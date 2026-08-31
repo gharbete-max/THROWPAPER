@@ -15,6 +15,13 @@
       "when": 1788214572237,
       "tag": "0001_auth_and_events",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788217675241,
+      "tag": "0002_forms",
+      "breakpoints": true
     }
   ]
 }

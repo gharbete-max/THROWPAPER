@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   integer,
   jsonb,
@@ -142,9 +143,68 @@ export const events = pgTable(
   (table) => [index('events_org_starts_idx').on(table.organisationId, table.startsAt)],
 );
 
+export const formStatus = pgEnum('form_status', ['draft', 'published', 'closed', 'archived']);
+
+/**
+ * A form's mutable head: identity, scheduling, and the draft the builder edits.
+ * Published snapshots live in form_versions — SPEC-forms.md §7 stores definitions as versioned
+ * JSON documents, never HTML strings.
+ */
+export const forms = pgTable(
+  'forms',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /** Optional: a form can stand alone, or collect registrations for one event. */
+    eventId: uuid('event_id').references(() => events.id, { onDelete: 'set null' }),
+    slug: text('slug').notNull(),
+    title: jsonb('title').$type<Record<string, string>>().notNull(),
+    status: formStatus('status').notNull().default('draft'),
+    /** The working copy. Autosaved, and never what the public sees. */
+    draftDefinition: jsonb('draft_definition').$type<Record<string, unknown>>().notNull(),
+    publishedVersionId: uuid('published_version_id'),
+    /**
+     * The published version's number, denormalised from form_versions.
+     * Written only by the publish handler. Without it, listing forms costs a query per row just
+     * to render "v3".
+     */
+    publishedVersion: integer('published_version'),
+    opensAt: timestamp('opens_at', { withTimezone: true }),
+    closesAt: timestamp('closes_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex('forms_org_slug_idx').on(table.organisationId, table.slug)],
+);
+
+/**
+ * An immutable published snapshot. Submissions reference the version they were filled against,
+ * so editing a form can never retroactively change what somebody answered.
+ */
+export const formVersions = pgTable(
+  'form_versions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    formId: uuid('form_id')
+      .notNull()
+      .references(() => forms.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    definition: jsonb('definition').$type<Record<string, unknown>>().notNull(),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
+    /** Recorded when an operator published despite missing required translations. */
+    translationOverride: boolean('translation_override').notNull().default(false),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex('form_versions_form_version_idx').on(table.formId, table.version)],
+);
+
 export type Organisation = typeof organisations.$inferSelect;
 export type NewOrganisation = typeof organisations.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
 export type AuditEntry = typeof auditLog.$inferSelect;
+export type Form = typeof forms.$inferSelect;
+export type FormVersion = typeof formVersions.$inferSelect;
