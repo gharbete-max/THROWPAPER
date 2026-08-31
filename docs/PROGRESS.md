@@ -51,8 +51,51 @@ file — START-HERE.md §Running it with Claude Code.
 
 Phases 1–5 should not start before 2 and 4 are answered. 4 blocks the rest of phase 0.
 
+## Phase 1 — Tokens across three targets · done
+
+**Shipped**
+
+- `packages/tokens/src/compile-email.ts` — `toEmailStyles()`. Resolved literal values and table
+  layout, never a custom property. Tested for the absence of `var(`, flex and grid.
+- `packages/tokens/src/compile-pdf.ts` — `toPrintCss()` with `@page` size, margins, running header
+  and page-number counters, plus `toPdfHeaderTemplate()`/`toPdfFooterTemplate()`. Chromium ignores
+  `@page` margin boxes, so both routes are generated from the same tokens.
+- `packages/tokens/src/fonts.ts` — `@font-face` blocks with the Inter bytes inlined as data URIs
+  (`@fontsource/inter`, latin + latin-ext). This is what makes å ä ö render instead of boxes.
+- `packages/tokens/src/units.ts` — px arithmetic for the two targets that cannot use `calc()`.
+- The PDF target is exported from `@tp/tokens/pdf`, **not** from the package root, because it reads
+  font files from disk. Keeping it off the main entry point is what stops `node:fs` reaching the
+  browser bundles.
+- `scripts/proof/` — one card definition rendered through all three compilers, written to
+  `proof-out/` as a side-by-side page. `pnpm tokens:proof --primary '#ff0000'` moves all three.
+- `scripts/proof/proof.test.ts` — the checkpoint as a test: one token change must reach web CSS,
+  email HTML and a real Chromium-rendered PDF, and the Swedish text must survive PDF text
+  extraction with å ä ö intact.
+- CI installs Chromium; the root `scripts/` directory is now typechecked (it was not before).
+
+**Checkpoint result**
+
+Passed. `#1f4b99` → `#ff0000` reaches all three, and Chromium computes `rgb(255, 0, 0)` for the
+heading in print media. PDF text extraction returns `Välkommen till Vårmötet` and `åäöÅÄÖ`
+unmangled, with the running header and `1 / 1` page number present.
+
+**Deferred, and why**
+
+- **Brand Kit editor**, theme presets and the Custom CSS panel — all A3. Phase 1 is the compilers.
+- **The native compiler.** `SPEC-shared.md` lists four targets; START-HERE phase 1 asks for three.
+  Nothing in v0.1 consumes it.
+- Deployment still blocked on the hosting/email region decision.
+
+**Assumptions to check**
+
+- Email engine is **React Email**, PDF engine is **Playwright Chromium** (both chosen deliberately;
+  Playwright is reused for phase 3 e2e).
+- The React Email components live in `scripts/proof/`, not in a package. They move to a real home
+  when Sendwork's block editor (B4) needs them — `packages/tokens` stays framework-free.
+- Inter is the only family with embedded font files. Any other family falls back to the host's
+  system fonts, which is the correct degradation but means a Brand Kit font picker (A3) must warn.
+
 ## Next
 
-Phase 1 — tokens across three targets. The riskiest bet in the product: one token change must
-visibly reach web, PDF and email, proven on a throwaway side-by-side page before anything else
-is built.
+Phase 2 — auth, org, event. Magic link, bearer tokens, roles, audit log, event CRUD, app shell
+and the language configuration. Blocked on nothing; the hosting decision blocks deployment only.

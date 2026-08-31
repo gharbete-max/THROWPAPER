@@ -29,6 +29,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The phase 1 proof test renders a real PDF; phase 3 e2e will reuse this browser.
+      - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm run verify
       - run: pnpm run contract:check
       - run: pnpm run format:check
