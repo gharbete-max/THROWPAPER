@@ -277,6 +277,52 @@ export function registerFormRoutes(
     },
   });
 
+  /**
+   * Submissions for a form, with the published definition so the caller can label the answers.
+   *
+   * v0.1 returns them all: START-HERE caps the demo at ~200 rows and says to use a library rather
+   * than build the grid from SPEC-shared.md. Server-side paging arrives with the real grid in A4.
+   */
+  app.get('/v1/forms/:id/submissions', {
+    preHandler: authenticated,
+    schema: {
+      tags: ['forms'],
+      params: IdParam,
+      response: { 200: formSchemas.SubmissionListResponse, ...errorResponses },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id } = IdParam.parse(request.params);
+
+      const form = await deps.repos.forms.findById(auth.organisation.id, id);
+      if (!form) return notFound(reply);
+
+      const versions = await deps.repos.forms.listVersions(id);
+      const published = versions.find((version) => version.id === form.publishedVersionId);
+      const parsed = formSchemas.FormDefinition.safeParse(
+        published?.definition ?? form.draftDefinition,
+      );
+
+      const rows = await deps.repos.submissions.list(auth.organisation.id, id);
+      const versionNumber = new Map(versions.map((version) => [version.id, version.version]));
+
+      return reply.send({
+        definition: parsed.success ? parsed.data : formSchemas.emptyDefinition,
+        submissions: rows.map((row) => ({
+          id: row.id,
+          reference: row.reference,
+          status: row.status,
+          locale: row.locale,
+          formVersion: versionNumber.get(row.formVersionId) ?? 1,
+          data: row.data,
+          submittedAt: row.submittedAt?.toISOString() ?? null,
+          createdAt: row.createdAt.toISOString(),
+        })),
+      });
+    },
+  });
+
   /** Restore an old version into the draft. One click, and it does not publish by itself. */
   app.post('/v1/forms/:id/versions/:version/restore', {
     preHandler: adminOnly,

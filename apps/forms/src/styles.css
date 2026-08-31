@@ -248,3 +248,38 @@ legend {
 .builder__tabs {
   gap: var(--tp-spacing-unit);
 }
+
+/* Submissions table. Not the grid from SPEC-shared.md — that is A4. */
+.table-scroll {
+  overflow-x: auto;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.grid th,
+.grid td {
+  border-bottom: var(--tp-border-width) solid var(--tp-colour-border);
+  padding: var(--tp-spacing-unit);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.grid th {
+  position: sticky;
+  top: 0;
+  background: var(--tp-colour-surface);
+}
+
+.grid__sort {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--tp-type-weight-bold);
+  cursor: pointer;
+  padding: 0;
+}

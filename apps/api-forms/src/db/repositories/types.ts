@@ -174,6 +174,71 @@ export interface FormRepository {
   }): Promise<FormVersionRecord>;
 }
 
+export interface SubmissionRecord {
+  id: string;
+  organisationId: string;
+  formId: string;
+  formVersionId: string;
+  eventId: string | null;
+  reference: string;
+  status: 'partial' | 'complete';
+  locale: string;
+  email: string | null;
+  data: Record<string, unknown>;
+  resumeTokenHash: string | null;
+  resumeExpiresAt: Date | null;
+  submittedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SubmissionDraftInput {
+  /** Present when resuming an existing draft rather than starting one. */
+  id?: string;
+  organisationId: string;
+  formId: string;
+  formVersionId: string;
+  eventId: string | null;
+  reference: string;
+  locale: string;
+  data: Record<string, unknown>;
+  resumeTokenHash: string;
+  resumeExpiresAt: Date;
+}
+
+export interface SubmissionCompleteInput {
+  id?: string;
+  organisationId: string;
+  formId: string;
+  formVersionId: string;
+  eventId: string | null;
+  reference: string;
+  locale: string;
+  email: string | null;
+  data: Record<string, unknown>;
+  /** Null means uncapped. Checked inside the same transaction as the insert. */
+  capacity: number | null;
+  duplicateControl: 'email' | 'none';
+}
+
+export type SubmissionCompleteResult =
+  { ok: true; submission: SubmissionRecord } | { ok: false; reason: 'duplicate' | 'full' };
+
+export interface SubmissionRepository {
+  list(organisationId: string, formId: string): Promise<SubmissionRecord[]>;
+  findByResumeTokenHash(tokenHash: string): Promise<SubmissionRecord | null>;
+  countComplete(formId: string): Promise<number>;
+  /** Save-and-resume. Creates the draft on first save and overwrites it thereafter. */
+  saveDraft(input: SubmissionDraftInput): Promise<SubmissionRecord>;
+  /**
+   * The only way a submission becomes complete.
+   *
+   * Capacity and duplicate control are re-checked **inside** the write, not before it: checking
+   * first and inserting afterwards lets two people pass the same last-place check.
+   */
+  complete(input: SubmissionCompleteInput): Promise<SubmissionCompleteResult>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -185,5 +250,6 @@ export interface Repositories {
   tokens: TokenRepository;
   events: EventRepository;
   forms: FormRepository;
+  submissions: SubmissionRepository;
   audit: AuditRepository;
 }

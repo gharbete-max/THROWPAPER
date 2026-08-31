@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -200,6 +201,57 @@ export const formVersions = pgTable(
   (table) => [uniqueIndex('form_versions_form_version_idx').on(table.formId, table.version)],
 );
 
+export const submissionStatus = pgEnum('submission_status', ['partial', 'complete']);
+
+/**
+ * One filled-in form.
+ *
+ * `formVersionId` binds the answers to the definition that was on screen, so editing a form later
+ * can never change what somebody actually answered.
+ */
+export const submissions = pgTable(
+  'submissions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    formId: uuid('form_id')
+      .notNull()
+      .references(() => forms.id, { onDelete: 'cascade' }),
+    formVersionId: uuid('form_version_id')
+      .notNull()
+      .references(() => formVersions.id),
+    eventId: uuid('event_id').references(() => events.id, { onDelete: 'set null' }),
+    /** Short human-quotable code. Phase 5 checks people in by reading this aloud at a door. */
+    reference: text('reference').notNull(),
+    status: submissionStatus('status').notNull().default('partial'),
+    /** Locale the form was submitted in — the confirmation and PDF have to match it. */
+    locale: text('locale').notNull(),
+    /** Lower-cased, and only set once complete. Drives duplicate control. */
+    email: text('email'),
+    data: jsonb('data').$type<Record<string, unknown>>().notNull().default({}),
+    /** Hashed like every other token: a leaked database must not resume anybody's draft. */
+    resumeTokenHash: text('resume_token_hash'),
+    resumeExpiresAt: timestamp('resume_expires_at', { withTimezone: true }),
+    submittedAt: timestamp('submitted_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('submissions_org_reference_idx').on(table.organisationId, table.reference),
+    uniqueIndex('submissions_resume_token_idx').on(table.resumeTokenHash),
+    /**
+     * Duplicate control by email (START-HERE v0.1). Partial, so drafts and withdrawn attempts do
+     * not occupy the address — and so the database, not the handler, is the last word on it.
+     */
+    uniqueIndex('submissions_form_email_idx')
+      .on(table.formId, table.email)
+      .where(sql`${table.status} = 'complete' and ${table.email} is not null`),
+    index('submissions_form_status_idx').on(table.formId, table.status),
+  ],
+);
+
 export type Organisation = typeof organisations.$inferSelect;
 export type NewOrganisation = typeof organisations.$inferInsert;
 export type User = typeof users.$inferSelect;
@@ -208,3 +260,4 @@ export type NewEvent = typeof events.$inferInsert;
 export type AuditEntry = typeof auditLog.$inferSelect;
 export type Form = typeof forms.$inferSelect;
 export type FormVersion = typeof formVersions.$inferSelect;
+export type Submission = typeof submissions.$inferSelect;

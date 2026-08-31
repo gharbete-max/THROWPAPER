@@ -12,6 +12,7 @@ import { useT } from '../../lib/i18n.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
 import { PALETTE, newField } from './field-defaults.js';
+import { Submissions } from '../Submissions.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
 
@@ -219,6 +220,12 @@ export function FormBuilder() {
           <FieldProperties field={selected} onChange={updateField} />
         </aside>
       </div>
+
+      {id && form.publishedVersion !== null && (
+        <section className="card">
+          <Submissions formId={id} />
+        </section>
+      )}
 
       <section className="card stack">
         <strong className="small">{t('builder.history')}</strong>

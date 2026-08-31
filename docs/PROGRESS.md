@@ -210,10 +210,99 @@ logic. Adding a field type is a scope change, not a detail.
 
 3b — the public renderer, validation on both sides, save-and-resume, and capacity enforcement.
 
+## Phase 3b — The public form · done
+
+**Shipped**
+
+- `packages/shared/src/forms/validate.ts` — **one validator, run on both sides**. The server is
+  authoritative; the client copy only produces feedback before submit.
+- Public endpoints, no bearer token: `GET /public/forms/:slug`, `POST /public/forms/:slug`,
+  save-and-resume, and resume-by-token. Rate-limited, with a honeypot on submit.
+- `submissions` table (`0003_submissions.sql`) with a partial unique index on
+  `(form_id, email) where status = 'complete'`.
+- Public renderer at `/f/:slug`, code-split so anonymous visitors never download the app shell.
+  Multi-page via page breaks, per-field errors, hidden fields prefilled from the query string.
+- Save-and-resume: opaque token, stored hashed. The link is shown with a copy button **and** sent
+  through the `MailTransport` seam from phase 2 — console today, a real provider in phase 4.
+- Seed now produces the demo form plus **200 registrations** with Nordic names, per START-HERE.
+
+**Decisions worth knowing**
+
+- **Validation issues are message keys plus parameters, never sentences.** A hard-coded English
+  string would break rule 4 and reach a Swedish visitor untranslated.
+- **The honeypot answers a bot as though it worked.** Telling it that it was detected only teaches
+  whoever wrote it to try something else.
+- **An unpublished form is a 404 to the public.** Whether a draft exists is not their business.
+- **Answers for fields not in the definition are dropped, not stored.** A stray key is a stale
+  client or someone probing; neither belongs in the export.
+- **`rich_text` renders as text, never HTML.** Operator-authored content on an anonymous page.
+- Capacity and duplicate control are checked **inside** the write, not before it.
+
+**The concurrency test, and what it does and does not prove**
+
+Two simultaneous submissions for the last place: exactly one wins. I verified the test is not
+vacuous by deliberately inserting an `await` between the capacity check and the insert — it then
+failed with `[201, 201]`, two people admitted to one place — and removing it again.
+
+That proves the **handler** has no check-then-act gap. The database-level guarantee is the
+transaction and `select … for update` in the Drizzle repository, and **only CI exercises that**,
+because Docker is still not installed here.
+
+**Deferred**
+
+Conditional logic and page branching, tokenised per-recipient links, per-token duplicate control,
+CAPTCHA (the honeypot and rate limits are in; CAPTCHA is A14).
+
+**Next**
+
+3c is done — see below.
+
+## Phase 3c — Submissions table and export · done
+
+Third and last merge of phase 3. **Phase 3 is complete.**
+
+**Shipped**
+
+- `GET /v1/forms/:id/submissions` — the answers plus the published definition needed to label
+  them, and the version each was filled against.
+- `packages/shared/src/forms/export.ts` — `toCsv()` and `toSheetRows()`, unit-tested without a
+  browser.
+- Submissions table with TanStack Table: client-side sort, global filter, column chooser. **Not**
+  the grid from `SPEC-shared.md` — START-HERE says use a library and defer the real one to A4, and
+  v0.1 is ~200 rows.
+- CSV and XLSX export, from the rows the table is currently showing.
+
+**The acceptance criterion**
+
+START-HERE's Done-means list includes "The CSV opens in Excel with Swedish characters intact". On
+Windows, Excel reads a CSV as the system code page unless the file starts with a **UTF-8 BOM**, so
+`Öberg` arrives as `Ã–berg`. The BOM is emitted and there is a test asserting `charCodeAt(0)` is
+`0xFEFF`. The separator defaults to `;`, which is the list separator Excel expects in Sweden, and
+is configurable.
+
+**Formula injection**
+
+A public form takes text from anyone, and a cell beginning `=`, `+`, `-` or `@` is **executed**
+when the operator opens the file. Those cells are prefixed with a tab, which neutralises them
+without changing the visible text. Tested for all four leading characters. This was not in the
+plan; it is a real hole that opens the moment untrusted text reaches a spreadsheet.
+
+**Export parity, made structural**
+
+Exports run from the table's current sorted, filtered, visible-column state rather than re-querying
+the server. Parity is then true by construction instead of by a second implementation agreeing
+with the first.
+
+**Deferred**
+
+Server-side sort, filter and pagination; saved views; grouping and subtotals; PDF export. All A4.
+
 ## Next
 
-Phase 3 — form builder and the public form (1.5–2 weeks, the longest phase). The small field set
-from START-HERE, drag-and-drop, versioning, the public renderer with the language dropdown,
-translations, validation, save-and-resume, and the submissions table with export.
+Phase 4 — documents and email (1 week). Admission PDF with a signed QR, provider integration,
+sending-domain verification with live SPF/DKIM/DMARC checks, confirmation and notification emails,
+and bulk PDF generation as a background job.
 
-If phase 3 runs past two weeks, START-HERE says the field set is too big — cut it.
+**Phase 4 is blocked** on START-HERE decision 4: the email provider region. The `MailTransport`
+seam from phase 2 is already carrying the magic link and the save-and-resume link, so the swap is
+a provider implementation rather than new plumbing — but the provider has to be chosen.

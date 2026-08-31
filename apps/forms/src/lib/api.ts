@@ -165,6 +165,12 @@ export const client = {
   listFormVersions: (id: string) =>
     request<{ versions: formSchemas.FormVersionSummary[] }>(`/v1/forms/${id}/versions`),
 
+  listSubmissions: (id: string) =>
+    request<{
+      submissions: formSchemas.SubmissionResponse[];
+      definition: formSchemas.FormDefinition;
+    }>(`/v1/forms/${id}/submissions`),
+
   restoreFormVersion: (id: string, version: number) =>
     request<formSchemas.FormResponse>(`/v1/forms/${id}/versions/${version}/restore`, {
       method: 'POST',
