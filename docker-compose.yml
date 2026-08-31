@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: throwpaper-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: throwpaper
+      POSTGRES_PASSWORD: throwpaper
+      POSTGRES_DB: throwpaper
+      # Nordic collation matters — CLAUDE.md rule 6.
+      POSTGRES_INITDB_ARGS: '--locale-provider=icu --icu-locale=sv-SE --encoding=UTF8'
+    ports:
+      - '5432:5432'
+    volumes:
+      - throwpaper-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U throwpaper -d throwpaper']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  throwpaper-pgdata:

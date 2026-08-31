@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: throwpaper
+          POSTGRES_PASSWORD: throwpaper
+          POSTGRES_DB: throwpaper
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U throwpaper" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://throwpaper:throwpaper@localhost:5432/throwpaper
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run verify
+      - run: pnpm run contract:check
+      - run: pnpm run format:check
+      - run: pnpm run db:migrate
+      - run: pnpm run db:seed

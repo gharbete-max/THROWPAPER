@@ -1,0 +1,32 @@
+{
+  "colour": {
+    "primary": "#1f4b99",
+    "secondary": "#3d6fb8",
+    "accent": "#c8642a",
+    "background": "#ffffff",
+    "surface": "#f5f6f8",
+    "text": "#14181f",
+    "muted": "#5b6472",
+    "border": "#d9dde3",
+    "success": "#1f7a45",
+    "warning": "#a86a00",
+    "danger": "#b3261e"
+  },
+  "typography": {
+    "headingFont": "Inter, system-ui, sans-serif",
+    "bodyFont": "Inter, system-ui, sans-serif",
+    "baseSize": "16px",
+    "scaleRatio": 1.25,
+    "lineHeight": 1.5,
+    "weightRegular": 400,
+    "weightBold": 600
+  },
+  "spacingUnit": "8px",
+  "radius": "6px",
+  "borderWidth": "1px",
+  "shadowLevel": 1,
+  "buttonStyle": "solid",
+  "logoLight": null,
+  "logoDark": null,
+  "favicon": null
+}
