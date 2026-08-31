@@ -164,4 +164,78 @@ export const messages: Catalogue = {
   'fieldType.page_break': { 'sv-SE': 'Sidbrytning', 'en-GB': 'Page break' },
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
   'fieldType.hidden': { 'sv-SE': 'Dolt fält', 'en-GB': 'Hidden field' },
+
+  // Public form. Shown to people who are not signed in, in their chosen language.
+  'public.next': { 'sv-SE': 'Nästa', 'en-GB': 'Next' },
+  'public.back': { 'sv-SE': 'Tillbaka', 'en-GB': 'Back' },
+  'public.submit': { 'sv-SE': 'Skicka', 'en-GB': 'Submit' },
+  'public.submitting': { 'sv-SE': 'Skickar…', 'en-GB': 'Submitting…' },
+  'public.page': { 'sv-SE': 'Sida {n} av {total}', 'en-GB': 'Page {n} of {total}' },
+  'public.save': { 'sv-SE': 'Spara och fortsätt senare', 'en-GB': 'Save and continue later' },
+  'public.saving': { 'sv-SE': 'Sparar…', 'en-GB': 'Saving…' },
+  'public.savedTitle': { 'sv-SE': 'Sparat', 'en-GB': 'Saved' },
+  'public.savedBody': {
+    'sv-SE': 'Spara länken nedan. Den gäller i 30 dagar.',
+    'en-GB': 'Keep the link below. It lasts 30 days.',
+  },
+  'public.copy': { 'sv-SE': 'Kopiera länk', 'en-GB': 'Copy link' },
+  'public.copied': { 'sv-SE': 'Kopierad', 'en-GB': 'Copied' },
+  'public.thanks': { 'sv-SE': 'Tack!', 'en-GB': 'Thank you.' },
+  'public.reference': {
+    'sv-SE': 'Din referens: {reference}',
+    'en-GB': 'Your reference: {reference}',
+  },
+  'public.closed': {
+    'sv-SE': 'Anmälan är stängd.',
+    'en-GB': 'This form is closed.',
+  },
+  'public.closed.not-open-yet': {
+    'sv-SE': 'Anmälan har inte öppnat än.',
+    'en-GB': 'This form has not opened yet.',
+  },
+  'public.closed.full': { 'sv-SE': 'Alla platser är tagna.', 'en-GB': 'All places are taken.' },
+  'public.closed.unpublished': { 'sv-SE': 'Formuläret finns inte.', 'en-GB': 'Form not found.' },
+  'public.rejected.duplicate': {
+    'sv-SE': 'Den här adressen har redan anmälts.',
+    'en-GB': 'That address has already been registered.',
+  },
+  'public.rejected.full': {
+    'sv-SE': 'Platserna tog slut medan du fyllde i.',
+    'en-GB': 'The places ran out while you were filling this in.',
+  },
+  'public.rejected.closed': {
+    'sv-SE': 'Anmälan stängde medan du fyllde i.',
+    'en-GB': 'The form closed while you were filling this in.',
+  },
+  'public.notFound': { 'sv-SE': 'Formuläret finns inte.', 'en-GB': 'Form not found.' },
+  'public.yes': { 'sv-SE': 'Ja', 'en-GB': 'Yes' },
+  'public.no': { 'sv-SE': 'Nej', 'en-GB': 'No' },
+  'public.choose': { 'sv-SE': 'Välj…', 'en-GB': 'Choose…' },
+
+  'validation.required': {
+    'sv-SE': 'Fältet är obligatoriskt.',
+    'en-GB': 'This field is required.',
+  },
+  'validation.tooShort': { 'sv-SE': 'Minst {min} tecken.', 'en-GB': 'At least {min} characters.' },
+  'validation.tooLong': { 'sv-SE': 'Högst {max} tecken.', 'en-GB': 'At most {max} characters.' },
+  'validation.pattern': { 'sv-SE': 'Fel format.', 'en-GB': 'Wrong format.' },
+  'validation.phone': { 'sv-SE': 'Ange ett telefonnummer.', 'en-GB': 'Enter a phone number.' },
+  'validation.email': { 'sv-SE': 'Ange en e-postadress.', 'en-GB': 'Enter an email address.' },
+  'validation.number': { 'sv-SE': 'Ange ett tal.', 'en-GB': 'Enter a number.' },
+  'validation.min': { 'sv-SE': 'Minst {min}.', 'en-GB': 'At least {min}.' },
+  'validation.max': { 'sv-SE': 'Högst {max}.', 'en-GB': 'At most {max}.' },
+  'validation.decimals': {
+    'sv-SE': 'Högst {decimals} decimaler.',
+    'en-GB': 'At most {decimals} decimal places.',
+  },
+  'validation.date': { 'sv-SE': 'Ange ett datum.', 'en-GB': 'Enter a date.' },
+  'validation.dateMin': { 'sv-SE': 'Tidigast {min}.', 'en-GB': 'No earlier than {min}.' },
+  'validation.dateMax': { 'sv-SE': 'Senast {max}.', 'en-GB': 'No later than {max}.' },
+  'validation.option': {
+    'sv-SE': 'Välj ett giltigt alternativ.',
+    'en-GB': 'Choose a valid option.',
+  },
+  'validation.minSelected': { 'sv-SE': 'Välj minst {min}.', 'en-GB': 'Choose at least {min}.' },
+  'validation.maxSelected': { 'sv-SE': 'Välj högst {max}.', 'en-GB': 'Choose at most {max}.' },
+  'validation.yesNo': { 'sv-SE': 'Välj ja eller nej.', 'en-GB': 'Choose yes or no.' },
 };

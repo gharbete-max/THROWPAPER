@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { useT } from './lib/i18n.js';
@@ -8,6 +9,12 @@ import { EventForm } from './screens/EventForm.js';
 import { Forms } from './screens/Forms.js';
 import { FormBuilder } from './screens/builder/FormBuilder.js';
 
+/**
+ * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,
+ * and the shell's bundle should not follow them.
+ */
+const PublicForm = lazy(() => import('./screens/PublicForm.js'));
+
 export function App() {
   return (
     <BrowserRouter>
@@ -15,6 +22,14 @@ export function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/auth/callback" element={<Callback />} />
+          <Route
+            path="/f/:slug"
+            element={
+              <Suspense fallback={<main className="shell shell--narrow" />}>
+                <PublicForm />
+              </Suspense>
+            }
+          />
           <Route path="/*" element={<Shell />} />
         </Routes>
       </SessionProvider>

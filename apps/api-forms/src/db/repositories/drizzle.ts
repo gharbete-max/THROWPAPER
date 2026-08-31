@@ -7,6 +7,7 @@ import {
   forms,
   loginTokens,
   organisations,
+  submissions,
   refreshTokens,
   users,
 } from '../schema.js';
@@ -19,6 +20,9 @@ import type {
   FormUpdate,
   FormVersionRecord,
   Repositories,
+  SubmissionCompleteInput,
+  SubmissionDraftInput,
+  SubmissionRecord,
   UserRecord,
 } from './types.js';
 
@@ -217,6 +221,148 @@ export function createDrizzleRepositories(db: Db): Repositories {
       },
     },
 
+    submissions: {
+      list: async (organisationId, formId) =>
+        (await db
+          .select()
+          .from(submissions)
+          .where(
+            and(eq(submissions.organisationId, organisationId), eq(submissions.formId, formId)),
+          )
+          .orderBy(desc(submissions.createdAt))) as SubmissionRecord[],
+
+      findByResumeTokenHash: async (tokenHash) =>
+        first(
+          await db
+            .select()
+            .from(submissions)
+            .where(eq(submissions.resumeTokenHash, tokenHash))
+            .limit(1),
+        ) as SubmissionRecord | null,
+
+      countComplete: async (formId) => {
+        const [row] = await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(submissions)
+          .where(and(eq(submissions.formId, formId), eq(submissions.status, 'complete')));
+        return row?.count ?? 0;
+      },
+
+      saveDraft: async (input: SubmissionDraftInput) => {
+        if (input.id) {
+          const [row] = await db
+            .update(submissions)
+            .set({
+              data: input.data,
+              locale: input.locale,
+              resumeTokenHash: input.resumeTokenHash,
+              resumeExpiresAt: input.resumeExpiresAt,
+              updatedAt: new Date(),
+            })
+            .where(and(eq(submissions.id, input.id), eq(submissions.status, 'partial')))
+            .returning();
+          if (row) return row as SubmissionRecord;
+        }
+
+        const [row] = await db
+          .insert(submissions)
+          .values({
+            organisationId: input.organisationId,
+            formId: input.formId,
+            formVersionId: input.formVersionId,
+            eventId: input.eventId,
+            reference: input.reference,
+            status: 'partial',
+            locale: input.locale,
+            data: input.data,
+            resumeTokenHash: input.resumeTokenHash,
+            resumeExpiresAt: input.resumeExpiresAt,
+          })
+          .returning();
+        if (!row) throw new Error('submission draft insert returned no row');
+        return row as SubmissionRecord;
+      },
+
+      /**
+       * Capacity and duplicate control are enforced inside one transaction.
+       *
+       * The form row is locked first, which serialises every completion for that form. Without it
+       * two callers both read "one place left" and both take it. The partial unique index on
+       * (form_id, email) is the second line of defence for duplicates, so a unique violation is
+       * translated rather than thrown.
+       */
+      complete: async (input: SubmissionCompleteInput) => {
+        const email = input.email?.toLowerCase() ?? null;
+
+        try {
+          return await db.transaction(async (tx) => {
+            await tx.execute(sql`select 1 from forms where id = ${input.formId} for update`);
+
+            if (input.duplicateControl === 'email' && email) {
+              const clash = await tx
+                .select({ id: submissions.id })
+                .from(submissions)
+                .where(
+                  and(
+                    eq(submissions.formId, input.formId),
+                    eq(submissions.status, 'complete'),
+                    eq(submissions.email, email),
+                  ),
+                )
+                .limit(1);
+              if (clash.length > 0) return { ok: false as const, reason: 'duplicate' as const };
+            }
+
+            if (input.capacity !== null) {
+              const [row] = await tx
+                .select({ count: sql<number>`count(*)::int` })
+                .from(submissions)
+                .where(
+                  and(eq(submissions.formId, input.formId), eq(submissions.status, 'complete')),
+                );
+              if ((row?.count ?? 0) >= input.capacity) {
+                return { ok: false as const, reason: 'full' as const };
+              }
+            }
+
+            const values = {
+              organisationId: input.organisationId,
+              formId: input.formId,
+              formVersionId: input.formVersionId,
+              eventId: input.eventId,
+              status: 'complete' as const,
+              locale: input.locale,
+              email,
+              data: input.data,
+              resumeTokenHash: null,
+              resumeExpiresAt: null,
+              submittedAt: new Date(),
+              updatedAt: new Date(),
+            };
+
+            const [saved] = input.id
+              ? await tx
+                  .update(submissions)
+                  .set(values)
+                  .where(eq(submissions.id, input.id))
+                  .returning()
+              : await tx
+                  .insert(submissions)
+                  .values({ ...values, reference: input.reference })
+                  .returning();
+
+            if (!saved) throw new Error('submission completion returned no row');
+            return { ok: true as const, submission: saved as SubmissionRecord };
+          });
+        } catch (error) {
+          if (isUniqueViolation(error, 'submissions_form_email_idx')) {
+            return { ok: false as const, reason: 'duplicate' as const };
+          }
+          throw error;
+        }
+      },
+    },
+
     audit: {
       record: async (entry) => {
         await db.insert(auditLog).values({
@@ -247,6 +393,12 @@ export function createDrizzleRepositories(db: Db): Repositories {
         ),
     },
   };
+}
+
+/** postgres.js surfaces the constraint name; anything else is a real error and must not be hidden. */
+function isUniqueViolation(error: unknown, constraint: string): boolean {
+  const candidate = error as { code?: string; constraint_name?: string } | null;
+  return candidate?.code === '23505' && candidate.constraint_name === constraint;
 }
 
 function first<T>(rows: T[]): T | null {

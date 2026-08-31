@@ -210,6 +210,55 @@ logic. Adding a field type is a scope change, not a detail.
 
 3b — the public renderer, validation on both sides, save-and-resume, and capacity enforcement.
 
+## Phase 3b — The public form · done
+
+**Shipped**
+
+- `packages/shared/src/forms/validate.ts` — **one validator, run on both sides**. The server is
+  authoritative; the client copy only produces feedback before submit.
+- Public endpoints, no bearer token: `GET /public/forms/:slug`, `POST /public/forms/:slug`,
+  save-and-resume, and resume-by-token. Rate-limited, with a honeypot on submit.
+- `submissions` table (`0003_submissions.sql`) with a partial unique index on
+  `(form_id, email) where status = 'complete'`.
+- Public renderer at `/f/:slug`, code-split so anonymous visitors never download the app shell.
+  Multi-page via page breaks, per-field errors, hidden fields prefilled from the query string.
+- Save-and-resume: opaque token, stored hashed. The link is shown with a copy button **and** sent
+  through the `MailTransport` seam from phase 2 — console today, a real provider in phase 4.
+- Seed now produces the demo form plus **200 registrations** with Nordic names, per START-HERE.
+
+**Decisions worth knowing**
+
+- **Validation issues are message keys plus parameters, never sentences.** A hard-coded English
+  string would break rule 4 and reach a Swedish visitor untranslated.
+- **The honeypot answers a bot as though it worked.** Telling it that it was detected only teaches
+  whoever wrote it to try something else.
+- **An unpublished form is a 404 to the public.** Whether a draft exists is not their business.
+- **Answers for fields not in the definition are dropped, not stored.** A stray key is a stale
+  client or someone probing; neither belongs in the export.
+- **`rich_text` renders as text, never HTML.** Operator-authored content on an anonymous page.
+- Capacity and duplicate control are checked **inside** the write, not before it.
+
+**The concurrency test, and what it does and does not prove**
+
+Two simultaneous submissions for the last place: exactly one wins. I verified the test is not
+vacuous by deliberately inserting an `await` between the capacity check and the insert — it then
+failed with `[201, 201]`, two people admitted to one place — and removing it again.
+
+That proves the **handler** has no check-then-act gap. The database-level guarantee is the
+transaction and `select … for update` in the Drizzle repository, and **only CI exercises that**,
+because Docker is still not installed here.
+
+**Deferred**
+
+Conditional logic and page branching, tokenised per-recipient links, per-token duplicate control,
+CAPTCHA (the honeypot and rate limits are in; CAPTCHA is A14).
+
+**Next**
+
+3c — the submissions table with sort, filter, column chooser, and CSV/XLSX export. The CSV must
+open in Excel with Swedish characters intact, which means UTF-8 with a BOM: that is an acceptance
+criterion in START-HERE, not a nicety.
+
 ## Next
 
 Phase 3 — form builder and the public form (1.5–2 weeks, the longest phase). The small field set

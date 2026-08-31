@@ -10,6 +10,9 @@ import type {
   FormUpdate,
   FormVersionRecord,
   LoginTokenRecord,
+  SubmissionCompleteInput,
+  SubmissionDraftInput,
+  SubmissionRecord,
   OrganisationRecord,
   Repositories,
   RefreshTokenRecord,
@@ -31,11 +34,16 @@ export interface MemoryState {
   events: EventRecord[];
   forms: FormRecord[];
   formVersions: FormVersionRecord[];
+  submissions: SubmissionRecord[];
   audit: AuditEntryRecord[];
 }
 
 function copyEvent(event: EventRecord): EventRecord {
   return { ...event, name: { ...event.name }, description: { ...event.description } };
+}
+
+function copySubmission(submission: SubmissionRecord): SubmissionRecord {
+  return { ...submission, data: structuredClone(submission.data) };
 }
 
 function copyForm(form: FormRecord): FormRecord {
@@ -57,6 +65,7 @@ export function createMemoryRepositories(
     events: seed.events ?? [],
     forms: seed.forms ?? [],
     formVersions: seed.formVersions ?? [],
+    submissions: seed.submissions ?? [],
     audit: seed.audit ?? [],
   };
 
@@ -219,6 +228,112 @@ export function createMemoryRepositories(
         };
         state.formVersions.push(record);
         return { ...record };
+      },
+    },
+
+    submissions: {
+      list: async (organisationId, formId) =>
+        state.submissions
+          .filter((s) => s.organisationId === organisationId && s.formId === formId)
+          .map(copySubmission),
+      findByResumeTokenHash: async (tokenHash) => {
+        const found = state.submissions.find((s) => s.resumeTokenHash === tokenHash);
+        return found ? copySubmission(found) : null;
+      },
+      countComplete: async (formId) =>
+        state.submissions.filter((s) => s.formId === formId && s.status === 'complete').length,
+
+      saveDraft: async (input: SubmissionDraftInput) => {
+        const existingIndex = input.id ? state.submissions.findIndex((s) => s.id === input.id) : -1;
+        const existing = state.submissions[existingIndex];
+        const now = new Date();
+
+        if (existing) {
+          const updated: SubmissionRecord = {
+            ...existing,
+            data: input.data,
+            locale: input.locale,
+            resumeTokenHash: input.resumeTokenHash,
+            resumeExpiresAt: input.resumeExpiresAt,
+            updatedAt: now,
+          };
+          state.submissions[existingIndex] = updated;
+          return copySubmission(updated);
+        }
+
+        const record: SubmissionRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          formId: input.formId,
+          formVersionId: input.formVersionId,
+          eventId: input.eventId,
+          reference: input.reference,
+          status: 'partial',
+          locale: input.locale,
+          email: null,
+          data: input.data,
+          resumeTokenHash: input.resumeTokenHash,
+          resumeExpiresAt: input.resumeExpiresAt,
+          submittedAt: null,
+          createdAt: now,
+          updatedAt: now,
+        };
+        state.submissions.push(record);
+        return copySubmission(record);
+      },
+
+      /**
+       * Check and write with no `await` between them.
+       *
+       * That is what makes the concurrency test meaningful here: if a handler ever grows a gap
+       * between counting and inserting, two callers interleave and the test catches it. The
+       * database-level guarantee is the Drizzle implementation's transaction; this fake can only
+       * prove the handler has no check-then-act gap of its own.
+       */
+      complete: async (input: SubmissionCompleteInput) => {
+        const email = input.email?.toLowerCase() ?? null;
+
+        if (input.duplicateControl === 'email' && email) {
+          const clash = state.submissions.some(
+            (s) => s.formId === input.formId && s.status === 'complete' && s.email === email,
+          );
+          if (clash) return { ok: false as const, reason: 'duplicate' as const };
+        }
+
+        if (input.capacity !== null) {
+          const taken = state.submissions.filter(
+            (s) => s.formId === input.formId && s.status === 'complete',
+          ).length;
+          if (taken >= input.capacity) return { ok: false as const, reason: 'full' as const };
+        }
+
+        const now = new Date();
+        const existingIndex = input.id ? state.submissions.findIndex((s) => s.id === input.id) : -1;
+        const existing = state.submissions[existingIndex];
+
+        const record: SubmissionRecord = {
+          id: existing?.id ?? randomUUID(),
+          organisationId: input.organisationId,
+          formId: input.formId,
+          formVersionId: input.formVersionId,
+          eventId: input.eventId,
+          reference: existing?.reference ?? input.reference,
+          status: 'complete',
+          locale: input.locale,
+          email,
+          data: input.data,
+          // The resume token dies with the draft it belonged to.
+          resumeTokenHash: null,
+          resumeExpiresAt: null,
+          submittedAt: now,
+          createdAt: existing?.createdAt ?? now,
+          updatedAt: now,
+        };
+
+        if (existing) state.submissions[existingIndex] = record;
+        else state.submissions.push(record);
+
+        return { ok: true as const, submission: copySubmission(record) };
       },
     },
 

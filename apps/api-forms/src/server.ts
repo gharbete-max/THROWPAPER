@@ -15,6 +15,7 @@ import { createConsoleMailTransport, type MailTransport } from './auth/mail.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerFormRoutes } from './routes/forms.js';
+import { registerPublicFormRoutes } from './routes/public-forms.js';
 
 export interface ServerOptions {
   /** Injected by the tests; defaults to the Drizzle implementation over Postgres. */
@@ -73,6 +74,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
+  registerPublicFormRoutes(app, { repos, mail, appUrl });
 
   app.get('/health', async (_request, reply) => {
     let state: 'up' | 'down' | 'skipped' = 'skipped';
