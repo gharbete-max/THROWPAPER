@@ -1,5 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": { "types": ["node"] },
-  "include": ["scripts/**/*.ts", "vitest.config.ts", "eslint.config.js"]
+  "compilerOptions": {
+    "types": ["node"],
+    "lib": ["ES2023", "DOM"],
+    "jsx": "react-jsx"
+  },
+  "include": ["scripts/**/*.ts", "scripts/**/*.tsx", "vitest.config.ts", "eslint.config.js"]
 }
