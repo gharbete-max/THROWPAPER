@@ -3,3 +3,7 @@ export { resolveChain, resolveLocale } from './locale.js';
 export type { CompletenessReport } from './completeness.js';
 export { completenessFor } from './completeness.js';
 export { collator, compareText } from './collation.js';
+export type { LocalisedText, PickedText } from './text.js';
+export { pickText, missingLocales } from './text.js';
+export type { Catalogue, Translator } from './catalogue.js';
+export { createTranslator } from './catalogue.js';

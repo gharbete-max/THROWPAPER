@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@tp/i18n": "workspace:*",
+    "@tp/shared": "workspace:^",
     "@tp/tokens": "workspace:*",
     "@tp/ui": "workspace:*",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router": "^8.3.1"
   },
   "devDependencies": {
     "@types/react": "^19.0.4",

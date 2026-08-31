@@ -95,7 +95,65 @@ unmangled, with the running header and `1 / 1` page number present.
 - Inter is the only family with embedded font files. Any other family falls back to the host's
   system fonts, which is the correct degradation but means a Brand Kit font picker (A3) must warn.
 
+## Phase 2 — Auth, organisation, event · done
+
+**Shipped**
+
+- Schema: `users`, `login_tokens`, `refresh_tokens`, `audit_log`, `events`
+  (`0001_auth_and_events.sql`). Only token **hashes** are stored — a leaked database yields no
+  working sessions.
+- Magic link → `POST /v1/auth/token` → bearer + refresh. Access tokens are 15-minute HS256 JWTs;
+  refresh tokens are opaque, hashed, and **rotate on every use**. Presenting an already-rotated
+  token revokes the whole family.
+- `POST /v1/auth/magic-link` answers identically for known and unknown addresses, and is
+  rate-limited. There is a test asserting the two responses are byte-identical.
+- Roles: **admin and operator only**. The role is read from the database on every request, not
+  from the token, so a demotion takes effect immediately.
+- Events: list, read, create, patch, and **archive — never delete** (rule 7). `registrationOpen`
+  is computed from capacity and the closing date, never stored.
+- Event text is per-locale JSONB from the start, with `missingLocales` on every response driving
+  the completeness indicator.
+- Every mutation writes an audit row through one `recordAudit()` helper.
+- OpenAPI generated from the Zod schemas at `/openapi.json` (`SPEC-forms.md` §7).
+- `apps/forms`: login, magic-link callback, authenticated shell with a **language dropdown driven
+  by the org's supportedLocales**, events list and event editor with one field per locale.
+- `packages/i18n` gained `pickText()`, `missingLocales()` and a translation catalogue, so no
+  user-facing string is hard-coded (rule 4). `packages/shared` gained `api/`.
+
+**The repository seam**
+
+Handlers depend on `Repositories` interfaces, never on `db`. Rotation, reuse detection,
+single-use links, role checks, audit writes and capacity rules are all tested against in-memory
+fakes, so `pnpm verify` is meaningful without Docker. One database-backed smoke test covers the
+migration and the Drizzle round trip; it **skips with a named reason** when no Postgres answers,
+and always runs in CI.
+
+Writing the fake surfaced a real defect: it mutated rows in place, so the audit log's `before`
+snapshot aliased the `after`. Postgres would never have done that. The fake now copies on read and
+replaces on update.
+
+**Deferred, and why**
+
+- SSO — `SPEC-shared.md` calls it optional and nothing in v0.1 needs it.
+- Multi-tenancy. One organisation row; no switching UI.
+- The other three roles and the permissions matrix — A14.
+- Honeypot and CAPTCHA — they belong with the public form in phase 3.
+- Deployment, still blocked on the hosting/email region decision.
+
+**Assumptions to check**
+
+- Launch locales are `sv-SE` and `en-GB`, driven entirely by `organisations.supported_locales`.
+- Refresh tokens live in `localStorage`, access tokens only in memory. A token in `localStorage`
+  is readable by any script on the page, so the short-lived one never goes there.
+- `JWT_SECRET` has **no default** — the server refuses to start without one of at least 32
+  characters. `.env.example` carries a development value that must not reach production.
+- Admin edits events; operators read them. If that split is wrong, it is one line in
+  `routes/events.ts`.
+
 ## Next
 
-Phase 2 — auth, org, event. Magic link, bearer tokens, roles, audit log, event CRUD, app shell
-and the language configuration. Blocked on nothing; the hosting decision blocks deployment only.
+Phase 3 — form builder and the public form (1.5–2 weeks, the longest phase). The small field set
+from START-HERE, drag-and-drop, versioning, the public renderer with the language dropdown,
+translations, validation, save-and-resume, and the submissions table with export.
+
+If phase 3 runs past two weeks, START-HERE says the field set is too big — cut it.

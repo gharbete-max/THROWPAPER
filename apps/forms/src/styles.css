@@ -42,3 +42,123 @@ body {
 .status-down {
   color: var(--tp-colour-danger);
 }
+
+/* Phase 2 shell. Every value below is a token variable — CLAUDE.md rule 4. */
+.shell--narrow {
+  max-width: 26rem;
+}
+
+.topbar {
+  border-bottom: var(--tp-border-width) solid var(--tp-colour-border);
+  background: var(--tp-colour-background);
+}
+
+.topbar__inner {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  flex-wrap: wrap;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  flex-wrap: wrap;
+}
+
+.row--between {
+  justify-content: space-between;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.field--inline {
+  flex-direction: row;
+  align-items: center;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: var(--tp-type-base-size);
+}
+
+fieldset {
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+legend {
+  padding: 0 var(--tp-spacing-unit);
+  color: var(--tp-colour-muted);
+  font-size: 0.875rem;
+}
+
+.button {
+  display: inline-block;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-primary);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-primary);
+  color: var(--tp-colour-background);
+  font-family: var(--tp-type-body-font);
+  font-size: var(--tp-type-base-size);
+  font-weight: var(--tp-type-weight-bold);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.button--quiet {
+  background: transparent;
+  color: var(--tp-colour-primary);
+  border-color: var(--tp-colour-border);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0 var(--tp-spacing-unit);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-muted);
+  font-size: 0.8125rem;
+}
+
+.badge--warning {
+  margin-left: var(--tp-spacing-unit);
+  background: var(--tp-colour-warning);
+  color: var(--tp-colour-background);
+}
+
+.small {
+  font-size: 0.875rem;
+}
+
+.status-warning {
+  color: var(--tp-colour-warning);
+}
