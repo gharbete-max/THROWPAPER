@@ -10,6 +10,10 @@ const Env = z.object({
     .default('postgres://throwpaper:throwpaper@localhost:5432/throwpaper'),
   API_FORMS_PORT: z.coerce.number().int().default(4001),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  /** Signs access tokens. No default — a predictable secret mints admin sessions. */
+  JWT_SECRET: z.string().min(32),
+  /** Base URL of apps/forms, used to build magic links and to scope CORS. */
+  APP_URL: z.string().url().default('http://localhost:5173'),
 });
 
 export const env = Env.parse(process.env);

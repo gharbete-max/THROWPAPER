@@ -1,58 +1,79 @@
-import { useEffect, useState } from 'react';
-import { cn } from '@tp/ui';
-import { resolveLocale, type LocaleConfig } from '@tp/i18n';
-
-const localeConfig: LocaleConfig = { supported: ['sv-SE', 'en-GB'], default: 'sv-SE' };
-
-interface Health {
-  status: string;
-  service: string;
-  contractVersion: number;
-  database: 'up' | 'down';
-}
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { SessionProvider, useSession } from './lib/session.js';
+import { useT } from './lib/i18n.js';
+import { Login } from './screens/Login.js';
+import { Callback } from './screens/Callback.js';
+import { Events } from './screens/Events.js';
+import { EventForm } from './screens/EventForm.js';
 
 export function App() {
-  const [health, setHealth] = useState<Health | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const locale = resolveLocale(localeConfig, navigator.language);
+  return (
+    <BrowserRouter>
+      <SessionProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/auth/callback" element={<Callback />} />
+          <Route path="/*" element={<Shell />} />
+        </Routes>
+      </SessionProvider>
+    </BrowserRouter>
+  );
+}
 
-  useEffect(() => {
-    fetch('/api/health')
-      .then((response) => response.json() as Promise<Health>)
-      .then(setHealth)
-      .catch((cause: unknown) => setError(String(cause)));
-  }, []);
+/** Everything behind the bearer token. */
+function Shell() {
+  const t = useT();
+  const { user, organisation, loading, locale, setLocale, locales, signOut } = useSession();
+
+  if (loading) {
+    return (
+      <main className="shell">
+        <p className="muted">{t('app.loading')}</p>
+      </main>
+    );
+  }
+
+  if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <main className="shell">
-      <h1>Formwork</h1>
-      <p className="muted">
-        Phase 0 skeleton. Next: <code>docs/START-HERE.md</code> phase 1 — tokens across web, PDF and
-        email.
-      </p>
-
-      <section className="card">
-        <strong>Backend</strong>
-        <p>
-          {error ? (
-            <span className="status-down">api-forms unreachable — is it running on :4001?</span>
-          ) : health ? (
-            <span className={cn(health.database === 'up' ? 'status-up' : 'status-down')}>
-              {health.service} · {health.status} · database {health.database} · contract v
-              {health.contractVersion}
+    <div className="app">
+      <header className="topbar">
+        <div className="topbar__inner">
+          <strong>{organisation?.name ?? t('app.name')}</strong>
+          <nav className="row">
+            {/*
+              The language dropdown is driven by the organisation's supportedLocales, not a
+              hard-coded list — SPEC-shared.md §packages/i18n.
+            */}
+            <label className="field field--inline">
+              <span className="small muted">{t('app.language')}</span>
+              <select value={locale} onChange={(event) => setLocale(event.target.value)}>
+                {locales.supported.map((supported) => (
+                  <option key={supported} value={supported}>
+                    {supported}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <span className="small muted">
+              {user.name} · {user.role}
             </span>
-          ) : (
-            <span className="muted">checking…</span>
-          )}
-        </p>
-      </section>
+            <button className="button button--quiet" onClick={signOut}>
+              {t('app.signOut')}
+            </button>
+          </nav>
+        </div>
+      </header>
 
-      <section className="card">
-        <strong>Locale</strong>
-        <p className="muted">
-          Browser asked for {navigator.language}; resolved to {locale}.
-        </p>
-      </section>
-    </main>
+      <main className="shell">
+        <Routes>
+          <Route path="/" element={<Navigate to="/events" replace />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/new" element={<EventForm />} />
+          <Route path="/events/:id" element={<EventForm />} />
+          <Route path="*" element={<Navigate to="/events" replace />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
