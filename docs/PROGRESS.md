@@ -140,6 +140,20 @@ replaces on update.
 - Honeypot and CAPTCHA — they belong with the public form in phase 3.
 - Deployment, still blocked on the hosting/email region decision.
 
+**What CI caught that local runs could not**
+
+The first CI run failed: `env.ts` requires `JWT_SECRET`, and a local `.env` was quietly supplying
+it. Two real problems behind one symptom.
+
+- `server.ts` imported `db/client.js` at module scope, which imports `env.ts`. So a test that
+  injected its own repositories still had to satisfy the full production environment — the seam
+  was leaking. The database module is now imported lazily, and only when no repositories were
+  passed in.
+- A migration or seed script has no business requiring a signing secret. `JWT_SECRET` is now
+  optional in `env.ts`; `main.ts` refuses to start the server without it.
+
+Verified by deleting the local `.env` and reproducing the failure before fixing it.
+
 **Assumptions to check**
 
 - Launch locales are `sv-SE` and `en-GB`, driven entirely by `organisations.supported_locales`.

@@ -9,8 +9,6 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import { CONTRACT_VERSION } from '@tp/shared';
-import { sql } from './db/client.js';
-import { db } from './db/client.js';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { createAuthService } from './auth/service.js';
 import { createConsoleMailTransport, type MailTransport } from './auth/mail.js';
@@ -27,6 +25,18 @@ export interface ServerOptions {
   probeDatabase?: boolean;
 }
 
+/**
+ * The database module is imported lazily and only when no repositories were injected.
+ *
+ * Importing it eagerly would drag in env.ts, so every test — including ones that pass their own
+ * repositories — would need a full production environment to build a server. CI caught exactly
+ * that.
+ */
+async function loadDatabase() {
+  const { db, sql } = await import('./db/client.js');
+  return { repos: createDrizzleRepositories(db), ping: () => sql`select 1` };
+}
+
 export async function buildServer(options: ServerOptions = {}): Promise<FastifyInstance> {
   const app = Fastify({
     logger: { level: process.env.NODE_ENV === 'test' ? 'silent' : 'info' },
@@ -35,11 +45,14 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  const repos = options.repos ?? createDrizzleRepositories(db);
+  const database = options.repos ? null : await loadDatabase();
+  const repos = options.repos ?? database?.repos;
+  if (!repos) throw new Error('no repositories available');
+
   const mail = options.mail ?? createConsoleMailTransport((message) => app.log.info(message));
   const jwtSecret = options.jwtSecret ?? requireSecret();
   const appUrl = options.appUrl ?? process.env['APP_URL'] ?? 'http://localhost:5173';
-  const probeDatabase = options.probeDatabase ?? options.repos === undefined;
+  const probeDatabase = options.probeDatabase ?? database !== null;
 
   await app.register(cors, { origin: appUrl, credentials: false });
   await app.register(rateLimit, { global: false, max: 100, timeWindow: '1 minute' });
@@ -60,21 +73,21 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerEventRoutes(app, { repos, guard });
 
   app.get('/health', async (_request, reply) => {
-    let database: 'up' | 'down' | 'skipped' = 'skipped';
-    if (probeDatabase) {
+    let state: 'up' | 'down' | 'skipped' = 'skipped';
+    if (probeDatabase && database) {
       try {
-        await sql`select 1`;
-        database = 'up';
+        await database.ping();
+        state = 'up';
       } catch (error) {
         app.log.error({ error }, 'health check could not reach the database');
-        database = 'down';
+        state = 'down';
       }
     }
-    return reply.code(database === 'down' ? 503 : 200).send({
-      status: database === 'down' ? 'degraded' : 'ok',
+    return reply.code(state === 'down' ? 503 : 200).send({
+      status: state === 'down' ? 'degraded' : 'ok',
       service: 'api-forms',
       contractVersion: CONTRACT_VERSION,
-      database,
+      database: state,
     });
   });
 
