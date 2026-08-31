@@ -33,8 +33,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # The phase 1 proof test renders a real PDF; phase 3 e2e will reuse this browser.
       - run: pnpm exec playwright install --with-deps chromium
+      # Migrate before verify: the database smoke test needs the schema to exist, and this is
+      # the order a real deployment uses. Seeding here also proves the seed matches the schema.
+      - run: pnpm run db:migrate
+      - run: pnpm run db:seed
       - run: pnpm run verify
       - run: pnpm run contract:check
       - run: pnpm run format:check
-      - run: pnpm run db:migrate
-      - run: pnpm run db:seed
