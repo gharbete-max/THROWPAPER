@@ -255,14 +255,54 @@ CAPTCHA (the honeypot and rate limits are in; CAPTCHA is A14).
 
 **Next**
 
-3c — the submissions table with sort, filter, column chooser, and CSV/XLSX export. The CSV must
-open in Excel with Swedish characters intact, which means UTF-8 with a BOM: that is an acceptance
-criterion in START-HERE, not a nicety.
+3c is done — see below.
+
+## Phase 3c — Submissions table and export · done
+
+Third and last merge of phase 3. **Phase 3 is complete.**
+
+**Shipped**
+
+- `GET /v1/forms/:id/submissions` — the answers plus the published definition needed to label
+  them, and the version each was filled against.
+- `packages/shared/src/forms/export.ts` — `toCsv()` and `toSheetRows()`, unit-tested without a
+  browser.
+- Submissions table with TanStack Table: client-side sort, global filter, column chooser. **Not**
+  the grid from `SPEC-shared.md` — START-HERE says use a library and defer the real one to A4, and
+  v0.1 is ~200 rows.
+- CSV and XLSX export, from the rows the table is currently showing.
+
+**The acceptance criterion**
+
+START-HERE's Done-means list includes "The CSV opens in Excel with Swedish characters intact". On
+Windows, Excel reads a CSV as the system code page unless the file starts with a **UTF-8 BOM**, so
+`Öberg` arrives as `Ã–berg`. The BOM is emitted and there is a test asserting `charCodeAt(0)` is
+`0xFEFF`. The separator defaults to `;`, which is the list separator Excel expects in Sweden, and
+is configurable.
+
+**Formula injection**
+
+A public form takes text from anyone, and a cell beginning `=`, `+`, `-` or `@` is **executed**
+when the operator opens the file. Those cells are prefixed with a tab, which neutralises them
+without changing the visible text. Tested for all four leading characters. This was not in the
+plan; it is a real hole that opens the moment untrusted text reaches a spreadsheet.
+
+**Export parity, made structural**
+
+Exports run from the table's current sorted, filtered, visible-column state rather than re-querying
+the server. Parity is then true by construction instead of by a second implementation agreeing
+with the first.
+
+**Deferred**
+
+Server-side sort, filter and pagination; saved views; grouping and subtotals; PDF export. All A4.
 
 ## Next
 
-Phase 3 — form builder and the public form (1.5–2 weeks, the longest phase). The small field set
-from START-HERE, drag-and-drop, versioning, the public renderer with the language dropdown,
-translations, validation, save-and-resume, and the submissions table with export.
+Phase 4 — documents and email (1 week). Admission PDF with a signed QR, provider integration,
+sending-domain verification with live SPF/DKIM/DMARC checks, confirmation and notification emails,
+and bulk PDF generation as a background job.
 
-If phase 3 runs past two weeks, START-HERE says the field set is too big — cut it.
+**Phase 4 is blocked** on START-HERE decision 4: the email provider region. The `MailTransport`
+seam from phase 2 is already carrying the magic link and the save-and-resume link, so the swap is
+a provider implementation rather than new plumbing — but the provider has to be chosen.

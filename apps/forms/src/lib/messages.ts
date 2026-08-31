@@ -165,6 +165,18 @@ export const messages: Catalogue = {
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
   'fieldType.hidden': { 'sv-SE': 'Dolt fält', 'en-GB': 'Hidden field' },
 
+  'submissions.title': { 'sv-SE': 'Svar ({n})', 'en-GB': 'Responses ({n})' },
+  'submissions.empty': { 'sv-SE': 'Inga svar ännu.', 'en-GB': 'No responses yet.' },
+  'submissions.search': { 'sv-SE': 'Sök', 'en-GB': 'Search' },
+  'submissions.columns': { 'sv-SE': 'Kolumner', 'en-GB': 'Columns' },
+  'submissions.separator': { 'sv-SE': 'Avgränsare', 'en-GB': 'Separator' },
+  'submissions.exportCsv': { 'sv-SE': 'Exportera CSV', 'en-GB': 'Export CSV' },
+  'submissions.exportXlsx': { 'sv-SE': 'Exportera Excel', 'en-GB': 'Export Excel' },
+  'submissions.column.reference': { 'sv-SE': 'Referens', 'en-GB': 'Reference' },
+  'submissions.column.submittedAt': { 'sv-SE': 'Skickad', 'en-GB': 'Submitted' },
+  'submissions.column.locale': { 'sv-SE': 'Språk', 'en-GB': 'Language' },
+  'submissions.column.status': { 'sv-SE': 'Status', 'en-GB': 'Status' },
+
   // Public form. Shown to people who are not signed in, in their chosen language.
   'public.next': { 'sv-SE': 'Nästa', 'en-GB': 'Next' },
   'public.back': { 'sv-SE': 'Tillbaka', 'en-GB': 'Back' },

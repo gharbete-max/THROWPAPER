@@ -76,6 +76,24 @@ export const FormResponse = z.object({
   updatedAt: IsoDateTime,
 });
 
+export const SubmissionResponse = z.object({
+  id: Uuid,
+  reference: z.string(),
+  status: z.enum(['partial', 'complete']),
+  locale: z.string(),
+  /** The version the answers were given against — a later edit does not move them. */
+  formVersion: z.number().int().positive(),
+  data: z.record(z.unknown()),
+  submittedAt: IsoDateTime.nullable(),
+  createdAt: IsoDateTime,
+});
+
+export const SubmissionListResponse = z.object({
+  submissions: z.array(SubmissionResponse),
+  /** The definition to read the answers against: the published one at the time of listing. */
+  definition: FormDefinition,
+});
+
 export const FormListResponse = z.object({ forms: z.array(FormResponse) });
 export const FormVersionListResponse = z.object({ versions: z.array(FormVersionSummary) });
 
@@ -83,3 +101,4 @@ export type CreateForm = z.infer<typeof CreateForm>;
 export type UpdateForm = z.infer<typeof UpdateForm>;
 export type FormResponse = z.infer<typeof FormResponse>;
 export type FormVersionSummary = z.infer<typeof FormVersionSummary>;
+export type SubmissionResponse = z.infer<typeof SubmissionResponse>;
