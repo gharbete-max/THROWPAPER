@@ -1,4 +1,4 @@
-import type { api } from '@tp/shared';
+import type { api, forms as formSchemas } from '@tp/shared';
 
 /**
  * Typed client for the Formwork API.
@@ -136,6 +136,39 @@ export const client = {
 
   archiveEvent: (id: string) =>
     request<api.EventResponse>(`/v1/events/${id}/archive`, { method: 'POST' }),
+
+  listForms: () => request<{ forms: formSchemas.FormResponse[] }>('/v1/forms'),
+
+  getForm: (id: string) => request<formSchemas.FormResponse>(`/v1/forms/${id}`),
+
+  createForm: (input: { slug: string; title: Record<string, string>; eventId?: string | null }) =>
+    request<formSchemas.FormResponse>('/v1/forms', { method: 'POST', body: JSON.stringify(input) }),
+
+  updateForm: (id: string, patch: Record<string, unknown>) =>
+    request<formSchemas.FormResponse>(`/v1/forms/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(patch),
+    }),
+
+  saveDraft: (id: string, definition: formSchemas.FormDefinition) =>
+    request<formSchemas.FormResponse>(`/v1/forms/${id}/draft`, {
+      method: 'PUT',
+      body: JSON.stringify({ definition }),
+    }),
+
+  publishForm: (id: string, overrideIncompleteTranslations = false) =>
+    request<formSchemas.FormResponse>(`/v1/forms/${id}/publish`, {
+      method: 'POST',
+      body: JSON.stringify({ overrideIncompleteTranslations }),
+    }),
+
+  listFormVersions: (id: string) =>
+    request<{ versions: formSchemas.FormVersionSummary[] }>(`/v1/forms/${id}/versions`),
+
+  restoreFormVersion: (id: string, version: number) =>
+    request<formSchemas.FormResponse>(`/v1/forms/${id}/versions/${version}/restore`, {
+      method: 'POST',
+    }),
 };
 
 /** Restores a session from the stored refresh token on a cold load. */

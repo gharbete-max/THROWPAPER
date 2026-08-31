@@ -164,6 +164,52 @@ Verified by deleting the local `.env` and reproducing the failure before fixing 
 - Admin edits events; operators read them. If that split is wrong, it is one line in
   `routes/events.ts`.
 
+## Phase 3a — Form definitions and the builder · done
+
+Phase 3 lands as three merges rather than one 1.5–2 week branch, so a defect surfaces after days
+rather than at the end.
+
+**Shipped**
+
+- `packages/shared/src/forms/` — the field union as a discriminated Zod union, pinned to a
+  `schemaVersion`. Exactly the **thirteen** v0.1 types from START-HERE and no others.
+- Helpers: `pagesOf()` (splits on page breaks, ready for 3b's multi-page renderer),
+  `answerableFields()`, `duplicateKeys()`, `translatableTexts()`, `definitionCompleteness()`,
+  `definitionProblems()`.
+- Schema: `forms` (mutable head — slug, scheduling, autosaved draft) and `form_versions`
+  (immutable published snapshots). `0002_forms.sql`.
+- Routes: form CRUD, draft autosave, publish, version list, version restore.
+- Builder in `apps/forms`: palette · canvas · properties, dnd-kit reordering with a **keyboard
+  sensor** (drag-and-drop that needs a mouse is not an accessible way to build a form), autosave
+  debounced to one request per typing burst, a translation tab covering every text property per
+  locale, and version history with one-click restore.
+
+**Decisions worth knowing**
+
+- **A submission will reference the version it was filled against**, so editing a form can never
+  retroactively change what somebody answered. There is a test asserting the published snapshot
+  is unaffected by later draft edits.
+- **Publishing is blocked on missing required translations unless explicitly overridden.** The
+  override is recorded both on the version row and in the audit log, so "who shipped it
+  half-translated" stays answerable. Labels and option labels are required; help text and
+  placeholders are not.
+- **Autosave is deliberately not audited.** It fires constantly and would bury the entries that
+  matter. Publishing is the auditable act.
+- `rich_text` stores plain text, not HTML — HTML here would be a stored-XSS surface on a public
+  page.
+- `forms.published_version` is denormalised from `form_versions`. Without it, listing forms costs
+  a query per row just to render "v3".
+
+**Deferred**
+
+Everything in `SPEC-forms.md` §3 outside the thirteen types: matrix, rating, linear scale, file
+upload, photo capture, signature, repeatable groups, lookups, computed fields, and conditional
+logic. Adding a field type is a scope change, not a detail.
+
+**Next**
+
+3b — the public renderer, validation on both sides, save-and-resume, and capacity enforcement.
+
 ## Next
 
 Phase 3 — form builder and the public form (1.5–2 weeks, the longest phase). The small field set

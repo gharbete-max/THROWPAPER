@@ -1,7 +1,26 @@
-import { and, asc, eq, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
-import { auditLog, events, loginTokens, organisations, refreshTokens, users } from '../schema.js';
-import type { EventCreate, EventRecord, EventUpdate, Repositories, UserRecord } from './types.js';
+import {
+  auditLog,
+  events,
+  formVersions,
+  forms,
+  loginTokens,
+  organisations,
+  refreshTokens,
+  users,
+} from '../schema.js';
+import type {
+  EventCreate,
+  EventRecord,
+  EventUpdate,
+  FormCreate,
+  FormRecord,
+  FormUpdate,
+  FormVersionRecord,
+  Repositories,
+  UserRecord,
+} from './types.js';
 
 /** The only module that knows about tables. Everything else talks to the interfaces in types.ts. */
 export function createDrizzleRepositories(db: Db): Repositories {
@@ -111,6 +130,91 @@ export function createDrizzleRepositories(db: Db): Repositories {
       },
       // Registrations land in phase 3.
       countRegistrations: async () => 0,
+    },
+
+    forms: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(forms)
+          .where(eq(forms.organisationId, organisationId))
+          .orderBy(desc(forms.updatedAt))) as FormRecord[],
+      findById: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(forms)
+            .where(and(eq(forms.organisationId, organisationId), eq(forms.id, id)))
+            .limit(1),
+        ) as FormRecord | null,
+      findBySlug: async (organisationId, slug) =>
+        first(
+          await db
+            .select()
+            .from(forms)
+            .where(and(eq(forms.organisationId, organisationId), eq(forms.slug, slug)))
+            .limit(1),
+        ) as FormRecord | null,
+      create: async (input: FormCreate) => {
+        const [row] = await db
+          .insert(forms)
+          .values({
+            organisationId: input.organisationId,
+            eventId: input.eventId,
+            slug: input.slug,
+            title: input.title,
+            status: input.status ?? 'draft',
+            draftDefinition: input.draftDefinition as Record<string, unknown>,
+            opensAt: input.opensAt,
+            closesAt: input.closesAt,
+          })
+          .returning();
+        if (!row) throw new Error('form insert returned no row');
+        return row as FormRecord;
+      },
+      update: async (organisationId, id, patch: FormUpdate) => {
+        const [row] = await db
+          .update(forms)
+          .set({
+            ...patch,
+            draftDefinition: patch.draftDefinition as Record<string, unknown> | undefined,
+            updatedAt: new Date(),
+          })
+          .where(and(eq(forms.organisationId, organisationId), eq(forms.id, id)))
+          .returning();
+        return (row as FormRecord | undefined) ?? null;
+      },
+
+      listVersions: async (formId) =>
+        (await db
+          .select()
+          .from(formVersions)
+          .where(eq(formVersions.formId, formId))
+          .orderBy(desc(formVersions.version))) as FormVersionRecord[],
+      findVersion: async (formId, version) =>
+        first(
+          await db
+            .select()
+            .from(formVersions)
+            .where(and(eq(formVersions.formId, formId), eq(formVersions.version, version)))
+            .limit(1),
+        ) as FormVersionRecord | null,
+      createVersion: async (input) => {
+        // The number is derived inside the statement, so two concurrent publishes cannot pick the
+        // same one; the unique index on (form_id, version) is the backstop.
+        const [row] = await db
+          .insert(formVersions)
+          .values({
+            formId: input.formId,
+            version: sql`(select coalesce(max(v.version), 0) + 1 from form_versions v where v.form_id = ${input.formId})`,
+            definition: input.definition as Record<string, unknown>,
+            publishedAt: new Date(),
+            translationOverride: input.translationOverride,
+          })
+          .returning();
+        if (!row) throw new Error('form version insert returned no row');
+        return row as FormVersionRecord;
+      },
     },
 
     audit: {

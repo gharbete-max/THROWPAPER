@@ -5,6 +5,10 @@ import type {
   EventCreate,
   EventRecord,
   EventUpdate,
+  FormCreate,
+  FormRecord,
+  FormUpdate,
+  FormVersionRecord,
   LoginTokenRecord,
   OrganisationRecord,
   Repositories,
@@ -25,11 +29,21 @@ export interface MemoryState {
   loginTokens: LoginTokenRecord[];
   refreshTokens: RefreshTokenRecord[];
   events: EventRecord[];
+  forms: FormRecord[];
+  formVersions: FormVersionRecord[];
   audit: AuditEntryRecord[];
 }
 
 function copyEvent(event: EventRecord): EventRecord {
   return { ...event, name: { ...event.name }, description: { ...event.description } };
+}
+
+function copyForm(form: FormRecord): FormRecord {
+  return {
+    ...form,
+    title: { ...form.title },
+    draftDefinition: structuredClone(form.draftDefinition),
+  };
 }
 
 export function createMemoryRepositories(
@@ -41,6 +55,8 @@ export function createMemoryRepositories(
     loginTokens: seed.loginTokens ?? [],
     refreshTokens: seed.refreshTokens ?? [],
     events: seed.events ?? [],
+    forms: seed.forms ?? [],
+    formVersions: seed.formVersions ?? [],
     audit: seed.audit ?? [],
   };
 
@@ -137,6 +153,73 @@ export function createMemoryRepositories(
         return copyEvent(updated);
       },
       countRegistrations: async () => 0,
+    },
+
+    forms: {
+      // Copy on read and replace on update, for the same reason events do — an aliased row makes
+      // the audit log's "before" silently become the "after".
+      list: async (organisationId) =>
+        state.forms.filter((f) => f.organisationId === organisationId).map(copyForm),
+      findById: async (organisationId, id) => {
+        const form = state.forms.find((f) => f.organisationId === organisationId && f.id === id);
+        return form ? copyForm(form) : null;
+      },
+      findBySlug: async (organisationId, slug) => {
+        const form = state.forms.find(
+          (f) => f.organisationId === organisationId && f.slug === slug,
+        );
+        return form ? copyForm(form) : null;
+      },
+      create: async (input: FormCreate) => {
+        const now = new Date();
+        const record: FormRecord = {
+          ...input,
+          status: input.status ?? 'draft',
+          id: randomUUID(),
+          publishedVersionId: null,
+          publishedVersion: null,
+          createdAt: now,
+          updatedAt: now,
+        };
+        state.forms.push(record);
+        return copyForm(record);
+      },
+      update: async (organisationId, id, patch: FormUpdate) => {
+        const index = state.forms.findIndex(
+          (f) => f.organisationId === organisationId && f.id === id,
+        );
+        const existing = state.forms[index];
+        if (!existing) return null;
+        const updated: FormRecord = { ...existing, ...patch, updatedAt: new Date() };
+        state.forms[index] = updated;
+        return copyForm(updated);
+      },
+
+      listVersions: async (formId) =>
+        state.formVersions
+          .filter((v) => v.formId === formId)
+          .sort((a, b) => b.version - a.version)
+          .map((v) => ({ ...v })),
+      findVersion: async (formId, version) => {
+        const found = state.formVersions.find((v) => v.formId === formId && v.version === version);
+        return found ? { ...found } : null;
+      },
+      createVersion: async (input) => {
+        const highest = state.formVersions
+          .filter((v) => v.formId === input.formId)
+          .reduce((max, v) => Math.max(max, v.version), 0);
+        const record: FormVersionRecord = {
+          id: randomUUID(),
+          formId: input.formId,
+          version: highest + 1,
+          definition: input.definition,
+          publishedAt: new Date(),
+          translationOverride: input.translationOverride,
+          createdAt: new Date(),
+        };
+        state.formVersions.push(record);
+        return { ...record };
+      },
     },
 
     audit: {

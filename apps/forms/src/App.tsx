@@ -1,10 +1,12 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
 import { Events } from './screens/Events.js';
 import { EventForm } from './screens/EventForm.js';
+import { Forms } from './screens/Forms.js';
+import { FormBuilder } from './screens/builder/FormBuilder.js';
 
 export function App() {
   return (
@@ -41,6 +43,12 @@ function Shell() {
         <div className="topbar__inner">
           <strong>{organisation?.name ?? t('app.name')}</strong>
           <nav className="row">
+            <Link className="button button--quiet small" to="/events">
+              {t('nav.events')}
+            </Link>
+            <Link className="button button--quiet small" to="/forms">
+              {t('nav.forms')}
+            </Link>
             {/*
               The language dropdown is driven by the organisation's supportedLocales, not a
               hard-coded list — SPEC-shared.md §packages/i18n.
@@ -71,6 +79,8 @@ function Shell() {
           <Route path="/events" element={<Events />} />
           <Route path="/events/new" element={<EventForm />} />
           <Route path="/events/:id" element={<EventForm />} />
+          <Route path="/forms" element={<Forms />} />
+          <Route path="/forms/:id" element={<FormBuilder />} />
           <Route path="*" element={<Navigate to="/events" replace />} />
         </Routes>
       </main>

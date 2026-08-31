@@ -124,6 +124,56 @@ export interface EventRepository {
   countRegistrations(eventId: string): Promise<number>;
 }
 
+export interface FormRecord {
+  id: string;
+  organisationId: string;
+  eventId: string | null;
+  slug: string;
+  title: Record<string, string>;
+  status: 'draft' | 'published' | 'closed' | 'archived';
+  draftDefinition: unknown;
+  publishedVersionId: string | null;
+  publishedVersion: number | null;
+  opensAt: Date | null;
+  closesAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface FormVersionRecord {
+  id: string;
+  formId: string;
+  version: number;
+  definition: unknown;
+  publishedAt: Date | null;
+  translationOverride: boolean;
+  createdAt: Date;
+}
+
+export type FormCreate = Omit<
+  FormRecord,
+  'id' | 'createdAt' | 'updatedAt' | 'publishedVersionId' | 'publishedVersion' | 'status'
+> & { status?: FormRecord['status'] };
+
+export type FormUpdate = Partial<Omit<FormRecord, 'id' | 'organisationId' | 'createdAt'>>;
+
+export interface FormRepository {
+  list(organisationId: string): Promise<FormRecord[]>;
+  findById(organisationId: string, id: string): Promise<FormRecord | null>;
+  findBySlug(organisationId: string, slug: string): Promise<FormRecord | null>;
+  create(input: FormCreate): Promise<FormRecord>;
+  update(organisationId: string, id: string, patch: FormUpdate): Promise<FormRecord | null>;
+
+  listVersions(formId: string): Promise<FormVersionRecord[]>;
+  findVersion(formId: string, version: number): Promise<FormVersionRecord | null>;
+  /** Next version number is derived, not supplied, so two publishes cannot collide on one number. */
+  createVersion(input: {
+    formId: string;
+    definition: unknown;
+    translationOverride: boolean;
+  }): Promise<FormVersionRecord>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -134,5 +184,6 @@ export interface Repositories {
   users: UserRepository;
   tokens: TokenRepository;
   events: EventRepository;
+  forms: FormRepository;
   audit: AuditRepository;
 }
