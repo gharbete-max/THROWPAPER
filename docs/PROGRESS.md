@@ -479,6 +479,36 @@ machine this repo is developed on has no Docker, no Postgres and no psql.
 development, where Vite serves the app on its own port and this code path never runs. It surfaces
 in production as a form link returning JSON to somebody who was sent it.
 
+**What opening the page found, and the code review did not**
+
+Three defects, none of which any existing test could have caught:
+
+1. **The container served a dead app.** The bundle calls `/api/v1/...` because in development Vite
+   proxies that here and strips the prefix. There is no proxy in a container, so every request came
+   back as the app shell and the form reported that it did not exist. The server now strips `/api`
+   itself — the same rule as the proxy, in one more place. A page that renders and then fails
+   everything is worse than one that will not start, because it looks like it works.
+2. **`node dist/main.js` had never worked.** The `start` script has been in `package.json` since
+   phase 0, but tsup left the `@tp/*` packages external and those publish TypeScript source, so it
+   could only ever have run under tsx. They are bundled now, and the container runs `node`, with no
+   pnpm or corepack in the runtime path.
+3. **The first smoke test threw away its own evidence.** The container exited about four seconds in
+   and the step reported a column of refused connections and nothing else, because `bash -e` exited
+   before reaching `docker logs`. It now traps and prints the logs whatever happens, and fails
+   early with a clear message when the container is gone.
+
+The suite now covers the `/api` prefix, and removing the rewrite fails it.
+
+**Verified by hand, in container shape**
+
+Served the built app from the built API and registered *Åsa Öqvist* through the public form in
+Swedish — two pages, a select, a number field — and got reference `80HR-7496` back. That is the
+first time the product has been driven end to end in the shape it will actually ship in.
+
+The demo banner also follows the public form's language switcher now, rather than the signed-in
+session's locale. It was announcing "Demo mode" in Swedish over an English form, on the one page
+members of the public ever see.
+
 **Still not deployed.** An image is not a deployment. The host, the region and the domain are
 decisions, and they are the user's.
 

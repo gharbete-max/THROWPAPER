@@ -11,11 +11,12 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "start": "node dist/main.js",
-    "build": "tsup src/main.ts --format esm --target node20 --clean",
+    "build": "tsup",
     "typecheck": "tsc -p tsconfig.json",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "start:demo": "node dist/demo/main.js"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1123.0",

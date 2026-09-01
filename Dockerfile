@@ -18,6 +18,8 @@ FROM mcr.microsoft.com/playwright:${PLAYWRIGHT_VERSION}-noble AS build
 
 WORKDIR /app
 ENV CI=true
+# corepack asks before downloading a pinned pnpm, and there is nobody here to answer.
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
 RUN corepack enable
 
@@ -37,7 +39,10 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm --filter @tp/forms build
+# Both halves are compiled here so that nothing at runtime needs pnpm, corepack or a TypeScript
+# loader. tsup bundles the @tp/* workspace packages, which publish TypeScript source and would
+# otherwise leave a dist that only runs under tsx.
+RUN pnpm --filter @tp/forms build && pnpm --filter @tp/api-forms build
 
 # --- runtime -----------------------------------------------------------------
 FROM mcr.microsoft.com/playwright:${PLAYWRIGHT_VERSION}-noble AS runtime
@@ -49,12 +54,15 @@ ENV API_FORMS_PORT=4001
 ENV SERVE_APP=/app/apps/forms/dist
 ENV DOCUMENT_DIR=/app/.documents
 
-RUN corepack enable
-
 COPY --from=build /app /app
 
 # Generated documents are written here. A named volume keeps a bulk export alive across restarts;
 # without one they vanish, which is acceptable for a demo and not for production.
+#
+# The directory is created and handed to the unprivileged user *before* VOLUME, because a volume
+# inherits the ownership of the path it shadows — get the order wrong and the first bulk export
+# fails with EACCES, in front of whoever asked for it.
+RUN mkdir -p /app/.documents && chown -R pwuser:pwuser /app/.documents
 VOLUME ["/app/.documents"]
 
 EXPOSE 4001
@@ -64,4 +72,4 @@ USER pwuser
 
 # `DEMO=true` starts the in-memory build — no database, mail never sent. Anything else starts the
 # real server, which refuses to boot without JWT_SECRET.
-CMD ["sh", "-c", "if [ \"$DEMO\" = \"true\" ]; then pnpm --filter @tp/api-forms exec tsx src/demo/main.ts; else pnpm --filter @tp/api-forms exec tsx src/main.ts; fi"]
+CMD ["sh", "-c", "if [ \"$DEMO\" = \"true\" ]; then exec node apps/api-forms/dist/demo/main.js; else exec node apps/api-forms/dist/main.js; fi"]

@@ -97,6 +97,49 @@ describe('serving the built app from the API', () => {
     expect(response.json()).toMatchObject({ error: { code: 'not-found' } });
   });
 
+  /**
+   * The app is built to call `/api/v1/...`, because in development Vite proxies that here and
+   * strips the prefix. In the container there is no proxy.
+   *
+   * This was found by opening the page rather than by reading the code: the shell rendered, and
+   * then every request came back as HTML and the form reported that it did not exist. A container
+   * that serves a broken app is worse than one that will not start.
+   */
+  describe('the /api prefix the app actually calls', () => {
+    it('answers /api/health the same as /health', async () => {
+      const direct = await app.inject({ method: 'GET', url: '/health' });
+      const prefixed = await app.inject({ method: 'GET', url: '/api/health' });
+      expect(prefixed.statusCode).toBe(200);
+      expect(prefixed.json()).toMatchObject({ status: 'ok' });
+      expect(prefixed.json()).toEqual(direct.json());
+    });
+
+    it('routes a prefixed API call to the API, not the app shell', async () => {
+      const response = await app.inject({ method: 'GET', url: '/api/public/forms/nope-at-all' });
+      expect(response.body).not.toContain('id="root"');
+      expect(response.headers['content-type']).toContain('application/json');
+    });
+
+    it('keeps the query string when stripping the prefix', async () => {
+      const response = await app.inject({ method: 'GET', url: '/api/health?x=1' });
+      expect(response.statusCode).toBe(200);
+      expect(response.json()).toMatchObject({ status: 'ok' });
+    });
+
+    it('404s an unknown /api route as JSON rather than as a page', async () => {
+      const response = await app.inject({ method: 'GET', url: '/api/nope' });
+      expect(response.statusCode).toBe(404);
+      expect(response.body).not.toContain('id="root"');
+      expect(response.json()).toMatchObject({ error: { code: 'not-found' } });
+    });
+
+    it('does not strip a client route that merely begins with the letters api', async () => {
+      const response = await app.inject({ method: 'GET', url: '/apiary' });
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toContain('id="root"');
+    });
+  });
+
   it('still answers /health', async () => {
     const response = await app.inject({ method: 'GET', url: '/health' });
     expect(response.statusCode).toBe(200);

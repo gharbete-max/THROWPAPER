@@ -12,6 +12,7 @@ import {
   type ValidationIssue,
 } from '@tp/shared/forms';
 import { messages } from '../lib/messages.js';
+import { useAnnounceLocale } from '../lib/demo.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -50,6 +51,9 @@ export default function PublicForm() {
   );
   const resolved = resolveLocale(locales, locale);
   const t = useMemo(() => createTranslator(locales, messages, resolved), [locales, resolved]);
+
+  // The banner lives above the router and would otherwise stay in the session's language.
+  useAnnounceLocale(resolved);
 
   // The public page is not inside the app shell, so it applies the brand itself.
   useEffect(() => {

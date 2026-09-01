@@ -51,6 +51,13 @@ The API serves the built app as well, so this single container is the whole prod
 convenience, not a constraint — putting the static bundle on a CDN and pointing it at the API works
 just as well, and is what you would do under real traffic.
 
+The app calls `/api/v1/...`. In development Vite proxies that here and strips the prefix; with
+`SERVE_APP` set the server strips it itself, so both halves speak the same URLs either way. If you
+do split the bundle onto a CDN, that rewrite is the thing to reproduce in front of the API.
+
+Nothing at runtime needs pnpm, corepack or a TypeScript loader: both entry points are compiled, and
+the workspace packages are bundled into them. The container runs `node`.
+
 ## Environment
 
 | Variable | Required | Notes |

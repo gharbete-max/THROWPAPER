@@ -76,8 +76,24 @@ async function loadDatabase() {
 }
 
 export async function buildServer(options: ServerOptions = {}): Promise<FastifyInstance> {
+  const appDir = options.serveAppFrom ?? process.env['SERVE_APP'];
+
   const app = Fastify({
     logger: { level: process.env.NODE_ENV === 'test' ? 'silent' : 'info' },
+    /**
+     * The app calls `/api/v1/...`. In development Vite proxies that to this server and strips the
+     * prefix; in the container there is no proxy, so the server strips it itself. Same rule, same
+     * shape, one place each.
+     *
+     * Without this the container serves an app that renders and then fails every request — which
+     * is worse than not starting, because it looks like it works.
+     */
+    rewriteUrl: appDir
+      ? (request) => {
+          const url = request.url ?? '/';
+          return url.startsWith('/api/') ? url.slice('/api'.length) : url;
+        }
+      : undefined,
   }).withTypeProvider<ZodTypeProvider>();
 
   app.setValidatorCompiler(validatorCompiler);
@@ -193,7 +209,6 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   /** The generated OpenAPI document — SPEC-forms.md §7 wants it derived from the Zod schemas. */
   app.get('/openapi.json', async () => app.swagger());
 
-  const appDir = options.serveAppFrom ?? process.env['SERVE_APP'];
   if (appDir) {
     await app.register(fastifyStatic, { root: appDir, wildcard: false });
 
@@ -205,8 +220,12 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
      * silently hand back an HTML page that a fetch will fail to parse.
      */
     app.setNotFoundHandler(async (request, reply) => {
-      const path = request.url.split('?')[0] ?? '';
+      // `rewriteUrl` has already stripped `/api`; the original is kept so that a mistyped
+      // `/api/...` still answers as an endpoint rather than as a page.
+      const raw = (request.raw as { originalUrl?: string }).originalUrl ?? request.url;
+      const path = raw.split('?')[0] ?? '';
       const isApi =
+        path.startsWith('/api/') ||
         path.startsWith('/v1/') ||
         path.startsWith('/public/') ||
         path.startsWith('/demo/') ||
