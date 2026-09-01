@@ -862,6 +862,30 @@ finds that until the export.
 style left behind when those components were replaced, and four message keys nothing referenced.
 
 
+## Touch targets belong to controls, not wrappers · done
+
+The public form was audited on a phone the way the builder had just been. It came out well — no
+horizontal overflow, every input at 16px so iOS does not zoom on focus — with one exception, and
+the exception was interesting.
+
+**The language switcher measured 67×20px.** It is the first thing a Swedish speaker reaches for on
+a page that opened in English, and it was less than half a tappable target.
+
+The cause was the rule, not the control. The 44px minimum was written as `.field input`,
+`.field select`, `.field textarea` — so it only protected controls somebody had remembered to wrap
+in a `.field`. The language switcher is a bare `select` in a header. A rule that only protects the
+controls you remembered is not a rule, so it is now written against `button`, `input`, `select`,
+`textarea` and `summary` themselves, with checkboxes and radios exempted (they size themselves;
+their labels carry the target) and bare selects given the same padding as wrapped ones.
+
+That immediately found a second one: the column manager on the submissions grid, a `<summary>` at
+21px. Nobody had reported either.
+
+Verified after: on the public form and in the builder at 375px, **zero controls below 44px and zero
+horizontal overflow**, and the desktop builder unchanged — the compact up/down buttons keep their
+22px there, where a mouse is doing the pointing.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

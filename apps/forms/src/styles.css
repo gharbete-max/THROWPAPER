@@ -398,14 +398,43 @@ legend {
   padding-bottom: max(calc(var(--tp-spacing-unit) * 6), env(safe-area-inset-bottom));
 }
 
-/* 44px is the smallest reliably tappable target; anything less gets mis-hit. */
+/* 44px is the smallest reliably tappable target; anything less gets mis-hit.
+ *
+ * Written against the elements themselves rather than `.field input` and friends. Scoping it to
+ * a wrapper meant any control outside one silently missed out: the language switcher on the
+ * public form — the first thing a Swedish speaker reaches for on an English page — was a bare
+ * `select` measuring 67x20 with no padding at all. A rule that only protects controls somebody
+ * remembered to wrap is not a rule.
+ */
+button,
+input,
+select,
+textarea,
+summary,
 .button,
-.field input,
-.field select,
-.field textarea,
 .grid__sort,
 .demo-banner__action {
   min-height: 44px;
+}
+
+/* A summary is a block by default, so min-height alone leaves the text at the top of a tall box. */
+summary {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Checkboxes and radios size themselves; forcing 44px on the box just stretches it. Their labels
+ * carry the target instead — see `.choice__option` and `.field--inline`. */
+input[type='checkbox'],
+input[type='radio'] {
+  min-height: 0;
+}
+
+/* A bare control gets the same padding as one inside a field, so 44px is real space rather than a
+ * stretched box with the text jammed against the edge. */
+select:not([multiple]) {
+  padding-inline: calc(var(--tp-spacing-unit) * 0.75);
 }
 
 .button {
@@ -823,11 +852,7 @@ textarea {
 }
 
 .builder__advanced summary {
-  cursor: pointer;
-  padding: calc(var(--tp-spacing-unit) * 0.5) 0;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
+  padding-block: calc(var(--tp-spacing-unit) * 0.5);
 }
 
 /* The preview renders the real public components, so it needs the page's own colours around it
