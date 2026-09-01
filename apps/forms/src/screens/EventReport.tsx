@@ -82,7 +82,7 @@ export function EventReport() {
   }
 
   async function revoke(attendee: Attendee) {
-    if (!window.confirm(t('events.archiveConfirm'))) return;
+    if (!(await confirm(t('events.archiveConfirm')))) return;
     await client.revokeSubmission(attendee.submissionId);
     load();
   }

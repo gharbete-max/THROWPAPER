@@ -23,7 +23,7 @@ export function Events() {
 
   async function archive(event: api.EventResponse) {
     // Rule 7: nothing deletes — or archives — without a confirmation step.
-    if (!window.confirm(t('events.archiveConfirm'))) return;
+    if (!(await confirm(t('events.archiveConfirm')))) return;
     await client.archiveEvent(event.id);
     load();
   }

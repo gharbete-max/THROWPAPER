@@ -876,3 +876,54 @@ textarea {
   padding-bottom: var(--tp-spacing-unit);
   margin-bottom: calc(var(--tp-spacing-unit) * 0.5);
 }
+
+/* A destructive action should not look like every other button. Used by the confirmation dialog
+ * and by the second step of removing a field. */
+.button--danger {
+  background: var(--tp-colour-danger);
+  border-color: var(--tp-colour-danger);
+  color: var(--tp-colour-background);
+}
+
+.builder__confirm {
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  flex: none;
+}
+
+/* The confirmation itself: a real dialog, in the product's own colours rather than the browser's. */
+.confirm {
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  max-inline-size: min(28rem, calc(100vw - 2rem));
+  font-family: var(--tp-type-body-font);
+}
+
+.confirm::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+/* Back and Save on the left, forward on the right. On a narrow screen the forward action goes
+ * full width and last, so the thumb lands on it. */
+.form-actions {
+  gap: var(--tp-spacing-unit);
+  flex-wrap: wrap;
+}
+
+.form-actions__forward {
+  margin-inline-start: auto;
+}
+
+@media (max-width: 600px) {
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions__forward {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+}

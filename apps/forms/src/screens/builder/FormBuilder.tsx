@@ -10,6 +10,7 @@ import type {
 import { ApiError, client } from '../../lib/api.js';
 import { useT } from '../../lib/i18n.js';
 import { useSession } from '../../lib/session.js';
+import { useConfirm } from '../../components/Confirm.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
 import { PALETTE_GROUPS, newField } from './field-defaults.js';
@@ -22,6 +23,7 @@ const AUTOSAVE_DELAY_MS = 800;
 
 export function FormBuilder() {
   const t = useT();
+  const confirm = useConfirm();
   const { locale, locales } = useSession();
   const { id } = useParams();
   const [form, setForm] = useState<FormResponse | null>(null);
@@ -91,6 +93,7 @@ export function FormBuilder() {
     const field = newField(
       type,
       definition.fields.map((existing) => existing.key),
+      locales.supported,
     );
 
     const at = definition.fields.findIndex((existing) => existing.id === selectedId);
@@ -144,7 +147,12 @@ export function FormBuilder() {
           .filter((entry) => !entry.complete)
           .map((entry) => entry.locale)
           .join(', ');
-        if (window.confirm(t('builder.overrideBody', { locales: missing }))) {
+        if (
+          await confirm(t('builder.overrideBody', { locales: missing }), {
+            confirmLabel: t('builder.publish'),
+            danger: false,
+          })
+        ) {
           const published = await client.publishForm(id, true);
           setForm(published);
           loadVersions();
@@ -158,7 +166,8 @@ export function FormBuilder() {
   }
 
   async function restore(version: number) {
-    if (!id || !window.confirm(t('builder.restoreConfirm', { n: version }))) return;
+    if (!id) return;
+    if (!(await confirm(t('builder.restoreConfirm', { n: version })))) return;
     const restored = await client.restoreFormVersion(id, version);
     setForm(restored);
     setDefinition(restored.draftDefinition);
