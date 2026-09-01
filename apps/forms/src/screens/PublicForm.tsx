@@ -99,6 +99,14 @@ export default function PublicForm() {
   }, [slug, params]);
 
   const pages = useMemo(() => (form ? pagesOf(form.definition) : []), [form]);
+
+  /**
+   * The builder lets an operator write their own submit label per locale. Falling back to the
+   * generic string only when they have not — before this, the setting was collected and ignored.
+   */
+  const submitLabel = form
+    ? pickText(locales, form.definition.settings.submitLabel, resolved).value || t('public.submit')
+    : t('public.submit');
   const currentPage = pages[page] ?? [];
 
   const setValue = useCallback((key: string, value: AnswerValue) => {
@@ -292,7 +300,7 @@ export default function PublicForm() {
               </button>
             ) : (
               <button type="submit" className="button" disabled={busy}>
-                {busy ? t('public.submitting') : t('public.submit')}
+                {busy ? t('public.submitting') : submitLabel}
               </button>
             )}
 

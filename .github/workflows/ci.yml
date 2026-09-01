@@ -40,3 +40,13 @@ jobs:
       - run: pnpm run verify
       - run: pnpm run contract:check
       - run: pnpm run format:check
+      # The only place the end-to-end suite can run: it needs the Postgres this job provides.
+      - run: pnpm run test:e2e
+        env:
+          CI: 'true'
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

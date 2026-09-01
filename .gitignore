@@ -13,3 +13,8 @@ proof-out/
 
 # generated documents (local DocumentStore stopgap)
 .documents/
+
+# playwright
+test-results/
+playwright-report/
+blob-report/
