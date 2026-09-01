@@ -49,6 +49,17 @@ export const FieldKey = z
   .max(64)
   .regex(/^[a-z][a-z0-9_]*$/, 'Use lower case, digits and underscores, starting with a letter');
 
+/**
+ * How much of a row a field takes.
+ *
+ * Named fractions rather than pixels, because a form has to survive a phone: "half" is half on a
+ * wide screen and the whole width on a narrow one. A pixel width would be a promise the layout
+ * cannot keep, and the author would be the last to find out.
+ */
+export const FIELD_WIDTHS = ['full', 'half', 'third'] as const;
+export const FieldWidth = z.enum(FIELD_WIDTHS);
+export type FieldWidth = z.infer<typeof FieldWidth>;
+
 const base = {
   id: z.string().min(1).max(64),
   key: FieldKey,
@@ -56,6 +67,7 @@ const base = {
   helpText: LocalisedText.optional(),
   placeholder: LocalisedText.optional(),
   required: z.boolean().default(false),
+  width: FieldWidth.default('full'),
 };
 
 export const SelectOption = z.object({
@@ -147,6 +159,7 @@ export const Field = z.discriminatedUnion('type', [
     id: base.id,
     key: base.key,
     type: z.literal('section_break'),
+    width: FieldWidth.default('full'),
     label: LocalisedText,
     helpText: LocalisedText.optional(),
   }),
@@ -155,6 +168,7 @@ export const Field = z.discriminatedUnion('type', [
     id: base.id,
     key: base.key,
     type: z.literal('rich_text'),
+    width: FieldWidth.default('full'),
     /** Plain text with paragraph breaks. Not HTML — that would be a stored-XSS surface. */
     content: LocalisedText,
   }),
@@ -170,6 +184,7 @@ export const Field = z.discriminatedUnion('type', [
     id: base.id,
     key: base.key,
     type: z.literal('image'),
+    width: FieldWidth.default('full'),
     src: AssetPath,
     alt: LocalisedText.default({}),
     /** Caps the rendered width in pixels. Unset means as wide as the form allows. */
@@ -190,6 +205,7 @@ export const Field = z.discriminatedUnion('type', [
     id: base.id,
     key: base.key,
     type: z.literal('link'),
+    width: FieldWidth.default('full'),
     label: LocalisedText.default({}),
     href: z
       .string()

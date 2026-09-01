@@ -68,6 +68,7 @@ export function newField(
 ): Field {
   const id = crypto.randomUUID();
   const key = uniqueKey(type, existingKeys);
+  const width = 'full' as const;
   const label = localisedDefault('field.defaultLabel', defaultLocale);
 
   switch (type) {
@@ -80,6 +81,7 @@ export function newField(
         type,
         label,
         required: false,
+        width,
         options: [newOption(1, defaultLocale)],
         appearance: 'dropdown',
       };
@@ -90,11 +92,12 @@ export function newField(
         type,
         label,
         required: false,
+        width,
         options: [newOption(1, defaultLocale)],
         appearance: 'checkboxes',
       };
     case 'yes_no':
-      return { id, key, type, label, required: false, appearance: 'dropdown' };
+      return { id, key, type, label, required: false, width, appearance: 'dropdown' };
     /**
      * An image field is created with no picture yet: `src` is only valid once something has been
      * uploaded, so the builder shows an upload control and the field is incomplete until then.
@@ -106,19 +109,31 @@ export function newField(
      * publish, or worse, point somewhere real.
      */
     case 'link':
-      return { id, key, type, label, href: '', appearance: 'button' } as unknown as Field;
+      return { id, key, type, label, width, href: '', appearance: 'button' } as unknown as Field;
     case 'image':
-      return { id, key, type, src: '', alt: {} } as unknown as Field;
+      return { id, key, type, width, src: '', alt: {} } as unknown as Field;
     case 'section_break':
-      return { id, key, type, label: localisedDefault('field.defaultSection', defaultLocale) };
+      return {
+        id,
+        key,
+        type,
+        width,
+        label: localisedDefault('field.defaultSection', defaultLocale),
+      };
     case 'page_break':
       return { id, key, type };
     case 'rich_text':
-      return { id, key, type, content: localisedDefault('field.defaultText', defaultLocale) };
+      return {
+        id,
+        key,
+        type,
+        width,
+        content: localisedDefault('field.defaultText', defaultLocale),
+      };
     case 'hidden':
       return { id, key, type };
     default:
-      return { id, key, type, label, required: false };
+      return { id, key, type, label, required: false, width };
   }
 }
 

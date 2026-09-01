@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import { pickText, type LocaleConfig } from '@tp/i18n';
-import type { AnswerValue, Field } from '@tp/shared/forms';
+import { parseRichTextBlock, type AnswerValue, type Field } from '@tp/shared/forms';
 
 /**
  * One field, as the person filling in the form sees it.
@@ -45,18 +46,28 @@ export function FieldInput({
   }
 
   if (field.type === 'rich_text') {
-    // Rendered as text, never as HTML — the definition is operator-authored but the page is public.
+    /**
+     * Rendered as elements the parser chose, never as HTML the author wrote.
+     *
+     * The content is a plain string carrying three markers; `parseRichTextBlock` turns it into
+     * spans holding three booleans, so the worst an author can produce is bold text. There is no
+     * sanitiser here because there is nothing to sanitise — `<script>` typed into a text block
+     * comes out as the literal characters, which is what somebody typing it asked for.
+     */
     return (
-      <p>
-        {text(field.content)
-          .split('\n')
-          .map((line, index) => (
-            <span key={index}>
-              {line}
-              <br />
-            </span>
-          ))}
-      </p>
+      <div className="rich-text">
+        {parseRichTextBlock(text(field.content)).map((spans, line) => (
+          <p key={line}>
+            {spans.map((span, at) => {
+              let node: ReactNode = span.text;
+              if (span.bold) node = <strong>{node}</strong>;
+              if (span.italic) node = <em>{node}</em>;
+              if (span.underline) node = <u>{node}</u>;
+              return <span key={at}>{node}</span>;
+            })}
+          </p>
+        ))}
+      </div>
     );
   }
 

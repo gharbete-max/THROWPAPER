@@ -23,6 +23,13 @@ type SaveState = 'saved' | 'saving' | 'unsaved';
 
 const AUTOSAVE_DELAY_MS = 800;
 
+const PREVIEW_WIDTH_KEY = 'tp.builder.previewWidth';
+
+/** Neither pane may be squeezed to the point of being useless. */
+function clampWidth(width: number): number {
+  return Math.min(720, Math.max(260, Math.round(width)));
+}
+
 export function FormBuilder() {
   const t = useT();
   const confirm = useConfirm();
@@ -35,6 +42,38 @@ export function FormBuilder() {
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /**
+   * Width of the preview pane, in pixels, remembered between visits.
+   *
+   * `localStorage` rather than the brand kit: this is how one person likes to work, not something
+   * about the organisation, and it should not follow them onto a colleague's screen.
+   */
+  const [previewWidth, setPreviewWidth] = useState(() => {
+    const stored = Number(localStorage.getItem(PREVIEW_WIDTH_KEY));
+    return Number.isFinite(stored) && stored > 0 ? clampWidth(stored) : 368;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(PREVIEW_WIDTH_KEY, String(previewWidth));
+  }, [previewWidth]);
+
+  function startResize(event: React.PointerEvent<HTMLDivElement>) {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = previewWidth;
+
+    const move = (moved: PointerEvent) => {
+      // Dragging left grows the preview, which is the direction the divider moves.
+      setPreviewWidth(clampWidth(startWidth + (startX - moved.clientX)));
+    };
+    const stop = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', stop);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', stop);
+  }
 
   const loadVersions = useCallback(() => {
     if (!id) return;
@@ -277,7 +316,10 @@ export function FormBuilder() {
         </p>
       )}
 
-      <div className="builder">
+      <div
+        className="builder"
+        style={{ gridTemplateColumns: `minmax(0, 1fr) 6px minmax(0, ${previewWidth}px)` }}
+      >
         <div className="stack">
           <div className="card stack">
             <strong className="small">{t('builder.palette')}</strong>
@@ -321,6 +363,27 @@ export function FormBuilder() {
           because the question a builder answers all day is "what does this look like?" — and an
           answer you have to click for is one you stop asking for.
         */}
+        {/*
+          The divider is a real control, not decoration: a form with long labels wants a wide
+          preview, and a form being reordered wants a wide list. Both are the same person ten
+          minutes apart, so the split is theirs to set rather than ours to guess.
+
+          It is a slider for the keyboard as well as a drag handle for the mouse — a resize nobody
+          can do without a pointer is a resize half the people cannot do.
+        */}
+        <div
+          className="builder__divider"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label={t('builder.resize')}
+          tabIndex={0}
+          onPointerDown={startResize}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowLeft') setPreviewWidth((width) => clampWidth(width + 32));
+            if (event.key === 'ArrowRight') setPreviewWidth((width) => clampWidth(width - 32));
+          }}
+        />
+
         <aside className="card stack builder__panel">
           <strong className="small row">
             <Icon name="preview" />

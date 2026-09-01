@@ -977,6 +977,41 @@ larger half of the job.
 labels. Doing it per span means a rich-text representation and an editor for it.
 
 
+## Per-field width, rich text, and a resizable builder · done
+
+The two things the last round left out, plus the layout work that makes them usable.
+
+**Per-field width.** A field can take a full row, a half or a third, so first name and surname sit
+side by side instead of stacked down a column. Named fractions rather than pixels: a pixel width is
+a promise the layout cannot keep on a phone, and the author would be the last to find out. Every
+width collapses to full below 600px — two columns on a phone is two cramped columns, not a layout.
+
+The demo form now puts name and email on one row, which is what a real registration looks like.
+
+**Bold, italic and underline inside a text block**, as `*bold*`, `/italic/` and `_underline_`, with a
+toolbar that wraps whatever is selected.
+
+The obvious implementation is to store HTML and render it with `dangerouslySetInnerHTML`. That
+hands every form author script execution on a public page, and sanitising HTML properly is a
+library plus a permanent obligation to keep up with it. So the content stays a plain string and a
+parser turns it into spans carrying three booleans — **the worst an author can produce is bold
+text**, and `<script>` typed into a box comes out as the literal characters. There is no sanitiser
+because there is nothing to sanitise, and a test says so.
+
+An unpaired marker stays literal: `2 * 3 = 6` is arithmetic far more often than somebody forgetting
+to close a bold, and swallowing the rest of the line into a style would be the wrong guess.
+
+**A resizable builder.** The divider between the field list and the preview is draggable, and
+remembered per browser in `localStorage` — how one person likes to work, not something about the
+organisation, so it should not follow them onto a colleague's screen. It is a `separator` with
+arrow-key support as well as a drag handle: a resize nobody can do without a pointer is a resize
+half the people cannot do. Neither pane can be squeezed below a usable width.
+
+A form with long labels wants a wide preview; a form being reordered wants a wide list. Both are
+the same person ten minutes apart, which is why the split is theirs to set rather than ours to
+guess.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

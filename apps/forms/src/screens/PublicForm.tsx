@@ -4,6 +4,7 @@ import { createTranslator, pickText, resolveLocale, type LocaleConfig } from '@t
 import { defaultTokens, toCssBlock } from '@tp/tokens';
 import {
   pagesOf,
+  widthOf,
   validateSubmission,
   type AnswerValue,
   type PublicFormResponse,
@@ -257,20 +258,28 @@ export default function PublicForm() {
             <p className="small muted">{t('public.page', { n: page + 1, total: pages.length })}</p>
           )}
 
-          {currentPage.map((field) => (
-            <FieldInput
-              key={field.id}
-              field={field}
-              locale={resolved}
-              locales={locales}
-              value={values[field.key]}
-              error={issueFor(field.key)}
-              chooseLabel={t('public.choose')}
-              yesLabel={t('public.yes')}
-              noLabel={t('public.no')}
-              onChange={setValue}
-            />
-          ))}
+          {/*
+            A grid rather than a stack, so a field can say it wants half a row and get it. Every
+            width collapses to full below 600px — a two-column form on a phone is two cramped
+            columns, not a clever layout.
+          */}
+          <div className="form-grid">
+            {currentPage.map((field) => (
+              <div className={`form-grid__cell form-grid__cell--${widthOf(field)}`} key={field.id}>
+                <FieldInput
+                  field={field}
+                  locale={resolved}
+                  locales={locales}
+                  value={values[field.key]}
+                  error={issueFor(field.key)}
+                  chooseLabel={t('public.choose')}
+                  yesLabel={t('public.yes')}
+                  noLabel={t('public.no')}
+                  onChange={setValue}
+                />
+              </div>
+            ))}
+          </div>
 
           {rejected && <p className="status-down">{t(`public.rejected.${rejected}`)}</p>}
 

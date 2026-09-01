@@ -1,4 +1,5 @@
 import {
+  FIELD_WIDTHS,
   MULTI_SELECT_APPEARANCES,
   SINGLE_SELECT_APPEARANCES,
   YES_NO_APPEARANCES,
@@ -79,6 +80,23 @@ export function FieldProperties({ field, onChange }: Props) {
           multiline
           onChange={(target, text) => setText('content', target, text)}
         />
+      )}
+
+      {'width' in field && (
+        <label className="field">
+          <span>{t('field.width')}</span>
+          <select
+            value={field.width}
+            onChange={(event) => patch({ width: event.target.value } as Partial<Field>)}
+          >
+            {FIELD_WIDTHS.map((option) => (
+              <option key={option} value={option}>
+                {t(`field.width.${option}`)}
+              </option>
+            ))}
+          </select>
+          <span className="small muted">{t('field.widthHint')}</span>
+        </label>
       )}
 
       {'required' in field && (
