@@ -9,6 +9,7 @@ import type {
   FormRecord,
   FormUpdate,
   FormVersionRecord,
+  JobRecord,
   LoginTokenRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
@@ -35,6 +36,7 @@ export interface MemoryState {
   forms: FormRecord[];
   formVersions: FormVersionRecord[];
   submissions: SubmissionRecord[];
+  jobs: JobRecord[];
   audit: AuditEntryRecord[];
 }
 
@@ -66,6 +68,7 @@ export function createMemoryRepositories(
     forms: seed.forms ?? [],
     formVersions: seed.formVersions ?? [],
     submissions: seed.submissions ?? [],
+    jobs: seed.jobs ?? [],
     audit: seed.audit ?? [],
   };
 
@@ -334,6 +337,83 @@ export function createMemoryRepositories(
         else state.submissions.push(record);
 
         return { ok: true as const, submission: copySubmission(record) };
+      },
+    },
+
+    jobs: {
+      enqueue: async (input) => {
+        const existing = state.jobs.find(
+          (j) =>
+            j.organisationId === input.organisationId && j.idempotencyKey === input.idempotencyKey,
+        );
+        if (existing) return { ...existing };
+
+        const now = new Date();
+        const record: JobRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          kind: input.kind,
+          idempotencyKey: input.idempotencyKey,
+          status: 'queued',
+          payload: input.payload,
+          result: null,
+          error: null,
+          attempts: 0,
+          maxAttempts: input.maxAttempts ?? 3,
+          progressDone: 0,
+          progressTotal: input.progressTotal,
+          runAfter: now,
+          startedAt: null,
+          finishedAt: null,
+          createdAt: now,
+        };
+        state.jobs.push(record);
+        return { ...record };
+      },
+
+      findById: async (organisationId, id) => {
+        const job = state.jobs.find((j) => j.organisationId === organisationId && j.id === id);
+        return job ? { ...job } : null;
+      },
+
+      // Find and mark with no `await` between them, so two workers cannot claim the same job.
+      claim: async (now) => {
+        const index = state.jobs.findIndex(
+          (j) => j.status === 'queued' && j.runAfter.getTime() <= now.getTime(),
+        );
+        const job = state.jobs[index];
+        if (!job) return null;
+        const claimed: JobRecord = {
+          ...job,
+          status: 'running',
+          attempts: job.attempts + 1,
+          startedAt: now,
+        };
+        state.jobs[index] = claimed;
+        return { ...claimed };
+      },
+
+      progress: async (id, done) => {
+        const index = state.jobs.findIndex((j) => j.id === id);
+        const job = state.jobs[index];
+        if (job) state.jobs[index] = { ...job, progressDone: done };
+      },
+
+      succeed: async (id, result) => {
+        const index = state.jobs.findIndex((j) => j.id === id);
+        const job = state.jobs[index];
+        if (job) {
+          state.jobs[index] = { ...job, status: 'done', result, finishedAt: new Date() };
+        }
+      },
+
+      fail: async (id, error, retryAt) => {
+        const index = state.jobs.findIndex((j) => j.id === id);
+        const job = state.jobs[index];
+        if (!job) return;
+        state.jobs[index] = retryAt
+          ? { ...job, status: 'queued', error, runAfter: retryAt }
+          : { ...job, status: 'failed', error, finishedAt: new Date() };
       },
     },
 

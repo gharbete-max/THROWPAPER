@@ -2,7 +2,10 @@ import type { FastifyInstance } from 'fastify';
 import { buildServer } from './server.js';
 import { createMemoryMailTransport } from './auth/mail.js';
 import { createMemoryRepositories, type MemoryState } from './db/repositories/index.js';
-import type { OrganisationRecord, UserRecord } from './db/repositories/index.js';
+import type { OrganisationRecord, Repositories, UserRecord } from './db/repositories/index.js';
+import { createMemoryDocumentStore } from './documents/store.js';
+import type { DocumentStore } from './documents/store.js';
+import type { PdfRenderer } from './documents/render.js';
 
 /**
  * Builds a server over in-memory repositories, so the rules that matter can be tested without a
@@ -36,31 +39,65 @@ export const operatorUser: UserRecord = {
   disabledAt: null,
 };
 
+/**
+ * A renderer that does not launch Chromium.
+ *
+ * Route and job tests care about orchestration — which documents were produced, what the job
+ * recorded, whether a failure was survived. The real renderer is exercised by admission.test.ts,
+ * which is the slow one and only needs to run once.
+ */
+export function createFakePdfRenderer(
+  options: { failOn?: (html: string) => boolean } = {},
+): PdfRenderer & { rendered: string[] } {
+  const rendered: string[] = [];
+  return {
+    rendered,
+    async render(html) {
+      if (options.failOn?.(html)) throw new Error('render failed');
+      rendered.push(html);
+      return Buffer.from(`%PDF-1.4 fake ${rendered.length}`);
+    },
+    async close() {},
+  };
+}
+
 export interface TestHarness {
   app: FastifyInstance;
+  repos: Repositories;
   state: MemoryState;
   mail: ReturnType<typeof createMemoryMailTransport>;
+  store: DocumentStore & { files: Map<string, Buffer> };
+  renderer: PdfRenderer & { rendered: string[] };
   close: () => Promise<void>;
 }
 
-export async function createTestHarness(seed: Partial<MemoryState> = {}): Promise<TestHarness> {
+export async function createTestHarness(
+  seed: Partial<MemoryState> = {},
+  options: { renderer?: PdfRenderer & { rendered: string[] } } = {},
+): Promise<TestHarness> {
   const repos = createMemoryRepositories({
     organisations: [testOrganisation],
     users: [adminUser, operatorUser],
     ...seed,
   });
   const mail = createMemoryMailTransport();
+  const store = createMemoryDocumentStore(TEST_JWT_SECRET);
+  const renderer = options.renderer ?? createFakePdfRenderer();
 
   const app = await buildServer({
     repos,
     mail,
+    store,
+    renderer,
     jwtSecret: TEST_JWT_SECRET,
     appUrl: 'http://localhost:5173',
     probeDatabase: false,
+    // Tests drain the queue by hand, so a job runs exactly when the test says it does.
+    startWorker: false,
   });
   await app.ready();
 
-  return { app, state: repos.state, mail, close: () => app.close() };
+  return { app, repos, state: repos.state, mail, store, renderer, close: () => app.close() };
 }
 
 /** Runs the full magic-link round trip and returns the resulting token pair. */

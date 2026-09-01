@@ -5,6 +5,7 @@ import {
   events,
   formVersions,
   forms,
+  jobs,
   loginTokens,
   organisations,
   submissions,
@@ -19,6 +20,7 @@ import type {
   FormRecord,
   FormUpdate,
   FormVersionRecord,
+  JobRecord,
   Repositories,
   SubmissionCompleteInput,
   SubmissionDraftInput,
@@ -360,6 +362,96 @@ export function createDrizzleRepositories(db: Db): Repositories {
           }
           throw error;
         }
+      },
+    },
+
+    jobs: {
+      enqueue: async (input) => {
+        // The unique index on (organisation_id, idempotency_key) is what makes this idempotent;
+        // a conflicting insert returns the row that is already there.
+        const [row] = await db
+          .insert(jobs)
+          .values({
+            organisationId: input.organisationId,
+            kind: input.kind,
+            idempotencyKey: input.idempotencyKey,
+            payload: input.payload,
+            progressTotal: input.progressTotal,
+            maxAttempts: input.maxAttempts ?? 3,
+          })
+          .onConflictDoNothing({ target: [jobs.organisationId, jobs.idempotencyKey] })
+          .returning();
+        if (row) return row as JobRecord;
+
+        const existing = first(
+          await db
+            .select()
+            .from(jobs)
+            .where(
+              and(
+                eq(jobs.organisationId, input.organisationId),
+                eq(jobs.idempotencyKey, input.idempotencyKey),
+              ),
+            )
+            .limit(1),
+        ) as JobRecord | null;
+        if (!existing) throw new Error('job enqueue neither inserted nor found a row');
+        return existing;
+      },
+
+      findById: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(jobs)
+            .where(and(eq(jobs.organisationId, organisationId), eq(jobs.id, id)))
+            .limit(1),
+        ) as JobRecord | null,
+
+      /**
+       * One statement, so two workers cannot claim the same job: the subquery picks a candidate
+       * with `for update skip locked`, and the update only lands if it is still queued.
+       */
+      claim: async (now) => {
+        const [row] = await db
+          .update(jobs)
+          .set({ status: 'running', startedAt: now, attempts: sql`${jobs.attempts} + 1` })
+          .where(
+            and(
+              eq(jobs.status, 'queued'),
+              sql`${jobs.id} = (
+                select j.id from jobs j
+                where j.status = 'queued' and j.run_after <= ${now}
+                order by j.run_after
+                for update skip locked
+                limit 1
+              )`,
+            ),
+          )
+          .returning();
+        return (row as JobRecord | undefined) ?? null;
+      },
+
+      progress: async (id, done) => {
+        await db.update(jobs).set({ progressDone: done }).where(eq(jobs.id, id));
+      },
+
+      succeed: async (id, result) => {
+        await db
+          .update(jobs)
+          .set({ status: 'done', result, finishedAt: new Date() })
+          .where(eq(jobs.id, id));
+      },
+
+      fail: async (id, error, retryAt) => {
+        await db
+          .update(jobs)
+          .set(
+            retryAt
+              ? { status: 'queued', error, runAfter: retryAt }
+              : { status: 'failed', error, finishedAt: new Date() },
+          )
+          .where(eq(jobs.id, id));
       },
     },
 

@@ -16,6 +16,11 @@ import { registerAuthRoutes } from './routes/auth.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerFormRoutes } from './routes/forms.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
+import { registerDocumentRoutes } from './routes/documents.js';
+import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
+import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
+import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
+import { createWorker } from './jobs/worker.js';
 
 export interface ServerOptions {
   /** Injected by the tests; defaults to the Drizzle implementation over Postgres. */
@@ -25,6 +30,14 @@ export interface ServerOptions {
   appUrl?: string;
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
   probeDatabase?: boolean;
+  /** Injected by tests. Defaults to Playwright Chromium and a local directory. */
+  renderer?: PdfRenderer;
+  store?: DocumentStore;
+  /**
+   * The background worker polls on an interval in production. Tests drain it by hand instead, so
+   * a job runs exactly when the test says it does.
+   */
+  startWorker?: boolean;
 }
 
 /**
@@ -71,10 +84,35 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   const guard = { repos, jwtSecret };
   const auth = createAuthService({ repos, mail, config: { jwtSecret, appUrl } });
 
+  const renderer = options.renderer ?? createPdfRenderer();
+  const store =
+    options.store ??
+    createLocalDocumentStore({
+      directory: process.env['DOCUMENT_DIR'] ?? '.documents',
+      signingSecret: jwtSecret,
+    });
+
+  const admission = { repos, renderer, store, jwtSecret };
+  const worker = createWorker({
+    repos,
+    handlers: { [ADMISSION_BULK_JOB]: createAdmissionBulkHandler(admission) },
+    onError: (error, job) => app.log.error({ error, jobId: job.id }, 'job failed'),
+  });
+  app.decorate('worker', worker);
+
+  if (options.startWorker ?? options.repos === undefined) worker.start();
+
+  // Chromium and the poll timer both outlive a request, so they are shut down with the server.
+  app.addHook('onClose', async () => {
+    worker.stop();
+    await renderer.close();
+  });
+
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
   registerPublicFormRoutes(app, { repos, mail, appUrl });
+  registerDocumentRoutes(app, { repos, guard, admission, store });
 
   app.get('/health', async (_request, reply) => {
     let state: 'up' | 'down' | 'skipped' = 'skipped';
