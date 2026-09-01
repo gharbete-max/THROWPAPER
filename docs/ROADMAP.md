@@ -37,6 +37,11 @@ reminders pushed as an audience.
 **A12.** Segment — Measurements & quality: parameters and ranges, sample registration, instrument
 import, flagging, QC control charts, certificates and statistics reports.
 **A13.** Segment — Surveys & feedback.
+**A13b.** Collaboration on a draft (`SPEC-forms.md` §3b): per-form view/comment/edit access,
+comment threads anchored to field ids, presence, tokenised review links, and soft locking so two
+editors cannot silently overwrite each other. Needs two things nothing else in Track A needs — a
+per-resource permission table and a live transport to the browser — so it is worth sequencing
+deliberately rather than squeezing in beside a segment.
 **A14.** Hardening: rate limits, bot protection, permissions matrix, GDPR export and erasure,
 backup and restore rehearsal, load test of the grid and bulk PDF generation.
 
