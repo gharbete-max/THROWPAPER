@@ -1,5 +1,5 @@
 import type { Repositories, UserRecord, OrganisationRecord } from '../db/repositories/index.js';
-import type { MailTransport } from './mail.js';
+import type { MailProvider } from './mail.js';
 import {
   ACCESS_TOKEN_TTL_SECONDS,
   MAGIC_LINK_TTL_SECONDS,
@@ -19,7 +19,7 @@ export interface AuthConfig {
 
 export interface AuthDeps {
   repos: Repositories;
-  mail: MailTransport;
+  mail: MailProvider;
   config: AuthConfig;
   now?: () => Date;
 }

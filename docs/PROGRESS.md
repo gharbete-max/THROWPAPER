@@ -344,8 +344,110 @@ implementation is the obvious next one and nothing above that interface changes 
 
 **Next**
 
-4b — SES (`eu-north-1`), sending-domain verification with live SPF/DKIM/DMARC checks, and the
-confirmation and notification emails.
+4b is done — see below.
+
+## Phase 4b — SES, domain verification, real email · done
+
+**Phase 4 is complete.**
+
+**Shipped**
+
+- `mail/provider.ts` — `MailTransport` widened into **`MailProvider`**: `from`, `html`,
+  `attachments`, a returned `messageId`. One mail seam, not two; `auth/mail.ts` re-exports it so
+  the magic link and resume link callers are unchanged.
+- `mail/ses.ts` — Amazon SES `eu-north-1` (Stockholm). SES has no attachment field in the simple
+  API, so anything with a PDF is assembled as raw MIME: `multipart/mixed` around a
+  `multipart/alternative`, RFC 2047 encoded subject, base64 wrapped at 76 characters.
+- `mail/domain-verification.ts` — live SPF, DKIM and DMARC checks over `node:dns/promises`, each
+  returning what was found and **what to paste into DNS**.
+- `mail/send-job.ts` — sending runs as a **job, never from a request handler**
+  (`SPEC-mailer.md` §8), keyed so a retry cannot double-send.
+- `email/templates.tsx` — confirmation and operator notification on **`toEmailStyles()`**, phase
+  1's email compiler used for real for the first time. The React Email components moved out of
+  `scripts/proof/` as 3a said they would.
+- `sending_domains` and `messages` tables (`0005_sending_domains.sql`). The message log is
+  `SPEC-mailer.md` §5's "per-recipient log of exactly what was rendered and sent", and what B11's
+  bounce webhooks will attach to.
+
+**The rule with no override**
+
+`SPEC-mailer.md` §6: "Refuse to send from an unverified domain — no override." `assertSendable`
+takes no `force` parameter, and there is a test asserting its arity so nobody adds one absent-
+mindedly. All three records must pass — a domain with SPF alone is exactly the setup that lands in
+spam. Console and memory providers are exempt, because there is no domain reputation to burn in
+development.
+
+**Two corrections to things that had become false**
+
+- `messages.send` was deferred to "phase 4". Phase 4 built the sending path **inside Formwork**,
+  so it is now B6. 
+- `delivery.webhook` was deferred to "phase 4" too; it waits for Sendwork's bounce handling in
+  B11.
+
+Left alone, `pnpm contract:check` would have cheerfully printed both lies on every run.
+
+**Deferred**
+
+Bounce and complaint handling beyond recording the message (B11), suppression lists, campaigns,
+warm-up, and the `POST /v1/messages` contract endpoint.
+
+**What is still unproven**
+
+Every email test uses the memory provider. **No message has been sent through SES**, because that
+needs AWS credentials and a verified domain. START-HERE's phase 4 checkpoint — does mail reliably
+land in real inboxes — is therefore **not met yet**, and cannot be until:
+
+1. SES **production access** is granted (a request to AWS; a new account only delivers to verified
+   addresses until then), and
+2. a real sending domain has SPF, DKIM and DMARC published.
+
+The code refuses to send until step 2 is true, which is the correct behaviour and also means the
+checkpoint fails closed rather than silently.
+
+## Phase 5 — Check-in · done
+
+**v0.1 is code-complete.** The loop closes: a form is filled in → a record exists → a branded PDF
+comes out → an email is queued → somebody is checked in at the door.
+
+**Shipped**
+
+- `check_ins` table (`0006_check_ins.sql`) with a **unique index on `submission_id`**. One row per
+  attendee, enforced by the database rather than by a handler remembering to look first.
+- `submissions.revoked_at` — START-HERE says the door must reject "duplicates **and revoked
+  entries**". Revoking is not deleting: the record and its audit trail stay, and the person is
+  refused *with a reason*.
+- `POST /v1/events/:id/check-ins` — accepts a scanned token or a typed reference and always
+  answers 200 with a decision: `admitted`, `already`, `revoked`, `wrong-event`, `not-found`,
+  `bad-signature`.
+- `GET /v1/events/:id/attendance` and `POST /v1/submissions/:id/revoke`.
+- Check-in screen with `@zxing/browser` (code-split), a always-present reference field, and a
+  deliberately enormous verdict — readable at arm's length in bad light with a queue waiting.
+- Attendance report: counts, attendee list, no-show filter, CSV through 3c's writer so the BOM and
+  the formula guard come along unchanged.
+
+**Idempotent, and tested for it**
+
+`already` is a normal 200 carrying the original timestamp, not an error. A scanner that retries
+after a dropped response must not turn one attendee into a failure in front of a queue — that is
+what START-HERE means by "idempotent, because that is what makes an offline mobile scanner cheap".
+
+The concurrency test was checked for vacuity the same way 3b's was: inserting an `await` between
+the lookup and the insert makes it fail with `['admitted', 'admitted']` — one card admitting twice
+— and removing it makes it pass.
+
+**Decisions worth knowing**
+
+- Token verification runs **before any query**, so a forged card costs nothing to refuse.
+- A correctly-signed card for a different event returns `wrong-event`, not `bad-signature` — the
+  difference matters to whoever is standing there.
+- Revoking after arrival does not erase the arrival. That happened.
+- A revoked registration is **not** a no-show: nobody was expecting them.
+- Operators can work the door; only admins can revoke.
+
+**Deferred**
+
+Offline queueing in the browser (the endpoint is idempotent, which is what makes that cheap
+later), session selection, waiting lists, badge printing, and the report builder (A9).
 
 ## Next
 

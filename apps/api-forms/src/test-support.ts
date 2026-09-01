@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { buildServer } from './server.js';
-import { createMemoryMailTransport } from './auth/mail.js';
+import { createMemoryMailProvider } from './auth/mail.js';
 import { createMemoryRepositories, type MemoryState } from './db/repositories/index.js';
 import type { OrganisationRecord, Repositories, UserRecord } from './db/repositories/index.js';
 import { createMemoryDocumentStore } from './documents/store.js';
@@ -65,7 +65,7 @@ export interface TestHarness {
   app: FastifyInstance;
   repos: Repositories;
   state: MemoryState;
-  mail: ReturnType<typeof createMemoryMailTransport>;
+  mail: ReturnType<typeof createMemoryMailProvider>;
   store: DocumentStore & { files: Map<string, Buffer> };
   renderer: PdfRenderer & { rendered: string[] };
   close: () => Promise<void>;
@@ -80,7 +80,7 @@ export async function createTestHarness(
     users: [adminUser, operatorUser],
     ...seed,
   });
-  const mail = createMemoryMailTransport();
+  const mail = createMemoryMailProvider();
   const store = createMemoryDocumentStore(TEST_JWT_SECRET);
   const renderer = options.renderer ?? createFakePdfRenderer();
 

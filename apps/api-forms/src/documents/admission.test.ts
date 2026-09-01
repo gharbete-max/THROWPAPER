@@ -39,6 +39,7 @@ function submission(overrides: Partial<SubmissionRecord> = {}): SubmissionRecord
     resumeTokenHash: null,
     resumeExpiresAt: null,
     submittedAt: new Date(),
+    revokedAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,

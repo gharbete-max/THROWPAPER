@@ -266,7 +266,8 @@ describe('bulk generation', () => {
     });
 
     expect(second.json().id).toBe(first.json().id);
-    expect(harness.state.jobs).toHaveLength(1);
+    // Only the bulk job: 4b also enqueues confirmation mail per registration.
+    expect(harness.state.jobs.filter((job) => job.kind === 'admission.bulk')).toHaveLength(1);
   });
 
   it('survives one document failing and still delivers the rest', async () => {

@@ -2,17 +2,21 @@ import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import {
   auditLog,
+  checkIns,
   events,
   formVersions,
   forms,
   jobs,
   loginTokens,
+  messages,
   organisations,
+  sendingDomains,
   submissions,
   refreshTokens,
   users,
 } from '../schema.js';
 import type {
+  CheckInRecord,
   EventCreate,
   EventRecord,
   EventUpdate,
@@ -21,7 +25,9 @@ import type {
   FormUpdate,
   FormVersionRecord,
   JobRecord,
+  MessageRecord,
   Repositories,
+  SendingDomainRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
@@ -242,6 +248,29 @@ export function createDrizzleRepositories(db: Db): Repositories {
             .limit(1),
         ) as SubmissionRecord | null,
 
+      findByReference: async (organisationId, reference) =>
+        first(
+          await db
+            .select()
+            .from(submissions)
+            .where(
+              and(
+                eq(submissions.organisationId, organisationId),
+                sql`upper(${submissions.reference}) = upper(${reference})`,
+              ),
+            )
+            .limit(1),
+        ) as SubmissionRecord | null,
+
+      revoke: async (organisationId, id, at) => {
+        const [row] = await db
+          .update(submissions)
+          .set({ revokedAt: at, updatedAt: new Date() })
+          .where(and(eq(submissions.organisationId, organisationId), eq(submissions.id, id)))
+          .returning();
+        return (row as SubmissionRecord | undefined) ?? null;
+      },
+
       countComplete: async (formId) => {
         const [row] = await db
           .select({ count: sql<number>`count(*)::int` })
@@ -365,6 +394,50 @@ export function createDrizzleRepositories(db: Db): Repositories {
       },
     },
 
+    checkIns: {
+      listForEvent: async (organisationId, eventId) =>
+        (await db
+          .select()
+          .from(checkIns)
+          .where(and(eq(checkIns.organisationId, organisationId), eq(checkIns.eventId, eventId)))
+          .orderBy(desc(checkIns.checkedInAt))) as CheckInRecord[],
+
+      findBySubmission: async (submissionId) =>
+        first(
+          await db.select().from(checkIns).where(eq(checkIns.submissionId, submissionId)).limit(1),
+        ) as CheckInRecord | null,
+
+      /**
+       * The unique index on submission_id is the guarantee, not a prior read: `do nothing` means
+       * a concurrent scan loses the insert race harmlessly and we return the row that won.
+       */
+      admit: async (input) => {
+        const [row] = await db
+          .insert(checkIns)
+          .values({
+            organisationId: input.organisationId,
+            submissionId: input.submissionId,
+            eventId: input.eventId,
+            checkedInByUserId: input.checkedInByUserId,
+            method: input.method,
+          })
+          .onConflictDoNothing({ target: checkIns.submissionId })
+          .returning();
+
+        if (row) return { created: true, checkIn: row as CheckInRecord };
+
+        const existing = first(
+          await db
+            .select()
+            .from(checkIns)
+            .where(eq(checkIns.submissionId, input.submissionId))
+            .limit(1),
+        ) as CheckInRecord | null;
+        if (!existing) throw new Error('check-in neither inserted nor found');
+        return { created: false, checkIn: existing };
+      },
+    },
+
     jobs: {
       enqueue: async (input) => {
         // The unique index on (organisation_id, idempotency_key) is what makes this idempotent;
@@ -452,6 +525,76 @@ export function createDrizzleRepositories(db: Db): Repositories {
               : { status: 'failed', error, finishedAt: new Date() },
           )
           .where(eq(jobs.id, id));
+      },
+    },
+
+    sendingDomains: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(sendingDomains)
+          .where(eq(sendingDomains.organisationId, organisationId))) as SendingDomainRecord[],
+      findById: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(sendingDomains)
+            .where(
+              and(eq(sendingDomains.organisationId, organisationId), eq(sendingDomains.id, id)),
+            )
+            .limit(1),
+        ) as SendingDomainRecord | null,
+      findByDomain: async (organisationId, domain) =>
+        first(
+          await db
+            .select()
+            .from(sendingDomains)
+            .where(
+              and(
+                eq(sendingDomains.organisationId, organisationId),
+                eq(sendingDomains.domain, domain.toLowerCase()),
+              ),
+            )
+            .limit(1),
+        ) as SendingDomainRecord | null,
+      create: async (input) => {
+        const [row] = await db
+          .insert(sendingDomains)
+          .values({
+            organisationId: input.organisationId,
+            domain: input.domain.toLowerCase(),
+            fromAddress: input.fromAddress.toLowerCase(),
+            dkimSelectors: input.dkimSelectors,
+          })
+          .returning();
+        if (!row) throw new Error('sending domain insert returned no row');
+        return row as SendingDomainRecord;
+      },
+      saveVerification: async (id, input) => {
+        const [row] = await db
+          .update(sendingDomains)
+          .set({
+            verified: input.verified,
+            checks: input.checks,
+            lastCheckedAt: input.lastCheckedAt,
+          })
+          .where(eq(sendingDomains.id, id))
+          .returning();
+        return (row as SendingDomainRecord | undefined) ?? null;
+      },
+    },
+
+    messages: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(messages)
+          .where(eq(messages.organisationId, organisationId))
+          .orderBy(desc(messages.createdAt))) as MessageRecord[],
+      record: async (input) => {
+        const [row] = await db.insert(messages).values(input).returning();
+        if (!row) throw new Error('message insert returned no row');
+        return row as MessageRecord;
       },
     },
 

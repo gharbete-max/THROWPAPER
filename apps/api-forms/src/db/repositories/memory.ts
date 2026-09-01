@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type {
   AuditEntryInput,
+  CheckInRecord,
   AuditEntryRecord,
   EventCreate,
   EventRecord,
@@ -11,6 +12,8 @@ import type {
   FormVersionRecord,
   JobRecord,
   LoginTokenRecord,
+  MessageRecord,
+  SendingDomainRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
@@ -36,7 +39,10 @@ export interface MemoryState {
   forms: FormRecord[];
   formVersions: FormVersionRecord[];
   submissions: SubmissionRecord[];
+  checkIns: CheckInRecord[];
   jobs: JobRecord[];
+  sendingDomains: SendingDomainRecord[];
+  messages: MessageRecord[];
   audit: AuditEntryRecord[];
 }
 
@@ -68,7 +74,10 @@ export function createMemoryRepositories(
     forms: seed.forms ?? [],
     formVersions: seed.formVersions ?? [],
     submissions: seed.submissions ?? [],
+    checkIns: seed.checkIns ?? [],
     jobs: seed.jobs ?? [],
+    sendingDomains: seed.sendingDomains ?? [],
+    messages: seed.messages ?? [],
     audit: seed.audit ?? [],
   };
 
@@ -246,6 +255,26 @@ export function createMemoryRepositories(
       countComplete: async (formId) =>
         state.submissions.filter((s) => s.formId === formId && s.status === 'complete').length,
 
+      findByReference: async (organisationId, reference) => {
+        const found = state.submissions.find(
+          (s) =>
+            s.organisationId === organisationId &&
+            s.reference.toUpperCase() === reference.toUpperCase(),
+        );
+        return found ? copySubmission(found) : null;
+      },
+
+      revoke: async (organisationId, id, at) => {
+        const index = state.submissions.findIndex(
+          (s) => s.organisationId === organisationId && s.id === id,
+        );
+        const existing = state.submissions[index];
+        if (!existing) return null;
+        const updated: SubmissionRecord = { ...existing, revokedAt: at, updatedAt: new Date() };
+        state.submissions[index] = updated;
+        return copySubmission(updated);
+      },
+
       saveDraft: async (input: SubmissionDraftInput) => {
         const existingIndex = input.id ? state.submissions.findIndex((s) => s.id === input.id) : -1;
         const existing = state.submissions[existingIndex];
@@ -278,6 +307,7 @@ export function createMemoryRepositories(
           resumeTokenHash: input.resumeTokenHash,
           resumeExpiresAt: input.resumeExpiresAt,
           submittedAt: null,
+          revokedAt: null,
           createdAt: now,
           updatedAt: now,
         };
@@ -329,6 +359,7 @@ export function createMemoryRepositories(
           resumeTokenHash: null,
           resumeExpiresAt: null,
           submittedAt: now,
+          revokedAt: existing?.revokedAt ?? null,
           createdAt: existing?.createdAt ?? now,
           updatedAt: now,
         };
@@ -337,6 +368,35 @@ export function createMemoryRepositories(
         else state.submissions.push(record);
 
         return { ok: true as const, submission: copySubmission(record) };
+      },
+    },
+
+    checkIns: {
+      listForEvent: async (organisationId, eventId) =>
+        state.checkIns
+          .filter((c) => c.organisationId === organisationId && c.eventId === eventId)
+          .map((c) => ({ ...c })),
+      findBySubmission: async (submissionId) => {
+        const found = state.checkIns.find((c) => c.submissionId === submissionId);
+        return found ? { ...found } : null;
+      },
+      // Find and insert with no `await` between them, mirroring the unique index in Postgres:
+      // two simultaneous scans of one card produce one row.
+      admit: async (input) => {
+        const existing = state.checkIns.find((c) => c.submissionId === input.submissionId);
+        if (existing) return { created: false, checkIn: { ...existing } };
+
+        const record: CheckInRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          submissionId: input.submissionId,
+          eventId: input.eventId,
+          checkedInAt: new Date(),
+          checkedInByUserId: input.checkedInByUserId,
+          method: input.method,
+        };
+        state.checkIns.push(record);
+        return { created: true, checkIn: { ...record } };
       },
     },
 
@@ -414,6 +474,58 @@ export function createMemoryRepositories(
         state.jobs[index] = retryAt
           ? { ...job, status: 'queued', error, runAfter: retryAt }
           : { ...job, status: 'failed', error, finishedAt: new Date() };
+      },
+    },
+
+    sendingDomains: {
+      list: async (organisationId) =>
+        state.sendingDomains
+          .filter((d) => d.organisationId === organisationId)
+          .map((d) => ({ ...d })),
+      findById: async (organisationId, id) => {
+        const found = state.sendingDomains.find(
+          (d) => d.organisationId === organisationId && d.id === id,
+        );
+        return found ? { ...found } : null;
+      },
+      findByDomain: async (organisationId, domain) => {
+        const found = state.sendingDomains.find(
+          (d) => d.organisationId === organisationId && d.domain === domain.toLowerCase(),
+        );
+        return found ? { ...found } : null;
+      },
+      create: async (input) => {
+        const record: SendingDomainRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          domain: input.domain.toLowerCase(),
+          fromAddress: input.fromAddress.toLowerCase(),
+          dkimSelectors: input.dkimSelectors,
+          verified: false,
+          checks: [],
+          lastCheckedAt: null,
+          createdAt: new Date(),
+        };
+        state.sendingDomains.push(record);
+        return { ...record };
+      },
+      saveVerification: async (id, input) => {
+        const index = state.sendingDomains.findIndex((d) => d.id === id);
+        const existing = state.sendingDomains[index];
+        if (!existing) return null;
+        const updated: SendingDomainRecord = { ...existing, ...input };
+        state.sendingDomains[index] = updated;
+        return { ...updated };
+      },
+    },
+
+    messages: {
+      list: async (organisationId) =>
+        state.messages.filter((m) => m.organisationId === organisationId).map((m) => ({ ...m })),
+      record: async (input) => {
+        const record: MessageRecord = { ...input, id: randomUUID(), createdAt: new Date() };
+        state.messages.push(record);
+        return { ...record };
       },
     },
 

@@ -188,6 +188,7 @@ export interface SubmissionRecord {
   resumeTokenHash: string | null;
   resumeExpiresAt: Date | null;
   submittedAt: Date | null;
+  revokedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -230,6 +231,9 @@ export interface SubmissionRepository {
   countComplete(formId: string): Promise<number>;
   /** Save-and-resume. Creates the draft on first save and overwrites it thereafter. */
   saveDraft(input: SubmissionDraftInput): Promise<SubmissionRecord>;
+  findByReference(organisationId: string, reference: string): Promise<SubmissionRecord | null>;
+  /** Withdraws a registration without deleting it. */
+  revoke(organisationId: string, id: string, at: Date): Promise<SubmissionRecord | null>;
   /**
    * The only way a submission becomes complete.
    *
@@ -280,6 +284,81 @@ export interface JobRepository {
   fail(id: string, error: string, retryAt: Date | null): Promise<void>;
 }
 
+export interface SendingDomainRecord {
+  id: string;
+  organisationId: string;
+  domain: string;
+  fromAddress: string;
+  dkimSelectors: string[];
+  verified: boolean;
+  checks: unknown[];
+  lastCheckedAt: Date | null;
+  createdAt: Date;
+}
+
+export interface SendingDomainRepository {
+  list(organisationId: string): Promise<SendingDomainRecord[]>;
+  findById(organisationId: string, id: string): Promise<SendingDomainRecord | null>;
+  findByDomain(organisationId: string, domain: string): Promise<SendingDomainRecord | null>;
+  create(input: {
+    organisationId: string;
+    domain: string;
+    fromAddress: string;
+    dkimSelectors: string[];
+  }): Promise<SendingDomainRecord>;
+  saveVerification(
+    id: string,
+    input: { verified: boolean; checks: unknown[]; lastCheckedAt: Date },
+  ): Promise<SendingDomainRecord | null>;
+}
+
+export interface MessageRecord {
+  id: string;
+  organisationId: string;
+  submissionId: string | null;
+  templateKey: string;
+  to: string;
+  locale: string;
+  subject: string;
+  providerMessageId: string | null;
+  provider: string | null;
+  sentAt: Date | null;
+  createdAt: Date;
+}
+
+export interface MessageRepository {
+  list(organisationId: string): Promise<MessageRecord[]>;
+  record(input: Omit<MessageRecord, 'id' | 'createdAt'>): Promise<MessageRecord>;
+}
+
+export interface CheckInRecord {
+  id: string;
+  organisationId: string;
+  submissionId: string;
+  eventId: string;
+  checkedInAt: Date;
+  checkedInByUserId: string | null;
+  method: 'scan' | 'manual';
+}
+
+export interface CheckInRepository {
+  listForEvent(organisationId: string, eventId: string): Promise<CheckInRecord[]>;
+  findBySubmission(submissionId: string): Promise<CheckInRecord | null>;
+  /**
+   * Idempotent admit.
+   *
+   * Returns `created: false` with the original row when the attendee was already checked in — a
+   * scanner retrying after a dropped response must not become an error at a door.
+   */
+  admit(input: {
+    organisationId: string;
+    submissionId: string;
+    eventId: string;
+    checkedInByUserId: string | null;
+    method: 'scan' | 'manual';
+  }): Promise<{ created: boolean; checkIn: CheckInRecord }>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -292,6 +371,9 @@ export interface Repositories {
   events: EventRepository;
   forms: FormRepository;
   submissions: SubmissionRepository;
+  checkIns: CheckInRepository;
   jobs: JobRepository;
+  sendingDomains: SendingDomainRepository;
+  messages: MessageRepository;
   audit: AuditRepository;
 }

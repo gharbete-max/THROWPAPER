@@ -1,31 +1,13 @@
 /**
- * The seam the real provider plugs into in phase 4.
- *
- * v0.1 has no mailer yet, so the console transport prints the link. This also satisfies
- * CLAUDE.md rule 7 — "every outbound action has a test mode" — and the memory transport is what
- * the tests assert against.
+ * Phase 2 defined `MailTransport` here for the magic link. Phase 4b widened it into `MailProvider`
+ * (from, html, attachments, a returned messageId) so a branded email with a PDF can go through the
+ * same seam. This file re-exports the new names so there is one mail interface, not two.
  */
-export interface OutboundMail {
-  to: string;
-  subject: string;
-  text: string;
-}
+export type { MailAttachment, MailProvider, OutboundMail, SentMail } from '../mail/provider.js';
+export {
+  createConsoleMailProvider,
+  createMemoryMailProvider,
+  createUnconfiguredMailProvider,
+} from '../mail/provider.js';
 
-export interface MailTransport {
-  send(mail: OutboundMail): Promise<void>;
-}
-
-export function createConsoleMailTransport(log: (message: string) => void): MailTransport {
-  return {
-    send: async (mail) => {
-      log(
-        `\n--- mail (console transport) ---\nto: ${mail.to}\n${mail.subject}\n${mail.text}\n---\n`,
-      );
-    },
-  };
-}
-
-export function createMemoryMailTransport(): MailTransport & { sent: OutboundMail[] } {
-  const sent: OutboundMail[] = [];
-  return { sent, send: async (mail) => void sent.push(mail) };
-}
+export type { MailProvider as MailTransport } from '../mail/provider.js';
