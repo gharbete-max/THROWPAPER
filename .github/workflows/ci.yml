@@ -56,7 +56,9 @@ jobs:
           # column of refused connections.
           trap 'echo "--- container logs ---"; docker logs formwork-demo 2>&1 || true; docker rm -f formwork-demo > /dev/null 2>&1 || true' EXIT
 
-          docker run -d --name formwork-demo -p 4100:4001 -e DEMO=true formwork:ci
+          # The image is NODE_ENV=production, and demo mode refuses that unless it is asked for
+          # twice. That guard is the point, so the smoke test opts in rather than weakening it.
+          docker run -d --name formwork-demo -p 4100:4001 -e DEMO=true -e DEMO_ALLOW_PRODUCTION=true formwork:ci
 
           for i in $(seq 1 30); do
             if curl -fsS http://localhost:4100/health > /dev/null; then break; fi

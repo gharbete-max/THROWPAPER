@@ -30,8 +30,12 @@ docker build -t formwork .
 **Demo** — in memory, no database, mail never sent:
 
 ```bash
-docker run -p 4001:4001 -e DEMO=true formwork
+docker run -p 4001:4001 -e DEMO=true -e DEMO_ALLOW_PRODUCTION=true formwork
 ```
+
+Both variables are needed, and that is deliberate. The image runs as `NODE_ENV=production`, and a
+demo binary that boots as production with no database and no real mail is the failure worth
+designing against — so it has to be asked for twice.
 
 **Real** — needs Postgres and a signing secret:
 
@@ -71,7 +75,7 @@ the workspace packages are bundled into them. The container runs `node`.
 | `MAIL_OPERATOR` | no | Where new-registration notifications go. |
 | `DOCUMENT_DIR` | no | Defaults to `/app/.documents`. |
 | `DEMO` | no | `true` starts the in-memory build. |
-| `DEMO_ALLOW_PRODUCTION` | no | Required to run demo mode with `NODE_ENV=production`. |
+| `DEMO_ALLOW_PRODUCTION` | with `DEMO` | The image is `NODE_ENV=production`, so a demo needs this too. |
 
 ## First run against a real database
 

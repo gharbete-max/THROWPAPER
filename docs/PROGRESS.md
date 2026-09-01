@@ -497,6 +497,12 @@ Three defects, none of which any existing test could have caught:
    before reaching `docker logs`. It now traps and prints the logs whatever happens, and fails
    early with a clear message when the container is gone.
 
+   That change immediately paid for itself. The next run printed the real reason, which was neither
+   of the causes worth guessing at: demo mode was **refusing to start**, exactly as designed,
+   because the image is `NODE_ENV=production` and a demo has to be asked for twice. The guard was
+   right and the callers were wrong — including the demo command in `docs/DEPLOY.md`, which would
+   have failed the same way the first time anybody ran it.
+
 The suite now covers the `/api` prefix, and removing the rewrite fails it.
 
 **Verified by hand, in container shape**
