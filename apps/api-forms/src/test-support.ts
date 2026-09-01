@@ -4,6 +4,7 @@ import { createMemoryMailProvider } from './auth/mail.js';
 import { createMemoryRepositories, type MemoryState } from './db/repositories/index.js';
 import type { OrganisationRecord, Repositories, UserRecord } from './db/repositories/index.js';
 import { createMemoryDocumentStore } from './documents/store.js';
+import { createMemoryAssetStore } from './uploads/store.js';
 import type { DocumentStore } from './documents/store.js';
 import type { PdfRenderer } from './documents/render.js';
 
@@ -67,6 +68,7 @@ export interface TestHarness {
   state: MemoryState;
   mail: ReturnType<typeof createMemoryMailProvider>;
   store: DocumentStore & { files: Map<string, Buffer> };
+  assets: ReturnType<typeof createMemoryAssetStore>;
   renderer: PdfRenderer & { rendered: string[] };
   close: () => Promise<void>;
 }
@@ -82,12 +84,14 @@ export async function createTestHarness(
   });
   const mail = createMemoryMailProvider();
   const store = createMemoryDocumentStore(TEST_JWT_SECRET);
+  const assets = createMemoryAssetStore();
   const renderer = options.renderer ?? createFakePdfRenderer();
 
   const app = await buildServer({
     repos,
     mail,
     store,
+    assets,
     renderer,
     jwtSecret: TEST_JWT_SECRET,
     appUrl: 'http://localhost:5173',
@@ -97,7 +101,16 @@ export async function createTestHarness(
   });
   await app.ready();
 
-  return { app, repos, state: repos.state, mail, store, renderer, close: () => app.close() };
+  return {
+    app,
+    repos,
+    state: repos.state,
+    mail,
+    store,
+    assets,
+    renderer,
+    close: () => app.close(),
+  };
 }
 
 /** Runs the full magic-link round trip and returns the resulting token pair. */

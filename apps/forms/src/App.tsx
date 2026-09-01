@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
-import { BrandProvider } from './lib/brand.js';
+import { BrandProvider, useBrand } from './lib/brand.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -53,6 +53,7 @@ export function App() {
 function Shell() {
   const t = useT();
   const { user, organisation, loading, locale, setLocale, locales, signOut } = useSession();
+  const { tokens: brand } = useBrand();
 
   if (loading) {
     return (
@@ -68,7 +69,11 @@ function Shell() {
     <div className="app">
       <header className="topbar">
         <div className="topbar__inner">
-          <strong>{organisation?.name ?? t('app.name')}</strong>
+          {brand.logoLight ? (
+            <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
+          ) : (
+            <strong>{organisation?.name ?? t('app.name')}</strong>
+          )}
           <nav className="row">
             <Link className="button button--quiet small" to="/events">
               {t('nav.events')}

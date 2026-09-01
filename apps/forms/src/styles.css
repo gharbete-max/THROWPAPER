@@ -653,3 +653,28 @@ textarea {
   flex-direction: column;
   gap: var(--tp-spacing-unit);
 }
+
+/* A logo replaces the organisation name in a header, so it is capped rather than scaled: an
+ * uploaded image can be any size, and nothing else on the page should move because of it. */
+.brand-mark {
+  max-height: 40px;
+  max-inline-size: 220px;
+  inline-size: auto;
+  block-size: auto;
+  object-fit: contain;
+}
+
+.brand__logo {
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  display: flex;
+  justify-content: center;
+}
+
+.brand__logo img {
+  max-height: 80px;
+  max-inline-size: 100%;
+  object-fit: contain;
+}

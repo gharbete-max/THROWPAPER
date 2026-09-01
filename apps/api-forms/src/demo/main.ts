@@ -13,6 +13,7 @@ import { buildServer } from '../server.js';
 import { createMemoryMailProvider } from '../mail/provider.js';
 import { createMemoryRepositories } from '../db/repositories/index.js';
 import { createMemoryDocumentStore } from '../documents/store.js';
+import { createMemoryAssetStore } from '../uploads/store.js';
 import { createPdfRenderer } from '../documents/render.js';
 import { buildDemoState, DEMO_FORM_SLUG, DEMO_USERS } from './dataset.js';
 
@@ -44,6 +45,8 @@ const app = await buildServer({
   repos,
   mail,
   store: createMemoryDocumentStore(JWT_SECRET),
+  // In memory too, so a demo cannot leave uploaded files behind on whatever it is running on.
+  assets: createMemoryAssetStore(),
   // The real renderer: admission PDFs are half the point of a demo.
   renderer: createPdfRenderer(),
   jwtSecret: JWT_SECRET,
