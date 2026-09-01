@@ -10,6 +10,7 @@
     "dev:forms": "pnpm --filter @tp/api-forms dev & pnpm --filter @tp/forms dev",
     "dev:mailer": "pnpm --filter @tp/api-mailer dev & pnpm --filter @tp/mailer dev",
     "demo": "pnpm --filter @tp/api-forms exec tsx src/demo/main.ts & pnpm --filter @tp/forms dev",
+    "icons": "tsx scripts/generate-icons.ts",
     "typecheck": "tsc -p tsconfig.json && pnpm -r --no-bail run typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",

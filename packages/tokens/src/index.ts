@@ -9,6 +9,9 @@ export { toCssVariables, toCssBlock } from './compile-web.js';
 /** Email target — resolved inline styles and table layout. Browser-safe, no dependencies. */
 export { toEmailStyles, type EmailStyles } from './compile-email.js';
 
+/** Native target — unitless numbers for a React Native StyleSheet. Browser-safe, no dependencies. */
+export { toNativeTokens, type NativeTokens } from './compile-native.js';
+
 export { pxValue, px, spacing, typeScale } from './units.js';
 
 /**

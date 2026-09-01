@@ -382,3 +382,105 @@ legend {
   padding: 2px var(--tp-spacing-unit);
   cursor: pointer;
 }
+
+/* ---------------------------------------------------------------------------
+   Touch and small screens.
+
+   The check-in screen is held in a hand at a door; the public form is filled in
+   on a phone far more often than on a desktop. Both are treated as the primary
+   case here, not as an adaptation of the desktop layout.
+   --------------------------------------------------------------------------- */
+
+/* Safe areas, so content clears a notch and the home indicator. */
+.app,
+.shell {
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
+}
+
+.shell {
+  padding-bottom: max(calc(var(--tp-spacing-unit) * 6), env(safe-area-inset-bottom));
+}
+
+/* 44px is the smallest reliably tappable target; anything less gets mis-hit. */
+.button,
+.field input,
+.field select,
+.field textarea,
+.grid__sort,
+.demo-banner__action {
+  min-height: 44px;
+}
+
+.button {
+  /* Stops a double-tap being read as a zoom, which makes a queue feel unresponsive. */
+  touch-action: manipulation;
+}
+
+.builder__grip {
+  /* Dragging a field must not scroll the page underneath it. */
+  touch-action: none;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+input,
+select,
+textarea {
+  /* iOS zooms the page when a focused input is under 16px. */
+  font-size: max(16px, var(--tp-type-base-size));
+}
+
+@media (max-width: 600px) {
+  .shell {
+    padding: calc(var(--tp-spacing-unit) * 2) calc(var(--tp-spacing-unit) * 2);
+  }
+
+  /* Stacked, full-width controls: thumbs are wide and screens are narrow. */
+  .row .button,
+  .row .button--quiet {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  .topbar__inner {
+    gap: var(--tp-spacing-unit);
+  }
+
+  .checkin__input {
+    font-size: 1.75rem;
+  }
+
+  .verdict__headline {
+    font-size: 2.5rem;
+  }
+
+  .grid th,
+  .grid td {
+    padding: calc(var(--tp-spacing-unit) * 0.75);
+  }
+}
+
+/* A door is often held in landscape; keep the verdict visible without scrolling. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .checkin__video {
+    max-height: 55vh;
+  }
+
+  .verdict {
+    padding: calc(var(--tp-spacing-unit) * 1.5);
+  }
+
+  .verdict__headline {
+    font-size: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
