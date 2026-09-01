@@ -23,6 +23,52 @@ export const DEMO_USERS = [
   { email: 'operator@example.com', name: 'Oskar Operatör', role: 'operator' as const },
 ];
 
+/**
+ * The demo organisation's brand: the palette this product is being built in.
+ *
+ * Deep Midnight, Saddle Brown, Cognac, Parchment and Brushed Gold, roughly 60/30/10. It lives here
+ * rather than in `packages/tokens/default-tokens.json` on purpose — the shipped defaults are what
+ * a *new customer* starts from, and they should be neutral. This is one organisation's choice,
+ * which is exactly what the brand kit is for.
+ *
+ * Contrast is measured, not assumed (`docs/SPEC-shared.md` §Brand direction). Cognac and Brushed
+ * Gold both fail as text on Parchment, so neither is used for text: accent is decorative and gold
+ * does not appear here at all.
+ */
+export const DEMO_BRAND = {
+  colour: {
+    primary: '#1b263b',
+    secondary: '#8b5a2b',
+    accent: '#c68b59',
+    background: '#f4f1ea',
+    surface: '#fbfaf6',
+    text: '#1b263b',
+    muted: '#5a6478',
+    border: '#ddd6c8',
+    success: '#1f7a45',
+    warning: '#7a5e10',
+    danger: '#b3261e',
+  },
+  typography: {
+    headingFont: 'Inter, system-ui, sans-serif',
+    bodyFont: 'Inter, system-ui, sans-serif',
+    baseSize: '16px',
+    scaleRatio: 1.25,
+    lineHeight: 1.5,
+    weightRegular: 400,
+    weightBold: 600,
+  },
+  spacingUnit: '8px',
+  // Flat and quiet: no gradients, and corners kept small rather than rounded off.
+  radius: '4px',
+  borderWidth: '1px',
+  shadowLevel: 0,
+  buttonStyle: 'solid',
+  logoLight: null,
+  logoDark: null,
+  favicon: null,
+} as const;
+
 export const DEMO_FORM_SLUG = 'varmotet';
 
 /** Nordic names on purpose: the CSV export and the PDF both have to survive å ä ö. */
@@ -226,6 +272,14 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     jobs: [],
     sendingDomains: [],
     messages: [],
+    brandKits: [
+      {
+        organisationId,
+        tokens: DEMO_BRAND,
+        updatedAt: now,
+        updatedBy: null,
+      },
+    ],
     audit: [],
   };
 }

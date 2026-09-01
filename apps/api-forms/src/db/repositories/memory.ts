@@ -10,6 +10,7 @@ import type {
   FormRecord,
   FormUpdate,
   FormVersionRecord,
+  BrandKitRecord,
   JobRecord,
   LoginTokenRecord,
   MessageRecord,
@@ -41,6 +42,7 @@ export interface MemoryState {
   submissions: SubmissionRecord[];
   checkIns: CheckInRecord[];
   jobs: JobRecord[];
+  brandKits: BrandKitRecord[];
   sendingDomains: SendingDomainRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
@@ -76,6 +78,7 @@ export function createMemoryRepositories(
     submissions: seed.submissions ?? [],
     checkIns: seed.checkIns ?? [],
     jobs: seed.jobs ?? [],
+    brandKits: seed.brandKits ?? [],
     sendingDomains: seed.sendingDomains ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
@@ -474,6 +477,31 @@ export function createMemoryRepositories(
         state.jobs[index] = retryAt
           ? { ...job, status: 'queued', error, runAfter: retryAt }
           : { ...job, status: 'failed', error, finishedAt: new Date() };
+      },
+    },
+
+    brandKits: {
+      // Copied on the way out, like every other record here: handing back the stored object lets a
+      // caller mutate the "database" by accident, which this file has been bitten by before.
+      find: async (organisationId) => {
+        const kit = state.brandKits.find((k) => k.organisationId === organisationId);
+        return kit ? { ...kit, tokens: structuredClone(kit.tokens) } : null;
+      },
+      save: async ({ organisationId, tokens, updatedBy }) => {
+        const record: BrandKitRecord = {
+          organisationId,
+          tokens: structuredClone(tokens),
+          updatedAt: new Date(),
+          updatedBy,
+        };
+        const index = state.brandKits.findIndex((k) => k.organisationId === organisationId);
+        if (index === -1) state.brandKits.push(record);
+        else state.brandKits[index] = record;
+        return { ...record, tokens: structuredClone(record.tokens) };
+      },
+      clear: async (organisationId) => {
+        const index = state.brandKits.findIndex((k) => k.organisationId === organisationId);
+        if (index !== -1) state.brandKits.splice(index, 1);
       },
     },
 

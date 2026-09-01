@@ -305,6 +305,27 @@ export const jobs = pgTable(
  * The verification result is stored rather than re-checked on every send: DNS on the hot path
  * would make sending depend on a resolver being up. It is refreshed on demand and on a schedule.
  */
+/**
+ * One brand kit per organisation: the token set every surface compiles from.
+ *
+ * Stored as a whole JSON document rather than a column per colour. The token set is a single
+ * versioned artefact that four compilers read (web, email, PDF, native) and it gains fields as the
+ * product grows; a column per token would mean a migration every time a designer wants one more
+ * shade, and would still not describe the shape any better than the schema in packages/shared.
+ *
+ * A row is optional. No row means the organisation has not chosen, and the shipped defaults apply
+ * — which is why nothing had to be backfilled when this arrived.
+ */
+export const brandKits = pgTable('brand_kits', {
+  organisationId: uuid('organisation_id')
+    .primaryKey()
+    .references(() => organisations.id, { onDelete: 'cascade' }),
+  tokens: jsonb('tokens').$type<Record<string, unknown>>().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  /** Kept for the audit trail; a brand change is the sort of thing people ask about later. */
+  updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
+});
+
 export const sendingDomains = pgTable(
   'sending_domains',
   {
@@ -395,6 +416,7 @@ export type Form = typeof forms.$inferSelect;
 export type FormVersion = typeof formVersions.$inferSelect;
 export type Submission = typeof submissions.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
+export type BrandKit = typeof brandKits.$inferSelect;
 export type SendingDomain = typeof sendingDomains.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type CheckIn = typeof checkIns.$inferSelect;

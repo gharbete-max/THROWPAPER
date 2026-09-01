@@ -591,3 +591,65 @@ textarea {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
+
+/* --- Brand Kit editor -----------------------------------------------------
+ *
+ * Two columns: what you are choosing on the left, what it does on the right. The preview is a
+ * scoped copy of the token block, so a colour being tried out cannot make the editor it is being
+ * tried in unreadable.
+ */
+.brand {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .brand {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  /* The preview stays put while the colour list scrolls past it. */
+  .brand > :last-child {
+    position: sticky;
+    top: var(--tp-spacing-unit);
+  }
+}
+
+.brand__colour .row {
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.brand__colour input[type='color'] {
+  /* A 44px swatch: this is the control people actually aim at. */
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 2px;
+  flex: none;
+  cursor: pointer;
+}
+
+.brand__colour input[type='text'] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  max-inline-size: 12ch;
+}
+
+.brand__preview {
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+}
+
+/* Painted with the *candidate* tokens, which the scoped block above redefines. */
+.brand__preview-inner {
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: var(--tp-type-base-size);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-spacing-unit);
+}

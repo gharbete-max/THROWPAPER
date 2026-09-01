@@ -1,4 +1,14 @@
 import type { api, forms as formSchemas } from '@tp/shared';
+import type { TokenSet, ContrastFinding } from '@tp/tokens';
+
+export interface BrandKitResponse {
+  tokens: TokenSet;
+  /** `false` when nothing has been saved and these are the shipped defaults. */
+  customised: boolean;
+  updatedAt: string | null;
+  /** Advisory. The server stores the kit either way — see routes/brand-kit.ts. */
+  warnings: ContrastFinding[];
+}
 
 /**
  * Typed client for the Formwork API.
@@ -124,6 +134,13 @@ export const client = {
     }),
 
   me: () => request<api.MeResponse>('/v1/me'),
+
+  brandKit: () => request<BrandKitResponse>('/v1/brand-kit'),
+
+  saveBrandKit: (tokens: TokenSet) =>
+    request<BrandKitResponse>('/v1/brand-kit', { method: 'PUT', body: JSON.stringify(tokens) }),
+
+  resetBrandKit: () => request<BrandKitResponse>('/v1/brand-kit', { method: 'DELETE' }),
 
   logout: async () => {
     const refreshToken = storedRefreshToken();

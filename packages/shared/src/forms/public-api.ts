@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { BrandKit } from '../brand/index.js';
 import { Locale } from '../api/common.js';
 import { FormDefinition } from './definition.js';
 
@@ -12,6 +13,12 @@ export const PublicFormResponse = z.object({
   definition: FormDefinition,
   formVersion: z.number().int().positive(),
   organisationName: z.string(),
+  /**
+   * The organisation's brand kit, so the page an anonymous visitor lands on is branded without a
+   * second request and without a flash of the default palette. Sent in full rather than as an id:
+   * there is no session here to fetch it with.
+   */
+  brand: BrandKit,
   supportedLocales: z.array(Locale),
   defaultLocale: Locale,
   /** Whether the form is currently accepting answers, and why not when it is not. */

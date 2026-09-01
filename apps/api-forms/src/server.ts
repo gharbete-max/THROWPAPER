@@ -24,6 +24,7 @@ import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admi
 import { createWorker } from './jobs/worker.js';
 import { registerSendingDomainRoutes } from './routes/sending-domains.js';
 import { registerCheckInRoutes } from './routes/checkin.js';
+import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
 import { createSesMailProvider } from './mail/ses.js';
@@ -183,6 +184,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerDocumentRoutes(app, { repos, guard, admission, store });
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
   registerCheckInRoutes(app, { repos, guard, jwtSecret });
+  registerBrandKitRoutes(app, { repos, guard });
   if (options.demo) registerDemoRoutes(app, { repos, demo: options.demo, jwtSecret });
 
   app.get('/health', async (_request, reply) => {
