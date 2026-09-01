@@ -622,6 +622,39 @@ from one `Response` and the body from another; each generates its own, so the se
 it could not parse.
 
 
+## A15b — images inside a form · done
+
+Two things, both of which the owner named: pictures in a form, and choices that are pictures.
+
+- An `image` field. Presentational, so it collects nothing — added to `PRESENTATIONAL_TYPES`,
+  which means validation, CSV export and submissions all exclude it from **one** place rather than
+  three that could disagree.
+- An optional picture on every choice option, shown by the `cards` and `buttons` appearances from
+  A15a and ignored by a dropdown, which has nowhere to put one.
+
+**Sources are asset paths, never URLs** — the same rule as a logo, and for the same reason: a form
+definition is written by a customer and rendered on a public page, so an arbitrary URL would leak
+every visitor's IP address to a third-party host and let whoever runs it change what the form
+appears to show. Extracted as `AssetPath` in `packages/shared` so the brand kit and form
+definitions cannot drift apart on it.
+
+**Two accessibility decisions worth naming.** Alt text on an image field is translatable but
+**not required**: an empty alt means "decorative, skip this", which is right for a banner, and
+requiring it would push people to type something rather than nothing — a screen reader announcing
+"image" repeatedly is worse than silence. And an option's picture is rendered with `alt=""`
+because the label beside it already names the choice; reading both would say everything twice.
+The label stays required even when there is a picture, because the answer that lands in the CSV is
+the label, and an image-only choice cannot be read aloud, searched or exported.
+
+The `ImagePicker` is shared by the brand editor and the builder, so "pick a picture" does not
+behave differently depending on the screen. It surfaces the server's own message verbatim: "SVG is
+not supported, upload a PNG instead" tells somebody what to do next, "upload failed" does not.
+
+**Verified by using it**: a banner uploaded and placed at the top of the demo form respecting its
+`maxWidth`, three real PNGs put on the meal options as cards, one chosen by clicking the card, and
+the registration submitted — reference `KQNR-2NZ9`, with `veg` stored, not the image path.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

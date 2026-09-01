@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { AssetPath } from '../assets.js';
 
 /**
  * The brand kit: what an organisation may set, and what it may not.
@@ -50,15 +51,6 @@ const FontStack = z
   .min(1)
   .max(200)
   .refine((value) => !/["'<>;{}]/.test(value), 'Font names cannot contain quotes or punctuation');
-
-/** `/public/assets/<sha256>.<ext>` and nothing else. See the note on `logoLight`. */
-const AssetPath = z
-  .string()
-  .trim()
-  .regex(
-    /^\/public\/assets\/[0-9a-f]{64}\.(png|jpg|webp|gif)$/,
-    'Upload an image and use the path it returns',
-  );
 
 export const ColourTokens = z.object({
   primary: Hex,

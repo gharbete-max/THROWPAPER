@@ -387,6 +387,19 @@ function FieldInput({
     );
   }
 
+  if (field.type === 'image') {
+    // A field with no picture chosen yet renders nothing rather than a broken image icon.
+    if (!field.src) return null;
+    return (
+      <img
+        className="form-image"
+        src={field.src}
+        alt={text(field.alt)}
+        style={field.maxWidth ? { maxWidth: `${field.maxWidth}px` } : undefined}
+      />
+    );
+  }
+
   const label = text(field.label);
   const help = 'helpText' in field ? text(field.helpText) : '';
   const placeholder = 'placeholder' in field ? text(field.placeholder) : '';
@@ -434,6 +447,9 @@ function FieldInput({
                   );
                 }}
               />
+              {/* Decorative: the label beside it already names the choice, so a screen reader
+                  reading both would say everything twice. */}
+              {option.image && <img className="choice__image" src={option.image} alt="" />}
               <span>{option.label || option.value}</span>
             </label>
           ))}
@@ -535,7 +551,7 @@ function choiceGroup(
 ): {
   appearance: string;
   multiple: boolean;
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ value: string; label: string; image: string | null }>;
   decode: (value: string) => AnswerValue;
 } | null {
   if (field.type === 'single_select' && field.appearance !== 'dropdown') {
@@ -545,6 +561,7 @@ function choiceGroup(
       options: field.options.map((option) => ({
         value: option.value,
         label: text(option.label),
+        image: option.image,
       })),
       decode: (value) => value,
     };
@@ -557,6 +574,7 @@ function choiceGroup(
       options: field.options.map((option) => ({
         value: option.value,
         label: text(option.label),
+        image: option.image,
       })),
       decode: (value) => value,
     };
@@ -567,8 +585,8 @@ function choiceGroup(
       appearance: field.appearance,
       multiple: false,
       options: [
-        { value: 'true', label: yesLabel },
-        { value: 'false', label: noLabel },
+        { value: 'true', label: yesLabel, image: null },
+        { value: 'false', label: noLabel, image: null },
       ],
       // The only appearance that stores something other than the option value it was given.
       decode: (value) => value === 'true',

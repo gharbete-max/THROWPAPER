@@ -211,6 +211,24 @@ export const messages: Catalogue = {
   'brand.reset': { 'sv-SE': 'Återställ standard', 'en-GB': 'Reset to default' },
   'brand.colours': { 'sv-SE': 'Färger', 'en-GB': 'Colours' },
   'brand.logo': { 'sv-SE': 'Logotyp', 'en-GB': 'Logo' },
+
+  'image.add': { 'sv-SE': 'Lägg till bild', 'en-GB': 'Add an image' },
+  'image.replace': { 'sv-SE': 'Byt bild', 'en-GB': 'Replace the image' },
+  'image.remove': { 'sv-SE': 'Ta bort bild', 'en-GB': 'Remove the image' },
+  'image.uploading': { 'sv-SE': 'Laddar upp…', 'en-GB': 'Uploading…' },
+  'image.previewAlt': { 'sv-SE': 'Vald bild', 'en-GB': 'The chosen image' },
+  'image.hint': {
+    'sv-SE': 'PNG, JPEG, WebP eller GIF, högst 2 MB. SVG stöds inte.',
+    'en-GB': 'PNG, JPEG, WebP or GIF, up to 2MB. SVG is not supported.',
+  },
+  'image.alt': { 'sv-SE': 'Alt-text', 'en-GB': 'Alt text' },
+  'image.altHint': {
+    'sv-SE': 'Beskriv bilden för den som inte ser den. Lämna tom om bilden bara är dekor.',
+    'en-GB':
+      'Describe the image for somebody who cannot see it. Leave it empty if it is decorative.',
+  },
+  'image.maxWidth': { 'sv-SE': 'Största bredd', 'en-GB': 'Maximum width' },
+  'image.optionImage': { 'sv-SE': 'Bild för alternativet', 'en-GB': 'Image for this option' },
   'brand.logoAdd': { 'sv-SE': 'Lägg till logotyp', 'en-GB': 'Add a logo' },
   'brand.logoReplace': { 'sv-SE': 'Byt logotyp', 'en-GB': 'Replace the logo' },
   'brand.logoRemove': { 'sv-SE': 'Ta bort logotyp', 'en-GB': 'Remove the logo' },

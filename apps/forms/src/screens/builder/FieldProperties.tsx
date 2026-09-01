@@ -8,6 +8,7 @@ import {
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { hasLabel, hasOptions } from './field-defaults.js';
+import { ImagePicker } from '../../components/ImagePicker.js';
 
 interface Props {
   field: Field | null;
@@ -33,7 +34,7 @@ export function FieldProperties({ field, onChange }: Props) {
   }
 
   function setText(
-    property: 'label' | 'helpText' | 'placeholder' | 'content',
+    property: 'label' | 'helpText' | 'placeholder' | 'content' | 'alt',
     locale: string,
     value: string,
   ) {
@@ -100,6 +101,30 @@ export function FieldProperties({ field, onChange }: Props) {
             </label>
           )}
 
+          {field.type === 'image' && (
+            <div className="stack">
+              <ImagePicker
+                value={field.src || null}
+                onChange={(path) => patch({ src: path ?? '' } as Partial<Field>)}
+              />
+
+              <label className="field">
+                <span>{t('image.maxWidth')}</span>
+                <input
+                  type="number"
+                  min={40}
+                  max={2000}
+                  value={field.maxWidth ?? ''}
+                  onChange={(event) =>
+                    patch({
+                      maxWidth: event.target.value ? Number(event.target.value) : undefined,
+                    } as Partial<Field>)
+                  }
+                />
+              </label>
+            </div>
+          )}
+
           {field.type === 'hidden' && (
             <label className="field">
               <span>{t('field.fromParameter')}</span>
@@ -114,17 +139,29 @@ export function FieldProperties({ field, onChange }: Props) {
             <div className="stack">
               <strong className="small">{t('field.options')}</strong>
               {field.options.map((option, index) => (
-                <label className="field" key={index}>
-                  <span className="small muted">{t('field.optionValue')}</span>
-                  <input
-                    value={option.value}
-                    onChange={(event) => {
+                <div className="stack builder__option" key={index}>
+                  <label className="field">
+                    <span className="small muted">{t('field.optionValue')}</span>
+                    <input
+                      value={option.value}
+                      onChange={(event) => {
+                        const options = [...field.options];
+                        options[index] = { ...option, value: event.target.value };
+                        patch({ options } as Partial<Field>);
+                      }}
+                    />
+                  </label>
+                  <ImagePicker
+                    compact
+                    label={t('image.optionImage')}
+                    value={option.image ?? null}
+                    onChange={(path) => {
                       const options = [...field.options];
-                      options[index] = { ...option, value: event.target.value };
+                      options[index] = { ...option, image: path };
                       patch({ options } as Partial<Field>);
                     }}
                   />
-                </label>
+                </div>
               ))}
               <button
                 type="button"
@@ -133,7 +170,7 @@ export function FieldProperties({ field, onChange }: Props) {
                   patch({
                     options: [
                       ...field.options,
-                      { value: `option_${field.options.length + 1}`, label: {} },
+                      { value: `option_${field.options.length + 1}`, label: {}, image: null },
                     ],
                   } as Partial<Field>)
                 }
@@ -155,6 +192,20 @@ export function FieldProperties({ field, onChange }: Props) {
                   value={field.label[locale] ?? ''}
                   onChange={(event) => setText('label', locale, event.target.value)}
                 />
+              </label>
+            ))}
+
+          {field.type === 'image' &&
+            locales.supported.map((locale) => (
+              <label className="field" key={`alt-${locale}`}>
+                <span>
+                  {t('image.alt')} · {locale}
+                </span>
+                <input
+                  value={field.alt?.[locale] ?? ''}
+                  onChange={(event) => setText('alt', locale, event.target.value)}
+                />
+                <span className="small muted">{t('image.altHint')}</span>
               </label>
             ))}
 
