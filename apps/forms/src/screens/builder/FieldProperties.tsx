@@ -7,7 +7,7 @@ import {
 } from '@tp/shared/forms';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
-import { hasLabel, hasOptions } from './field-defaults.js';
+import { hasLabel, hasOptions, newOption } from './field-defaults.js';
 import { ImagePicker } from '../../components/ImagePicker.js';
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
  */
 export function FieldProperties({ field, onChange }: Props) {
   const t = useT();
-  const { locales } = useSession();
+  const { locale, locales } = useSession();
   const [tab, setTab] = useState<'properties' | 'translations'>('properties');
 
   if (!field) return <p className="muted small">{t('builder.selectField')}</p>;
@@ -73,13 +73,21 @@ export function FieldProperties({ field, onChange }: Props) {
             field as far as anybody except the database is concerned. The other locales stay on
             the translation tab, which is what that tab is for.
           */}
+          {/*
+            Edited in the language currently being viewed, not the organisation's default.
+            Writing to the default would mean an author working in English types English into the
+            Swedish slot and sees their own text vanish behind a fallback — so the locale is named
+            beside the box rather than assumed.
+          */}
           {hasLabel(field) && (
             <label className="field">
-              <span>{t('field.label')}</span>
+              <span>
+                {t('field.label')} · {locale}
+              </span>
               <input
                 autoFocus
-                value={field.label[locales.default] ?? ''}
-                onChange={(event) => setText('label', locales.default, event.target.value)}
+                value={field.label[locale] ?? ''}
+                onChange={(event) => setText('label', locale, event.target.value)}
                 placeholder={t('field.labelPlaceholder')}
               />
               {locales.supported.length > 1 && (
@@ -92,10 +100,12 @@ export function FieldProperties({ field, onChange }: Props) {
 
           {'helpText' in field && (
             <label className="field">
-              <span>{t('field.helpText')}</span>
+              <span>
+                {t('field.helpText')} · {locale}
+              </span>
               <input
-                value={field.helpText?.[locales.default] ?? ''}
-                onChange={(event) => setText('helpText', locales.default, event.target.value)}
+                value={field.helpText?.[locale] ?? ''}
+                onChange={(event) => setText('helpText', locale, event.target.value)}
               />
             </label>
           )}
@@ -167,17 +177,56 @@ export function FieldProperties({ field, onChange }: Props) {
               <strong className="small">{t('field.options')}</strong>
               {field.options.map((option, index) => (
                 <div className="stack builder__option" key={index}>
+                  {/*
+                    The text people read, first — the same fix as the field label. This box used to
+                    show only `option.value`, the machine name, with the visible wording on the
+                    translation tab, so writing "Vegetarian" meant knowing to go and look for it.
+                  */}
                   <label className="field">
-                    <span className="small muted">{t('field.optionValue')}</span>
+                    <span className="small muted">
+                      {t('field.optionLabel')} · {locale}
+                    </span>
                     <input
-                      value={option.value}
+                      value={option.label[locale] ?? ''}
                       onChange={(event) => {
                         const options = [...field.options];
-                        options[index] = { ...option, value: event.target.value };
+                        options[index] = {
+                          ...option,
+                          label: { ...option.label, [locale]: event.target.value },
+                        };
                         patch({ options } as Partial<Field>);
                       }}
                     />
                   </label>
+
+                  <div className="row row--between">
+                    <details className="builder__advanced">
+                      <summary className="small muted">{t('field.optionValue')}</summary>
+                      <input
+                        value={option.value}
+                        onChange={(event) => {
+                          const options = [...field.options];
+                          options[index] = { ...option, value: event.target.value };
+                          patch({ options } as Partial<Field>);
+                        }}
+                      />
+                      <span className="small muted">{t('field.optionValueHint')}</span>
+                    </details>
+
+                    {/* Removing the last option would leave a choice with nothing to choose. */}
+                    {field.options.length > 1 && (
+                      <button
+                        type="button"
+                        className="button button--quiet small"
+                        onClick={() => {
+                          const options = field.options.filter((_, at) => at !== index);
+                          patch({ options } as Partial<Field>);
+                        }}
+                      >
+                        {t('field.removeOption')}
+                      </button>
+                    )}
+                  </div>
                   <ImagePicker
                     compact
                     label={t('image.optionImage')}
@@ -197,7 +246,7 @@ export function FieldProperties({ field, onChange }: Props) {
                   patch({
                     options: [
                       ...field.options,
-                      { value: `option_${field.options.length + 1}`, label: {}, image: null },
+                      newOption(field.options.length + 1, locales.supported),
                     ],
                   } as Partial<Field>)
                 }

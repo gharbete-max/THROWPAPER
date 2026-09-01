@@ -192,6 +192,23 @@ export const messages: Catalogue = {
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
+  'field.optionLabel': { 'sv-SE': 'Alternativets text', 'en-GB': 'Option text' },
+  'field.optionValueHint': {
+    'sv-SE': 'Sparas i exporten. Ändra inte efter att svar kommit in.',
+    'en-GB': 'Stored in the export. Do not change it once answers exist.',
+  },
+  'field.removeOption': { 'sv-SE': 'Ta bort', 'en-GB': 'Remove' },
+
+  'field.defaultLabel': { 'sv-SE': 'Ny fråga', 'en-GB': 'New question' },
+  'field.defaultSection': { 'sv-SE': 'Nytt avsnitt', 'en-GB': 'New section' },
+  'field.defaultText': { 'sv-SE': 'Skriv din text här.', 'en-GB': 'Write your text here.' },
+  'field.defaultOption': { 'sv-SE': 'Alternativ {n}', 'en-GB': 'Option {n}' },
+
+  'confirm.title': { 'sv-SE': 'Bekräfta', 'en-GB': 'Confirm' },
+  'confirm.cancel': { 'sv-SE': 'Avbryt', 'en-GB': 'Cancel' },
+  'confirm.confirm': { 'sv-SE': 'Ja, fortsätt', 'en-GB': 'Yes, continue' },
+  'builder.removeYes': { 'sv-SE': 'Ta bort', 'en-GB': 'Remove' },
+
   'forms.edit': { 'sv-SE': 'Redigera formulär', 'en-GB': 'Edit form' },
 
   'palette.text': { 'sv-SE': 'Text och siffror', 'en-GB': 'Text and numbers' },
@@ -404,6 +421,12 @@ export const messages: Catalogue = {
   'public.next': { 'sv-SE': 'Nästa', 'en-GB': 'Next' },
   'public.back': { 'sv-SE': 'Tillbaka', 'en-GB': 'Back' },
   'public.submit': { 'sv-SE': 'Skicka', 'en-GB': 'Submit' },
+  /**
+   * The last page's action. "Complete" rather than "Sign": a signature that carries legal weight
+   * is a regulated feature this product does not have (SPEC-forms.md §8), and a button that says
+   * "Sign" would be claiming one. An author who wants different wording sets submitLabel.
+   */
+  'public.complete': { 'sv-SE': 'Slutför', 'en-GB': 'Complete' },
   'public.submitting': { 'sv-SE': 'Skickar…', 'en-GB': 'Submitting…' },
   'public.page': { 'sv-SE': 'Sida {n} av {total}', 'en-GB': 'Page {n} of {total}' },
   'public.save': { 'sv-SE': 'Spara och fortsätt senare', 'en-GB': 'Save and continue later' },

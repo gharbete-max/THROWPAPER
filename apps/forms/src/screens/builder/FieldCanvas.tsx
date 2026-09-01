@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   DndContext,
   KeyboardSensor,
@@ -97,6 +98,7 @@ function SortableField({
 }) {
   const t = useT();
   const { locale, locales } = useSession();
+  const [confirming, setConfirming] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.id,
   });
@@ -175,15 +177,39 @@ function SortableField({
         </button>
       </div>
 
-      <button
-        type="button"
-        className="button button--quiet small"
-        onClick={() => {
-          if (window.confirm(t('builder.removeConfirm'))) onRemove(field.id);
-        }}
-      >
-        {t('builder.remove')}
-      </button>
+      {/*
+        Confirmed in place rather than in a dialog. Removing a field is frequent and small, and a
+        modal for each one would be exhausting — but it is still a delete, so it still takes two
+        deliberate clicks. The second click is a different button in a different colour, so it
+        cannot be reached by double-clicking the first.
+      */}
+      {confirming ? (
+        <div className="row builder__confirm">
+          <button
+            type="button"
+            className="button button--danger small"
+            onClick={() => onRemove(field.id)}
+          >
+            {t('builder.removeYes')}
+          </button>
+          <button
+            type="button"
+            className="button button--quiet small"
+            autoFocus
+            onClick={() => setConfirming(false)}
+          >
+            {t('confirm.cancel')}
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="button button--quiet small"
+          onClick={() => setConfirming(true)}
+        >
+          {t('builder.remove')}
+        </button>
+      )}
     </li>
   );
 }

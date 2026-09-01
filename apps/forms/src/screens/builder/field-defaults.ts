@@ -1,4 +1,5 @@
 import { FIELD_TYPES, type Field, type FieldType } from '@tp/shared/forms';
+import { messages } from '../../lib/messages.js';
 
 /**
  * A new field of each type, ready to drop on the canvas.
@@ -25,9 +26,53 @@ export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldTy
   { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'hidden'] },
 ];
 
-export function newField(type: FieldType, existingKeys: readonly string[]): Field {
+/**
+ * A default in **every language the organisation publishes**, read straight from the catalogue.
+ *
+ * A new field used to arrive with `label: {}`, which meant it was immediately missing in every
+ * locale — add three fields and the header reads "sv-SE: 3 missing · en-GB: 3 missing" before
+ * anybody has done anything wrong. Warnings that appear for doing the normal thing are warnings
+ * people learn to ignore.
+ *
+ * A placeholder that is obviously a placeholder is better: the form stays publishable, the
+ * completeness indicator stays meaningful, and "New question" tells the author exactly what is
+ * left to do.
+ */
+function localisedDefault(
+  key: string,
+  supported: readonly string[],
+  replacements: Record<string, string | number> = {},
+): Record<string, string> {
+  const entry = messages[key] ?? {};
+  const out: Record<string, string> = {};
+  for (const locale of supported) {
+    const value = entry[locale];
+    if (!value) continue;
+    out[locale] = Object.entries(replacements).reduce(
+      (text, [token, replacement]) => text.replaceAll(`{${token}}`, String(replacement)),
+      value,
+    );
+  }
+  return out;
+}
+
+/** The label an option gets when it is created, so a new choice is not missing either. */
+export function newOption(index: number, supported: readonly string[]) {
+  return {
+    value: `option_${index}`,
+    label: localisedDefault('field.defaultOption', supported, { n: index }),
+    image: null,
+  };
+}
+
+export function newField(
+  type: FieldType,
+  existingKeys: readonly string[],
+  supported: readonly string[],
+): Field {
   const id = crypto.randomUUID();
   const key = uniqueKey(type, existingKeys);
+  const label = localisedDefault('field.defaultLabel', supported);
 
   switch (type) {
     // Split, rather than sharing a branch, because the two have different appearance vocabularies
@@ -37,9 +82,9 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
         id,
         key,
         type,
-        label: {},
+        label,
         required: false,
-        options: [{ value: 'option_1', label: {}, image: null }],
+        options: [newOption(1, supported)],
         appearance: 'dropdown',
       };
     case 'multi_select':
@@ -47,13 +92,13 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
         id,
         key,
         type,
-        label: {},
+        label,
         required: false,
-        options: [{ value: 'option_1', label: {}, image: null }],
+        options: [newOption(1, supported)],
         appearance: 'checkboxes',
       };
     case 'yes_no':
-      return { id, key, type, label: {}, required: false, appearance: 'dropdown' };
+      return { id, key, type, label, required: false, appearance: 'dropdown' };
     /**
      * An image field is created with no picture yet: `src` is only valid once something has been
      * uploaded, so the builder shows an upload control and the field is incomplete until then.
@@ -62,15 +107,15 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
     case 'image':
       return { id, key, type, src: '', alt: {} } as unknown as Field;
     case 'section_break':
-      return { id, key, type, label: {} };
+      return { id, key, type, label: localisedDefault('field.defaultSection', supported) };
     case 'page_break':
       return { id, key, type };
     case 'rich_text':
-      return { id, key, type, content: {} };
+      return { id, key, type, content: localisedDefault('field.defaultText', supported) };
     case 'hidden':
       return { id, key, type };
     default:
-      return { id, key, type, label: {}, required: false };
+      return { id, key, type, label, required: false };
   }
 }
 

@@ -115,8 +115,9 @@ export default function PublicForm() {
    * generic string only when they have not — before this, the setting was collected and ignored.
    */
   const submitLabel = form
-    ? pickText(locales, form.definition.settings.submitLabel, resolved).value || t('public.submit')
-    : t('public.submit');
+    ? pickText(locales, form.definition.settings.submitLabel, resolved).value ||
+      t('public.complete')
+    : t('public.complete');
   const currentPage = pages[page] ?? [];
 
   const setValue = useCallback((key: string, value: AnswerValue) => {
@@ -292,41 +293,51 @@ export default function PublicForm() {
             </div>
           )}
 
-          <div className="row">
-            {page > 0 && (
-              <button
-                type="button"
-                className="button button--quiet"
-                onClick={() => setPage(page - 1)}
-              >
-                {t('public.back')}
-              </button>
-            )}
+          {/*
+            Back on the left, forward on the right, the way every multi-step form works — the
+            previous layout put all three actions in a left-aligned row, so "Next" sat between
+            "Back" and "Save", which is the last place anybody looks for it.
+
+            On the final page the forward action is the submit, and it says so: "Complete" rather
+            than a second "Next" that happens to end the form.
+          */}
+          <div className="row row--between form-actions">
+            <div className="row">
+              {page > 0 && (
+                <button
+                  type="button"
+                  className="button button--quiet"
+                  onClick={() => setPage(page - 1)}
+                >
+                  {t('public.back')}
+                </button>
+              )}
+
+              {form.definition.settings.allowSaveAndResume && (
+                <button
+                  type="button"
+                  className="button button--quiet"
+                  onClick={saveDraft}
+                  disabled={busy}
+                >
+                  {busy ? t('public.saving') : t('public.save')}
+                </button>
+              )}
+            </div>
 
             {page < pages.length - 1 ? (
               <button
                 type="button"
-                className="button"
+                className="button form-actions__forward"
                 onClick={() => {
                   if (validatePage()) setPage(page + 1);
                 }}
               >
-                {t('public.next')}
+                {t('public.next')} →
               </button>
             ) : (
-              <button type="submit" className="button" disabled={busy}>
+              <button type="submit" className="button form-actions__forward" disabled={busy}>
                 {busy ? t('public.submitting') : submitLabel}
-              </button>
-            )}
-
-            {form.definition.settings.allowSaveAndResume && (
-              <button
-                type="button"
-                className="button button--quiet"
-                onClick={saveDraft}
-                disabled={busy}
-              >
-                {busy ? t('public.saving') : t('public.save')}
               </button>
             )}
           </div>

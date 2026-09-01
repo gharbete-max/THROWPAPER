@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
+import { ConfirmProvider } from './components/Confirm.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -28,20 +29,22 @@ export function App() {
       <DemoProvider>
         <SessionProvider>
           <BrandProvider>
-            <DemoBanner />
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/auth/callback" element={<Callback />} />
-              <Route
-                path="/f/:slug"
-                element={
-                  <Suspense fallback={<main className="shell shell--narrow" />}>
-                    <PublicForm />
-                  </Suspense>
-                }
-              />
-              <Route path="/*" element={<Shell />} />
-            </Routes>
+            <ConfirmProvider>
+              <DemoBanner />
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/auth/callback" element={<Callback />} />
+                <Route
+                  path="/f/:slug"
+                  element={
+                    <Suspense fallback={<main className="shell shell--narrow" />}>
+                      <PublicForm />
+                    </Suspense>
+                  }
+                />
+                <Route path="/*" element={<Shell />} />
+              </Routes>
+            </ConfirmProvider>
           </BrandProvider>
         </SessionProvider>
       </DemoProvider>

@@ -740,6 +740,67 @@ for what is unfinished instead of finding out at publish time.
   borrowed the events string.
 
 
+## Builder fixes: remove, defaults, sorting, pages · done
+
+Reported: removing parts of a form did not work, sv-SE warnings for no reason, sorting and layout,
+and pages that end in a completion step.
+
+### Remove did not work, and neither did three other things
+
+`window.confirm` **returns `false` without showing anything** in an embedded browser — a desktop
+app's webview, an in-app browser, anything that suppresses native dialogs. So the guarded action
+silently did nothing.
+
+It was not only Remove. The same call was quietly disabling **archiving an event**, **restoring a
+version** and **overriding an incomplete publish**. Four features that looked like ordinary
+buttons and did nothing at all, and nothing in the codebase could have told us: the app compiles,
+the tests pass, and the failure only exists in the browser the customer happens to use.
+
+`CLAUDE.md` rule 7 requires a confirmation step. It does not require a native dialog, and a native
+dialog turns out to be the one implementation that cannot be relied on. There is now a real
+`<dialog>` in the product's own styling, Escape cancels, focus starts on the safe option. Removing
+a field confirms **in place** instead — it is frequent and small, and a modal each time would be
+exhausting — but still takes two deliberate clicks on two different buttons.
+
+A test bans `window.confirm`, `alert` and `prompt` from the app source and names the offending
+file. Mutation-checked.
+
+### Warnings for doing the normal thing
+
+A new field arrived with `label: {}` — immediately missing in every locale. Add three fields and
+the header read "sv-SE: 3 missing · en-GB: 3 missing" before anybody had done anything wrong.
+Warnings that fire for normal use are warnings people learn to ignore, which makes the real ones
+useless too.
+
+New fields, sections, text blocks and choice options now arrive with a default in **every language
+the organisation publishes** — "New question", "Option 1" — read straight from the message
+catalogue. The form stays publishable, the completeness indicator stays meaningful, and the
+placeholder says what is left to do.
+
+### The machine name kept coming first
+
+Fixed for field labels last time; the same fault was still in the **options** editor, which showed
+`option.value` while the wording people read lived on the translation tab. Option text is now
+first, in the language being viewed, with the value folded into a disclosure — and options can be
+removed, which they could not be before.
+
+Also: the inline label and help text now edit **the language being viewed**, not the
+organisation's default. Writing to the default meant an author working in English typed English
+into the Swedish slot and watched their text vanish behind a fallback.
+
+### Pages
+
+Back and Save on the left, forward on the right, the way every multi-step form works — the actions
+used to sit in one left-aligned row where "Next" fell between "Back" and "Save". The last page's
+action is the submit and says so, defaulting to **Complete**.
+
+**Not "Sign".** A signature carrying legal weight is a regulated feature this product does not
+have (`SPEC-forms.md` §8), and a button reading "Sign" would be claiming one. An author who wants
+different wording sets `submitLabel`, which every template already does.
+
+A duplicate "Page 1 of 2" introduced while moving the actions was caught by looking at the page.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
