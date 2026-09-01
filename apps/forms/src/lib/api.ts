@@ -1,5 +1,6 @@
 import type { api, forms as formSchemas } from '@tp/shared';
 import type { TokenSet, ContrastFinding } from '@tp/tokens';
+import type { FormTemplate } from '@tp/shared/forms';
 
 export interface BrandKitResponse {
   tokens: TokenSet;
@@ -189,7 +190,14 @@ export const client = {
 
   getForm: (id: string) => request<formSchemas.FormResponse>(`/v1/forms/${id}`),
 
-  createForm: (input: { slug: string; title: Record<string, string>; eventId?: string | null }) =>
+  formTemplates: () => request<{ templates: FormTemplate[] }>('/v1/form-templates'),
+
+  createForm: (input: {
+    slug: string;
+    title: Record<string, string>;
+    eventId?: string | null;
+    templateId?: string;
+  }) =>
     request<formSchemas.FormResponse>('/v1/forms', { method: 'POST', body: JSON.stringify(input) }),
 
   updateForm: (id: string, patch: Record<string, unknown>) =>

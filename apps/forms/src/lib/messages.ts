@@ -191,6 +191,20 @@ export const messages: Catalogue = {
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
+  'templates.heading': { 'sv-SE': 'Börja från', 'en-GB': 'Start from' },
+  'templates.intro': {
+    'sv-SE':
+      'Mallarna är utgångspunkter — ändra allt som inte passar er. Juridiska, medicinska och skatterelaterade formulär finns medvetet inte här; den texten måste en människa skriva.',
+    'en-GB':
+      'Templates are starting points — change anything that does not fit. Legal, medical and tax forms are deliberately absent; that wording has to come from a person.',
+  },
+  'templates.blank': { 'sv-SE': 'Tomt formulär', 'en-GB': 'Blank form' },
+  'templates.blankHint': {
+    'sv-SE': 'Börja från ingenting.',
+    'en-GB': 'Start from nothing.',
+  },
+  'templates.fields': { 'sv-SE': 'fält', 'en-GB': 'fields' },
+
   'brand.title': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
   'brand.intro': {
     'sv-SE':

@@ -60,6 +60,23 @@ export function registerFormRoutes(
     },
   });
 
+  /**
+   * The template catalogue. Static content that ships with the product, so it is served from code
+   * rather than the database — see `packages/shared/src/forms/templates.ts`.
+   */
+  app.get('/v1/form-templates', {
+    preHandler: requireAuth(deps.guard, ['admin', 'operator']),
+    schema: {
+      tags: ['forms'],
+      response: {
+        200: z.object({ templates: z.array(formSchemas.FormTemplate) }),
+        401: api.ErrorResponse,
+        403: api.ErrorResponse,
+      },
+    },
+    handler: async () => ({ templates: formSchemas.FORM_TEMPLATES }),
+  });
+
   app.post('/v1/forms', {
     preHandler: adminOnly,
     schema: {
@@ -79,12 +96,29 @@ export function registerFormRoutes(
           .send({ error: { code: 'slug-taken', message: 'That link is already in use' } });
       }
 
+      /**
+       * An unknown template id is refused rather than quietly ignored. Silently handing back an
+       * empty form when somebody asked for "Customer feedback" is the kind of failure people
+       * discover ten minutes into rebuilding it by hand.
+       */
+      let draftDefinition = formSchemas.emptyDefinition;
+      if (body.templateId) {
+        const template = formSchemas.findTemplate(body.templateId);
+        if (!template) {
+          return reply.code(422).send({
+            error: { code: 'unknown-template', message: 'That template does not exist' },
+          });
+        }
+        // Deep-copied, so editing this form can never reach the shipped catalogue.
+        draftDefinition = structuredClone(template.definition);
+      }
+
       const record = await deps.repos.forms.create({
         organisationId: auth.organisation.id,
         eventId: body.eventId ?? null,
         slug: body.slug,
         title: body.title,
-        draftDefinition: formSchemas.emptyDefinition,
+        draftDefinition,
         opensAt: null,
         closesAt: null,
       });
