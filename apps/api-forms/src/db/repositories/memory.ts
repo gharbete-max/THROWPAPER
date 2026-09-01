@@ -11,6 +11,8 @@ import type {
   FormVersionRecord,
   JobRecord,
   LoginTokenRecord,
+  MessageRecord,
+  SendingDomainRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
@@ -37,6 +39,8 @@ export interface MemoryState {
   formVersions: FormVersionRecord[];
   submissions: SubmissionRecord[];
   jobs: JobRecord[];
+  sendingDomains: SendingDomainRecord[];
+  messages: MessageRecord[];
   audit: AuditEntryRecord[];
 }
 
@@ -69,6 +73,8 @@ export function createMemoryRepositories(
     formVersions: seed.formVersions ?? [],
     submissions: seed.submissions ?? [],
     jobs: seed.jobs ?? [],
+    sendingDomains: seed.sendingDomains ?? [],
+    messages: seed.messages ?? [],
     audit: seed.audit ?? [],
   };
 
@@ -414,6 +420,58 @@ export function createMemoryRepositories(
         state.jobs[index] = retryAt
           ? { ...job, status: 'queued', error, runAfter: retryAt }
           : { ...job, status: 'failed', error, finishedAt: new Date() };
+      },
+    },
+
+    sendingDomains: {
+      list: async (organisationId) =>
+        state.sendingDomains
+          .filter((d) => d.organisationId === organisationId)
+          .map((d) => ({ ...d })),
+      findById: async (organisationId, id) => {
+        const found = state.sendingDomains.find(
+          (d) => d.organisationId === organisationId && d.id === id,
+        );
+        return found ? { ...found } : null;
+      },
+      findByDomain: async (organisationId, domain) => {
+        const found = state.sendingDomains.find(
+          (d) => d.organisationId === organisationId && d.domain === domain.toLowerCase(),
+        );
+        return found ? { ...found } : null;
+      },
+      create: async (input) => {
+        const record: SendingDomainRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          domain: input.domain.toLowerCase(),
+          fromAddress: input.fromAddress.toLowerCase(),
+          dkimSelectors: input.dkimSelectors,
+          verified: false,
+          checks: [],
+          lastCheckedAt: null,
+          createdAt: new Date(),
+        };
+        state.sendingDomains.push(record);
+        return { ...record };
+      },
+      saveVerification: async (id, input) => {
+        const index = state.sendingDomains.findIndex((d) => d.id === id);
+        const existing = state.sendingDomains[index];
+        if (!existing) return null;
+        const updated: SendingDomainRecord = { ...existing, ...input };
+        state.sendingDomains[index] = updated;
+        return { ...updated };
+      },
+    },
+
+    messages: {
+      list: async (organisationId) =>
+        state.messages.filter((m) => m.organisationId === organisationId).map((m) => ({ ...m })),
+      record: async (input) => {
+        const record: MessageRecord = { ...input, id: randomUUID(), createdAt: new Date() };
+        state.messages.push(record);
+        return { ...record };
       },
     },
 

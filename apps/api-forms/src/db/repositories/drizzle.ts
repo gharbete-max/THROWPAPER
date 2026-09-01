@@ -7,7 +7,9 @@ import {
   forms,
   jobs,
   loginTokens,
+  messages,
   organisations,
+  sendingDomains,
   submissions,
   refreshTokens,
   users,
@@ -21,7 +23,9 @@ import type {
   FormUpdate,
   FormVersionRecord,
   JobRecord,
+  MessageRecord,
   Repositories,
+  SendingDomainRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
@@ -452,6 +456,76 @@ export function createDrizzleRepositories(db: Db): Repositories {
               : { status: 'failed', error, finishedAt: new Date() },
           )
           .where(eq(jobs.id, id));
+      },
+    },
+
+    sendingDomains: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(sendingDomains)
+          .where(eq(sendingDomains.organisationId, organisationId))) as SendingDomainRecord[],
+      findById: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(sendingDomains)
+            .where(
+              and(eq(sendingDomains.organisationId, organisationId), eq(sendingDomains.id, id)),
+            )
+            .limit(1),
+        ) as SendingDomainRecord | null,
+      findByDomain: async (organisationId, domain) =>
+        first(
+          await db
+            .select()
+            .from(sendingDomains)
+            .where(
+              and(
+                eq(sendingDomains.organisationId, organisationId),
+                eq(sendingDomains.domain, domain.toLowerCase()),
+              ),
+            )
+            .limit(1),
+        ) as SendingDomainRecord | null,
+      create: async (input) => {
+        const [row] = await db
+          .insert(sendingDomains)
+          .values({
+            organisationId: input.organisationId,
+            domain: input.domain.toLowerCase(),
+            fromAddress: input.fromAddress.toLowerCase(),
+            dkimSelectors: input.dkimSelectors,
+          })
+          .returning();
+        if (!row) throw new Error('sending domain insert returned no row');
+        return row as SendingDomainRecord;
+      },
+      saveVerification: async (id, input) => {
+        const [row] = await db
+          .update(sendingDomains)
+          .set({
+            verified: input.verified,
+            checks: input.checks,
+            lastCheckedAt: input.lastCheckedAt,
+          })
+          .where(eq(sendingDomains.id, id))
+          .returning();
+        return (row as SendingDomainRecord | undefined) ?? null;
+      },
+    },
+
+    messages: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(messages)
+          .where(eq(messages.organisationId, organisationId))
+          .orderBy(desc(messages.createdAt))) as MessageRecord[],
+      record: async (input) => {
+        const [row] = await db.insert(messages).values(input).returning();
+        if (!row) throw new Error('message insert returned no row');
+        return row as MessageRecord;
       },
     },
 

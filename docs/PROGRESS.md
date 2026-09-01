@@ -344,8 +344,65 @@ implementation is the obvious next one and nothing above that interface changes 
 
 **Next**
 
-4b — SES (`eu-north-1`), sending-domain verification with live SPF/DKIM/DMARC checks, and the
-confirmation and notification emails.
+4b is done — see below.
+
+## Phase 4b — SES, domain verification, real email · done
+
+**Phase 4 is complete.**
+
+**Shipped**
+
+- `mail/provider.ts` — `MailTransport` widened into **`MailProvider`**: `from`, `html`,
+  `attachments`, a returned `messageId`. One mail seam, not two; `auth/mail.ts` re-exports it so
+  the magic link and resume link callers are unchanged.
+- `mail/ses.ts` — Amazon SES `eu-north-1` (Stockholm). SES has no attachment field in the simple
+  API, so anything with a PDF is assembled as raw MIME: `multipart/mixed` around a
+  `multipart/alternative`, RFC 2047 encoded subject, base64 wrapped at 76 characters.
+- `mail/domain-verification.ts` — live SPF, DKIM and DMARC checks over `node:dns/promises`, each
+  returning what was found and **what to paste into DNS**.
+- `mail/send-job.ts` — sending runs as a **job, never from a request handler**
+  (`SPEC-mailer.md` §8), keyed so a retry cannot double-send.
+- `email/templates.tsx` — confirmation and operator notification on **`toEmailStyles()`**, phase
+  1's email compiler used for real for the first time. The React Email components moved out of
+  `scripts/proof/` as 3a said they would.
+- `sending_domains` and `messages` tables (`0005_sending_domains.sql`). The message log is
+  `SPEC-mailer.md` §5's "per-recipient log of exactly what was rendered and sent", and what B11's
+  bounce webhooks will attach to.
+
+**The rule with no override**
+
+`SPEC-mailer.md` §6: "Refuse to send from an unverified domain — no override." `assertSendable`
+takes no `force` parameter, and there is a test asserting its arity so nobody adds one absent-
+mindedly. All three records must pass — a domain with SPF alone is exactly the setup that lands in
+spam. Console and memory providers are exempt, because there is no domain reputation to burn in
+development.
+
+**Two corrections to things that had become false**
+
+- `messages.send` was deferred to "phase 4". Phase 4 built the sending path **inside Formwork**,
+  so it is now B6. 
+- `delivery.webhook` was deferred to "phase 4" too; it waits for Sendwork's bounce handling in
+  B11.
+
+Left alone, `pnpm contract:check` would have cheerfully printed both lies on every run.
+
+**Deferred**
+
+Bounce and complaint handling beyond recording the message (B11), suppression lists, campaigns,
+warm-up, and the `POST /v1/messages` contract endpoint.
+
+**What is still unproven**
+
+Every email test uses the memory provider. **No message has been sent through SES**, because that
+needs AWS credentials and a verified domain. START-HERE's phase 4 checkpoint — does mail reliably
+land in real inboxes — is therefore **not met yet**, and cannot be until:
+
+1. SES **production access** is granted (a request to AWS; a new account only delivers to verified
+   addresses until then), and
+2. a real sending domain has SPF, DKIM and DMARC published.
+
+The code refuses to send until step 2 is true, which is the correct behaviour and also means the
+checkpoint fails closed rather than silently.
 
 ## Next
 

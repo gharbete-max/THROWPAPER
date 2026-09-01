@@ -11,7 +11,7 @@ import {
 import { CONTRACT_VERSION } from '@tp/shared';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { createAuthService } from './auth/service.js';
-import { createConsoleMailTransport, type MailTransport } from './auth/mail.js';
+import { createConsoleMailProvider, type MailProvider } from './auth/mail.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerFormRoutes } from './routes/forms.js';
@@ -21,11 +21,15 @@ import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
 import { createWorker } from './jobs/worker.js';
+import { registerSendingDomainRoutes } from './routes/sending-domains.js';
+import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
+import { createSesMailProvider } from './mail/ses.js';
+import type { TxtResolver } from './mail/domain-verification.js';
 
 export interface ServerOptions {
   /** Injected by the tests; defaults to the Drizzle implementation over Postgres. */
   repos?: Repositories;
-  mail?: MailTransport;
+  mail?: MailProvider;
   jwtSecret?: string;
   appUrl?: string;
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
@@ -38,6 +42,10 @@ export interface ServerOptions {
    * a job runs exactly when the test says it does.
    */
   startWorker?: boolean;
+  /** Stubbed by the domain-verification tests so no real DNS is queried. */
+  resolver?: TxtResolver;
+  /** Where the operator notification goes. */
+  operatorAddress?: string | null;
 }
 
 /**
@@ -64,7 +72,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   const repos = options.repos ?? database?.repos;
   if (!repos) throw new Error('no repositories available');
 
-  const mail = options.mail ?? createConsoleMailTransport((message) => app.log.info(message));
+  const mail = options.mail ?? configuredMailProvider((message: string) => app.log.info(message));
   const jwtSecret = options.jwtSecret ?? requireSecret();
   const appUrl = options.appUrl ?? process.env['APP_URL'] ?? 'http://localhost:5173';
   const probeDatabase = options.probeDatabase ?? database !== null;
@@ -93,9 +101,20 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     });
 
   const admission = { repos, renderer, store, jwtSecret };
+  const mailDeps = {
+    repos,
+    provider: mail,
+    admission,
+    appUrl,
+    operatorAddress: options.operatorAddress ?? process.env['MAIL_OPERATOR'] ?? null,
+  };
+
   const worker = createWorker({
     repos,
-    handlers: { [ADMISSION_BULK_JOB]: createAdmissionBulkHandler(admission) },
+    handlers: {
+      [ADMISSION_BULK_JOB]: createAdmissionBulkHandler(admission),
+      [MAIL_SEND_JOB]: createMailSendHandler(mailDeps),
+    },
     onError: (error, job) => app.log.error({ error, jobId: job.id }, 'job failed'),
   });
   app.decorate('worker', worker);
@@ -111,8 +130,27 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
-  registerPublicFormRoutes(app, { repos, mail, appUrl });
+  registerPublicFormRoutes(app, {
+    repos,
+    mail,
+    appUrl,
+    // One job per message, keyed so a retry cannot double-send.
+    onSubmitted: async (submissionId) => {
+      const organisation = await repos.organisations.first();
+      if (!organisation) return;
+      for (const templateKey of ['registration.confirmation', 'registration.notification']) {
+        await repos.jobs.enqueue({
+          organisationId: organisation.id,
+          kind: MAIL_SEND_JOB,
+          idempotencyKey: `${MAIL_SEND_JOB}:${templateKey}:${submissionId}`,
+          payload: { templateKey, submissionId },
+          progressTotal: 1,
+        });
+      }
+    },
+  });
   registerDocumentRoutes(app, { repos, guard, admission, store });
+  registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
 
   app.get('/health', async (_request, reply) => {
     let state: 'up' | 'down' | 'skipped' = 'skipped';
@@ -137,6 +175,31 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   app.get('/openapi.json', async () => app.swagger());
 
   return app;
+}
+
+/**
+ * Which provider to send through.
+ *
+ * Console by default so development never needs AWS credentials. `MAIL_PROVIDER=ses` switches to
+ * Amazon SES in the region from `MAIL_REGION` — `eu-north-1` (Stockholm), so recipient data stays
+ * in Sweden (START-HERE decision 4).
+ */
+function configuredMailProvider(log: (message: string) => void): MailProvider {
+  const provider = process.env['MAIL_PROVIDER'] ?? 'console';
+  if (provider !== 'ses') return createConsoleMailProvider(log);
+
+  const from = process.env['MAIL_FROM'];
+  if (!from) {
+    throw new Error('MAIL_PROVIDER=ses requires MAIL_FROM to be set to a verified sender address.');
+  }
+
+  return createSesMailProvider({
+    region: process.env['MAIL_REGION'] ?? 'eu-north-1',
+    from,
+    ...(process.env['MAIL_CONFIGURATION_SET']
+      ? { configurationSet: process.env['MAIL_CONFIGURATION_SET'] }
+      : {}),
+  });
 }
 
 /**

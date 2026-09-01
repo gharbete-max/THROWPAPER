@@ -280,6 +280,53 @@ export interface JobRepository {
   fail(id: string, error: string, retryAt: Date | null): Promise<void>;
 }
 
+export interface SendingDomainRecord {
+  id: string;
+  organisationId: string;
+  domain: string;
+  fromAddress: string;
+  dkimSelectors: string[];
+  verified: boolean;
+  checks: unknown[];
+  lastCheckedAt: Date | null;
+  createdAt: Date;
+}
+
+export interface SendingDomainRepository {
+  list(organisationId: string): Promise<SendingDomainRecord[]>;
+  findById(organisationId: string, id: string): Promise<SendingDomainRecord | null>;
+  findByDomain(organisationId: string, domain: string): Promise<SendingDomainRecord | null>;
+  create(input: {
+    organisationId: string;
+    domain: string;
+    fromAddress: string;
+    dkimSelectors: string[];
+  }): Promise<SendingDomainRecord>;
+  saveVerification(
+    id: string,
+    input: { verified: boolean; checks: unknown[]; lastCheckedAt: Date },
+  ): Promise<SendingDomainRecord | null>;
+}
+
+export interface MessageRecord {
+  id: string;
+  organisationId: string;
+  submissionId: string | null;
+  templateKey: string;
+  to: string;
+  locale: string;
+  subject: string;
+  providerMessageId: string | null;
+  provider: string | null;
+  sentAt: Date | null;
+  createdAt: Date;
+}
+
+export interface MessageRepository {
+  list(organisationId: string): Promise<MessageRecord[]>;
+  record(input: Omit<MessageRecord, 'id' | 'createdAt'>): Promise<MessageRecord>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -293,5 +340,7 @@ export interface Repositories {
   forms: FormRepository;
   submissions: SubmissionRepository;
   jobs: JobRepository;
+  sendingDomains: SendingDomainRepository;
+  messages: MessageRepository;
   audit: AuditRepository;
 }

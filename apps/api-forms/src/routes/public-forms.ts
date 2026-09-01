@@ -3,7 +3,7 @@ import type { FastifyInstance, FastifyReply } from 'fastify';
 import { pickText } from '@tp/i18n';
 import { api, forms as formSchemas } from '@tp/shared';
 import type { Repositories } from '../db/repositories/index.js';
-import type { MailTransport } from '../auth/mail.js';
+import type { MailProvider } from '../auth/mail.js';
 import { expiryFrom, generateSecret, hashSecret } from '../auth/tokens.js';
 import {
   capacityFor,
@@ -25,7 +25,12 @@ const RESUME_TTL_SECONDS = 30 * 24 * 60 * 60;
  */
 export function registerPublicFormRoutes(
   app: FastifyInstance,
-  deps: { repos: Repositories; mail: MailTransport; appUrl: string },
+  deps: {
+    repos: Repositories;
+    mail: MailProvider;
+    appUrl: string;
+    onSubmitted?: (submissionId: string) => Promise<void>;
+  },
 ): void {
   async function loadPublished(slug: string) {
     const organisation = await deps.repos.organisations.first();
@@ -260,6 +265,10 @@ export function registerPublicFormRoutes(
         loaded.definition.settings.confirmationMessage,
         body.locale,
       );
+
+      // Enqueued, never sent inline — SPEC-mailer.md §8. A registration must not fail because a
+      // provider was slow.
+      await deps.onSubmitted?.(result.submission.id);
 
       return reply.code(201).send({
         status: 'received' as const,
