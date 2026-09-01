@@ -54,6 +54,12 @@ export async function signInAs(
   page: Page,
   sql: ReturnType<typeof db>,
   email: string,
+  /**
+   * Pinned, not inherited. The authenticated shell takes its language from the browser, and CI's
+   * Chromium reports `en-US` — so assertions written against Swedish labels silently looked for
+   * text that was never on the page.
+   */
+  locale: 'sv-SE' | 'en-GB' = 'sv-SE',
 ): Promise<void> {
   const [user] = await sql`select id from users where email = ${email} limit 1`;
   if (!user) throw new Error(`No seeded user ${email} — run pnpm db:seed first.`);
@@ -70,9 +76,13 @@ export async function signInAs(
   `;
 
   // Must be set for the app's origin before the first load, or restoreSession finds nothing.
-  await page.addInitScript((token: string) => {
-    window.localStorage.setItem('tp.refresh', token);
-  }, secret);
+  await page.addInitScript(
+    ({ token, locale: chosen }: { token: string; locale: string }) => {
+      window.localStorage.setItem('tp.refresh', token);
+      window.localStorage.setItem('tp.locale', chosen);
+    },
+    { token: secret, locale },
+  );
 }
 
 /** Removes rows a test created, so a re-run starts clean. */
