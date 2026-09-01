@@ -92,10 +92,22 @@ images: header art, per-question illustrations, image-choice options. Those need
 `SPEC-forms.md` §7 defers, so they are the larger half and are distinct from A6's *respondent*
 photo capture.
 
-**A16.** Template gallery. Prebuilt forms covering the most commonly used form in each sector and
-business, chosen at creation and then edited freely. Requires A5 versioning to already exist, and
-is mostly content work rather than engineering — the engineering is one screen, a seeded
-catalogue, and keeping templates valid as the field schema moves.
+**A16.** Template gallery.
+
+*Done, with six templates.* Chosen when a form is created and copied into the draft, never
+referenced — improving a template must not rewrite forms people are already filling in. The
+catalogue is code rather than database rows, and a test parses every template against the schema
+so a field type gaining a required property fails the build instead of a customer's afternoon.
+
+*Deliberately limited.* `CLAUDE.md` rule 8 rules out the categories a template gallery would
+otherwise reach for first — incident and accident reports, medical intake, consent and waiver
+forms, tax declarations, employment contracts. A plausible-looking one written here would be worse
+than none, because somebody would send it out. What ships is the operational middle: event
+registration, contact enquiry, customer feedback, course sign-up, booking request, member details.
+The gallery says so on the screen.
+
+*Remaining.* More sectors, and templates carrying images now that A15b exists. Both are content
+work, and the right people to write them are the ones who use the forms.
 
 ### Open, from the direction note
 

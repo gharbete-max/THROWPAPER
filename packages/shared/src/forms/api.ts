@@ -19,6 +19,14 @@ export const CreateForm = z.object({
   slug: FormSlug,
   /** Optional: a form can stand alone, or collect registrations for one event. */
   eventId: Uuid.nullable().optional(),
+  /**
+   * Start from a prebuilt template instead of an empty form.
+   *
+   * The template is **copied into the draft**, not referenced. An author edits their form, not a
+   * shared original — otherwise improving a template would silently rewrite forms that people are
+   * already filling in.
+   */
+  templateId: z.string().min(1).max(64).optional(),
 });
 
 export const UpdateForm = z.object({

@@ -655,6 +655,46 @@ not supported, upload a PNG instead" tells somebody what to do next, "upload fai
 the registration submitted — reference `KQNR-2NZ9`, with `veg` stored, not the image path.
 
 
+## A16 — the template gallery · done
+
+Six prebuilt forms, chosen when a form is created.
+
+**Copied, never referenced.** The template is deep-copied into the draft. If a form kept a
+reference, improving a template later would silently rewrite forms that people are already filling
+in — and in the same process, the first author to edit theirs would mutate the shipped catalogue
+for everybody who picked it afterwards. A test asserts that editing a form leaves the template
+untouched.
+
+**Code, not database rows.** A template ships with the product and has to stay valid as the field
+schema moves. A seeded table would drift the moment a field type gained a required property, and
+nothing would notice until an author picked that template; `templates.test.ts` parses every one
+against `FormDefinition`, so the build finds out instead. Another test creates a form from every
+template and publishes it with no edits — a template that needs fixing before it can be published
+is not a template, it is homework.
+
+**What is deliberately not here, and why.** `CLAUDE.md` rule 8 and `SPEC-forms.md` §8: no legal,
+clinical, tax or safety-critical wording. That rules out most of what a template gallery reaches
+for first — incident and accident reports, medical intake, consent and waiver forms, tax
+declarations, employment contracts. Those need a human who is accountable for the words, and a
+plausible-looking one written here would be worse than none: somebody would send it out.
+
+What ships is the operational middle — event registration, contact enquiry, customer feedback,
+course sign-up, booking request, member details — and the gallery says on screen that legal,
+medical and tax forms are absent on purpose. A word-list test fails the build if a new template
+reaches for those categories. It cannot prove absence and does not pretend to; what it does is
+make the boundary a decision rather than something that erodes one well-meaning template at a
+time. **It caught its own author**: a description reading "no fees or terms" tripped it, and the
+right fix was to reword rather than to soften the check.
+
+**Every template is bilingual**, and a test proves it. A half-translated template is worse than an
+English-only one, because the author cannot tell which strings are theirs to finish.
+
+**Verified by using it**: picked Customer feedback from the gallery, which prefilled the title,
+created the form, published it untouched, and got a working feedback form — a 1–5 rating as a
+button strip, two free-text boxes, a Yes/No radio pair and a conditional email field, in the
+organisation's palette. Three clicks from "New form" to something publishable.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

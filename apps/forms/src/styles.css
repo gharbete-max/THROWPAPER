@@ -753,3 +753,55 @@ textarea {
   border: var(--tp-border-width) solid var(--tp-colour-border);
   border-radius: var(--tp-radius);
 }
+
+/* The template gallery. A radio group painted as cards — same technique as a choice field, and
+ * for the same reason: picking a starting point is a choice among alternatives, so it should
+ * behave like one for the keyboard and for a screen reader. */
+.templates {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--tp-spacing-unit);
+}
+
+@media (min-width: 700px) {
+  .templates {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.template {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  align-items: flex-start;
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  cursor: pointer;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.template input {
+  margin-block-start: 2px;
+  inline-size: 20px;
+  block-size: 20px;
+  flex: none;
+  accent-color: var(--tp-colour-primary);
+}
+
+.template__body {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+}
+
+.template:has(input:checked) {
+  border-color: var(--tp-colour-primary);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary);
+}
+
+.template:has(input:focus-visible) {
+  outline: 2px solid var(--tp-colour-primary);
+  outline-offset: 2px;
+}
