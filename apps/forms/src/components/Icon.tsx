@@ -35,6 +35,7 @@ export type IconName =
   | 'page_break'
   | 'rich_text'
   | 'image'
+  | 'link'
   | 'hidden'
   // Actions and navigation.
   | 'arrow-left'
@@ -71,6 +72,7 @@ const PATHS: Record<IconName, string> = {
   page_break: 'M3 12h4M10 12h4M17 12h4M12 3v4M12 17v4',
   rich_text: 'M5 5h14M5 10h14M5 15h9M5 20h6',
   image: 'M3 5h18v14H3zM3 16l5-5 4 4 3-3 6 6',
+  link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
   hidden: 'M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6zM4 4l16 16',
 
   'arrow-left': 'M20 12H4M10 6l-6 6 6 6',

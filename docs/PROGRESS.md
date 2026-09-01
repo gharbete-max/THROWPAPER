@@ -927,6 +927,56 @@ header can only be as wide as its column. They are 44px tall and fill their colu
 the width would break the table. Recorded rather than quietly ignored.
 
 
+## Total customization: sliders, type, logo colour, link fields · done
+
+**Everything is a slider now.** Corner radius, border thickness, spacing, button and field height,
+form width, text size, line height, heading scale — each with a live preview beside it. A number
+box asks somebody to guess what 6 looks like; a slider next to the thing it changes lets them find
+the answer by moving it.
+
+Two new tokens carry the sizing: `controlHeight` and `contentWidth`. Both defaulted in the schema,
+so a brand kit stored before they existed still parses.
+
+**The 44px floor survives customisation, but only where it matters.** An author who wants a dense
+desktop form gets one — 32px controls are ordinary with a mouse. Under `@media (pointer: coarse)`
+the floor comes back: a control too small to hit reliably is broken however deliberately it was
+chosen, and the person filling in the form did not choose it.
+
+**Typography**: font family from a list of stacks that are already on the machine — no web fonts,
+because a downloaded typeface means a request before the form can be read, a flash of unstyled
+text, and a third party told about every visitor. Plus size, line height, heading scale, and
+bold / italic / underline for question labels as three toggle buttons.
+
+**A logo now sets the button colour.** Uploading one reads the colour it is mostly made of and
+offers it as the primary, replacing the shipped blue.
+
+The naive version of this is wrong in two ways, and both are handled: "most frequent pixel" picks
+the *background* — a logo on white is mostly white — so transparent, near-grey and near-black or
+near-white pixels are discarded; and anti-aliasing splits one colour across dozens of
+near-identical values, so the rest are bucketed coarsely and the winner averaged over its real
+members. Verified against the demo logo: Deep Midnight at 95% share, correctly ignoring the gold
+bar and the transparent ground.
+
+It is **offered, not applied**. Reading a colour out of an image is a good guess and still a guess;
+silently repainting somebody's product the moment they upload a file is the kind of helpfulness
+that feels like a bug.
+
+**A `link` field.** The author gives a URL and a label, and somebody filling in the form can open
+it — terms, a price list, directions — without losing what they have typed. It opens in a new tab
+for exactly that reason, with `rel="noopener"` so the opened page cannot navigate the form away.
+`http` and `https` only: an author-supplied `javascript:` href on a public page is script execution
+against every visitor, and there is a test for each scheme.
+
+### Asked for and not done yet
+
+**Per-field size overrides.** The sizing here is global — every button and field takes the same
+height. Setting them individually needs a per-field style object on the definition and is the
+larger half of the job.
+
+**Bold, italic and underline inside a text block.** Currently theme-level, applying to question
+labels. Doing it per span means a rich-text representation and an editor for it.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

@@ -19,7 +19,10 @@
     "scaleRatio": 1.25,
     "lineHeight": 1.5,
     "weightRegular": 400,
-    "weightBold": 600
+    "weightBold": 600,
+    "labelWeight": 400,
+    "labelStyle": "normal",
+    "labelDecoration": "none"
   },
   "spacingUnit": "8px",
   "radius": "6px",
@@ -28,5 +31,7 @@
   "buttonStyle": "solid",
   "logoLight": null,
   "logoDark": null,
-  "favicon": null
+  "favicon": null,
+  "controlHeight": "44px",
+  "contentWidth": "640px"
 }

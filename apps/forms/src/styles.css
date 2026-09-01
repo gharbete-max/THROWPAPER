@@ -45,7 +45,9 @@ body {
 
 /* Phase 2 shell. Every value below is a token variable — CLAUDE.md rule 4. */
 .shell--narrow {
-  max-width: 26rem;
+  /* The author's choice, not a hard-coded width — how wide a form gets is a real design decision
+   * and differs between a two-question enquiry and a long registration. */
+  max-width: var(--tp-content-width);
 }
 
 .topbar {
@@ -483,7 +485,28 @@ summary,
 .button,
 .grid__sort,
 .demo-banner__action {
-  min-height: 44px;
+  min-height: var(--tp-control-height);
+}
+
+/**
+ * The 44px floor applies where a finger is doing the pointing, and only there.
+ *
+ * An author who wants a dense form on a desktop should get one — 32px controls are ordinary with a
+ * mouse. On a touch screen the floor is not theirs to lower: a control too small to hit reliably
+ * is a broken control however deliberately it was chosen, so the customisation stops at the point
+ * where it would break the form for the person filling it in.
+ */
+@media (pointer: coarse) {
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  .button,
+  .grid__sort,
+  .demo-banner__action {
+    min-height: max(44px, var(--tp-control-height));
+  }
 }
 
 /* A summary is a block by default, so min-height alone leaves the text at the top of a tall box. */
@@ -1097,4 +1120,48 @@ textarea {
 .builder__itemRow .button--icon {
   min-inline-size: 40px;
   padding-inline: 0;
+}
+
+/* A question's label, set the way the brand kit asks. Its own controls because it is the text
+ * people read most on a form. */
+.field > span:first-child,
+.choice > legend {
+  font-weight: var(--tp-type-label-weight);
+  font-style: var(--tp-type-label-style);
+  text-decoration: var(--tp-type-label-decoration);
+}
+
+/* A link the author put in the form, shown as text rather than a button. */
+.form-link {
+  color: var(--tp-colour-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Brand editor: sliders and the colour a logo suggested. */
+.brand__slider input[type='range'] {
+  inline-size: 100%;
+  accent-color: var(--tp-colour-primary);
+  min-block-size: 0;
+}
+
+.brand__suggestion {
+  padding: calc(var(--tp-spacing-unit) * 0.75);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  gap: var(--tp-spacing-unit);
+}
+
+.brand__swatch {
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: var(--tp-radius);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  display: inline-block;
+  margin-inline-end: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.brand__styleRow {
+  gap: calc(var(--tp-spacing-unit) * 0.5);
 }

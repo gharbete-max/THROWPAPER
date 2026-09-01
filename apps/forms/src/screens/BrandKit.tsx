@@ -5,6 +5,7 @@ import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useBrand } from '../lib/brand.js';
 import { ImagePicker } from '../components/ImagePicker.js';
+import { dominantColour } from '../lib/dominant-colour.js';
 
 /**
  * The Brand Kit editor.
@@ -32,6 +33,86 @@ const COLOUR_FIELDS = [
 
 type ColourKey = (typeof COLOUR_FIELDS)[number]['key'];
 
+/**
+ * Every length in the token set, as a slider.
+ *
+ * A number box asks somebody to guess what 6 looks like; a slider with a live preview beside it
+ * lets them find the answer by moving it. The bounds are what keeps the form usable — a 40px
+ * radius is a pill and a 0px one is a box, but a 200px one is a shape nobody chose on purpose.
+ */
+const LENGTHS: ReadonlyArray<{
+  key: 'radius' | 'borderWidth' | 'spacingUnit' | 'controlHeight' | 'contentWidth';
+  min: number;
+  max: number;
+  hint?: string;
+}> = [
+  { key: 'radius', min: 0, max: 20 },
+  { key: 'borderWidth', min: 0, max: 4 },
+  { key: 'spacingUnit', min: 4, max: 16, hint: 'brand.spacingHint' },
+  { key: 'controlHeight', min: 32, max: 64, hint: 'brand.controlHeightHint' },
+  { key: 'contentWidth', min: 360, max: 1000, hint: 'brand.contentWidthHint' },
+];
+
+/**
+ * Fonts that are already on the machine.
+ *
+ * No web fonts: a downloaded typeface means a request before the form can be read, a flash of
+ * unstyled text, and a third party told about every visitor. These stacks all resolve to
+ * something installed, which is why the form appears immediately.
+ */
+const FONT_STACKS = [
+  'Inter, system-ui, sans-serif',
+  'system-ui, sans-serif',
+  'Georgia, "Times New Roman", serif',
+  '"Segoe UI", Roboto, sans-serif',
+  '"Helvetica Neue", Arial, sans-serif',
+  'ui-monospace, "Cascadia Mono", Menlo, monospace',
+];
+
+function Slider({
+  label,
+  hint,
+  min,
+  max,
+  step = 1,
+  suffix = 'px',
+  value,
+  disabled,
+  onChange,
+}: {
+  label: string;
+  hint?: string | undefined;
+  min: number;
+  max: number;
+  step?: number;
+  suffix?: string;
+  value: number;
+  disabled: boolean;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="field brand__slider">
+      <span className="row row--between">
+        {label}
+        <span className="small muted">
+          {value}
+          {suffix}
+        </span>
+      </span>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        disabled={disabled}
+        onChange={(event) => onChange(Number(event.target.value))}
+      />
+      {hint && <span className="small muted">{hint}</span>}
+    </label>
+  );
+}
+
 export function BrandKit() {
   const t = useT();
   const { user } = useSession();
@@ -40,6 +121,18 @@ export function BrandKit() {
   const [saved, setSaved] = useState<BrandKitResponse | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'saving' | 'error'>('loading');
   const [error, setError] = useState<string | null>(null);
+  const [suggested, setSuggested] = useState<string | null>(null);
+
+  /**
+   * Reads the colour a logo is mostly made of, so the buttons can match it instead of staying the
+   * blue this product shipped with. Silent on failure — a greyscale mark has no answer to give,
+   * and a wrong colour is worse than no suggestion.
+   */
+  async function suggestFromLogo(path: string) {
+    const found = await dominantColour(path);
+    // A colour that is barely present is a stray pixel, not the brand.
+    if (found && found.share > 0.12) setSuggested(found.hex);
+  }
 
   const readOnly = user?.role !== 'admin';
 
@@ -132,8 +225,44 @@ export function BrandKit() {
           <ImagePicker
             value={tokens.logoLight}
             disabled={readOnly}
-            onChange={(path) => setTokens((current) => ({ ...current, logoLight: path }))}
+            onChange={(path) => {
+              setTokens((current) => ({ ...current, logoLight: path }));
+              setSuggested(null);
+              if (path) void suggestFromLogo(path);
+            }}
           />
+
+          {/*
+            Offered, not imposed. Reading a colour out of a logo is a guess — a good one, but a
+            guess — and silently repainting somebody's product the moment they upload a file is
+            the kind of helpfulness that feels like a bug. One click applies it; ignoring it costs
+            nothing.
+          */}
+          {suggested && (
+            <div className="row row--between brand__suggestion">
+              <span className="row">
+                <span
+                  className="brand__swatch"
+                  style={{ background: suggested }}
+                  aria-hidden="true"
+                />
+                <span className="small">{t('brand.logoColour')}</span>
+              </span>
+              <button
+                type="button"
+                className="button button--quiet small"
+                onClick={() => {
+                  setTokens((current) => ({
+                    ...current,
+                    colour: { ...current.colour, primary: suggested },
+                  }));
+                  setSuggested(null);
+                }}
+              >
+                {t('brand.logoColourApply')}
+              </button>
+            </div>
+          )}
 
           <h2 className="small">{t('brand.colours')}</h2>
 
@@ -150,40 +279,168 @@ export function BrandKit() {
 
           <h2 className="small">{t('brand.shape')}</h2>
 
-          <label className="field">
-            <span>{t('brand.radius')}</span>
-            <input
-              type="range"
-              min={0}
-              max={20}
-              step={1}
+          {LENGTHS.map(({ key, min, max, hint }) => (
+            <Slider
+              key={key}
+              label={t(`brand.${key}`)}
+              hint={hint ? t(hint) : undefined}
+              min={min}
+              max={max}
+              value={Number.parseFloat(tokens[key]) || min}
               disabled={readOnly}
-              value={Number.parseFloat(tokens.radius) || 0}
-              onChange={(event) =>
-                setTokens((current) => ({ ...current, radius: `${event.target.value}px` }))
-              }
+              onChange={(value) => setTokens((current) => ({ ...current, [key]: `${value}px` }))}
             />
-            <span className="small muted">{tokens.radius}</span>
-          </label>
+          ))}
+
+          <h2 className="small">{t('brand.type')}</h2>
 
           <label className="field">
-            <span>{t('brand.baseSize')}</span>
-            <input
-              type="range"
-              min={14}
-              max={20}
-              step={1}
+            <span>{t('brand.bodyFont')}</span>
+            <select
+              value={tokens.typography.bodyFont}
               disabled={readOnly}
-              value={Number.parseFloat(tokens.typography.baseSize) || 16}
               onChange={(event) =>
                 setTokens((current) => ({
                   ...current,
-                  typography: { ...current.typography, baseSize: `${event.target.value}px` },
+                  typography: {
+                    ...current.typography,
+                    bodyFont: event.target.value,
+                    headingFont: event.target.value,
+                  },
                 }))
               }
-            />
-            <span className="small muted">{tokens.typography.baseSize}</span>
+            >
+              {FONT_STACKS.map((stack) => (
+                <option key={stack} value={stack}>
+                  {stack.split(',')[0]}
+                </option>
+              ))}
+            </select>
           </label>
+
+          <Slider
+            label={t('brand.baseSize')}
+            min={12}
+            max={22}
+            value={Number.parseFloat(tokens.typography.baseSize) || 16}
+            disabled={readOnly}
+            onChange={(value) =>
+              setTokens((current) => ({
+                ...current,
+                typography: { ...current.typography, baseSize: `${value}px` },
+              }))
+            }
+          />
+
+          <Slider
+            label={t('brand.lineHeight')}
+            min={1.1}
+            max={2}
+            step={0.05}
+            suffix=""
+            value={tokens.typography.lineHeight}
+            disabled={readOnly}
+            onChange={(value) =>
+              setTokens((current) => ({
+                ...current,
+                typography: { ...current.typography, lineHeight: value },
+              }))
+            }
+          />
+
+          <Slider
+            label={t('brand.scaleRatio')}
+            min={1}
+            max={1.6}
+            step={0.05}
+            suffix=""
+            hint={t('brand.scaleRatioHint')}
+            value={tokens.typography.scaleRatio}
+            disabled={readOnly}
+            onChange={(value) =>
+              setTokens((current) => ({
+                ...current,
+                typography: { ...current.typography, scaleRatio: value },
+              }))
+            }
+          />
+
+          <h2 className="small">{t('brand.labels')}</h2>
+
+          <div className="row brand__styleRow">
+            <button
+              type="button"
+              className={
+                tokens.typography.labelWeight >= 600
+                  ? 'button button--icon small'
+                  : 'button button--quiet button--icon small'
+              }
+              disabled={readOnly}
+              aria-pressed={tokens.typography.labelWeight >= 600}
+              title={t('brand.bold')}
+              aria-label={t('brand.bold')}
+              onClick={() =>
+                setTokens((current) => ({
+                  ...current,
+                  typography: {
+                    ...current.typography,
+                    labelWeight: current.typography.labelWeight >= 600 ? 400 : 700,
+                  },
+                }))
+              }
+            >
+              <strong>B</strong>
+            </button>
+
+            <button
+              type="button"
+              className={
+                tokens.typography.labelStyle === 'italic'
+                  ? 'button button--icon small'
+                  : 'button button--quiet button--icon small'
+              }
+              disabled={readOnly}
+              aria-pressed={tokens.typography.labelStyle === 'italic'}
+              title={t('brand.italic')}
+              aria-label={t('brand.italic')}
+              onClick={() =>
+                setTokens((current) => ({
+                  ...current,
+                  typography: {
+                    ...current.typography,
+                    labelStyle: current.typography.labelStyle === 'italic' ? 'normal' : 'italic',
+                  },
+                }))
+              }
+            >
+              <em>I</em>
+            </button>
+
+            <button
+              type="button"
+              className={
+                tokens.typography.labelDecoration === 'underline'
+                  ? 'button button--icon small'
+                  : 'button button--quiet button--icon small'
+              }
+              disabled={readOnly}
+              aria-pressed={tokens.typography.labelDecoration === 'underline'}
+              title={t('brand.underline')}
+              aria-label={t('brand.underline')}
+              onClick={() =>
+                setTokens((current) => ({
+                  ...current,
+                  typography: {
+                    ...current.typography,
+                    labelDecoration:
+                      current.typography.labelDecoration === 'underline' ? 'none' : 'underline',
+                  },
+                }))
+              }
+            >
+              <u>U</u>
+            </button>
+          </div>
         </div>
 
         <div className="stack">
