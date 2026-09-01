@@ -19,7 +19,7 @@
     "verify": "pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
     "contract:check": "tsx scripts/contract-check.ts",
     "tokens:proof": "tsx scripts/proof/index.ts",
-    "test:e2e": "echo \"no e2e suite yet \u2014 added in phase 3\" && exit 0",
+    "test:e2e": "echo \"No end-to-end suite yet. It needs a running stack (Postgres + both apps); see docs/PROGRESS.md.\" && exit 0",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:migrate": "pnpm --filter @tp/api-forms db:migrate",
