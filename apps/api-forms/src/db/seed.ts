@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
-import { forms as formSchemas } from '@tp/shared';
 import { db, sql } from './client.js';
 import { events, formVersions, forms, organisations, submissions, users } from './schema.js';
 import { generateReference } from '../forms/public-service.js';
 import { demoEventName, demoSchedule } from '../demo/schedule.js';
+import { DEMO_DEFINITION, DEMO_FORM_SLUG } from '../demo/dataset.js';
 
 /**
  * CLAUDE.md §Demo data — a broken seed blocks demos, so it grows with the schema.
@@ -72,63 +72,8 @@ if (!eventId) {
 
 if (!eventId) throw new Error('seed could not create the demo event');
 
-const DEFINITION: formSchemas.FormDefinition = {
-  schemaVersion: 1,
-  fields: [
-    {
-      id: 'name',
-      key: 'full_name',
-      type: 'short_text',
-      label: { 'sv-SE': 'Namn', 'en-GB': 'Name' },
-      required: true,
-    },
-    {
-      id: 'email',
-      key: 'email',
-      type: 'email',
-      label: { 'sv-SE': 'E-post', 'en-GB': 'Email' },
-      required: true,
-    },
-    {
-      id: 'org',
-      key: 'organisation',
-      type: 'short_text',
-      label: { 'sv-SE': 'Organisation', 'en-GB': 'Organisation' },
-      required: false,
-    },
-    { id: 'page', key: 'page_two', type: 'page_break' },
-    {
-      id: 'meal',
-      key: 'meal',
-      type: 'single_select',
-      label: { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
-      required: true,
-      options: [
-        { value: 'standard', label: { 'sv-SE': 'Standard', 'en-GB': 'Standard' } },
-        { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' } },
-        { value: 'gluten', label: { 'sv-SE': 'Glutenfritt', 'en-GB': 'Gluten free' } },
-      ],
-    },
-    {
-      id: 'guests',
-      key: 'guests',
-      type: 'number',
-      label: { 'sv-SE': 'Medföljande gäster', 'en-GB': 'Accompanying guests' },
-      required: false,
-      min: 0,
-      max: 2,
-    },
-  ],
-  settings: {
-    submitLabel: { 'sv-SE': 'Anmäl mig', 'en-GB': 'Register me' },
-    confirmationMessage: {
-      'sv-SE': 'Tack för din anmälan! Vi ses i maj.',
-      'en-GB': 'Thank you for registering. See you in May.',
-    },
-    duplicateControl: 'email',
-    allowSaveAndResume: true,
-  },
-};
+// The definition lives in demo/dataset.ts so the SQL seed and demo mode show the same product.
+const DEFINITION = DEMO_DEFINITION;
 
 const existingForm = await db.select({ id: forms.id }).from(forms).limit(1);
 
@@ -138,7 +83,7 @@ if (existingForm.length === 0) {
     .values({
       organisationId: organisation.id,
       eventId,
-      slug: 'varmotet-2026',
+      slug: DEMO_FORM_SLUG,
       title: { 'sv-SE': 'Anmälan till Vårmötet', 'en-GB': 'Spring meeting registration' },
       status: 'published',
       draftDefinition: DEFINITION,

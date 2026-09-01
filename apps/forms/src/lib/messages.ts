@@ -179,6 +179,17 @@ export const messages: Catalogue = {
 
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
 
+  'demo.banner': {
+    'sv-SE': 'Demoläge — data sparas inte och e-post skickas aldrig.',
+    'en-GB': 'Demo mode — nothing is saved and no email is ever sent.',
+  },
+  'demo.reset': { 'sv-SE': 'Återställ demodata', 'en-GB': 'Reset demo data' },
+  'demo.signInAs': { 'sv-SE': 'Logga in som {role}', 'en-GB': 'Sign in as {role}' },
+  'demo.signInHint': {
+    'sv-SE': 'I demoläge går ingen e-post att läsa, så logga in direkt:',
+    'en-GB': 'No email can be read in demo mode, so sign in directly:',
+  },
+
   'checkin.title': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'checkin.counts': {
     'sv-SE': '{checkedIn} av {registered} incheckade',

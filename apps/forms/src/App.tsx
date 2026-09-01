@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
+import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -22,21 +23,24 @@ const CheckIn = lazy(() => import('./screens/CheckIn.js'));
 export function App() {
   return (
     <BrowserRouter>
-      <SessionProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/auth/callback" element={<Callback />} />
-          <Route
-            path="/f/:slug"
-            element={
-              <Suspense fallback={<main className="shell shell--narrow" />}>
-                <PublicForm />
-              </Suspense>
-            }
-          />
-          <Route path="/*" element={<Shell />} />
-        </Routes>
-      </SessionProvider>
+      <DemoProvider>
+        <SessionProvider>
+          <DemoBanner />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/auth/callback" element={<Callback />} />
+            <Route
+              path="/f/:slug"
+              element={
+                <Suspense fallback={<main className="shell shell--narrow" />}>
+                  <PublicForm />
+                </Suspense>
+              }
+            />
+            <Route path="/*" element={<Shell />} />
+          </Routes>
+        </SessionProvider>
+      </DemoProvider>
     </BrowserRouter>
   );
 }
