@@ -213,7 +213,12 @@ export default function PublicForm() {
   return (
     <main className="shell shell--narrow stack">
       <header className="row row--between">
-        <strong>{form?.organisationName}</strong>
+        {/* The name is the alt text rather than a caption: a logo already says who this is. */}
+        {form?.brand.logoLight ? (
+          <img className="brand-mark" src={form.brand.logoLight} alt={form.organisationName} />
+        ) : (
+          <strong>{form?.organisationName}</strong>
+        )}
         {/*
           The dropdown re-renders labels from the same `values` state, so switching language mid
           flow cannot lose what has been typed.

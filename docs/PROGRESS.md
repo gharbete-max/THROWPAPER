@@ -581,6 +581,47 @@ preview unreadable — while the editor around it stays legible, which is why th
 rather than applied to the page.
 
 
+## A3b — image upload and the logo · done
+
+The dependency both image fields and a useful template gallery were waiting on.
+
+**Content-addressed, because a logo is public.** Generated documents get a signed URL that expires,
+because a bulk export of 200 registrations is personal data. A logo is painted on a public form
+that anybody can open, so an expiring URL would break the page for the people it is for while
+protecting nothing. These are keyed by the SHA-256 of their own bytes instead: the URL never
+changes so it can be cached forever, the same file uploaded twice costs one copy, and the key
+cannot encode anything the uploader chose.
+
+**The format is read out of the bytes.** The filename and the declared content type are both
+written by whoever is uploading, so neither is evidence. A file called `logo.png`, announced as
+`image/png`, containing `<script>`, is a stored cross-site scripting attack the moment it is
+served from the app's own origin — so PNG, JPEG, WebP and GIF are identified by their magic
+numbers, and the type the file is *served* with comes from that reading. Responses carry
+`nosniff` and a `default-src 'none'; sandbox` policy so a browser cannot second-guess it either.
+
+**SVG is refused, separately and on purpose.** An SVG is a document: it carries script, event
+handlers and external references, and sanitising it properly is a project in itself. It gets its
+own error code so the message can say *why* and name a way forward, rather than leaving somebody
+to conclude the upload is broken.
+
+**A logo may only be a path into this asset store.** Not an arbitrary URL. A brand kit is written
+by a customer and ends up in `src` attributes on a public page and in email; accepting any URL
+would let one organisation point every form it publishes at a third-party host, leaking every
+visitor's IP address to it and handing whoever controls it the ability to change what the form
+appears to say.
+
+**Verified against a running server**, not only in tests: a real PNG uploaded and served with the
+right headers; HTML named `logo.png` and declared `image/png` refused; an SVG refused with its
+own message; an external URL refused as a logo; and the uploaded mark rendered on the public form
+in place of the organisation name.
+
+Two things found while building it. The client sets `content-type: application/json` on every
+request, which silently breaks a multipart body — the browser has to set that header itself
+because only it knows the boundary. And the first version of the upload test read the boundary
+from one `Response` and the body from another; each generates its own, so the server got a body
+it could not parse.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

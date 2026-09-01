@@ -51,6 +51,15 @@ const FontStack = z
   .max(200)
   .refine((value) => !/["'<>;{}]/.test(value), 'Font names cannot contain quotes or punctuation');
 
+/** `/public/assets/<sha256>.<ext>` and nothing else. See the note on `logoLight`. */
+const AssetPath = z
+  .string()
+  .trim()
+  .regex(
+    /^\/public\/assets\/[0-9a-f]{64}\.(png|jpg|webp|gif)$/,
+    'Upload an image and use the path it returns',
+  );
+
 export const ColourTokens = z.object({
   primary: Hex,
   secondary: Hex,
@@ -85,13 +94,20 @@ export const BrandKit = z.object({
   shadowLevel: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]),
   buttonStyle: z.enum(['solid', 'outline', 'soft']),
   /**
-   * Logos and favicon are URLs, and stay `null` until there is somewhere to upload them —
-   * `SPEC-forms.md` §7 defers object storage. Kept in the shape so the schema does not change
-   * when they arrive.
+   * Logos and favicon, as paths into this application's own asset store.
+   *
+   * **Not arbitrary URLs.** A brand kit is written by a customer and its values end up in `src`
+   * attributes on a public page and in email. Accepting any URL would let one organisation point
+   * every form it publishes at a third-party host — which leaks the visitor's IP address to that
+   * host on every page load, and hands whoever controls it the ability to change what the form
+   * appears to say. The upload endpoint exists so there is somewhere legitimate to put these.
+   *
+   * The key is the SHA-256 of the file's content, which is what makes the path safe to hard-code
+   * here: it cannot encode a path, a host or anything else the uploader chose.
    */
-  logoLight: z.string().url().nullable().default(null),
-  logoDark: z.string().url().nullable().default(null),
-  favicon: z.string().url().nullable().default(null),
+  logoLight: AssetPath.nullable().default(null),
+  logoDark: AssetPath.nullable().default(null),
+  favicon: AssetPath.nullable().default(null),
 });
 
 export type BrandKit = z.infer<typeof BrandKit>;

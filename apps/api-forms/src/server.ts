@@ -1,8 +1,10 @@
+import { join } from 'node:path';
 import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import fastifyStatic from '@fastify/static';
+import multipart from '@fastify/multipart';
 import {
   jsonSchemaTransform,
   serializerCompiler,
@@ -25,6 +27,9 @@ import { createWorker } from './jobs/worker.js';
 import { registerSendingDomainRoutes } from './routes/sending-domains.js';
 import { registerCheckInRoutes } from './routes/checkin.js';
 import { registerBrandKitRoutes } from './routes/brand-kit.js';
+import { registerUploadRoutes } from './routes/uploads.js';
+import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
+import { MAX_IMAGE_BYTES } from './uploads/image.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
 import { createSesMailProvider } from './mail/ses.js';
@@ -62,6 +67,9 @@ export interface ServerOptions {
    * Unset in development, where Vite serves the app and proxies here.
    */
   serveAppFrom?: string;
+
+  /** Uploaded images. Injected by the tests and by demo mode; local disk otherwise. */
+  assets?: AssetStore;
 }
 
 /**
@@ -111,6 +119,11 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
 
   await app.register(cors, { origin: appUrl, credentials: false });
   await app.register(rateLimit, { global: false, max: 100, timeWindow: '1 minute' });
+  /**
+   * The cap is set here as well as per-request. Without a global limit a client can announce a
+   * multi-gigabyte part and have it buffered before any handler runs.
+   */
+  await app.register(multipart, { limits: { fileSize: MAX_IMAGE_BYTES, files: 1 } });
   await app.register(swagger, {
     openapi: {
       info: { title: 'Formwork API', version: '0.1.0' },
@@ -185,6 +198,14 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
   registerCheckInRoutes(app, { repos, guard, jwtSecret });
   registerBrandKitRoutes(app, { repos, guard });
+
+  const assets =
+    options.assets ??
+    createLocalAssetStore({
+      directory:
+        process.env['ASSET_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'assets'),
+    });
+  registerUploadRoutes(app, { repos, guard, assets });
   if (options.demo) registerDemoRoutes(app, { repos, demo: options.demo, jwtSecret });
 
   app.get('/health', async (_request, reply) => {

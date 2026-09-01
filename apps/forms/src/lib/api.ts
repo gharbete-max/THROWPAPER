@@ -84,7 +84,12 @@ async function refreshOnce(): Promise<boolean> {
 
 async function request<T>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
   const headers = new Headers(init.headers);
-  headers.set('content-type', 'application/json');
+  /**
+   * A multipart body sets its own content type, including the boundary the browser generated.
+   * Overriding it with application/json produces a request the server cannot parse — and the
+   * failure looks like a broken upload rather than a wrong header.
+   */
+  if (!(init.body instanceof FormData)) headers.set('content-type', 'application/json');
   if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
 
   const response = await fetch(`${BASE}${path}`, { ...init, headers });
@@ -141,6 +146,19 @@ export const client = {
     request<BrandKitResponse>('/v1/brand-kit', { method: 'PUT', body: JSON.stringify(tokens) }),
 
   resetBrandKit: () => request<BrandKitResponse>('/v1/brand-kit', { method: 'DELETE' }),
+
+  /**
+   * Uploads a file. `body` is FormData, so the browser sets the multipart content type and its
+   * boundary itself — setting it by hand produces a body the server cannot parse.
+   */
+  upload: (file: File) => {
+    const body = new FormData();
+    body.set('file', file);
+    return request<{ key: string; path: string; contentType: string; bytes: number }>(
+      '/v1/uploads',
+      { method: 'POST', body },
+    );
+  },
 
   logout: async () => {
     const refreshToken = storedRefreshToken();

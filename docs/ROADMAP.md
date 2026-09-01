@@ -37,8 +37,15 @@ the admission PDF and both confirmation and operator email. Contrast is checked 
 because these values are interpolated into inline email styles and print CSS where "whatever the
 browser makes of it" is not a specification.
 
-*Remaining.* Logo and favicon upload, which need the object store `SPEC-forms.md` §7 defers, and
-per-form overrides.
+*A3b — done.* Image upload and the brand logo. Uploads are content-addressed (the key is the
+SHA-256 of the bytes), the format is decided by reading the magic numbers rather than trusting the
+filename or the declared type, and SVG is refused with a message that says what to send instead.
+Logos on a brand kit must be a path into this application's own asset store — never an arbitrary
+URL, which would leak every visitor's IP to a third-party host and let whoever runs it change what
+the form appears to say.
+
+*Remaining.* Favicon, per-form overrides, and image *fields* inside a form (header art,
+per-question illustrations, image-choice options) — the upload path they need now exists.
 **A4.** The shared data grid: server-side sort/filter/pagination, ICU collation, multi-column
 sort, column management, grouping with subtotals, saved views, CSV/XLSX export parity. Test
 against 100k seeded rows. Reused everywhere — build it once, properly.
