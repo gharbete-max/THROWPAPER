@@ -3,6 +3,7 @@ import type { Repositories, SubmissionRecord } from '../db/repositories/index.js
 import type { DocumentStore } from './store.js';
 import type { PdfRenderer } from './render.js';
 import { attendeeName, renderAdmissionHtml } from './admission.js';
+import { resolveTokens } from '../routes/brand-kit.js';
 import { deriveQrKey, signAdmissionToken } from './qr-token.js';
 import type { JobContext, JobHandler } from '../jobs/worker.js';
 
@@ -33,7 +34,8 @@ export async function renderAdmissionPdf(
     deriveQrKey(deps.jwtSecret),
   );
 
-  const html = await renderAdmissionHtml({ organisation, event, submission, token });
+  const { tokens } = await resolveTokens(deps.repos, organisationId);
+  const html = await renderAdmissionHtml({ organisation, event, submission, token, tokens });
   const pdf = await deps.renderer.render(html, {
     header: organisation.name,
     footer: submission.reference,

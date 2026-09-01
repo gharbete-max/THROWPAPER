@@ -55,13 +55,19 @@ export default function PublicForm() {
   // The banner lives above the router and would otherwise stay in the session's language.
   useAnnounceLocale(resolved);
 
-  // The public page is not inside the app shell, so it applies the brand itself.
+  /**
+   * The public page is not inside the app shell, so it applies the brand itself.
+   *
+   * The defaults go up immediately and are replaced when the form arrives with the organisation's
+   * kit. Waiting for the fetch would leave the page unstyled for a moment; painting the defaults
+   * first means the worst case is a brief flash of the wrong palette rather than of no palette.
+   */
   useEffect(() => {
     const style = document.createElement('style');
-    style.textContent = toCssBlock(defaultTokens);
+    style.textContent = toCssBlock(form?.brand ?? defaultTokens);
     document.head.appendChild(style);
     return () => style.remove();
-  }, []);
+  }, [form?.brand]);
 
   useEffect(() => {
     if (!slug) return;

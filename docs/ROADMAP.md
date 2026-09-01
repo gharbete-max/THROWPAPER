@@ -30,6 +30,15 @@ After week 0 the tracks run independently. They re-sync only on contract changes
 **A1.** Auth, tenancy, roles, audit log, locale config, app shell.
 **A2.** Contacts and reference tables. Import with column mapping and merge. Seed data.
 **A3.** Brand Kit editor on tokens, with the web and PDF compilers proven end to end.
+
+*A3a — done.* Per-organisation token sets, stored, edited and applied to the app, the public form,
+the admission PDF and both confirmation and operator email. Contrast is checked as you type and is
+**advisory**: it never blocks a save. Colours are hex-only and font stacks are punctuation-free,
+because these values are interpolated into inline email styles and print CSS where "whatever the
+browser makes of it" is not a specification.
+
+*Remaining.* Logo and favicon upload, which need the object store `SPEC-forms.md` §7 defers, and
+per-form overrides.
 **A4.** The shared data grid: server-side sort/filter/pagination, ICU collation, multi-column
 sort, column management, grouping with subtotals, saved views, CSV/XLSX export parity. Test
 against 100k seeded rows. Reused everywhere — build it once, properly.

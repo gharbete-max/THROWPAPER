@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { resolveTokens } from './brand-kit.js';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { pickText } from '@tp/i18n';
 import { api, forms as formSchemas } from '@tp/shared';
@@ -74,11 +75,14 @@ export function registerPublicFormRoutes(
       // An unpublished form is a 404 to the public: whether a draft exists is not their business.
       if (!loaded || !loaded.definition || !loaded.published) return notFound(reply);
 
+      const { tokens } = await resolveTokens(deps.repos, loaded.organisation.id);
+
       return reply.send({
         slug: loaded.form.slug,
         definition: loaded.definition,
         formVersion: loaded.published.version,
         organisationName: loaded.organisation.name,
+        brand: tokens,
         supportedLocales: loaded.organisation.supportedLocales,
         defaultLocale: loaded.organisation.defaultLocale,
         open: loaded.availability.open,

@@ -359,6 +359,26 @@ export interface CheckInRepository {
   }): Promise<{ created: boolean; checkIn: CheckInRecord }>;
 }
 
+export interface BrandKitRecord {
+  organisationId: string;
+  /** A TokenSet. Kept opaque here so the repository layer does not depend on the token package. */
+  tokens: Record<string, unknown>;
+  updatedAt: Date;
+  updatedBy: string | null;
+}
+
+export interface BrandKitRepository {
+  /** `null` means the organisation has not chosen one, and the shipped defaults apply. */
+  find(organisationId: string): Promise<BrandKitRecord | null>;
+  save(input: {
+    organisationId: string;
+    tokens: Record<string, unknown>;
+    updatedBy: string | null;
+  }): Promise<BrandKitRecord>;
+  /** Back to the shipped defaults, by removing the row rather than storing a copy of them. */
+  clear(organisationId: string): Promise<void>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -373,6 +393,7 @@ export interface Repositories {
   submissions: SubmissionRepository;
   checkIns: CheckInRepository;
   jobs: JobRepository;
+  brandKits: BrandKitRepository;
   sendingDomains: SendingDomainRepository;
   messages: MessageRepository;
   audit: AuditRepository;

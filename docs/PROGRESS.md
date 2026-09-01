@@ -519,6 +519,68 @@ members of the public ever see.
 decisions, and they are the user's.
 
 
+## A15a and A3a — the form looks like the customer · done
+
+Two phases driven by the owner's description of the product: a form and email site with heavy
+customisation and prebuilt templates, of which the AGM work is one segment.
+
+### A15a — choice appearance
+
+There were no radio buttons at all. `single_select` was always a dropdown, `multi_select` always
+checkboxes, `yes_no` always a dropdown, and appearance was not something an author could set.
+
+Now each has its own vocabulary — dropdown/radio/buttons/cards, checkboxes/buttons/cards,
+dropdown/radio/buttons — enforced by the schema, so `cards` on a yes/no question is refused rather
+than ignored. Presentation only: the stored value, the CSV column and every existing submission are
+untouched, and old definitions are defaulted rather than required, which is why `schemaVersion`
+stays at 1.
+
+Every variant is a `fieldset` with a `legend` and real inputs. Buttons and cards are restyled
+radios, never divs with click handlers. The first attempt hid the input with `opacity: 0` — the
+version that mostly works and that some tools treat as hidden; it uses the clip technique instead.
+
+### A3a — the Brand Kit
+
+There was no brand kit at all: no table, no endpoint, no editor, and `default-tokens.json` compiled
+in at build time. Every organisation would have had identical colours.
+
+- `brand_kits`, one row per organisation, the token set as a JSON document. **No row means the
+  shipped defaults**, so nothing needed backfilling and an organisation that never chooses is not
+  frozen on whatever the product looked like the day it signed up.
+- `GET`/`PUT`/`DELETE /v1/brand-kit`. Admins write, operators read, and reset deletes the row
+  rather than storing a copy of the defaults.
+- Applied to the app, the public form, the admission PDF and both emails. Those last three already
+  took tokens as a parameter and were simply being handed the defaults.
+- The public form response carries the brand, so an anonymous visitor gets a branded page in one
+  request with no flash of the wrong palette.
+
+**Contrast is advisory, and that is a decision.** Colours are checked as you type, because a
+warning that arrives after you commit is a reprimand rather than help. But an unreadable choice is
+never refused: declining to store somebody's brand would be the tool overruling the customer about
+their own colours. Saying nothing would be negligent; refusing would be obnoxious.
+
+Writing the checker turned up two genuine defects in the shipped palette. `warning` sat at 4.44:1
+where 4.5 is required — fixed. The border sits at 1.36:1 where a boundary wants 3, and is left
+alone deliberately: reaching 3 needs a heavy grey around every input, and the visual direction is
+flat and quiet. A test pins that one advisory so it stays a decision rather than becoming an
+oversight.
+
+**Validation is about the output formats, not fussiness.** Colours are hex only — `red`,
+`rgb(...)` and `var(--x)` are refused — and font stacks may not contain quotes. These strings are
+interpolated into an inline `style` attribute in email and into print CSS, where an unescaped
+quote ends the attribute early.
+
+The demo organisation carries the owner's palette (Deep Midnight, Saddle Brown, Cognac, Parchment,
+Brushed Gold; flat, small radius, no shadow). The shipped defaults stay neutral, because they are
+what a *new customer* starts from. Making the palette the product default instead is a one-file
+change if that is wanted.
+
+**Verified by using it**: the public form renders in the palette, the editor's two columns work,
+and typing an unreadable text colour immediately raises two warnings, enables Save, and turns the
+preview unreadable — while the editor around it stays legible, which is why the preview is scoped
+rather than applied to the page.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

@@ -50,6 +50,13 @@
       "when": 1788248340747,
       "tag": "0006_check_ins",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788264923531,
+      "tag": "0007_brand_kits",
+      "breakpoints": true
     }
   ]
 }

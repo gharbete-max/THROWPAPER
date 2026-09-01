@@ -1,6 +1,6 @@
 import { pickText, type LocaleConfig } from '@tp/i18n';
-import { defaultTokens } from '@tp/tokens';
 import type { Repositories, SubmissionRecord } from '../db/repositories/index.js';
+import { resolveTokens } from '../routes/brand-kit.js';
 import type { JobHandler } from '../jobs/worker.js';
 import type { AdmissionDeps } from '../documents/admission-service.js';
 import { renderAdmissionPdf } from '../documents/admission-service.js';
@@ -109,7 +109,9 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
         ? await renderAdmissionPdf(deps.admission, job.organisationId, submission)
         : null;
 
-      const html = await renderConfirmation(defaultTokens, {
+      const { tokens } = await resolveTokens(deps.repos, job.organisationId);
+
+      const html = await renderConfirmation(tokens, {
         heading: copy.confirmationHeading,
         intro: copy.confirmationIntro,
         eventName,
@@ -158,7 +160,9 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
     const copy = copyFor(locale);
     const eventName = event ? pickText(locales, event.name, locale).value : organisation.name;
 
-    const html = await renderNotification(defaultTokens, {
+    const { tokens: operatorTokens } = await resolveTokens(deps.repos, job.organisationId);
+
+    const html = await renderNotification(operatorTokens, {
       heading: copy.notificationHeading,
       intro: copy.notificationIntro,
       rows: [

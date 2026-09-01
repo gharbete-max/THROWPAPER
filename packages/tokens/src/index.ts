@@ -14,6 +14,16 @@ export { toNativeTokens, type NativeTokens } from './compile-native.js';
 
 export { pxValue, px, spacing, typeScale } from './units.js';
 
+export {
+  checkContrast,
+  contrastRatio,
+  luminance,
+  parseHex,
+  BOUNDARY_CONTRAST,
+  TEXT_CONTRAST,
+  type ContrastFinding,
+} from './contrast.js';
+
 /**
  * The PDF target lives at `@tp/tokens/pdf`, not here: it embeds font files from disk and so is
  * node-only. Keeping it off this entry point is what stops node:fs reaching the browser bundles.

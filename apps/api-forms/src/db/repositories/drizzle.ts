@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import {
+  brandKits,
   auditLog,
   checkIns,
   events,
@@ -16,6 +17,7 @@ import {
   users,
 } from '../schema.js';
 import type {
+  BrandKitRecord,
   CheckInRecord,
   EventCreate,
   EventRecord,
@@ -530,6 +532,37 @@ export function createDrizzleRepositories(db: Db): Repositories {
               : { status: 'failed', error, finishedAt: new Date() },
           )
           .where(eq(jobs.id, id));
+      },
+    },
+
+    brandKits: {
+      find: async (organisationId) =>
+        first(
+          await db
+            .select()
+            .from(brandKits)
+            .where(eq(brandKits.organisationId, organisationId))
+            .limit(1),
+        ) as BrandKitRecord | null,
+
+      /**
+       * Upsert on the primary key. One kit per organisation is the rule, and letting the database
+       * enforce it means two admins saving at once cannot produce two rows.
+       */
+      save: async ({ organisationId, tokens, updatedBy }) => {
+        const rows = await db
+          .insert(brandKits)
+          .values({ organisationId, tokens, updatedBy, updatedAt: new Date() })
+          .onConflictDoUpdate({
+            target: brandKits.organisationId,
+            set: { tokens, updatedBy, updatedAt: new Date() },
+          })
+          .returning();
+        return first(rows) as BrandKitRecord;
+      },
+
+      clear: async (organisationId) => {
+        await db.delete(brandKits).where(eq(brandKits.organisationId, organisationId));
       },
     },
 

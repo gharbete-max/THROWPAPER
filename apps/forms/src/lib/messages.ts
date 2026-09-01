@@ -189,6 +189,87 @@ export const messages: Catalogue = {
   'submissions.column.status': { 'sv-SE': 'Status', 'en-GB': 'Status' },
 
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
+  'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
+
+  'brand.title': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
+  'brand.intro': {
+    'sv-SE':
+      'Färger och form för allt organisationen skickar ut — formulär, PDF och e-post använder samma uppsättning.',
+    'en-GB':
+      'Colours and shape for everything the organisation sends out. Forms, PDFs and email all read the same set.',
+  },
+  'brand.readOnly': {
+    'sv-SE': 'Bara administratörer kan ändra utseendet.',
+    'en-GB': 'Only admins can change the brand.',
+  },
+  'brand.loadFailed': {
+    'sv-SE': 'Utseendet kunde inte hämtas.',
+    'en-GB': 'The brand could not be loaded.',
+  },
+  'brand.save': { 'sv-SE': 'Spara', 'en-GB': 'Save' },
+  'brand.saving': { 'sv-SE': 'Sparar…', 'en-GB': 'Saving…' },
+  'brand.reset': { 'sv-SE': 'Återställ standard', 'en-GB': 'Reset to default' },
+  'brand.colours': { 'sv-SE': 'Färger', 'en-GB': 'Colours' },
+  'brand.shape': { 'sv-SE': 'Form och text', 'en-GB': 'Shape and text' },
+  'brand.radius': { 'sv-SE': 'Hörnradie', 'en-GB': 'Corner radius' },
+  'brand.baseSize': { 'sv-SE': 'Textstorlek', 'en-GB': 'Text size' },
+  'brand.preview': { 'sv-SE': 'Förhandsgranskning', 'en-GB': 'Preview' },
+  'brand.contrast': { 'sv-SE': 'Kontrast', 'en-GB': 'Contrast' },
+  'brand.contrastOk': {
+    'sv-SE': 'Alla kombinationer går att läsa.',
+    'en-GB': 'Every combination is readable.',
+  },
+  'brand.contrastNeeds': { 'sv-SE': 'behöver', 'en-GB': 'needs' },
+  'brand.contrastAdvisory': {
+    'sv-SE': 'Varningar hindrar inte att du sparar — de säger bara vad som blir svårläst.',
+    'en-GB': 'Warnings never block a save. They only say what will be hard to read.',
+  },
+
+  'brand.colour.primary': { 'sv-SE': 'Primär', 'en-GB': 'Primary' },
+  'brand.colour.secondary': { 'sv-SE': 'Sekundär', 'en-GB': 'Secondary' },
+  'brand.colour.accent': { 'sv-SE': 'Accent', 'en-GB': 'Accent' },
+  'brand.colour.background': { 'sv-SE': 'Bakgrund', 'en-GB': 'Background' },
+  'brand.colour.surface': { 'sv-SE': 'Yta', 'en-GB': 'Surface' },
+  'brand.colour.text': { 'sv-SE': 'Text', 'en-GB': 'Text' },
+  'brand.colour.muted': { 'sv-SE': 'Dämpad text', 'en-GB': 'Muted text' },
+  'brand.colour.border': { 'sv-SE': 'Kantlinje', 'en-GB': 'Border' },
+  'brand.colour.success': { 'sv-SE': 'Klart', 'en-GB': 'Success' },
+  'brand.colour.warning': { 'sv-SE': 'Varning', 'en-GB': 'Warning' },
+  'brand.colour.danger': { 'sv-SE': 'Fel', 'en-GB': 'Error' },
+
+  'brand.hint.primary': {
+    'sv-SE': 'Knappar och markerade val.',
+    'en-GB': 'Buttons and selected choices.',
+  },
+  'brand.hint.secondary': { 'sv-SE': 'Andrahandsknappar.', 'en-GB': 'Secondary buttons.' },
+  'brand.hint.accent': {
+    'sv-SE': 'Dekor. Använd den inte till text.',
+    'en-GB': 'Decorative. Do not use it for text.',
+  },
+  'brand.hint.background': { 'sv-SE': 'Sidans bakgrund.', 'en-GB': 'The page behind everything.' },
+  'brand.hint.surface': { 'sv-SE': 'Kort och paneler.', 'en-GB': 'Cards and panels.' },
+  'brand.hint.text': { 'sv-SE': 'Brödtext.', 'en-GB': 'Body text.' },
+  'brand.hint.muted': { 'sv-SE': 'Hjälptext och etiketter.', 'en-GB': 'Help text and labels.' },
+  'brand.hint.border': { 'sv-SE': 'Fältkanter.', 'en-GB': 'Field edges.' },
+  'brand.hint.success': { 'sv-SE': 'Bekräftelser.', 'en-GB': 'Confirmations.' },
+  'brand.hint.warning': { 'sv-SE': 'Varningar.', 'en-GB': 'Warnings.' },
+  'brand.hint.danger': { 'sv-SE': 'Felmeddelanden.', 'en-GB': 'Error messages.' },
+
+  'brand.previewHeading': { 'sv-SE': 'Anmälan', 'en-GB': 'Registration' },
+  'brand.previewBody': {
+    'sv-SE': 'Så här ser ett formulär ut för den som fyller i det.',
+    'en-GB': 'This is what a form looks like to the person filling it in.',
+  },
+  'brand.previewField': { 'sv-SE': 'Namn', 'en-GB': 'Name' },
+  'brand.previewChoice': { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
+  'brand.previewOptionA': { 'sv-SE': 'Standard', 'en-GB': 'Standard' },
+  'brand.previewOptionB': { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' },
+  'brand.previewSubmit': { 'sv-SE': 'Anmäl mig', 'en-GB': 'Register me' },
+  'brand.previewSecondary': { 'sv-SE': 'Spara utkast', 'en-GB': 'Save draft' },
+  'brand.previewError': {
+    'sv-SE': 'Så här ser ett felmeddelande ut.',
+    'en-GB': 'This is what an error looks like.',
+  },
 
   'demo.banner': {
     'sv-SE': 'Demoläge — data sparas inte och e-post skickas aldrig.',
