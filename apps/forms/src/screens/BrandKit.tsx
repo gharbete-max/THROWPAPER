@@ -4,6 +4,7 @@ import { client, type BrandKitResponse } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useBrand } from '../lib/brand.js';
+import { ImagePicker } from '../components/ImagePicker.js';
 
 /**
  * The Brand Kit editor.
@@ -128,7 +129,7 @@ export function BrandKit() {
       <div className="brand">
         <div className="stack">
           <h2 className="small">{t('brand.logo')}</h2>
-          <LogoField
+          <ImagePicker
             value={tokens.logoLight}
             disabled={readOnly}
             onChange={(path) => setTokens((current) => ({ ...current, logoLight: path }))}
@@ -205,75 +206,6 @@ export function BrandKit() {
           <p className="small muted">{t('brand.contrastAdvisory')}</p>
         </div>
       </div>
-    </div>
-  );
-}
-
-/**
- * Upload a logo, or clear it.
- *
- * The file goes straight to `/v1/uploads` and what is stored on the kit is the path it returns —
- * never a URL somebody typed. The server refuses anything that is not an image it recognised by
- * its bytes, so the failure worth showing here is the server's message, verbatim: "SVG is not
- * supported, upload a PNG instead" is useful, "upload failed" is not.
- */
-function LogoField({
-  value,
-  disabled,
-  onChange,
-}: {
-  value: string | null;
-  disabled: boolean;
-  onChange: (path: string | null) => void;
-}) {
-  const t = useT();
-  const [busy, setBusy] = useState(false);
-  const [problem, setProblem] = useState<string | null>(null);
-
-  async function choose(file: File | undefined) {
-    if (!file) return;
-    setBusy(true);
-    setProblem(null);
-    try {
-      const uploaded = await client.upload(file);
-      onChange(uploaded.path);
-    } catch (caught) {
-      setProblem(caught instanceof Error ? caught.message : String(caught));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <div className="stack">
-      {value && (
-        <div className="brand__logo">
-          <img src={value} alt={t('brand.logoAlt')} />
-        </div>
-      )}
-
-      <label className="field">
-        <span>{value ? t('brand.logoReplace') : t('brand.logoAdd')}</span>
-        <input
-          type="file"
-          accept="image/png,image/jpeg,image/webp,image/gif"
-          disabled={disabled || busy}
-          onChange={(event) => {
-            void choose(event.target.files?.[0]);
-            // Cleared so choosing the same file twice still fires a change.
-            event.target.value = '';
-          }}
-        />
-        <span className="small muted">{t('brand.logoHint')}</span>
-      </label>
-
-      {problem && <p className="small status-down">{problem}</p>}
-
-      {value && !disabled && (
-        <button type="button" className="secondary small" onClick={() => onChange(null)}>
-          {t('brand.logoRemove')}
-        </button>
-      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { LocalisedText } from '../api/common.js';
+import { AssetPath } from '../assets.js';
 
 /**
  * A form definition is a **versioned JSON document, never an HTML string** (`SPEC-forms.md` §7).
@@ -7,8 +8,9 @@ import { LocalisedText } from '../api/common.js';
  * Submissions reference the version they were filled against, so editing a form can never
  * retroactively change what somebody answered.
  *
- * The thirteen types below are exactly the v0.1 field set from `docs/START-HERE.md`. Adding to
- * this union is a scope change, not a detail — the rest of `SPEC-forms.md` §3 is a later phase.
+ * The first thirteen were exactly the v0.1 field set from `docs/START-HERE.md`. Adding to this
+ * union is a scope change, not a detail — `image` arrived with A15b because the product is a
+ * general form builder rather than a registration tool, and it needed somewhere to put a picture.
  */
 export const FIELD_TYPES = [
   'short_text',
@@ -23,6 +25,7 @@ export const FIELD_TYPES = [
   'section_break',
   'page_break',
   'rich_text',
+  'image',
   'hidden',
 ] as const;
 
@@ -30,7 +33,7 @@ export const FieldType = z.enum(FIELD_TYPES);
 export type FieldType = z.infer<typeof FieldType>;
 
 /** Types that display something but never collect an answer. */
-export const PRESENTATIONAL_TYPES = ['section_break', 'page_break', 'rich_text'] as const;
+export const PRESENTATIONAL_TYPES = ['section_break', 'page_break', 'rich_text', 'image'] as const;
 
 /** Stable machine name for a field. Submission data is keyed by this, not by the label. */
 export const FieldKey = z
@@ -51,6 +54,15 @@ const base = {
 export const SelectOption = z.object({
   value: z.string().min(1).max(128),
   label: LocalisedText,
+  /**
+   * A picture for this choice. Shown by the `cards` and `buttons` appearances, ignored by a
+   * dropdown, which has nowhere to put it.
+   *
+   * The label stays required even when there is an image. An image-only choice cannot be read
+   * aloud, cannot be searched, and cannot be exported — the answer that lands in the CSV is still
+   * the label, so it has to exist.
+   */
+  image: AssetPath.nullable().default(null),
 });
 
 /**
@@ -138,6 +150,23 @@ export const Field = z.discriminatedUnion('type', [
     type: z.literal('rich_text'),
     /** Plain text with paragraph breaks. Not HTML — that would be a stored-XSS surface. */
     content: LocalisedText,
+  }),
+
+  /**
+   * A picture in the form: header art, or an illustration for the question that follows.
+   *
+   * `alt` is localised like every other string and may be empty — but only deliberately. An empty
+   * alt means "decorative, skip it", which is right for a banner and wrong for a diagram somebody
+   * needs in order to answer.
+   */
+  z.object({
+    id: base.id,
+    key: base.key,
+    type: z.literal('image'),
+    src: AssetPath,
+    alt: LocalisedText.default({}),
+    /** Caps the rendered width in pixels. Unset means as wide as the form allows. */
+    maxWidth: z.number().int().min(40).max(2000).optional(),
   }),
 
   /** Prefilled from a URL parameter or a known contact. Never shown, never edited by the filler. */

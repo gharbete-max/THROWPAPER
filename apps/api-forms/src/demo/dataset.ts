@@ -109,9 +109,9 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       label: { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
       required: true,
       options: [
-        { value: 'standard', label: { 'sv-SE': 'Standard', 'en-GB': 'Standard' } },
-        { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' } },
-        { value: 'gluten', label: { 'sv-SE': 'Glutenfritt', 'en-GB': 'Gluten free' } },
+        { value: 'standard', label: { 'sv-SE': 'Standard', 'en-GB': 'Standard' }, image: null },
+        { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' }, image: null },
+        { value: 'gluten', label: { 'sv-SE': 'Glutenfritt', 'en-GB': 'Gluten free' }, image: null },
       ],
       // Cards rather than a dropdown: three short choices on a form that is mostly filled in on a
       // phone, and the demo should show what the builder can now do.

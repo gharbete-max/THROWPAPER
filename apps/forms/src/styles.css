@@ -678,3 +678,78 @@ textarea {
   max-inline-size: 100%;
   object-fit: contain;
 }
+
+/* An image placed in a form by its author. Capped rather than scaled: the uploaded file can be
+ * any size, and the form's layout should not depend on what somebody happened to upload. */
+.form-image {
+  max-inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--tp-radius);
+  display: block;
+}
+
+/* A picture on a choice. Cards stack it above the label, buttons keep it inline and small. */
+.choice__image {
+  max-inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--tp-radius);
+}
+
+.choice--cards .choice__option {
+  flex-direction: column;
+  align-items: stretch;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.choice--cards .choice__image {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  inline-size: 100%;
+}
+
+.choice--buttons .choice__image {
+  block-size: 24px;
+  inline-size: 24px;
+  object-fit: contain;
+  flex: none;
+}
+
+.choice--radio .choice__image,
+.choice--checkboxes .choice__image {
+  block-size: 32px;
+  inline-size: 32px;
+  object-fit: contain;
+  flex: none;
+}
+
+/* The image picker, shared by the brand editor and the builder. */
+.image-picker__preview {
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  display: flex;
+  justify-content: center;
+}
+
+.image-picker__preview img {
+  max-height: 80px;
+  max-inline-size: 100%;
+  object-fit: contain;
+}
+
+.image-picker__preview--compact {
+  justify-content: flex-start;
+  padding: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.image-picker__preview--compact img {
+  max-height: 40px;
+}
+
+/* One option and its picture, kept together so a long list stays readable. */
+.builder__option {
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}

@@ -22,7 +22,7 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
         type,
         label: {},
         required: false,
-        options: [{ value: 'option_1', label: {} }],
+        options: [{ value: 'option_1', label: {}, image: null }],
         appearance: 'dropdown',
       };
     case 'multi_select':
@@ -32,11 +32,18 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
         type,
         label: {},
         required: false,
-        options: [{ value: 'option_1', label: {} }],
+        options: [{ value: 'option_1', label: {}, image: null }],
         appearance: 'checkboxes',
       };
     case 'yes_no':
       return { id, key, type, label: {}, required: false, appearance: 'dropdown' };
+    /**
+     * An image field is created with no picture yet: `src` is only valid once something has been
+     * uploaded, so the builder shows an upload control and the field is incomplete until then.
+     * That is better than inventing a placeholder path that would fail validation on publish.
+     */
+    case 'image':
+      return { id, key, type, src: '', alt: {} } as unknown as Field;
     case 'section_break':
       return { id, key, type, label: {} };
     case 'page_break':

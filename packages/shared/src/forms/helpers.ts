@@ -56,6 +56,23 @@ export function translatableTexts(definition: FormDefinition): TranslatableText[
       });
       continue;
     }
+    /**
+     * Alt text is translatable but **not required**, unlike a label.
+     *
+     * An empty alt is a real choice — it means "decorative, skip this" — and a banner across the
+     * top of a form is exactly that. Requiring it would push people to type something rather than
+     * nothing, and a screen reader announcing "image" over and over is worse than silence.
+     */
+    if (field.type === 'image') {
+      texts.push({
+        path: `field.${field.id}.alt`,
+        fieldId: field.id,
+        text: field.alt,
+        required: false,
+      });
+      continue;
+    }
+
     if (field.type === 'hidden') continue;
 
     texts.push({

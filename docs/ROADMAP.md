@@ -44,8 +44,12 @@ Logos on a brand kit must be a path into this application's own asset store — 
 URL, which would leak every visitor's IP to a third-party host and let whoever runs it change what
 the form appears to say.
 
-*Remaining.* Favicon, per-form overrides, and image *fields* inside a form (header art,
-per-question illustrations, image-choice options) — the upload path they need now exists.
+*A15b — done.* Images inside a form. A presentational `image` field for header art and
+illustrations, and an optional picture on each choice, shown by the `cards` and `buttons`
+appearances. Sources must be paths into this application's asset store, the same rule as a logo.
+Alt text is localised and optional, because an empty alt is a real choice for decoration.
+
+*Remaining.* Favicon and per-form brand overrides.
 **A4.** The shared data grid: server-side sort/filter/pagination, ICU collation, multi-column
 sort, column management, grouping with subtotals, saved views, CSV/XLSX export parity. Test
 against 100k seeded rows. Reused everywhere — build it once, properly.
