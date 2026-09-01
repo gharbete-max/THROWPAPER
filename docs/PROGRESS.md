@@ -695,6 +695,51 @@ button strip, two free-text boxes, a Yes/No radio pair and a conditional email f
 organisation's palette. Three clicks from "New form" to something publishable.
 
 
+## Builder usability · done
+
+The owner said the form builder was not working well. It was not, and using it for five minutes
+showed why. This is what was wrong and what changed.
+
+**You could not write the question without changing tabs.** The properties panel led with `Key` —
+a machine name like `full_name` — and the label, the actual question text, lived only on the
+translation tab. So the first thing an author saw was a database field, and the thing they came to
+write was hidden. The label is now first, in the language being worked in, and the key is folded
+into an *Advanced* disclosure at the bottom. The translation tab still carries every locale, which
+is what it is for.
+
+**There was no way to see what you were building.** You laid out abstract rows and found out what
+they looked like by publishing. There is now a preview, and it renders the **same `FieldInput`
+component the public page does** — lifted out of `PublicForm` for the purpose. A preview with its
+own renderer is worse than none, because it drifts and then nobody trusts it. It is interactive, it
+follows the selected field onto its own page, and it says plainly that nothing is saved.
+
+**The palette buried the form.** Fourteen equally-weighted full-width buttons in a column, ~900px
+tall on a narrow screen — you scrolled past every field type before reaching your own form. Now
+three labelled groups of wrapping chips. A test asserts every field type appears in exactly one
+group, so adding a type forces a decision rather than silently dropping it from the palette.
+
+**A new field always landed at the end.** Adding a question in the middle of a long form meant
+scrolling to the bottom and dragging it back. New fields now land directly after the selected one,
+and the palette says so.
+
+**Reordering was drag-only.** Fine with a mouse, awkward on the phone half of this will be used
+on. Every row now has up and down buttons.
+
+**Rows disguised unfinished work.** A field with no label showed its machine key, which looks like
+a name. It now says *Needs a question*, and required fields are marked, so the list can be scanned
+for what is unfinished instead of finding out at publish time.
+
+### Two defects found on the way
+
+- **`fieldType.image` had no translation**, so the palette had been showing the literal string
+  `fieldType.image` to anybody building a form since A15b shipped. Nothing catches a missing
+  key — the app compiles and the tests pass; it only appears on a screen somebody opens. There is
+  now a test driven by `FIELD_TYPES` itself, so a new field type without a label fails the build.
+  Mutation-checked by renaming the key: it fails.
+- **Every form in the list said "Edit event"**, including a feedback form, because the forms screen
+  borrowed the events string.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

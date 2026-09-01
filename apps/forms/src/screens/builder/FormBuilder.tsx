@@ -9,9 +9,11 @@ import type {
 } from '@tp/shared/forms';
 import { ApiError, client } from '../../lib/api.js';
 import { useT } from '../../lib/i18n.js';
+import { useSession } from '../../lib/session.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
-import { PALETTE, newField } from './field-defaults.js';
+import { PALETTE_GROUPS, newField } from './field-defaults.js';
+import { FormPreview } from './FormPreview.js';
 import { Submissions } from '../Submissions.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
@@ -20,6 +22,7 @@ const AUTOSAVE_DELAY_MS = 800;
 
 export function FormBuilder() {
   const t = useT();
+  const { locale, locales } = useSession();
   const { id } = useParams();
   const [form, setForm] = useState<FormResponse | null>(null);
   const [definition, setDefinition] = useState<FormDefinition | null>(null);
@@ -28,6 +31,7 @@ export function FormBuilder() {
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [view, setView] = useState<'edit' | 'preview'>('edit');
 
   const loadVersions = useCallback(() => {
     if (!id) return;
@@ -75,14 +79,39 @@ export function FormBuilder() {
     setError(null);
   }
 
+  /**
+   * A new field lands **after the one being worked on**, not at the end of the form.
+   *
+   * Appending was the old behaviour and it is wrong the moment a form is longer than a screen:
+   * adding a question in the middle of a section meant scrolling to the bottom and dragging it
+   * back up, every time. With nothing selected, appending is still the right guess.
+   */
   function addField(type: FieldType) {
     if (!definition) return;
     const field = newField(
       type,
       definition.fields.map((existing) => existing.key),
     );
-    edit({ ...definition, fields: [...definition.fields, field] });
+
+    const at = definition.fields.findIndex((existing) => existing.id === selectedId);
+    const fields = [...definition.fields];
+    fields.splice(at === -1 ? fields.length : at + 1, 0, field);
+
+    edit({ ...definition, fields });
     setSelectedId(field.id);
+  }
+
+  /** Reorder without dragging: a touch screen and a keyboard both need this. */
+  function moveField(fieldId: string, direction: -1 | 1) {
+    if (!definition) return;
+    const from = definition.fields.findIndex((field) => field.id === fieldId);
+    const to = from + direction;
+    if (from === -1 || to < 0 || to >= definition.fields.length) return;
+
+    const fields = [...definition.fields];
+    const [moved] = fields.splice(from, 1);
+    fields.splice(to, 0, moved!);
+    edit({ ...definition, fields });
   }
 
   function updateField(updated: Field) {
@@ -191,33 +220,69 @@ export function FormBuilder() {
       )}
 
       <div className="builder">
-        <aside className="card stack builder__panel">
-          <strong className="small">{t('builder.palette')}</strong>
-          {PALETTE.map((type) => (
-            <button
-              key={type}
-              type="button"
-              className="button button--quiet small"
-              onClick={() => addField(type)}
-            >
-              {t(`fieldType.${type}`)}
-            </button>
-          ))}
-        </aside>
+        <div className="stack">
+          <div className="card stack">
+            <strong className="small">{t('builder.palette')}</strong>
+            {PALETTE_GROUPS.map((group) => (
+              <div className="stack" key={group.id}>
+                <span className="small muted">{t(`palette.${group.id}`)}</span>
+                <div className="builder__palette">
+                  {group.types.map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      className="button button--quiet small"
+                      onClick={() => addField(type)}
+                    >
+                      {t(`fieldType.${type}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <span className="small muted">{t('builder.addHint')}</span>
+          </div>
 
-        <div className="card builder__canvas">
-          <FieldCanvas
-            fields={definition.fields}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
-            onReorder={(fields) => edit({ ...definition, fields })}
-            onRemove={removeField}
-          />
+          <div className="card builder__canvas">
+            <FieldCanvas
+              fields={definition.fields}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              onReorder={(fields) => edit({ ...definition, fields })}
+              onRemove={removeField}
+              onMove={moveField}
+            />
+          </div>
         </div>
 
         <aside className="card stack builder__panel">
-          <strong className="small">{t('builder.properties')}</strong>
-          <FieldProperties field={selected} onChange={updateField} />
+          <div className="row builder__tabs builder__tabs--top">
+            <button
+              type="button"
+              className={view === 'edit' ? 'button small' : 'button button--quiet small'}
+              onClick={() => setView('edit')}
+            >
+              {t('builder.viewField')}
+            </button>
+            <button
+              type="button"
+              className={view === 'preview' ? 'button small' : 'button button--quiet small'}
+              onClick={() => setView('preview')}
+            >
+              {t('builder.viewPreview')}
+            </button>
+          </div>
+
+          {view === 'edit' ? (
+            <FieldProperties field={selected} onChange={updateField} />
+          ) : (
+            <FormPreview
+              definition={definition}
+              locale={locale}
+              locales={locales}
+              selectedId={selectedId}
+            />
+          )}
         </aside>
       </div>
 

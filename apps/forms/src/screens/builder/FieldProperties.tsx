@@ -64,14 +64,41 @@ export function FieldProperties({ field, onChange }: Props) {
 
       {tab === 'properties' ? (
         <div className="stack">
-          <label className="field">
-            <span>{t('field.key')}</span>
-            <input
-              value={field.key}
-              onChange={(event) => patch({ key: event.target.value } as Partial<Field>)}
-            />
-            <span className="small muted">{t('field.keyHint')}</span>
-          </label>
+          {/*
+            The question text comes first, in the language being worked in.
+
+            It used to live only on the translation tab, with the machine key at the top of this
+            one — so the first thing an author saw was `full_name`, and writing "What is your
+            name?" meant knowing to switch tabs. That is the wrong way round: the label is the
+            field as far as anybody except the database is concerned. The other locales stay on
+            the translation tab, which is what that tab is for.
+          */}
+          {hasLabel(field) && (
+            <label className="field">
+              <span>{t('field.label')}</span>
+              <input
+                autoFocus
+                value={field.label[locales.default] ?? ''}
+                onChange={(event) => setText('label', locales.default, event.target.value)}
+                placeholder={t('field.labelPlaceholder')}
+              />
+              {locales.supported.length > 1 && (
+                <span className="small muted">
+                  {t('field.labelOtherLocales', { n: locales.supported.length - 1 })}
+                </span>
+              )}
+            </label>
+          )}
+
+          {'helpText' in field && (
+            <label className="field">
+              <span>{t('field.helpText')}</span>
+              <input
+                value={field.helpText?.[locales.default] ?? ''}
+                onChange={(event) => setText('helpText', locales.default, event.target.value)}
+              />
+            </label>
+          )}
 
           {'required' in field && (
             <label className="field field--inline">
@@ -179,6 +206,24 @@ export function FieldProperties({ field, onChange }: Props) {
               </button>
             </div>
           )}
+
+          {/*
+            The key is real and occasionally matters — it is what a CSV column is named and what an
+            integration reads — but it is not what somebody is thinking about while writing a form,
+            and putting it first made the panel look like a database screen. Folded away, and
+            warned about: changing it after answers exist orphans them.
+          */}
+          <details className="builder__advanced">
+            <summary className="small muted">{t('field.advanced')}</summary>
+            <label className="field">
+              <span>{t('field.key')}</span>
+              <input
+                value={field.key}
+                onChange={(event) => patch({ key: event.target.value } as Partial<Field>)}
+              />
+              <span className="small muted">{t('field.keyHint')}</span>
+            </label>
+          </details>
         </div>
       ) : (
         <div className="stack">

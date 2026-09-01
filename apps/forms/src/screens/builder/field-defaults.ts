@@ -8,6 +8,23 @@ import { FIELD_TYPES, type Field, type FieldType } from '@tp/shared/forms';
  */
 export const PALETTE: readonly FieldType[] = FIELD_TYPES;
 
+/**
+ * The palette, grouped.
+ *
+ * Fourteen equally-weighted buttons in a column is a list, not a palette: it fills the screen,
+ * buries the form being built, and gives no clue that "Page break" and "Email" are different kinds
+ * of thing. Three groups of five or fewer is something you can scan.
+ *
+ * Every type appears exactly once — `field-defaults.test.ts` proves it, so adding a field type
+ * without deciding where it belongs fails the build rather than quietly vanishing from the
+ * palette.
+ */
+export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldType[] }> = [
+  { id: 'text', types: ['short_text', 'long_text', 'number', 'email', 'phone', 'date'] },
+  { id: 'choice', types: ['single_select', 'multi_select', 'yes_no'] },
+  { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'hidden'] },
+];
+
 export function newField(type: FieldType, existingKeys: readonly string[]): Field {
   const id = crypto.randomUUID();
   const key = uniqueKey(type, existingKeys);
