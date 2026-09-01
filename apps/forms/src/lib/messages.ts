@@ -174,6 +174,7 @@ export const messages: Catalogue = {
   'fieldType.section_break': { 'sv-SE': 'Avsnitt', 'en-GB': 'Section' },
   'fieldType.page_break': { 'sv-SE': 'Sidbrytning', 'en-GB': 'Page break' },
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
+  'fieldType.image': { 'sv-SE': 'Bild', 'en-GB': 'Image' },
   'fieldType.hidden': { 'sv-SE': 'Dolt fält', 'en-GB': 'Hidden field' },
 
   'submissions.title': { 'sv-SE': 'Svar ({n})', 'en-GB': 'Responses ({n})' },
@@ -190,6 +191,42 @@ export const messages: Catalogue = {
 
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
+
+  'forms.edit': { 'sv-SE': 'Redigera formulär', 'en-GB': 'Edit form' },
+
+  'palette.text': { 'sv-SE': 'Text och siffror', 'en-GB': 'Text and numbers' },
+  'palette.choice': { 'sv-SE': 'Val', 'en-GB': 'Choices' },
+  'palette.layout': { 'sv-SE': 'Layout', 'en-GB': 'Layout' },
+
+  'builder.addHint': {
+    'sv-SE': 'Nya fält hamnar direkt efter det markerade.',
+    'en-GB': 'A new field lands directly after the one you have selected.',
+  },
+  'builder.needsLabel': { 'sv-SE': 'Saknar frågetext', 'en-GB': 'Needs a question' },
+  'builder.moveUp': { 'sv-SE': 'Flytta upp', 'en-GB': 'Move up' },
+  'builder.moveDown': { 'sv-SE': 'Flytta ned', 'en-GB': 'Move down' },
+  'builder.viewField': { 'sv-SE': 'Fältet', 'en-GB': 'This field' },
+  'builder.viewPreview': { 'sv-SE': 'Hela formuläret', 'en-GB': 'Whole form' },
+
+  'preview.empty': {
+    'sv-SE': 'Lägg till ett fält så visas formuläret här.',
+    'en-GB': 'Add a field and the form appears here.',
+  },
+  'preview.page': { 'sv-SE': 'Sida {current} av {total}', 'en-GB': 'Page {current} of {total}' },
+  'preview.note': {
+    'sv-SE': 'Så här ser formuläret ut för den som fyller i det. Inget sparas härifrån.',
+    'en-GB': 'This is what the form looks like to the person filling it in. Nothing here is saved.',
+  },
+
+  'field.labelPlaceholder': {
+    'sv-SE': 'T.ex. Vad heter du?',
+    'en-GB': 'For example: What is your name?',
+  },
+  'field.labelOtherLocales': {
+    'sv-SE': 'Övriga {n} språk finns under Översättning.',
+    'en-GB': 'The other {n} language(s) are on the Translation tab.',
+  },
+  'field.advanced': { 'sv-SE': 'Avancerat', 'en-GB': 'Advanced' },
 
   'templates.heading': { 'sv-SE': 'Börja från', 'en-GB': 'Start from' },
   'templates.intro': {

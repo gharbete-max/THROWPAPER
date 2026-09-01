@@ -166,7 +166,7 @@ legend {
 /* Form builder: palette · canvas · properties (SPEC-forms.md §3). */
 .builder {
   display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr) 18rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
   gap: calc(var(--tp-spacing-unit) * 2);
   align-items: start;
 }
@@ -804,4 +804,75 @@ textarea {
 .template:has(input:focus-visible) {
   outline: 2px solid var(--tp-colour-primary);
   outline-offset: 2px;
+}
+
+/* --- Builder: palette, rows, preview -------------------------------------
+ *
+ * The palette used to be fourteen full-width buttons in a column, which filled the first screen
+ * and buried the form being built. Grouped chips that wrap take a fraction of the space and make
+ * the kinds of field distinguishable at a glance.
+ */
+.builder__palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.builder__palette .button {
+  flex: 0 0 auto;
+}
+
+/* Reorder without dragging. Stacked so the pair occupies one row's height. */
+.builder__move {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: none;
+}
+
+.builder__move .button {
+  min-height: 22px;
+  padding: 0 calc(var(--tp-spacing-unit) * 0.5);
+  line-height: 1;
+}
+
+.builder__required {
+  color: var(--tp-colour-danger);
+  margin-inline-start: 0.25em;
+}
+
+.builder__advanced summary {
+  cursor: pointer;
+  padding: calc(var(--tp-spacing-unit) * 0.5) 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* The preview renders the real public components, so it needs the page's own colours around it
+ * rather than the panel's — otherwise it reads as part of the editor instead of as the form. */
+.preview__page {
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  padding: var(--tp-spacing-unit);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+/* Ties a row in the list to the question it is on the page. */
+.preview__field--selected {
+  outline: 2px solid var(--tp-colour-primary);
+  outline-offset: 4px;
+  border-radius: var(--tp-radius);
+}
+
+/* The outer pair switches between the selected field and the whole form; the inner pair switches
+ * between a field's properties and its translations. Separated so two rows of tabs do not read as
+ * one confusing row of four. */
+.builder__tabs--top {
+  border-bottom: var(--tp-border-width) solid var(--tp-colour-border);
+  padding-bottom: var(--tp-spacing-unit);
+  margin-bottom: calc(var(--tp-spacing-unit) * 0.5);
 }

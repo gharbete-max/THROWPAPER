@@ -28,9 +28,10 @@ interface Props {
   onSelect: (id: string) => void;
   onReorder: (fields: Field[]) => void;
   onRemove: (id: string) => void;
+  onMove: (id: string, direction: -1 | 1) => void;
 }
 
-export function FieldCanvas({ fields, selectedId, onSelect, onReorder, onRemove }: Props) {
+export function FieldCanvas({ fields, selectedId, onSelect, onReorder, onRemove, onMove }: Props) {
   const t = useT();
   // Keyboard sensor included deliberately: drag-and-drop that only works with a mouse is not
   // an accessible way to build a form.
@@ -59,13 +60,16 @@ export function FieldCanvas({ fields, selectedId, onSelect, onReorder, onRemove 
         strategy={verticalListSortingStrategy}
       >
         <ul className="builder__list">
-          {fields.map((field) => (
+          {fields.map((field, index) => (
             <SortableField
               key={field.id}
               field={field}
               selected={field.id === selectedId}
+              first={index === 0}
+              last={index === fields.length - 1}
               onSelect={onSelect}
               onRemove={onRemove}
+              onMove={onMove}
             />
           ))}
         </ul>
@@ -77,13 +81,19 @@ export function FieldCanvas({ fields, selectedId, onSelect, onReorder, onRemove 
 function SortableField({
   field,
   selected,
+  first,
+  last,
   onSelect,
   onRemove,
+  onMove,
 }: {
   field: Field;
   selected: boolean;
+  first: boolean;
+  last: boolean;
   onSelect: (id: string) => void;
   onRemove: (id: string) => void;
+  onMove: (id: string, direction: -1 | 1) => void;
 }) {
   const t = useT();
   const { locale, locales } = useSession();
@@ -116,12 +126,54 @@ function SortableField({
       <button type="button" className="builder__itemBody" onClick={() => onSelect(field.id)}>
         <span className="small muted">{t(`fieldType.${field.type}`)}</span>
         <span className="builder__itemLabel">
-          {field.type === 'page_break' ? '— — —' : (label?.value ?? field.key)}
+          {field.type === 'page_break' ? (
+            '— — —'
+          ) : label?.value ? (
+            label.value
+          ) : (
+            /*
+             * An unlabelled question is the most common half-finished state and the builder used
+             * to disguise it by showing the machine key, which looks like a name. Saying so here
+             * means it is visible while scanning the list rather than at publish time.
+             */
+            <span className="status-warning">{t('builder.needsLabel')}</span>
+          )}
+          {'required' in field && field.required && (
+            <span className="builder__required" title={t('field.required')}>
+              *
+            </span>
+          )}
           {label?.fallback && label.value && (
             <span className="badge badge--warning">{label.locale}</span>
           )}
         </span>
       </button>
+
+      {/*
+        Up and down beside the drag handle. Dragging is fine with a mouse and awkward on a phone,
+        which is where half of this will be used — and two buttons are something you can hit
+        without a steady hand.
+      */}
+      <div className="builder__move">
+        <button
+          type="button"
+          className="button button--quiet small"
+          disabled={first}
+          aria-label={t('builder.moveUp')}
+          onClick={() => onMove(field.id, -1)}
+        >
+          ↑
+        </button>
+        <button
+          type="button"
+          className="button button--quiet small"
+          disabled={last}
+          aria-label={t('builder.moveDown')}
+          onClick={() => onMove(field.id, 1)}
+        >
+          ↓
+        </button>
+      </div>
 
       <button
         type="button"

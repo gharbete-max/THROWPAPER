@@ -143,7 +143,7 @@ export function Forms() {
             {isAdmin && (
               <div className="row">
                 <Link className="button button--quiet" to={`/forms/${form.id}`}>
-                  {t('event.editTitle')}
+                  {t('forms.edit')}
                 </Link>
               </div>
             )}
