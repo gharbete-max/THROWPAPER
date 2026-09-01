@@ -886,6 +886,47 @@ horizontal overflow**, and the desktop builder unchanged — the compact up/down
 22px there, where a mouse is doing the pointing.
 
 
+## Icons and button styling · done
+
+Asked for: icons, stylised buttons, real arrows, everything following the theme, and no gradients.
+
+**Icons are inline SVG using `currentColor`.** That last part is the whole design. An icon takes
+the colour of the text beside it, so it is themed by the Brand Kit for free and `CLAUDE.md` rule 4
+— no hard-coded colours — holds structurally rather than by anybody remembering. Change the brand
+and every icon follows. No icon font (a network request, and a missing glyph until it arrives) and
+no images (they cannot change colour).
+
+Stroked at a uniform weight, sized in `em` so an icon matches whatever text it sits beside, and
+`aria-hidden` because every icon here sits next to its own label — announcing both would make a
+screen reader say everything twice. An icon-only control names itself with `aria-label`.
+
+**A test proves every field type has an icon**, driven by `FIELD_TYPES`, so adding a type forces
+the decision instead of leaving a blank chip somebody finds on screen. Same guard as the message
+catalogue, for the same reason.
+
+**Buttons are flat and token-driven.** No gradients — the stated direction is quiet, and a gradient
+is also the one treatment that cannot follow a customer's palette without being recomputed. Since
+darkening cannot be derived from a token, hover swaps the frame rather than mixing a colour the
+customer never chose. Focus rings are the secondary colour, on every control rather than only
+buttons.
+
+The literal `→`, `↑` and `⠿` characters are gone, replaced by real arrows and a grip that scale
+and colour with everything else.
+
+**Two things the icons themselves forced:**
+
+- Adding icons widened the field rows until *Remove* wrapped to a second line. Duplicate is now
+  icon-only and Remove keeps its word — a copy is safe and repeatable and its icon reads
+  universally, while a delete should say what it is rather than ask somebody to recognise a glyph
+  before destroying something.
+- That compaction then dropped Duplicate to 40px on a phone. It is 44px there again; the narrow
+  version is a mouse affordance only.
+
+**One knowingly left:** the sort buttons in the submissions grid are 34–42px wide because a column
+header can only be as wide as its column. They are 44px tall and fill their column, and forcing
+the width would break the table. Recorded rather than quietly ignored.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

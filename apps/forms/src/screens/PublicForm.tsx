@@ -13,6 +13,7 @@ import {
 import { messages } from '../lib/messages.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
+import { Icon } from '../components/Icon.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -309,6 +310,7 @@ export default function PublicForm() {
                   className="button button--quiet"
                   onClick={() => setPage(page - 1)}
                 >
+                  <Icon name="arrow-left" />
                   {t('public.back')}
                 </button>
               )}
@@ -320,6 +322,7 @@ export default function PublicForm() {
                   onClick={saveDraft}
                   disabled={busy}
                 >
+                  <Icon name="save" />
                   {busy ? t('public.saving') : t('public.save')}
                 </button>
               )}
@@ -333,10 +336,12 @@ export default function PublicForm() {
                   if (validatePage()) setPage(page + 1);
                 }}
               >
-                {t('public.next')} →
+                {t('public.next')}
+                <Icon name="arrow-right" />
               </button>
             ) : (
               <button type="submit" className="button form-actions__forward" disabled={busy}>
+                <Icon name="check" />
                 {busy ? t('public.submitting') : submitLabel}
               </button>
             )}

@@ -16,6 +16,7 @@ import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
+import { Icon } from '../../components/Icon.js';
 import { Submissions } from '../Submissions.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
@@ -245,6 +246,7 @@ export function FormBuilder() {
             onClick={publish}
             disabled={publishing || saveState !== 'saved'}
           >
+            <Icon name="publish" />
             {publishing ? t('builder.publishing') : t('builder.publish')}
           </button>
         </div>
@@ -290,6 +292,7 @@ export function FormBuilder() {
                       className="button button--quiet small"
                       onClick={() => addField(type)}
                     >
+                      <Icon name={type} />
                       {t(`fieldType.${type}`)}
                     </button>
                   ))}
@@ -319,7 +322,10 @@ export function FormBuilder() {
           answer you have to click for is one you stop asking for.
         */}
         <aside className="card stack builder__panel">
-          <strong className="small">{t('builder.viewPreview')}</strong>
+          <strong className="small row">
+            <Icon name="preview" />
+            {t('builder.viewPreview')}
+          </strong>
           <FormPreview
             definition={definition}
             locale={locale}

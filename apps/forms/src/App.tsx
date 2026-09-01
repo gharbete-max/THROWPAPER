@@ -4,6 +4,7 @@ import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
 import { ConfirmProvider } from './components/Confirm.js';
+import { Icon } from './components/Icon.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -79,12 +80,15 @@ function Shell() {
           )}
           <nav className="row">
             <Link className="button button--quiet small" to="/events">
+              <Icon name="events" />
               {t('nav.events')}
             </Link>
             <Link className="button button--quiet small" to="/forms">
+              <Icon name="forms" />
               {t('nav.forms')}
             </Link>
             <Link className="button button--quiet small" to="/brand">
+              <Icon name="brand" />
               {t('nav.brand')}
             </Link>
             {/*
