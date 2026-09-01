@@ -14,7 +14,7 @@ import { useSession } from '../../lib/session.js';
 import { useConfirm } from '../../components/Confirm.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
-import { PALETTE_GROUPS, newField } from './field-defaults.js';
+import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
 import { Submissions } from '../Submissions.js';
 
@@ -102,6 +102,37 @@ export function FormBuilder() {
 
     edit({ ...definition, fields });
     setSelectedId(field.id);
+  }
+
+  /**
+   * Copy a field, directly below the original.
+   *
+   * Long forms repeat themselves — five questions with the same five options, a block of contact
+   * details asked once per guest — and rebuilding each one by hand is where a form builder starts
+   * feeling like data entry.
+   *
+   * The copy gets a new id and a new key: sharing either would silently merge two questions'
+   * answers into one column, which is the kind of defect nobody finds until the export.
+   */
+  function duplicateField(fieldId: string) {
+    if (!definition) return;
+    const at = definition.fields.findIndex((field) => field.id === fieldId);
+    if (at === -1) return;
+
+    const original = definition.fields[at]!;
+    const copy = {
+      ...structuredClone(original),
+      id: crypto.randomUUID(),
+      key: uniqueKey(
+        original.key,
+        definition.fields.map((field) => field.key),
+      ),
+    } as Field;
+
+    const fields = [...definition.fields];
+    fields.splice(at + 1, 0, copy);
+    edit({ ...definition, fields });
+    setSelectedId(copy.id);
   }
 
   /** Reorder without dragging: a touch screen and a keyboard both need this. */
@@ -276,6 +307,7 @@ export function FormBuilder() {
               onReorder={(fields) => edit({ ...definition, fields })}
               onRemove={removeField}
               onMove={moveField}
+              onDuplicate={duplicateField}
               renderEditor={(field) => <FieldProperties field={field} onChange={updateField} />}
             />
           </div>

@@ -245,10 +245,6 @@ legend {
   font-weight: var(--tp-type-weight-bold);
 }
 
-.builder__tabs {
-  gap: var(--tp-spacing-unit);
-}
-
 /* Submissions table. Not the grid from SPEC-shared.md — that is A4. */
 .table-scroll {
   overflow-x: auto;
@@ -664,21 +660,6 @@ textarea {
   object-fit: contain;
 }
 
-.brand__logo {
-  padding: var(--tp-spacing-unit);
-  border: var(--tp-border-width) solid var(--tp-colour-border);
-  border-radius: var(--tp-radius);
-  background: var(--tp-colour-surface);
-  display: flex;
-  justify-content: center;
-}
-
-.brand__logo img {
-  max-height: 80px;
-  max-inline-size: 100%;
-  object-fit: contain;
-}
-
 /* An image placed in a form by its author. Capped rather than scaled: the uploaded file can be
  * any size, and the form's layout should not depend on what somebody happened to upload. */
 .form-image {
@@ -868,15 +849,6 @@ textarea {
   border-radius: var(--tp-radius);
 }
 
-/* The outer pair switches between the selected field and the whole form; the inner pair switches
- * between a field's properties and its translations. Separated so two rows of tabs do not read as
- * one confusing row of four. */
-.builder__tabs--top {
-  border-bottom: var(--tp-border-width) solid var(--tp-colour-border);
-  padding-bottom: var(--tp-spacing-unit);
-  margin-bottom: calc(var(--tp-spacing-unit) * 0.5);
-}
-
 /* A destructive action should not look like every other button. Used by the confirmation dialog
  * and by the second step of removing a field. */
 .button--danger {
@@ -965,5 +937,38 @@ textarea {
     top: var(--tp-spacing-unit);
     max-block-size: calc(100vh - var(--tp-spacing-unit) * 2);
     overflow-y: auto;
+  }
+}
+
+/* --- Builder rows on a phone ---------------------------------------------
+ *
+ * Grip, label, up, down, duplicate and remove do not fit across 375px: the row measured 389px and
+ * pushed the whole page sideways. And the move buttons, stacked to fit one row's height, came out
+ * 16x22 — a third of the 44px target every other control in this product meets.
+ *
+ * So on a narrow screen the label takes the full width and the actions wrap beneath it, where
+ * there is room for them to be a real size.
+ */
+.builder__itemRow {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .builder__itemBody {
+    flex-basis: 100%;
+    order: -1;
+  }
+
+  .builder__move {
+    flex-direction: row;
+  }
+
+  .builder__move .button {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+
+  .builder__itemRow > .button {
+    min-block-size: 44px;
   }
 }

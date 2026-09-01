@@ -121,8 +121,6 @@ export const messages: Catalogue = {
     'sv-SE': 'Ta bort fältet? Svar som redan lämnats påverkas inte.',
     'en-GB': 'Remove this field? Answers already given are unaffected.',
   },
-  'builder.tabProperties': { 'sv-SE': 'Egenskaper', 'en-GB': 'Properties' },
-  'builder.tabTranslations': { 'sv-SE': 'Översättning', 'en-GB': 'Translation' },
   'builder.translationsComplete': {
     'sv-SE': 'Alla språk klara',
     'en-GB': 'All languages complete',
@@ -208,6 +206,7 @@ export const messages: Catalogue = {
   'confirm.title': { 'sv-SE': 'Bekräfta', 'en-GB': 'Confirm' },
   'confirm.cancel': { 'sv-SE': 'Avbryt', 'en-GB': 'Cancel' },
   'confirm.confirm': { 'sv-SE': 'Ja, fortsätt', 'en-GB': 'Yes, continue' },
+  'builder.duplicate': { 'sv-SE': 'Duplicera', 'en-GB': 'Duplicate' },
   'builder.removeYes': { 'sv-SE': 'Ta bort', 'en-GB': 'Remove' },
 
   'forms.edit': { 'sv-SE': 'Redigera formulär', 'en-GB': 'Edit form' },
@@ -223,7 +222,6 @@ export const messages: Catalogue = {
   'builder.needsLabel': { 'sv-SE': 'Saknar frågetext', 'en-GB': 'Needs a question' },
   'builder.moveUp': { 'sv-SE': 'Flytta upp', 'en-GB': 'Move up' },
   'builder.moveDown': { 'sv-SE': 'Flytta ned', 'en-GB': 'Move down' },
-  'builder.viewField': { 'sv-SE': 'Fältet', 'en-GB': 'This field' },
   'builder.viewPreview': { 'sv-SE': 'Hela formuläret', 'en-GB': 'Whole form' },
 
   'preview.empty': {
@@ -239,10 +237,6 @@ export const messages: Catalogue = {
   'field.labelPlaceholder': {
     'sv-SE': 'T.ex. Vad heter du?',
     'en-GB': 'For example: What is your name?',
-  },
-  'field.labelOtherLocales': {
-    'sv-SE': 'Övriga {n} språk finns under Översättning.',
-    'en-GB': 'The other {n} language(s) are on the Translation tab.',
   },
   'field.advanced': { 'sv-SE': 'Avancerat', 'en-GB': 'Advanced' },
 

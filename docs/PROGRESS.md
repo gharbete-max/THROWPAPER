@@ -838,6 +838,30 @@ offers `+ sv-SE` and reveals a second box when pressed; and a form written only 
 reports nothing missing.
 
 
+## Builder: duplicate a field, and a phone that fits · done
+
+Found by looking rather than by being told — the builder had been rebuilt three times in a row
+without anybody opening it on a phone.
+
+**Two mobile defects, both introduced by the rebuild.** At 375px the field row measured 389px and
+pushed the whole page sideways, and the up/down buttons came out **16×22px** — a third of the 44px
+target every other control in this product meets, on the device where reordering by drag is
+hardest. On a narrow screen the label now takes the full width and the actions wrap beneath it,
+where there is room for them to be a real size. Zero overflow, nothing under 44px.
+
+**Duplicate a field.** Long forms repeat themselves — five questions with the same five options, a
+block of contact details asked once per guest — and rebuilding each by hand is where a builder
+starts to feel like data entry. The copy lands directly below the original with a new id and a new
+key, because two fields sharing a key silently merge their answers into one column and nobody
+finds that until the export.
+
+`uniqueKey` was generalised to do it, and pinned by tests: a copy of `email_2` is `email_3`, not
+`email_2_2`. (Its old body contained `type.replace(/_/g, '_')`, which had never done anything.)
+
+**Dead code from the last three rounds** removed: the two tab-row styles and the logo preview
+style left behind when those components were replaced, and four message keys nothing referenced.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
