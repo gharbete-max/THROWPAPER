@@ -23,6 +23,7 @@ import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admi
 import { createWorker } from './jobs/worker.js';
 import { registerSendingDomainRoutes } from './routes/sending-domains.js';
 import { registerCheckInRoutes } from './routes/checkin.js';
+import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
 import { createSesMailProvider } from './mail/ses.js';
 import type { TxtResolver } from './mail/domain-verification.js';
@@ -47,6 +48,11 @@ export interface ServerOptions {
   resolver?: TxtResolver;
   /** Where the operator notification goes. */
   operatorAddress?: string | null;
+  /**
+   * Present only in demo mode. Its presence is what registers the /demo routes — there is no
+   * environment variable that turns them on in a normal server.
+   */
+  demo?: DemoOptions;
 }
 
 /**
@@ -153,6 +159,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerDocumentRoutes(app, { repos, guard, admission, store });
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
   registerCheckInRoutes(app, { repos, guard, jwtSecret });
+  if (options.demo) registerDemoRoutes(app, { repos, demo: options.demo, jwtSecret });
 
   app.get('/health', async (_request, reply) => {
     let state: 'up' | 'down' | 'skipped' = 'skipped';
@@ -170,6 +177,8 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       service: 'api-forms',
       contractVersion: CONTRACT_VERSION,
       database: state,
+      // The app reads this to decide whether to show the demo banner.
+      mode: options.demo ? 'demo' : 'live',
     });
   });
 

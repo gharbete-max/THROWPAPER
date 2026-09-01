@@ -358,3 +358,27 @@ legend {
   font-size: 0.875rem;
   color: var(--tp-colour-muted);
 }
+
+/* Demo banner. Deliberately hard to miss — a demo that does not announce itself misleads people. */
+.demo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  flex-wrap: wrap;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  background: var(--tp-colour-warning);
+  color: var(--tp-colour-background);
+  font-size: 0.9375rem;
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.demo-banner__action {
+  border: var(--tp-border-width) solid currentColor;
+  border-radius: var(--tp-radius);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 2px var(--tp-spacing-unit);
+  cursor: pointer;
+}

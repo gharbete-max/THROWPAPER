@@ -98,6 +98,19 @@ async function request<T>(path: string, init: RequestInit = {}, retry = true): P
 }
 
 export const client = {
+  /** Whether this server is a demo. Drives the banner and the sign-in shortcut. */
+  health: () => request<{ status: string; mode: 'demo' | 'live'; database: string }>('/health'),
+
+  demoInfo: () =>
+    request<{ demo: true; formSlug: string; users: Array<{ email: string; role: string }> }>(
+      '/demo/info',
+    ),
+
+  demoSignIn: (email: string) =>
+    request<api.TokenPair>('/demo/sign-in', { method: 'POST', body: JSON.stringify({ email }) }),
+
+  demoReset: () => request<{ status: string }>('/demo/reset', { method: 'POST' }),
+
   requestMagicLink: (email: string) =>
     request<{ status: string }>('/v1/auth/magic-link', {
       method: 'POST',

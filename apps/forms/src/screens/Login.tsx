@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import { client } from '../lib/api.js';
+import { client, setSession } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
+import { useDemo } from '../lib/demo.js';
 
 export function Login() {
   const t = useT();
+  const { isDemo, users } = useDemo();
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
 
@@ -19,6 +21,33 @@ export function Login() {
   return (
     <main className="shell shell--narrow">
       <h1>{t('login.title')}</h1>
+
+      {isDemo && users.length > 0 && (
+        <div className="card stack">
+          <p className="small muted">{t('demo.signInHint')}</p>
+          <div className="row">
+            {users.map((user) => (
+              <button
+                key={user.email}
+                type="button"
+                className="button"
+                onClick={() => {
+                  client
+                    .demoSignIn(user.email)
+                    .then((pair) => {
+                      setSession(pair);
+                      // Full reload so the session provider picks the tokens up cleanly.
+                      window.location.assign('/events');
+                    })
+                    .catch(() => undefined);
+                }}
+              >
+                {t('demo.signInAs', { role: user.role })}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {state === 'sent' ? (
         <div className="card">
