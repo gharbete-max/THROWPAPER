@@ -48,7 +48,7 @@ test('a visitor fills in the form across both pages and gets a reference', async
   await page.getByRole('button', { name: 'Nästa' }).click();
 
   // Page two only exists because of the page break in the definition.
-  await page.getByLabel(/Måltid/).selectOption('veg');
+  await page.getByRole('radio', { name: 'Vegetariskt' }).check();
   await page.getByRole('button', { name: 'Anmäl mig' }).click();
 
   await expect(page.getByText(/Din referens:/)).toBeVisible();
@@ -114,7 +114,7 @@ test('the same address cannot register twice', async ({ page }) => {
     await page.getByLabel(/Namn/).fill(`Försök ${attempt}`);
     await page.getByLabel(/E-post/).fill(email);
     await page.getByRole('button', { name: 'Nästa' }).click();
-    await page.getByLabel(/Måltid/).selectOption('standard');
+    await page.getByRole('radio', { name: 'Standard' }).check();
     await page.getByRole('button', { name: 'Anmäl mig' }).click();
 
     if (attempt === 1) {

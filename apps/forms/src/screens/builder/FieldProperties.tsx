@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import type { Field } from '@tp/shared/forms';
+import {
+  MULTI_SELECT_APPEARANCES,
+  SINGLE_SELECT_APPEARANCES,
+  YES_NO_APPEARANCES,
+  type Field,
+} from '@tp/shared/forms';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { hasLabel, hasOptions } from './field-defaults.js';
@@ -75,6 +80,23 @@ export function FieldProperties({ field, onChange }: Props) {
                 onChange={(event) => patch({ required: event.target.checked } as Partial<Field>)}
               />
               <span>{t('field.required')}</span>
+            </label>
+          )}
+
+          {'appearance' in field && (
+            <label className="field">
+              <span>{t('field.appearance')}</span>
+              <select
+                value={field.appearance}
+                onChange={(event) => patch({ appearance: event.target.value } as Partial<Field>)}
+              >
+                {appearances(field)?.map((option) => (
+                  <option key={option} value={option}>
+                    {t(`field.appearance.${option}`)}
+                  </option>
+                ))}
+              </select>
+              <span className="small muted">{t('field.appearanceHint')}</span>
             </label>
           )}
 
@@ -201,4 +223,23 @@ export function FieldProperties({ field, onChange }: Props) {
       )}
     </div>
   );
+}
+
+/**
+ * Which appearances this field may take, or `null` if it is not a choice field.
+ *
+ * The lists come from the schema rather than being retyped here, so a new appearance shows up in
+ * the builder the moment it is allowed by the definition — one place to change, not two.
+ */
+function appearances(field: Field): readonly string[] | null {
+  switch (field.type) {
+    case 'single_select':
+      return SINGLE_SELECT_APPEARANCES;
+    case 'multi_select':
+      return MULTI_SELECT_APPEARANCES;
+    case 'yes_no':
+      return YES_NO_APPEARANCES;
+    default:
+      return null;
+  }
 }

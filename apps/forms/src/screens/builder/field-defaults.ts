@@ -13,7 +13,18 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
   const key = uniqueKey(type, existingKeys);
 
   switch (type) {
+    // Split, rather than sharing a branch, because the two have different appearance vocabularies
+    // and the defaults are what the form looked like before appearance was a choice at all.
     case 'single_select':
+      return {
+        id,
+        key,
+        type,
+        label: {},
+        required: false,
+        options: [{ value: 'option_1', label: {} }],
+        appearance: 'dropdown',
+      };
     case 'multi_select':
       return {
         id,
@@ -22,7 +33,10 @@ export function newField(type: FieldType, existingKeys: readonly string[]): Fiel
         label: {},
         required: false,
         options: [{ value: 'option_1', label: {} }],
+        appearance: 'checkboxes',
       };
+    case 'yes_no':
+      return { id, key, type, label: {}, required: false, appearance: 'dropdown' };
     case 'section_break':
       return { id, key, type, label: {} };
     case 'page_break':

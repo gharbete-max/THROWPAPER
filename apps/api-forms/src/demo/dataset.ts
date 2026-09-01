@@ -67,6 +67,9 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
         { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' } },
         { value: 'gluten', label: { 'sv-SE': 'Glutenfritt', 'en-GB': 'Gluten free' } },
       ],
+      // Cards rather than a dropdown: three short choices on a form that is mostly filled in on a
+      // phone, and the demo should show what the builder can now do.
+      appearance: 'cards',
     },
     {
       id: 'guests',
