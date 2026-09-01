@@ -92,9 +92,44 @@ revocable, and never edit.
 **Activity.** Who changed what in the builder, from the audit log that already exists, shown beside
 the version history rather than as a separate feature.
 
+### Anonymous participants
+
+Not everyone who needs to look at a draft will have an account, and requiring one is how review
+cycles die. Somebody opens a shared link and is immediately useful.
+
+**The flow.** A shared link opens the form and, before anything else, asks for a **temporary
+display name**. No account, no email, no password. The name plus a generated participant id is kept
+in that browser, so the same person keeps their identity across visits on that device and their
+comment thread stays coherent.
+
+**A self-chosen name is not an identity, and the interface must not pretend otherwise.** Anyone
+holding the link can call themselves anything, including a colleague's name. Guests are therefore
+labelled as guests everywhere their name appears — visibly, not subtly — and the audit log records
+the participant id and the link token rather than rendering a guest as though they were an account
+holder. Getting this wrong turns a review link into an impersonation tool.
+
+**Edit by link is off by default.** View and comment are the safe defaults. Granting edit to
+whoever holds a URL is a decision an admin makes per link, deliberately, with an expiry. Links are
+revocable, and revoking drops live sessions rather than waiting for them to reload.
+
+These endpoints are public in the same sense the form itself is, so they carry the same rate limits
+and the same honeypot thinking.
+
+**Accounts remain the durable path.** An account holder's forms, drafts and comment history persist
+across devices; a guest's identity lives in one browser and is gone when that storage is cleared.
+That difference should be stated in the interface at the moment somebody picks a temporary name,
+not discovered later.
+
+> **Open question.** "Accounts with saved forms" is unambiguous for the people who *build* forms —
+> that exists today. Whether a **respondent** should be able to hold an account and see their own
+> past submissions is a different product, closer to a portal, and is not specced here. It needs a
+> decision before anybody builds toward it.
+
 ### What this needs that does not exist yet
 
 - A per-resource permission table. Roles are currently organisation-wide only.
+- A participant identity that is not a user: guests need a stable id and a display name without an
+  account, and every table that currently references `users.id` for an actor needs to tolerate one.
 - A live transport. Nothing in the product pushes to a browser today; presence and live comments
   both need one, and it is the piece most likely to constrain hosting.
 - A notification path for mentions, which the phase 4 mail provider already covers.
