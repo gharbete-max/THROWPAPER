@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type {
   AuditEntryInput,
+  CheckInRecord,
   AuditEntryRecord,
   EventCreate,
   EventRecord,
@@ -38,6 +39,7 @@ export interface MemoryState {
   forms: FormRecord[];
   formVersions: FormVersionRecord[];
   submissions: SubmissionRecord[];
+  checkIns: CheckInRecord[];
   jobs: JobRecord[];
   sendingDomains: SendingDomainRecord[];
   messages: MessageRecord[];
@@ -72,6 +74,7 @@ export function createMemoryRepositories(
     forms: seed.forms ?? [],
     formVersions: seed.formVersions ?? [],
     submissions: seed.submissions ?? [],
+    checkIns: seed.checkIns ?? [],
     jobs: seed.jobs ?? [],
     sendingDomains: seed.sendingDomains ?? [],
     messages: seed.messages ?? [],
@@ -252,6 +255,26 @@ export function createMemoryRepositories(
       countComplete: async (formId) =>
         state.submissions.filter((s) => s.formId === formId && s.status === 'complete').length,
 
+      findByReference: async (organisationId, reference) => {
+        const found = state.submissions.find(
+          (s) =>
+            s.organisationId === organisationId &&
+            s.reference.toUpperCase() === reference.toUpperCase(),
+        );
+        return found ? copySubmission(found) : null;
+      },
+
+      revoke: async (organisationId, id, at) => {
+        const index = state.submissions.findIndex(
+          (s) => s.organisationId === organisationId && s.id === id,
+        );
+        const existing = state.submissions[index];
+        if (!existing) return null;
+        const updated: SubmissionRecord = { ...existing, revokedAt: at, updatedAt: new Date() };
+        state.submissions[index] = updated;
+        return copySubmission(updated);
+      },
+
       saveDraft: async (input: SubmissionDraftInput) => {
         const existingIndex = input.id ? state.submissions.findIndex((s) => s.id === input.id) : -1;
         const existing = state.submissions[existingIndex];
@@ -284,6 +307,7 @@ export function createMemoryRepositories(
           resumeTokenHash: input.resumeTokenHash,
           resumeExpiresAt: input.resumeExpiresAt,
           submittedAt: null,
+          revokedAt: null,
           createdAt: now,
           updatedAt: now,
         };
@@ -335,6 +359,7 @@ export function createMemoryRepositories(
           resumeTokenHash: null,
           resumeExpiresAt: null,
           submittedAt: now,
+          revokedAt: existing?.revokedAt ?? null,
           createdAt: existing?.createdAt ?? now,
           updatedAt: now,
         };
@@ -343,6 +368,35 @@ export function createMemoryRepositories(
         else state.submissions.push(record);
 
         return { ok: true as const, submission: copySubmission(record) };
+      },
+    },
+
+    checkIns: {
+      listForEvent: async (organisationId, eventId) =>
+        state.checkIns
+          .filter((c) => c.organisationId === organisationId && c.eventId === eventId)
+          .map((c) => ({ ...c })),
+      findBySubmission: async (submissionId) => {
+        const found = state.checkIns.find((c) => c.submissionId === submissionId);
+        return found ? { ...found } : null;
+      },
+      // Find and insert with no `await` between them, mirroring the unique index in Postgres:
+      // two simultaneous scans of one card produce one row.
+      admit: async (input) => {
+        const existing = state.checkIns.find((c) => c.submissionId === input.submissionId);
+        if (existing) return { created: false, checkIn: { ...existing } };
+
+        const record: CheckInRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          submissionId: input.submissionId,
+          eventId: input.eventId,
+          checkedInAt: new Date(),
+          checkedInByUserId: input.checkedInByUserId,
+          method: input.method,
+        };
+        state.checkIns.push(record);
+        return { created: true, checkIn: { ...record } };
       },
     },
 

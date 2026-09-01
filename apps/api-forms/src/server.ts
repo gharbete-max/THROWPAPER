@@ -22,6 +22,7 @@ import { createLocalDocumentStore, type DocumentStore } from './documents/store.
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
 import { createWorker } from './jobs/worker.js';
 import { registerSendingDomainRoutes } from './routes/sending-domains.js';
+import { registerCheckInRoutes } from './routes/checkin.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
 import { createSesMailProvider } from './mail/ses.js';
 import type { TxtResolver } from './mail/domain-verification.js';
@@ -151,6 +152,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   });
   registerDocumentRoutes(app, { repos, guard, admission, store });
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
+  registerCheckInRoutes(app, { repos, guard, jwtSecret });
 
   app.get('/health', async (_request, reply) => {
     let state: 'up' | 'down' | 'skipped' = 'skipped';

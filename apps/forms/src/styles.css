@@ -283,3 +283,78 @@ legend {
   cursor: pointer;
   padding: 0;
 }
+
+/* Check-in. Loud on purpose: read at arm's length, in bad light, with a queue waiting. */
+.checkin__video {
+  width: 100%;
+  max-height: 40vh;
+  border-radius: var(--tp-radius);
+  background: #000;
+}
+
+.checkin__video--off {
+  display: none;
+}
+
+.checkin__input {
+  font-size: 1.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.verdict {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  padding: calc(var(--tp-spacing-unit) * 3);
+  border-radius: var(--tp-radius);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  color: var(--tp-colour-background);
+}
+
+.verdict--good {
+  background: var(--tp-colour-success);
+}
+
+.verdict--warn {
+  background: var(--tp-colour-warning);
+}
+
+.verdict--bad {
+  background: var(--tp-colour-danger);
+}
+
+.verdict__headline {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.verdict__name {
+  font-size: 1.25rem;
+}
+
+.verdict__meta {
+  opacity: 0.85;
+  font-size: 0.9375rem;
+}
+
+.stats {
+  gap: calc(var(--tp-spacing-unit) * 3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat__value {
+  font-size: 2rem;
+  font-weight: var(--tp-type-weight-bold);
+  line-height: 1;
+  color: var(--tp-colour-primary);
+}
+
+.stat__label {
+  font-size: 0.875rem;
+  color: var(--tp-colour-muted);
+}

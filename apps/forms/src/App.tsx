@@ -8,12 +8,16 @@ import { Events } from './screens/Events.js';
 import { EventForm } from './screens/EventForm.js';
 import { Forms } from './screens/Forms.js';
 import { FormBuilder } from './screens/builder/FormBuilder.js';
+import { EventReport } from './screens/EventReport.js';
 
 /**
  * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,
  * and the shell's bundle should not follow them.
  */
 const PublicForm = lazy(() => import('./screens/PublicForm.js'));
+
+/** Code-split: only the door needs a QR decoder, and it is not small. */
+const CheckIn = lazy(() => import('./screens/CheckIn.js'));
 
 export function App() {
   return (
@@ -96,6 +100,15 @@ function Shell() {
           <Route path="/events/:id" element={<EventForm />} />
           <Route path="/forms" element={<Forms />} />
           <Route path="/forms/:id" element={<FormBuilder />} />
+          <Route path="/events/:id/attendance" element={<EventReport />} />
+          <Route
+            path="/events/:id/check-in"
+            element={
+              <Suspense fallback={<p className="muted">…</p>}>
+                <CheckIn />
+              </Suspense>
+            }
+          />
           <Route path="*" element={<Navigate to="/events" replace />} />
         </Routes>
       </main>

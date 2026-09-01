@@ -165,6 +165,43 @@ export const client = {
   listFormVersions: (id: string) =>
     request<{ versions: formSchemas.FormVersionSummary[] }>(`/v1/forms/${id}/versions`),
 
+  checkIn: (eventId: string, code: string) =>
+    request<{
+      outcome: 'admitted' | 'already' | 'revoked' | 'wrong-event' | 'not-found' | 'bad-signature';
+      attendee: {
+        submissionId: string;
+        reference: string;
+        name: string;
+        email: string | null;
+        revoked: boolean;
+        checkedInAt: string | null;
+      } | null;
+      checkedInAt: string | null;
+    }>(`/v1/events/${eventId}/check-ins`, { method: 'POST', body: JSON.stringify({ code }) }),
+
+  attendance: (eventId: string) =>
+    request<{
+      registered: number;
+      checkedIn: number;
+      noShow: number;
+      revoked: number;
+      byHour: Array<{ hour: string; count: number }>;
+      attendees: Array<{
+        submissionId: string;
+        reference: string;
+        name: string;
+        email: string | null;
+        locale: string;
+        revoked: boolean;
+        checkedInAt: string | null;
+      }>;
+    }>(`/v1/events/${eventId}/attendance`),
+
+  revokeSubmission: (submissionId: string) =>
+    request<{ submissionId: string; revoked: boolean }>(`/v1/submissions/${submissionId}/revoke`, {
+      method: 'POST',
+    }),
+
   listSubmissions: (id: string) =>
     request<{
       submissions: formSchemas.SubmissionResponse[];

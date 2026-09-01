@@ -43,6 +43,13 @@
       "when": 1788247504764,
       "tag": "0005_sending_domains",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788248340747,
+      "tag": "0006_check_ins",
+      "breakpoints": true
     }
   ]
 }
