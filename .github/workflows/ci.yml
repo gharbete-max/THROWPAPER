@@ -44,6 +44,26 @@ jobs:
       - run: pnpm run test:e2e
         env:
           CI: 'true'
+      # The Dockerfile is only ever proven by building it, and nobody here has Docker.
+      - name: Build the deployment image
+        run: docker build -t formwork:ci .
+
+      # A container that boots and answers is the difference between "it compiled" and "it runs".
+      - name: Smoke-test the image in demo mode
+        run: |
+          docker run -d --name formwork-demo -p 4100:4001 -e DEMO=true formwork:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:4100/health > /dev/null; then break; fi
+            sleep 2
+          done
+          curl -fsS http://localhost:4100/health | tee /dev/stderr | grep -q '"mode":"demo"'
+          # The app itself must be served, not just the API.
+          curl -fsS http://localhost:4100/ | grep -qi '<div id="root"'
+          # And a client route must fall back to index.html rather than 404.
+          curl -fsS http://localhost:4100/f/varmotet | grep -qi '<div id="root"'
+          docker logs formwork-demo
+          docker rm -f formwork-demo
+
       - if: failure()
         uses: actions/upload-artifact@v7
         with:

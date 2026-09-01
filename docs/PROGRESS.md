@@ -449,6 +449,40 @@ the lookup and the insert makes it fail with `['admitted', 'admitted']` — one 
 Offline queueing in the browser (the endpoint is idempotent, which is what makes that cheap
 later), session selection, waiting lists, badge printing, and the report builder (A9).
 
+## Deployable — one image, two modes · done
+
+The first thing phase 0 was supposed to do and the last thing actually done. `docs/DEPLOY.md` is
+the operator's copy; this is what changed and why.
+
+**Shipped**
+
+- `Dockerfile` — multi-stage, on `mcr.microsoft.com/playwright:...-noble`. The browser is a
+  **runtime** dependency since 4a, so a slim Node base would produce an image that boots happily
+  and fails the first time somebody asks for a PDF. Runs as `pwuser`, not root.
+- `SERVE_APP` — the API serves the built app as well, so one container is the whole product. A
+  `setNotFoundHandler` falls back to the app shell for client routes and leaves `/v1/`,
+  `/public/`, `/demo/`, `/health`, `/openapi.json` and every non-GET answering as an API.
+- `DEMO=true` selects the in-memory build from the same image, so the demo and the real thing
+  cannot drift apart into two artefacts.
+- `docs/DEPLOY.md` — host requirements, the environment table, and the ordered list of things
+  that must happen before a real event.
+
+**Proven by building it, because nobody here has Docker**
+
+CI builds the image and then runs it: `/health` must report `"mode":"demo"`, and both `/` and
+`/f/varmotet` must return the app shell. A Dockerfile that is never built is a guess, and the one
+machine this repo is developed on has no Docker, no Postgres and no psql.
+
+**The boundary is tested, not assumed**
+
+`serve-app.test.ts` pins the fallback rules — the failure it exists to prevent is invisible in
+development, where Vite serves the app on its own port and this code path never runs. It surfaces
+in production as a form link returning JSON to somebody who was sent it.
+
+**Still not deployed.** An image is not a deployment. The host, the region and the domain are
+decisions, and they are the user's.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
@@ -459,9 +493,9 @@ in at the door.
 
 From `START-HERE.md` §Done means, in the order these block each other:
 
-1. **Deploy it.** Phase 0 said "deployed to the real hosting target... day one, not at the end".
-   That never happened, and it now blocks everything below. The image needs **Chromium** (phase 4a
-   made Playwright a runtime dependency), and the hosting region still has to be picked.
+1. **Deploy it.** The image now exists, builds in CI and boots — see `docs/DEPLOY.md`. What is
+   still missing is a host: somewhere to run it, a Postgres, a domain and a region. That is a
+   decision, not code, and it still blocks everything below.
 2. **SES production access.** A new account only delivers to verified addresses. Until AWS grants
    it, the phase 4 checkpoint — "does email reliably land in real inboxes" — cannot be tested at
    all. It is a request with a turnaround, so it is worth starting before it is needed.

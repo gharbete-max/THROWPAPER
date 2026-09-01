@@ -2,6 +2,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
+import fastifyStatic from '@fastify/static';
 import {
   jsonSchemaTransform,
   serializerCompiler,
@@ -53,6 +54,13 @@ export interface ServerOptions {
    * environment variable that turns them on in a normal server.
    */
   demo?: DemoOptions;
+  /**
+   * Absolute path to the built `apps/forms` bundle. When set, the API also serves the app, so the
+   * whole product is one container — which is what makes a demo deployable in one step.
+   *
+   * Unset in development, where Vite serves the app and proxies here.
+   */
+  serveAppFrom?: string;
 }
 
 /**
@@ -184,6 +192,33 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
 
   /** The generated OpenAPI document — SPEC-forms.md §7 wants it derived from the Zod schemas. */
   app.get('/openapi.json', async () => app.swagger());
+
+  const appDir = options.serveAppFrom ?? process.env['SERVE_APP'];
+  if (appDir) {
+    await app.register(fastifyStatic, { root: appDir, wildcard: false });
+
+    /**
+     * SPA fallback. Anything that is not an API route and not a file on disk is a client route —
+     * `/f/:slug`, `/events/:id/check-in` — and must return index.html rather than a 404.
+     *
+     * The API prefixes are excluded explicitly: a mistyped endpoint should 404 as an endpoint, not
+     * silently hand back an HTML page that a fetch will fail to parse.
+     */
+    app.setNotFoundHandler(async (request, reply) => {
+      const path = request.url.split('?')[0] ?? '';
+      const isApi =
+        path.startsWith('/v1/') ||
+        path.startsWith('/public/') ||
+        path.startsWith('/demo/') ||
+        path === '/health' ||
+        path === '/openapi.json';
+
+      if (isApi || request.method !== 'GET') {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+      return reply.sendFile('index.html');
+    });
+  }
 
   return app;
 }
