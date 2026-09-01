@@ -451,12 +451,42 @@ later), session selection, waiting lists, badge printing, and the report builder
 
 ## Next
 
-Phase 4 — documents and email (1 week). Admission PDF with a signed QR, provider integration,
-sending-domain verification with live SPF/DKIM/DMARC checks, confirmation and notification emails,
-and bulk PDF generation as a background job.
+**v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
+filled in → a record exists → a branded PDF comes out → an email is queued → somebody is checked
+in at the door.
 
-**Decision 4 answered: Amazon SES, `eu-north-1` (Stockholm).** Recipient data stays in Sweden.
+### What is not done, and none of it is code
 
-4a is done — see below. 4b needs SES **production access**, which is a request to AWS with a
-turnaround: a new account can only send to verified addresses until it is granted. Worth requesting
-before 4b is built, or the phase 4 checkpoint cannot be met when the code is ready.
+From `START-HERE.md` §Done means, in the order these block each other:
+
+1. **Deploy it.** Phase 0 said "deployed to the real hosting target... day one, not at the end".
+   That never happened, and it now blocks everything below. The image needs **Chromium** (phase 4a
+   made Playwright a runtime dependency), and the hosting region still has to be picked.
+2. **SES production access.** A new account only delivers to verified addresses. Until AWS grants
+   it, the phase 4 checkpoint — "does email reliably land in real inboxes" — cannot be tested at
+   all. It is a request with a turnaround, so it is worth starting before it is needed.
+3. **HTTPS**, or the check-in camera will not open on a phone. `localhost` is exempt; a phone on
+   your network is not.
+4. **A real user runs a real event.** START-HERE: "the only criterion that matters."
+
+### Outstanding in the code
+
+- **No end-to-end suite.** `pnpm test:e2e` has been a passing no-op since phase 0, and the message
+  claiming it arrives "in phase 3" was still there after phase 5 shipped. A real suite needs a
+  running stack — Postgres plus both apps — which CI has and this machine does not. The honest
+  version: it should drive the public form in a browser against a live server, and it does not
+  exist yet.
+- **The local `DocumentStore` is a stopgap.** `SPEC-forms.md` §7 wants S3-compatible storage with
+  signed URLs and virus scanning; generated ZIPs currently go to a directory on disk.
+- **Nobody has run this stack end to end.** Every database path is proven by CI and unit tests,
+  never by a person clicking through it. That is the single largest gap between "tests pass" and
+  "it works", and phase 5 of START-HERE anticipates it: *run a real event and fix what breaks.*
+
+### After that
+
+`docs/ROADMAP.md` describes Track A phases A2–A14 and the whole of Track B. **Do not start them
+from the roadmap.** START-HERE is explicit that the specs are seductive and that v0.2 scope comes
+from watching the first real user work around the tool:
+
+> Ask the user what they actually did outside the tool — spreadsheet exports, manual chasing,
+> things they worked around. That list, not this document, is your v0.2 scope.
