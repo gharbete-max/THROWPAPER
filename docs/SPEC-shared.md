@@ -22,6 +22,46 @@ with a live specimen, sliders for spacing and radius, and a logo uploader, with 
 Ship 6–8 form themes, 6–8 email themes and 3–4 document themes as presets. Brand Kit changes
 cascade to anything not overriding a token.
 
+### Brand direction
+
+The house palette. These are token values, not CSS — everything downstream (web variables, inline
+email styles, print stylesheet, native StyleSheet) compiles from them.
+
+| Colour | Hex | Role |
+|---|---|---|
+| Deep Midnight | `#1B263B` | Base / primary. Ultra-dark navy; grounded and tailored. |
+| Saddle Brown | `#8B5A2B` | Accent / focus. Warm leather, heritage texture. |
+| Cognac | `#C68B59` | Secondary accent. Softer amber leather that lifts the palette. |
+| Parchment | `#F4F1EA` | Light neutral. Unbleached cream, clean contrast against the navy. |
+| Brushed Gold | `#D4AF37` | Highlight. Metallic detail — hardware and trim only. |
+
+**Ratios.** 60% Deep Midnight for structure and backdrops · 30% Saddle Brown and Cognac split
+across accents · 10% Parchment for readable contrast and Brushed Gold for precise detail.
+
+**Treatment: flat and plain.** No gradients. No decorative corner treatment. Colour and spacing do
+the work, not ornament. The editing interface in particular is judged on how quickly somebody can
+change a form, not on how it looks doing it.
+
+**Measured contrast, recorded so it is not discovered in an audit.** WCAG AA needs 4.5:1 for body
+text and 3:1 for large text.
+
+| Foreground | on Deep Midnight | on Parchment |
+|---|---|---|
+| Parchment / Deep Midnight | **13.42** ✅ | **13.42** ✅ |
+| Saddle Brown | 2.59 ❌ | **5.18** ✅ |
+| Cognac | **5.22** ✅ | 2.57 ❌ |
+| Brushed Gold | **7.20** ✅ | 1.86 ❌ |
+
+**Each accent works on exactly one ground, and they split cleanly.** Saddle Brown is the accent for
+light surfaces; Cognac and Brushed Gold are accents for dark ones. Used the other way round they
+fail AA outright — Brushed Gold on Parchment is 1.86:1, which is decorative-only and unreadable as
+text.
+
+That is not a flaw in the palette, it is its shape: it wants a dark ground with warm accents, or a
+Parchment ground with Saddle Brown. Mixing the two halves is what produces the unreadable
+combinations, and the Brand Kit's contrast warnings (§Brand Kit editor) should say so at the moment
+somebody picks one.
+
 **Escape hatch:** a sandboxed Custom CSS panel for public forms only, scoped to the form root,
 with a reset button. Never for email or PDF.
 
