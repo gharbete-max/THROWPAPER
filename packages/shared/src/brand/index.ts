@@ -75,6 +75,13 @@ export const TypographyTokens = z.object({
   lineHeight: z.number().min(1).max(2.5),
   weightRegular: z.number().int().min(100).max(900),
   weightBold: z.number().int().min(100).max(900),
+  /**
+   * A question's label has its own weight, slant and underline, because it is the text people
+   * read most and the one an author most often wants to set apart.
+   */
+  labelWeight: z.number().int().min(100).max(900).default(400),
+  labelStyle: z.enum(['normal', 'italic']).default('normal'),
+  labelDecoration: z.enum(['none', 'underline']).default('none'),
 });
 
 export const BrandKit = z.object({
@@ -83,6 +90,12 @@ export const BrandKit = z.object({
   spacingUnit: Px,
   radius: Px,
   borderWidth: Px,
+  /**
+   * Defaulted rather than required: a brand kit stored before these existed still parses, which is
+   * the same reason `appearance` is defaulted on a field.
+   */
+  controlHeight: Px.default('44px'),
+  contentWidth: Px.default('640px'),
   shadowLevel: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]),
   buttonStyle: z.enum(['solid', 'outline', 'soft']),
   /**

@@ -73,6 +73,24 @@ export function FieldInput({
     );
   }
 
+  if (field.type === 'link') {
+    if (!field.href) return null;
+    return (
+      <a
+        className={field.appearance === 'button' ? 'button button--quiet' : 'form-link'}
+        href={field.href}
+        target="_blank"
+        /**
+         * `noopener` is the one that matters: without it the opened page gets a handle on this
+         * one through `window.opener` and can navigate a half-filled form somewhere else.
+         */
+        rel="noopener noreferrer"
+      >
+        {text(field.label) || field.href}
+      </a>
+    );
+  }
+
   const label = text(field.label);
   const help = 'helpText' in field ? text(field.helpText) : '';
   const placeholder = 'placeholder' in field ? text(field.placeholder) : '';

@@ -10,6 +10,8 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-spacing-unit'] = tokens.spacingUnit;
   vars['--tp-radius'] = tokens.radius;
   vars['--tp-border-width'] = tokens.borderWidth;
+  vars['--tp-control-height'] = tokens.controlHeight;
+  vars['--tp-content-width'] = tokens.contentWidth;
   return vars;
 }
 

@@ -23,7 +23,7 @@ export const PALETTE: readonly FieldType[] = FIELD_TYPES;
 export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldType[] }> = [
   { id: 'text', types: ['short_text', 'long_text', 'number', 'email', 'phone', 'date'] },
   { id: 'choice', types: ['single_select', 'multi_select', 'yes_no'] },
-  { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'hidden'] },
+  { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'link', 'hidden'] },
 ];
 
 /**
@@ -100,6 +100,13 @@ export function newField(
      * uploaded, so the builder shows an upload control and the field is incomplete until then.
      * That is better than inventing a placeholder path that would fail validation on publish.
      */
+    /**
+     * Created without a destination. `href` only validates once somebody types one, so the field
+     * is incomplete until then — better than inventing a placeholder URL that would fail on
+     * publish, or worse, point somewhere real.
+     */
+    case 'link':
+      return { id, key, type, label, href: '', appearance: 'button' } as unknown as Field;
     case 'image':
       return { id, key, type, src: '', alt: {} } as unknown as Field;
     case 'section_break':

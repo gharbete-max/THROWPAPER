@@ -26,6 +26,7 @@ export const FIELD_TYPES = [
   'page_break',
   'rich_text',
   'image',
+  'link',
   'hidden',
 ] as const;
 
@@ -33,7 +34,13 @@ export const FieldType = z.enum(FIELD_TYPES);
 export type FieldType = z.infer<typeof FieldType>;
 
 /** Types that display something but never collect an answer. */
-export const PRESENTATIONAL_TYPES = ['section_break', 'page_break', 'rich_text', 'image'] as const;
+export const PRESENTATIONAL_TYPES = [
+  'section_break',
+  'page_break',
+  'rich_text',
+  'image',
+  'link',
+] as const;
 
 /** Stable machine name for a field. Submission data is keyed by this, not by the label. */
 export const FieldKey = z
@@ -167,6 +174,30 @@ export const Field = z.discriminatedUnion('type', [
     alt: LocalisedText.default({}),
     /** Caps the rendered width in pixels. Unset means as wide as the form allows. */
     maxWidth: z.number().int().min(40).max(2000).optional(),
+  }),
+
+  /**
+   * A link out of the form — terms, a price list, directions, whatever the author wants somebody
+   * to be able to read before answering.
+   *
+   * Opens in a new tab on purpose: a half-filled form is lost if the same tab navigates away, and
+   * this exists precisely for the moment somebody stops to check something.
+   *
+   * Collects nothing, so it is presentational. `http` and `https` only — a form is a public page
+   * and `javascript:` in an author-supplied href is script execution against every visitor.
+   */
+  z.object({
+    id: base.id,
+    key: base.key,
+    type: z.literal('link'),
+    label: LocalisedText.default({}),
+    href: z
+      .string()
+      .trim()
+      .url()
+      .refine((value) => /^https?:\/\//i.test(value), 'Links must start with http:// or https://'),
+    /** A quieter presentation for a link that is a footnote rather than an action. */
+    appearance: z.enum(['button', 'link']).default('button'),
   }),
 
   /** Prefilled from a URL parameter or a known contact. Never shown, never edited by the filler. */

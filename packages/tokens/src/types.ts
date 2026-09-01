@@ -26,6 +26,10 @@ export interface TypographyTokens {
   lineHeight: number;
   weightRegular: number;
   weightBold: number;
+  /** How a question's label is set. Its own controls, because it is the text people read most. */
+  labelWeight: number;
+  labelStyle: 'normal' | 'italic';
+  labelDecoration: 'none' | 'underline';
 }
 
 export interface TokenSet {
@@ -34,6 +38,10 @@ export interface TokenSet {
   spacingUnit: string;
   radius: string;
   borderWidth: string;
+  /** Height of a button or input. The single control that makes a form feel dense or roomy. */
+  controlHeight: string;
+  /** How wide a form is allowed to get before it stops growing. */
+  contentWidth: string;
   shadowLevel: 0 | 1 | 2 | 3;
   buttonStyle: 'solid' | 'outline' | 'soft';
   logoLight: string | null;

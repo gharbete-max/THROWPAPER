@@ -109,6 +109,33 @@ export function FieldProperties({ field, onChange }: Props) {
         </label>
       )}
 
+      {field.type === 'link' && (
+        <div className="stack">
+          <label className="field">
+            <span>{t('field.href')}</span>
+            <input
+              type="url"
+              inputMode="url"
+              placeholder="https://"
+              value={field.href}
+              onChange={(event) => patch({ href: event.target.value } as Partial<Field>)}
+            />
+            <span className="small muted">{t('field.hrefHint')}</span>
+          </label>
+
+          <label className="field">
+            <span>{t('field.linkAppearance')}</span>
+            <select
+              value={field.appearance}
+              onChange={(event) => patch({ appearance: event.target.value } as Partial<Field>)}
+            >
+              <option value="button">{t('field.linkAppearance.button')}</option>
+              <option value="link">{t('field.linkAppearance.link')}</option>
+            </select>
+          </label>
+        </div>
+      )}
+
       {field.type === 'image' && (
         <div className="stack">
           <ImagePicker
