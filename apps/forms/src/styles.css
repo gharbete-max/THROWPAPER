@@ -166,7 +166,7 @@ legend {
 /* Form builder: palette · canvas · properties (SPEC-forms.md §3). */
 .builder {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
   gap: calc(var(--tp-spacing-unit) * 2);
   align-items: start;
 }
@@ -925,5 +925,45 @@ textarea {
   .form-actions__forward {
     margin-inline-start: 0;
     width: 100%;
+  }
+}
+
+/* A field row is now a header plus, when open, its own editor. The row stays a row: the controls
+ * that were always there keep their places, and the editor appears beneath them. */
+.builder__item {
+  display: block;
+}
+
+.builder__itemRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.builder__editor {
+  margin-block-start: var(--tp-spacing-unit);
+  padding-block-start: var(--tp-spacing-unit);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+/* Other languages, added on request rather than presented as a chore. */
+.localised__other {
+  padding-inline-start: var(--tp-spacing-unit);
+  border-inline-start: 2px solid var(--tp-colour-border);
+}
+
+.localised__add {
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  flex-wrap: wrap;
+}
+
+/* The preview stays in view while the list scrolls past it — that is the whole point of it being
+ * a permanent pane rather than a tab. */
+@media (min-width: 901px) {
+  .builder__panel {
+    position: sticky;
+    top: var(--tp-spacing-unit);
+    max-block-size: calc(100vh - var(--tp-spacing-unit) * 2);
+    overflow-y: auto;
   }
 }

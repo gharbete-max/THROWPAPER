@@ -193,6 +193,7 @@ export const messages: Catalogue = {
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
   'field.optionLabel': { 'sv-SE': 'Alternativets text', 'en-GB': 'Option text' },
+  'field.addLanguage': { 'sv-SE': '{locale}', 'en-GB': '{locale}' },
   'field.optionValueHint': {
     'sv-SE': 'Sparas i exporten. Ändra inte efter att svar kommit in.',
     'en-GB': 'Stored in the export. Do not change it once answers exist.',

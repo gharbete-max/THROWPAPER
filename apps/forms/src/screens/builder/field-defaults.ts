@@ -27,40 +27,36 @@ export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldTy
 ];
 
 /**
- * A default in **every language the organisation publishes**, read straight from the catalogue.
+ * A default for the language being written in — and only that one.
  *
  * A new field used to arrive with `label: {}`, which meant it was immediately missing in every
- * locale — add three fields and the header reads "sv-SE: 3 missing · en-GB: 3 missing" before
- * anybody has done anything wrong. Warnings that appear for doing the normal thing are warnings
- * people learn to ignore.
+ * locale: three fields and the header read "sv-SE: 3 missing · en-GB: 3 missing" before anybody
+ * had done anything wrong.
  *
- * A placeholder that is obviously a placeholder is better: the form stays publishable, the
- * completeness indicator stays meaningful, and "New question" tells the author exactly what is
- * left to do.
+ * Filling *every* supported locale with the same placeholder fixed the warning and created a
+ * worse problem — an untranslated English form would have shown a real respondent the words
+ * "New question". One locale is seeded; the rest fall back to it when rendered, and are added
+ * deliberately when somebody wants them.
  */
 function localisedDefault(
   key: string,
-  supported: readonly string[],
+  locale: string,
   replacements: Record<string, string | number> = {},
 ): Record<string, string> {
-  const entry = messages[key] ?? {};
-  const out: Record<string, string> = {};
-  for (const locale of supported) {
-    const value = entry[locale];
-    if (!value) continue;
-    out[locale] = Object.entries(replacements).reduce(
-      (text, [token, replacement]) => text.replaceAll(`{${token}}`, String(replacement)),
-      value,
-    );
-  }
-  return out;
+  const value = messages[key]?.[locale];
+  if (!value) return {};
+  const text = Object.entries(replacements).reduce(
+    (result, [token, replacement]) => result.replaceAll(`{${token}}`, String(replacement)),
+    value,
+  );
+  return { [locale]: text };
 }
 
-/** The label an option gets when it is created, so a new choice is not missing either. */
-export function newOption(index: number, supported: readonly string[]) {
+/** The label an option gets when it is created, so a new choice is not blank either. */
+export function newOption(index: number, locale: string) {
   return {
     value: `option_${index}`,
-    label: localisedDefault('field.defaultOption', supported, { n: index }),
+    label: localisedDefault('field.defaultOption', locale, { n: index }),
     image: null,
   };
 }
@@ -68,11 +64,11 @@ export function newOption(index: number, supported: readonly string[]) {
 export function newField(
   type: FieldType,
   existingKeys: readonly string[],
-  supported: readonly string[],
+  defaultLocale: string,
 ): Field {
   const id = crypto.randomUUID();
   const key = uniqueKey(type, existingKeys);
-  const label = localisedDefault('field.defaultLabel', supported);
+  const label = localisedDefault('field.defaultLabel', defaultLocale);
 
   switch (type) {
     // Split, rather than sharing a branch, because the two have different appearance vocabularies
@@ -84,7 +80,7 @@ export function newField(
         type,
         label,
         required: false,
-        options: [newOption(1, supported)],
+        options: [newOption(1, defaultLocale)],
         appearance: 'dropdown',
       };
     case 'multi_select':
@@ -94,7 +90,7 @@ export function newField(
         type,
         label,
         required: false,
-        options: [newOption(1, supported)],
+        options: [newOption(1, defaultLocale)],
         appearance: 'checkboxes',
       };
     case 'yes_no':
@@ -107,11 +103,11 @@ export function newField(
     case 'image':
       return { id, key, type, src: '', alt: {} } as unknown as Field;
     case 'section_break':
-      return { id, key, type, label: localisedDefault('field.defaultSection', supported) };
+      return { id, key, type, label: localisedDefault('field.defaultSection', defaultLocale) };
     case 'page_break':
       return { id, key, type };
     case 'rich_text':
-      return { id, key, type, content: localisedDefault('field.defaultText', supported) };
+      return { id, key, type, content: localisedDefault('field.defaultText', defaultLocale) };
     case 'hidden':
       return { id, key, type };
     default:
