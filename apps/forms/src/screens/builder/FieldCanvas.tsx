@@ -30,6 +30,7 @@ interface Props {
   onReorder: (fields: Field[]) => void;
   onRemove: (id: string) => void;
   onMove: (id: string, direction: -1 | 1) => void;
+  onDuplicate: (id: string) => void;
   /** Rendered inside the open field's own row. */
   renderEditor: (field: Field) => ReactNode;
 }
@@ -41,6 +42,7 @@ export function FieldCanvas({
   onReorder,
   onRemove,
   onMove,
+  onDuplicate,
   renderEditor,
 }: Props) {
   const t = useT();
@@ -81,6 +83,7 @@ export function FieldCanvas({
               onSelect={onSelect}
               onRemove={onRemove}
               onMove={onMove}
+              onDuplicate={onDuplicate}
               renderEditor={renderEditor}
             />
           ))}
@@ -98,6 +101,7 @@ function SortableField({
   onSelect,
   onRemove,
   onMove,
+  onDuplicate,
   renderEditor,
 }: {
   field: Field;
@@ -107,6 +111,7 @@ function SortableField({
   onSelect: (id: string) => void;
   onRemove: (id: string) => void;
   onMove: (id: string, direction: -1 | 1) => void;
+  onDuplicate: (id: string) => void;
   renderEditor: (field: Field) => ReactNode;
 }) {
   const t = useT();
@@ -197,6 +202,14 @@ function SortableField({
         deliberate clicks. The second click is a different button in a different colour, so it
         cannot be reached by double-clicking the first.
       */}
+        <button
+          type="button"
+          className="button button--quiet small"
+          onClick={() => onDuplicate(field.id)}
+        >
+          {t('builder.duplicate')}
+        </button>
+
         {confirming ? (
           <div className="row builder__confirm">
             <button

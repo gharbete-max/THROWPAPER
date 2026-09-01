@@ -115,12 +115,20 @@ export function newField(
   }
 }
 
-function uniqueKey(type: FieldType, existing: readonly string[]): string {
-  const base = type.replace(/_/g, '_');
-  let candidate = base;
+/**
+ * A key nothing else is using, derived from `base`.
+ *
+ * Used both for a new field (where the base is the type) and for a copy (where it is the original
+ * key). Two fields sharing a key silently merge their answers into one column, and nobody finds
+ * that until the export.
+ */
+export function uniqueKey(base: string, existing: readonly string[]): string {
+  // A copy of `email_2` should be `email_3`, not `email_2_2`.
+  const stem = base.replace(/_\d+$/, '');
+  let candidate = stem;
   let counter = 2;
   while (existing.includes(candidate)) {
-    candidate = `${base}_${counter}`;
+    candidate = `${stem}_${counter}`;
     counter += 1;
   }
   return candidate;
