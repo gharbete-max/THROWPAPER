@@ -75,10 +75,20 @@ export async function signInAs(
     )
   `;
 
-  // Must be set for the app's origin before the first load, or restoreSession finds nothing.
+  /**
+   * Must be set for the app's origin before the first load, or restoreSession finds nothing.
+   *
+   * Planted only when nothing is there. `addInitScript` runs on *every* navigation, and refresh
+   * tokens rotate on use — so re-planting the original on a second page load presents a token that
+   * has already been spent, and the reuse detection from phase 2 correctly revokes the whole
+   * family and logs the session out. Any test that navigates twice would lose its session, and the
+   * product would be right to do that.
+   */
   await page.addInitScript(
     ({ token, locale: chosen }: { token: string; locale: string }) => {
-      window.localStorage.setItem('tp.refresh', token);
+      if (!window.localStorage.getItem('tp.refresh')) {
+        window.localStorage.setItem('tp.refresh', token);
+      }
       window.localStorage.setItem('tp.locale', chosen);
     },
     { token: secret, locale },
