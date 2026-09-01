@@ -1,5 +1,18 @@
 # Roadmap — two parallel tracks
 
+## What this is, before the phases
+
+Stated by the owner on 2026-09-01: this launches as a **form and email site**. The general form
+builder is the product. Events and registrations — everything built in phases 0–5, the AGM slice —
+are **one segment among several**, and are only first because a demo has to be about something.
+
+Read A10–A13 as segments, not as the destination, and read A5–A6 as the thing being sold.
+
+The product is deliberately **unregulated**: no advanced accounting, no scientific instrumentation.
+That is the owner's line and it agrees with `CLAUDE.md` rule 8. It has consequences worth naming
+rather than discovering later — see *Open, from the direction note* at the end of Track A.
+
+
 ## Week 0, both tracks together
 
 1. Agree and freeze `docs/CONTRACT.md`. Nothing else starts first.
@@ -44,6 +57,30 @@ per-resource permission table and a live transport to the browser — so it is w
 deliberately rather than squeezing in beside a segment.
 **A14.** Hardening: rate limits, bot protection, permissions matrix, GDPR export and erasure,
 backup and restore rehearsal, load test of the grid and bulk PDF generation.
+
+**A15.** Field styling and media. Per-field appearance the author controls — radio and checkbox
+groups as cards, buttons or plain lists, dropdown and combobox behaviour, per-field colour drawn
+from the Brand Kit rather than free-typed hex, spacing and emphasis. Author-uploaded images:
+header art, per-question illustrations, image-choice options. Distinct from A6's *respondent*
+photo capture, and dependent on A3 for anything to theme against.
+
+**A16.** Template gallery. Prebuilt forms covering the most commonly used form in each sector and
+business, chosen at creation and then edited freely. Requires A5 versioning to already exist, and
+is mostly content work rather than engineering — the engineering is one screen, a seeded
+catalogue, and keeping templates valid as the field schema moves.
+
+### Open, from the direction note
+
+Two things the "unregulated, no advanced accounting or science" line collides with, neither
+resolved here:
+
+- **A7 (`packages/calc`)** was specced as a formula AST with units and precision plus a statistics
+  library. Basic arithmetic on form answers — totals, fees, quantities — is clearly wanted. The
+  statistics half was there for A12 and may not be.
+- **A12 (Measurements & quality)** is instrumentation-shaped. It may be out of scope entirely, or
+  may survive as ordinary numeric fields with ranges.
+
+Ask before building either. Cutting them is cheaper than cutting them later.
 
 ## Track B — Sendwork
 

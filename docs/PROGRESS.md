@@ -449,6 +449,76 @@ the lookup and the insert makes it fail with `['admitted', 'admitted']` — one 
 Offline queueing in the browser (the endpoint is idempotent, which is what makes that cheap
 later), session selection, waiting lists, badge printing, and the report builder (A9).
 
+## Deployable — one image, two modes · done
+
+The first thing phase 0 was supposed to do and the last thing actually done. `docs/DEPLOY.md` is
+the operator's copy; this is what changed and why.
+
+**Shipped**
+
+- `Dockerfile` — multi-stage, on `mcr.microsoft.com/playwright:...-noble`. The browser is a
+  **runtime** dependency since 4a, so a slim Node base would produce an image that boots happily
+  and fails the first time somebody asks for a PDF. Runs as `pwuser`, not root.
+- `SERVE_APP` — the API serves the built app as well, so one container is the whole product. A
+  `setNotFoundHandler` falls back to the app shell for client routes and leaves `/v1/`,
+  `/public/`, `/demo/`, `/health`, `/openapi.json` and every non-GET answering as an API.
+- `DEMO=true` selects the in-memory build from the same image, so the demo and the real thing
+  cannot drift apart into two artefacts.
+- `docs/DEPLOY.md` — host requirements, the environment table, and the ordered list of things
+  that must happen before a real event.
+
+**Proven by building it, because nobody here has Docker**
+
+CI builds the image and then runs it: `/health` must report `"mode":"demo"`, and both `/` and
+`/f/varmotet` must return the app shell. A Dockerfile that is never built is a guess, and the one
+machine this repo is developed on has no Docker, no Postgres and no psql.
+
+**The boundary is tested, not assumed**
+
+`serve-app.test.ts` pins the fallback rules — the failure it exists to prevent is invisible in
+development, where Vite serves the app on its own port and this code path never runs. It surfaces
+in production as a form link returning JSON to somebody who was sent it.
+
+**What opening the page found, and the code review did not**
+
+Three defects, none of which any existing test could have caught:
+
+1. **The container served a dead app.** The bundle calls `/api/v1/...` because in development Vite
+   proxies that here and strips the prefix. There is no proxy in a container, so every request came
+   back as the app shell and the form reported that it did not exist. The server now strips `/api`
+   itself — the same rule as the proxy, in one more place. A page that renders and then fails
+   everything is worse than one that will not start, because it looks like it works.
+2. **`node dist/main.js` had never worked.** The `start` script has been in `package.json` since
+   phase 0, but tsup left the `@tp/*` packages external and those publish TypeScript source, so it
+   could only ever have run under tsx. They are bundled now, and the container runs `node`, with no
+   pnpm or corepack in the runtime path.
+3. **The first smoke test threw away its own evidence.** The container exited about four seconds in
+   and the step reported a column of refused connections and nothing else, because `bash -e` exited
+   before reaching `docker logs`. It now traps and prints the logs whatever happens, and fails
+   early with a clear message when the container is gone.
+
+   That change immediately paid for itself. The next run printed the real reason, which was neither
+   of the causes worth guessing at: demo mode was **refusing to start**, exactly as designed,
+   because the image is `NODE_ENV=production` and a demo has to be asked for twice. The guard was
+   right and the callers were wrong — including the demo command in `docs/DEPLOY.md`, which would
+   have failed the same way the first time anybody ran it.
+
+The suite now covers the `/api` prefix, and removing the rewrite fails it.
+
+**Verified by hand, in container shape**
+
+Served the built app from the built API and registered *Åsa Öqvist* through the public form in
+Swedish — two pages, a select, a number field — and got reference `80HR-7496` back. That is the
+first time the product has been driven end to end in the shape it will actually ship in.
+
+The demo banner also follows the public form's language switcher now, rather than the signed-in
+session's locale. It was announcing "Demo mode" in Swedish over an English form, on the one page
+members of the public ever see.
+
+**Still not deployed.** An image is not a deployment. The host, the region and the domain are
+decisions, and they are the user's.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
@@ -459,9 +529,9 @@ in at the door.
 
 From `START-HERE.md` §Done means, in the order these block each other:
 
-1. **Deploy it.** Phase 0 said "deployed to the real hosting target... day one, not at the end".
-   That never happened, and it now blocks everything below. The image needs **Chromium** (phase 4a
-   made Playwright a runtime dependency), and the hosting region still has to be picked.
+1. **Deploy it.** The image now exists, builds in CI and boots — see `docs/DEPLOY.md`. What is
+   still missing is a host: somewhere to run it, a Postgres, a domain and a region. That is a
+   decision, not code, and it still blocks everything below.
 2. **SES production access.** A new account only delivers to verified addresses. Until AWS grants
    it, the phase 4 checkpoint — "does email reliably land in real inboxes" — cannot be tested at
    all. It is a request with a turnaround, so it is worth starting before it is needed.

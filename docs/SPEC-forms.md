@@ -18,6 +18,30 @@ configuration — templates, reference tables, formulas, report layouts, seed da
 applications. A segment may not fork the grid, the PDF renderer, auth, i18n or tokens. If one
 seems to need to, the core is missing a feature; add it to the core.
 
+### What is being sold (owner, 2026-09-01)
+
+The builder is the product, and it launches alongside the email side as a form and email site. The
+events and registrations work that exists today is one segment; it came first because a demo has to
+be about something, and it should not be mistaken for the shape of the whole.
+
+Three things this adds to the sections below, carried as **A15** and **A16** in the roadmap:
+
+- **Customisation is a first-class feature, not polish.** The author controls how a field *looks*,
+  not only what it collects: radio and checkbox groups rendered as cards, buttons or plain lists;
+  dropdown and combobox behaviour; colour, spacing and emphasis per field. Colour comes from the
+  Brand Kit (§tokens), never a free-typed hex — that is what keeps a customised form still looking
+  like the organisation.
+- **Images.** Author-uploaded header art, per-question illustrations and image-choice options. This
+  is separate from respondent photo capture, which §6 already covers, and it needs the object store
+  §7 defers.
+- **A template gallery.** Prebuilt forms for the most commonly used form in each sector, chosen at
+  creation and then edited freely. Mostly content work; the engineering is one screen, a seeded
+  catalogue, and a way to keep templates valid as the field schema moves.
+
+And one boundary: the product is deliberately **unregulated**. No advanced accounting, no
+scientific instrumentation. This agrees with §8 and with `CLAUDE.md` rule 8, and it puts a
+question mark over the statistics half of `packages/calc` and over §Measurements — see the roadmap.
+
 **Segments at launch:** Events & registrations · Inspections & work orders · Measurements &
 quality · Surveys & feedback. See §6.
 
