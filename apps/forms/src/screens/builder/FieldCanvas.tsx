@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   DndContext,
   KeyboardSensor,
@@ -30,9 +30,19 @@ interface Props {
   onReorder: (fields: Field[]) => void;
   onRemove: (id: string) => void;
   onMove: (id: string, direction: -1 | 1) => void;
+  /** Rendered inside the open field's own row. */
+  renderEditor: (field: Field) => ReactNode;
 }
 
-export function FieldCanvas({ fields, selectedId, onSelect, onReorder, onRemove, onMove }: Props) {
+export function FieldCanvas({
+  fields,
+  selectedId,
+  onSelect,
+  onReorder,
+  onRemove,
+  onMove,
+  renderEditor,
+}: Props) {
   const t = useT();
   // Keyboard sensor included deliberately: drag-and-drop that only works with a mouse is not
   // an accessible way to build a form.
@@ -71,6 +81,7 @@ export function FieldCanvas({ fields, selectedId, onSelect, onReorder, onRemove,
               onSelect={onSelect}
               onRemove={onRemove}
               onMove={onMove}
+              renderEditor={renderEditor}
             />
           ))}
         </ul>
@@ -87,6 +98,7 @@ function SortableField({
   onSelect,
   onRemove,
   onMove,
+  renderEditor,
 }: {
   field: Field;
   selected: boolean;
@@ -95,6 +107,7 @@ function SortableField({
   onSelect: (id: string) => void;
   onRemove: (id: string) => void;
   onMove: (id: string, direction: -1 | 1) => void;
+  renderEditor: (field: Field) => ReactNode;
 }) {
   const t = useT();
   const { locale, locales } = useSession();
@@ -115,101 +128,111 @@ function SortableField({
         isDragging && 'builder__item--dragging',
       )}
     >
-      <button
-        type="button"
-        className="builder__grip"
-        aria-label={field.key}
-        {...attributes}
-        {...listeners}
-      >
-        ⠿
-      </button>
+      <div className="builder__itemRow">
+        <button
+          type="button"
+          className="builder__grip"
+          aria-label={field.key}
+          {...attributes}
+          {...listeners}
+        >
+          ⠿
+        </button>
 
-      <button type="button" className="builder__itemBody" onClick={() => onSelect(field.id)}>
-        <span className="small muted">{t(`fieldType.${field.type}`)}</span>
-        <span className="builder__itemLabel">
-          {field.type === 'page_break' ? (
-            '— — —'
-          ) : label?.value ? (
-            label.value
-          ) : (
-            /*
-             * An unlabelled question is the most common half-finished state and the builder used
-             * to disguise it by showing the machine key, which looks like a name. Saying so here
-             * means it is visible while scanning the list rather than at publish time.
-             */
-            <span className="status-warning">{t('builder.needsLabel')}</span>
-          )}
-          {'required' in field && field.required && (
-            <span className="builder__required" title={t('field.required')}>
-              *
-            </span>
-          )}
-          {label?.fallback && label.value && (
-            <span className="badge badge--warning">{label.locale}</span>
-          )}
-        </span>
-      </button>
+        <button type="button" className="builder__itemBody" onClick={() => onSelect(field.id)}>
+          <span className="small muted">{t(`fieldType.${field.type}`)}</span>
+          <span className="builder__itemLabel">
+            {field.type === 'page_break' ? (
+              '— — —'
+            ) : label?.value ? (
+              label.value
+            ) : (
+              /*
+               * An unlabelled question is the most common half-finished state and the builder used
+               * to disguise it by showing the machine key, which looks like a name. Saying so here
+               * means it is visible while scanning the list rather than at publish time.
+               */
+              <span className="status-warning">{t('builder.needsLabel')}</span>
+            )}
+            {'required' in field && field.required && (
+              <span className="builder__required" title={t('field.required')}>
+                *
+              </span>
+            )}
+            {label?.fallback && label.value && (
+              <span className="badge badge--warning">{label.locale}</span>
+            )}
+          </span>
+        </button>
 
-      {/*
+        {/*
         Up and down beside the drag handle. Dragging is fine with a mouse and awkward on a phone,
         which is where half of this will be used — and two buttons are something you can hit
         without a steady hand.
       */}
-      <div className="builder__move">
-        <button
-          type="button"
-          className="button button--quiet small"
-          disabled={first}
-          aria-label={t('builder.moveUp')}
-          onClick={() => onMove(field.id, -1)}
-        >
-          ↑
-        </button>
-        <button
-          type="button"
-          className="button button--quiet small"
-          disabled={last}
-          aria-label={t('builder.moveDown')}
-          onClick={() => onMove(field.id, 1)}
-        >
-          ↓
-        </button>
-      </div>
+        <div className="builder__move">
+          <button
+            type="button"
+            className="button button--quiet small"
+            disabled={first}
+            aria-label={t('builder.moveUp')}
+            onClick={() => onMove(field.id, -1)}
+          >
+            ↑
+          </button>
+          <button
+            type="button"
+            className="button button--quiet small"
+            disabled={last}
+            aria-label={t('builder.moveDown')}
+            onClick={() => onMove(field.id, 1)}
+          >
+            ↓
+          </button>
+        </div>
 
-      {/*
+        {/*
         Confirmed in place rather than in a dialog. Removing a field is frequent and small, and a
         modal for each one would be exhausting — but it is still a delete, so it still takes two
         deliberate clicks. The second click is a different button in a different colour, so it
         cannot be reached by double-clicking the first.
       */}
-      {confirming ? (
-        <div className="row builder__confirm">
-          <button
-            type="button"
-            className="button button--danger small"
-            onClick={() => onRemove(field.id)}
-          >
-            {t('builder.removeYes')}
-          </button>
+        {confirming ? (
+          <div className="row builder__confirm">
+            <button
+              type="button"
+              className="button button--danger small"
+              onClick={() => onRemove(field.id)}
+            >
+              {t('builder.removeYes')}
+            </button>
+            <button
+              type="button"
+              className="button button--quiet small"
+              autoFocus
+              onClick={() => setConfirming(false)}
+            >
+              {t('confirm.cancel')}
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
             className="button button--quiet small"
-            autoFocus
-            onClick={() => setConfirming(false)}
+            onClick={() => setConfirming(true)}
           >
-            {t('confirm.cancel')}
+            {t('builder.remove')}
           </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className="button button--quiet small"
-          onClick={() => setConfirming(true)}
-        >
-          {t('builder.remove')}
-        </button>
-      )}
+        )}
+      </div>
+
+      {/*
+        The editor opens **inside the field's own row**, not in a panel somewhere else on the page.
+        A side panel means the thing you are changing and the controls that change it are far
+        apart — and on a narrow screen the panel sits below the whole list, so editing the second
+        of twenty questions meant scrolling past the other eighteen to reach its settings.
+      */}
+      {selected && <div className="builder__editor">{renderEditor(field)}</div>}
     </li>
   );
 }

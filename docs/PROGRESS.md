@@ -801,6 +801,43 @@ different wording sets `submitLabel`, which every template already does.
 A duplicate "Page 1 of 2" introduced while moving the actions was caught by looking at the page.
 
 
+## Builder: live preview, inline editing, optional translation · done
+
+Three changes, all asked for, all the same idea — put the thing you are editing next to the thing
+it affects, and stop presenting optional work as required.
+
+**The preview is the right-hand side of the screen, always on.** It was a tab you switched to,
+which meant the answer to "what does this look like?" cost a click — and an answer that costs a
+click is one people stop asking for. It is sticky, so it stays in view while the field list
+scrolls past it, and it still renders the same `FieldInput` the public page does.
+
+**The field editor opens inside the field's own row.** It was a panel elsewhere on the page: on a
+narrow screen it sat below the entire list, so editing the second of twenty questions meant
+scrolling past the other eighteen to reach its settings. Selecting a row now expands it in place
+and selecting it again closes it.
+
+**Translation is a plus, not a tab.** Every locale of every string used to live on a parallel
+"Translation" tab, which made translation feel compulsory: a second language existed for the
+organisation, so every field was incomplete until somebody filled it in, whether or not they ever
+meant to publish in it. Each text now shows one box for the language being worked in, with a
+`+ sv-SE` beside it. Languages that already have text stay visible — the plus is for adding a
+language, not for finding one.
+
+Two consequences worth stating:
+
+- **New fields seed one locale, not all of them.** The previous fix filled every supported locale
+  with the same placeholder, which silenced the warning and created a worse problem: an
+  untranslated English form would have shown a real respondent the words "New question". A missing
+  locale falls back when rendered, which is what makes leaving it alone a real choice.
+- **A language is only reported incomplete once somebody has started writing in it.** A locale
+  with no text anywhere is one nobody asked for. This is the same decision as the plus, read back.
+
+**Verified by using it**: the editor opens inside the selected row and leads with the question
+text in the language being viewed; the preview sits to the right and stays there; a new field
+offers `+ sv-SE` and reveals a second box when pressed; and a form written only in one language
+reports nothing missing.
+
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

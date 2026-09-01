@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
+import { translatableTexts } from '@tp/shared/forms';
 import type {
   Field,
   FieldType,
@@ -33,7 +34,6 @@ export function FormBuilder() {
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useState<'edit' | 'preview'>('edit');
 
   const loadVersions = useCallback(() => {
     if (!id) return;
@@ -93,7 +93,7 @@ export function FormBuilder() {
     const field = newField(
       type,
       definition.fields.map((existing) => existing.key),
-      locales.supported,
+      locale,
     );
 
     const at = definition.fields.findIndex((existing) => existing.id === selectedId);
@@ -176,8 +176,24 @@ export function FormBuilder() {
 
   if (!form || !definition) return <p className="muted">{t('app.loading')}</p>;
 
-  const selected = definition.fields.find((field) => field.id === selectedId) ?? null;
-  const incomplete = form.completeness.filter((entry) => !entry.complete);
+  /**
+   * A language is only worth warning about once somebody has started writing in it.
+   *
+   * The organisation supports two locales, so every form used to be reported as incomplete in the
+   * second one whether or not anybody ever intended to publish it there — which made the
+   * indicator noise rather than information. Adding a language is now a deliberate act (the plus
+   * beside each text), and this is the same decision read back: a locale with no text anywhere is
+   * one nobody has asked for, and an untranslated string falls back when the form is rendered.
+   */
+  const started = new Set<string>([locales.default]);
+  for (const text of translatableTexts(definition)) {
+    for (const [candidate, value] of Object.entries(text.text)) {
+      if (value) started.add(candidate);
+    }
+  }
+  const incomplete = form.completeness.filter(
+    (entry) => !entry.complete && started.has(entry.locale),
+  );
 
   return (
     <section className="stack">
@@ -256,42 +272,28 @@ export function FormBuilder() {
             <FieldCanvas
               fields={definition.fields}
               selectedId={selectedId}
-              onSelect={setSelectedId}
+              onSelect={(fieldId) => setSelectedId(fieldId === selectedId ? null : fieldId)}
               onReorder={(fields) => edit({ ...definition, fields })}
               onRemove={removeField}
               onMove={moveField}
+              renderEditor={(field) => <FieldProperties field={field} onChange={updateField} />}
             />
           </div>
         </div>
 
+        {/*
+          The preview is not a tab any more. It is the right-hand side of the screen, always on,
+          because the question a builder answers all day is "what does this look like?" — and an
+          answer you have to click for is one you stop asking for.
+        */}
         <aside className="card stack builder__panel">
-          <div className="row builder__tabs builder__tabs--top">
-            <button
-              type="button"
-              className={view === 'edit' ? 'button small' : 'button button--quiet small'}
-              onClick={() => setView('edit')}
-            >
-              {t('builder.viewField')}
-            </button>
-            <button
-              type="button"
-              className={view === 'preview' ? 'button small' : 'button button--quiet small'}
-              onClick={() => setView('preview')}
-            >
-              {t('builder.viewPreview')}
-            </button>
-          </div>
-
-          {view === 'edit' ? (
-            <FieldProperties field={selected} onChange={updateField} />
-          ) : (
-            <FormPreview
-              definition={definition}
-              locale={locale}
-              locales={locales}
-              selectedId={selectedId}
-            />
-          )}
+          <strong className="small">{t('builder.viewPreview')}</strong>
+          <FormPreview
+            definition={definition}
+            locale={locale}
+            locales={locales}
+            selectedId={selectedId}
+          />
         </aside>
       </div>
 
