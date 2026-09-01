@@ -39,6 +39,9 @@ export interface Worker {
   stop(): void;
 }
 
+/** Stands in for a job when the failure happened before one was claimed. */
+const unclaimedJob = { id: '(none)', kind: '(claim)' } as JobRecord;
+
 export function createWorker(options: WorkerOptions): Worker {
   const { repos, handlers } = options;
   const backoffBaseMs = options.backoffBaseMs ?? 5_000;
@@ -90,9 +93,14 @@ export function createWorker(options: WorkerOptions): Worker {
         // One pass at a time: overlapping ticks would claim jobs faster than they finish.
         if (running) return;
         running = true;
-        void runOnce().finally(() => {
-          running = false;
-        });
+        // Caught, not merely awaited. `runOnce` can reject before it reaches a handler — a
+        // database hiccup while claiming, for instance — and an unhandled rejection on a timer
+        // takes the whole API process with it. A queue must not be able to kill the web server.
+        runOnce()
+          .catch((error: unknown) => options.onError?.(error, unclaimedJob))
+          .finally(() => {
+            running = false;
+          });
       }, intervalMs);
       timer.unref?.();
     },

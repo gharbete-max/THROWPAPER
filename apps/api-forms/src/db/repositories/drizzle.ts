@@ -484,6 +484,11 @@ export function createDrizzleRepositories(db: Db): Repositories {
       /**
        * One statement, so two workers cannot claim the same job: the subquery picks a candidate
        * with `for update skip locked`, and the update only lands if it is still queued.
+       *
+       * `now` is bound as an ISO string with an explicit cast, not as a Date. Passing a Date into
+       * a raw `sql` fragment gets it to postgres.js unconverted, which throws
+       * `ERR_INVALID_ARG_TYPE: Received an instance of Date` — and because this runs on the
+       * worker's timer, that rejection took the whole API process down a second after boot.
        */
       claim: async (now) => {
         const [row] = await db
@@ -494,7 +499,7 @@ export function createDrizzleRepositories(db: Db): Repositories {
               eq(jobs.status, 'queued'),
               sql`${jobs.id} = (
                 select j.id from jobs j
-                where j.status = 'queued' and j.run_after <= ${now}
+                where j.status = 'queued' and j.run_after <= ${now.toISOString()}::timestamptz
                 order by j.run_after
                 for update skip locked
                 limit 1
