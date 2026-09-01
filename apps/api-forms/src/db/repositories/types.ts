@@ -239,6 +239,47 @@ export interface SubmissionRepository {
   complete(input: SubmissionCompleteInput): Promise<SubmissionCompleteResult>;
 }
 
+export interface JobRecord {
+  id: string;
+  organisationId: string;
+  kind: string;
+  idempotencyKey: string;
+  status: 'queued' | 'running' | 'done' | 'failed';
+  payload: Record<string, unknown>;
+  result: Record<string, unknown> | null;
+  error: string | null;
+  attempts: number;
+  maxAttempts: number;
+  progressDone: number;
+  progressTotal: number;
+  runAfter: Date;
+  startedAt: Date | null;
+  finishedAt: Date | null;
+  createdAt: Date;
+}
+
+export interface JobRepository {
+  /** Idempotent: the same key twice returns the existing job rather than duplicating the work. */
+  enqueue(input: {
+    organisationId: string;
+    kind: string;
+    idempotencyKey: string;
+    payload: Record<string, unknown>;
+    progressTotal: number;
+    maxAttempts?: number;
+  }): Promise<JobRecord>;
+  findById(organisationId: string, id: string): Promise<JobRecord | null>;
+  /**
+   * Takes one runnable job and marks it running in the same write, so two workers cannot both
+   * claim it.
+   */
+  claim(now: Date): Promise<JobRecord | null>;
+  progress(id: string, done: number): Promise<void>;
+  succeed(id: string, result: Record<string, unknown>): Promise<void>;
+  /** Re-queues with backoff while attempts remain, and fails permanently once they run out. */
+  fail(id: string, error: string, retryAt: Date | null): Promise<void>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -251,5 +292,6 @@ export interface Repositories {
   events: EventRepository;
   forms: FormRepository;
   submissions: SubmissionRepository;
+  jobs: JobRepository;
   audit: AuditRepository;
 }

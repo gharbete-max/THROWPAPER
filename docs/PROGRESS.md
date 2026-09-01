@@ -297,12 +297,64 @@ with the first.
 
 Server-side sort, filter and pagination; saved views; grouping and subtotals; PDF export. All A4.
 
+## Phase 4a — Admission PDF, signed QR, bulk generation · done
+
+First of two merges for phase 4. Needs no email provider.
+
+**Shipped**
+
+- `documents/qr-token.ts` — `<reference>.<signature>`, HMAC-SHA256 truncated to 16 characters.
+  Short on purpose: a dense QR fails to scan on a cheap phone in bad light at a door. The key is
+  derived from `JWT_SECRET` via HKDF, so there is no second secret to manage but a leaked QR key
+  cannot mint access tokens. **Verification is offline** — no database round trip — which is what
+  makes phase 5's check-in work on a flaky venue network.
+- `documents/admission.ts` — the branded card, rendered in the **attendee's** locale from
+  `submissions.locale`, on `@tp/tokens/pdf` from phase 1. QR embedded as inline SVG so it stays
+  vector at print size.
+- `documents/render.ts` — Playwright Chromium, browser reused across a bulk run rather than
+  relaunched 200 times.
+- `jobs/worker.ts` and the `jobs` table (`0004_jobs.sql`) — durable queue with attempts, backoff
+  and an idempotency key (`SPEC-forms.md` §7). A table plus a polling worker, not pg-boss.
+- `documents/store.ts` — `DocumentStore` with a local implementation and expiring signed links.
+- Routes: single PDF, bulk enqueue, job status, signed download.
+
+**Decisions worth knowing**
+
+- **A failing document does not lose the run.** It is recorded and the bulk job continues. A job
+  that aborts at row 137 of 200 is worse than useless to an operator with an event tomorrow.
+- **The download route is deliberately not behind the bearer guard** — a browser following a link
+  cannot attach an Authorization header. The signature and expiry are the access control, because
+  a ZIP of 200 registrations is personal data and an unguessable URL is not protection.
+- **Bulk is keyed on form + published version**, so asking twice returns the running job rather
+  than starting a second Chromium marathon.
+- An unknown job kind fails permanently rather than retrying: a deployment mistake is not a
+  transient fault.
+
+**Deployment consequence**
+
+Playwright moved from a root devDependency to a real dependency of `apps/api-forms`. **The deploy
+image now needs Chromium** — roughly 400MB plus a memory floor. This is the first phase to change
+what the deployment must contain.
+
+**Stopgap, named**
+
+`SPEC-forms.md` §7 wants S3-compatible storage with signed URLs and virus scanning. No object store
+is chosen yet, so generated ZIPs go to a local directory behind `DocumentStore`. The S3
+implementation is the obvious next one and nothing above that interface changes for it.
+
+**Next**
+
+4b — SES (`eu-north-1`), sending-domain verification with live SPF/DKIM/DMARC checks, and the
+confirmation and notification emails.
+
 ## Next
 
 Phase 4 — documents and email (1 week). Admission PDF with a signed QR, provider integration,
 sending-domain verification with live SPF/DKIM/DMARC checks, confirmation and notification emails,
 and bulk PDF generation as a background job.
 
-**Phase 4 is blocked** on START-HERE decision 4: the email provider region. The `MailTransport`
-seam from phase 2 is already carrying the magic link and the save-and-resume link, so the swap is
-a provider implementation rather than new plumbing — but the provider has to be chosen.
+**Decision 4 answered: Amazon SES, `eu-north-1` (Stockholm).** Recipient data stays in Sweden.
+
+4a is done — see below. 4b needs SES **production access**, which is a request to AWS with a
+turnaround: a new account can only send to verified addresses until it is granted. Worth requesting
+before 4b is built, or the phase 4 checkpoint cannot be met when the code is ready.

@@ -10,3 +10,6 @@ coverage/
 .vite/
 .turbo/
 proof-out/
+
+# generated documents (local DocumentStore stopgap)
+.documents/

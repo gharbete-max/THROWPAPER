@@ -252,6 +252,47 @@ export const submissions = pgTable(
   ],
 );
 
+export const jobStatus = pgEnum('job_status', ['queued', 'running', 'done', 'failed']);
+
+/**
+ * The durable job queue — `SPEC-forms.md` §7: retries and idempotency keys for bulk PDFs and
+ * exports, and `SPEC-mailer.md` §8: a send is never issued from a request handler.
+ *
+ * A table plus a polling worker rather than pg-boss or BullMQ: one fewer moving part, and the
+ * repository seam already makes it testable. If throughput ever needs more than this, a real queue
+ * slots in behind the same JobRepository interface.
+ */
+export const jobs = pgTable(
+  'jobs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    kind: text('kind').notNull(),
+    /** Enqueueing the same key twice returns the first job rather than duplicating the work. */
+    idempotencyKey: text('idempotency_key').notNull(),
+    status: jobStatus('status').notNull().default('queued'),
+    payload: jsonb('payload').$type<Record<string, unknown>>().notNull().default({}),
+    result: jsonb('result').$type<Record<string, unknown>>(),
+    error: text('error'),
+    attempts: integer('attempts').notNull().default(0),
+    maxAttempts: integer('max_attempts').notNull().default(3),
+    /** Progress for the UI: "142 of 200". */
+    progressDone: integer('progress_done').notNull().default(0),
+    progressTotal: integer('progress_total').notNull().default(0),
+    /** Backoff: the worker ignores a job until this time. */
+    runAfter: timestamp('run_after', { withTimezone: true }).notNull().defaultNow(),
+    startedAt: timestamp('started_at', { withTimezone: true }),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('jobs_org_idempotency_idx').on(table.organisationId, table.idempotencyKey),
+    index('jobs_claim_idx').on(table.status, table.runAfter),
+  ],
+);
+
 export type Organisation = typeof organisations.$inferSelect;
 export type NewOrganisation = typeof organisations.$inferInsert;
 export type User = typeof users.$inferSelect;
@@ -261,3 +302,4 @@ export type AuditEntry = typeof auditLog.$inferSelect;
 export type Form = typeof forms.$inferSelect;
 export type FormVersion = typeof formVersions.$inferSelect;
 export type Submission = typeof submissions.$inferSelect;
+export type Job = typeof jobs.$inferSelect;
