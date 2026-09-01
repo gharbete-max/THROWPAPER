@@ -3,6 +3,7 @@ import { forms as formSchemas } from '@tp/shared';
 import { db, sql } from './client.js';
 import { events, formVersions, forms, organisations, submissions, users } from './schema.js';
 import { generateReference } from '../forms/public-service.js';
+import { demoEventName, demoSchedule } from '../demo/schedule.js';
 
 /**
  * CLAUDE.md §Demo data — a broken seed blocks demos, so it grows with the schema.
@@ -40,6 +41,9 @@ await db
   ])
   .onConflictDoNothing();
 
+// Relative to now, so the demo never expires. See demo/schedule.ts for why that matters.
+const schedule = demoSchedule();
+
 const existingEvent = await db.select({ id: events.id }).from(events).limit(1);
 let eventId = existingEvent[0]?.id;
 
@@ -48,18 +52,18 @@ if (!eventId) {
     .insert(events)
     .values({
       organisationId: organisation.id,
-      name: { 'sv-SE': 'Vårmötet 2026', 'en-GB': 'Spring meeting 2026' },
+      name: demoEventName(schedule),
       description: {
         'sv-SE': 'Årets viktigaste möte, med lunch och rundvandring.',
         'en-GB': 'The main meeting of the year, with lunch and a tour.',
       },
-      startsAt: new Date('2026-05-14T09:00:00Z'),
-      endsAt: new Date('2026-05-14T16:00:00Z'),
+      startsAt: schedule.startsAt,
+      endsAt: schedule.endsAt,
       venueName: 'Näringslivets Hus',
       venueAddress: 'Storgatan 19, Göteborg',
       // Comfortably above the seeded 200, so a demo can still register somebody and watch it work.
       capacity: 250,
-      registrationClosesAt: new Date('2026-05-07T23:59:59Z'),
+      registrationClosesAt: schedule.registrationClosesAt,
       status: 'open',
     })
     .returning();
