@@ -48,7 +48,13 @@ test('a visitor fills in the form across both pages and gets a reference', async
   await page.getByRole('button', { name: 'Nästa' }).click();
 
   // Page two only exists because of the page break in the definition.
-  await page.getByLabel(/Måltid/).selectOption('veg');
+  //
+  // The meal question is rendered as cards, so the radio itself is clipped out of sight and only
+  // the label is on screen. `check()` fails on it, and correctly: nobody clicks a 1px input. A
+  // person clicks the card, which is what this does. The keyboard and screen-reader paths are
+  // covered by the input still being focusable and named — see the unit tests.
+  await page.getByText('Vegetariskt', { exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Vegetariskt' })).toBeChecked();
   await page.getByRole('button', { name: 'Anmäl mig' }).click();
 
   await expect(page.getByText(/Din referens:/)).toBeVisible();
@@ -114,7 +120,7 @@ test('the same address cannot register twice', async ({ page }) => {
     await page.getByLabel(/Namn/).fill(`Försök ${attempt}`);
     await page.getByLabel(/E-post/).fill(email);
     await page.getByRole('button', { name: 'Nästa' }).click();
-    await page.getByLabel(/Måltid/).selectOption('standard');
+    await page.getByText('Standard', { exact: true }).click();
     await page.getByRole('button', { name: 'Anmäl mig' }).click();
 
     if (attempt === 1) {

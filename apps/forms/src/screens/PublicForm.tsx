@@ -381,6 +381,59 @@ function FieldInput({
   const placeholder = 'placeholder' in field ? text(field.placeholder) : '';
   const required = 'required' in field ? field.required : false;
 
+  /**
+   * Grouped choices are a `fieldset` with a `legend`, not a `label` wrapped round several
+   * inputs. A label may only name one control; wrapping a group makes clicking the question text
+   * silently tick the first option, and leaves a screen reader announcing the wrong thing.
+   */
+  const group = choiceGroup(field, text, yesLabel, noLabel);
+  if (group) {
+    const selected = group.multiple
+      ? new Set(Array.isArray(value) ? value.map(String) : [])
+      : new Set(value === null || value === undefined ? [] : [String(value)]);
+
+    return (
+      <fieldset className={`choice choice--${group.appearance}`}>
+        <legend>
+          {label}
+          {required && ' *'}
+        </legend>
+
+        <div className="choice__options">
+          {group.options.map((option) => (
+            <label className="choice__option" key={option.value}>
+              <input
+                type={group.multiple ? 'checkbox' : 'radio'}
+                // A radio group needs a shared name, or every option becomes its own group and
+                // more than one can be chosen at once.
+                name={`${field.key}__${group.multiple ? 'check' : 'radio'}`}
+                value={option.value}
+                checked={selected.has(option.value)}
+                onChange={(event) => {
+                  if (!group.multiple) {
+                    onChange(field.key, group.decode(option.value));
+                    return;
+                  }
+                  const next = new Set(selected);
+                  if (event.target.checked) next.add(option.value);
+                  else next.delete(option.value);
+                  onChange(
+                    field.key,
+                    group.options.filter((o) => next.has(o.value)).map((o) => o.value),
+                  );
+                }}
+              />
+              <span>{option.label || option.value}</span>
+            </label>
+          ))}
+        </div>
+
+        {help && <span className="small muted">{help}</span>}
+        {error && <span className="small status-down">{error}</span>}
+      </fieldset>
+    );
+  }
+
   return (
     <label className="field">
       <span>
@@ -454,6 +507,64 @@ function FieldInput({
       {error && <span className="small status-down">{error}</span>}
     </label>
   );
+}
+
+/**
+ * The presentation an author chose for a choice field, flattened so the renderer does not care
+ * which of the three field types it is looking at.
+ *
+ * Returns `null` for the appearances that are a single control — a dropdown is a `select`, and a
+ * `select` is perfectly good at being one. Only the grouped appearances need building by hand.
+ */
+function choiceGroup(
+  field: Field,
+  text: (value: Record<string, string> | undefined) => string,
+  yesLabel: string,
+  noLabel: string,
+): {
+  appearance: string;
+  multiple: boolean;
+  options: Array<{ value: string; label: string }>;
+  decode: (value: string) => AnswerValue;
+} | null {
+  if (field.type === 'single_select' && field.appearance !== 'dropdown') {
+    return {
+      appearance: field.appearance,
+      multiple: false,
+      options: field.options.map((option) => ({
+        value: option.value,
+        label: text(option.label),
+      })),
+      decode: (value) => value,
+    };
+  }
+
+  if (field.type === 'multi_select') {
+    return {
+      appearance: field.appearance,
+      multiple: true,
+      options: field.options.map((option) => ({
+        value: option.value,
+        label: text(option.label),
+      })),
+      decode: (value) => value,
+    };
+  }
+
+  if (field.type === 'yes_no' && field.appearance !== 'dropdown') {
+    return {
+      appearance: field.appearance,
+      multiple: false,
+      options: [
+        { value: 'true', label: yesLabel },
+        { value: 'false', label: noLabel },
+      ],
+      // The only appearance that stores something other than the option value it was given.
+      decode: (value) => value === 'true',
+    };
+  }
+
+  return null;
 }
 
 function inputType(type: Field['type']): string {

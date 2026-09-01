@@ -53,6 +53,29 @@ export const SelectOption = z.object({
   label: LocalisedText,
 });
 
+/**
+ * How a choice field is *presented*. Presentation only — it never changes what is stored, so a
+ * form can be restyled after it has been filled in without touching a single submission.
+ *
+ * Old definitions have no `appearance` at all. Each is defaulted rather than required, so every
+ * document written before this existed still parses and still renders exactly as it did. That is
+ * why `schemaVersion` stays at 1: nothing became unreadable.
+ *
+ * Every variant renders a real `input` underneath. Buttons and cards are restyled radios and
+ * checkboxes, never divs with click handlers — otherwise the keyboard, the screen reader and the
+ * browser's own validation all quietly stop working, and that is not something to retrofit.
+ */
+export const SINGLE_SELECT_APPEARANCES = ['dropdown', 'radio', 'buttons', 'cards'] as const;
+export const MULTI_SELECT_APPEARANCES = ['checkboxes', 'buttons', 'cards'] as const;
+export const YES_NO_APPEARANCES = ['dropdown', 'radio', 'buttons'] as const;
+
+export const SingleSelectAppearance = z.enum(SINGLE_SELECT_APPEARANCES);
+export type SingleSelectAppearance = z.infer<typeof SingleSelectAppearance>;
+export const MultiSelectAppearance = z.enum(MULTI_SELECT_APPEARANCES);
+export type MultiSelectAppearance = z.infer<typeof MultiSelectAppearance>;
+export const YesNoAppearance = z.enum(YES_NO_APPEARANCES);
+export type YesNoAppearance = z.infer<typeof YesNoAppearance>;
+
 const TextRules = {
   minLength: z.number().int().nonnegative().optional(),
   maxLength: z.number().int().positive().optional(),
@@ -84,15 +107,21 @@ export const Field = z.discriminatedUnion('type', [
     min: z.string().date().optional(),
     max: z.string().date().optional(),
   }),
-  z.object({ ...base, type: z.literal('single_select'), options: z.array(SelectOption).min(1) }),
+  z.object({
+    ...base,
+    type: z.literal('single_select'),
+    options: z.array(SelectOption).min(1),
+    appearance: SingleSelectAppearance.default('dropdown'),
+  }),
   z.object({
     ...base,
     type: z.literal('multi_select'),
     options: z.array(SelectOption).min(1),
     minSelected: z.number().int().nonnegative().optional(),
     maxSelected: z.number().int().positive().optional(),
+    appearance: MultiSelectAppearance.default('checkboxes'),
   }),
-  z.object({ ...base, type: z.literal('yes_no') }),
+  z.object({ ...base, type: z.literal('yes_no'), appearance: YesNoAppearance.default('dropdown') }),
 
   // Presentational — no answer is collected, so `required` is meaningless and omitted.
   z.object({

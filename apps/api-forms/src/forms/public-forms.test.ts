@@ -125,6 +125,66 @@ describe('fetching a public form', () => {
     expect(response.json().open).toBe(true);
   });
 
+  /**
+   * Appearance is chosen in the builder and only matters on the public page, so the interesting
+   * question is whether it survives the trip: draft, publish, then the anonymous endpoint.
+   *
+   * Also pinned here: a definition saved before appearance existed still publishes, and comes back
+   * with the appearance it always effectively had.
+   */
+  it('carries a field appearance through to the public definition', async () => {
+    await publishForm({
+      fields: [
+        nameField,
+        {
+          id: 'meal',
+          key: 'meal',
+          type: 'single_select',
+          label: { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
+          required: true,
+          options: [
+            { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' } },
+            { value: 'standard', label: { 'sv-SE': 'Standard', 'en-GB': 'Standard' } },
+          ],
+          appearance: 'cards',
+        },
+      ],
+    });
+
+    const response = await harness.app.inject({ method: 'GET', url: '/public/forms/anmalan' });
+    expect(response.statusCode).toBe(200);
+    const meal = response
+      .json()
+      .definition.fields.find((field: { key: string }) => field.key === 'meal');
+    expect(meal).toMatchObject({ type: 'single_select', appearance: 'cards' });
+  });
+
+  it('publishes a definition written before appearance existed', async () => {
+    await publishForm({
+      fields: [
+        nameField,
+        {
+          id: 'meal',
+          key: 'meal',
+          type: 'single_select',
+          label: { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
+          required: true,
+          options: [{ value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' } }],
+        },
+      ],
+    });
+
+    const response = await harness.app.inject({ method: 'GET', url: '/public/forms/anmalan' });
+    const meal = response
+      .json()
+      .definition.fields.find((field: { key: string }) => field.key === 'meal');
+    expect(meal).toMatchObject({ appearance: 'dropdown' });
+
+    // And it still accepts an answer, which is the thing that would actually hurt.
+    const submitted = await submit({ locale: 'sv-SE', values: { first_name: 'Åsa', meal: 'veg' } });
+    expect(submitted.statusCode).toBe(201);
+  });
+
   it('serves the published version, not the draft', async () => {
     const id = await publishForm();
     await harness.app.inject({

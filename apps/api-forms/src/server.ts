@@ -232,7 +232,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         path === '/health' ||
         path === '/openapi.json';
 
-      if (isApi || request.method !== 'GET') {
+      if (isApi || request.method !== 'GET' || looksLikeAsset(path)) {
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       }
       return reply.sendFile('index.html');
@@ -240,6 +240,22 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   }
 
   return app;
+}
+
+/**
+ * A request for a file that is not there, as opposed to a client route.
+ *
+ * Handing back index.html for a missing `.js` is the worst available answer: the browser refuses
+ * the module on MIME grounds and the page is blank, with an error that says nothing about the
+ * actual cause. A 404 is recoverable — the service worker falls back, a reload fixes it.
+ *
+ * This is not hypothetical. Deploy a new build and a visitor still holding the previous
+ * index.html asks for asset hashes that no longer exist; that is a rolling deploy, not an edge
+ * case. Client routes have no file extension, which is what makes the two safe to tell apart.
+ */
+function looksLikeAsset(path: string): boolean {
+  const lastSegment = path.slice(path.lastIndexOf('/') + 1);
+  return /\.[a-z0-9]{1,8}$/i.test(lastSegment);
 }
 
 /**

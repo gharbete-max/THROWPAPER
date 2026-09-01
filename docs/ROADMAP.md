@@ -58,11 +58,19 @@ deliberately rather than squeezing in beside a segment.
 **A14.** Hardening: rate limits, bot protection, permissions matrix, GDPR export and erasure,
 backup and restore rehearsal, load test of the grid and bulk PDF generation.
 
-**A15.** Field styling and media. Per-field appearance the author controls — radio and checkbox
-groups as cards, buttons or plain lists, dropdown and combobox behaviour, per-field colour drawn
-from the Brand Kit rather than free-typed hex, spacing and emphasis. Author-uploaded images:
-header art, per-question illustrations, image-choice options. Distinct from A6's *respondent*
-photo capture, and dependent on A3 for anything to theme against.
+**A15.** Field styling and media.
+
+*A15a — choice appearance. Done.* `single_select` renders as a dropdown, radio buttons, buttons or
+cards; `multi_select` as checkboxes, buttons or cards; `yes_no` as a dropdown, radios or buttons.
+Every variant is a `fieldset` with a `legend` and real inputs, so the keyboard and screen readers
+work in all of them, and colour comes from the Brand Kit rather than free-typed hex. Presentation
+only: a form can be restyled after it has been filled in without touching a submission.
+
+*Remaining.* Per-field colour, spacing and emphasis beyond the shared Brand Kit. A layout hint for
+buttons and cards (columns) — deliberately left out of A15a rather than guessed at. Author-uploaded
+images: header art, per-question illustrations, image-choice options. Those need the object store
+`SPEC-forms.md` §7 defers, so they are the larger half and are distinct from A6's *respondent*
+photo capture.
 
 **A16.** Template gallery. Prebuilt forms covering the most commonly used form in each sector and
 business, chosen at creation and then edited freely. Requires A5 versioning to already exist, and

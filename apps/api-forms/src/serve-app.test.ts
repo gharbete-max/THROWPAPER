@@ -140,6 +140,45 @@ describe('serving the built app from the API', () => {
     });
   });
 
+  /**
+   * Deploy a new build and a visitor still holding the previous index.html asks for asset hashes
+   * that no longer exist. Answering those with the app shell makes the browser refuse the module
+   * on MIME grounds and the page goes blank, reporting nothing useful. A 404 is recoverable.
+   *
+   * Found the way it happens in production: by rebuilding the app under a running server and then
+   * wondering why the page was empty.
+   */
+  describe('a missing file is not a client route', () => {
+    it.each([
+      '/assets/index-DELETED.js',
+      '/assets/index-DELETED.css',
+      '/gone.js',
+      '/icon-192.png',
+      '/fonts/inter.woff2',
+      '/old-service-worker.js.map',
+    ])('404s %s rather than handing back the app shell', async (url) => {
+      const response = await app.inject({ method: 'GET', url });
+      expect(response.statusCode).toBe(404);
+      expect(response.body).not.toContain('id="root"');
+    });
+
+    it.each(['/f/varmotet', '/check-in', '/events/abc/registrations'])(
+      'still serves the shell for %s, which has no extension',
+      async (url) => {
+        const response = await app.inject({ method: 'GET', url });
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toContain('id="root"');
+      },
+    );
+
+    it('serves the shell for a form slug containing a dot', async () => {
+      // A trailing extension is the signal, not a dot anywhere in the path.
+      const response = await app.inject({ method: 'GET', url: '/f/spring.meeting/details' });
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toContain('id="root"');
+    });
+  });
+
   it('still answers /health', async () => {
     const response = await app.inject({ method: 'GET', url: '/health' });
     expect(response.statusCode).toBe(200);

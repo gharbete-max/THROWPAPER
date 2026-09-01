@@ -146,6 +146,17 @@ export const messages: Catalogue = {
   'field.placeholder': { 'sv-SE': 'Platshållare', 'en-GB': 'Placeholder' },
   'field.required': { 'sv-SE': 'Obligatoriskt', 'en-GB': 'Required' },
   'field.options': { 'sv-SE': 'Alternativ', 'en-GB': 'Options' },
+
+  'field.appearance': { 'sv-SE': 'Utseende', 'en-GB': 'Appearance' },
+  'field.appearanceHint': {
+    'sv-SE': 'Påverkar bara hur frågan visas — svaren lagras likadant.',
+    'en-GB': 'Changes how the question looks. Answers are stored the same way either way.',
+  },
+  'field.appearance.dropdown': { 'sv-SE': 'Rullgardin', 'en-GB': 'Dropdown' },
+  'field.appearance.radio': { 'sv-SE': 'Radioknappar', 'en-GB': 'Radio buttons' },
+  'field.appearance.checkboxes': { 'sv-SE': 'Kryssrutor', 'en-GB': 'Checkboxes' },
+  'field.appearance.buttons': { 'sv-SE': 'Knappar', 'en-GB': 'Buttons' },
+  'field.appearance.cards': { 'sv-SE': 'Kort', 'en-GB': 'Cards' },
   'field.addOption': { 'sv-SE': 'Lägg till alternativ', 'en-GB': 'Add option' },
   'field.optionValue': { 'sv-SE': 'Värde', 'en-GB': 'Value' },
   'field.content': { 'sv-SE': 'Innehåll', 'en-GB': 'Content' },
