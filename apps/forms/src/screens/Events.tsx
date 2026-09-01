@@ -77,6 +77,15 @@ export function Events() {
               </p>
             )}
 
+            <div className="row">
+              <Link className="button button--quiet" to={`/events/${event.id}/attendance`}>
+                {t('attendance.title')}
+              </Link>
+              <Link className="button button--quiet" to={`/events/${event.id}/check-in`}>
+                {t('nav.checkin')}
+              </Link>
+            </div>
+
             {isAdmin && event.status !== 'archived' && (
               <div className="row">
                 <Link className="button button--quiet" to={`/events/${event.id}`}>

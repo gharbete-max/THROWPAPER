@@ -235,6 +235,12 @@ export const submissions = pgTable(
     resumeTokenHash: text('resume_token_hash'),
     resumeExpiresAt: timestamp('resume_expires_at', { withTimezone: true }),
     submittedAt: timestamp('submitted_at', { withTimezone: true }),
+    /**
+     * A withdrawn registration. START-HERE: the door must reject "duplicates and revoked entries".
+     * Revoking is not deleting — the record and its audit trail stay, and the person is refused
+     * with a reason rather than vanishing.
+     */
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -344,6 +350,41 @@ export const messages = pgTable(
   (table) => [index('messages_org_created_idx').on(table.organisationId, table.createdAt)],
 );
 
+export const checkInMethod = pgEnum('check_in_method', ['scan', 'manual']);
+
+/**
+ * One arrival.
+ *
+ * The unique index on `submission_id` is the idempotency guarantee: the database refuses a second
+ * row, so a scanner that retries after a dropped response cannot double-admit anybody. That is
+ * what START-HERE means by "idempotent, because that is what makes an offline mobile scanner
+ * cheap" — the client can replay freely.
+ */
+export const checkIns = pgTable(
+  'check_ins',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    submissionId: uuid('submission_id')
+      .notNull()
+      .references(() => submissions.id, { onDelete: 'cascade' }),
+    eventId: uuid('event_id')
+      .notNull()
+      .references(() => events.id, { onDelete: 'cascade' }),
+    checkedInAt: timestamp('checked_in_at', { withTimezone: true }).notNull().defaultNow(),
+    checkedInByUserId: uuid('checked_in_by_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    method: checkInMethod('method').notNull().default('scan'),
+  },
+  (table) => [
+    uniqueIndex('check_ins_submission_idx').on(table.submissionId),
+    index('check_ins_event_idx').on(table.eventId, table.checkedInAt),
+  ],
+);
+
 export type Organisation = typeof organisations.$inferSelect;
 export type NewOrganisation = typeof organisations.$inferInsert;
 export type User = typeof users.$inferSelect;
@@ -356,3 +397,4 @@ export type Submission = typeof submissions.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
 export type SendingDomain = typeof sendingDomains.$inferSelect;
 export type Message = typeof messages.$inferSelect;
+export type CheckIn = typeof checkIns.$inferSelect;

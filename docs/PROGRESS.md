@@ -404,6 +404,51 @@ land in real inboxes — is therefore **not met yet**, and cannot be until:
 The code refuses to send until step 2 is true, which is the correct behaviour and also means the
 checkpoint fails closed rather than silently.
 
+## Phase 5 — Check-in · done
+
+**v0.1 is code-complete.** The loop closes: a form is filled in → a record exists → a branded PDF
+comes out → an email is queued → somebody is checked in at the door.
+
+**Shipped**
+
+- `check_ins` table (`0006_check_ins.sql`) with a **unique index on `submission_id`**. One row per
+  attendee, enforced by the database rather than by a handler remembering to look first.
+- `submissions.revoked_at` — START-HERE says the door must reject "duplicates **and revoked
+  entries**". Revoking is not deleting: the record and its audit trail stay, and the person is
+  refused *with a reason*.
+- `POST /v1/events/:id/check-ins` — accepts a scanned token or a typed reference and always
+  answers 200 with a decision: `admitted`, `already`, `revoked`, `wrong-event`, `not-found`,
+  `bad-signature`.
+- `GET /v1/events/:id/attendance` and `POST /v1/submissions/:id/revoke`.
+- Check-in screen with `@zxing/browser` (code-split), a always-present reference field, and a
+  deliberately enormous verdict — readable at arm's length in bad light with a queue waiting.
+- Attendance report: counts, attendee list, no-show filter, CSV through 3c's writer so the BOM and
+  the formula guard come along unchanged.
+
+**Idempotent, and tested for it**
+
+`already` is a normal 200 carrying the original timestamp, not an error. A scanner that retries
+after a dropped response must not turn one attendee into a failure in front of a queue — that is
+what START-HERE means by "idempotent, because that is what makes an offline mobile scanner cheap".
+
+The concurrency test was checked for vacuity the same way 3b's was: inserting an `await` between
+the lookup and the insert makes it fail with `['admitted', 'admitted']` — one card admitting twice
+— and removing it makes it pass.
+
+**Decisions worth knowing**
+
+- Token verification runs **before any query**, so a forged card costs nothing to refuse.
+- A correctly-signed card for a different event returns `wrong-event`, not `bad-signature` — the
+  difference matters to whoever is standing there.
+- Revoking after arrival does not erase the arrival. That happened.
+- A revoked registration is **not** a no-show: nobody was expecting them.
+- Operators can work the door; only admins can revoke.
+
+**Deferred**
+
+Offline queueing in the browser (the endpoint is idempotent, which is what makes that cheap
+later), session selection, waiting lists, badge printing, and the report builder (A9).
+
 ## Next
 
 Phase 4 — documents and email (1 week). Admission PDF with a signed QR, provider integration,

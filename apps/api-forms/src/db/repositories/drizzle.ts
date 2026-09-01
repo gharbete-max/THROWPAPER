@@ -2,6 +2,7 @@ import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import {
   auditLog,
+  checkIns,
   events,
   formVersions,
   forms,
@@ -15,6 +16,7 @@ import {
   users,
 } from '../schema.js';
 import type {
+  CheckInRecord,
   EventCreate,
   EventRecord,
   EventUpdate,
@@ -246,6 +248,29 @@ export function createDrizzleRepositories(db: Db): Repositories {
             .limit(1),
         ) as SubmissionRecord | null,
 
+      findByReference: async (organisationId, reference) =>
+        first(
+          await db
+            .select()
+            .from(submissions)
+            .where(
+              and(
+                eq(submissions.organisationId, organisationId),
+                sql`upper(${submissions.reference}) = upper(${reference})`,
+              ),
+            )
+            .limit(1),
+        ) as SubmissionRecord | null,
+
+      revoke: async (organisationId, id, at) => {
+        const [row] = await db
+          .update(submissions)
+          .set({ revokedAt: at, updatedAt: new Date() })
+          .where(and(eq(submissions.organisationId, organisationId), eq(submissions.id, id)))
+          .returning();
+        return (row as SubmissionRecord | undefined) ?? null;
+      },
+
       countComplete: async (formId) => {
         const [row] = await db
           .select({ count: sql<number>`count(*)::int` })
@@ -366,6 +391,50 @@ export function createDrizzleRepositories(db: Db): Repositories {
           }
           throw error;
         }
+      },
+    },
+
+    checkIns: {
+      listForEvent: async (organisationId, eventId) =>
+        (await db
+          .select()
+          .from(checkIns)
+          .where(and(eq(checkIns.organisationId, organisationId), eq(checkIns.eventId, eventId)))
+          .orderBy(desc(checkIns.checkedInAt))) as CheckInRecord[],
+
+      findBySubmission: async (submissionId) =>
+        first(
+          await db.select().from(checkIns).where(eq(checkIns.submissionId, submissionId)).limit(1),
+        ) as CheckInRecord | null,
+
+      /**
+       * The unique index on submission_id is the guarantee, not a prior read: `do nothing` means
+       * a concurrent scan loses the insert race harmlessly and we return the row that won.
+       */
+      admit: async (input) => {
+        const [row] = await db
+          .insert(checkIns)
+          .values({
+            organisationId: input.organisationId,
+            submissionId: input.submissionId,
+            eventId: input.eventId,
+            checkedInByUserId: input.checkedInByUserId,
+            method: input.method,
+          })
+          .onConflictDoNothing({ target: checkIns.submissionId })
+          .returning();
+
+        if (row) return { created: true, checkIn: row as CheckInRecord };
+
+        const existing = first(
+          await db
+            .select()
+            .from(checkIns)
+            .where(eq(checkIns.submissionId, input.submissionId))
+            .limit(1),
+        ) as CheckInRecord | null;
+        if (!existing) throw new Error('check-in neither inserted nor found');
+        return { created: false, checkIn: existing };
       },
     },
 
