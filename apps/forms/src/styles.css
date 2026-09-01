@@ -115,8 +115,20 @@ legend {
   font-size: 0.875rem;
 }
 
+/* --- Buttons --------------------------------------------------------------
+ *
+ * Flat: one solid colour, one border, one radius, all from the Brand Kit. **No gradients** — the
+ * stated direction is simple and quiet, and a gradient is also the one treatment that cannot
+ * follow a customer's palette without being recomputed.
+ *
+ * `inline-flex` rather than `inline-block` so a button holding an icon and a label centres both
+ * on the same baseline without either needing its own alignment.
+ */
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
   padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
   border: var(--tp-border-width) solid var(--tp-colour-primary);
   border-radius: var(--tp-radius);
@@ -127,6 +139,29 @@ legend {
   font-weight: var(--tp-type-weight-bold);
   text-decoration: none;
   cursor: pointer;
+  /* Colour only, and quickly — a button that animates its size makes a form feel unsteady. */
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+/* Darkening cannot be computed from a token, so depth comes from the border instead: hover swaps
+ * the frame rather than mixing a new colour the customer never chose. */
+.button:hover:not(:disabled) {
+  background: var(--tp-colour-text);
+  border-color: var(--tp-colour-text);
+}
+
+.button:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
 }
 
 .button:disabled {
@@ -138,6 +173,40 @@ legend {
   background: transparent;
   color: var(--tp-colour-primary);
   border-color: var(--tp-colour-border);
+}
+
+.button--quiet:hover:not(:disabled) {
+  background: var(--tp-colour-surface);
+  border-color: var(--tp-colour-primary);
+  color: var(--tp-colour-primary);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: var(--tp-colour-danger);
+  border-color: var(--tp-colour-text);
+}
+
+/* An icon-only control is square rather than a wide button with a glyph adrift in it. */
+.button--icon {
+  padding-inline: 0;
+  min-inline-size: 44px;
+}
+
+/* --- Icons ----------------------------------------------------------------
+ *
+ * Sized in em so an icon matches whatever text it sits beside, and coloured by `currentColor` so
+ * it is themed by the Brand Kit without any rule here naming a colour.
+ */
+.icon {
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  flex: none;
+  /* Optical centring: a cap-height glyph and a 24px box do not share a baseline. */
+  vertical-align: -0.16em;
+}
+
+.icon--lead {
+  margin-inline-end: calc(var(--tp-spacing-unit) * 0.5);
 }
 
 .badge {
@@ -166,7 +235,7 @@ legend {
 /* Form builder: palette · canvas · properties (SPEC-forms.md §3). */
 .builder {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 23rem);
   gap: calc(var(--tp-spacing-unit) * 2);
   align-items: start;
 }
@@ -398,14 +467,43 @@ legend {
   padding-bottom: max(calc(var(--tp-spacing-unit) * 6), env(safe-area-inset-bottom));
 }
 
-/* 44px is the smallest reliably tappable target; anything less gets mis-hit. */
+/* 44px is the smallest reliably tappable target; anything less gets mis-hit.
+ *
+ * Written against the elements themselves rather than `.field input` and friends. Scoping it to
+ * a wrapper meant any control outside one silently missed out: the language switcher on the
+ * public form — the first thing a Swedish speaker reaches for on an English page — was a bare
+ * `select` measuring 67x20 with no padding at all. A rule that only protects controls somebody
+ * remembered to wrap is not a rule.
+ */
+button,
+input,
+select,
+textarea,
+summary,
 .button,
-.field input,
-.field select,
-.field textarea,
 .grid__sort,
 .demo-banner__action {
   min-height: 44px;
+}
+
+/* A summary is a block by default, so min-height alone leaves the text at the top of a tall box. */
+summary {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Checkboxes and radios size themselves; forcing 44px on the box just stretches it. Their labels
+ * carry the target instead — see `.choice__option` and `.field--inline`. */
+input[type='checkbox'],
+input[type='radio'] {
+  min-height: 0;
+}
+
+/* A bare control gets the same padding as one inside a field, so 44px is real space rather than a
+ * stretched box with the text jammed against the edge. */
+select:not([multiple]) {
+  padding-inline: calc(var(--tp-spacing-unit) * 0.75);
 }
 
 .button {
@@ -801,6 +899,9 @@ textarea {
 
 .builder__palette .button {
   flex: 0 0 auto;
+  /* Left-aligned so the icons form a column down the group and the eye can run along them. */
+  justify-content: flex-start;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
 }
 
 /* Reorder without dragging. Stacked so the pair occupies one row's height. */
@@ -813,6 +914,7 @@ textarea {
 
 .builder__move .button {
   min-height: 22px;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
   padding: 0 calc(var(--tp-spacing-unit) * 0.5);
   line-height: 1;
 }
@@ -823,11 +925,7 @@ textarea {
 }
 
 .builder__advanced summary {
-  cursor: pointer;
-  padding: calc(var(--tp-spacing-unit) * 0.5) 0;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
+  padding-block: calc(var(--tp-spacing-unit) * 0.5);
 }
 
 /* The preview renders the real public components, so it needs the page's own colours around it
@@ -971,4 +1069,32 @@ textarea {
   .builder__itemRow > .button {
     min-block-size: 44px;
   }
+
+  /* The desktop compaction is a mouse affordance; a thumb needs the full square back. */
+  .builder__itemRow .button--icon {
+    min-inline-size: 44px;
+  }
+}
+
+/* The type label above a field's name, with its icon. */
+.builder__itemBody .row {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.4);
+  /* The icon and its word are one label; wrapping between them reads as two things. */
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* A small button holding only an icon should not inherit the full 44px pill on desktop. */
+.builder__move .icon {
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: 0;
+}
+
+/* Icon-only actions in a field row: square, and no wider than they need to be. */
+.builder__itemRow .button--icon {
+  min-inline-size: 40px;
+  padding-inline: 0;
 }

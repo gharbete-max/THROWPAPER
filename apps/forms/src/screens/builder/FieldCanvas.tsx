@@ -22,6 +22,7 @@ import { cn } from '@tp/ui';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { hasLabel } from './field-defaults.js';
+import { Icon } from '../../components/Icon.js';
 
 interface Props {
   fields: Field[];
@@ -141,11 +142,14 @@ function SortableField({
           {...attributes}
           {...listeners}
         >
-          ⠿
+          <Icon name="drag" />
         </button>
 
         <button type="button" className="builder__itemBody" onClick={() => onSelect(field.id)}>
-          <span className="small muted">{t(`fieldType.${field.type}`)}</span>
+          <span className="small muted row">
+            <Icon name={field.type} />
+            {t(`fieldType.${field.type}`)}
+          </span>
           <span className="builder__itemLabel">
             {field.type === 'page_break' ? (
               '— — —'
@@ -183,7 +187,7 @@ function SortableField({
             aria-label={t('builder.moveUp')}
             onClick={() => onMove(field.id, -1)}
           >
-            ↑
+            <Icon name="arrow-up" />
           </button>
           <button
             type="button"
@@ -192,7 +196,7 @@ function SortableField({
             aria-label={t('builder.moveDown')}
             onClick={() => onMove(field.id, 1)}
           >
-            ↓
+            <Icon name="arrow-down" />
           </button>
         </div>
 
@@ -204,10 +208,12 @@ function SortableField({
       */}
         <button
           type="button"
-          className="button button--quiet small"
+          className="button button--quiet button--icon small"
+          title={t('builder.duplicate')}
+          aria-label={t('builder.duplicate')}
           onClick={() => onDuplicate(field.id)}
         >
-          {t('builder.duplicate')}
+          <Icon name="copy" />
         </button>
 
         {confirming ? (
@@ -217,6 +223,7 @@ function SortableField({
               className="button button--danger small"
               onClick={() => onRemove(field.id)}
             >
+              <Icon name="trash" />
               {t('builder.removeYes')}
             </button>
             <button
@@ -234,6 +241,7 @@ function SortableField({
             className="button button--quiet small"
             onClick={() => setConfirming(true)}
           >
+            <Icon name="trash" />
             {t('builder.remove')}
           </button>
         )}
