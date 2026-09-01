@@ -471,16 +471,17 @@ From `START-HERE.md` §Done means, in the order these block each other:
 
 ### Outstanding in the code
 
-- **No end-to-end suite.** `pnpm test:e2e` has been a passing no-op since phase 0, and the message
-  claiming it arrives "in phase 3" was still there after phase 5 shipped. A real suite needs a
-  running stack — Postgres plus both apps — which CI has and this machine does not. The honest
-  version: it should drive the public form in a browser against a live server, and it does not
-  exist yet.
+- **The end-to-end suite exists but is thin.** Playwright drives the built app against a running
+  `api-forms` and a real Postgres, covering the public form, the language switch, validation,
+  duplicate control, save-and-resume, and check-in. It does **not** cover the builder, the
+  admission PDF download, bulk generation, or sending-domain verification — those are unit-tested
+  only. `pnpm test:e2e` skips loudly without a database, so it runs in CI and nowhere else yet.
 - **The local `DocumentStore` is a stopgap.** `SPEC-forms.md` §7 wants S3-compatible storage with
   signed URLs and virus scanning; generated ZIPs currently go to a directory on disk.
-- **Nobody has run this stack end to end.** Every database path is proven by CI and unit tests,
-  never by a person clicking through it. That is the single largest gap between "tests pass" and
-  "it works", and phase 5 of START-HERE anticipates it: *run a real event and fix what breaks.*
+- **Nobody has run this stack by hand.** CI now drives a browser through the whole public loop,
+  which is a real improvement on unit tests alone — but no person has clicked through it, and no
+  email has ever been sent. That is still the largest gap between "tests pass" and "it works", and
+  phase 5 of START-HERE anticipates it: *run a real event and fix what breaks.*
 
 ### After that
 
