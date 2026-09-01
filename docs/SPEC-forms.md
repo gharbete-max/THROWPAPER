@@ -53,6 +53,52 @@ submission, and a submission grid using the shared grid with saved views and exp
 both in the submitter's locale, both sent through the mailer contract (or SMTP fallback), with
 configurable recipients and immediate-or-digest delivery.
 
+## 3b. Collaboration on a draft
+
+A form is written by more than one person. Someone builds it, someone else has opinions about the
+wording, and the second person usually must not be able to publish. Google Docs and Google Forms
+are the reference point people will consciously compare this to.
+
+**Per-form access, separate from the org-wide role.** §2's roles say what somebody may do in
+general; this says what they may do to *this draft*. Three levels: **can view**, **can comment**,
+**can edit**. Publishing stays with Admin regardless — a shared draft must never become a route to
+putting something live.
+
+**Comments.** Threads anchored to a **field id**, which the versioned JSON definition already gives
+us as a stable identifier, plus threads on the form as a whole. Resolve and reopen. `@` mentions
+that notify by email through the same transactional path as everything else. Comments live outside
+the definition document: they annotate a form, they are not part of it, and a published version
+must not carry them.
+
+**Presence and concurrent editing.** Who else is in the builder right now, and where they are.
+Two editors on one form must not silently overwrite each other — the autosave from phase 3a is
+last-write-wins, which is exactly the wrong behaviour here.
+
+The honest options, in increasing order of cost:
+
+1. **Soft lock** — one editor at a time, others see it read-only and can take over when idle.
+   Cheap, obvious to users, and covers a two-or-three person team completely.
+2. **Field-level locking** — concurrent editing of different fields, conflicts only on the same
+   field. Middle cost, fits the definition's shape well.
+3. **CRDT** — genuine simultaneous editing. Correct, and the largest single piece of engineering
+   in this document.
+
+Start at 1. Most customers are three people and a deadline, not a newsroom.
+
+**Draft sharing links.** A tokenised link that grants view-or-comment on an unpublished form
+without an account, so an operator can get sign-off from somebody who will never log in. Expiring,
+revocable, and never edit.
+
+**Activity.** Who changed what in the builder, from the audit log that already exists, shown beside
+the version history rather than as a separate feature.
+
+### What this needs that does not exist yet
+
+- A per-resource permission table. Roles are currently organisation-wide only.
+- A live transport. Nothing in the product pushes to a browser today; presence and live comments
+  both need one, and it is the piece most likely to constrain hosting.
+- A notification path for mentions, which the phase 4 mail provider already covers.
+
 ## 4. Reference data and datasets
 
 - **Reference tables:** operator-managed lookup tables with versioning and effective dates

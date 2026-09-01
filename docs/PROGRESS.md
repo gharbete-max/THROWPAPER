@@ -483,6 +483,17 @@ From `START-HERE.md` §Done means, in the order these block each other:
   email has ever been sent. That is still the largest gap between "tests pass" and "it works", and
   phase 5 of START-HERE anticipates it: *run a real event and fix what breaks.*
 
+### Requested, specced, not built
+
+**Collaboration on a draft** — comments, presence and per-form view/comment/edit access, in the
+manner of Google Docs and Forms. Written up as `SPEC-forms.md` §3b and placed at A13b in the
+roadmap. It was not in any spec before; it is now.
+
+Two honest notes on it. First, the autosave built in phase 3a is last-write-wins, which is exactly
+wrong once two people share a draft — so this is not additive, it changes something that already
+exists. Second, real-time co-editing is the largest single feature in the product; the spec starts
+at a soft lock for that reason, and a three-person team will not notice the difference.
+
 ### After that
 
 `docs/ROADMAP.md` describes Track A phases A2–A14 and the whole of Track B. **Do not start them
