@@ -126,6 +126,34 @@ describe('failure', () => {
     expect(finished?.attempts).toBe(2);
   });
 
+  /**
+   * The worker runs on a timer. An unhandled rejection there kills the API process, which is
+   * exactly what a Date bound into a raw SQL fragment did in CI: the server died a second after
+   * boot, every time, against a real database.
+   */
+  it('survives the claim itself failing, rather than taking the process down', async () => {
+    const repos = createMemoryRepositories({ organisations: [testOrganisation] });
+    const failures: unknown[] = [];
+    repos.jobs.claim = async () => {
+      throw new Error('database went away mid-claim');
+    };
+
+    const worker = createWorker({
+      repos,
+      handlers: {},
+      onError: (error) => failures.push(error),
+    });
+
+    // Neither the direct call nor the timer path may reject.
+    await expect(worker.runOnce()).rejects.toThrow('database went away');
+
+    worker.start(1);
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    worker.stop();
+
+    expect(failures.length).toBeGreaterThan(0);
+  });
+
   it('does not retry an unknown job kind — a deployment mistake is not a transient fault', async () => {
     const { repos, worker } = setup({});
     const job = await enqueue(repos);
