@@ -143,6 +143,14 @@ export const messages: Catalogue = {
   'field.helpText': { 'sv-SE': 'Hjälptext', 'en-GB': 'Help text' },
   'field.placeholder': { 'sv-SE': 'Platshållare', 'en-GB': 'Placeholder' },
   'field.required': { 'sv-SE': 'Obligatoriskt', 'en-GB': 'Required' },
+  'field.width': { 'sv-SE': 'Bredd', 'en-GB': 'Width' },
+  'field.widthHint': {
+    'sv-SE': 'På mobil upptar alla fält hela bredden.',
+    'en-GB': 'Every field takes the full width on a phone.',
+  },
+  'field.width.full': { 'sv-SE': 'Hel rad', 'en-GB': 'Full row' },
+  'field.width.half': { 'sv-SE': 'Halv rad', 'en-GB': 'Half row' },
+  'field.width.third': { 'sv-SE': 'Tredjedel', 'en-GB': 'One third' },
   'field.options': { 'sv-SE': 'Alternativ', 'en-GB': 'Options' },
 
   'field.appearance': { 'sv-SE': 'Utseende', 'en-GB': 'Appearance' },
@@ -231,6 +239,7 @@ export const messages: Catalogue = {
   'builder.needsLabel': { 'sv-SE': 'Saknar frågetext', 'en-GB': 'Needs a question' },
   'builder.moveUp': { 'sv-SE': 'Flytta upp', 'en-GB': 'Move up' },
   'builder.moveDown': { 'sv-SE': 'Flytta ned', 'en-GB': 'Move down' },
+  'builder.resize': { 'sv-SE': 'Ändra bredd', 'en-GB': 'Resize' },
   'builder.viewPreview': { 'sv-SE': 'Hela formuläret', 'en-GB': 'Whole form' },
 
   'preview.empty': {
@@ -246,6 +255,10 @@ export const messages: Catalogue = {
   'field.labelPlaceholder': {
     'sv-SE': 'T.ex. Vad heter du?',
     'en-GB': 'For example: What is your name?',
+  },
+  'field.formatHint': {
+    'sv-SE': 'Markera text och tryck på B, I eller U.',
+    'en-GB': 'Select some text, then press B, I or U.',
   },
   'field.advanced': { 'sv-SE': 'Avancerat', 'en-GB': 'Advanced' },
 

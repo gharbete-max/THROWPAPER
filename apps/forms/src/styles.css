@@ -243,8 +243,9 @@ a:focus-visible {
 }
 
 @media (max-width: 900px) {
+  /* Inline styles set the columns on wide screens, so this needs the same weight to undo them. */
   .builder {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -1164,4 +1165,75 @@ textarea {
 
 .brand__styleRow {
   gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+/* --- Field widths ---------------------------------------------------------
+ *
+ * Twelve columns, so half and third both divide evenly and can sit in the same row. Every width
+ * collapses to full below 600px: two columns on a phone is two cramped columns, not a layout.
+ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+.form-grid__cell {
+  grid-column: span 12;
+  min-inline-size: 0;
+}
+
+@media (min-width: 601px) {
+  .form-grid__cell--half {
+    grid-column: span 6;
+  }
+
+  .form-grid__cell--third {
+    grid-column: span 4;
+  }
+}
+
+/* A text block the author wrote. Paragraphs keep their own rhythm; an empty line is a real gap. */
+.rich-text p {
+  margin: 0;
+  min-block-size: 1em;
+}
+
+.rich-text p + p {
+  margin-block-start: var(--tp-spacing-unit);
+}
+
+/* The formatting toolbar above a text block. */
+.rich-toolbar {
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+/* The divider between the field list and the preview. Wider than it looks, because a 6px target
+ * is a 6px target however carefully it is drawn. */
+.builder__divider {
+  position: relative;
+  cursor: col-resize;
+  background: var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  touch-action: none;
+}
+
+.builder__divider::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline: -8px;
+}
+
+.builder__divider:hover,
+.builder__divider:focus-visible {
+  background: var(--tp-colour-primary);
+}
+
+/* Stacked layouts have no split to drag. */
+@media (max-width: 900px) {
+  .builder__divider {
+    display: none;
+  }
 }

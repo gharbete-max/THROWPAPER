@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { toggleMarker } from '@tp/shared/forms';
 import { useT } from '../../lib/i18n.js';
 
 /**
@@ -34,6 +35,7 @@ export function LocalisedField({
 }) {
   const t = useT();
   const text = value ?? {};
+  const boxes = useRef<Record<string, HTMLTextAreaElement | HTMLInputElement | null>>({});
 
   /**
    * Shown when it already has text, so reopening a form does not hide translations somebody has
@@ -50,6 +52,25 @@ export function LocalisedField({
 
   const Input = multiline ? 'textarea' : 'input';
 
+  /**
+   * Applies a marker to whatever is selected in the box beside the button.
+   *
+   * Reads the selection off the DOM rather than tracking it in state: a controlled selection would
+   * have to be kept in step with every keystroke, and the browser already knows the answer.
+   */
+  function format(marker: '*' | '/' | '_') {
+    const box = boxes.current[locale];
+    if (!box) return;
+    const next = toggleMarker(box.value, box.selectionStart ?? 0, box.selectionEnd ?? 0, marker);
+    if (next.value === box.value) return;
+    onChange(locale, next.value);
+    // Restore the selection after React re-renders, so a second click toggles the same words.
+    requestAnimationFrame(() => {
+      box.focus();
+      box.setSelectionRange(next.start, next.end);
+    });
+  }
+
   return (
     <div className="stack localised">
       <label className="field">
@@ -58,11 +79,39 @@ export function LocalisedField({
           {supported.length > 1 && <span className="small muted"> · {locale}</span>}
         </span>
         <Input
+          ref={(element: HTMLTextAreaElement | HTMLInputElement | null) => {
+            boxes.current[locale] = element;
+          }}
           value={text[locale] ?? ''}
           placeholder={placeholder}
           rows={multiline ? 3 : undefined}
           onChange={(event: { target: { value: string } }) => onChange(locale, event.target.value)}
         />
+
+        {multiline && (
+          <span className="row rich-toolbar">
+            {(
+              [
+                ['*', 'bold', <strong key="b">B</strong>],
+                ['/', 'italic', <em key="i">I</em>],
+                ['_', 'underline', <u key="u">U</u>],
+              ] as const
+            ).map(([marker, name, glyph]) => (
+              <button
+                key={marker}
+                type="button"
+                className="button button--quiet button--icon small"
+                title={t(`brand.${name}`)}
+                aria-label={t(`brand.${name}`)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => format(marker)}
+              >
+                {glyph}
+              </button>
+            ))}
+            <span className="small muted">{t('field.formatHint')}</span>
+          </span>
+        )}
         {hint && <span className="small muted">{hint}</span>}
       </label>
 

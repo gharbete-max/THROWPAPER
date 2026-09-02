@@ -86,6 +86,7 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       type: 'short_text',
       label: { 'sv-SE': 'Namn', 'en-GB': 'Name' },
       required: true,
+      width: 'half',
     },
     {
       id: 'email',
@@ -93,6 +94,7 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       type: 'email',
       label: { 'sv-SE': 'E-post', 'en-GB': 'Email' },
       required: true,
+      width: 'half',
     },
     {
       id: 'org',
@@ -100,6 +102,7 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       type: 'short_text',
       label: { 'sv-SE': 'Organisation', 'en-GB': 'Organisation' },
       required: false,
+      width: 'full',
     },
     { id: 'page', key: 'page_two', type: 'page_break' },
     {
@@ -108,6 +111,7 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       type: 'single_select',
       label: { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
       required: true,
+      width: 'full',
       options: [
         { value: 'standard', label: { 'sv-SE': 'Standard', 'en-GB': 'Standard' }, image: null },
         { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' }, image: null },
@@ -121,6 +125,7 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       id: 'guests',
       key: 'guests',
       type: 'number',
+      width: 'half',
       label: { 'sv-SE': 'Medföljande gäster', 'en-GB': 'Accompanying guests' },
       required: false,
       min: 0,

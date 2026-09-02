@@ -1,4 +1,9 @@
-import { PRESENTATIONAL_TYPES, type Field, type FormDefinition } from './definition.js';
+import {
+  PRESENTATIONAL_TYPES,
+  type Field,
+  type FieldWidth,
+  type FormDefinition,
+} from './definition.js';
 
 const presentational = new Set<string>(PRESENTATIONAL_TYPES);
 
@@ -175,4 +180,14 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
     }
   }
   return problems;
+}
+
+/**
+ * How wide a field asks to be, defaulting to the whole row.
+ *
+ * `page_break` and `hidden` have no width because neither ever occupies a cell — one is stripped
+ * when the form is split into pages and the other renders nothing at all.
+ */
+export function widthOf(field: Field): FieldWidth {
+  return 'width' in field ? field.width : 'full';
 }

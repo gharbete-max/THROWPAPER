@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { LocaleConfig } from '@tp/i18n';
 import {
   pagesOf,
+  widthOf,
   type AnswerValue,
   type FormDefinition,
   type SubmissionValues,
@@ -72,26 +73,32 @@ export function FormPreview({
           </p>
         )}
 
-        {fields.map((field) => (
-          <div
-            key={field.id}
-            className={
-              field.id === selectedId ? 'preview__field preview__field--selected' : 'preview__field'
-            }
-          >
-            <FieldInput
-              field={field}
-              locale={locale}
-              locales={locales}
-              value={values[field.key] ?? null}
-              error={null}
-              chooseLabel={t('public.choose')}
-              yesLabel={t('public.yes')}
-              noLabel={t('public.no')}
-              onChange={setValue}
-            />
-          </div>
-        ))}
+        <div className="form-grid">
+          {fields.map((field) => (
+            <div
+              key={field.id}
+              className={[
+                'preview__field',
+                `form-grid__cell form-grid__cell--${widthOf(field)}`,
+                field.id === selectedId && 'preview__field--selected',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              <FieldInput
+                field={field}
+                locale={locale}
+                locales={locales}
+                value={values[field.key] ?? null}
+                error={null}
+                chooseLabel={t('public.choose')}
+                yesLabel={t('public.yes')}
+                noLabel={t('public.no')}
+                onChange={setValue}
+              />
+            </div>
+          ))}
+        </div>
 
         {pages.length > 1 && (
           <div className="row">

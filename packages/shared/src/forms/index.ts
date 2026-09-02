@@ -5,3 +5,4 @@ export * from './validate.js';
 export * from './public-api.js';
 export * from './export.js';
 export * from './templates.js';
+export * from './rich-text.js';
