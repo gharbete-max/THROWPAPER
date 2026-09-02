@@ -233,6 +233,21 @@ export type SubmissionCompleteResult =
 
 export interface SubmissionRepository {
   list(organisationId: string, formId: string): Promise<SubmissionRecord[]>;
+  /**
+   * One submission by id.
+   *
+   * Added because the only way to do this was to list every form in the organisation and then
+   * every submission of every form, and scan. Twenty forms with five hundred responses each meant
+   * ten thousand rows read to find one — per admission document generated.
+   */
+  findById(organisationId: string, submissionId: string): Promise<SubmissionRecord | null>;
+  /**
+   * Every submission for an event, across whichever forms feed it.
+   *
+   * The attendance and check-in screens want exactly this, and were assembling it by listing the
+   * organisation's forms, filtering them in memory, and issuing one query per surviving form.
+   */
+  listForEvent(organisationId: string, eventId: string): Promise<SubmissionRecord[]>;
   findByResumeTokenHash(tokenHash: string): Promise<SubmissionRecord | null>;
   countComplete(formId: string): Promise<number>;
   /**

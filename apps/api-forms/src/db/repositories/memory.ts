@@ -257,6 +257,18 @@ export function createMemoryRepositories(
         state.submissions
           .filter((s) => s.organisationId === organisationId && s.formId === formId)
           .map(copySubmission),
+      findById: async (organisationId, submissionId) => {
+        const found = state.submissions.find(
+          (s) => s.organisationId === organisationId && s.id === submissionId,
+        );
+        return found ? copySubmission(found) : null;
+      },
+
+      listForEvent: async (organisationId, eventId) =>
+        state.submissions
+          .filter((s) => s.organisationId === organisationId && s.eventId === eventId)
+          .map(copySubmission),
+
       findByResumeTokenHash: async (tokenHash) => {
         const found = state.submissions.find((s) => s.resumeTokenHash === tokenHash);
         return found ? copySubmission(found) : null;

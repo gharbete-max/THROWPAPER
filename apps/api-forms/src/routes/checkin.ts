@@ -120,14 +120,8 @@ export function registerCheckInRoutes(
       const event = await deps.repos.events.findById(auth.organisation.id, id);
       if (!event) return notFound(reply);
 
-      const forms = await deps.repos.forms.list(auth.organisation.id);
-      const submissions = (
-        await Promise.all(
-          forms
-            .filter((form) => form.eventId === id)
-            .map((form) => deps.repos.submissions.list(auth.organisation.id, form.id)),
-        )
-      ).flat();
+      // One query, on the event, rather than one per form that happens to point at it.
+      const submissions = await deps.repos.submissions.listForEvent(auth.organisation.id, id);
 
       const checkIns = await deps.repos.checkIns.listForEvent(auth.organisation.id, id);
       const byId = new Map(checkIns.map((entry) => [entry.submissionId, entry.checkedInAt]));

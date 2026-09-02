@@ -171,14 +171,15 @@ export function registerDocumentRoutes(
   });
 }
 
-async function findSubmission(repos: Repositories, organisationId: string, submissionId: string) {
-  for (const form of await repos.forms.list(organisationId)) {
-    const found = (await repos.submissions.list(organisationId, form.id)).find(
-      (submission) => submission.id === submissionId,
-    );
-    if (found) return found;
-  }
-  return null;
+/**
+ * One submission, in one query.
+ *
+ * This used to walk every form in the organisation and read every submission of each to find one
+ * by id — ten thousand rows for a single admission document, on a form with any history. Kept as
+ * a named function rather than inlined so the call sites still read the same.
+ */
+function findSubmission(repos: Repositories, organisationId: string, submissionId: string) {
+  return repos.submissions.findById(organisationId, submissionId);
 }
 
 function toJobResponse(job: {

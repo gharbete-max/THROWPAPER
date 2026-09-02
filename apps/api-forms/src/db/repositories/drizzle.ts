@@ -254,6 +254,25 @@ export function createDrizzleRepositories(db: Db): Repositories {
           )
           .orderBy(desc(submissions.createdAt))) as SubmissionRecord[],
 
+      findById: async (organisationId, submissionId) =>
+        (first(
+          await db
+            .select()
+            .from(submissions)
+            .where(
+              and(eq(submissions.organisationId, organisationId), eq(submissions.id, submissionId)),
+            )
+            .limit(1),
+        ) as SubmissionRecord | null) ?? null,
+
+      listForEvent: async (organisationId, eventId) =>
+        (await db
+          .select()
+          .from(submissions)
+          .where(
+            and(eq(submissions.organisationId, organisationId), eq(submissions.eventId, eventId)),
+          )) as SubmissionRecord[],
+
       findByResumeTokenHash: async (tokenHash) =>
         first(
           await db
