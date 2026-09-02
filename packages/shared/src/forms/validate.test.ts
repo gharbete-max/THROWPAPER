@@ -210,3 +210,59 @@ describe('counting decimal places', () => {
     expect(validateSubmission(form(3), { amount: '2.5e-3' }).ok).toBe(false);
   });
 });
+
+/**
+ * A number field silently rewrote long answers.
+ *
+ * `Number('1234567890123456789')` is `1234567890123456800`. An author reaches for a number field
+ * for an account number, an organisation number or a long reference, and before this the answer
+ * was changed on the way in — no error, no warning, wrong digits in the export. Rule 5.
+ */
+describe('numbers a double cannot hold', () => {
+  const form = (): FormDefinition => ({
+    schemaVersion: 1,
+    fields: [
+      Field.parse({ id: 'f1', key: 'account', type: 'number', label: { 'sv-SE': 'Konto' } }),
+    ],
+    settings: emptyDefinition.settings,
+  });
+
+  const check = (account: string) => validateSubmission(form(), { account });
+
+  it.each([
+    ['1234567890123456789', 'a 19-digit account number'],
+    ['12345678901234567890', 'a 20-digit reference'],
+    ['9007199254740993', 'one past the last exactly representable integer'],
+  ])('refuses %s — %s', (account) => {
+    expect(check(account).issues).toEqual([{ key: 'account', code: 'validation.precision' }]);
+  });
+
+  it.each([
+    ['5560160680', 'a Swedish organisation number'],
+    ['0.1', 'an ordinary decimal'],
+    ['123.456', 'a measurement'],
+    ['1.50', 'trailing zeros, which are not extra precision'],
+    ['007', 'leading zeros'],
+    ['-42', 'a negative'],
+    ['-0', 'negative zero, which is zero'],
+    ['1000000000000000000', 'nineteen digits that happen to be a power of ten'],
+    ['9007199254740992', 'the last exactly representable integer'],
+  ])('accepts %s — %s', (account) => {
+    expect(check(account).ok, account).toBe(true);
+  });
+
+  it('accepts a comma as the decimal separator, as it always did', () => {
+    const result = validateSubmission(form(), { account: '1,5' });
+    expect(result.ok).toBe(true);
+    expect(result.values.account).toBe(1.5);
+  });
+
+  /**
+   * The counting rule this replaced would have been wrong in both directions: sixteen significant
+   * digits are sometimes exact, and fifteen are not always enough. Round-tripping asks directly.
+   */
+  it('judges by round-tripping, not by counting digits', () => {
+    expect(check('1000000000000000000').ok).toBe(true);
+    expect(check('1000000000000000001').ok).toBe(false);
+  });
+});
