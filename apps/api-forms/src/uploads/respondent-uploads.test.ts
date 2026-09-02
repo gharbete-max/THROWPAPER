@@ -233,3 +233,53 @@ describe('reading a file back', () => {
     expect(response.statusCode).toBe(404);
   });
 });
+
+describe('listing submissions that carry a file', () => {
+  it('names the attachment, so a grid shows a filename rather than a hash', async () => {
+    const { key } = (await upload(pdf, 'annual-report.pdf')).json() as { key: string };
+    await harness.app.inject({
+      method: 'POST',
+      url: `/public/forms/${SLUG}`,
+      payload: { locale: 'sv-SE', values: { attachment: key }, website: '' },
+    });
+
+    const form = harness.state.forms.find((entry) => entry.slug === SLUG)!;
+    const response = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/forms/${form.id}/submissions`,
+      headers: bearer(adminToken),
+    });
+
+    expect(response.statusCode).toBe(200);
+    const body = response.json() as {
+      submissions: Array<{
+        data: Record<string, unknown>;
+        uploads: Array<{ fieldKey: string; key: string; filename: string }>;
+      }>;
+    };
+
+    const row = body.submissions[0]!;
+    // The answer stays the key — it is the only part safe to trust — and the name travels beside it.
+    expect(row.data['attachment']).toBe(key);
+    expect(row.uploads).toEqual([
+      expect.objectContaining({ fieldKey: 'attachment', key, filename: 'annual-report.pdf' }),
+    ]);
+  });
+
+  it('carries an empty list for a form nobody attached anything to', async () => {
+    await harness.app.inject({
+      method: 'POST',
+      url: `/public/forms/${SLUG}`,
+      payload: { locale: 'sv-SE', values: {}, website: '' },
+    });
+
+    const form = harness.state.forms.find((entry) => entry.slug === SLUG)!;
+    const response = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/forms/${form.id}/submissions`,
+      headers: bearer(adminToken),
+    });
+    const body = response.json() as { submissions: Array<{ uploads: unknown[] }> };
+    expect(body.submissions[0]?.uploads).toEqual([]);
+  });
+});
