@@ -728,6 +728,10 @@ export const messages: Catalogue = {
     'sv-SE': 'Högst {decimals} decimaler.',
     'en-GB': 'At most {decimals} decimal places.',
   },
+  'validation.precision': {
+    'sv-SE': 'Talet är för långt för att lagras exakt. Använd ett textfält för långa nummer.',
+    'en-GB': 'That number is too long to store exactly. Use a text field for long numbers.',
+  },
   'validation.date': { 'sv-SE': 'Ange ett datum.', 'en-GB': 'Enter a date.' },
   'validation.dateMin': { 'sv-SE': 'Tidigast {min}.', 'en-GB': 'No earlier than {min}.' },
   'validation.dateMax': { 'sv-SE': 'Senast {max}.', 'en-GB': 'No later than {max}.' },

@@ -118,6 +118,21 @@ function validateField(
     case 'number': {
       const value = typeof raw === 'number' ? raw : Number(String(raw).replace(',', '.'));
       if (!Number.isFinite(value)) return { issue: { code: 'validation.number' } };
+      /**
+       * Refuse a number a double cannot hold, rather than storing a different one.
+       *
+       * `Number('1234567890123456789')` is `1234567890123456800`. A form author will reach for a
+       * number field for an account number, an organisation number or a long reference, and
+       * before this the answer was silently rewritten on the way in — no error, no warning, and
+       * the wrong digits in the export. `CLAUDE.md` rule 5 is about exactly this.
+       *
+       * Saying so is the honest fix at this layer. Storing such values *correctly* needs decimal
+       * or bigint all the way through, which is `packages/calc`'s job when totals arrive; until
+       * then, a long identifier belongs in a text field with a digits format.
+       */
+      if (typeof raw === 'string' && losesPrecision(raw, value)) {
+        return { issue: { code: 'validation.precision' } };
+      }
       if (field.min !== undefined && value < field.min) {
         return { issue: { code: 'validation.min', params: { min: field.min } } };
       }
@@ -265,4 +280,73 @@ function decimalPlaces(value: number): number {
   const fractionDigits = match[2]?.length ?? 0;
   const exponent = Number(match[3]);
   return Math.max(0, fractionDigits - exponent);
+}
+
+/**
+ * Whether parsing this text lost digits.
+ *
+ * Compares the answer's own canonical decimal form against the shortest text that reproduces the
+ * double it parsed to. They match for everything a double holds exactly — `0.1`, `1.50`, `007`,
+ * `1000000000000000000` — and differ the moment digits fall off the end.
+ *
+ * A counting rule would be wrong in both directions: sixteen significant digits are sometimes
+ * fine (`1000000000000000000` is a power of ten and exact), and fifteen are not always enough.
+ * Round-tripping asks the question directly instead of approximating it.
+ *
+ * Exponent notation is not checked. `2.5e-3` has no canonical decimal form to compare against
+ * without reimplementing the printing rules, it is vanishingly rare in a form answer, and the
+ * `decimals` rule already governs how fine an answer may be.
+ */
+function losesPrecision(text: string, value: number): boolean {
+  const trimmed = text.trim().replace(',', '.');
+
+  /**
+   * A whole number is compared as a `BigInt`, which is exact at any size.
+   *
+   * This is the case that matters — account numbers, organisation numbers, long references — and
+   * it needs no reasoning about how a double prints itself.
+   */
+  if (/^[+-]?\d+$/.test(trimmed)) {
+    try {
+      return BigInt(trimmed) !== BigInt(value);
+    } catch {
+      // `BigInt(value)` refuses a non-integral double, which an integer input cannot produce.
+      return false;
+    }
+  }
+
+  /**
+   * Anything with a point is compared as text, and skipped when the double prints as an exponent.
+   *
+   * `String(1e-7)` is `"1e-7"`, which no canonical decimal will ever equal — comparing them
+   * flagged `0.0000001` as lossy when it is simply the nearest double, printed in the shortest
+   * form. Below 1e-6 and at or above 1e21 the comparison says nothing, so it does not speak. The
+   * `decimals` rule already governs how fine an answer may be.
+   */
+  const printed = String(value);
+  if (printed.includes('e') || printed.includes('E')) return false;
+
+  const canonical = canonicalDecimal(trimmed);
+  return canonical !== null && canonical !== printed;
+}
+
+/** `+007.50` becomes `7.5`. Returns null for anything that is not plain decimal notation. */
+function canonicalDecimal(text: string): string | null {
+  let body = text.trim().replace(',', '.');
+  let sign = '';
+  if (body.startsWith('+')) body = body.slice(1);
+  else if (body.startsWith('-')) {
+    sign = '-';
+    body = body.slice(1);
+  }
+
+  if (body === '' || body === '.' || !/^\d*\.?\d*$/.test(body)) return null;
+
+  const [rawWhole = '', rawFraction = ''] = body.split('.');
+  const whole = rawWhole.replace(/^0+/, '') || '0';
+  const fraction = rawFraction.replace(/0+$/, '');
+  const decimal = fraction ? `${whole}.${fraction}` : whole;
+
+  // `-0` and `0` are the same number, and `String(-0)` is `"0"`.
+  return decimal === '0' ? '0' : sign + decimal;
 }
