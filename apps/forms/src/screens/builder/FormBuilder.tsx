@@ -19,6 +19,7 @@ import { FormPreview } from './FormPreview.js';
 import { FormSettingsPanel } from './FormSettingsPanel.js';
 import { useHistory } from './use-history.js';
 import { Icon } from '../../components/Icon.js';
+import { Loading } from '../../components/Loading.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
 
@@ -303,7 +304,7 @@ export function FormBuilder() {
     setSaveState('saved');
   }
 
-  if (!form || !definition) return <p className="muted">{t('app.loading')}</p>;
+  if (!form || !definition) return <Loading />;
 
   /**
    * A language is only worth warning about once somebody has started writing in it.

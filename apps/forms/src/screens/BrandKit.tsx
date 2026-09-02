@@ -7,6 +7,7 @@ import { useBrand } from '../lib/brand.js';
 import { ImagePicker } from '../components/ImagePicker.js';
 import { ThemePicker } from '../components/ThemePicker.js';
 import { dominantColour } from '../lib/dominant-colour.js';
+import { Loading } from '../components/Loading.js';
 
 /**
  * The Brand Kit editor.
@@ -190,7 +191,7 @@ export function BrandKit() {
     }
   }
 
-  if (status === 'loading') return <p className="muted">{t('app.loading')}</p>;
+  if (status === 'loading') return <Loading />;
   if (status === 'error') return <p className="status-down">{t('brand.loadFailed')}</p>;
 
   return (

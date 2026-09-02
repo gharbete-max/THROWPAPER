@@ -7,6 +7,7 @@ import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { Submissions } from './Submissions.js';
+import { Loading } from '../components/Loading.js';
 
 /**
  * Responses to one form, on a page of their own.
@@ -51,7 +52,7 @@ export function FormResponses() {
       </section>
     );
   }
-  if (!form) return <p className="muted">{t('app.loading')}</p>;
+  if (!form) return <Loading />;
 
   const name = pickText(locales, form.title, locale).value || form.slug;
 

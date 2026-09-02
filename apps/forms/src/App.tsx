@@ -5,6 +5,8 @@ import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
 import { ConfirmProvider } from './components/Confirm.js';
 import { Icon, type IconName } from './components/Icon.js';
+import { Wordmark } from './components/Logo.js';
+import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -15,6 +17,7 @@ import { BrandKit } from './screens/BrandKit.js';
 import { FormBuilder } from './screens/builder/FormBuilder.js';
 import { EventReport } from './screens/EventReport.js';
 import { FormResponses } from './screens/FormResponses.js';
+import { Loading } from './components/Loading.js';
 
 /**
  * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,
@@ -32,6 +35,7 @@ export function App() {
         <SessionProvider>
           <BrandProvider>
             <ConfirmProvider>
+              <Intro />
               <DemoBanner />
               <Routes>
                 <Route path="/login" element={<Login />} />
@@ -89,7 +93,7 @@ function Shell() {
   if (loading) {
     return (
       <main className="shell">
-        <p className="muted">{t('app.loading')}</p>
+        <Loading />
       </main>
     );
   }
@@ -103,7 +107,8 @@ function Shell() {
           {brand.logoLight ? (
             <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
           ) : (
-            <strong>{organisation?.name ?? t('app.name')}</strong>
+            // The mark stands in for a customer logo until they upload one of their own.
+            <Wordmark name={organisation?.name ?? t('app.name')} />
           )}
           {/**
            * Two groups, not one row of six things.
