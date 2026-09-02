@@ -345,6 +345,7 @@ export default function PublicForm() {
               <div className={`form-grid__cell form-grid__cell--${widthOf(field)}`} key={field.id}>
                 <FieldInput
                   field={field}
+                  slug={slug}
                   locale={resolved}
                   locales={locales}
                   value={values[field.key]}

@@ -33,6 +33,8 @@ export type IconName =
   | 'yes_no'
   | 'rating'
   | 'time'
+  | 'file'
+  | 'paperclip'
   | 'section_break'
   | 'page_break'
   | 'rich_text'
@@ -83,6 +85,8 @@ const PATHS: Record<IconName, string> = {
   yes_no: 'M8 6h8a6 6 0 0 1 0 12H8A6 6 0 0 1 8 6zM16 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
   rating: 'M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9z',
   time: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3.5 2',
+  file: 'M6 3h9l4 4v14H6zM15 3v4h4M9 13h6M9 17h4',
+  paperclip: 'M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 5',
   section_break: 'M3 12h18M6 7h12M6 17h12',
   page_break: 'M3 12h4M10 12h4M17 12h4M12 3v4M12 17v4',
   rich_text: 'M5 5h14M5 10h14M5 15h9M5 20h6',

@@ -207,6 +207,7 @@ export const messages: Catalogue = {
   'fieldType.yes_no': { 'sv-SE': 'Ja/Nej', 'en-GB': 'Yes/No' },
   'fieldType.rating': { 'sv-SE': 'Betyg', 'en-GB': 'Rating' },
   'fieldType.time': { 'sv-SE': 'Tid', 'en-GB': 'Time' },
+  'fieldType.file': { 'sv-SE': 'Bifogad fil', 'en-GB': 'File upload' },
   'fieldType.section_break': { 'sv-SE': 'Avsnitt', 'en-GB': 'Section' },
   'fieldType.page_break': { 'sv-SE': 'Sidbrytning', 'en-GB': 'Page break' },
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
@@ -327,6 +328,53 @@ export const messages: Catalogue = {
   'theme.garden': { 'sv-SE': 'Trädgård', 'en-GB': 'Garden' },
   'theme.bold': { 'sv-SE': 'Kraftfull', 'en-GB': 'Bold' },
 
+  // Attaching a file. The wording matters here: a refusal is read by a member of the public.
+  'file.hint': {
+    'sv-SE': '{kinds}, högst {size} MB.',
+    'en-GB': '{kinds}, up to {size} MB.',
+  },
+  'file.accept.image': { 'sv-SE': 'Bilder', 'en-GB': 'Images' },
+  'file.accept.pdf': { 'sv-SE': 'PDF-filer', 'en-GB': 'PDF files' },
+  'file.accept.both': { 'sv-SE': 'Bilder eller PDF', 'en-GB': 'Images or PDF' },
+  'file.uploading': { 'sv-SE': 'Laddar upp {name}…', 'en-GB': 'Uploading {name}…' },
+  'file.remove': { 'sv-SE': 'Ta bort', 'en-GB': 'Remove' },
+  'file.error.too-large': {
+    'sv-SE': 'Filen är för stor.',
+    'en-GB': 'That file is too large.',
+  },
+  'file.error.empty': { 'sv-SE': 'Filen är tom.', 'en-GB': 'That file is empty.' },
+  'file.error.svg-not-supported': {
+    'sv-SE': 'SVG går inte att bifoga. Skicka en PNG eller JPEG.',
+    'en-GB': 'SVG cannot be attached. Send a PNG or a JPEG.',
+  },
+  'file.error.unsupported-format': {
+    'sv-SE': 'Den filtypen går inte att bifoga.',
+    'en-GB': 'That kind of file cannot be attached.',
+  },
+  'file.error.not-accepted-here': {
+    'sv-SE': 'Den här frågan tar inte emot den filtypen.',
+    'en-GB': 'This question does not take that kind of file.',
+  },
+  'file.error.no-such-field': {
+    'sv-SE': 'Den här frågan tar inte emot filer.',
+    'en-GB': 'This question does not take files.',
+  },
+  'file.error.closed': {
+    'sv-SE': 'Formuläret tar inte emot svar längre.',
+    'en-GB': 'This form is no longer accepting answers.',
+  },
+  'file.error.no-file': { 'sv-SE': 'Ingen fil valdes.', 'en-GB': 'No file was chosen.' },
+  'file.error.network': {
+    'sv-SE': 'Uppladdningen misslyckades. Försök igen.',
+    'en-GB': 'The upload failed. Try again.',
+  },
+  'field.accept': { 'sv-SE': 'Tillåtna filtyper', 'en-GB': 'Accepted file types' },
+  'field.maxBytes': { 'sv-SE': 'Största storlek (MB)', 'en-GB': 'Largest size (MB)' },
+  'validation.file': {
+    'sv-SE': 'Bifoga en fil.',
+    'en-GB': 'Attach a file.',
+  },
+
   // Conditional logic: show a field only when an earlier answer says so.
   'visibility.heading': { 'sv-SE': 'Visa bara när…', 'en-GB': 'Show only when…' },
   'visibility.count': { 'sv-SE': '{n} villkor', 'en-GB': '{n} conditions' },
@@ -423,6 +471,7 @@ export const messages: Catalogue = {
 
   'palette.text': { 'sv-SE': 'Text', 'en-GB': 'Text' },
   'palette.numbers': { 'sv-SE': 'Siffror och datum', 'en-GB': 'Numbers and dates' },
+  'palette.attachments': { 'sv-SE': 'Filer', 'en-GB': 'Files' },
   'palette.choice': { 'sv-SE': 'Val', 'en-GB': 'Choices' },
   'palette.layout': { 'sv-SE': 'Layout', 'en-GB': 'Layout' },
 

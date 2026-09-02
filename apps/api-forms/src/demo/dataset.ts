@@ -272,6 +272,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     ),
 
     checkIns: [],
+    uploads: [],
     loginTokens: [],
     refreshTokens: [],
     jobs: [],

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { pickText, type LocaleConfig } from '@tp/i18n';
 import { parseRichTextBlock, type AnswerValue, type Field } from '@tp/shared/forms';
+import { FileField } from './FileField.js';
 
 /**
  * One field, as the person filling in the form sees it.
@@ -20,6 +21,7 @@ export function FieldInput({
   yesLabel,
   noLabel,
   onChange,
+  slug,
 }: {
   field: Field;
   locale: string;
@@ -30,6 +32,14 @@ export function FieldInput({
   yesLabel: string;
   noLabel: string;
   onChange: (key: string, value: AnswerValue) => void;
+  /**
+   * The form's slug, so a file field knows where to upload.
+   *
+   * Optional because the builder's preview has no published form to upload to — a preview shows
+   * the control without it being able to send anything, which is honest: nothing in a preview is
+   * stored either.
+   */
+  slug?: string;
 }) {
   const text = (source: Record<string, string> | undefined) =>
     source ? pickText(locales, source, locale).value : '';
@@ -157,6 +167,31 @@ export function FieldInput({
         {field.helpText && <span className="small muted">{text(field.helpText)}</span>}
         {error && <span className="small status-down">{error}</span>}
       </fieldset>
+    );
+  }
+
+  if (field.type === 'file') {
+    return (
+      <label className="field">
+        <span>
+          {text(field.label)}
+          {field.required && ' *'}
+        </span>
+        {slug ? (
+          <FileField
+            slug={slug}
+            fieldKey={field.key}
+            accept={field.accept}
+            maxBytes={field.maxBytes}
+            value={typeof value === 'string' ? value : ''}
+            onChange={(key) => onChange(field.key, key)}
+          />
+        ) : (
+          <input type="file" disabled />
+        )}
+        {field.helpText && <span className="small muted">{text(field.helpText)}</span>}
+        {error && <span className="small status-down">{error}</span>}
+      </label>
     );
   }
 

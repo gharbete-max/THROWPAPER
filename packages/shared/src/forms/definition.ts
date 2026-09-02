@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { LocalisedText } from '../api/common.js';
 import { AssetPath } from '../assets.js';
+import { FileAccept, MAX_UPLOAD_BYTES } from './uploads.js';
 
 /**
  * A form definition is a **versioned JSON document, never an HTML string** (`SPEC-forms.md` §7).
@@ -24,6 +25,7 @@ export const FIELD_TYPES = [
   'yes_no',
   'rating',
   'time',
+  'file',
   'section_break',
   'page_break',
   'rich_text',
@@ -224,6 +226,22 @@ export const Field = z.discriminatedUnion('type', [
     appearance: RatingAppearance.default('star'),
     minLabel: LocalisedText.optional(),
     maxLabel: LocalisedText.optional(),
+  }),
+
+  /**
+   * A file the person filling in the form attaches.
+   *
+   * The answer is the storage key, not the bytes and not the filename. A filename is written by
+   * whoever uploaded it and is shown back only after being looked up — never used to address
+   * anything. The original name lives beside the file in `form_uploads`, which is also what makes
+   * an unclaimed upload findable later.
+   */
+  z.object({
+    ...base,
+    type: z.literal('file'),
+    accept: FileAccept.default('both'),
+    /** A per-field cap, never above the one the endpoint enforces regardless. */
+    maxBytes: z.number().int().min(1024).max(MAX_UPLOAD_BYTES).default(MAX_UPLOAD_BYTES),
   }),
 
   /**

@@ -5,6 +5,8 @@ import { pickText } from '@tp/i18n';
 import { api, forms as formSchemas } from '@tp/shared';
 import type { Repositories } from '../db/repositories/index.js';
 import type { MailProvider } from '../auth/mail.js';
+import type { PrivateUploadStore } from '../uploads/private-store.js';
+import { checkAttachment } from '../uploads/attachment.js';
 import { expiryFrom, generateSecret, hashSecret } from '../auth/tokens.js';
 import {
   capacityFor,
@@ -30,6 +32,7 @@ export function registerPublicFormRoutes(
     repos: Repositories;
     mail: MailProvider;
     appUrl: string;
+    uploadStore: PrivateUploadStore;
     onSubmitted?: (submissionId: string) => Promise<void>;
   },
 ): void {
@@ -189,6 +192,105 @@ export function registerPublicFormRoutes(
     },
   });
 
+  /**
+   * Attach a file, before the form is submitted.
+   *
+   * Unauthenticated, like everything else on this surface, which makes it the only route in the
+   * product where a stranger can cause bytes to be written to disk. What keeps that safe:
+   *
+   * - the form must be **published and open**, and must actually contain a `file` field, so this
+   *   is not a general-purpose drop box attached to every form that ever existed;
+   * - the size cap is enforced while streaming, so an enormous upload is never buffered;
+   * - the format is read out of the bytes, never believed from the filename or the declared type;
+   * - the stored name is the hash of the content, so nothing the uploader chose reaches a path;
+   * - a row is written with no submission, which is both how the answer is later checked and how
+   *   an abandoned upload stays findable.
+   */
+  app.post('/public/forms/:slug/uploads', {
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      response: {
+        201: formSchemas.UploadAttachmentResponse,
+        400: api.ErrorResponse,
+        404: api.ErrorResponse,
+        409: api.ErrorResponse,
+        413: api.ErrorResponse,
+      },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const loaded = await loadPublished(slug);
+      if (!loaded || !loaded.definition || !loaded.published) return notFound(reply);
+
+      if (!loaded.availability.open) {
+        return reply
+          .code(409)
+          .send({ error: { code: 'closed', message: 'This form is not accepting answers' } });
+      }
+
+      // Which question this is for, so its own `accept` and `maxBytes` apply. A form with no
+      // file field accepts no files at all, whatever is posted.
+      const key =
+        typeof request.query === 'object' && request.query
+          ? String((request.query as Record<string, unknown>)['field'] ?? '')
+          : '';
+      const field = loaded.definition.fields.find(
+        (candidate) => candidate.type === 'file' && candidate.key === key,
+      );
+      if (!field || field.type !== 'file') {
+        return reply.code(400).send({
+          error: { code: 'no-such-field', message: 'That question does not take a file' },
+        });
+      }
+
+      const file = await request.file({ limits: { fileSize: field.maxBytes } });
+      if (!file) {
+        return reply
+          .code(400)
+          .send({ error: { code: 'no-file', message: 'Send one file as multipart form data' } });
+      }
+
+      const content = await file.toBuffer();
+      /**
+       * The stream cap and this check are not redundant. The cap stops a very large upload being
+       * buffered at all; `truncated` says it *was* cut off, so a file that hit the limit is
+       * refused rather than stored as a corrupt fragment.
+       */
+      if (file.file.truncated) {
+        return reply
+          .code(413)
+          .send({ error: { code: 'too-large', message: 'That file is too large' } });
+      }
+
+      const checked = checkAttachment(content, field.accept, field.maxBytes);
+      if (!checked.ok) {
+        return reply
+          .code(checked.code === 'too-large' ? 413 : 400)
+          .send({ error: { code: checked.code, message: uploadRejection(checked.code) } });
+      }
+
+      const stored = await deps.uploadStore.put(content, checked.extension);
+      const record = await deps.repos.uploads.create({
+        organisationId: loaded.organisation.id,
+        formId: loaded.form.id,
+        storageKey: stored.key,
+        // Kept for display only, and capped: a filename is a string somebody typed.
+        filename: (file.filename || 'attachment').slice(0, 200),
+        contentType: checked.contentType,
+        bytes: stored.bytes,
+      });
+
+      return reply.code(201).send({
+        key: record.storageKey,
+        filename: record.filename,
+        contentType: record.contentType,
+        bytes: record.bytes,
+      });
+    },
+  });
+
   app.post('/public/forms/:slug', {
     config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
     schema: {
@@ -237,6 +339,30 @@ export function registerPublicFormRoutes(
         });
       }
 
+      /**
+       * Every attached file must be one *this form* received and nothing has claimed.
+       *
+       * A storage key is the SHA-256 of the content, so anybody holding the same file can work
+       * one out — "the answer names a real upload" is therefore not a check at all. What makes it
+       * one is that the upload arrived through this form and no submission has taken it, which is
+       * exactly what the unclaimed row records.
+       */
+      const attachedKeys = attachedUploadKeys(loaded.definition, validated.values);
+      const claimable = attachedKeys.length
+        ? await deps.repos.uploads.findUnclaimed(loaded.form.id, attachedKeys)
+        : [];
+
+      if (claimable.length !== attachedKeys.length) {
+        const known = new Set(claimable.map((upload) => upload.storageKey));
+        return reply.code(422).send({
+          status: 'rejected' as const,
+          reason: 'invalid' as const,
+          issues: fileKeysFor(loaded.definition, validated.values)
+            .filter(([, value]) => !known.has(value))
+            .map(([key]) => ({ key, code: 'validation.file' })),
+        });
+      }
+
       const draft = body.resumeToken
         ? await deps.repos.submissions.findByResumeTokenHash(hashSecret(body.resumeToken))
         : null;
@@ -259,6 +385,15 @@ export function registerPublicFormRoutes(
         return reply
           .code(409)
           .send({ status: 'rejected' as const, reason: result.reason, issues: [] });
+      }
+
+      // Claimed only once the submission exists, so a rejected attempt leaves the files sweepable
+      // rather than tied to a row that was never created.
+      if (claimable.length > 0) {
+        await deps.repos.uploads.claim(
+          claimable.map((upload) => upload.id),
+          result.submission.id,
+        );
       }
 
       const confirmation = pickText(
@@ -285,4 +420,40 @@ export function registerPublicFormRoutes(
 
 function notFound(reply: FastifyReply) {
   return reply.code(404).send({ error: { code: 'not-found', message: 'Form not found' } });
+}
+
+/** The `file` answers in a submission, as [fieldKey, storageKey] pairs. */
+function fileKeysFor(
+  definition: formSchemas.FormDefinition,
+  values: formSchemas.SubmissionValues,
+): Array<[string, string]> {
+  return definition.fields
+    .filter((field) => field.type === 'file')
+    .map((field) => [field.key, values[field.key]] as const)
+    .filter((entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1] !== '')
+    .map(([key, value]) => [key, value]);
+}
+
+/** Just the storage keys, for the unclaimed lookup. */
+function attachedUploadKeys(
+  definition: formSchemas.FormDefinition,
+  values: formSchemas.SubmissionValues,
+): string[] {
+  return fileKeysFor(definition, values).map(([, storageKey]) => storageKey);
+}
+
+/** Why an attachment was refused. Rendered by the app from the code; this is for API clients. */
+function uploadRejection(code: string): string {
+  switch (code) {
+    case 'empty':
+      return 'The file is empty';
+    case 'too-large':
+      return 'That file is too large';
+    case 'svg-not-supported':
+      return 'SVG files are not accepted. Send a PNG or a JPEG.';
+    case 'not-accepted-here':
+      return 'That question does not take this kind of file';
+    default:
+      return 'That file type is not accepted';
+  }
 }

@@ -1,4 +1,4 @@
-import { FIELD_TYPES, type Field, type FieldType } from '@tp/shared/forms';
+import { FIELD_TYPES, MAX_UPLOAD_BYTES, type Field, type FieldType } from '@tp/shared/forms';
 import { messages } from '../../lib/messages.js';
 
 /**
@@ -26,6 +26,7 @@ export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldTy
   // the group whose answers get counted, averaged and charted, which is a real distinction.
   { id: 'numbers', types: ['number', 'date', 'time'] },
   { id: 'choice', types: ['single_select', 'multi_select', 'yes_no', 'rating'] },
+  { id: 'attachments', types: ['file'] },
   { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'link', 'hidden'] },
 ];
 
@@ -101,6 +102,18 @@ export function newField(
       };
     case 'yes_no':
       return { id, key, type, label, required: false, width, appearance: 'dropdown' };
+    // Both kinds by default: an author who wants only photographs says so, and most do not care.
+    case 'file':
+      return {
+        id,
+        key,
+        type,
+        label,
+        required: false,
+        width,
+        accept: 'both',
+        maxBytes: MAX_UPLOAD_BYTES,
+      };
     // Five stars, because that is what a rating means to almost everybody who sees one.
     case 'rating':
       return { id, key, type, label, required: false, width, scale: 5, appearance: 'star' };

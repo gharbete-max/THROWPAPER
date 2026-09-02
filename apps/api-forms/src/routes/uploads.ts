@@ -7,6 +7,8 @@ import type { Repositories } from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
 import { checkImage, MAX_IMAGE_BYTES } from '../uploads/image.js';
 import { assetPath, isAssetKey, type AssetStore } from '../uploads/store.js';
+import type { PrivateUploadStore } from '../uploads/private-store.js';
+import { isUploadKey } from '@tp/shared/forms';
 
 const UploadResponse = z.object({
   key: z.string(),
@@ -23,7 +25,12 @@ const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable';
 
 export function registerUploadRoutes(
   app: FastifyInstance,
-  deps: { repos: Repositories; guard: AuthGuardDeps; assets: AssetStore },
+  deps: {
+    repos: Repositories;
+    guard: AuthGuardDeps;
+    assets: AssetStore;
+    uploadStore: PrivateUploadStore;
+  },
 ): void {
   const adminOnly = requireAuth(deps.guard, ['admin']);
 
@@ -94,11 +101,73 @@ export function registerUploadRoutes(
   });
 
   /**
+   * Read a file a respondent attached. **Authenticated, and scoped to the submission.**
+   *
+   * Not a signed URL. The documents store uses one for a bulk export and says why it is
+   * acceptable there; here it is not, because a signed URL is a bearer token written into a link,
+   * and a link gets forwarded, logged and pasted into chat. Somebody's CV should need a session,
+   * not a string.
+   *
+   * The lookup is the access control: a row matching this organisation, this submission and this
+   * key, or nothing. The key alone proves nothing — it is the hash of the content, so anybody
+   * holding the same file can compute it.
+   *
+   * Served as an attachment with the type read from the bytes at upload, never the one declared,
+   * so an HTML file renamed `.pdf` cannot execute against this origin.
+   */
+  app.get('/v1/submissions/:submissionId/files/:key', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 120, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['uploads'],
+      params: z.object({
+        submissionId: z.string().uuid(),
+        key: z.string().min(1).max(128),
+      }),
+      response: { 401: api.ErrorResponse, 403: api.ErrorResponse, 404: api.ErrorResponse },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) {
+        return reply
+          .code(401)
+          .send({ error: { code: 'unauthenticated', message: 'Sign in to continue' } });
+      }
+
+      const params = z
+        .object({ submissionId: z.string().uuid(), key: z.string().min(1).max(128) })
+        .parse(request.params);
+
+      if (!isUploadKey(params.key)) return notFound(reply);
+
+      const record = await deps.repos.uploads.findForDownload(
+        auth.organisation.id,
+        params.submissionId,
+        params.key,
+      );
+      if (!record) return notFound(reply);
+
+      const content = await deps.uploadStore.get(record.storageKey);
+      if (!content) return notFound(reply);
+
+      return (
+        reply
+          .header('content-type', record.contentType)
+          // Always an attachment: nothing uploaded by a stranger renders inline on this origin.
+          .header('content-disposition', `attachment; filename="${asciiFilename(record.filename)}"`)
+          .header('cache-control', 'private, no-store')
+          .send(content)
+      );
+    },
+  });
+
+  /**
    * Serve an uploaded image. **No authentication**, on purpose: a logo is painted on a public form
    * that anybody can open, so anything else would break the page for the people it is for.
    *
    * What protects this is that the key is the SHA-256 of the content. It cannot be guessed, it
-   * cannot be enumerated, and it cannot encode a path.
+   * cannot be enumerated, and it cannot encode a path. Note the contrast with the route above:
+   * these are an author's images, meant to be seen; those are a stranger's personal files.
    */
   app.get('/public/assets/:key', {
     schema: { tags: ['uploads'], response: { 404: api.ErrorResponse } },
@@ -128,4 +197,18 @@ export function registerUploadRoutes(
 
 function notFound(reply: FastifyReply) {
   return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+}
+
+/**
+ * A filename safe to put in a header.
+ *
+ * `Content-Disposition` is parsed by the browser, so a quote or a newline in a name somebody
+ * chose would let them write their own header fields. Non-ASCII is dropped rather than encoded:
+ * the name is a convenience, and `RFC 5987` encoding is not worth the surface here.
+ */
+function asciiFilename(filename: string): string {
+  // ` ` to `~` is exactly the printable ASCII range; the second pass drops the two characters
+  // that would end the quoted string early.
+  const cleaned = filename.replace(/[^ -~]/g, '').replace(/["\\]/g, '');
+  return cleaned.trim() || 'attachment';
 }

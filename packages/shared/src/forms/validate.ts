@@ -1,6 +1,7 @@
 import {
   answerableFields,
   isDangerousPattern,
+  isUploadKey,
   isVisible,
   MAX_MATCHED_LENGTH,
   type AnswerableField,
@@ -208,6 +209,20 @@ function validateField(
       if (field.max && value > field.max) {
         return { issue: { code: 'validation.timeMax', params: { max: field.max } } };
       }
+      return { value };
+    }
+
+    /**
+     * Only the **shape** of the key is checked here.
+     *
+     * Whether that upload exists, belongs to this form and has not already been attached to
+     * another submission is a database question, and this validator runs in a browser as well as
+     * on the server — it has no repository and must not grow one. The submit route asks the rest,
+     * which is the only place that can.
+     */
+    case 'file': {
+      const value = String(raw).trim();
+      if (!isUploadKey(value)) return { issue: { code: 'validation.file' } };
       return { value };
     }
 
