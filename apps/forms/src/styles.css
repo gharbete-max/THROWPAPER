@@ -1935,3 +1935,25 @@ textarea {
     stroke-dashoffset: 0;
   }
 }
+
+/* --- Signing ---------------------------------------------------------------
+ *
+ * A ruled box that looks like the line you sign on, with the pad filling it. The canvas is a
+ * fixed 600x200 internally and scales to whatever width it gets, so a stroke drawn on a phone and
+ * one drawn on a laptop produce the same image.
+ */
+.signature__pad {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 1;
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  /* The cursor is the affordance: nothing else says "you can draw here". */
+  cursor: crosshair;
+}
+
+.signature__pad:focus-visible {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+}

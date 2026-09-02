@@ -233,3 +233,92 @@ describe('reading a file back', () => {
     expect(response.statusCode).toBe(404);
   });
 });
+
+/**
+ * A signature goes through the same route as a file, deliberately.
+ *
+ * Every check on that surface — the form must be open, the bytes decide the format, the key is
+ * the content hash, the row starts unclaimed — then applies to signatures without anybody having
+ * to remember to copy it across. What differs is only the limits.
+ */
+describe('signing', () => {
+  async function seedSignatureForm() {
+    const definition = formSchemas.FormDefinition.parse({
+      schemaVersion: 1,
+      fields: [
+        {
+          id: 's1',
+          key: 'signed_by',
+          type: 'signature',
+          label: { 'sv-SE': 'Signatur', 'en-GB': 'Signature' },
+        },
+      ],
+    });
+
+    const form = await harness.repos.forms.create({
+      organisationId: testOrganisation.id,
+      eventId: null,
+      slug: 'contract',
+      title: { 'sv-SE': 'Avtal', 'en-GB': 'Contract' },
+      status: 'published',
+      draftDefinition: definition,
+      opensAt: null,
+      closesAt: null,
+    });
+    const version = await harness.repos.forms.createVersion({
+      formId: form.id,
+      definition,
+      translationOverride: false,
+    });
+    await harness.repos.forms.update(testOrganisation.id, form.id, {
+      publishedVersion: 1,
+      publishedVersionId: version.id,
+    });
+    return form;
+  }
+
+  const signWith = (content: Buffer) =>
+    harness.app.inject({
+      method: 'POST',
+      url: '/public/forms/contract/uploads?field=signed_by',
+      ...multipart(content, 'signature.png'),
+    });
+
+  it('accepts the PNG the pad produces', async () => {
+    await seedSignatureForm();
+    const response = await signWith(png);
+    expect(response.statusCode).toBe(201);
+    expect((response.json() as { key: string }).key).toMatch(/^[0-9a-f]{64}.png$/);
+  });
+
+  it('refuses a PDF, because a signature is an image this app drew', async () => {
+    await seedSignatureForm();
+    expect((await signWith(pdf)).statusCode).toBe(400);
+  });
+
+  it('claims the signature when the form is submitted', async () => {
+    await seedSignatureForm();
+    const { key } = (await signWith(png)).json() as { key: string };
+
+    const submitted = await harness.app.inject({
+      method: 'POST',
+      url: '/public/forms/contract',
+      payload: { locale: 'sv-SE', values: { signed_by: key }, website: '' },
+    });
+    expect(submitted.statusCode).toBe(201);
+
+    const stored = harness.state.uploads.find((entry) => entry.storageKey === key);
+    // Without the claim covering signatures they would look abandoned for ever and be swept up.
+    expect(stored?.submissionId).not.toBeNull();
+  });
+
+  it('refuses a signature key this form never issued', async () => {
+    await seedSignatureForm();
+    const response = await harness.app.inject({
+      method: 'POST',
+      url: '/public/forms/contract',
+      payload: { locale: 'sv-SE', values: { signed_by: `${'b'.repeat(64)}.png` }, website: '' },
+    });
+    expect(response.statusCode).toBe(422);
+  });
+});

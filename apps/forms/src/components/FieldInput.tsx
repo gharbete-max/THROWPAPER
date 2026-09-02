@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { pickText, type LocaleConfig } from '@tp/i18n';
 import { parseRichTextBlock, type AnswerValue, type Field } from '@tp/shared/forms';
 import { FileField } from './FileField.js';
+import { SignaturePad } from './SignaturePad.js';
 
 /**
  * One field, as the person filling in the form sees it.
@@ -167,6 +168,31 @@ export function FieldInput({
         {field.helpText && <span className="small muted">{text(field.helpText)}</span>}
         {error && <span className="small status-down">{error}</span>}
       </fieldset>
+    );
+  }
+
+  if (field.type === 'signature') {
+    return (
+      <div className="field">
+        <span>
+          {text(field.label)}
+          {field.required && ' *'}
+        </span>
+        {/* The statement being signed, above the pad, where somebody reads it before signing. */}
+        {field.statement && <p className="small">{text(field.statement)}</p>}
+        {slug ? (
+          <SignaturePad
+            slug={slug}
+            fieldKey={field.key}
+            value={typeof value === 'string' ? value : ''}
+            onChange={(key) => onChange(field.key, key)}
+          />
+        ) : (
+          <p className="small muted">{text(field.helpText)}</p>
+        )}
+        {field.helpText && <span className="small muted">{text(field.helpText)}</span>}
+        {error && <span className="small status-down">{error}</span>}
+      </div>
     );
   }
 

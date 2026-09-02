@@ -19,6 +19,9 @@ const SlugParam = z.object({ slug: z.string().min(1).max(64) });
 
 const RESUME_TTL_SECONDS = 30 * 24 * 60 * 60;
 
+/** A signature this app drew is small. Anything larger is not a signature. */
+const SIGNATURE_MAX_BYTES = 512 * 1024;
+
 /**
  * The public form surface. **No bearer token** — anyone with the link can reach these.
  *
@@ -237,15 +240,29 @@ export function registerPublicFormRoutes(
           ? String((request.query as Record<string, unknown>)['field'] ?? '')
           : '';
       const field = loaded.definition.fields.find(
-        (candidate) => candidate.type === 'file' && candidate.key === key,
+        (candidate) =>
+          (candidate.type === 'file' || candidate.type === 'signature') && candidate.key === key,
       );
-      if (!field || field.type !== 'file') {
+      if (!field || (field.type !== 'file' && field.type !== 'signature')) {
         return reply.code(400).send({
           error: { code: 'no-such-field', message: 'That question does not take a file' },
         });
       }
 
-      const file = await request.file({ limits: { fileSize: field.maxBytes } });
+      /**
+       * A signature is a small PNG this app drew, not a file somebody chose.
+       *
+       * So it accepts images only and gets a much tighter cap: half a megabyte is a generous
+       * signature and a poor place to hide something else. Sharing the route rather than adding a
+       * second one is deliberate — every check on this surface then applies to both without
+       * anybody having to remember to copy it across.
+       */
+      const limits =
+        field.type === 'signature'
+          ? { accept: 'image' as const, maxBytes: SIGNATURE_MAX_BYTES }
+          : { accept: field.accept, maxBytes: field.maxBytes };
+
+      const file = await request.file({ limits: { fileSize: limits.maxBytes } });
       if (!file) {
         return reply
           .code(400)
@@ -264,7 +281,7 @@ export function registerPublicFormRoutes(
           .send({ error: { code: 'too-large', message: 'That file is too large' } });
       }
 
-      const checked = checkAttachment(content, field.accept, field.maxBytes);
+      const checked = checkAttachment(content, limits.accept, limits.maxBytes);
       if (!checked.ok) {
         return reply
           .code(checked.code === 'too-large' ? 413 : 400)
@@ -428,7 +445,7 @@ function fileKeysFor(
   values: formSchemas.SubmissionValues,
 ): Array<[string, string]> {
   return definition.fields
-    .filter((field) => field.type === 'file')
+    .filter((field) => field.type === 'file' || field.type === 'signature')
     .map((field) => [field.key, values[field.key]] as const)
     .filter((entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1] !== '')
     .map(([key, value]) => [key, value]);
