@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter, NavLink, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
@@ -111,6 +111,7 @@ function Shell() {
   const t = useT();
   const { user, organisation, loading, locale, setLocale, locales, signOut } = useSession();
   const { tokens: brand } = useBrand();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -121,6 +122,20 @@ function Shell() {
   }
 
   if (!user) return <Navigate to="/login" replace />;
+
+  /**
+   * The two screens that are workspaces rather than documents.
+   *
+   * 52rem is a reading measure — right for a list of forms, and wrong for a builder with a
+   * palette, a canvas and a live preview side by side, or for a grid of forty responses. Both were
+   * squeezed into the left two thirds of an ordinary laptop with the rest of the page empty, while
+   * the top bar above them already spanned 76rem.
+   *
+   * Matched by path rather than set by the screens themselves, because the element being widened
+   * belongs to the shell — a child reaching up to restyle its own container is the kind of thing
+   * that works until two of them disagree.
+   */
+  const wide = /^\/forms\/[^/]+/.test(location.pathname);
 
   return (
     <div className="app">
@@ -178,7 +193,7 @@ function Shell() {
         </div>
       </header>
 
-      <main className="shell">
+      <main className={wide ? 'shell shell--wide' : 'shell'}>
         {/* One boundary for the whole table: these screens are alternatives, never siblings, so
             seven separate ones would only mean seven copies of the same fallback. */}
         <Suspense fallback={<Loading />}>
