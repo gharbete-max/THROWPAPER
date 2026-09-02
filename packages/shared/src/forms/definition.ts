@@ -26,6 +26,7 @@ export const FIELD_TYPES = [
   'rating',
   'time',
   'file',
+  'signature',
   'section_break',
   'page_break',
   'rich_text',
@@ -242,6 +243,25 @@ export const Field = z.discriminatedUnion('type', [
     accept: FileAccept.default('both'),
     /** A per-field cap, never above the one the endpoint enforces regardless. */
     maxBytes: z.number().int().min(1024).max(MAX_UPLOAD_BYTES).default(MAX_UPLOAD_BYTES),
+  }),
+
+  /**
+   * A signature.
+   *
+   * Stored exactly like a file upload — the answer is a storage key, and the bytes are a PNG in
+   * the private store — because that is already a solved problem here: private storage, access
+   * control scoped to the submission, a download button, a filename in the export. A signature
+   * that invented its own storage would have to solve all of it again, worse.
+   *
+   * What differs is only how the image is produced: drawn on a canvas, or typed. Both matter.
+   * Somebody using a keyboard cannot draw, and a signature field they cannot complete is a form
+   * they cannot submit — so typing a name is a first-class way to sign, not a fallback.
+   */
+  z.object({
+    ...base,
+    type: z.literal('signature'),
+    /** Shown above the signing area — "I confirm the above is correct", and so on. */
+    statement: LocalisedText.optional(),
   }),
 
   /**

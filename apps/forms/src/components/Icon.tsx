@@ -35,6 +35,7 @@ export type IconName =
   | 'time'
   | 'file'
   | 'paperclip'
+  | 'signature'
   | 'section_break'
   | 'page_break'
   | 'rich_text'
@@ -87,6 +88,7 @@ const PATHS: Record<IconName, string> = {
   time: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3.5 2',
   file: 'M6 3h9l4 4v14H6zM15 3v4h4M9 13h6M9 17h4',
   paperclip: 'M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 5',
+  signature: 'M3 17c4-9 6-9 8-2s4 7 6 0M3 21h18',
   section_break: 'M3 12h18M6 7h12M6 17h12',
   page_break: 'M3 12h4M10 12h4M17 12h4M12 3v4M12 17v4',
   rich_text: 'M5 5h14M5 10h14M5 15h9M5 20h6',

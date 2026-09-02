@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  FIELD_TYPES,
   Field,
   FormDefinition,
   answerableFields,
@@ -39,9 +40,17 @@ const definition: FormDefinition = {
 };
 
 describe('field definitions', () => {
-  it('accepts the thirteen v0.1 types and rejects anything else', () => {
-    expect(Field.safeParse({ ...field({}), type: 'signature' }).success).toBe(false);
+  /**
+   * Driven by `FIELD_TYPES` rather than a number in a sentence.
+   *
+   * This used to read "the thirteen v0.1 types" and used `signature` as its example of something
+   * invalid — so the day a signature field was added, a correct change broke a test that was only
+   * ever asserting "unknown types are refused". A made-up name says that without going stale.
+   */
+  it('accepts every type in the schema and refuses one that is not', () => {
     expect(Field.safeParse({ id: 'f', key: 'p', type: 'page_break' }).success).toBe(true);
+    expect(Field.safeParse({ ...field({}), type: 'interpretive_dance' }).success).toBe(false);
+    expect(FIELD_TYPES.length).toBeGreaterThan(13);
   });
 
   it('requires a machine-safe field key — data is addressed by key, not label', () => {

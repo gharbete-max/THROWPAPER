@@ -38,6 +38,7 @@ const PANEL_CONTROLS = [
   'appearance',
   'maxWidth',
   'fromParameter',
+  'statement',
   'accept',
   'maxBytes',
   'scale',

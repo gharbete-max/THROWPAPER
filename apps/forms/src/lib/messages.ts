@@ -208,6 +208,7 @@ export const messages: Catalogue = {
   'fieldType.rating': { 'sv-SE': 'Betyg', 'en-GB': 'Rating' },
   'fieldType.time': { 'sv-SE': 'Tid', 'en-GB': 'Time' },
   'fieldType.file': { 'sv-SE': 'Bifogad fil', 'en-GB': 'File upload' },
+  'fieldType.signature': { 'sv-SE': 'Signatur', 'en-GB': 'Signature' },
   'fieldType.section_break': { 'sv-SE': 'Avsnitt', 'en-GB': 'Section' },
   'fieldType.page_break': { 'sv-SE': 'Sidbrytning', 'en-GB': 'Page break' },
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
@@ -367,6 +368,23 @@ export const messages: Catalogue = {
   'file.error.network': {
     'sv-SE': 'Uppladdningen misslyckades. Försök igen.',
     'en-GB': 'The upload failed. Try again.',
+  },
+  'field.statement': { 'sv-SE': 'Text som signeras', 'en-GB': 'What is being signed' },
+  'field.statementHint': {
+    'sv-SE': 'Visas ovanför signaturrutan. Till exempel: "Jag intygar att uppgifterna stämmer."',
+    'en-GB': 'Shown above the signing area. For example: "I confirm the above is correct."',
+  },
+  'signature.clear': { 'sv-SE': 'Rensa', 'en-GB': 'Clear' },
+  'signature.apply': { 'sv-SE': 'Använd signaturen', 'en-GB': 'Use this signature' },
+  'signature.saving': { 'sv-SE': 'Sparar…', 'en-GB': 'Saving…' },
+  'signature.saved': { 'sv-SE': 'Signerat', 'en-GB': 'Signed' },
+  'signature.failed': {
+    'sv-SE': 'Signaturen kunde inte sparas. Försök igen.',
+    'en-GB': 'The signature could not be saved. Try again.',
+  },
+  'signature.typeInstead': {
+    'sv-SE': 'Eller skriv ditt namn',
+    'en-GB': 'Or type your name',
   },
   'field.accept': { 'sv-SE': 'Tillåtna filtyper', 'en-GB': 'Accepted file types' },
   'field.maxBytes': { 'sv-SE': 'Största storlek (MB)', 'en-GB': 'Largest size (MB)' },

@@ -220,6 +220,8 @@ function validateField(
      * on the server — it has no repository and must not grow one. The submit route asks the rest,
      * which is the only place that can.
      */
+    // A signature is stored exactly as a file is: the answer is the key to a PNG.
+    case 'signature':
     case 'file': {
       const value = String(raw).trim();
       if (!isUploadKey(value)) return { issue: { code: 'validation.file' } };

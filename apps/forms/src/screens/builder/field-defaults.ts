@@ -26,7 +26,7 @@ export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldTy
   // the group whose answers get counted, averaged and charted, which is a real distinction.
   { id: 'numbers', types: ['number', 'date', 'time'] },
   { id: 'choice', types: ['single_select', 'multi_select', 'yes_no', 'rating'] },
-  { id: 'attachments', types: ['file'] },
+  { id: 'attachments', types: ['file', 'signature'] },
   { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'link', 'hidden'] },
 ];
 
@@ -103,6 +103,9 @@ export function newField(
     case 'yes_no':
       return { id, key, type, label, required: false, width, appearance: 'dropdown' };
     // Both kinds by default: an author who wants only photographs says so, and most do not care.
+    // Nothing extra to seed: a signature is a label and a place to sign.
+    case 'signature':
+      return { id, key, type, label, required: false, width };
     case 'file':
       return {
         id,

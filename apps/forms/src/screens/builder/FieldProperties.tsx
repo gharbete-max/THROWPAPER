@@ -61,7 +61,15 @@ export function FieldProperties({ field, definition, onChange }: Props) {
   }
 
   function setText(
-    property: 'label' | 'helpText' | 'placeholder' | 'content' | 'alt' | 'minLabel' | 'maxLabel',
+    property:
+      | 'label'
+      | 'helpText'
+      | 'placeholder'
+      | 'content'
+      | 'alt'
+      | 'minLabel'
+      | 'maxLabel'
+      | 'statement',
     locale: string,
     value: string,
   ) {
@@ -199,6 +207,18 @@ export function FieldProperties({ field, definition, onChange }: Props) {
             onChange={(target, text) => setText('maxLabel', target, text)}
           />
         </div>
+      )}
+
+      {field.type === 'signature' && (
+        <LocalisedField
+          label={t('field.statement')}
+          value={textAt('statement')}
+          locale={locale}
+          supported={locales.supported}
+          multiline
+          hint={t('field.statementHint')}
+          onChange={(target, text) => setText('statement', target, text)}
+        />
       )}
 
       {field.type === 'file' && (
