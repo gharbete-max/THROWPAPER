@@ -18,6 +18,7 @@ import {
   DEMO_OPERATOR_EMAIL,
 } from '../demo/dataset.js';
 import { forms as formSchemas } from '@tp/shared';
+import { LOCALE_CODES } from '@tp/i18n';
 
 /**
  * CLAUDE.md §Demo data — a broken seed blocks demos, so it grows with the schema.
@@ -30,7 +31,7 @@ const [organisation] = await db
     name: 'Demo AB',
     slug: 'demo',
     defaultLocale: 'sv-SE',
-    supportedLocales: ['sv-SE', 'en-GB'],
+    supportedLocales: [...LOCALE_CODES],
   })
   .onConflictDoUpdate({ target: organisations.slug, set: { name: 'Demo AB' } })
   .returning();

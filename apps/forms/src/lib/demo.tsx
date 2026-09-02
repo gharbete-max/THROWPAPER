@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { createTranslator, resolveLocale } from '@tp/i18n';
+import { resolveLocale } from '@tp/i18n';
 import { client } from './api.js';
-import { messages } from './messages.js';
+import { useTranslator } from './i18n.js';
 import { useSession } from './session.js';
 
 /**
@@ -98,10 +98,7 @@ export function DemoBanner() {
   const [resetting, setResetting] = useState(false);
 
   // A Swedish banner over an English form is the one page the public sees getting it wrong.
-  const t = useMemo(
-    () => createTranslator(locales, messages, resolveLocale(locales, announcedLocale ?? locale)),
-    [locales, announcedLocale, locale],
-  );
+  const t = useTranslator(locales, resolveLocale(locales, announcedLocale ?? locale));
 
   if (!isDemo) return null;
 

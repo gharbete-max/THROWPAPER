@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { api } from '@tp/shared';
-import { resolveLocale, type LocaleConfig } from '@tp/i18n';
+import { DEFAULT_FALLBACKS, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { client, restoreSession, setSession } from './api.js';
 
 interface SessionValue {
@@ -46,7 +46,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const locales: LocaleConfig = useMemo(
     () =>
       organisation
-        ? { supported: organisation.supportedLocales, default: organisation.defaultLocale }
+        ? {
+            supported: organisation.supportedLocales,
+            default: organisation.defaultLocale,
+            // Nordic readers meeting an untranslated string are better served by a neighbouring
+            // language than by dropping straight to English — see DEFAULT_FALLBACKS.
+            fallbacks: DEFAULT_FALLBACKS,
+          }
         : FALLBACK_LOCALES,
     [organisation],
   );

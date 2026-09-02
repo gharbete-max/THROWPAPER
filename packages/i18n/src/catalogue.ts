@@ -37,34 +37,54 @@ export function createTranslator(
 const CATEGORIES: ReadonlySet<string> = new Set(['zero', 'one', 'two', 'few', 'many', 'other']);
 
 /**
- * Pick the plural form of a message, if it has any.
+ * The marker that makes a message a plural one.
+ *
+ * Explicit rather than inferred. The first version treated any message containing a `|` whose
+ * segments began with category names as plural, which cannot express a language with a single
+ * category: Chinese and Japanese need one form and therefore no pipe, and `other {count} 表单`
+ * with nothing to detect would have rendered the word "other" to the reader.
+ *
+ * Inferring from a bare leading `one`/`other` instead would misread any ordinary message that
+ * happens to start with those words. A prefix nobody writes by accident settles both.
+ */
+const PLURAL = 'plural:';
+
+/**
+ * Pick the plural form of a message, if it declares any.
  *
  * Selection is `Intl.PluralRules`, so the rules come from the platform's CLDR data rather than
- * from `count === 1` — which is right for English and Swedish and wrong for most of the languages
- * this product will meet later.
+ * from `count === 1` — right for English and Swedish, wrong for Russian, and wrong in a different
+ * way for every language with a dual or a paucal.
  *
- * A message with no `|`, or with a `|` that is not followed by category names, is returned
- * untouched: an ordinary sentence containing a pipe must not be silently cut in half.
+ * An unmarked message is returned untouched, so an ordinary sentence containing a pipe is never
+ * silently cut in half.
  */
 function plural(
   template: string,
   locale: string,
   vars: Readonly<Record<string, string | number>>,
 ): string {
-  if (!template.includes('|') || !('count' in vars)) return template;
+  if (!template.startsWith(PLURAL)) return template;
+  const body = template.slice(PLURAL.length);
+  if (!('count' in vars)) return body;
 
   const forms = new Map<string, string>();
-  for (const part of template.split('|')) {
+  for (const part of body.split('|')) {
     const trimmed = part.trim();
     const space = trimmed.indexOf(' ');
     const category = space === -1 ? trimmed : trimmed.slice(0, space);
+    // A marked message with a segment that names no category is a typo in the catalogue. Showing
+    // the whole thing, marker and all, makes that loud rather than silently dropping a form.
     if (!CATEGORIES.has(category)) return template;
     forms.set(category, space === -1 ? '' : trimmed.slice(space + 1));
   }
 
   const count = Number(vars.count);
-  if (!Number.isFinite(count)) return forms.get('other') ?? template;
-  return forms.get(new Intl.PluralRules(locale).select(count)) ?? forms.get('other') ?? template;
+  const chosen = Number.isFinite(count)
+    ? new Intl.PluralRules(locale).select(count)
+    : /* A count that is not a number cannot be pluralised; the general form is the safe one. */
+      'other';
+  return forms.get(chosen) ?? forms.get('other') ?? body;
 }
 
 function interpolate(template: string, vars: Readonly<Record<string, string | number>>): string {

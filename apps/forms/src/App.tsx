@@ -7,6 +7,7 @@ import { ConfirmProvider } from './components/Confirm.js';
 import { Icon, type IconName } from './components/Icon.js';
 import { Wordmark } from './components/Logo.js';
 import { Intro } from './components/Intro.js';
+import { localeLabel } from '@tp/i18n';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -186,9 +187,17 @@ function Shell() {
                 value={locale}
                 onChange={(event) => setLocale(event.target.value)}
               >
+                {/**
+                 * The endonym, not the code.
+                 *
+                 * A list reading "sv-SE, zh-CN, ru-RU" is a list only a developer can use.
+                 * Somebody looking for their own language is looking for the word they call it
+                 * by — Svenska, 简体中文, Русский — and at two locales the codes were merely
+                 * unhelpful, while at twelve they are unusable.
+                 */}
                 {locales.supported.map((supported) => (
                   <option key={supported} value={supported}>
-                    {supported}
+                    {localeLabel(supported)}
                   </option>
                 ))}
               </select>

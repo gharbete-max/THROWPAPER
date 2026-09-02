@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useParams, useSearchParams } from 'react-router';
-import { createTranslator, pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
+import { pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { defaultTokens, toCssBlock } from '@tp/tokens';
 import {
   isVisible,
@@ -12,7 +12,7 @@ import {
   type SubmissionValues,
   type ValidationIssue,
 } from '@tp/shared/forms';
-import { messages } from '../lib/messages.js';
+import { useTranslator } from '../lib/i18n.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
@@ -56,7 +56,7 @@ export default function PublicForm() {
     [form],
   );
   const resolved = resolveLocale(locales, locale);
-  const t = useMemo(() => createTranslator(locales, messages, resolved), [locales, resolved]);
+  const t = useTranslator(locales, resolved);
 
   // The banner lives above the router and would otherwise stay in the session's language.
   useAnnounceLocale(resolved);

@@ -8,7 +8,9 @@ import {
   YES_NO_APPEARANCES,
 } from '@tp/shared/forms';
 import { THEME_PRESET_IDS } from '@tp/tokens';
-import { messages } from './messages.js';
+import { LOCALE_CODES } from '@tp/i18n';
+import { TRANSLATED_LOCALES } from './messages/index.js';
+import { messages } from './messages/all.js';
 import { PALETTE_GROUPS } from '../screens/builder/field-defaults.js';
 
 /**
@@ -69,11 +71,64 @@ describe('translations for schema-driven strings', () => {
     expect(codes.filter((code) => !messages[`problem.${code}`])).toEqual([]);
   });
 
-  it('has both languages for every string it defines', () => {
+  /**
+   * Every shipped language, for every string.
+   *
+   * The type already guarantees this — each locale file is `Record<MessageKey, string>` — but the
+   * type cannot see an *empty* string, and an empty translation renders as nothing at all rather
+   * than as the key, which is the one failure mode that hides itself. So the values are checked
+   * as well as the keys.
+   */
+  it('has every shipped language for every string it defines', () => {
     const incomplete = Object.entries(messages)
-      .filter(([, value]) => !value['sv-SE'] || !value['en-GB'])
-      .map(([key]) => key);
+      .flatMap(([key, value]) =>
+        LOCALE_CODES.filter((locale) => !value[locale]?.trim()).map(
+          (locale) => `${key} (${locale})`,
+        ),
+      )
+      .sort();
     expect(incomplete).toEqual([]);
+  });
+
+  /**
+   * The registry and the catalogues are two lists that must agree.
+   *
+   * `LOCALES` drives the language picker; the catalogues are what the picker's choices resolve
+   * to. A locale in the registry with no catalogue is a language somebody can select and then
+   * find the whole app in English.
+   */
+  it('ships a catalogue for exactly the locales the registry names', () => {
+    expect([...TRANSLATED_LOCALES].sort()).toEqual([...LOCALE_CODES].sort());
+  });
+
+  /**
+   * A plural message must declare a form for every category its language actually uses, or a
+   * Russian reader meeting 5 of something sees the form meant for 2.
+   */
+  it('declares every plural category its language needs', () => {
+    const gaps: string[] = [];
+    for (const [key, value] of Object.entries(messages)) {
+      for (const locale of LOCALE_CODES) {
+        const text = value[locale] ?? '';
+        if (!text.startsWith('plural:')) continue;
+        const declared = new Set(
+          text
+            .slice('plural:'.length)
+            .split('|')
+            .map((part) => part.trim().split(' ')[0]),
+        );
+        // The categories this language can produce for a whole number. `other` is the documented
+        // fallback, so a message that declares it covers anything it did not name.
+        const needed = new Set(
+          Array.from({ length: 101 }, (_, n) => new Intl.PluralRules(locale).select(n)),
+        );
+        if (declared.has('other')) continue;
+        for (const category of needed) {
+          if (!declared.has(category)) gaps.push(`${key} (${locale}) missing "${category}"`);
+        }
+      }
+    }
+    expect(gaps).toEqual([]);
   });
 
   /**
