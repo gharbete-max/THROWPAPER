@@ -46,7 +46,12 @@ export default defineConfig({
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+          /**
+           * Maskable: a launcher may crop this to a circle, a squircle or a rounded square. The
+           * plane spans 62% of the tile precisely so every one of those crops keeps the nose.
+           */
           { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
         ],
       },
     }),
