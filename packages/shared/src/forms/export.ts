@@ -32,14 +32,30 @@ export interface CsvOptions {
   newline?: '\r\n' | '\n';
 }
 
-/** Columns for a form: the fixed submission metadata, then one per answerable field. */
+/**
+ * Columns for a form: when it arrived, then the answers, then the bookkeeping.
+ *
+ * ## Why the answers are not last
+ *
+ * The order used to be reference, submittedAt, locale, status, *then* the answers — so the first
+ * thing anybody saw, on screen and in a spreadsheet, was an eight-character machine code, followed
+ * by two columns that are usually the same value in every row. The name of the person who filled
+ * the form in was column five at best, and off the right-hand edge on a narrow screen.
+ *
+ * `submittedAt` leads because a list of responses is read newest-first, and the answers follow
+ * because they are the reason the form exists. `reference` keeps a column — it is what a person
+ * at a door types in — but it does not open the table.
+ */
 export function columnsFor(
   definition: FormDefinition,
   labels: { header: (key: string) => string; fieldHeader: (fieldKey: string) => string },
 ): ExportColumn[] {
-  const meta: ExportColumn[] = [
-    { key: 'reference', header: labels.header('reference'), type: 'text' },
+  const when: ExportColumn[] = [
     { key: 'submittedAt', header: labels.header('submittedAt'), type: 'date' },
+  ];
+
+  const bookkeeping: ExportColumn[] = [
+    { key: 'reference', header: labels.header('reference'), type: 'text' },
     { key: 'locale', header: labels.header('locale'), type: 'text' },
     { key: 'status', header: labels.header('status'), type: 'text' },
   ];
@@ -58,7 +74,7 @@ export function columnsFor(
     return { key: field.key, header: labels.fieldHeader(field.key), type };
   });
 
-  return [...meta, ...fields];
+  return [...when, ...fields, ...bookkeeping];
 }
 
 export function toCsv(

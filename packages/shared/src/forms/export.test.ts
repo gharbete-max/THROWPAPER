@@ -124,13 +124,15 @@ describe('columns follow the form', () => {
       fieldHeader: (key) => key.toUpperCase(),
     });
 
+    // When it arrived, then what was answered, then the bookkeeping. A reader looking for a
+    // person should not have to pass an eight-character machine code to reach their name.
     expect(result.map((column) => column.key)).toEqual([
-      'reference',
       'submittedAt',
-      'locale',
-      'status',
       'full_name',
       'guests',
+      'reference',
+      'locale',
+      'status',
     ]);
     // Presentational fields collect nothing, so they get no column.
     expect(result.some((column) => column.key === 'page')).toBe(false);
