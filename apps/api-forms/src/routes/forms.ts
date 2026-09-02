@@ -28,18 +28,24 @@ async function resolve(
   repos: Repositories,
   auth: Auth,
   id: string,
-): Promise<{ form: FormRecord; access: formSchemas.FormAccess; shareCount: number } | null> {
+): Promise<{
+  form: FormRecord;
+  access: formSchemas.FormAccess;
+  shareCount: number;
+  sharedRole: formSchemas.FormShareRole | null;
+} | null> {
   const form = await repos.forms.findById(auth.organisation.id, id);
   if (!form) return null;
   const shares = await repos.forms.listShares(auth.organisation.id, id);
+  const mine = shares.find((share) => share.userId === auth.user.id)?.role ?? null;
   const access = formSchemas.accessFor({
     userId: auth.user.id,
     userRole: auth.user.role,
     ownerUserId: form.ownerUserId,
-    shareRole: shares.find((share) => share.userId === auth.user.id)?.role ?? null,
+    shareRole: mine,
   });
   if (!access) return null;
-  return { form, access, shareCount: shares.length };
+  return { form, access, shareCount: shares.length, sharedRole: mine };
 }
 
 /**
@@ -54,10 +60,12 @@ async function single(
   form: FormRecord,
   access: formSchemas.FormAccess,
   shareCount: number,
+  sharedRole: formSchemas.FormShareRole | null = null,
 ): Promise<formSchemas.FormResponse> {
   const owner = form.ownerUserId ? await repos.users.findById(form.ownerUserId) : null;
   return toFormResponse(form, auth.organisation.supportedLocales, await countFor(repos, form.id), {
     access,
+    sharedRole,
     ownerName: owner?.name ?? null,
     shareCount,
   });
@@ -91,11 +99,12 @@ async function listResponse(
   const names = new Map(people.map((person) => [person.id, person.name]));
 
   return records.flatMap((record) => {
+    const shared = shareRole.get(record.id) ?? null;
     const access = formSchemas.accessFor({
       userId: auth.user.id,
       userRole: auth.user.role,
       ownerUserId: record.ownerUserId,
-      shareRole: shareRole.get(record.id) ?? null,
+      shareRole: shared,
     });
     // Belt and braces: the repository already filtered by scope, but a form the reader has no
     // access to must never survive into a response merely because a filter was written wrongly.
@@ -103,6 +112,7 @@ async function listResponse(
     return [
       toFormResponse(record, auth.organisation.supportedLocales, counts[record.id] ?? 0, {
         access,
+        sharedRole: shared,
         ownerName: record.ownerUserId ? (names.get(record.ownerUserId) ?? null) : null,
         shareCount: shareCounts[record.id] ?? 0,
       }),

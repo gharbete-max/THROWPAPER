@@ -68,8 +68,20 @@ export function FormCard({
               ? t('forms.ownerYou')
               : t('forms.owner', { name: form.ownerName ?? '—' })}
         </span>
-        {(form.access === 'viewer' || form.access === 'editor' || form.access === 'admin') && (
-          <span className="badge badge--quiet">{t(`forms.access.${form.access}`)}</span>
+        {/**
+         * The share wins the badge where there is one.
+         *
+         * An administrator holding an editor share has `access: 'admin'` — true, and what every
+         * button here obeys — but labelling it "Administrator" on their "shared with me" tab hid
+         * the fact that a colleague had deliberately handed them the form. `sharedRole` is the
+         * share; `access` is the authority. The badge reports the first, the buttons the second.
+         */}
+        {form.sharedRole ? (
+          <span className="badge badge--quiet">{t(`forms.access.${form.sharedRole}`)}</span>
+        ) : (
+          form.access === 'admin' && (
+            <span className="badge badge--quiet">{t('forms.access.admin')}</span>
+          )
         )}
         {form.shareCount > 0 && (
           <span>

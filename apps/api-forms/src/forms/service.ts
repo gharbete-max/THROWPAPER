@@ -26,6 +26,8 @@ export function toFormResponse(
    */
   viewer: {
     access: formSchemas.FormAccess;
+    /** The share addressed to this reader, if any. Independent of `access` — see the schema. */
+    sharedRole?: formSchemas.FormShareRole | null;
     /** The owner's display name, resolved by the caller. Null when nobody owns it. */
     ownerName?: string | null;
     shareCount?: number;
@@ -39,6 +41,7 @@ export function toFormResponse(
     ownerName: viewer.ownerName ?? null,
     deletedAt: form.deletedAt?.toISOString() ?? null,
     access: viewer.access,
+    sharedRole: viewer.sharedRole ?? null,
     shareCount: viewer.shareCount ?? 0,
     id: form.id,
     slug: form.slug,

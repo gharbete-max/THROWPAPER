@@ -44,8 +44,14 @@ export const messages: Catalogue = {
   },
   'events.registrationOpen': { 'sv-SE': 'Anmälan öppen', 'en-GB': 'Registration open' },
   'events.registrationClosed': { 'sv-SE': 'Anmälan stängd', 'en-GB': 'Registration closed' },
-  'events.capacity': { 'sv-SE': '{count} platser', 'en-GB': '{count} places' },
-  'events.registered': { 'sv-SE': '{count} anmälda', 'en-GB': '{count} registered' },
+  'events.capacity': {
+    'sv-SE': 'one {count} plats | other {count} platser',
+    'en-GB': 'one {count} place | other {count} places',
+  },
+  'events.registered': {
+    'sv-SE': 'one {count} anmäld | other {count} anmälda',
+    'en-GB': 'one {count} registered | other {count} registered',
+  },
   'events.registeredOf': {
     'sv-SE': '{count} av {capacity} anmälda',
     'en-GB': '{count} of {capacity} registered',
@@ -106,6 +112,19 @@ export const messages: Catalogue = {
   },
   'scope.emptyTrash': { 'sv-SE': 'Papperskorgen är tom.', 'en-GB': 'The bin is empty.' },
 
+  /*
+   * The same three piles, said about somebody else.
+   *
+   * An administrator looking at a colleague's workspace was being shown tabs labelled "My forms"
+   * and "Shared with me", which are the two most misleading words on a screen whose whole purpose
+   * is that these are not yours.
+   */
+  'scope.theirs.mine': { 'sv-SE': 'Deras formulär', 'en-GB': 'Their forms' },
+  'scope.theirs.shared': { 'sv-SE': 'Delade med dem', 'en-GB': 'Shared with them' },
+  'scope.theirs.trash': { 'sv-SE': 'Deras papperskorg', 'en-GB': 'Their bin' },
+  'scope.theirs.active': { 'sv-SE': 'Alla', 'en-GB': 'All' },
+  'scope.theirs.all': { 'sv-SE': 'Hela organisationen', 'en-GB': 'Whole organisation' },
+
   'forms.owner': { 'sv-SE': 'Av {name}', 'en-GB': 'By {name}' },
   'forms.ownerYou': { 'sv-SE': 'Av dig', 'en-GB': 'By you' },
   'forms.ownerNobody': { 'sv-SE': 'Hela organisationen', 'en-GB': 'Whole organisation' },
@@ -126,12 +145,17 @@ export const messages: Catalogue = {
       'Move “{title}” to the bin? It stops accepting responses, and you can restore it later.',
   },
   'forms.confirmDelete': {
-    'sv-SE': 'Radera ”{title}” och alla {count} svar permanent? Detta går inte att ångra.',
-    'en-GB': 'Permanently delete “{title}” and all {count} responses? This cannot be undone.',
+    'sv-SE':
+      'one Radera ”{title}” och dess {count} svar permanent? Detta går inte att ångra. | other Radera ”{title}” och alla {count} svar permanent? Detta går inte att ångra.',
+    'en-GB':
+      'one Permanently delete “{title}” and its {count} response? This cannot be undone. | other Permanently delete “{title}” and all {count} responses? This cannot be undone.',
   },
 
   'share.title': { 'sv-SE': 'Dela', 'en-GB': 'Share' },
-  'share.with': { 'sv-SE': 'Delad med {count}', 'en-GB': 'Shared with {count}' },
+  'share.with': {
+    'sv-SE': 'one Delad med {count} person | other Delad med {count} personer',
+    'en-GB': 'one Shared with {count} person | other Shared with {count} people',
+  },
   'share.email': { 'sv-SE': 'E-postadress', 'en-GB': 'Email address' },
   'share.emailHint': {
     'sv-SE': 'Måste vara någon som redan finns i organisationen.',
@@ -156,7 +180,10 @@ export const messages: Catalogue = {
     'sv-SE': 'Alla i organisationen. Öppna någon för att se deras formulär och papperskorg.',
     'en-GB': 'Everybody in the organisation. Open one to see their forms and bin.',
   },
-  'users.forms': { 'sv-SE': '{count} formulär', 'en-GB': '{count} forms' },
+  'users.forms': {
+    'sv-SE': 'one {count} formulär | other {count} formulär',
+    'en-GB': 'one {count} form | other {count} forms',
+  },
   'users.inBin': { 'sv-SE': '{count} i papperskorgen', 'en-GB': '{count} in the bin' },
   'users.disabled': { 'sv-SE': 'Avstängd', 'en-GB': 'Disabled' },
   'users.role.admin': { 'sv-SE': 'Administratör', 'en-GB': 'Administrator' },
@@ -185,7 +212,10 @@ export const messages: Catalogue = {
   'forms.status.archived': { 'sv-SE': 'Arkiverat', 'en-GB': 'Archived' },
   'forms.version': { 'sv-SE': 'Version {n}', 'en-GB': 'Version {n}' },
   'forms.unpublished': { 'sv-SE': 'Aldrig publicerat', 'en-GB': 'Never published' },
-  'forms.responses': { 'sv-SE': '{count} svar', 'en-GB': '{count} responses' },
+  'forms.responses': {
+    'sv-SE': 'one {count} svar | other {count} svar',
+    'en-GB': 'one {count} response | other {count} responses',
+  },
   'forms.notFound': {
     'sv-SE': 'Formuläret finns inte, eller så har du inte behörighet till det.',
     'en-GB': 'That form does not exist, or you do not have access to it.',

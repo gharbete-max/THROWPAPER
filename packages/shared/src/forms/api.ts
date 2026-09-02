@@ -111,6 +111,16 @@ export const FormResponse = z.object({
    * stricter default would have made old forms uneditable the moment this shipped.
    */
   access: FormAccess.default('organisation'),
+  /**
+   * The share addressed to you specifically, if there is one — independent of `access`.
+   *
+   * Both, because they answer different questions and can disagree. An administrator with an
+   * editor share on a colleague's form has `access: 'admin'`, which is the truth about what the
+   * API will let them do; but on their "shared with me" tab that label buried the fact that
+   * somebody had deliberately handed them the form, and read as though they were only there by
+   * privilege. `access` still decides every button. This decides what the badge says.
+   */
+  sharedRole: FormShareRole.nullable().default(null),
   /** How many people it is shared with. Zero for most forms; drawn as a count on the share button. */
   shareCount: z.number().int().nonnegative().default(0),
   createdAt: IsoDateTime,

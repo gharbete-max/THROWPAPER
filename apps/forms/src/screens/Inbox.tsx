@@ -59,7 +59,15 @@ export function Inbox() {
                   </span>
                   <span className="inbox__reference small muted">{entry.reference}</span>
                   <span className="inbox__status">
-                    <span className={entry.status === 'complete' ? 'badge' : 'badge badge--quiet'}>
+                    {/* Outlined, never filled: a filled badge takes the surface colour and the
+                        inbox rows are that colour, so it disappeared into the row it sat on. */}
+                    <span
+                      className={
+                        entry.status === 'complete'
+                          ? 'badge badge--quiet'
+                          : 'badge badge--quiet status-warning'
+                      }
+                    >
                       {t(entry.status === 'complete' ? 'inbox.complete' : 'inbox.partial')}
                     </span>
                   </span>

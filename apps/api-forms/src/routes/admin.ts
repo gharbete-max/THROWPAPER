@@ -126,7 +126,7 @@ export function registerAdminRoutes(
         userId: person.id,
       });
 
-      const [counts, shareCounts, people] = await Promise.all([
+      const [counts, shareCounts, people, ownShares] = await Promise.all([
         deps.repos.submissions.countCompleteByForm(
           auth.organisation.id,
           records.map((record) => record.id),
@@ -138,8 +138,12 @@ export function registerAdminRoutes(
         // The owner of a form on somebody's "shared with me" tab is somebody else again, so the
         // names come from the directory rather than from the person being looked at.
         deps.repos.users.list(auth.organisation.id),
+        // The visiting administrator's own shares: a form that was also shared with them should
+        // say so, rather than reading as one they reached only by privilege.
+        deps.repos.forms.sharesForUser(auth.organisation.id, auth.user.id),
       ]);
       const names = new Map(people.map((entry) => [entry.id, entry.name]));
+      const ownShareRole = new Map(ownShares.map((share) => [share.formId, share.role]));
 
       await recordAudit(deps.repos, request, {
         action: 'admin.viewed_user_forms',
@@ -159,6 +163,7 @@ export function registerAdminRoutes(
                 userRole: auth.user.role,
                 ownerUserId: record.ownerUserId,
               }) ?? 'admin',
+            sharedRole: ownShareRole.get(record.id) ?? null,
             ownerName: record.ownerUserId ? (names.get(record.ownerUserId) ?? null) : null,
             shareCount: shareCounts[record.id] ?? 0,
           }),

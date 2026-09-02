@@ -77,10 +77,14 @@ export function UserWorkspace() {
 
   return (
     <section className="stack">
-      <Link className="button button--quiet small" to="/users">
-        <Icon name="arrow-left" className="icon--lead" />
-        {t('users.back')}
-      </Link>
+      {/* In a row, or the stack stretches it across the page — a back link is not a call to
+          action and should be the width of its own words. */}
+      <div className="row">
+        <Link className="button button--quiet small" to="/users">
+          <Icon name="arrow-left" className="icon--lead" />
+          {t('users.back')}
+        </Link>
+      </div>
 
       <header className="stack stack--tight">
         <h1>{person?.name ?? '…'}</h1>
@@ -102,6 +106,7 @@ export function UserWorkspace() {
         current={scope}
         onChange={setScope}
         label={t('users.title')}
+        perspective="third"
       />
 
       {forms === null && <Loading />}
