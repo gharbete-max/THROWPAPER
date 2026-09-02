@@ -78,6 +78,15 @@ export const FormResponse = z.object({
   /** The working copy the builder edits. */
   draftDefinition: FormDefinition,
   publishedVersion: z.number().int().nullable(),
+  /**
+   * Completed responses so far.
+   *
+   * Required rather than optional-with-a-default: "how many people have answered this" is the one
+   * fact that tells an author whether a form is working, and a default of nought would let a route
+   * that forgot to count report silence as an answer. Required means the response schema rejects
+   * the omission instead.
+   */
+  submissionCount: z.number().int().nonnegative(),
   completeness: z.array(LocaleCompletenessResponse),
   problems: z.array(DefinitionProblemResponse),
   createdAt: IsoDateTime,

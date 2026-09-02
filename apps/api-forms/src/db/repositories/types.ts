@@ -120,7 +120,13 @@ export interface EventRepository {
   findById(organisationId: string, id: string): Promise<EventRecord | null>;
   create(input: EventCreate): Promise<EventRecord>;
   update(organisationId: string, id: string, patch: EventUpdate): Promise<EventRecord | null>;
-  /** Registrations arrive in phase 3; until then this is always 0. */
+  /**
+   * People holding a place: completed, not withdrawn.
+   *
+   * This was stubbed to `0` while registrations were still being built, and stayed stubbed after
+   * they arrived — so every event reported nobody registered and every event's registration
+   * stayed "open" however full it was. Nothing showed the number, so nothing contradicted it.
+   */
   countRegistrations(eventId: string): Promise<number>;
 }
 
@@ -229,6 +235,14 @@ export interface SubmissionRepository {
   list(organisationId: string, formId: string): Promise<SubmissionRecord[]>;
   findByResumeTokenHash(tokenHash: string): Promise<SubmissionRecord | null>;
   countComplete(formId: string): Promise<number>;
+  /**
+   * Completed counts for several forms at once, keyed by form id.
+   *
+   * The forms list needs a count per row; calling `countComplete` in a loop makes the list cost
+   * one query per form. Forms with no completed responses are absent from the result rather than
+   * present as nought, so the caller decides what missing means.
+   */
+  countCompleteByForm(formIds: readonly string[]): Promise<Record<string, number>>;
   /** Save-and-resume. Creates the draft on first save and overwrites it thereafter. */
   saveDraft(input: SubmissionDraftInput): Promise<SubmissionRecord>;
   findByReference(organisationId: string, reference: string): Promise<SubmissionRecord | null>;

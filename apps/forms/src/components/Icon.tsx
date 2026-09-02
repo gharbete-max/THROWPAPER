@@ -55,7 +55,15 @@ export type IconName =
   | 'save'
   | 'publish'
   | 'warning'
-  | 'search';
+  | 'search'
+  | 'people'
+  | 'checkin'
+  | 'edit'
+  | 'archive'
+  | 'external'
+  | 'inbox'
+  | 'clock'
+  | 'globe';
 
 /** 24×24 paths, stroke-width 2, round caps. */
 const PATHS: Record<IconName, string> = {
@@ -94,6 +102,16 @@ const PATHS: Record<IconName, string> = {
   publish: 'M12 20V6M6 12l6-6 6 6M4 3h16',
   warning: 'M12 4 2 20h20L12 4zM12 10v5M12 18h.01',
   search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM16 16l4 4',
+  people:
+    'M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 4a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7M22 19v-1a4 4 0 0 0-3-3.9M16 4.1a4 4 0 0 1 0 7.8',
+  checkin: 'M11 21H4V3h7M14 12h8M18 8l4 4-4 4',
+  edit: 'M4 20h4L20 8l-4-4L4 16zM14 6l4 4',
+  archive: 'M3 4h18v4H3zM5 8v12h14V8M10 12h4',
+  external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
+  inbox: 'M3 13h5l1 3h6l1-3h5M6 5h12l3 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z',
+  clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+  globe:
+    'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.6 2.4 4 5.5 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.5-4-9s1.4-6.6 4-9z',
 };
 
 export function Icon({ name, className }: { name: IconName; className?: string }) {

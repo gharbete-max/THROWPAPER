@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { translatableTexts } from '@tp/shared/forms';
 import type {
   Field,
@@ -17,7 +17,6 @@ import { FieldProperties } from './FieldProperties.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
 import { Icon } from '../../components/Icon.js';
-import { Submissions } from '../Submissions.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
 
@@ -398,9 +397,18 @@ export function FormBuilder() {
         </aside>
       </div>
 
+      {/* The table itself moved to `/forms/:id/submissions`. What belongs at the foot of the
+          editor is the way there, not forty rows of other people's answers. */}
       {id && form.publishedVersion !== null && (
-        <section className="card">
-          <Submissions formId={id} />
+        <section className="card row row--between">
+          <strong className="small">
+            <Icon name="inbox" className="icon--lead" />
+            {t('forms.responses', { count: form.submissionCount })}
+          </strong>
+          <Link className="button button--quiet" to={`/forms/${id}/submissions`}>
+            {t('forms.viewResponses')}
+            <Icon name="arrow-right" className="icon--lead" />
+          </Link>
         </section>
       )}
 

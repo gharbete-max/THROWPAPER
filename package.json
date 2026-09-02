@@ -18,7 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "pnpm -r run build",
-    "verify": "pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
+    "verify": "pnpm run format:check && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
     "contract:check": "tsx scripts/contract-check.ts",
     "tokens:proof": "tsx scripts/proof/index.ts",
     "test:e2e": "tsx scripts/run-e2e.ts",
