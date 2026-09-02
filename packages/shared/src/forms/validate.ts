@@ -248,8 +248,21 @@ function safeMatch(pattern: string, value: string): boolean {
   }
 }
 
+/**
+ * How many digits this number carries after the point.
+ *
+ * Reading them out of `String(value)` looks obvious and is wrong: JavaScript switches to
+ * exponential notation below 1e-6, so `String(0.0000001)` is `"1e-7"` — no `.` to find, zero
+ * decimal places reported, and a `decimals: 0` rule that a visitor could walk straight past by
+ * typing a small enough number.
+ *
+ * `toExponential()` always produces the same shape, so the answer comes out of the exponent
+ * instead of out of how the value happened to be printed.
+ */
 function decimalPlaces(value: number): number {
-  const text = String(value);
-  const index = text.indexOf('.');
-  return index < 0 ? 0 : text.length - index - 1;
+  const match = /^-?(\d)(?:\.(\d+))?e([+-]\d+)$/.exec(value.toExponential());
+  if (!match) return 0;
+  const fractionDigits = match[2]?.length ?? 0;
+  const exponent = Number(match[3]);
+  return Math.max(0, fractionDigits - exponent);
 }

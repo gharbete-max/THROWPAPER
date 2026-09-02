@@ -312,7 +312,8 @@ export function FormBuilder() {
 
       {form.problems.length > 0 && (
         <p className="small status-down">
-          {form.problems.map((problem) => problem.message).join('; ')}
+          {/* Translated by code — `problem.message` is English, for logs and API clients. */}
+          {form.problems.map((problem) => t(`problem.${problem.code}`, problem.params)).join('; ')}
         </p>
       )}
 

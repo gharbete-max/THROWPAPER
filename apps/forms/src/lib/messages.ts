@@ -248,6 +248,34 @@ export const messages: Catalogue = {
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
+  // Why a form cannot be published. One key per DefinitionProblem code — messages.test.ts checks.
+  'problem.duplicate-key': {
+    'sv-SE': 'Fältnyckeln "{key}" används mer än en gång.',
+    'en-GB': 'The field key "{key}" is used more than once.',
+  },
+  'problem.no-answerable-fields': {
+    'sv-SE': 'Formuläret samlar inte in några svar än.',
+    'en-GB': 'The form does not collect any answers yet.',
+  },
+  'problem.empty-options': {
+    'sv-SE': 'En flervalsfråga saknar alternativ.',
+    'en-GB': 'A choice question has no options.',
+  },
+  'problem.condition-unknown-field': {
+    'sv-SE': 'Ett villkor frågar efter "{key}", som inget fält heter.',
+    'en-GB': 'A condition asks about "{key}", which no field is called.',
+  },
+  'problem.condition-forward-reference': {
+    'sv-SE': 'Ett villkor frågar efter "{key}", som kommer längre ned i formuläret.',
+    'en-GB': 'A condition asks about "{key}", which comes further down the form.',
+  },
+  'problem.unsafe-pattern': {
+    'sv-SE':
+      'En formatregel kan ta orimligt lång tid att kontrollera. Undvik upprepning inuti en upprepad grupp, som (a+)+.',
+    'en-GB':
+      'A format rule can take an unreasonable time to check. Avoid a repeat inside a repeated group, such as (a+)+.',
+  },
+
   // Settings that belong to the form rather than to any one field.
   'settings.heading': { 'sv-SE': 'Formulärets inställningar', 'en-GB': 'Form settings' },
   'settings.submitLabel': { 'sv-SE': 'Text på skicka-knappen', 'en-GB': 'Submit button wording' },

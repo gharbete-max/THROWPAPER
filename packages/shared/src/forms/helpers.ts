@@ -167,7 +167,17 @@ export interface DefinitionProblem {
     | 'condition-unknown-field'
     | 'condition-forward-reference'
     | 'unsafe-pattern';
+  /**
+   * English, for logs and for an API client that has no catalogue.
+   *
+   * **Not** what the builder shows. `CLAUDE.md` rule 4 keeps user-facing strings in
+   * `packages/i18n`, and these were being rendered straight to the operator — the one place in
+   * the product where an English sentence reached a Swedish screen. The app renders
+   * `problem.<code>` with `params` instead.
+   */
   message: string;
+  /** Values the translated message interpolates, e.g. the duplicated key. */
+  params?: Record<string, string>;
   fieldId?: string;
 }
 
@@ -176,7 +186,11 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
   const problems: DefinitionProblem[] = [];
 
   for (const key of duplicateKeys(definition)) {
-    problems.push({ code: 'duplicate-key', message: `Field key "${key}" is used more than once` });
+    problems.push({
+      code: 'duplicate-key',
+      message: `Field key "${key}" is used more than once`,
+      params: { key },
+    });
   }
   if (answerableFields(definition).length === 0) {
     problems.push({ code: 'no-answerable-fields', message: 'The form collects no answers' });
@@ -227,11 +241,13 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
           ? {
               code: 'condition-forward-reference',
               message: `A condition asks about "${condition.fieldKey}", which comes later in the form`,
+              params: { key: condition.fieldKey },
               fieldId: field.id,
             }
           : {
               code: 'condition-unknown-field',
               message: `A condition asks about "${condition.fieldKey}", which no field uses`,
+              params: { key: condition.fieldKey },
               fieldId: field.id,
             },
       );

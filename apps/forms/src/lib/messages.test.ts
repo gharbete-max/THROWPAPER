@@ -49,6 +49,26 @@ describe('translations for schema-driven strings', () => {
     expect(messages[`palette.${id}`], `palette.${id}`).toBeDefined();
   });
 
+  /**
+   * Every reason a form cannot be published must be sayable.
+   *
+   * These were rendered from `problem.message` — English sentences written in `packages/shared`,
+   * shown straight to the operator. The only place in the product where an English string reached
+   * a Swedish screen, and rule 4 says exactly that must not happen. Read out of the union in
+   * `helpers.ts` rather than from a list beside it, because a list beside it is what drifts.
+   */
+  it('can say every reason a form cannot be published', () => {
+    const source = readFileSync(
+      new URL('../../../../packages/shared/src/forms/helpers.ts', import.meta.url),
+      'utf8',
+    );
+    const union = /export interface DefinitionProblem \{\s*code:([^;]+);/.exec(source)?.[1] ?? '';
+    const codes = [...union.matchAll(/'([a-z-]+)'/g)].map((match) => match[1]!);
+
+    expect(codes.length).toBeGreaterThan(3);
+    expect(codes.filter((code) => !messages[`problem.${code}`])).toEqual([]);
+  });
+
   it('has both languages for every string it defines', () => {
     const incomplete = Object.entries(messages)
       .filter(([, value]) => !value['sv-SE'] || !value['en-GB'])
