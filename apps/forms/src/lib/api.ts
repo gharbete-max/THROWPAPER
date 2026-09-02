@@ -210,7 +210,39 @@ export const client = {
   archiveEvent: (id: string) =>
     request<api.EventResponse>(`/v1/events/${id}/archive`, { method: 'POST' }),
 
-  listForms: () => request<{ forms: formSchemas.FormResponse[] }>('/v1/forms'),
+  listForms: (scope: formSchemas.FormScope = 'active') =>
+    request<{ forms: formSchemas.FormResponse[] }>(`/v1/forms?scope=${scope}`),
+
+  trashForm: (id: string) =>
+    request<formSchemas.FormResponse>(`/v1/forms/${id}/trash`, { method: 'POST' }),
+
+  restoreForm: (id: string) =>
+    request<formSchemas.FormResponse>(`/v1/forms/${id}/restore`, { method: 'POST' }),
+
+  /** Permanent, and only ever reached from the bin — the server refuses it anywhere else. */
+  deleteForm: (id: string) => request<null>(`/v1/forms/${id}`, { method: 'DELETE' }),
+
+  listShares: (id: string) =>
+    request<{ shares: formSchemas.FormShareResponse[] }>(`/v1/forms/${id}/shares`),
+
+  shareForm: (id: string, email: string, role: formSchemas.FormShareRole) =>
+    request<{ shares: formSchemas.FormShareResponse[] }>(`/v1/forms/${id}/shares`, {
+      method: 'PUT',
+      body: JSON.stringify({ email, role }),
+    }),
+
+  unshareForm: (id: string, userId: string) =>
+    request<null>(`/v1/forms/${id}/shares/${userId}`, { method: 'DELETE' }),
+
+  /** Responses arriving across every form you can see. */
+  inbox: (limit = 50) =>
+    request<{ submissions: formSchemas.InboxEntry[] }>(`/v1/submissions?limit=${limit}`),
+
+  listUsers: () => request<{ users: formSchemas.UserSummary[] }>('/v1/admin/users'),
+
+  /** One colleague's workspace, read as yourself — see `routes/admin.ts` on why not impersonation. */
+  userForms: (id: string, scope: formSchemas.FormScope = 'active') =>
+    request<{ forms: formSchemas.FormResponse[] }>(`/v1/admin/users/${id}/forms?scope=${scope}`),
 
   getForm: (id: string) => request<formSchemas.FormResponse>(`/v1/forms/${id}`),
 

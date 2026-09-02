@@ -71,6 +71,13 @@
       "when": 1788372654791,
       "tag": "0009_submissions_event_index",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788374230994,
+      "tag": "0010_cool_vision",
+      "breakpoints": true
     }
   ]
 }

@@ -1,10 +1,11 @@
-import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import {
   brandKits,
   auditLog,
   checkIns,
   events,
+  formShares,
   formUploads,
   formVersions,
   forms,
@@ -24,7 +25,9 @@ import type {
   EventRecord,
   EventUpdate,
   FormCreate,
+  FormListFilter,
   FormRecord,
+  FormShareRecord,
   FormUpdate,
   FormVersionRecord,
   JobRecord,
@@ -67,6 +70,14 @@ export function createDrizzleRepositories(db: Db): Repositories {
         ),
       findById: async (id) =>
         toUser(first(await db.select().from(users).where(eq(users.id, id)).limit(1))),
+      list: async (organisationId) =>
+        (
+          await db
+            .select()
+            .from(users)
+            .where(eq(users.organisationId, organisationId))
+            .orderBy(asc(users.name))
+        ).map((row) => toUser(row) as UserRecord),
     },
 
     tokens: {
@@ -160,12 +171,63 @@ export function createDrizzleRepositories(db: Db): Repositories {
     },
 
     forms: {
-      list: async (organisationId) =>
-        (await db
+      list: async (organisationId, filter?: FormListFilter) => {
+        const scope = filter?.scope ?? 'active';
+        const userId = filter?.userId;
+
+        /**
+         * "Shared with me" as a subquery rather than a join.
+         *
+         * A join would multiply the form rows by their shares — a form shared with four people
+         * would come back four times, and the count on its card would be wrong in a way that looks
+         * like a counting bug rather than a join bug. `IN (select …)` cannot duplicate a row.
+         */
+        const sharedWithUser = userId
+          ? inArray(
+              forms.id,
+              db
+                .select({ id: formShares.formId })
+                .from(formShares)
+                .where(
+                  and(eq(formShares.organisationId, organisationId), eq(formShares.userId, userId)),
+                ),
+            )
+          : undefined;
+
+        const ownership = (() => {
+          switch (scope) {
+            case 'mine':
+              return userId ? eq(forms.ownerUserId, userId) : undefined;
+            case 'shared':
+              // Without a user there is nobody for anything to be shared *with*, and answering
+              // "everything" would be the opposite of what was asked.
+              return sharedWithUser ?? sql`false`;
+            case 'trash':
+              return userId ? eq(forms.ownerUserId, userId) : undefined;
+            case 'active':
+              // Yours, shared with you, or nobody's. An administrator asking without a user id
+              // gets the lot, which is what the support view wants.
+              return userId
+                ? or(eq(forms.ownerUserId, userId), isNull(forms.ownerUserId), sharedWithUser)
+                : undefined;
+            case 'all':
+              return undefined;
+          }
+        })();
+
+        return (await db
           .select()
           .from(forms)
-          .where(eq(forms.organisationId, organisationId))
-          .orderBy(desc(forms.updatedAt))) as FormRecord[],
+          .where(
+            and(
+              eq(forms.organisationId, organisationId),
+              // The bin is a separate pile, never mixed into another one.
+              scope === 'trash' ? isNotNull(forms.deletedAt) : isNull(forms.deletedAt),
+              ownership,
+            ),
+          )
+          .orderBy(desc(forms.updatedAt))) as FormRecord[];
+      },
       findById: async (organisationId, id) =>
         first(
           await db
@@ -194,6 +256,7 @@ export function createDrizzleRepositories(db: Db): Repositories {
             draftDefinition: input.draftDefinition as Record<string, unknown>,
             opensAt: input.opensAt,
             closesAt: input.closesAt,
+            ownerUserId: input.ownerUserId ?? null,
           })
           .returning();
         if (!row) throw new Error('form insert returned no row');
@@ -210,6 +273,71 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .where(and(eq(forms.organisationId, organisationId), eq(forms.id, id)))
           .returning();
         return (row as FormRecord | undefined) ?? null;
+      },
+      purge: async (organisationId, id) => {
+        // Versions, submissions, shares and uploads all cascade from the row — the foreign keys
+        // say so, so this stays one statement and cannot half-delete a form.
+        const rows = await db
+          .delete(forms)
+          .where(and(eq(forms.organisationId, organisationId), eq(forms.id, id)))
+          .returning({ id: forms.id });
+        return rows.length > 0;
+      },
+
+      listShares: async (organisationId, formId) =>
+        (await db
+          .select()
+          .from(formShares)
+          .where(
+            and(eq(formShares.organisationId, organisationId), eq(formShares.formId, formId)),
+          )) as FormShareRecord[],
+      share: async (input) => {
+        // Upsert on (form, user): sharing again is changing a role, and a second row would make
+        // "what may this person do" a question with two answers.
+        const [row] = await db
+          .insert(formShares)
+          .values(input)
+          .onConflictDoUpdate({
+            target: [formShares.formId, formShares.userId],
+            set: { role: input.role },
+          })
+          .returning();
+        if (!row) throw new Error('share insert returned no row');
+        return row as FormShareRecord;
+      },
+      unshare: async (organisationId, formId, userId) => {
+        const rows = await db
+          .delete(formShares)
+          .where(
+            and(
+              eq(formShares.organisationId, organisationId),
+              eq(formShares.formId, formId),
+              eq(formShares.userId, userId),
+            ),
+          )
+          .returning({ id: formShares.id });
+        return rows.length > 0;
+      },
+      sharesForUser: async (organisationId, userId) =>
+        (await db
+          .select()
+          .from(formShares)
+          .where(
+            and(eq(formShares.organisationId, organisationId), eq(formShares.userId, userId)),
+          )) as FormShareRecord[],
+      shareCounts: async (organisationId, formIds) => {
+        if (formIds.length === 0) return {};
+        const rows = await db
+          .select({ formId: formShares.formId, count: sql<number>`count(*)::int` })
+          .from(formShares)
+          .where(
+            and(
+              eq(formShares.organisationId, organisationId),
+              inArray(formShares.formId, [...formIds]),
+            ),
+          )
+          .groupBy(formShares.formId);
+        return Object.fromEntries(rows.map((row) => [row.formId, Number(row.count)]));
       },
 
       listVersions: async (formId) =>
@@ -303,6 +431,24 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .where(and(eq(submissions.organisationId, organisationId), eq(submissions.id, id)))
           .returning();
         return (row as SubmissionRecord | undefined) ?? null;
+      },
+
+      listForForms: async (organisationId, formIds, limit) => {
+        if (formIds.length === 0) return [];
+        return (
+          (await db
+            .select()
+            .from(submissions)
+            .where(
+              and(
+                eq(submissions.organisationId, organisationId),
+                inArray(submissions.formId, [...formIds]),
+              ),
+            )
+            // Newest first, and cut in the database: the inbox shows a page, not a corpus.
+            .orderBy(desc(submissions.createdAt))
+            .limit(limit)) as SubmissionRecord[]
+        );
       },
 
       countComplete: async (formId) => {

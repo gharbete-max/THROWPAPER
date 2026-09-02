@@ -174,10 +174,67 @@ export const forms = pgTable(
     publishedVersion: integer('published_version'),
     opensAt: timestamp('opens_at', { withTimezone: true }),
     closesAt: timestamp('closes_at', { withTimezone: true }),
+    /**
+     * Who made it. **Nullable, and null means the organisation's.**
+     *
+     * Every form that existed before ownership did has no owner, and inventing one would be
+     * guessing — probably wrongly, and in a column that decides who can see what. An unowned form
+     * stays visible to everyone in the organisation, exactly as it was; new ones get an owner.
+     */
+    ownerUserId: uuid('owner_user_id').references(() => users.id, { onDelete: 'set null' }),
+    /**
+     * In the bin. Separate from `status: 'archived'` on purpose.
+     *
+     * Archived means retired but kept — a form that ran last year and should not be listed with
+     * the live ones. Trashed means on its way out, restorable for now. Folding the two together
+     * would make "restore from the bin" and "un-retire" the same button, and they are not.
+     */
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [uniqueIndex('forms_org_slug_idx').on(table.organisationId, table.slug)],
+  (table) => [
+    uniqueIndex('forms_org_slug_idx').on(table.organisationId, table.slug),
+    /** "My forms" is this query, and it is the first thing anybody loads after signing in. */
+    index('forms_owner_idx').on(table.organisationId, table.ownerUserId),
+  ],
+);
+
+/**
+ * Who else may see a form, and how much they may do with it.
+ *
+ * A row per person rather than a list on the form: sharing with someone has to survive them being
+ * renamed, and revoking a share should be a delete rather than rewriting an array that two people
+ * might be editing at once.
+ *
+ * `viewer` can open the form and read its responses; `editor` can also change it. Neither can
+ * delete it or share it onward — those stay with the owner and with an administrator, because a
+ * share that can reshare is a permission nobody can reason about after the third hop.
+ */
+export const formShareRole = pgEnum('form_share_role', ['viewer', 'editor']);
+
+export const formShares = pgTable(
+  'form_shares',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    formId: uuid('form_id')
+      .notNull()
+      .references(() => forms.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    role: formShareRole('role').notNull().default('viewer'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    /** One share per person per form: sharing twice is changing the role, not adding a row. */
+    uniqueIndex('form_shares_form_user_idx').on(table.formId, table.userId),
+    /** "Shared with me" reads this way round. */
+    index('form_shares_user_idx').on(table.userId),
+  ],
 );
 
 /**

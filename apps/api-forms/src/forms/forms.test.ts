@@ -89,19 +89,200 @@ describe('form CRUD', () => {
     expect(response.statusCode).toBe(400);
   });
 
-  it('lets operators read forms but not build them', async () => {
+  /**
+   * The rule that replaced "only administrators may build forms".
+   *
+   * Everybody gets their own workspace, so everybody can fill it. What protects a form is who
+   * owns it, not what role its author holds.
+   */
+  it('lets anybody build a form of their own', async () => {
+    const created = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/forms',
+      headers: bearer(operatorToken),
+      payload: { slug: 'oskars-enkat', title: { 'sv-SE': 'Enkät' } },
+    });
+    expect(created.statusCode).toBe(201);
+    expect(created.json().access).toBe('owner');
+
+    expect((await saveDraftAs(operatorToken, created.json().id)).statusCode).toBe(200);
+  });
+
+  /**
+   * Somebody else's form is **404, not 403**.
+   *
+   * A 403 would confirm the form exists to somebody who has no business knowing that. Both
+   * requests below are the same denial wearing the same answer.
+   */
+  it("keeps one person's form out of another's reach", async () => {
     const { id } = (await createForm()).json();
 
-    const read = await harness.app.inject({
+    const list = await harness.app.inject({
       method: 'GET',
       url: '/v1/forms',
       headers: bearer(operatorToken),
     });
-    expect(read.statusCode).toBe(200);
+    expect(list.statusCode).toBe(200);
+    expect(list.json().forms).toEqual([]);
 
-    const write = await saveDraftAs(operatorToken, id);
-    expect(write.statusCode).toBe(403);
+    expect((await saveDraftAs(operatorToken, id)).statusCode).toBe(404);
+    const read = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/forms/${id}`,
+      headers: bearer(operatorToken),
+    });
+    expect(read.statusCode).toBe(404);
   });
+
+  /** Sharing is the way in, and an editor share is enough to save the draft. */
+  it('opens a form to a colleague when it is shared with them', async () => {
+    const { id } = (await createForm()).json();
+
+    const shared = await harness.app.inject({
+      method: 'PUT',
+      url: `/v1/forms/${id}/shares`,
+      headers: bearer(adminToken),
+      payload: { email: operatorUser.email, role: 'editor' },
+    });
+    expect(shared.statusCode).toBe(200);
+    expect(shared.json().shares).toHaveLength(1);
+
+    expect((await saveDraftAs(operatorToken, id)).statusCode).toBe(200);
+
+    const mine = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/forms?scope=shared',
+      headers: bearer(operatorToken),
+    });
+    expect(mine.json().forms.map((form: { id: string }) => form.id)).toEqual([id]);
+    expect(mine.json().forms[0].access).toBe('editor');
+  });
+
+  /** A viewer may read the form and its responses, and may not change either. */
+  it('stops a viewer share short of editing', async () => {
+    const { id } = (await createForm()).json();
+    await harness.app.inject({
+      method: 'PUT',
+      url: `/v1/forms/${id}/shares`,
+      headers: bearer(adminToken),
+      payload: { email: operatorUser.email, role: 'viewer' },
+    });
+
+    const read = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/forms/${id}`,
+      headers: bearer(operatorToken),
+    });
+    expect(read.statusCode).toBe(200);
+    expect(read.json().access).toBe('viewer');
+
+    expect((await saveDraftAs(operatorToken, id)).statusCode).toBe(403);
+  });
+
+  /** Reading every form in the organisation is an administrator's privilege, not a query string. */
+  it('refuses scope=all to anybody but an administrator', async () => {
+    const response = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/forms?scope=all',
+      headers: bearer(operatorToken),
+    });
+    expect(response.statusCode).toBe(403);
+  });
+
+  describe('the bin', () => {
+    it('takes a form out of the ordinary list and puts it in the bin', async () => {
+      const { id } = (await createForm()).json();
+
+      const trashed = await harness.app.inject({
+        method: 'POST',
+        url: `/v1/forms/${id}/trash`,
+        headers: bearer(adminToken),
+      });
+      expect(trashed.statusCode).toBe(200);
+      expect(trashed.json().deletedAt).not.toBeNull();
+
+      expect((await listAs(adminToken, 'active')).json().forms).toEqual([]);
+      expect(
+        (await listAs(adminToken, 'trash')).json().forms.map((f: { id: string }) => f.id),
+      ).toEqual([id]);
+    });
+
+    it('puts it back where it was', async () => {
+      const { id } = (await createForm()).json();
+      await harness.app.inject({
+        method: 'POST',
+        url: `/v1/forms/${id}/trash`,
+        headers: bearer(adminToken),
+      });
+
+      const restored = await harness.app.inject({
+        method: 'POST',
+        url: `/v1/forms/${id}/restore`,
+        headers: bearer(adminToken),
+      });
+      expect(restored.statusCode).toBe(200);
+      expect(restored.json().deletedAt).toBeNull();
+      expect((await listAs(adminToken, 'trash')).json().forms).toEqual([]);
+    });
+
+    /**
+     * The property that makes the bin worth having: there is no single request that destroys a
+     * live form. Deleting one that has not been binned is refused, not obeyed.
+     */
+    it('refuses to destroy a form that is not in the bin', async () => {
+      const { id } = (await createForm()).json();
+      const response = await harness.app.inject({
+        method: 'DELETE',
+        url: `/v1/forms/${id}`,
+        headers: bearer(adminToken),
+      });
+      expect(response.statusCode).toBe(409);
+      expect(response.json().error.code).toBe('not-in-bin');
+    });
+
+    it('destroys it once it is in the bin', async () => {
+      const { id } = (await createForm()).json();
+      await harness.app.inject({
+        method: 'POST',
+        url: `/v1/forms/${id}/trash`,
+        headers: bearer(adminToken),
+      });
+
+      const destroyed = await harness.app.inject({
+        method: 'DELETE',
+        url: `/v1/forms/${id}`,
+        headers: bearer(adminToken),
+      });
+      expect(destroyed.statusCode).toBe(204);
+      expect((await listAs(adminToken, 'trash')).json().forms).toEqual([]);
+    });
+
+    /** An editor can fix a typo. Throwing the thing away is the owner's to do. */
+    it('does not let an editor share bin a form', async () => {
+      const { id } = (await createForm()).json();
+      await harness.app.inject({
+        method: 'PUT',
+        url: `/v1/forms/${id}/shares`,
+        headers: bearer(adminToken),
+        payload: { email: operatorUser.email, role: 'editor' },
+      });
+
+      const response = await harness.app.inject({
+        method: 'POST',
+        url: `/v1/forms/${id}/trash`,
+        headers: bearer(operatorToken),
+      });
+      expect(response.statusCode).toBe(403);
+    });
+  });
+
+  function listAs(token: string, scope: string) {
+    return harness.app.inject({
+      method: 'GET',
+      url: `/v1/forms?scope=${scope}`,
+      headers: bearer(token),
+    });
+  }
 
   function saveDraftAs(token: string, id: string) {
     return harness.app.inject({

@@ -39,6 +39,11 @@ const EventReport = lazy(() =>
 const FormResponses = lazy(() =>
   import('./screens/FormResponses.js').then((m) => ({ default: m.FormResponses })),
 );
+const Inbox = lazy(() => import('./screens/Inbox.js').then((m) => ({ default: m.Inbox })));
+const Users = lazy(() => import('./screens/Users.js').then((m) => ({ default: m.Users })));
+const UserWorkspace = lazy(() =>
+  import('./screens/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
+);
 import { Loading } from './components/Loading.js';
 
 /**
@@ -143,6 +148,11 @@ function Shell() {
           <nav className="topbar__nav" aria-label={t('nav.sections')}>
             <NavSection to="/events" icon="events" label={t('nav.events')} />
             <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
+            <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
+            {/* Support work, so it only appears for the people who do it. */}
+            {user.role === 'admin' && (
+              <NavSection to="/users" icon="people" label={t('nav.users')} />
+            )}
           </nav>
 
           <div className="topbar__account">
@@ -188,6 +198,9 @@ function Shell() {
             <Route path="/events/new" element={<EventForm />} />
             <Route path="/events/:id" element={<EventForm />} />
             <Route path="/forms" element={<Forms />} />
+            <Route path="/responses" element={<Inbox />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserWorkspace />} />
             <Route path="/brand" element={<BrandKit />} />
             {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
             <Route path="/forms/:id/submissions" element={<FormResponses />} />

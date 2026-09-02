@@ -81,6 +81,93 @@ export const messages: Catalogue = {
 
   'nav.events': { 'sv-SE': 'Evenemang', 'en-GB': 'Events' },
   'nav.forms': { 'sv-SE': 'Formulär', 'en-GB': 'Forms' },
+  'nav.inbox': { 'sv-SE': 'Svar', 'en-GB': 'Responses' },
+  'nav.users': { 'sv-SE': 'Användare', 'en-GB': 'Users' },
+
+  /*
+   * The four piles a person's forms fall into.
+   *
+   * These are the words the market has settled on — Google Forms, JotForm and Typeform all use
+   * some spelling of them — so somebody arriving from any of those already knows what each tab
+   * holds without being told.
+   */
+  'scope.active': { 'sv-SE': 'Alla', 'en-GB': 'All' },
+  'scope.mine': { 'sv-SE': 'Mina formulär', 'en-GB': 'My forms' },
+  'scope.shared': { 'sv-SE': 'Delade med mig', 'en-GB': 'Shared with me' },
+  'scope.trash': { 'sv-SE': 'Papperskorg', 'en-GB': 'Trash' },
+  'scope.all': { 'sv-SE': 'Hela organisationen', 'en-GB': 'Whole organisation' },
+  'scope.emptyMine': {
+    'sv-SE': 'Du har inga egna formulär ännu.',
+    'en-GB': 'You have not made any forms yet.',
+  },
+  'scope.emptyShared': {
+    'sv-SE': 'Ingen har delat ett formulär med dig.',
+    'en-GB': 'Nobody has shared a form with you.',
+  },
+  'scope.emptyTrash': { 'sv-SE': 'Papperskorgen är tom.', 'en-GB': 'The bin is empty.' },
+
+  'forms.owner': { 'sv-SE': 'Av {name}', 'en-GB': 'By {name}' },
+  'forms.ownerYou': { 'sv-SE': 'Av dig', 'en-GB': 'By you' },
+  'forms.ownerNobody': { 'sv-SE': 'Hela organisationen', 'en-GB': 'Whole organisation' },
+  'forms.access.viewer': { 'sv-SE': 'Kan läsa', 'en-GB': 'Can view' },
+  'forms.access.editor': { 'sv-SE': 'Kan redigera', 'en-GB': 'Can edit' },
+  'forms.access.admin': { 'sv-SE': 'Administratör', 'en-GB': 'Administrator' },
+  'forms.trash': { 'sv-SE': 'Flytta till papperskorgen', 'en-GB': 'Move to bin' },
+  'forms.restore': { 'sv-SE': 'Återställ', 'en-GB': 'Restore' },
+  'forms.deleteForever': { 'sv-SE': 'Radera permanent', 'en-GB': 'Delete for ever' },
+  'forms.trashedAt': {
+    'sv-SE': 'I papperskorgen sedan {date}',
+    'en-GB': 'In the bin since {date}',
+  },
+  'forms.confirmTrash': {
+    'sv-SE':
+      'Flytta ”{title}” till papperskorgen? Formuläret slutar ta emot svar men går att återställa.',
+    'en-GB':
+      'Move “{title}” to the bin? It stops accepting responses, and you can restore it later.',
+  },
+  'forms.confirmDelete': {
+    'sv-SE': 'Radera ”{title}” och alla {count} svar permanent? Detta går inte att ångra.',
+    'en-GB': 'Permanently delete “{title}” and all {count} responses? This cannot be undone.',
+  },
+
+  'share.title': { 'sv-SE': 'Dela', 'en-GB': 'Share' },
+  'share.with': { 'sv-SE': 'Delad med {count}', 'en-GB': 'Shared with {count}' },
+  'share.email': { 'sv-SE': 'E-postadress', 'en-GB': 'Email address' },
+  'share.emailHint': {
+    'sv-SE': 'Måste vara någon som redan finns i organisationen.',
+    'en-GB': 'Must be somebody already in the organisation.',
+  },
+  'share.role': { 'sv-SE': 'Behörighet', 'en-GB': 'Permission' },
+  'share.add': { 'sv-SE': 'Dela', 'en-GB': 'Share' },
+  'share.remove': { 'sv-SE': 'Ta bort', 'en-GB': 'Remove' },
+  'share.none': { 'sv-SE': 'Inte delad med någon.', 'en-GB': 'Not shared with anybody.' },
+
+  'inbox.title': { 'sv-SE': 'Svar', 'en-GB': 'Responses' },
+  'inbox.intro': {
+    'sv-SE': 'De senaste svaren från alla formulär du har tillgång till.',
+    'en-GB': 'The latest responses across every form you can see.',
+  },
+  'inbox.empty': { 'sv-SE': 'Inga svar ännu.', 'en-GB': 'No responses yet.' },
+  'inbox.partial': { 'sv-SE': 'Påbörjat', 'en-GB': 'In progress' },
+  'inbox.complete': { 'sv-SE': 'Inskickat', 'en-GB': 'Submitted' },
+
+  'users.title': { 'sv-SE': 'Användare', 'en-GB': 'Users' },
+  'users.intro': {
+    'sv-SE': 'Alla i organisationen. Öppna någon för att se deras formulär och papperskorg.',
+    'en-GB': 'Everybody in the organisation. Open one to see their forms and bin.',
+  },
+  'users.forms': { 'sv-SE': '{count} formulär', 'en-GB': '{count} forms' },
+  'users.inBin': { 'sv-SE': '{count} i papperskorgen', 'en-GB': '{count} in the bin' },
+  'users.disabled': { 'sv-SE': 'Avstängd', 'en-GB': 'Disabled' },
+  'users.role.admin': { 'sv-SE': 'Administratör', 'en-GB': 'Administrator' },
+  'users.role.operator': { 'sv-SE': 'Användare', 'en-GB': 'Member' },
+  'users.open': { 'sv-SE': 'Visa arbetsyta', 'en-GB': 'View workspace' },
+  'users.back': { 'sv-SE': 'Alla användare', 'en-GB': 'All users' },
+  'users.viewingAs': {
+    'sv-SE': 'Du tittar på {name}s arbetsyta som dig själv. Allt du gör loggas i ditt namn.',
+    'en-GB': "You are viewing {name}'s workspace as yourself. Anything you do is logged as you.",
+  },
+  'users.notFound': { 'sv-SE': 'Användaren finns inte.', 'en-GB': 'No such user.' },
 
   'forms.title': { 'sv-SE': 'Formulär', 'en-GB': 'Forms' },
   'forms.new': { 'sv-SE': 'Nytt formulär', 'en-GB': 'New form' },

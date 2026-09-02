@@ -1,9 +1,23 @@
 import { eq } from 'drizzle-orm';
 import { db, sql } from './client.js';
-import { events, formVersions, forms, organisations, submissions, users } from './schema.js';
+import {
+  events,
+  formShares,
+  formVersions,
+  forms,
+  organisations,
+  submissions,
+  users,
+} from './schema.js';
 import { generateReference } from '../forms/public-service.js';
 import { demoEventName, demoSchedule } from '../demo/schedule.js';
-import { DEMO_DEFINITION, DEMO_FORM_SLUG } from '../demo/dataset.js';
+import {
+  DEMO_ADMIN_EMAIL,
+  DEMO_DEFINITION,
+  DEMO_FORM_SLUG,
+  DEMO_OPERATOR_EMAIL,
+} from '../demo/dataset.js';
+import { forms as formSchemas } from '@tp/shared';
 
 /**
  * CLAUDE.md §Demo data — a broken seed blocks demos, so it grows with the schema.
@@ -40,6 +54,26 @@ await db
     },
   ])
   .onConflictDoNothing();
+
+/**
+ * The seeded people, read back rather than assumed.
+ *
+ * `onConflictDoNothing` means a re-seed inserts nothing and returns nothing, so the ids have to
+ * come from a select — the forms below belong to these two, and a form with a made-up owner is a
+ * form nobody can see.
+ */
+const people = await db
+  .select({ id: users.id, email: users.email })
+  .from(users)
+  .where(eq(users.organisationId, organisation.id));
+
+const personId = (email: string): string => {
+  const found = people.find((person) => person.email === email);
+  if (!found) throw new Error(`seed could not find the demo user ${email}`);
+  return found.id;
+};
+const adminId = personId(DEMO_ADMIN_EMAIL);
+const operatorId = personId(DEMO_OPERATOR_EMAIL);
 
 // Relative to now, so the demo never expires. See demo/schedule.ts for why that matters.
 const schedule = demoSchedule();
@@ -87,9 +121,52 @@ if (existingForm.length === 0) {
       title: { 'sv-SE': 'Anmälan till Vårmötet', 'en-GB': 'Spring meeting registration' },
       status: 'published',
       draftDefinition: DEFINITION,
+      ownerUserId: adminId,
     })
     .returning();
   if (!form) throw new Error('seed could not create the demo form');
+
+  /**
+   * Two more forms, so every tab of the workspace has something in it.
+   *
+   * A demo where all three forms belong to the same person and none is in the bin demonstrates
+   * one quarter of the feature. Oskar's feedback form is shared with Alva, so "shared with me"
+   * has a row; the old survey is binned a week ago, so the bin does too.
+   */
+  const feedback = formSchemas.findTemplate('customer-feedback');
+  const [shared] = await db
+    .insert(forms)
+    .values({
+      organisationId: organisation.id,
+      eventId: null,
+      slug: 'kundfeedback',
+      title: { 'sv-SE': 'Kundfeedback', 'en-GB': 'Customer feedback' },
+      status: 'draft',
+      draftDefinition: feedback
+        ? structuredClone(feedback.definition)
+        : formSchemas.emptyDefinition,
+      ownerUserId: operatorId,
+    })
+    .returning();
+  if (!shared) throw new Error('seed could not create the shared demo form');
+
+  await db.insert(formShares).values({
+    organisationId: organisation.id,
+    formId: shared.id,
+    userId: adminId,
+    role: 'editor',
+  });
+
+  await db.insert(forms).values({
+    organisationId: organisation.id,
+    eventId: null,
+    slug: 'gammal-enkat',
+    title: { 'sv-SE': 'Gammal enkät', 'en-GB': 'Old survey' },
+    status: 'draft',
+    draftDefinition: formSchemas.emptyDefinition,
+    ownerUserId: adminId,
+    deletedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+  });
 
   const [version] = await db
     .insert(formVersions)

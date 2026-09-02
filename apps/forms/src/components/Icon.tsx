@@ -71,6 +71,8 @@ export type IconName =
   | 'globe'
   | 'settings'
   | 'undo'
+  | 'user'
+  | 'share'
   | 'redo';
 
 /** 24×24 paths, stroke-width 2, round caps. */
@@ -87,6 +89,11 @@ const PATHS: Record<IconName, string> = {
   rating: 'M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9z',
   time: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3.5 2',
   file: 'M6 3h9l4 4v14H6zM15 3v4h4M9 13h6M9 17h4',
+  // A head and shoulders: whose form this is.
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
+  // Three nodes on two arms — the usual shape for passing something on to somebody.
+  share:
+    'M18 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1',
   paperclip: 'M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 5',
   signature: 'M3 17c4-9 6-9 8-2s4 7 6 0M3 21h18',
   section_break: 'M3 12h18M6 7h12M6 17h12',
