@@ -1,5 +1,6 @@
 import {
   PRESENTATIONAL_TYPES,
+  type AnswerableField,
   type Field,
   type FieldWidth,
   type FormDefinition,
@@ -8,8 +9,10 @@ import {
 const presentational = new Set<string>(PRESENTATIONAL_TYPES);
 
 /** Fields that actually collect an answer. Section breaks, page breaks and rich text do not. */
-export function answerableFields(definition: FormDefinition): Field[] {
-  return definition.fields.filter((field) => !presentational.has(field.type));
+export function answerableFields(definition: FormDefinition): AnswerableField[] {
+  return definition.fields.filter(
+    (field): field is AnswerableField => !presentational.has(field.type),
+  );
 }
 
 /**

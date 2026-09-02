@@ -1,4 +1,4 @@
-import { answerableFields, type Field, type FormDefinition } from './index.js';
+import { answerableFields, type AnswerableField, type FormDefinition } from './index.js';
 
 /**
  * One validator, run on both sides.
@@ -65,7 +65,7 @@ export function validateSubmission(
 }
 
 function validateField(
-  field: Field,
+  field: AnswerableField,
   raw: AnswerValue,
 ): { value?: AnswerValue; issue?: Omit<ValidationIssue, 'key'> } {
   switch (field.type) {
@@ -152,12 +152,48 @@ function validateField(
       return { issue: { code: 'validation.yesNo' } };
     }
 
+    case 'rating': {
+      const value = typeof raw === 'number' ? raw : Number(String(raw));
+      if (!Number.isInteger(value) || value < 1 || value > field.scale) {
+        return { issue: { code: 'validation.rating', params: { max: field.scale } } };
+      }
+      return { value };
+    }
+
+    case 'time': {
+      const value = String(raw).trim();
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) {
+        return { issue: { code: 'validation.time' } };
+      }
+      // `HH:MM` is fixed-width and zero-padded, so string order is clock order.
+      if (field.min && value < field.min) {
+        return { issue: { code: 'validation.timeMin', params: { min: field.min } } };
+      }
+      if (field.max && value > field.max) {
+        return { issue: { code: 'validation.timeMax', params: { max: field.max } } };
+      }
+      return { value };
+    }
+
     case 'hidden':
       return { value: String(raw).slice(0, 500) };
 
     default:
-      return { value: null };
+      /**
+       * Not a fallback — a bug.
+       *
+       * This used to `return { value: null }`, which meant a new answerable field type added to
+       * the schema without a case here would accept anything and store nothing, in silence, all
+       * the way through to an empty column in the export. `never` makes it a compile error
+       * instead, so the switch cannot fall behind the union.
+       */
+      return assertHandled(field);
   }
+}
+
+function assertHandled(field: never): { issue: Omit<ValidationIssue, 'key'> } {
+  const type = (field as { type?: string }).type ?? 'unknown';
+  throw new Error(`validateField has no case for field type "${type}"`);
 }
 
 function isEmpty(value: AnswerValue): boolean {

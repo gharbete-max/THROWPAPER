@@ -160,6 +160,10 @@ export const messages: Catalogue = {
   'field.label': { 'sv-SE': 'Etikett', 'en-GB': 'Label' },
   'field.helpText': { 'sv-SE': 'Hjälptext', 'en-GB': 'Help text' },
   'field.placeholder': { 'sv-SE': 'Platshållare', 'en-GB': 'Placeholder' },
+  'field.placeholderHint': {
+    'sv-SE': 'Grå exempeltext i rutan. Ersätter inte hjälptexten.',
+    'en-GB': 'Grey example text inside the box. Not a replacement for help text.',
+  },
   'field.required': { 'sv-SE': 'Obligatoriskt', 'en-GB': 'Required' },
   'field.width': { 'sv-SE': 'Bredd', 'en-GB': 'Width' },
   'field.widthHint': {
@@ -177,6 +181,15 @@ export const messages: Catalogue = {
     'en-GB': 'Changes how the question looks. Answers are stored the same way either way.',
   },
   'field.appearance.dropdown': { 'sv-SE': 'Rullgardin', 'en-GB': 'Dropdown' },
+  'field.appearance.star': { 'sv-SE': 'Stjärnor', 'en-GB': 'Stars' },
+  'field.appearance.number': { 'sv-SE': 'Siffror', 'en-GB': 'Numbers' },
+  'field.scale': { 'sv-SE': 'Skala', 'en-GB': 'Scale' },
+  'field.scaleHint': {
+    'sv-SE': 'Antal steg, 2 till 10. Fem stjärnor eller tio siffror.',
+    'en-GB': 'How many points, 2 to 10. Five stars, or ten numbers.',
+  },
+  'field.minLabel': { 'sv-SE': 'Text vid lägsta', 'en-GB': 'Label at the low end' },
+  'field.maxLabel': { 'sv-SE': 'Text vid högsta', 'en-GB': 'Label at the high end' },
   'field.appearance.radio': { 'sv-SE': 'Radioknappar', 'en-GB': 'Radio buttons' },
   'field.appearance.checkboxes': { 'sv-SE': 'Kryssrutor', 'en-GB': 'Checkboxes' },
   'field.appearance.buttons': { 'sv-SE': 'Knappar', 'en-GB': 'Buttons' },
@@ -195,6 +208,8 @@ export const messages: Catalogue = {
   'fieldType.single_select': { 'sv-SE': 'Ett val', 'en-GB': 'Single select' },
   'fieldType.multi_select': { 'sv-SE': 'Flera val', 'en-GB': 'Multi select' },
   'fieldType.yes_no': { 'sv-SE': 'Ja/Nej', 'en-GB': 'Yes/No' },
+  'fieldType.rating': { 'sv-SE': 'Betyg', 'en-GB': 'Rating' },
+  'fieldType.time': { 'sv-SE': 'Tid', 'en-GB': 'Time' },
   'fieldType.section_break': { 'sv-SE': 'Avsnitt', 'en-GB': 'Section' },
   'fieldType.page_break': { 'sv-SE': 'Sidbrytning', 'en-GB': 'Page break' },
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
@@ -232,6 +247,46 @@ export const messages: Catalogue = {
 
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
+
+  // What counts as a valid answer. Every one of these drives a rule the validator already had.
+  'rules.heading': { 'sv-SE': 'Regler för svaret', 'en-GB': 'Answer rules' },
+  'rules.intro': {
+    'sv-SE': 'Lämna tomt för ingen regel.',
+    'en-GB': 'Leave blank for no rule.',
+  },
+  'rules.minLength': { 'sv-SE': 'Minst antal tecken', 'en-GB': 'Minimum characters' },
+  'rules.maxLength': { 'sv-SE': 'Högst antal tecken', 'en-GB': 'Maximum characters' },
+  'rules.rows': { 'sv-SE': 'Höjd i rader', 'en-GB': 'Height in rows' },
+  'rules.min': { 'sv-SE': 'Lägsta värde', 'en-GB': 'Lowest value' },
+  'rules.max': { 'sv-SE': 'Högsta värde', 'en-GB': 'Highest value' },
+  'rules.minDate': { 'sv-SE': 'Tidigast datum', 'en-GB': 'Earliest date' },
+  'rules.maxDate': { 'sv-SE': 'Senast datum', 'en-GB': 'Latest date' },
+  'rules.minTime': { 'sv-SE': 'Tidigast tid', 'en-GB': 'Earliest time' },
+  'rules.maxTime': { 'sv-SE': 'Senast tid', 'en-GB': 'Latest time' },
+  'rules.decimals': { 'sv-SE': 'Antal decimaler', 'en-GB': 'Decimal places' },
+  'rules.minSelected': { 'sv-SE': 'Minst antal val', 'en-GB': 'Minimum choices' },
+  'rules.maxSelected': { 'sv-SE': 'Högst antal val', 'en-GB': 'Maximum choices' },
+  'rules.defaultValue': { 'sv-SE': 'Standardvärde', 'en-GB': 'Default value' },
+  'rules.defaultValueHint': {
+    'sv-SE': 'Används när ingen parameter finns i länken.',
+    'en-GB': 'Used when the link carries no parameter.',
+  },
+  'rules.pattern': { 'sv-SE': 'Format', 'en-GB': 'Format' },
+  'rules.pattern.none': { 'sv-SE': 'Vad som helst', 'en-GB': 'Anything' },
+  'rules.pattern.letters': { 'sv-SE': 'Endast bokstäver', 'en-GB': 'Letters only' },
+  'rules.pattern.digits': { 'sv-SE': 'Endast siffror', 'en-GB': 'Digits only' },
+  'rules.pattern.alphanumeric': {
+    'sv-SE': 'Bokstäver och siffror',
+    'en-GB': 'Letters and digits',
+  },
+  'rules.pattern.postcodeSe': { 'sv-SE': 'Svenskt postnummer', 'en-GB': 'Swedish postcode' },
+  'rules.pattern.url': { 'sv-SE': 'Webbadress', 'en-GB': 'Web address' },
+  'rules.pattern.custom': { 'sv-SE': 'Eget mönster', 'en-GB': 'Custom pattern' },
+  'rules.pattern.expression': { 'sv-SE': 'Reguljärt uttryck', 'en-GB': 'Regular expression' },
+  'rules.pattern.expressionHint': {
+    'sv-SE': 'Matchas mot hela svaret. Skriv inga ^ eller $.',
+    'en-GB': 'Matched against the whole answer. Do not add ^ or $.',
+  },
   /** Names the nav landmark for a screen reader; never shown. */
   'nav.sections': { 'sv-SE': 'Avdelningar', 'en-GB': 'Sections' },
 
@@ -256,7 +311,8 @@ export const messages: Catalogue = {
 
   'forms.edit': { 'sv-SE': 'Redigera formulär', 'en-GB': 'Edit form' },
 
-  'palette.text': { 'sv-SE': 'Text och siffror', 'en-GB': 'Text and numbers' },
+  'palette.text': { 'sv-SE': 'Text', 'en-GB': 'Text' },
+  'palette.numbers': { 'sv-SE': 'Siffror och datum', 'en-GB': 'Numbers and dates' },
   'palette.choice': { 'sv-SE': 'Val', 'en-GB': 'Choices' },
   'palette.layout': { 'sv-SE': 'Layout', 'en-GB': 'Layout' },
 
@@ -578,4 +634,8 @@ export const messages: Catalogue = {
   'validation.minSelected': { 'sv-SE': 'Välj minst {min}.', 'en-GB': 'Choose at least {min}.' },
   'validation.maxSelected': { 'sv-SE': 'Välj högst {max}.', 'en-GB': 'Choose at most {max}.' },
   'validation.yesNo': { 'sv-SE': 'Välj ja eller nej.', 'en-GB': 'Choose yes or no.' },
+  'validation.rating': { 'sv-SE': 'Välj 1 till {max}.', 'en-GB': 'Choose 1 to {max}.' },
+  'validation.time': { 'sv-SE': 'Ange en tid.', 'en-GB': 'Enter a time.' },
+  'validation.timeMin': { 'sv-SE': 'Tidigast {min}.', 'en-GB': 'No earlier than {min}.' },
+  'validation.timeMax': { 'sv-SE': 'Senast {max}.', 'en-GB': 'No later than {max}.' },
 };

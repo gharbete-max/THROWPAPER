@@ -22,6 +22,8 @@ export const FIELD_TYPES = [
   'single_select',
   'multi_select',
   'yes_no',
+  'rating',
+  'time',
   'section_break',
   'page_break',
   'rich_text',
@@ -99,6 +101,8 @@ export const SelectOption = z.object({
 export const SINGLE_SELECT_APPEARANCES = ['dropdown', 'radio', 'buttons', 'cards'] as const;
 export const MULTI_SELECT_APPEARANCES = ['checkboxes', 'buttons', 'cards'] as const;
 export const YES_NO_APPEARANCES = ['dropdown', 'radio', 'buttons'] as const;
+/** Stars for satisfaction, numbers for a scale somebody will do arithmetic on later. */
+export const RATING_APPEARANCES = ['star', 'number'] as const;
 
 export const SingleSelectAppearance = z.enum(SINGLE_SELECT_APPEARANCES);
 export type SingleSelectAppearance = z.infer<typeof SingleSelectAppearance>;
@@ -106,6 +110,8 @@ export const MultiSelectAppearance = z.enum(MULTI_SELECT_APPEARANCES);
 export type MultiSelectAppearance = z.infer<typeof MultiSelectAppearance>;
 export const YesNoAppearance = z.enum(YES_NO_APPEARANCES);
 export type YesNoAppearance = z.infer<typeof YesNoAppearance>;
+export const RatingAppearance = z.enum(RATING_APPEARANCES);
+export type RatingAppearance = z.infer<typeof RatingAppearance>;
 
 const TextRules = {
   minLength: z.number().int().nonnegative().optional(),
@@ -153,6 +159,43 @@ export const Field = z.discriminatedUnion('type', [
     appearance: MultiSelectAppearance.default('checkboxes'),
   }),
   z.object({ ...base, type: z.literal('yes_no'), appearance: YesNoAppearance.default('dropdown') }),
+
+  /**
+   * A rating or a linear scale — satisfaction, likelihood to recommend, how good the coffee was.
+   *
+   * Stores a plain integer from 1 to `scale`, so the answer is a number in the export and can be
+   * averaged, rather than the text of whichever star got clicked.
+   *
+   * `minLabel` and `maxLabel` name the ends. Without them a 1–10 scale is ambiguous in both
+   * directions — a survey that does not say whether 10 is good or bad collects noise.
+   */
+  z.object({
+    ...base,
+    type: z.literal('rating'),
+    scale: z.number().int().min(2).max(10).default(5),
+    appearance: RatingAppearance.default('star'),
+    minLabel: LocalisedText.optional(),
+    maxLabel: LocalisedText.optional(),
+  }),
+
+  /**
+   * A time of day, `HH:MM` on a 24-hour clock.
+   *
+   * Stored as a string rather than a number of minutes because that is what `<input type="time">`
+   * produces, what a spreadsheet reads back, and what sorts correctly as text.
+   */
+  z.object({
+    ...base,
+    type: z.literal('time'),
+    min: z
+      .string()
+      .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+      .optional(),
+    max: z
+      .string()
+      .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+      .optional(),
+  }),
 
   // Presentational — no answer is collected, so `required` is meaningless and omitted.
   z.object({
@@ -228,6 +271,35 @@ export const Field = z.discriminatedUnion('type', [
 ]);
 
 export type Field = z.infer<typeof Field>;
+
+export type PresentationalType = (typeof PRESENTATIONAL_TYPES)[number];
+
+/**
+ * A field that collects an answer — everything except the presentational ones.
+ *
+ * A real narrowing rather than a comment, so `validateField` can be an exhaustive switch. While
+ * `answerableFields` returned the whole union, that switch needed a `default` branch, and its
+ * default silently stored `null` — which is what a new answerable field type would have done all
+ * the way through to an empty column in the export.
+ */
+export type AnswerableField = Exclude<Field, { type: PresentationalType }>;
+
+/**
+ * Every property a field of this type carries, read out of the schema itself.
+ *
+ * Exists so the builder can be **proved** to expose everything a field has. The validator has
+ * enforced `minLength`, `maxLength`, `pattern`, `min`, `max`, `decimals`, `minSelected` and
+ * `maxSelected` since it was written, and the properties panel offered a control for none of
+ * them — a whole validation engine no author could reach, because nothing compared the two lists.
+ *
+ * `apps/forms/.../field-properties.test.ts` walks this and fails on any property with nowhere to
+ * set it, so adding a rule to the schema and forgetting the UI is now a red test rather than a
+ * feature nobody can find.
+ */
+export function fieldProperties(type: FieldType): string[] {
+  const variant = Field.options.find((option) => option.shape.type.value === type);
+  return variant ? Object.keys(variant.shape) : [];
+}
 
 export const FormSettings = z.object({
   submitLabel: LocalisedText.default({}),
