@@ -93,12 +93,26 @@ export function useAnnounceLocale(locale: string): void {
 }
 
 export function DemoBanner() {
-  const { locales, locale } = useSession();
+  const { interfaceLocales, locale } = useSession();
   const { isDemo, announcedLocale } = useDemo();
   const [resetting, setResetting] = useState(false);
 
-  // A Swedish banner over an English form is the one page the public sees getting it wrong.
-  const t = useTranslator(locales, resolveLocale(locales, announcedLocale ?? locale));
+  /**
+   * A Swedish banner over an English form is the one page the public sees getting it wrong — and
+   * a Swedish banner over a Japanese interface is the same mistake indoors.
+   *
+   * Resolved against the **interface** languages rather than the organisation's content ones.
+   * Against the organisation's, choosing Japanese in the top bar left this banner in Swedish,
+   * because a demo organisation publishing forms in two languages says nothing about which
+   * language the person reading the screen asked for.
+   *
+   * `announcedLocale` still wins where a public form has set one: there the banner sits above
+   * somebody else's document and should match it.
+   */
+  const t = useTranslator(
+    interfaceLocales,
+    resolveLocale(interfaceLocales, announcedLocale ?? locale),
+  );
 
   if (!isDemo) return null;
 

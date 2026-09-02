@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto';
 import { forms as formSchemas } from '@tp/shared';
-import { LOCALE_CODES } from '@tp/i18n';
 import type { MemoryState } from '../db/repositories/index.js';
 import { generateReference } from '../forms/public-service.js';
 import { demoEventName, demoSchedule } from './schedule.js';
@@ -17,13 +16,13 @@ export const DEMO_ORGANISATION = {
   slug: 'demo',
   defaultLocale: 'sv-SE',
   /**
-   * Every language the product ships in.
+   * The languages this organisation publishes **content** in — not the twelve the interface is
+   * available in, which is a separate list the demo does not get to choose.
    *
-   * The demo publishes in all of them on purpose: the language picker, the completeness report
-   * and the fallback chain are only exercised at all when an organisation supports more than
-   * two, and a demo that shows two proves none of it works at twelve.
+   * Two, because the demo has content in two. Claiming twelve put a row of ten "missing
+   * translation" warnings under every seeded event and form: accurate, and entirely self-inflicted.
    */
-  supportedLocales: LOCALE_CODES,
+  supportedLocales: ['sv-SE', 'en-GB'],
 } as const;
 
 export const DEMO_ADMIN_EMAIL = 'admin@example.com';

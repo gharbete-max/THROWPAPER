@@ -115,7 +115,8 @@ function NavSection({ to, icon, label }: { to: string; icon: IconName; label: st
 /** Everything behind the bearer token. */
 function Shell() {
   const t = useT();
-  const { user, organisation, loading, locale, setLocale, locales, signOut } = useSession();
+  const { user, organisation, loading, locale, setLocale, interfaceLocales, signOut } =
+    useSession();
   const { tokens: brand } = useBrand();
   const location = useLocation();
 
@@ -183,7 +184,11 @@ function Shell() {
               The site is in **one** language at a time; a form can offer its own switcher
               separately, which is a different control on a different page.
             */}
-            <LanguagePicker locales={locales.supported} current={locale} onChange={setLocale} />
+            <LanguagePicker
+              locales={interfaceLocales.supported}
+              current={locale}
+              onChange={setLocale}
+            />
             <span className="small muted">
               {user.name} · {user.role}
             </span>

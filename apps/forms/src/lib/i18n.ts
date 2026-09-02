@@ -23,8 +23,11 @@ import {
  * the same trade the fallback chain already makes for a half-translated form.
  */
 export function useT(): Translator {
-  const { locales, locale } = useSession();
-  return useTranslator(locales, locale);
+  // The **interface** list, not the organisation's content list — see `session.tsx`. Resolving
+  // against the organisation's would mean an operator could not read the app in a language their
+  // customer happens not to publish forms in.
+  const { interfaceLocales, locale } = useSession();
+  return useTranslator(interfaceLocales, locale);
 }
 
 /**
