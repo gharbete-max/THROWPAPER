@@ -50,7 +50,6 @@ export const messages: Catalogue = {
     'sv-SE': '{count} av {capacity} anmälda',
     'en-GB': '{count} of {capacity} registered',
   },
-  'events.uncapped': { 'sv-SE': 'Obegränsat', 'en-GB': 'Uncapped' },
   'events.archive': { 'sv-SE': 'Arkivera', 'en-GB': 'Archive' },
   'events.archiveConfirm': {
     'sv-SE': 'Arkivera evenemanget? Det går att återställa.',
@@ -134,11 +133,9 @@ export const messages: Catalogue = {
     'sv-SE': 'Ersätt utkastet med version {n}? Det som inte är publicerat går förlorat.',
     'en-GB': 'Replace the draft with version {n}? Anything unpublished is lost.',
   },
+  'builder.undo': { 'sv-SE': 'Ångra (Ctrl+Z)', 'en-GB': 'Undo (Ctrl+Z)' },
+  'builder.redo': { 'sv-SE': 'Gör om (Ctrl+Shift+Z)', 'en-GB': 'Redo (Ctrl+Shift+Z)' },
   'builder.remove': { 'sv-SE': 'Ta bort', 'en-GB': 'Remove' },
-  'builder.removeConfirm': {
-    'sv-SE': 'Ta bort fältet? Svar som redan lämnats påverkas inte.',
-    'en-GB': 'Remove this field? Answers already given are unaffected.',
-  },
   'builder.translationsComplete': {
     'sv-SE': 'Alla språk klara',
     'en-GB': 'All languages complete',
@@ -671,7 +668,6 @@ export const messages: Catalogue = {
   // Public form. Shown to people who are not signed in, in their chosen language.
   'public.next': { 'sv-SE': 'Nästa', 'en-GB': 'Next' },
   'public.back': { 'sv-SE': 'Tillbaka', 'en-GB': 'Back' },
-  'public.submit': { 'sv-SE': 'Skicka', 'en-GB': 'Submit' },
   /**
    * The last page's action. "Complete" rather than "Sign": a signature that carries legal weight
    * is a regulated feature this product does not have (SPEC-forms.md §8), and a button that says
@@ -679,7 +675,6 @@ export const messages: Catalogue = {
    */
   'public.complete': { 'sv-SE': 'Slutför', 'en-GB': 'Complete' },
   'public.submitting': { 'sv-SE': 'Skickar…', 'en-GB': 'Submitting…' },
-  'public.page': { 'sv-SE': 'Sida {n} av {total}', 'en-GB': 'Page {n} of {total}' },
   'public.save': { 'sv-SE': 'Spara och fortsätt senare', 'en-GB': 'Save and continue later' },
   'public.saving': { 'sv-SE': 'Sparar…', 'en-GB': 'Saving…' },
   'public.savedTitle': { 'sv-SE': 'Sparat', 'en-GB': 'Saved' },
@@ -693,10 +688,6 @@ export const messages: Catalogue = {
   'public.reference': {
     'sv-SE': 'Din referens: {reference}',
     'en-GB': 'Your reference: {reference}',
-  },
-  'public.closed': {
-    'sv-SE': 'Anmälan är stängd.',
-    'en-GB': 'This form is closed.',
   },
   'public.closed.not-open-yet': {
     'sv-SE': 'Anmälan har inte öppnat än.',

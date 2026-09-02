@@ -29,7 +29,7 @@ interface Props {
   selectedId: string | null;
   onSelect: (id: string) => void;
   onReorder: (fields: Field[]) => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: string) => void | Promise<void>;
   onMove: (id: string, direction: -1 | 1) => void;
   onDuplicate: (id: string) => void;
   /** Rendered inside the open field's own row. */
@@ -110,7 +110,7 @@ function SortableField({
   first: boolean;
   last: boolean;
   onSelect: (id: string) => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: string) => void | Promise<void>;
   onMove: (id: string, direction: -1 | 1) => void;
   onDuplicate: (id: string) => void;
   renderEditor: (field: Field) => ReactNode;

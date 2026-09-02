@@ -17,6 +17,7 @@ import { FieldProperties } from './FieldProperties.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
 import { FormSettingsPanel } from './FormSettingsPanel.js';
+import { useHistory } from './use-history.js';
 import { Icon } from '../../components/Icon.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
@@ -42,6 +43,7 @@ export function FormBuilder() {
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const history = useHistory();
 
   /**
    * Width of the preview pane, in pixels, remembered between visits.
@@ -57,6 +59,32 @@ export function FormBuilder() {
   useEffect(() => {
     localStorage.setItem(PREVIEW_WIDTH_KEY, String(previewWidth));
   }, [previewWidth]);
+
+  /**
+   * Ctrl+Z and Ctrl+Shift+Z, plus Ctrl+Y for the Windows habit.
+   *
+   * **Not while a text box has focus.** The browser's own undo inside an input is what somebody
+   * pressing Ctrl+Z mid-word wants; stealing it to roll back the whole form would be startling and
+   * would take a keystroke away that has no other equivalent. So the shortcut applies only when
+   * focus is somewhere structural.
+   */
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (!event.ctrlKey && !event.metaKey) return;
+      const key = event.key.toLowerCase();
+      if (key !== 'z' && key !== 'y') return;
+
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return;
+
+      event.preventDefault();
+      stepHistory(key === 'y' || event.shiftKey ? 'redo' : 'undo');
+    }
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  });
 
   function startResize(event: React.PointerEvent<HTMLDivElement>) {
     event.preventDefault();
@@ -88,6 +116,8 @@ export function FormBuilder() {
     client.getForm(id).then((loaded) => {
       setForm(loaded);
       setDefinition(loaded.draftDefinition);
+      // Otherwise Ctrl+Z on the second form walks back into the first one's edits.
+      history.reset();
     });
     loadVersions();
   }, [id, loadVersions]);
@@ -116,9 +146,27 @@ export function FormBuilder() {
   }, [id, definition, saveState]);
 
   function edit(next: FormDefinition) {
+    if (definition) history.record(definition, next);
     setDefinition(next);
     setSaveState('unsaved');
     setError(null);
+  }
+
+  /**
+   * Step back, or forward.
+   *
+   * Goes through `setDefinition` rather than `edit`, or undoing would record itself as another
+   * edit and the stack would never empty. The save state is set by hand for the same reason: the
+   * form on the server no longer matches, so it is unsaved, and autosave takes it from there.
+   */
+  function stepHistory(direction: 'undo' | 'redo') {
+    if (!definition) return;
+    const target = direction === 'undo' ? history.undo(definition) : history.redo(definition);
+    if (!target) return;
+    setDefinition(target);
+    setSaveState('unsaved');
+    // A field that no longer exists must not stay selected, or the properties panel edits a ghost.
+    if (selectedId && !target.fields.some((field) => field.id === selectedId)) setSelectedId(null);
   }
 
   /**
@@ -196,6 +244,16 @@ export function FormBuilder() {
     });
   }
 
+  /**
+   * Rule 7's confirmation for this action lives in `FieldCanvas`: pressing Remove swaps the button
+   * for an inline "Yes, remove", rather than opening a modal. Deliberate — a modal for every field
+   * you delete while laying out a form is the friction that makes a builder tiring, and the inline
+   * one is just as much a deliberate second press.
+   *
+   * Undo backs it up but does not replace it: undo lives in memory, so deleting a field, letting
+   * the 800ms autosave fire and reloading loses it for good — version history only restores what
+   * was *published*.
+   */
   function removeField(fieldId: string) {
     if (!definition) return;
     edit({ ...definition, fields: definition.fields.filter((field) => field.id !== fieldId) });
@@ -279,6 +337,29 @@ export function FormBuilder() {
           </p>
         </div>
         <div className="row">
+          {/* Icon-only: two buttons that say "Undo" and "Redo" crowd out the one that publishes,
+              and the arrows are the most recognisable pair of glyphs in any editor. */}
+          <button
+            type="button"
+            className="button button--quiet button--icon"
+            onClick={() => stepHistory('undo')}
+            disabled={!history.canUndo}
+            title={t('builder.undo')}
+            aria-label={t('builder.undo')}
+          >
+            <Icon name="undo" />
+          </button>
+          <button
+            type="button"
+            className="button button--quiet button--icon"
+            onClick={() => stepHistory('redo')}
+            disabled={!history.canRedo}
+            title={t('builder.redo')}
+            aria-label={t('builder.redo')}
+          >
+            <Icon name="redo" />
+          </button>
+
           <span className="small muted">{t(`builder.${saveState}`)}</span>
           <button
             className="button"
