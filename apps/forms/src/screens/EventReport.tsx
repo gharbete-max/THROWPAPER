@@ -6,6 +6,7 @@ import { useSession } from '../lib/session.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
 import { Stat, Stats } from '../components/Stat.js';
 import { useConfirm } from '../components/Confirm.js';
+import { Loading } from '../components/Loading.js';
 
 interface Attendee {
   submissionId: string;
@@ -94,7 +95,7 @@ export function EventReport() {
     load();
   }
 
-  if (!attendance) return <p className="muted">{t('app.loading')}</p>;
+  if (!attendance) return <Loading />;
 
   return (
     <section className="stack">

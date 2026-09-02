@@ -7,6 +7,8 @@ import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { CopyLink } from '../components/CopyLink.js';
+import { Loading } from '../components/Loading.js';
+import { Reveal } from '../components/Signed.js';
 
 export function Forms() {
   const t = useT();
@@ -119,7 +121,7 @@ export function Forms() {
         </form>
       )}
 
-      {forms === null && <p className="muted">{t('app.loading')}</p>}
+      {forms === null && <Loading />}
       {forms?.length === 0 && <p className="muted">{t('forms.empty')}</p>}
 
       {forms?.map((form) => {
@@ -129,74 +131,76 @@ export function Forms() {
         const publicPath = `/f/${form.slug}`;
         const live = form.status === 'published';
         return (
-          <article className="card stack" key={form.id}>
-            <div className="row row--between">
-              <h2>{name.value || form.slug}</h2>
-              <span className="badge">{t(`forms.status.${form.status}`)}</span>
-            </div>
+          <Reveal key={form.id}>
+            <article className="card stack">
+              <div className="row row--between">
+                <h2>{name.value || form.slug}</h2>
+                <span className="badge">{t(`forms.status.${form.status}`)}</span>
+              </div>
 
-            {/**
-             * Responses first. A list of forms with no counts on it answers "what have I built",
-             * which nobody is asking; the question is "is anybody filling these in".
-             */}
-            <p className="small">
-              <Icon name="inbox" className="icon--lead" />
-              <strong>{t('forms.responses', { count: form.submissionCount })}</strong>
-              <span className="muted">
-                {' · '}
-                {form.publishedVersion
-                  ? t('forms.version', { n: form.publishedVersion })
-                  : t('forms.unpublished')}
-              </span>
-            </p>
-
-            {/**
-             * The address was printed as plain text, so the one thing an author most wants to do
-             * with it — look at their own form, or send the link to somebody — was retyping.
-             */}
-            <p className="small row form-link-row">
-              {live ? (
-                <a
-                  className="form-link"
-                  href={publicPath}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon name="external" className="icon--lead" />
-                  {publicPath}
-                </a>
-              ) : (
-                <span className="muted">
-                  <Icon name="link" className="icon--lead" />
-                  {publicPath}
-                </span>
-              )}
-              <CopyLink path={publicPath} />
-            </p>
-
-            {incomplete.length > 0 && (
-              <p className="small status-warning">
-                <Icon name="globe" className="icon--lead" />
-                {/* The bare locale codes used to sit here on their own, orange and unexplained. */}
-                {t('forms.untranslated', {
-                  locales: incomplete.map((entry) => entry.locale).join(', '),
-                })}
-              </p>
-            )}
-
-            <div className="row card__actions">
-              <Link className="button button--quiet" to={`/forms/${form.id}/submissions`}>
+              {/**
+               * Responses first. A list of forms with no counts on it answers "what have I built",
+               * which nobody is asking; the question is "is anybody filling these in".
+               */}
+              <p className="small">
                 <Icon name="inbox" className="icon--lead" />
-                {t('forms.viewResponses')}
-              </Link>
-              {isAdmin && (
-                <Link className="button button--quiet" to={`/forms/${form.id}`}>
-                  <Icon name="edit" className="icon--lead" />
-                  {t('forms.edit')}
-                </Link>
+                <strong>{t('forms.responses', { count: form.submissionCount })}</strong>
+                <span className="muted">
+                  {' · '}
+                  {form.publishedVersion
+                    ? t('forms.version', { n: form.publishedVersion })
+                    : t('forms.unpublished')}
+                </span>
+              </p>
+
+              {/**
+               * The address was printed as plain text, so the one thing an author most wants to do
+               * with it — look at their own form, or send the link to somebody — was retyping.
+               */}
+              <p className="small row form-link-row">
+                {live ? (
+                  <a
+                    className="form-link"
+                    href={publicPath}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name="external" className="icon--lead" />
+                    {publicPath}
+                  </a>
+                ) : (
+                  <span className="muted">
+                    <Icon name="link" className="icon--lead" />
+                    {publicPath}
+                  </span>
+                )}
+                <CopyLink path={publicPath} />
+              </p>
+
+              {incomplete.length > 0 && (
+                <p className="small status-warning">
+                  <Icon name="globe" className="icon--lead" />
+                  {/* The bare locale codes used to sit here on their own, orange and unexplained. */}
+                  {t('forms.untranslated', {
+                    locales: incomplete.map((entry) => entry.locale).join(', '),
+                  })}
+                </p>
               )}
-            </div>
-          </article>
+
+              <div className="row card__actions">
+                <Link className="button button--quiet" to={`/forms/${form.id}/submissions`}>
+                  <Icon name="inbox" className="icon--lead" />
+                  {t('forms.viewResponses')}
+                </Link>
+                {isAdmin && (
+                  <Link className="button button--quiet" to={`/forms/${form.id}`}>
+                    <Icon name="edit" className="icon--lead" />
+                    {t('forms.edit')}
+                  </Link>
+                )}
+              </div>
+            </article>
+          </Reveal>
         );
       })}
     </section>
