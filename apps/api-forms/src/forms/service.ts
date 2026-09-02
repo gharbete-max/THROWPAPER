@@ -16,11 +16,33 @@ export function toFormResponse(
    * handed and has no repository. Callers that list many forms count them in one query.
    */
   submissionCount: number,
+  /**
+   * Who is looking, and what they are allowed to do.
+   *
+   * Required rather than optional. Every route that returns a form has to have decided this
+   * already in order to have let the request through, so passing it costs nothing — and making it
+   * optional would mean a route that forgot could hand back a form claiming the most permissive
+   * access there is. A missing argument is a compile error; a wrong default is a security bug.
+   */
+  viewer: {
+    access: formSchemas.FormAccess;
+    /** The share addressed to this reader, if any. Independent of `access` — see the schema. */
+    sharedRole?: formSchemas.FormShareRole | null;
+    /** The owner's display name, resolved by the caller. Null when nobody owns it. */
+    ownerName?: string | null;
+    shareCount?: number;
+  },
 ): formSchemas.FormResponse {
   const parsed = formSchemas.FormDefinition.safeParse(form.draftDefinition);
   const definition = parsed.success ? parsed.data : formSchemas.emptyDefinition;
 
   return {
+    ownerUserId: form.ownerUserId,
+    ownerName: viewer.ownerName ?? null,
+    deletedAt: form.deletedAt?.toISOString() ?? null,
+    access: viewer.access,
+    sharedRole: viewer.sharedRole ?? null,
+    shareCount: viewer.shareCount ?? 0,
     id: form.id,
     slug: form.slug,
     title: form.title,

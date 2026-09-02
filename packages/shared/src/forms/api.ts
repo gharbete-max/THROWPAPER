@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Locale, LocalisedText, Uuid } from '../api/common.js';
 import { FormDefinition } from './definition.js';
+import { FormAccess, FormScope, FormShareRole } from './access.js';
 
 /** Product API shapes for the builder. The public renderer's shapes arrive in 3b. */
 export const FormStatus = z.enum(['draft', 'published', 'closed', 'archived']);
@@ -91,8 +92,64 @@ export const FormResponse = z.object({
   submissionCount: z.number().int().nonnegative(),
   completeness: z.array(LocaleCompletenessResponse),
   problems: z.array(DefinitionProblemResponse),
+  /**
+   * Who made it, and what to call them. Null owner means the organisation's — see `access.ts`.
+   *
+   * The name travels with the form rather than being looked up by the app, because "shared with
+   * me" lists forms belonging to people the reader may never have loaded, and a list that has to
+   * fetch a user per row to say who wrote each one is a list that flickers.
+   */
+  ownerUserId: Uuid.nullable().default(null),
+  ownerName: z.string().nullable().default(null),
+  /** In the bin since. Null for everything not in it, which is nearly everything. */
+  deletedAt: IsoDateTime.nullable().default(null),
+  /**
+   * What *you* may do with it, decided by the server.
+   *
+   * Defaulted so a response written before this existed still parses — but note that the default
+   * is the most permissive level, matching how every pre-ownership form already behaved. A
+   * stricter default would have made old forms uneditable the moment this shipped.
+   */
+  access: FormAccess.default('organisation'),
+  /**
+   * The share addressed to you specifically, if there is one — independent of `access`.
+   *
+   * Both, because they answer different questions and can disagree. An administrator with an
+   * editor share on a colleague's form has `access: 'admin'`, which is the truth about what the
+   * API will let them do; but on their "shared with me" tab that label buried the fact that
+   * somebody had deliberately handed them the form, and read as though they were only there by
+   * privilege. `access` still decides every button. This decides what the badge says.
+   */
+  sharedRole: FormShareRole.nullable().default(null),
+  /** How many people it is shared with. Zero for most forms; drawn as a count on the share button. */
+  shareCount: z.number().int().nonnegative().default(0),
   createdAt: IsoDateTime,
   updatedAt: IsoDateTime,
+});
+
+/** Which pile to list. `scope` is validated here so a typo is a 400 rather than a silent `all`. */
+export const FormListQuery = z.object({ scope: FormScope.default('active') });
+
+export const FormShareResponse = z.object({
+  userId: Uuid,
+  name: z.string(),
+  email: z.string(),
+  role: FormShareRole,
+  createdAt: IsoDateTime,
+});
+
+export const FormShareListResponse = z.object({ shares: z.array(FormShareResponse) });
+
+/**
+ * Share with somebody by email rather than by id.
+ *
+ * The person doing the sharing knows their colleague's address and does not know their uuid, and
+ * making the app resolve one to the other first would mean shipping a user directory to everybody
+ * in order to support a feature that needs one row from it.
+ */
+export const CreateFormShare = z.object({
+  email: z.string().email(),
+  role: FormShareRole.default('viewer'),
 });
 
 /**
@@ -135,8 +192,52 @@ export const SubmissionListResponse = z.object({
 export const FormListResponse = z.object({ forms: z.array(FormResponse) });
 export const FormVersionListResponse = z.object({ versions: z.array(FormVersionSummary) });
 
+/**
+ * One response, wearing the name of the form it answered.
+ *
+ * The inbox crosses forms, so the row cannot rely on the surrounding page to say what was being
+ * answered the way the per-form grid can. It carries no `definition`: labelling every answer would
+ * mean shipping every form's definition alongside a page of mixed rows, and the inbox is a list of
+ * arrivals — you open one to read it.
+ */
+export const InboxEntry = z.object({
+  id: Uuid,
+  formId: Uuid,
+  formTitle: LocalisedText,
+  formSlug: FormSlug,
+  reference: z.string(),
+  status: z.enum(['partial', 'complete']),
+  locale: z.string(),
+  submittedAt: IsoDateTime.nullable(),
+  createdAt: IsoDateTime,
+});
+
+export const InboxResponse = z.object({ submissions: z.array(InboxEntry) });
+
+/**
+ * A colleague, as an administrator sees them in the user list.
+ *
+ * `formCount` and `trashCount` are here because the list exists to answer "who should I go and
+ * help", and a directory of names answers that no better than the staff handbook does.
+ */
+export const UserSummary = z.object({
+  id: Uuid,
+  name: z.string(),
+  email: z.string(),
+  role: z.enum(['admin', 'operator']),
+  disabled: z.boolean(),
+  formCount: z.number().int().nonnegative(),
+  trashCount: z.number().int().nonnegative(),
+});
+
+export const UserListResponse = z.object({ users: z.array(UserSummary) });
+
 export type CreateForm = z.infer<typeof CreateForm>;
 export type UpdateForm = z.infer<typeof UpdateForm>;
 export type FormResponse = z.infer<typeof FormResponse>;
 export type FormVersionSummary = z.infer<typeof FormVersionSummary>;
 export type SubmissionResponse = z.infer<typeof SubmissionResponse>;
+export type FormShareResponse = z.infer<typeof FormShareResponse>;
+export type CreateFormShare = z.infer<typeof CreateFormShare>;
+export type InboxEntry = z.infer<typeof InboxEntry>;
+export type UserSummary = z.infer<typeof UserSummary>;

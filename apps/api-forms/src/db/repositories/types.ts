@@ -84,6 +84,8 @@ export interface OrganisationRepository {
 export interface UserRepository {
   findByEmail(organisationId: string, email: string): Promise<UserRecord | null>;
   findById(id: string): Promise<UserRecord | null>;
+  /** Everybody in the organisation, for the administrator's user list. Ordered by name. */
+  list(organisationId: string): Promise<UserRecord[]>;
 }
 
 export interface TokenRepository {
@@ -142,6 +144,10 @@ export interface FormRecord {
   publishedVersion: number | null;
   opensAt: Date | null;
   closesAt: Date | null;
+  /** Null means the organisation's rather than any one person's — see packages/shared access.ts. */
+  ownerUserId: string | null;
+  /** In the bin since. Distinct from `status: archived`, which means retired but kept. */
+  deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -158,17 +164,83 @@ export interface FormVersionRecord {
 
 export type FormCreate = Omit<
   FormRecord,
-  'id' | 'createdAt' | 'updatedAt' | 'publishedVersionId' | 'publishedVersion' | 'status'
-> & { status?: FormRecord['status'] };
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'publishedVersionId'
+  | 'publishedVersion'
+  | 'status'
+  | 'ownerUserId'
+  | 'deletedAt'
+> & {
+  status?: FormRecord['status'];
+  /** Omitted means the organisation's. A form cannot be created already in the bin, so there is
+   * no way to say `deletedAt` here. */
+  ownerUserId?: string | null;
+};
 
 export type FormUpdate = Partial<Omit<FormRecord, 'id' | 'organisationId' | 'createdAt'>>;
 
+/**
+ * Whose forms, and which pile.
+ *
+ * `userId` absent means the whole organisation, which only an administrator ever asks for. The
+ * repository does not know about roles — the route decides who may omit it.
+ */
+export interface FormListFilter {
+  userId?: string;
+  /**
+   * - `active` — everything the user can work on: owned, shared with them, and unowned. No bin.
+   * - `mine` — owned by the user.
+   * - `shared` — shared with the user by somebody else.
+   * - `trash` — in the bin.
+   * - `all` — every form in the organisation, bin excluded.
+   */
+  scope?: FormScope;
+}
+
+export type FormScope = 'active' | 'mine' | 'shared' | 'trash' | 'all';
+
+export interface FormShareRecord {
+  id: string;
+  organisationId: string;
+  formId: string;
+  userId: string;
+  role: 'viewer' | 'editor';
+  createdAt: Date;
+}
+
 export interface FormRepository {
-  list(organisationId: string): Promise<FormRecord[]>;
+  /**
+   * Forms, filtered.
+   *
+   * **Trashed forms are excluded from every scope but `trash`.** That is the whole safety property
+   * of a bin: something deleted stops appearing where it used to, or the delete did nothing.
+   */
+  list(organisationId: string, filter?: FormListFilter): Promise<FormRecord[]>;
   findById(organisationId: string, id: string): Promise<FormRecord | null>;
   findBySlug(organisationId: string, slug: string): Promise<FormRecord | null>;
   create(input: FormCreate): Promise<FormRecord>;
   update(organisationId: string, id: string, patch: FormUpdate): Promise<FormRecord | null>;
+  /**
+   * Destroy a form and everything under it. Only ever reached from the bin, never from a list.
+   *
+   * Separate from `update({ deletedAt })` on purpose: one is reversible and one is not, and a
+   * caller that confuses them should have to have typed a different word.
+   */
+  purge(organisationId: string, id: string): Promise<boolean>;
+
+  listShares(organisationId: string, formId: string): Promise<FormShareRecord[]>;
+  /** Sharing with the same person twice changes their role rather than adding a second row. */
+  share(input: Omit<FormShareRecord, 'id' | 'createdAt'>): Promise<FormShareRecord>;
+  unshare(organisationId: string, formId: string, userId: string): Promise<boolean>;
+  /**
+   * Every share addressed to one person, so a list of forms can be labelled with one query
+   * instead of one per row.
+   */
+  sharesForUser(organisationId: string, userId: string): Promise<FormShareRecord[]>;
+  /** Share counts for many forms at once, keyed by form id. Absent means none. */
+  shareCounts(organisationId: string, formIds: readonly string[]): Promise<Record<string, number>>;
 
   listVersions(formId: string): Promise<FormVersionRecord[]>;
   findVersion(formId: string, version: number): Promise<FormVersionRecord | null>;
@@ -261,6 +333,17 @@ export interface SubmissionRepository {
     organisationId: string,
     formIds: readonly string[],
   ): Promise<Record<string, number>>;
+  /**
+   * The newest responses across several forms, for the cross-form inbox.
+   *
+   * Capped by `limit` in the query rather than trimmed afterwards: an inbox over twenty forms with
+   * five hundred responses each would otherwise read ten thousand rows to show fifty.
+   */
+  listForForms(
+    organisationId: string,
+    formIds: readonly string[],
+    limit: number,
+  ): Promise<SubmissionRecord[]>;
   /** Save-and-resume. Creates the draft on first save and overwrites it thereafter. */
   saveDraft(input: SubmissionDraftInput): Promise<SubmissionRecord>;
   findByReference(organisationId: string, reference: string): Promise<SubmissionRecord | null>;

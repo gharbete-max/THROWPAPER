@@ -18,9 +18,12 @@ export const DEMO_ORGANISATION = {
   supportedLocales: ['sv-SE', 'en-GB'],
 } as const;
 
+export const DEMO_ADMIN_EMAIL = 'admin@example.com';
+export const DEMO_OPERATOR_EMAIL = 'operator@example.com';
+
 export const DEMO_USERS = [
-  { email: 'admin@example.com', name: 'Alva Admin', role: 'admin' as const },
-  { email: 'operator@example.com', name: 'Oskar Operatör', role: 'operator' as const },
+  { email: DEMO_ADMIN_EMAIL, name: 'Alva Admin', role: 'admin' as const },
+  { email: DEMO_OPERATOR_EMAIL, name: 'Oskar Operatör', role: 'operator' as const },
 ];
 
 /**
@@ -198,6 +201,29 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
   const formId = randomUUID();
   const versionId = randomUUID();
 
+  /**
+   * Stable ids for the demo people, so the forms below can actually belong to somebody.
+   *
+   * The workspaces are the point: a demo where every form is unowned shows the fallback path and
+   * none of the feature — no "my forms", nothing under "shared with me", an empty bin.
+   */
+  const userIds = new Map(DEMO_USERS.map((user) => [user.email, randomUUID()]));
+  const userId = (email: string): string => {
+    const id = userIds.get(email);
+    // Thrown rather than papered over with a fresh uuid: a form owned by a user who is not in the
+    // dataset is invisible in every list, which is a confusing way to find out about a typo.
+    if (!id) throw new Error(`demo dataset has no user ${email}`);
+    return id;
+  };
+  const adminId = userId(DEMO_ADMIN_EMAIL);
+  const operatorId = userId(DEMO_OPERATOR_EMAIL);
+
+  // Oskar's own form, shared with Alva — this is what fills "shared with me" for the admin.
+  const feedbackId = randomUUID();
+  const feedbackTemplate = formSchemas.findTemplate('customer-feedback');
+  // And one of Alva's in the bin, so the fourth tab has something in it to restore.
+  const binnedId = randomUUID();
+
   return {
     organisations: [
       {
@@ -208,7 +234,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     ],
 
     users: DEMO_USERS.map((user) => ({
-      id: randomUUID(),
+      id: userId(user.email),
       organisationId,
       email: user.email,
       name: user.name,
@@ -250,8 +276,59 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
         publishedVersion: 1,
         opensAt: null,
         closesAt: null,
+        // The registration form is Alva's: she is the administrator and set the event up.
+        ownerUserId: adminId,
+        deletedAt: null,
         createdAt: now,
         updatedAt: now,
+      },
+      {
+        id: feedbackId,
+        organisationId,
+        eventId: null,
+        slug: 'kundfeedback',
+        title: { 'sv-SE': 'Kundfeedback', 'en-GB': 'Customer feedback' },
+        status: 'draft',
+        draftDefinition: feedbackTemplate
+          ? structuredClone(feedbackTemplate.definition)
+          : formSchemas.emptyDefinition,
+        publishedVersionId: null,
+        publishedVersion: null,
+        opensAt: null,
+        closesAt: null,
+        ownerUserId: operatorId,
+        deletedAt: null,
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: binnedId,
+        organisationId,
+        eventId: null,
+        slug: 'gammal-enkat',
+        title: { 'sv-SE': 'Gammal enkät', 'en-GB': 'Old survey' },
+        status: 'draft',
+        draftDefinition: formSchemas.emptyDefinition,
+        publishedVersionId: null,
+        publishedVersion: null,
+        opensAt: null,
+        closesAt: null,
+        ownerUserId: adminId,
+        // In the bin a week, so the demo shows a date rather than "just now".
+        deletedAt: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
+        createdAt: now,
+        updatedAt: now,
+      },
+    ],
+
+    formShares: [
+      {
+        id: randomUUID(),
+        organisationId,
+        formId: feedbackId,
+        userId: adminId,
+        role: 'editor',
+        createdAt: now,
       },
     ],
 

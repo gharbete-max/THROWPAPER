@@ -102,8 +102,24 @@ describe('listing submissions', () => {
     expect((await listSubmissions(id)).json().submissions[0].formVersion).toBe(1);
   });
 
-  it('is readable by an operator — they run the event day to day', async () => {
+  /**
+   * A colleague reads the responses once the form has been shared with them — and not before.
+   *
+   * This used to hold for any signed-in person in the organisation. Now that forms belong to
+   * people, "the operator runs the event day to day" is something the owner says by sharing it,
+   * rather than something everybody gets by virtue of having an account.
+   */
+  it('is readable by a colleague the form is shared with', async () => {
     const id = await publishForm();
+    expect((await listSubmissions(id, operatorToken)).statusCode).toBe(404);
+
+    await harness.app.inject({
+      method: 'PUT',
+      url: `/v1/forms/${id}/shares`,
+      headers: bearer(adminToken),
+      payload: { email: operatorUser.email, role: 'viewer' },
+    });
+
     expect((await listSubmissions(id, operatorToken)).statusCode).toBe(200);
   });
 

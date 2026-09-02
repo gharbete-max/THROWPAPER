@@ -1,18 +1,32 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { Link } from 'react-router';
 import { pickText } from '@tp/i18n';
-import type { FormResponse, FormTemplate } from '@tp/shared/forms';
+import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
-import { Icon } from '../components/Icon.js';
-import { CopyLink } from '../components/CopyLink.js';
+import { useConfirm } from '../components/Confirm.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
+import { FormCard } from '../components/FormCard.js';
+import { ScopeTabs } from '../components/ScopeTabs.js';
+import { ShareDialog } from '../components/ShareDialog.js';
 
+/**
+ * A person's workspace.
+ *
+ * Four piles rather than one list, which is where every form builder on the market has landed:
+ * what you made, what somebody handed you, and what you threw away are different questions, and a
+ * single list answers none of them once there are more than a dozen forms in it.
+ *
+ * An administrator gets a fifth tab for the whole organisation. It is a separate pile rather than
+ * a widened default on purpose — an administrator's own forms should still be findable without
+ * scrolling past everybody else's.
+ */
 export function Forms() {
   const t = useT();
+  const confirm = useConfirm();
   const { locale, locales, user } = useSession();
+  const [scope, setScope] = useState<FormScope>('mine');
   const [forms, setForms] = useState<FormResponse[] | null>(null);
   const [creating, setCreating] = useState(false);
   const [slug, setSlug] = useState('');
@@ -20,14 +34,20 @@ export function Forms() {
   const [error, setError] = useState<string | null>(null);
   const [templates, setTemplates] = useState<FormTemplate[]>([]);
   const [templateId, setTemplateId] = useState<string | null>(null);
-  const isAdmin = user?.role === 'admin';
+  const [sharing, setSharing] = useState<FormResponse | null>(null);
+
+  const scopes: FormScope[] =
+    user?.role === 'admin'
+      ? ['mine', 'shared', 'trash', 'all']
+      : ['mine', 'shared', 'active', 'trash'];
 
   const load = useCallback(() => {
+    setForms(null);
     client
-      .listForms()
+      .listForms(scope)
       .then((result) => setForms(result.forms))
       .catch(() => setForms([]));
-  }, []);
+  }, [scope]);
 
   useEffect(load, [load]);
 
@@ -53,22 +73,62 @@ export function Forms() {
       setTitle('');
       setTemplateId(null);
       setCreating(false);
-      load();
+      // Straight to your own pile, which is where the new form went.
+      if (scope === 'mine') load();
+      else setScope('mine');
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : String(cause));
     }
   }
 
+  async function trash(form: FormResponse) {
+    const name = pickText(locales, form.title, locale).value || form.slug;
+    if (!(await confirm(t('forms.confirmTrash', { title: name })))) return;
+    await client.trashForm(form.id);
+    load();
+  }
+
+  async function restore(form: FormResponse) {
+    await client.restoreForm(form.id);
+    load();
+  }
+
+  /**
+   * The one irreversible action in the app, so the confirmation says the number out loud.
+   *
+   * "Delete this form?" and "delete this form and the four hundred and twelve answers people gave
+   * it?" are different questions, and only the second one is the truth.
+   */
+  async function destroy(form: FormResponse) {
+    const name = pickText(locales, form.title, locale).value || form.slug;
+    const sure = await confirm(
+      t('forms.confirmDelete', { title: name, count: form.submissionCount }),
+      { confirmLabel: t('forms.deleteForever'), danger: true },
+    );
+    if (!sure) return;
+    await client.deleteForm(form.id);
+    load();
+  }
+
+  const empty =
+    scope === 'mine'
+      ? t('scope.emptyMine')
+      : scope === 'shared'
+        ? t('scope.emptyShared')
+        : scope === 'trash'
+          ? t('scope.emptyTrash')
+          : t('forms.empty');
+
   return (
     <section className="stack">
       <header className="row row--between">
         <h1>{t('forms.title')}</h1>
-        {isAdmin && (
-          <button className="button" onClick={() => setCreating((open) => !open)}>
-            {t('forms.new')}
-          </button>
-        )}
+        <button className="button" onClick={() => setCreating((open) => !open)}>
+          {t('forms.new')}
+        </button>
       </header>
+
+      <ScopeTabs scopes={scopes} current={scope} onChange={setScope} label={t('forms.title')} />
 
       {creating && (
         <form className="card stack" onSubmit={create}>
@@ -122,87 +182,24 @@ export function Forms() {
       )}
 
       {forms === null && <Loading />}
-      {forms?.length === 0 && <p className="muted">{t('forms.empty')}</p>}
+      {forms?.length === 0 && <p className="muted">{empty}</p>}
 
-      {forms?.map((form) => {
-        const name = pickText(locales, form.title, locale);
-        const incomplete = form.completeness.filter((entry) => !entry.complete);
-        // Only a published form has a page to open; linking to a draft sends people to a 404.
-        const publicPath = `/f/${form.slug}`;
-        const live = form.status === 'published';
-        return (
-          <Reveal key={form.id}>
-            <article className="card stack">
-              <div className="row row--between">
-                <h2>{name.value || form.slug}</h2>
-                <span className="badge">{t(`forms.status.${form.status}`)}</span>
-              </div>
+      {forms?.map((form) => (
+        <Reveal key={form.id}>
+          <FormCard
+            form={form}
+            locale={locale}
+            locales={locales}
+            currentUserId={user?.id}
+            onTrash={() => void trash(form)}
+            onRestore={() => void restore(form)}
+            onDelete={() => void destroy(form)}
+            onShare={() => setSharing(form)}
+          />
+        </Reveal>
+      ))}
 
-              {/**
-               * Responses first. A list of forms with no counts on it answers "what have I built",
-               * which nobody is asking; the question is "is anybody filling these in".
-               */}
-              <p className="small">
-                <Icon name="inbox" className="icon--lead" />
-                <strong>{t('forms.responses', { count: form.submissionCount })}</strong>
-                <span className="muted">
-                  {' · '}
-                  {form.publishedVersion
-                    ? t('forms.version', { n: form.publishedVersion })
-                    : t('forms.unpublished')}
-                </span>
-              </p>
-
-              {/**
-               * The address was printed as plain text, so the one thing an author most wants to do
-               * with it — look at their own form, or send the link to somebody — was retyping.
-               */}
-              <p className="small row form-link-row">
-                {live ? (
-                  <a
-                    className="form-link"
-                    href={publicPath}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="external" className="icon--lead" />
-                    {publicPath}
-                  </a>
-                ) : (
-                  <span className="muted">
-                    <Icon name="link" className="icon--lead" />
-                    {publicPath}
-                  </span>
-                )}
-                <CopyLink path={publicPath} />
-              </p>
-
-              {incomplete.length > 0 && (
-                <p className="small status-warning">
-                  <Icon name="globe" className="icon--lead" />
-                  {/* The bare locale codes used to sit here on their own, orange and unexplained. */}
-                  {t('forms.untranslated', {
-                    locales: incomplete.map((entry) => entry.locale).join(', '),
-                  })}
-                </p>
-              )}
-
-              <div className="row card__actions">
-                <Link className="button button--quiet" to={`/forms/${form.id}/submissions`}>
-                  <Icon name="inbox" className="icon--lead" />
-                  {t('forms.viewResponses')}
-                </Link>
-                {isAdmin && (
-                  <Link className="button button--quiet" to={`/forms/${form.id}`}>
-                    <Icon name="edit" className="icon--lead" />
-                    {t('forms.edit')}
-                  </Link>
-                )}
-              </div>
-            </article>
-          </Reveal>
-        );
-      })}
+      {sharing && <ShareDialog form={sharing} onClose={() => setSharing(null)} onChanged={load} />}
     </section>
   );
 }

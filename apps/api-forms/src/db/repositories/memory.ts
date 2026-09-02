@@ -9,6 +9,7 @@ import type {
   EventUpdate,
   FormCreate,
   FormRecord,
+  FormShareRecord,
   FormUpdate,
   FormVersionRecord,
   BrandKitRecord,
@@ -39,6 +40,7 @@ export interface MemoryState {
   refreshTokens: RefreshTokenRecord[];
   events: EventRecord[];
   forms: FormRecord[];
+  formShares: FormShareRecord[];
   formVersions: FormVersionRecord[];
   submissions: SubmissionRecord[];
   checkIns: CheckInRecord[];
@@ -52,6 +54,16 @@ export interface MemoryState {
 
 function copyEvent(event: EventRecord): EventRecord {
   return { ...event, name: { ...event.name }, description: { ...event.description } };
+}
+
+/**
+ * Whose bin, whose forms.
+ *
+ * An absent user means the whole organisation — the administrator case — rather than "forms with
+ * no owner", which is a different and much smaller set.
+ */
+function matchesOwner(form: FormRecord, userId: string | undefined): boolean {
+  return userId === undefined || form.ownerUserId === userId;
 }
 
 function copySubmission(submission: SubmissionRecord): SubmissionRecord {
@@ -76,6 +88,7 @@ export function createMemoryRepositories(
     refreshTokens: seed.refreshTokens ?? [],
     events: seed.events ?? [],
     forms: seed.forms ?? [],
+    formShares: seed.formShares ?? [],
     formVersions: seed.formVersions ?? [],
     submissions: seed.submissions ?? [],
     checkIns: seed.checkIns ?? [],
@@ -101,6 +114,11 @@ export function createMemoryRepositories(
           (u) => u.organisationId === organisationId && u.email === email.toLowerCase(),
         ) ?? null,
       findById: async (id) => state.users.find((u) => u.id === id) ?? null,
+      list: async (organisationId) =>
+        state.users
+          .filter((u) => u.organisationId === organisationId)
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name)),
     },
 
     tokens: {
@@ -188,8 +206,39 @@ export function createMemoryRepositories(
     forms: {
       // Copy on read and replace on update, for the same reason events do — an aliased row makes
       // the audit log's "before" silently become the "after".
-      list: async (organisationId) =>
-        state.forms.filter((f) => f.organisationId === organisationId).map(copyForm),
+      list: async (organisationId, filter) => {
+        const scope = filter?.scope ?? 'active';
+        const userId = filter?.userId;
+        const sharedWithUser = new Set(
+          state.formShares
+            .filter((s) => s.organisationId === organisationId && s.userId === userId)
+            .map((s) => s.formId),
+        );
+
+        return state.forms
+          .filter((form) => {
+            if (form.organisationId !== organisationId) return false;
+            // The bin is a pile of its own; nothing in it shows up anywhere else.
+            if (scope === 'trash') return form.deletedAt !== null && matchesOwner(form, userId);
+            if (form.deletedAt !== null) return false;
+            switch (scope) {
+              case 'mine':
+                return matchesOwner(form, userId);
+              case 'shared':
+                return userId ? sharedWithUser.has(form.id) : false;
+              case 'active':
+                return userId
+                  ? form.ownerUserId === userId ||
+                      form.ownerUserId === null ||
+                      sharedWithUser.has(form.id)
+                  : true;
+              case 'all':
+                return true;
+            }
+          })
+          .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+          .map(copyForm);
+      },
       findById: async (organisationId, id) => {
         const form = state.forms.find((f) => f.organisationId === organisationId && f.id === id);
         return form ? copyForm(form) : null;
@@ -205,6 +254,8 @@ export function createMemoryRepositories(
         const record: FormRecord = {
           ...input,
           status: input.status ?? 'draft',
+          ownerUserId: input.ownerUserId ?? null,
+          deletedAt: null,
           id: randomUUID(),
           publishedVersionId: null,
           publishedVersion: null,
@@ -223,6 +274,58 @@ export function createMemoryRepositories(
         const updated: FormRecord = { ...existing, ...patch, updatedAt: new Date() };
         state.forms[index] = updated;
         return copyForm(updated);
+      },
+      purge: async (organisationId, id) => {
+        const index = state.forms.findIndex(
+          (f) => f.organisationId === organisationId && f.id === id,
+        );
+        if (index === -1) return false;
+        state.forms.splice(index, 1);
+        // Postgres cascades these; here they are removed by hand, so a test that purges and then
+        // lists shares sees the same emptiness either implementation would give it.
+        state.formVersions = state.formVersions.filter((v) => v.formId !== id);
+        state.formShares = state.formShares.filter((s) => s.formId !== id);
+        state.submissions = state.submissions.filter((s) => s.formId !== id);
+        state.uploads = state.uploads.filter((u) => u.formId !== id);
+        return true;
+      },
+
+      listShares: async (organisationId, formId) =>
+        state.formShares
+          .filter((s) => s.organisationId === organisationId && s.formId === formId)
+          .map((s) => ({ ...s })),
+      share: async (input) => {
+        const existing = state.formShares.find(
+          (s) => s.formId === input.formId && s.userId === input.userId,
+        );
+        if (existing) {
+          existing.role = input.role;
+          return { ...existing };
+        }
+        const record: FormShareRecord = { ...input, id: randomUUID(), createdAt: new Date() };
+        state.formShares.push(record);
+        return { ...record };
+      },
+      unshare: async (organisationId, formId, userId) => {
+        const index = state.formShares.findIndex(
+          (s) => s.organisationId === organisationId && s.formId === formId && s.userId === userId,
+        );
+        if (index === -1) return false;
+        state.formShares.splice(index, 1);
+        return true;
+      },
+      sharesForUser: async (organisationId, userId) =>
+        state.formShares
+          .filter((s) => s.organisationId === organisationId && s.userId === userId)
+          .map((s) => ({ ...s })),
+      shareCounts: async (organisationId, formIds) => {
+        const wanted = new Set(formIds);
+        const counts: Record<string, number> = {};
+        for (const share of state.formShares) {
+          if (share.organisationId !== organisationId || !wanted.has(share.formId)) continue;
+          counts[share.formId] = (counts[share.formId] ?? 0) + 1;
+        }
+        return counts;
       },
 
       listVersions: async (formId) =>
@@ -273,6 +376,15 @@ export function createMemoryRepositories(
         const found = state.submissions.find((s) => s.resumeTokenHash === tokenHash);
         return found ? copySubmission(found) : null;
       },
+      listForForms: async (organisationId, formIds, limit) => {
+        const wanted = new Set(formIds);
+        return state.submissions
+          .filter((s) => s.organisationId === organisationId && wanted.has(s.formId))
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .slice(0, limit)
+          .map(copySubmission);
+      },
+
       countComplete: async (formId) =>
         state.submissions.filter((s) => s.formId === formId && s.status === 'complete').length,
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   compareText,
+  createTranslator,
   completenessFor,
   resolveChain,
   resolveLocale,
@@ -42,5 +43,49 @@ describe('collation', () => {
 
   it('does not sort them after z in English', () => {
     expect(compareText('en-GB', 'å', 'z')).toBeLessThan(0);
+  });
+});
+
+describe('plurals', () => {
+  const catalogue = {
+    'forms.count': {
+      'sv-SE': 'one {count} formulär | other {count} formulär',
+      'en-GB': 'one {count} form | other {count} forms',
+    },
+    plain: { 'sv-SE': '{count} svar', 'en-GB': '{count} responses' },
+    /** An ordinary sentence that happens to contain a pipe. It must survive intact. */
+    piped: { 'sv-SE': 'A | B', 'en-GB': 'A | B' },
+  };
+  const t = (locale: string) => createTranslator(config, catalogue, locale);
+
+  it('picks the singular for one and the plural for the rest', () => {
+    expect(t('en-GB')('forms.count', { count: 1 })).toBe('1 form');
+    expect(t('en-GB')('forms.count', { count: 0 })).toBe('0 forms');
+    expect(t('en-GB')('forms.count', { count: 7 })).toBe('7 forms');
+  });
+
+  /**
+   * Selection comes from `Intl.PluralRules`, not from `count === 1`. Swedish agrees with English
+   * here; most of the languages this product will meet later do not, and hard-coding the English
+   * rule is the mistake this is guarding against.
+   */
+  it('asks the locale rather than assuming the English rule', () => {
+    expect(new Intl.PluralRules('sv-SE').select(1)).toBe('one');
+    expect(t('sv-SE')('forms.count', { count: 1 })).toBe('1 formulär');
+    expect(t('sv-SE')('forms.count', { count: 3 })).toBe('3 formulär');
+  });
+
+  it('leaves a message with no plural forms alone', () => {
+    expect(t('en-GB')('plain', { count: 2 })).toBe('2 responses');
+  });
+
+  /** A pipe is a character people write. Only category names turn one into a plural form. */
+  it('does not cut an ordinary sentence in half at a pipe', () => {
+    expect(t('en-GB')('piped', { count: 1 })).toBe('A | B');
+    expect(t('en-GB')('piped')).toBe('A | B');
+  });
+
+  it('falls back to the plural form when the count is not a number', () => {
+    expect(t('en-GB')('forms.count', { count: 'many' })).toBe('many forms');
   });
 });
