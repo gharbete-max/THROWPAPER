@@ -10,13 +10,35 @@ import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
-import { Events } from './screens/Events.js';
-import { EventForm } from './screens/EventForm.js';
-import { Forms } from './screens/Forms.js';
-import { BrandKit } from './screens/BrandKit.js';
-import { FormBuilder } from './screens/builder/FormBuilder.js';
-import { EventReport } from './screens/EventReport.js';
-import { FormResponses } from './screens/FormResponses.js';
+
+/**
+ * The signed-in application, split out of the entry chunk.
+ *
+ * The reason is who pays for it. A member of the public opening `/f/spring-meeting` has no use
+ * for the form builder, the drag-and-drop library it needs or the data grid — and before this they
+ * downloaded every byte of all of it, because `App` imported those screens at the top level and
+ * so they landed in the entry chunk that loads before anything renders.
+ *
+ * A respondent is by far the most common visitor this product has, usually on a phone, often on a
+ * bad connection, and they never see any of these screens. Sign-in is deliberately *not* lazy:
+ * it is the first thing a returning operator needs, and a spinner in front of a password box to
+ * save a few kilobytes is a poor trade.
+ */
+const Events = lazy(() => import('./screens/Events.js').then((m) => ({ default: m.Events })));
+const EventForm = lazy(() =>
+  import('./screens/EventForm.js').then((m) => ({ default: m.EventForm })),
+);
+const Forms = lazy(() => import('./screens/Forms.js').then((m) => ({ default: m.Forms })));
+const BrandKit = lazy(() => import('./screens/BrandKit.js').then((m) => ({ default: m.BrandKit })));
+const FormBuilder = lazy(() =>
+  import('./screens/builder/FormBuilder.js').then((m) => ({ default: m.FormBuilder })),
+);
+const EventReport = lazy(() =>
+  import('./screens/EventReport.js').then((m) => ({ default: m.EventReport })),
+);
+const FormResponses = lazy(() =>
+  import('./screens/FormResponses.js').then((m) => ({ default: m.FormResponses })),
+);
 import { Loading } from './components/Loading.js';
 
 /**
@@ -157,27 +179,31 @@ function Shell() {
       </header>
 
       <main className="shell">
-        <Routes>
-          <Route path="/" element={<Navigate to="/events" replace />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/new" element={<EventForm />} />
-          <Route path="/events/:id" element={<EventForm />} />
-          <Route path="/forms" element={<Forms />} />
-          <Route path="/brand" element={<BrandKit />} />
-          {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
-          <Route path="/forms/:id/submissions" element={<FormResponses />} />
-          <Route path="/forms/:id" element={<FormBuilder />} />
-          <Route path="/events/:id/attendance" element={<EventReport />} />
-          <Route
-            path="/events/:id/check-in"
-            element={
-              <Suspense fallback={<p className="muted">…</p>}>
-                <CheckIn />
-              </Suspense>
-            }
-          />
-          <Route path="*" element={<Navigate to="/events" replace />} />
-        </Routes>
+        {/* One boundary for the whole table: these screens are alternatives, never siblings, so
+            seven separate ones would only mean seven copies of the same fallback. */}
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/events" replace />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/events/new" element={<EventForm />} />
+            <Route path="/events/:id" element={<EventForm />} />
+            <Route path="/forms" element={<Forms />} />
+            <Route path="/brand" element={<BrandKit />} />
+            {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
+            <Route path="/forms/:id/submissions" element={<FormResponses />} />
+            <Route path="/forms/:id" element={<FormBuilder />} />
+            <Route path="/events/:id/attendance" element={<EventReport />} />
+            <Route
+              path="/events/:id/check-in"
+              element={
+                <Suspense fallback={<p className="muted">…</p>}>
+                  <CheckIn />
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<Navigate to="/events" replace />} />
+          </Routes>
+        </Suspense>
       </main>
     </div>
   );

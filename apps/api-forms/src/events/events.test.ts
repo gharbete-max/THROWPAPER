@@ -315,3 +315,68 @@ describe('counting the people holding a place', () => {
     expect(listed?.registeredCount).toBe(1);
   });
 });
+
+/**
+ * Two lookups that used to be loops.
+ *
+ * Finding one submission meant listing every form in the organisation and reading every
+ * submission of each; the attendance screen issued one query per form pointing at the event. Both
+ * are single queries now, and both are scoped — a faster wrong answer is not an optimisation.
+ */
+describe('finding submissions without walking every form', () => {
+  function row(over: Partial<SubmissionRecord> & { id?: string }) {
+    const now = new Date();
+    return {
+      id: over.id ?? randomUUID(),
+      organisationId: testOrganisation.id,
+      formId: 'f1',
+      formVersionId: 'v1',
+      eventId: null,
+      reference: randomUUID().slice(0, 8).toUpperCase(),
+      status: 'complete' as const,
+      locale: 'sv-SE',
+      email: null,
+      data: {},
+      resumeTokenHash: null,
+      resumeExpiresAt: null,
+      submittedAt: now,
+      revokedAt: null,
+      createdAt: now,
+      updatedAt: now,
+      ...over,
+    } satisfies SubmissionRecord;
+  }
+
+  it('finds one by id', async () => {
+    const wanted = row({ id: '11111111-1111-4111-8111-111111111111' });
+    harness.state.submissions.push(row({}), wanted, row({}));
+    const found = await harness.repos.submissions.findById(testOrganisation.id, wanted.id);
+    expect(found?.id).toBe(wanted.id);
+  });
+
+  it('will not find one belonging to another organisation', async () => {
+    const elsewhere = row({ organisationId: '99999999-9999-4999-8999-999999999999' });
+    harness.state.submissions.push(elsewhere);
+    expect(await harness.repos.submissions.findById(testOrganisation.id, elsewhere.id)).toBeNull();
+  });
+
+  it('collects an event across every form that feeds it', async () => {
+    // The point of the change: two forms, one event, one query.
+    harness.state.submissions.push(
+      row({ formId: 'f1', eventId: 'e1' }),
+      row({ formId: 'f2', eventId: 'e1' }),
+      row({ formId: 'f3', eventId: 'e2' }),
+      row({ formId: 'f4', eventId: null }),
+    );
+    const forEvent = await harness.repos.submissions.listForEvent(testOrganisation.id, 'e1');
+    expect(forEvent).toHaveLength(2);
+    expect(new Set(forEvent.map((entry) => entry.formId))).toEqual(new Set(['f1', 'f2']));
+  });
+
+  it('does not collect an event belonging to another organisation', async () => {
+    harness.state.submissions.push(
+      row({ organisationId: '99999999-9999-4999-8999-999999999999', eventId: 'e1' }),
+    );
+    expect(await harness.repos.submissions.listForEvent(testOrganisation.id, 'e1')).toEqual([]);
+  });
+});

@@ -1571,12 +1571,25 @@ textarea {
 }
 
 .logo {
-  inline-size: 1.6em;
-  block-size: 1.6em;
+  /* The viewBox is 100x64 now, so a square box would squash it. Height follows the ratio. */
+  inline-size: 2.1em;
+  block-size: auto;
   flex: none;
   color: var(--tp-colour-primary);
   transform-style: preserve-3d;
   animation: plane-spin 8s linear infinite;
+}
+
+/**
+ * The keel: the same brand colour, taken down towards black.
+ *
+ * `color-mix` rather than a fourth token, because this is one shade of a colour the customer
+ * already chose — asking them to pick a "dark primary" as well would be a setting that can only
+ * be got wrong. The `fill` attribute on the path is plain `primary`, so a browser without
+ * `color-mix` still gets a solid keel, just without the extra depth.
+ */
+.logo__keel {
+  fill: color-mix(in srgb, var(--tp-colour-primary) 72%, #000);
 }
 
 .wordmark {

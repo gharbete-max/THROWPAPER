@@ -1,12 +1,18 @@
 /**
  * The mark: a paper plane, spinning.
  *
- * ## The drawing
+ * ## Three faces, not two
  *
- * Four points and one crease. A dart seen from three-quarters above — nose, far wingtip, the
- * notch where the belly folds, and the near tail. That is the whole shape, and it is why this
- * works where the previous mark did not: a plane is a silhouette everyone already knows, so it
- * survives being shrunk to a browser tab without any of the detail a drawn hand needs.
+ * A dart seen from three-quarters above: the top wing sweeping back from the nose, the near wing
+ * folded under it, and a sliver of the keel showing beneath them both.
+ *
+ * The third face is what the two-triangle version was missing. Two flat shapes meeting at a line
+ * read as a chevron; the moment a little of the underside shows past the near wing, the eye reads
+ * a folded sheet with a near side and a far side. It costs one more polygon and is the whole
+ * difference between a shape and an object.
+ *
+ * Drawn in that order — top, keel, near wing — so the near wing covers all of the keel except the
+ * sliver. The overlap does the work; there is no clipping and no mask.
  *
  * ## Two colours, not a colour and a hole
  *
@@ -30,17 +36,19 @@ export function Logo({
     <span className="logo__frame">
       <svg
         className={className ? `logo ${className}` : 'logo'}
-        viewBox="0 0 64 64"
+        viewBox="0 0 100 64"
         fill="none"
         role={title ? 'img' : undefined}
         aria-label={title}
         aria-hidden={title ? undefined : 'true'}
         focusable="false"
       >
-        {/* The far wing, in the darker of the two. */}
-        <path d="M60 6 L4 28 L29 37 Z" fill="var(--tp-colour-primary)" />
+        {/* The top wing: wingtip, nose, and back to the fold. The largest face. */}
+        <path d="M6 6 L96 32 L20 38.5 Z" fill="var(--tp-colour-primary)" />
+        {/* The keel, under everything. Only the sliver past the near wing is ever seen. */}
+        <path className="logo__keel" d="M96 32 L46 55 L26 49 Z" fill="var(--tp-colour-primary)" />
         {/* The near wing, in the accent — the side the light is on. */}
-        <path d="M60 6 L29 37 L36 59 Z" fill="var(--tp-colour-accent)" />
+        <path d="M20 38.5 L96 32 L18 58 Z" fill="var(--tp-colour-accent)" />
       </svg>
     </span>
   );

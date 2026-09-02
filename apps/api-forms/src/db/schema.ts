@@ -255,6 +255,14 @@ export const submissions = pgTable(
       .on(table.formId, table.email)
       .where(sql`${table.status} = 'complete' and ${table.email} is not null`),
     index('submissions_form_status_idx').on(table.formId, table.status),
+    /**
+     * Attendance and check-in read submissions by *event*, across whichever forms feed it.
+     *
+     * Without this the new `listForEvent` is a sequential scan of every submission the
+     * organisation has ever taken — which would have replaced an N+1 with something slower on a
+     * busy database, and is the kind of "optimisation" worth catching before it ships.
+     */
+    index('submissions_event_status_idx').on(table.eventId, table.status),
   ],
 );
 
