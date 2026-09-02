@@ -43,7 +43,11 @@ describe('contrast', () => {
    * not telling them at all would be negligent.
    *
    * This test exists to make that a decision rather than an oversight — if the border changes, it
-   * fails and somebody has to think about it again.
+   * fails and somebody has to think about it again. It has already done that once: the theme
+   * presets were written with 3:1 borders, which made the default look like an outlier until this
+   * test asked whether the default was wrong or the bar was. The answer is that the decision above
+   * is about the *default*, which people get without choosing it. `presets.test.ts` holds every
+   * theme somebody actively picks to the full 3:1, and they all meet it.
    */
   it('passes the shipped default palette on text, with the border as the one known advisory', () => {
     const findings = checkContrast(defaultTokens);

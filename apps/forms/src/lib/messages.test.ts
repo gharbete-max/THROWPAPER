@@ -7,6 +7,7 @@ import {
   SINGLE_SELECT_APPEARANCES,
   YES_NO_APPEARANCES,
 } from '@tp/shared/forms';
+import { THEME_PRESET_IDS } from '@tp/tokens';
 import { messages } from './messages.js';
 import { PALETTE_GROUPS } from '../screens/builder/field-defaults.js';
 
@@ -37,6 +38,11 @@ describe('translations for schema-driven strings', () => {
   /** An unnamed operator would put `visibility.operator.greaterThan` in a dropdown. */
   it.each(CONDITION_OPERATORS)('names the %s condition operator', (operator) => {
     expect(messages[`visibility.operator.${operator}`], operator).toBeDefined();
+  });
+
+  /** A shipped theme with no name shows as `theme.garden` under its own swatch. */
+  it.each(THEME_PRESET_IDS)('names the %s theme', (id) => {
+    expect(messages[`theme.${id}`], id).toBeDefined();
   });
 
   it.each(PALETTE_GROUPS.map((group) => group.id))('names the %s palette group', (id) => {

@@ -248,6 +248,20 @@ export const messages: Catalogue = {
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
+  // Ready-made looks. One key per THEME_PRESETS entry — messages.test.ts proves the mapping.
+  'brand.themes': { 'sv-SE': 'Teman', 'en-GB': 'Themes' },
+  'brand.themesHint': {
+    'sv-SE': 'Välj ett tema som utgångspunkt och justera det sedan. Alla klarar kontrastkravet.',
+    'en-GB': 'Pick a theme to start from, then adjust it. Every one passes the contrast check.',
+  },
+  'brand.themeSampleLabel': { 'sv-SE': 'Fråga', 'en-GB': 'Question' },
+  'brand.themeSampleButton': { 'sv-SE': 'Skicka', 'en-GB': 'Send' },
+  'theme.default': { 'sv-SE': 'Standard', 'en-GB': 'Default' },
+  'theme.midnight': { 'sv-SE': 'Midnatt', 'en-GB': 'Midnight' },
+  'theme.minimal': { 'sv-SE': 'Minimal', 'en-GB': 'Minimal' },
+  'theme.garden': { 'sv-SE': 'Trädgård', 'en-GB': 'Garden' },
+  'theme.bold': { 'sv-SE': 'Kraftfull', 'en-GB': 'Bold' },
+
   // Conditional logic: show a field only when an earlier answer says so.
   'visibility.heading': { 'sv-SE': 'Visa bara när…', 'en-GB': 'Show only when…' },
   'visibility.count': { 'sv-SE': '{n} villkor', 'en-GB': '{n} conditions' },
