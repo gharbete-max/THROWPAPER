@@ -1892,6 +1892,93 @@ textarea {
   }
 }
 
+/* --- The flight trail -----------------------------------------------------
+ *
+ * A dashed curve behind the plane. Decoration, so it is drawn in `border` and never in a brand
+ * colour: it has to sit quietly on a light page and a dark one, which is the job a neutral token
+ * exists for.
+ *
+ * The dashes drift along the path rather than the line drawing itself. A line that draws once is
+ * an entrance, and an entrance repeated on every screen becomes a tic — dashes that move read as
+ * flight and can sit there indefinitely without asking for attention.
+ */
+.trail {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  /* Behind whatever it decorates, and never in the way of a click. */
+  pointer-events: none;
+}
+
+.trail__path {
+  animation: trail-drift 3.4s linear infinite;
+}
+
+@keyframes trail-drift {
+  to {
+    /* One full dash period, so the loop is seamless. */
+    stroke-dashoffset: -20;
+  }
+}
+
+/* Sitting behind the sign-in card and the thank-you screen, quietly. */
+.trail--behind {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: -1.5rem;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+.trail-host {
+  position: relative;
+}
+
+.trail-host > *:not(.trail) {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- The intro's trail ----------------------------------------------------
+ *
+ * Uncovered by a wipe travelling with the plane, not drawn by a dash animation: the dashes have to
+ * stay put on the path while the reveal moves, and animating `stroke-dashoffset` would slide the
+ * dashes along instead of uncovering them.
+ */
+.intro__wipe {
+  transform-origin: 0 0;
+  animation: intro-wipe 1000ms cubic-bezier(0.3, 0, 0.5, 1) forwards;
+}
+
+@keyframes intro-wipe {
+  0%,
+  30% {
+    transform: scaleX(0.25);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Fades in with the throw rather than being there from the first frame. */
+.intro__trail {
+  opacity: 0;
+  animation: intro-trail-in 1000ms ease-out forwards;
+}
+
+@keyframes intro-trail-in {
+  0%,
+  28% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /* ==========================================================================
  * The switch.
  *

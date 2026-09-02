@@ -101,28 +101,34 @@ export function Intro() {
           </g>
 
           {/**
+           * The trail, revealed by a wipe that travels with the plane.
+           *
+           * A clip rectangle scaled from nothing rather than a dash animation: the dashes have to
+           * stay put on the path while the *reveal* moves, and animating `stroke-dashoffset` would
+           * slide the dashes along instead of uncovering them.
+           */}
+          <clipPath id="intro-trail-wipe">
+            <rect className="intro__wipe" x="0" y="0" width="240" height="120" />
+          </clipPath>
+          <path
+            className="intro__trail"
+            clipPath="url(#intro-trail-wipe)"
+            d="M60 62 C92 34 118 26 150 40 C186 56 208 54 236 46"
+            stroke="var(--tp-colour-border)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray="8 10"
+          />
+
+          {/**
            * The plane, thrown across the frame and turning as it goes.
            *
-           * The same two-wing shape as the mark, at a twelfth the size — so the thing being
-           * thrown in the intro and the thing in the top bar are recognisably one object. It was
-           * a crumpled ball until the mark became a plane, and leaving it would have made the
-           * intro tell a different story from the logo it hands over to.
+           * The same two-wing shape and the same two colours as the mark, at a twelfth the size,
+           * so the thing being thrown and the thing in the top bar are recognisably one object.
            */}
           <g className="intro__paper">
-            <path
-              d="M14 -7 L-14 4 L-1.5 8.5 Z"
-              fill="currentColor"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14 -7 L-1.5 8.5 L2 19.5 Z"
-              fill="var(--tp-colour-background)"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-            />
+            <path d="M14 -7 L-14 4 L-1.5 8.5 Z" fill="var(--tp-colour-primary)" />
+            <path d="M14 -7 L-1.5 8.5 L2 19.5 Z" fill="var(--tp-colour-accent)" />
           </g>
         </svg>
 
