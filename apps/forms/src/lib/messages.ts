@@ -45,6 +45,11 @@ export const messages: Catalogue = {
   'events.registrationOpen': { 'sv-SE': 'Anmälan öppen', 'en-GB': 'Registration open' },
   'events.registrationClosed': { 'sv-SE': 'Anmälan stängd', 'en-GB': 'Registration closed' },
   'events.capacity': { 'sv-SE': '{count} platser', 'en-GB': '{count} places' },
+  'events.registered': { 'sv-SE': '{count} anmälda', 'en-GB': '{count} registered' },
+  'events.registeredOf': {
+    'sv-SE': '{count} av {capacity} anmälda',
+    'en-GB': '{count} of {capacity} registered',
+  },
   'events.uncapped': { 'sv-SE': 'Obegränsat', 'en-GB': 'Uncapped' },
   'events.archive': { 'sv-SE': 'Arkivera', 'en-GB': 'Archive' },
   'events.archiveConfirm': {
@@ -94,6 +99,15 @@ export const messages: Catalogue = {
   'forms.status.archived': { 'sv-SE': 'Arkiverat', 'en-GB': 'Archived' },
   'forms.version': { 'sv-SE': 'Version {n}', 'en-GB': 'Version {n}' },
   'forms.unpublished': { 'sv-SE': 'Aldrig publicerat', 'en-GB': 'Never published' },
+  'forms.responses': { 'sv-SE': '{count} svar', 'en-GB': '{count} responses' },
+  'forms.viewResponses': { 'sv-SE': 'Visa svar', 'en-GB': 'View responses' },
+  'forms.copyLink': { 'sv-SE': 'Kopiera länk', 'en-GB': 'Copy link' },
+  'forms.copied': { 'sv-SE': 'Kopierad', 'en-GB': 'Copied' },
+  'forms.copyFailed': { 'sv-SE': 'Kunde inte kopiera', 'en-GB': 'Could not copy' },
+  'forms.untranslated': {
+    'sv-SE': 'Saknar översättning: {locales}',
+    'en-GB': 'Missing translation: {locales}',
+  },
 
   'builder.palette': { 'sv-SE': 'Fält', 'en-GB': 'Fields' },
   'builder.properties': { 'sv-SE': 'Egenskaper', 'en-GB': 'Properties' },
@@ -194,6 +208,14 @@ export const messages: Catalogue = {
 
   'submissions.title': { 'sv-SE': 'Svar ({n})', 'en-GB': 'Responses ({n})' },
   'submissions.empty': { 'sv-SE': 'Inga svar ännu.', 'en-GB': 'No responses yet.' },
+  'submissions.notPublished': {
+    'sv-SE': 'Formuläret är inte publicerat än, så det finns inga svar att visa.',
+    'en-GB': 'This form is not published yet, so there are no responses to show.',
+  },
+  'submissions.stat.complete': { 'sv-SE': 'Kompletta', 'en-GB': 'Complete' },
+  'submissions.stat.partial': { 'sv-SE': 'Påbörjade', 'en-GB': 'Started' },
+  'submissions.stat.languages': { 'sv-SE': 'Språk', 'en-GB': 'Languages' },
+  'submissions.stat.latest': { 'sv-SE': 'Senaste svar', 'en-GB': 'Latest response' },
   'submissions.search': { 'sv-SE': 'Sök', 'en-GB': 'Search' },
   'submissions.columns': { 'sv-SE': 'Kolumner', 'en-GB': 'Columns' },
   'submissions.separator': { 'sv-SE': 'Avgränsare', 'en-GB': 'Separator' },
@@ -454,6 +476,10 @@ export const messages: Catalogue = {
   'attendance.checkedIn': { 'sv-SE': 'Incheckade', 'en-GB': 'Checked in' },
   'attendance.noShow': { 'sv-SE': 'Uteblivna', 'en-GB': 'No-shows' },
   'attendance.revoked': { 'sv-SE': 'Återkallade', 'en-GB': 'Withdrawn' },
+  'attendance.revokeConfirm': {
+    'sv-SE': 'Återkalla anmälan för {name}? Platsen blir ledig igen.',
+    'en-GB': 'Withdraw the registration for {name}? The place is freed up again.',
+  },
   'attendance.all': { 'sv-SE': 'Alla', 'en-GB': 'All' },
   'attendance.onlyNoShow': { 'sv-SE': 'Endast uteblivna', 'en-GB': 'No-shows only' },
   'attendance.exportCsv': { 'sv-SE': 'Exportera CSV', 'en-GB': 'Export CSV' },

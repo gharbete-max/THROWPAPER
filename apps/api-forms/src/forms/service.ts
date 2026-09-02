@@ -9,6 +9,13 @@ import type { FormRecord } from '../db/repositories/index.js';
 export function toFormResponse(
   form: FormRecord,
   supportedLocales: readonly string[],
+  /**
+   * Completed responses, counted by the caller.
+   *
+   * A parameter rather than something this function fetches, because it maps a record it was
+   * handed and has no repository. Callers that list many forms count them in one query.
+   */
+  submissionCount: number,
 ): formSchemas.FormResponse {
   const parsed = formSchemas.FormDefinition.safeParse(form.draftDefinition);
   const definition = parsed.success ? parsed.data : formSchemas.emptyDefinition;
@@ -23,6 +30,7 @@ export function toFormResponse(
     closesAt: form.closesAt?.toISOString() ?? null,
     draftDefinition: definition,
     publishedVersion: form.publishedVersion,
+    submissionCount,
     completeness: formSchemas.definitionCompleteness(definition, supportedLocales),
     problems: parsed.success
       ? formSchemas.definitionProblems(definition)

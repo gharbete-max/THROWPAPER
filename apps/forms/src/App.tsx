@@ -14,6 +14,7 @@ import { Forms } from './screens/Forms.js';
 import { BrandKit } from './screens/BrandKit.js';
 import { FormBuilder } from './screens/builder/FormBuilder.js';
 import { EventReport } from './screens/EventReport.js';
+import { FormResponses } from './screens/FormResponses.js';
 
 /**
  * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,
@@ -123,6 +124,8 @@ function Shell() {
           <Route path="/events/:id" element={<EventForm />} />
           <Route path="/forms" element={<Forms />} />
           <Route path="/brand" element={<BrandKit />} />
+          {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
+          <Route path="/forms/:id/submissions" element={<FormResponses />} />
           <Route path="/forms/:id" element={<FormBuilder />} />
           <Route path="/events/:id/attendance" element={<EventReport />} />
           <Route

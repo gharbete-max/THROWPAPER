@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import {
   brandKits,
@@ -143,7 +143,19 @@ export function createDrizzleRepositories(db: Db): Repositories {
         return (row as EventRecord | undefined) ?? null;
       },
       // Registrations land in phase 3.
-      countRegistrations: async () => 0,
+      countRegistrations: async (eventId) => {
+        const [row] = await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(submissions)
+          .where(
+            and(
+              eq(submissions.eventId, eventId),
+              eq(submissions.status, 'complete'),
+              isNull(submissions.revokedAt),
+            ),
+          );
+        return row?.count ?? 0;
+      },
     },
 
     forms: {
@@ -281,6 +293,22 @@ export function createDrizzleRepositories(db: Db): Repositories {
         return row?.count ?? 0;
       },
 
+      countCompleteByForm: async (formIds) => {
+        // `IN ()` is not valid SQL, so an empty ask is answered without going to the database.
+        if (formIds.length === 0) return {};
+        const rows = await db
+          .select({ formId: submissions.formId, count: sql<number>`count(*)::int` })
+          .from(submissions)
+          .where(
+            and(
+              inArray(submissions.formId, [...formIds]),
+              eq(submissions.status, 'complete'),
+            ),
+          )
+          .groupBy(submissions.formId);
+        return Object.fromEntries(rows.map((row) => [row.formId, row.count]));
+      },
+
       saveDraft: async (input: SubmissionDraftInput) => {
         if (input.id) {
           const [row] = await db
@@ -351,7 +379,14 @@ export function createDrizzleRepositories(db: Db): Repositories {
                 .select({ count: sql<number>`count(*)::int` })
                 .from(submissions)
                 .where(
-                  and(eq(submissions.formId, input.formId), eq(submissions.status, 'complete')),
+                  and(
+                    eq(submissions.formId, input.formId),
+                    eq(submissions.status, 'complete'),
+                    // A withdrawn registration gives its place back. Counting it would hold a
+                    // seat for somebody who cancelled, and the attendance screen has always
+                    // reported withdrawals separately from registrations.
+                    isNull(submissions.revokedAt),
+                  ),
                 );
               if ((row?.count ?? 0) >= input.capacity) {
                 return { ok: false as const, reason: 'full' as const };

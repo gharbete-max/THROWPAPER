@@ -23,6 +23,8 @@ import type { SheetData } from 'write-excel-file/browser';
 import { client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
+import { Icon } from '../components/Icon.js';
+import { Stat, Stats } from '../components/Stat.js';
 
 /**
  * The submissions table.
@@ -103,6 +105,32 @@ export function Submissions({ formId }: { formId: string }) {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  /**
+   * The four facts worth knowing before reading any row.
+   *
+   * Computed from `rows` rather than from the filtered table on purpose: a summary that moves when
+   * you type in the search box is a second set of numbers to reconcile, not an overview. The
+   * heading already reports the filtered count.
+   */
+  const summary = useMemo(() => {
+    const all = rows ?? [];
+    const complete = all.filter((row) => row.status === 'complete');
+    const languages = new Set(all.map((row) => row.locale));
+    // Latest by the moment it was actually sent; a draft has no submittedAt to compare.
+    const latest = complete.reduce<string | null>((newest, row) => {
+      const at = row.submittedAt;
+      if (!at) return newest;
+      return newest === null || at > newest ? at : newest;
+    }, null);
+    return {
+      total: all.length,
+      complete: complete.length,
+      partial: all.length - complete.length,
+      languages: [...languages].sort(),
+      latest,
+    };
+  }, [rows]);
+
   /** Exactly what is on screen: visible columns, current sort, current filter. */
   function visibleExport() {
     const visibleKeys = new Set(table.getVisibleLeafColumns().map((column) => column.id));
@@ -171,8 +199,33 @@ export function Submissions({ formId }: { formId: string }) {
         </div>
       </div>
 
+      {summary.total > 0 && (
+        <Stats>
+          <Stat label={t('submissions.stat.complete')} value={summary.complete} />
+          {/* Only when there are any: a permanent nought is a column of noise. */}
+          {summary.partial > 0 && (
+            <Stat label={t('submissions.stat.partial')} value={summary.partial} />
+          )}
+          {summary.languages.length > 1 && (
+            <Stat
+              label={t('submissions.stat.languages')}
+              value={summary.languages.length}
+            />
+          )}
+          {summary.latest && (
+            <Stat
+              label={t('submissions.stat.latest')}
+              value={<span className="stat__value--small">{formatDateTime(locale, summary.latest)}</span>}
+            />
+          )}
+        </Stats>
+      )}
+
       <label className="field">
-        <span className="small muted">{t('submissions.search')}</span>
+        <span className="small muted">
+          <Icon name="search" className="icon--lead" />
+          {t('submissions.search')}
+        </span>
         <input value={globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
       </label>
 

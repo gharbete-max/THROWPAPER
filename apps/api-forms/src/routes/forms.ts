@@ -37,8 +37,14 @@ export function registerFormRoutes(
       const auth = request.auth;
       if (!auth) return unauthenticated(reply);
       const records = await deps.repos.forms.list(auth.organisation.id);
+      // One query for every row's count, not one per row.
+      const counts = await deps.repos.submissions.countCompleteByForm(
+        records.map((record) => record.id),
+      );
       return reply.send({
-        forms: records.map((record) => toFormResponse(record, auth.organisation.supportedLocales)),
+        forms: records.map((record) =>
+          toFormResponse(record, auth.organisation.supportedLocales, counts[record.id] ?? 0),
+        ),
       });
     },
   });
@@ -56,7 +62,13 @@ export function registerFormRoutes(
       const { id } = IdParam.parse(request.params);
       const record = await deps.repos.forms.findById(auth.organisation.id, id);
       if (!record) return notFound(reply);
-      return reply.send(toFormResponse(record, auth.organisation.supportedLocales));
+      return reply.send(
+        toFormResponse(
+          record,
+          auth.organisation.supportedLocales,
+          await deps.repos.submissions.countComplete(record.id),
+        ),
+      );
     },
   });
 
@@ -130,7 +142,8 @@ export function registerFormRoutes(
         after: record,
       });
 
-      return reply.code(201).send(toFormResponse(record, auth.organisation.supportedLocales));
+      // A form created a moment ago has no responses; that is arithmetic, not an assumption.
+      return reply.code(201).send(toFormResponse(record, auth.organisation.supportedLocales, 0));
     },
   });
 
@@ -172,7 +185,13 @@ export function registerFormRoutes(
         after: updated,
       });
 
-      return reply.send(toFormResponse(updated, auth.organisation.supportedLocales));
+      return reply.send(
+        toFormResponse(
+          updated,
+          auth.organisation.supportedLocales,
+          await deps.repos.submissions.countComplete(updated.id),
+        ),
+      );
     },
   });
 
@@ -200,7 +219,13 @@ export function registerFormRoutes(
       if (!updated) return notFound(reply);
       // Autosave is deliberately not audited: it fires on every keystroke burst and would bury
       // the entries that matter. Publishing is the auditable act.
-      return reply.send(toFormResponse(updated, auth.organisation.supportedLocales));
+      return reply.send(
+        toFormResponse(
+          updated,
+          auth.organisation.supportedLocales,
+          await deps.repos.submissions.countComplete(updated.id),
+        ),
+      );
     },
   });
 
@@ -307,7 +332,13 @@ export function registerFormRoutes(
         after: { version: version.version, missingLocales: incomplete.map((e) => e.locale) },
       });
 
-      return reply.send(toFormResponse(updated, auth.organisation.supportedLocales));
+      return reply.send(
+        toFormResponse(
+          updated,
+          auth.organisation.supportedLocales,
+          await deps.repos.submissions.countComplete(updated.id),
+        ),
+      );
     },
   });
 
@@ -388,7 +419,13 @@ export function registerFormRoutes(
         after: { restoredVersion: version },
       });
 
-      return reply.send(toFormResponse(updated, auth.organisation.supportedLocales));
+      return reply.send(
+        toFormResponse(
+          updated,
+          auth.organisation.supportedLocales,
+          await deps.repos.submissions.countComplete(updated.id),
+        ),
+      );
     },
   });
 }

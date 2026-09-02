@@ -4,6 +4,8 @@ import { toCsv, type ExportColumn } from '@tp/shared/forms';
 import { client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
+import { Stat, Stats } from '../components/Stat.js';
+import { useConfirm } from '../components/Confirm.js';
 
 interface Attendee {
   submissionId: string;
@@ -32,6 +34,7 @@ interface Attendance {
  */
 export function EventReport() {
   const t = useT();
+  const confirm = useConfirm();
   const { id: eventId } = useParams();
   const { locale, user } = useSession();
   const [attendance, setAttendance] = useState<Attendance | null>(null);
@@ -82,7 +85,11 @@ export function EventReport() {
   }
 
   async function revoke(attendee: Attendee) {
-    if (!(await confirm(t('events.archiveConfirm')))) return;
+    // The hook, not the global `confirm`, which shows nothing and returns false in an embedded
+    // browser — this button was dead there. And its own wording: it withdraws one person's
+    // registration, not the event, which is what the borrowed `events.archiveConfirm` said.
+    if (!(await confirm(t('attendance.revokeConfirm', { name: attendee.name }), { danger: true })))
+      return;
     await client.revokeSubmission(attendee.submissionId);
     load();
   }
@@ -103,14 +110,14 @@ export function EventReport() {
         </div>
       </header>
 
-      <div className="row stats">
+      <Stats>
         <Stat label={t('attendance.registered')} value={attendance.registered} />
         <Stat label={t('attendance.checkedIn')} value={attendance.checkedIn} />
         <Stat label={t('attendance.noShow')} value={attendance.noShow} />
         {attendance.revoked > 0 && (
           <Stat label={t('attendance.revoked')} value={attendance.revoked} />
         )}
-      </div>
+      </Stats>
 
       <div className="row">
         <button
@@ -165,14 +172,5 @@ export function EventReport() {
         </table>
       </div>
     </section>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="stat">
-      <span className="stat__value">{value}</span>
-      <span className="stat__label">{label}</span>
-    </div>
   );
 }

@@ -176,7 +176,10 @@ export function createMemoryRepositories(
         state.events[index] = updated;
         return copyEvent(updated);
       },
-      countRegistrations: async () => 0,
+      countRegistrations: async (eventId) =>
+        state.submissions.filter(
+          (s) => s.eventId === eventId && s.status === 'complete' && s.revokedAt === null,
+        ).length,
     },
 
     forms: {
@@ -258,6 +261,17 @@ export function createMemoryRepositories(
       countComplete: async (formId) =>
         state.submissions.filter((s) => s.formId === formId && s.status === 'complete').length,
 
+      countCompleteByForm: async (formIds) => {
+        const wanted = new Set(formIds);
+        const counts: Record<string, number> = {};
+        for (const submission of state.submissions) {
+          if (submission.status !== 'complete') continue;
+          if (!wanted.has(submission.formId)) continue;
+          counts[submission.formId] = (counts[submission.formId] ?? 0) + 1;
+        }
+        return counts;
+      },
+
       findByReference: async (organisationId, reference) => {
         const found = state.submissions.find(
           (s) =>
@@ -337,8 +351,9 @@ export function createMemoryRepositories(
         }
 
         if (input.capacity !== null) {
+          // Withdrawn registrations free their place — see the note in the Drizzle implementation.
           const taken = state.submissions.filter(
-            (s) => s.formId === input.formId && s.status === 'complete',
+            (s) => s.formId === input.formId && s.status === 'complete' && s.revokedAt === null,
           ).length;
           if (taken >= input.capacity) return { ok: false as const, reason: 'full' as const };
         }

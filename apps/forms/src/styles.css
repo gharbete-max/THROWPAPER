@@ -1237,3 +1237,66 @@ textarea {
     display: none;
   }
 }
+
+/* --- Overviews -------------------------------------------------------------
+ *
+ * The list screens exist to answer one question each — how many people have registered, how many
+ * have answered — and for a long time they answered a different one. These are the pieces that
+ * carry the number.
+ */
+
+/**
+ * How full something is.
+ *
+ * The track is `border`, not `surface`: these sit on cards, and a card *is* a surface, so a
+ * surface-coloured track was invisible — the bar read as a stray dash rather than as 40 of 250.
+ */
+.meter {
+  block-size: 6px;
+  inline-size: 100%;
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-border);
+  overflow: hidden;
+}
+
+.meter__fill {
+  block-size: 100%;
+  background: var(--tp-colour-primary);
+  /* Zero registrations must still read as a bar at nought, not a missing element. */
+  min-inline-size: 0;
+}
+
+/* Full is worth noticing before reading the numbers. */
+.meter--full .meter__fill {
+  background: var(--tp-colour-warning);
+}
+
+/* A card's buttons, kept on one line until they genuinely do not fit. */
+.card__actions {
+  margin-block-start: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.stack--tight {
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.backlink {
+  color: var(--tp-colour-muted);
+  text-decoration: none;
+}
+
+.backlink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The public address and its copy button share a line and never separate. */
+.form-link-row {
+  gap: var(--tp-spacing-unit);
+}
+
+/* A timestamp is not a headline number, so it does not get headline size. */
+.stat__value--small {
+  font-size: 1rem;
+  font-weight: var(--tp-type-weight-regular);
+}

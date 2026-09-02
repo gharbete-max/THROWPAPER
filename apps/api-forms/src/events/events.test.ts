@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   adminUser,
@@ -10,7 +11,7 @@ import {
   type TestHarness,
 } from '../test-support.js';
 import { registrationOpen } from './service.js';
-import type { EventRecord } from '../db/repositories/index.js';
+import type { EventRecord, SubmissionRecord } from '../db/repositories/index.js';
 
 let harness: TestHarness;
 let adminToken: string;
@@ -242,5 +243,74 @@ describe('registrationOpen is computed, not stored', () => {
   it('is closed unless the event itself is open', () => {
     expect(registrationOpen({ ...base, status: 'draft' }, 0, before)).toBe(false);
     expect(registrationOpen({ ...base, status: 'archived' }, 0, before)).toBe(false);
+  });
+});
+
+/**
+ * The count behind that pure function.
+ *
+ * `countRegistrations` was stubbed to return `0` while registrations were being built, and stayed
+ * stubbed once they existed. Nothing displayed it, so nothing contradicted it — every event
+ * reported an empty guest list and stayed open however full it was. These tests are what stops it
+ * being quietly stubbed again.
+ */
+describe('counting the people holding a place', () => {
+  function registration(overrides: Partial<SubmissionRecord> & { eventId: string }) {
+    const now = new Date();
+    return {
+      id: randomUUID(),
+      organisationId: testOrganisation.id,
+      formId: 'f1',
+      formVersionId: 'v1',
+      reference: randomUUID().slice(0, 8).toUpperCase(),
+      status: 'complete' as const,
+      locale: 'sv-SE',
+      email: null,
+      data: {},
+      resumeTokenHash: null,
+      resumeExpiresAt: null,
+      submittedAt: now,
+      revokedAt: null,
+      createdAt: now,
+      updatedAt: now,
+      ...overrides,
+    } satisfies SubmissionRecord;
+  }
+
+  it('counts completed registrations for the event', async () => {
+    harness.state.submissions.push(
+      registration({ eventId: 'e1' }),
+      registration({ eventId: 'e1' }),
+      registration({ eventId: 'e2' }),
+    );
+    expect(await harness.repos.events.countRegistrations('e1')).toBe(2);
+  });
+
+  it('does not count a half-finished form as a registration', async () => {
+    harness.state.submissions.push(registration({ eventId: 'e1', status: 'partial' }));
+    expect(await harness.repos.events.countRegistrations('e1')).toBe(0);
+  });
+
+  it('gives a withdrawn registration its place back', async () => {
+    harness.state.submissions.push(
+      registration({ eventId: 'e1' }),
+      registration({ eventId: 'e1', revokedAt: new Date() }),
+    );
+    expect(await harness.repos.events.countRegistrations('e1')).toBe(1);
+  });
+
+  it('reports the count on the event, which is what the list screen reads', async () => {
+    const created = await createEvent();
+    const { id } = created.json() as { id: string };
+    harness.state.submissions.push(registration({ eventId: id }));
+
+    const response = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/events',
+      headers: bearer(adminToken),
+    });
+    const listed = (response.json() as { events: Array<{ id: string; registeredCount: number }> })
+      .events.find((event) => event.id === id);
+    expect(listed?.registeredCount).toBe(1);
   });
 });
