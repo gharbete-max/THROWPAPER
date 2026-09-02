@@ -292,13 +292,22 @@ export function createDrizzleRepositories(db: Db): Repositories {
         return row?.count ?? 0;
       },
 
-      countCompleteByForm: async (formIds) => {
+      countCompleteByForm: async (organisationId, formIds) => {
         // `IN ()` is not valid SQL, so an empty ask is answered without going to the database.
         if (formIds.length === 0) return {};
         const rows = await db
           .select({ formId: submissions.formId, count: sql<number>`count(*)::int` })
           .from(submissions)
-          .where(and(inArray(submissions.formId, [...formIds]), eq(submissions.status, 'complete')))
+          .where(
+            and(
+              // Scoped, even though every caller passes ids it already read from this
+              // organisation. A count is small, but it is still somebody else's data, and a
+              // repository that trusts its caller is one refactor away from handing it over.
+              eq(submissions.organisationId, organisationId),
+              inArray(submissions.formId, [...formIds]),
+              eq(submissions.status, 'complete'),
+            ),
+          )
           .groupBy(submissions.formId);
         return Object.fromEntries(rows.map((row) => [row.formId, row.count]));
       },

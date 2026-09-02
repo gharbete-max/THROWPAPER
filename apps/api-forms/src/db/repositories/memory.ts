@@ -261,10 +261,11 @@ export function createMemoryRepositories(
       countComplete: async (formId) =>
         state.submissions.filter((s) => s.formId === formId && s.status === 'complete').length,
 
-      countCompleteByForm: async (formIds) => {
+      countCompleteByForm: async (organisationId, formIds) => {
         const wanted = new Set(formIds);
         const counts: Record<string, number> = {};
         for (const submission of state.submissions) {
+          if (submission.organisationId !== organisationId) continue;
           if (submission.status !== 'complete') continue;
           if (!wanted.has(submission.formId)) continue;
           counts[submission.formId] = (counts[submission.formId] ?? 0) + 1;

@@ -242,7 +242,10 @@ export interface SubmissionRepository {
    * one query per form. Forms with no completed responses are absent from the result rather than
    * present as nought, so the caller decides what missing means.
    */
-  countCompleteByForm(formIds: readonly string[]): Promise<Record<string, number>>;
+  countCompleteByForm(
+    organisationId: string,
+    formIds: readonly string[],
+  ): Promise<Record<string, number>>;
   /** Save-and-resume. Creates the draft on first save and overwrites it thereafter. */
   saveDraft(input: SubmissionDraftInput): Promise<SubmissionRecord>;
   findByReference(organisationId: string, reference: string): Promise<SubmissionRecord | null>;

@@ -6,6 +6,7 @@ import {
   type FieldWidth,
   type FormDefinition,
 } from './definition.js';
+import { isDangerousPattern } from './pattern-safety.js';
 
 const presentational = new Set<string>(PRESENTATIONAL_TYPES);
 
@@ -164,7 +165,8 @@ export interface DefinitionProblem {
     | 'no-answerable-fields'
     | 'empty-options'
     | 'condition-unknown-field'
-    | 'condition-forward-reference';
+    | 'condition-forward-reference'
+    | 'unsafe-pattern';
   message: string;
   fieldId?: string;
 }
@@ -196,6 +198,22 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
       problems.push({
         code: 'empty-options',
         message: 'A choice field has no options',
+        fieldId: field.id,
+      });
+    }
+
+    /**
+     * A pattern that can backtrack catastrophically never reaches a live form.
+     *
+     * Refused here rather than only skipped at validation time, because this is the one moment a
+     * person is present and can be told. The alternative is a rule that silently does nothing.
+     */
+    if ('pattern' in field && field.pattern && isDangerousPattern(field.pattern)) {
+      problems.push({
+        code: 'unsafe-pattern',
+        message:
+          'A format rule can take exponential time to check. Avoid a repeat inside a repeated ' +
+          'group, such as (a+)+.',
         fieldId: field.id,
       });
     }

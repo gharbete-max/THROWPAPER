@@ -82,6 +82,20 @@ export function Submissions({ formId }: { formId: string }) {
     [rows],
   );
 
+  /**
+   * Text sorts by ICU collation — `CLAUDE.md` rule 6, which nothing implemented until now.
+   *
+   * TanStack's default string comparison is `<` on UTF-16 code units. That gets Swedish wrong in
+   * two separate ways: it is case-sensitive, so "Zebra" sorts before "apple"; and it orders the
+   * accented letters by code point, which happens to put å ä ö after z for Swedish but puts
+   * Danish and Norwegian æ ø å in the wrong order against each other. A collator built for the
+   * operator's own locale gets all of them right, and is the same maths the database would use.
+   *
+   * Numbers and dates keep the default, which compares the accessor value — a real number and an
+   * ISO string. Sorting either as collated text would be worse, not better.
+   */
+  const collator = useMemo(() => new Intl.Collator(locale, { numeric: true }), [locale]);
+
   const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(
     () =>
       exportColumns.map((column) => ({
@@ -89,8 +103,17 @@ export function Submissions({ formId }: { formId: string }) {
         accessorKey: column.key,
         header: column.header,
         cell: (info) => renderCell(info.getValue(), column, locale),
+        ...(column.type === 'text' || column.type === 'list'
+          ? {
+              sortingFn: (a, b, columnId) =>
+                collator.compare(
+                  String(a.getValue(columnId) ?? ''),
+                  String(b.getValue(columnId) ?? ''),
+                ),
+            }
+          : {}),
       })),
-    [exportColumns, locale],
+    [exportColumns, locale, collator],
   );
 
   const table = useReactTable({

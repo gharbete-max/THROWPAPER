@@ -1,4 +1,11 @@
-import { answerableFields, isVisible, type AnswerableField, type FormDefinition } from './index.js';
+import {
+  answerableFields,
+  isDangerousPattern,
+  isVisible,
+  MAX_MATCHED_LENGTH,
+  type AnswerableField,
+  type FormDefinition,
+} from './index.js';
 
 /**
  * One validator, run on both sides.
@@ -222,8 +229,19 @@ function isEmpty(value: AnswerValue): boolean {
  * builder is not a place to accept arbitrary regular expressions unguarded.
  */
 function safeMatch(pattern: string, value: string): boolean {
+  /**
+   * A pattern that can backtrack catastrophically is **skipped**, not failed.
+   *
+   * Publishing refuses these, so reaching here means a form was written through the API before
+   * that check existed. Two bad options: fail every answer, which makes a live public form
+   * unfillable by anybody with no way for the visitor to fix it; or skip that one rule, leaving
+   * the field validated by its type and its length limits. Skipping degrades; failing breaks.
+   */
+  if (isDangerousPattern(pattern)) return true;
+
   try {
-    return new RegExp(`^(?:${pattern})$`).test(value);
+    // Bounded input bounds the work even if the structural check missed something.
+    return new RegExp(`^(?:${pattern})$`).test(value.slice(0, MAX_MATCHED_LENGTH));
   } catch {
     // An unparseable pattern must not silently pass everything.
     return false;

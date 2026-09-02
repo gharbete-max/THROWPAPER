@@ -1,6 +1,6 @@
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 
 /**
  * Where generated documents live.
@@ -49,8 +49,14 @@ export function createLocalDocumentStore(options: {
 
     async get(key) {
       const target = resolve(join(root, key));
-      // Refuse anything that escapes the root: `key` reaches here from a URL.
-      if (!target.startsWith(root)) return null;
+      /**
+       * Refuse anything that escapes the root: `key` reaches here from a URL.
+       *
+       * The separator matters. A bare `startsWith(root)` also accepts a *sibling* whose name
+       * merely begins with the root's — `/var/docs-backup` passes a check against `/var/docs` —
+       * so the prefix has to end at a directory boundary, or be the root itself.
+       */
+      if (target !== root && !target.startsWith(root + sep)) return null;
       try {
         return await readFile(target);
       } catch {
