@@ -1528,3 +1528,370 @@ textarea {
   border: 1px solid;
   font-size: 0.75rem;
 }
+
+/* ==========================================================================
+ * Motion
+ *
+ * One rule governs this whole section: every animation below is switched off by
+ * `prefers-reduced-motion`, and the block that does it is at the very end. Movement is added by
+ * exception here, never assumed — this product's surface is forms filled in by members of the
+ * public who did not choose to be here, and for somebody with a vestibular disorder a page that
+ * zooms and slides is not a style choice.
+ *
+ * Everything animates `transform` and `opacity` only. Those are the two properties a browser can
+ * move on the compositor without re-laying-out the page; animating width, top or margin instead is
+ * what makes an interface feel cheap on a slow machine.
+ * ========================================================================== */
+
+/* --- The mark ------------------------------------------------------------- */
+.logo {
+  inline-size: 1.6em;
+  block-size: 1.6em;
+  flex: none;
+  /* Two tones, both from the kit: `currentColor` for the hand, the page for the paper. */
+  color: var(--tp-colour-primary);
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.3, 1.2);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.25);
+  font-size: 1.05rem;
+}
+
+/* A slight tilt on hover, as though the paper were about to be thrown. */
+.wordmark:hover .logo {
+  transform: rotate(-8deg) scale(1.06);
+}
+
+/* --- The intro ------------------------------------------------------------
+ *
+ * An overlay, never a gate: the app is mounted and interactive underneath it the whole time, and
+ * any key or click removes it. It fades rather than cutting, because a hard cut to the product
+ * reads as a page reload.
+ */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--tp-colour-background);
+}
+
+.intro--leaving {
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+  /* Stops being clickable the instant it starts leaving, so nothing is swallowed. */
+  pointer-events: none;
+}
+
+.intro__stage {
+  display: grid;
+  place-items: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  color: var(--tp-colour-primary);
+  /* The camera: pushes in, then pulls back and pans as the paper leaves the frame. */
+  animation: intro-camera 1000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.intro__scene {
+  inline-size: min(70vw, 30rem);
+  block-size: auto;
+}
+
+.intro__word {
+  margin: 0;
+  font-family: var(--tp-type-heading-font);
+  font-weight: var(--tp-type-weight-bold);
+  font-size: 1.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: intro-word 620ms 380ms ease-out forwards;
+}
+
+/* The wind-up and the throw, in one arc. */
+.intro__arm {
+  /* The shoulder. Rotating about anything else swings the whole arm off the body. */
+  transform-origin: 40px 50px;
+  animation: intro-throw 1000ms cubic-bezier(0.5, -0.4, 0.3, 1.6) forwards;
+}
+
+.intro__figure {
+  transform-origin: 40px 84px;
+  animation: intro-lean 1000ms ease-in-out forwards;
+}
+
+/* The sheet leaves the hand, crosses the frame and spins. */
+.intro__paper {
+  transform-origin: center;
+  animation: intro-paper 1000ms cubic-bezier(0.3, 0, 0.5, 1) forwards;
+}
+
+@keyframes intro-camera {
+  0% {
+    transform: scale(0.86) translateX(0);
+  }
+  40% {
+    transform: scale(1.1) translateX(0);
+  }
+  100% {
+    transform: scale(1) translateX(-4%);
+  }
+}
+
+@keyframes intro-word {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro-throw {
+  0% {
+    transform: rotate(0deg);
+  }
+  30% {
+    /* The wind-up: back and up, stopping short of where the head is. */
+    transform: rotate(-50deg);
+  }
+  48% {
+    transform: rotate(40deg);
+  }
+  100% {
+    transform: rotate(22deg);
+  }
+}
+
+@keyframes intro-lean {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-4deg);
+  }
+  55% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes intro-paper {
+  0%,
+  30% {
+    /* In the hand, at the arm's resting end. */
+    transform: translate(58px, 58px) rotate(0deg) scale(0.9);
+    opacity: 1;
+  }
+  48% {
+    /* Released as the arm comes through. */
+    transform: translate(96px, 34px) rotate(200deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(238px, 48px) rotate(560deg) scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* --- Waiting: a hand bouncing a paper ball -------------------------------- */
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  color: var(--tp-colour-primary);
+}
+
+.loading__scene {
+  inline-size: 3rem;
+  block-size: 2.5rem;
+  flex: none;
+}
+
+.loading__ball {
+  transform-origin: 8px 9px;
+  animation: bounce-ball 900ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* The palm gives a little as the ball lands, which is what sells the weight. */
+.loading__hand {
+  transform-origin: 24px 31px;
+  animation: bounce-hand 900ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes bounce-ball {
+  0%,
+  100% {
+    transform: translate(16px, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(16px, 14px) rotate(180deg);
+  }
+}
+
+@keyframes bounce-hand {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(2px) scaleY(0.9);
+  }
+}
+
+/* Still, not absent: the same picture with the ball resting in the palm. */
+.loading--still .loading__ball {
+  animation: none;
+  transform: translate(16px, 12px);
+}
+
+.loading--still .loading__hand {
+  animation: none;
+}
+
+/* --- Finishing: the signature draws itself -------------------------------- */
+.signed {
+  inline-size: min(100%, 15rem);
+  block-size: auto;
+  color: var(--tp-colour-primary);
+}
+
+.signed__stroke {
+  /* Roughly the path length. Over-long is safe: the dash simply starts further off-screen. */
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: draw-signature 900ms 120ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.signed__tick {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: draw-signature 320ms 900ms ease-out forwards;
+}
+
+@keyframes draw-signature {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Already signed, rather than never signed. */
+.signed--still .signed__stroke,
+.signed--still .signed__tick {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+
+/* --- Arriving on scroll ---------------------------------------------------
+ *
+ * The hidden state is only ever applied by JavaScript that has already decided the effect can
+ * run, so content is never left invisible by a script that failed to load.
+ */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 340ms ease-out,
+    transform 340ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.reveal--in {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Pressing -------------------------------------------------------------
+ *
+ * A press that moves is a press you felt. One pixel and a moment, on the control itself rather
+ * than a ripple overlay — an overlay needs a positioned wrapper on every control and breaks the
+ * moment one of them is a link.
+ */
+.button,
+.theme {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 90ms ease;
+}
+
+.button:active:not(:disabled),
+.builder__itemBody:active,
+.theme:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+
+/* A choice that has just been made gives a small nudge, so a card grid confirms the click. */
+.choice__option:has(input:checked) {
+  animation: chosen 260ms cubic-bezier(0.2, 0.8, 0.3, 1.4);
+}
+
+@keyframes chosen {
+  40% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* A star that has just been lit. */
+.rating__point--on .rating__glyph {
+  animation: chosen 240ms cubic-bezier(0.2, 0.8, 0.3, 1.5);
+}
+
+/* A field appearing because a condition became true, rather than blinking into existence. */
+.form-grid__cell {
+  animation: field-in 220ms ease-out;
+}
+
+@keyframes field-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ==========================================================================
+ * The switch.
+ *
+ * Everything above is off here — including the intro, which does not even mount, and the reveal,
+ * which starts revealed. `!important` because these rules have to beat any specificity above them,
+ * and this is the one place in the stylesheet where that is the correct tool.
+ * ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .button:active:not(:disabled),
+  .builder__itemBody:active,
+  .theme:active:not(:disabled) {
+    transform: none;
+  }
+
+  .loading--still .loading__ball {
+    transform: translate(16px, 12px);
+  }
+
+  .signed--still .signed__stroke,
+  .signed--still .signed__tick {
+    stroke-dashoffset: 0;
+  }
+}

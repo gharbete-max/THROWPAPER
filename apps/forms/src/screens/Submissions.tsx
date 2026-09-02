@@ -27,6 +27,7 @@ import { formatDateTime, useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { Stat, Stats } from '../components/Stat.js';
 import { AttachmentLink } from '../components/AttachmentLink.js';
+import { Loading } from '../components/Loading.js';
 
 /**
  * The submissions table.
@@ -251,7 +252,7 @@ export function Submissions({ formId }: { formId: string }) {
     await writeXlsxFile(data, { stickyRowsCount: 1 }).toFile('submissions.xlsx');
   }
 
-  if (rows === null) return <p className="muted">{t('app.loading')}</p>;
+  if (rows === null) return <Loading />;
 
   return (
     <section className="stack">
