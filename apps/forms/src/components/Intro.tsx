@@ -3,7 +3,7 @@ import { rememberIntroSeen, shouldPlayIntro, useReducedMotion } from '../lib/mot
 import { useT } from '../lib/i18n.js';
 
 /**
- * The one-second intro: a figure winds up and throws a crumpled sheet, and the camera follows it.
+ * The one-second intro: a figure winds up and throws a paper plane, and the camera follows it.
  *
  * ## The rules it plays by
  *
@@ -100,20 +100,28 @@ export function Intro() {
             />
           </g>
 
-          {/* The sheet, thrown across the frame and spinning as it goes. */}
+          {/**
+           * The plane, thrown across the frame and turning as it goes.
+           *
+           * The same two-wing shape as the mark, at a twelfth the size — so the thing being
+           * thrown in the intro and the thing in the top bar are recognisably one object. It was
+           * a crumpled ball until the mark became a plane, and leaving it would have made the
+           * intro tell a different story from the logo it hands over to.
+           */}
           <g className="intro__paper">
             <path
-              d="M0 0 L9 3 L13 10 L9 18 L1 21 L-8 18 L-12 10 L-8 2 Z"
-              fill="var(--tp-colour-background)"
+              d="M14 -7 L-14 4 L-1.5 8.5 Z"
+              fill="currentColor"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="1.2"
               strokeLinejoin="round"
             />
             <path
-              d="M0 0 L1 10 L13 10 M1 10 L-8 18 M1 10 L9 18"
+              d="M14 -7 L-1.5 8.5 L2 19.5 Z"
+              fill="var(--tp-colour-background)"
               stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
             />
           </g>
         </svg>

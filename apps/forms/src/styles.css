@@ -1543,14 +1543,40 @@ textarea {
  * what makes an interface feel cheap on a slow machine.
  * ========================================================================== */
 
-/* --- The mark ------------------------------------------------------------- */
+/* --- The mark -------------------------------------------------------------
+ *
+ * A paper plane, spinning.
+ *
+ * ## Why it turns in the plane of the screen rather than in space
+ *
+ * The obvious reading of "spinning" is a `rotateY` — the fold turning towards you and away. It
+ * was built that way first and measured: twice per revolution the plane passed edge-on and its
+ * rendered width fell to **under one pixel**. A flat shape has no thickness, so a full rotation
+ * about any axis in its own plane makes it disappear. A logo that vanishes twice every seven
+ * seconds is a defect however pretty the other five.
+ *
+ * So it spins about Z, like a thrown plane that has run out of lift and is coming round. Always
+ * fully visible, and unambiguously spinning. The constant `rotateX` tilt is what stops it reading
+ * as a flat pinwheel: it keeps a little foreshortening so the fold still looks like paper.
+ *
+ * Slow on purpose — eight seconds. A mark in a top bar sits beside everything somebody is trying
+ * to read, and anything quicker competes with the page. Hovering speeds it up, which is the one
+ * moment they are actually looking at it.
+ */
+.logo__frame {
+  display: inline-flex;
+  /* Without this the rotation is an affine squash and the plane never looks three-dimensional. */
+  perspective: 320px;
+  flex: none;
+}
+
 .logo {
   inline-size: 1.6em;
   block-size: 1.6em;
   flex: none;
-  /* Two tones, both from the kit: `currentColor` for the hand, the page for the paper. */
   color: var(--tp-colour-primary);
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.3, 1.2);
+  transform-style: preserve-3d;
+  animation: plane-spin 8s linear infinite;
 }
 
 .wordmark {
@@ -1560,9 +1586,17 @@ textarea {
   font-size: 1.05rem;
 }
 
-/* A slight tilt on hover, as though the paper were about to be thrown. */
 .wordmark:hover .logo {
-  transform: rotate(-8deg) scale(1.06);
+  animation-duration: 1.6s;
+}
+
+@keyframes plane-spin {
+  from {
+    transform: rotateX(18deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(18deg) rotateZ(360deg);
+  }
 }
 
 /* --- The intro ------------------------------------------------------------
@@ -1888,6 +1922,12 @@ textarea {
 
   .loading--still .loading__ball {
     transform: translate(16px, 12px);
+  }
+
+  /* Parked at the angle it is drawn at, which already reads as a plane in flight. */
+  .logo {
+    animation: none !important;
+    transform: rotateX(18deg) rotateZ(-8deg);
   }
 
   .signed--still .signed__stroke,
