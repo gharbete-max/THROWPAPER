@@ -257,6 +257,9 @@ export const frFR: Record<MessageKey, string> = {
   'settings.redirectUrl': 'Les rediriger vers',
   'settings.redirectUrlHint':
     'Facultatif. Remplace l’écran de remerciement. La référence est transmise dans le lien.',
+  'settings.locales': 'Langues dans lesquelles ce formulaire est proposé',
+  'settings.localesHint':
+    'Cochez-en plusieurs et le formulaire obtient son propre sélecteur de langue. N’en cochez aucune pour toutes les langues publiées par l’organisation. Vous rédigez chaque version vous-même, dans l’onglet des traductions.',
   'settings.showProgress': 'Montrer leur progression',
   'settings.allowSaveAndResume': 'Autoriser l’enregistrement et la reprise ultérieure',
   'settings.duplicateControl': 'Doublons',

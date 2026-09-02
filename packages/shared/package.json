@@ -16,6 +16,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@tp/i18n": "workspace:*",
     "zod": "^3.24.1"
   }
 }

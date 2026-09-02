@@ -2253,6 +2253,192 @@ input[type='file']:disabled::file-selector-button {
 }
 
 /* ==========================================================================
+ * Languages: flags, the picker, and the per-form choice.
+ * ========================================================================== */
+
+/* Sized in ems so a flag matches whatever text it sits beside, at 4:3 like the real thing. */
+.flag {
+  inline-size: 1.5em;
+  block-size: 1.125em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.langpicker {
+  position: relative;
+  display: inline-flex;
+}
+
+.langpicker__button {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.6);
+  /* 44px on touch: this is a target people hit with a thumb in the corner of a form. */
+  min-height: 44px;
+  padding: calc(var(--tp-spacing-unit) * 0.5) var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: 0.875rem;
+  cursor: pointer;
+  /* A double-tap here is somebody tapping twice, not asking to zoom. */
+  touch-action: manipulation;
+}
+
+.langpicker__button:hover {
+  border-color: var(--tp-colour-primary);
+}
+
+.langpicker__chevron {
+  inline-size: 0.85em;
+  block-size: 0.85em;
+  color: var(--tp-colour-muted);
+}
+
+.langpicker__name {
+  white-space: nowrap;
+}
+
+.langpicker__list {
+  position: absolute;
+  inset-block-start: calc(100% + 4px);
+  inset-inline-end: 0;
+  z-index: 30;
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 0.4);
+  list-style: none;
+  min-inline-size: 12rem;
+  /* Twelve languages is taller than a phone. Scroll the list, never the page behind it. */
+  max-block-size: min(60vh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.14);
+}
+
+.langpicker__option {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  inline-size: 100%;
+  min-height: 44px;
+  padding: calc(var(--tp-spacing-unit) * 0.5) calc(var(--tp-spacing-unit) * 0.75);
+  border: 0;
+  border-radius: var(--tp-radius);
+  background: none;
+  color: inherit;
+  font-family: var(--tp-type-body-font);
+  font-size: 0.9375rem;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* One highlight, driven by the keyboard *and* the mouse, so Enter always takes what looks taken. */
+.langpicker__option.is-active {
+  background: color-mix(in srgb, var(--tp-colour-primary) 10%, transparent);
+}
+
+.langpicker__tick {
+  margin-inline-start: auto;
+  inline-size: 1em;
+  block-size: 1em;
+  color: var(--tp-colour-primary);
+}
+
+/* On a form the switcher is flags only — the reader is choosing between two or three, and the
+ * corner of a form is not where a language name earns its width. The name is still the accessible
+ * name and the tooltip, so it is never *only* a picture. */
+.langpicker--corner .langpicker__button {
+  border-color: transparent;
+  background: none;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.langpicker--corner .langpicker__button:hover {
+  border-color: var(--tp-colour-border);
+}
+
+/* The author's choice of which languages a form offers. */
+.locale-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+  margin-block-start: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.locale-choice {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.6);
+  min-height: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
+  border-radius: var(--tp-radius);
+  cursor: pointer;
+}
+
+.locale-choice:hover {
+  background: color-mix(in srgb, var(--tp-colour-primary) 6%, transparent);
+}
+
+/* ==========================================================================
+ * Touch and trackpad.
+ *
+ * Two things break sideways panning on a phone or a trackpad, and both are omissions rather than
+ * mistakes: a wide thing that is not inside its own scroller, and a scroller that hands its
+ * overscroll to the page so the whole document rubber-bands instead.
+ *
+ * Pinch-zoom is deliberately left alone. `user-scalable=no` and `maximum-scale=1` are the usual
+ * way it gets lost, and neither appears in index.html — a form somebody cannot zoom into is a
+ * form somebody cannot read.
+ * ========================================================================== */
+
+html {
+  /* Rotating a phone must not silently inflate every font. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Wide content pans inside itself, and stops there. Without `contain`, reaching the end of a
+ * table throws the scroll to the page and the whole screen lurches sideways. */
+.table-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* Momentum on older iOS; harmless everywhere else. */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* The pile switcher: five tabs do not fit across a phone. Scrolled rather than wrapped, so the
+ * row stays a row and two fingers on a trackpad move it. */
+.tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: 0 0 auto;
+}
+
+/* Anything that can overflow its box horizontally does so inside itself. A code block or a long
+ * unbroken reference must never widen the document — that is what makes a whole page pan when
+ * only one line is too long. */
+.inbox,
+.share-list,
+.templates {
+  overscroll-behavior-x: contain;
+}
+
+/* ==========================================================================
  * The switch.
  *
  * Everything above is off here — including the intro, which does not even mount, and the reveal,

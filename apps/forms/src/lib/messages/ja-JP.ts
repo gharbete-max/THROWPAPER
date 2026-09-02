@@ -256,6 +256,9 @@ export const jaJP: Record<MessageKey, string> = {
   'settings.confirmationMessageHint': '送信後に受付番号とともに表示されます。',
   'settings.redirectUrl': '送信後の移動先',
   'settings.redirectUrlHint': '任意。お礼の画面の代わりになります。受付番号はリンクに含まれます。',
+  'settings.locales': 'このフォームを提供する言語',
+  'settings.localesHint':
+    '2つ以上選ぶと、フォームに独自の言語切り替えが付きます。すべて未選択にすると、組織が公開しているすべての言語になります。各言語の文面は翻訳タブでご自身が書きます。',
   'settings.showProgress': '進み具合を表示する',
   'settings.allowSaveAndResume': '保存して後で続けられるようにする',
   'settings.duplicateControl': '重複',

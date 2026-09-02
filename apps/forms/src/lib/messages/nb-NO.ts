@@ -250,6 +250,9 @@ export const nbNO: Record<MessageKey, string> = {
   'settings.confirmationMessageHint': 'Vises etter innsending, sammen med referansenummeret.',
   'settings.redirectUrl': 'Send dem videre til',
   'settings.redirectUrlHint': 'Valgfritt. Erstatter takkeskjermen. Referansen følger med i lenken.',
+  'settings.locales': 'Språk skjemaet finnes på',
+  'settings.localesHint':
+    'Kryss av for mer enn ett, så får skjemaet sin egen språkveksler. La alle stå tomme for alle språkene organisasjonen publiserer på. Hver versjon skriver du selv, på oversettelsesfanen.',
   'settings.showProgress': 'Vis hvor langt de har kommet',
   'settings.allowSaveAndResume': 'Tillat å lagre og fortsette senere',
   'settings.duplicateControl': 'Duplikater',

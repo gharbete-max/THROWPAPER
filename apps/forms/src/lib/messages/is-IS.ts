@@ -250,6 +250,9 @@ export const isIS: Record<MessageKey, string> = {
   'settings.redirectUrl': 'Senda þau áfram á',
   'settings.redirectUrlHint':
     'Valfrjálst. Kemur í stað þakkarskjásins. Tilvísunin fylgir hlekknum.',
+  'settings.locales': 'Tungumál sem eyðublaðið er í boði á',
+  'settings.localesHint':
+    'Merktu við fleiri en eitt og eyðublaðið fær sinn eigin tungumálaskiptara. Skildu allt eftir ómerkt til að fá öll tungumál sem stofnunin birtir á. Hverja útgáfu skrifar þú sjálf, á þýðingarflipanum.',
   'settings.showProgress': 'Sýna hversu langt þau eru komin',
   'settings.allowSaveAndResume': 'Leyfa að vista og halda áfram síðar',
   'settings.duplicateControl': 'Tvítök',

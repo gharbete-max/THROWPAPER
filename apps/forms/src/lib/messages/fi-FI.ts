@@ -251,6 +251,9 @@ export const fiFI: Record<MessageKey, string> = {
   'settings.confirmationMessageHint': 'Näytetään lähetyksen jälkeen viitenumeron ohella.',
   'settings.redirectUrl': 'Ohjaa eteenpäin osoitteeseen',
   'settings.redirectUrlHint': 'Valinnainen. Korvaa kiitosnäkymän. Viite kulkee linkin mukana.',
+  'settings.locales': 'Kielet, joilla lomake on tarjolla',
+  'settings.localesHint':
+    'Valitse useampi kuin yksi, niin lomake saa oman kielenvaihtimensa. Jätä kaikki valitsematta, jos haluat kaikki organisaation julkaisukielet. Jokaisen version kirjoitat itse käännösvälilehdellä.',
   'settings.showProgress': 'Näytä, kuinka pitkällä ollaan',
   'settings.allowSaveAndResume': 'Salli tallennus ja jatkaminen myöhemmin',
   'settings.duplicateControl': 'Kaksoiskappaleet',

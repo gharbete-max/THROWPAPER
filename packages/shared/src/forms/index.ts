@@ -5,6 +5,7 @@ export * from './api.js';
 export * from './validate.js';
 export * from './public-api.js';
 export * from './export.js';
+export * from './vocabulary.js';
 export * from './templates.js';
 export * from './rich-text.js';
 export * from './pattern-safety.js';

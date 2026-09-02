@@ -257,6 +257,9 @@ export const deDE: Record<MessageKey, string> = {
   'settings.redirectUrl': 'Weiterleiten an',
   'settings.redirectUrlHint':
     'Optional. Ersetzt die Dankesseite. Die Referenz wird im Link mitgegeben.',
+  'settings.locales': 'Sprachen, in denen dieses Formular angeboten wird',
+  'settings.localesHint':
+    'Kreuzen Sie mehr als eine an, und das Formular bekommt einen eigenen Sprachumschalter. Lassen Sie alle leer für alle Sprachen, in denen die Organisation veröffentlicht. Jede Fassung schreiben Sie selbst, im Übersetzungs-Tab.',
   'settings.showProgress': 'Fortschritt anzeigen',
   'settings.allowSaveAndResume': 'Speichern und später fortsetzen erlauben',
   'settings.duplicateControl': 'Doppelte Antworten',

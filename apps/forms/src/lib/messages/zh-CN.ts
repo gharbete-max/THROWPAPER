@@ -249,6 +249,9 @@ export const zhCN: Record<MessageKey, string> = {
   'settings.confirmationMessageHint': '在表单提交后与编号一起显示。',
   'settings.redirectUrl': '将他们转到',
   'settings.redirectUrlHint': '可选。替代感谢页面。编号会随链接一起传递。',
+  'settings.locales': '本表单提供的语言',
+  'settings.localesHint':
+    '勾选多于一种，表单就会有自己的语言切换器。全部不勾选则表示组织发布的所有语言。每个版本都需要你自己在翻译标签页中撰写。',
   'settings.showProgress': '显示填写进度',
   'settings.allowSaveAndResume': '允许保存并稍后继续',
   'settings.duplicateControl': '重复提交',

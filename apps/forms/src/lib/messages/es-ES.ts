@@ -257,6 +257,9 @@ export const esES: Record<MessageKey, string> = {
   'settings.redirectUrl': 'Enviarles a',
   'settings.redirectUrlHint':
     'Opcional. Sustituye la pantalla de agradecimiento. La referencia viaja en el enlace.',
+  'settings.locales': 'Idiomas en los que se ofrece este formulario',
+  'settings.localesHint':
+    'Marca más de uno y el formulario tendrá su propio selector de idioma. Déjalos todos sin marcar para todos los idiomas en los que publica la organización. Cada versión la escribes tú, en la pestaña de traducciones.',
   'settings.showProgress': 'Mostrar cuánto llevan avanzado',
   'settings.allowSaveAndResume': 'Permitir guardar y continuar más tarde',
   'settings.duplicateControl': 'Duplicados',

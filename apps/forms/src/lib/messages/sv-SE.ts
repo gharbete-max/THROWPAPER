@@ -250,6 +250,9 @@ export const svSE: Record<MessageKey, string> = {
     'Visas efter att formuläret skickats, tillsammans med referensnumret.',
   'settings.redirectUrl': 'Skicka vidare till',
   'settings.redirectUrlHint': 'Valfritt. Ersätter tacksidan. Referensnumret följer med i länken.',
+  'settings.locales': 'Språk som formuläret finns på',
+  'settings.localesHint':
+    'Kryssa i fler än ett så får formuläret en egen språkväxlare. Lämna alla tomma för alla språk organisationen publicerar på. Varje version skriver du själv, på översättningsfliken.',
   'settings.showProgress': 'Visa hur långt man kommit',
   'settings.allowSaveAndResume': 'Tillåt att spara och fortsätta senare',
   'settings.duplicateControl': 'Dubbletter',

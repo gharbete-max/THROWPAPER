@@ -248,6 +248,9 @@ export const daDK: Record<MessageKey, string> = {
   'settings.confirmationMessageHint': 'Vises efter afsendelse, sammen med referencenummeret.',
   'settings.redirectUrl': 'Send dem videre til',
   'settings.redirectUrlHint': 'Valgfrit. Erstatter tak-skærmen. Referencen følger med i linket.',
+  'settings.locales': 'Sprog som formularen findes på',
+  'settings.localesHint':
+    'Sæt kryds ved mere end ét, så får formularen sin egen sprogskifter. Lad alle stå tomme for alle de sprog, organisationen udgiver på. Hver version skriver du selv, på oversættelsesfanen.',
   'settings.showProgress': 'Vis hvor langt de er nået',
   'settings.allowSaveAndResume': 'Tillad at gemme og fortsætte senere',
   'settings.duplicateControl': 'Dubletter',

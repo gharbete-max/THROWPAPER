@@ -257,6 +257,9 @@ export const enGB = {
   'settings.redirectUrl': 'Send them on to',
   'settings.redirectUrlHint':
     'Optional. Replaces the thank-you screen. The reference is carried in the link.',
+  'settings.locales': 'Languages this form is offered in',
+  'settings.localesHint':
+    'Tick more than one and the form gets its own language switcher. Leave all unticked for every language the organisation publishes in. You write each version yourself, on the translation tab.',
   'settings.showProgress': 'Show how far through they are',
   'settings.allowSaveAndResume': 'Allow saving and continuing later',
   'settings.duplicateControl': 'Duplicates',
