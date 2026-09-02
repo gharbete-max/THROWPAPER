@@ -467,10 +467,28 @@ a:focus-visible {
    --------------------------------------------------------------------------- */
 
 /* Safe areas, so content clears a notch and the home indicator. */
-.app,
-.shell {
+.app {
   padding-left: max(0px, env(safe-area-inset-left));
   padding-right: max(0px, env(safe-area-inset-right));
+}
+
+/**
+ * The shell keeps its own gutter, and the notch only ever widens it.
+ *
+ * This used to read `max(0px, env(safe-area-inset-left))` like `.app` above — which on every
+ * device without a notch resolves to `0px` and **overrode the 24px gutter** `.shell` sets higher
+ * up. Every page has had no horizontal padding at all on a desktop since the safe-area rule was
+ * written.
+ *
+ * It went unnoticed because `.shell` is capped at 52rem and centred: on a wide screen the auto
+ * margins look exactly like padding. It only shows when the viewport is narrower than the cap —
+ * a tablet, a split window — or, as here, when a screen opts into a wider cap and the margins
+ * disappear. `.app` is left alone deliberately: it wraps the full-bleed top bar, which must reach
+ * the edges.
+ */
+.shell {
+  padding-left: max(calc(var(--tp-spacing-unit) * 3), env(safe-area-inset-left));
+  padding-right: max(calc(var(--tp-spacing-unit) * 3), env(safe-area-inset-right));
 }
 
 .shell {
@@ -1992,6 +2010,59 @@ textarea {
   }
 }
 
+/* --- File inputs ----------------------------------------------------------
+ *
+ * The one control that was still wearing the browser's clothes. A raw file input renders as the
+ * operating system's own grey button beside the words "No file chosen" — a different typeface, a
+ * different shape and a different colour from every other control on the page, on the two screens
+ * where somebody uploads a logo or attaches a document.
+ *
+ * Styled through `::file-selector-button` rather than the usual trick of hiding the input behind a
+ * label: the input keeps its own keyboard behaviour, its focus ring and its announcement, and
+ * there is no second element to keep in step with it.
+ */
+input[type='file'] {
+  padding: calc(var(--tp-spacing-unit) * 0.75);
+  border: var(--tp-border-width) dashed var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-muted);
+  font-family: var(--tp-type-body-font);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* Dashed rather than solid, so it reads as a place to drop something rather than a text box. */
+input[type='file']:hover:not(:disabled) {
+  border-color: var(--tp-colour-primary);
+}
+
+input[type='file']::file-selector-button {
+  margin-inline-end: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 0.5) var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-primary);
+  font-family: var(--tp-type-body-font);
+  font-size: 0.875rem;
+  font-weight: var(--tp-type-weight-bold);
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+input[type='file']::file-selector-button:hover {
+  border-color: var(--tp-colour-primary);
+}
+
+input[type='file']:disabled,
+input[type='file']:disabled::file-selector-button {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* ==========================================================================
  * Workspaces: the pile switcher, the share dialog, the response inbox.
  * ========================================================================== */
@@ -2245,4 +2316,17 @@ textarea {
 .signature__pad:focus-visible {
   outline: 2px solid var(--tp-colour-secondary);
   outline-offset: 2px;
+}
+
+/**
+ * The workspace width.
+ *
+ * `.shell` is 52rem because that is a reading measure — the right cap for a list of forms or a
+ * page of settings. The builder and the responses grid are not documents: one is a palette, a
+ * canvas and a live preview side by side, the other is a table of forty rows and a dozen columns.
+ * Both sat in the left two thirds of an ordinary laptop screen with the rest of the page empty,
+ * under a top bar that already spanned 76rem.
+ */
+.shell--wide {
+  max-width: 76rem;
 }
