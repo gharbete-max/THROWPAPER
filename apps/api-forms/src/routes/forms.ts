@@ -373,6 +373,24 @@ export function registerFormRoutes(
       const rows = await deps.repos.submissions.list(auth.organisation.id, id);
       const versionNumber = new Map(versions.map((version) => [version.id, version.version]));
 
+      /**
+       * Filenames for the whole page in one query, then matched back to their rows.
+       *
+       * Which field an upload belongs to is worked out here rather than stored: the answer already
+       * says so, and a second copy of that relationship is a second thing to keep in step.
+       */
+      const uploads = await deps.repos.uploads.listForSubmissions(
+        auth.organisation.id,
+        rows.map((row) => row.id),
+      );
+      const uploadsBySubmission = new Map<string, typeof uploads>();
+      for (const upload of uploads) {
+        if (!upload.submissionId) continue;
+        const list = uploadsBySubmission.get(upload.submissionId) ?? [];
+        list.push(upload);
+        uploadsBySubmission.set(upload.submissionId, list);
+      }
+
       return reply.send({
         definition: parsed.success ? parsed.data : formSchemas.emptyDefinition,
         submissions: rows.map((row) => ({
@@ -384,6 +402,14 @@ export function registerFormRoutes(
           data: row.data,
           submittedAt: row.submittedAt?.toISOString() ?? null,
           createdAt: row.createdAt.toISOString(),
+          uploads: (uploadsBySubmission.get(row.id) ?? []).map((upload) => ({
+            fieldKey:
+              Object.entries(row.data).find(([, value]) => value === upload.storageKey)?.[0] ?? '',
+            key: upload.storageKey,
+            filename: upload.filename,
+            contentType: upload.contentType,
+            bytes: upload.bytes,
+          })),
         })),
       });
     },

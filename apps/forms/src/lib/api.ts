@@ -113,6 +113,30 @@ async function request<T>(path: string, init: RequestInit = {}, retry = true): P
   return body as T;
 }
 
+/**
+ * Fetches bytes rather than JSON, with the session attached.
+ *
+ * `request` parses every response as JSON, which a PDF is not. Kept separate rather than
+ * generalised: one caller, and a shared helper that sometimes parses and sometimes does not is
+ * how a download ends up silently returning `null`.
+ *
+ * A 401 refreshes once and retries, the same as `request`, so a long-open submissions screen
+ * does not start failing downloads after the access token ages out.
+ */
+async function requestBlob(path: string, retry = true): Promise<Blob> {
+  const headers = new Headers();
+  if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
+
+  const response = await fetch(`${BASE}${path}`, { headers });
+  if (response.status === 401 && retry && (await refreshOnce())) {
+    return requestBlob(path, false);
+  }
+  if (!response.ok) {
+    throw new ApiError(response.status, 'download-failed', 'That file could not be downloaded');
+  }
+  return response.blob();
+}
+
 export const client = {
   /** Whether this server is a demo. Drives the banner and the sign-in shortcut. */
   health: () => request<{ status: string; mode: 'demo' | 'live'; database: string }>('/health'),
@@ -257,6 +281,10 @@ export const client = {
     request<{ submissionId: string; revoked: boolean }>(`/v1/submissions/${submissionId}/revoke`, {
       method: 'POST',
     }),
+
+  /** One file from one submission. Authenticated, and scoped to that submission by the server. */
+  submissionFile: (submissionId: string, key: string) =>
+    requestBlob(`/v1/submissions/${submissionId}/files/${key}`),
 
   listSubmissions: (id: string) =>
     request<{

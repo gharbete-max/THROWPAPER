@@ -95,6 +95,23 @@ export const FormResponse = z.object({
   updatedAt: IsoDateTime,
 });
 
+/**
+ * A file attached to a submission, named.
+ *
+ * The answer itself stores only the storage key — the hash of the content — because that is the
+ * one thing about an upload safe to trust. The name somebody chose lives beside it and travels
+ * with the submission, so a grid can show "receipt.pdf" instead of sixty-four hex characters.
+ */
+export const SubmissionUpload = z.object({
+  /** The field this was attached to, so a row knows which column it belongs in. */
+  fieldKey: z.string(),
+  key: z.string(),
+  filename: z.string(),
+  contentType: z.string(),
+  bytes: z.number().int().nonnegative(),
+});
+export type SubmissionUpload = z.infer<typeof SubmissionUpload>;
+
 export const SubmissionResponse = z.object({
   id: Uuid,
   reference: z.string(),
@@ -105,6 +122,8 @@ export const SubmissionResponse = z.object({
   data: z.record(z.unknown()),
   submittedAt: IsoDateTime.nullable(),
   createdAt: IsoDateTime,
+  /** Empty for a form with no file questions, which is most of them. */
+  uploads: z.array(SubmissionUpload).default([]),
 });
 
 export const SubmissionListResponse = z.object({

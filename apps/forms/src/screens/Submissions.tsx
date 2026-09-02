@@ -18,6 +18,7 @@ import {
   type ExportColumn,
   type FormDefinition,
   type SubmissionResponse,
+  type SubmissionUpload,
 } from '@tp/shared/forms';
 import type { SheetData } from 'write-excel-file/browser';
 import { client } from '../lib/api.js';
@@ -25,6 +26,7 @@ import { useSession } from '../lib/session.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { Stat, Stats } from '../components/Stat.js';
+import { AttachmentLink } from '../components/AttachmentLink.js';
 import { Loading } from '../components/Loading.js';
 
 /**
@@ -79,6 +81,9 @@ export function Submissions({ formId }: { formId: string }) {
         locale: row.locale,
         status: row.status,
         ...row.data,
+        // Carried alongside the answers so a cell can find the name for the key it holds.
+        __submissionId: row.id,
+        __uploads: row.uploads,
       })),
     [rows],
   );
@@ -95,6 +100,17 @@ export function Submissions({ formId }: { formId: string }) {
    * Numbers and dates keep the default, which compares the accessor value — a real number and an
    * ISO string. Sorting either as collated text would be worse, not better.
    */
+  /** Which columns hold an upload key, so only those look for an attachment. */
+  const fileFields = useMemo(
+    () =>
+      new Set(
+        (definition?.fields ?? [])
+          .filter((field) => field.type === 'file')
+          .map((field) => field.key),
+      ),
+    [definition],
+  );
+
   const collator = useMemo(() => new Intl.Collator(locale, { numeric: true }), [locale]);
 
   const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(
@@ -103,7 +119,28 @@ export function Submissions({ formId }: { formId: string }) {
         id: column.key,
         accessorKey: column.key,
         header: column.header,
-        cell: (info) => renderCell(info.getValue(), column, locale),
+        cell: (info) => {
+          /**
+           * A file answer is a storage key. Rendering it raw puts sixty-four hex characters in
+           * the cell, which is the hash of the content and of no use to anybody reading a list.
+           */
+          const attachment = fileFields.has(column.key)
+            ? (info.row.original['__uploads'] as SubmissionUpload[] | undefined)?.find(
+                (upload) => upload.key === info.getValue(),
+              )
+            : undefined;
+
+          if (attachment) {
+            return (
+              <AttachmentLink
+                submissionId={String(info.row.original['__submissionId'])}
+                storageKey={attachment.key}
+                filename={attachment.filename}
+              />
+            );
+          }
+          return renderCell(info.getValue(), column, locale);
+        },
         ...(column.type === 'text' || column.type === 'list'
           ? {
               sortingFn: (a, b, columnId) =>
@@ -114,7 +151,7 @@ export function Submissions({ formId }: { formId: string }) {
             }
           : {}),
       })),
-    [exportColumns, locale, collator],
+    [exportColumns, locale, collator, fileFields],
   );
 
   const table = useReactTable({
@@ -159,7 +196,24 @@ export function Submissions({ formId }: { formId: string }) {
   function visibleExport() {
     const visibleKeys = new Set(table.getVisibleLeafColumns().map((column) => column.id));
     const cols = exportColumns.filter((column) => visibleKeys.has(column.key));
-    const visibleRows = table.getSortedRowModel().rows.map((row) => row.original);
+    const visibleRows = table.getSortedRowModel().rows.map((row) => {
+      if (fileFields.size === 0) return row.original;
+
+      /**
+       * A file column exports as the name, not the key.
+       *
+       * The grid already shows the name, and "export is what is on screen" has to mean it — a
+       * spreadsheet column of sixty-four-character hashes is not the same information in a
+       * different format, it is unusable.
+       */
+      const uploads = (row.original['__uploads'] as SubmissionUpload[] | undefined) ?? [];
+      const named: Record<string, unknown> = { ...row.original };
+      for (const key of fileFields) {
+        const found = uploads.find((upload) => upload.key === named[key]);
+        if (found) named[key] = found.filename;
+      }
+      return named;
+    });
     return { cols, visibleRows };
   }
 
