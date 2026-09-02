@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UploadKey } from './uploads.js';
 import { BrandKit } from '../brand/index.js';
 import { Locale } from '../api/common.js';
 import { FormDefinition } from './definition.js';
@@ -83,3 +84,12 @@ export type SubmitResponse = z.infer<typeof SubmitResponse>;
 export type SubmitRejected = z.infer<typeof SubmitRejected>;
 export type SaveDraftResponse = z.infer<typeof SaveDraftResponse>;
 export type ResumeResponse = z.infer<typeof ResumeResponse>;
+
+/** What the browser gets back after attaching a file, so it can show the name it will submit. */
+export const UploadAttachmentResponse = z.object({
+  key: UploadKey,
+  filename: z.string(),
+  contentType: z.string(),
+  bytes: z.number().int().nonnegative(),
+});
+export type UploadAttachmentResponse = z.infer<typeof UploadAttachmentResponse>;

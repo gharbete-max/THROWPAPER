@@ -5,6 +5,7 @@ import { createMemoryRepositories, type MemoryState } from './db/repositories/in
 import type { OrganisationRecord, Repositories, UserRecord } from './db/repositories/index.js';
 import { createMemoryDocumentStore } from './documents/store.js';
 import { createMemoryAssetStore } from './uploads/store.js';
+import { createMemoryUploadStore } from './uploads/private-store.js';
 import type { DocumentStore } from './documents/store.js';
 import type { PdfRenderer } from './documents/render.js';
 
@@ -68,6 +69,7 @@ export interface TestHarness {
   state: MemoryState;
   mail: ReturnType<typeof createMemoryMailProvider>;
   store: DocumentStore & { files: Map<string, Buffer> };
+  uploadStore: ReturnType<typeof createMemoryUploadStore>;
   assets: ReturnType<typeof createMemoryAssetStore>;
   renderer: PdfRenderer & { rendered: string[] };
   close: () => Promise<void>;
@@ -85,6 +87,7 @@ export async function createTestHarness(
   const mail = createMemoryMailProvider();
   const store = createMemoryDocumentStore(TEST_JWT_SECRET);
   const assets = createMemoryAssetStore();
+  const uploadStore = createMemoryUploadStore();
   const renderer = options.renderer ?? createFakePdfRenderer();
 
   const app = await buildServer({
@@ -92,6 +95,7 @@ export async function createTestHarness(
     mail,
     store,
     assets,
+    uploadStore,
     renderer,
     jwtSecret: TEST_JWT_SECRET,
     appUrl: 'http://localhost:5173',
@@ -108,6 +112,7 @@ export async function createTestHarness(
     mail,
     store,
     assets,
+    uploadStore,
     renderer,
     close: () => app.close(),
   };

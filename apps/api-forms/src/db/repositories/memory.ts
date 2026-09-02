@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type {
   AuditEntryInput,
   CheckInRecord,
+  UploadRecord,
   AuditEntryRecord,
   EventCreate,
   EventRecord,
@@ -41,6 +42,7 @@ export interface MemoryState {
   formVersions: FormVersionRecord[];
   submissions: SubmissionRecord[];
   checkIns: CheckInRecord[];
+  uploads: UploadRecord[];
   jobs: JobRecord[];
   brandKits: BrandKitRecord[];
   sendingDomains: SendingDomainRecord[];
@@ -77,6 +79,7 @@ export function createMemoryRepositories(
     formVersions: seed.formVersions ?? [],
     submissions: seed.submissions ?? [],
     checkIns: seed.checkIns ?? [],
+    uploads: seed.uploads ?? [],
     jobs: seed.jobs ?? [],
     brandKits: seed.brandKits ?? [],
     sendingDomains: seed.sendingDomains ?? [],
@@ -387,6 +390,60 @@ export function createMemoryRepositories(
         else state.submissions.push(record);
 
         return { ok: true as const, submission: copySubmission(record) };
+      },
+    },
+
+    uploads: {
+      create: async (input) => {
+        const record: UploadRecord = {
+          id: randomUUID(),
+          ...input,
+          submissionId: null,
+          createdAt: new Date(),
+        };
+        state.uploads.push(record);
+        return { ...record };
+      },
+
+      findUnclaimed: async (formId, storageKeys) => {
+        const wanted = new Set(storageKeys);
+        return state.uploads
+          .filter(
+            (upload) =>
+              upload.formId === formId &&
+              upload.submissionId === null &&
+              wanted.has(upload.storageKey),
+          )
+          .map((upload) => ({ ...upload }));
+      },
+
+      claim: async (ids, submissionId) => {
+        const wanted = new Set(ids);
+        for (const upload of state.uploads) {
+          if (wanted.has(upload.id)) upload.submissionId = submissionId;
+        }
+      },
+
+      listForSubmissions: async (organisationId, submissionIds) => {
+        const wanted = new Set(submissionIds);
+        return state.uploads
+          .filter(
+            (upload) =>
+              upload.organisationId === organisationId &&
+              upload.submissionId !== null &&
+              wanted.has(upload.submissionId),
+          )
+          .map((upload) => ({ ...upload }));
+      },
+
+      findForDownload: async (organisationId, submissionId, storageKey) => {
+        const found = state.uploads.find(
+          (upload) =>
+            upload.organisationId === organisationId &&
+            upload.submissionId === submissionId &&
+            upload.storageKey === storageKey,
+        );
+        return found ? { ...found } : null;
       },
     },
 

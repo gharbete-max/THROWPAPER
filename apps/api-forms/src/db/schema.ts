@@ -420,3 +420,46 @@ export type BrandKit = typeof brandKits.$inferSelect;
 export type SendingDomain = typeof sendingDomains.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type CheckIn = typeof checkIns.$inferSelect;
+
+/**
+ * A file a respondent attached, recorded beside the bytes rather than inside the answer.
+ *
+ * The submission's `data` holds only the storage key, because that is the one thing about a file
+ * that is safe to trust: it is the hash of the content. Everything a person chose — the filename
+ * above all — lives here, is never used to address anything, and is shown back only after being
+ * read out of this table.
+ *
+ * `submissionId` is null until the form is actually submitted. That is what makes an abandoned
+ * upload findable: somebody who attaches a CV and closes the tab leaves bytes behind, and without
+ * a row saying when they arrived and that nothing ever claimed them, nothing could ever sweep them
+ * up. It is also the check that stops one form's upload being pasted into another's answer.
+ */
+export const formUploads = pgTable(
+  'form_uploads',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    formId: uuid('form_id')
+      .notNull()
+      .references(() => forms.id, { onDelete: 'cascade' }),
+    /** `<sha256>.<ext>` — the content address, and the whole of what the answer stores. */
+    storageKey: text('storage_key').notNull(),
+    /** As the uploader named it. Display only, and escaped like any other untrusted string. */
+    filename: text('filename').notNull(),
+    /** Decided by reading the bytes, never by believing the upload's own declaration. */
+    contentType: text('content_type').notNull(),
+    bytes: integer('bytes').notNull(),
+    submissionId: uuid('submission_id').references(() => submissions.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    // Reading a file back is "this key, in this organisation" — never the key on its own.
+    index('form_uploads_org_key_idx').on(table.organisationId, table.storageKey),
+    // Finding what to sweep: unclaimed rows, oldest first.
+    index('form_uploads_unclaimed_idx')
+      .on(table.createdAt)
+      .where(sql`${table.submissionId} is null`),
+  ],
+);

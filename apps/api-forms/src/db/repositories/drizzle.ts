@@ -5,6 +5,7 @@ import {
   auditLog,
   checkIns,
   events,
+  formUploads,
   formVersions,
   forms,
   jobs,
@@ -33,6 +34,7 @@ import type {
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
+  UploadRecord,
   UserRecord,
 } from './types.js';
 
@@ -432,6 +434,64 @@ export function createDrizzleRepositories(db: Db): Repositories {
           throw error;
         }
       },
+    },
+
+    uploads: {
+      create: async (input) => {
+        const [row] = await db.insert(formUploads).values(input).returning();
+        if (!row) throw new Error('upload insert returned no row');
+        return row as UploadRecord;
+      },
+
+      findUnclaimed: async (formId, storageKeys) => {
+        if (storageKeys.length === 0) return [];
+        return (await db
+          .select()
+          .from(formUploads)
+          .where(
+            and(
+              eq(formUploads.formId, formId),
+              isNull(formUploads.submissionId),
+              inArray(formUploads.storageKey, [...storageKeys]),
+            ),
+          )) as UploadRecord[];
+      },
+
+      claim: async (ids, submissionId) => {
+        if (ids.length === 0) return;
+        await db
+          .update(formUploads)
+          .set({ submissionId })
+          .where(inArray(formUploads.id, [...ids]));
+      },
+
+      listForSubmissions: async (organisationId, submissionIds) => {
+        if (submissionIds.length === 0) return [];
+        return (await db
+          .select()
+          .from(formUploads)
+          .where(
+            and(
+              eq(formUploads.organisationId, organisationId),
+              inArray(formUploads.submissionId, [...submissionIds]),
+            ),
+          )) as UploadRecord[];
+      },
+
+      findForDownload: async (organisationId, submissionId, storageKey) =>
+        (first(
+          await db
+            .select()
+            .from(formUploads)
+            .where(
+              and(
+                eq(formUploads.organisationId, organisationId),
+                eq(formUploads.submissionId, submissionId),
+                eq(formUploads.storageKey, storageKey),
+              ),
+            )
+            .limit(1),
+        ) as UploadRecord | null) ?? null,
     },
 
     checkIns: {

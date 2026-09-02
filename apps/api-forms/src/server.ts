@@ -29,6 +29,7 @@ import { registerCheckInRoutes } from './routes/checkin.js';
 import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
+import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
 import { MAX_IMAGE_BYTES } from './uploads/image.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
@@ -70,6 +71,7 @@ export interface ServerOptions {
 
   /** Uploaded images. Injected by the tests and by demo mode; local disk otherwise. */
   assets?: AssetStore;
+  uploadStore?: PrivateUploadStore;
 }
 
 /**
@@ -172,6 +174,18 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     await renderer.close();
   });
 
+  /**
+   * Respondent attachments live apart from the public asset store, in their own directory.
+   *
+   * Personal data rather than page furniture: nothing here is ever served from a public route, so
+   * keeping the two in one directory would make it far too easy to expose the wrong one.
+   */
+  const uploadStore =
+    options.uploadStore ??
+    createLocalUploadStore(
+      process.env['UPLOAD_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'uploads'),
+    );
+
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
@@ -179,6 +193,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     repos,
     mail,
     appUrl,
+    uploadStore,
     // One job per message, keyed so a retry cannot double-send.
     onSubmitted: async (submissionId) => {
       const organisation = await repos.organisations.first();
@@ -205,7 +220,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       directory:
         process.env['ASSET_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'assets'),
     });
-  registerUploadRoutes(app, { repos, guard, assets });
+  registerUploadRoutes(app, { repos, guard, assets, uploadStore });
   if (options.demo) registerDemoRoutes(app, { repos, demo: options.demo, jwtSecret });
 
   app.get('/health', async (_request, reply) => {

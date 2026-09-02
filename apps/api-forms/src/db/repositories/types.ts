@@ -402,6 +402,7 @@ export interface AuditRepository {
 }
 
 export interface Repositories {
+  uploads: UploadRepository;
   organisations: OrganisationRepository;
   users: UserRepository;
   tokens: TokenRepository;
@@ -414,4 +415,51 @@ export interface Repositories {
   sendingDomains: SendingDomainRepository;
   messages: MessageRepository;
   audit: AuditRepository;
+}
+
+/** A file a respondent attached. The bytes live in the private upload store, keyed by `storageKey`. */
+export interface UploadRecord {
+  id: string;
+  organisationId: string;
+  formId: string;
+  storageKey: string;
+  filename: string;
+  contentType: string;
+  bytes: number;
+  submissionId: string | null;
+  createdAt: Date;
+}
+
+export interface UploadCreate {
+  organisationId: string;
+  formId: string;
+  storageKey: string;
+  filename: string;
+  contentType: string;
+  bytes: number;
+}
+
+export interface UploadRepository {
+  create(input: UploadCreate): Promise<UploadRecord>;
+  /**
+   * Uploads for this form that nothing has claimed yet, among the given keys.
+   *
+   * This is the check that stops a key being pasted from somewhere else. A content address is
+   * guessable by anybody who has the same file, so "the answer names a real upload" is not enough
+   * on its own — it has to be an upload *this form* received and no submission has taken.
+   */
+  findUnclaimed(formId: string, storageKeys: readonly string[]): Promise<UploadRecord[]>;
+  /** Attaches uploads to the submission that finally arrived, so they stop looking abandoned. */
+  claim(ids: readonly string[], submissionId: string): Promise<void>;
+  /** Filenames for a page of submissions, so a grid can show names rather than hashes. */
+  listForSubmissions(
+    organisationId: string,
+    submissionIds: readonly string[],
+  ): Promise<UploadRecord[]>;
+  /** The one row a download is allowed to read: this key, on a submission this organisation owns. */
+  findForDownload(
+    organisationId: string,
+    submissionId: string,
+    storageKey: string,
+  ): Promise<UploadRecord | null>;
 }

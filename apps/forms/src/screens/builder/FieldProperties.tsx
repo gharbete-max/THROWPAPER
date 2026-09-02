@@ -1,6 +1,8 @@
 import {
   FIELD_WIDTHS,
   fieldSupports,
+  FILE_ACCEPTS,
+  MAX_UPLOAD_BYTES,
   MULTI_SELECT_APPEARANCES,
   SINGLE_SELECT_APPEARANCES,
   RATING_APPEARANCES,
@@ -196,6 +198,43 @@ export function FieldProperties({ field, definition, onChange }: Props) {
             supported={locales.supported}
             onChange={(target, text) => setText('maxLabel', target, text)}
           />
+        </div>
+      )}
+
+      {field.type === 'file' && (
+        <div className="stack">
+          <label className="field">
+            <span>{t('field.accept')}</span>
+            <select
+              value={field.accept}
+              onChange={(event) => patch({ accept: event.target.value } as Partial<Field>)}
+            >
+              {FILE_ACCEPTS.map((option) => (
+                <option key={option} value={option}>
+                  {t(`file.accept.${option}`)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="field">
+            <span>{t('field.maxBytes')}</span>
+            <input
+              type="number"
+              min={1}
+              max={Math.floor(MAX_UPLOAD_BYTES / 1024 / 1024)}
+              value={Math.max(1, Math.round(field.maxBytes / 1024 / 1024))}
+              onChange={(event) =>
+                patch({
+                  // Stored in bytes; shown in megabytes, because nobody thinks in bytes.
+                  maxBytes: Math.min(
+                    MAX_UPLOAD_BYTES,
+                    Math.max(1, Number(event.target.value) || 1) * 1024 * 1024,
+                  ),
+                } as Partial<Field>)
+              }
+            />
+          </label>
         </div>
       )}
 

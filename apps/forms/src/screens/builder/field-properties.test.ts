@@ -38,6 +38,8 @@ const PANEL_CONTROLS = [
   'appearance',
   'maxWidth',
   'fromParameter',
+  'accept',
+  'maxBytes',
   'scale',
   'minLabel',
   'maxLabel',
