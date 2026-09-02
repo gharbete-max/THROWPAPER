@@ -352,7 +352,9 @@ export function FormBuilder() {
               onRemove={removeField}
               onMove={moveField}
               onDuplicate={duplicateField}
-              renderEditor={(field) => <FieldProperties field={field} onChange={updateField} />}
+              renderEditor={(field) => (
+                <FieldProperties field={field} definition={definition} onChange={updateField} />
+              )}
             />
           </div>
         </div>

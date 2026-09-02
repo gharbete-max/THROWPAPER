@@ -248,6 +248,37 @@ export const messages: Catalogue = {
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
+  // Conditional logic: show a field only when an earlier answer says so.
+  'visibility.heading': { 'sv-SE': 'Visa bara när…', 'en-GB': 'Show only when…' },
+  'visibility.count': { 'sv-SE': '{n} villkor', 'en-GB': '{n} conditions' },
+  'visibility.intro': {
+    'sv-SE': 'Fältet visas bara när villkoren stämmer. Annars hoppas det över helt.',
+    'en-GB': 'The field appears only when the conditions hold. Otherwise it is skipped entirely.',
+  },
+  'visibility.needsEarlierField': {
+    'sv-SE': 'Lägg en fråga ovanför den här först — villkor kan bara läsa tidigare svar.',
+    'en-GB': 'Put a question above this one first — a condition can only read an earlier answer.',
+  },
+  'visibility.match': { 'sv-SE': 'Kräv', 'en-GB': 'Require' },
+  'visibility.match.all': { 'sv-SE': 'Alla villkor', 'en-GB': 'All conditions' },
+  'visibility.match.any': { 'sv-SE': 'Minst ett villkor', 'en-GB': 'Any condition' },
+  'visibility.field': { 'sv-SE': 'Fråga', 'en-GB': 'Question' },
+  'visibility.operator': { 'sv-SE': 'Jämförelse', 'en-GB': 'Comparison' },
+  'visibility.value': { 'sv-SE': 'Värde', 'en-GB': 'Value' },
+  'visibility.add': { 'sv-SE': 'Lägg till villkor', 'en-GB': 'Add condition' },
+  'visibility.remove': { 'sv-SE': 'Ta bort villkor', 'en-GB': 'Remove condition' },
+  'visibility.missingField': {
+    'sv-SE': '{key} — finns inte längre ovanför',
+    'en-GB': '{key} — no longer above this field',
+  },
+  'visibility.operator.equals': { 'sv-SE': 'är lika med', 'en-GB': 'is' },
+  'visibility.operator.notEquals': { 'sv-SE': 'är inte lika med', 'en-GB': 'is not' },
+  'visibility.operator.contains': { 'sv-SE': 'innehåller', 'en-GB': 'contains' },
+  'visibility.operator.answered': { 'sv-SE': 'är besvarad', 'en-GB': 'is answered' },
+  'visibility.operator.empty': { 'sv-SE': 'är tom', 'en-GB': 'is empty' },
+  'visibility.operator.greaterThan': { 'sv-SE': 'är större än', 'en-GB': 'is greater than' },
+  'visibility.operator.lessThan': { 'sv-SE': 'är mindre än', 'en-GB': 'is less than' },
+
   // What counts as a valid answer. Every one of these drives a rule the validator already had.
   'rules.heading': { 'sv-SE': 'Regler för svaret', 'en-GB': 'Answer rules' },
   'rules.intro': {

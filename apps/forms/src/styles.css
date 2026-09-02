@@ -1452,3 +1452,17 @@ textarea {
   outline: 2px solid var(--tp-colour-secondary);
   outline-offset: 2px;
 }
+
+/* Conditional logic. One condition is a boxed group, so several do not read as one long form. */
+.builder__condition {
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+/* A count on the summary, so a collapsed section still says it is doing something. */
+.badge--rule {
+  margin-inline-start: var(--tp-spacing-unit);
+  background: var(--tp-colour-primary);
+  color: var(--tp-colour-background);
+}

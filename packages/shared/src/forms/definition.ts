@@ -62,6 +62,53 @@ export const FIELD_WIDTHS = ['full', 'half', 'third'] as const;
 export const FieldWidth = z.enum(FIELD_WIDTHS);
 export type FieldWidth = z.infer<typeof FieldWidth>;
 
+/**
+ * Conditional visibility — "show this only when that was answered a certain way".
+ *
+ * The comparison is done on the **stored answer**, not on anything visible, so a form that has
+ * been restyled or retranslated keeps behaving the same way. `value` is a string for every
+ * operator because that is what a builder's input produces; the evaluator coerces per field type.
+ */
+export const CONDITION_OPERATORS = [
+  'equals',
+  'notEquals',
+  'contains',
+  'answered',
+  'empty',
+  'greaterThan',
+  'lessThan',
+] as const;
+export const ConditionOperator = z.enum(CONDITION_OPERATORS);
+export type ConditionOperator = z.infer<typeof ConditionOperator>;
+
+/** Operators that compare against nothing — the box for a value is hidden for these. */
+export const VALUELESS_OPERATORS = ['answered', 'empty'] as const;
+
+export const Condition = z.object({
+  /** The field being asked about, by key. Must appear *earlier* in the form; cycles are then
+   *  impossible by construction rather than by a cycle detector nobody would maintain. */
+  fieldKey: FieldKey,
+  operator: ConditionOperator,
+  value: z.string().max(200).default(''),
+});
+export type Condition = z.infer<typeof Condition>;
+
+export const VisibilityRule = z.object({
+  /** `all` is the safer default: adding a second condition narrows rather than widens. */
+  match: z.enum(['all', 'any']).default('all'),
+  conditions: z.array(Condition).min(1),
+});
+export type VisibilityRule = z.infer<typeof VisibilityRule>;
+
+/**
+ * Shown by default.
+ *
+ * `undefined` rather than an empty rule, so "no conditions" cannot be confused with "a rule whose
+ * conditions all happen to be satisfied" — and an old definition with no `showWhen` at all keeps
+ * rendering exactly as it did.
+ */
+const showWhen = VisibilityRule.optional();
+
 const base = {
   id: z.string().min(1).max(64),
   key: FieldKey,
@@ -70,6 +117,7 @@ const base = {
   placeholder: LocalisedText.optional(),
   required: z.boolean().default(false),
   width: FieldWidth.default('full'),
+  showWhen,
 };
 
 export const SelectOption = z.object({
@@ -203,6 +251,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('section_break'),
     width: FieldWidth.default('full'),
+    showWhen,
     label: LocalisedText,
     helpText: LocalisedText.optional(),
   }),
@@ -212,6 +261,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('rich_text'),
     width: FieldWidth.default('full'),
+    showWhen,
     /** Plain text with paragraph breaks. Not HTML — that would be a stored-XSS surface. */
     content: LocalisedText,
   }),
@@ -228,6 +278,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('image'),
     width: FieldWidth.default('full'),
+    showWhen,
     src: AssetPath,
     alt: LocalisedText.default({}),
     /** Caps the rendered width in pixels. Unset means as wide as the form allows. */
@@ -249,6 +300,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('link'),
     width: FieldWidth.default('full'),
+    showWhen,
     label: LocalisedText.default({}),
     href: z
       .string()
@@ -299,6 +351,29 @@ export type AnswerableField = Exclude<Field, { type: PresentationalType }>;
 export function fieldProperties(type: FieldType): string[] {
   const variant = Field.options.find((option) => option.shape.type.value === type);
   return variant ? Object.keys(variant.shape) : [];
+}
+
+const PROPERTY_SETS = new Map<string, Set<string>>(
+  FIELD_TYPES.map((type) => [type, new Set(fieldProperties(type))]),
+);
+
+/**
+ * Whether a field of this **type** can carry this property.
+ *
+ * Use this, never `'helpText' in field`.
+ *
+ * Zod omits an `.optional()` property that was not set, so the key is simply absent from the
+ * parsed object — and `'helpText' in field` then reads as "this kind of field has no help text"
+ * when it actually means "nobody has written any yet". The builder asked that question about
+ * `helpText`, so the box for it appeared only on fields that already had help text: there was no
+ * way to *add* help text to anything, and the same was about to be true of `placeholder` and of
+ * conditional visibility.
+ *
+ * A `.default()`ed property is always present after parsing, which is why `width`, `required` and
+ * `appearance` happened to work and hid the problem.
+ */
+export function fieldSupports(type: FieldType, property: string): boolean {
+  return PROPERTY_SETS.get(type)?.has(property) ?? false;
 }
 
 export const FormSettings = z.object({

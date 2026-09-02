@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
+  CONDITION_OPERATORS,
   FIELD_TYPES,
   MULTI_SELECT_APPEARANCES,
   SINGLE_SELECT_APPEARANCES,
@@ -33,6 +34,11 @@ describe('translations for schema-driven strings', () => {
    * and this is the file that gets forgotten — the new heading would render as `palette.numbers`
    * above the fields it names.
    */
+  /** An unnamed operator would put `visibility.operator.greaterThan` in a dropdown. */
+  it.each(CONDITION_OPERATORS)('names the %s condition operator', (operator) => {
+    expect(messages[`visibility.operator.${operator}`], operator).toBeDefined();
+  });
+
   it.each(PALETTE_GROUPS.map((group) => group.id))('names the %s palette group', (id) => {
     expect(messages[`palette.${id}`], `palette.${id}`).toBeDefined();
   });

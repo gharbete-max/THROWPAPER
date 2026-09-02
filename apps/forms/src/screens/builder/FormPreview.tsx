@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { LocaleConfig } from '@tp/i18n';
 import {
+  isVisible,
   pagesOf,
   widthOf,
   type AnswerValue,
@@ -39,7 +40,17 @@ export function FormPreview({
 
   const pages = pagesOf(definition);
   const current = Math.min(page, pages.length - 1);
-  const fields = pages[current] ?? [];
+
+  /**
+   * Conditions apply here too — the preview's whole job is being the same code as the real page.
+   *
+   * With one exception: the field currently selected is always shown, even when its own condition
+   * is not met. Otherwise clicking a conditional question in the list makes it vanish from the
+   * preview, which looks like the builder losing it rather than the condition working.
+   */
+  const fields = (pages[current] ?? []).filter(
+    (field) => field.id === selectedId || isVisible(field, values),
+  );
 
   /**
    * Follow the selection onto its own page.

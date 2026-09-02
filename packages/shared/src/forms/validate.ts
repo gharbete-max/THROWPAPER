@@ -1,4 +1,4 @@
-import { answerableFields, type AnswerableField, type FormDefinition } from './index.js';
+import { answerableFields, isVisible, type AnswerableField, type FormDefinition } from './index.js';
 
 /**
  * One validator, run on both sides.
@@ -42,6 +42,20 @@ export function validateSubmission(
   const values: SubmissionValues = {};
 
   for (const field of answerableFields(definition)) {
+    /**
+     * A field the conditions have hidden collects nothing and blocks nothing.
+     *
+     * Without this, a required question behind a condition would refuse the submission with an
+     * error attached to a field that is not on the page — the classic conditional-logic dead end,
+     * where the form cannot be submitted and cannot be corrected either. Its key is written as
+     * empty rather than omitted, so the column still exists in the export and a blank means
+     * "was not asked" consistently across every row.
+     */
+    if (!isVisible(field, input)) {
+      values[field.key] = field.type === 'multi_select' ? [] : null;
+      continue;
+    }
+
     const raw = input[field.key];
     const empty = isEmpty(raw);
 

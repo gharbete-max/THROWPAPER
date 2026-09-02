@@ -1,6 +1,7 @@
 import {
   PRESENTATIONAL_TYPES,
   type AnswerableField,
+  type Condition,
   type Field,
   type FieldWidth,
   type FormDefinition,
@@ -158,7 +159,12 @@ export function definitionCompleteness(
 }
 
 export interface DefinitionProblem {
-  code: 'duplicate-key' | 'no-answerable-fields' | 'empty-options';
+  code:
+    | 'duplicate-key'
+    | 'no-answerable-fields'
+    | 'empty-options'
+    | 'condition-unknown-field'
+    | 'condition-forward-reference';
   message: string;
   fieldId?: string;
 }
@@ -173,6 +179,18 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
   if (answerableFields(definition).length === 0) {
     problems.push({ code: 'no-answerable-fields', message: 'The form collects no answers' });
   }
+  /**
+   * Conditions may only ask about a field that exists and comes **earlier**.
+   *
+   * Forward references are refused rather than supported, and that is what makes cycles impossible
+   * by construction: A can depend on B only if B is above it, so no chain can close. The
+   * alternative is a cycle detector, which is more code, is only exercised by a mistake, and would
+   * still have to say something at publish time anyway.
+   *
+   * A reference to a deleted field is worse than a forward one: the condition silently never
+   * holds, so the field simply never appears and nothing says why.
+   */
+  const seenKeys = new Set<string>();
   for (const field of definition.fields) {
     if ('options' in field && field.options.length === 0) {
       problems.push({
@@ -181,7 +199,29 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
         fieldId: field.id,
       });
     }
+
+    const rule = 'showWhen' in field ? field.showWhen : undefined;
+    for (const condition of rule?.conditions ?? []) {
+      if (seenKeys.has(condition.fieldKey)) continue;
+      const existsLater = definition.fields.some((other) => other.key === condition.fieldKey);
+      problems.push(
+        existsLater
+          ? {
+              code: 'condition-forward-reference',
+              message: `A condition asks about "${condition.fieldKey}", which comes later in the form`,
+              fieldId: field.id,
+            }
+          : {
+              code: 'condition-unknown-field',
+              message: `A condition asks about "${condition.fieldKey}", which no field uses`,
+              fieldId: field.id,
+            },
+      );
+    }
+
+    seenKeys.add(field.key);
   }
+
   return problems;
 }
 
@@ -193,4 +233,96 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
  */
 export function widthOf(field: Field): FieldWidth {
   return 'width' in field ? field.width : 'full';
+}
+
+/**
+ * Whether one condition holds against the answers given so far.
+ *
+ * Comparison is on the **stored** answer, never on anything displayed, so restyling or
+ * retranslating a form cannot change which fields it shows.
+ *
+ * Everything is compared as a trimmed string except the ordering operators, which fall back to
+ * string order when either side is not a number — that is what makes `greaterThan` work for a
+ * date (`2026-05-14`) and a time (`09:30`) as well as for a number.
+ */
+export function conditionHolds(condition: Condition, values: Record<string, unknown>): boolean {
+  const answer = values[condition.fieldKey];
+  const given = !isBlank(answer);
+
+  if (condition.operator === 'answered') return given;
+  if (condition.operator === 'empty') return !given;
+
+  // Every other operator compares something. An unanswered field satisfies none of them —
+  // including `notEquals`, because "not equal to Sweden" should not be true of a blank.
+  if (!given) return false;
+
+  const wanted = condition.value.trim();
+
+  // A multi-select answer is a list, and "equals" against a list means "is one of the chosen".
+  if (Array.isArray(answer)) {
+    const chosen = answer.map((entry) => String(entry));
+    switch (condition.operator) {
+      case 'equals':
+        return chosen.includes(wanted);
+      case 'notEquals':
+        return !chosen.includes(wanted);
+      case 'contains':
+        return chosen.some((entry) => entry.toLowerCase().includes(wanted.toLowerCase()));
+      default:
+        // Ordering a list against a scalar has no sensible meaning, so it is false rather than
+        // some accident of how JavaScript stringifies an array.
+        return false;
+    }
+  }
+
+  const actual = typeof answer === 'boolean' ? String(answer) : String(answer).trim();
+
+  switch (condition.operator) {
+    case 'equals':
+      return actual === wanted;
+    case 'notEquals':
+      return actual !== wanted;
+    case 'contains':
+      return actual.toLowerCase().includes(wanted.toLowerCase());
+    case 'greaterThan':
+    case 'lessThan': {
+      const left = Number(actual);
+      const right = Number(wanted);
+      const numeric = Number.isFinite(left) && Number.isFinite(right);
+      const after = numeric ? left > right : actual > wanted;
+      return condition.operator === 'greaterThan' ? after : !after && actual !== wanted;
+    }
+    default:
+      return false;
+  }
+}
+
+/** Whether a field is shown, given the answers so far. A field with no rule is always shown. */
+export function isVisible(field: Field, values: Record<string, unknown>): boolean {
+  const rule = 'showWhen' in field ? field.showWhen : undefined;
+  if (!rule || rule.conditions.length === 0) return true;
+  return rule.match === 'any'
+    ? rule.conditions.some((condition) => conditionHolds(condition, values))
+    : rule.conditions.every((condition) => conditionHolds(condition, values));
+}
+
+/**
+ * The fields actually on show, given the answers so far.
+ *
+ * Used by the renderer *and* the validator. If only the renderer knew about visibility, a hidden
+ * required field would block submission with an error pointing at a question nobody can see — the
+ * classic conditional-logic dead end.
+ */
+export function visibleFields(
+  definition: FormDefinition,
+  values: Record<string, unknown>,
+): Field[] {
+  return definition.fields.filter((field) => isVisible(field, values));
+}
+
+function isBlank(value: unknown): boolean {
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string') return value.trim() === '';
+  if (Array.isArray(value)) return value.length === 0;
+  return false;
 }
