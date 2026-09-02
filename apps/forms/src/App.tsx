@@ -68,7 +68,9 @@ function NavSection({ to, icon, label }: { to: string; icon: IconName; label: st
   return (
     <NavLink
       className={({ isActive }) =>
-        isActive ? 'button button--quiet small nav-link nav-link--current' : 'button button--quiet small nav-link'
+        isActive
+          ? 'button button--quiet small nav-link nav-link--current'
+          : 'button button--quiet small nav-link'
       }
       to={to}
     >

@@ -142,7 +142,6 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .returning();
         return (row as EventRecord | undefined) ?? null;
       },
-      // Registrations land in phase 3.
       countRegistrations: async (eventId) => {
         const [row] = await db
           .select({ count: sql<number>`count(*)::int` })
@@ -299,12 +298,7 @@ export function createDrizzleRepositories(db: Db): Repositories {
         const rows = await db
           .select({ formId: submissions.formId, count: sql<number>`count(*)::int` })
           .from(submissions)
-          .where(
-            and(
-              inArray(submissions.formId, [...formIds]),
-              eq(submissions.status, 'complete'),
-            ),
-          )
+          .where(and(inArray(submissions.formId, [...formIds]), eq(submissions.status, 'complete')))
           .groupBy(submissions.formId);
         return Object.fromEntries(rows.map((row) => [row.formId, row.count]));
       },

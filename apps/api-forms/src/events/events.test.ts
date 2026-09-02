@@ -309,8 +309,9 @@ describe('counting the people holding a place', () => {
       url: '/v1/events',
       headers: bearer(adminToken),
     });
-    const listed = (response.json() as { events: Array<{ id: string; registeredCount: number }> })
-      .events.find((event) => event.id === id);
+    const listed = (
+      response.json() as { events: Array<{ id: string; registeredCount: number }> }
+    ).events.find((event) => event.id === id);
     expect(listed?.registeredCount).toBe(1);
   });
 });

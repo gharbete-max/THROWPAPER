@@ -207,15 +207,14 @@ export function Submissions({ formId }: { formId: string }) {
             <Stat label={t('submissions.stat.partial')} value={summary.partial} />
           )}
           {summary.languages.length > 1 && (
-            <Stat
-              label={t('submissions.stat.languages')}
-              value={summary.languages.length}
-            />
+            <Stat label={t('submissions.stat.languages')} value={summary.languages.length} />
           )}
           {summary.latest && (
             <Stat
               label={t('submissions.stat.latest')}
-              value={<span className="stat__value--small">{formatDateTime(locale, summary.latest)}</span>}
+              value={
+                <span className="stat__value--small">{formatDateTime(locale, summary.latest)}</span>
+              }
             />
           )}
         </Stats>

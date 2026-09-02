@@ -39,7 +39,7 @@ packages/shared  Types and Zod schemas, including the CONTRACT schemas
 
 ```
 pnpm dev:forms      pnpm dev:mailer
-pnpm verify         # typecheck + lint + test + build across the workspace — must pass before a phase is done
+pnpm verify         # format + typecheck + lint + test + build across the workspace — must pass before a phase is done
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates both apps against docs/CONTRACT.md schemas
 pnpm test:e2e
