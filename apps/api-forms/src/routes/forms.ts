@@ -39,6 +39,7 @@ export function registerFormRoutes(
       const records = await deps.repos.forms.list(auth.organisation.id);
       // One query for every row's count, not one per row.
       const counts = await deps.repos.submissions.countCompleteByForm(
+        auth.organisation.id,
         records.map((record) => record.id),
       );
       return reply.send({

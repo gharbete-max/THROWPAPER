@@ -1,18 +1,25 @@
 import {
   FIELD_WIDTHS,
+  fieldSupports,
   MULTI_SELECT_APPEARANCES,
   SINGLE_SELECT_APPEARANCES,
+  RATING_APPEARANCES,
   YES_NO_APPEARANCES,
   type Field,
+  type FormDefinition,
 } from '@tp/shared/forms';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { hasLabel, hasOptions, newOption } from './field-defaults.js';
 import { ImagePicker } from '../../components/ImagePicker.js';
 import { LocalisedField } from './LocalisedField.js';
+import { FieldRules } from './FieldRules.js';
+import { FieldVisibility } from './FieldVisibility.js';
 
 interface Props {
   field: Field | null;
+  /** The whole form, so conditions can offer the questions above this one. */
+  definition: FormDefinition;
   onChange: (field: Field) => void;
 }
 
@@ -23,18 +30,36 @@ interface Props {
  * text property here is edited per locale rather than in one box, which is why the completeness
  * indicator can be trusted.
  */
-export function FieldProperties({ field, onChange }: Props) {
+export function FieldProperties({ field, definition, onChange }: Props) {
   const t = useT();
   const { locale, locales } = useSession();
 
   if (!field) return <p className="muted small">{t('builder.selectField')}</p>;
+
+  /**
+   * Whether this field type carries a property, asked of the **schema**.
+   *
+   * Never `property in field`: Zod omits an unset optional, so that question answers "this kind
+   * of field has none" when the truth is "none has been written yet".
+   */
+  const shows = (property: string) => fieldSupports(field.type, property);
+
+  /**
+   * The localised text at a property TypeScript cannot narrow to.
+   *
+   * `fieldSupports` returns a boolean, not a type guard, so it cannot narrow the union the way
+   * `in` does. That is the trade: `in` narrows but lies about unset optionals, so the check is
+   * schema-driven and the read is a cast — the same cast `setText` already makes to write it.
+   */
+  const textAt = (property: string): Record<string, string> | undefined =>
+    (field as unknown as Record<string, Record<string, string> | undefined>)[property];
 
   function patch(changes: Partial<Field>) {
     onChange({ ...(field as Field), ...changes } as Field);
   }
 
   function setText(
-    property: 'label' | 'helpText' | 'placeholder' | 'content' | 'alt',
+    property: 'label' | 'helpText' | 'placeholder' | 'content' | 'alt' | 'minLabel' | 'maxLabel',
     locale: string,
     value: string,
   ) {
@@ -61,13 +86,26 @@ export function FieldProperties({ field, onChange }: Props) {
         />
       )}
 
-      {'helpText' in field && (
+      {shows('helpText') && (
         <LocalisedField
           label={t('field.helpText')}
-          value={field.helpText}
+          value={textAt('helpText')}
           locale={locale}
           supported={locales.supported}
           onChange={(target, text) => setText('helpText', target, text)}
+        />
+      )}
+
+      {/* Every answerable field carries one, and the panel had no box for it — so the grey hint
+          text inside an input was another schema property no author could reach. */}
+      {shows('placeholder') && (
+        <LocalisedField
+          label={t('field.placeholder')}
+          value={textAt('placeholder')}
+          locale={locale}
+          supported={locales.supported}
+          hint={t('field.placeholderHint')}
+          onChange={(target, text) => setText('placeholder', target, text)}
         />
       )}
 
@@ -125,6 +163,40 @@ export function FieldProperties({ field, onChange }: Props) {
           </select>
           <span className="small muted">{t('field.appearanceHint')}</span>
         </label>
+      )}
+
+      {field.type === 'rating' && (
+        <div className="stack">
+          <label className="field">
+            <span>{t('field.scale')}</span>
+            <input
+              type="number"
+              min={2}
+              max={10}
+              value={field.scale}
+              onChange={(event) =>
+                patch({ scale: Number(event.target.value) || 5 } as Partial<Field>)
+              }
+            />
+            <span className="small muted">{t('field.scaleHint')}</span>
+          </label>
+
+          {/* Both ends, because "8 out of 10" means nothing without knowing which end is good. */}
+          <LocalisedField
+            label={t('field.minLabel')}
+            value={field.minLabel}
+            locale={locale}
+            supported={locales.supported}
+            onChange={(target, text) => setText('minLabel', target, text)}
+          />
+          <LocalisedField
+            label={t('field.maxLabel')}
+            value={field.maxLabel}
+            locale={locale}
+            supported={locales.supported}
+            onChange={(target, text) => setText('maxLabel', target, text)}
+          />
+        </div>
       )}
 
       {field.type === 'link' && (
@@ -273,6 +345,10 @@ export function FieldProperties({ field, onChange }: Props) {
         </div>
       )}
 
+      <FieldVisibility field={field} definition={definition} patch={patch} />
+
+      <FieldRules field={field} patch={patch} />
+
       {/*
             The key is real and occasionally matters — it is what a CSV column is named and what an
             integration reads — but it is not what somebody is thinking about while writing a form,
@@ -308,6 +384,8 @@ function appearances(field: Field): readonly string[] | null {
       return MULTI_SELECT_APPEARANCES;
     case 'yes_no':
       return YES_NO_APPEARANCES;
+    case 'rating':
+      return RATING_APPEARANCES;
     default:
       return null;
   }

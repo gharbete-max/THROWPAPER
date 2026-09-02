@@ -22,6 +22,8 @@ export const FIELD_TYPES = [
   'single_select',
   'multi_select',
   'yes_no',
+  'rating',
+  'time',
   'section_break',
   'page_break',
   'rich_text',
@@ -60,6 +62,53 @@ export const FIELD_WIDTHS = ['full', 'half', 'third'] as const;
 export const FieldWidth = z.enum(FIELD_WIDTHS);
 export type FieldWidth = z.infer<typeof FieldWidth>;
 
+/**
+ * Conditional visibility — "show this only when that was answered a certain way".
+ *
+ * The comparison is done on the **stored answer**, not on anything visible, so a form that has
+ * been restyled or retranslated keeps behaving the same way. `value` is a string for every
+ * operator because that is what a builder's input produces; the evaluator coerces per field type.
+ */
+export const CONDITION_OPERATORS = [
+  'equals',
+  'notEquals',
+  'contains',
+  'answered',
+  'empty',
+  'greaterThan',
+  'lessThan',
+] as const;
+export const ConditionOperator = z.enum(CONDITION_OPERATORS);
+export type ConditionOperator = z.infer<typeof ConditionOperator>;
+
+/** Operators that compare against nothing — the box for a value is hidden for these. */
+export const VALUELESS_OPERATORS = ['answered', 'empty'] as const;
+
+export const Condition = z.object({
+  /** The field being asked about, by key. Must appear *earlier* in the form; cycles are then
+   *  impossible by construction rather than by a cycle detector nobody would maintain. */
+  fieldKey: FieldKey,
+  operator: ConditionOperator,
+  value: z.string().max(200).default(''),
+});
+export type Condition = z.infer<typeof Condition>;
+
+export const VisibilityRule = z.object({
+  /** `all` is the safer default: adding a second condition narrows rather than widens. */
+  match: z.enum(['all', 'any']).default('all'),
+  conditions: z.array(Condition).min(1),
+});
+export type VisibilityRule = z.infer<typeof VisibilityRule>;
+
+/**
+ * Shown by default.
+ *
+ * `undefined` rather than an empty rule, so "no conditions" cannot be confused with "a rule whose
+ * conditions all happen to be satisfied" — and an old definition with no `showWhen` at all keeps
+ * rendering exactly as it did.
+ */
+const showWhen = VisibilityRule.optional();
+
 const base = {
   id: z.string().min(1).max(64),
   key: FieldKey,
@@ -68,6 +117,7 @@ const base = {
   placeholder: LocalisedText.optional(),
   required: z.boolean().default(false),
   width: FieldWidth.default('full'),
+  showWhen,
 };
 
 export const SelectOption = z.object({
@@ -99,6 +149,8 @@ export const SelectOption = z.object({
 export const SINGLE_SELECT_APPEARANCES = ['dropdown', 'radio', 'buttons', 'cards'] as const;
 export const MULTI_SELECT_APPEARANCES = ['checkboxes', 'buttons', 'cards'] as const;
 export const YES_NO_APPEARANCES = ['dropdown', 'radio', 'buttons'] as const;
+/** Stars for satisfaction, numbers for a scale somebody will do arithmetic on later. */
+export const RATING_APPEARANCES = ['star', 'number'] as const;
 
 export const SingleSelectAppearance = z.enum(SINGLE_SELECT_APPEARANCES);
 export type SingleSelectAppearance = z.infer<typeof SingleSelectAppearance>;
@@ -106,6 +158,8 @@ export const MultiSelectAppearance = z.enum(MULTI_SELECT_APPEARANCES);
 export type MultiSelectAppearance = z.infer<typeof MultiSelectAppearance>;
 export const YesNoAppearance = z.enum(YES_NO_APPEARANCES);
 export type YesNoAppearance = z.infer<typeof YesNoAppearance>;
+export const RatingAppearance = z.enum(RATING_APPEARANCES);
+export type RatingAppearance = z.infer<typeof RatingAppearance>;
 
 const TextRules = {
   minLength: z.number().int().nonnegative().optional(),
@@ -154,12 +208,50 @@ export const Field = z.discriminatedUnion('type', [
   }),
   z.object({ ...base, type: z.literal('yes_no'), appearance: YesNoAppearance.default('dropdown') }),
 
+  /**
+   * A rating or a linear scale — satisfaction, likelihood to recommend, how good the coffee was.
+   *
+   * Stores a plain integer from 1 to `scale`, so the answer is a number in the export and can be
+   * averaged, rather than the text of whichever star got clicked.
+   *
+   * `minLabel` and `maxLabel` name the ends. Without them a 1–10 scale is ambiguous in both
+   * directions — a survey that does not say whether 10 is good or bad collects noise.
+   */
+  z.object({
+    ...base,
+    type: z.literal('rating'),
+    scale: z.number().int().min(2).max(10).default(5),
+    appearance: RatingAppearance.default('star'),
+    minLabel: LocalisedText.optional(),
+    maxLabel: LocalisedText.optional(),
+  }),
+
+  /**
+   * A time of day, `HH:MM` on a 24-hour clock.
+   *
+   * Stored as a string rather than a number of minutes because that is what `<input type="time">`
+   * produces, what a spreadsheet reads back, and what sorts correctly as text.
+   */
+  z.object({
+    ...base,
+    type: z.literal('time'),
+    min: z
+      .string()
+      .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+      .optional(),
+    max: z
+      .string()
+      .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+      .optional(),
+  }),
+
   // Presentational — no answer is collected, so `required` is meaningless and omitted.
   z.object({
     id: base.id,
     key: base.key,
     type: z.literal('section_break'),
     width: FieldWidth.default('full'),
+    showWhen,
     label: LocalisedText,
     helpText: LocalisedText.optional(),
   }),
@@ -169,6 +261,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('rich_text'),
     width: FieldWidth.default('full'),
+    showWhen,
     /** Plain text with paragraph breaks. Not HTML — that would be a stored-XSS surface. */
     content: LocalisedText,
   }),
@@ -185,6 +278,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('image'),
     width: FieldWidth.default('full'),
+    showWhen,
     src: AssetPath,
     alt: LocalisedText.default({}),
     /** Caps the rendered width in pixels. Unset means as wide as the form allows. */
@@ -206,6 +300,7 @@ export const Field = z.discriminatedUnion('type', [
     key: base.key,
     type: z.literal('link'),
     width: FieldWidth.default('full'),
+    showWhen,
     label: LocalisedText.default({}),
     href: z
       .string()
@@ -229,6 +324,58 @@ export const Field = z.discriminatedUnion('type', [
 
 export type Field = z.infer<typeof Field>;
 
+export type PresentationalType = (typeof PRESENTATIONAL_TYPES)[number];
+
+/**
+ * A field that collects an answer — everything except the presentational ones.
+ *
+ * A real narrowing rather than a comment, so `validateField` can be an exhaustive switch. While
+ * `answerableFields` returned the whole union, that switch needed a `default` branch, and its
+ * default silently stored `null` — which is what a new answerable field type would have done all
+ * the way through to an empty column in the export.
+ */
+export type AnswerableField = Exclude<Field, { type: PresentationalType }>;
+
+/**
+ * Every property a field of this type carries, read out of the schema itself.
+ *
+ * Exists so the builder can be **proved** to expose everything a field has. The validator has
+ * enforced `minLength`, `maxLength`, `pattern`, `min`, `max`, `decimals`, `minSelected` and
+ * `maxSelected` since it was written, and the properties panel offered a control for none of
+ * them — a whole validation engine no author could reach, because nothing compared the two lists.
+ *
+ * `apps/forms/.../field-properties.test.ts` walks this and fails on any property with nowhere to
+ * set it, so adding a rule to the schema and forgetting the UI is now a red test rather than a
+ * feature nobody can find.
+ */
+export function fieldProperties(type: FieldType): string[] {
+  const variant = Field.options.find((option) => option.shape.type.value === type);
+  return variant ? Object.keys(variant.shape) : [];
+}
+
+const PROPERTY_SETS = new Map<string, Set<string>>(
+  FIELD_TYPES.map((type) => [type, new Set(fieldProperties(type))]),
+);
+
+/**
+ * Whether a field of this **type** can carry this property.
+ *
+ * Use this, never `'helpText' in field`.
+ *
+ * Zod omits an `.optional()` property that was not set, so the key is simply absent from the
+ * parsed object — and `'helpText' in field` then reads as "this kind of field has no help text"
+ * when it actually means "nobody has written any yet". The builder asked that question about
+ * `helpText`, so the box for it appeared only on fields that already had help text: there was no
+ * way to *add* help text to anything, and the same was about to be true of `placeholder` and of
+ * conditional visibility.
+ *
+ * A `.default()`ed property is always present after parsing, which is why `width`, `required` and
+ * `appearance` happened to work and hid the problem.
+ */
+export function fieldSupports(type: FieldType, property: string): boolean {
+  return PROPERTY_SETS.get(type)?.has(property) ?? false;
+}
+
 export const FormSettings = z.object({
   submitLabel: LocalisedText.default({}),
   confirmationMessage: LocalisedText.default({}),
@@ -236,6 +383,27 @@ export const FormSettings = z.object({
   duplicateControl: z.enum(['email', 'none']).default('email'),
   /** Save-and-resume is in v0.1 scope but can be switched off per form. */
   allowSaveAndResume: z.boolean().default(true),
+  /**
+   * How far through a multi-page form somebody is. A single-page form has no progress to show and
+   * ignores this.
+   */
+  showProgress: z.boolean().default(true),
+  /**
+   * Where to send somebody after they submit, instead of the confirmation screen.
+   *
+   * `http` and `https` only. This is author-supplied and ends up in `location.href`, so a
+   * `javascript:` URL here would be script execution against every person who fills in the form —
+   * the same reason the link field is restricted.
+   *
+   * The reference is appended as a query parameter, so a destination page can still show it. A
+   * redirect that loses the reference makes an event registration unusable at the door.
+   */
+  redirectUrl: z
+    .string()
+    .trim()
+    .url()
+    .refine((value) => /^https?:\/\//i.test(value), 'Links must start with http:// or https://')
+    .optional(),
 });
 
 export const FormDefinition = z.object({
@@ -248,13 +416,12 @@ export const FormDefinition = z.object({
 export type FormDefinition = z.infer<typeof FormDefinition>;
 export type FormSettings = z.infer<typeof FormSettings>;
 
-export const emptyDefinition: FormDefinition = {
-  schemaVersion: 1,
-  fields: [],
-  settings: {
-    submitLabel: {},
-    confirmationMessage: {},
-    duplicateControl: 'email',
-    allowSaveAndResume: true,
-  },
-};
+/**
+ * A blank form, built by the schema rather than retyped beside it.
+ *
+ * Every value here is already a `.default()` in `FormSettings`, so parsing an almost-empty object
+ * produces them. Writing the literal out again meant two lists to keep in step, and the one that
+ * gets forgotten is this one — a new setting would be missing from every form created from
+ * scratch while being present on every form the builder had touched.
+ */
+export const emptyDefinition: FormDefinition = FormDefinition.parse({ schemaVersion: 1 });

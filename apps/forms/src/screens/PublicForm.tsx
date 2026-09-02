@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from 'react-router';
 import { createTranslator, pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { defaultTokens, toCssBlock } from '@tp/tokens';
 import {
+  isVisible,
   pagesOf,
   widthOf,
   validateSubmission,
@@ -15,6 +16,7 @@ import { messages } from '../lib/messages.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
+import { Meter } from '../components/Meter.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -120,7 +122,50 @@ export default function PublicForm() {
     ? pickText(locales, form.definition.settings.submitLabel, resolved).value ||
       t('public.complete')
     : t('public.complete');
-  const currentPage = pages[page] ?? [];
+  /**
+   * The page, with conditionally hidden fields removed.
+   *
+   * Filtered here rather than inside the loop that renders it, so `validatePage` and the renderer
+   * agree on exactly one list. Two lists is how you get an error under a field that is not there.
+   */
+  const currentPage = useMemo(
+    () => (pages[page] ?? []).filter((field) => isVisible(field, values)),
+    [pages, page, values],
+  );
+
+  /**
+   * The next page in a direction that still has something on it.
+   *
+   * A page whose every field is conditionally hidden must be stepped over, not shown as a blank
+   * screen with a Next button — that reads as a broken form, and it is the first thing anybody
+   * hits when they put a whole section behind one condition. Returns `null` when there is nothing
+   * further that way, which is what turns Next into Complete.
+   */
+  const nextPageWithContent = useCallback(
+    (from: number, direction: 1 | -1): number | null => {
+      for (let at = from + direction; at >= 0 && at < pages.length; at += direction) {
+        const fields = pages[at] ?? [];
+        if (fields.some((field) => isVisible(field, values))) return at;
+      }
+      return null;
+    },
+    [pages, values],
+  );
+
+  const forwardPage = nextPageWithContent(page, 1);
+  const backPage = nextPageWithContent(page, -1);
+
+  /**
+   * Which step this is, out of the steps that actually exist for these answers.
+   *
+   * Pages hidden by conditions are not counted, so the bar reaches the end rather than stopping
+   * at four fifths on a form that skipped a section.
+   */
+  const reachable = pages
+    .map((fields, at) => ({ at, live: fields.some((field) => isVisible(field, values)) }))
+    .filter((entry) => entry.live);
+  const totalSteps = Math.max(1, reachable.length);
+  const stepNumber = Math.max(1, reachable.findIndex((entry) => entry.at === page) + 1);
 
   const setValue = useCallback((key: string, value: AnswerValue) => {
     setValues((current) => ({ ...current, [key]: value }));
@@ -184,6 +229,23 @@ export default function PublicForm() {
         setReference(body.reference);
         setConfirmation(body.confirmationMessage);
         setPhase('done');
+
+        /**
+         * A form can send people somewhere of its own instead of the thank-you screen.
+         *
+         * The reference goes with them: an event registration whose reference is lost at the
+         * redirect cannot be checked in at the door, which would make the feature a trap.
+         *
+         * The URL is `http`/`https` by schema — `javascript:` in an author-supplied string would
+         * be script execution against every visitor. `assign`, not `replace`, so the browser's
+         * Back button still returns to the confirmation rather than resubmitting the form.
+         */
+        const destination = form.definition.settings.redirectUrl;
+        if (destination) {
+          const target = new URL(destination);
+          if (body.reference) target.searchParams.set('reference', String(body.reference));
+          window.location.assign(target.toString());
+        }
         return;
       }
       if (response.status === 422) {
@@ -254,8 +316,23 @@ export default function PublicForm() {
 
       {phase === 'filling' && form && (
         <form className="stack" onSubmit={submit}>
-          {pages.length > 1 && (
-            <p className="small muted">{t('public.page', { n: page + 1, total: pages.length })}</p>
+          {/**
+           * Progress, counted over the pages that are actually reachable.
+           *
+           * Counting every page break would say "step 2 of 5" on a form where conditions have
+           * hidden three of them — a bar that never fills, which is worse than none.
+           */}
+          {pages.length > 1 && form.definition.settings.showProgress && (
+            <div className="stack stack--tight">
+              <p className="small muted">
+                {t('public.progress', { n: stepNumber, total: totalSteps })}
+              </p>
+              <Meter
+                value={stepNumber}
+                max={totalSteps}
+                label={t('public.progress', { n: stepNumber, total: totalSteps })}
+              />
+            </div>
           )}
 
           {/*
@@ -313,11 +390,11 @@ export default function PublicForm() {
           */}
           <div className="row row--between form-actions">
             <div className="row">
-              {page > 0 && (
+              {backPage !== null && (
                 <button
                   type="button"
                   className="button button--quiet"
-                  onClick={() => setPage(page - 1)}
+                  onClick={() => setPage(backPage)}
                 >
                   <Icon name="arrow-left" />
                   {t('public.back')}
@@ -337,12 +414,12 @@ export default function PublicForm() {
               )}
             </div>
 
-            {page < pages.length - 1 ? (
+            {forwardPage !== null ? (
               <button
                 type="button"
                 className="button form-actions__forward"
                 onClick={() => {
-                  if (validatePage()) setPage(page + 1);
+                  if (validatePage()) setPage(forwardPage);
                 }}
               >
                 {t('public.next')}

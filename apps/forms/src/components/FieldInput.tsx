@@ -102,6 +102,64 @@ export function FieldInput({
     );
   }
 
+  /**
+   * A rating is a radio group wearing stars.
+   *
+   * Built from real `input type="radio"` elements for the same reason the card and button
+   * appearances are: a row of divs with click handlers loses the keyboard, the screen reader and
+   * the browser's own required-field handling, and none of that is retrofittable.
+   */
+  if (field.type === 'rating') {
+    const chosen = typeof value === 'number' ? value : Number(value);
+    const points = Array.from({ length: field.scale }, (_, at) => at + 1);
+    return (
+      <fieldset className={`rating rating--${field.appearance}`}>
+        <legend>
+          {text(field.label)}
+          {field.required && ' *'}
+        </legend>
+
+        <div className="rating__scale">
+          {field.minLabel && <span className="small muted">{text(field.minLabel)}</span>}
+          <div className="rating__points">
+            {points.map((point) => (
+              <label
+                className={
+                  // Stars fill up to the chosen one, the way every rating control behaves.
+                  // Numbers mark only the one selected, because 7 out of 10 is not "1 to 7".
+                  field.appearance === 'star' && chosen >= point
+                    ? 'rating__point rating__point--on'
+                    : chosen === point
+                      ? 'rating__point rating__point--on'
+                      : 'rating__point'
+                }
+                key={point}
+              >
+                <input
+                  type="radio"
+                  name={`${field.key}__rating`}
+                  value={point}
+                  checked={chosen === point}
+                  onChange={() => onChange(field.key, point)}
+                />
+                {/* The number is the accessible name in both appearances; the star is decoration
+                    over the top of it, so a screen reader hears "3 of 5", not "star". */}
+                <span className={field.appearance === 'star' ? 'rating__glyph' : 'rating__number'}>
+                  {field.appearance === 'star' ? '★' : point}
+                </span>
+                {field.appearance === 'star' && <span className="visually-hidden">{point}</span>}
+              </label>
+            ))}
+          </div>
+          {field.maxLabel && <span className="small muted">{text(field.maxLabel)}</span>}
+        </div>
+
+        {field.helpText && <span className="small muted">{text(field.helpText)}</span>}
+        {error && <span className="small status-down">{error}</span>}
+      </fieldset>
+    );
+  }
+
   const label = text(field.label);
   const help = 'helpText' in field ? text(field.helpText) : '';
   const placeholder = 'placeholder' in field ? text(field.placeholder) : '';
@@ -308,6 +366,8 @@ function inputType(type: Field['type']): string {
       return 'number';
     case 'date':
       return 'date';
+    case 'time':
+      return 'time';
     default:
       return 'text';
   }

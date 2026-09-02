@@ -14,6 +14,9 @@ export { toNativeTokens, type NativeTokens } from './compile-native.js';
 
 export { pxValue, px, spacing, typeScale } from './units.js';
 
+/** Ready-made looks, every one of which passes the contrast check — see `presets.test.ts`. */
+export { THEME_PRESETS, THEME_PRESET_IDS, type ThemePreset } from './presets.js';
+
 export {
   checkContrast,
   contrastRatio,

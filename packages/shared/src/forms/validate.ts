@@ -1,4 +1,11 @@
-import { answerableFields, type Field, type FormDefinition } from './index.js';
+import {
+  answerableFields,
+  isDangerousPattern,
+  isVisible,
+  MAX_MATCHED_LENGTH,
+  type AnswerableField,
+  type FormDefinition,
+} from './index.js';
 
 /**
  * One validator, run on both sides.
@@ -42,6 +49,20 @@ export function validateSubmission(
   const values: SubmissionValues = {};
 
   for (const field of answerableFields(definition)) {
+    /**
+     * A field the conditions have hidden collects nothing and blocks nothing.
+     *
+     * Without this, a required question behind a condition would refuse the submission with an
+     * error attached to a field that is not on the page — the classic conditional-logic dead end,
+     * where the form cannot be submitted and cannot be corrected either. Its key is written as
+     * empty rather than omitted, so the column still exists in the export and a blank means
+     * "was not asked" consistently across every row.
+     */
+    if (!isVisible(field, input)) {
+      values[field.key] = field.type === 'multi_select' ? [] : null;
+      continue;
+    }
+
     const raw = input[field.key];
     const empty = isEmpty(raw);
 
@@ -65,7 +86,7 @@ export function validateSubmission(
 }
 
 function validateField(
-  field: Field,
+  field: AnswerableField,
   raw: AnswerValue,
 ): { value?: AnswerValue; issue?: Omit<ValidationIssue, 'key'> } {
   switch (field.type) {
@@ -152,12 +173,48 @@ function validateField(
       return { issue: { code: 'validation.yesNo' } };
     }
 
+    case 'rating': {
+      const value = typeof raw === 'number' ? raw : Number(String(raw));
+      if (!Number.isInteger(value) || value < 1 || value > field.scale) {
+        return { issue: { code: 'validation.rating', params: { max: field.scale } } };
+      }
+      return { value };
+    }
+
+    case 'time': {
+      const value = String(raw).trim();
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) {
+        return { issue: { code: 'validation.time' } };
+      }
+      // `HH:MM` is fixed-width and zero-padded, so string order is clock order.
+      if (field.min && value < field.min) {
+        return { issue: { code: 'validation.timeMin', params: { min: field.min } } };
+      }
+      if (field.max && value > field.max) {
+        return { issue: { code: 'validation.timeMax', params: { max: field.max } } };
+      }
+      return { value };
+    }
+
     case 'hidden':
       return { value: String(raw).slice(0, 500) };
 
     default:
-      return { value: null };
+      /**
+       * Not a fallback — a bug.
+       *
+       * This used to `return { value: null }`, which meant a new answerable field type added to
+       * the schema without a case here would accept anything and store nothing, in silence, all
+       * the way through to an empty column in the export. `never` makes it a compile error
+       * instead, so the switch cannot fall behind the union.
+       */
+      return assertHandled(field);
   }
+}
+
+function assertHandled(field: never): { issue: Omit<ValidationIssue, 'key'> } {
+  const type = (field as { type?: string }).type ?? 'unknown';
+  throw new Error(`validateField has no case for field type "${type}"`);
 }
 
 function isEmpty(value: AnswerValue): boolean {
@@ -172,16 +229,40 @@ function isEmpty(value: AnswerValue): boolean {
  * builder is not a place to accept arbitrary regular expressions unguarded.
  */
 function safeMatch(pattern: string, value: string): boolean {
+  /**
+   * A pattern that can backtrack catastrophically is **skipped**, not failed.
+   *
+   * Publishing refuses these, so reaching here means a form was written through the API before
+   * that check existed. Two bad options: fail every answer, which makes a live public form
+   * unfillable by anybody with no way for the visitor to fix it; or skip that one rule, leaving
+   * the field validated by its type and its length limits. Skipping degrades; failing breaks.
+   */
+  if (isDangerousPattern(pattern)) return true;
+
   try {
-    return new RegExp(`^(?:${pattern})$`).test(value);
+    // Bounded input bounds the work even if the structural check missed something.
+    return new RegExp(`^(?:${pattern})$`).test(value.slice(0, MAX_MATCHED_LENGTH));
   } catch {
     // An unparseable pattern must not silently pass everything.
     return false;
   }
 }
 
+/**
+ * How many digits this number carries after the point.
+ *
+ * Reading them out of `String(value)` looks obvious and is wrong: JavaScript switches to
+ * exponential notation below 1e-6, so `String(0.0000001)` is `"1e-7"` — no `.` to find, zero
+ * decimal places reported, and a `decimals: 0` rule that a visitor could walk straight past by
+ * typing a small enough number.
+ *
+ * `toExponential()` always produces the same shape, so the answer comes out of the exponent
+ * instead of out of how the value happened to be printed.
+ */
 function decimalPlaces(value: number): number {
-  const text = String(value);
-  const index = text.indexOf('.');
-  return index < 0 ? 0 : text.length - index - 1;
+  const match = /^-?(\d)(?:\.(\d+))?e([+-]\d+)$/.exec(value.toExponential());
+  if (!match) return 0;
+  const fractionDigits = match[2]?.length ?? 0;
+  const exponent = Number(match[3]);
+  return Math.max(0, fractionDigits - exponent);
 }

@@ -21,8 +21,11 @@ export const PALETTE: readonly FieldType[] = FIELD_TYPES;
  * palette.
  */
 export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldType[] }> = [
-  { id: 'text', types: ['short_text', 'long_text', 'number', 'email', 'phone', 'date'] },
-  { id: 'choice', types: ['single_select', 'multi_select', 'yes_no'] },
+  { id: 'text', types: ['short_text', 'long_text', 'email', 'phone'] },
+  // Split off when `time` arrived and pushed the text group past six. Numbers and dates are also
+  // the group whose answers get counted, averaged and charted, which is a real distinction.
+  { id: 'numbers', types: ['number', 'date', 'time'] },
+  { id: 'choice', types: ['single_select', 'multi_select', 'yes_no', 'rating'] },
   { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'link', 'hidden'] },
 ];
 
@@ -98,6 +101,9 @@ export function newField(
       };
     case 'yes_no':
       return { id, key, type, label, required: false, width, appearance: 'dropdown' };
+    // Five stars, because that is what a rating means to almost everybody who sees one.
+    case 'rating':
+      return { id, key, type, label, required: false, width, scale: 5, appearance: 'star' };
     /**
      * An image field is created with no picture yet: `src` is only valid once something has been
      * uploaded, so the builder shows an upload control and the field is incomplete until then.

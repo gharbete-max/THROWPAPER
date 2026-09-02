@@ -158,3 +158,55 @@ describe('issues are keys, not sentences', () => {
     expect(JSON.stringify(issue)).not.toMatch(/too (large|many)/i);
   });
 });
+
+/**
+ * `decimalPlaces` used to read the digits out of `String(value)`.
+ *
+ * JavaScript prints anything below 1e-6 in exponential notation, so `String(0.0000001)` is
+ * `"1e-7"`: no `.` to find, zero decimals reported, and a `decimals: 0` rule that a visitor could
+ * walk straight past by typing a small enough number. Found by an audit, not by a failing test —
+ * hence this one.
+ */
+describe('counting decimal places', () => {
+  const field = (decimals: number) =>
+    Field.parse({
+      id: 'f1',
+      key: 'amount',
+      type: 'number',
+      label: { 'sv-SE': 'Belopp' },
+      decimals,
+    });
+
+  const form = (decimals: number): FormDefinition => ({
+    schemaVersion: 1,
+    fields: [field(decimals)],
+    settings: emptyDefinition.settings,
+  });
+
+  it('rejects a small number written in full, which prints as an exponent', () => {
+    const result = validateSubmission(form(0), { amount: '0.0000001' });
+    expect(result.issues).toEqual([
+      { key: 'amount', code: 'validation.decimals', params: { decimals: 0 } },
+    ]);
+  });
+
+  it('still counts ordinary decimals', () => {
+    expect(validateSubmission(form(2), { amount: '1.25' }).ok).toBe(true);
+    expect(validateSubmission(form(2), { amount: '1.256' }).ok).toBe(false);
+    expect(validateSubmission(form(0), { amount: '100' }).ok).toBe(true);
+    expect(validateSubmission(form(0), { amount: '100.5' }).ok).toBe(false);
+  });
+
+  it('accepts a small number when that many places are allowed', () => {
+    // Six is the schema's cap on `decimals`, and 1e-6 is exactly where JavaScript stops printing
+    // a plain decimal — so this is the boundary the old implementation got right by luck.
+    expect(validateSubmission(form(6), { amount: '0.000001' }).ok).toBe(true);
+    expect(validateSubmission(form(6), { amount: '0.0000001' }).ok).toBe(false);
+  });
+
+  it('counts a value typed in exponential notation', () => {
+    // `2.5e-3` is 0.0025 — four places, whichever way it was written.
+    expect(validateSubmission(form(4), { amount: '2.5e-3' }).ok).toBe(true);
+    expect(validateSubmission(form(3), { amount: '2.5e-3' }).ok).toBe(false);
+  });
+});

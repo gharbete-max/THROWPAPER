@@ -16,6 +16,7 @@ import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
+import { FormSettingsPanel } from './FormSettingsPanel.js';
 import { Icon } from '../../components/Icon.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
@@ -311,7 +312,8 @@ export function FormBuilder() {
 
       {form.problems.length > 0 && (
         <p className="small status-down">
-          {form.problems.map((problem) => problem.message).join('; ')}
+          {/* Translated by code — `problem.message` is English, for logs and API clients. */}
+          {form.problems.map((problem) => t(`problem.${problem.code}`, problem.params)).join('; ')}
         </p>
       )}
 
@@ -352,7 +354,9 @@ export function FormBuilder() {
               onRemove={removeField}
               onMove={moveField}
               onDuplicate={duplicateField}
-              renderEditor={(field) => <FieldProperties field={field} onChange={updateField} />}
+              renderEditor={(field) => (
+                <FieldProperties field={field} definition={definition} onChange={updateField} />
+              )}
             />
           </div>
         </div>
@@ -411,6 +415,8 @@ export function FormBuilder() {
           </Link>
         </section>
       )}
+
+      <FormSettingsPanel definition={definition} onChange={edit} />
 
       <section className="card stack">
         <strong className="small">{t('builder.history')}</strong>

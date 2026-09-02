@@ -160,6 +160,10 @@ export const messages: Catalogue = {
   'field.label': { 'sv-SE': 'Etikett', 'en-GB': 'Label' },
   'field.helpText': { 'sv-SE': 'Hjälptext', 'en-GB': 'Help text' },
   'field.placeholder': { 'sv-SE': 'Platshållare', 'en-GB': 'Placeholder' },
+  'field.placeholderHint': {
+    'sv-SE': 'Grå exempeltext i rutan. Ersätter inte hjälptexten.',
+    'en-GB': 'Grey example text inside the box. Not a replacement for help text.',
+  },
   'field.required': { 'sv-SE': 'Obligatoriskt', 'en-GB': 'Required' },
   'field.width': { 'sv-SE': 'Bredd', 'en-GB': 'Width' },
   'field.widthHint': {
@@ -177,6 +181,15 @@ export const messages: Catalogue = {
     'en-GB': 'Changes how the question looks. Answers are stored the same way either way.',
   },
   'field.appearance.dropdown': { 'sv-SE': 'Rullgardin', 'en-GB': 'Dropdown' },
+  'field.appearance.star': { 'sv-SE': 'Stjärnor', 'en-GB': 'Stars' },
+  'field.appearance.number': { 'sv-SE': 'Siffror', 'en-GB': 'Numbers' },
+  'field.scale': { 'sv-SE': 'Skala', 'en-GB': 'Scale' },
+  'field.scaleHint': {
+    'sv-SE': 'Antal steg, 2 till 10. Fem stjärnor eller tio siffror.',
+    'en-GB': 'How many points, 2 to 10. Five stars, or ten numbers.',
+  },
+  'field.minLabel': { 'sv-SE': 'Text vid lägsta', 'en-GB': 'Label at the low end' },
+  'field.maxLabel': { 'sv-SE': 'Text vid högsta', 'en-GB': 'Label at the high end' },
   'field.appearance.radio': { 'sv-SE': 'Radioknappar', 'en-GB': 'Radio buttons' },
   'field.appearance.checkboxes': { 'sv-SE': 'Kryssrutor', 'en-GB': 'Checkboxes' },
   'field.appearance.buttons': { 'sv-SE': 'Knappar', 'en-GB': 'Buttons' },
@@ -195,6 +208,8 @@ export const messages: Catalogue = {
   'fieldType.single_select': { 'sv-SE': 'Ett val', 'en-GB': 'Single select' },
   'fieldType.multi_select': { 'sv-SE': 'Flera val', 'en-GB': 'Multi select' },
   'fieldType.yes_no': { 'sv-SE': 'Ja/Nej', 'en-GB': 'Yes/No' },
+  'fieldType.rating': { 'sv-SE': 'Betyg', 'en-GB': 'Rating' },
+  'fieldType.time': { 'sv-SE': 'Tid', 'en-GB': 'Time' },
   'fieldType.section_break': { 'sv-SE': 'Avsnitt', 'en-GB': 'Section' },
   'fieldType.page_break': { 'sv-SE': 'Sidbrytning', 'en-GB': 'Page break' },
   'fieldType.rich_text': { 'sv-SE': 'Text', 'en-GB': 'Text block' },
@@ -232,6 +247,159 @@ export const messages: Catalogue = {
 
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
+
+  // Why a form cannot be published. One key per DefinitionProblem code — messages.test.ts checks.
+  'problem.duplicate-key': {
+    'sv-SE': 'Fältnyckeln "{key}" används mer än en gång.',
+    'en-GB': 'The field key "{key}" is used more than once.',
+  },
+  'problem.no-answerable-fields': {
+    'sv-SE': 'Formuläret samlar inte in några svar än.',
+    'en-GB': 'The form does not collect any answers yet.',
+  },
+  'problem.empty-options': {
+    'sv-SE': 'En flervalsfråga saknar alternativ.',
+    'en-GB': 'A choice question has no options.',
+  },
+  'problem.condition-unknown-field': {
+    'sv-SE': 'Ett villkor frågar efter "{key}", som inget fält heter.',
+    'en-GB': 'A condition asks about "{key}", which no field is called.',
+  },
+  'problem.condition-forward-reference': {
+    'sv-SE': 'Ett villkor frågar efter "{key}", som kommer längre ned i formuläret.',
+    'en-GB': 'A condition asks about "{key}", which comes further down the form.',
+  },
+  'problem.unsafe-pattern': {
+    'sv-SE':
+      'En formatregel kan ta orimligt lång tid att kontrollera. Undvik upprepning inuti en upprepad grupp, som (a+)+.',
+    'en-GB':
+      'A format rule can take an unreasonable time to check. Avoid a repeat inside a repeated group, such as (a+)+.',
+  },
+
+  // Settings that belong to the form rather than to any one field.
+  'settings.heading': { 'sv-SE': 'Formulärets inställningar', 'en-GB': 'Form settings' },
+  'settings.submitLabel': { 'sv-SE': 'Text på skicka-knappen', 'en-GB': 'Submit button wording' },
+  'settings.submitLabelHint': {
+    'sv-SE': 'Lämna tomt för standardtexten.',
+    'en-GB': 'Leave blank for the standard wording.',
+  },
+  'settings.confirmationMessage': { 'sv-SE': 'Tackmeddelande', 'en-GB': 'Thank-you message' },
+  'settings.confirmationMessageHint': {
+    'sv-SE': 'Visas efter att formuläret skickats, tillsammans med referensnumret.',
+    'en-GB': 'Shown after the form is sent, alongside the reference number.',
+  },
+  'settings.redirectUrl': { 'sv-SE': 'Skicka vidare till', 'en-GB': 'Send them on to' },
+  'settings.redirectUrlHint': {
+    'sv-SE': 'Valfritt. Ersätter tacksidan. Referensnumret följer med i länken.',
+    'en-GB': 'Optional. Replaces the thank-you screen. The reference is carried in the link.',
+  },
+  'settings.showProgress': {
+    'sv-SE': 'Visa hur långt man kommit',
+    'en-GB': 'Show how far through they are',
+  },
+  'settings.allowSaveAndResume': {
+    'sv-SE': 'Tillåt att spara och fortsätta senare',
+    'en-GB': 'Allow saving and continuing later',
+  },
+  'settings.duplicateControl': { 'sv-SE': 'Dubbletter', 'en-GB': 'Duplicates' },
+  'settings.duplicateControlHint': {
+    'sv-SE': 'Om samma e-postadress får svara mer än en gång.',
+    'en-GB': 'Whether the same email address may answer more than once.',
+  },
+  'settings.duplicateControl.email': {
+    'sv-SE': 'Ett svar per e-postadress',
+    'en-GB': 'One response per email address',
+  },
+  'settings.duplicateControl.none': {
+    'sv-SE': 'Hur många som helst',
+    'en-GB': 'Any number of responses',
+  },
+  'public.progress': { 'sv-SE': 'Steg {n} av {total}', 'en-GB': 'Step {n} of {total}' },
+
+  // Ready-made looks. One key per THEME_PRESETS entry — messages.test.ts proves the mapping.
+  'brand.themes': { 'sv-SE': 'Teman', 'en-GB': 'Themes' },
+  'brand.themesHint': {
+    'sv-SE': 'Välj ett tema som utgångspunkt och justera det sedan. Alla klarar kontrastkravet.',
+    'en-GB': 'Pick a theme to start from, then adjust it. Every one passes the contrast check.',
+  },
+  'brand.themeSampleLabel': { 'sv-SE': 'Fråga', 'en-GB': 'Question' },
+  'brand.themeSampleButton': { 'sv-SE': 'Skicka', 'en-GB': 'Send' },
+  'theme.default': { 'sv-SE': 'Standard', 'en-GB': 'Default' },
+  'theme.midnight': { 'sv-SE': 'Midnatt', 'en-GB': 'Midnight' },
+  'theme.minimal': { 'sv-SE': 'Minimal', 'en-GB': 'Minimal' },
+  'theme.garden': { 'sv-SE': 'Trädgård', 'en-GB': 'Garden' },
+  'theme.bold': { 'sv-SE': 'Kraftfull', 'en-GB': 'Bold' },
+
+  // Conditional logic: show a field only when an earlier answer says so.
+  'visibility.heading': { 'sv-SE': 'Visa bara när…', 'en-GB': 'Show only when…' },
+  'visibility.count': { 'sv-SE': '{n} villkor', 'en-GB': '{n} conditions' },
+  'visibility.intro': {
+    'sv-SE': 'Fältet visas bara när villkoren stämmer. Annars hoppas det över helt.',
+    'en-GB': 'The field appears only when the conditions hold. Otherwise it is skipped entirely.',
+  },
+  'visibility.needsEarlierField': {
+    'sv-SE': 'Lägg en fråga ovanför den här först — villkor kan bara läsa tidigare svar.',
+    'en-GB': 'Put a question above this one first — a condition can only read an earlier answer.',
+  },
+  'visibility.match': { 'sv-SE': 'Kräv', 'en-GB': 'Require' },
+  'visibility.match.all': { 'sv-SE': 'Alla villkor', 'en-GB': 'All conditions' },
+  'visibility.match.any': { 'sv-SE': 'Minst ett villkor', 'en-GB': 'Any condition' },
+  'visibility.field': { 'sv-SE': 'Fråga', 'en-GB': 'Question' },
+  'visibility.operator': { 'sv-SE': 'Jämförelse', 'en-GB': 'Comparison' },
+  'visibility.value': { 'sv-SE': 'Värde', 'en-GB': 'Value' },
+  'visibility.add': { 'sv-SE': 'Lägg till villkor', 'en-GB': 'Add condition' },
+  'visibility.remove': { 'sv-SE': 'Ta bort villkor', 'en-GB': 'Remove condition' },
+  'visibility.missingField': {
+    'sv-SE': '{key} — finns inte längre ovanför',
+    'en-GB': '{key} — no longer above this field',
+  },
+  'visibility.operator.equals': { 'sv-SE': 'är lika med', 'en-GB': 'is' },
+  'visibility.operator.notEquals': { 'sv-SE': 'är inte lika med', 'en-GB': 'is not' },
+  'visibility.operator.contains': { 'sv-SE': 'innehåller', 'en-GB': 'contains' },
+  'visibility.operator.answered': { 'sv-SE': 'är besvarad', 'en-GB': 'is answered' },
+  'visibility.operator.empty': { 'sv-SE': 'är tom', 'en-GB': 'is empty' },
+  'visibility.operator.greaterThan': { 'sv-SE': 'är större än', 'en-GB': 'is greater than' },
+  'visibility.operator.lessThan': { 'sv-SE': 'är mindre än', 'en-GB': 'is less than' },
+
+  // What counts as a valid answer. Every one of these drives a rule the validator already had.
+  'rules.heading': { 'sv-SE': 'Regler för svaret', 'en-GB': 'Answer rules' },
+  'rules.intro': {
+    'sv-SE': 'Lämna tomt för ingen regel.',
+    'en-GB': 'Leave blank for no rule.',
+  },
+  'rules.minLength': { 'sv-SE': 'Minst antal tecken', 'en-GB': 'Minimum characters' },
+  'rules.maxLength': { 'sv-SE': 'Högst antal tecken', 'en-GB': 'Maximum characters' },
+  'rules.rows': { 'sv-SE': 'Höjd i rader', 'en-GB': 'Height in rows' },
+  'rules.min': { 'sv-SE': 'Lägsta värde', 'en-GB': 'Lowest value' },
+  'rules.max': { 'sv-SE': 'Högsta värde', 'en-GB': 'Highest value' },
+  'rules.minDate': { 'sv-SE': 'Tidigast datum', 'en-GB': 'Earliest date' },
+  'rules.maxDate': { 'sv-SE': 'Senast datum', 'en-GB': 'Latest date' },
+  'rules.minTime': { 'sv-SE': 'Tidigast tid', 'en-GB': 'Earliest time' },
+  'rules.maxTime': { 'sv-SE': 'Senast tid', 'en-GB': 'Latest time' },
+  'rules.decimals': { 'sv-SE': 'Antal decimaler', 'en-GB': 'Decimal places' },
+  'rules.minSelected': { 'sv-SE': 'Minst antal val', 'en-GB': 'Minimum choices' },
+  'rules.maxSelected': { 'sv-SE': 'Högst antal val', 'en-GB': 'Maximum choices' },
+  'rules.defaultValue': { 'sv-SE': 'Standardvärde', 'en-GB': 'Default value' },
+  'rules.defaultValueHint': {
+    'sv-SE': 'Används när ingen parameter finns i länken.',
+    'en-GB': 'Used when the link carries no parameter.',
+  },
+  'rules.pattern': { 'sv-SE': 'Format', 'en-GB': 'Format' },
+  'rules.pattern.none': { 'sv-SE': 'Vad som helst', 'en-GB': 'Anything' },
+  'rules.pattern.letters': { 'sv-SE': 'Endast bokstäver', 'en-GB': 'Letters only' },
+  'rules.pattern.digits': { 'sv-SE': 'Endast siffror', 'en-GB': 'Digits only' },
+  'rules.pattern.alphanumeric': {
+    'sv-SE': 'Bokstäver och siffror',
+    'en-GB': 'Letters and digits',
+  },
+  'rules.pattern.postcodeSe': { 'sv-SE': 'Svenskt postnummer', 'en-GB': 'Swedish postcode' },
+  'rules.pattern.url': { 'sv-SE': 'Webbadress', 'en-GB': 'Web address' },
+  'rules.pattern.custom': { 'sv-SE': 'Eget mönster', 'en-GB': 'Custom pattern' },
+  'rules.pattern.expression': { 'sv-SE': 'Reguljärt uttryck', 'en-GB': 'Regular expression' },
+  'rules.pattern.expressionHint': {
+    'sv-SE': 'Matchas mot hela svaret. Skriv inga ^ eller $.',
+    'en-GB': 'Matched against the whole answer. Do not add ^ or $.',
+  },
   /** Names the nav landmark for a screen reader; never shown. */
   'nav.sections': { 'sv-SE': 'Avdelningar', 'en-GB': 'Sections' },
 
@@ -256,7 +424,8 @@ export const messages: Catalogue = {
 
   'forms.edit': { 'sv-SE': 'Redigera formulär', 'en-GB': 'Edit form' },
 
-  'palette.text': { 'sv-SE': 'Text och siffror', 'en-GB': 'Text and numbers' },
+  'palette.text': { 'sv-SE': 'Text', 'en-GB': 'Text' },
+  'palette.numbers': { 'sv-SE': 'Siffror och datum', 'en-GB': 'Numbers and dates' },
   'palette.choice': { 'sv-SE': 'Val', 'en-GB': 'Choices' },
   'palette.layout': { 'sv-SE': 'Layout', 'en-GB': 'Layout' },
 
@@ -578,4 +747,8 @@ export const messages: Catalogue = {
   'validation.minSelected': { 'sv-SE': 'Välj minst {min}.', 'en-GB': 'Choose at least {min}.' },
   'validation.maxSelected': { 'sv-SE': 'Välj högst {max}.', 'en-GB': 'Choose at most {max}.' },
   'validation.yesNo': { 'sv-SE': 'Välj ja eller nej.', 'en-GB': 'Choose yes or no.' },
+  'validation.rating': { 'sv-SE': 'Välj 1 till {max}.', 'en-GB': 'Choose 1 to {max}.' },
+  'validation.time': { 'sv-SE': 'Ange en tid.', 'en-GB': 'Enter a time.' },
+  'validation.timeMin': { 'sv-SE': 'Tidigast {min}.', 'en-GB': 'No earlier than {min}.' },
+  'validation.timeMax': { 'sv-SE': 'Senast {max}.', 'en-GB': 'No later than {max}.' },
 };

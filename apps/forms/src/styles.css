@@ -1366,3 +1366,165 @@ textarea {
     justify-content: space-between;
   }
 }
+
+/* --- Rating ----------------------------------------------------------------
+ *
+ * Real radios wearing stars. The input keeps the clip treatment used by the button and card
+ * appearances — in the accessibility tree, focusable, invisible — and the glyph beside it is what
+ * gets painted, so the keyboard and a screen reader work exactly as they do for any radio group.
+ */
+.rating__scale {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  flex-wrap: wrap;
+}
+
+.rating__points {
+  display: flex;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.rating__point {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--tp-colour-border);
+  transition: color 120ms ease;
+}
+
+.rating__point input,
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.rating__point--on {
+  color: var(--tp-colour-primary);
+}
+
+.rating__glyph {
+  font-size: 1.75rem;
+  line-height: 1;
+  /* A star is wider than it is tall in most fonts; a fixed box stops the row jittering on hover. */
+  min-inline-size: 1.75rem;
+  text-align: center;
+}
+
+/* Hovering a star lights it and everything before it, the way every rating control does. */
+.rating--star .rating__points:hover .rating__point {
+  color: var(--tp-colour-primary);
+}
+
+.rating--star .rating__points .rating__point:hover ~ .rating__point {
+  color: var(--tp-colour-border);
+}
+
+.rating__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.25rem;
+  min-block-size: 2.25rem;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  color: var(--tp-colour-text);
+}
+
+.rating__point--on .rating__number {
+  border-color: var(--tp-colour-primary);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary);
+  font-weight: var(--tp-type-weight-bold);
+}
+
+/* The ring is drawn on the glyph, because the input it belongs to is clipped to a pixel. */
+.rating__point input:focus-visible ~ .rating__glyph,
+.rating__point input:focus-visible ~ .rating__number {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+}
+
+/* Conditional logic. One condition is a boxed group, so several do not read as one long form. */
+.builder__condition {
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+/* A count on the summary, so a collapsed section still says it is doing something. */
+.badge--rule {
+  margin-inline-start: var(--tp-spacing-unit);
+  background: var(--tp-colour-primary);
+  color: var(--tp-colour-background);
+}
+
+/* --- Theme gallery ---------------------------------------------------------
+ *
+ * Each card is a miniature form drawn in that theme's own tokens, not a row of colour circles.
+ * Circles always look fine; the question being asked is whether the *form* would be worth sending.
+ */
+.themes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.theme {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  cursor: pointer;
+  text-align: start;
+}
+
+.theme:hover:not(:disabled) {
+  border-color: var(--tp-colour-primary);
+}
+
+/* Inset rather than thicker, so choosing a theme does not shift the grid. */
+.theme--current {
+  border-color: var(--tp-colour-primary);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary);
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.theme__sample {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  padding: var(--tp-spacing-unit);
+  border: 1px solid;
+  /* The sample paints its own colours inline, so it must not inherit the app's. */
+  min-block-size: 5.5rem;
+}
+
+.theme__label {
+  font-size: 0.75rem;
+}
+
+.theme__input {
+  block-size: 1.5rem;
+  border: 1px solid;
+}
+
+.theme__button {
+  align-self: flex-start;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid;
+  font-size: 0.75rem;
+}

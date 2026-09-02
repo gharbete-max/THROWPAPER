@@ -63,7 +63,9 @@ export const LocaleCompletenessResponse = z.object({
 
 export const DefinitionProblemResponse = z.object({
   code: z.string(),
+  /** English fallback for logs and API clients; the app renders `problem.<code>` instead. */
   message: z.string(),
+  params: z.record(z.string()).optional(),
   fieldId: z.string().optional(),
 });
 

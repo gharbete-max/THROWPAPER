@@ -5,6 +5,7 @@ import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useBrand } from '../lib/brand.js';
 import { ImagePicker } from '../components/ImagePicker.js';
+import { ThemePicker } from '../components/ThemePicker.js';
 import { dominantColour } from '../lib/dominant-colour.js';
 
 /**
@@ -218,6 +219,9 @@ export function BrandKit() {
       <p className="muted small">{t('brand.intro')}</p>
       {readOnly && <p className="small muted">{t('brand.readOnly')}</p>}
       {error && <p className="status-down">{error}</p>}
+
+      {/* First, because starting from a whole look beats starting from eleven colour pickers. */}
+      {!readOnly && <ThemePicker current={tokens} onApply={setTokens} />}
 
       <div className="brand">
         <div className="stack">

@@ -62,7 +62,7 @@ export function columnsFor(
 
   const fields = answerableFields(definition).map((field): ExportColumn => {
     const type: ExportColumn['type'] =
-      field.type === 'number'
+      field.type === 'number' || field.type === 'rating'
         ? 'number'
         : field.type === 'date'
           ? 'date'
