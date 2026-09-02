@@ -31,7 +31,26 @@ export function FormResponses() {
       .catch(() => setMissing(true));
   }, [id]);
 
-  if (!id || missing) return <p className="muted">{t('forms.empty')}</p>;
+  /**
+   * A form that could not be loaded is not the same as an organisation with no forms.
+   *
+   * The first version of this screen reused `forms.empty` — "No forms yet." — for a single form
+   * that 404'd, which tells somebody following a stale link that their whole account is empty.
+   * It says what actually happened, and offers the way back.
+   */
+  if (!id || missing) {
+    return (
+      <section className="stack">
+        <p className="muted">{t('forms.notFound')}</p>
+        <p>
+          <Link className="button button--quiet" to="/forms">
+            <Icon name="arrow-left" className="icon--lead" />
+            {t('forms.title')}
+          </Link>
+        </p>
+      </section>
+    );
+  }
   if (!form) return <p className="muted">{t('app.loading')}</p>;
 
   const name = pickText(locales, form.title, locale).value || form.slug;

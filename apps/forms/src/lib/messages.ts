@@ -100,6 +100,10 @@ export const messages: Catalogue = {
   'forms.version': { 'sv-SE': 'Version {n}', 'en-GB': 'Version {n}' },
   'forms.unpublished': { 'sv-SE': 'Aldrig publicerat', 'en-GB': 'Never published' },
   'forms.responses': { 'sv-SE': '{count} svar', 'en-GB': '{count} responses' },
+  'forms.notFound': {
+    'sv-SE': 'Formuläret finns inte, eller så har du inte behörighet till det.',
+    'en-GB': 'That form does not exist, or you do not have access to it.',
+  },
   'forms.viewResponses': { 'sv-SE': 'Visa svar', 'en-GB': 'View responses' },
   'forms.copyLink': { 'sv-SE': 'Kopiera länk', 'en-GB': 'Copy link' },
   'forms.copied': { 'sv-SE': 'Kopierad', 'en-GB': 'Copied' },
@@ -228,6 +232,8 @@ export const messages: Catalogue = {
 
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
+  /** Names the nav landmark for a screen reader; never shown. */
+  'nav.sections': { 'sv-SE': 'Avdelningar', 'en-GB': 'Sections' },
 
   'field.optionLabel': { 'sv-SE': 'Alternativets text', 'en-GB': 'Option text' },
   'field.addLanguage': { 'sv-SE': '{locale}', 'en-GB': '{locale}' },

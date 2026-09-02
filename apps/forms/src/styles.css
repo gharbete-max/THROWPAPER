@@ -56,7 +56,14 @@ body {
 }
 
 .topbar__inner {
-  max-width: 52rem;
+  /**
+   * Wider than the 52rem content column below it.
+   *
+   * The bar used to share that width, which is why it ran out of room at an ordinary laptop size
+   * and folded the account controls onto a second line. A top bar spans its window; the column it
+   * sits above is what stays narrow, so text keeps a readable measure.
+   */
+  max-width: 76rem;
   margin: 0 auto;
   padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 3);
   display: flex;
@@ -1299,4 +1306,63 @@ textarea {
 .stat__value--small {
   font-size: 1rem;
   font-weight: var(--tp-type-weight-regular);
+}
+
+/* --- Top bar ---------------------------------------------------------------
+ *
+ * Product on the left, account on the right, with the current section marked. Previously all six
+ * controls sat in one flat row styled alike, so the bar answered neither "where am I" nor "who am
+ * I" without reading every item.
+ */
+.topbar__nav,
+.topbar__account {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  flex-wrap: wrap;
+}
+
+/**
+ * The account side is quieter than the sections it sits beside.
+ *
+ * No `margin-inline-start: auto` — inside a wrapping flex row it makes this group claim all the
+ * free space and drop onto a line of its own. `space-between` on `.topbar__inner` already pushes
+ * it right, and lets the bar stay one line while it fits.
+ */
+.topbar__account {
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+/**
+ * The current section.
+ *
+ * Marked with weight and an underline rather than a fill: a filled nav item competes with the one
+ * primary button a screen is allowed, and colour alone would be the only signal for anybody who
+ * cannot separate these two blues.
+ */
+.nav-link--current {
+  font-weight: var(--tp-type-weight-bold);
+  border-color: var(--tp-colour-primary);
+  color: var(--tp-colour-primary);
+}
+
+.nav-link--current::after {
+  content: '';
+  position: absolute;
+  inset-inline: calc(var(--tp-spacing-unit) * 1.5);
+  inset-block-end: -1px;
+  block-size: 2px;
+  background: var(--tp-colour-primary);
+}
+
+.nav-link {
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  /* Sections stay side by side; only the account side is allowed to wrap away. */
+  .topbar__account {
+    inline-size: 100%;
+    justify-content: space-between;
+  }
 }

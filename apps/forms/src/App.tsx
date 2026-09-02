@@ -1,10 +1,10 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, NavLink, Navigate, Route, Routes } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
 import { ConfirmProvider } from './components/Confirm.js';
-import { Icon } from './components/Icon.js';
+import { Icon, type IconName } from './components/Icon.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -54,6 +54,30 @@ export function App() {
   );
 }
 
+/**
+ * One top-level destination, which knows whether you are already there.
+ *
+ * `NavLink` rather than `Link` so the current section is marked — three identical quiet buttons
+ * told you nothing about where you were, which is most of what a top bar is for. `aria-current`
+ * comes from `NavLink` itself, so the styling and the announcement cannot disagree.
+ *
+ * `end` is deliberately **not** set: `/forms/:id` and `/forms/:id/submissions` are still Forms,
+ * and a section that unhighlights the moment you open something inside it is worse than none.
+ */
+function NavSection({ to, icon, label }: { to: string; icon: IconName; label: string }) {
+  return (
+    <NavLink
+      className={({ isActive }) =>
+        isActive ? 'button button--quiet small nav-link nav-link--current' : 'button button--quiet small nav-link'
+      }
+      to={to}
+    >
+      <Icon name={icon} className="icon--lead" />
+      {label}
+    </NavLink>
+  );
+}
+
 /** Everything behind the bearer token. */
 function Shell() {
   const t = useT();
@@ -79,40 +103,49 @@ function Shell() {
           ) : (
             <strong>{organisation?.name ?? t('app.name')}</strong>
           )}
-          <nav className="row">
-            <Link className="button button--quiet small" to="/events">
-              <Icon name="events" />
-              {t('nav.events')}
-            </Link>
-            <Link className="button button--quiet small" to="/forms">
-              <Icon name="forms" />
-              {t('nav.forms')}
-            </Link>
-            <Link className="button button--quiet small" to="/brand">
-              <Icon name="brand" />
-              {t('nav.brand')}
-            </Link>
+          {/**
+           * Two groups, not one row of six things.
+           *
+           * Events, Forms and Brand used to sit in the same flat row as the language dropdown,
+           * the signed-in name and Sign out, all styled identically — so "where am I" and "who am
+           * I" were the same question, and on a narrow screen the whole lot wrapped into a
+           * jumble. The left group is the product; the right group is the account.
+           */}
+          <nav className="topbar__nav" aria-label={t('nav.sections')}>
+            <NavSection to="/events" icon="events" label={t('nav.events')} />
+            <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
+          </nav>
+
+          <div className="topbar__account">
+            {/* Brand is settings — it configures the other two rather than sitting beside them. */}
+            <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
             {/*
               The language dropdown is driven by the organisation's supportedLocales, not a
               hard-coded list — SPEC-shared.md §packages/i18n.
             */}
-            <label className="field field--inline">
-              <span className="small muted">{t('app.language')}</span>
-              <select value={locale} onChange={(event) => setLocale(event.target.value)}>
+            {/* The globe carries the label, so the word does not also take a slot in the bar.
+                The name moves onto the select itself rather than disappearing. */}
+            <span className="field field--inline">
+              <Icon name="globe" className="muted" />
+              <select
+                aria-label={t('app.language')}
+                value={locale}
+                onChange={(event) => setLocale(event.target.value)}
+              >
                 {locales.supported.map((supported) => (
                   <option key={supported} value={supported}>
                     {supported}
                   </option>
                 ))}
               </select>
-            </label>
+            </span>
             <span className="small muted">
               {user.name} · {user.role}
             </span>
-            <button className="button button--quiet" onClick={signOut}>
+            <button className="button button--quiet small" onClick={signOut}>
               {t('app.signOut')}
             </button>
-          </nav>
+          </div>
         </div>
       </header>
 
