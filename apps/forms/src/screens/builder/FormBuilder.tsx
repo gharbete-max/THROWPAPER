@@ -16,6 +16,7 @@ import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
+import { FormSettingsPanel } from './FormSettingsPanel.js';
 import { Icon } from '../../components/Icon.js';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
@@ -413,6 +414,8 @@ export function FormBuilder() {
           </Link>
         </section>
       )}
+
+      <FormSettingsPanel definition={definition} onChange={edit} />
 
       <section className="card stack">
         <strong className="small">{t('builder.history')}</strong>

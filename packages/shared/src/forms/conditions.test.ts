@@ -3,6 +3,7 @@ import {
   Field,
   conditionHolds,
   definitionProblems,
+  emptyDefinition,
   isVisible,
   validateSubmission,
 } from './index.js';
@@ -125,12 +126,8 @@ describe('validation and visibility together', () => {
         },
       }),
     ],
-    settings: {
-      submitLabel: {},
-      confirmationMessage: {},
-      duplicateControl: 'none',
-      allowSaveAndResume: true,
-    },
+    // From the schema, so a new setting cannot leave this literal stale.
+    settings: { ...emptyDefinition.settings, duplicateControl: 'none' },
   });
 
   /**
@@ -178,12 +175,7 @@ describe('conditions that cannot work', () => {
     return {
       schemaVersion: 1,
       fields: order === 'before' ? [other, asker] : [asker, other],
-      settings: {
-        submitLabel: {},
-        confirmationMessage: {},
-        duplicateControl: 'none',
-        allowSaveAndResume: true,
-      },
+      settings: { ...emptyDefinition.settings, duplicateControl: 'none' },
     };
   };
 

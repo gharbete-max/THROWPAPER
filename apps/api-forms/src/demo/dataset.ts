@@ -132,14 +132,14 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       max: 2,
     },
   ],
+  // Spread from the schema's own defaults, so a new setting does not have to be remembered here.
   settings: {
+    ...formSchemas.emptyDefinition.settings,
     submitLabel: { 'sv-SE': 'Anmäl mig', 'en-GB': 'Register me' },
     confirmationMessage: {
       'sv-SE': 'Tack för din anmälan! Vi ses snart.',
       'en-GB': 'Thank you for registering. See you soon.',
     },
-    duplicateControl: 'email',
-    allowSaveAndResume: true,
   },
 };
 

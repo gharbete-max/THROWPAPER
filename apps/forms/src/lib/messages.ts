@@ -248,6 +248,46 @@ export const messages: Catalogue = {
   'nav.checkin': { 'sv-SE': 'Incheckning', 'en-GB': 'Check-in' },
   'nav.brand': { 'sv-SE': 'Utseende', 'en-GB': 'Brand' },
 
+  // Settings that belong to the form rather than to any one field.
+  'settings.heading': { 'sv-SE': 'Formulärets inställningar', 'en-GB': 'Form settings' },
+  'settings.submitLabel': { 'sv-SE': 'Text på skicka-knappen', 'en-GB': 'Submit button wording' },
+  'settings.submitLabelHint': {
+    'sv-SE': 'Lämna tomt för standardtexten.',
+    'en-GB': 'Leave blank for the standard wording.',
+  },
+  'settings.confirmationMessage': { 'sv-SE': 'Tackmeddelande', 'en-GB': 'Thank-you message' },
+  'settings.confirmationMessageHint': {
+    'sv-SE': 'Visas efter att formuläret skickats, tillsammans med referensnumret.',
+    'en-GB': 'Shown after the form is sent, alongside the reference number.',
+  },
+  'settings.redirectUrl': { 'sv-SE': 'Skicka vidare till', 'en-GB': 'Send them on to' },
+  'settings.redirectUrlHint': {
+    'sv-SE': 'Valfritt. Ersätter tacksidan. Referensnumret följer med i länken.',
+    'en-GB': 'Optional. Replaces the thank-you screen. The reference is carried in the link.',
+  },
+  'settings.showProgress': {
+    'sv-SE': 'Visa hur långt man kommit',
+    'en-GB': 'Show how far through they are',
+  },
+  'settings.allowSaveAndResume': {
+    'sv-SE': 'Tillåt att spara och fortsätta senare',
+    'en-GB': 'Allow saving and continuing later',
+  },
+  'settings.duplicateControl': { 'sv-SE': 'Dubbletter', 'en-GB': 'Duplicates' },
+  'settings.duplicateControlHint': {
+    'sv-SE': 'Om samma e-postadress får svara mer än en gång.',
+    'en-GB': 'Whether the same email address may answer more than once.',
+  },
+  'settings.duplicateControl.email': {
+    'sv-SE': 'Ett svar per e-postadress',
+    'en-GB': 'One response per email address',
+  },
+  'settings.duplicateControl.none': {
+    'sv-SE': 'Hur många som helst',
+    'en-GB': 'Any number of responses',
+  },
+  'public.progress': { 'sv-SE': 'Steg {n} av {total}', 'en-GB': 'Step {n} of {total}' },
+
   // Ready-made looks. One key per THEME_PRESETS entry — messages.test.ts proves the mapping.
   'brand.themes': { 'sv-SE': 'Teman', 'en-GB': 'Themes' },
   'brand.themesHint': {

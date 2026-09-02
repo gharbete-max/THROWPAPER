@@ -16,6 +16,7 @@ import { messages } from '../lib/messages.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
+import { Meter } from '../components/Meter.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -154,6 +155,18 @@ export default function PublicForm() {
   const forwardPage = nextPageWithContent(page, 1);
   const backPage = nextPageWithContent(page, -1);
 
+  /**
+   * Which step this is, out of the steps that actually exist for these answers.
+   *
+   * Pages hidden by conditions are not counted, so the bar reaches the end rather than stopping
+   * at four fifths on a form that skipped a section.
+   */
+  const reachable = pages
+    .map((fields, at) => ({ at, live: fields.some((field) => isVisible(field, values)) }))
+    .filter((entry) => entry.live);
+  const totalSteps = Math.max(1, reachable.length);
+  const stepNumber = Math.max(1, reachable.findIndex((entry) => entry.at === page) + 1);
+
   const setValue = useCallback((key: string, value: AnswerValue) => {
     setValues((current) => ({ ...current, [key]: value }));
     setIssues((current) => current.filter((issue) => issue.key !== key));
@@ -216,6 +229,23 @@ export default function PublicForm() {
         setReference(body.reference);
         setConfirmation(body.confirmationMessage);
         setPhase('done');
+
+        /**
+         * A form can send people somewhere of its own instead of the thank-you screen.
+         *
+         * The reference goes with them: an event registration whose reference is lost at the
+         * redirect cannot be checked in at the door, which would make the feature a trap.
+         *
+         * The URL is `http`/`https` by schema — `javascript:` in an author-supplied string would
+         * be script execution against every visitor. `assign`, not `replace`, so the browser's
+         * Back button still returns to the confirmation rather than resubmitting the form.
+         */
+        const destination = form.definition.settings.redirectUrl;
+        if (destination) {
+          const target = new URL(destination);
+          if (body.reference) target.searchParams.set('reference', String(body.reference));
+          window.location.assign(target.toString());
+        }
         return;
       }
       if (response.status === 422) {
@@ -286,8 +316,23 @@ export default function PublicForm() {
 
       {phase === 'filling' && form && (
         <form className="stack" onSubmit={submit}>
-          {pages.length > 1 && (
-            <p className="small muted">{t('public.page', { n: page + 1, total: pages.length })}</p>
+          {/**
+           * Progress, counted over the pages that are actually reachable.
+           *
+           * Counting every page break would say "step 2 of 5" on a form where conditions have
+           * hidden three of them — a bar that never fills, which is worse than none.
+           */}
+          {pages.length > 1 && form.definition.settings.showProgress && (
+            <div className="stack stack--tight">
+              <p className="small muted">
+                {t('public.progress', { n: stepNumber, total: totalSteps })}
+              </p>
+              <Meter
+                value={stepNumber}
+                max={totalSteps}
+                label={t('public.progress', { n: stepNumber, total: totalSteps })}
+              />
+            </div>
           )}
 
           {/*

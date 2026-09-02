@@ -383,6 +383,27 @@ export const FormSettings = z.object({
   duplicateControl: z.enum(['email', 'none']).default('email'),
   /** Save-and-resume is in v0.1 scope but can be switched off per form. */
   allowSaveAndResume: z.boolean().default(true),
+  /**
+   * How far through a multi-page form somebody is. A single-page form has no progress to show and
+   * ignores this.
+   */
+  showProgress: z.boolean().default(true),
+  /**
+   * Where to send somebody after they submit, instead of the confirmation screen.
+   *
+   * `http` and `https` only. This is author-supplied and ends up in `location.href`, so a
+   * `javascript:` URL here would be script execution against every person who fills in the form —
+   * the same reason the link field is restricted.
+   *
+   * The reference is appended as a query parameter, so a destination page can still show it. A
+   * redirect that loses the reference makes an event registration unusable at the door.
+   */
+  redirectUrl: z
+    .string()
+    .trim()
+    .url()
+    .refine((value) => /^https?:\/\//i.test(value), 'Links must start with http:// or https://')
+    .optional(),
 });
 
 export const FormDefinition = z.object({
@@ -395,13 +416,12 @@ export const FormDefinition = z.object({
 export type FormDefinition = z.infer<typeof FormDefinition>;
 export type FormSettings = z.infer<typeof FormSettings>;
 
-export const emptyDefinition: FormDefinition = {
-  schemaVersion: 1,
-  fields: [],
-  settings: {
-    submitLabel: {},
-    confirmationMessage: {},
-    duplicateControl: 'email',
-    allowSaveAndResume: true,
-  },
-};
+/**
+ * A blank form, built by the schema rather than retyped beside it.
+ *
+ * Every value here is already a `.default()` in `FormSettings`, so parsing an almost-empty object
+ * produces them. Writing the literal out again meant two lists to keep in step, and the one that
+ * gets forgotten is this one — a new setting would be missing from every form created from
+ * scratch while being present on every form the builder had touched.
+ */
+export const emptyDefinition: FormDefinition = FormDefinition.parse({ schemaVersion: 1 });
