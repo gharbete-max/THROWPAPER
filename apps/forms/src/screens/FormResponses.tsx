@@ -73,7 +73,7 @@ export function FormResponses() {
       </div>
 
       {form.publishedVersion === null ? (
-        <p className="muted">{t('submissions.notPublished')}</p>
+        <p className="muted empty">{t('submissions.notPublished')}</p>
       ) : (
         <Submissions formId={id} />
       )}

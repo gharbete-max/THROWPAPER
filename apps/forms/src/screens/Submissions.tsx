@@ -323,7 +323,7 @@ export function Submissions({ formId }: { formId: string }) {
       </details>
 
       {table.getRowModel().rows.length === 0 ? (
-        <p className="muted">{t('submissions.empty')}</p>
+        <p className="muted empty">{t('submissions.empty')}</p>
       ) : (
         <div className="table-scroll">
           <table className="grid">

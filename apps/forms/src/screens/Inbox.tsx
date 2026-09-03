@@ -46,7 +46,7 @@ export function Inbox() {
       </header>
 
       {entries === null && <Loading />}
-      {entries?.length === 0 && <p className="muted">{t('inbox.empty')}</p>}
+      {entries?.length === 0 && <p className="muted empty">{t('inbox.empty')}</p>}
 
       {entries && entries.length > 0 && (
         <ul className="inbox">

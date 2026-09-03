@@ -50,7 +50,7 @@ export function Events() {
       {!isAdmin && <p className="muted small">{t('events.adminOnly')}</p>}
 
       {events === null && <Loading />}
-      {events?.length === 0 && <p className="muted">{t('events.empty')}</p>}
+      {events?.length === 0 && <p className="muted empty">{t('events.empty')}</p>}
 
       {events?.map((event) => {
         const name = pickText(locales, event.name, locale);
