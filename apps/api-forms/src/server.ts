@@ -13,6 +13,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { CONTRACT_VERSION } from '@tp/shared';
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
@@ -256,7 +257,17 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   app.get('/openapi.json', async () => app.swagger());
 
   if (appDir) {
-    await app.register(fastifyStatic, { root: appDir, wildcard: false });
+    /**
+     * `index: false` so the root is not answered by the file on disk.
+     *
+     * `fastify-static` serves `index.html` for `/` before any handler runs, which meant the
+     * landing page — the one page on this domain a search engine actually reads — was the only
+     * site route still shipped as an empty shell. Every other route already fell through to the
+     * not-found handler, so `/features/ledger` was server-rendered and `/` was not.
+     *
+     * The file is still served everywhere it should be: the fallback below reaches for it by name.
+     */
+    await app.register(fastifyStatic, { root: appDir, wildcard: false, index: false });
 
     /**
      * SPA fallback. Anything that is not an API route and not a file on disk is a client route —
@@ -283,6 +294,20 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       }
 
       /**
+       * The public site is rendered here, not in the browser.
+       *
+       * A landing page whose markup arrives empty and fills in after a bundle downloads is a
+       * landing page a crawler reads as blank and a visitor on a slow connection reads as broken.
+       * These pages are a pure function of their content module — no session, no fetch — so
+       * rendering them on the server is honest rather than a shell with a spinner in it.
+       *
+       * The app is deliberately not rendered here: it is behind a bearer token this server does
+       * not have, and there is no crawler on the other side of a sign-in.
+       */
+      const site = await renderSite(appDir, path, appUrl);
+      if (site) return reply.type('text/html; charset=utf-8').send(site);
+
+      /**
        * A public form link gets a real preview card.
        *
        * Everything else gets the shipped `index.html` unchanged: the app's own screens are behind
@@ -303,6 +328,59 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   }
 
   return app;
+}
+
+/**
+ * The server-rendered public site, or `null` when this path is not one of its pages.
+ *
+ * The SSR bundle is imported lazily and only once: it pulls in React and the whole site tree, and
+ * a deployment that never serves the site (an API-only container) should not pay for it at boot.
+ */
+let sitePromise: Promise<SiteRenderer | null> | null = null;
+
+interface SiteRenderer {
+  isSiteRoute: (path: string) => boolean;
+  render: (path: string, origin: string) => { html: string; head: string; styles: string };
+}
+
+async function loadSite(appDir: string): Promise<SiteRenderer | null> {
+  try {
+    /**
+     * `dist-server` sits beside the client build. In development this file is never reached —
+     * Vite serves the app and this whole branch is dead — so a missing bundle is a normal state
+     * rather than a failure, and the site falls back to being client-rendered.
+     */
+    const entry = pathToFileURL(join(appDir, '..', 'dist-server', 'entry-server.js')).href;
+    return (await import(entry)) as SiteRenderer;
+  } catch {
+    return null;
+  }
+}
+
+async function renderSite(appDir: string, path: string, appUrl: string): Promise<string | null> {
+  sitePromise ??= loadSite(appDir);
+  const site = await sitePromise;
+  if (!site?.isSiteRoute(path)) return null;
+
+  try {
+    const shell = await readFile(join(appDir, 'index.html'), 'utf8');
+    const { html, head, styles } = site.render(path, appUrl);
+    return (
+      shell
+        .replace(/<title>[^<]*<\/title>/, '')
+        .replace(
+          /<\/head>/,
+          `  ${head}
+    <style>${styles}</style>
+  </head>`,
+        )
+        // The markup React will hydrate, so the page is readable before any script runs.
+        .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
+    );
+  } catch {
+    // A render that throws must not take the page down: fall through to the client-rendered shell.
+    return null;
+  }
 }
 
 /**

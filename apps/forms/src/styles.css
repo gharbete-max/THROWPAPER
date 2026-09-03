@@ -4200,3 +4200,348 @@ body:has(> .app) {
   font-size: var(--tp-text-xl);
   line-height: 1.2;
 }
+
+/* ==========================================================================
+ * The public site.
+ *
+ * A different job from the app: the app is a tool somebody uses for an hour, this is a page
+ * somebody reads for forty seconds. So it is wider, quieter, and built out of the same tokens —
+ * a landing page in a different palette from the product is a promise the product breaks.
+ * ========================================================================== */
+.site {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+  background: var(--tp-colour-background);
+}
+
+.site__bar {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  inline-size: min(76rem, 100%);
+  margin-inline: auto;
+  padding: calc(var(--tp-spacing-unit) * 2) calc(var(--tp-spacing-unit) * 3);
+}
+
+.site__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.25);
+  color: var(--tp-colour-text);
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.site__nav {
+  display: flex;
+  gap: calc(var(--tp-spacing-unit) * 2.5);
+  margin-inline-start: auto;
+}
+
+.site__nav a {
+  color: var(--tp-colour-muted);
+  text-decoration: none;
+}
+
+.site__nav a:hover {
+  color: var(--tp-colour-text);
+}
+
+.site__main {
+  flex: 1;
+  inline-size: min(76rem, 100%);
+  margin-inline: auto;
+  padding-inline: calc(var(--tp-spacing-unit) * 3);
+}
+
+/* --- The hero -------------------------------------------------------------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 6);
+  align-items: center;
+  padding-block: calc(var(--tp-spacing-unit) * 10);
+}
+
+.hero__eyebrow {
+  margin: 0 0 var(--tp-spacing-unit);
+  color: var(--tp-colour-accent);
+  font-size: var(--tp-text-sm);
+  font-weight: var(--tp-type-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--tp-colour-text);
+}
+
+.hero__body {
+  margin: calc(var(--tp-spacing-unit) * 2) 0 0;
+  max-inline-size: 34rem;
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-lg);
+  line-height: 1.55;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  margin-block-start: calc(var(--tp-spacing-unit) * 4);
+}
+
+.hero__figure {
+  display: grid;
+  place-items: center;
+}
+
+.hero__ft {
+  inline-size: min(28rem, 100%);
+  block-size: auto;
+  aspect-ratio: 1;
+}
+
+/* --- Sections -------------------------------------------------------------- */
+.site__section {
+  padding-block: calc(var(--tp-spacing-unit) * 8);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.site__sectionTitle {
+  margin: 0 0 calc(var(--tp-spacing-unit) * 4);
+  font-size: var(--tp-text-2xl);
+  letter-spacing: -0.015em;
+}
+
+.cards {
+  display: grid;
+  /* `min(…, 100%)` so a card can never be wider than the column it is in — the bug that made the
+     whole document pan sideways on a phone the last time this pattern was written. */
+  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 3);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  text-decoration: none;
+  transition:
+    transform var(--tp-motion) var(--tp-ease),
+    box-shadow var(--tp-motion) var(--tp-ease);
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tp-shadow-raised);
+}
+
+.feature-card__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: var(--tp-radius-pill);
+  background: color-mix(in srgb, var(--tp-colour-primary) 10%, transparent);
+  color: var(--tp-colour-primary);
+  font-size: 20px;
+}
+
+.feature-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-block-start: auto;
+  padding-block-start: var(--tp-spacing-unit);
+  color: var(--tp-colour-primary);
+  font-size: var(--tp-text-sm);
+}
+
+/* --- Quotes ---------------------------------------------------------------- */
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.quote {
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 3);
+  border-inline-start: 2px solid var(--tp-colour-accent);
+  background: var(--tp-colour-surface);
+  border-radius: 0 var(--tp-radius-lg) var(--tp-radius-lg) 0;
+}
+
+.quote blockquote {
+  margin: 0 0 var(--tp-spacing-unit);
+  font-size: var(--tp-text-lg);
+  line-height: 1.45;
+}
+
+/* --- A feature's own page -------------------------------------------------- */
+.site__article {
+  max-inline-size: 44rem;
+  margin-inline: auto;
+  padding-block: calc(var(--tp-spacing-unit) * 6);
+}
+
+.site__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-block-end: calc(var(--tp-spacing-unit) * 4);
+  color: var(--tp-colour-muted);
+  text-decoration: none;
+  font-size: var(--tp-text-sm);
+}
+
+.feature__mark {
+  margin-block-end: calc(var(--tp-spacing-unit) * 2);
+}
+
+.site__article h1 {
+  margin: 0 0 var(--tp-spacing-unit);
+  font-size: var(--tp-text-3xl);
+  letter-spacing: -0.02em;
+}
+
+.site__lede {
+  margin: 0;
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-lg);
+  line-height: 1.55;
+}
+
+.site__points {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 4);
+  margin-block-start: calc(var(--tp-spacing-unit) * 6);
+}
+
+.site__points h2 {
+  margin: 0 0 calc(var(--tp-spacing-unit) * 0.5);
+  font-size: var(--tp-text-lg);
+}
+
+.site__points p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.site__more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  margin-block-start: calc(var(--tp-spacing-unit) * 8);
+  padding-block-start: calc(var(--tp-spacing-unit) * 3);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.site__more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tp-colour-primary);
+  text-decoration: none;
+  font-size: var(--tp-text-sm);
+}
+
+.site__cta {
+  text-align: center;
+}
+
+.site__cta .button {
+  margin-block-start: calc(var(--tp-spacing-unit) * 3);
+}
+
+.site__foot {
+  inline-size: min(76rem, 100%);
+  margin-inline: auto;
+  padding: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 3);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+@media (max-width: 60rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--tp-spacing-unit) * 4);
+    padding-block: calc(var(--tp-spacing-unit) * 6);
+  }
+
+  /* The fold goes first on a phone: it is the one thing here that is decoration. */
+  .hero__figure {
+    order: -1;
+  }
+
+  .hero__ft {
+    inline-size: min(16rem, 60%);
+  }
+
+  .site__nav {
+    display: none;
+  }
+}
+
+/*
+ * The site's entrance, which does not wait for JavaScript.
+ *
+ * `.reveal` in the app is a class that JS adds when an element scrolls into view — right for a
+ * tool somebody is already using, and wrong here: these cards started at `opacity: 0` and stayed
+ * there, so a server-rendered page whose whole point is arriving complete arrived blank.
+ *
+ * An animation rather than a transition, so it plays on its own with nothing to trigger it, and
+ * `backwards` so the first frame applies during the delay instead of the element flashing at full
+ * opacity first.
+ */
+.rise {
+  animation: rise 420ms var(--tp-ease) backwards;
+}
+
+/*
+ * A stagger, so a row arrives as a row rather than all at once. Six is the most cards in any grid
+ * here; past that they share the last delay, which is better than a page that keeps animating.
+ */
+.rise:nth-child(2) {
+  animation-delay: 60ms;
+}
+.rise:nth-child(3) {
+  animation-delay: 120ms;
+}
+.rise:nth-child(4) {
+  animation-delay: 180ms;
+}
+.rise:nth-child(5) {
+  animation-delay: 240ms;
+}
+.rise:nth-child(n + 6) {
+  animation-delay: 300ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/*
+ * The one rule that matters most here: with motion switched off the content is simply present.
+ * An entrance is a nicety; being able to read the page is not.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}

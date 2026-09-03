@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# The SSR bundle, built beside `dist` by `vite build --ssr`.
+dist-server/
 build/
 coverage/
 .env

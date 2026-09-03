@@ -55,10 +55,34 @@ const PUBLISHED_VERSION = {
 } as never;
 
 let app: FastifyInstance;
+let root: string;
 let dir: string;
 
 beforeAll(async () => {
-  dir = mkdtempSync(join(tmpdir(), 'tp-serve-app-'));
+  root = mkdtempSync(join(tmpdir(), 'tp-serve-app-'));
+  dir = join(root, 'dist');
+  mkdirSync(dir);
+
+  /**
+   * A stub SSR bundle beside the client build, laid out the way `pnpm build` lays it out.
+   *
+   * Stubbed rather than built: this test is about the *wiring* — does the server find the bundle,
+   * ask it whether a path is a site route, and put what it returns into the shell — and building
+   * the real site here would make a routing test depend on React rendering.
+   */
+  mkdirSync(join(root, 'dist-server'));
+  writeFileSync(
+    join(root, 'dist-server', 'entry-server.js'),
+    [
+      "export const SITE_ROUTES = ['/', '/features/ledger'];",
+      'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
+      'export const render = (path) => ({',
+      '  html: `<div class="site">rendered ${path}</div>`,',
+      `  head: '<title>Site</title><link rel="canonical" href="https://x.test/" />',`,
+      `  styles: ':root{--x:1}',`,
+      '});',
+    ].join('\n'),
+  );
   /**
    * A realistic shell, not `<div id="root">` on its own.
    *
@@ -104,7 +128,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await app.close();
-  rmSync(dir, { recursive: true, force: true });
+  rmSync(root, { recursive: true, force: true });
 });
 
 describe('serving the built app from the API', () => {
@@ -286,6 +310,44 @@ describe('serving the built app from the API', () => {
       // Nobody pastes `/events/…` into a chat window, and those screens are behind a sign-in.
       const response = await app.inject({ method: 'GET', url: '/events/some-id/registrations' });
       expect(response.body).not.toContain('og:title');
+    });
+  });
+
+  /**
+   * The public site is rendered here, not in the browser.
+   *
+   * A landing page whose markup arrives empty and fills in once a bundle downloads is a page a
+   * crawler reads as blank. These routes have no session and no fetch, so there is nothing to
+   * stop the server drawing them.
+   */
+  describe('the public site', () => {
+    it.each(['/', '/features/ledger'])('server-renders %s into the shell', async (url) => {
+      const response = await app.inject({ method: 'GET', url });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toContain(`rendered ${url}`);
+      // Into the shipped shell, not instead of it.
+      expect(response.body).toContain('id="root"');
+      expect(response.body).toContain('rel="canonical"');
+    });
+
+    /**
+     * The root is the one that got away.
+     *
+     * `fastify-static` answers `/` with `index.html` before any handler runs, so the landing page
+     * — the single page on this domain a search engine actually reads — was the only site route
+     * still shipped as an empty shell while `/features/…` rendered correctly.
+     */
+    it('renders the root rather than serving the file on disk', async () => {
+      const response = await app.inject({ method: 'GET', url: '/' });
+      expect(response.body).toContain('rendered /');
+    });
+
+    it('leaves the app alone', async () => {
+      // Behind a bearer token this server does not have, and no crawler on the other side of it.
+      const response = await app.inject({ method: 'GET', url: '/events' });
+      expect(response.body).not.toContain('class="site"');
+      expect(response.body).toContain('id="root"');
     });
   });
 });
