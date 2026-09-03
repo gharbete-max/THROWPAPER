@@ -19,6 +19,7 @@ import { registerAuthRoutes } from './routes/auth.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerFormRoutes } from './routes/forms.js';
 import { registerAdminRoutes } from './routes/admin.js';
+import { registerLedgerRoutes } from './routes/ledger.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
 import { registerDocumentRoutes } from './routes/documents.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
@@ -191,6 +192,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
   registerAdminRoutes(app, { repos, guard });
+  registerLedgerRoutes(app, { repos, guard });
   registerPublicFormRoutes(app, {
     repos,
     mail,

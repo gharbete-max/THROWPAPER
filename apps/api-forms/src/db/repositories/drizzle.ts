@@ -7,6 +7,9 @@ import {
   events,
   formShares,
   formUploads,
+  journalEntries,
+  journalLines,
+  ledgerAccounts,
   formVersions,
   forms,
   jobs,
@@ -29,6 +32,9 @@ import type {
   FormRecord,
   FormShareRecord,
   FormUpdate,
+  JournalEntryWithLines,
+  JournalLineRecord,
+  LedgerAccountRecord,
   FormVersionRecord,
   JobRecord,
   MessageRecord,
@@ -40,6 +46,36 @@ import type {
   UploadRecord,
   UserRecord,
 } from './types.js';
+
+/**
+ * Lines for a page of entries, in one query rather than one per entry.
+ *
+ * A book of five hundred entries would otherwise be five hundred round trips to render one screen.
+ */
+async function attachLines(
+  db: Db,
+  entries: JournalEntryWithLines[],
+): Promise<JournalEntryWithLines[]> {
+  if (entries.length === 0) return [];
+  const rows = (await db
+    .select()
+    .from(journalLines)
+    .where(
+      inArray(
+        journalLines.entryId,
+        entries.map((entry) => entry.id),
+      ),
+    )
+    .orderBy(asc(journalLines.position))) as JournalLineRecord[];
+
+  const byEntry = new Map<string, JournalLineRecord[]>();
+  for (const row of rows) {
+    const list = byEntry.get(row.entryId) ?? [];
+    list.push(row);
+    byEntry.set(row.entryId, list);
+  }
+  return entries.map((entry) => ({ ...entry, lines: byEntry.get(entry.id) ?? [] }));
+}
 
 /** The only module that knows about tables. Everything else talks to the interfaces in types.ts. */
 export function createDrizzleRepositories(db: Db): Repositories {
@@ -897,6 +933,154 @@ export function createDrizzleRepositories(db: Db): Repositories {
         if (!row) throw new Error('message insert returned no row');
         return row as MessageRecord;
       },
+    },
+
+    /**
+     * The ledger.
+     *
+     * No update and no delete, here or in the interface. A posted entry is corrected by posting a
+     * reversing one, and both stay in the book — see `packages/calc/src/ledger.ts` for why that
+     * is the whole point rather than a restriction.
+     */
+    ledger: {
+      listAccounts: async (organisationId) =>
+        (await db
+          .select()
+          .from(ledgerAccounts)
+          .where(eq(ledgerAccounts.organisationId, organisationId))
+          .orderBy(asc(ledgerAccounts.code))) as LedgerAccountRecord[],
+      findAccount: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(ledgerAccounts)
+            .where(
+              and(eq(ledgerAccounts.organisationId, organisationId), eq(ledgerAccounts.id, id)),
+            )
+            .limit(1),
+        ) as LedgerAccountRecord | null,
+      createAccount: async (input) => {
+        const [row] = await db.insert(ledgerAccounts).values(input).returning();
+        if (!row) throw new Error('ledger account insert returned no row');
+        return row as LedgerAccountRecord;
+      },
+      archiveAccount: async (organisationId, id, at) => {
+        const [row] = await db
+          .update(ledgerAccounts)
+          .set({ archivedAt: at })
+          .where(and(eq(ledgerAccounts.organisationId, organisationId), eq(ledgerAccounts.id, id)))
+          .returning();
+        return (row as LedgerAccountRecord | undefined) ?? null;
+      },
+
+      listEntries: async (organisationId, limit) => {
+        const entries = await db
+          .select()
+          .from(journalEntries)
+          .where(eq(journalEntries.organisationId, organisationId))
+          // The book is read newest first by the date the thing happened, then by when it was
+          // written down, so two entries on the same day come back in the order they were posted.
+          .orderBy(desc(journalEntries.occurredOn), desc(journalEntries.postedAt))
+          .limit(limit);
+        return attachLines(db, entries as JournalEntryWithLines[]);
+      },
+      findEntry: async (organisationId, id) => {
+        const entry = first(
+          await db
+            .select()
+            .from(journalEntries)
+            .where(
+              and(eq(journalEntries.organisationId, organisationId), eq(journalEntries.id, id)),
+            )
+            .limit(1),
+        ) as JournalEntryWithLines | undefined;
+        if (!entry) return null;
+        return (await attachLines(db, [entry]))[0] ?? null;
+      },
+
+      /**
+       * One transaction for the entry, its lines, and the stamp on whatever it reverses.
+       *
+       * A half-written entry would put the whole book out of trial balance, and there is no repair
+       * path — because there is no update. So the only safe way to write one is all of it or none.
+       */
+      post: async (input) =>
+        db.transaction(async (tx) => {
+          const [entry] = await tx
+            .insert(journalEntries)
+            .values({
+              organisationId: input.organisationId,
+              reference: input.reference,
+              description: input.description,
+              occurredOn: input.occurredOn,
+              postedByUserId: input.postedByUserId,
+              currency: input.currency,
+              reversesEntryId: input.reversesEntryId ?? null,
+            })
+            .returning();
+          if (!entry) throw new Error('journal entry insert returned no row');
+
+          const lines = await tx
+            .insert(journalLines)
+            .values(
+              input.lines.map((line, position) => ({
+                entryId: entry.id,
+                accountId: line.accountId,
+                debitMinor: line.debitMinor,
+                creditMinor: line.creditMinor,
+                memo: line.memo,
+                position,
+              })),
+            )
+            .returning();
+
+          if (input.reversesEntryId) {
+            await tx
+              .update(journalEntries)
+              .set({ reversedByEntryId: entry.id })
+              .where(eq(journalEntries.id, input.reversesEntryId));
+          }
+
+          return { ...entry, lines: lines as JournalLineRecord[] } as JournalEntryWithLines;
+        }),
+
+      /**
+       * The next reference, derived inside the statement rather than read and incremented.
+       *
+       * Two people posting at once would otherwise both read the same highest number. The unique
+       * index on (organisation, reference) is the backstop; this is what stops it firing.
+       */
+      nextReference: async (organisationId) => {
+        const year = new Date().getUTCFullYear();
+        const prefix = `V${year}-`;
+        const [row] = await db
+          .select({
+            highest: sql<number>`coalesce(max(nullif(regexp_replace(${journalEntries.reference}, '^.*-', ''), '')::int), 0)`,
+          })
+          .from(journalEntries)
+          .where(
+            and(
+              eq(journalEntries.organisationId, organisationId),
+              sql`${journalEntries.reference} like ${prefix + '%'}`,
+            ),
+          );
+        return `${prefix}${String((row?.highest ?? 0) + 1).padStart(4, '0')}`;
+      },
+
+      allLines: async (organisationId) =>
+        (await db
+          .select({
+            id: journalLines.id,
+            entryId: journalLines.entryId,
+            accountId: journalLines.accountId,
+            debitMinor: journalLines.debitMinor,
+            creditMinor: journalLines.creditMinor,
+            memo: journalLines.memo,
+            position: journalLines.position,
+          })
+          .from(journalLines)
+          .innerJoin(journalEntries, eq(journalLines.entryId, journalEntries.id))
+          .where(eq(journalEntries.organisationId, organisationId))) as JournalLineRecord[],
     },
 
     audit: {

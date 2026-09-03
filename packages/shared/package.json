@@ -9,7 +9,8 @@
     ".": "./src/index.ts",
     "./contract": "./src/contract/index.ts",
     "./api": "./src/api/index.ts",
-    "./forms": "./src/forms/index.ts"
+    "./forms": "./src/forms/index.ts",
+    "./ledger": "./src/ledger/index.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

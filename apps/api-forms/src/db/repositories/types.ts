@@ -499,6 +499,104 @@ export interface AuditRepository {
   list(organisationId: string): Promise<AuditEntryRecord[]>;
 }
 
+export interface LedgerAccountRecord {
+  id: string;
+  organisationId: string;
+  code: string;
+  name: Record<string, string>;
+  type: 'asset' | 'liability' | 'equity' | 'income' | 'expense';
+  archivedAt: Date | null;
+  createdAt: Date;
+}
+
+export interface JournalLineRecord {
+  id: string;
+  entryId: string;
+  accountId: string;
+  debitMinor: bigint;
+  creditMinor: bigint;
+  memo: string | null;
+  position: number;
+}
+
+export interface JournalEntryRecord {
+  id: string;
+  organisationId: string;
+  reference: string;
+  description: string;
+  /** The date the thing happened — `YYYY-MM-DD`, not a timestamp. See the schema for why. */
+  occurredOn: string;
+  postedAt: Date;
+  postedByUserId: string | null;
+  reversesEntryId: string | null;
+  reversedByEntryId: string | null;
+  currency: string;
+}
+
+export interface JournalEntryWithLines extends JournalEntryRecord {
+  lines: JournalLineRecord[];
+}
+
+/**
+ * The ledger.
+ *
+ * **There is no `update` and no `delete` here, and there never will be.** A posted entry is
+ * corrected by posting a reversing one; both stay in the book for ever. That is not a policy this
+ * interface enforces — it is a capability it does not offer, which is a much harder thing to work
+ * around by accident.
+ *
+ * `post` is the only way a row is written, and it writes the entry and its lines in one
+ * transaction: a half-written entry would make the whole book fail its trial balance, and there is
+ * no repair path because there is no update.
+ */
+export interface LedgerRepository {
+  listAccounts(organisationId: string): Promise<LedgerAccountRecord[]>;
+  findAccount(organisationId: string, id: string): Promise<LedgerAccountRecord | null>;
+  createAccount(input: {
+    organisationId: string;
+    code: string;
+    name: Record<string, string>;
+    type: LedgerAccountRecord['type'];
+  }): Promise<LedgerAccountRecord>;
+  /** Retiring an account is the only thing "removing" one can honestly mean once it has entries. */
+  archiveAccount(
+    organisationId: string,
+    id: string,
+    at: Date | null,
+  ): Promise<LedgerAccountRecord | null>;
+
+  listEntries(organisationId: string, limit: number): Promise<JournalEntryWithLines[]>;
+  findEntry(organisationId: string, id: string): Promise<JournalEntryWithLines | null>;
+
+  /**
+   * Write an entry and its lines, atomically.
+   *
+   * `reverses` links a reversal to what it undoes and stamps the original in the same
+   * transaction, so "has this been reversed" can never disagree with the reversal's own existence.
+   */
+  post(input: {
+    organisationId: string;
+    reference: string;
+    description: string;
+    occurredOn: string;
+    postedByUserId: string | null;
+    currency: string;
+    reversesEntryId?: string | null;
+    lines: Array<{
+      accountId: string;
+      debitMinor: bigint;
+      creditMinor: bigint;
+      memo: string | null;
+    }>;
+  }): Promise<JournalEntryWithLines>;
+
+  /** The next reference for this organisation. Derived, never supplied — see `forms.createVersion`. */
+  nextReference(organisationId: string): Promise<string>;
+
+  /** Every line in the book, for the trial balance and the account totals. */
+  allLines(organisationId: string): Promise<JournalLineRecord[]>;
+}
+
 export interface Repositories {
   uploads: UploadRepository;
   organisations: OrganisationRepository;
@@ -513,6 +611,7 @@ export interface Repositories {
   sendingDomains: SendingDomainRepository;
   messages: MessageRepository;
   audit: AuditRepository;
+  ledger: LedgerRepository;
 }
 
 /** A file a respondent attached. The bytes live in the private upload store, keyed by `storageKey`. */

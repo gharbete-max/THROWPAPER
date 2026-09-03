@@ -11,6 +11,10 @@ import type {
   FormRecord,
   FormShareRecord,
   FormUpdate,
+  JournalEntryRecord,
+  JournalEntryWithLines,
+  JournalLineRecord,
+  LedgerAccountRecord,
   FormVersionRecord,
   BrandKitRecord,
   JobRecord,
@@ -50,6 +54,9 @@ export interface MemoryState {
   sendingDomains: SendingDomainRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
+  ledgerAccounts: LedgerAccountRecord[];
+  journalEntries: JournalEntryRecord[];
+  journalLines: JournalLineRecord[];
 }
 
 function copyEvent(event: EventRecord): EventRecord {
@@ -98,7 +105,22 @@ export function createMemoryRepositories(
     sendingDomains: seed.sendingDomains ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
+    ledgerAccounts: seed.ledgerAccounts ?? [],
+    journalEntries: seed.journalEntries ?? [],
+    journalLines: seed.journalLines ?? [],
   };
+
+  /** An entry with its lines, in the order they were written. */
+  function withLines(entry: JournalEntryRecord): JournalEntryWithLines {
+    return {
+      ...entry,
+      lines: state.journalLines
+        .filter((line) => line.entryId === entry.id)
+        .slice()
+        .sort((a, b) => a.position - b.position)
+        .map((line) => ({ ...line })),
+    };
+  }
 
   return {
     state,
@@ -751,6 +773,109 @@ export function createMemoryRepositories(
         const record: MessageRecord = { ...input, id: randomUUID(), createdAt: new Date() };
         state.messages.push(record);
         return { ...record };
+      },
+    },
+
+    /**
+     * The ledger, in memory.
+     *
+     * Same shape as the Drizzle one and the same absence: no update, no delete. `post` builds the
+     * entry and its lines together and pushes both, because a half-written entry would break the
+     * trial balance and there is no repair path — by design.
+     */
+    ledger: {
+      listAccounts: async (organisationId) =>
+        state.ledgerAccounts
+          .filter((a) => a.organisationId === organisationId)
+          .slice()
+          .sort((a, b) => a.code.localeCompare(b.code))
+          .map((a) => ({ ...a, name: { ...a.name } })),
+      findAccount: async (organisationId, id) => {
+        const found = state.ledgerAccounts.find(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        return found ? { ...found, name: { ...found.name } } : null;
+      },
+      createAccount: async (input) => {
+        const record: LedgerAccountRecord = {
+          ...input,
+          id: randomUUID(),
+          archivedAt: null,
+          createdAt: new Date(),
+        };
+        state.ledgerAccounts.push(record);
+        return { ...record, name: { ...record.name } };
+      },
+      archiveAccount: async (organisationId, id, at) => {
+        const found = state.ledgerAccounts.find(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        if (!found) return null;
+        found.archivedAt = at;
+        return { ...found, name: { ...found.name } };
+      },
+
+      listEntries: async (organisationId, limit) =>
+        state.journalEntries
+          .filter((e) => e.organisationId === organisationId)
+          .slice()
+          // Newest first by the date the thing happened, then by when it was written down, so two
+          // entries on the same day read back in the order they were posted.
+          .sort(
+            (a, b) =>
+              b.occurredOn.localeCompare(a.occurredOn) ||
+              b.postedAt.getTime() - a.postedAt.getTime(),
+          )
+          .slice(0, limit)
+          .map((entry) => withLines(entry)),
+      findEntry: async (organisationId, id) => {
+        const entry = state.journalEntries.find(
+          (e) => e.organisationId === organisationId && e.id === id,
+        );
+        return entry ? withLines(entry) : null;
+      },
+
+      post: async (input) => {
+        const entry: JournalEntryRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          reference: input.reference,
+          description: input.description,
+          occurredOn: input.occurredOn,
+          postedAt: new Date(),
+          postedByUserId: input.postedByUserId,
+          reversesEntryId: input.reversesEntryId ?? null,
+          reversedByEntryId: null,
+          currency: input.currency,
+        };
+        state.journalEntries.push(entry);
+        input.lines.forEach((line, position) => {
+          state.journalLines.push({ ...line, id: randomUUID(), entryId: entry.id, position });
+        });
+
+        // Stamp the original in the same breath, so "has this been reversed" can never disagree
+        // with the reversal's own existence.
+        if (entry.reversesEntryId) {
+          const original = state.journalEntries.find((e) => e.id === entry.reversesEntryId);
+          if (original) original.reversedByEntryId = entry.id;
+        }
+        return withLines(entry);
+      },
+
+      nextReference: async (organisationId) => {
+        const year = new Date().getUTCFullYear();
+        const prefix = `V${year}-`;
+        const highest = state.journalEntries
+          .filter((e) => e.organisationId === organisationId && e.reference.startsWith(prefix))
+          .reduce((max, e) => Math.max(max, Number(e.reference.slice(prefix.length)) || 0), 0);
+        return `${prefix}${String(highest + 1).padStart(4, '0')}`;
+      },
+
+      allLines: async (organisationId) => {
+        const ours = new Set(
+          state.journalEntries.filter((e) => e.organisationId === organisationId).map((e) => e.id),
+        );
+        return state.journalLines.filter((l) => ours.has(l.entryId)).map((l) => ({ ...l }));
       },
     },
 

@@ -1,6 +1,9 @@
 import { sql } from 'drizzle-orm';
 import {
+  bigint,
   boolean,
+  check,
+  date,
   index,
   integer,
   jsonb,
@@ -526,5 +529,144 @@ export const formUploads = pgTable(
     index('form_uploads_unclaimed_idx')
       .on(table.createdAt)
       .where(sql`${table.submissionId} is null`),
+  ],
+);
+
+/* ==========================================================================
+ * The ledger.
+ *
+ * Double-entry bookkeeping, and the table definitions carry the rule the whole thing rests on:
+ * **a posted entry is never edited and never deleted.** There is no `updatedAt` on an entry or a
+ * line, because there is no update; there is no `deletedAt`, because there is no delete. A
+ * mistake is corrected by posting a reversing entry and both stay in the book for ever, which is
+ * what a ledger is — the paper version is a bound book in ink, struck through and rewritten
+ * beside, precisely so a later reader can see that a mistake was made and what was done about it.
+ *
+ * The repository behind these tables offers no update or delete either. Not guarded — absent.
+ * ========================================================================== */
+
+export const accountType = pgEnum('account_type', [
+  'asset',
+  'liability',
+  'equity',
+  'income',
+  'expense',
+]);
+
+export const ledgerAccounts = pgTable(
+  'ledger_accounts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /**
+     * The account number an accountant would recognise — 1910, 3001, and so on.
+     *
+     * Text rather than an integer: chart-of-accounts codes are identifiers that happen to look
+     * like numbers, they are sorted as text, and some plans use letters. Nobody adds two of them.
+     */
+    code: text('code').notNull(),
+    name: jsonb('name').$type<Record<string, string>>().notNull(),
+    type: accountType('type').notNull(),
+    /**
+     * Retired, but kept. An account with entries against it can never be deleted — the entries
+     * reference it and the book must stay readable — so retiring it is the only thing "removing"
+     * an account can honestly mean.
+     */
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    /** One 1910 per organisation. A duplicated code is a chart nobody can reconcile. */
+    uniqueIndex('ledger_accounts_org_code_idx').on(table.organisationId, table.code),
+  ],
+);
+
+export const journalEntries = pgTable(
+  'journal_entries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /** Human-facing, sequential per organisation, and never reused. */
+    reference: text('reference').notNull(),
+    description: text('description').notNull(),
+    /**
+     * When the thing happened, which is not when it was written down.
+     *
+     * An invoice dated the 31st entered on the 3rd belongs in the earlier period. Keeping both
+     * dates is the difference between a book you can close and one you can only sort.
+     */
+    occurredOn: date('occurred_on').notNull(),
+    postedAt: timestamp('posted_at', { withTimezone: true }).notNull().defaultNow(),
+    postedByUserId: uuid('posted_by_user_id').references(() => users.id, { onDelete: 'set null' }),
+    /** Set on a reversal, pointing at what it undoes. Null on an ordinary entry. */
+    reversesEntryId: uuid('reverses_entry_id'),
+    /**
+     * Set on the original when its reversal is posted.
+     *
+     * Denormalised on purpose: "has this been reversed" is asked on every row of every listing,
+     * and answering it by searching for a reversal pointing back would be a second query per row.
+     * Written in the same transaction as the reversal, so the two cannot disagree.
+     */
+    reversedByEntryId: uuid('reversed_by_entry_id'),
+    currency: text('currency').notNull(),
+  },
+  (table) => [
+    uniqueIndex('journal_entries_org_reference_idx').on(table.organisationId, table.reference),
+    /** The book is read in date order, always. */
+    index('journal_entries_org_date_idx').on(table.organisationId, table.occurredOn),
+  ],
+);
+
+export const journalLines = pgTable(
+  'journal_lines',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    entryId: uuid('entry_id')
+      .notNull()
+      .references(() => journalEntries.id, { onDelete: 'cascade' }),
+    accountId: uuid('account_id')
+      .notNull()
+      .references(() => ledgerAccounts.id),
+    /**
+     * Minor units, as a **bigint** — CLAUDE.md rule 5.
+     *
+     * `numeric` would also be exact and would come back from the driver as a string that
+     * everything downstream would have to remember to parse. A count of öre is a whole number by
+     * construction, so the integer type says what is true and needs no parsing discipline.
+     *
+     * A line carries one side. Both would make "credit 50" and "debit −50" two spellings of one
+     * fact, and a book where a fact has two spellings cannot be summed with confidence. The check
+     * constraint below is what makes that structural rather than hopeful.
+     */
+    // The default is written in SQL rather than as `0n`, because drizzle-kit serialises its
+    // snapshot as JSON and JSON has no bigint. The column is still a bigint either way.
+    debitMinor: bigint('debit_minor', { mode: 'bigint' })
+      .notNull()
+      .default(sql`0`),
+    creditMinor: bigint('credit_minor', { mode: 'bigint' })
+      .notNull()
+      .default(sql`0`),
+    memo: text('memo'),
+    /** Position in the entry, so it reads back the way it was written. */
+    position: integer('position').notNull().default(0),
+  },
+  (table) => [
+    index('journal_lines_entry_idx').on(table.entryId),
+    index('journal_lines_account_idx').on(table.accountId),
+    /**
+     * One side, non-negative, and never both.
+     *
+     * In the database rather than only in the domain: the domain is what every ordinary write
+     * goes through, and this is what a migration, a repair script or a future bug goes through.
+     */
+    check(
+      'journal_lines_one_side',
+      sql`${table.debitMinor} >= 0 AND ${table.creditMinor} >= 0
+          AND (${table.debitMinor} = 0) <> (${table.creditMinor} = 0)`,
+    ),
   ],
 );
