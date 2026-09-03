@@ -1,4 +1,4 @@
-import { luminance, parseHex } from './contrast.js';
+import { contrastRatio, luminance, parseHex, TEXT_CONTRAST } from './contrast.js';
 import type { ColourTokens, TokenSet } from './types.js';
 
 /**
@@ -179,6 +179,31 @@ export function toDarkColours(colour: ColourTokens): ColourTokens {
     warning: lift(colour.warning),
     danger: lift(colour.danger),
   };
+}
+
+/**
+ * The accent, dark enough to be read as words.
+ *
+ * `accent` is decoration in the app — the second wing of the mark, the edge of a quote — so
+ * `checkContrast` deliberately never tests it against the background: reporting a pair nothing
+ * renders trains people to ignore the warnings.
+ *
+ * Then the site used it as text. A small uppercase label in the shipped accent came out at 3.57:1
+ * against parchment, under the 4.5 that normal text needs, and nothing could have caught it:
+ * the checker was right not to look, and the stylesheet was the first place the colour became
+ * words.
+ *
+ * So there is a token for that use. It walks the accent toward the palette's own ink until it
+ * clears the bar, which terminates at `text` — a colour the checker *does* hold to 4.5:1 against
+ * the background, so the worst case is legible by something already guaranteed. The hue survives
+ * for every palette where it can.
+ */
+export function accentInk(colour: ColourTokens): string {
+  for (let step = 0; step <= 10; step += 1) {
+    const candidate = mix(colour.accent, colour.text, 1 - step / 10);
+    if ((contrastRatio(candidate, colour.background) ?? 0) >= TEXT_CONTRAST) return candidate;
+  }
+  return colour.text;
 }
 
 export function toDark(tokens: TokenSet): TokenSet {

@@ -1,4 +1,4 @@
-import { buttonSurface, shadow, toDark } from './derive.js';
+import { accentInk, buttonSurface, shadow, toDark } from './derive.js';
 import type { TokenSet } from './types.js';
 import { px, pxValue, typeScale } from './units.js';
 
@@ -19,6 +19,8 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   for (const [key, value] of Object.entries(tokens.typography)) {
     vars[`--tp-type-${kebab(key)}`] = String(value);
   }
+  // The accent where it has to be read rather than seen. See `accentInk`.
+  vars['--tp-colour-accent-ink'] = accentInk(tokens.colour);
   vars['--tp-spacing-unit'] = tokens.spacingUnit;
   vars['--tp-radius'] = tokens.radius;
   vars['--tp-border-width'] = tokens.borderWidth;

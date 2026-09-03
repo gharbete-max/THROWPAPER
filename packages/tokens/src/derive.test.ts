@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { THEME_PRESETS } from './presets.js';
-import { buttonSurface, mix, readableOn, shadow, toDark, toHsl } from './derive.js';
+import { accentInk, buttonSurface, mix, readableOn, shadow, toDark, toHsl } from './derive.js';
 import { checkContrast, contrastRatio } from './contrast.js';
 import { toCssVariables, toThemedCssBlock } from './compile-web.js';
 import defaults from './default-tokens.json' with { type: 'json' };
@@ -113,6 +113,44 @@ describe('the button style token', () => {
     const midnight = THEME_PRESETS.find((theme) => theme.id === 'midnight')!;
     const button = buttonSurface({ ...midnight.tokens, buttonStyle: 'solid' });
     expect([midnight.tokens.colour.background, midnight.tokens.colour.text]).toContain(button.text);
+  });
+});
+
+/**
+ * `accent` is decoration in the app, so `checkContrast` deliberately never tests it against the
+ * background — reporting a pair nothing renders trains people to ignore the warnings.
+ *
+ * Then the site used it as a small uppercase label, and the shipped accent came out at 3.57:1 on
+ * parchment. Nothing could have caught it: the checker was right not to look, and the stylesheet
+ * was the first place the colour became words.
+ */
+describe('the accent, where it has to be read', () => {
+  it.each(THEME_PRESETS.map((theme) => theme.id))('is legible as text: %s', (id) => {
+    const theme = THEME_PRESETS.find((candidate) => candidate.id === id)!;
+    const ink = accentInk(theme.tokens.colour);
+    expect(contrastRatio(ink, theme.tokens.colour.background) ?? 0).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('leaves an accent alone when it already reads', () => {
+    // Darkening a colour that passes would cost the brand for nothing.
+    const readable = { ...defaults.colour, accent: '#000000', background: '#ffffff' };
+    expect(accentInk(readable)).toBe('#000000');
+  });
+
+  it('leaves an accent that already reads exactly as it is', () => {
+    /**
+     * It stops at the first mix that clears the bar rather than walking all the way to the ink.
+     * Darkening a colour that was already legible would throw away the brand for contrast nobody
+     * asked for — the point is a readable accent, not a readable grey.
+     *
+     * `minimal` is the case worth having in the list: its accent and its ink are the same colour on
+     * purpose, so "keeps some accent" and "is not the text colour" are different claims there.
+     */
+    for (const theme of THEME_PRESETS) {
+      const { accent, background } = theme.tokens.colour;
+      if ((contrastRatio(accent, background) ?? 0) < 4.5) continue;
+      expect(accentInk(theme.tokens.colour), theme.id).toBe(accent);
+    }
   });
 });
 

@@ -13,7 +13,15 @@ export { toCssVariables, toCssBlock, toThemedCssBlock } from './compile-web.js';
  * derived from its light one, so dark mode needed no new field, no migration and no second set of
  * colour pickers.
  */
-export { toDark, toDarkColours, mix, readableOn, buttonSurface, shadow } from './derive.js';
+export {
+  toDark,
+  toDarkColours,
+  mix,
+  readableOn,
+  buttonSurface,
+  shadow,
+  accentInk,
+} from './derive.js';
 
 /** Email target — resolved inline styles and table layout. Browser-safe, no dependencies. */
 export { toEmailStyles, type EmailStyles } from './compile-email.js';

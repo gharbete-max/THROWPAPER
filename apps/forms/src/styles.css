@@ -4266,7 +4266,8 @@ body:has(> .app) {
 
 .hero__eyebrow {
   margin: 0 0 var(--tp-spacing-unit);
-  color: var(--tp-colour-accent);
+  /* Not `--tp-colour-accent`: as small uppercase text that is 3.57:1 on parchment. See `accentInk`. */
+  color: var(--tp-colour-accent-ink);
   font-size: var(--tp-text-sm);
   font-weight: var(--tp-type-weight-bold);
   letter-spacing: 0.08em;
