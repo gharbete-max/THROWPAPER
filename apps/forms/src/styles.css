@@ -2612,11 +2612,45 @@ h4 {
  * muted paragraph in its stack, and now wearing a large dashed box in front of every respondent.
  * A selector that has to guess what a paragraph means will eventually guess wrong.
  */
+/*
+ * An empty list. See `EmptyState.tsx` for why this is no longer a dashed box: a dashed rectangle
+ * is what a drop zone looks like, and the one screen with nothing on it should not be inviting a
+ * drag that does nothing.
+ */
 .empty {
-  padding: calc(var(--tp-spacing-unit) * 5) calc(var(--tp-spacing-unit) * 3);
-  border: var(--tp-border-width) dashed var(--tp-colour-border);
-  border-radius: var(--tp-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 6) calc(var(--tp-spacing-unit) * 3);
   text-align: center;
+}
+
+/* The mark sits in a soft disc rather than floating, so it reads as deliberate at any size. */
+.empty__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 48px;
+  block-size: 48px;
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-muted);
+  font-size: 22px;
+}
+
+/*
+ * Full contrast, not muted. This is the only sentence on the screen; setting it in the colour
+ * reserved for text people skim past was telling them to ignore the one thing there is to read.
+ */
+.empty__title {
+  margin: 0;
+  color: var(--tp-colour-text);
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.empty__hint {
+  margin: 0;
+  max-inline-size: 34rem;
 }
 
 /* --- The bar, at widths between a phone and a laptop -----------------------

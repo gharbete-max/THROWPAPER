@@ -7,6 +7,7 @@ import { useSession } from '../lib/session.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { useConfirm } from '../components/Confirm.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { Meter } from '../components/Meter.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
@@ -50,7 +51,20 @@ export function Events() {
       {!isAdmin && <p className="muted small">{t('events.adminOnly')}</p>}
 
       {events === null && <Loading />}
-      {events?.length === 0 && <p className="muted empty">{t('events.empty')}</p>}
+      {events?.length === 0 && (
+        <EmptyState
+          icon="events"
+          title={t('events.empty')}
+          /* Only an admin can make one, so only an admin is offered the way to. */
+          action={
+            isAdmin ? (
+              <Link className="button" to="/events/new">
+                {t('events.new')}
+              </Link>
+            ) : undefined
+          }
+        />
+      )}
 
       {events?.map((event) => {
         const name = pickText(locales, event.name, locale);

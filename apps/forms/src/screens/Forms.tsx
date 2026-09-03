@@ -8,6 +8,7 @@ import { useConfirm } from '../components/Confirm.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
 import { FormCard } from '../components/FormCard.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { ScopeTabs } from '../components/ScopeTabs.js';
 import { ShareDialog } from '../components/ShareDialog.js';
 
@@ -25,7 +26,7 @@ import { ShareDialog } from '../components/ShareDialog.js';
 export function Forms() {
   const t = useT();
   const confirm = useConfirm();
-  const { locale, locales, user } = useSession();
+  const { locale, locales, interfaceLocales, user } = useSession();
   const [scope, setScope] = useState<FormScope>('mine');
   const [forms, setForms] = useState<FormResponse[] | null>(null);
   const [creating, setCreating] = useState(false);
@@ -143,17 +144,37 @@ export function Forms() {
                 description={t('templates.blankHint')}
                 onSelect={() => setTemplateId(null)}
               />
+              {/*
+                Resolved against `interfaceLocales`, not `locales`.
+
+                A template's name is **ours**, shipped in all twelve languages — not the
+                customer's content. Resolving it against the organisation's publish languages
+                meant an operator reading the app in Japanese, in an organisation that publishes
+                in Swedish and English, got a gallery of Swedish template names under Japanese
+                headings. The Japanese names existed the whole time; nothing was asking for them.
+
+                Everything else on this screen keeps `locales`, because form titles and event
+                names really are the organisation's content and really are limited to the
+                languages it publishes in.
+              */}
               {templates.map((template) => (
                 <TemplateCard
                   key={template.id}
                   selected={templateId === template.id}
-                  name={pickText(locales, template.name, locale).value}
-                  description={pickText(locales, template.description, locale).value}
+                  name={pickText(interfaceLocales, template.name, locale).value}
+                  description={pickText(interfaceLocales, template.description, locale).value}
                   fieldCount={template.definition.fields.length}
                   onSelect={() => {
                     setTemplateId(template.id);
-                    // A title saves a step; it is editable like anything else.
-                    if (!title) setTitle(pickText(locales, template.name, locale).value);
+                    /*
+                     * A title saves a step; it is editable like anything else.
+                     *
+                     * Seeded in the language of the card that was just clicked, rather than the
+                     * organisation's default: clicking a card and getting a title box in a third
+                     * language is the kind of surprise that makes people distrust the whole
+                     * screen. They can edit it, and usually will.
+                     */
+                    if (!title) setTitle(pickText(interfaceLocales, template.name, locale).value);
                   }}
                 />
               ))}
@@ -182,7 +203,23 @@ export function Forms() {
       )}
 
       {forms === null && <Loading />}
-      {forms?.length === 0 && <p className="muted empty">{empty}</p>}
+      {forms?.length === 0 && (
+        <EmptyState
+          icon={scope === 'trash' ? 'trash' : 'forms'}
+          title={empty}
+          /*
+           * The bin offers nothing: "create a form" is not what somebody looking at an empty bin
+           * came to do, and an action that ignores where you are is worse than none.
+           */
+          action={
+            scope === 'trash' ? undefined : (
+              <button className="button" onClick={() => setCreating(true)}>
+                {t('forms.new')}
+              </button>
+            )
+          }
+        />
+      )}
 
       {forms?.map((form) => (
         <Reveal key={form.id}>
