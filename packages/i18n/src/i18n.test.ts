@@ -49,12 +49,14 @@ describe('collation', () => {
 describe('plurals', () => {
   const catalogue = {
     'forms.count': {
-      'sv-SE': 'one {count} formulär | other {count} formulär',
-      'en-GB': 'one {count} form | other {count} forms',
+      'sv-SE': 'plural:one {count} formulär | other {count} formulär',
+      'en-GB': 'plural:one {count} form | other {count} forms',
     },
     plain: { 'sv-SE': '{count} svar', 'en-GB': '{count} responses' },
     /** An ordinary sentence that happens to contain a pipe. It must survive intact. */
     piped: { 'sv-SE': 'A | B', 'en-GB': 'A | B' },
+    /** A language with one plural category declares one form — and still needs the marker. */
+    single: { 'sv-SE': 'plural:other {count} st', 'en-GB': 'plural:other {count} items' },
   };
   const t = (locale: string) => createTranslator(config, catalogue, locale);
 
@@ -77,6 +79,15 @@ describe('plurals', () => {
 
   it('leaves a message with no plural forms alone', () => {
     expect(t('en-GB')('plain', { count: 2 })).toBe('2 responses');
+  });
+
+  /**
+   * Chinese and Japanese have a single category, so their messages carry no pipe at all. Before
+   * the marker existed there was nothing to detect, and the word "other" reached the reader.
+   */
+  it('handles a language with only one plural form', () => {
+    expect(t('en-GB')('single', { count: 1 })).toBe('1 items');
+    expect(t('en-GB')('single', { count: 9 })).toBe('9 items');
   });
 
   /** A pipe is a character people write. Only category names turn one into a plural form. */

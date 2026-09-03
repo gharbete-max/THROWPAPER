@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { LOCALE_CODES } from '@tp/i18n';
 import { FORM_TEMPLATES, FormTemplate, findTemplate } from './templates.js';
 import { FormDefinition } from './definition.js';
 import { answerableFields, pagesOf, translatableTexts } from './helpers.js';
@@ -45,35 +46,46 @@ describe('the template catalogue', () => {
   );
 
   /**
-   * Every template ships in both languages the product supports. A half-translated template is
-   * worse than an English-only one: the author cannot tell which strings are theirs to finish.
+   * Every template ships in **every** language the product does.
+   *
+   * A template's text is copied into the author's draft when they pick it, so it cannot fall back
+   * to a message catalogue the way the interface does — whatever is missing here is missing in
+   * their form, and they have no way of telling which strings were meant to be ours.
+   *
+   * Driven by `LOCALE_CODES` rather than a list written here, so adding a thirteenth language
+   * fails this test rather than quietly shipping eighteen half-translated templates.
    */
   it.each(FORM_TEMPLATES.map((template) => [template.id, template] as const))(
-    '%s is complete in both sv-SE and en-GB',
+    '%s is complete in every shipped language',
     (_id, template) => {
-      expect(template.name['sv-SE']).toBeTruthy();
-      expect(template.name['en-GB']).toBeTruthy();
-      expect(template.description['sv-SE']).toBeTruthy();
-      expect(template.description['en-GB']).toBeTruthy();
-
-      const missing = translatableTexts(template.definition)
-        .filter((text) => text.required)
-        .filter((text) => !text.text['sv-SE'] || !text.text['en-GB'])
-        .map((text) => text.path);
-      expect(missing).toEqual([]);
+      const gaps: string[] = [];
+      for (const locale of LOCALE_CODES) {
+        if (!template.name[locale]?.trim()) gaps.push(`name (${locale})`);
+        if (!template.description[locale]?.trim()) gaps.push(`description (${locale})`);
+      }
+      for (const text of translatableTexts(template.definition).filter((each) => each.required)) {
+        for (const locale of LOCALE_CODES) {
+          if (!text.text[locale]?.trim()) gaps.push(`${text.path} (${locale})`);
+        }
+      }
+      expect(gaps).toEqual([]);
     },
   );
 
   it.each(FORM_TEMPLATES.map((template) => [template.id, template] as const))(
-    '%s labels every choice in both languages',
+    '%s labels every choice in every shipped language',
     (_id, template) => {
+      const gaps: string[] = [];
       for (const field of template.definition.fields) {
         if (!('options' in field)) continue;
         for (const option of field.options) {
-          expect(option.label['sv-SE'], `${field.key}/${option.value}`).toBeTruthy();
-          expect(option.label['en-GB'], `${field.key}/${option.value}`).toBeTruthy();
+          for (const locale of LOCALE_CODES) {
+            if (!option.label[locale]?.trim())
+              gaps.push(`${field.key}/${option.value} (${locale})`);
+          }
         }
       }
+      expect(gaps).toEqual([]);
     },
   );
 
@@ -111,8 +123,6 @@ describe('the template catalogue', () => {
         'contract',
         'villkor',
         'terms and conditions',
-        'signature',
-        'underskrift',
       ];
 
       const haystack = JSON.stringify(template).toLowerCase();
@@ -121,6 +131,34 @@ describe('the template catalogue', () => {
     },
   );
 
+  /**
+   * A signature is a control, not a claim.
+   *
+   * "signature" and "underskrift" used to sit in the forbidden list above, from before the field
+   * type existed — which would now ban the one template that most needs one. The wording is what
+   * rule 8 is about, so this checks the wording instead, and checks it harder: a signature in a
+   * shipped template must not assert anything. Whatever it confirms is for a person to write, so
+   * the statement has to read as a placeholder.
+   */
+  it.each(
+    FORM_TEMPLATES.flatMap((template) =>
+      template.definition.fields
+        .filter((field) => field.type === 'signature')
+        .map((field) => [`${template.id}/${field.key}`, field] as const),
+    ),
+  )('%s asserts nothing a person did not write', (_id, field) => {
+    const statement = 'statement' in field ? (field.statement ?? {}) : {};
+    for (const locale of LOCALE_CODES) {
+      const text = statement[locale] ?? '';
+      expect(text, `${locale} statement`).toBeTruthy();
+      // A bracketed placeholder, in any script. Anything else is a declaration this file wrote.
+      expect(
+        /^[[［].*[\]］]$/su.test(text.trim()),
+        `${locale}: "${text}" reads as a declaration rather than a placeholder`,
+      ).toBe(true);
+    }
+  });
+
   it('answers a filled-in submission the way the author would expect', () => {
     const template = findTemplate('contact-enquiry');
     expect(template).not.toBeNull();
@@ -128,7 +166,7 @@ describe('the template catalogue', () => {
     const result = validateSubmission(template!.definition, {
       full_name: 'Åsa Öqvist',
       email: 'asa@example.com',
-      topic: 'quote',
+      topic: 'sales',
       message: 'Hej!',
     });
     expect(result.issues).toEqual([]);

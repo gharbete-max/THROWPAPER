@@ -6,6 +6,7 @@ import { BrandProvider, useBrand } from './lib/brand.js';
 import { ConfirmProvider } from './components/Confirm.js';
 import { Icon, type IconName } from './components/Icon.js';
 import { Wordmark } from './components/Logo.js';
+import { LanguagePicker } from './components/LanguagePicker.js';
 import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
@@ -114,7 +115,8 @@ function NavSection({ to, icon, label }: { to: string; icon: IconName; label: st
 /** Everything behind the bearer token. */
 function Shell() {
   const t = useT();
-  const { user, organisation, loading, locale, setLocale, locales, signOut } = useSession();
+  const { user, organisation, loading, locale, setLocale, interfaceLocales, signOut } =
+    useSession();
   const { tokens: brand } = useBrand();
   const location = useLocation();
 
@@ -174,25 +176,19 @@ function Shell() {
             {/* Brand is settings — it configures the other two rather than sitting beside them. */}
             <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
             {/*
-              The language dropdown is driven by the organisation's supportedLocales, not a
-              hard-coded list — SPEC-shared.md §packages/i18n.
+              Driven by the organisation's supportedLocales, not a hard-coded list —
+              SPEC-shared.md §packages/i18n.
+
+              A flag and the language's own name. The list read "sv-SE, zh-CN, ru-RU" until
+              recently: only a developer could use it, and at twelve entries not even them.
+              The site is in **one** language at a time; a form can offer its own switcher
+              separately, which is a different control on a different page.
             */}
-            {/* The globe carries the label, so the word does not also take a slot in the bar.
-                The name moves onto the select itself rather than disappearing. */}
-            <span className="field field--inline">
-              <Icon name="globe" className="muted" />
-              <select
-                aria-label={t('app.language')}
-                value={locale}
-                onChange={(event) => setLocale(event.target.value)}
-              >
-                {locales.supported.map((supported) => (
-                  <option key={supported} value={supported}>
-                    {supported}
-                  </option>
-                ))}
-              </select>
-            </span>
+            <LanguagePicker
+              locales={interfaceLocales.supported}
+              current={locale}
+              onChange={setLocale}
+            />
             <span className="small muted">
               {user.name} · {user.role}
             </span>

@@ -15,6 +15,13 @@ export const DEMO_ORGANISATION = {
   name: 'Demo AB',
   slug: 'demo',
   defaultLocale: 'sv-SE',
+  /**
+   * The languages this organisation publishes **content** in — not the twelve the interface is
+   * available in, which is a separate list the demo does not get to choose.
+   *
+   * Two, because the demo has content in two. Claiming twelve put a row of ten "missing
+   * translation" warnings under every seeded event and form: accurate, and entirely self-inflicted.
+   */
   supportedLocales: ['sv-SE', 'en-GB'],
 } as const;
 

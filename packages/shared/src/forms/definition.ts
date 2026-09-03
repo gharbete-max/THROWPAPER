@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LocalisedText } from '../api/common.js';
+import { Locale, LocalisedText } from '../api/common.js';
 import { AssetPath } from '../assets.js';
 import { FileAccept, MAX_UPLOAD_BYTES } from './uploads.js';
 
@@ -442,7 +442,43 @@ export const FormSettings = z.object({
     .url()
     .refine((value) => /^https?:\/\//i.test(value), 'Links must start with http:// or https://')
     .optional(),
+  /**
+   * The languages **this form** offers its respondents, as a switcher on the public page.
+   *
+   * Distinct from the interface language, which is one at a time and personal. A form is a
+   * document: a Swedish association with English-speaking members publishes one form that reads
+   * in both, and the reader flips between them with a flag in the corner.
+   *
+   * **Empty means the organisation's full list**, which is what every form published before this
+   * existed effectively had. It is not "no languages": a form nobody can read is not a state
+   * worth being able to express, and defaulting to none would have silenced every existing form.
+   *
+   * Narrowing it is the useful direction — an organisation supporting twelve rarely writes a form
+   * in more than two, and offering a switcher to ten untranslated versions is worse than offering
+   * none. Anything here that the organisation does not support is ignored rather than honoured;
+   * the author's list is a filter, not a way to publish in a language nobody configured.
+   */
+  locales: z.array(Locale).default([]),
 });
+
+/**
+ * The languages a form actually offers, given what the organisation supports.
+ *
+ * One function because the public renderer, the builder's preview and the API all have to agree —
+ * a switcher offering a language the server will not accept is a broken form, and three
+ * independent intersections is how that happens.
+ */
+export function formLocales(
+  settings: { locales?: readonly string[] },
+  organisationLocales: readonly string[],
+): string[] {
+  const chosen = settings.locales ?? [];
+  if (chosen.length === 0) return [...organisationLocales];
+  const offered = chosen.filter((locale) => organisationLocales.includes(locale));
+  // An author who narrows to nothing the organisation supports gets the organisation's list back
+  // rather than an unreadable form.
+  return offered.length > 0 ? offered : [...organisationLocales];
+}
 
 export const FormDefinition = z.object({
   /** Bumped when the document shape changes in a way old versions cannot be read as. */

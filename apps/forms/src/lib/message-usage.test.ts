@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { messages } from './messages.js';
+import { messages } from './messages/all.js';
 
 /**
  * The catalogue and the code that uses it, compared in both directions.

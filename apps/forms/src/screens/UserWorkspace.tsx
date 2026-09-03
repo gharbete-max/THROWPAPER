@@ -111,7 +111,9 @@ export function UserWorkspace() {
 
       {forms === null && <Loading />}
       {forms?.length === 0 && (
-        <p className="muted">{scope === 'trash' ? t('scope.emptyTrash') : t('forms.empty')}</p>
+        <p className="muted empty">
+          {scope === 'trash' ? t('scope.emptyTrash') : t('forms.empty')}
+        </p>
       )}
 
       {forms?.map((form) => (

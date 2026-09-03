@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useParams, useSearchParams } from 'react-router';
-import { createTranslator, pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
+import { pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { defaultTokens, toCssBlock } from '@tp/tokens';
 import {
   isVisible,
@@ -12,7 +12,8 @@ import {
   type SubmissionValues,
   type ValidationIssue,
 } from '@tp/shared/forms';
-import { messages } from '../lib/messages.js';
+import { useTranslator } from '../lib/i18n.js';
+import { LanguagePicker } from '../components/LanguagePicker.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
@@ -56,7 +57,7 @@ export default function PublicForm() {
     [form],
   );
   const resolved = resolveLocale(locales, locale);
-  const t = useMemo(() => createTranslator(locales, messages, resolved), [locales, resolved]);
+  const t = useTranslator(locales, resolved);
 
   // The banner lives above the router and would otherwise stay in the session's language.
   useAnnounceLocale(resolved);
@@ -286,21 +287,28 @@ export default function PublicForm() {
         ) : (
           <strong>{form?.organisationName}</strong>
         )}
-        {/*
-          The dropdown re-renders labels from the same `values` state, so switching language mid
-          flow cannot lose what has been typed.
-        */}
-        <select
-          aria-label="language"
-          value={resolved}
-          onChange={(event) => setLocale(event.target.value)}
-        >
-          {form?.supportedLocales.map((supported) => (
-            <option key={supported} value={supported}>
-              {supported}
-            </option>
-          ))}
-        </select>
+        {/**
+         * The form's own language switcher, separate from the site's.
+         *
+         * The site is in one language at a time and that is a personal setting. A *form* is a
+         * document, and a Swedish association with English-speaking members publishes one form
+         * that reads in both — so the reader flips between them here, with a flag in the corner,
+         * without anything about their account changing.
+         *
+         * Which languages appear is the author's choice (`settings.locales`), not the whole
+         * organisation's list: offering a switcher to ten versions nobody translated is worse
+         * than offering none. `LanguagePicker` renders nothing below two, so a single-language
+         * form simply has no corner control.
+         *
+         * Switching re-renders labels from the same `values` state, so changing language
+         * mid-flow cannot lose what has already been typed.
+         */}
+        <LanguagePicker
+          locales={form?.supportedLocales ?? []}
+          current={resolved}
+          onChange={setLocale}
+          variant="corner"
+        />
       </header>
 
       {phase === 'closed' && (

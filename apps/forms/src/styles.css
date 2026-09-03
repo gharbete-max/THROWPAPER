@@ -364,6 +364,9 @@ a:focus-visible {
   width: 100%;
   max-height: 40vh;
   border-radius: var(--tp-radius);
+  /* The one hard-coded colour in the file, and deliberate: this is the letterbox behind a camera
+   * feed, not a surface. Black is what a viewfinder is, in every brand — using the palette here
+   * would tint the picture rather than frame it. */
   background: #000;
 }
 
@@ -2249,6 +2252,577 @@ input[type='file']:disabled::file-selector-button {
   .inbox__when {
     order: 4;
     justify-content: flex-end;
+  }
+}
+
+/* ==========================================================================
+ * Languages: flags, the picker, and the per-form choice.
+ * ========================================================================== */
+
+/* Sized in ems so a flag matches whatever text it sits beside, at 4:3 like the real thing. */
+.flag {
+  inline-size: 1.5em;
+  block-size: 1.125em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.langpicker {
+  position: relative;
+  display: inline-flex;
+}
+
+.langpicker__button {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.6);
+  /* 44px on touch: this is a target people hit with a thumb in the corner of a form. */
+  min-height: 44px;
+  padding: calc(var(--tp-spacing-unit) * 0.5) var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: 0.875rem;
+  cursor: pointer;
+  /* A double-tap here is somebody tapping twice, not asking to zoom. */
+  touch-action: manipulation;
+}
+
+.langpicker__button:hover {
+  border-color: var(--tp-colour-primary);
+}
+
+.langpicker__chevron {
+  inline-size: 0.85em;
+  block-size: 0.85em;
+  color: var(--tp-colour-muted);
+}
+
+.langpicker__name {
+  white-space: nowrap;
+}
+
+.langpicker__list {
+  position: absolute;
+  inset-block-start: calc(100% + 4px);
+  inset-inline-end: 0;
+  z-index: 30;
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 0.4);
+  list-style: none;
+  min-inline-size: 12rem;
+  /* Twelve languages is taller than a phone. Scroll the list, never the page behind it. */
+  max-block-size: min(60vh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.14);
+}
+
+.langpicker__option {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  inline-size: 100%;
+  min-height: 44px;
+  padding: calc(var(--tp-spacing-unit) * 0.5) calc(var(--tp-spacing-unit) * 0.75);
+  border: 0;
+  border-radius: var(--tp-radius);
+  background: none;
+  color: inherit;
+  font-family: var(--tp-type-body-font);
+  font-size: 0.9375rem;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* One highlight, driven by the keyboard *and* the mouse, so Enter always takes what looks taken. */
+.langpicker__option.is-active {
+  background: color-mix(in srgb, var(--tp-colour-primary) 10%, transparent);
+}
+
+.langpicker__tick {
+  margin-inline-start: auto;
+  inline-size: 1em;
+  block-size: 1em;
+  color: var(--tp-colour-primary);
+}
+
+/* On a form the switcher is flags only — the reader is choosing between two or three, and the
+ * corner of a form is not where a language name earns its width. The name is still the accessible
+ * name and the tooltip, so it is never *only* a picture. */
+.langpicker--corner .langpicker__button {
+  border-color: transparent;
+  background: none;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.langpicker--corner .langpicker__button:hover {
+  border-color: var(--tp-colour-border);
+}
+
+/* The author's choice of which languages a form offers. */
+.locale-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+  margin-block-start: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.locale-choice {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.6);
+  min-height: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
+  border-radius: var(--tp-radius);
+  cursor: pointer;
+}
+
+.locale-choice:hover {
+  background: color-mix(in srgb, var(--tp-colour-primary) 6%, transparent);
+}
+
+/* ==========================================================================
+ * Touch and trackpad.
+ *
+ * Two things break sideways panning on a phone or a trackpad, and both are omissions rather than
+ * mistakes: a wide thing that is not inside its own scroller, and a scroller that hands its
+ * overscroll to the page so the whole document rubber-bands instead.
+ *
+ * Pinch-zoom is deliberately left alone. `user-scalable=no` and `maximum-scale=1` are the usual
+ * way it gets lost, and neither appears in index.html — a form somebody cannot zoom into is a
+ * form somebody cannot read.
+ * ========================================================================== */
+
+html {
+  /* Rotating a phone must not silently inflate every font. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Wide content pans inside itself, and stops there. Without `contain`, reaching the end of a
+ * table throws the scroll to the page and the whole screen lurches sideways. */
+.table-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* Momentum on older iOS; harmless everywhere else. */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* The pile switcher: five tabs do not fit across a phone. Scrolled rather than wrapped, so the
+ * row stays a row and two fingers on a trackpad move it. */
+.tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: 0 0 auto;
+}
+
+/* Anything that can overflow its box horizontally does so inside itself. A code block or a long
+ * unbroken reference must never widen the document — that is what makes a whole page pan when
+ * only one line is too long. */
+.inbox,
+.share-list,
+.templates {
+  overscroll-behavior-x: contain;
+}
+
+/* ==========================================================================
+ * The refinement layer.
+ *
+ * Everything above builds the product; this tightens how it reads. It sits near the end because
+ * these are deliberate overrides of earlier rules — written here rather than edited in place so
+ * the change is one reviewable block, and so the reasoning for each is next to the rule.
+ *
+ * The brand stays flat: no gradients, no drop shadows on ordinary surfaces. Hierarchy comes from
+ * **weight, space and colour**, which is the harder way and the one that survives a customer
+ * choosing their own palette.
+ * ========================================================================== */
+
+:root {
+  /**
+   * Motion, as three values instead of a number typed at each call site.
+   *
+   * `120ms ease` appeared in six places and `90ms ease` in one more, which is how a product ends
+   * up with a hover that feels different depending on what you hover. The curve decelerates —
+   * fast out of the gate, settling at the end — because that is what reads as responsive; a
+   * symmetric `ease` starts slowly and makes every control feel a beat behind the pointer.
+   */
+  --tp-ease: cubic-bezier(0.2, 0, 0, 1);
+  --tp-motion-fast: 110ms;
+  --tp-motion: 180ms;
+  --tp-motion-slow: 320ms;
+}
+
+/* --- Type ------------------------------------------------------------------
+ *
+ * Headings were inheriting the body's 1.5 line-height: a 32px heading was sitting on 48px leading,
+ * a gap and a half between two lines of a title. Display type needs *less* leading than body text,
+ * not the same — the larger the type, the tighter it wants to be — and a touch of negative
+ * tracking stops large text looking loose. Body text keeps 1.5, where it earns its keep.
+ */
+h1,
+h2,
+h3,
+.shell h1 {
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h3,
+h4 {
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+/* A heading needs room above it and little below: it belongs to what follows, not what precedes.
+ * Equal margins on both sides is what makes a page read as a list of unrelated blocks. */
+.shell h1 {
+  margin-block: 0 calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.card h2 {
+  margin-block: 0 calc(var(--tp-spacing-unit) * 0.25);
+  font-size: 1.25rem;
+}
+
+/* Long prose has a comfortable measure even inside a wide shell. Sixty to seventy-five characters
+ * is where the eye stops losing its place returning to the left edge. */
+.shell > .stack > p.muted,
+.card > p.small {
+  max-inline-size: 68ch;
+}
+
+/* --- Stacks own their spacing ---------------------------------------------
+ *
+ * A `.stack` sets a flex `gap`, but its children were still carrying the browser's default
+ * paragraph margins — so between two paragraphs in a card sat 14px + 12px gap + 14px, forty
+ * pixels where twelve were specified. Every stack in the product was a third looser than the
+ * value written on it, which is why the cards read as a border drawn around some floating text.
+ *
+ * The container owns the rhythm. A child that also has an opinion is a child fighting it.
+ */
+.stack > *,
+.row > * {
+  margin-block: 0;
+}
+
+/* --- Navigation ------------------------------------------------------------
+ *
+ * The bar was six identically outlined rectangles: Events, Forms, Responses, Users, Brand, Sign
+ * out. Every one of them drew a box, so nothing was more important than anything else and the
+ * only signal for "where am I" was a 2px underline competing with five other frames.
+ *
+ * Navigation is not a set of buttons. These are places, so they read as text — and the current
+ * one is marked by weight, colour and the underline that was always there but had no contrast to
+ * work against. The frames come off; the underline finally means something.
+ */
+.topbar__nav .nav-link,
+.topbar__account .nav-link {
+  border-color: transparent;
+  background: none;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.25);
+  color: var(--tp-colour-muted);
+  font-weight: var(--tp-type-weight-regular);
+  transition:
+    color var(--tp-motion-fast) var(--tp-ease),
+    background-color var(--tp-motion-fast) var(--tp-ease);
+}
+
+.topbar__nav .nav-link:hover:not(:disabled),
+.topbar__account .nav-link:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tp-colour-primary) 7%, transparent);
+  border-color: transparent;
+  color: var(--tp-colour-text);
+}
+
+.nav-link--current,
+.topbar__nav .nav-link--current,
+.topbar__account .nav-link--current {
+  color: var(--tp-colour-primary);
+  font-weight: var(--tp-type-weight-bold);
+  border-color: transparent;
+}
+
+/* The underline now sits under the text rather than under a button's padding, so it reads as an
+ * indicator rather than as one more edge. */
+.nav-link--current::after {
+  inset-inline: calc(var(--tp-spacing-unit) * 1.25);
+  inset-block-end: -2px;
+  border-radius: 2px;
+}
+
+/* The bar itself gets a little more height and its own quiet ground, so the page beneath is
+ * clearly a different surface from the chrome above it. */
+.topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--tp-colour-surface) 70%, var(--tp-colour-background));
+  backdrop-filter: saturate(1.4) blur(8px);
+}
+
+.topbar__inner {
+  min-block-size: 56px;
+}
+
+/* Who you are is not a control. It was reading at the same weight as the sections. */
+.topbar__account .small.muted {
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+/* --- Buttons ---------------------------------------------------------------
+ *
+ * Three tiers, and only three: **primary** is filled and there is at most one on a screen;
+ * **quiet** is outlined and is the ordinary action; **bare** is text and is for the things that
+ * would otherwise be a row of six frames.
+ *
+ * The heights were already 44px for touch. What was missing was the difference between the tiers
+ * being legible at a glance — a quiet button and a primary button differed only in fill, and at
+ * small sizes that reads as "two buttons" rather than "an action and its alternative".
+ */
+.button {
+  padding-block: calc(var(--tp-spacing-unit) * 0.75);
+  border-radius: var(--tp-radius);
+  font-size: 0.9375rem;
+  letter-spacing: 0.005em;
+  transition:
+    background-color var(--tp-motion-fast) var(--tp-ease),
+    border-color var(--tp-motion-fast) var(--tp-ease),
+    color var(--tp-motion-fast) var(--tp-ease),
+    transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+/* The one exception to "no shadows": a filled primary lifts by a hair so that the single most
+ * important control on a screen is findable without reading it. Tied to the primary colour rather
+ * than to black, so it stays honest against a dark palette. */
+.button:not(.button--quiet):not(.button--danger) {
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
+}
+
+.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
+}
+
+.button:active:not(:disabled) {
+  box-shadow: none;
+}
+
+/* A disabled control must not look raised. The lift says "press me", which is the one thing this
+ * button cannot do. */
+.button:disabled {
+  box-shadow: none;
+}
+
+.button--quiet {
+  font-weight: var(--tp-type-weight-regular);
+  color: var(--tp-colour-text);
+}
+
+.button--quiet:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tp-colour-primary) 6%, var(--tp-colour-surface));
+}
+
+/* --- Focus -----------------------------------------------------------------
+ *
+ * One ring, everywhere, and it has to be visible on both the page ground and a filled primary
+ * button. A single outline colour cannot do that, so the ring is the brand colour with a
+ * background-coloured gap behind it — the gap is what makes it legible on top of a dark fill.
+ */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--tp-colour-background);
+}
+
+/* --- Cards -----------------------------------------------------------------
+ *
+ * A card was 16px of padding around items spaced 16px apart, so its edge was exactly as far from
+ * its contents as its contents were from each other and the whole thing read as a border drawn
+ * around some paragraphs. Padding now exceeds the internal gap, which is what makes a card read
+ * as one object.
+ */
+.card {
+  padding: calc(var(--tp-spacing-unit) * 3);
+  transition:
+    border-color var(--tp-motion) var(--tp-ease),
+    box-shadow var(--tp-motion) var(--tp-ease);
+}
+
+.card.stack {
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+/* A list of cards is a list of things you can act on. The edge warms on approach — no lift, no
+ * scale, nothing that moves the text somebody is reading. */
+.card:hover {
+  border-color: color-mix(in srgb, var(--tp-colour-primary) 30%, var(--tp-colour-border));
+}
+
+/* The actions belong to the card, so they sit against its bottom edge with a rule above them
+ * rather than floating in the same rhythm as its content. */
+.card__actions {
+  margin-block-start: calc(var(--tp-spacing-unit) * 0.5);
+  padding-block-start: calc(var(--tp-spacing-unit) * 1.5);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+/* --- Headers ---------------------------------------------------------------
+ *
+ * "Forms" and "New form" were the same visual weight, so a page title and a create button argued
+ * for the eye. The title wins; the button is the one filled thing on the screen and does not also
+ * need to be the widest.
+ */
+.row--between > .button {
+  flex: 0 0 auto;
+}
+
+/* --- Empty states ----------------------------------------------------------
+ *
+ * "No forms yet." as a bare grey sentence on an otherwise empty page reads like a failure. Given
+ * room and a dashed frame it reads as a place where something will be.
+ *
+ * Marked with a class rather than inferred from structure. The first version matched
+ * `.stack > p.muted:only-of-type`, which also caught the public form's "Step 1 of 2" — the only
+ * muted paragraph in its stack, and now wearing a large dashed box in front of every respondent.
+ * A selector that has to guess what a paragraph means will eventually guess wrong.
+ */
+.empty {
+  padding: calc(var(--tp-spacing-unit) * 5) calc(var(--tp-spacing-unit) * 3);
+  border: var(--tp-border-width) dashed var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  text-align: center;
+}
+
+/* --- The bar, at widths between a phone and a laptop -----------------------
+ *
+ * Five sections plus a language, a name and a way out is more than fits across 800px, so the row
+ * wrapped — but wrapped with the same generous gap it uses horizontally, which turned a bar into
+ * four loosely stacked lines occupying a third of the screen before any content.
+ *
+ * Rows are tighter than columns when a flex row wraps. That one asymmetry is what makes a wrapped
+ * bar still read as a bar.
+ */
+.topbar__inner {
+  row-gap: calc(var(--tp-spacing-unit) * 0.25);
+  column-gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.topbar__nav,
+.topbar__account {
+  row-gap: 0;
+}
+
+/**
+ * Sign out was the last outlined box in a row of text.
+ *
+ * It is not a destination, so it is not a nav link; it is also not something to invite, so it is
+ * not a filled button. Text, in the muted colour, sitting at the end — findable when looked for
+ * and not competing when not.
+ */
+.topbar__account > .button--quiet:not(.nav-link) {
+  border-color: transparent;
+  background: none;
+  color: var(--tp-colour-muted);
+  font-weight: var(--tp-type-weight-regular);
+}
+
+.topbar__account > .button--quiet:not(.nav-link):hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tp-colour-primary) 7%, transparent);
+  border-color: transparent;
+  color: var(--tp-colour-text);
+}
+
+/**
+ * Below a laptop, the signed-in name goes.
+ *
+ * It is the least useful thing in the bar — you know who you are — and it is the widest, so it is
+ * what should leave first. The role it also carried is visible wherever it matters; this was a
+ * caption, not a control.
+ */
+@media (max-width: 60rem) {
+  .topbar__account .small.muted {
+    display: none;
+  }
+}
+
+/* --- The demo banner -------------------------------------------------------
+ *
+ * A strip, not a panel. It was taking a fifth of the viewport above the fold on a narrow screen,
+ * in the warning colour, on every single page — which is a lot of insistence for a fact somebody
+ * absorbs once. It still cannot be dismissed, because it must not be; it just says its piece in
+ * one line's worth of room.
+ */
+.demo-banner {
+  gap: var(--tp-spacing-unit);
+  padding-block: calc(var(--tp-spacing-unit) * 0.5);
+  font-size: 0.8125rem;
+  font-weight: var(--tp-type-weight-regular);
+  line-height: 1.35;
+}
+
+.demo-banner__action {
+  font-size: 0.8125rem;
+  font-weight: var(--tp-type-weight-bold);
+  padding-block: 1px;
+  white-space: nowrap;
+}
+
+/* --- Motion, applied ------------------------------------------------------
+ *
+ * The tokens above, put to work on the controls that already animated with hand-typed numbers.
+ * Nothing new starts moving; what moved already now moves the same way.
+ */
+.tab,
+.langpicker__button,
+.langpicker__option,
+.inbox__link,
+.locale-choice,
+.theme {
+  transition-duration: var(--tp-motion-fast);
+  transition-timing-function: var(--tp-ease);
+}
+
+/* A popover that appears instantly reads as a glitch; one that takes its time reads as slow.
+ * Under a fifth of a second, moving a few pixels, is the window where it reads as neither. */
+.langpicker__list {
+  animation: popover-in var(--tp-motion) var(--tp-ease);
+  transform-origin: top right;
+}
+
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
+.dialog[open] {
+  animation: dialog-in var(--tp-motion) var(--tp-ease);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
   }
 }
 

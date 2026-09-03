@@ -89,7 +89,12 @@ export function registerPublicFormRoutes(
         formVersion: loaded.published.version,
         organisationName: loaded.organisation.name,
         brand: tokens,
-        supportedLocales: loaded.organisation.supportedLocales,
+        // The languages **this form** offers, not the whole organisation's. An author who
+        // wrote a form in two of twelve should not show a switcher to ten untranslated ones.
+        supportedLocales: formSchemas.formLocales(
+          loaded.definition.settings,
+          loaded.organisation.supportedLocales,
+        ),
         defaultLocale: loaded.organisation.defaultLocale,
         open: loaded.availability.open,
         closedReason: loaded.availability.reason,

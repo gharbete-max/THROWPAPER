@@ -182,7 +182,7 @@ export function Forms() {
       )}
 
       {forms === null && <Loading />}
-      {forms?.length === 0 && <p className="muted">{empty}</p>}
+      {forms?.length === 0 && <p className="muted empty">{empty}</p>}
 
       {forms?.map((form) => (
         <Reveal key={form.id}>

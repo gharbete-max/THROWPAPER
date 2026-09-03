@@ -1,5 +1,5 @@
 import { FIELD_TYPES, MAX_UPLOAD_BYTES, type Field, type FieldType } from '@tp/shared/forms';
-import { messages } from '../../lib/messages.js';
+import { currentMessages } from '../../lib/messages/index.js';
 
 /**
  * A new field of each type, ready to drop on the canvas.
@@ -47,7 +47,7 @@ function localisedDefault(
   locale: string,
   replacements: Record<string, string | number> = {},
 ): Record<string, string> {
-  const value = messages[key]?.[locale];
+  const value = currentMessages()[key]?.[locale];
   if (!value) return {};
   const text = Object.entries(replacements).reduce(
     (result, [token, replacement]) => result.replaceAll(`{${token}}`, String(replacement)),

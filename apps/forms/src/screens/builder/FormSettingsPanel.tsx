@@ -3,6 +3,8 @@ import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { Icon } from '../../components/Icon.js';
 import { LocalisedField } from './LocalisedField.js';
+import { Flag } from '../../components/Flag.js';
+import { localeLabel } from '@tp/i18n';
 
 /**
  * Settings that belong to the form rather than to any one field.
@@ -24,6 +26,7 @@ export const SETTINGS_CONTROLS: Array<keyof FormSettings> = [
   'showProgress',
   'allowSaveAndResume',
   'duplicateControl',
+  'locales',
 ];
 
 export function FormSettingsPanel({
@@ -82,6 +85,44 @@ export function FormSettingsPanel({
         />
         <span className="small muted">{t('settings.redirectUrlHint')}</span>
       </label>
+
+      {/**
+       * Which languages this form offers its readers.
+       *
+       * Separate from the interface language, which is one at a time and belongs to whoever is
+       * signed in. A form is a document: tick two here and the public page grows a flag in the
+       * corner that flips between them, and the author writes both versions of every label on
+       * the translation tab.
+       *
+       * None ticked means the organisation's whole list — which is what every form published
+       * before this setting existed effectively had, so nothing changed under anybody.
+       */}
+      <fieldset className="field">
+        <legend>{t('settings.locales')}</legend>
+        <span className="small muted">{t('settings.localesHint')}</span>
+        <div className="locale-choices">
+          {locales.supported.map((supported) => {
+            const chosen = settings.locales.includes(supported);
+            return (
+              <label key={supported} className="locale-choice">
+                <input
+                  type="checkbox"
+                  checked={chosen}
+                  onChange={() =>
+                    patch({
+                      locales: chosen
+                        ? settings.locales.filter((each) => each !== supported)
+                        : [...settings.locales, supported],
+                    })
+                  }
+                />
+                <Flag locale={supported} />
+                <span>{localeLabel(supported)}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <label className="field field--inline">
         <input
