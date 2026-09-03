@@ -24,4 +24,4 @@ blob-report/
 .playwright-mcp/
 
 # design hook cache (generated)
-.impeccable/
+.impeccable/hook.cache.json

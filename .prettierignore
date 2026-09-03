@@ -8,4 +8,4 @@ docs
 **/drizzle/
 .playwright-mcp/
 
-.impeccable/
+.impeccable/hook.cache.json

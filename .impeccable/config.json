@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "bounce-ball",
+        "createdAt": "2026-09-03T17:21:33.825Z",
+        "reason": "literal motion: the loading indicator is a figure bouncing a paper ball, and the keyframe is the ball"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "bounce-hand",
+        "createdAt": "2026-09-03T17:21:33.886Z",
+        "reason": "literal motion: the palm gives as the ball lands, which is what sells its weight"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.5, -0.4, 0.3, 1.6)",
+        "createdAt": "2026-09-03T17:21:33.952Z",
+        "reason": "literal motion: a throwing arm winds up past its start and follows through past its end"
+      }
+    ]
+  }
+}
