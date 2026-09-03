@@ -193,6 +193,44 @@ export function admissionStrings(locale: string): AdmissionStrings {
   return STRINGS[locale] ?? STRINGS['en-GB']!;
 }
 
+/**
+ * How the admission QR is generated. Exported so `admission-qr.test.ts` can hold it to the spec.
+ *
+ * ## The quiet zone
+ *
+ * `margin` was `0`. The QR specification requires a **four-module** clear border on all sides, and
+ * it is not decoration: decoders use it to find the symbol's edges, and without it a scanner has to
+ * guess where the code stops and the page begins. It happened to be surrounded by card padding,
+ * which is not the same thing — the padding is a layout value that anybody could reduce, and the
+ * card is parchment while the light modules were white, so the boundary the decoder needed to see
+ * was exactly where one colour became another.
+ *
+ * ## The error correction level
+ *
+ * `M` corrects about 15% and is the right default for a code on a screen. This one is printed,
+ * folded into a pocket and held under whatever light a venue door has. `Q` corrects about 25%,
+ * which is the usual choice for anything physical and is what lets a crease through the symbol
+ * still scan. It costs a slightly denser code at the same size.
+ *
+ * ## The colours
+ *
+ * The dark modules stay pure black rather than taking the brand's ink. `CLAUDE.md` rule 4 is about
+ * *design* colours, and this is not one — it is the contrast a camera needs at a door, and the one
+ * thing on this card that has to work for a machine before it works for a person. The light
+ * modules take the card's own background so the quiet zone is part of the card rather than a white
+ * patch stuck onto it.
+ */
+export const ADMISSION_QR = {
+  type: 'svg',
+  errorCorrectionLevel: 'Q',
+  /** Four modules, per the specification. */
+  margin: 4,
+  width: 180,
+} as const;
+
+/** Pure black, for the reason in the note above: this is contrast for a camera, not a brand colour. */
+export const QR_DARK = '#000000';
+
 export interface AdmissionInput {
   organisation: OrganisationRecord;
   event: EventRecord;
@@ -233,10 +271,9 @@ export async function renderAdmissionHtml(input: AdmissionInput): Promise<string
   // SVG rather than a raster image: it stays crisp whatever the print size, and Chromium embeds it
   // as vector in the PDF.
   const qr = await QRCode.toString(input.token, {
-    type: 'svg',
-    errorCorrectionLevel: 'M',
-    margin: 0,
-    width: 180,
+    ...ADMISSION_QR,
+    // The quiet zone takes the card's colour, so it is part of the card and not a white patch.
+    color: { dark: QR_DARK, light: tokens.colour.background },
   });
 
   const when = formatRange(locale, event.startsAt, event.endsAt);
