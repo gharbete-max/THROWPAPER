@@ -267,6 +267,33 @@ export default function PublicForm() {
     }
   }
 
+  /**
+   * The title in whichever language this reader has chosen, falling back the way every other
+   * string on this page does.
+   */
+  const formTitle = form ? pickText(locales, form.title, resolved).value : '';
+
+  /**
+   * The tab, too.
+   *
+   * The server sends a per-form `<title>` for crawlers; a browser that has already loaded the app
+   * and navigated within it never asks the server again, so without this the tab says "Formwork"
+   * for every form somebody has open at once.
+   *
+   * Above the early returns, with the other hooks. It sat below them at first, so the loading
+   * render called one fewer hook than the loaded one — "rendered more hooks than during the
+   * previous render", and the page stopped rendering at all. A screen with four exits is exactly
+   * where that mistake hides.
+   */
+  useEffect(() => {
+    if (!formTitle) return;
+    const previous = document.title;
+    document.title = `${formTitle} — ${form?.organisationName ?? ''}`.trim();
+    return () => {
+      document.title = previous;
+    };
+  }, [formTitle, form?.organisationName]);
+
   if (phase === 'loading') return <main className="shell shell--narrow" />;
 
   if (phase === 'missing') {
@@ -309,6 +336,18 @@ export default function PublicForm() {
           variant="corner"
         />
       </header>
+
+      {/*
+        What this is.
+        
+        The page had no heading: the organisation's name, then a first question. Somebody who
+        followed a link from a chat window saw a card naming the form, opened it, and arrived
+        somewhere that did not name it — which is the moment a careful person closes the tab.
+
+        `h1` and not a caption: on a page whose whole purpose is one document, the document's name
+        is the heading, and a screen reader jumping by heading should land on it.
+      */}
+      {formTitle && phase !== 'done' && <h1 className="public__title">{formTitle}</h1>}
 
       {phase === 'closed' && (
         <div className="card">

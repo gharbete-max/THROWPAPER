@@ -4187,3 +4187,16 @@ body:has(> .app) {
 .page-head h1 {
   margin: 0;
 }
+
+/*
+ * The form's own name, on the page it names.
+ *
+ * Sized down from the shell's default heading: on a page whose whole content is one document, a
+ * display-sized title competes with the first question rather than introducing it. It is the
+ * heading because it is the heading, not because it needs to shout.
+ */
+.public__title {
+  margin: 0;
+  font-size: var(--tp-text-xl);
+  line-height: 1.2;
+}

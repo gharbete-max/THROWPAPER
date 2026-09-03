@@ -126,6 +126,24 @@ describe('fetching a public form', () => {
   });
 
   /**
+   * The form says what it is.
+   *
+   * It did not. The page showed the organisation's name and then a first question, and that was
+   * not an oversight in the page — the title was never in this response, so the page could not
+   * have rendered it. Somebody following a link from a chat window saw a card naming the form,
+   * opened it, and arrived somewhere that did not name it.
+   *
+   * Localised, like everything else a respondent reads: a form written in two languages is titled
+   * in whichever one they are reading it in.
+   */
+  it('sends the form title, in every language it was written in', async () => {
+    await publishForm();
+    const response = await harness.app.inject({ method: 'GET', url: '/public/forms/anmalan' });
+
+    expect(response.json().title).toEqual({ 'sv-SE': 'Anmälan', 'en-GB': 'Registration' });
+  });
+
+  /**
    * Appearance is chosen in the builder and only matters on the public page, so the interesting
    * question is whether it survives the trip: draft, publish, then the anonymous endpoint.
    *
