@@ -17,18 +17,79 @@ import { TEST_JWT_SECRET, createFakePdfRenderer, testOrganisation } from './test
  * port and this code path never runs. It only shows up in production, as a form URL that returns
  * JSON to somebody who was sent a link.
  */
+/**
+ * One published form and one draft, so the preview can be checked for what it says *and* for what
+ * it refuses to say. A draft's title is the author's working note; a link to one already refuses to
+ * render the form, and it must not leak the title in a chat window either.
+ */
+const PUBLISHED_FORM = {
+  id: 'form-published',
+  organisationId: testOrganisation.id,
+  slug: 'varmotet',
+  title: { 'sv-SE': 'Anmälan till Vårmötet' },
+  eventId: null,
+  publishedVersionId: 'version-1',
+  ownerUserId: null,
+  deletedAt: null,
+  opensAt: null,
+  closesAt: null,
+  maxSubmissions: null,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+} as never;
+
+const DRAFT_FORM = {
+  ...(PUBLISHED_FORM as object),
+  id: 'form-draft',
+  slug: 'hemligt',
+  title: { 'sv-SE': 'Internt utkast' },
+  publishedVersionId: null,
+} as never;
+
+const PUBLISHED_VERSION = {
+  id: 'version-1',
+  formId: 'form-published',
+  version: 1,
+  definition: { schemaVersion: 1, fields: [], settings: {} },
+  createdAt: new Date(),
+} as never;
+
 let app: FastifyInstance;
 let dir: string;
 
 beforeAll(async () => {
   dir = mkdtempSync(join(tmpdir(), 'tp-serve-app-'));
-  writeFileSync(join(dir, 'index.html'), '<!doctype html><div id="root"></div>');
+  /**
+   * A realistic shell, not `<div id="root">` on its own.
+   *
+   * The link preview injects before `</head>`, so a fixture without a head silently proved
+   * nothing — the negative cases passed for the wrong reason and the positive one failed for a
+   * reason that does not exist in production. What is served is a real document; the fixture
+   * should be one.
+   */
+  writeFileSync(
+    join(dir, 'index.html'),
+    [
+      '<!doctype html>',
+      '<html lang="en">',
+      '  <head>',
+      '    <meta charset="UTF-8" />',
+      '    <title>Formwork</title>',
+      '  </head>',
+      '  <body><div id="root"></div></body>',
+      '</html>',
+    ].join('\n'),
+  );
   writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Formwork"}');
   mkdirSync(join(dir, 'assets'));
   writeFileSync(join(dir, 'assets', 'index.js'), 'console.log(1)');
 
   app = await buildServer({
-    repos: createMemoryRepositories({ organisations: [testOrganisation] }),
+    repos: createMemoryRepositories({
+      organisations: [testOrganisation],
+      forms: [PUBLISHED_FORM, DRAFT_FORM],
+      formVersions: [PUBLISHED_VERSION],
+    }),
     mail: createMemoryMailProvider(),
     store: createMemoryDocumentStore(TEST_JWT_SECRET),
     renderer: createFakePdfRenderer(),
@@ -183,5 +244,48 @@ describe('serving the built app from the API', () => {
     const response = await app.inject({ method: 'GET', url: '/health' });
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({ status: 'ok' });
+  });
+
+  /**
+   * The link preview.
+   *
+   * The whole distribution model here is "send somebody a link", and that link previewed in Slack,
+   * WhatsApp and Teams as "Formwork" with no title and no organisation — an unlabelled link to an
+   * unfamiliar domain asking for a name and an email, which is a reasonable thing to distrust.
+   */
+  describe('a public form link', () => {
+    it('previews with the form title and the organisation', async () => {
+      const response = await app.inject({ method: 'GET', url: '/f/varmotet' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toContain('og:title" content="Anmälan till Vårmötet"');
+      expect(response.body).toContain(`og:site_name" content="${testOrganisation.name}"`);
+      expect(response.body).toContain('og:url" content="http://localhost:5173/f/varmotet"');
+      // Still the app: the tags are added to the shell, not served instead of it.
+      expect(response.body).toContain('id="root"');
+    });
+
+    it('says nothing at all about an unpublished form', async () => {
+      const response = await app.inject({ method: 'GET', url: '/f/hemligt' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toContain('id="root"');
+      expect(response.body).not.toContain('Internt utkast');
+      expect(response.body).not.toContain('og:title');
+    });
+
+    it('says nothing about a slug that does not exist', async () => {
+      // A preview that confirms which slugs are real is a way to enumerate them.
+      const response = await app.inject({ method: 'GET', url: '/f/no-such-form' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).not.toContain('og:title');
+    });
+
+    it('leaves the app’s own screens unbranded', async () => {
+      // Nobody pastes `/events/…` into a chat window, and those screens are behind a sign-in.
+      const response = await app.inject({ method: 'GET', url: '/events/some-id/registrations' });
+      expect(response.body).not.toContain('og:title');
+    });
   });
 });

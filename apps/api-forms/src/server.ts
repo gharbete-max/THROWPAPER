@@ -12,7 +12,11 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import { CONTRACT_VERSION } from '@tp/shared';
+import { readFile } from 'node:fs/promises';
+import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
+import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
+import { resolveTokens } from './routes/brand-kit.js';
 import { createAuthService } from './auth/service.js';
 import { createConsoleMailProvider, type MailProvider } from './auth/mail.js';
 import { registerAuthRoutes } from './routes/auth.js';
@@ -277,11 +281,83 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       if (isApi || request.method !== 'GET' || looksLikeAsset(path)) {
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       }
+
+      /**
+       * A public form link gets a real preview card.
+       *
+       * Everything else gets the shipped `index.html` unchanged: the app's own screens are behind
+       * a sign-in and nobody pastes them into a chat window. See `link-preview.ts` for why this
+       * cannot be done in React.
+       */
+      const slug = /^\/f\/([A-Za-z0-9][A-Za-z0-9-]{0,63})$/.exec(path)?.[1];
+      if (slug) {
+        const preview = await previewForSlug(repos, slug, appUrl);
+        if (preview) {
+          const shell = await readFile(join(appDir, 'index.html'), 'utf8');
+          return reply.type('text/html; charset=utf-8').send(withLinkPreview(shell, preview));
+        }
+      }
+
       return reply.sendFile('index.html');
     });
   }
 
   return app;
+}
+
+/**
+ * The preview for a published form, or `null`.
+ *
+ * **Only published forms.** A draft's title is the author's working note and has not been shown to
+ * anybody; a link to one already refuses to render the form, and it must not leak the title
+ * either. A form that does not exist gets the plain shell for the same reason — a preview that
+ * confirms which slugs are real is a way to enumerate them.
+ */
+async function previewForSlug(
+  repos: Repositories,
+  slug: string,
+  appUrl: string,
+): Promise<LinkPreview | null> {
+  try {
+    const organisation = await repos.organisations.first();
+    if (!organisation) return null;
+
+    const form = await repos.forms.findBySlug(organisation.id, slug);
+    if (!form?.publishedVersionId) return null;
+
+    const versions = await repos.forms.listVersions(form.id);
+    const published = versions.find((version) => version.id === form.publishedVersionId);
+    if (!published) return null;
+
+    const locale = organisation.defaultLocale;
+    const title = pickText(
+      { default: locale, supported: organisation.supportedLocales, fallbacks: {} },
+      form.title,
+      locale,
+    ).value;
+    if (!title) return null;
+
+    const origin = appUrl.replace(/\/$/, '');
+    const { tokens } = await resolveTokens(repos, organisation.id);
+
+    return {
+      title,
+      organisation: organisation.name,
+      url: `${origin}/f/${slug}`,
+      // The organisation's own logo where they have uploaded one; the product's mark otherwise.
+      image: tokens.logoLight
+        ? new URL(tokens.logoLight, `${origin}/`).toString()
+        : `${origin}/icon-512.png`,
+      locale,
+    };
+  } catch {
+    /**
+     * A preview is decoration on a page that has to load. If the lookup fails — a database blip, a
+     * form row that no longer parses — the visitor still gets the app, which will fetch the form
+     * itself and show its own error. Failing the page over a meta tag would be the wrong trade.
+     */
+    return null;
+  }
 }
 
 /**
