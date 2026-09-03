@@ -23,7 +23,15 @@
  * flag carries a `title` and an accessible name so it is never only a picture.
  */
 export function Flag({ locale, className }: { locale: string; className?: string }) {
-  const draw = FLAGS[locale] ?? FLAGS[locale.split('-')[1] ?? ''] ?? null;
+  /**
+   * Keyed by the full locale, and only that.
+   *
+   * There was a second lookup here on the region — `locale.split('-')[1]`, so `SE` — as a fallback.
+   * Every key in the table is a full locale, so it matched nothing and never could: a fallback that
+   * had never once fired. `flag.test.ts` holds the table against the locale registry instead, which
+   * is a guarantee rather than a guess.
+   */
+  const draw = FLAGS[locale] ?? null;
 
   return (
     <svg
@@ -70,6 +78,33 @@ function nordicCross(field: string, cross: string, inner?: string) {
   );
 }
 
+/**
+ * A five-pointed star, optionally turned so that one point aims at something.
+ *
+ * The four small stars on the Chinese flag are each rotated to point at the large one — it is the
+ * detail that distinguishes that flag from any other red flag with stars on it, and it is
+ * specified rather than decorative. They were circles here, which is the one shortcut that makes
+ * the drawing wrong rather than simplified.
+ *
+ * The inner radius is the golden section of the outer, which is what makes a pentagram regular
+ * rather than a spiky asterisk.
+ */
+function star(cx: number, cy: number, radius: number, aimAt?: readonly [number, number]): string {
+  const inner = radius * 0.381966;
+  // The unrotated star points straight up, so the turn is measured from there.
+  const turn = aimAt ? (Math.atan2(aimAt[1] - cy, aimAt[0] - cx) * 180) / Math.PI + 90 : 0;
+  const round = (value: number) => Math.round(value * 100) / 100;
+  const at = (index: number) => {
+    const r = index % 2 === 0 ? radius : inner;
+    const angle = ((-90 + turn + index * 36) * Math.PI) / 180;
+    return `${round(cx + r * Math.cos(angle))} ${round(cy + r * Math.sin(angle))}`;
+  };
+  return `M${[...Array(10).keys()].map(at).join(' L')} Z`;
+}
+
+/** The large star's centre, which the other four point at. */
+const CHINA_BIG = [4, 4.5] as const;
+
 const FLAGS: Record<string, React.ReactNode> = {
   'en-GB': (
     <>
@@ -111,16 +146,19 @@ const FLAGS: Record<string, React.ReactNode> = {
   'zh-CN': (
     <>
       <rect width="24" height="18" fill="#EE1C25" />
-      {/* One large star and four small ones. At 24px the small stars are dots — which is what
-          they look like at this size on any flag, drawn or photographed. */}
-      <path
-        d="M5 2.2 L5.9 4.7 L8.5 4.7 L6.4 6.3 L7.2 8.8 L5 7.3 L2.8 8.8 L3.6 6.3 L1.5 4.7 L4.1 4.7 Z"
-        fill="#FFFF00"
-      />
-      <circle cx="9.8" cy="2.2" r="0.9" fill="#FFFF00" />
-      <circle cx="11.6" cy="4.3" r="0.9" fill="#FFFF00" />
-      <circle cx="11.6" cy="7.1" r="0.9" fill="#FFFF00" />
-      <circle cx="9.8" cy="9.1" r="0.9" fill="#FFFF00" />
+      {/*
+        Positions from the published specification's 30x20 grid, scaled to this one: the large star
+        at (5,5) with radius 3, the four small ones at (10,2), (12,4), (12,7) and (10,9) with
+        radius 1, each turned to point at the large one.
+
+        The yellow is #FFDE00, the specified gold. It was #FFFF00 — pure yellow, a noticeably
+        colder colour beside that red.
+      */}
+      <path d={star(CHINA_BIG[0], CHINA_BIG[1], 2.4)} fill="#FFDE00" />
+      <path d={star(8, 1.8, 0.8, CHINA_BIG)} fill="#FFDE00" />
+      <path d={star(9.6, 3.6, 0.8, CHINA_BIG)} fill="#FFDE00" />
+      <path d={star(9.6, 6.3, 0.8, CHINA_BIG)} fill="#FFDE00" />
+      <path d={star(8, 8.1, 0.8, CHINA_BIG)} fill="#FFDE00" />
     </>
   ),
   'ja-JP': (
@@ -137,3 +175,6 @@ const FLAGS: Record<string, React.ReactNode> = {
     </>
   ),
 };
+
+/** The locales this component can draw. `flag.test.ts` holds it against the registry. */
+export const FLAG_LOCALES = Object.keys(FLAGS);
