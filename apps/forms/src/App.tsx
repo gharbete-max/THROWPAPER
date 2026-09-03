@@ -164,99 +164,119 @@ function Shell() {
       {/* Inside the shell, so it exists only where there is somewhere to navigate to — the
           sign-in page has one screen and a palette on it would be a joke at the user's expense. */}
       <CommandPalette />
-      <header className="topbar">
-        <div className="topbar__inner">
+      {/**
+       * A sidebar, because the bar could not hold what it was given.
+       *
+       * Events, Forms, Responses, Users, Brand, a language, a theme, a name and a way out were all
+       * asked to sit on one line. At 1440px — an ordinary laptop — that line wrapped, so the
+       * product's own sections floated at the right edge on one row while the account controls sat
+       * on another, six unlike things sharing an undifferentiated strip. A horizontal bar competes
+       * for the one axis a page has least of.
+       *
+       * Vertical navigation cannot wrap. The sections get a fixed place that does not move as the
+       * window changes, the mark sits above them where it reads as the product rather than as
+       * decoration, and the top of the page is left for the one thing that belongs there: what you
+       * are looking at and what you can do to it.
+       *
+       * On a narrow screen this becomes a bottom bar — the sections stay reachable by thumb, and
+       * `.topline` picks up the mark.
+       */}
+      <nav className="sidebar" aria-label={t('nav.sections')}>
+        <div className="sidebar__mark">
           {brand.logoLight ? (
             <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
           ) : (
             // The mark stands in for a customer logo until they upload one of their own.
             <Wordmark name={organisation?.name ?? t('app.name')} />
           )}
-          {/**
-           * Two groups, not one row of six things.
-           *
-           * Events, Forms and Brand used to sit in the same flat row as the language dropdown,
-           * the signed-in name and Sign out, all styled identically — so "where am I" and "who am
-           * I" were the same question, and on a narrow screen the whole lot wrapped into a
-           * jumble. The left group is the product; the right group is the account.
-           */}
-          <nav className="topbar__nav" aria-label={t('nav.sections')}>
-            <NavSection to="/events" icon="events" label={t('nav.events')} />
-            <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
-            <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
-            {/* Support work, so it only appears for the people who do it. */}
-            {user.role === 'admin' && (
-              <NavSection to="/users" icon="people" label={t('nav.users')} />
-            )}
-          </nav>
-
-          <div className="topbar__account">
-            {/* Brand is settings — it configures the other two rather than sitting beside them. */}
-            <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
-            {/*
-              The palette is invisible until pressed, so it needs somewhere to say it exists.
-              Shown only where there is a keyboard to press it with — CSS hides it on coarse
-              pointers and narrow screens rather than advertising a shortcut a phone cannot use.
-            */}
-            <span className="kbd" aria-hidden="true">
-              <Icon name="command" />K
-            </span>
-            {/*
-              Driven by the organisation's supportedLocales, not a hard-coded list —
-              SPEC-shared.md §packages/i18n.
-
-              A flag and the language's own name. The list read "sv-SE, zh-CN, ru-RU" until
-              recently: only a developer could use it, and at twelve entries not even them.
-              The site is in **one** language at a time; a form can offer its own switcher
-              separately, which is a different control on a different page.
-            */}
-            <LanguagePicker
-              locales={interfaceLocales.supported}
-              current={locale}
-              onChange={setLocale}
-            />
-            {/* Beside the language, because both are "how this app is presented to me" rather
-                than anything about the organisation or the work. */}
-            <ThemeToggle />
-            <span className="small muted">
-              {user.name} · {user.role}
-            </span>
-            <button className="button button--quiet small" onClick={signOut}>
-              {t('app.signOut')}
-            </button>
-          </div>
         </div>
-      </header>
 
-      <main className={`shell${wide ? ' shell--wide' : roomy ? ' shell--roomy' : ''}`}>
-        {/* One boundary for the whole table: these screens are alternatives, never siblings, so
+        <div className="sidebar__sections">
+          <NavSection to="/events" icon="events" label={t('nav.events')} />
+          <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
+          <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
+          {/* Support work, so it only appears for the people who do it. */}
+          {user.role === 'admin' && <NavSection to="/users" icon="people" label={t('nav.users')} />}
+        </div>
+
+        {/* Brand configures the sections above rather than sitting among them, so it sits apart. */}
+        <div className="sidebar__foot">
+          <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
+        </div>
+      </nav>
+
+      {/*
+        Everything about *this session* rather than about the work: which language it is read in,
+        whether it is light or dark, who is signed in and how to stop being. It is a short row that
+        cannot wrap, which is the whole reason the sections are no longer in it.
+      */}
+      <div className="topline">
+        <div className="topline__mark">
+          <Wordmark name={organisation?.name ?? t('app.name')} />
+        </div>
+
+        {/*
+          The palette is invisible until pressed, so it needs somewhere to say it exists. Shown
+          only where there is a keyboard to press it with — CSS hides it on coarse pointers and
+          narrow screens rather than advertising a shortcut a phone cannot use.
+        */}
+        <span className="kbd" aria-hidden="true">
+          <Icon name="command" />K
+        </span>
+
+        {/*
+          Driven by the organisation's supportedLocales, not a hard-coded list —
+          SPEC-shared.md §packages/i18n. A flag and the language's own name: the list read
+          "sv-SE, zh-CN, ru-RU" until recently, which only a developer could use, and at twelve
+          entries not even them. The site is in **one** language at a time; a form can offer its
+          own switcher separately, which is a different control on a different page.
+        */}
+        <LanguagePicker
+          locales={interfaceLocales.supported}
+          current={locale}
+          onChange={setLocale}
+        />
+        {/* Beside the language, because both are "how this app is presented to me". */}
+        <ThemeToggle />
+        <span className="topline__who small muted">
+          {user.name} · {user.role}
+        </span>
+        <button className="button button--quiet small" onClick={signOut}>
+          {t('app.signOut')}
+        </button>
+      </div>
+
+      <main className="main">
+        <div className={`shell${wide ? ' shell--wide' : roomy ? ' shell--roomy' : ''}`}>
+          {/* One boundary for the whole table: these screens are alternatives, never siblings, so
             seven separate ones would only mean seven copies of the same fallback. */}
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/events" replace />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/events/new" element={<EventForm />} />
-            <Route path="/events/:id" element={<EventForm />} />
-            <Route path="/forms" element={<Forms />} />
-            <Route path="/responses" element={<Inbox />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/users/:id" element={<UserWorkspace />} />
-            <Route path="/brand" element={<BrandKit />} />
-            {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
-            <Route path="/forms/:id/submissions" element={<FormResponses />} />
-            <Route path="/forms/:id" element={<FormBuilder />} />
-            <Route path="/events/:id/attendance" element={<EventReport />} />
-            <Route
-              path="/events/:id/check-in"
-              element={
-                <Suspense fallback={<p className="muted">…</p>}>
-                  <CheckIn />
-                </Suspense>
-              }
-            />
-            <Route path="*" element={<Navigate to="/events" replace />} />
-          </Routes>
-        </Suspense>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/events" replace />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/events/new" element={<EventForm />} />
+              <Route path="/events/:id" element={<EventForm />} />
+              <Route path="/forms" element={<Forms />} />
+              <Route path="/responses" element={<Inbox />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/users/:id" element={<UserWorkspace />} />
+              <Route path="/brand" element={<BrandKit />} />
+              {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
+              <Route path="/forms/:id/submissions" element={<FormResponses />} />
+              <Route path="/forms/:id" element={<FormBuilder />} />
+              <Route path="/events/:id/attendance" element={<EventReport />} />
+              <Route
+                path="/events/:id/check-in"
+                element={
+                  <Suspense fallback={<p className="muted">…</p>}>
+                    <CheckIn />
+                  </Suspense>
+                }
+              />
+              <Route path="*" element={<Navigate to="/events" replace />} />
+            </Routes>
+          </Suspense>
+        </div>
       </main>
     </div>
   );

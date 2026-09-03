@@ -11,12 +11,6 @@ body {
   line-height: var(--tp-type-line-height);
 }
 
-.shell {
-  max-width: 52rem;
-  margin: 0 auto;
-  padding: calc(var(--tp-spacing-unit) * 6) calc(var(--tp-spacing-unit) * 3);
-}
-
 .shell h1 {
   font-family: var(--tp-type-heading-font);
   color: var(--tp-colour-primary);
@@ -48,29 +42,6 @@ body {
   /* The author's choice, not a hard-coded width — how wide a form gets is a real design decision
    * and differs between a two-question enquiry and a long registration. */
   max-width: var(--tp-content-width);
-}
-
-.topbar {
-  border-bottom: var(--tp-border-width) solid var(--tp-colour-border);
-  background: var(--tp-colour-background);
-}
-
-.topbar__inner {
-  /**
-   * Wider than the 52rem content column below it.
-   *
-   * The bar used to share that width, which is why it ran out of room at an ordinary laptop size
-   * and folded the account controls onto a second line. A top bar spans its window; the column it
-   * sits above is what stays narrow, so text keeps a readable measure.
-   */
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 3);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: calc(var(--tp-spacing-unit) * 2);
-  flex-wrap: wrap;
 }
 
 .stack {
@@ -469,35 +440,6 @@ a:focus-visible {
    case here, not as an adaptation of the desktop layout.
    --------------------------------------------------------------------------- */
 
-/* Safe areas, so content clears a notch and the home indicator. */
-.app {
-  padding-left: max(0px, env(safe-area-inset-left));
-  padding-right: max(0px, env(safe-area-inset-right));
-}
-
-/**
- * The shell keeps its own gutter, and the notch only ever widens it.
- *
- * This used to read `max(0px, env(safe-area-inset-left))` like `.app` above — which on every
- * device without a notch resolves to `0px` and **overrode the 24px gutter** `.shell` sets higher
- * up. Every page has had no horizontal padding at all on a desktop since the safe-area rule was
- * written.
- *
- * It went unnoticed because `.shell` is capped at 52rem and centred: on a wide screen the auto
- * margins look exactly like padding. It only shows when the viewport is narrower than the cap —
- * a tablet, a split window — or, as here, when a screen opts into a wider cap and the margins
- * disappear. `.app` is left alone deliberately: it wraps the full-bleed top bar, which must reach
- * the edges.
- */
-.shell {
-  padding-left: max(calc(var(--tp-spacing-unit) * 3), env(safe-area-inset-left));
-  padding-right: max(calc(var(--tp-spacing-unit) * 3), env(safe-area-inset-right));
-}
-
-.shell {
-  padding-bottom: max(calc(var(--tp-spacing-unit) * 6), env(safe-area-inset-bottom));
-}
-
 /* 44px is the smallest reliably tappable target; anything less gets mis-hit.
  *
  * Written against the elements themselves rather than `.field input` and friends. Scoping it to
@@ -587,10 +529,6 @@ textarea {
   .row .button--quiet {
     flex: 1 1 auto;
     text-align: center;
-  }
-
-  .topbar__inner {
-    gap: var(--tp-spacing-unit);
   }
 
   .checkin__input {
@@ -1361,31 +1299,6 @@ input[type='range'] {
   font-weight: var(--tp-type-weight-regular);
 }
 
-/* --- Top bar ---------------------------------------------------------------
- *
- * Product on the left, account on the right, with the current section marked. Previously all six
- * controls sat in one flat row styled alike, so the bar answered neither "where am I" nor "who am
- * I" without reading every item.
- */
-.topbar__nav,
-.topbar__account {
-  display: flex;
-  align-items: center;
-  gap: var(--tp-spacing-unit);
-  flex-wrap: wrap;
-}
-
-/**
- * The account side is quieter than the sections it sits beside.
- *
- * No `margin-inline-start: auto` — inside a wrapping flex row it makes this group claim all the
- * free space and drop onto a line of its own. `space-between` on `.topbar__inner` already pushes
- * it right, and lets the bar stay one line while it fits.
- */
-.topbar__account {
-  gap: calc(var(--tp-spacing-unit) * 2);
-}
-
 /**
  * The current section.
  *
@@ -1410,14 +1323,6 @@ input[type='range'] {
 
 .nav-link {
   position: relative;
-}
-
-@media (max-width: 600px) {
-  /* Sections stay side by side; only the account side is allowed to wrap away. */
-  .topbar__account {
-    inline-size: 100%;
-    justify-content: space-between;
-  }
 }
 
 /* --- Rating ----------------------------------------------------------------
@@ -2340,11 +2245,13 @@ h4 {
  * only signal for "where am I" was a 2px underline competing with five other frames.
  *
  * Navigation is not a set of buttons. These are places, so they read as text — and the current
- * one is marked by weight, colour and the underline that was always there but had no contrast to
- * work against. The frames come off; the underline finally means something.
+ * one is marked by weight and colour rather than a frame.
+ *
+ * Written for a horizontal bar and kept when the bar became a rail: the reasoning did not change,
+ * only which element carries it. `.sidebar` adds the full-width row shape further down.
  */
-.topbar__nav .nav-link,
-.topbar__account .nav-link {
+.sidebar .nav-link,
+.topline .nav-link {
   border-color: transparent;
   background: none;
   padding-inline: calc(var(--tp-spacing-unit) * 1.25);
@@ -2355,16 +2262,16 @@ h4 {
     background-color var(--tp-motion-fast) var(--tp-ease);
 }
 
-.topbar__nav .nav-link:hover:not(:disabled),
-.topbar__account .nav-link:hover:not(:disabled) {
+.sidebar .nav-link:hover:not(:disabled),
+.topline .nav-link:hover:not(:disabled) {
   background: color-mix(in srgb, var(--tp-colour-primary) 7%, transparent);
   border-color: transparent;
   color: var(--tp-colour-text);
 }
 
 .nav-link--current,
-.topbar__nav .nav-link--current,
-.topbar__account .nav-link--current {
+.sidebar .nav-link--current,
+.topline .nav-link--current {
   color: var(--tp-colour-primary);
   font-weight: var(--tp-type-weight-bold);
   border-color: transparent;
@@ -2378,22 +2285,24 @@ h4 {
   border-radius: 2px;
 }
 
-/* The bar itself gets a little more height and its own quiet ground, so the page beneath is
- * clearly a different surface from the chrome above it. */
-.topbar {
+/*
+ * The session row stays put and lets the work pass under it.
+ *
+ * Translucent rather than solid, so the page reads as continuing beneath rather than beginning
+ * below. Written for the old top bar and kept on the row that replaced it: the treatment was never
+ * the problem, the number of things asked to fit on one line was.
+ */
+.topline {
   position: sticky;
   inset-block-start: 0;
   z-index: 20;
+  min-block-size: 56px;
   background: color-mix(in srgb, var(--tp-colour-surface) 70%, var(--tp-colour-background));
   backdrop-filter: saturate(1.4) blur(8px);
 }
 
-.topbar__inner {
-  min-block-size: 56px;
-}
-
 /* Who you are is not a control. It was reading at the same weight as the sections. */
-.topbar__account .small.muted {
+.topline__who {
   font-size: 0.8125rem;
   white-space: nowrap;
 }
@@ -2559,22 +2468,16 @@ h4 {
 
 /* --- The bar, at widths between a phone and a laptop -----------------------
  *
- * Five sections plus a language, a name and a way out is more than fits across 800px, so the row
- * wrapped — but wrapped with the same generous gap it uses horizontally, which turned a bar into
- * four loosely stacked lines occupying a third of the screen before any content.
+ * Gone, and worth recording why rather than deleting silently.
  *
- * Rows are tighter than columns when a flex row wraps. That one asymmetry is what makes a wrapped
- * bar still read as a bar.
+ * Five sections plus a language, a name and a way out did not fit across 800px, so the row
+ * wrapped — and this block tightened the row gap so that a wrapped bar still read as a bar. It
+ * worked. It was also a repair on a shape that could not hold what it was given: the same row
+ * wrapped at 1440px too, which is not a narrow screen by any definition.
+ *
+ * The sections live in a rail now and the session controls are a short row that cannot wrap, so
+ * there is no wrapped bar left to make legible.
  */
-.topbar__inner {
-  row-gap: calc(var(--tp-spacing-unit) * 0.25);
-  column-gap: calc(var(--tp-spacing-unit) * 2);
-}
-
-.topbar__nav,
-.topbar__account {
-  row-gap: 0;
-}
 
 /**
  * Sign out was the last outlined box in a row of text.
@@ -2583,14 +2486,14 @@ h4 {
  * not a filled button. Text, in the muted colour, sitting at the end — findable when looked for
  * and not competing when not.
  */
-.topbar__account > .button--quiet:not(.nav-link) {
+.topline > .button--quiet:not(.nav-link) {
   border-color: transparent;
   background: none;
   color: var(--tp-colour-muted);
   font-weight: var(--tp-type-weight-regular);
 }
 
-.topbar__account > .button--quiet:not(.nav-link):hover:not(:disabled) {
+.topline > .button--quiet:not(.nav-link):hover:not(:disabled) {
   background: color-mix(in srgb, var(--tp-colour-primary) 7%, transparent);
   border-color: transparent;
   color: var(--tp-colour-text);
@@ -2603,12 +2506,6 @@ h4 {
  * what should leave first. The role it also carried is visible wherever it matters; this was a
  * caption, not a control.
  */
-@media (max-width: 60rem) {
-  .topbar__account .small.muted {
-    display: none;
-  }
-}
-
 /* --- The demo banner -------------------------------------------------------
  *
  * A strip, not a panel. It was taking a fifth of the viewport above the fold on a narrow screen,
@@ -3225,13 +3122,13 @@ h4 {
  * has less work to do and a heavy one reads as a cage. The shadow does the separating instead.
  */
 :root[data-theme='dark'] .card,
-:root[data-theme='dark'] .topbar {
+:root[data-theme='dark'] .topline {
   border-color: color-mix(in srgb, var(--tp-colour-border) 55%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .card,
-  :root:not([data-theme='light']) .topbar {
+  :root:not([data-theme='light']) .topline {
     border-color: color-mix(in srgb, var(--tp-colour-border) 55%, transparent);
   }
 }
@@ -3994,4 +3891,299 @@ h4 {
  */
 .ft__flap--se {
   fill: color-mix(in srgb, var(--tp-colour-primary) 72%, #000);
+}
+
+/* ==========================================================================
+ * The frame.
+ *
+ * A sidebar, a session row, and a column of work. Replaces a top bar that was asked to hold the
+ * product's four sections *and* Brand, a keyboard hint, a language, a theme, a name and a way out
+ * on one line — and could not: at 1440px it wrapped, and the sections ended up floating at the
+ * right edge on a row of their own.
+ *
+ * The grid is the fix rather than a tidier bar. Horizontal space is the axis a page has least of
+ * and the one every column of content also wants; vertical space in a 240px rail is free, and a
+ * vertical list cannot wrap however many sections are added to it.
+ * ========================================================================== */
+/*
+ * The frame fills what is left below anything above it, and the work scrolls inside it.
+ *
+ * The rail was `100dvh` and sticky, which is right until something sits above the frame: the demo
+ * banner pushed it down without shortening it, so the rail was a banner's height too tall and
+ * Brand — pinned to its foot — sat permanently just below the fold. Nothing about that is
+ * demo-specific; any future announcement bar would do it again.
+ *
+ * So the page is a column, the frame takes the remainder, and the rail simply stretches to the
+ * grid row. It cannot be the wrong height because nothing tells it a height.
+ */
+body:has(> .app) {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+}
+
+.app {
+  display: grid;
+  /*
+   * `minmax(0, …)`, not `1fr`.
+   *
+   * A `1fr` track is `minmax(auto, 1fr)`, and `auto` means "at least the widest thing inside".
+   * One row of tabs wider than a phone therefore widened the whole frame to 428px in a 375px
+   * window: the session row, the work and every card ran off the right edge together, with a
+   * horizontal scrollbar under the lot. The track has to be allowed to be narrower than its
+   * contents so the contents are the thing that has to cope.
+   */
+  grid-template-columns: var(--tp-rail) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'sidebar topline'
+    'sidebar main';
+  flex: 1;
+  /* Without this a grid child with long content refuses to shrink and the frame overflows. */
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+:root {
+  /* Wide enough for the longest section name in twelve languages without truncating. */
+  --tp-rail: 15rem;
+}
+
+/* --- The rail -------------------------------------------------------------- */
+.sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  padding: calc(var(--tp-spacing-unit) * 2.5);
+  border-inline-end: var(--tp-border-width) solid var(--tp-colour-border);
+  background: var(--tp-colour-surface);
+  /*
+   * The rail stays put while the work scrolls. `100dvh` rather than `100vh` because a phone's
+   * address bar makes `vh` taller than the screen, which puts the last section under it.
+   */
+  /* Stretched by the grid row, which is the frame's height. Scrolls itself if a future rail
+     outgrows a short window. */
+  overflow-y: auto;
+}
+
+.sidebar__mark {
+  display: flex;
+  align-items: center;
+  min-block-size: 2.5rem;
+}
+
+.sidebar__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Pushed to the bottom: Brand configures the sections above rather than being one of them. */
+.sidebar__foot {
+  margin-block-start: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-block-start: calc(var(--tp-spacing-unit) * 2);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+/*
+ * A rail link is a row, not a chip.
+ *
+ * `.nav-link` was built for a horizontal bar, where a link is as wide as its label. Here the
+ * target is the full width of the rail: the whole row is clickable, which is what makes a sidebar
+ * feel like one rather than like a list of small buttons stacked up.
+ */
+.sidebar .nav-link {
+  justify-content: flex-start;
+  inline-size: 100%;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.5);
+  border-radius: var(--tp-radius);
+}
+
+.sidebar .nav-link--current {
+  background: color-mix(in srgb, var(--tp-colour-primary) 10%, transparent);
+  color: var(--tp-colour-primary);
+  font-weight: var(--tp-type-weight-bold);
+}
+
+/*
+ * The underline the horizontal bar used has no meaning in a column — it would run under a row that
+ * has a row beneath it. The fill above says the same thing.
+ */
+.sidebar .nav-link--current::after {
+  display: none;
+}
+
+/* --- The session row ------------------------------------------------------- */
+.topline {
+  grid-area: topline;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 3);
+  border-block-end: var(--tp-border-width) solid var(--tp-colour-border);
+  background: var(--tp-colour-background);
+}
+
+/* The rail carries the mark on a wide screen; this one appears only when the rail is a bottom bar. */
+.topline__mark {
+  display: none;
+  margin-inline-end: auto;
+}
+
+/* --- The work -------------------------------------------------------------- */
+.main {
+  grid-area: main;
+  min-inline-size: 0;
+  /* The work is what scrolls, so the rail and the session row stay where they are. */
+  overflow-y: auto;
+  padding: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 3)
+    calc(var(--tp-spacing-unit) * 8);
+}
+
+/*
+ * The content column, centred in whatever the rail leaves.
+ *
+ * `.shell` was `margin: 0 auto` inside a full-width page and carried its own vertical padding;
+ * both are the grid's job now, so this only decides how wide a measure the content is allowed.
+ */
+.shell {
+  margin-inline: auto;
+  padding: 0;
+}
+
+/* --- Narrow: the rail becomes a bottom bar --------------------------------- */
+@media (max-width: 64rem) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'topline'
+      'main';
+  }
+
+  /*
+   * Fixed to the bottom, where a thumb is. The sections stay; Brand goes with them rather than
+   * being stranded, because there is no "foot" of a horizontal bar to put it at.
+   */
+  .app {
+    overflow: visible;
+  }
+
+  .main {
+    overflow: visible;
+  }
+
+  .sidebar {
+    position: fixed;
+    inset-block-start: auto;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: 40;
+    block-size: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0;
+    padding: calc(var(--tp-spacing-unit) * 0.5);
+    /* Clear of a phone's home indicator, which otherwise sits on top of the last section. */
+    padding-block-end: max(calc(var(--tp-spacing-unit) * 0.5), env(safe-area-inset-bottom));
+    border-inline-end: 0;
+    border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+  }
+
+  /* The rail's mark would be a logo in the middle of a row of sections. */
+  .sidebar__mark {
+    display: none;
+  }
+
+  .sidebar__sections,
+  .sidebar__foot {
+    flex-direction: row;
+    gap: 0;
+    margin-block-start: 0;
+    padding-block-start: 0;
+    border-block-start: 0;
+  }
+
+  /* A bottom bar is icons over labels: the label alone is too wide for five across a phone. */
+  .sidebar .nav-link {
+    flex-direction: column;
+    gap: 2px;
+    padding: calc(var(--tp-spacing-unit) * 0.5);
+    font-size: var(--tp-text-xs);
+    /* The 44px floor, on the one control a phone user hits most. */
+    min-block-size: 44px;
+  }
+
+  .sidebar .nav-link .icon--lead {
+    margin: 0;
+  }
+
+  .topline__mark {
+    display: block;
+  }
+
+  .topline {
+    /*
+     * The mark, a language, a theme and a way out do not fit across 375px on one line, and a flex
+     * row that cannot fit its children does not politely overflow — it squeezes them. "Log out"
+     * was rendered one character per line down the right edge.
+     *
+     * So: tighter gutters to match the work below, and the row may wrap. It has four items rather
+     * than nine, so wrapping here costs one line at the narrowest sizes instead of turning a bar
+     * into four stacked rows.
+     */
+    flex-wrap: wrap;
+    gap: var(--tp-spacing-unit);
+    padding-inline: calc(var(--tp-spacing-unit) * 2);
+  }
+
+  /* The name and role go first: you know who you are, and it is the widest thing here. */
+  .topline__who {
+    display: none;
+  }
+
+  /* A label is a word, not a column of letters. */
+  .topline > .button--quiet:not(.nav-link) {
+    white-space: nowrap;
+  }
+
+  /*
+   * The mark is allowed to shrink but not to spill.
+   *
+   * `.ft` paints outside its box on purpose — the fold swings past its own edges — which on a
+   * phone put the nose of the plane through the left gutter.
+   */
+  .topline__mark {
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  .main {
+    padding-inline: calc(var(--tp-spacing-unit) * 2);
+    /* Room for the bottom bar, so the last card is not under it. */
+    padding-block-end: calc(var(--tp-spacing-unit) * 12);
+  }
+}
+
+/*
+ * The page header: what this is, and what can be done to it.
+ *
+ * The builder spent 340px of a 900px window on a title, a slug and a translation notice before any
+ * field appeared. A header is a line, not a region.
+ */
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  flex-wrap: wrap;
+  margin-block-end: calc(var(--tp-spacing-unit) * 3);
+}
+
+.page-head h1 {
+  margin: 0;
 }
