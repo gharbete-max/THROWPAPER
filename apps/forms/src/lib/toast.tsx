@@ -61,6 +61,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               .filter((toast) => (liveness === 'assertive') === (toast.tone === 'error'))
               .map((toast) => (
                 <div key={toast.id} className={`toast toast--${toast.tone}`}>
+                  {/* Colour alone is not a message — the text says what happened, and this only
+                      makes the kind scannable for people who can see it. */}
+                  <span className="toast__dot" aria-hidden="true" />
                   <span className="toast__text">{toast.text}</span>
                 </div>
               ))}

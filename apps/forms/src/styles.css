@@ -1927,9 +1927,16 @@ input[type='range'] {
   transform: translateY(1px) scale(0.985);
 }
 
-/* A choice that has just been made gives a small nudge, so a card grid confirms the click. */
+/*
+ * A choice that has just been made gives a small nudge, so a card grid confirms the click.
+ *
+ * The nudge lives in the keyframe — 1.03 and back. The curve used to overshoot as well
+ * (`cubic-bezier(0.2, 0.8, 0.3, 1.4)`), which meant two overshoots stacked on one 260ms
+ * animation and gave it the elastic wobble that dates an interface fastest. One overshoot,
+ * decelerating: the shared easing token.
+ */
 .choice__option:has(input:checked) {
-  animation: chosen 260ms cubic-bezier(0.2, 0.8, 0.3, 1.4);
+  animation: chosen 260ms var(--tp-ease);
 }
 
 @keyframes chosen {
@@ -1941,9 +1948,9 @@ input[type='range'] {
   }
 }
 
-/* A star that has just been lit. */
+/* A star that has just been lit. Same animation, same reasoning as above. */
 .rating__point--on .rating__glyph {
-  animation: chosen 240ms cubic-bezier(0.2, 0.8, 0.3, 1.5);
+  animation: chosen 240ms var(--tp-ease);
 }
 
 /* A field appearing because a condition became true, rather than blinking into existence. */
@@ -3559,20 +3566,34 @@ h4 {
   padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
   background: var(--tp-colour-background);
   border: var(--tp-border-width) solid var(--tp-colour-border);
-  /* The inline-start edge carries the meaning, so the toast needs no coloured fill to fight the
-     brand with. */
-  border-inline-start: 3px solid var(--tp-colour-primary);
   border-radius: var(--tp-radius);
   box-shadow: var(--tp-shadow-overlay);
   animation: toast-in var(--tp-motion) var(--tp-ease);
 }
 
-.toast--success {
-  border-inline-start-color: var(--tp-colour-success);
+/*
+ * The tone is a dot, not a thick bar down one edge.
+ *
+ * The bar was the first thing written here and it is the single most recognisable tell of an
+ * interface nobody art-directed — every generated card has one. A dot says the same thing in less
+ * space, sits on the text baseline where the eye already is, and leaves the toast a plain card.
+ */
+.toast__dot {
+  flex: none;
+  inline-size: 8px;
+  block-size: 8px;
+  /* Nudged down to sit on the first line's centre rather than its cap height. */
+  margin-block-start: 0.45em;
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-primary);
 }
 
-.toast--error {
-  border-inline-start-color: var(--tp-colour-danger);
+.toast--success .toast__dot {
+  background: var(--tp-colour-success);
+}
+
+.toast--error .toast__dot {
+  background: var(--tp-colour-danger);
 }
 
 .toast__text {
