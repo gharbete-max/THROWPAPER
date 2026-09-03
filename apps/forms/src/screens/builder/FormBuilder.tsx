@@ -404,7 +404,7 @@ export function FormBuilder() {
         style={{ gridTemplateColumns: `minmax(0, 1fr) 6px minmax(0, ${previewWidth}px)` }}
       >
         <div className="stack">
-          <div className="card stack">
+          <div className="card stack builder__tools">
             <strong className="small">{t('builder.palette')}</strong>
             {PALETTE_GROUPS.map((group) => (
               <div className="stack" key={group.id}>

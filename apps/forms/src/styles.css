@@ -2929,6 +2929,132 @@ h4 {
   background: none;
 }
 
+/* --- The builder: the work above the tools ---------------------------------
+ *
+ * Measured at 1280x860: the canvas — the form actually being edited — started at y=884. On a
+ * laptop you could not see your own form without scrolling past the entire field palette. The
+ * palette is a *tool*; the canvas is the *work*, and the work was below the fold on the screen
+ * where all the work happens.
+ *
+ * The palette is bounded and scrolls itself instead. Seventeen field types will never fit
+ * comfortably in the space above a canvas, so the choice is between the palette scrolling and the
+ * page scrolling — and the page scrolling takes the canvas with it.
+ */
+.builder__tools {
+  max-block-size: 42vh;
+  overflow-y: auto;
+  /* Reaching the end of the palette must not start scrolling the page behind it. */
+  overscroll-behavior-y: contain;
+  /* Room for the scrollbar, so it never sits on top of a button. */
+  padding-inline-end: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+/**
+ * A grid rather than a wrapping flex row.
+ *
+ * Wrapping gave each group its own ragged block, so five groups took five different heights and
+ * the whole palette was as tall as the sum of them. Equal columns make the groups line up, which
+ * is both shorter and easier to scan — you learn where "Rating" is and it stays there.
+ */
+.builder__palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.builder__palette .button {
+  /* A palette button is a source to drag from, not a call to action. Compact, still 40px for a
+   * thumb, and the icon column stays aligned so the eye can run down it. */
+  min-block-size: 40px;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.9);
+  font-size: 0.8125rem;
+}
+
+/* The canvas is the thing being worked on, so it says so — a slightly stronger edge than the
+ * panels around it, and room to breathe once fields are in it. */
+.builder__canvas {
+  min-height: 18rem;
+}
+
+/* On a narrow screen everything is one column anyway, and a 42vh palette above a canvas leaves
+ * too little of either. Let it run its natural height and let the page scroll. */
+@media (max-width: 900px) {
+  .builder__tools {
+    max-block-size: none;
+    overflow-y: visible;
+  }
+}
+
+/* --- The response grid's controls -----------------------------------------
+ *
+ * The search box was the full width of the table — 1168px on a laptop. A field that wide reads as
+ * a text area, and nobody types a paragraph into a filter. Capped to a measure that matches what
+ * people actually put in one: a name, an email, a reference.
+ */
+.field--search {
+  max-inline-size: 24rem;
+}
+
+/**
+ * A closed disclosure is a control, not a panel.
+ *
+ * "Columns" was a 93px card containing one word, because the card padding applies whether the
+ * disclosure is open or shut — so a collapsed control looked like an empty box somebody forgot to
+ * fill. Shut, it is the size of its summary; open, it is a panel again.
+ */
+.card--disclosure:not([open]) {
+  padding: 0;
+  border-color: transparent;
+  background: none;
+  inline-size: fit-content;
+}
+
+.card--disclosure > summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  min-block-size: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.25);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  color: var(--tp-colour-text);
+  transition: border-color var(--tp-motion-fast) var(--tp-ease);
+}
+
+.card--disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A triangle that turns, so "there is more behind this" is visible before it is clicked. */
+.card--disclosure > summary::after {
+  content: '';
+  inline-size: 0;
+  block-size: 0;
+  border-inline: 4px solid transparent;
+  border-block-start: 5px solid currentColor;
+  opacity: 0.6;
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+.card--disclosure[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+.card--disclosure > summary:hover {
+  border-color: var(--tp-colour-primary);
+}
+
+/* Open, the toggles are a grid rather than a tall column of one-per-row: twelve columns in a
+ * single file is a list you scroll past to reach the table you came for. */
+.card--disclosure[open] > .stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+  margin-block-start: var(--tp-spacing-unit);
+}
+
 /* --- Motion, applied ------------------------------------------------------
  *
  * The tokens above, put to work on the controls that already animated with hand-typed numbers.
