@@ -3883,22 +3883,22 @@ h4 {
  */
 .wordmark:hover .ft--mark .ft__flap--ne,
 .wordmark:focus-visible .ft--mark .ft__flap--ne {
-  animation: ft-open-ne 1.9s var(--tp-ease);
+  animation: ft-open-ne 900ms var(--tp-ease);
 }
 
 .wordmark:hover .ft--mark .ft__flap--nw,
 .wordmark:focus-visible .ft--mark .ft__flap--nw {
-  animation: ft-open-nw 1.9s var(--tp-ease);
+  animation: ft-open-nw 900ms var(--tp-ease);
 }
 
 .wordmark:hover .ft--mark .ft__flap--se,
 .wordmark:focus-visible .ft--mark .ft__flap--se {
-  animation: ft-open-se 1.9s var(--tp-ease);
+  animation: ft-open-se 900ms var(--tp-ease);
 }
 
 .wordmark:hover .ft--mark .ft__flap--sw,
 .wordmark:focus-visible .ft--mark .ft__flap--sw {
-  animation: ft-open-sw 1.9s var(--tp-ease);
+  animation: ft-open-sw 900ms var(--tp-ease);
 }
 
 /* The creases appear while the paper is open and are gone again by the time it is a plane. */
@@ -3927,30 +3927,30 @@ h4 {
   100% {
     stroke-opacity: 0;
   }
-  25%,
-  75% {
+  50% {
     stroke-opacity: 1;
   }
 }
 
 /*
- * Unfold, pinch, refold. The reverse of `ft-fold-*` as far as the closed square, then one pinch,
- * then forward again — so every pose here is one the fold already passes through.
+ * Unfold and back: the plane comes apart and reassembles, and that is all.
+ *
+ * It went further at first — all the way to the closed square, a pinch, and back — which is the
+ * whole fold played in reverse and forwards again. Nice in a filmstrip and too much on a top bar
+ * you pass the pointer over a hundred times a day: the mark left its own silhouette for most of
+ * two seconds every time. One pose out and back keeps the idea (this plane is folded from
+ * something) without the mark ever stopping being the mark.
+ *
+ * The single pose is one the fold already passes through, so the two animations still agree about
+ * what the paper does.
  */
 @keyframes ft-open-ne {
   0%,
   100% {
     d: path('M96 56 L96 56 L96 56 Z');
   }
-  22% {
+  50% {
     d: path('M70 52 L62 22 L96 54 Z');
-  }
-  40%,
-  78% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-  58% {
-    d: path('M50 50 L50 2 L72 50 Z');
   }
 }
 
@@ -3959,15 +3959,8 @@ h4 {
   100% {
     d: path('M20 62.5 L6 30 L96 56 Z');
   }
-  22% {
+  50% {
     d: path('M34 56 L8 42 L74 30 Z');
-  }
-  40%,
-  78% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-  58% {
-    d: path('M50 50 L28 50 L50 2 Z');
   }
 }
 
@@ -3976,15 +3969,8 @@ h4 {
   100% {
     d: path('M46 79 L96 56 L26 73 Z');
   }
-  22% {
+  50% {
     d: path('M48 68 L92 56 L30 82 Z');
-  }
-  40%,
-  78% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-  58% {
-    d: path('M50 50 L72 50 L50 98 Z');
   }
 }
 
@@ -3993,15 +3979,8 @@ h4 {
   100% {
     d: path('M20 62.5 L18 82 L96 56 Z');
   }
-  22% {
+  50% {
     d: path('M30 62 L24 84 L86 52 Z');
-  }
-  40%,
-  78% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-  58% {
-    d: path('M50 50 L50 98 L28 50 Z');
   }
 }
 
