@@ -1191,7 +1191,14 @@ textarea {
  * `margin: 0` because the UA stylesheet gives a range a 2px inline margin, which pushed it 2px
  * wider than its own container and made every field on the panel report an overflow.
  */
-.brand__slider input[type='range'] {
+/*
+ * Every slider, not just this screen's.
+ *
+ * This rule was scoped to `.brand__slider` and so the decoration panel's sliders arrived at 21px
+ * tall in the browser's default blue — a hard-coded colour on a product whose first rule says
+ * there are none, on the same page as eight correctly-styled ones. A range is a range.
+ */
+input[type='range'] {
   inline-size: 100%;
   margin: 0;
   block-size: 44px;
@@ -3172,4 +3179,144 @@ h4 {
  */
 .shell--wide {
   max-width: 76rem;
+}
+
+/* --- Decoration ------------------------------------------------------------
+ *
+ * Shapes and drawings on a form. They collect nothing, so they are styled as content rather than
+ * as controls: no border, no background, no focus ring — a rectangle an author drew should look
+ * exactly like the rectangle they drew and nothing else.
+ */
+.decoration {
+  display: block;
+  inline-size: 100%;
+  /* Never a pointer target. A shape sitting over a question must not eat the click that answers
+     it, and `aria-hidden` alone stops the screen reader, not the mouse. */
+  pointer-events: none;
+  overflow: visible;
+}
+
+.decoration--drawing {
+  /* Handwriting keeps its ratio, so the height follows from the width and the viewBox. */
+  block-size: auto;
+}
+
+/* A rule centred in the row, with the arrowhead sitting on its right end. */
+.decoration--rule {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.decoration__line {
+  flex: 1;
+  border-block-start-style: solid;
+}
+
+/*
+ * Two borders of a square, turned 45°.
+ *
+ * The pull-back that makes the chevron meet the rule is set inline, in terms of the stroke width:
+ * rotating a square widens its box by about a fifth on each side, so a fixed `em` nudge would be
+ * right at one thickness and visibly wrong at every other.
+ */
+.decoration__head {
+  flex: none;
+  border-style: solid;
+  border-block-end-width: 0;
+  border-inline-start-width: 0;
+  transform: rotate(45deg);
+}
+
+/* --- Colour swatches -------------------------------------------------------
+ *
+ * A row of brand colours, then the operating system's own colour well. Wraps rather than scrolls:
+ * nine swatches at 32px fit two rows in the narrowest property panel, and a horizontal scroller
+ * inside a vertical panel is a gesture nobody finds.
+ */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-space) * 0.75);
+  align-items: center;
+}
+
+.swatch {
+  inline-size: 32px;
+  block-size: 32px;
+  padding: 0;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  cursor: pointer;
+  /* Below the 44px floor deliberately: the floor is for targets a respondent hits on a phone,
+     and this is an authoring control in a panel. The hit area is padded back out below. */
+  position: relative;
+  touch-action: manipulation;
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+/* The visible square stays 32px; the thing a finger has to hit is 44. */
+.swatch::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.swatch:active {
+  transform: scale(0.92);
+}
+
+.swatch--on {
+  /* A ring outside the swatch, so the chosen colour is not tinted by its own selection state. */
+  box-shadow:
+    0 0 0 2px var(--tp-colour-background),
+    0 0 0 4px var(--tp-colour-primary);
+}
+
+.swatch:focus-visible {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 3px;
+}
+
+/* "None" is drawn as the absence it is: the diagonal every graphics tool uses for no fill. */
+.swatch--none {
+  background:
+    linear-gradient(
+        to top right,
+        transparent calc(50% - 1px),
+        var(--tp-colour-danger) calc(50% - 1px),
+        var(--tp-colour-danger) calc(50% + 1px),
+        transparent calc(50% + 1px)
+      )
+      no-repeat,
+    var(--tp-colour-background);
+}
+
+.swatch--custom {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* The native well fills the swatch, so what is clicked is the colour itself. */
+.swatch--custom input[type='color'] {
+  inline-size: 200%;
+  block-size: 200%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* --- Drawing pad -----------------------------------------------------------
+ *
+ * The surface an author draws a decoration on. Ruled like the signature pad, because it is the
+ * same gesture and should not look like a different one.
+ */
+.pad__surface {
+  inline-size: 100%;
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) dashed var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  cursor: crosshair;
 }

@@ -17,6 +17,7 @@ import { ImagePicker } from '../../components/ImagePicker.js';
 import { LocalisedField } from './LocalisedField.js';
 import { FieldRules } from './FieldRules.js';
 import { FieldVisibility } from './FieldVisibility.js';
+import { DecorationProperties } from './DecorationProperties.js';
 
 interface Props {
   field: Field | null;
@@ -326,6 +327,10 @@ export function FieldProperties({ field, definition, onChange }: Props) {
             onChange={(event) => patch({ fromParameter: event.target.value } as Partial<Field>)}
           />
         </label>
+      )}
+
+      {(field.type === 'shape' || field.type === 'drawing') && (
+        <DecorationProperties field={field} patch={patch} />
       )}
 
       {hasOptions(field) && (

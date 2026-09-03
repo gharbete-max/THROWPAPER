@@ -45,6 +45,19 @@ const PANEL_CONTROLS = [
   'minLabel',
   'maxLabel',
   'showWhen',
+  // Decoration, in `DecorationProperties.tsx`. `viewBoxWidth` and `viewBoxHeight` are set together
+  // by the drawing-area preset rather than as two numbers — they are a coordinate space, not a
+  // pair of measurements — but they are reachable, which is what this list is about.
+  'kind',
+  'fill',
+  'stroke',
+  'strokeWidth',
+  'radius',
+  'height',
+  'dashed',
+  'paths',
+  'viewBoxWidth',
+  'viewBoxHeight',
 ];
 
 /** Deliberately not editable: an id is internal, and the type is chosen from the palette. */

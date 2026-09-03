@@ -8,6 +8,7 @@ import { ImagePicker } from '../components/ImagePicker.js';
 import { ThemePicker } from '../components/ThemePicker.js';
 import { dominantColour } from '../lib/dominant-colour.js';
 import { Loading } from '../components/Loading.js';
+import { Slider } from '../components/Slider.js';
 
 /**
  * The Brand Kit editor.
@@ -70,50 +71,6 @@ const FONT_STACKS = [
   '"Helvetica Neue", Arial, sans-serif',
   'ui-monospace, "Cascadia Mono", Menlo, monospace',
 ];
-
-function Slider({
-  label,
-  hint,
-  min,
-  max,
-  step = 1,
-  suffix = 'px',
-  value,
-  disabled,
-  onChange,
-}: {
-  label: string;
-  hint?: string | undefined;
-  min: number;
-  max: number;
-  step?: number;
-  suffix?: string;
-  value: number;
-  disabled: boolean;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <label className="field brand__slider">
-      <span className="row row--between">
-        {label}
-        <span className="small muted">
-          {value}
-          {suffix}
-        </span>
-      </span>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        disabled={disabled}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
-      {hint && <span className="small muted">{hint}</span>}
-    </label>
-  );
-}
 
 export function BrandKit() {
   const t = useT();

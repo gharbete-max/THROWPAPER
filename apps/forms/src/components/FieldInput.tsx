@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { pickText, type LocaleConfig } from '@tp/i18n';
 import { parseRichTextBlock, type AnswerValue, type Field } from '@tp/shared/forms';
+import { DrawingField, ShapeField } from './Decoration.js';
 import { FileField } from './FileField.js';
 import { SignaturePad } from './SignaturePad.js';
 
@@ -81,6 +82,10 @@ export function FieldInput({
       </div>
     );
   }
+
+  // Decoration: presentational, aria-hidden, and never in the export. See Decoration.tsx.
+  if (field.type === 'shape') return <ShapeField field={field} />;
+  if (field.type === 'drawing') return <DrawingField field={field} />;
 
   if (field.type === 'image') {
     // A field with no picture chosen yet renders nothing rather than a broken image icon.

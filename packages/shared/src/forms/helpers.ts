@@ -83,7 +83,16 @@ export function translatableTexts(definition: FormDefinition): TranslatableText[
       continue;
     }
 
-    if (field.type === 'hidden') continue;
+    /**
+     * Some fields carry no text at all, so there is nothing here to translate.
+     *
+     * Asked structurally rather than as a list of types. A hidden field has no label because
+     * nobody sees it; a shape and a drawing have none because a decoration that announced itself
+     * would be read aloud to somebody who gains nothing from hearing it. Either way the question
+     * is "does this have a label", and a list of type names would need extending every time the
+     * answer becomes true for a new one — which is exactly the drift these helpers exist to avoid.
+     */
+    if (!('label' in field)) continue;
 
     texts.push({
       path: `field.${field.id}.label`,

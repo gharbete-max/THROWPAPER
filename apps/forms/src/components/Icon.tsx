@@ -42,6 +42,8 @@ export type IconName =
   | 'image'
   | 'link'
   | 'hidden'
+  | 'shape'
+  | 'drawing'
   // Actions and navigation.
   | 'arrow-left'
   | 'arrow-right'
@@ -89,6 +91,10 @@ const PATHS: Record<IconName, string> = {
   rating: 'M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9z',
   time: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3.5 2',
   file: 'M6 3h9l4 4v14H6zM15 3v4h4M9 13h6M9 17h4',
+  // A rounded rectangle: the default decorative shape, and what the group is named for.
+  shape: 'M5 5h14v14H5z',
+  // A pen nib over a stroke — freehand, rather than a pencil, which reads as "edit".
+  drawing: 'M3 20c4-1 5-9 9-9s2 5 5 5 4-3 4-3M14 4l6 6-9 9-6 1 1-6z',
   // A head and shoulders: whose form this is.
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
   // Three nodes on two arms — the usual shape for passing something on to somebody.
