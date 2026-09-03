@@ -1,63 +1,128 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { defaultTokens } from '@tp/tokens';
+import { MARK_FACES, MARK_OFFSET } from './FortuneTeller.js';
 
 /**
- * The mark is drawn in three places, and they must be the same mark.
+ * The mark is drawn in four places, and they must be the same mark.
  *
- * `Logo.tsx` renders it in the app, `scripts/generate-icons.ts` bakes it into the launcher icons
- * and the favicon, and the fold in `styles.css` ends on it. Nothing but this test connects them:
- * the script runs in node and cannot import JSX, and a CSS keyframe cannot import anything at all,
- * so the path data is written out three times on purpose — duplicating six numbers is cheaper than
- * building a renderer to avoid it, but only if something notices when one copy changes.
+ * `FortuneTeller` holds the geometry and renders it; `scripts/generate-icons.ts` bakes the same
+ * numbers into the favicon and the launcher icons; the fold's last keyframe lands on it; and the
+ * hover animation starts and ends there. Nothing but this test connects them — the icon script
+ * runs in node and a CSS keyframe imports nothing at all, so the numbers are written out three
+ * times on purpose. Duplicating six coordinates is cheaper than building a renderer to avoid it,
+ * but only if something notices when one copy changes.
  *
  * The failure this prevents is quiet and embarrassing: a redrawn logo in the top bar while the
  * browser tab, the installed app and the intro all still show the old one.
  */
 const read = (path: string) => readFileSync(new URL(path, import.meta.url), 'utf8');
 
-const LOGO = read('./Logo.tsx');
 const ICONS = read('../../../../scripts/generate-icons.ts');
-/** The fold's keyframes: its last pose is the mark. See `FortuneTeller.tsx`. */
 const STYLES = read('../styles.css');
 
-/** Every `d="…"` on a `<path>` in a component, in order. */
-function drawnPaths(source: string): string[] {
-  return [...source.matchAll(/<path[^>]*\sd="(M[^"]+)"/g)].map((match) =>
-    match[1]!.replace(/\s+/g, ' ').trim(),
-  );
+/** The `(x, y)` pairs in a path, in order. */
+function points(path: string): Array<[number, number]> {
+  return [...path.matchAll(/(-?[\d.]+)\s+(-?[\d.]+)/g)].map((match) => [
+    Number(match[1]),
+    Number(match[2]),
+  ]);
 }
 
 /**
- * The path data the icon script holds, in `PLANE_PATHS`.
+ * A pose as an order-independent key.
  *
- * It lives in an object rather than in markup because that script assembles SVG strings — so the
- * two copies cannot be compared by looking for the same syntax, only for the same numbers.
+ * A set rather than a list: a fold may arrive at a given corner from any of the three points, so
+ * the order is the animation's business. Which corners they are is the mark's.
  */
-function scriptPaths(source: string): string[] {
-  const block = source.slice(source.indexOf('PLANE_PATHS'), source.indexOf('} as const;'));
+function corners(path: string, dy = 0): string {
+  return points(path)
+    .map(([x, y]) => `${x},${Math.round((y + dy) * 100) / 100}`)
+    .sort()
+    .join(' ');
+}
+
+/** The `d` of one flap at a given percentage of a keyframe animation. */
+function poseAt(animation: string, percent: string): string {
+  const block = STYLES.slice(STYLES.indexOf(`@keyframes ${animation}`));
+  const at = block.slice(block.indexOf(percent));
+  return /path\('([^']+)'\)/.exec(at)?.[1] ?? '';
+}
+
+/** The path data the icon script holds, in `PLANE_PATHS`. */
+function scriptPaths(): string[] {
+  const block = ICONS.slice(ICONS.indexOf('PLANE_PATHS'), ICONS.indexOf('} as const;'));
   return [...block.matchAll(/'(M[^']+)'/g)].map((match) => match[1]!.replace(/\s+/g, ' ').trim());
 }
 
+/** Which flap becomes which face of the plane. */
+const FACES = [
+  ['nw', 'topWing'],
+  ['se', 'keel'],
+  ['sw', 'nearWing'],
+] as const;
+
 describe('the mark, wherever it is drawn', () => {
   it('is the same three polygons in the component and in the icon script', () => {
-    const inLogo = drawnPaths(LOGO);
-    const inIcons = scriptPaths(ICONS);
+    const [topWing, keel, nearWing] = scriptPaths();
+    expect([topWing, keel, nearWing].every(Boolean), 'icon script must hold three faces').toBe(
+      true,
+    );
 
-    // Three faces: top wing, keel, near wing. If this is not three, the drawing changed shape.
-    expect(inLogo).toHaveLength(3);
-    expect(inIcons).toEqual(inLogo);
+    // The component draws the mark inside a square, so it sits lower by a fixed offset.
+    const expected = { topWing, keel, nearWing };
+    for (const [flap, face] of FACES) {
+      expect(corners(MARK_FACES[flap]), `${flap} → ${face}`).toBe(
+        corners(expected[face]!, MARK_OFFSET),
+      );
+    }
+  });
+
+  it('collapses the quarter the plane has no face for', () => {
+    // Four quarters, three faces. The spare one folds onto the nose and must be a single point.
+    const spare = points(MARK_FACES.ne);
+    expect(new Set(spare.map(String)).size).toBe(1);
+  });
+
+  it('uses brand tokens for its colours and never a literal', () => {
+    /**
+     * A hard-coded colour would survive a customer changing their palette, which is exactly what
+     * `CLAUDE.md` rule 4 exists to prevent. The keel is a `color-mix` of the primary rather than a
+     * fourth token, which still reads the customer's colour.
+     */
+    const fills = [...STYLES.matchAll(/\.ft__flap[^{]*\{[^}]*fill:\s*([^;]+);/g)].map((match) =>
+      match[1]!.trim(),
+    );
+
+    expect(fills.length).toBeGreaterThan(0);
+    expect(fills.every((fill) => fill.includes('var(--tp-colour-'))).toBe(true);
   });
 
   /**
-   * The generated icons are a build artefact that is committed, so they go stale silently.
+   * The fold has to land on the mark, exactly, and the hover has to start and end there.
    *
-   * They did. The palette moved to parchment and midnight and the favicon stayed `#1f4b99` on
-   * white — the old blue — so the browser tab and the installed app wore the previous brand while
-   * the product wore the new one. The shape check above passed the whole time, because the shape
-   * had not changed; only the colours had, and nothing looked at those.
+   * The final frame of the intro is the one that stays on the screen, and the hover's first and
+   * last frames are what a pointer arriving and leaving reveal. A pose a few units off the mark is
+   * a logo that visibly jumps — the kind of thing that reads as a bug without anyone being able to
+   * say what moved.
+   */
+  it.each([
+    ['the fold ends on it', 'ft-fold', '100%'],
+    ['the hover starts and ends on it', 'ft-open', '0%'],
+  ])('%s', (_name, animation, percent) => {
+    for (const [flap] of FACES) {
+      expect(corners(poseAt(`${animation}-${flap}`, percent)), flap).toBe(
+        corners(MARK_FACES[flap]),
+      );
+    }
+  });
+
+  /**
+   * The generated icons are a committed build artefact, so they go stale silently.
    *
-   * `pnpm icons` regenerates them from `defaultTokens`. This is what says when that is overdue.
+   * They did: the palette moved to parchment and midnight and the favicon stayed on the old blue,
+   * so the browser tab wore the previous brand while the product wore the new one. The shape check
+   * passed the whole time, because only the colours had changed and nothing looked at those.
    */
   it('has regenerated icons since the palette last changed', () => {
     const favicon = read('../../public/favicon.svg');
@@ -66,72 +131,5 @@ describe('the mark, wherever it is drawn', () => {
     expect(favicon, 'run `pnpm icons`').toContain(colour.primary);
     expect(favicon, 'run `pnpm icons`').toContain(colour.background);
     expect(favicon, 'run `pnpm icons`').toContain(colour.accent);
-  });
-
-  it('uses brand tokens for its colours and never a literal', () => {
-    /**
-     * A hard-coded colour here would survive a customer changing their palette, which is exactly
-     * what `CLAUDE.md` rule 4 exists to prevent.
-     *
-     * Only the shapes are checked: `<svg fill="none">` on the element itself is a reset rather
-     * than a colour, and counting it would make this assertion impossible to satisfy.
-     */
-    const fills = [...LOGO.matchAll(/<path[^>]*\sfill="([^"]+)"/g)].map((match) => match[1]!);
-    expect(fills.length).toBeGreaterThan(0);
-    expect(fills.every((fill) => fill.startsWith('var(--tp-colour-'))).toBe(true);
-  });
-
-  /**
-   * The fold has to land on the mark, exactly.
-   *
-   * This assertion used to be "the intro contains at least two `<path>` elements", because the
-   * intro drew its own small copy of the plane and there was no way to compare a hand-scaled copy
-   * to the original. The fold changed that: its last keyframe *is* the mark, moved down the
-   * viewBox to sit in a square, so the two can be checked number for number.
-   *
-   * That matters more than the old check did. The final frame of the intro is the one that stays
-   * on the screen, and a fold that ends a few units off the logo is a mark that visibly jumps when
-   * the overlay clears — the kind of thing that reads as a bug without anyone being able to say
-   * what moved.
-   */
-  it('ends the fold on exactly the mark in the top bar', () => {
-    const points = (path: string): Array<[number, number]> =>
-      [...path.matchAll(/(-?[\d.]+)\s+(-?[\d.]+)/g)].map((match) => [
-        Number(match[1]),
-        Number(match[2]),
-      ]);
-
-    /** The `100%` pose of one flap's fold. */
-    const finalPose = (flap: string): string => {
-      const block = STYLES.slice(STYLES.indexOf(`@keyframes ft-fold-${flap}`));
-      const at100 = block.slice(block.indexOf('100%'));
-      return /path\('([^']+)'\)/.exec(at100)?.[1] ?? '';
-    };
-
-    // The mark's own three faces, and where each one ends up.
-    const [topWing, keel, nearWing] = drawnPaths(LOGO);
-    const pairs: Array<[string, string]> = [
-      [topWing!, finalPose('nw')],
-      [keel!, finalPose('se')],
-      [nearWing!, finalPose('sw')],
-    ];
-
-    // A set, not a list: a fold may arrive at a corner from any of the three, so the order of the
-    // points is the animation's business. Which corners they are is the mark's.
-    const key = (list: Array<[number, number]>, dy = 0) =>
-      list
-        .map(([x, y]) => `${x},${y + dy}`)
-        .sort()
-        .join(' ');
-
-    /** One offset for all three, or the faces have drifted apart rather than moved together. */
-    const OFFSET = 24;
-    for (const [face, landed] of pairs) {
-      expect(key(points(landed)), face).toBe(key(points(face), OFFSET));
-    }
-
-    // And the fourth quarter, which the plane has no face for, folds away to a single point.
-    const vanished = points(finalPose('ne'));
-    expect(new Set(vanished.map(String)).size, 'the spare quarter must collapse').toBe(1);
   });
 });

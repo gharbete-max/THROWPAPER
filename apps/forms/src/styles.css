@@ -1598,51 +1598,31 @@ input[type='range'] {
 
 /* --- The mark -------------------------------------------------------------
  *
- * A paper plane, spinning.
+ * A paper plane, folded from a fortune teller, which holds still until somebody points at it.
  *
- * ## Why it turns in the plane of the screen rather than in space
+ * It used to spin — eight seconds, linear, infinite — and there was a long note here about why it
+ * turned about Z rather than Y: a flat shape rotated about an axis in its own plane goes edge-on
+ * and vanishes twice a revolution. All true, and all beside the point. A mark that never stops
+ * moving is one people learn to stop seeing, and it was the only thing on a quiet page that would
+ * not be still.
  *
- * The obvious reading of "spinning" is a `rotateY` — the fold turning towards you and away. It
- * was built that way first and measured: twice per revolution the plane passed edge-on and its
- * rendered width fell to **under one pixel**. A flat shape has no thickness, so a full rotation
- * about any axis in its own plane makes it disappear. A logo that vanishes twice every seven
- * seconds is a defect however pretty the other five.
- *
- * So it spins about Z, like a thrown plane that has run out of lift and is coming round. Always
- * fully visible, and unambiguously spinning. The constant `rotateX` tilt is what stops it reading
- * as a flat pinwheel: it keeps a little foreshortening so the fold still looks like paper.
- *
- * Slow on purpose — eight seconds. A mark in a top bar sits beside everything somebody is trying
- * to read, and anything quicker competes with the page. Hovering speeds it up, which is the one
- * moment they are actually looking at it.
+ * The fold it plays on hover lives with the fortune teller at the end of this file, because it is
+ * the same four quarters as the intro and the loading indicator.
  */
-.logo__frame {
-  display: inline-flex;
-  /* Without this the rotation is an affine squash and the plane never looks three-dimensional. */
-  perspective: 320px;
-  flex: none;
-}
-
 .logo {
-  /* The viewBox is 100x64 now, so a square box would squash it. Height follows the ratio. */
-  inline-size: 2.1em;
-  block-size: auto;
+  /*
+   * A square box: the mark sits inside the fortune teller's own 100x100 grid, so the paper has
+   * somewhere to unfold into. The plane fills a little over half that height, so the box is bigger
+   * than the old one to keep the mark the same size on screen, and the negative block margin takes
+   * back the empty air above and below rather than making the top bar taller.
+   */
+  inline-size: 3.1em;
+  block-size: 3.1em;
+  margin-block: -0.95em;
   flex: none;
   color: var(--tp-colour-primary);
-  transform-style: preserve-3d;
-  animation: plane-spin 8s linear infinite;
-}
-
-/**
- * The keel: the same brand colour, taken down towards black.
- *
- * `color-mix` rather than a fourth token, because this is one shade of a colour the customer
- * already chose — asking them to pick a "dark primary" as well would be a setting that can only
- * be got wrong. The `fill` attribute on the path is plain `primary`, so a browser without
- * `color-mix` still gets a solid keel, just without the extra depth.
- */
-.logo__keel {
-  fill: color-mix(in srgb, var(--tp-colour-primary) 72%, #000);
+  /* Creases belong to the fold. At rest this is a plane, not a sheet of folded paper. */
+  stroke-opacity: 0;
 }
 
 .wordmark {
@@ -1652,17 +1632,10 @@ input[type='range'] {
   font-size: 1.05rem;
 }
 
-.wordmark:hover .logo {
-  animation-duration: 1.6s;
-}
-
-@keyframes plane-spin {
-  from {
-    transform: rotateX(18deg) rotateZ(0deg);
-  }
-  to {
-    transform: rotateX(18deg) rotateZ(360deg);
-  }
+/* While it unfolds, the creases are what say it is paper. */
+.wordmark:hover .logo,
+.wordmark:focus-visible .logo {
+  stroke-opacity: 1;
 }
 
 /* --- The intro ------------------------------------------------------------
@@ -1849,75 +1822,6 @@ input[type='range'] {
   from {
     opacity: 0;
     transform: translateY(-4px);
-  }
-}
-
-/* --- The flight trail -----------------------------------------------------
- *
- * A dashed curve behind the plane. Decoration, so it is drawn in `border` and never in a brand
- * colour: it has to sit quietly on a light page and a dark one, which is the job a neutral token
- * exists for.
- *
- * The dashes drift along the path rather than the line drawing itself. A line that draws once is
- * an entrance, and an entrance repeated on every screen becomes a tic — dashes that move read as
- * flight and can sit there indefinitely without asking for attention.
- */
-.trail {
-  display: block;
-  inline-size: 100%;
-  block-size: auto;
-  /* Behind whatever it decorates, and never in the way of a click. */
-  pointer-events: none;
-}
-
-.trail__path {
-  animation: trail-drift 3.4s linear infinite;
-}
-
-@keyframes trail-drift {
-  to {
-    /* One full dash period, so the loop is seamless. */
-    stroke-dashoffset: -20;
-  }
-}
-
-/* Sitting behind the sign-in card and the thank-you screen, quietly. */
-.trail--behind {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: -1.5rem;
-  z-index: 0;
-  opacity: 0.9;
-}
-
-.trail-host {
-  position: relative;
-}
-
-.trail-host > *:not(.trail) {
-  position: relative;
-  z-index: 1;
-}
-
-/* --- The intro's trail ----------------------------------------------------
- *
- * Uncovered by a wipe travelling with the plane, not drawn by a dash animation: the dashes have to
- * stay put on the path while the reveal moves, and animating `stroke-dashoffset` would slide the
- * dashes along instead of uncovering them.
- */
-
-/* Fades in with the throw rather than being there from the first frame. */
-
-@keyframes intro-trail-in {
-  0%,
-  28% {
-    opacity: 0;
-  }
-  45% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
   }
 }
 
@@ -3034,10 +2938,17 @@ h4 {
     transform: none;
   }
 
-  /* Parked at the angle it is drawn at, which already reads as a plane in flight. */
-  .logo {
-    animation: none !important;
-    transform: rotateX(18deg) rotateZ(-8deg);
+  /*
+   * The mark holds still and stays a plane.
+   *
+   * The tilt this rule used to apply existed to park a *spinning* logo at a flattering angle.
+   * Nothing spins now — the mark moves only while somebody points at it — so there is nothing to
+   * park, and leaving the transform in would skew a mark that is drawn straight. The crease
+   * override is what stops the hover doing anything at all.
+   */
+  .wordmark:hover .logo,
+  .wordmark:focus-visible .logo {
+    stroke-opacity: 0;
   }
 
   .signed--still .signed__stroke,
@@ -3661,9 +3572,15 @@ h4 {
  * appear where quarters meet. It fades to nothing by the end, which is what leaves the finished
  * plane flat and identical to `Logo`.
  */
+/*
+ * No size here on purpose.
+ *
+ * This was `100%` in both axes, which is fine while the only users are the loading indicator and
+ * the intro — both size their own box — and wrong the moment the mark in the top bar became one of
+ * these too. `.ft` sits later in this file than `.logo`, so at equal specificity it won and the
+ * logo rendered at its container's full width: a 384px mark in a 420px top bar. Each user sizes it.
+ */
 .ft {
-  inline-size: 100%;
-  block-size: 100%;
   overflow: visible;
 }
 
@@ -3950,4 +3867,152 @@ h4 {
 .intro__ft {
   inline-size: min(38vmin, 220px);
   block-size: min(38vmin, 220px);
+}
+
+/* --- The mark, and what it does when pointed at ----------------------------
+ *
+ * At rest it is the plane and nothing moves. The logo used to spin — eight seconds, linear,
+ * infinite, on every screen — and a mark that never stops is one people learn to stop seeing.
+ *
+ * On hover the paper comes apart into the fortune teller, gets pinched once and folds back. It
+ * ends exactly where it started, so there is no state to unwind if somebody moves the pointer
+ * away halfway: the animation simply stops and the `d` in the markup is already the mark.
+ *
+ * Driven from `.wordmark:hover` rather than the SVG's own `:hover` so that pointing anywhere at
+ * the logo *or its name* plays it — a 28px target is a poor thing to ask someone to hit.
+ */
+.wordmark:hover .ft--mark .ft__flap--ne,
+.wordmark:focus-visible .ft--mark .ft__flap--ne {
+  animation: ft-open-ne 1.9s var(--tp-ease);
+}
+
+.wordmark:hover .ft--mark .ft__flap--nw,
+.wordmark:focus-visible .ft--mark .ft__flap--nw {
+  animation: ft-open-nw 1.9s var(--tp-ease);
+}
+
+.wordmark:hover .ft--mark .ft__flap--se,
+.wordmark:focus-visible .ft--mark .ft__flap--se {
+  animation: ft-open-se 1.9s var(--tp-ease);
+}
+
+.wordmark:hover .ft--mark .ft__flap--sw,
+.wordmark:focus-visible .ft--mark .ft__flap--sw {
+  animation: ft-open-sw 1.9s var(--tp-ease);
+}
+
+/* The creases appear while the paper is open and are gone again by the time it is a plane. */
+.wordmark:hover .ft--mark .ft__flap,
+.wordmark:focus-visible .ft--mark .ft__flap {
+  animation-name: ft-open-ne, ft-mark-crease;
+}
+
+.wordmark:hover .ft--mark .ft__flap--nw,
+.wordmark:focus-visible .ft--mark .ft__flap--nw {
+  animation-name: ft-open-nw, ft-mark-crease;
+}
+
+.wordmark:hover .ft--mark .ft__flap--se,
+.wordmark:focus-visible .ft--mark .ft__flap--se {
+  animation-name: ft-open-se, ft-mark-crease;
+}
+
+.wordmark:hover .ft--mark .ft__flap--sw,
+.wordmark:focus-visible .ft--mark .ft__flap--sw {
+  animation-name: ft-open-sw, ft-mark-crease;
+}
+
+@keyframes ft-mark-crease {
+  0%,
+  100% {
+    stroke-opacity: 0;
+  }
+  25%,
+  75% {
+    stroke-opacity: 1;
+  }
+}
+
+/*
+ * Unfold, pinch, refold. The reverse of `ft-fold-*` as far as the closed square, then one pinch,
+ * then forward again — so every pose here is one the fold already passes through.
+ */
+@keyframes ft-open-ne {
+  0%,
+  100% {
+    d: path('M96 56 L96 56 L96 56 Z');
+  }
+  22% {
+    d: path('M70 52 L62 22 L96 54 Z');
+  }
+  40%,
+  78% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+  58% {
+    d: path('M50 50 L50 2 L72 50 Z');
+  }
+}
+
+@keyframes ft-open-nw {
+  0%,
+  100% {
+    d: path('M20 62.5 L6 30 L96 56 Z');
+  }
+  22% {
+    d: path('M34 56 L8 42 L74 30 Z');
+  }
+  40%,
+  78% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+  58% {
+    d: path('M50 50 L28 50 L50 2 Z');
+  }
+}
+
+@keyframes ft-open-se {
+  0%,
+  100% {
+    d: path('M46 79 L96 56 L26 73 Z');
+  }
+  22% {
+    d: path('M48 68 L92 56 L30 82 Z');
+  }
+  40%,
+  78% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+  58% {
+    d: path('M50 50 L72 50 L50 98 Z');
+  }
+}
+
+@keyframes ft-open-sw {
+  0%,
+  100% {
+    d: path('M20 62.5 L18 82 L96 56 Z');
+  }
+  22% {
+    d: path('M30 62 L24 84 L86 52 Z');
+  }
+  40%,
+  78% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+  58% {
+    d: path('M50 50 L50 98 L28 50 Z');
+  }
+}
+
+/*
+ * The keel, a shade down from the primary.
+ *
+ * `color-mix` rather than a fourth token, because this is one shade of a colour the customer
+ * already chose — asking them to pick a "dark primary" as well would be a setting that can only be
+ * got wrong. It applies in every mode, so the frame the intro ends on and the mark in the top bar
+ * are the same picture.
+ */
+.ft__flap--se {
+  fill: color-mix(in srgb, var(--tp-colour-primary) 72%, #000);
 }

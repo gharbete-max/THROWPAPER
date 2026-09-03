@@ -19,7 +19,6 @@ import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
-import { FlightTrail } from '../components/Logo.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -318,11 +317,9 @@ export default function PublicForm() {
       )}
 
       {phase === 'done' && (
-        <div className="card stack done trail-host">
-          {/* The same curve the intro drew, at the other end of the journey. */}
-          <FlightTrail variant="short" className="trail--behind" />
-          {/* Drawn rather than already there: a line appearing *now* is what says it worked, which
-              is the thing people are unsure about on a confirmation screen. */}
+        <div className="card stack done">
+          {/* Drawn rather than already there: a mark appearing *now* is what says it worked,
+              which is the thing people are unsure about on a confirmation screen. */}
           <Signed />
           <h1>{confirmation || t('public.thanks')}</h1>
           <p className="muted">{t('public.reference', { reference })}</p>

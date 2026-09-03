@@ -38,17 +38,33 @@
 export function FortuneTeller({
   mode,
   className,
+  title,
 }: {
-  /** `pinch` loops the fortune teller working. `fold` runs once and ends as the plane. */
-  mode: 'pinch' | 'fold' | 'still';
+  /**
+   * `pinch` loops the fortune teller working. `fold` runs once and ends as the plane. `mark` rests
+   * *as* the plane and unfolds only while somebody points at it.
+   */
+  mode: 'pinch' | 'fold' | 'still' | 'mark';
   className?: string;
+  /** Give it a name where it stands alone. Omit where a wordmark sits beside it. */
+  title?: string;
 }) {
+  /**
+   * At rest the mark is the plane, so that is what sits in the markup.
+   *
+   * The `d` attribute is the resting pose in every mode — the animation overrides it while it
+   * runs, and this is what shows when it is not running, or where a browser will not interpolate
+   * `d` at all. For the top bar that resting frame is the logo, so it has to be exact.
+   */
+  const resting = mode === 'mark' ? MARK : CLOSED;
   return (
     <svg
       className={`ft ft--${mode}${className ? ` ${className}` : ''}`}
       viewBox="0 0 100 100"
       fill="none"
-      aria-hidden="true"
+      role={title ? 'img' : undefined}
+      aria-label={title}
+      aria-hidden={title ? undefined : 'true'}
       focusable="false"
     >
       {/*
@@ -57,10 +73,36 @@ export function FortuneTeller({
         the near wing on top. Getting this wrong is invisible for the whole animation and then
         wrong in the one frame that stays on screen.
       */}
-      <path className="ft__flap ft__flap--ne" d="M50 50 L50 6 L94 50 Z" />
-      <path className="ft__flap ft__flap--nw" d="M50 50 L6 50 L50 6 Z" />
-      <path className="ft__flap ft__flap--se" d="M50 50 L94 50 L50 94 Z" />
-      <path className="ft__flap ft__flap--sw" d="M50 50 L50 94 L6 50 Z" />
+      <path className="ft__flap ft__flap--ne" d={resting.ne} />
+      <path className="ft__flap ft__flap--nw" d={resting.nw} />
+      <path className="ft__flap ft__flap--se" d={resting.se} />
+      <path className="ft__flap ft__flap--sw" d={resting.sw} />
     </svg>
   );
 }
+
+/**
+ * The two resting poses, as data rather than as four string literals in the markup.
+ *
+ * `MARK` is the mark itself — the three faces of the plane, plus the quarter the plane has no face
+ * for collapsed onto the nose. It is the single source of truth for the logo's geometry:
+ * `Logo` renders it, `scripts/generate-icons.ts` bakes the same numbers into the favicon, and the
+ * fold's last keyframe lands on it. `logo-consistency.test.ts` holds all three together.
+ */
+const CLOSED = {
+  ne: 'M50 50 L50 6 L94 50 Z',
+  nw: 'M50 50 L6 50 L50 6 Z',
+  se: 'M50 50 L94 50 L50 94 Z',
+  sw: 'M50 50 L50 94 L6 50 Z',
+} as const;
+
+const MARK = {
+  ne: 'M96 56 L96 56 L96 56 Z',
+  nw: 'M20 62.5 L6 30 L96 56 Z',
+  se: 'M46 79 L96 56 L26 73 Z',
+  sw: 'M20 62.5 L18 82 L96 56 Z',
+} as const;
+
+/** The plane sits `MARK_OFFSET` lower than `Logo`'s own 100x64 drawing, to centre it in a square. */
+export const MARK_OFFSET = 24;
+export const MARK_FACES = MARK;

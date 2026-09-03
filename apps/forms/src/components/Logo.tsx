@@ -1,5 +1,7 @@
+import { FortuneTeller } from './FortuneTeller.js';
+
 /**
- * The mark: a paper plane, spinning.
+ * The mark: a paper plane, folded from a fortune teller.
  *
  * ## Three faces, not two
  *
@@ -32,72 +34,24 @@ export function Logo({
   /** Give it a name where it stands alone. Omit where a wordmark sits beside it. */
   title?: string;
 }) {
+  /**
+   * The mark is the fortune teller at rest.
+   *
+   * It used to be three static paths that span perpetually — `plane-spin`, eight seconds, infinite,
+   * on every screen. A logo that never stops moving is a logo you learn to stop looking at, and it
+   * was the only thing on a quiet page that would not hold still.
+   *
+   * Now it sits still and unfolds when somebody points at it: the paper comes apart into the
+   * fortune teller, gets pinched once, and folds back. Same four quarters as the intro and the
+   * loading indicator, so all three are one object, and the resting frame is the mark itself.
+   */
   return (
-    <span className="logo__frame">
-      <svg
-        className={className ? `logo ${className}` : 'logo'}
-        viewBox="0 0 100 64"
-        fill="none"
-        role={title ? 'img' : undefined}
-        aria-label={title}
-        aria-hidden={title ? undefined : 'true'}
-        focusable="false"
-      >
-        {/* The top wing: wingtip, nose, and back to the fold. The largest face. */}
-        <path d="M6 6 L96 32 L20 38.5 Z" fill="var(--tp-colour-primary)" />
-        {/* The keel, under everything. Only the sliver past the near wing is ever seen. */}
-        <path className="logo__keel" d="M96 32 L46 55 L26 49 Z" fill="var(--tp-colour-primary)" />
-        {/* The near wing, in the accent — the side the light is on. */}
-        <path d="M20 38.5 L96 32 L18 58 Z" fill="var(--tp-colour-accent)" />
-      </svg>
-    </span>
-  );
-}
-
-/**
- * The dashed path a thrown plane leaves behind it.
- *
- * Decorative, and drawn in `border` rather than a brand colour on purpose: it has to sit quietly
- * behind whatever it decorates on a light page *and* on a dark one, which is the one job a neutral
- * token exists for. Never announced — it carries nothing a reader needs.
- *
- * The dashes march slowly along the path rather than the line drawing itself. A line that draws
- * once is an entrance, and an entrance repeated on every screen becomes a tic; dashes that drift
- * read as flight and can sit there indefinitely without demanding attention.
- *
- * `variant` picks the curve. Two lengths rather than one squashed to fit, because a wide header
- * and a narrow card want different geometry, not the same geometry at a different aspect ratio.
- */
-export function FlightTrail({
-  variant = 'long',
-  className,
-}: {
-  variant?: 'long' | 'short';
-  className?: string;
-}) {
-  const long = variant === 'long';
-  return (
-    <svg
-      className={['trail', className].filter(Boolean).join(' ')}
-      viewBox={long ? '0 0 360 110' : '0 0 214 66'}
-      fill="none"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        className="trail__path"
-        d={
-          long
-            ? 'M2 74 C40 96 72 22 128 30 C186 38 196 92 250 78 C300 66 320 40 358 34'
-            : 'M4 46 C40 60 62 12 110 22 C152 30 168 52 210 40'
-        }
-        stroke="var(--tp-colour-border)"
-        strokeWidth={3}
-        strokeLinecap="round"
-        strokeDasharray="9 11"
-      />
-    </svg>
+    <FortuneTeller
+      mode="mark"
+      // `logo` carries the sizing; without it the SVG inherits `.ft`'s 100% and fills its parent.
+      className={className ? `logo ${className}` : 'logo'}
+      title={title}
+    />
   );
 }
 
