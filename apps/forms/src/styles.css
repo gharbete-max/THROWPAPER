@@ -1692,13 +1692,12 @@ input[type='range'] {
   place-items: center;
   gap: calc(var(--tp-spacing-unit) * 2);
   color: var(--tp-colour-primary);
-  /* The camera: pushes in, then pulls back and pans as the paper leaves the frame. */
-  animation: intro-camera 1000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.intro__scene {
-  inline-size: min(70vw, 30rem);
-  block-size: auto;
+  /*
+   * The camera. It used to follow a thrown plane across the frame; the fold happens in one place,
+   * so this is now just a gentle push-in that settles — enough to feel like an entrance without
+   * the pan that made it a shot.
+   */
+  animation: intro-camera 1400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .intro__word {
@@ -1709,36 +1708,16 @@ input[type='range'] {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   opacity: 0;
-  animation: intro-word 620ms 380ms ease-out forwards;
-}
-
-/* The wind-up and the throw, in one arc. */
-.intro__arm {
-  /* The shoulder. Rotating about anything else swings the whole arm off the body. */
-  transform-origin: 40px 50px;
-  animation: intro-throw 1000ms cubic-bezier(0.5, -0.4, 0.3, 1.6) forwards;
-}
-
-.intro__figure {
-  transform-origin: 40px 84px;
-  animation: intro-lean 1000ms ease-in-out forwards;
-}
-
-/* The sheet leaves the hand, crosses the frame and spins. */
-.intro__paper {
-  transform-origin: center;
-  animation: intro-paper 1000ms cubic-bezier(0.3, 0, 0.5, 1) forwards;
+  /* Held back until the mark has actually landed, so the name arrives with the plane. */
+  animation: intro-word 620ms 2100ms ease-out forwards;
 }
 
 @keyframes intro-camera {
   0% {
-    transform: scale(0.86) translateX(0);
-  }
-  40% {
-    transform: scale(1.1) translateX(0);
+    transform: scale(0.9);
   }
   100% {
-    transform: scale(1) translateX(-4%);
+    transform: scale(1);
   }
 }
 
@@ -1753,54 +1732,7 @@ input[type='range'] {
   }
 }
 
-@keyframes intro-throw {
-  0% {
-    transform: rotate(0deg);
-  }
-  30% {
-    /* The wind-up: back and up, stopping short of where the head is. */
-    transform: rotate(-50deg);
-  }
-  48% {
-    transform: rotate(40deg);
-  }
-  100% {
-    transform: rotate(22deg);
-  }
-}
-
-@keyframes intro-lean {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  30% {
-    transform: rotate(-4deg);
-  }
-  55% {
-    transform: rotate(5deg);
-  }
-}
-
-@keyframes intro-paper {
-  0%,
-  30% {
-    /* In the hand, at the arm's resting end. */
-    transform: translate(58px, 58px) rotate(0deg) scale(0.9);
-    opacity: 1;
-  }
-  48% {
-    /* Released as the arm comes through. */
-    transform: translate(96px, 34px) rotate(200deg) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(238px, 48px) rotate(560deg) scale(0.9);
-    opacity: 0;
-  }
-}
-
-/* --- Waiting: a hand bouncing a paper ball -------------------------------- */
+/* --- Waiting: a fortune teller, worked ------------------------------------- */
 .loading {
   display: inline-flex;
   align-items: center;
@@ -1808,52 +1740,7 @@ input[type='range'] {
   color: var(--tp-colour-primary);
 }
 
-.loading__scene {
-  inline-size: 3rem;
-  block-size: 2.5rem;
-  flex: none;
-}
-
-.loading__ball {
-  transform-origin: 8px 9px;
-  animation: bounce-ball 900ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-/* The palm gives a little as the ball lands, which is what sells the weight. */
-.loading__hand {
-  transform-origin: 24px 31px;
-  animation: bounce-hand 900ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-@keyframes bounce-ball {
-  0%,
-  100% {
-    transform: translate(16px, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(16px, 14px) rotate(180deg);
-  }
-}
-
-@keyframes bounce-hand {
-  0%,
-  100% {
-    transform: translateY(0) scaleY(1);
-  }
-  50% {
-    transform: translateY(2px) scaleY(0.9);
-  }
-}
-
 /* Still, not absent: the same picture with the ball resting in the palm. */
-.loading--still .loading__ball {
-  animation: none;
-  transform: translate(16px, 12px);
-}
-
-.loading--still .loading__hand {
-  animation: none;
-}
 
 /* --- Finishing: the signature draws itself -------------------------------- */
 .signed {
@@ -2018,26 +1905,8 @@ input[type='range'] {
  * stay put on the path while the reveal moves, and animating `stroke-dashoffset` would slide the
  * dashes along instead of uncovering them.
  */
-.intro__wipe {
-  transform-origin: 0 0;
-  animation: intro-wipe 1000ms cubic-bezier(0.3, 0, 0.5, 1) forwards;
-}
-
-@keyframes intro-wipe {
-  0%,
-  30% {
-    transform: scaleX(0.25);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-}
 
 /* Fades in with the throw rather than being there from the first frame. */
-.intro__trail {
-  opacity: 0;
-  animation: intro-trail-in 1000ms ease-out forwards;
-}
 
 @keyframes intro-trail-in {
   0%,
@@ -3131,10 +3000,6 @@ h4 {
     transform: none;
   }
 
-  .loading--still .loading__ball {
-    transform: translate(16px, 12px);
-  }
-
   /* Parked at the angle it is drawn at, which already reads as a plane in flight. */
   .logo {
     animation: none !important;
@@ -3745,4 +3610,310 @@ h4 {
   .palette {
     animation: none;
   }
+}
+
+/* --- The fortune teller ----------------------------------------------------
+ *
+ * See `FortuneTeller.tsx` for why every pose is four triangles of three points. The poses, in the
+ * order they are used:
+ *
+ *   CLOSED  a regular diamond — the fortune teller seen from above, flaps down
+ *   TALL    east and west squeezed toward the centre — opened along one axis
+ *   WIDE    north and south squeezed — opened along the other
+ *   OPENING the sheet coming apart, quarters swinging out of the square
+ *   PLANE   the three faces of the mark, and one quarter folded away to the nose
+ *
+ * The stroke is what draws the creases: each flap outlined in the border colour, so the folds
+ * appear where quarters meet. It fades to nothing by the end, which is what leaves the finished
+ * plane flat and identical to `Logo`.
+ */
+.ft {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.ft__flap {
+  stroke: var(--tp-colour-border);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  /* Fills never change: each quarter already wears the colour of the face it becomes. */
+}
+
+.ft__flap--nw,
+.ft__flap--se {
+  fill: var(--tp-colour-primary);
+}
+
+.ft__flap--ne,
+.ft__flap--sw {
+  fill: var(--tp-colour-accent);
+}
+
+/* ---- Working it: the loop ------------------------------------------------- */
+
+.ft--pinch .ft__flap--ne {
+  animation: ft-pinch-ne 2.6s var(--tp-ease) infinite;
+}
+.ft--pinch .ft__flap--nw {
+  animation: ft-pinch-nw 2.6s var(--tp-ease) infinite;
+}
+.ft--pinch .ft__flap--se {
+  animation: ft-pinch-se 2.6s var(--tp-ease) infinite;
+}
+.ft--pinch .ft__flap--sw {
+  animation: ft-pinch-sw 2.6s var(--tp-ease) infinite;
+}
+
+@keyframes ft-pinch-ne {
+  0%,
+  100% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+  22% {
+    d: path('M50 50 L50 2 L72 50 Z');
+  }
+  44% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+  66% {
+    d: path('M50 50 L50 28 L98 50 Z');
+  }
+  88% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+}
+
+@keyframes ft-pinch-nw {
+  0%,
+  100% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+  22% {
+    d: path('M50 50 L28 50 L50 2 Z');
+  }
+  44% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+  66% {
+    d: path('M50 50 L2 50 L50 28 Z');
+  }
+  88% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+}
+
+@keyframes ft-pinch-se {
+  0%,
+  100% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+  22% {
+    d: path('M50 50 L72 50 L50 98 Z');
+  }
+  44% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+  66% {
+    d: path('M50 50 L98 50 L50 72 Z');
+  }
+  88% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+}
+
+@keyframes ft-pinch-sw {
+  0%,
+  100% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+  22% {
+    d: path('M50 50 L50 98 L28 50 Z');
+  }
+  44% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+  66% {
+    d: path('M50 50 L50 72 L2 50 Z');
+  }
+  88% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+}
+
+/* ---- Folding into the plane: once ----------------------------------------
+ *
+ * Two pinches, then the fold. `forwards` because the last frame is the mark, and that is the frame
+ * that stays on the screen.
+ */
+.ft--fold .ft__flap {
+  animation-duration: 2.8s;
+  animation-timing-function: var(--tp-ease);
+  animation-fill-mode: forwards;
+}
+
+/*
+ * Two animations per flap: its own fold, and the shared crease fade. Named together in one
+ * declaration because `animation-name` is not additive — a second rule naming only the crease
+ * would silently drop the fold.
+ */
+.ft--fold .ft__flap--ne {
+  animation-name: ft-fold-ne, ft-crease;
+}
+.ft--fold .ft__flap--nw {
+  animation-name: ft-fold-nw, ft-crease;
+}
+.ft--fold .ft__flap--se {
+  animation-name: ft-fold-se, ft-crease;
+}
+.ft--fold .ft__flap--sw {
+  animation-name: ft-fold-sw, ft-crease;
+}
+
+@keyframes ft-crease {
+  0%,
+  55% {
+    stroke-opacity: 1;
+  }
+  100% {
+    stroke-opacity: 0;
+  }
+}
+
+@keyframes ft-fold-ne {
+  0% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+  14% {
+    d: path('M50 50 L50 2 L72 50 Z');
+  }
+  28% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+  42% {
+    d: path('M50 50 L50 28 L98 50 Z');
+  }
+  55% {
+    d: path('M50 50 L50 6 L94 50 Z');
+  }
+  /* The quarter that has to go: it swings toward the nose and folds under the wing. */
+  64% {
+    d: path('M58 50 L56 24 L95 50 Z');
+  }
+  75% {
+    d: path('M70 52 L62 22 L96 54 Z');
+  }
+  100% {
+    d: path('M96 56 L96 56 L96 56 Z');
+  }
+}
+
+@keyframes ft-fold-nw {
+  0% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+  14% {
+    d: path('M50 50 L28 50 L50 2 Z');
+  }
+  28% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+  42% {
+    d: path('M50 50 L2 50 L50 28 Z');
+  }
+  55% {
+    d: path('M50 50 L6 50 L50 6 Z');
+  }
+  64% {
+    d: path('M42 52 L8 46 L60 20 Z');
+  }
+  75% {
+    d: path('M34 56 L8 42 L74 30 Z');
+  }
+  100% {
+    d: path('M20 62.5 L6 30 L96 56 Z');
+  }
+}
+
+@keyframes ft-fold-se {
+  0% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+  14% {
+    d: path('M50 50 L72 50 L50 98 Z');
+  }
+  28% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+  42% {
+    d: path('M50 50 L98 50 L50 72 Z');
+  }
+  55% {
+    d: path('M50 50 L94 50 L50 94 Z');
+  }
+  64% {
+    d: path('M50 60 L95 52 L34 78 Z');
+  }
+  75% {
+    d: path('M48 68 L92 56 L30 82 Z');
+  }
+  100% {
+    d: path('M46 79 L96 56 L26 73 Z');
+  }
+}
+
+@keyframes ft-fold-sw {
+  0% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+  14% {
+    d: path('M50 50 L50 98 L28 50 Z');
+  }
+  28% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+  42% {
+    d: path('M50 50 L50 72 L2 50 Z');
+  }
+  55% {
+    d: path('M50 50 L50 94 L6 50 Z');
+  }
+  64% {
+    d: path('M36 58 L30 80 L90 52 Z');
+  }
+  75% {
+    d: path('M30 62 L24 84 L86 52 Z');
+  }
+  100% {
+    d: path('M20 62.5 L18 82 L96 56 Z');
+  }
+}
+
+/*
+ * Standing still.
+ *
+ * Not a different picture: the same four quarters, closed, with their creases showing. Somebody
+ * who turns motion off should get a quieter product, not a plainer one.
+ */
+.ft--still .ft__flap {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft__flap {
+    animation: none !important;
+  }
+}
+
+/* The loading indicator's own frame: small, and beside its word. */
+.loading__ft {
+  inline-size: 40px;
+  block-size: 40px;
+  flex: none;
+}
+
+/* The intro plays it large, in the middle of the stage. */
+.intro__ft {
+  inline-size: min(38vmin, 220px);
+  block-size: min(38vmin, 220px);
 }

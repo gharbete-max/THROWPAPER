@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { rememberIntroSeen, shouldPlayIntro, useReducedMotion } from '../lib/motion.js';
 import { useT } from '../lib/i18n.js';
+import { FortuneTeller } from './FortuneTeller.js';
 
 /**
- * The one-second intro: a figure winds up and throws a paper plane, and the camera follows it.
+ * The intro: a square of paper is worked like a fortune teller, then folds into the mark.
  *
  * ## The rules it plays by
  *
@@ -21,10 +22,16 @@ import { useT } from '../lib/i18n.js';
  * ## Why SVG and CSS rather than a video
  *
  * A video is a network request, a decoder, a format matrix and a file nobody can restyle. This is
- * a few paths that take their colour from the Brand Kit like everything else, weighs nothing, and
+ * four paths that take their colour from the Brand Kit like everything else, weighs nothing, and
  * is legible at any size.
+ *
+ * The fold is `d` interpolation between poses that are all four triangles — see
+ * `FortuneTeller.tsx`. Where a browser will not interpolate `d`, the paths keep the pose in their
+ * markup and the intro is a still fortune teller for its second on screen, which is a decoration
+ * that did not move rather than a broken one.
  */
-const DURATION_MS = 1000;
+/** The fold runs 2.8s; the overlay leaves a beat after the mark lands. */
+const DURATION_MS = 3000;
 /** Long enough for the fade-out to finish before the node goes. */
 const FADE_MS = 260;
 
@@ -73,64 +80,17 @@ export function Intro() {
       aria-hidden="true"
     >
       <div className="intro__stage">
-        <svg className="intro__scene" viewBox="0 0 240 120" fill="none">
-          {/* The thrower. Blocky, like the mark: a head, a body, and one arm that swings. */}
-          <g className="intro__figure">
-            {/**
-             * The head sits high and the shoulder low, so the arm's arc clears it.
-             *
-             * The first attempt had them level: at the top of the wind-up the arm swung straight
-             * through the head and simply disappeared, which is not something the code could have
-             * told me — it took looking at a frame.
-             */}
-            <circle cx="40" cy="34" r="8" fill="currentColor" />
-            <path d="M40 42 L40 82" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
-            <path
-              d="M40 82 L32 102 M40 82 L50 102"
-              stroke="currentColor"
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-            <path
-              className="intro__arm"
-              d="M40 50 L56 56"
-              stroke="currentColor"
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-          </g>
+        {/*
+          The whole intro is now one object: a sheet of paper folded into the mark.
 
-          {/**
-           * The trail, revealed by a wipe that travels with the plane.
-           *
-           * A clip rectangle scaled from nothing rather than a dash animation: the dashes have to
-           * stay put on the path while the *reveal* moves, and animating `stroke-dashoffset` would
-           * slide the dashes along instead of uncovering them.
-           */}
-          <clipPath id="intro-trail-wipe">
-            <rect className="intro__wipe" x="0" y="0" width="240" height="120" />
-          </clipPath>
-          <path
-            className="intro__trail"
-            clipPath="url(#intro-trail-wipe)"
-            d="M60 62 C92 34 118 26 150 40 C186 56 208 54 236 46"
-            stroke="var(--tp-colour-border)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray="8 10"
-          />
+          It replaced a figure winding up and throwing a dart. That was two ideas — a person, and
+          a plane — and the person was doing the work. This is the product's own mark being made,
+          which is a shorter thing to say and needs no thrower, no trail and no camera move.
 
-          {/**
-           * The plane, thrown across the frame and turning as it goes.
-           *
-           * The same two-wing shape and the same two colours as the mark, at a twelfth the size,
-           * so the thing being thrown and the thing in the top bar are recognisably one object.
-           */}
-          <g className="intro__paper">
-            <path d="M14 -7 L-14 4 L-1.5 8.5 Z" fill="var(--tp-colour-primary)" />
-            <path d="M14 -7 L-1.5 8.5 L2 19.5 Z" fill="var(--tp-colour-accent)" />
-          </g>
-        </svg>
+          It is the same component the loading indicator uses, in `fold` rather than `pinch`, so
+          the shape somebody watches while waiting is the shape that becomes the logo.
+        */}
+        <FortuneTeller mode="fold" className="intro__ft" />
 
         <p className="intro__word">{t('app.name')}</p>
       </div>
