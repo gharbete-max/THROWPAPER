@@ -364,6 +364,9 @@ a:focus-visible {
   width: 100%;
   max-height: 40vh;
   border-radius: var(--tp-radius);
+  /* The one hard-coded colour in the file, and deliberate: this is the letterbox behind a camera
+   * feed, not a surface. Black is what a viewfinder is, in every brand — using the palette here
+   * would tint the picture rather than frame it. */
   background: #000;
 }
 
@@ -2618,6 +2621,12 @@ h4 {
 }
 
 .button:active:not(:disabled) {
+  box-shadow: none;
+}
+
+/* A disabled control must not look raised. The lift says "press me", which is the one thing this
+ * button cannot do. */
+.button:disabled {
   box-shadow: none;
 }
 
