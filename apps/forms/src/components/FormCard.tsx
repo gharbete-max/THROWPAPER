@@ -50,7 +50,9 @@ export function FormCard({
     <article className={binned ? 'card stack card--binned' : 'card stack'}>
       <div className="row row--between">
         <h2>{name || form.slug}</h2>
-        <span className="badge">{t(`forms.status.${form.status}`)}</span>
+        {/* The status carries into the class so colour can say it too — a form that is live and
+            taking answers is the one fact somebody scanning forty of them is looking for. */}
+        <span className={`badge badge--${form.status}`}>{t(`forms.status.${form.status}`)}</span>
       </div>
 
       {/**

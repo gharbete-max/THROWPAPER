@@ -18,3 +18,7 @@ proof-out/
 test-results/
 playwright-report/
 blob-report/
+
+# Playwright MCP scratch: page snapshots, console logs and screenshots it writes while driving
+# the app. Debugging output, not source — and it lands in the repo root by default.
+.playwright-mcp/

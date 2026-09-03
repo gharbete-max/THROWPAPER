@@ -2139,6 +2139,11 @@ input[type='file']:disabled::file-selector-button {
 .badge--quiet {
   background: none;
   border: var(--tp-border-width) solid var(--tp-colour-border);
+  /* Not shouted. A permission is context, not status — uppercasing it made "CAN EDIT" compete
+   * with the one badge on the card that is actually about the form. */
+  text-transform: none;
+  font-weight: var(--tp-type-weight-regular);
+  letter-spacing: normal;
 }
 
 /* The administrator's "you are looking at somebody else's workspace" banner. Deliberately the
@@ -2784,6 +2789,108 @@ h4 {
   font-weight: var(--tp-type-weight-bold);
   padding-block: 1px;
   white-space: nowrap;
+}
+
+/* --- The list column, and cards abreast in it -----------------------------
+ *
+ * A workspace is scanned; a document is read. They were sharing the 52rem reading measure, so on
+ * a 1440px screen a list of forms sat in the left two thirds with the rest of the page empty —
+ * under a top bar that already spanned 76rem, which made the emptiness look like a mistake rather
+ * than a margin.
+ */
+.shell--roomy {
+  max-width: 68rem;
+}
+
+/**
+ * Two cards abreast once there is room for two.
+ *
+ * `auto-fill` with a 26rem floor rather than a fixed column count: the breakpoint is then a
+ * property of the card's own legibility — below 26rem a card with four actions in it starts
+ * wrapping badly — instead of a width somebody guessed and nobody revisits.
+ *
+ * Applied to the list screens only, via the shell modifier. A document's stack stays a stack.
+ */
+.shell--roomy > .stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  align-items: start;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+/* The things that introduce the list — heading, tabs, the create form, an empty state — span it
+ * rather than becoming columns of their own. Only the cards are grid items. */
+.shell--roomy > .stack > header,
+.shell--roomy > .stack > .tabs,
+.shell--roomy > .stack > form,
+.shell--roomy > .stack > p,
+.shell--roomy > .stack > .inbox,
+.shell--roomy > .stack > .loading {
+  grid-column: 1 / -1;
+}
+
+/* A card in a grid has no top margin: the grid gap is the spacing, and `margin-top` on top of it
+ * would make the first row sit lower than the rest. */
+.shell--roomy .card {
+  margin-top: 0;
+  block-size: 100%;
+}
+
+/* Actions pinned to the bottom, so two cards of different heights still line their buttons up.
+ * A row of buttons that floats at a different height in each card reads as misalignment. */
+.shell--roomy .card.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.shell--roomy .card__actions {
+  margin-block-start: auto;
+}
+
+/* Card actions are secondary controls: four of them at full button padding do not fit a 26rem
+ * card, and "Move to bin" fell to a row of its own — which reads as a mistake rather than as a
+ * grouping. Compact enough for four abreast, still 40px tall for a thumb. */
+.card__actions .button {
+  padding-inline: calc(var(--tp-spacing-unit) * 1.1);
+  font-size: 0.875rem;
+}
+
+.card__actions .button .icon {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+/**
+ * Status is a fact about the form, so it looks like one.
+ *
+ * "Published" and "Draft" were muted grey on a pale card — the least visible thing on it, and the
+ * first thing somebody scanning a list of forty actually wants. Colour carries it, and the word
+ * still says it, so the two never disagree and neither is doing the job alone.
+ */
+.badge {
+  padding: 1px calc(var(--tp-spacing-unit) * 0.75);
+  border: var(--tp-border-width) solid transparent;
+  font-weight: var(--tp-type-weight-bold);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Live and taking answers — the only status worth a colour of its own. Everything else is a
+ * state of rest and reads as one. */
+.badge--published {
+  color: var(--tp-colour-success);
+  border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
+}
+
+.badge--draft,
+.badge--closed,
+.badge--archived {
+  color: var(--tp-colour-muted);
+  border-color: var(--tp-colour-border);
+  background: none;
 }
 
 /* --- Motion, applied ------------------------------------------------------

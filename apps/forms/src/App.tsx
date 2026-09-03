@@ -131,18 +131,26 @@ function Shell() {
   if (!user) return <Navigate to="/login" replace />;
 
   /**
-   * The two screens that are workspaces rather than documents.
+   * How wide the content column gets, which depends on what kind of screen it is.
    *
-   * 52rem is a reading measure — right for a list of forms, and wrong for a builder with a
-   * palette, a canvas and a live preview side by side, or for a grid of forty responses. Both were
-   * squeezed into the left two thirds of an ordinary laptop with the rest of the page empty, while
-   * the top bar above them already spanned 76rem.
+   * 52rem is a **reading** measure. It is right for a document — a form being filled in, a single
+   * event being edited — and wrong for everything else, because a workspace is scanned rather than
+   * read. Both kinds were sharing one width, so a list of forms sat in the left two thirds of a
+   * laptop with the rest of the page empty, under a top bar that already spanned 76rem.
+   *
+   * - `wide` (76rem): the builder and the response grid. Three panels, or forty columns.
+   * - `roomy` (68rem): the lists — forms, events, responses, users. Enough for two cards abreast
+   *   on a large screen without the eye having to travel the full width of the window.
+   * - neither: documents, at the reading measure.
    *
    * Matched by path rather than set by the screens themselves, because the element being widened
    * belongs to the shell — a child reaching up to restyle its own container is the kind of thing
    * that works until two of them disagree.
    */
-  const wide = /^\/forms\/[^/]+/.test(location.pathname);
+  const path = location.pathname;
+  const wide = /^\/forms\/[^/]+/.test(path);
+  const roomy =
+    !wide && (/^\/(forms|events|responses|users)$/.test(path) || /^\/users\/[^/]+$/.test(path));
 
   return (
     <div className="app">
@@ -199,7 +207,7 @@ function Shell() {
         </div>
       </header>
 
-      <main className={wide ? 'shell shell--wide' : 'shell'}>
+      <main className={`shell${wide ? ' shell--wide' : roomy ? ' shell--roomy' : ''}`}>
         {/* One boundary for the whole table: these screens are alternatives, never siblings, so
             seven separate ones would only mean seven copies of the same fallback. */}
         <Suspense fallback={<Loading />}>
