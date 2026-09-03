@@ -1161,17 +1161,42 @@ textarea {
 }
 
 /* A link the author put in the form, shown as text rather than a button. */
+/**
+ * The public address of a form, as a link.
+ *
+ * Given a real hit area rather than left as bare inline text. It sits directly beside a 44px
+ * "Copy link" button and was 21px tall — the two things a thumb reaches for in that row, one of
+ * them half the size of the other, and the smaller one is the one that opens the form.
+ */
 .form-link {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.4);
+  min-block-size: 44px;
   color: var(--tp-colour-secondary);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-/* Brand editor: sliders and the colour a logo suggested. */
+/**
+ * Brand editor: sliders and the colour a logo suggested.
+ *
+ * The slider used to carry `min-block-size: 0`, which cancelled the product's own 44px touch
+ * floor — on the one screen whose job is setting that floor. Eight sliders at 33px, on the page
+ * with a control reading "Touch screens always use at least 44px". Measured, not noticed.
+ *
+ * The height is the hit area; the browser still draws a thin track down the middle of it, so
+ * nothing looks heavier — there is just something to hit.
+ *
+ * `margin: 0` because the UA stylesheet gives a range a 2px inline margin, which pushed it 2px
+ * wider than its own container and made every field on the panel report an overflow.
+ */
 .brand__slider input[type='range'] {
   inline-size: 100%;
+  margin: 0;
+  block-size: 44px;
+  background: transparent;
   accent-color: var(--tp-colour-primary);
-  min-block-size: 0;
 }
 
 .brand__suggestion {
@@ -2813,7 +2838,18 @@ h4 {
  */
 .shell--roomy > .stack {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  /**
+   * `min(26rem, 100%)`, not `26rem`.
+   *
+   * A bare `minmax(26rem, 1fr)` forces the column to 416px whatever the container is, so on a
+   * 390px phone the grid was 432px wide inside a 390px page and the whole document panned
+   * sideways — on four of the five list screens. The floor has to be allowed to give way when
+   * there is less room than it asks for, which is what `min()` does.
+   *
+   * Caught by measuring `scrollWidth > clientWidth` at 390px rather than by looking: the overflow
+   * is invisible until somebody drags, and then it is the whole page that moves.
+   */
+  grid-template-columns: repeat(auto-fill, minmax(min(26rem, 100%), 1fr));
   align-items: start;
   gap: calc(var(--tp-spacing-unit) * 2);
 }
