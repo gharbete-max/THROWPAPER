@@ -28,10 +28,28 @@ function referenceIn(text: string | null): string {
   return found;
 }
 
+/**
+ * Pick a language on the public form.
+ *
+ * The switcher used to be a native `<select>` and these tests used `selectOption`. It is a
+ * listbox now — a `<select>` cannot contain a flag, because an `<option>` renders text and
+ * nothing else — so the language is chosen the way a visitor chooses it: open the control, click
+ * the language by its own name.
+ *
+ * The endonym rather than the code, because that is what the control shows and what a person
+ * would look for.
+ */
+const ENDONYM = { 'sv-SE': 'Svenska', 'en-GB': 'English' } as const;
+
+async function chooseLanguage(page: import('@playwright/test').Page, locale: 'sv-SE' | 'en-GB') {
+  await page.getByRole('button', { name: /^(Language|Språk):/ }).click();
+  await page.getByRole('option', { name: ENDONYM[locale] }).click();
+}
+
 /** The form loads in the visitor's language; pin it so the assertions are deterministic. */
 async function open(page: import('@playwright/test').Page, locale: 'sv-SE' | 'en-GB') {
   await page.goto(`/f/${slug}`);
-  await page.getByLabel('language').selectOption(locale);
+  await chooseLanguage(page, locale);
 }
 
 /**
@@ -79,7 +97,7 @@ test('switching language mid-flow keeps what has already been typed', async ({ p
 
   await page.getByLabel(/Namn/).fill('Åsa Ångström');
   await page.getByLabel(/E-post/).fill(uniqueEmail());
-  await page.getByLabel('language').selectOption('en-GB');
+  await chooseLanguage(page, 'en-GB');
 
   // The label changed; the answer did not.
   await expect(page.getByLabel(/Name/)).toHaveValue('Åsa Ångström');
