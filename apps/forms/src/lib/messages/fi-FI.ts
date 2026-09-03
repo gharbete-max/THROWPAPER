@@ -245,6 +245,15 @@ export const fiFI: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Korkea',
   'field.drawAreaLocked': 'Tyhjennä piirros, jos haluat muuttaa muotoa.',
 
+  'appearance.label': 'Ulkoasu',
+  'appearance.system': 'Järjestelmä',
+  'appearance.light': 'Vaalea',
+  'appearance.dark': 'Tumma',
+
+  'palette.title': 'Siirry',
+  'palette.placeholder': 'Hae näkymiä…',
+  'palette.empty': 'Ei osumia.',
+
   'fieldType.hidden': 'Piilotettu kenttä',
 
   'submissions.title': 'Vastaukset ({n})',

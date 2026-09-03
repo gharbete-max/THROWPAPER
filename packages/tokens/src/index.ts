@@ -4,7 +4,16 @@ import type { TokenSet } from './types.js';
 export type { TokenSet, ColourTokens, TypographyTokens } from './types.js';
 
 /** Web target — CSS custom properties. */
-export { toCssVariables, toCssBlock } from './compile-web.js';
+export { toCssVariables, toCssBlock, toThemedCssBlock } from './compile-web.js';
+
+/**
+ * Scales computed from the tokens somebody set, rather than stored beside them.
+ *
+ * `toDark` is the one worth knowing about: every organisation's brand kit gets a dark palette
+ * derived from its light one, so dark mode needed no new field, no migration and no second set of
+ * colour pickers.
+ */
+export { toDark, toDarkColours, mix, readableOn, buttonSurface, shadow } from './derive.js';
 
 /** Email target — resolved inline styles and table layout. Browser-safe, no dependencies. */
 export { toEmailStyles, type EmailStyles } from './compile-email.js';

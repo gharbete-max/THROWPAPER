@@ -249,6 +249,15 @@ export const jaJP: Record<MessageKey, string> = {
   'field.drawArea.tall': '縦長',
   'field.drawAreaLocked': '形を変えるには描画を消してください。',
 
+  'appearance.label': '外観',
+  'appearance.system': 'システム',
+  'appearance.light': 'ライト',
+  'appearance.dark': 'ダーク',
+
+  'palette.title': '移動',
+  'palette.placeholder': '画面を検索…',
+  'palette.empty': '一致するものがありません。',
+
   'fieldType.hidden': '非表示項目',
 
   'submissions.title': '回答（{n}）',

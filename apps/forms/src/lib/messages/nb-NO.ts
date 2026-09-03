@@ -244,6 +244,15 @@ export const nbNO: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Høy',
   'field.drawAreaLocked': 'Tøm tegningen for å endre formen.',
 
+  'appearance.label': 'Utseende',
+  'appearance.system': 'System',
+  'appearance.light': 'Lyst',
+  'appearance.dark': 'Mørkt',
+
+  'palette.title': 'Gå til',
+  'palette.placeholder': 'Søk i skjermer…',
+  'palette.empty': 'Ingenting samsvarer.',
+
   'fieldType.hidden': 'Skjult felt',
 
   'submissions.title': 'Svar ({n})',

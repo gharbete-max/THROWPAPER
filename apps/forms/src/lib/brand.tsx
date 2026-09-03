@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { defaultTokens, toCssBlock, type TokenSet } from '@tp/tokens';
+import { defaultTokens, toThemedCssBlock, type TokenSet } from '@tp/tokens';
 import { client } from './api.js';
 import { useSession } from './session.js';
 
@@ -53,7 +53,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     // A dedicated element, so this replaces its own block rather than fighting main.tsx's.
     const style = document.createElement('style');
     style.dataset['brand'] = 'organisation';
-    style.textContent = toCssBlock(tokens);
+    style.textContent = toThemedCssBlock(tokens);
     document.head.appendChild(style);
     return () => style.remove();
   }, [tokens]);

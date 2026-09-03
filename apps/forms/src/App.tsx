@@ -7,6 +7,9 @@ import { ConfirmProvider } from './components/Confirm.js';
 import { Icon, type IconName } from './components/Icon.js';
 import { Wordmark } from './components/Logo.js';
 import { LanguagePicker } from './components/LanguagePicker.js';
+import { ThemeToggle } from './components/ThemeToggle.js';
+import { CommandPalette } from './components/CommandPalette.js';
+import { ToastProvider } from './lib/toast.js';
 import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
 import { Login } from './screens/Login.js';
@@ -63,21 +66,25 @@ export function App() {
         <SessionProvider>
           <BrandProvider>
             <ConfirmProvider>
-              <Intro />
-              <DemoBanner />
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/auth/callback" element={<Callback />} />
-                <Route
-                  path="/f/:slug"
-                  element={
-                    <Suspense fallback={<main className="shell shell--narrow" />}>
-                      <PublicForm />
-                    </Suspense>
-                  }
-                />
-                <Route path="/*" element={<Shell />} />
-              </Routes>
+              {/* Outside the routes: a toast raised by a screen must survive navigating away
+                  from it, which is exactly when "Saved" and "Could not save" are raised. */}
+              <ToastProvider>
+                <Intro />
+                <DemoBanner />
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/auth/callback" element={<Callback />} />
+                  <Route
+                    path="/f/:slug"
+                    element={
+                      <Suspense fallback={<main className="shell shell--narrow" />}>
+                        <PublicForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route path="/*" element={<Shell />} />
+                </Routes>
+              </ToastProvider>
             </ConfirmProvider>
           </BrandProvider>
         </SessionProvider>
@@ -154,6 +161,9 @@ function Shell() {
 
   return (
     <div className="app">
+      {/* Inside the shell, so it exists only where there is somewhere to navigate to — the
+          sign-in page has one screen and a palette on it would be a joke at the user's expense. */}
+      <CommandPalette />
       <header className="topbar">
         <div className="topbar__inner">
           {brand.logoLight ? (
@@ -184,6 +194,14 @@ function Shell() {
             {/* Brand is settings — it configures the other two rather than sitting beside them. */}
             <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
             {/*
+              The palette is invisible until pressed, so it needs somewhere to say it exists.
+              Shown only where there is a keyboard to press it with — CSS hides it on coarse
+              pointers and narrow screens rather than advertising a shortcut a phone cannot use.
+            */}
+            <span className="kbd" aria-hidden="true">
+              <Icon name="command" />K
+            </span>
+            {/*
               Driven by the organisation's supportedLocales, not a hard-coded list —
               SPEC-shared.md §packages/i18n.
 
@@ -197,6 +215,9 @@ function Shell() {
               current={locale}
               onChange={setLocale}
             />
+            {/* Beside the language, because both are "how this app is presented to me" rather
+                than anything about the organisation or the work. */}
+            <ThemeToggle />
             <span className="small muted">
               {user.name} · {user.role}
             </span>

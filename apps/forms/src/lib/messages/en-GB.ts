@@ -250,6 +250,15 @@ export const enGB = {
   'field.drawArea.tall': 'Tall',
   'field.drawAreaLocked': 'Clear the drawing to change its shape.',
 
+  'appearance.label': 'Appearance',
+  'appearance.system': 'System',
+  'appearance.light': 'Light',
+  'appearance.dark': 'Dark',
+
+  'palette.title': 'Go to',
+  'palette.placeholder': 'Search screens…',
+  'palette.empty': 'Nothing matches.',
+
   'fieldType.hidden': 'Hidden field',
 
   'submissions.title': 'Responses ({n})',

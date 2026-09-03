@@ -249,6 +249,15 @@ export const deDE: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Hoch',
   'field.drawAreaLocked': 'Zeichnung löschen, um die Form zu ändern.',
 
+  'appearance.label': 'Darstellung',
+  'appearance.system': 'System',
+  'appearance.light': 'Hell',
+  'appearance.dark': 'Dunkel',
+
+  'palette.title': 'Gehe zu',
+  'palette.placeholder': 'Ansichten suchen…',
+  'palette.empty': 'Keine Treffer.',
+
   'fieldType.hidden': 'Verstecktes Feld',
 
   'submissions.title': 'Antworten ({n})',

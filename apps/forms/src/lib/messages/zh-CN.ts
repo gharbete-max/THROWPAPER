@@ -244,6 +244,15 @@ export const zhCN: Record<MessageKey, string> = {
   'field.drawArea.tall': '高',
   'field.drawAreaLocked': '清除绘制内容后才能更改形状。',
 
+  'appearance.label': '外观',
+  'appearance.system': '跟随系统',
+  'appearance.light': '浅色',
+  'appearance.dark': '深色',
+
+  'palette.title': '跳转到',
+  'palette.placeholder': '搜索页面…',
+  'palette.empty': '没有匹配项。',
+
   'fieldType.hidden': '隐藏字段',
 
   'submissions.title': '回复（{n}）',

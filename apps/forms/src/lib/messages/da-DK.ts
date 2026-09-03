@@ -243,6 +243,15 @@ export const daDK: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Høj',
   'field.drawAreaLocked': 'Ryd tegningen for at ændre formen.',
 
+  'appearance.label': 'Udseende',
+  'appearance.system': 'System',
+  'appearance.light': 'Lyst',
+  'appearance.dark': 'Mørkt',
+
+  'palette.title': 'Gå til',
+  'palette.placeholder': 'Søg skærme…',
+  'palette.empty': 'Intet matcher.',
+
   'fieldType.hidden': 'Skjult felt',
 
   'submissions.title': 'Svar ({n})',

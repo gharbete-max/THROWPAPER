@@ -2490,20 +2490,14 @@ html {
  * choosing their own palette.
  * ========================================================================== */
 
-:root {
-  /**
-   * Motion, as three values instead of a number typed at each call site.
-   *
-   * `120ms ease` appeared in six places and `90ms ease` in one more, which is how a product ends
-   * up with a hover that feels different depending on what you hover. The curve decelerates —
-   * fast out of the gate, settling at the end — because that is what reads as responsive; a
-   * symmetric `ease` starts slowly and makes every control feel a beat behind the pointer.
-   */
-  --tp-ease: cubic-bezier(0.2, 0, 0, 1);
-  --tp-motion-fast: 110ms;
-  --tp-motion: 180ms;
-  --tp-motion-slow: 320ms;
-}
+/**
+ * Motion used to be defined here, as three values instead of a number typed at each call site.
+ *
+ * It has moved into `packages/tokens`, because a stylesheet is the wrong owner: motion is part of
+ * a brand, the email and native targets need the same curve, and a "reduce motion" preference has
+ * to reach all of them. `compile-web.ts` emits `--tp-ease`, `--tp-motion-fast`, `--tp-motion` and
+ * `--tp-motion-slow`; the values are unchanged and every rule below still reads them.
+ */
 
 /* --- Type ------------------------------------------------------------------
  *
@@ -3319,4 +3313,415 @@ h4 {
   border: var(--tp-border-width) dashed var(--tp-colour-border);
   border-radius: var(--tp-radius);
   cursor: crosshair;
+}
+
+/* ==========================================================================
+ * The 2026 layer.
+ *
+ * Everything above is the product as it was built. This adopts the scales that
+ * `packages/tokens` now derives — a radius family, a type scale, an elevation ramp and the button
+ * surface — and adds the handful of patterns a product of this kind is expected to have.
+ *
+ * It is one appended block for the same reason the refinement layer above is: the change stays
+ * reviewable, and the reasoning sits next to the rule rather than in a commit message.
+ *
+ * The brand direction is unchanged and still holds: flat, no gradients, hierarchy from weight,
+ * space and colour. "Modern" here means more accurate scales, not more decoration.
+ * ========================================================================== */
+
+/* --- The radius family -----------------------------------------------------
+ *
+ * One radius for a card, a text input and a badge is the clearest tell that a design has one
+ * number where it needs three. A 10px corner that reads as soft on a 400px card reads as a blob on
+ * a 20px badge, and as nothing at all on a full-width panel.
+ *
+ * The family is derived from the brand's own radius, so an organisation that sets 0 stays square
+ * all the way down and one that sets 16 softens together.
+ */
+.card,
+.builder__item,
+.brand__preview {
+  border-radius: var(--tp-radius-lg);
+}
+
+.badge,
+.chip {
+  border-radius: var(--tp-radius-pill);
+}
+
+/* --- Elevation -------------------------------------------------------------
+ *
+ * A card sat on a border alone, which works on white and disappears the moment the surface and
+ * the page are close in tone — which is exactly what a warm palette does. The resting shadow is
+ * the theme's own shadowLevel, so a flat theme still gets nothing and nothing is imposed.
+ */
+.card {
+  box-shadow: var(--tp-shadow);
+}
+
+/* --- The button surface ----------------------------------------------------
+ *
+ * buttonStyle has been a token since phase 1. Four of the five shipped presets set it to
+ * something other than solid, and none of it reached the page — "minimal" asked for an outline
+ * button and got the same filled one as everything else.
+ *
+ * Scoped to the filled tier only. Quiet and danger are their own tiers and are not what
+ * buttonStyle is describing.
+ */
+.button:not(.button--quiet):not(.button--danger) {
+  background: var(--tp-button-background);
+  color: var(--tp-button-text);
+  border-color: var(--tp-button-border);
+}
+
+/* --- The type scale --------------------------------------------------------
+ *
+ * scaleRatio has been a token since phase 0 and reached the page as a bare number no rule could
+ * use, so every heading size was picked by hand and changing the ratio in the brand editor did
+ * nothing visible. These read the derived steps, so the brand's own ratio finally drives the
+ * hierarchy.
+ */
+.shell h1 {
+  font-size: var(--tp-text-2xl);
+}
+
+.shell h2 {
+  font-size: var(--tp-text-xl);
+}
+
+.shell h3 {
+  font-size: var(--tp-text-lg);
+}
+
+.small,
+.badge {
+  font-size: var(--tp-text-sm);
+}
+
+/* --- Dark mode -------------------------------------------------------------
+ *
+ * The palette is derived per organisation in `packages/tokens`, so there is no second set of
+ * colours here and nothing to keep in sync. These are the few rules that need to know which way
+ * up the page is.
+ *
+ * A surface on a dark page is lighter than the page, so the border that separated them on light
+ * has less work to do and a heavy one reads as a cage. The shadow does the separating instead.
+ */
+:root[data-theme='dark'] .card,
+:root[data-theme='dark'] .topbar {
+  border-color: color-mix(in srgb, var(--tp-colour-border) 55%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .card,
+  :root:not([data-theme='light']) .topbar {
+    border-color: color-mix(in srgb, var(--tp-colour-border) 55%, transparent);
+  }
+}
+
+/* --- The appearance toggle -------------------------------------------------
+ *
+ * A segmented control: three states visible at once, the on one filled. The same shape works for
+ * any small either/or set, which is why it is `.segmented` and not `.theme-toggle`.
+ */
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  background: var(--tp-colour-surface);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+}
+
+.segmented__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Below the 44px floor deliberately: that floor is for what a respondent taps on a phone, and
+     this is chrome in an operator's top bar. The hit area is padded back out below. */
+  inline-size: 30px;
+  block-size: 30px;
+  position: relative;
+  padding: 0;
+  border: 0;
+  border-radius: var(--tp-radius-pill);
+  background: transparent;
+  color: var(--tp-colour-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--tp-motion-fast) var(--tp-ease),
+    color var(--tp-motion-fast) var(--tp-ease);
+}
+
+/* The visible pill stays 30px; what a finger has to hit is 44. */
+.segmented__option::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+}
+
+.segmented__option:hover {
+  color: var(--tp-colour-text);
+}
+
+.segmented__option--on {
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-primary);
+  box-shadow: var(--tp-shadow);
+}
+
+.segmented__option:focus-visible {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+}
+
+/* --- Skeletons -------------------------------------------------------------
+ *
+ * A shape where the content will be, rather than a spinner in the middle of an empty page. The
+ * difference is that the layout does not jump when the data lands, which is the actual complaint
+ * behind "it feels slow".
+ *
+ * A sweep, not a pulse: opacity pulsing on a warm palette looks like a rendering fault.
+ */
+.skeleton {
+  --tp-skeleton-sheen: color-mix(
+    in srgb,
+    var(--tp-colour-background) 60%,
+    var(--tp-colour-surface)
+  );
+  background:
+    linear-gradient(90deg, transparent 0%, var(--tp-skeleton-sheen) 50%, transparent 100%) no-repeat,
+    var(--tp-colour-surface);
+  background-size:
+    40% 100%,
+    100% 100%;
+  border-radius: var(--tp-radius-sm);
+  block-size: 1em;
+  animation: skeleton-sweep 1.4s var(--tp-ease) infinite;
+}
+
+/* The one place a gradient is allowed: it is not decoration, it is the motion itself, and it is
+   composed of the theme's own two surface colours rather than an invented pair. */
+@keyframes skeleton-sweep {
+  from {
+    background-position:
+      -60% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      160% 0,
+      0 0;
+  }
+}
+
+.skeleton--title {
+  block-size: 1.4em;
+  inline-size: 45%;
+}
+
+.skeleton--line:last-child {
+  inline-size: 70%;
+}
+
+/* --- Toasts ----------------------------------------------------------------
+ *
+ * Confirmation that does not move the page. A saved form used to say so by swapping a label in
+ * place, which is invisible if you have already looked away — and errors had nowhere to go at all.
+ *
+ * Bottom on a phone (near the thumb, clear of the notch) and bottom-right on a laptop.
+ */
+.toasts {
+  position: fixed;
+  inset-block-end: max(var(--tp-spacing-unit), env(safe-area-inset-bottom));
+  inset-inline: var(--tp-spacing-unit);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  /* The strip is a layout box, not a target — clicks pass through to the page between toasts. */
+  pointer-events: none;
+}
+
+@media (min-width: 40rem) {
+  .toasts {
+    inset-inline: auto var(--tp-spacing-unit);
+    max-inline-size: 26rem;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  /* The inline-start edge carries the meaning, so the toast needs no coloured fill to fight the
+     brand with. */
+  border-inline-start: 3px solid var(--tp-colour-primary);
+  border-radius: var(--tp-radius);
+  box-shadow: var(--tp-shadow-overlay);
+  animation: toast-in var(--tp-motion) var(--tp-ease);
+}
+
+.toast--success {
+  border-inline-start-color: var(--tp-colour-success);
+}
+
+.toast--error {
+  border-inline-start-color: var(--tp-colour-danger);
+}
+
+.toast__text {
+  flex: 1;
+  font-size: var(--tp-text-sm);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- The command palette ---------------------------------------------------
+ *
+ * On a product where the work is spread over eight screens, the fastest path between two of them
+ * should not be the mouse.
+ */
+.palette__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  justify-content: center;
+  /* Not vertically centred: a dialog that grows downward from a fixed point does not move its own
+     input while somebody is typing into it. */
+  padding-block-start: 12vh;
+  padding-inline: var(--tp-spacing-unit);
+  /*
+   * Black, not a brand colour. This was `color-mix(… var(--tp-colour-text) 38% …)`, which is fine
+   * on a light theme and inverted on a dark one — `text` is near-white there, so the scrim
+   * *lightened* the page it was supposed to be dimming. A scrim is shadow, not brand.
+   */
+  background: rgb(0 0 0 / 0.45);
+}
+
+.palette {
+  inline-size: min(34rem, 100%);
+  align-self: flex-start;
+  max-block-size: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  box-shadow: var(--tp-shadow-overlay);
+  overflow: hidden;
+  animation: palette-in var(--tp-motion) var(--tp-ease);
+}
+
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.palette__input {
+  inline-size: 100%;
+  padding: calc(var(--tp-spacing-unit) * 1.75) calc(var(--tp-spacing-unit) * 2);
+  border: 0;
+  border-block-end: var(--tp-border-width) solid var(--tp-colour-border);
+  background: transparent;
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: var(--tp-text-lg);
+}
+
+.palette__input:focus {
+  outline: none;
+}
+
+.palette__list {
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 0.5);
+  list-style: none;
+  overflow-y: auto;
+}
+
+.palette__option {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  inline-size: 100%;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  border: 0;
+  border-radius: var(--tp-radius);
+  background: transparent;
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: var(--tp-text-base);
+  text-align: start;
+  cursor: pointer;
+}
+
+/*
+ * One highlight, driven by the keyboard.
+ *
+ * Hover is deliberately not a second highlight: with both, moving the mouse a pixel while arrowing
+ * down lights two rows and neither is obviously the one Enter will take.
+ */
+.palette__option--active {
+  background: color-mix(in srgb, var(--tp-colour-primary) 10%, var(--tp-colour-background));
+}
+
+.palette__hint {
+  margin-inline-start: auto;
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-xs);
+}
+
+.palette__empty {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
+}
+
+/* The keyboard hint in the top bar. Hidden where there is no keyboard to press. */
+.kbd {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-sm);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-xs);
+  font-family: ui-monospace, monospace;
+}
+
+@media (min-width: 60rem) and (pointer: fine) {
+  .kbd {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .toast,
+  .palette {
+    animation: none;
+  }
 }

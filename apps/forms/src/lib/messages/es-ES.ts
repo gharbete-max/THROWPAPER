@@ -250,6 +250,15 @@ export const esES: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Alta',
   'field.drawAreaLocked': 'Borra el dibujo para cambiar su forma.',
 
+  'appearance.label': 'Apariencia',
+  'appearance.system': 'Sistema',
+  'appearance.light': 'Claro',
+  'appearance.dark': 'Oscuro',
+
+  'palette.title': 'Ir a',
+  'palette.placeholder': 'Buscar pantallas…',
+  'palette.empty': 'No hay coincidencias.',
+
   'fieldType.hidden': 'Campo oculto',
 
   'submissions.title': 'Respuestas ({n})',

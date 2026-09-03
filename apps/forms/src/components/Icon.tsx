@@ -75,6 +75,10 @@ export type IconName =
   | 'undo'
   | 'user'
   | 'share'
+  | 'theme-system'
+  | 'theme-light'
+  | 'theme-dark'
+  | 'command'
   | 'redo';
 
 /** 24×24 paths, stroke-width 2, round caps. */
@@ -118,6 +122,15 @@ const PATHS: Record<IconName, string> = {
   plus: 'M12 5v14M5 12h14',
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
   trash: 'M4 7h16M10 4h4M6 7l1 13h10l1-13M10 11v5M14 11v5',
+  // A laptop: "whatever this machine is set to".
+  'theme-system': 'M4 6h16v10H4zM2 20h20',
+  // A sun, drawn as a disc and eight rays.
+  'theme-light':
+    'M12 8a4 4 0 100 8 4 4 0 000-8M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  // A crescent, as one path so it inherits the stroke like everything else.
+  'theme-dark': 'M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z',
+  // The command key, for the palette.
+  command: 'M9 6a3 3 0 10-3 3h12a3 3 0 10-3-3v12a3 3 0 103-3H6a3 3 0 10 3 3z',
   drag: 'M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01',
   events: 'M4 6h16v14H4zM4 10h16M9 3v4M15 3v4M8 14h3v3H8z',
   forms: 'M6 3h9l4 4v14H6zM15 3v4h4M9 12h7M9 16h5',

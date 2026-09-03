@@ -250,6 +250,15 @@ export const frFR: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Haute',
   'field.drawAreaLocked': 'Effacez le dessin pour changer sa forme.',
 
+  'appearance.label': 'Apparence',
+  'appearance.system': 'Système',
+  'appearance.light': 'Clair',
+  'appearance.dark': 'Sombre',
+
+  'palette.title': 'Aller à',
+  'palette.placeholder': 'Rechercher un écran…',
+  'palette.empty': 'Aucun résultat.',
+
   'fieldType.hidden': 'Champ masqué',
 
   'submissions.title': 'Réponses ({n})',

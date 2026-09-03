@@ -253,6 +253,15 @@ export const ruRU: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Высокая',
   'field.drawAreaLocked': 'Очистите рисунок, чтобы изменить форму области.',
 
+  'appearance.label': 'Оформление',
+  'appearance.system': 'Как в системе',
+  'appearance.light': 'Светлое',
+  'appearance.dark': 'Тёмное',
+
+  'palette.title': 'Перейти',
+  'palette.placeholder': 'Поиск по экранам…',
+  'palette.empty': 'Ничего не найдено.',
+
   'fieldType.hidden': 'Скрытое поле',
 
   'submissions.title': 'Ответы ({n})',

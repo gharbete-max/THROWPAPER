@@ -63,13 +63,25 @@ const LENGTHS: ReadonlyArray<{
  * unstyled text, and a third party told about every visitor. These stacks all resolve to
  * something installed, which is why the form appears immediately.
  */
-const FONT_STACKS = [
+/**
+ * Unquoted, and that is load-bearing rather than a style choice.
+ *
+ * `BrandKit`'s `FontStack` in `packages/shared` refuses quotes, because the stack is interpolated
+ * into an inline `style` attribute in email where a quote ends the attribute early. Four of the
+ * six entries here were quoted — so the editor offered Georgia, Segoe UI, Helvetica Neue and the
+ * monospace stack, and the API rejected every one of them with a 400. Two lists that had to agree,
+ * with nothing comparing them; `brand-fonts.test.ts` compares them now.
+ *
+ * A multi-word family is legal CSS unquoted as long as each word is a valid identifier, which is
+ * true of all of these.
+ */
+export const FONT_STACKS = [
   'Inter, system-ui, sans-serif',
   'system-ui, sans-serif',
-  'Georgia, "Times New Roman", serif',
-  '"Segoe UI", Roboto, sans-serif',
-  '"Helvetica Neue", Arial, sans-serif',
-  'ui-monospace, "Cascadia Mono", Menlo, monospace',
+  'Georgia, Times New Roman, serif',
+  'Segoe UI, Roboto, sans-serif',
+  'Helvetica Neue, Arial, sans-serif',
+  'ui-monospace, Cascadia Mono, Menlo, monospace',
 ];
 
 export function BrandKit() {

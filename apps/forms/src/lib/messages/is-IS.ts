@@ -244,6 +244,15 @@ export const isIS: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Hátt',
   'field.drawAreaLocked': 'Hreinsaðu teikninguna til að breyta löguninni.',
 
+  'appearance.label': 'Útlit',
+  'appearance.system': 'Kerfi',
+  'appearance.light': 'Ljóst',
+  'appearance.dark': 'Dökkt',
+
+  'palette.title': 'Fara á',
+  'palette.placeholder': 'Leita að skjám…',
+  'palette.empty': 'Ekkert passar.',
+
   'fieldType.hidden': 'Falinn reitur',
 
   'submissions.title': 'Svör ({n})',

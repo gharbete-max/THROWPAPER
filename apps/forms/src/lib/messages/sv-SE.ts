@@ -244,6 +244,15 @@ export const svSE: Record<MessageKey, string> = {
   'field.drawArea.tall': 'Hög',
   'field.drawAreaLocked': 'Rensa teckningen för att ändra formen.',
 
+  'appearance.label': 'Utseende',
+  'appearance.system': 'System',
+  'appearance.light': 'Ljust',
+  'appearance.dark': 'Mörkt',
+
+  'palette.title': 'Gå till',
+  'palette.placeholder': 'Sök vyer…',
+  'palette.empty': 'Inget matchar.',
+
   'fieldType.hidden': 'Dolt fält',
 
   'submissions.title': 'Svar ({n})',
