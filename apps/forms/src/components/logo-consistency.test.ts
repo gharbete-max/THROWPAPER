@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { defaultTokens } from '@tp/tokens';
 
 /**
  * The mark is drawn in three places, and they must be the same mark.
@@ -46,6 +47,25 @@ describe('the mark, wherever it is drawn', () => {
     // Three faces: top wing, keel, near wing. If this is not three, the drawing changed shape.
     expect(inLogo).toHaveLength(3);
     expect(inIcons).toEqual(inLogo);
+  });
+
+  /**
+   * The generated icons are a build artefact that is committed, so they go stale silently.
+   *
+   * They did. The palette moved to parchment and midnight and the favicon stayed `#1f4b99` on
+   * white — the old blue — so the browser tab and the installed app wore the previous brand while
+   * the product wore the new one. The shape check above passed the whole time, because the shape
+   * had not changed; only the colours had, and nothing looked at those.
+   *
+   * `pnpm icons` regenerates them from `defaultTokens`. This is what says when that is overdue.
+   */
+  it('has regenerated icons since the palette last changed', () => {
+    const favicon = read('../../public/favicon.svg');
+    const { colour } = defaultTokens;
+
+    expect(favicon, 'run `pnpm icons`').toContain(colour.primary);
+    expect(favicon, 'run `pnpm icons`').toContain(colour.background);
+    expect(favicon, 'run `pnpm icons`').toContain(colour.accent);
   });
 
   it('uses brand tokens for its colours and never a literal', () => {
