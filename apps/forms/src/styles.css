@@ -4528,3 +4528,74 @@ body:has(> #root .shell--narrow) {
     animation: none !important;
   }
 }
+
+/* --- The rest of the paper, in motion -------------------------------------
+ *
+ * Everything below is scoped to `.system` for the same reason the fold is: a published form is the
+ * organisation's page, and motion nobody chose is as much a house style as a colour nobody chose.
+ *
+ * The rule for all of it: motion that tells you something, never motion that decorates. A card
+ * lifting says it is the thing under the pointer. A row arriving says the list changed. Nothing
+ * here loops, and nothing here delays a person by more than the time it takes them to move a hand.
+ * ------------------------------------------------------------------------ */
+
+/*
+ * A card lifts a little, and its top edge catches the light.
+ *
+ * The lift is 2px. It reads as "this one" without moving text far enough that the eye has to
+ * re-find the line it was on, which is the failure of every hover that translates by 8px.
+ */
+.system .card {
+  transition:
+    border-color var(--tp-motion) var(--tp-ease),
+    box-shadow var(--tp-motion) var(--tp-ease),
+    transform var(--tp-motion) var(--tp-ease);
+}
+
+.system .card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tp-shadow-raised);
+}
+
+/*
+ * The current section's marker slides between items instead of blinking off one and on the next.
+ *
+ * Only the colour and the marker move; the text does not, because a nav item that shifts when it
+ * becomes current makes the whole rail twitch on every navigation.
+ */
+.system .nav-link {
+  transition:
+    background-color var(--tp-motion) var(--tp-ease),
+    color var(--tp-motion) var(--tp-ease);
+}
+
+/*
+ * A pressed control gives way under the finger.
+ *
+ * 0.985, which is about a pixel on a 44px button — under the threshold where it reads as the
+ * button moving, over the one where nothing seems to have happened.
+ */
+.system .button:active {
+  transform: scale(0.985);
+}
+
+.system .button {
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+/*
+ * Removed entirely rather than shortened.
+ *
+ * Every one of these is decoration: the card is still the card, the list is still the list, and a
+ * button still reports its press through its own colours.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .system .card,
+  .system .card:hover,
+  .system .button,
+  .system .button:active {
+    animation: none !important;
+    transition: none;
+    transform: none;
+  }
+}
