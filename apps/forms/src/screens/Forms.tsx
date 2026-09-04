@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router';
 import { pickText } from '@tp/i18n';
+import { FORM_WIZARD, type WizardField } from '@tp/shared/forms';
+import { Wizard } from '../components/Wizard.js';
 import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
@@ -29,7 +32,15 @@ export function Forms() {
   const { locale, locales, interfaceLocales, user } = useSession();
   const [scope, setScope] = useState<FormScope>('mine');
   const [forms, setForms] = useState<FormResponse[] | null>(null);
-  const [creating, setCreating] = useState(false);
+  /**
+   * How a new form is being started.
+   *
+   * `null` is closed. `'wizard'` is the default — a few questions, and the form falls out of the
+   * answers. `'manual'` is the advanced route, which is the template gallery and the fields it used
+   * to open with. Both end in the same editor with the same document.
+   */
+  const navigate = useNavigate();
+  const [creating, setCreating] = useState<null | 'wizard' | 'manual'>(null);
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +71,29 @@ export function Forms() {
       .catch(() => setTemplates([]));
   }, []);
 
+  /**
+   * Make the form the answers describe, and open it.
+   *
+   * The slug is derived rather than asked for. A wizard whose last step is "now invent a URL" has
+   * given the time back it just saved, and a slug is editable afterwards like everything else.
+   */
+  async function createFromWizard(answers: readonly string[]) {
+    setError(null);
+    try {
+      const stamp = Date.now().toString(36);
+      const created = await client.createForm({
+        slug: `form-${stamp}`,
+        title: { [locales.default]: t('forms.untitled') },
+        wizardAnswers: [...answers],
+      });
+      setCreating(null);
+      // Into the editor, which is where the wizard was always a head start for.
+      navigate(`/forms/${created.id}`);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : String(cause));
+    }
+  }
+
   async function create(event: FormEvent) {
     event.preventDefault();
     setError(null);
@@ -73,7 +107,7 @@ export function Forms() {
       setSlug('');
       setTitle('');
       setTemplateId(null);
-      setCreating(false);
+      setCreating(null);
       // Straight to your own pile, which is where the new form went.
       if (scope === 'mine') load();
       else setScope('mine');
@@ -124,14 +158,33 @@ export function Forms() {
     <section className="stack">
       <header className="row row--between">
         <h1>{t('forms.title')}</h1>
-        <button className="button" onClick={() => setCreating((open) => !open)}>
+        <button
+          className="button"
+          onClick={() => setCreating((mode) => (mode === null ? 'wizard' : null))}
+        >
           {t('forms.new')}
         </button>
       </header>
 
       <ScopeTabs scopes={scopes} current={scope} onChange={setScope} label={t('forms.title')} />
 
-      {creating && (
+      {creating === 'wizard' && (
+        <div className="card">
+          <Wizard
+            tree={FORM_WIZARD}
+            locales={locales}
+            locale={locale}
+            skipLabel={t('wizard.advanced')}
+            onSkip={() => setCreating('manual')}
+            summarise={(field: WizardField) => pickText(locales, field.label, locale).value}
+            onFinish={(_fields, answers) => {
+              void createFromWizard(answers);
+            }}
+          />
+        </div>
+      )}
+
+      {creating === 'manual' && (
         <form className="card stack" onSubmit={create}>
           <div className="stack">
             <strong className="small">{t('templates.heading')}</strong>
@@ -213,7 +266,7 @@ export function Forms() {
            */
           action={
             scope === 'trash' ? undefined : (
-              <button className="button" onClick={() => setCreating(true)}>
+              <button className="button" onClick={() => setCreating('wizard')}>
                 {t('forms.new')}
               </button>
             )

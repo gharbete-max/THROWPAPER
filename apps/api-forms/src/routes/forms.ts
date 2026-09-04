@@ -236,6 +236,24 @@ export function registerFormRoutes(
        * discover ten minutes into rebuilding it by hand.
        */
       let draftDefinition = formSchemas.emptyDefinition;
+
+      /*
+       * A run of wizard answers, resolved here rather than trusted from the client.
+       *
+       * Refused rather than ignored, for the same reason an unknown template is: quietly handing
+       * back an empty form to somebody who just answered three questions is a failure they discover
+       * after rebuilding it by hand.
+       */
+      if (body.wizardAnswers) {
+        try {
+          draftDefinition = formSchemas.definitionFromAnswers(body.wizardAnswers);
+        } catch {
+          return reply.code(422).send({
+            error: { code: 'unknown-answers', message: 'Those answers do not make a form' },
+          });
+        }
+      }
+
       if (body.templateId) {
         const template = formSchemas.findTemplate(body.templateId);
         if (!template) {

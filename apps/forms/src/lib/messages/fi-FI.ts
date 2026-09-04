@@ -116,6 +116,7 @@ export const fiFI: Record<MessageKey, string> = {
 
   'forms.title': 'Lomakkeet',
   'forms.new': 'Uusi lomake',
+  'forms.untitled': 'Nimetön lomake',
   'forms.empty': 'Ei vielä lomakkeita.',
   'forms.slug': 'Linkkiosoite',
   'forms.slugHint': 'Muodossa /f/<osoite>. Pieniä kirjaimia, numeroita ja väliviivoja.',
@@ -578,6 +579,12 @@ export const fiFI: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Peruttu',
 
   'public.next': 'Seuraava',
+  'wizard.step': 'Kysymys {n}',
+  'wizard.done': 'Valmis',
+  'wizard.review': 'Tästä tulee tämä',
+  'wizard.open': 'Avaa muokkaimessa',
+  'wizard.back': 'Takaisin',
+  'wizard.advanced': 'Rakennan itse',
   'public.back': 'Takaisin',
   'public.complete': 'Valmis',
   'public.submitting': 'Lähetetään…',

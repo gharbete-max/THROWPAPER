@@ -115,6 +115,7 @@ export const daDK: Record<MessageKey, string> = {
 
   'forms.title': 'Formularer',
   'forms.new': 'Ny formular',
+  'forms.untitled': 'Nyt formular',
   'forms.empty': 'Ingen formularer endnu.',
   'forms.slug': 'Linkadresse',
   'forms.slugHint': 'Bliver til /f/<adresse>. Små bogstaver, tal og bindestreger.',
@@ -573,6 +574,12 @@ export const daDK: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Trukket tilbage',
 
   'public.next': 'Næste',
+  'wizard.step': 'Spørgsmål {n}',
+  'wizard.done': 'Færdig',
+  'wizard.review': 'Sådan bliver det',
+  'wizard.open': 'Åbn i editoren',
+  'wizard.back': 'Tilbage',
+  'wizard.advanced': 'Byg det selv',
   'public.back': 'Tilbage',
   'public.complete': 'Færdiggør',
   'public.submitting': 'Sender…',

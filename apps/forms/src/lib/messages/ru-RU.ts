@@ -124,6 +124,7 @@ export const ruRU: Record<MessageKey, string> = {
 
   'forms.title': 'Формы',
   'forms.new': 'Новая форма',
+  'forms.untitled': 'Форма без названия',
   'forms.empty': 'Форм пока нет.',
   'forms.slug': 'Адрес ссылки',
   'forms.slugHint': 'Станет /f/<адрес>. Строчные буквы, цифры и дефисы.',
@@ -587,6 +588,12 @@ export const ruRU: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Отозвано',
 
   'public.next': 'Далее',
+  'wizard.step': 'Вопрос {n}',
+  'wizard.done': 'Готово',
+  'wizard.review': 'Вот что получится',
+  'wizard.open': 'Открыть в редакторе',
+  'wizard.back': 'Назад',
+  'wizard.advanced': 'Собрать самому',
   'public.back': 'Назад',
   'public.complete': 'Завершить',
   'public.submitting': 'Отправка…',

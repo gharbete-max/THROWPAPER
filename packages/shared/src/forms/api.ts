@@ -28,6 +28,15 @@ export const CreateForm = z.object({
    * already filling in.
    */
   templateId: z.string().min(1).max(64).optional(),
+  /**
+   * The answers somebody pressed through, instead of a template.
+   *
+   * The answers, not the fields they produce. What an answer produces is not the client's to
+   * decide — a posted list of fields is just a posted list of fields — and the answers are a
+   * better record besides: "contact, email, one message" reads a year later in a way a serialised
+   * field array does not.
+   */
+  wizardAnswers: z.array(z.string().min(1).max(64)).min(1).max(8).optional(),
 });
 
 export const UpdateForm = z.object({

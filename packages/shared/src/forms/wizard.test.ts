@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TYPES } from './definition.js';
+import { WizardError, everyPath as allPathsOf } from '../wizard/tree.js';
 import {
   FIRST_QUESTION,
-  WIZARD_QUESTIONS,
-  WizardError,
+  FORM_WIZARD,
   fieldsFromAnswers,
   nextQuestion,
   wizardQuestion,
   type WizardField,
 } from './wizard.js';
+
+/** The questions, reached through the tree rather than as a second export. */
+const WIZARD_QUESTIONS = FORM_WIZARD.questions;
 
 /**
  * The wizard, checked by walking every path through it.
@@ -18,25 +21,12 @@ import {
  * tested by guessing which combinations somebody might press.
  */
 
-/** Every complete run of answers the tree allows, depth-first. */
-function everyPath(): string[][] {
-  const paths: string[][] = [];
-
-  const walk = (questionId: string | undefined, answers: string[]) => {
-    if (!questionId) {
-      paths.push(answers);
-      return;
-    }
-    const question = wizardQuestion(questionId);
-    if (!question) throw new Error(`No question ${questionId}`);
-    for (const option of question.options) {
-      walk(option.next, [...answers, option.id]);
-    }
-  };
-
-  walk(FIRST_QUESTION, []);
-  return paths;
-}
+/**
+ * Every complete run, from the shared walker.
+ *
+ * It also refuses a tree that loops, which a hand-rolled walk here would have hung on instead.
+ */
+const everyPath = () => allPathsOf(FORM_WIZARD);
 
 describe('the tree', () => {
   it('starts somewhere real', () => {

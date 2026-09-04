@@ -1,4 +1,6 @@
 import type { FieldType } from './definition.js';
+import type { WizardQuestion, WizardTree } from '../wizard/tree.js';
+import { collect, currentQuestion, questionById } from '../wizard/tree.js';
 
 /**
  * Building a form by ruling things out, instead of by filling a form in.
@@ -21,19 +23,13 @@ import type { FieldType } from './definition.js';
  * Four presses and no typing. The builder is still there afterwards for anybody who wants it; this
  * decides what it opens with.
  *
- * ## Why the questions are data
+ * ## The questions are data, and the walk is somebody else's
  *
- * Because they are content, not logic. A question written in a component is a question that has to
- * be translated by editing a component, and a branch written as an `if` is a branch nobody can see
- * the shape of. Here the whole tree is one value: it can be walked, counted, tested for dead ends,
- * and rendered by something that knows nothing about what any particular question means.
+ * The tree structure lives in `wizard/tree.ts` and is shared with every other place that starts
+ * something this way. This file is only the questions and the fields they produce — which is the
+ * part that is about forms, and the only part that should be.
  *
- * ## What an answer is allowed to do
- *
- * Add fields, and choose the next question. That is the entire vocabulary. It is deliberately
- * smaller than "run arbitrary code per answer", because the useful property of this tree is that
- * every path through it can be enumerated — which is what makes it testable, and what stops it
- * quietly growing into a second form builder.
+ * See that module for why an answer may do exactly two things and no more.
  */
 
 /** A field the wizard can put on a form, in the shape the builder already understands. */
@@ -47,23 +43,6 @@ export interface WizardField {
   readonly options?: readonly { readonly value: string; readonly label: Record<string, string> }[];
 }
 
-export interface WizardOption {
-  readonly id: string;
-  readonly label: Record<string, string>;
-  /** A sentence of consequence, so somebody can tell the buttons apart without pressing them. */
-  readonly detail?: Record<string, string>;
-  /** Fields this answer contributes, in order. */
-  readonly fields?: readonly WizardField[];
-  /** The next question, or nothing to finish here. */
-  readonly next?: string;
-}
-
-export interface WizardQuestion {
-  readonly id: string;
-  readonly prompt: Record<string, string>;
-  readonly options: readonly WizardOption[];
-}
-
 const sv = (en: string, svText: string) => ({ 'en-GB': en, 'sv-SE': svText });
 
 /**
@@ -73,7 +52,7 @@ const sv = (en: string, svText: string) => ({ 'en-GB': en, 'sv-SE': svText });
  * thing this exists to avoid — past about four, people stop reading and start scanning, which is
  * where a wrong answer comes from.
  */
-export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
+const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
   {
     id: 'purpose',
     prompt: sv('What is this form for?', 'Vad ska formuläret användas till?'),
@@ -88,7 +67,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
         id: 'signup',
         label: sv('Signing up for something', 'Anmälan'),
         detail: sv('A meeting, a course, an event.', 'Ett möte, en kurs, ett evenemang.'),
-        fields: [
+        contributes: [
           {
             type: 'short_text',
             key: 'name',
@@ -108,7 +87,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
         id: 'collect',
         label: sv('Collecting information', 'Samla in uppgifter'),
         detail: sv('Updating what you hold on people.', 'Uppdatera uppgifter om medlemmar.'),
-        fields: [
+        contributes: [
           { type: 'short_text', key: 'name', label: sv('Name', 'Namn'), required: true },
           { type: 'email', key: 'email', label: sv('Email address', 'E-postadress') },
         ],
@@ -124,7 +103,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'email',
         label: sv('By email', 'Med e-post'),
-        fields: [
+        contributes: [
           { type: 'short_text', key: 'name', label: sv('Name', 'Namn'), required: true },
           {
             type: 'email',
@@ -138,7 +117,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'phone',
         label: sv('By telephone', 'Per telefon'),
-        fields: [
+        contributes: [
           { type: 'short_text', key: 'name', label: sv('Name', 'Namn'), required: true },
           { type: 'phone', key: 'phone', label: sv('Telephone', 'Telefon'), required: true },
         ],
@@ -147,7 +126,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'either',
         label: sv('Either, let them choose', 'Låt dem välja'),
-        fields: [
+        contributes: [
           { type: 'short_text', key: 'name', label: sv('Name', 'Namn'), required: true },
           { type: 'email', key: 'email', label: sv('Email address', 'E-postadress') },
           { type: 'phone', key: 'phone', label: sv('Telephone', 'Telefon') },
@@ -165,7 +144,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
         id: 'message',
         label: sv('One message', 'Ett meddelande'),
         detail: sv('A single box. Nothing else to fill in.', 'En ruta. Inget mer att fylla i.'),
-        fields: [
+        contributes: [
           {
             type: 'long_text',
             key: 'message',
@@ -177,7 +156,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'subject',
         label: sv('A subject and a message', 'Ämne och meddelande'),
-        fields: [
+        contributes: [
           { type: 'short_text', key: 'subject', label: sv('Subject', 'Ämne'), required: true },
           {
             type: 'long_text',
@@ -191,7 +170,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
         id: 'topic',
         label: sv('Pick a topic, then a message', 'Välj ämnesområde, sedan meddelande'),
         detail: sv('Sends it to the right person.', 'Skickar till rätt person.'),
-        fields: [
+        contributes: [
           {
             type: 'single_select',
             key: 'topic',
@@ -227,7 +206,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
         id: 'dietary',
         label: sv('What they eat', 'Specialkost'),
         detail: sv('For anything with food.', 'För allt med mat.'),
-        fields: [
+        contributes: [
           {
             type: 'single_select',
             key: 'meal',
@@ -245,7 +224,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'guests',
         label: sv('Whether they bring anyone', 'Om de tar med gäster'),
-        fields: [
+        contributes: [
           {
             type: 'number',
             key: 'guests',
@@ -256,7 +235,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'both',
         label: sv('Both of those', 'Båda'),
-        fields: [
+        contributes: [
           {
             type: 'single_select',
             key: 'meal',
@@ -286,7 +265,7 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'address',
         label: sv('Where they live', 'Adress'),
-        fields: [
+        contributes: [
           { type: 'short_text', key: 'address', label: sv('Address', 'Adress'), required: true },
           {
             type: 'short_text',
@@ -300,13 +279,13 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
       {
         id: 'contact',
         label: sv('How to reach them', 'Kontaktuppgifter'),
-        fields: [{ type: 'phone', key: 'phone', label: sv('Telephone', 'Telefon') }],
+        contributes: [{ type: 'phone', key: 'phone', label: sv('Telephone', 'Telefon') }],
       },
       {
         id: 'consent',
         label: sv('What they agree to', 'Samtycken'),
         detail: sv('Newsletters, photographs, the members list.', 'Utskick, foton, medlemslistan.'),
-        fields: [
+        contributes: [
           {
             type: 'yes_no',
             key: 'newsletter',
@@ -323,65 +302,32 @@ export const WIZARD_QUESTIONS: readonly WizardQuestion[] = [
   },
 ];
 
-const BY_ID = new Map(WIZARD_QUESTIONS.map((question) => [question.id, question]));
-
-/** Where every run starts. */
-export const FIRST_QUESTION = 'purpose';
-
-export function wizardQuestion(id: string): WizardQuestion | undefined {
-  return BY_ID.get(id);
-}
-
-export class WizardError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'WizardError';
-  }
-}
-
 /**
- * Walk a run of answers and collect the fields.
+ * The form tree.
  *
- * Answers are option ids in the order they were pressed. Duplicated keys are dropped rather than
- * repeated: two branches can both ask for an email address, and a form with two email boxes on it
- * is a form somebody fills in twice and then queries.
+ * `keyOf` is the field key, so two branches that both ask for an email address contribute one box
+ * rather than two.
  */
-export function fieldsFromAnswers(answers: readonly string[]): readonly WizardField[] {
-  const fields: WizardField[] = [];
-  const seen = new Set<string>();
+export const FORM_WIZARD: WizardTree<WizardField> = {
+  id: 'form',
+  first: 'purpose',
+  questions: WIZARD_QUESTIONS,
+  keyOf: (field) => field.key,
+};
 
-  let questionId: string | undefined = FIRST_QUESTION;
+/** Where every run starts. Kept as a name because screens read better for it. */
+export const FIRST_QUESTION = FORM_WIZARD.first;
 
-  for (const answer of answers) {
-    if (!questionId) throw new WizardError('The run already finished; there is nothing to answer');
-
-    const question = BY_ID.get(questionId);
-    if (!question) throw new WizardError(`No question ${questionId}`);
-
-    const option = question.options.find((candidate) => candidate.id === answer);
-    if (!option) throw new WizardError(`${answer} is not an answer to ${questionId}`);
-
-    for (const field of option.fields ?? []) {
-      if (seen.has(field.key)) continue;
-      seen.add(field.key);
-      fields.push(field);
-    }
-
-    questionId = option.next;
-  }
-
-  return fields;
+export function wizardQuestion(id: string): WizardQuestion<WizardField> | undefined {
+  return questionById(FORM_WIZARD, id);
 }
 
-/** The question a run is currently on, or nothing when it has finished. */
-export function nextQuestion(answers: readonly string[]): WizardQuestion | undefined {
-  let questionId: string | undefined = FIRST_QUESTION;
+/** The fields a run of answers produces. */
+export function fieldsFromAnswers(answers: readonly string[]): readonly WizardField[] {
+  return collect(FORM_WIZARD, answers);
+}
 
-  for (const answer of answers) {
-    const question: WizardQuestion | undefined = questionId ? BY_ID.get(questionId) : undefined;
-    if (!question) return undefined;
-    questionId = question.options.find((candidate) => candidate.id === answer)?.next;
-  }
-
-  return questionId ? BY_ID.get(questionId) : undefined;
+/** The question in front of somebody, or nothing when the run has finished. */
+export function nextQuestion(answers: readonly string[]): WizardQuestion<WizardField> | undefined {
+  return currentQuestion(FORM_WIZARD, answers);
 }

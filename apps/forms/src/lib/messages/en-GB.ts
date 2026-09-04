@@ -121,6 +121,7 @@ export const enGB = {
 
   'forms.title': 'Forms',
   'forms.new': 'New form',
+  'forms.untitled': 'Untitled form',
   'forms.empty': 'No forms yet.',
   'forms.slug': 'Link address',
   'forms.slugHint': 'Becomes /f/<address>. Lower case, digits and hyphens.',
@@ -584,6 +585,12 @@ export const enGB = {
   'attendance.status.revoked': 'Withdrawn',
 
   'public.next': 'Next',
+  'wizard.step': 'Question {n}',
+  'wizard.done': 'Done',
+  'wizard.review': 'Here is what that gives you',
+  'wizard.open': 'Open it in the editor',
+  'wizard.back': 'Back',
+  'wizard.advanced': 'Build it myself',
   'public.back': 'Back',
   'public.complete': 'Complete',
   'public.submitting': 'Submitting…',

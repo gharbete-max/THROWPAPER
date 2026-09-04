@@ -116,6 +116,7 @@ export const isIS: Record<MessageKey, string> = {
 
   'forms.title': 'Eyðublöð',
   'forms.new': 'Nýtt eyðublað',
+  'forms.untitled': 'Ónefnt eyðublað',
   'forms.empty': 'Engin eyðublöð enn.',
   'forms.slug': 'Slóð',
   'forms.slugHint': 'Verður /f/<slóð>. Lágstafir, tölustafir og bandstrik.',
@@ -576,6 +577,12 @@ export const isIS: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Afturkallað',
 
   'public.next': 'Áfram',
+  'wizard.step': 'Spurning {n}',
+  'wizard.done': 'Lokið',
+  'wizard.review': 'Svona verður það',
+  'wizard.open': 'Opna í ritlinum',
+  'wizard.back': 'Til baka',
+  'wizard.advanced': 'Byggja sjálf',
   'public.back': 'Til baka',
   'public.complete': 'Ljúka',
   'public.submitting': 'Sendi…',

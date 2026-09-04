@@ -118,6 +118,7 @@ export const zhCN: Record<MessageKey, string> = {
 
   'forms.title': '表单',
   'forms.new': '新建表单',
+  'forms.untitled': '未命名表单',
   'forms.empty': '暂无表单。',
   'forms.slug': '链接地址',
   'forms.slugHint': '将成为 /f/<地址>。小写字母、数字和连字符。',
@@ -567,6 +568,12 @@ export const zhCN: Record<MessageKey, string> = {
   'attendance.status.revoked': '已撤回',
 
   'public.next': '下一步',
+  'wizard.step': '问题 {n}',
+  'wizard.done': '完成',
+  'wizard.review': '结果是这样',
+  'wizard.open': '在编辑器中打开',
+  'wizard.back': '返回',
+  'wizard.advanced': '自己搭建',
   'public.back': '上一步',
   'public.complete': '完成',
   'public.submitting': '提交中…',

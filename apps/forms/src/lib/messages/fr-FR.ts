@@ -117,6 +117,7 @@ export const frFR: Record<MessageKey, string> = {
 
   'forms.title': 'Formulaires',
   'forms.new': 'Nouveau formulaire',
+  'forms.untitled': 'Formulaire sans titre',
   'forms.empty': 'Aucun formulaire pour le moment.',
   'forms.slug': 'Adresse du lien',
   'forms.slugHint': 'Devient /f/<adresse>. Minuscules, chiffres et tirets.',
@@ -589,6 +590,12 @@ export const frFR: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Retiré',
 
   'public.next': 'Suivant',
+  'wizard.step': 'Question {n}',
+  'wizard.done': 'Terminé',
+  'wizard.review': 'Voici ce que cela donne',
+  'wizard.open': 'Ouvrir dans l’éditeur',
+  'wizard.back': 'Retour',
+  'wizard.advanced': 'Le construire moi-même',
   'public.back': 'Précédent',
   'public.complete': 'Terminer',
   'public.submitting': 'Envoi…',

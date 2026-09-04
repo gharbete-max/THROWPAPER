@@ -120,6 +120,7 @@ export const jaJP: Record<MessageKey, string> = {
 
   'forms.title': 'フォーム',
   'forms.new': '新しいフォーム',
+  'forms.untitled': '無題のフォーム',
   'forms.empty': 'フォームはまだありません。',
   'forms.slug': 'リンクのアドレス',
   'forms.slugHint': '/f/<アドレス> になります。小文字、数字、ハイフンが使えます。',
@@ -580,6 +581,12 @@ export const jaJP: Record<MessageKey, string> = {
   'attendance.status.revoked': '取消済み',
 
   'public.next': '次へ',
+  'wizard.step': '質問 {n}',
+  'wizard.done': '完了',
+  'wizard.review': 'こうなります',
+  'wizard.open': 'エディターで開く',
+  'wizard.back': '戻る',
+  'wizard.advanced': '自分で作る',
   'public.back': '戻る',
   'public.complete': '完了',
   'public.submitting': '送信中…',

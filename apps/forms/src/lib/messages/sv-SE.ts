@@ -115,6 +115,7 @@ export const svSE: Record<MessageKey, string> = {
 
   'forms.title': 'Formulär',
   'forms.new': 'Nytt formulär',
+  'forms.untitled': 'Namnlöst formulär',
   'forms.empty': 'Inga formulär ännu.',
   'forms.slug': 'Länkadress',
   'forms.slugHint': 'Blir /f/<adress>. Små bokstäver, siffror och bindestreck.',
@@ -575,6 +576,12 @@ export const svSE: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Återkallad',
 
   'public.next': 'Nästa',
+  'wizard.step': 'Fråga {n}',
+  'wizard.done': 'Klart',
+  'wizard.review': 'Så här blir det',
+  'wizard.open': 'Öppna i redigeraren',
+  'wizard.back': 'Tillbaka',
+  'wizard.advanced': 'Bygga själv',
   'public.back': 'Tillbaka',
   'public.complete': 'Slutför',
   'public.submitting': 'Skickar…',

@@ -4831,3 +4831,111 @@ body:has(> #root .shell--narrow) {
   color: var(--tp-colour-text);
   text-decoration: underline;
 }
+
+/* --- The wizard ------------------------------------------------------------
+ *
+ * The default way of starting anything here. The options are the screen: large, quiet, and far
+ * enough apart that a wrong press is a decision rather than a slip.
+ * ------------------------------------------------------------------------ */
+
+.wizard {
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  padding-block: calc(var(--tp-spacing-unit) * 4);
+}
+
+.wizard__step {
+  margin: 0;
+  color: var(--tp-colour-accent-ink);
+  font-size: var(--tp-text-sm);
+  font-weight: var(--tp-type-label-weight);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wizard__prompt {
+  margin: var(--tp-spacing-unit) 0 calc(var(--tp-spacing-unit) * 3);
+  font-size: var(--tp-text-2xl);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.wizard__options {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+/*
+ * A whole row, not a chip.
+ *
+ * Each option carries a sentence of consequence under its label, so it needs the width to say it —
+ * and a target this size is one nobody misses on a phone, which is where a volunteer will do this.
+ */
+.wizard__option {
+  display: grid;
+  gap: 4px;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color var(--tp-motion) var(--tp-ease),
+    transform var(--tp-motion) var(--tp-ease);
+}
+
+.system .wizard__option:hover {
+  border-color: var(--tp-colour-primary);
+  transform: translateY(-1px);
+}
+
+.wizard__option:focus-visible {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+}
+
+.wizard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin-block-start: calc(var(--tp-spacing-unit) * 3);
+}
+
+/*
+ * The advanced route sits with the other actions, not in a corner.
+ *
+ * `margin-inline-start: auto` puts it at the far end of the row: present, reachable, and clearly
+ * not the thing being suggested. Hiding it behind a menu would tell experienced people the product
+ * is not for them, and they are the ones who notice.
+ */
+.wizard__skip {
+  margin-inline-start: auto;
+  color: var(--tp-colour-muted);
+}
+
+.wizard__summary {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wizard__summary li {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5) calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.wizard__summary .icon {
+  color: var(--tp-colour-success);
+  flex: none;
+}

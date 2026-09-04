@@ -117,6 +117,7 @@ export const esES: Record<MessageKey, string> = {
 
   'forms.title': 'Formularios',
   'forms.new': 'Nuevo formulario',
+  'forms.untitled': 'Formulario sin título',
   'forms.empty': 'Aún no hay formularios.',
   'forms.slug': 'Dirección del enlace',
   'forms.slugHint': 'Se convierte en /f/<dirección>. Minúsculas, dígitos y guiones.',
@@ -587,6 +588,12 @@ export const esES: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Retirado',
 
   'public.next': 'Siguiente',
+  'wizard.step': 'Pregunta {n}',
+  'wizard.done': 'Listo',
+  'wizard.review': 'Esto es lo que obtienes',
+  'wizard.open': 'Abrir en el editor',
+  'wizard.back': 'Atrás',
+  'wizard.advanced': 'Crearlo yo',
   'public.back': 'Atrás',
   'public.complete': 'Finalizar',
   'public.submitting': 'Enviando…',

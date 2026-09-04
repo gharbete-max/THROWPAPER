@@ -118,6 +118,7 @@ export const deDE: Record<MessageKey, string> = {
 
   'forms.title': 'Formulare',
   'forms.new': 'Neues Formular',
+  'forms.untitled': 'Neues Formular',
   'forms.empty': 'Noch keine Formulare.',
   'forms.slug': 'Linkadresse',
   'forms.slugHint': 'Wird zu /f/<Adresse>. Kleinbuchstaben, Ziffern und Bindestriche.',
@@ -590,6 +591,12 @@ export const deDE: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Zurückgezogen',
 
   'public.next': 'Weiter',
+  'wizard.step': 'Frage {n}',
+  'wizard.done': 'Fertig',
+  'wizard.review': 'Das kommt dabei heraus',
+  'wizard.open': 'Im Editor öffnen',
+  'wizard.back': 'Zurück',
+  'wizard.advanced': 'Selbst aufbauen',
   'public.back': 'Zurück',
   'public.complete': 'Abschließen',
   'public.submitting': 'Wird gesendet…',

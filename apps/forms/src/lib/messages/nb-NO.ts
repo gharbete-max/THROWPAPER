@@ -116,6 +116,7 @@ export const nbNO: Record<MessageKey, string> = {
 
   'forms.title': 'Skjemaer',
   'forms.new': 'Nytt skjema',
+  'forms.untitled': 'Skjema uten navn',
   'forms.empty': 'Ingen skjemaer ennå.',
   'forms.slug': 'Lenkeadresse',
   'forms.slugHint': 'Blir /f/<adresse>. Små bokstaver, tall og bindestreker.',
@@ -575,6 +576,12 @@ export const nbNO: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Trukket tilbake',
 
   'public.next': 'Neste',
+  'wizard.step': 'Spørsmål {n}',
+  'wizard.done': 'Ferdig',
+  'wizard.review': 'Slik blir det',
+  'wizard.open': 'Åpne i editoren',
+  'wizard.back': 'Tilbake',
+  'wizard.advanced': 'Bygge det selv',
   'public.back': 'Tilbake',
   'public.complete': 'Fullfør',
   'public.submitting': 'Sender…',

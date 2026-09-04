@@ -11,7 +11,8 @@
     "./api": "./src/api/index.ts",
     "./forms": "./src/forms/index.ts",
     "./ledger": "./src/ledger/index.ts",
-    "./invoicing": "./src/invoicing/index.ts"
+    "./invoicing": "./src/invoicing/index.ts",
+    "./wizard": "./src/wizard/index.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
