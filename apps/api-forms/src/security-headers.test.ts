@@ -63,6 +63,7 @@ describe('security headers', () => {
     ['img-src', 'data:', 'the QR on an admission card'],
     ['img-src', 'blob:', 'an attachment or a CSV being saved'],
     ['style-src', "'unsafe-inline'", 'the brand palette, injected as a style block'],
+    ['font-src', 'data:', 'a document that carries its own typeface rather than hoping for it'],
   ])('allows %s %s for %s', async (_directive, allowance) => {
     const response = await app.inject({ method: 'GET', url: '/api/public/forms/anything' });
     expect(String(response.headers['content-security-policy'])).toContain(allowance);

@@ -49,4 +49,13 @@ export const SERVER_RENDERED_PATHS: readonly RegExp[] = [
   ...SITE_ROUTES.map((route) => new RegExp(`^${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)),
   /* Not a site route: the server renders these per slug to give each form its own preview card. */
   /^\/f\//,
+  /*
+   * An invoice, rendered per token by the server.
+   *
+   * Added after the worker served the precached shell for one and the page came up titled
+   * "Formwork" instead of the invoice. That is the second time this exact bug has happened, which
+   * is why the test below now asserts the property for *every* path the server renders rather than
+   * only for the ones somebody remembered.
+   */
+  /^\/i\//,
 ];

@@ -27,6 +27,7 @@ import { registerFormRoutes } from './routes/forms.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerLedgerRoutes } from './routes/ledger.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
+import { registerPublicInvoiceRoutes } from './routes/public-invoices.js';
 import { registerDocumentRoutes } from './routes/documents.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
@@ -156,7 +157,15 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         styleSrc: ["'self'", "'unsafe-inline'"],
         /* `data:` for the QR on an admission card, `blob:` for a CSV or attachment being saved. */
         imgSrc: ["'self'", 'data:', 'blob:'],
-        fontSrc: ["'self'"],
+        /*
+         * `data:` because the print compiler embeds the font's own bytes.
+         *
+         * That is deliberate and load-bearing elsewhere: a PDF has to carry its typeface rather
+         * than hope the reader has it. The invoice page uses the same stylesheet, so a policy of
+         * `'self'` alone silently rendered somebody's invoice in a fallback face — found by
+         * opening one, not by reading the header.
+         */
+        fontSrc: ["'self'", 'data:'],
         connectSrc: ["'self'"],
         workerSrc: ["'self'"],
         objectSrc: ["'none'"],
@@ -267,6 +276,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerFormRoutes(app, { repos, guard });
   registerAdminRoutes(app, { repos, guard });
   registerLedgerRoutes(app, { repos, guard });
+  registerPublicInvoiceRoutes(app, { repos });
   registerPublicFormRoutes(app, {
     repos,
     mail,

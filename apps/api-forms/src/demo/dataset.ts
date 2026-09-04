@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
 import type { MemoryState } from '../db/repositories/index.js';
 import { generateReference } from '../forms/public-service.js';
@@ -198,6 +199,118 @@ export function demoRegistration(
  * Fewer registrations than the SQL seed's 200 — a demo wants a list somebody can read, and
  * generating 200 admission PDFs on a demo box is a poor first impression.
  */
+
+/**
+ * A property, and a month of rent across it.
+ *
+ * Three flats of different sizes in one building, on one rate per square metre, which is how
+ * residential rent is actually set here. Each tenant also has the extras they happen to have —
+ * which is the point of the charge model: the landlord writes their own, and nothing in the code
+ * knows what cable television is.
+ *
+ * `CLAUDE.md` §Demo data requires the seed to leave the product demonstrable. An invoicing feature
+ * with no invoices in it demonstrates nothing.
+ */
+function demoInvoices(organisationId: string, now: Date) {
+  const batchId = randomUUID();
+  const issuedOn = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const dueOn = new Date(now.getTime() + 9 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+  /** 148,00 kr per square metre per month, the same for every flat in the building. */
+  const RATE = 14_800n;
+
+  const flats = [
+    { name: 'Anna Lindqvist', flat: '1201', areaThousandths: 67_500n, cable: true, parking: true },
+    { name: 'Bo Ekström', flat: '1202', areaThousandths: 45_000n, cable: true, parking: false },
+    { name: 'Carina Holm', flat: '1301', areaThousandths: 92_000n, cable: false, parking: true },
+  ];
+
+  const line = (
+    description: Record<string, string>,
+    quantityThousandths: bigint,
+    unitAmountMinor: bigint,
+    vatRateBasisPoints: number,
+  ) => {
+    const amountMinor = (quantityThousandths * unitAmountMinor + 500n) / 1000n;
+    const vatMinor = (amountMinor * BigInt(vatRateBasisPoints) + 5_000n) / 10_000n;
+    return {
+      id: randomUUID(),
+      description,
+      quantityThousandths,
+      unitAmountMinor,
+      amountMinor,
+      vatRateBasisPoints,
+      vatMinor,
+      position: 0,
+    };
+  };
+
+  const invoices = flats.map((flat, index) => {
+    const lines = [
+      line({ 'sv-SE': 'Hyra', 'en-GB': 'Rent' }, flat.areaThousandths, RATE, 0),
+      ...(flat.cable
+        ? [line({ 'sv-SE': 'Kabel-TV', 'en-GB': 'Cable television' }, 1000n, 24_900n, 2500)]
+        : []),
+      ...(flat.parking
+        ? [line({ 'sv-SE': 'Parkeringsplats', 'en-GB': 'Parking space' }, 1000n, 65_000n, 2500)]
+        : []),
+    ].map((entry, position) => ({ ...entry, position }));
+
+    const netMinor = lines.reduce((total, entry) => total + entry.amountMinor, 0n);
+    const vatMinor = lines.reduce((total, entry) => total + entry.vatMinor, 0n);
+    const number = 1001 + index;
+
+    return {
+      id: randomUUID(),
+      organisationId,
+      batchId,
+      number,
+      ocr: ocrForInvoice(number, {
+        method: 'bankgiro' as const,
+        account: '123-4567',
+        ocrLengthControl: true,
+      }),
+      status: 'sent' as const,
+      currency: 'SEK',
+      recipientName: flat.name,
+      recipientEmail: `${flat.flat}@example.com`,
+      recipientAddress: `Storgatan 14, lgh ${flat.flat}\n123 45 Stockholm`,
+      recipientReference: flat.flat,
+      subject: { 'sv-SE': 'Hyra', 'en-GB': 'Rent' },
+      periodStart: issuedOn,
+      periodEnd: dueOn,
+      issuedOn,
+      dueOn,
+      netMinor,
+      vatMinor,
+      totalMinor: netMinor + vatMinor,
+      paymentMethod: 'bankgiro',
+      paymentAccount: '123-4567',
+      /*
+       * Fixed in the demo so the link is the same after every restart, and hex because the route
+       * refuses anything that could not be a token this app issued. `demo` is not hex; `de` is.
+       */
+      publicToken: `de${flat.flat}`.padEnd(32, '0'),
+      sentAt: now,
+      paidAt: null,
+      createdAt: now,
+      lines,
+    };
+  });
+
+  const batch = {
+    id: batchId,
+    organisationId,
+    name: 'Hyra',
+    createdBy: null,
+    sentAt: now,
+    lastTestAt: null,
+    createdAt: now,
+  };
+
+  return { batch, invoices };
+}
+
 export function buildDemoState(options: { registrations?: number; now?: Date } = {}): MemoryState {
   const now = options.now ?? new Date();
   const count = options.registrations ?? 40;
@@ -207,6 +320,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
   const eventId = randomUUID();
   const formId = randomUUID();
   const versionId = randomUUID();
+  const demoBilling = demoInvoices(organisationId, now);
 
   /**
    * Stable ids for the demo people, so the forms below can actually belong to somebody.
@@ -373,8 +487,8 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     audit: [],
     // The ledger starts empty: a demo book with invented entries in it would be a book
     // somebody could mistake for an example of correct bookkeeping.
-    invoiceBatches: [],
-    invoices: [],
+    invoiceBatches: [demoBilling.batch],
+    invoices: demoBilling.invoices,
     ledgerAccounts: [],
     journalEntries: [],
     journalLines: [],

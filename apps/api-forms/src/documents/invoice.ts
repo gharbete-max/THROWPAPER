@@ -80,6 +80,14 @@ export function renderInvoiceDocument(input: InvoiceDocumentInput): string {
   const tokens = input.tokens ?? defaultTokens;
   const media = input.media ?? 'web';
 
+  /*
+   * Line amounts are shown excluding VAT, and VAT is summarised once underneath.
+   *
+   * The first version printed the line inclusive of its own VAT beside an exclusive unit price, so
+   * a reader saw `1 x 249,00 kr = 311,25 kr` and a Netto that agreed with neither. A column of
+   * money has to survive being added up by hand — that is the only check a tenant actually
+   * performs.
+   */
   const money = (amount: bigint) => formatMinor(amount, invoice.currency, locale);
   const subject = pickText(locales, invoice.subject, locale).value;
 
@@ -90,7 +98,7 @@ export function renderInvoiceDocument(input: InvoiceDocumentInput): string {
         <td>${escapeHtml(pickText(locales, line.description, locale).value)}</td>
         <td class="num">${escapeHtml(formatQuantity(line.quantityThousandths, locale))}</td>
         <td class="num">${escapeHtml(money(line.unitAmountMinor))}</td>
-        <td class="num">${escapeHtml(money(line.amountMinor + line.vatMinor))}</td>
+        <td class="num">${escapeHtml(money(line.amountMinor))}</td>
       </tr>`,
     )
     .join('');
@@ -128,6 +136,17 @@ ${media === 'web' ? WEB_CSS(tokens) : ''}
 
 .invoice__head { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .invoice__who { max-width: 24rem; }
+/*
+ * A postal address is written on lines and HTML does not keep them.
+ *
+ * pre-line rather than turning the newlines into break tags: the address is text somebody typed,
+ * and turning text into markup is where an address containing a stray angle bracket stops being an
+ * address. Escaping has already happened; this only restores the shape.
+ *
+ * (No backticks in here. This comment lives inside a template literal, and a backtick would end it
+ * — which is exactly how this file stopped parsing a minute ago.)
+ */
+.address { white-space: pre-line; }
 .invoice__meta dl { display: grid; gap: 10px; margin: 0; }
 .invoice__meta dt {
   font-size: 12px;
@@ -204,8 +223,11 @@ td { padding: 10px 0; border-bottom: 1px solid ${tokens.colour.border}; font-siz
       <p class="tp-muted">${escapeHtml(strings.invoice)}</p>
       <h1>${escapeHtml(subject)}</h1>
       <p>${escapeHtml(organisationName)}</p>
-      <p class="tp-muted">${escapeHtml(invoice.recipientName)}${
-        invoice.recipientAddress ? `<br />${escapeHtml(invoice.recipientAddress)}` : ''
+      <p class="tp-muted address">${escapeHtml(invoice.recipientName)}${
+        invoice.recipientAddress
+          ? `
+${escapeHtml(invoice.recipientAddress)}`
+          : ''
       }</p>
     </div>
 

@@ -24,8 +24,18 @@ describe('what the service worker may serve from cache', () => {
     }
   });
 
-  it('covers the public form, whose preview card the server injects per slug', () => {
-    expect(SERVER_RENDERED_PATHS.some((pattern) => pattern.test('/f/varmotet'))).toBe(true);
+  /**
+   * Every path the server renders per URL, not only the ones somebody remembered.
+   *
+   * `/i/` was missed when invoices arrived, and the symptom was an invoice page titled "Formwork"
+   * because the worker answered with the precached shell. Listing them here means adding a
+   * server-rendered surface without adding it to the denylist fails a test rather than shipping.
+   */
+  it.each([
+    ['/f/varmotet', 'a public form, whose preview card the server injects per slug'],
+    ['/i/de120100000000000000000000000000', 'an invoice, rendered per token'],
+  ])('covers %s (%s)', (path) => {
+    expect(SERVER_RENDERED_PATHS.some((pattern) => pattern.test(path))).toBe(true);
   });
 
   /**

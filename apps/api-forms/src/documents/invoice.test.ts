@@ -103,6 +103,30 @@ describe('what a tenant needs in order to pay', () => {
   });
 
   /**
+   * The column has to survive being added up by hand.
+   *
+   * It did not: the line was printed inclusive of its own VAT beside an exclusive unit price, so
+   * the page read `1 x 249,00 kr = 311,25 kr` and the Netto underneath agreed with neither. Adding
+   * up the column is the only check a tenant actually performs.
+   */
+  it('prints a line amount that is quantity times unit price', () => {
+    const digits = html.replace(/[\s]/g, '');
+    // Cable television: one at 249,00, so 249,00 and not 311,25.
+    expect(digits).toContain('249,00');
+    expect(digits).not.toContain('311,25');
+  });
+
+  it('adds the lines up to the net shown beneath them', () => {
+    const net = INVOICE.lines.reduce((total, entry) => total + entry.amountMinor, 0n);
+    expect(net).toBe(INVOICE.netMinor);
+  });
+
+  it('keeps a postal address on its lines', () => {
+    // HTML collapses the newline a person typed; the address ran together on one line without this.
+    expect(html).toContain('pre-line');
+  });
+
+  /**
    * A quantity in thousandths is a floor area, and has to read as one.
    *
    * `67500` on the page would be a rent of sixty-seven thousand square metres.
