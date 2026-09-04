@@ -89,7 +89,8 @@ export function toHsl(colour: string): [number, number, number] | null {
   return [(h * 60 + 360) % 360, s, l];
 }
 
-export function fromHsl([h, s, l]: [number, number, number]): string {
+/** Internal: only `lift` needs it, so it is not part of the package's surface. */
+function fromHsl([h, s, l]: [number, number, number]): string {
   const c = (1 - Math.abs(2 * l - 1)) * s;
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = l - c / 2;

@@ -26,14 +26,7 @@ import { FortuneTeller } from './FortuneTeller.js';
  * Both come from the Brand Kit, so an organisation's palette still drives it and `CLAUDE.md`
  * rule 4 is satisfied structurally rather than by remembering.
  */
-export function Logo({
-  className,
-  title,
-}: {
-  className?: string;
-  /** Give it a name where it stands alone. Omit where a wordmark sits beside it. */
-  title?: string;
-}) {
+export function Logo() {
   /**
    * The mark is the fortune teller at rest.
    *
@@ -45,14 +38,8 @@ export function Logo({
    * fortune teller, gets pinched once, and folds back. Same four quarters as the intro and the
    * loading indicator, so all three are one object, and the resting frame is the mark itself.
    */
-  return (
-    <FortuneTeller
-      mode="mark"
-      // `logo` carries the sizing; without it the SVG inherits `.ft`'s 100% and fills its parent.
-      className={className ? `logo ${className}` : 'logo'}
-      title={title}
-    />
-  );
+  // `logo` carries the sizing; without it the SVG inherits `.ft`'s 100% and fills its parent.
+  return <FortuneTeller mode="mark" className="logo" />;
 }
 
 /** The mark beside the product's name, for the sign-in screen and the top bar. */

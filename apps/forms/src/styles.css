@@ -4524,7 +4524,6 @@ body:has(.app) > #root {
  *   3. a bright inner hairline along the top, which is what gives a pane thickness;
  *   4. a shadow, because glass floats.
  * ========================================================================== */
-.glass,
 .topline,
 .palette,
 .toast,
@@ -4578,7 +4577,6 @@ body:has(.app) > #root {
  * point of the setting is opacity, and half-transparent is still transparent.
  */
 @media (prefers-reduced-transparency: reduce) {
-  .glass,
   .topline,
   .palette,
   .toast,
@@ -4608,7 +4606,6 @@ body:has(.app) > #root {
  * unfashionable.
  */
 @supports not (backdrop-filter: blur(1px)) {
-  .glass,
   .topline,
   .palette,
   .toast,

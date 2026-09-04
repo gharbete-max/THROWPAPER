@@ -38,7 +38,6 @@
 export function FortuneTeller({
   mode,
   className,
-  title,
 }: {
   /**
    * `pinch` loops the fortune teller working. `fold` runs once and ends as the plane. `mark` rests
@@ -46,8 +45,6 @@ export function FortuneTeller({
    */
   mode: 'pinch' | 'fold' | 'still' | 'mark';
   className?: string;
-  /** Give it a name where it stands alone. Omit where a wordmark sits beside it. */
-  title?: string;
 }) {
   /**
    * At rest the mark is the plane, so that is what sits in the markup.
@@ -62,9 +59,15 @@ export function FortuneTeller({
       className={`ft ft--${mode}${className ? ` ${className}` : ''}`}
       viewBox="0 0 100 100"
       fill="none"
-      role={title ? 'img' : undefined}
-      aria-label={title}
-      aria-hidden={title ? undefined : 'true'}
+      /*
+       * Always hidden from the accessibility tree.
+       *
+       * There was a `title` prop here that switched this to `role="img"` with a name, and nothing
+       * ever passed one — every call site is a mark beside its own wording: the wordmark says
+       * "Formwork", the loading indicator has its word next to it, the intro is decoration. An
+       * unused prop implying an option nobody takes is worse than no prop.
+       */
+      aria-hidden="true"
       focusable="false"
     >
       {/*
