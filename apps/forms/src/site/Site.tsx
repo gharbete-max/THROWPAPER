@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from 'react-router';
 import { FEATURES, HERO, QUOTES, type Feature } from './content.js';
+import { LEGAL_DOCUMENTS, PENDING_PATTERN, type LegalDocument } from './legal.js';
 import { Icon } from '../components/Icon.js';
 import { Logo } from '../components/Logo.js';
 import { Mark } from '../components/Mark.js';
@@ -32,6 +33,13 @@ export function Site() {
             key={feature.slug}
             path={`/features/${feature.slug}`}
             element={<FeaturePage feature={feature} />}
+          />
+        ))}
+        {LEGAL_DOCUMENTS.map((document) => (
+          <Route
+            key={document.slug}
+            path={`/${document.slug}`}
+            element={<LegalPage document={document} />}
           />
         ))}
       </Routes>
@@ -214,9 +222,81 @@ function FeaturePage({ feature }: { feature: Feature }) {
 function SiteFooter() {
   return (
     <footer className="site__foot">
-      <p className="muted small">
-        Formwork. Forms, registrations and the door. The demo saves nothing and sends nothing.
-      </p>
+      <div className="site__inner site__footInner">
+        <p className="muted small">
+          Formwork. Forms, registrations and the door. The demo saves nothing and sends nothing.
+        </p>
+        {/*
+          These belong in the footer because that is where people look for them, and a service that
+          hides its privacy page is telling you something about the page.
+        */}
+        <nav className="site__footNav" aria-label="Policies">
+          {LEGAL_DOCUMENTS.map((document) => (
+            <Link key={document.slug} to={`/${document.slug}`}>
+              {document.title}
+            </Link>
+          ))}
+        </nav>
+      </div>
     </footer>
+  );
+}
+
+/**
+ * A policy page.
+ *
+ * One renderer for all five, because they differ in words rather than in shape, and five hand-built
+ * pages is five places for the wording to drift out of step with the software it describes.
+ */
+function LegalPage({ document }: { document: LegalDocument }) {
+  return (
+    <main className="site__main">
+      <article className="site__article legal">
+        <Link className="site__back" to="/">
+          <Icon name="arrow-left" /> Back
+        </Link>
+        <h1>{document.title}</h1>
+        <p className="site__lede">{document.lede}</p>
+        <p className="muted small">Last reviewed {document.updated}</p>
+
+        {document.sections.map((section) => (
+          <section className="legal__section" key={section.heading}>
+            <h2>{section.heading}</h2>
+            {section.body.map((paragraph) => (
+              <p key={paragraph}>{withPending(paragraph)}</p>
+            ))}
+            {section.rows ? (
+              <dl className="legal__rows">
+                {section.rows.map(([term, description]) => (
+                  <div className="legal__row" key={term}>
+                    <dt>{term}</dt>
+                    <dd>{withPending(description)}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+          </section>
+        ))}
+      </article>
+    </main>
+  );
+}
+
+/**
+ * Renders a missing fact as a visible marker rather than as text that reads like an answer.
+ *
+ * The whole point of `pending()` is that an unfinished page looks unfinished. Rendering the marker
+ * as ordinary prose would defeat it, and a sensible-looking default would defeat it worse.
+ */
+function withPending(text: string) {
+  const parts = text.split(PENDING_PATTERN);
+  return parts.map((part, index) =>
+    index % 2 === 1 ? (
+      <mark className="pending" key={`${part}-${index}`}>
+        to be confirmed: {part}
+      </mark>
+    ) : (
+      part
+    ),
   );
 }

@@ -4459,6 +4459,8 @@ body:has(> #root .shell--narrow) {
   background-image: none;
 }
 
+/* system-scope:start — every rule between these markers must name `.system`. See
+ * `system-scope.test.ts`: this is the house style, and a published form is not ours to style. */
 /* ===========================================================================
  * The paper language
  *
@@ -4558,8 +4560,14 @@ body:has(> #root .shell--narrow) {
   animation: mark-fold 820ms var(--tp-ease) calc(var(--i) * 42ms) both;
 }
 
-/* The intro plays the same fold once, slower, with the stagger opened out. */
-.mark--intro .mark__facet {
+/*
+ * The intro plays the same fold once, slower, with the stagger opened out.
+ *
+ * Scoped like the hover, though nothing renders an intro mark on a published form today. That is
+ * the difference between a rule that is safe and a rule that happens to be unused: the second one
+ * becomes the first bug the day somebody puts the mark on a form's header.
+ */
+.system .mark--intro .mark__facet {
   animation: mark-fold 1400ms var(--tp-ease) calc(var(--i) * 70ms) both;
 }
 
@@ -4720,4 +4728,106 @@ body:has(> #root .shell--narrow) {
     transition: none;
     transform: none;
   }
+}
+
+/* system-scope:end */
+
+/* --- Policy pages ----------------------------------------------------------
+ *
+ * One layout for privacy, terms, cookies, the FAQ and the about page. They differ in words, not in
+ * shape, and five hand-built pages is five places for the wording to drift from the software.
+ * ------------------------------------------------------------------------ */
+
+.legal__section {
+  margin-block-start: calc(var(--tp-spacing-unit) * 5);
+}
+
+.legal__section h2 {
+  margin: 0 0 calc(var(--tp-spacing-unit) * 1.5);
+  font-size: var(--tp-text-lg);
+  letter-spacing: -0.01em;
+}
+
+.legal__section p {
+  margin: 0 0 var(--tp-spacing-unit);
+  line-height: 1.6;
+}
+
+/*
+ * Two columns where the content is really a table, one where there is no room.
+ *
+ * A retention period beside the thing it applies to is a table, and setting it as prose makes a
+ * reader hold the pairing in their head. `28ch` is wide enough for the longest term here without
+ * leaving the description a narrow gutter.
+ */
+.legal__rows {
+  margin: calc(var(--tp-spacing-unit) * 2) 0 0;
+  display: grid;
+  gap: 0;
+}
+
+.legal__row {
+  display: grid;
+  grid-template-columns: minmax(0, 28ch) minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  padding-block: calc(var(--tp-spacing-unit) * 1.5);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.legal__row dt {
+  font-weight: var(--tp-type-label-weight);
+}
+
+.legal__row dd {
+  margin: 0;
+  color: var(--tp-colour-muted);
+}
+
+@media (max-width: 40rem) {
+  .legal__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--tp-spacing-unit) * 0.5);
+  }
+}
+
+/*
+ * A fact nobody has supplied yet, marked so it cannot be read as one.
+ *
+ * `warning` rather than `danger`: this is not broken, it is unfinished, and the two deserve
+ * different colours. It is loud on purpose — a policy page that looks complete while its retention
+ * periods are invented is worse than one that visibly is not finished.
+ */
+.pending {
+  padding: 2px 6px;
+  border-radius: var(--tp-radius-sm);
+  background: color-mix(in srgb, var(--tp-colour-warning) 18%, var(--tp-colour-background));
+  color: var(--tp-colour-warning);
+  font-size: var(--tp-text-sm);
+  font-weight: var(--tp-type-label-weight);
+}
+
+/* --- The footer, now that it has links in it ------------------------------- */
+.site__footInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--tp-spacing-unit);
+}
+
+.site__footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.site__footNav a {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
+  text-decoration: none;
+}
+
+.site__footNav a:hover {
+  color: var(--tp-colour-text);
+  text-decoration: underline;
 }

@@ -1,4 +1,5 @@
 import { FEATURES } from './content.js';
+import { LEGAL_DOCUMENTS } from './legal.js';
 
 /**
  * Which URLs the public site owns.
@@ -11,6 +12,7 @@ import { FEATURES } from './content.js';
 export const SITE_ROUTES: readonly string[] = [
   '/',
   ...FEATURES.map((feature) => `/features/${feature.slug}`),
+  ...LEGAL_DOCUMENTS.map((document) => `/${document.slug}`),
 ];
 
 export function isSiteRoute(path: string): boolean {
@@ -35,4 +37,16 @@ export function isSiteRoute(path: string): boolean {
  * `verify` keeps this honest against `SITE_ROUTES`, so a new page cannot be added to one and
  * forgotten in the other.
  */
-export const SERVER_RENDERED_PATHS: readonly RegExp[] = [/^\/$/, /^\/features\//, /^\/f\//];
+export const SERVER_RENDERED_PATHS: readonly RegExp[] = [
+  /*
+   * Derived, not restated.
+   *
+   * This was a hand-written list of three patterns beside a hand-written list of routes, which is
+   * the shape of every drift bug in this codebase: adding a page to one and forgetting the other
+   * hands it back to the precache, and nothing anywhere says so. Building it from `SITE_ROUTES`
+   * removes the possibility rather than testing for it.
+   */
+  ...SITE_ROUTES.map((route) => new RegExp(`^${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)),
+  /* Not a site route: the server renders these per slug to give each form its own preview card. */
+  /^\/f\//,
+];

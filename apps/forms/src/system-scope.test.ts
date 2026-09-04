@@ -26,21 +26,47 @@ const FOLD = read('./lib/fold.ts');
 
 describe('the paper language', () => {
   /**
-   * Every rule the fold introduces has to name the scope.
+   * Anything that decorates an interaction has to name the scope.
    *
-   * Checked against the block rather than the whole stylesheet, because plenty of unrelated rules
-   * legitimately style `.button` — this is about the ones that fold it.
+   * This was written as "every rule after the fold's own heading", which held only while that block
+   * happened to be the last thing in the file. Adding the policy pages after it broke the test
+   * without breaking the property — the worst kind of failure, because the obvious repair is to
+   * move the slice and carry on.
+   *
+   * So it asks the question that actually matters instead of the one that was convenient: a rule
+   * that fires on hover, on press, or on the folding class is decoration, and decoration is what
+   * must not reach somebody else's registration page. Where it sits in the stylesheet is not the
+   * point.
+   *
+   * The mark's own colours are deliberately outside this. The mark is drawn on a published form in
+   * the organisation's palette, where it is their brand and not our animation; only its motion is
+   * ours to withhold.
    */
-  it('scopes every folding rule to .system', () => {
-    const block = CSS.slice(CSS.indexOf('/* --- Buttons fold when pressed'));
-    const selectors = [...block.matchAll(/^(\.[^\s{,]+[^{]*)\{/gm)].map((match) =>
+  it('scopes every rule in the house-style region to .system', () => {
+    const start = CSS.indexOf('/* system-scope:start');
+    const end = CSS.indexOf('/* system-scope:end');
+    expect(start, 'the scoped region is not marked in the stylesheet').toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+
+    const region = CSS.slice(start, end);
+    const selectors = [...region.matchAll(/^(\.[^\s{,][^{]*)\{/gm)].map((match) =>
       match[1]!.trim(),
     );
 
-    expect(selectors.length).toBeGreaterThan(0);
-    for (const selector of selectors) {
-      expect(selector, `"${selector}" would fold a control on any page`).toContain('.system');
-    }
+    /*
+     * The mark itself is deliberately outside the rule, and only the mark.
+     *
+     * It is drawn on a published form in the organisation's own palette, where it is their brand
+     * mark and not our animation — so its box and its four surfaces travel. Everything that *moves*
+     * it is withheld, including the intro fold, which nothing puts on a form today and which is
+     * scoped anyway. A rule that is safe because it is unused is a bug waiting for a use.
+     */
+    const structural = /^\.mark(__facet|\s*$|,)/;
+    const decoration = selectors.filter((selector) => !structural.test(selector));
+    const unscoped = decoration.filter((selector) => !selector.includes('.system'));
+
+    expect(decoration.length).toBeGreaterThan(3);
+    expect(unscoped, 'these would apply the house style to a published form').toEqual([]);
   });
 
   it('never puts the scope on the public form', () => {
