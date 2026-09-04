@@ -13,6 +13,15 @@ import { toEmailStyles, type TokenSet } from '@tp/tokens';
  * real needed them; this is that.
  */
 export interface ConfirmationContent {
+  /**
+   * BCP-47, for the `lang` attribute on the document.
+   *
+   * Both templates hard-coded `lang="sv"` while their content was passed in already translated, so
+   * a Japanese confirmation went out declared as Swedish. That is not cosmetic: `lang` is what a
+   * screen reader uses to choose a voice and what a client uses to decide whether to offer a
+   * translation, and getting it wrong makes an email that is read aloud incomprehensible.
+   */
+  lang: string;
   heading: string;
   intro: string;
   eventName: string;
@@ -36,7 +45,7 @@ export function ConfirmationEmail({
   const s = toEmailStyles(tokens);
 
   return (
-    <Html lang="sv">
+    <Html lang={content.lang}>
       <Head />
       <Preview>{content.heading}</Preview>
       <Body style={s.body}>
@@ -79,6 +88,8 @@ export function ConfirmationEmail({
 }
 
 export interface NotificationContent {
+  /** BCP-47, for the `lang` attribute. See `ConfirmationContent`. */
+  lang: string;
   heading: string;
   intro: string;
   rows: Array<{ label: string; value: string }>;
@@ -97,7 +108,7 @@ export function NotificationEmail({
   const s = toEmailStyles(tokens);
 
   return (
-    <Html lang="sv">
+    <Html lang={content.lang}>
       <Head />
       <Preview>{content.heading}</Preview>
       <Body style={s.body}>

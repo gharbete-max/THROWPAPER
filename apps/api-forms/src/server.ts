@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import helmet from '@fastify/helmet';
 import swagger from '@fastify/swagger';
 import fastifyStatic from '@fastify/static';
 import multipart from '@fastify/multipart';
@@ -12,14 +13,21 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import { CONTRACT_VERSION } from '@tp/shared';
+import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
+import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
+import { resolveTokens } from './routes/brand-kit.js';
 import { createAuthService } from './auth/service.js';
 import { createConsoleMailProvider, type MailProvider } from './auth/mail.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerFormRoutes } from './routes/forms.js';
 import { registerAdminRoutes } from './routes/admin.js';
+import { registerLedgerRoutes } from './routes/ledger.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
+import { registerPublicInvoiceRoutes } from './routes/public-invoices.js';
 import { registerDocumentRoutes } from './routes/documents.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
@@ -119,6 +127,82 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   const jwtSecret = options.jwtSecret ?? requireSecret();
   const appUrl = options.appUrl ?? process.env['APP_URL'] ?? 'http://localhost:5173';
   const probeDatabase = options.probeDatabase ?? database !== null;
+  /* HSTS and upgrade-insecure-requests are correct in front of TLS and break a localhost page. */
+  const isProduction = process.env['NODE_ENV'] === 'production';
+
+  /**
+   * Security headers, on a server that hands HTML to browsers.
+   *
+   * There were none. Not a weak set — none at all: no framing policy, no `nosniff`, no referrer
+   * policy, no content policy. That is defensible for an API nobody points a browser at, and this
+   * one serves the app, the marketing site and every public registration page.
+   *
+   * The policy is written against what the app actually loads, which is little: no inline scripts,
+   * no external origins, no CDN. That makes `script-src 'self'` achievable rather than aspirational
+   * — the version of this header that is worth having.
+   */
+  await app.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        /* No inline scripts anywhere: the shipped HTML loads two modules by src and nothing else. */
+        scriptSrc: ["'self'"],
+        /*
+         * Styles need `unsafe-inline` and that is a deliberate cost, not an oversight. The brand
+         * palette is injected as a `<style>` block — inline on the server for a page whose first
+         * impression is the point, and at runtime in the app because an organisation's kit
+         * replaces it. A nonce would work for the server-rendered half and not for the half the
+         * client writes after a fetch.
+         */
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        /* `data:` for the QR on an admission card, `blob:` for a CSV or attachment being saved. */
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        /*
+         * `data:` because the print compiler embeds the font's own bytes.
+         *
+         * That is deliberate and load-bearing elsewhere: a PDF has to carry its typeface rather
+         * than hope the reader has it. The invoice page uses the same stylesheet, so a policy of
+         * `'self'` alone silently rendered somebody's invoice in a fallback face — found by
+         * opening one, not by reading the header.
+         */
+        fontSrc: ["'self'", 'data:'],
+        connectSrc: ["'self'"],
+        workerSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        /*
+         * Nothing here may be framed, including the public form.
+         *
+         * Embedding a form in a customer's own page is a feature this product may well want, and
+         * when it does it should be a decision with an allow-list behind it — not something that
+         * works today because nobody set a header. Until then a registration page that can be
+         * framed is a registration page that can be clickjacked.
+         */
+        frameAncestors: ["'none'"],
+        /* Breaks every localhost page, and adds nothing that HSTS does not already do in front. */
+        ...(isProduction ? {} : { upgradeInsecureRequests: null }),
+      },
+    },
+    /* Only meaningful over TLS, and actively unhelpful on a development machine. */
+    hsts: isProduction ? { maxAge: 15552000, includeSubDomains: true } : false,
+    /* The door screen reads a QR from the camera, so that one capability stays. */
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  });
+
+  /**
+   * One capability, granted to one screen.
+   *
+   * Helmet does not write this, and its absence means every API a browser has ever added is
+   * available to any script that gets onto the page. The camera is named because check-in needs
+   * it; everything else is refused rather than left to the browser's default.
+   */
+  app.addHook('onSend', async (_request, reply) => {
+    reply.header(
+      'Permissions-Policy',
+      'camera=(self), geolocation=(), microphone=(), payment=(), usb=(), interest-cohort=()',
+    );
+  });
 
   await app.register(cors, { origin: appUrl, credentials: false });
   await app.register(rateLimit, { global: false, max: 100, timeWindow: '1 minute' });
@@ -191,6 +275,8 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
   registerAdminRoutes(app, { repos, guard });
+  registerLedgerRoutes(app, { repos, guard });
+  registerPublicInvoiceRoutes(app, { repos });
   registerPublicFormRoutes(app, {
     repos,
     mail,
@@ -250,7 +336,17 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   app.get('/openapi.json', async () => app.swagger());
 
   if (appDir) {
-    await app.register(fastifyStatic, { root: appDir, wildcard: false });
+    /**
+     * `index: false` so the root is not answered by the file on disk.
+     *
+     * `fastify-static` serves `index.html` for `/` before any handler runs, which meant the
+     * landing page — the one page on this domain a search engine actually reads — was the only
+     * site route still shipped as an empty shell. Every other route already fell through to the
+     * not-found handler, so `/features/ledger` was server-rendered and `/` was not.
+     *
+     * The file is still served everywhere it should be: the fallback below reaches for it by name.
+     */
+    await app.register(fastifyStatic, { root: appDir, wildcard: false, index: false });
 
     /**
      * SPA fallback. Anything that is not an API route and not a file on disk is a client route —
@@ -275,11 +371,145 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       if (isApi || request.method !== 'GET' || looksLikeAsset(path)) {
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       }
+
+      /**
+       * The public site is rendered here, not in the browser.
+       *
+       * A landing page whose markup arrives empty and fills in after a bundle downloads is a
+       * landing page a crawler reads as blank and a visitor on a slow connection reads as broken.
+       * These pages are a pure function of their content module — no session, no fetch — so
+       * rendering them on the server is honest rather than a shell with a spinner in it.
+       *
+       * The app is deliberately not rendered here: it is behind a bearer token this server does
+       * not have, and there is no crawler on the other side of a sign-in.
+       */
+      const site = await renderSite(appDir, path, appUrl);
+      if (site) return reply.type('text/html; charset=utf-8').send(site);
+
+      /**
+       * A public form link gets a real preview card.
+       *
+       * Everything else gets the shipped `index.html` unchanged: the app's own screens are behind
+       * a sign-in and nobody pastes them into a chat window. See `link-preview.ts` for why this
+       * cannot be done in React.
+       */
+      const slug = /^\/f\/([A-Za-z0-9][A-Za-z0-9-]{0,63})$/.exec(path)?.[1];
+      if (slug) {
+        const preview = await previewForSlug(repos, slug, appUrl);
+        if (preview) {
+          const shell = await readFile(join(appDir, 'index.html'), 'utf8');
+          return reply.type('text/html; charset=utf-8').send(withLinkPreview(shell, preview));
+        }
+      }
+
       return reply.sendFile('index.html');
     });
   }
 
   return app;
+}
+
+/**
+ * The server-rendered public site, or `null` when this path is not one of its pages.
+ *
+ * The SSR bundle is imported lazily and only once: it pulls in React and the whole site tree, and
+ * a deployment that never serves the site (an API-only container) should not pay for it at boot.
+ */
+let sitePromise: Promise<SiteRenderer | null> | null = null;
+
+interface SiteRenderer {
+  isSiteRoute: (path: string) => boolean;
+  render: (path: string, origin: string) => { html: string; head: string };
+}
+
+async function loadSite(appDir: string): Promise<SiteRenderer | null> {
+  try {
+    /**
+     * `dist-server` sits beside the client build. In development this file is never reached —
+     * Vite serves the app and this whole branch is dead — so a missing bundle is a normal state
+     * rather than a failure, and the site falls back to being client-rendered.
+     */
+    const entry = pathToFileURL(join(appDir, '..', 'dist-server', 'entry-server.js')).href;
+    return (await import(entry)) as SiteRenderer;
+  } catch {
+    return null;
+  }
+}
+
+async function renderSite(appDir: string, path: string, appUrl: string): Promise<string | null> {
+  sitePromise ??= loadSite(appDir);
+  const site = await sitePromise;
+  if (!site?.isSiteRoute(path)) return null;
+
+  try {
+    const shell = await readFile(join(appDir, 'index.html'), 'utf8');
+    const { html, head } = site.render(path, appUrl);
+    return (
+      shell
+        .replace(/<title>[^<]*<\/title>/, '')
+        .replace(/<\/head>/, `  ${head}\n  </head>`)
+        // The markup React will hydrate, so the page is readable before any script runs.
+        .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
+    );
+  } catch {
+    // A render that throws must not take the page down: fall through to the client-rendered shell.
+    return null;
+  }
+}
+
+/**
+ * The preview for a published form, or `null`.
+ *
+ * **Only published forms.** A draft's title is the author's working note and has not been shown to
+ * anybody; a link to one already refuses to render the form, and it must not leak the title
+ * either. A form that does not exist gets the plain shell for the same reason — a preview that
+ * confirms which slugs are real is a way to enumerate them.
+ */
+async function previewForSlug(
+  repos: Repositories,
+  slug: string,
+  appUrl: string,
+): Promise<LinkPreview | null> {
+  try {
+    const organisation = await repos.organisations.first();
+    if (!organisation) return null;
+
+    const form = await repos.forms.findBySlug(organisation.id, slug);
+    if (!form?.publishedVersionId) return null;
+
+    const versions = await repos.forms.listVersions(form.id);
+    const published = versions.find((version) => version.id === form.publishedVersionId);
+    if (!published) return null;
+
+    const locale = organisation.defaultLocale;
+    const title = pickText(
+      { default: locale, supported: organisation.supportedLocales, fallbacks: {} },
+      form.title,
+      locale,
+    ).value;
+    if (!title) return null;
+
+    const origin = appUrl.replace(/\/$/, '');
+    const { tokens } = await resolveTokens(repos, organisation.id);
+
+    return {
+      title,
+      organisation: organisation.name,
+      url: `${origin}/f/${slug}`,
+      // The organisation's own logo where they have uploaded one; the product's mark otherwise.
+      image: tokens.logoLight
+        ? new URL(tokens.logoLight, `${origin}/`).toString()
+        : `${origin}/icon-512.png`,
+      locale,
+    };
+  } catch {
+    /**
+     * A preview is decoration on a page that has to load. If the lookup fails — a database blip, a
+     * form row that no longer parses — the visitor still gets the app, which will fetch the form
+     * itself and show its own error. Failing the page over a meta tag would be the wrong trade.
+     */
+    return null;
+  }
 }
 
 /**

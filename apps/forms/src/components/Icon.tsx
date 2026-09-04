@@ -42,6 +42,8 @@ export type IconName =
   | 'image'
   | 'link'
   | 'hidden'
+  | 'shape'
+  | 'drawing'
   // Actions and navigation.
   | 'arrow-left'
   | 'arrow-right'
@@ -73,6 +75,10 @@ export type IconName =
   | 'undo'
   | 'user'
   | 'share'
+  | 'theme-system'
+  | 'theme-light'
+  | 'theme-dark'
+  | 'command'
   | 'redo';
 
 /** 24×24 paths, stroke-width 2, round caps. */
@@ -89,6 +95,10 @@ const PATHS: Record<IconName, string> = {
   rating: 'M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9z',
   time: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3.5 2',
   file: 'M6 3h9l4 4v14H6zM15 3v4h4M9 13h6M9 17h4',
+  // A rounded rectangle: the default decorative shape, and what the group is named for.
+  shape: 'M8 5h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z',
+  // A pen nib over a stroke — freehand, rather than a pencil, which reads as "edit".
+  drawing: 'M3 20c4-1 5-9 9-9s2 5 5 5 4-3 4-3M14 4l6 6-9 9-6 1 1-6z',
   // A head and shoulders: whose form this is.
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
   // Three nodes on two arms — the usual shape for passing something on to somebody.
@@ -96,9 +106,18 @@ const PATHS: Record<IconName, string> = {
     'M18 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1',
   paperclip: 'M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 5',
   signature: 'M3 17c4-9 6-9 8-2s4 7 6 0M3 21h18',
-  section_break: 'M3 12h18M6 7h12M6 17h12',
+  /**
+   * A heading, not another stack of lines.
+   *
+   * This was three centred rules, `rich_text` was four ragged ones and `long_text` is three more —
+   * so the palette offered three icons that were all "some horizontal lines", two of them in the
+   * same group and visible at once. A section break puts a *heading* in the form, and H is what a
+   * heading looks like in every editor anybody has used.
+   */
+  section_break: 'M6 4v16M18 4v16M6 12h12',
   page_break: 'M3 12h4M10 12h4M17 12h4M12 3v4M12 17v4',
-  rich_text: 'M5 5h14M5 10h14M5 15h9M5 20h6',
+  // Type, for the same reason: a block of prose, told apart from the line stacks around it.
+  rich_text: 'M4 7V4h16v3M12 4v16M9 20h6',
   image: 'M3 5h18v14H3zM3 16l5-5 4 4 3-3 6 6',
   link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
   hidden: 'M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6zM4 4l16 16',
@@ -112,6 +131,15 @@ const PATHS: Record<IconName, string> = {
   plus: 'M12 5v14M5 12h14',
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
   trash: 'M4 7h16M10 4h4M6 7l1 13h10l1-13M10 11v5M14 11v5',
+  // A laptop: "whatever this machine is set to".
+  'theme-system': 'M4 6h16v10H4zM2 20h20',
+  // A sun, drawn as a disc and eight rays.
+  'theme-light':
+    'M12 8a4 4 0 100 8 4 4 0 000-8M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  // A crescent, as one path so it inherits the stroke like everything else.
+  'theme-dark': 'M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z',
+  // The command key, for the palette.
+  command: 'M9 6a3 3 0 10-3 3h12a3 3 0 10-3-3v12a3 3 0 103-3H6a3 3 0 10 3 3z',
   drag: 'M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01',
   events: 'M4 6h16v14H4zM4 10h16M9 3v4M15 3v4M8 14h3v3H8z',
   forms: 'M6 3h9l4 4v14H6zM15 3v4h4M9 12h7M9 16h5',
@@ -129,7 +157,14 @@ const PATHS: Record<IconName, string> = {
   archive: 'M3 4h18v4H3zM5 8v12h14V8M10 12h4',
   external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
   inbox: 'M3 13h5l1 3h6l1-3h5M6 5h12l3 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z',
-  clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+  /**
+   * History, not a clock face.
+   *
+   * `time` is already a clock — it is the field where somebody types a time of day — and this was
+   * the same drawing with one hand half a unit shorter. They mean different things: this marks when
+   * something arrived, which is the past, and the arrow curling back is what says so.
+   */
+  clock: 'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8M3 3v5h5M12 7v5l4 2',
   undo: 'M4 10h11a5 5 0 0 1 0 10h-6M4 10l4-4M4 10l4 4',
   redo: 'M20 10H9a5 5 0 0 0 0 10h6M20 10l-4-4M20 10l-4 4',
   settings:

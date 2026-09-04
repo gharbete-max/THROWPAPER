@@ -117,6 +117,7 @@ export const frFR: Record<MessageKey, string> = {
 
   'forms.title': 'Formulaires',
   'forms.new': 'Nouveau formulaire',
+  'forms.untitled': 'Formulaire sans titre',
   'forms.empty': 'Aucun formulaire pour le moment.',
   'forms.slug': 'Adresse du lien',
   'forms.slugHint': 'Devient /f/<adresse>. Minuscules, chiffres et tirets.',
@@ -215,6 +216,49 @@ export const frFR: Record<MessageKey, string> = {
   'field.linkAppearance': 'Affiché comme',
   'field.linkAppearance.button': 'Bouton',
   'field.linkAppearance.link': 'Lien texte',
+
+  'fieldType.shape': 'Forme',
+  'fieldType.drawing': 'Dessin',
+  'palette.decoration': 'Décoration',
+  'field.shapeKind': 'Forme',
+  'field.shapeKind.rectangle': 'Rectangle',
+  'field.shapeKind.ellipse': 'Ellipse',
+  'field.shapeKind.line': 'Ligne',
+  'field.shapeKind.arrow': 'Flèche',
+  'field.shapeKind.divider': 'Séparateur',
+  'field.fill': 'Remplissage',
+  'field.stroke': 'Couleur du trait',
+  'field.strokeWidth': 'Épaisseur du trait',
+  'field.radius': 'Rayon des coins',
+  'field.shapeHeight': 'Hauteur',
+  'field.dashed': 'Pointillés',
+  'field.colour.none': 'Aucun',
+  'field.colour.custom': 'Personnalisée…',
+  'field.colourHint':
+    'Les couleurs de la charte suivent la palette de l’organisation : la modifier modifie ceci aussi.',
+  'draw.title': 'Dessiner',
+  'draw.hint': 'Dessinez au doigt, au stylet ou à la souris.',
+  'draw.clear': 'Effacer',
+  'draw.undoStroke': 'Annuler le dernier trait',
+  'draw.empty': 'Rien de dessiné pour le moment.',
+  'draw.strokes': 'plural:one {count} trait | other {count} traits',
+  'decoration.note':
+    'Décoration seulement. Ne recueille aucune réponse et n’apparaît jamais dans l’export.',
+
+  'field.drawArea': 'Zone de dessin',
+  'field.drawArea.wide': 'Large',
+  'field.drawArea.square': 'Carrée',
+  'field.drawArea.tall': 'Haute',
+  'field.drawAreaLocked': 'Effacez le dessin pour changer sa forme.',
+
+  'appearance.label': 'Apparence',
+  'appearance.system': 'Système',
+  'appearance.light': 'Clair',
+  'appearance.dark': 'Sombre',
+
+  'palette.title': 'Aller à',
+  'palette.placeholder': 'Rechercher un écran…',
+  'palette.empty': 'Aucun résultat.',
 
   'fieldType.hidden': 'Champ masqué',
 
@@ -525,6 +569,8 @@ export const frFR: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Carte invalide',
 
   'attendance.title': 'Présence',
+  'attendance.loadFailed': 'La liste des présences n’a pas pu être chargée.',
+  'attendance.retry': 'Réessayer',
   'attendance.registered': 'Inscrits',
   'attendance.checkedIn': 'Arrivés',
   'attendance.noShow': 'Absents',
@@ -544,6 +590,12 @@ export const frFR: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Retiré',
 
   'public.next': 'Suivant',
+  'wizard.step': 'Question {n}',
+  'wizard.done': 'Terminé',
+  'wizard.review': 'Voici ce que cela donne',
+  'wizard.open': 'Ouvrir dans l’éditeur',
+  'wizard.back': 'Retour',
+  'wizard.advanced': 'Le construire moi-même',
   'public.back': 'Précédent',
   'public.complete': 'Terminer',
   'public.submitting': 'Envoi…',
@@ -561,6 +613,10 @@ export const frFR: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Cette adresse est déjà inscrite.',
   'public.rejected.full': 'Les places se sont épuisées pendant que vous remplissiez le formulaire.',
   'public.rejected.closed': 'Le formulaire a fermé pendant que vous le remplissiez.',
+  'public.rejected.offline':
+    'Vos réponses sont toujours là, mais elles n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.',
+  'public.rejected.error':
+    'Un problème est survenu de notre côté. Vos réponses sont toujours là — réessayez.',
   'public.notFound': 'Formulaire introuvable.',
   'public.yes': 'Oui',
   'public.no': 'Non',

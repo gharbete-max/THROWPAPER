@@ -8,6 +8,7 @@ import { ImagePicker } from '../components/ImagePicker.js';
 import { ThemePicker } from '../components/ThemePicker.js';
 import { dominantColour } from '../lib/dominant-colour.js';
 import { Loading } from '../components/Loading.js';
+import { Slider } from '../components/Slider.js';
 
 /**
  * The Brand Kit editor.
@@ -62,58 +63,26 @@ const LENGTHS: ReadonlyArray<{
  * unstyled text, and a third party told about every visitor. These stacks all resolve to
  * something installed, which is why the form appears immediately.
  */
-const FONT_STACKS = [
+/**
+ * Unquoted, and that is load-bearing rather than a style choice.
+ *
+ * `BrandKit`'s `FontStack` in `packages/shared` refuses quotes, because the stack is interpolated
+ * into an inline `style` attribute in email where a quote ends the attribute early. Four of the
+ * six entries here were quoted — so the editor offered Georgia, Segoe UI, Helvetica Neue and the
+ * monospace stack, and the API rejected every one of them with a 400. Two lists that had to agree,
+ * with nothing comparing them; `brand-fonts.test.ts` compares them now.
+ *
+ * A multi-word family is legal CSS unquoted as long as each word is a valid identifier, which is
+ * true of all of these.
+ */
+export const FONT_STACKS = [
   'Inter, system-ui, sans-serif',
   'system-ui, sans-serif',
-  'Georgia, "Times New Roman", serif',
-  '"Segoe UI", Roboto, sans-serif',
-  '"Helvetica Neue", Arial, sans-serif',
-  'ui-monospace, "Cascadia Mono", Menlo, monospace',
+  'Georgia, Times New Roman, serif',
+  'Segoe UI, Roboto, sans-serif',
+  'Helvetica Neue, Arial, sans-serif',
+  'ui-monospace, Cascadia Mono, Menlo, monospace',
 ];
-
-function Slider({
-  label,
-  hint,
-  min,
-  max,
-  step = 1,
-  suffix = 'px',
-  value,
-  disabled,
-  onChange,
-}: {
-  label: string;
-  hint?: string | undefined;
-  min: number;
-  max: number;
-  step?: number;
-  suffix?: string;
-  value: number;
-  disabled: boolean;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <label className="field brand__slider">
-      <span className="row row--between">
-        {label}
-        <span className="small muted">
-          {value}
-          {suffix}
-        </span>
-      </span>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        disabled={disabled}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
-      {hint && <span className="small muted">{hint}</span>}
-    </label>
-  );
-}
 
 export function BrandKit() {
   const t = useT();

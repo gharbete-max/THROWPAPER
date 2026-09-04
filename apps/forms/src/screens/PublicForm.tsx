@@ -19,7 +19,6 @@ import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
-import { FlightTrail } from '../components/Logo.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -193,16 +192,29 @@ export default function PublicForm() {
   async function saveDraft() {
     if (!slug || !form) return;
     setBusy(true);
+    setRejected(null);
     try {
       const response = await fetch(`/api/public/forms/${slug}/draft`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ locale: resolved, values, resumeToken: resumeToken ?? undefined }),
       });
-      if (!response.ok) return;
+      /**
+       * A failed save has to say so.
+       *
+       * It returned silently before: the button finished, no link appeared, and somebody who had
+       * asked to come back later walked away believing their answers were kept. The link is the
+       * only copy — there is nothing else to return to.
+       */
+      if (!response.ok) {
+        setRejected('error');
+        return;
+      }
       const saved = (await response.json()) as { resumeToken: string };
       setResumeToken(saved.resumeToken);
       setResumeLink(`${window.location.origin}/f/${slug}?resume=${saved.resumeToken}`);
+    } catch {
+      setRejected('offline');
     } finally {
       setBusy(false);
     }
@@ -226,7 +238,14 @@ export default function PublicForm() {
           website: '',
         }),
       });
-      const body = await response.json();
+      /**
+       * A body that will not parse is not a reason to lose the answers.
+       *
+       * A gateway timing out in front of the API answers with an HTML error page, and `json()`
+       * throws on it. That threw out of the whole function, so the one status code most likely to
+       * appear under load produced no message at all.
+       */
+      const body = await response.json().catch(() => ({}) as Record<string, unknown>);
 
       if (response.status === 201) {
         setReference(body.reference);
@@ -262,11 +281,60 @@ export default function PublicForm() {
         if (firstBad >= 0) setPage(firstBad);
         return;
       }
+      /**
+       * A fault at our end is not a closed form.
+       *
+       * Anything unrecognised used to fall through to `'closed'`, so a 500 told the visitor "The
+       * form closed while you were filling this in." That is a false statement, and it is the kind
+       * that makes somebody give up rather than press the button again — which is exactly what
+       * would have worked.
+       */
+      if (response.status >= 500) {
+        setRejected('error');
+        return;
+      }
       setRejected(String(body.reason ?? 'closed'));
+    } catch {
+      /**
+       * The connection went, not the answers.
+       *
+       * This is a phone on a venue's wifi at the end of a long form. Nothing here clears `values`,
+       * so everything typed is still on the page and pressing the button again is a real fix —
+       * but only if somebody is told that. Before, the promise rejected into nothing: the button
+       * un-greyed itself and the page said absolutely nothing.
+       */
+      setRejected('offline');
     } finally {
       setBusy(false);
     }
   }
+
+  /**
+   * The title in whichever language this reader has chosen, falling back the way every other
+   * string on this page does.
+   */
+  const formTitle = form ? pickText(locales, form.title, resolved).value : '';
+
+  /**
+   * The tab, too.
+   *
+   * The server sends a per-form `<title>` for crawlers; a browser that has already loaded the app
+   * and navigated within it never asks the server again, so without this the tab says "Formwork"
+   * for every form somebody has open at once.
+   *
+   * Above the early returns, with the other hooks. It sat below them at first, so the loading
+   * render called one fewer hook than the loaded one — "rendered more hooks than during the
+   * previous render", and the page stopped rendering at all. A screen with four exits is exactly
+   * where that mistake hides.
+   */
+  useEffect(() => {
+    if (!formTitle) return;
+    const previous = document.title;
+    document.title = `${formTitle} — ${form?.organisationName ?? ''}`.trim();
+    return () => {
+      document.title = previous;
+    };
+  }, [formTitle, form?.organisationName]);
 
   if (phase === 'loading') return <main className="shell shell--narrow" />;
 
@@ -311,6 +379,18 @@ export default function PublicForm() {
         />
       </header>
 
+      {/*
+        What this is.
+        
+        The page had no heading: the organisation's name, then a first question. Somebody who
+        followed a link from a chat window saw a card naming the form, opened it, and arrived
+        somewhere that did not name it — which is the moment a careful person closes the tab.
+
+        `h1` and not a caption: on a page whose whole purpose is one document, the document's name
+        is the heading, and a screen reader jumping by heading should land on it.
+      */}
+      {formTitle && phase !== 'done' && <h1 className="public__title">{formTitle}</h1>}
+
       {phase === 'closed' && (
         <div className="card">
           <p>{t(`public.closed.${form?.closedReason ?? 'closed'}`)}</p>
@@ -318,11 +398,9 @@ export default function PublicForm() {
       )}
 
       {phase === 'done' && (
-        <div className="card stack done trail-host">
-          {/* The same curve the intro drew, at the other end of the journey. */}
-          <FlightTrail variant="short" className="trail--behind" />
-          {/* Drawn rather than already there: a line appearing *now* is what says it worked, which
-              is the thing people are unsure about on a confirmation screen. */}
+        <div className="card stack done">
+          {/* Drawn rather than already there: a mark appearing *now* is what says it worked,
+              which is the thing people are unsure about on a confirmation screen. */}
           <Signed />
           <h1>{confirmation || t('public.thanks')}</h1>
           <p className="muted">{t('public.reference', { reference })}</p>
@@ -374,7 +452,16 @@ export default function PublicForm() {
             ))}
           </div>
 
-          {rejected && <p className="status-down">{t(`public.rejected.${rejected}`)}</p>}
+          {/*
+            `alert`, because this appears in response to pressing the button rather than as part of
+            the page. Without it a screen reader announces nothing at all: focus stays on a button
+            whose label has gone back to "Complete", which reads as though the form simply refused.
+          */}
+          {rejected && (
+            <p className="status-down" role="alert">
+              {t(`public.rejected.${rejected}`)}
+            </p>
+          )}
 
           {resumeLink && (
             <div className="card stack">

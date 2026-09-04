@@ -85,6 +85,7 @@ export function registerPublicFormRoutes(
 
       return reply.send({
         slug: loaded.form.slug,
+        title: loaded.form.title,
         definition: loaded.definition,
         formVersion: loaded.published.version,
         organisationName: loaded.organisation.name,

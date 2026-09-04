@@ -9,6 +9,7 @@
  * in-memory repositories that already back the tests, wired to the same server, with the dataset
  * the SQL seed uses. Nothing here forks the product.
  */
+import { randomBytes } from 'node:crypto';
 import { buildServer } from '../server.js';
 import { createMemoryMailProvider } from '../mail/provider.js';
 import { createMemoryRepositories } from '../db/repositories/index.js';
@@ -19,7 +20,18 @@ import { buildDemoState, DEMO_FORM_SLUG, DEMO_USERS } from './dataset.js';
 
 const PORT = Number(process.env['API_FORMS_PORT'] ?? 4001);
 const APP_URL = process.env['APP_URL'] ?? 'http://localhost:5173';
-const JWT_SECRET = process.env['JWT_SECRET'] ?? 'demo-mode-secret-not-for-production-use-only-here';
+/**
+ * A fresh secret every boot, rather than one written down here.
+ *
+ * This used to fall back to a constant string. That string is in a public repository, and the
+ * guard below only refuses to start when `NODE_ENV` is exactly `production` — which is unset on
+ * plenty of real deployments. Anyone who had read the source could have minted an admin session
+ * against any demo running without an explicit `JWT_SECRET`.
+ *
+ * Random costs nothing here: demo data lives in memory and is lost on restart, so a session that
+ * does not survive a restart either is not a regression. It is the data's own lifetime.
+ */
+const JWT_SECRET = process.env['JWT_SECRET'] ?? randomBytes(32).toString('base64url');
 
 /**
  * A demo binary that boots as production with no database and no real mail would be a quiet

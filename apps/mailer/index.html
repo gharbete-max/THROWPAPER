@@ -1,8 +1,22 @@
 <!doctype html>
-<html lang="sv">
+<!--
+  English, not Swedish, for the same reason as Formwork's: it is the language of the markup below,
+  and a fixed `sv` is a guess about a reader this file has never met. Sendwork has no locale
+  switcher yet — it is a scaffold — so unlike Formwork nothing replaces this at runtime.
+-->
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Deliberately without a favicon or a mark of its own.
+
+      Sendwork is a scaffold: the page it renders says so, and v0.1 ships its sending path inside
+      Formwork. Drawing it a logo now would be designing the identity of a product nobody has
+      decided the shape of — and borrowing Formwork's would be worse, because these are two
+      products that are meant to be told apart. The browser's default icon is the honest placeholder
+      until there is something to brand.
+    -->
     <title>Sendwork</title>
   </head>
   <body>

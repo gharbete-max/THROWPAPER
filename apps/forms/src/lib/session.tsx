@@ -4,6 +4,7 @@ import type { api } from '@tp/shared';
 import { DEFAULT_FALLBACKS, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { TRANSLATED_LOCALES } from './messages/index.js';
 import { client, restoreSession, setSession } from './api.js';
+import { syncDocumentLanguage } from './theme.js';
 
 interface SessionValue {
   user: api.SessionUser | null;
@@ -96,6 +97,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   // Never render in a language the app has not been translated into.
   const resolved = resolveLocale(interfaceLocales, locale);
+
+  /**
+   * The document's own language follows the one being read.
+   *
+   * `resolved` rather than `locale`: what matters is the language actually on screen after the
+   * fallback chain has had its say, which is what a screen reader is about to pronounce.
+   */
+  useEffect(() => {
+    syncDocumentLanguage(resolved);
+  }, [resolved]);
 
   const setLocale = useCallback((next: string) => {
     setLocaleState(next);

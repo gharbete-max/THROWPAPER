@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { client, setSession } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useDemo } from '../lib/demo.js';
-import { FlightTrail, Wordmark } from '../components/Logo.js';
+import { Wordmark } from '../components/Logo.js';
 
 export function Login() {
   const t = useT();
@@ -20,11 +20,8 @@ export function Login() {
   }
 
   return (
-    <main className="shell shell--narrow">
-      {/* Behind the heading rather than beside it: decoration that competes with a page's one
-          real instruction is not decoration. */}
-      <div className="trail-host">
-        <FlightTrail variant="short" className="trail--behind" />
+    <main className="shell shell--narrow system">
+      <div>
         <Wordmark name={t('app.name')} />
         <h1>{t('login.title')}</h1>
       </div>

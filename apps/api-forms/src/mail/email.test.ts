@@ -152,6 +152,7 @@ describe('sending on submission', () => {
 describe('the confirmation email itself', () => {
   it('resolves every style — email clients understand no custom properties', async () => {
     const html = await renderConfirmation(defaultTokens, {
+      lang: 'sv-SE',
       heading: 'Din anmälan är bekräftad',
       intro: 'Tack.',
       eventName: 'Vårmötet',
@@ -173,6 +174,7 @@ describe('the confirmation email itself', () => {
 
   it('keeps Swedish characters intact', async () => {
     const html = await renderConfirmation(defaultTokens, {
+      lang: 'sv-SE',
       heading: 'Din anmälan är bekräftad',
       intro: 'Tack.',
       eventName: 'Vårmötet',

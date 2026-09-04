@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { defaultTokens, toCssBlock, type TokenSet } from '@tp/tokens';
+import { defaultTokens, toThemedCssBlock, type TokenSet } from '@tp/tokens';
 import { client } from './api.js';
 import { useSession } from './session.js';
+import { syncThemeColour } from './theme.js';
 
 /**
  * The signed-in app painted with the organisation's brand.
@@ -53,8 +54,11 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     // A dedicated element, so this replaces its own block rather than fighting main.tsx's.
     const style = document.createElement('style');
     style.dataset['brand'] = 'organisation';
-    style.textContent = toCssBlock(tokens);
+    style.textContent = toThemedCssBlock(tokens);
     document.head.appendChild(style);
+    // The page has just been repainted in this organisation's colours; the browser chrome above it
+    // reads its colour from a meta tag that has no idea any of this happened.
+    syncThemeColour();
     return () => style.remove();
   }, [tokens]);
 

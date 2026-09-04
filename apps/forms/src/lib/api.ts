@@ -253,6 +253,8 @@ export const client = {
     title: Record<string, string>;
     eventId?: string | null;
     templateId?: string;
+    /** What somebody pressed through the wizard. The server decides what those produce. */
+    wizardAnswers?: string[];
   }) =>
     request<formSchemas.FormResponse>('/v1/forms', { method: 'POST', body: JSON.stringify(input) }),
 

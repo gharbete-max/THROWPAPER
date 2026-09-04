@@ -298,15 +298,23 @@ export function Submissions({ formId }: { formId: string }) {
         </Stats>
       )}
 
-      <label className="field">
+      {/* Capped rather than full width: a search box the width of the table reads as a text area,
+          and nobody types a paragraph into it. `type="search"` earns the clear button and the
+          right keyboard on a phone. */}
+      <label className="field field--search">
         <span className="small muted">
           <Icon name="search" className="icon--lead" />
           {t('submissions.search')}
         </span>
-        <input value={globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
+        <input
+          type="search"
+          value={globalFilter}
+          onChange={(event) => setGlobalFilter(event.target.value)}
+        />
       </label>
 
-      <details className="card">
+      {/* A closed disclosure is a control, not a panel — see `details.card` in the stylesheet. */}
+      <details className="card card--disclosure">
         <summary className="small">{t('submissions.columns')}</summary>
         <div className="stack">
           {table.getAllLeafColumns().map((column) => (

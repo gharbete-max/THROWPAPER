@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'node:fs';
 import { VitePWA } from 'vite-plugin-pwa';
+import { SERVER_RENDERED_PATHS } from './src/site/routes.js';
 
 /**
  * Read from the token JSON rather than importing @tp/tokens: Vite loads this config outside the
@@ -31,8 +32,18 @@ export default defineConfig({
         skipWaiting: true,
         clientsClaim: true,
         globPatterns: ['**/*.{js,css,html,woff2}'],
-        // Never cache the API: a cached registration count or attendee list is actively misleading.
-        navigateFallbackDenylist: [/^\/api/],
+        /**
+         * What the worker must not answer from its own precache.
+         *
+         * The API, because a cached registration count or attendee list is actively misleading.
+         * And every path the server renders per URL — the precached shell was being served for
+         * those, so the server render never reached a returning visitor and the tab carried the
+         * shell's generic title instead of the page's own.
+         *
+         * Everything else keeps the fallback, which is the point of it: the door screen opens on a
+         * venue's bad wifi.
+         */
+        navigateFallbackDenylist: [/^\/api/, ...SERVER_RENDERED_PATHS],
       },
       manifest: {
         name: 'Formwork',

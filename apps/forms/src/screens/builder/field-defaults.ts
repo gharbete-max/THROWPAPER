@@ -28,6 +28,14 @@ export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldTy
   { id: 'choice', types: ['single_select', 'multi_select', 'yes_no', 'rating'] },
   { id: 'attachments', types: ['file', 'signature'] },
   { id: 'layout', types: ['section_break', 'page_break', 'rich_text', 'image', 'link', 'hidden'] },
+  /**
+   * Decoration, in a group of its own rather than folded into layout.
+   *
+   * Layout arranges the questions; these do not arrange anything. Grouping them together would
+   * put "page break" — which changes how a form is answered — beside "rectangle", which changes
+   * only how it looks, and an author scanning for one would keep finding the other.
+   */
+  { id: 'decoration', types: ['shape', 'drawing'] },
 ];
 
 /**
@@ -154,6 +162,45 @@ export function newField(
       };
     case 'hidden':
       return { id, key, type };
+    /**
+     * Decoration, seeded so it is visible the moment it lands.
+     *
+     * Every other field arrives showing something — a box, a label, a heading. A shape defaulting
+     * to no fill and no stroke would arrive invisible, and the author's first experience of the
+     * tool would be clicking it and appearing to get nothing. A bordered box in the brand's own
+     * border colour is the least surprising thing it can be.
+     */
+    case 'shape':
+      return {
+        id,
+        key,
+        type,
+        width,
+        kind: 'rectangle',
+        fill: 'none',
+        stroke: 'border',
+        strokeWidth: 2,
+        radius: 4,
+        height: 80,
+        dashed: false,
+      };
+    /**
+     * A drawing starts empty — there is nothing to seed, because the content is whatever somebody
+     * draws. The renderer shows nothing rather than an empty frame, so the canvas in the property
+     * panel is what tells the author it is there.
+     */
+    case 'drawing':
+      return {
+        id,
+        key,
+        type,
+        width,
+        paths: [],
+        stroke: 'text',
+        strokeWidth: 3,
+        viewBoxWidth: 1000,
+        viewBoxHeight: 300,
+      };
     default:
       return { id, key, type, label, required: false, width };
   }

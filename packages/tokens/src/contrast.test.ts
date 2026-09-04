@@ -32,27 +32,26 @@ describe('contrast', () => {
   });
 
   /**
-   * The default palette passes on every text pair. It reports exactly one advisory: the border is
-   * a pale grey at 1.36 against white, where WCAG 1.4.11 wants 3 for a boundary that identifies a
-   * control.
+   * The shipped default now passes every pair, boundary included. It did not always.
    *
-   * That is left as it is, deliberately. Reaching 3:1 on white needs roughly #8b919b — a
-   * noticeably heavy grey around every input — and the visual direction for this product is flat
-   * and quiet. So contrast findings are **advisory**: shown to whoever is choosing colours, never
+   * This test used to record a deliberate exception: the border was a pale grey at 1.36 against
+   * white, and reaching 3:1 on white needs roughly #8b919b — a noticeably heavy grey ring around
+   * every input, against a stated visual direction of flat and quiet. The exception was the honest
+   * call at the time, and the test existed so that it stayed a decision rather than becoming an
+   * oversight.
+   *
+   * It has now done its job twice. When the default moved to the parchment palette the assertion
+   * failed, and the question came back with a different answer: the old trade was specifically
+   * about *grey on pure white*, and this palette has neither. A warm taupe at 3.11:1 on parchment
+   * is not heavy — it reads as the edge of a page. There was no longer anything to trade, so the
+   * exception is gone.
+   *
+   * Findings stay **advisory** for a customer's own palette: shown while they choose, never
    * blocking a save. Refusing to store somebody's brand over a subtle border would be obnoxious;
-   * not telling them at all would be negligent.
-   *
-   * This test exists to make that a decision rather than an oversight — if the border changes, it
-   * fails and somebody has to think about it again. It has already done that once: the theme
-   * presets were written with 3:1 borders, which made the default look like an outlier until this
-   * test asked whether the default was wrong or the bar was. The answer is that the decision above
-   * is about the *default*, which people get without choosing it. `presets.test.ts` holds every
-   * theme somebody actively picks to the full 3:1, and they all meet it.
+   * not telling them would be negligent. That is about *their* colours. Ours have no excuse.
    */
-  it('passes the shipped default palette on text, with the border as the one known advisory', () => {
-    const findings = checkContrast(defaultTokens);
-    expect(findings.map((finding) => finding.token)).toEqual(['colour.border']);
-    expect(findings.every((finding) => finding.kind === 'boundary')).toBe(true);
+  it('passes the shipped default palette on every pair, including the boundary', () => {
+    expect(checkContrast(defaultTokens)).toEqual([]);
   });
 
   it('catches text that cannot be read on its own background', () => {

@@ -1,5 +1,7 @@
+import { randomUUID } from 'node:crypto';
 import { and, asc, desc, eq, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
+import { ocrForInvoice } from '@tp/shared/invoicing';
 import {
   brandKits,
   auditLog,
@@ -7,6 +9,12 @@ import {
   events,
   formShares,
   formUploads,
+  invoiceBatches,
+  invoiceLines,
+  invoices,
+  journalEntries,
+  journalLines,
+  ledgerAccounts,
   formVersions,
   forms,
   jobs,
@@ -29,6 +37,9 @@ import type {
   FormRecord,
   FormShareRecord,
   FormUpdate,
+  JournalEntryWithLines,
+  JournalLineRecord,
+  LedgerAccountRecord,
   FormVersionRecord,
   JobRecord,
   MessageRecord,
@@ -40,6 +51,36 @@ import type {
   UploadRecord,
   UserRecord,
 } from './types.js';
+
+/**
+ * Lines for a page of entries, in one query rather than one per entry.
+ *
+ * A book of five hundred entries would otherwise be five hundred round trips to render one screen.
+ */
+async function attachLines(
+  db: Db,
+  entries: JournalEntryWithLines[],
+): Promise<JournalEntryWithLines[]> {
+  if (entries.length === 0) return [];
+  const rows = (await db
+    .select()
+    .from(journalLines)
+    .where(
+      inArray(
+        journalLines.entryId,
+        entries.map((entry) => entry.id),
+      ),
+    )
+    .orderBy(asc(journalLines.position))) as JournalLineRecord[];
+
+  const byEntry = new Map<string, JournalLineRecord[]>();
+  for (const row of rows) {
+    const list = byEntry.get(row.entryId) ?? [];
+    list.push(row);
+    byEntry.set(row.entryId, list);
+  }
+  return entries.map((entry) => ({ ...entry, lines: byEntry.get(entry.id) ?? [] }));
+}
 
 /** The only module that knows about tables. Everything else talks to the interfaces in types.ts. */
 export function createDrizzleRepositories(db: Db): Repositories {
@@ -899,6 +940,335 @@ export function createDrizzleRepositories(db: Db): Repositories {
       },
     },
 
+    /**
+     * The ledger.
+     *
+     * No update and no delete, here or in the interface. A posted entry is corrected by posting a
+     * reversing one, and both stay in the book — see `packages/calc/src/ledger.ts` for why that
+     * is the whole point rather than a restriction.
+     */
+    invoices: {
+      listBatches: (organisationId) =>
+        db
+          .select()
+          .from(invoiceBatches)
+          .where(eq(invoiceBatches.organisationId, organisationId))
+          .orderBy(desc(invoiceBatches.createdAt)),
+
+      findBatch: async (organisationId, id) => {
+        const [row] = await db
+          .select()
+          .from(invoiceBatches)
+          .where(and(eq(invoiceBatches.organisationId, organisationId), eq(invoiceBatches.id, id)))
+          .limit(1);
+        return row ?? null;
+      },
+
+      /**
+       * A run and every invoice in it, in one transaction.
+       *
+       * ## Why the numbers are taken here
+       *
+       * `select max(number) + 1` inside the transaction, with the organisation's rows locked. Two
+       * runs started at the same moment would otherwise read the same highest number and allocate
+       * the same references, and the unique index would reject the second one *after* the first had
+       * already been sent.
+       *
+       * The lock is on the organisation row rather than on the invoices, because the thing being
+       * serialised is "who is allocating numbers for this organisation" — locking rows that do not
+       * exist yet is not a thing a database can do.
+       */
+      createBatch: (input) =>
+        db.transaction(async (tx) => {
+          await tx.execute(
+            sql`select 1 from organisations where id = ${input.organisationId} for update`,
+          );
+
+          const [highest] = await tx
+            .select({ number: sql<number>`coalesce(max(${invoices.number}), 0)` })
+            .from(invoices)
+            .where(eq(invoices.organisationId, input.organisationId));
+
+          let next = (highest?.number ?? 0) + 1;
+
+          const [batch] = await tx
+            .insert(invoiceBatches)
+            .values({
+              organisationId: input.organisationId,
+              name: input.name,
+              createdBy: input.createdBy,
+            })
+            .returning();
+
+          const created = [];
+          for (const request of input.invoices) {
+            const number = next;
+            next += 1;
+
+            const [invoice] = await tx
+              .insert(invoices)
+              .values({
+                organisationId: input.organisationId,
+                batchId: batch!.id,
+                number,
+                ocr: ocrForInvoice(number, {
+                  method: 'bankgiro',
+                  account: request.paymentAccount,
+                  ocrLengthControl: request.ocrLengthControl,
+                }),
+                status: 'issued',
+                currency: request.currency,
+                recipientName: request.recipientName,
+                recipientEmail: request.recipientEmail,
+                recipientAddress: request.recipientAddress,
+                recipientReference: request.recipientReference,
+                subject: request.subject,
+                periodStart: request.periodStart,
+                periodEnd: request.periodEnd,
+                issuedOn: request.issuedOn,
+                dueOn: request.dueOn,
+                netMinor: request.lines.reduce((total, line) => total + line.amountMinor, 0n),
+                vatMinor: request.lines.reduce((total, line) => total + line.vatMinor, 0n),
+                totalMinor: request.lines.reduce(
+                  (total, line) => total + line.amountMinor + line.vatMinor,
+                  0n,
+                ),
+                paymentMethod: request.paymentMethod,
+                paymentAccount: request.paymentAccount,
+                /* Long, random, and deliberately not the OCR. See the schema. */
+                publicToken: randomUUID().replace(/-/g, '') + randomUUID().slice(0, 8),
+              })
+              .returning();
+
+            const lines = request.lines.length
+              ? await tx
+                  .insert(invoiceLines)
+                  .values(
+                    request.lines.map((line, position) => ({
+                      invoiceId: invoice!.id,
+                      ...line,
+                      position,
+                    })),
+                  )
+                  .returning()
+              : [];
+
+            created.push({ ...invoice!, lines });
+          }
+
+          return { batch: batch!, invoices: created };
+        }),
+
+      listInvoices: async (organisationId, batchId) => {
+        const rows = await db
+          .select()
+          .from(invoices)
+          .where(
+            batchId === undefined
+              ? eq(invoices.organisationId, organisationId)
+              : and(eq(invoices.organisationId, organisationId), eq(invoices.batchId, batchId)),
+          )
+          .orderBy(asc(invoices.number));
+
+        return withLines(db, rows);
+      },
+
+      findInvoice: async (organisationId, id) => {
+        const [row] = await db
+          .select()
+          .from(invoices)
+          .where(and(eq(invoices.organisationId, organisationId), eq(invoices.id, id)))
+          .limit(1);
+        if (!row) return null;
+        return (await withLines(db, [row]))[0] ?? null;
+      },
+
+      /* By token alone: whoever opens the link is a tenant, and has no session to scope by. */
+      findByPublicToken: async (token) => {
+        const [row] = await db
+          .select()
+          .from(invoices)
+          .where(eq(invoices.publicToken, token))
+          .limit(1);
+        if (!row) return null;
+        return (await withLines(db, [row]))[0] ?? null;
+      },
+
+      markSent: async (organisationId, batchId, at) => {
+        await db.transaction(async (tx) => {
+          await tx
+            .update(invoiceBatches)
+            .set({ sentAt: at })
+            .where(
+              and(
+                eq(invoiceBatches.organisationId, organisationId),
+                eq(invoiceBatches.id, batchId),
+              ),
+            );
+          await tx
+            .update(invoices)
+            .set({ sentAt: at, status: 'sent' })
+            .where(and(eq(invoices.organisationId, organisationId), eq(invoices.batchId, batchId)));
+        });
+      },
+
+      /*
+       * A test run stamps the batch and nothing else.
+       *
+       * Not the invoices: they went to nobody, and marking them would make a test
+       * indistinguishable from the real thing in every list that reads `sentAt`.
+       */
+      markTested: async (organisationId, batchId, at) => {
+        await db
+          .update(invoiceBatches)
+          .set({ lastTestAt: at })
+          .where(
+            and(eq(invoiceBatches.organisationId, organisationId), eq(invoiceBatches.id, batchId)),
+          );
+      },
+    },
+
+    ledger: {
+      listAccounts: async (organisationId) =>
+        (await db
+          .select()
+          .from(ledgerAccounts)
+          .where(eq(ledgerAccounts.organisationId, organisationId))
+          .orderBy(asc(ledgerAccounts.code))) as LedgerAccountRecord[],
+      findAccount: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(ledgerAccounts)
+            .where(
+              and(eq(ledgerAccounts.organisationId, organisationId), eq(ledgerAccounts.id, id)),
+            )
+            .limit(1),
+        ) as LedgerAccountRecord | null,
+      createAccount: async (input) => {
+        const [row] = await db.insert(ledgerAccounts).values(input).returning();
+        if (!row) throw new Error('ledger account insert returned no row');
+        return row as LedgerAccountRecord;
+      },
+      archiveAccount: async (organisationId, id, at) => {
+        const [row] = await db
+          .update(ledgerAccounts)
+          .set({ archivedAt: at })
+          .where(and(eq(ledgerAccounts.organisationId, organisationId), eq(ledgerAccounts.id, id)))
+          .returning();
+        return (row as LedgerAccountRecord | undefined) ?? null;
+      },
+
+      listEntries: async (organisationId, limit) => {
+        const entries = await db
+          .select()
+          .from(journalEntries)
+          .where(eq(journalEntries.organisationId, organisationId))
+          // The book is read newest first by the date the thing happened, then by when it was
+          // written down, so two entries on the same day come back in the order they were posted.
+          .orderBy(desc(journalEntries.occurredOn), desc(journalEntries.postedAt))
+          .limit(limit);
+        return attachLines(db, entries as JournalEntryWithLines[]);
+      },
+      findEntry: async (organisationId, id) => {
+        const entry = first(
+          await db
+            .select()
+            .from(journalEntries)
+            .where(
+              and(eq(journalEntries.organisationId, organisationId), eq(journalEntries.id, id)),
+            )
+            .limit(1),
+        ) as JournalEntryWithLines | undefined;
+        if (!entry) return null;
+        return (await attachLines(db, [entry]))[0] ?? null;
+      },
+
+      /**
+       * One transaction for the entry, its lines, and the stamp on whatever it reverses.
+       *
+       * A half-written entry would put the whole book out of trial balance, and there is no repair
+       * path — because there is no update. So the only safe way to write one is all of it or none.
+       */
+      post: async (input) =>
+        db.transaction(async (tx) => {
+          const [entry] = await tx
+            .insert(journalEntries)
+            .values({
+              organisationId: input.organisationId,
+              reference: input.reference,
+              description: input.description,
+              occurredOn: input.occurredOn,
+              postedByUserId: input.postedByUserId,
+              currency: input.currency,
+              reversesEntryId: input.reversesEntryId ?? null,
+            })
+            .returning();
+          if (!entry) throw new Error('journal entry insert returned no row');
+
+          const lines = await tx
+            .insert(journalLines)
+            .values(
+              input.lines.map((line, position) => ({
+                entryId: entry.id,
+                accountId: line.accountId,
+                debitMinor: line.debitMinor,
+                creditMinor: line.creditMinor,
+                memo: line.memo,
+                position,
+              })),
+            )
+            .returning();
+
+          if (input.reversesEntryId) {
+            await tx
+              .update(journalEntries)
+              .set({ reversedByEntryId: entry.id })
+              .where(eq(journalEntries.id, input.reversesEntryId));
+          }
+
+          return { ...entry, lines: lines as JournalLineRecord[] } as JournalEntryWithLines;
+        }),
+
+      /**
+       * The next reference, derived inside the statement rather than read and incremented.
+       *
+       * Two people posting at once would otherwise both read the same highest number. The unique
+       * index on (organisation, reference) is the backstop; this is what stops it firing.
+       */
+      nextReference: async (organisationId) => {
+        const year = new Date().getUTCFullYear();
+        const prefix = `V${year}-`;
+        const [row] = await db
+          .select({
+            highest: sql<number>`coalesce(max(nullif(regexp_replace(${journalEntries.reference}, '^.*-', ''), '')::int), 0)`,
+          })
+          .from(journalEntries)
+          .where(
+            and(
+              eq(journalEntries.organisationId, organisationId),
+              sql`${journalEntries.reference} like ${prefix + '%'}`,
+            ),
+          );
+        return `${prefix}${String((row?.highest ?? 0) + 1).padStart(4, '0')}`;
+      },
+
+      allLines: async (organisationId) =>
+        (await db
+          .select({
+            id: journalLines.id,
+            entryId: journalLines.entryId,
+            accountId: journalLines.accountId,
+            debitMinor: journalLines.debitMinor,
+            creditMinor: journalLines.creditMinor,
+            memo: journalLines.memo,
+            position: journalLines.position,
+          })
+          .from(journalLines)
+          .innerJoin(journalEntries, eq(journalLines.entryId, journalEntries.id))
+          .where(eq(journalEntries.organisationId, organisationId))) as JournalLineRecord[],
+    },
+
     audit: {
       record: async (entry) => {
         await db.insert(auditLog).values({
@@ -943,4 +1313,34 @@ function first<T>(rows: T[]): T | null {
 
 function toUser(row: typeof users.$inferSelect | null): UserRecord | null {
   return row;
+}
+
+/**
+ * Attach lines to invoices in one query rather than one per invoice.
+ *
+ * A run is forty invoices; forty round trips to render a list is the difference between a page and
+ * a wait. Grouped in memory because the rows come back in one order and belong in another.
+ */
+async function withLines(db: Db, rows: Array<typeof invoices.$inferSelect>) {
+  if (rows.length === 0) return [];
+
+  const lines = await db
+    .select()
+    .from(invoiceLines)
+    .where(
+      inArray(
+        invoiceLines.invoiceId,
+        rows.map((row) => row.id),
+      ),
+    )
+    .orderBy(asc(invoiceLines.position));
+
+  const byInvoice = new Map<string, Array<typeof invoiceLines.$inferSelect>>();
+  for (const line of lines) {
+    const existing = byInvoice.get(line.invoiceId);
+    if (existing) existing.push(line);
+    else byInvoice.set(line.invoiceId, [line]);
+  }
+
+  return rows.map((row) => ({ ...row, lines: byInvoice.get(row.id) ?? [] }));
 }

@@ -117,6 +117,7 @@ export const esES: Record<MessageKey, string> = {
 
   'forms.title': 'Formularios',
   'forms.new': 'Nuevo formulario',
+  'forms.untitled': 'Formulario sin título',
   'forms.empty': 'Aún no hay formularios.',
   'forms.slug': 'Dirección del enlace',
   'forms.slugHint': 'Se convierte en /f/<dirección>. Minúsculas, dígitos y guiones.',
@@ -215,6 +216,49 @@ export const esES: Record<MessageKey, string> = {
   'field.linkAppearance': 'Se muestra como',
   'field.linkAppearance.button': 'Botón',
   'field.linkAppearance.link': 'Enlace de texto',
+
+  'fieldType.shape': 'Forma',
+  'fieldType.drawing': 'Dibujo',
+  'palette.decoration': 'Decoración',
+  'field.shapeKind': 'Forma',
+  'field.shapeKind.rectangle': 'Rectángulo',
+  'field.shapeKind.ellipse': 'Elipse',
+  'field.shapeKind.line': 'Línea',
+  'field.shapeKind.arrow': 'Flecha',
+  'field.shapeKind.divider': 'Separador',
+  'field.fill': 'Relleno',
+  'field.stroke': 'Color de línea',
+  'field.strokeWidth': 'Grosor de línea',
+  'field.radius': 'Radio de esquina',
+  'field.shapeHeight': 'Altura',
+  'field.dashed': 'Discontinua',
+  'field.colour.none': 'Ninguno',
+  'field.colour.custom': 'Personalizado…',
+  'field.colourHint':
+    'Los colores de marca siguen la paleta de la organización, así que cambiarla cambia esto también.',
+  'draw.title': 'Dibujar',
+  'draw.hint': 'Dibuja con el dedo, un lápiz o el ratón.',
+  'draw.clear': 'Borrar',
+  'draw.undoStroke': 'Deshacer el último trazo',
+  'draw.empty': 'Aún no hay nada dibujado.',
+  'draw.strokes': 'plural:one {count} trazo | other {count} trazos',
+  'decoration.note':
+    'Solo decoración. No recoge ninguna respuesta y nunca aparece en la exportación.',
+
+  'field.drawArea': 'Área de dibujo',
+  'field.drawArea.wide': 'Ancha',
+  'field.drawArea.square': 'Cuadrada',
+  'field.drawArea.tall': 'Alta',
+  'field.drawAreaLocked': 'Borra el dibujo para cambiar su forma.',
+
+  'appearance.label': 'Apariencia',
+  'appearance.system': 'Sistema',
+  'appearance.light': 'Claro',
+  'appearance.dark': 'Oscuro',
+
+  'palette.title': 'Ir a',
+  'palette.placeholder': 'Buscar pantallas…',
+  'palette.empty': 'No hay coincidencias.',
 
   'fieldType.hidden': 'Campo oculto',
 
@@ -523,6 +567,8 @@ export const esES: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Tarjeta no válida',
 
   'attendance.title': 'Asistencia',
+  'attendance.loadFailed': 'No se ha podido cargar la lista de asistencia.',
+  'attendance.retry': 'Inténtalo de nuevo',
   'attendance.registered': 'Inscritos',
   'attendance.checkedIn': 'Registrados',
   'attendance.noShow': 'No presentados',
@@ -542,6 +588,12 @@ export const esES: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Retirado',
 
   'public.next': 'Siguiente',
+  'wizard.step': 'Pregunta {n}',
+  'wizard.done': 'Listo',
+  'wizard.review': 'Esto es lo que obtienes',
+  'wizard.open': 'Abrir en el editor',
+  'wizard.back': 'Atrás',
+  'wizard.advanced': 'Crearlo yo',
   'public.back': 'Atrás',
   'public.complete': 'Finalizar',
   'public.submitting': 'Enviando…',
@@ -559,6 +611,10 @@ export const esES: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Esa dirección ya está inscrita.',
   'public.rejected.full': 'Las plazas se agotaron mientras rellenabas el formulario.',
   'public.rejected.closed': 'El formulario cerró mientras lo rellenabas.',
+  'public.rejected.offline':
+    'Tus respuestas siguen aquí, pero no se han podido enviar. Comprueba tu conexión e inténtalo de nuevo.',
+  'public.rejected.error':
+    'Algo ha fallado por nuestra parte. Tus respuestas siguen aquí: inténtalo de nuevo.',
   'public.notFound': 'Formulario no encontrado.',
   'public.yes': 'Sí',
   'public.no': 'No',

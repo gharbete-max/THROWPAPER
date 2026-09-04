@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { ocrForInvoice } from '@tp/shared/invoicing';
 import type {
   AuditEntryInput,
   CheckInRecord,
@@ -11,6 +12,12 @@ import type {
   FormRecord,
   FormShareRecord,
   FormUpdate,
+  JournalEntryRecord,
+  JournalEntryWithLines,
+  JournalLineRecord,
+  InvoiceBatchRecord,
+  InvoiceRecord,
+  LedgerAccountRecord,
   FormVersionRecord,
   BrandKitRecord,
   JobRecord,
@@ -50,6 +57,11 @@ export interface MemoryState {
   sendingDomains: SendingDomainRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
+  invoiceBatches: InvoiceBatchRecord[];
+  invoices: InvoiceRecord[];
+  ledgerAccounts: LedgerAccountRecord[];
+  journalEntries: JournalEntryRecord[];
+  journalLines: JournalLineRecord[];
 }
 
 function copyEvent(event: EventRecord): EventRecord {
@@ -98,7 +110,24 @@ export function createMemoryRepositories(
     sendingDomains: seed.sendingDomains ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
+    invoiceBatches: seed.invoiceBatches ?? [],
+    invoices: seed.invoices ?? [],
+    ledgerAccounts: seed.ledgerAccounts ?? [],
+    journalEntries: seed.journalEntries ?? [],
+    journalLines: seed.journalLines ?? [],
   };
+
+  /** An entry with its lines, in the order they were written. */
+  function withLines(entry: JournalEntryRecord): JournalEntryWithLines {
+    return {
+      ...entry,
+      lines: state.journalLines
+        .filter((line) => line.entryId === entry.id)
+        .slice()
+        .sort((a, b) => a.position - b.position)
+        .map((line) => ({ ...line })),
+    };
+  }
 
   return {
     state,
@@ -751,6 +780,247 @@ export function createMemoryRepositories(
         const record: MessageRecord = { ...input, id: randomUUID(), createdAt: new Date() };
         state.messages.push(record);
         return { ...record };
+      },
+    },
+
+    /**
+     * The ledger, in memory.
+     *
+     * Same shape as the Drizzle one and the same absence: no update, no delete. `post` builds the
+     * entry and its lines together and pushes both, because a half-written entry would break the
+     * trial balance and there is no repair path — by design.
+     */
+    /**
+     * Invoices, in memory.
+     *
+     * The same shape as the Drizzle one, including the part that matters: a run and its invoices
+     * are created together. A batch row followed by forty inserts can half-fail, and a half-created
+     * run is worse than none — the numbers are allocated, the references are issued, and nobody can
+     * say which tenants were billed.
+     */
+    invoices: {
+      listBatches: async (organisationId) =>
+        state.invoiceBatches
+          .filter((batch) => batch.organisationId === organisationId)
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+
+      findBatch: async (organisationId, id) =>
+        state.invoiceBatches.find(
+          (batch) => batch.organisationId === organisationId && batch.id === id,
+        ) ?? null,
+
+      createBatch: async (input) => {
+        const now = new Date();
+        const batch: InvoiceBatchRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          name: input.name,
+          createdBy: input.createdBy,
+          sentAt: null,
+          lastTestAt: null,
+          createdAt: now,
+        };
+
+        /*
+         * The next number, taken once for the whole run.
+         *
+         * Per organisation and never reused, because the reference is built from it and a repeated
+         * reference is two debts a bank cannot tell apart.
+         */
+        let next =
+          state.invoices
+            .filter((invoice) => invoice.organisationId === input.organisationId)
+            .reduce((highest, invoice) => Math.max(highest, invoice.number), 0) + 1;
+
+        const created: InvoiceRecord[] = input.invoices.map((request) => {
+          const number = next;
+          next += 1;
+
+          return {
+            id: randomUUID(),
+            organisationId: input.organisationId,
+            batchId: batch.id,
+            number,
+            ocr: ocrForInvoice(number, {
+              method: 'bankgiro',
+              account: request.paymentAccount,
+              ocrLengthControl: request.ocrLengthControl,
+            }),
+            status: 'issued' as const,
+            currency: request.currency,
+            recipientName: request.recipientName,
+            recipientEmail: request.recipientEmail,
+            recipientAddress: request.recipientAddress,
+            recipientReference: request.recipientReference,
+            subject: request.subject,
+            periodStart: request.periodStart,
+            periodEnd: request.periodEnd,
+            issuedOn: request.issuedOn,
+            dueOn: request.dueOn,
+            netMinor: request.lines.reduce((total, line) => total + line.amountMinor, 0n),
+            vatMinor: request.lines.reduce((total, line) => total + line.vatMinor, 0n),
+            totalMinor: request.lines.reduce(
+              (total, line) => total + line.amountMinor + line.vatMinor,
+              0n,
+            ),
+            paymentMethod: request.paymentMethod,
+            paymentAccount: request.paymentAccount,
+            /* Long, random, and deliberately not the OCR. See the schema. */
+            publicToken: randomUUID().replace(/-/g, '') + randomUUID().slice(0, 8),
+            sentAt: null,
+            paidAt: null,
+            createdAt: now,
+            lines: request.lines.map((line, position) => ({
+              id: randomUUID(),
+              ...line,
+              position,
+            })),
+          };
+        });
+
+        state.invoiceBatches.push(batch);
+        state.invoices.push(...created);
+        return { batch, invoices: created };
+      },
+
+      listInvoices: async (organisationId, batchId) =>
+        state.invoices
+          .filter(
+            (invoice) =>
+              invoice.organisationId === organisationId &&
+              (batchId === undefined || invoice.batchId === batchId),
+          )
+          .sort((a, b) => a.number - b.number),
+
+      findInvoice: async (organisationId, id) =>
+        state.invoices.find(
+          (invoice) => invoice.organisationId === organisationId && invoice.id === id,
+        ) ?? null,
+
+      /* By token alone: whoever opens the link is a tenant, and has no session to scope by. */
+      findByPublicToken: async (token) =>
+        state.invoices.find((invoice) => invoice.publicToken === token) ?? null,
+
+      markSent: async (organisationId, batchId, at) => {
+        const batch = state.invoiceBatches.find(
+          (candidate) => candidate.organisationId === organisationId && candidate.id === batchId,
+        );
+        if (!batch) return;
+        batch.sentAt = at;
+        for (const invoice of state.invoices) {
+          if (invoice.batchId !== batchId) continue;
+          invoice.sentAt = at;
+          invoice.status = 'sent';
+        }
+      },
+
+      /*
+       * A test run stamps the batch and nothing else.
+       *
+       * Not the invoices: they were not sent to anybody, and marking them would make a test
+       * indistinguishable from the real thing in every list that reads `sentAt`.
+       */
+      markTested: async (organisationId, batchId, at) => {
+        const batch = state.invoiceBatches.find(
+          (candidate) => candidate.organisationId === organisationId && candidate.id === batchId,
+        );
+        if (batch) batch.lastTestAt = at;
+      },
+    },
+
+    ledger: {
+      listAccounts: async (organisationId) =>
+        state.ledgerAccounts
+          .filter((a) => a.organisationId === organisationId)
+          .slice()
+          .sort((a, b) => a.code.localeCompare(b.code))
+          .map((a) => ({ ...a, name: { ...a.name } })),
+      findAccount: async (organisationId, id) => {
+        const found = state.ledgerAccounts.find(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        return found ? { ...found, name: { ...found.name } } : null;
+      },
+      createAccount: async (input) => {
+        const record: LedgerAccountRecord = {
+          ...input,
+          id: randomUUID(),
+          archivedAt: null,
+          createdAt: new Date(),
+        };
+        state.ledgerAccounts.push(record);
+        return { ...record, name: { ...record.name } };
+      },
+      archiveAccount: async (organisationId, id, at) => {
+        const found = state.ledgerAccounts.find(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        if (!found) return null;
+        found.archivedAt = at;
+        return { ...found, name: { ...found.name } };
+      },
+
+      listEntries: async (organisationId, limit) =>
+        state.journalEntries
+          .filter((e) => e.organisationId === organisationId)
+          .slice()
+          // Newest first by the date the thing happened, then by when it was written down, so two
+          // entries on the same day read back in the order they were posted.
+          .sort(
+            (a, b) =>
+              b.occurredOn.localeCompare(a.occurredOn) ||
+              b.postedAt.getTime() - a.postedAt.getTime(),
+          )
+          .slice(0, limit)
+          .map((entry) => withLines(entry)),
+      findEntry: async (organisationId, id) => {
+        const entry = state.journalEntries.find(
+          (e) => e.organisationId === organisationId && e.id === id,
+        );
+        return entry ? withLines(entry) : null;
+      },
+
+      post: async (input) => {
+        const entry: JournalEntryRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          reference: input.reference,
+          description: input.description,
+          occurredOn: input.occurredOn,
+          postedAt: new Date(),
+          postedByUserId: input.postedByUserId,
+          reversesEntryId: input.reversesEntryId ?? null,
+          reversedByEntryId: null,
+          currency: input.currency,
+        };
+        state.journalEntries.push(entry);
+        input.lines.forEach((line, position) => {
+          state.journalLines.push({ ...line, id: randomUUID(), entryId: entry.id, position });
+        });
+
+        // Stamp the original in the same breath, so "has this been reversed" can never disagree
+        // with the reversal's own existence.
+        if (entry.reversesEntryId) {
+          const original = state.journalEntries.find((e) => e.id === entry.reversesEntryId);
+          if (original) original.reversedByEntryId = entry.id;
+        }
+        return withLines(entry);
+      },
+
+      nextReference: async (organisationId) => {
+        const year = new Date().getUTCFullYear();
+        const prefix = `V${year}-`;
+        const highest = state.journalEntries
+          .filter((e) => e.organisationId === organisationId && e.reference.startsWith(prefix))
+          .reduce((max, e) => Math.max(max, Number(e.reference.slice(prefix.length)) || 0), 0);
+        return `${prefix}${String(highest + 1).padStart(4, '0')}`;
+      },
+
+      allLines: async (organisationId) => {
+        const ours = new Set(
+          state.journalEntries.filter((e) => e.organisationId === organisationId).map((e) => e.id),
+        );
+        return state.journalLines.filter((l) => ours.has(l.entryId)).map((l) => ({ ...l }));
       },
     },
 

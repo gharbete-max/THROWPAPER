@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UploadKey } from './uploads.js';
 import { BrandKit } from '../brand/index.js';
-import { Locale } from '../api/common.js';
+import { Locale, LocalisedText } from '../api/common.js';
 import { FormDefinition } from './definition.js';
 
 /** Shapes for the public, unauthenticated form endpoints. */
@@ -13,6 +13,17 @@ export const PublicFormResponse = z.object({
   /** The published definition, never the draft. */
   definition: FormDefinition,
   formVersion: z.number().int().positive(),
+  /**
+   * What the form is called, in every language it was written in.
+   *
+   * The page had no heading at all: a respondent who followed a link saw the organisation's name
+   * and then a first question, with nothing confirming what they had opened. It was not an
+   * oversight in the page — the title was never sent, so the page could not have shown it.
+   *
+   * Localised, like everything else a respondent reads, so a form offered in two languages is
+   * titled in whichever one they are reading it in.
+   */
+  title: LocalisedText,
   organisationName: z.string(),
   /**
    * The organisation's brand kit, so the page an anonymous visitor lands on is branded without a

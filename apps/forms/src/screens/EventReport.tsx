@@ -38,7 +38,15 @@ export function EventReport() {
   const confirm = useConfirm();
   const { id: eventId } = useParams();
   const { locale, user } = useSession();
-  const [attendance, setAttendance] = useState<Attendance | null>(null);
+  /**
+   * Three states, because `null` was doing the work of two.
+   *
+   * It meant "not loaded yet" *and* "the load failed" — the catch set the state to exactly the
+   * value it already held — so `if (!attendance) return <Loading />` rendered the loading
+   * indicator forever. Following a link to an event that has been deleted, or mistyping an id,
+   * left somebody watching a spinner that was never going to resolve.
+   */
+  const [attendance, setAttendance] = useState<Attendance | 'failed' | null>(null);
   const [onlyNoShow, setOnlyNoShow] = useState(false);
 
   const load = useCallback(() => {
@@ -46,13 +54,13 @@ export function EventReport() {
     client
       .attendance(eventId)
       .then(setAttendance)
-      .catch(() => setAttendance(null));
+      .catch(() => setAttendance('failed'));
   }, [eventId]);
 
   useEffect(load, [load]);
 
   const rows = useMemo(() => {
-    const all = attendance?.attendees ?? [];
+    const all = attendance === 'failed' ? [] : (attendance?.attendees ?? []);
     return onlyNoShow ? all.filter((a) => !a.checkedInAt && !a.revoked) : all;
   }, [attendance, onlyNoShow]);
 
@@ -93,6 +101,25 @@ export function EventReport() {
       return;
     await client.revokeSubmission(attendee.submissionId);
     load();
+  }
+
+  /*
+   * A failure says so, and offers the one thing that might work.
+   *
+   * `load` rather than a page reload: the event may simply have been slow, and reloading would
+   * throw away a filter somebody had already set.
+   */
+  if (attendance === 'failed') {
+    return (
+      <div className="stack">
+        <p className="status-down">{t('attendance.loadFailed')}</p>
+        <div>
+          <button type="button" className="button button--quiet" onClick={load}>
+            {t('attendance.retry')}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!attendance) return <Loading />;

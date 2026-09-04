@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { pickText } from '@tp/i18n';
+import { pickText, type Translator } from '@tp/i18n';
 import type { Field } from '@tp/shared/forms';
 import { cn } from '@tp/ui';
 import { useSession } from '../../lib/session.js';
@@ -153,6 +153,16 @@ function SortableField({
           <span className="builder__itemLabel">
             {field.type === 'page_break' ? (
               '— — —'
+            ) : !hasLabel(field) ? (
+              /*
+               * Fields that carry no label at all describe themselves instead.
+               *
+               * The warning below is for a question somebody has not named yet. A shape has no
+               * name to give it, and a hidden field is identified by the parameter it reads — so
+               * both used to sit in the list permanently flagged as half-finished, which teaches
+               * an author to ignore the one colour in the builder that means "fix this".
+               */
+              <span className="muted">{describe(field, t)}</span>
             ) : label?.value ? (
               label.value
             ) : (
@@ -256,4 +266,27 @@ function SortableField({
       {selected && <div className="builder__editor">{renderEditor(field)}</div>}
     </li>
   );
+}
+
+/**
+ * What a field with no label shows in the list.
+ *
+ * Not the type name — the row above it already says that, and repeating it would fill the list
+ * with "Shape / Shape". This is the one detail that tells two of the same kind apart while
+ * scanning: which shape it is, whether the drawing has anything in it, which parameter the hidden
+ * field reads.
+ */
+function describe(field: Field, t: Translator): string {
+  switch (field.type) {
+    case 'shape':
+      return t(`field.shapeKind.${field.kind}`);
+    case 'drawing':
+      return field.paths.length === 0
+        ? t('draw.empty')
+        : t('draw.strokes', { count: field.paths.length });
+    case 'hidden':
+      return field.fromParameter || field.key;
+    default:
+      return field.key;
+  }
 }

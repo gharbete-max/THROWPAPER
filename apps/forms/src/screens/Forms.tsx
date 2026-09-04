@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router';
 import { pickText } from '@tp/i18n';
+import { FORM_WIZARD, type WizardField } from '@tp/shared/forms';
+import { Wizard } from '../components/Wizard.js';
 import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
@@ -8,6 +11,7 @@ import { useConfirm } from '../components/Confirm.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
 import { FormCard } from '../components/FormCard.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { ScopeTabs } from '../components/ScopeTabs.js';
 import { ShareDialog } from '../components/ShareDialog.js';
 
@@ -25,10 +29,18 @@ import { ShareDialog } from '../components/ShareDialog.js';
 export function Forms() {
   const t = useT();
   const confirm = useConfirm();
-  const { locale, locales, user } = useSession();
+  const { locale, locales, interfaceLocales, user } = useSession();
   const [scope, setScope] = useState<FormScope>('mine');
   const [forms, setForms] = useState<FormResponse[] | null>(null);
-  const [creating, setCreating] = useState(false);
+  /**
+   * How a new form is being started.
+   *
+   * `null` is closed. `'wizard'` is the default — a few questions, and the form falls out of the
+   * answers. `'manual'` is the advanced route, which is the template gallery and the fields it used
+   * to open with. Both end in the same editor with the same document.
+   */
+  const navigate = useNavigate();
+  const [creating, setCreating] = useState<null | 'wizard' | 'manual'>(null);
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +71,29 @@ export function Forms() {
       .catch(() => setTemplates([]));
   }, []);
 
+  /**
+   * Make the form the answers describe, and open it.
+   *
+   * The slug is derived rather than asked for. A wizard whose last step is "now invent a URL" has
+   * given the time back it just saved, and a slug is editable afterwards like everything else.
+   */
+  async function createFromWizard(answers: readonly string[]) {
+    setError(null);
+    try {
+      const stamp = Date.now().toString(36);
+      const created = await client.createForm({
+        slug: `form-${stamp}`,
+        title: { [locales.default]: t('forms.untitled') },
+        wizardAnswers: [...answers],
+      });
+      setCreating(null);
+      // Into the editor, which is where the wizard was always a head start for.
+      navigate(`/forms/${created.id}`);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : String(cause));
+    }
+  }
+
   async function create(event: FormEvent) {
     event.preventDefault();
     setError(null);
@@ -72,7 +107,7 @@ export function Forms() {
       setSlug('');
       setTitle('');
       setTemplateId(null);
-      setCreating(false);
+      setCreating(null);
       // Straight to your own pile, which is where the new form went.
       if (scope === 'mine') load();
       else setScope('mine');
@@ -123,14 +158,33 @@ export function Forms() {
     <section className="stack">
       <header className="row row--between">
         <h1>{t('forms.title')}</h1>
-        <button className="button" onClick={() => setCreating((open) => !open)}>
+        <button
+          className="button"
+          onClick={() => setCreating((mode) => (mode === null ? 'wizard' : null))}
+        >
           {t('forms.new')}
         </button>
       </header>
 
       <ScopeTabs scopes={scopes} current={scope} onChange={setScope} label={t('forms.title')} />
 
-      {creating && (
+      {creating === 'wizard' && (
+        <div className="card">
+          <Wizard
+            tree={FORM_WIZARD}
+            locales={locales}
+            locale={locale}
+            skipLabel={t('wizard.advanced')}
+            onSkip={() => setCreating('manual')}
+            summarise={(field: WizardField) => pickText(locales, field.label, locale).value}
+            onFinish={(_fields, answers) => {
+              void createFromWizard(answers);
+            }}
+          />
+        </div>
+      )}
+
+      {creating === 'manual' && (
         <form className="card stack" onSubmit={create}>
           <div className="stack">
             <strong className="small">{t('templates.heading')}</strong>
@@ -143,17 +197,37 @@ export function Forms() {
                 description={t('templates.blankHint')}
                 onSelect={() => setTemplateId(null)}
               />
+              {/*
+                Resolved against `interfaceLocales`, not `locales`.
+
+                A template's name is **ours**, shipped in all twelve languages — not the
+                customer's content. Resolving it against the organisation's publish languages
+                meant an operator reading the app in Japanese, in an organisation that publishes
+                in Swedish and English, got a gallery of Swedish template names under Japanese
+                headings. The Japanese names existed the whole time; nothing was asking for them.
+
+                Everything else on this screen keeps `locales`, because form titles and event
+                names really are the organisation's content and really are limited to the
+                languages it publishes in.
+              */}
               {templates.map((template) => (
                 <TemplateCard
                   key={template.id}
                   selected={templateId === template.id}
-                  name={pickText(locales, template.name, locale).value}
-                  description={pickText(locales, template.description, locale).value}
+                  name={pickText(interfaceLocales, template.name, locale).value}
+                  description={pickText(interfaceLocales, template.description, locale).value}
                   fieldCount={template.definition.fields.length}
                   onSelect={() => {
                     setTemplateId(template.id);
-                    // A title saves a step; it is editable like anything else.
-                    if (!title) setTitle(pickText(locales, template.name, locale).value);
+                    /*
+                     * A title saves a step; it is editable like anything else.
+                     *
+                     * Seeded in the language of the card that was just clicked, rather than the
+                     * organisation's default: clicking a card and getting a title box in a third
+                     * language is the kind of surprise that makes people distrust the whole
+                     * screen. They can edit it, and usually will.
+                     */
+                    if (!title) setTitle(pickText(interfaceLocales, template.name, locale).value);
                   }}
                 />
               ))}
@@ -182,7 +256,23 @@ export function Forms() {
       )}
 
       {forms === null && <Loading />}
-      {forms?.length === 0 && <p className="muted empty">{empty}</p>}
+      {forms?.length === 0 && (
+        <EmptyState
+          icon={scope === 'trash' ? 'trash' : 'forms'}
+          title={empty}
+          /*
+           * The bin offers nothing: "create a form" is not what somebody looking at an empty bin
+           * came to do, and an action that ignores where you are is worse than none.
+           */
+          action={
+            scope === 'trash' ? undefined : (
+              <button className="button" onClick={() => setCreating('wizard')}>
+                {t('forms.new')}
+              </button>
+            )
+          }
+        />
+      )}
 
       {forms?.map((form) => (
         <Reveal key={form.id}>

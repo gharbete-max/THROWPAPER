@@ -1,6 +1,9 @@
 import { sql } from 'drizzle-orm';
 import {
+  bigint,
   boolean,
+  check,
+  date,
   index,
   integer,
   jsonb,
@@ -526,5 +529,464 @@ export const formUploads = pgTable(
     index('form_uploads_unclaimed_idx')
       .on(table.createdAt)
       .where(sql`${table.submissionId} is null`),
+  ],
+);
+
+/* ==========================================================================
+ * The ledger.
+ *
+ * Double-entry bookkeeping, and the table definitions carry the rule the whole thing rests on:
+ * **a posted entry is never edited and never deleted.** There is no `updatedAt` on an entry or a
+ * line, because there is no update; there is no `deletedAt`, because there is no delete. A
+ * mistake is corrected by posting a reversing entry and both stay in the book for ever, which is
+ * what a ledger is — the paper version is a bound book in ink, struck through and rewritten
+ * beside, precisely so a later reader can see that a mistake was made and what was done about it.
+ *
+ * The repository behind these tables offers no update or delete either. Not guarded — absent.
+ * ========================================================================== */
+
+export const accountType = pgEnum('account_type', [
+  'asset',
+  'liability',
+  'equity',
+  'income',
+  'expense',
+]);
+
+export const ledgerAccounts = pgTable(
+  'ledger_accounts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /**
+     * The account number an accountant would recognise — 1910, 3001, and so on.
+     *
+     * Text rather than an integer: chart-of-accounts codes are identifiers that happen to look
+     * like numbers, they are sorted as text, and some plans use letters. Nobody adds two of them.
+     */
+    code: text('code').notNull(),
+    name: jsonb('name').$type<Record<string, string>>().notNull(),
+    type: accountType('type').notNull(),
+    /**
+     * Retired, but kept. An account with entries against it can never be deleted — the entries
+     * reference it and the book must stay readable — so retiring it is the only thing "removing"
+     * an account can honestly mean.
+     */
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    /** One 1910 per organisation. A duplicated code is a chart nobody can reconcile. */
+    uniqueIndex('ledger_accounts_org_code_idx').on(table.organisationId, table.code),
+  ],
+);
+
+export const journalEntries = pgTable(
+  'journal_entries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /** Human-facing, sequential per organisation, and never reused. */
+    reference: text('reference').notNull(),
+    description: text('description').notNull(),
+    /**
+     * When the thing happened, which is not when it was written down.
+     *
+     * An invoice dated the 31st entered on the 3rd belongs in the earlier period. Keeping both
+     * dates is the difference between a book you can close and one you can only sort.
+     */
+    occurredOn: date('occurred_on').notNull(),
+    postedAt: timestamp('posted_at', { withTimezone: true }).notNull().defaultNow(),
+    postedByUserId: uuid('posted_by_user_id').references(() => users.id, { onDelete: 'set null' }),
+    /** Set on a reversal, pointing at what it undoes. Null on an ordinary entry. */
+    reversesEntryId: uuid('reverses_entry_id'),
+    /**
+     * Set on the original when its reversal is posted.
+     *
+     * Denormalised on purpose: "has this been reversed" is asked on every row of every listing,
+     * and answering it by searching for a reversal pointing back would be a second query per row.
+     * Written in the same transaction as the reversal, so the two cannot disagree.
+     */
+    reversedByEntryId: uuid('reversed_by_entry_id'),
+    currency: text('currency').notNull(),
+  },
+  (table) => [
+    uniqueIndex('journal_entries_org_reference_idx').on(table.organisationId, table.reference),
+    /** The book is read in date order, always. */
+    index('journal_entries_org_date_idx').on(table.organisationId, table.occurredOn),
+  ],
+);
+
+export const journalLines = pgTable(
+  'journal_lines',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    entryId: uuid('entry_id')
+      .notNull()
+      .references(() => journalEntries.id, { onDelete: 'cascade' }),
+    accountId: uuid('account_id')
+      .notNull()
+      .references(() => ledgerAccounts.id),
+    /**
+     * Minor units, as a **bigint** — CLAUDE.md rule 5.
+     *
+     * `numeric` would also be exact and would come back from the driver as a string that
+     * everything downstream would have to remember to parse. A count of öre is a whole number by
+     * construction, so the integer type says what is true and needs no parsing discipline.
+     *
+     * A line carries one side. Both would make "credit 50" and "debit −50" two spellings of one
+     * fact, and a book where a fact has two spellings cannot be summed with confidence. The check
+     * constraint below is what makes that structural rather than hopeful.
+     */
+    // The default is written in SQL rather than as `0n`, because drizzle-kit serialises its
+    // snapshot as JSON and JSON has no bigint. The column is still a bigint either way.
+    debitMinor: bigint('debit_minor', { mode: 'bigint' })
+      .notNull()
+      .default(sql`0`),
+    creditMinor: bigint('credit_minor', { mode: 'bigint' })
+      .notNull()
+      .default(sql`0`),
+    memo: text('memo'),
+    /** Position in the entry, so it reads back the way it was written. */
+    position: integer('position').notNull().default(0),
+  },
+  (table) => [
+    index('journal_lines_entry_idx').on(table.entryId),
+    index('journal_lines_account_idx').on(table.accountId),
+    /**
+     * One side, non-negative, and never both.
+     *
+     * In the database rather than only in the domain: the domain is what every ordinary write
+     * goes through, and this is what a migration, a repair script or a future bug goes through.
+     */
+    check(
+      'journal_lines_one_side',
+      sql`${table.debitMinor} >= 0 AND ${table.creditMinor} >= 0
+          AND (${table.debitMinor} = 0) <> (${table.creditMinor} = 0)`,
+    ),
+  ],
+);
+
+export const invoiceStatus = pgEnum('invoice_status', [
+  'draft',
+  'issued',
+  'sent',
+  'paid',
+  'cancelled',
+]);
+
+/**
+ * A run that produces many invoices at once: a month's rent across a property.
+ *
+ * Separate from the invoices themselves because the run is a thing an operator manages — they name
+ * it, check it, send it, and look at what happened afterwards. Forty invoices with no record of
+ * having been issued together is forty rows nobody can reason about the morning a tenant calls.
+ */
+export const invoiceBatches = pgTable(
+  'invoice_batches',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+    /**
+     * When the run was actually sent, and never before it was.
+     *
+     * Null means issued but not sent, which is the state rule 7 requires to exist: creating and
+     * sending are two decisions, and forty emails with a wrong amount is not a mistake anybody can
+     * take back.
+     */
+    sentAt: timestamp('sent_at', { withTimezone: true }),
+    /** A send that went to the operator instead of to the tenants. Rule 7's test mode. */
+    lastTestAt: timestamp('last_test_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('invoice_batches_org_idx').on(table.organisationId)],
+);
+
+/**
+ * An invoice.
+ *
+ * ## Why the recipient is copied rather than referenced
+ *
+ * The name and address are held on the row, not looked up. An invoice is a record of what was sent
+ * on a day. A tenant who moves in March must not silently rewrite the address on January's
+ * invoice, and a name corrected today must not change what the books say was issued.
+ *
+ * ## Why the OCR is a column with a unique index
+ *
+ * The reference is what a bank matches a payment on. Two invoices sharing one is two payments
+ * nobody can tell apart, and the failure surfaces weeks later in a reconciliation that will not
+ * balance. `ocr.ts` builds a well-formed reference; only this index can promise it has never been
+ * used before, so the promise lives here rather than in the code that generates it.
+ */
+export const invoices = pgTable(
+  'invoices',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    batchId: uuid('batch_id').references(() => invoiceBatches.id, { onDelete: 'set null' }),
+    /** Sequential per organisation, never reused, and what the OCR is built from. */
+    number: integer('number').notNull(),
+    ocr: text('ocr').notNull(),
+    status: invoiceStatus('status').notNull().default('draft'),
+    currency: text('currency').notNull().default('SEK'),
+
+    recipientName: text('recipient_name').notNull(),
+    recipientEmail: text('recipient_email'),
+    recipientAddress: text('recipient_address'),
+    /** The issuer's own reference: an apartment number, a member number, a customer number. */
+    recipientReference: text('recipient_reference'),
+
+    subject: jsonb('subject').$type<Record<string, string>>().notNull(),
+    /** Inclusive, and only where the charge covers a period. Rent does; a repair does not. */
+    periodStart: date('period_start'),
+    periodEnd: date('period_end'),
+    issuedOn: date('issued_on').notNull(),
+    dueOn: date('due_on').notNull(),
+
+    /**
+     * Minor units, as bigint. Rule 5.
+     *
+     * Stored as well as derivable, because an invoice is a record: recomputing a total from the
+     * lines years later, under whatever rounding the code has by then, is not the same as reading
+     * what was actually billed.
+     */
+    netMinor: bigint('net_minor', { mode: 'bigint' }).notNull(),
+    vatMinor: bigint('vat_minor', { mode: 'bigint' }).notNull(),
+    totalMinor: bigint('total_minor', { mode: 'bigint' }).notNull(),
+
+    paymentMethod: text('payment_method').notNull(),
+    paymentAccount: text('payment_account').notNull(),
+
+    /**
+     * The token in the public link, which is deliberately not the OCR.
+     *
+     * The OCR is printed on the invoice, quoted on bank statements and readable by anyone who
+     * handles the payment. Using it to open a web page would mean everybody in that chain can read
+     * the invoice behind it. This is separate, random and long.
+     */
+    publicToken: text('public_token').notNull(),
+
+    sentAt: timestamp('sent_at', { withTimezone: true }),
+    paidAt: timestamp('paid_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    /** The promise `ocr.ts` cannot make: this reference belongs to exactly one invoice. */
+    uniqueIndex('invoices_org_ocr_idx').on(table.organisationId, table.ocr),
+    /** And the number it was built from, so a repeat is impossible rather than unlikely. */
+    uniqueIndex('invoices_org_number_idx').on(table.organisationId, table.number),
+    /** The public link is looked up by token alone, so it is unique across every organisation. */
+    uniqueIndex('invoices_public_token_idx').on(table.publicToken),
+    index('invoices_org_status_idx').on(table.organisationId, table.status),
+    index('invoices_batch_idx').on(table.batchId),
+    /**
+     * The totals have to agree in the database, not only in the code that wrote them. A migration
+     * or a repair script does not go through the domain.
+     */
+    check(
+      'invoices_total_is_net_plus_vat',
+      sql`${table.totalMinor} = ${table.netMinor} + ${table.vatMinor}`,
+    ),
+    check('invoices_due_not_before_issue', sql`${table.dueOn} >= ${table.issuedOn}`),
+  ],
+);
+
+/**
+ * One line on an invoice: rent, cable television, a parking space.
+ *
+ * The line's own amount is stored rather than recomputed, for the same reason the invoice total is.
+ * What a tenant was billed for their parking space in March is a fact about March.
+ */
+export const invoiceLines = pgTable(
+  'invoice_lines',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    invoiceId: uuid('invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'cascade' }),
+    /** Localised: a tenant reads their invoice in their own language. */
+    description: jsonb('description').$type<Record<string, string>>().notNull(),
+    /** Thousandths, so half a month and a third of a shared meter stay exact. */
+    quantityThousandths: bigint('quantity_thousandths', { mode: 'bigint' }).notNull(),
+    unitAmountMinor: bigint('unit_amount_minor', { mode: 'bigint' }).notNull(),
+    amountMinor: bigint('amount_minor', { mode: 'bigint' }).notNull(),
+    /** Basis points: 2500 is 25%. Rent is usually exempt, which is why zero is ordinary here. */
+    vatRateBasisPoints: integer('vat_rate_basis_points').notNull().default(0),
+    vatMinor: bigint('vat_minor', { mode: 'bigint' }).notNull(),
+    position: integer('position').notNull().default(0),
+  },
+  (table) => [index('invoice_lines_invoice_idx').on(table.invoiceId)],
+);
+
+/**
+ * What a charge's amount is reckoned against.
+ *
+ * `square_metre` exists because Swedish residential rent is set per square metre for a building,
+ * not per flat. The others are here because the same table has to serve a consultancy billing
+ * hours and a club billing a season.
+ */
+export const chargeUnit = pgEnum('charge_unit', ['each', 'square_metre', 'month', 'hour']);
+
+/**
+ * A cost the issuer defines once and puts on invoices.
+ *
+ * There is no list of charge types in this product. Rent is one of these, cable television is one
+ * of these, a storage cupboard and a second parking space are two more, and a gym's joining fee is
+ * one as well. The landlord writes their own, because the alternative is a fixed set that is wrong
+ * for the second customer and every customer after them.
+ *
+ * The amount here is a **default**, not the amount. Rent differs per tenant and is set on the
+ * tenancy; cable television is usually the same for everybody and is not. Both cases fall out of
+ * the same table without a flag saying which one this is.
+ */
+export const chargeTypes = pgTable(
+  'charge_types',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /** Localised, because it is printed on an invoice somebody reads in their own language. */
+    name: jsonb('name').$type<Record<string, string>>().notNull(),
+    /** Minor units. What this costs unless a recipient has their own figure. */
+    defaultUnitAmountMinor: bigint('default_unit_amount_minor', { mode: 'bigint' }).notNull(),
+    /** Basis points: 2500 is 25%. Residential rent is exempt in Sweden, so zero is ordinary. */
+    vatRateBasisPoints: integer('vat_rate_basis_points').notNull().default(0),
+    /**
+     * What the amount is *per*.
+     *
+     * `each` is the ordinary case: cable television costs what it costs. `square_metre` is how
+     * residential rent is actually set in Sweden — a building has one rate, and a flat's rent is
+     * that rate against its floor area. Two flats of the same size in the same building pay the
+     * same rent, which is the point of the system rather than an accident of it.
+     *
+     * Storing the *rate* and multiplying by the area beats storing forty computed rents: a rent
+     * review changes one number, and every flat follows without anybody recomputing a column.
+     */
+    unit: chargeUnit('unit').notNull().default('each'),
+    /**
+     * Retired, not deleted.
+     *
+     * Invoices copy their lines, so removing a charge type cannot corrupt an issued invoice — but
+     * it can make last year's book unreadable to somebody trying to work out what a line was.
+     */
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    position: integer('position').notNull().default(0),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('charge_types_org_idx').on(table.organisationId)],
+);
+
+/**
+ * Somebody who gets invoiced, month after month: a tenant, a member, a client on a retainer.
+ *
+ * Kept because rent recurs. Retyping forty names, addresses and amounts every month is not a
+ * workflow, and the batch endpoint accepting them inline is only reasonable for a one-off run.
+ *
+ * An invoice still copies the name and address at the moment it is issued. This row is who they
+ * are now; the invoice is who they were in March.
+ */
+export const billingRecipients = pgTable(
+  'billing_recipients',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    email: text('email'),
+    address: text('address'),
+    /** The issuer's own handle for them: an apartment number, a member number, a customer number. */
+    reference: text('reference'),
+    /**
+     * Floor area, in thousandths of a square metre: 67,5 m2 is `67500`.
+     *
+     * Thousandths for the same reason quantities are — a flat is 67,5 m2 and a float has no
+     * business anywhere near a number that multiplies into rent. Null for a recipient who is not
+     * a home: a gym member has no area, and a charge priced per square metre simply cannot apply
+     * to them, which the resolver says out loud rather than treating as zero.
+     */
+    floorAreaThousandths: bigint('floor_area_thousandths', { mode: 'bigint' }),
+    /**
+     * Which language their invoice is written in.
+     *
+     * Held on the recipient rather than guessed from the organisation, because a property has
+     * tenants who do not all read Swedish and an invoice is the wrong document to make somebody
+     * puzzle over.
+     */
+    locale: text('locale'),
+    /** Moved out, left the club. Their invoices stay; they stop appearing in new runs. */
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('billing_recipients_org_idx').on(table.organisationId),
+    /**
+     * One apartment number per organisation, when one is given.
+     *
+     * Partial, because a reference is optional: a landlord numbers flats, a gym may not number
+     * members at all, and a unique index over nulls would refuse the second member with none.
+     */
+    uniqueIndex('billing_recipients_org_reference_idx')
+      .on(table.organisationId, table.reference)
+      .where(sql`reference is not null`),
+  ],
+);
+
+/**
+ * A charge that applies to this recipient every time an invoice is made for them.
+ *
+ * This is the standing arrangement: this tenant pays this rent, has cable television, and rents the
+ * second parking space. A run over forty tenants reads these and needs nothing typed.
+ *
+ * ## Why the amount can be null
+ *
+ * Null means "whatever the charge type currently says". That is what makes raising cable television
+ * for every tenant one edit instead of forty. Rent, which differs per tenant, carries its own
+ * figure here and ignores the default.
+ *
+ * The risk is real and worth stating: changing a default silently changes what every recipient
+ * relying on it will be billed next time. It cannot alter an invoice that has already been issued,
+ * because invoices copy their lines — so the blast radius is the next run, which is a run somebody
+ * has to confirm before it sends.
+ */
+export const recipientCharges = pgTable(
+  'recipient_charges',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    recipientId: uuid('recipient_id')
+      .notNull()
+      .references(() => billingRecipients.id, { onDelete: 'cascade' }),
+    chargeTypeId: uuid('charge_type_id')
+      .notNull()
+      .references(() => chargeTypes.id, { onDelete: 'restrict' }),
+    /** Null defers to the charge type's default. See above for what that costs. */
+    unitAmountMinor: bigint('unit_amount_minor', { mode: 'bigint' }),
+    /**
+     * Thousandths, so half a parking space between two flats is expressible.
+     *
+     * The default is written as SQL rather than as `1000n`: drizzle-kit serialises its schema
+     * snapshot to JSON, and `JSON.stringify` refuses a bigint outright. The literal below is what
+     * reaches the column definition either way.
+     */
+    quantityThousandths: bigint('quantity_thousandths', { mode: 'bigint' })
+      .notNull()
+      .default(sql`1000`),
+    position: integer('position').notNull().default(0),
+  },
+  (table) => [
+    index('recipient_charges_recipient_idx').on(table.recipientId),
+    /** The same charge twice on one recipient is a duplicate line nobody meant to add. */
+    uniqueIndex('recipient_charges_unique_idx').on(table.recipientId, table.chargeTypeId),
   ],
 );

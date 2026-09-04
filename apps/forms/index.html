@@ -1,10 +1,22 @@
 <!doctype html>
-<html lang="sv">
+<!--
+  `lang` is replaced with the chosen locale as soon as React runs — see `lib/theme.ts`. It starts as
+  English rather than Swedish because that is the language of the markup below and the fallback
+  everything else resolves to; the hard-coded `sv` it had was announcing a Japanese interface as
+  Swedish to every screen reader that read it.
+-->
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <!-- viewport-fit=cover so the check-in screen reaches under a phone's notch and home bar. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#1f4b99" />
+    <!--
+      A placeholder, replaced at runtime with the organisation's own background colour so the
+      phone's status bar matches the page it sits above. It was `#1f4b99` — the blue this product
+      shipped with before the palette moved to parchment and midnight, and hard-coded, so it could
+      not have followed a customer's brand even if it had been current.
+    -->
+    <meta name="theme-color" content="#faf7f0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <!--
