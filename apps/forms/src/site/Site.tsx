@@ -66,77 +66,108 @@ function SiteHeader() {
 }
 
 function Landing() {
+  /*
+   * One `<main>`, and each section owns its own container.
+   *
+   * The whole page used to sit inside a single centred column, which meant no section could reach
+   * the edges of the window — so every band had the same width, the same ground, and the page read
+   * as one long beige field with rules across it. A quiet page is not the same as a flat one.
+   */
   return (
-    <main className="site__main">
-      <section className="hero">
-        <div className="hero__words">
-          <p className="hero__eyebrow">{HERO.eyebrow}</p>
-          <h1 className="hero__title">{HERO.title}</h1>
-          <p className="hero__body">{HERO.body}</p>
-          <div className="hero__actions">
-            <Link className="button" to={HERO.primary.href}>
-              {HERO.primary.label}
-            </Link>
-            <a className="button button--quiet" href={HERO.secondary.href}>
-              {HERO.secondary.label}
-            </a>
+    <main className="site__flow">
+      <section className="hero-band">
+        <div className="site__inner hero">
+          <div className="hero__words">
+            <p className="hero__eyebrow">{HERO.eyebrow}</p>
+            <h1 className="hero__title">{HERO.title}</h1>
+            <p className="hero__body">{HERO.body}</p>
+            <div className="hero__actions">
+              <Link className="button" to={HERO.primary.href}>
+                {HERO.primary.label}
+              </Link>
+              <a className="button button--quiet" href={HERO.secondary.href}>
+                {HERO.secondary.label}
+              </a>
+            </div>
           </div>
-        </div>
 
-        {/*
-          The mark, folding, at the size it was drawn for.
+          {/*
+            The mark, folding, at the size it was drawn for.
 
-          A stock photograph of somebody at a laptop would say nothing this page does not already
-          say in words. The fold says the one thing worth saying without words: this is paper, and
-          it is being made into something.
-        */}
-        <div className="hero__figure" aria-hidden="true">
-          <Mark mode="intro" className="hero__mark" />
+            A stock photograph of somebody at a laptop would say nothing this page does not already
+            say in words. The fold says the one thing worth saying without words: this is paper, and
+            it is being made into something.
+          */}
+          <div className="hero__figure" aria-hidden="true">
+            <Mark mode="intro" className="hero__mark" />
+          </div>
         </div>
       </section>
 
       <section className="site__section" id="features">
-        <h2 className="site__sectionTitle">What it does</h2>
-        <div className="cards">
-          {FEATURES.map((feature) => (
-            <Link className="feature-card rise" key={feature.slug} to={`/features/${feature.slug}`}>
-              <span className="feature-card__mark" aria-hidden="true">
-                <Icon name={feature.icon} />
-              </span>
-              <strong>{feature.name}</strong>
-              <span className="muted small">{feature.summary}</span>
-              <span className="feature-card__more">
-                Read more <Icon name="arrow-right" />
-              </span>
-            </Link>
-          ))}
+        <div className="site__inner">
+          <p className="site__eyebrow">Everything it does</p>
+          <h2 className="site__sectionTitle">Built for the day it is used</h2>
+          <div className="cards">
+            {FEATURES.map((feature) => (
+              <Link
+                className="feature-card rise"
+                key={feature.slug}
+                to={`/features/${feature.slug}`}
+              >
+                <span className="feature-card__mark" aria-hidden="true">
+                  <Icon name={feature.icon} />
+                </span>
+                <strong>{feature.name}</strong>
+                <span className="muted small">{feature.summary}</span>
+                <span className="feature-card__more">
+                  Read more <Icon name="arrow-right" />
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="site__section">
-        <h2 className="site__sectionTitle">In use</h2>
-        <div className="quotes">
-          {QUOTES.map((quote) => (
-            <figure className="quote rise" key={quote.who}>
-              <blockquote>{quote.text}</blockquote>
-              {/*
-                A role, not a person. Inventing a name and a face for a testimonial is the one
-                thing on a landing page that is straightforwardly a lie.
-              */}
-              <figcaption className="muted small">{quote.who}</figcaption>
-            </figure>
-          ))}
+      {/*
+        The one dark band on the page.
+
+        Not decoration: it is where somebody else is talking rather than us, and giving that its own
+        ground is the cheapest way to say so. It also breaks a long parchment page into parts, which
+        is most of what "crisp" means on a page with no photographs in it.
+      */}
+      <section className="site__band">
+        <div className="site__inner">
+          <p className="site__eyebrow">In use</p>
+          <h2 className="site__sectionTitle">What people said afterwards</h2>
+          <div className="quotes">
+            {QUOTES.map((quote) => (
+              <figure className="quote" key={quote.who}>
+                <blockquote>{quote.text}</blockquote>
+                {/*
+                  A role, not a person. Inventing a name and a face for a testimonial is the one
+                  thing on a landing page that is straightforwardly a lie.
+                */}
+                <figcaption className="small">{quote.who}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="site__section site__cta">
-        <h2 className="site__sectionTitle">Nothing to install</h2>
-        <p className="muted">
-          The demo runs on made-up data, sends no email, and forgets everything when it restarts.
-        </p>
-        <Link className="button" to="/login">
-          Open the demo
-        </Link>
+        <div className="site__inner">
+          <div className="site__ctaPanel">
+            <h2 className="site__sectionTitle">Nothing to install</h2>
+            <p className="muted">
+              The demo runs on made-up data, sends no email, and forgets everything when it
+              restarts.
+            </p>
+            <Link className="button" to="/login">
+              Open the demo
+            </Link>
+          </div>
+        </div>
       </section>
     </main>
   );

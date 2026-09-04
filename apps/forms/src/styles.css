@@ -3793,13 +3793,45 @@ body:has(.app) > #root {
   padding-inline: calc(var(--tp-spacing-unit) * 3);
 }
 
+/*
+ * The landing page runs edge to edge and each section holds its own column.
+ *
+ * `.site__main` still serves the feature articles, which are one column of prose and want to stay
+ * that way. Only the landing page needs a band that reaches the window, and it needs exactly one.
+ */
+.site__flow {
+  flex: 1;
+}
+
+.site__inner {
+  inline-size: min(76rem, 100%);
+  margin-inline: auto;
+  padding-inline: calc(var(--tp-spacing-unit) * 3);
+}
+
+/*
+ * A label above a heading, not a smaller heading.
+ *
+ * Two sizes of the same voice reads as indecision. This is a different voice — small, spaced,
+ * accent-ink — so the heading below it can be the only thing at that size on the screen.
+ */
+.site__eyebrow {
+  margin: 0 0 var(--tp-spacing-unit);
+  color: var(--tp-colour-accent-ink);
+  font-size: var(--tp-text-sm);
+  font-weight: var(--tp-type-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* --- The hero -------------------------------------------------------------- */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: calc(var(--tp-spacing-unit) * 6);
   align-items: center;
-  padding-block: calc(var(--tp-spacing-unit) * 10);
+  /* Was 10. The hero had a hand's width of nothing under the buttons before the first rule. */
+  padding-block: calc(var(--tp-spacing-unit) * 9) calc(var(--tp-spacing-unit) * 7);
 }
 
 .hero__eyebrow {
@@ -3841,7 +3873,13 @@ body:has(.app) > #root {
 }
 
 .hero__mark {
-  inline-size: min(28rem, 100%);
+  /*
+   * 19rem, down from 28.
+   *
+   * At 28 the letter was 450px of a 1120px page and read as the subject of it, which put the mark
+   * and the sentence in competition. A logo is not the argument; it is who is making it.
+   */
+  inline-size: min(19rem, 100%);
   block-size: auto;
   aspect-ratio: 1;
 }
@@ -3853,9 +3891,10 @@ body:has(.app) > #root {
 }
 
 .site__sectionTitle {
-  margin: 0 0 calc(var(--tp-spacing-unit) * 4);
-  font-size: var(--tp-text-2xl);
-  letter-spacing: -0.015em;
+  margin: 0 0 calc(var(--tp-spacing-unit) * 5);
+  font-size: clamp(var(--tp-text-2xl), 3.2vw, 2.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 
 .cards {
@@ -3891,10 +3930,16 @@ body:has(.app) > #root {
   place-items: center;
   inline-size: 44px;
   block-size: 44px;
-  border-radius: var(--tp-radius-pill);
-  background: color-mix(in srgb, var(--tp-colour-primary) 10%, transparent);
+  /* A folded corner rather than a circle: the same language as the mark, at the size of a chip. */
+  border-radius: var(--tp-radius-lg) var(--tp-radius-sm) var(--tp-radius-lg) var(--tp-radius-lg);
+  background: color-mix(in srgb, var(--tp-colour-primary) 12%, transparent);
   color: var(--tp-colour-primary);
   font-size: 20px;
+  transition: background-color var(--tp-motion) var(--tp-ease);
+}
+
+.feature-card:hover .feature-card__mark {
+  background: color-mix(in srgb, var(--tp-colour-accent) 24%, transparent);
 }
 
 .feature-card__more {
@@ -3914,18 +3959,54 @@ body:has(.app) > #root {
   gap: calc(var(--tp-spacing-unit) * 2);
 }
 
+/*
+ * The dark band: the one place on the page where somebody else is speaking.
+ *
+ * `primary` as a ground rather than a fifth shade of parchment, because the page had one tone from
+ * the header to the footer and every section therefore looked like the same section. Giving the
+ * quotes their own ground says who is talking without a line of copy.
+ *
+ * The text colour is `background`, so this inverts with the brand rather than being a hard-coded
+ * light-on-dark that breaks the moment an organisation picks a pale primary.
+ */
+.site__band {
+  margin-block-start: calc(var(--tp-spacing-unit) * 2);
+  padding-block: calc(var(--tp-spacing-unit) * 9);
+  background: var(--tp-colour-primary);
+  color: var(--tp-colour-background);
+}
+
+.site__band .site__sectionTitle {
+  color: var(--tp-colour-background);
+}
+
+/* Accent-ink is reckoned against the *page*; on the band the accent itself has the contrast. */
+.site__band .site__eyebrow {
+  color: var(--tp-colour-accent);
+}
+
 .quote {
   margin: 0;
   padding: calc(var(--tp-spacing-unit) * 3);
+  /*
+   * A hairline of the band's own light, not a card.
+   *
+   * Boxes on a dark ground turn three quotes into three more rectangles on a page that already has
+   * six. A rule and some air is enough to say where one voice stops.
+   */
   border-inline-start: 2px solid var(--tp-colour-accent);
-  background: var(--tp-colour-surface);
+  background: color-mix(in srgb, var(--tp-colour-background) 7%, transparent);
   border-radius: 0 var(--tp-radius-lg) var(--tp-radius-lg) 0;
 }
 
 .quote blockquote {
-  margin: 0 0 var(--tp-spacing-unit);
+  margin: 0 0 calc(var(--tp-spacing-unit) * 1.5);
   font-size: var(--tp-text-lg);
   line-height: 1.45;
+}
+
+.quote figcaption {
+  color: color-mix(in srgb, var(--tp-colour-background) 68%, var(--tp-colour-primary));
 }
 
 /* --- A feature's own page -------------------------------------------------- */
@@ -3997,8 +4078,42 @@ body:has(.app) > #root {
   font-size: var(--tp-text-sm);
 }
 
+/*
+ * The closing panel.
+ *
+ * It was centred text on a page that is left-aligned from the header down, so it read as something
+ * that had come loose rather than as the end of an argument. Giving it a ground anchors it, and the
+ * clipped corner is the same fold the mark and the feature chips use.
+ */
 .site__cta {
-  text-align: center;
+  padding-block: calc(var(--tp-spacing-unit) * 8);
+}
+
+.site__cta .site__inner {
+  display: grid;
+  justify-items: start;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  max-inline-size: min(76rem, 100%);
+}
+
+.site__ctaPanel {
+  display: grid;
+  justify-items: start;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  inline-size: 100%;
+  padding: calc(var(--tp-spacing-unit) * 5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-xl) var(--tp-radius-sm) var(--tp-radius-xl) var(--tp-radius-xl);
+  background: var(--tp-colour-surface);
+}
+
+.site__ctaPanel .site__sectionTitle {
+  margin: 0;
+}
+
+.site__ctaPanel p {
+  margin: 0;
+  max-inline-size: 44rem;
 }
 
 .site__cta .button {
@@ -4380,7 +4495,14 @@ body:has(> #root .shell--narrow) {
 }
 
 .mark__facet--fold {
-  fill: color-mix(in srgb, var(--tp-colour-primary) 62%, var(--tp-colour-background));
+  /*
+   * 78%, not 62%.
+   *
+   * The stem's larger facet is this tone, so at 62% the bulk of the letter sat nearer the page
+   * than the brand and the mark read grey at hero size — a fold of paper, but not a fold of *this*
+   * paper. High enough to stay navy, low enough that the crease against `face` is still a crease.
+   */
+  fill: color-mix(in srgb, var(--tp-colour-primary) 78%, var(--tp-colour-background));
 }
 
 .mark__facet--warm {
