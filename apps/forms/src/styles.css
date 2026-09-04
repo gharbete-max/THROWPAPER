@@ -41,7 +41,7 @@ body {
 .shell--narrow {
   /* The author's choice, not a hard-coded width — how wide a form gets is a real design decision
    * and differs between a two-question enquiry and a long registration. */
-  max-width: var(--tp-content-width);
+  --tp-measure: var(--tp-content-width);
 }
 
 .stack {
@@ -2535,7 +2535,7 @@ h4 {
  * than a margin.
  */
 .shell--roomy {
-  max-width: 68rem;
+  --tp-measure: 68rem;
 }
 
 /**
@@ -2885,7 +2885,7 @@ h4 {
  * under a top bar that already spanned 76rem.
  */
 .shell--wide {
-  max-width: 76rem;
+  --tp-measure: 76rem;
 }
 
 /* --- Decoration ------------------------------------------------------------
@@ -4006,10 +4006,25 @@ body:has(.app) > #root {
 /*
  * The content column, centred in whatever the rail leaves.
  *
- * `.shell` was `margin: 0 auto` inside a full-width page and carried its own vertical padding;
- * both are the grid's job now, so this only decides how wide a measure the content is allowed.
+ * The grid owns the gutter and the vertical rhythm now, so those came off. The **measure** did not
+ * come off with them and should not have: the frame bounds the page, and 52rem bounds a line of
+ * text, which are different decisions. Deleting this cap alongside the padding left every document
+ * screen — the brand kit, an event being edited — running to 1137px of prose at a laptop width,
+ * which is roughly twice a readable line.
+ *
+ * `--roomy` and `--wide` widen it deliberately for screens that are scanned rather than read.
  */
 .shell {
+  /*
+   * A variable rather than a value the variants have to out-specify.
+   *
+   * Restoring the cap as a plain `max-inline-size` here broke the wider screens instead: this rule
+   * lives at the end of the file, `--roomy` and `--wide` are declared earlier, and at equal
+   * specificity the later one wins — so the forms list came out at the reading measure too. A
+   * variant sets the variable on the same element and this reads it, which works whatever order
+   * they end up in.
+   */
+  max-inline-size: var(--tp-measure, 52rem);
   margin-inline: auto;
   padding: 0;
 }
