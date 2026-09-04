@@ -14,6 +14,7 @@ const CATALOGUE: ChargeType[] = [
     id: '11111111-1111-4111-8111-111111111111',
     name: { 'sv-SE': 'Hyra', 'en-GB': 'Rent' },
     defaultUnitAmount: '0',
+    unit: 'each',
     vatRateBasisPoints: 0,
     archived: false,
     position: 0,
@@ -22,6 +23,7 @@ const CATALOGUE: ChargeType[] = [
     id: '22222222-2222-4222-8222-222222222222',
     name: { 'sv-SE': 'Kabel-TV', 'en-GB': 'Cable television' },
     defaultUnitAmount: '24900',
+    unit: 'each',
     vatRateBasisPoints: 2500,
     archived: false,
     position: 1,
@@ -30,6 +32,7 @@ const CATALOGUE: ChargeType[] = [
     id: '33333333-3333-4333-8333-333333333333',
     name: { 'sv-SE': 'Förråd', 'en-GB': 'Storage' },
     defaultUnitAmount: '15000',
+    unit: 'each',
     vatRateBasisPoints: 2500,
     archived: true,
     position: 2,
@@ -169,5 +172,106 @@ describe('a month of rent for one tenant', () => {
     // VAT on the two taxed lines only: 62,25 + 87,50 = 149,75. Rent stays exempt.
     expect(totals.vat).toBe(14_975n);
     expect(totals.total).toBe(969_875n);
+  });
+});
+
+describe('rent set per square metre', () => {
+  /**
+   * How Swedish residential rent is actually set.
+   *
+   * A building has one rate; a flat's rent is that rate against its floor area. Two flats of the
+   * same size in the same building pay the same rent, which is the point of the system rather than
+   * a coincidence — so the software holds the rate and the area, not forty computed rents.
+   */
+  const PER_AREA: ChargeType[] = [
+    {
+      id: '55555555-5555-4555-8555-555555555555',
+      name: { 'sv-SE': 'Hyra Storgatan 14', 'en-GB': 'Rent, Storgatan 14' },
+      /** 148,00 kr per square metre per month. */
+      defaultUnitAmount: '14800',
+      unit: 'square_metre',
+      vatRateBasisPoints: 0,
+      archived: false,
+      position: 0,
+    },
+  ];
+  const RATE = PER_AREA[0]!.id;
+
+  it('takes the quantity from the flat rather than the arrangement', () => {
+    const lines = resolveCharges(
+      [{ chargeTypeId: RATE, quantity: '1000', position: 0 }],
+      PER_AREA,
+      [],
+      {
+        floorAreaThousandths: '67500', // 67,5 m2
+      },
+    );
+
+    expect(lines[0]!.quantity).toBe('67500');
+    expect(lines[0]!.unitAmount).toBe('14800');
+  });
+
+  it('prices a flat at rate times area', () => {
+    const lines = resolveCharges(
+      [{ chargeTypeId: RATE, quantity: '1000', position: 0 }],
+      PER_AREA,
+      [],
+      {
+        floorAreaThousandths: '67500',
+      },
+    );
+
+    // 67,5 m2 at 148,00 kr = 9 990,00 kr.
+    expect(invoiceTotals(lines).total).toBe(999_000n);
+  });
+
+  /**
+   * The whole reason the rate is stored rather than the rent: a review is one number.
+   *
+   * Two flats in the same building, different sizes, one rate. Raising it raises both correctly
+   * and in proportion, which is what nobody wants to do by hand across forty rows.
+   */
+  it('keeps two flats in the same building in proportion', () => {
+    const small = resolveCharges(
+      [{ chargeTypeId: RATE, quantity: '1000', position: 0 }],
+      PER_AREA,
+      [],
+      {
+        floorAreaThousandths: '45000',
+      },
+    );
+    const large = resolveCharges(
+      [{ chargeTypeId: RATE, quantity: '1000', position: 0 }],
+      PER_AREA,
+      [],
+      {
+        floorAreaThousandths: '90000',
+      },
+    );
+
+    expect(invoiceTotals(large).total).toBe(invoiceTotals(small).total * 2n);
+  });
+
+  /**
+   * No area is refused, not treated as zero.
+   *
+   * Zero would bill a tenant nothing for their rent on an invoice that otherwise looks complete,
+   * and a bill that is too low is one nobody queries.
+   */
+  it('refuses to bill an area charge against a recipient with no area', () => {
+    expect(() =>
+      resolveCharges([{ chargeTypeId: RATE, quantity: '1000', position: 0 }], PER_AREA),
+    ).toThrow(ChargeResolutionError);
+  });
+
+  it('lets an explicit quantity override the area, for a shared flat', () => {
+    const lines = resolveCharges(
+      [{ chargeTypeId: RATE, quantity: '33750', position: 0 }], // half of 67,5 m2
+      PER_AREA,
+      [],
+      { floorAreaThousandths: '67500' },
+    );
+    expect(lines[0]!.quantity).toBe('33750');
+    expect(invoiceTotals(lines).total).toBe(499_500n);
   });
 });

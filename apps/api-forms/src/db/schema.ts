@@ -829,6 +829,15 @@ export const invoiceLines = pgTable(
 );
 
 /**
+ * What a charge's amount is reckoned against.
+ *
+ * `square_metre` exists because Swedish residential rent is set per square metre for a building,
+ * not per flat. The others are here because the same table has to serve a consultancy billing
+ * hours and a club billing a season.
+ */
+export const chargeUnit = pgEnum('charge_unit', ['each', 'square_metre', 'month', 'hour']);
+
+/**
  * A cost the issuer defines once and puts on invoices.
  *
  * There is no list of charge types in this product. Rent is one of these, cable television is one
@@ -853,6 +862,18 @@ export const chargeTypes = pgTable(
     defaultUnitAmountMinor: bigint('default_unit_amount_minor', { mode: 'bigint' }).notNull(),
     /** Basis points: 2500 is 25%. Residential rent is exempt in Sweden, so zero is ordinary. */
     vatRateBasisPoints: integer('vat_rate_basis_points').notNull().default(0),
+    /**
+     * What the amount is *per*.
+     *
+     * `each` is the ordinary case: cable television costs what it costs. `square_metre` is how
+     * residential rent is actually set in Sweden — a building has one rate, and a flat's rent is
+     * that rate against its floor area. Two flats of the same size in the same building pay the
+     * same rent, which is the point of the system rather than an accident of it.
+     *
+     * Storing the *rate* and multiplying by the area beats storing forty computed rents: a rent
+     * review changes one number, and every flat follows without anybody recomputing a column.
+     */
+    unit: chargeUnit('unit').notNull().default('each'),
     /**
      * Retired, not deleted.
      *
@@ -887,6 +908,15 @@ export const billingRecipients = pgTable(
     address: text('address'),
     /** The issuer's own handle for them: an apartment number, a member number, a customer number. */
     reference: text('reference'),
+    /**
+     * Floor area, in thousandths of a square metre: 67,5 m2 is `67500`.
+     *
+     * Thousandths for the same reason quantities are — a flat is 67,5 m2 and a float has no
+     * business anywhere near a number that multiplies into rent. Null for a recipient who is not
+     * a home: a gym member has no area, and a charge priced per square metre simply cannot apply
+     * to them, which the resolver says out loud rather than treating as zero.
+     */
+    floorAreaThousandths: bigint('floor_area_thousandths', { mode: 'bigint' }),
     /**
      * Which language their invoice is written in.
      *

@@ -32,11 +32,24 @@ import type { InvoiceLine } from './api.js';
  * made deliberately rather than by omission.
  */
 
+export const CHARGE_UNITS = ['each', 'square_metre', 'month', 'hour'] as const;
+export const ChargeUnit = z.enum(CHARGE_UNITS);
+export type ChargeUnit = z.infer<typeof ChargeUnit>;
+
 export const ChargeType = z.object({
   id: Uuid,
   name: LocalisedText,
   /** What this costs unless a recipient has their own figure. */
   defaultUnitAmount: MinorAmount,
+  /**
+   * What the amount is reckoned *per*.
+   *
+   * `square_metre` is how residential rent is actually set in Sweden: a building has one rate and
+   * a flat's rent is that rate against its floor area, so two flats of the same size in the same
+   * building pay the same rent. Holding the rate and multiplying beats holding forty computed
+   * rents — a rent review is then one number, and every flat follows.
+   */
+  unit: ChargeUnit.default('each'),
   vatRateBasisPoints: z.number().int().min(0).max(10_000).default(0),
   archived: z.boolean().default(false),
   position: z.number().int().min(0).default(0),
@@ -68,11 +81,23 @@ export const OneOffCharge = z.object({
 });
 export type OneOffCharge = z.infer<typeof OneOffCharge>;
 
+/** What a quantity is when nobody set one: exactly one of whatever the charge is per. */
+const DEFAULT_QUANTITY = '1000';
+
 export class ChargeResolutionError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'ChargeResolutionError';
   }
+}
+
+export interface ResolveContext {
+  /**
+   * The recipient's floor area, in thousandths of a square metre. `67500` is 67,5 m2.
+   *
+   * Only a per-area charge reads it, and only that case requires it.
+   */
+  readonly floorAreaThousandths?: string;
 }
 
 /**
@@ -90,6 +115,7 @@ export function resolveCharges(
   charges: readonly RecipientCharge[],
   catalogue: readonly ChargeType[],
   oneOffs: readonly OneOffCharge[] = [],
+  context: ResolveContext = {},
 ): Array<Omit<InvoiceLine, 'amount'>> {
   const byId = new Map(catalogue.map((type) => [type.id, type]));
 
@@ -108,9 +134,27 @@ export function resolveCharges(
         );
       }
 
+      /*
+       * A charge priced by area takes its quantity from the flat, not from the arrangement.
+       *
+       * Refused rather than defaulted when there is no area. Treating a missing area as zero would
+       * bill a tenant nothing for their rent and produce an invoice that looks complete — the exact
+       * failure the archived-charge case above is also written to avoid. An explicit quantity on
+       * the arrangement still wins, so a half-share of a shared flat stays expressible.
+       */
+      let quantity = charge.quantity;
+      if (type.unit === 'square_metre' && charge.quantity === DEFAULT_QUANTITY) {
+        if (context.floorAreaThousandths === undefined) {
+          throw new ChargeResolutionError(
+            `Charge type ${charge.chargeTypeId} is priced per square metre and this recipient has no floor area`,
+          );
+        }
+        quantity = context.floorAreaThousandths;
+      }
+
       return {
         description: type.name,
-        quantity: charge.quantity,
+        quantity,
         /* The recipient's own figure, or the catalogue's, decided here and only here. */
         unitAmount: charge.unitAmount ?? type.defaultUnitAmount,
         vatRateBasisPoints: type.vatRateBasisPoints,
