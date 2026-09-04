@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import helmet from '@fastify/helmet';
 import swagger from '@fastify/swagger';
 import fastifyStatic from '@fastify/static';
 import multipart from '@fastify/multipart';
@@ -125,6 +126,74 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   const jwtSecret = options.jwtSecret ?? requireSecret();
   const appUrl = options.appUrl ?? process.env['APP_URL'] ?? 'http://localhost:5173';
   const probeDatabase = options.probeDatabase ?? database !== null;
+  /* HSTS and upgrade-insecure-requests are correct in front of TLS and break a localhost page. */
+  const isProduction = process.env['NODE_ENV'] === 'production';
+
+  /**
+   * Security headers, on a server that hands HTML to browsers.
+   *
+   * There were none. Not a weak set — none at all: no framing policy, no `nosniff`, no referrer
+   * policy, no content policy. That is defensible for an API nobody points a browser at, and this
+   * one serves the app, the marketing site and every public registration page.
+   *
+   * The policy is written against what the app actually loads, which is little: no inline scripts,
+   * no external origins, no CDN. That makes `script-src 'self'` achievable rather than aspirational
+   * — the version of this header that is worth having.
+   */
+  await app.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        /* No inline scripts anywhere: the shipped HTML loads two modules by src and nothing else. */
+        scriptSrc: ["'self'"],
+        /*
+         * Styles need `unsafe-inline` and that is a deliberate cost, not an oversight. The brand
+         * palette is injected as a `<style>` block — inline on the server for a page whose first
+         * impression is the point, and at runtime in the app because an organisation's kit
+         * replaces it. A nonce would work for the server-rendered half and not for the half the
+         * client writes after a fetch.
+         */
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        /* `data:` for the QR on an admission card, `blob:` for a CSV or attachment being saved. */
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        fontSrc: ["'self'"],
+        connectSrc: ["'self'"],
+        workerSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        /*
+         * Nothing here may be framed, including the public form.
+         *
+         * Embedding a form in a customer's own page is a feature this product may well want, and
+         * when it does it should be a decision with an allow-list behind it — not something that
+         * works today because nobody set a header. Until then a registration page that can be
+         * framed is a registration page that can be clickjacked.
+         */
+        frameAncestors: ["'none'"],
+        /* Breaks every localhost page, and adds nothing that HSTS does not already do in front. */
+        ...(isProduction ? {} : { upgradeInsecureRequests: null }),
+      },
+    },
+    /* Only meaningful over TLS, and actively unhelpful on a development machine. */
+    hsts: isProduction ? { maxAge: 15552000, includeSubDomains: true } : false,
+    /* The door screen reads a QR from the camera, so that one capability stays. */
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  });
+
+  /**
+   * One capability, granted to one screen.
+   *
+   * Helmet does not write this, and its absence means every API a browser has ever added is
+   * available to any script that gets onto the page. The camera is named because check-in needs
+   * it; everything else is refused rather than left to the browser's default.
+   */
+  app.addHook('onSend', async (_request, reply) => {
+    reply.header(
+      'Permissions-Policy',
+      'camera=(self), geolocation=(), microphone=(), payment=(), usb=(), interest-cohort=()',
+    );
+  });
 
   await app.register(cors, { origin: appUrl, credentials: false });
   await app.register(rateLimit, { global: false, max: 100, timeWindow: '1 minute' });
