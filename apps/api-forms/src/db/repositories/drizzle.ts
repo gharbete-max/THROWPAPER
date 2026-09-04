@@ -1,5 +1,7 @@
+import { randomUUID } from 'node:crypto';
 import { and, asc, desc, eq, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
+import { ocrForInvoice } from '@tp/shared/invoicing';
 import {
   brandKits,
   auditLog,
@@ -7,6 +9,9 @@ import {
   events,
   formShares,
   formUploads,
+  invoiceBatches,
+  invoiceLines,
+  invoices,
   journalEntries,
   journalLines,
   ledgerAccounts,
@@ -942,6 +947,187 @@ export function createDrizzleRepositories(db: Db): Repositories {
      * reversing one, and both stay in the book — see `packages/calc/src/ledger.ts` for why that
      * is the whole point rather than a restriction.
      */
+    invoices: {
+      listBatches: (organisationId) =>
+        db
+          .select()
+          .from(invoiceBatches)
+          .where(eq(invoiceBatches.organisationId, organisationId))
+          .orderBy(desc(invoiceBatches.createdAt)),
+
+      findBatch: async (organisationId, id) => {
+        const [row] = await db
+          .select()
+          .from(invoiceBatches)
+          .where(and(eq(invoiceBatches.organisationId, organisationId), eq(invoiceBatches.id, id)))
+          .limit(1);
+        return row ?? null;
+      },
+
+      /**
+       * A run and every invoice in it, in one transaction.
+       *
+       * ## Why the numbers are taken here
+       *
+       * `select max(number) + 1` inside the transaction, with the organisation's rows locked. Two
+       * runs started at the same moment would otherwise read the same highest number and allocate
+       * the same references, and the unique index would reject the second one *after* the first had
+       * already been sent.
+       *
+       * The lock is on the organisation row rather than on the invoices, because the thing being
+       * serialised is "who is allocating numbers for this organisation" — locking rows that do not
+       * exist yet is not a thing a database can do.
+       */
+      createBatch: (input) =>
+        db.transaction(async (tx) => {
+          await tx.execute(
+            sql`select 1 from organisations where id = ${input.organisationId} for update`,
+          );
+
+          const [highest] = await tx
+            .select({ number: sql<number>`coalesce(max(${invoices.number}), 0)` })
+            .from(invoices)
+            .where(eq(invoices.organisationId, input.organisationId));
+
+          let next = (highest?.number ?? 0) + 1;
+
+          const [batch] = await tx
+            .insert(invoiceBatches)
+            .values({
+              organisationId: input.organisationId,
+              name: input.name,
+              createdBy: input.createdBy,
+            })
+            .returning();
+
+          const created = [];
+          for (const request of input.invoices) {
+            const number = next;
+            next += 1;
+
+            const [invoice] = await tx
+              .insert(invoices)
+              .values({
+                organisationId: input.organisationId,
+                batchId: batch!.id,
+                number,
+                ocr: ocrForInvoice(number, {
+                  method: 'bankgiro',
+                  account: request.paymentAccount,
+                  ocrLengthControl: request.ocrLengthControl,
+                }),
+                status: 'issued',
+                currency: request.currency,
+                recipientName: request.recipientName,
+                recipientEmail: request.recipientEmail,
+                recipientAddress: request.recipientAddress,
+                recipientReference: request.recipientReference,
+                subject: request.subject,
+                periodStart: request.periodStart,
+                periodEnd: request.periodEnd,
+                issuedOn: request.issuedOn,
+                dueOn: request.dueOn,
+                netMinor: request.lines.reduce((total, line) => total + line.amountMinor, 0n),
+                vatMinor: request.lines.reduce((total, line) => total + line.vatMinor, 0n),
+                totalMinor: request.lines.reduce(
+                  (total, line) => total + line.amountMinor + line.vatMinor,
+                  0n,
+                ),
+                paymentMethod: request.paymentMethod,
+                paymentAccount: request.paymentAccount,
+                /* Long, random, and deliberately not the OCR. See the schema. */
+                publicToken: randomUUID().replace(/-/g, '') + randomUUID().slice(0, 8),
+              })
+              .returning();
+
+            const lines = request.lines.length
+              ? await tx
+                  .insert(invoiceLines)
+                  .values(
+                    request.lines.map((line, position) => ({
+                      invoiceId: invoice!.id,
+                      ...line,
+                      position,
+                    })),
+                  )
+                  .returning()
+              : [];
+
+            created.push({ ...invoice!, lines });
+          }
+
+          return { batch: batch!, invoices: created };
+        }),
+
+      listInvoices: async (organisationId, batchId) => {
+        const rows = await db
+          .select()
+          .from(invoices)
+          .where(
+            batchId === undefined
+              ? eq(invoices.organisationId, organisationId)
+              : and(eq(invoices.organisationId, organisationId), eq(invoices.batchId, batchId)),
+          )
+          .orderBy(asc(invoices.number));
+
+        return withLines(db, rows);
+      },
+
+      findInvoice: async (organisationId, id) => {
+        const [row] = await db
+          .select()
+          .from(invoices)
+          .where(and(eq(invoices.organisationId, organisationId), eq(invoices.id, id)))
+          .limit(1);
+        if (!row) return null;
+        return (await withLines(db, [row]))[0] ?? null;
+      },
+
+      /* By token alone: whoever opens the link is a tenant, and has no session to scope by. */
+      findByPublicToken: async (token) => {
+        const [row] = await db
+          .select()
+          .from(invoices)
+          .where(eq(invoices.publicToken, token))
+          .limit(1);
+        if (!row) return null;
+        return (await withLines(db, [row]))[0] ?? null;
+      },
+
+      markSent: async (organisationId, batchId, at) => {
+        await db.transaction(async (tx) => {
+          await tx
+            .update(invoiceBatches)
+            .set({ sentAt: at })
+            .where(
+              and(
+                eq(invoiceBatches.organisationId, organisationId),
+                eq(invoiceBatches.id, batchId),
+              ),
+            );
+          await tx
+            .update(invoices)
+            .set({ sentAt: at, status: 'sent' })
+            .where(and(eq(invoices.organisationId, organisationId), eq(invoices.batchId, batchId)));
+        });
+      },
+
+      /*
+       * A test run stamps the batch and nothing else.
+       *
+       * Not the invoices: they went to nobody, and marking them would make a test
+       * indistinguishable from the real thing in every list that reads `sentAt`.
+       */
+      markTested: async (organisationId, batchId, at) => {
+        await db
+          .update(invoiceBatches)
+          .set({ lastTestAt: at })
+          .where(
+            and(eq(invoiceBatches.organisationId, organisationId), eq(invoiceBatches.id, batchId)),
+          );
+      },
+    },
+
     ledger: {
       listAccounts: async (organisationId) =>
         (await db
@@ -1127,4 +1313,34 @@ function first<T>(rows: T[]): T | null {
 
 function toUser(row: typeof users.$inferSelect | null): UserRecord | null {
   return row;
+}
+
+/**
+ * Attach lines to invoices in one query rather than one per invoice.
+ *
+ * A run is forty invoices; forty round trips to render a list is the difference between a page and
+ * a wait. Grouped in memory because the rows come back in one order and belong in another.
+ */
+async function withLines(db: Db, rows: Array<typeof invoices.$inferSelect>) {
+  if (rows.length === 0) return [];
+
+  const lines = await db
+    .select()
+    .from(invoiceLines)
+    .where(
+      inArray(
+        invoiceLines.invoiceId,
+        rows.map((row) => row.id),
+      ),
+    )
+    .orderBy(asc(invoiceLines.position));
+
+  const byInvoice = new Map<string, Array<typeof invoiceLines.$inferSelect>>();
+  for (const line of lines) {
+    const existing = byInvoice.get(line.invoiceId);
+    if (existing) existing.push(line);
+    else byInvoice.set(line.invoiceId, [line]);
+  }
+
+  return rows.map((row) => ({ ...row, lines: byInvoice.get(row.id) ?? [] }));
 }

@@ -612,6 +612,7 @@ export interface Repositories {
   messages: MessageRepository;
   audit: AuditRepository;
   ledger: LedgerRepository;
+  invoices: InvoiceRepository;
 }
 
 /** A file a respondent attached. The bytes live in the private upload store, keyed by `storageKey`. */
@@ -659,4 +660,115 @@ export interface UploadRepository {
     submissionId: string,
     storageKey: string,
   ): Promise<UploadRecord | null>;
+}
+
+/** One line as it was billed. Stored, never recomputed — see the schema for why. */
+export interface InvoiceLineRecord {
+  id: string;
+  description: Record<string, string>;
+  quantityThousandths: bigint;
+  unitAmountMinor: bigint;
+  amountMinor: bigint;
+  vatRateBasisPoints: number;
+  vatMinor: bigint;
+  position: number;
+}
+
+export interface InvoiceRecord {
+  id: string;
+  organisationId: string;
+  batchId: string | null;
+  number: number;
+  ocr: string;
+  status: 'draft' | 'issued' | 'sent' | 'paid' | 'cancelled';
+  currency: string;
+  recipientName: string;
+  recipientEmail: string | null;
+  recipientAddress: string | null;
+  recipientReference: string | null;
+  subject: Record<string, string>;
+  periodStart: string | null;
+  periodEnd: string | null;
+  issuedOn: string;
+  dueOn: string;
+  netMinor: bigint;
+  vatMinor: bigint;
+  totalMinor: bigint;
+  paymentMethod: string;
+  paymentAccount: string;
+  publicToken: string;
+  sentAt: Date | null;
+  paidAt: Date | null;
+  createdAt: Date;
+  lines: InvoiceLineRecord[];
+}
+
+export interface InvoiceBatchRecord {
+  id: string;
+  organisationId: string;
+  name: string;
+  createdBy: string | null;
+  sentAt: Date | null;
+  lastTestAt: Date | null;
+  createdAt: Date;
+}
+
+export interface InvoiceRepository {
+  listBatches(organisationId: string): Promise<InvoiceBatchRecord[]>;
+  findBatch(organisationId: string, id: string): Promise<InvoiceBatchRecord | null>;
+
+  /**
+   * Create a run and every invoice in it, atomically.
+   *
+   * One call rather than a batch row followed by forty inserts, because a run that half exists is
+   * worse than one that does not: the numbers are already allocated, the references are already
+   * issued, and nobody can tell which tenants were billed.
+   *
+   * The **numbers are allocated here**, inside the transaction, and the reference is built from
+   * them. That is the only place uniqueness can be promised — `ocr.ts` makes a well-formed
+   * reference and cannot know whether it has been used before.
+   */
+  createBatch(input: {
+    organisationId: string;
+    name: string;
+    createdBy: string | null;
+    invoices: Array<{
+      recipientName: string;
+      recipientEmail: string | null;
+      recipientAddress: string | null;
+      recipientReference: string | null;
+      subject: Record<string, string>;
+      currency: string;
+      periodStart: string | null;
+      periodEnd: string | null;
+      issuedOn: string;
+      dueOn: string;
+      paymentMethod: string;
+      paymentAccount: string;
+      ocrLengthControl: boolean;
+      lines: Array<{
+        description: Record<string, string>;
+        quantityThousandths: bigint;
+        unitAmountMinor: bigint;
+        amountMinor: bigint;
+        vatRateBasisPoints: number;
+        vatMinor: bigint;
+      }>;
+    }>;
+  }): Promise<{ batch: InvoiceBatchRecord; invoices: InvoiceRecord[] }>;
+
+  listInvoices(organisationId: string, batchId?: string): Promise<InvoiceRecord[]>;
+  findInvoice(organisationId: string, id: string): Promise<InvoiceRecord | null>;
+
+  /**
+   * The public lookup, by token alone.
+   *
+   * No organisation: the person opening the link is a tenant, not a user, and has no session to
+   * scope by. The token is what stands in for one, which is why it is long, random, and not the
+   * payment reference.
+   */
+  findByPublicToken(token: string): Promise<InvoiceRecord | null>;
+
+  markSent(organisationId: string, batchId: string, at: Date): Promise<void>;
+  markTested(organisationId: string, batchId: string, at: Date): Promise<void>;
 }

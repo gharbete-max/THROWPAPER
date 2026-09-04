@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { ocrForInvoice } from '@tp/shared/invoicing';
 import type {
   AuditEntryInput,
   CheckInRecord,
@@ -14,6 +15,8 @@ import type {
   JournalEntryRecord,
   JournalEntryWithLines,
   JournalLineRecord,
+  InvoiceBatchRecord,
+  InvoiceRecord,
   LedgerAccountRecord,
   FormVersionRecord,
   BrandKitRecord,
@@ -54,6 +57,8 @@ export interface MemoryState {
   sendingDomains: SendingDomainRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
+  invoiceBatches: InvoiceBatchRecord[];
+  invoices: InvoiceRecord[];
   ledgerAccounts: LedgerAccountRecord[];
   journalEntries: JournalEntryRecord[];
   journalLines: JournalLineRecord[];
@@ -105,6 +110,8 @@ export function createMemoryRepositories(
     sendingDomains: seed.sendingDomains ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
+    invoiceBatches: seed.invoiceBatches ?? [],
+    invoices: seed.invoices ?? [],
     ledgerAccounts: seed.ledgerAccounts ?? [],
     journalEntries: seed.journalEntries ?? [],
     journalLines: seed.journalLines ?? [],
@@ -783,6 +790,144 @@ export function createMemoryRepositories(
      * entry and its lines together and pushes both, because a half-written entry would break the
      * trial balance and there is no repair path — by design.
      */
+    /**
+     * Invoices, in memory.
+     *
+     * The same shape as the Drizzle one, including the part that matters: a run and its invoices
+     * are created together. A batch row followed by forty inserts can half-fail, and a half-created
+     * run is worse than none — the numbers are allocated, the references are issued, and nobody can
+     * say which tenants were billed.
+     */
+    invoices: {
+      listBatches: async (organisationId) =>
+        state.invoiceBatches
+          .filter((batch) => batch.organisationId === organisationId)
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+
+      findBatch: async (organisationId, id) =>
+        state.invoiceBatches.find(
+          (batch) => batch.organisationId === organisationId && batch.id === id,
+        ) ?? null,
+
+      createBatch: async (input) => {
+        const now = new Date();
+        const batch: InvoiceBatchRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          name: input.name,
+          createdBy: input.createdBy,
+          sentAt: null,
+          lastTestAt: null,
+          createdAt: now,
+        };
+
+        /*
+         * The next number, taken once for the whole run.
+         *
+         * Per organisation and never reused, because the reference is built from it and a repeated
+         * reference is two debts a bank cannot tell apart.
+         */
+        let next =
+          state.invoices
+            .filter((invoice) => invoice.organisationId === input.organisationId)
+            .reduce((highest, invoice) => Math.max(highest, invoice.number), 0) + 1;
+
+        const created: InvoiceRecord[] = input.invoices.map((request) => {
+          const number = next;
+          next += 1;
+
+          return {
+            id: randomUUID(),
+            organisationId: input.organisationId,
+            batchId: batch.id,
+            number,
+            ocr: ocrForInvoice(number, {
+              method: 'bankgiro',
+              account: request.paymentAccount,
+              ocrLengthControl: request.ocrLengthControl,
+            }),
+            status: 'issued' as const,
+            currency: request.currency,
+            recipientName: request.recipientName,
+            recipientEmail: request.recipientEmail,
+            recipientAddress: request.recipientAddress,
+            recipientReference: request.recipientReference,
+            subject: request.subject,
+            periodStart: request.periodStart,
+            periodEnd: request.periodEnd,
+            issuedOn: request.issuedOn,
+            dueOn: request.dueOn,
+            netMinor: request.lines.reduce((total, line) => total + line.amountMinor, 0n),
+            vatMinor: request.lines.reduce((total, line) => total + line.vatMinor, 0n),
+            totalMinor: request.lines.reduce(
+              (total, line) => total + line.amountMinor + line.vatMinor,
+              0n,
+            ),
+            paymentMethod: request.paymentMethod,
+            paymentAccount: request.paymentAccount,
+            /* Long, random, and deliberately not the OCR. See the schema. */
+            publicToken: randomUUID().replace(/-/g, '') + randomUUID().slice(0, 8),
+            sentAt: null,
+            paidAt: null,
+            createdAt: now,
+            lines: request.lines.map((line, position) => ({
+              id: randomUUID(),
+              ...line,
+              position,
+            })),
+          };
+        });
+
+        state.invoiceBatches.push(batch);
+        state.invoices.push(...created);
+        return { batch, invoices: created };
+      },
+
+      listInvoices: async (organisationId, batchId) =>
+        state.invoices
+          .filter(
+            (invoice) =>
+              invoice.organisationId === organisationId &&
+              (batchId === undefined || invoice.batchId === batchId),
+          )
+          .sort((a, b) => a.number - b.number),
+
+      findInvoice: async (organisationId, id) =>
+        state.invoices.find(
+          (invoice) => invoice.organisationId === organisationId && invoice.id === id,
+        ) ?? null,
+
+      /* By token alone: whoever opens the link is a tenant, and has no session to scope by. */
+      findByPublicToken: async (token) =>
+        state.invoices.find((invoice) => invoice.publicToken === token) ?? null,
+
+      markSent: async (organisationId, batchId, at) => {
+        const batch = state.invoiceBatches.find(
+          (candidate) => candidate.organisationId === organisationId && candidate.id === batchId,
+        );
+        if (!batch) return;
+        batch.sentAt = at;
+        for (const invoice of state.invoices) {
+          if (invoice.batchId !== batchId) continue;
+          invoice.sentAt = at;
+          invoice.status = 'sent';
+        }
+      },
+
+      /*
+       * A test run stamps the batch and nothing else.
+       *
+       * Not the invoices: they were not sent to anybody, and marking them would make a test
+       * indistinguishable from the real thing in every list that reads `sentAt`.
+       */
+      markTested: async (organisationId, batchId, at) => {
+        const batch = state.invoiceBatches.find(
+          (candidate) => candidate.organisationId === organisationId && candidate.id === batchId,
+        );
+        if (batch) batch.lastTestAt = at;
+      },
+    },
+
     ledger: {
       listAccounts: async (organisationId) =>
         state.ledgerAccounts
