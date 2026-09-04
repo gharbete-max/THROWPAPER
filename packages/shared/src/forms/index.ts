@@ -10,3 +10,4 @@ export * from './templates.js';
 export * from './rich-text.js';
 export * from './pattern-safety.js';
 export * from './uploads.js';
+export * from './wizard.js';

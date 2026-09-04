@@ -1,4 +1,10 @@
-import { contrastRatio, luminance, parseHex, TEXT_CONTRAST } from './contrast.js';
+import {
+  BOUNDARY_CONTRAST,
+  contrastRatio,
+  luminance,
+  parseHex,
+  TEXT_CONTRAST,
+} from './contrast.js';
 import type { ColourTokens, TokenSet } from './types.js';
 
 /**
@@ -271,19 +277,79 @@ export function toDark(tokens: TokenSet): TokenSet {
  * property cannot drive a selector, but it can carry a colour, and email and PDF can read the same
  * three values without knowing the word "outline".
  */
+/**
+ * The brand colour, taken far enough from the page that a filled shape reads as a shape.
+ *
+ * `accentInk` solves the same problem for *text*. This is the other half, and it was missing: a
+ * filled button whose label is perfectly readable can still be invisible as a button, because
+ * nothing was checking the fill against the page behind it. WCAG asks for 3:1 on the boundary of a
+ * control for exactly this reason.
+ *
+ * It matters much more now than it did. The Brand Kit reads an organisation's logo and offers its
+ * dominant colour as the primary, so the palette is no longer something a person chose by looking
+ * at it — a pale yellow wordmark yields a pale yellow primary, and a pale yellow button on
+ * parchment is a rectangle nobody can see the edge of.
+ *
+ * ## Why this moves lightness rather than mixing toward the ink
+ *
+ * Mixing toward `text` was the first implementation and it fails the one property that matters
+ * here: the shipped ink is a near-black with a blue cast, so a pale yellow walked toward it comes
+ * out greener and then bluer. The organisation whose logo that yellow came from would be right to
+ * ask what happened to it.
+ *
+ * Moving along lightness in HSL keeps hue and saturation exactly, which is what "the same colour,
+ * darker" means to everybody except a computer. Toward whichever end of the scale the page is not:
+ * a pale brand on a pale page darkens, and the same brand on a dark page lightens instead.
+ */
+export function brandFill(colour: ColourTokens): string {
+  if ((contrastRatio(colour.primary, colour.background) ?? 0) >= BOUNDARY_CONTRAST) {
+    return colour.primary;
+  }
+
+  const hsl = toHsl(colour.primary);
+  const pageLuminance = luminance(colour.background);
+  /*
+   * A colour neither of these can read is a colour there is no basis for changing.
+   *
+   * Without the page's luminance there is no way to tell which direction is away from it, and a
+   * guess would be a brand darkened on a dark page — worse than leaving it alone.
+   */
+  if (!hsl || pageLuminance === null) return colour.primary;
+  /* Named to avoid shadowing this module's own `lightness`, which reads a colour rather than a step. */
+  const [hue, saturation, startLightness] = hsl;
+
+  /* Away from the page: darken on a light page, lighten on a dark one. */
+  const target = pageLuminance > 0.5 ? 0 : 1;
+
+  let candidate = colour.primary;
+  for (let step = 1; step <= 20; step += 1) {
+    const moved = startLightness + (target - startLightness) * (step / 20);
+    candidate = fromHsl([hue, saturation, moved]);
+    if ((contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST) return candidate;
+  }
+  return candidate;
+}
+
 export function buttonSurface(tokens: TokenSet): {
   background: string;
   text: string;
   border: string;
 } {
-  const { primary, background, text } = tokens.colour;
+  const { background, text } = tokens.colour;
+  /* Not `colour.primary`: see `brandFill`. A button has to be visible as well as legible. */
+  const primary = brandFill(tokens.colour);
   const onPrimary = readableOn(primary, background, text);
 
   switch (tokens.buttonStyle) {
     case 'outline':
       return { background: 'transparent', text: primary, border: primary };
     case 'soft':
-      return { background: mix(primary, background, 0.14), text: primary, border: 'transparent' };
+      /*
+       * A soft button is a tint of the brand, which is fainter still, so its border carries the
+       * boundary contrast instead of its fill. Without one it is a slightly different shade of
+       * page.
+       */
+      return { background: mix(primary, background, 0.14), text: primary, border: primary };
     default:
       return { background: primary, text: onPrimary, border: primary };
   }
