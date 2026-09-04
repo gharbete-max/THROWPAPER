@@ -1,18 +1,11 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { sourceFiles } from './source-files.js';
 import { describe, expect, it } from 'vitest';
 import { TRANSLATED_LOCALES } from './messages/index.js';
 import { LOCALE_CODES } from '@tp/i18n';
 
 const ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-
-function sourceFiles(dir: string): string[] {
-  return readdirSync(dir).flatMap((entry) => {
-    const path = join(dir, entry);
-    if (statSync(path).isDirectory()) return sourceFiles(path);
-    return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry) ? [path] : [];
-  });
-}
 
 /**
  * The twelve catalogues must stay out of the entry chunk.

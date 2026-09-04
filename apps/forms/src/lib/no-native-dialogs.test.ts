@@ -1,5 +1,6 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { sourceFiles } from './source-files.js';
 import { describe, expect, it } from 'vitest';
 
 /**
@@ -25,14 +26,6 @@ import { describe, expect, it } from 'vitest';
  */
 const CALL = /(?<![.\w$])(?:window\.)?(?:confirm|alert|prompt)\s*\(/;
 const SOURCE_ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-
-function sourceFiles(directory: string): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const full = join(directory, entry);
-    if (statSync(full).isDirectory()) return sourceFiles(full);
-    return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry) ? [full] : [];
-  });
-}
 
 describe('native dialogs', () => {
   it('are not used anywhere in the app', () => {

@@ -116,7 +116,7 @@ function SortableField({
   renderEditor: (field: Field) => ReactNode;
 }) {
   const t = useT();
-  const { locale, locales } = useSession();
+  const { contentLocale: locale, locales } = useSession();
   const [confirming, setConfirming] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.id,

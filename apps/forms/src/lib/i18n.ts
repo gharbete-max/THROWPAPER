@@ -15,10 +15,14 @@ import {
  * 240 kB that a respondent reading one form in one language paid for. So this hook asks for the
  * languages it needs, subscribes to their arrival, and re-renders once when they land.
  *
- * The **whole chain** is requested, not just the resolved locale: a Norwegian reader falls back
- * to Danish before English, and a chain with a hole in it silently skips to the end of it.
+ * Only the **first** link of the chain is fetched, not all of it. The chain exists for *content*,
+ * which really can be half-translated; the app's own catalogues cannot be, because
+ * `messages.test.ts` asserts a non-empty string for every key in every shipped language. So the
+ * Danish and Swedish a Norwegian reader falls back to would be downloaded and never read — three
+ * extra catalogues for every Nordic session, and worst on the public form, which is the page the
+ * split was built to keep small.
  *
- * Until they arrive `t()` answers from whatever is loaded, which always includes English. On a
+ * Until it arrives `t()` answers from whatever is loaded, which always includes English. On a
  * cold load in another language that is a brief moment of English rather than a blank screen —
  * the same trade the fallback chain already makes for a half-translated form.
  */
@@ -43,7 +47,9 @@ export function useTranslator(locales: LocaleConfig, locale: string): Translator
   const chain = useMemo(() => resolveChain(locales, locale), [locales, locale]);
 
   useEffect(() => {
-    for (const wanted of chain) void loadCatalogue(wanted);
+    // The rest of the chain is for content, and English is already here. See the note above.
+    const wanted = chain[0];
+    if (wanted) void loadCatalogue(wanted);
   }, [chain]);
 
   return useMemo(

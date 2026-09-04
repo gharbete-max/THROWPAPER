@@ -1987,6 +1987,9 @@ input[type='file']:disabled::file-selector-button {
   block-size: 1.125em;
   flex: 0 0 auto;
   display: block;
+  /* The corner follows the design system like every other rounded thing, rather than a 2 written
+     into the component. The band colours stay literal — those are national flags, not styling. */
+  border-radius: var(--tp-radius-sm);
 }
 
 .langpicker {

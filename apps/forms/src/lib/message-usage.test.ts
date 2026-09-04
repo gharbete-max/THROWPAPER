@@ -1,5 +1,6 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { sourceFiles } from './source-files.js';
 import { describe, expect, it } from 'vitest';
 import { messages } from './messages/all.js';
 
@@ -21,14 +22,6 @@ import { messages } from './messages/all.js';
  * schema-driven ones rather than replacing them.
  */
 const SOURCE_ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-
-function sourceFiles(directory: string): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const full = join(directory, entry);
-    if (statSync(full).isDirectory()) return sourceFiles(full);
-    return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry) ? [full] : [];
-  });
-}
 
 /**
  * `packages/shared` is read too, because a key can be *named* there and rendered here.

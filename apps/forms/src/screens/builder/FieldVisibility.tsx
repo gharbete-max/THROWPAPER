@@ -38,7 +38,7 @@ export function FieldVisibility({
   patch: (changes: Partial<Field>) => void;
 }) {
   const t = useT();
-  const { locale, locales } = useSession();
+  const { contentLocale: locale, locales } = useSession();
 
   // Asked of the schema, not of this object. Zod omits an unset optional, so a key-presence check
   // would answer "no conditions possible" for every field nobody had put a condition on yet.

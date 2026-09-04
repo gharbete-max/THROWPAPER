@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react';
 import type { api } from '@tp/shared';
 import { DEFAULT_FALLBACKS, resolveLocale, type LocaleConfig } from '@tp/i18n';
-import { TRANSLATED_LOCALES } from './messages/index.js';
+import { TRANSLATED_LOCALES, loadCatalogue } from './messages/index.js';
 import { client, restoreSession, setSession } from './api.js';
 import { syncDocumentLanguage } from './theme.js';
 
@@ -32,9 +32,36 @@ interface SessionValue {
    * So: this is the app's own list, and `locales` above stays the organisation's.
    */
   interfaceLocales: LocaleConfig;
+  /**
+   * The language to **author content in**, which is neither of the above on its own.
+   *
+   * `locale` is what the operator reads the buttons in, and since the interface list was split
+   * from the organisation's it can be any of the twelve the app speaks. Writing content in it is
+   * a different question with a different answer: a German-reading operator at a Swedish
+   * association who adds a field would otherwise seed its label in `de-DE` — a language the
+   * organisation does not publish, so the translation editor never shows the box (it lists the
+   * organisation's locales), the completeness report never counts it, and a respondent gets the
+   * German text through `pickText`'s last-ditch "any content at all" branch.
+   *
+   * So: the interface language when the organisation actually publishes in it, and the
+   * organisation's own default otherwise.
+   */
+  contentLocale: string;
   loading: boolean;
   signInWithToken: (token: string) => Promise<void>;
   signOut: () => Promise<void>;
+}
+
+/**
+ * The language to write form content in, given the one being read and what the organisation
+ * publishes.
+ *
+ * A pure function so the rule has somewhere to be tested. The interface language when the
+ * organisation actually publishes in it — an operator working in Swedish at a Swedish
+ * organisation writes Swedish — and the organisation's own default otherwise.
+ */
+export function authoringLocale(interfaceLocale: string, organisation: LocaleConfig): string {
+  return organisation.supported.includes(interfaceLocale) ? interfaceLocale : organisation.default;
 }
 
 const SessionContext = createContext<SessionValue | null>(null);
@@ -98,6 +125,23 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   // Never render in a language the app has not been translated into.
   const resolved = resolveLocale(interfaceLocales, locale);
 
+  // Never author content in a language the organisation does not publish. See `contentLocale`.
+  const contentLocale = authoringLocale(resolved, locales);
+
+  /**
+   * Fetch the authoring language's catalogue, even when nothing is rendering in it.
+   *
+   * The builder seeds a new field's label from the message catalogue — "New question", "Option
+   * 1" — in `contentLocale`. That is not necessarily the language on screen, and the catalogues
+   * are downloaded on demand, so an operator reading the app in English at a Swedish
+   * organisation would find `sv-SE` simply absent and the field created with `label: {}`: the
+   * "missing in every locale" state the seeding exists to prevent. Asking for it here is one
+   * line and closes the window before anybody can click.
+   */
+  useEffect(() => {
+    void loadCatalogue(contentLocale);
+  }, [contentLocale]);
+
   /**
    * The document's own language follows the one being read.
    *
@@ -138,6 +182,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setLocale,
       locales,
       interfaceLocales,
+      contentLocale,
       loading,
       signInWithToken,
       signOut,
@@ -149,6 +194,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setLocale,
       locales,
       interfaceLocales,
+      contentLocale,
       loading,
       signInWithToken,
       signOut,

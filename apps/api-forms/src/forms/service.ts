@@ -53,7 +53,18 @@ export function toFormResponse(
     draftDefinition: definition,
     publishedVersion: form.publishedVersion,
     submissionCount,
-    completeness: formSchemas.definitionCompleteness(definition, supportedLocales),
+    /*
+     * Against the languages **this form** offers, not the organisation's whole list.
+     *
+     * An organisation supporting twelve rarely writes a form in more than two. Reporting the
+     * other ten as incomplete is accurate and useless: it is the state every form is in by
+     * design, so the indicator stops carrying information. `formLocales` is the one place that
+     * decides which languages a form is actually in — the public renderer already asks it.
+     */
+    completeness: formSchemas.definitionCompleteness(
+      definition,
+      formSchemas.formLocales(definition.settings, supportedLocales),
+    ),
     problems: parsed.success
       ? formSchemas.definitionProblems(definition)
       : [{ code: 'definition-invalid', message: 'The saved draft is not a valid form' }],

@@ -244,6 +244,7 @@ function Shell() {
           locales={interfaceLocales.supported}
           current={locale}
           onChange={setLocale}
+          t={t}
         />
         {/* Beside the language, because both are "how this app is presented to me". */}
         <ThemeToggle />

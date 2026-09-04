@@ -43,7 +43,9 @@ const mealField = {
 };
 
 /** Builds and publishes a form the public routes can serve. */
-async function publishForm(options: { capacity?: number | null; fields?: unknown[] } = {}) {
+async function publishForm(
+  options: { capacity?: number | null; fields?: unknown[]; locales?: string[] } = {},
+) {
   const created = await harness.app.inject({
     method: 'POST',
     url: '/v1/forms',
@@ -84,6 +86,7 @@ async function publishForm(options: { capacity?: number | null; fields?: unknown
         settings: {
           ...formSchemas.emptyDefinition.settings,
           confirmationMessage: { 'sv-SE': 'Tack!', 'en-GB': 'Thank you!' },
+          ...(options.locales ? { locales: options.locales } : {}),
         },
       },
     },
@@ -112,6 +115,44 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await harness.close();
+});
+
+describe('the languages a public form offers', () => {
+  /**
+   * The default has to be one of them. Stated as a property, because the failure is silent.
+   *
+   * `resolveChain` only returns locales from `supported`, so a default outside that list
+   * terminates nothing: a visitor whose browser language matches none of the offered ones gets an
+   * empty chain, and `resolveLocale` hands back the default anyway — a language the form does not
+   * publish and the switcher does not list. The page renders with a current locale that has no
+   * row beside it and nothing ticked, and every string comes out of `pickText`'s last-ditch
+   * "any content at all" branch. Nothing throws; it just quietly reads wrong.
+   */
+  it.each([
+    ['the whole organisation', undefined],
+    ['narrowed to the default', ['sv-SE']],
+    ['narrowed away from the default', ['en-GB']],
+    ['narrowed to nothing the organisation supports', ['fr-FR']],
+  ])('offers a default it also lists — %s', async (_case, locales) => {
+    await publishForm({ locales });
+    const body = (await harness.app.inject({ method: 'GET', url: '/public/forms/anmalan' })).json();
+
+    expect(body.supportedLocales.length).toBeGreaterThan(0);
+    expect(body.supportedLocales).toContain(body.defaultLocale);
+  });
+
+  it('keeps the organisation default when the form still offers it', async () => {
+    await publishForm({ locales: ['sv-SE', 'en-GB'] });
+    const body = (await harness.app.inject({ method: 'GET', url: '/public/forms/anmalan' })).json();
+    expect(body.defaultLocale).toBe(testOrganisation.defaultLocale);
+  });
+
+  it('moves the default onto the form when the author narrows the default away', async () => {
+    await publishForm({ locales: ['en-GB'] });
+    const body = (await harness.app.inject({ method: 'GET', url: '/public/forms/anmalan' })).json();
+    expect(body.supportedLocales).toEqual(['en-GB']);
+    expect(body.defaultLocale).toBe('en-GB');
+  });
 });
 
 describe('fetching a public form', () => {
