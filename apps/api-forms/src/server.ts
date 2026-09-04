@@ -340,7 +340,7 @@ let sitePromise: Promise<SiteRenderer | null> | null = null;
 
 interface SiteRenderer {
   isSiteRoute: (path: string) => boolean;
-  render: (path: string, origin: string) => { html: string; head: string; styles: string };
+  render: (path: string, origin: string) => { html: string; head: string };
 }
 
 async function loadSite(appDir: string): Promise<SiteRenderer | null> {
@@ -364,16 +364,11 @@ async function renderSite(appDir: string, path: string, appUrl: string): Promise
 
   try {
     const shell = await readFile(join(appDir, 'index.html'), 'utf8');
-    const { html, head, styles } = site.render(path, appUrl);
+    const { html, head } = site.render(path, appUrl);
     return (
       shell
         .replace(/<title>[^<]*<\/title>/, '')
-        .replace(
-          /<\/head>/,
-          `  ${head}
-    <style>${styles}</style>
-  </head>`,
-        )
+        .replace(/<\/head>/, `  ${head}\n  </head>`)
         // The markup React will hydrate, so the page is readable before any script runs.
         .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
     );

@@ -17,19 +17,18 @@ import { FEATURES } from './site/content.js';
  */
 export interface Rendered {
   html: string;
-  /** Tags for the document head — title, description, canonical, the social card. */
+  /**
+   * Everything for the document head: title, description, canonical, the social card, and the
+   * token block.
+   *
+   * The palette was a third field the caller only ever wrapped in a `<style>` tag. One string of
+   * head content is one thing to splice in, and the tag belongs with the tags.
+   */
   head: string;
-  /** The token block, so the first paint is already branded rather than flashing default. */
-  styles: string;
-}
-
-interface PageMeta {
-  title: string;
-  description: string;
 }
 
 /** What each page calls itself, kept beside the routes it describes rather than in a template. */
-function metaFor(path: string): PageMeta {
+function metaFor(path: string): { title: string; description: string } {
   const feature = FEATURES.find((entry) => path === `/features/${entry.slug}`);
   if (feature) {
     return { title: `${feature.name} — Formwork`, description: feature.summary };
@@ -51,11 +50,11 @@ function escapeAttribute(value: string): string {
 
 export function render(path: string, origin: string): Rendered {
   const meta = metaFor(path);
-  const url = `${origin.replace(/\/$/, '')}${path}`;
+  const site = origin.replace(/\/$/, '');
   const title = escapeAttribute(meta.title);
   const description = escapeAttribute(meta.description);
-  const canonical = escapeAttribute(url);
-  const image = escapeAttribute(`${origin.replace(/\/$/, '')}/icon-512.png`);
+  const canonical = escapeAttribute(`${site}${path}`);
+  const image = escapeAttribute(`${site}/icon-512.png`);
 
   const html = renderToString(
     <StaticRouter location={path}>
@@ -73,17 +72,18 @@ export function render(path: string, origin: string): Rendered {
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:image" content="${image}" />`,
     `<meta name="twitter:card" content="summary" />`,
+    /**
+     * The palette inline, not fetched.
+     *
+     * `main.tsx` injects this at runtime, which is right for the app: it is replaced by the
+     * organisation's own kit a moment later. A visitor to the site has no organisation, so waiting
+     * for JavaScript to paint the colours would mean a flash of unstyled text on the one page
+     * whose whole job is the first impression.
+     */
+    `<style>${toThemedCssBlock(defaultTokens)}</style>`,
   ].join('\n    ');
 
-  /**
-   * The palette inline, not fetched.
-   *
-   * `main.tsx` injects this at runtime, which is right for the app — it is replaced by the
-   * organisation's own kit a moment later. A visitor to the site has no organisation, so waiting
-   * for JavaScript to paint the colours would mean a flash of unstyled text on the one page whose
-   * whole job is the first impression.
-   */
-  return { html, head, styles: toThemedCssBlock(defaultTokens) };
+  return { html, head };
 }
 
 export { SITE_ROUTES, isSiteRoute } from './site/routes.js';
