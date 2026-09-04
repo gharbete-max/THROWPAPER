@@ -590,6 +590,9 @@ export const nbNO: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Den adressen er allerede påmeldt.',
   'public.rejected.full': 'Plassene tok slutt mens du fylte ut skjemaet.',
   'public.rejected.closed': 'Skjemaet stengte mens du fylte det ut.',
+  'public.rejected.offline':
+    'Svarene dine er her fortsatt, men de kunne ikke sendes. Sjekk tilkoblingen og prøv igjen.',
+  'public.rejected.error': 'Noe gikk galt hos oss. Svarene dine er her fortsatt — prøv igjen.',
   'public.notFound': 'Skjemaet ble ikke funnet.',
   'public.yes': 'Ja',
   'public.no': 'Nei',

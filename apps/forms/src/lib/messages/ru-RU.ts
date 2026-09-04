@@ -602,6 +602,9 @@ export const ruRU: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Этот адрес уже зарегистрирован.',
   'public.rejected.full': 'Места закончились, пока вы заполняли форму.',
   'public.rejected.closed': 'Форма закрылась, пока вы её заполняли.',
+  'public.rejected.offline':
+    'Ваши ответы на месте, но отправить их не удалось. Проверьте соединение и попробуйте ещё раз.',
+  'public.rejected.error': 'У нас произошла ошибка. Ваши ответы на месте — попробуйте ещё раз.',
   'public.notFound': 'Форма не найдена.',
   'public.yes': 'Да',
   'public.no': 'Нет',

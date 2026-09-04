@@ -604,6 +604,10 @@ export const frFR: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Cette adresse est déjà inscrite.',
   'public.rejected.full': 'Les places se sont épuisées pendant que vous remplissiez le formulaire.',
   'public.rejected.closed': 'Le formulaire a fermé pendant que vous le remplissiez.',
+  'public.rejected.offline':
+    'Vos réponses sont toujours là, mais elles n’ont pas pu être envoyées. Vérifiez votre connexion et réessayez.',
+  'public.rejected.error':
+    'Un problème est survenu de notre côté. Vos réponses sont toujours là — réessayez.',
   'public.notFound': 'Formulaire introuvable.',
   'public.yes': 'Oui',
   'public.no': 'Non',

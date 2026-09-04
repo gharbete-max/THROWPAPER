@@ -605,6 +605,10 @@ export const deDE: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Diese Adresse ist bereits angemeldet.',
   'public.rejected.full': 'Die Plätze waren aufgebraucht, während Sie ausgefüllt haben.',
   'public.rejected.closed': 'Das Formular wurde geschlossen, während Sie ausgefüllt haben.',
+  'public.rejected.offline':
+    'Ihre Antworten sind noch da, konnten aber nicht gesendet werden. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.',
+  'public.rejected.error':
+    'Bei uns ist etwas schiefgegangen. Ihre Antworten sind noch da — bitte versuchen Sie es erneut.',
   'public.notFound': 'Formular nicht gefunden.',
   'public.yes': 'Ja',
   'public.no': 'Nein',

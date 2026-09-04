@@ -593,6 +593,10 @@ export const fiFI: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Tuo osoite on jo ilmoittautunut.',
   'public.rejected.full': 'Paikat loppuivat, kun täytit tätä.',
   'public.rejected.closed': 'Lomake sulkeutui, kun täytit sitä.',
+  'public.rejected.offline':
+    'Vastauksesi ovat yhä tallessa, mutta niitä ei voitu lähettää. Tarkista yhteytesi ja yritä uudelleen.',
+  'public.rejected.error':
+    'Meidän päässämme meni jokin vikaan. Vastauksesi ovat yhä tallessa — yritä uudelleen.',
   'public.notFound': 'Lomaketta ei löytynyt.',
   'public.yes': 'Kyllä',
   'public.no': 'Ei',

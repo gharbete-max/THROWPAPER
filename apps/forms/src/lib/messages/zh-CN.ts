@@ -582,6 +582,8 @@ export const zhCN: Record<MessageKey, string> = {
   'public.rejected.duplicate': '该地址已经报名过了。',
   'public.rejected.full': '在你填写的过程中名额已经满了。',
   'public.rejected.closed': '在你填写的过程中表单已经关闭。',
+  'public.rejected.offline': '你的回答还在，但没能发送出去。请检查网络连接后重试。',
+  'public.rejected.error': '我们这边出了问题。你的回答还在，请重试。',
   'public.notFound': '未找到表单。',
   'public.yes': '是',
   'public.no': '否',

@@ -591,6 +591,10 @@ export const isIS: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Þetta netfang er þegar skráð.',
   'public.rejected.full': 'Sætin kláruðust á meðan þú fylltir þetta út.',
   'public.rejected.closed': 'Eyðublaðinu var lokað á meðan þú fylltir það út.',
+  'public.rejected.offline':
+    'Svörin þín eru enn hér en ekki tókst að senda þau. Athugaðu nettenginguna og reyndu aftur.',
+  'public.rejected.error':
+    'Eitthvað fór úrskeiðis hjá okkur. Svörin þín eru enn hér — reyndu aftur.',
   'public.notFound': 'Eyðublaðið fannst ekki.',
   'public.yes': 'Já',
   'public.no': 'Nei',

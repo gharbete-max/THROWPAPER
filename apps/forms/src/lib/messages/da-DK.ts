@@ -588,6 +588,9 @@ export const daDK: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Den adresse er allerede tilmeldt.',
   'public.rejected.full': 'Pladserne slap op, mens du udfyldte formularen.',
   'public.rejected.closed': 'Formularen lukkede, mens du udfyldte den.',
+  'public.rejected.offline':
+    'Dine svar er her stadig, men de kunne ikke sendes. Tjek din forbindelse, og prøv igen.',
+  'public.rejected.error': 'Noget gik galt hos os. Dine svar er her stadig — prøv igen.',
   'public.notFound': 'Formularen blev ikke fundet.',
   'public.yes': 'Ja',
   'public.no': 'Nej',

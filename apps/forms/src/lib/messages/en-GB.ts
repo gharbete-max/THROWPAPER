@@ -599,6 +599,10 @@ export const enGB = {
   'public.rejected.duplicate': 'That address has already been registered.',
   'public.rejected.full': 'The places ran out while you were filling this in.',
   'public.rejected.closed': 'The form closed while you were filling this in.',
+  'public.rejected.offline':
+    'Your answers are still here, but they could not be sent. Check your connection and try again.',
+  'public.rejected.error':
+    'Something went wrong at our end. Your answers are still here — please try again.',
   'public.notFound': 'Form not found.',
   'public.yes': 'Yes',
   'public.no': 'No',

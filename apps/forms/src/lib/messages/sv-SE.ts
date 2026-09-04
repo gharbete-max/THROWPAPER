@@ -590,6 +590,9 @@ export const svSE: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Den här adressen har redan anmälts.',
   'public.rejected.full': 'Platserna tog slut medan du fyllde i.',
   'public.rejected.closed': 'Anmälan stängde medan du fyllde i.',
+  'public.rejected.offline':
+    'Dina svar finns kvar, men de kunde inte skickas. Kontrollera din anslutning och försök igen.',
+  'public.rejected.error': 'Något gick fel hos oss. Dina svar finns kvar — försök igen.',
   'public.notFound': 'Formuläret finns inte.',
   'public.yes': 'Ja',
   'public.no': 'Nej',

@@ -192,16 +192,29 @@ export default function PublicForm() {
   async function saveDraft() {
     if (!slug || !form) return;
     setBusy(true);
+    setRejected(null);
     try {
       const response = await fetch(`/api/public/forms/${slug}/draft`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ locale: resolved, values, resumeToken: resumeToken ?? undefined }),
       });
-      if (!response.ok) return;
+      /**
+       * A failed save has to say so.
+       *
+       * It returned silently before: the button finished, no link appeared, and somebody who had
+       * asked to come back later walked away believing their answers were kept. The link is the
+       * only copy — there is nothing else to return to.
+       */
+      if (!response.ok) {
+        setRejected('error');
+        return;
+      }
       const saved = (await response.json()) as { resumeToken: string };
       setResumeToken(saved.resumeToken);
       setResumeLink(`${window.location.origin}/f/${slug}?resume=${saved.resumeToken}`);
+    } catch {
+      setRejected('offline');
     } finally {
       setBusy(false);
     }
@@ -225,7 +238,14 @@ export default function PublicForm() {
           website: '',
         }),
       });
-      const body = await response.json();
+      /**
+       * A body that will not parse is not a reason to lose the answers.
+       *
+       * A gateway timing out in front of the API answers with an HTML error page, and `json()`
+       * throws on it. That threw out of the whole function, so the one status code most likely to
+       * appear under load produced no message at all.
+       */
+      const body = await response.json().catch(() => ({}) as Record<string, unknown>);
 
       if (response.status === 201) {
         setReference(body.reference);
@@ -261,7 +281,29 @@ export default function PublicForm() {
         if (firstBad >= 0) setPage(firstBad);
         return;
       }
+      /**
+       * A fault at our end is not a closed form.
+       *
+       * Anything unrecognised used to fall through to `'closed'`, so a 500 told the visitor "The
+       * form closed while you were filling this in." That is a false statement, and it is the kind
+       * that makes somebody give up rather than press the button again — which is exactly what
+       * would have worked.
+       */
+      if (response.status >= 500) {
+        setRejected('error');
+        return;
+      }
       setRejected(String(body.reason ?? 'closed'));
+    } catch {
+      /**
+       * The connection went, not the answers.
+       *
+       * This is a phone on a venue's wifi at the end of a long form. Nothing here clears `values`,
+       * so everything typed is still on the page and pressing the button again is a real fix —
+       * but only if somebody is told that. Before, the promise rejected into nothing: the button
+       * un-greyed itself and the page said absolutely nothing.
+       */
+      setRejected('offline');
     } finally {
       setBusy(false);
     }
@@ -410,7 +452,16 @@ export default function PublicForm() {
             ))}
           </div>
 
-          {rejected && <p className="status-down">{t(`public.rejected.${rejected}`)}</p>}
+          {/*
+            `alert`, because this appears in response to pressing the button rather than as part of
+            the page. Without it a screen reader announces nothing at all: focus stays on a button
+            whose label has gone back to "Complete", which reads as though the form simply refused.
+          */}
+          {rejected && (
+            <p className="status-down" role="alert">
+              {t(`public.rejected.${rejected}`)}
+            </p>
+          )}
 
           {resumeLink && (
             <div className="card stack">

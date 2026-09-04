@@ -602,6 +602,10 @@ export const esES: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'Esa dirección ya está inscrita.',
   'public.rejected.full': 'Las plazas se agotaron mientras rellenabas el formulario.',
   'public.rejected.closed': 'El formulario cerró mientras lo rellenabas.',
+  'public.rejected.offline':
+    'Tus respuestas siguen aquí, pero no se han podido enviar. Comprueba tu conexión e inténtalo de nuevo.',
+  'public.rejected.error':
+    'Algo ha fallado por nuestra parte. Tus respuestas siguen aquí: inténtalo de nuevo.',
   'public.notFound': 'Formulario no encontrado.',
   'public.yes': 'Sí',
   'public.no': 'No',

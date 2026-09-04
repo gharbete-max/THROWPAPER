@@ -595,6 +595,10 @@ export const jaJP: Record<MessageKey, string> = {
   'public.rejected.duplicate': 'そのアドレスはすでに登録されています。',
   'public.rejected.full': '記入中に定員に達しました。',
   'public.rejected.closed': '記入中にフォームが締め切られました。',
+  'public.rejected.offline':
+    '回答は残っていますが、送信できませんでした。接続を確認してもう一度お試しください。',
+  'public.rejected.error':
+    'こちら側で問題が発生しました。回答は残っていますので、もう一度お試しください。',
   'public.notFound': 'フォームが見つかりません。',
   'public.yes': 'はい',
   'public.no': 'いいえ',
