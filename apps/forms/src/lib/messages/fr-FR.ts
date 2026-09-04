@@ -568,6 +568,8 @@ export const frFR: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Carte invalide',
 
   'attendance.title': 'Présence',
+  'attendance.loadFailed': 'La liste des présences n’a pas pu être chargée.',
+  'attendance.retry': 'Réessayer',
   'attendance.registered': 'Inscrits',
   'attendance.checkedIn': 'Arrivés',
   'attendance.noShow': 'Absents',

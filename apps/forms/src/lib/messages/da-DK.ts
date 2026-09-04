@@ -552,6 +552,8 @@ export const daDK: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Ugyldigt kort',
 
   'attendance.title': 'Fremmøde',
+  'attendance.loadFailed': 'Deltagerlisten kunne ikke hentes.',
+  'attendance.retry': 'Prøv igen',
   'attendance.registered': 'Tilmeldte',
   'attendance.checkedIn': 'Checket ind',
   'attendance.noShow': 'Udeblevne',

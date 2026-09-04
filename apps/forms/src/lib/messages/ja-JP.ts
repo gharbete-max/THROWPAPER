@@ -559,6 +559,8 @@ export const jaJP: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': '無効な受付票',
 
   'attendance.title': '出席',
+  'attendance.loadFailed': '出席リストを読み込めませんでした。',
+  'attendance.retry': 'もう一度試す',
   'attendance.registered': '申込済み',
   'attendance.checkedIn': '受付済み',
   'attendance.noShow': '未到着',

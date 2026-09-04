@@ -566,6 +566,8 @@ export const esES: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Tarjeta no válida',
 
   'attendance.title': 'Asistencia',
+  'attendance.loadFailed': 'No se ha podido cargar la lista de asistencia.',
+  'attendance.retry': 'Inténtalo de nuevo',
   'attendance.registered': 'Inscritos',
   'attendance.checkedIn': 'Registrados',
   'attendance.noShow': 'No presentados',

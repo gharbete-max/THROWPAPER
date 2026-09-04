@@ -563,6 +563,8 @@ export const enGB = {
   'checkin.outcome.bad-signature': 'Invalid card',
 
   'attendance.title': 'Attendance',
+  'attendance.loadFailed': 'The attendance list could not be loaded.',
+  'attendance.retry': 'Try again',
   'attendance.registered': 'Registered',
   'attendance.checkedIn': 'Checked in',
   'attendance.noShow': 'No-shows',

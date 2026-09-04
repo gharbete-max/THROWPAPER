@@ -555,6 +555,8 @@ export const isIS: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Ógilt kort',
 
   'attendance.title': 'Mæting',
+  'attendance.loadFailed': 'Ekki tókst að hlaða mætingarlistann.',
+  'attendance.retry': 'Reyna aftur',
   'attendance.registered': 'Skráðir',
   'attendance.checkedIn': 'Innritaðir',
   'attendance.noShow': 'Mættu ekki',

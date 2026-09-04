@@ -556,6 +556,8 @@ export const fiFI: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Virheellinen kortti',
 
   'attendance.title': 'Osallistuminen',
+  'attendance.loadFailed': 'Osallistujalistaa ei voitu ladata.',
+  'attendance.retry': 'Yritä uudelleen',
   'attendance.registered': 'Ilmoittautuneet',
   'attendance.checkedIn': 'Kirjattu sisään',
   'attendance.noShow': 'Ei saapuneet',

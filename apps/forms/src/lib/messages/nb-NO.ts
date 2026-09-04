@@ -554,6 +554,8 @@ export const nbNO: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Ugyldig kort',
 
   'attendance.title': 'Oppmøte',
+  'attendance.loadFailed': 'Deltakerlisten kunne ikke lastes.',
+  'attendance.retry': 'Prøv igjen',
   'attendance.registered': 'Påmeldte',
   'attendance.checkedIn': 'Sjekket inn',
   'attendance.noShow': 'Ikke møtt',

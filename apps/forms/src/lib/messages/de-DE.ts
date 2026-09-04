@@ -569,6 +569,8 @@ export const deDE: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Ungültige Karte',
 
   'attendance.title': 'Teilnahme',
+  'attendance.loadFailed': 'Die Teilnehmerliste konnte nicht geladen werden.',
+  'attendance.retry': 'Erneut versuchen',
   'attendance.registered': 'Angemeldet',
   'attendance.checkedIn': 'Eingecheckt',
   'attendance.noShow': 'Nicht erschienen',

@@ -546,6 +546,8 @@ export const zhCN: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': '无效凭证',
 
   'attendance.title': '出席',
+  'attendance.loadFailed': '无法加载出席名单。',
+  'attendance.retry': '重试',
   'attendance.registered': '已报名',
   'attendance.checkedIn': '已签到',
   'attendance.noShow': '未到场',

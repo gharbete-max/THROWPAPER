@@ -566,6 +566,8 @@ export const ruRU: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Недействительный билет',
 
   'attendance.title': 'Посещаемость',
+  'attendance.loadFailed': 'Не удалось загрузить список участников.',
+  'attendance.retry': 'Попробовать ещё раз',
   'attendance.registered': 'Зарегистрированы',
   'attendance.checkedIn': 'Отмечены',
   'attendance.noShow': 'Не пришли',

@@ -554,6 +554,8 @@ export const svSE: Record<MessageKey, string> = {
   'checkin.outcome.bad-signature': 'Ogiltigt kort',
 
   'attendance.title': 'Närvaro',
+  'attendance.loadFailed': 'Närvarolistan kunde inte hämtas.',
+  'attendance.retry': 'Försök igen',
   'attendance.registered': 'Anmälda',
   'attendance.checkedIn': 'Incheckade',
   'attendance.noShow': 'Uteblivna',
