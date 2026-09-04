@@ -827,3 +827,136 @@ export const invoiceLines = pgTable(
   },
   (table) => [index('invoice_lines_invoice_idx').on(table.invoiceId)],
 );
+
+/**
+ * A cost the issuer defines once and puts on invoices.
+ *
+ * There is no list of charge types in this product. Rent is one of these, cable television is one
+ * of these, a storage cupboard and a second parking space are two more, and a gym's joining fee is
+ * one as well. The landlord writes their own, because the alternative is a fixed set that is wrong
+ * for the second customer and every customer after them.
+ *
+ * The amount here is a **default**, not the amount. Rent differs per tenant and is set on the
+ * tenancy; cable television is usually the same for everybody and is not. Both cases fall out of
+ * the same table without a flag saying which one this is.
+ */
+export const chargeTypes = pgTable(
+  'charge_types',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /** Localised, because it is printed on an invoice somebody reads in their own language. */
+    name: jsonb('name').$type<Record<string, string>>().notNull(),
+    /** Minor units. What this costs unless a recipient has their own figure. */
+    defaultUnitAmountMinor: bigint('default_unit_amount_minor', { mode: 'bigint' }).notNull(),
+    /** Basis points: 2500 is 25%. Residential rent is exempt in Sweden, so zero is ordinary. */
+    vatRateBasisPoints: integer('vat_rate_basis_points').notNull().default(0),
+    /**
+     * Retired, not deleted.
+     *
+     * Invoices copy their lines, so removing a charge type cannot corrupt an issued invoice — but
+     * it can make last year's book unreadable to somebody trying to work out what a line was.
+     */
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    position: integer('position').notNull().default(0),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('charge_types_org_idx').on(table.organisationId)],
+);
+
+/**
+ * Somebody who gets invoiced, month after month: a tenant, a member, a client on a retainer.
+ *
+ * Kept because rent recurs. Retyping forty names, addresses and amounts every month is not a
+ * workflow, and the batch endpoint accepting them inline is only reasonable for a one-off run.
+ *
+ * An invoice still copies the name and address at the moment it is issued. This row is who they
+ * are now; the invoice is who they were in March.
+ */
+export const billingRecipients = pgTable(
+  'billing_recipients',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    email: text('email'),
+    address: text('address'),
+    /** The issuer's own handle for them: an apartment number, a member number, a customer number. */
+    reference: text('reference'),
+    /**
+     * Which language their invoice is written in.
+     *
+     * Held on the recipient rather than guessed from the organisation, because a property has
+     * tenants who do not all read Swedish and an invoice is the wrong document to make somebody
+     * puzzle over.
+     */
+    locale: text('locale'),
+    /** Moved out, left the club. Their invoices stay; they stop appearing in new runs. */
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('billing_recipients_org_idx').on(table.organisationId),
+    /**
+     * One apartment number per organisation, when one is given.
+     *
+     * Partial, because a reference is optional: a landlord numbers flats, a gym may not number
+     * members at all, and a unique index over nulls would refuse the second member with none.
+     */
+    uniqueIndex('billing_recipients_org_reference_idx')
+      .on(table.organisationId, table.reference)
+      .where(sql`reference is not null`),
+  ],
+);
+
+/**
+ * A charge that applies to this recipient every time an invoice is made for them.
+ *
+ * This is the standing arrangement: this tenant pays this rent, has cable television, and rents the
+ * second parking space. A run over forty tenants reads these and needs nothing typed.
+ *
+ * ## Why the amount can be null
+ *
+ * Null means "whatever the charge type currently says". That is what makes raising cable television
+ * for every tenant one edit instead of forty. Rent, which differs per tenant, carries its own
+ * figure here and ignores the default.
+ *
+ * The risk is real and worth stating: changing a default silently changes what every recipient
+ * relying on it will be billed next time. It cannot alter an invoice that has already been issued,
+ * because invoices copy their lines — so the blast radius is the next run, which is a run somebody
+ * has to confirm before it sends.
+ */
+export const recipientCharges = pgTable(
+  'recipient_charges',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    recipientId: uuid('recipient_id')
+      .notNull()
+      .references(() => billingRecipients.id, { onDelete: 'cascade' }),
+    chargeTypeId: uuid('charge_type_id')
+      .notNull()
+      .references(() => chargeTypes.id, { onDelete: 'restrict' }),
+    /** Null defers to the charge type's default. See above for what that costs. */
+    unitAmountMinor: bigint('unit_amount_minor', { mode: 'bigint' }),
+    /**
+     * Thousandths, so half a parking space between two flats is expressible.
+     *
+     * The default is written as SQL rather than as `1000n`: drizzle-kit serialises its schema
+     * snapshot to JSON, and `JSON.stringify` refuses a bigint outright. The literal below is what
+     * reaches the column definition either way.
+     */
+    quantityThousandths: bigint('quantity_thousandths', { mode: 'bigint' })
+      .notNull()
+      .default(sql`1000`),
+    position: integer('position').notNull().default(0),
+  },
+  (table) => [
+    index('recipient_charges_recipient_idx').on(table.recipientId),
+    /** The same charge twice on one recipient is a duplicate line nobody meant to add. */
+    uniqueIndex('recipient_charges_unique_idx').on(table.recipientId, table.chargeTypeId),
+  ],
+);
