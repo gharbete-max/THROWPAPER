@@ -45,6 +45,12 @@ typography:
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: 'normal'
+  mono:
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace'
+    fontSize: '12.8px'
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: 'normal'
 rounded:
   sm: '5px'
   md: '10px'
@@ -151,11 +157,29 @@ leading with a CSS generic silently breaks both.
 email, where a quote ends the attribute early. Multi-word families are written unquoted.
 
 The scale is computed from `baseSize` (16px) and `scaleRatio` (1.25), so changing the ratio in the
-Brand Kit moves every heading together: `xs` 10.24 · `sm` 12.8 · `base` 16 · `lg` 20 · `xl` 25 ·
-`2xl` 31.25 · `3xl` 39.06.
+Brand Kit moves every heading together: `xs` 10.24 · `sm` 12.8 · **`ui` 14.31** · `base` 16 ·
+`lg` 20 · `xl` 25 · `2xl` 31.25 · `3xl` 39.06.
+
+**`ui` is a half step, and it exists because interface text needed one.** The ramp is built for
+display type, where 12.8 to 16 is a clean jump; a table row, a button label, a badge and a help line
+all live inside that gap. The stylesheet had been solving it by hand — 21 of its 33 hand-written
+sizes sat between 12 and 15px, on four different values no rule could reproduce. `ratio ** -0.5` is
+what they were all approximating. It is derived rather than fixed at 14px so it stays tied to the
+brand: widening the ratio opens the gap downward, and the step drops with it — 13.06 at a ratio of
+1.5 — keeping interface text in proportion to the headings instead of a constant 14px beside them.
+
+**Three sizes are deliberately off the ramp**, because they are not reading sizes: the two glyphs
+centred in a fixed 48px and 44px circle, which are sized to the circle and would burst it if a brand
+raised the ratio, and the landing page's fluid `clamp()` headline.
 
 Body sits at 1.55 line-height; headings drop to 1.15 with `-0.015em` tracking, because display type
 wants less leading than body text rather than the same.
+
+**One monospace face, for two things that are not prose.** The hex field in the Brand Kit uses it so
+the digits keep their columns while somebody types, and the `⌘K` hint uses it because a key cap is
+a key cap. It is written in CSS rather than added to `TokenSet`: that schema is on the wire and in
+every brand kit row, and a customer choosing their own monospace for a hex field is not a setting
+anybody wants. Both places share one stack — they had drifted to two.
 
 ## Layout
 

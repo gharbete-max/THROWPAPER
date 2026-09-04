@@ -20,6 +20,51 @@
         "value": "cubic-bezier(0.5, -0.4, 0.3, 1.6)",
         "createdAt": "2026-09-03T17:21:33.952Z",
         "reason": "literal motion: a throwing arm winds up past its start and follows through past its end"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "createdAt": "2026-09-04T00:42:51.316Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(0 0 0 / 0.4)",
+        "createdAt": "2026-09-04T00:42:51.394Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(0 0 0 / 0.14)",
+        "createdAt": "2026-09-04T00:42:51.492Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(0 0 0 / 0.45)",
+        "createdAt": "2026-09-04T00:42:51.566Z"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "22px",
+        "createdAt": "2026-09-04T00:44:19.176Z"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "20px",
+        "createdAt": "2026-09-04T00:44:19.240Z"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "2.4rem",
+        "createdAt": "2026-09-04T00:44:19.340Z"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "2px",
+        "createdAt": "2026-09-04T00:44:19.440Z"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "sfmono-regular",
+        "createdAt": "2026-09-04T00:44:19.534Z"
       }
     ]
   }

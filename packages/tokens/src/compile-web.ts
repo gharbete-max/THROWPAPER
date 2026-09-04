@@ -52,6 +52,19 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   const { baseSize, scaleRatio } = tokens.typography;
   vars['--tp-text-xs'] = typeScale(baseSize, scaleRatio, -2);
   vars['--tp-text-sm'] = typeScale(baseSize, scaleRatio, -1);
+  /**
+   * A half step, because interface text needs one and a 1.25 ratio does not offer one.
+   *
+   * The ramp is built for display type, where 12.8 → 16 is a clean jump. Interface chrome lives in
+   * that gap: a table row, a button label, a badge, a help line. The stylesheet proved it — 21 of
+   * its 33 hand-written sizes sat between 12 and 15px, reaching for a step that did not exist and
+   * landing on four different values that no rule could reproduce.
+   *
+   * `ratio ** -0.5` is 14.31px at the shipped ratio, which is what those declarations were
+   * approximating. Deriving it rather than fixing it at 14 keeps it tied to the brand: raise the
+   * ratio and the gap widens, and this widens with it.
+   */
+  vars['--tp-text-ui'] = typeScale(baseSize, scaleRatio, -0.5);
   vars['--tp-text-base'] = baseSize;
   vars['--tp-text-lg'] = typeScale(baseSize, scaleRatio, 1);
   vars['--tp-text-xl'] = typeScale(baseSize, scaleRatio, 2);

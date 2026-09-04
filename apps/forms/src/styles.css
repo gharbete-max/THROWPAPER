@@ -92,7 +92,7 @@ fieldset {
 legend {
   padding: 0 var(--tp-spacing-unit);
   color: var(--tp-colour-muted);
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
 }
 
 /* --- Buttons --------------------------------------------------------------
@@ -195,7 +195,7 @@ a:focus-visible {
   border-radius: var(--tp-radius);
   background: var(--tp-colour-surface);
   color: var(--tp-colour-muted);
-  font-size: 0.8125rem;
+  font-size: var(--tp-text-sm);
 }
 
 .badge--warning {
@@ -205,7 +205,7 @@ a:focus-visible {
 }
 
 .small {
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
 }
 
 .status-warning {
@@ -273,7 +273,7 @@ a:focus-visible {
   border: 0;
   background: transparent;
   color: var(--tp-colour-muted);
-  font-size: 1.1rem;
+  font-size: var(--tp-text-base);
   padding: 0 var(--tp-spacing-unit);
 }
 
@@ -303,7 +303,7 @@ a:focus-visible {
 .grid {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9375rem;
+  font-size: var(--tp-text-ui);
 }
 
 .grid th,
@@ -346,7 +346,7 @@ a:focus-visible {
 }
 
 .checkin__input {
-  font-size: 1.5rem;
+  font-size: var(--tp-text-xl);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -374,17 +374,17 @@ a:focus-visible {
 }
 
 .verdict__headline {
-  font-size: 2rem;
+  font-size: var(--tp-text-2xl);
   line-height: 1.1;
 }
 
 .verdict__name {
-  font-size: 1.25rem;
+  font-size: var(--tp-text-lg);
 }
 
 .verdict__meta {
   opacity: 0.85;
-  font-size: 0.9375rem;
+  font-size: var(--tp-text-ui);
 }
 
 .stats {
@@ -397,14 +397,14 @@ a:focus-visible {
 }
 
 .stat__value {
-  font-size: 2rem;
+  font-size: var(--tp-text-2xl);
   font-weight: var(--tp-type-weight-bold);
   line-height: 1;
   color: var(--tp-colour-primary);
 }
 
 .stat__label {
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
   color: var(--tp-colour-muted);
 }
 
@@ -418,7 +418,7 @@ a:focus-visible {
   padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
   background: var(--tp-colour-warning);
   color: var(--tp-colour-background);
-  font-size: 0.9375rem;
+  font-size: var(--tp-text-ui);
   font-weight: var(--tp-type-weight-bold);
 }
 
@@ -532,11 +532,11 @@ textarea {
   }
 
   .checkin__input {
-    font-size: 1.75rem;
+    font-size: var(--tp-text-xl);
   }
 
   .verdict__headline {
-    font-size: 2.5rem;
+    font-size: var(--tp-text-3xl);
   }
 
   .grid th,
@@ -556,7 +556,7 @@ textarea {
   }
 
   .verdict__headline {
-    font-size: 1.5rem;
+    font-size: var(--tp-text-xl);
   }
 }
 
@@ -1295,7 +1295,7 @@ input[type='range'] {
 
 /* A timestamp is not a headline number, so it does not get headline size. */
 .stat__value--small {
-  font-size: 1rem;
+  font-size: var(--tp-text-base);
   font-weight: var(--tp-type-weight-regular);
 }
 
@@ -1371,7 +1371,7 @@ input[type='range'] {
 }
 
 .rating__glyph {
-  font-size: 1.75rem;
+  font-size: var(--tp-text-xl);
   line-height: 1;
   /* A star is wider than it is tall in most fonts; a fixed box stops the row jittering on hover. */
   min-inline-size: 1.75rem;
@@ -1472,7 +1472,7 @@ input[type='range'] {
 }
 
 .theme__label {
-  font-size: 0.75rem;
+  font-size: var(--tp-text-sm);
 }
 
 .theme__input {
@@ -1484,7 +1484,7 @@ input[type='range'] {
   align-self: flex-start;
   padding: 0.15rem 0.6rem;
   border: 1px solid;
-  font-size: 0.75rem;
+  font-size: var(--tp-text-sm);
 }
 
 /* ==========================================================================
@@ -1534,7 +1534,7 @@ input[type='range'] {
   display: inline-flex;
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 1.25);
-  font-size: 1.05rem;
+  font-size: var(--tp-text-base);
 }
 
 /* While it unfolds, the creases are what say it is paper. */
@@ -1582,7 +1582,7 @@ input[type='range'] {
   margin: 0;
   font-family: var(--tp-type-heading-font);
   font-weight: var(--tp-type-weight-bold);
-  font-size: 1.5rem;
+  font-size: var(--tp-text-xl);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   opacity: 0;
@@ -1748,7 +1748,7 @@ input[type='file'] {
   background: var(--tp-colour-background);
   color: var(--tp-colour-muted);
   font-family: var(--tp-type-body-font);
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
   cursor: pointer;
 }
 
@@ -1765,7 +1765,7 @@ input[type='file']::file-selector-button {
   background: var(--tp-colour-surface);
   color: var(--tp-colour-primary);
   font-family: var(--tp-type-body-font);
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
   font-weight: var(--tp-type-weight-bold);
   cursor: pointer;
   transition:
@@ -1814,7 +1814,7 @@ input[type='file']:disabled::file-selector-button {
   background: none;
   color: var(--tp-colour-muted);
   font-family: var(--tp-type-body-font);
-  font-size: 0.9375rem;
+  font-size: var(--tp-text-ui);
   cursor: pointer;
   transition:
     color 120ms ease,
@@ -2006,7 +2006,7 @@ input[type='file']:disabled::file-selector-button {
   background: var(--tp-colour-surface);
   color: var(--tp-colour-text);
   font-family: var(--tp-type-body-font);
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
   cursor: pointer;
   /* A double-tap here is somebody tapping twice, not asking to zoom. */
   touch-action: manipulation;
@@ -2057,7 +2057,7 @@ input[type='file']:disabled::file-selector-button {
   background: none;
   color: inherit;
   font-family: var(--tp-type-body-font);
-  font-size: 0.9375rem;
+  font-size: var(--tp-text-ui);
   text-align: start;
   cursor: pointer;
   touch-action: manipulation;
@@ -2214,7 +2214,7 @@ h4 {
 
 .card h2 {
   margin-block: 0 calc(var(--tp-spacing-unit) * 0.25);
-  font-size: 1.25rem;
+  font-size: var(--tp-text-lg);
 }
 
 /* Long prose has a comfortable measure even inside a wide shell. Sixty to seventy-five characters
@@ -2302,7 +2302,7 @@ h4 {
 
 /* Who you are is not a control. It was reading at the same weight as the sections. */
 .topline__who {
-  font-size: 0.8125rem;
+  font-size: var(--tp-text-sm);
   white-space: nowrap;
 }
 
@@ -2319,7 +2319,7 @@ h4 {
 .button {
   padding-block: calc(var(--tp-spacing-unit) * 0.75);
   border-radius: var(--tp-radius);
-  font-size: 0.9375rem;
+  font-size: var(--tp-text-ui);
   letter-spacing: 0.005em;
   transition:
     background-color var(--tp-motion-fast) var(--tp-ease),
@@ -2515,13 +2515,13 @@ h4 {
 .demo-banner {
   gap: var(--tp-spacing-unit);
   padding-block: calc(var(--tp-spacing-unit) * 0.5);
-  font-size: 0.8125rem;
+  font-size: var(--tp-text-sm);
   font-weight: var(--tp-type-weight-regular);
   line-height: 1.35;
 }
 
 .demo-banner__action {
-  font-size: 0.8125rem;
+  font-size: var(--tp-text-sm);
   font-weight: var(--tp-type-weight-bold);
   padding-block: 1px;
   white-space: nowrap;
@@ -2599,7 +2599,7 @@ h4 {
  * grouping. Compact enough for four abreast, still 40px tall for a thumb. */
 .card__actions .button {
   padding-inline: calc(var(--tp-spacing-unit) * 1.1);
-  font-size: 0.875rem;
+  font-size: var(--tp-text-ui);
 }
 
 .card__actions .button .icon {
@@ -2618,7 +2618,7 @@ h4 {
   padding: 1px calc(var(--tp-spacing-unit) * 0.75);
   border: var(--tp-border-width) solid transparent;
   font-weight: var(--tp-type-weight-bold);
-  font-size: 0.75rem;
+  font-size: var(--tp-text-sm);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -2678,7 +2678,7 @@ h4 {
    * thumb, and the icon column stays aligned so the eye can run down it. */
   min-block-size: 40px;
   padding-inline: calc(var(--tp-spacing-unit) * 0.9);
-  font-size: 0.8125rem;
+  font-size: var(--tp-text-sm);
 }
 
 /* The canvas is the thing being worked on, so it says so — a slightly stronger edge than the
@@ -3377,7 +3377,7 @@ h4 {
   border-radius: var(--tp-radius-sm);
   color: var(--tp-colour-muted);
   font-size: var(--tp-text-xs);
-  font-family: ui-monospace, monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @media (min-width: 60rem) and (pointer: fine) {
@@ -4194,7 +4194,7 @@ body:has(.app) > #root {
   gap: calc(var(--tp-spacing-unit) * 1.25);
   color: var(--tp-colour-text);
   text-decoration: none;
-  font-size: 1.05rem;
+  font-size: var(--tp-text-base);
 }
 
 .site__nav {
