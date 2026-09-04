@@ -670,3 +670,160 @@ export const journalLines = pgTable(
     ),
   ],
 );
+
+export const invoiceStatus = pgEnum('invoice_status', [
+  'draft',
+  'issued',
+  'sent',
+  'paid',
+  'cancelled',
+]);
+
+/**
+ * A run that produces many invoices at once: a month's rent across a property.
+ *
+ * Separate from the invoices themselves because the run is a thing an operator manages — they name
+ * it, check it, send it, and look at what happened afterwards. Forty invoices with no record of
+ * having been issued together is forty rows nobody can reason about the morning a tenant calls.
+ */
+export const invoiceBatches = pgTable(
+  'invoice_batches',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+    /**
+     * When the run was actually sent, and never before it was.
+     *
+     * Null means issued but not sent, which is the state rule 7 requires to exist: creating and
+     * sending are two decisions, and forty emails with a wrong amount is not a mistake anybody can
+     * take back.
+     */
+    sentAt: timestamp('sent_at', { withTimezone: true }),
+    /** A send that went to the operator instead of to the tenants. Rule 7's test mode. */
+    lastTestAt: timestamp('last_test_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('invoice_batches_org_idx').on(table.organisationId)],
+);
+
+/**
+ * An invoice.
+ *
+ * ## Why the recipient is copied rather than referenced
+ *
+ * The name and address are held on the row, not looked up. An invoice is a record of what was sent
+ * on a day. A tenant who moves in March must not silently rewrite the address on January's
+ * invoice, and a name corrected today must not change what the books say was issued.
+ *
+ * ## Why the OCR is a column with a unique index
+ *
+ * The reference is what a bank matches a payment on. Two invoices sharing one is two payments
+ * nobody can tell apart, and the failure surfaces weeks later in a reconciliation that will not
+ * balance. `ocr.ts` builds a well-formed reference; only this index can promise it has never been
+ * used before, so the promise lives here rather than in the code that generates it.
+ */
+export const invoices = pgTable(
+  'invoices',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    batchId: uuid('batch_id').references(() => invoiceBatches.id, { onDelete: 'set null' }),
+    /** Sequential per organisation, never reused, and what the OCR is built from. */
+    number: integer('number').notNull(),
+    ocr: text('ocr').notNull(),
+    status: invoiceStatus('status').notNull().default('draft'),
+    currency: text('currency').notNull().default('SEK'),
+
+    recipientName: text('recipient_name').notNull(),
+    recipientEmail: text('recipient_email'),
+    recipientAddress: text('recipient_address'),
+    /** The issuer's own reference: an apartment number, a member number, a customer number. */
+    recipientReference: text('recipient_reference'),
+
+    subject: jsonb('subject').$type<Record<string, string>>().notNull(),
+    /** Inclusive, and only where the charge covers a period. Rent does; a repair does not. */
+    periodStart: date('period_start'),
+    periodEnd: date('period_end'),
+    issuedOn: date('issued_on').notNull(),
+    dueOn: date('due_on').notNull(),
+
+    /**
+     * Minor units, as bigint. Rule 5.
+     *
+     * Stored as well as derivable, because an invoice is a record: recomputing a total from the
+     * lines years later, under whatever rounding the code has by then, is not the same as reading
+     * what was actually billed.
+     */
+    netMinor: bigint('net_minor', { mode: 'bigint' }).notNull(),
+    vatMinor: bigint('vat_minor', { mode: 'bigint' }).notNull(),
+    totalMinor: bigint('total_minor', { mode: 'bigint' }).notNull(),
+
+    paymentMethod: text('payment_method').notNull(),
+    paymentAccount: text('payment_account').notNull(),
+
+    /**
+     * The token in the public link, which is deliberately not the OCR.
+     *
+     * The OCR is printed on the invoice, quoted on bank statements and readable by anyone who
+     * handles the payment. Using it to open a web page would mean everybody in that chain can read
+     * the invoice behind it. This is separate, random and long.
+     */
+    publicToken: text('public_token').notNull(),
+
+    sentAt: timestamp('sent_at', { withTimezone: true }),
+    paidAt: timestamp('paid_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    /** The promise `ocr.ts` cannot make: this reference belongs to exactly one invoice. */
+    uniqueIndex('invoices_org_ocr_idx').on(table.organisationId, table.ocr),
+    /** And the number it was built from, so a repeat is impossible rather than unlikely. */
+    uniqueIndex('invoices_org_number_idx').on(table.organisationId, table.number),
+    /** The public link is looked up by token alone, so it is unique across every organisation. */
+    uniqueIndex('invoices_public_token_idx').on(table.publicToken),
+    index('invoices_org_status_idx').on(table.organisationId, table.status),
+    index('invoices_batch_idx').on(table.batchId),
+    /**
+     * The totals have to agree in the database, not only in the code that wrote them. A migration
+     * or a repair script does not go through the domain.
+     */
+    check(
+      'invoices_total_is_net_plus_vat',
+      sql`${table.totalMinor} = ${table.netMinor} + ${table.vatMinor}`,
+    ),
+    check('invoices_due_not_before_issue', sql`${table.dueOn} >= ${table.issuedOn}`),
+  ],
+);
+
+/**
+ * One line on an invoice: rent, cable television, a parking space.
+ *
+ * The line's own amount is stored rather than recomputed, for the same reason the invoice total is.
+ * What a tenant was billed for their parking space in March is a fact about March.
+ */
+export const invoiceLines = pgTable(
+  'invoice_lines',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    invoiceId: uuid('invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'cascade' }),
+    /** Localised: a tenant reads their invoice in their own language. */
+    description: jsonb('description').$type<Record<string, string>>().notNull(),
+    /** Thousandths, so half a month and a third of a shared meter stay exact. */
+    quantityThousandths: bigint('quantity_thousandths', { mode: 'bigint' }).notNull(),
+    unitAmountMinor: bigint('unit_amount_minor', { mode: 'bigint' }).notNull(),
+    amountMinor: bigint('amount_minor', { mode: 'bigint' }).notNull(),
+    /** Basis points: 2500 is 25%. Rent is usually exempt, which is why zero is ordinary here. */
+    vatRateBasisPoints: integer('vat_rate_basis_points').notNull().default(0),
+    vatMinor: bigint('vat_minor', { mode: 'bigint' }).notNull(),
+    position: integer('position').notNull().default(0),
+  },
+  (table) => [index('invoice_lines_invoice_idx').on(table.invoiceId)],
+);
