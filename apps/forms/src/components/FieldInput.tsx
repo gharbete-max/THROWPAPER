@@ -232,6 +232,22 @@ export function FieldInput({
   const required = 'required' in field ? field.required : false;
 
   /**
+   * The help text and the error, tied to the control that owns them.
+   *
+   * Both were rendered as siblings of the input and referenced by nothing. Sighted people read
+   * them because they sit underneath; a screen reader announces the label, the type and the
+   * required state, and stops. So on a form that has just refused to submit, the field somebody is
+   * focused on tells them nothing about why — which is the one moment the message exists for.
+   *
+   * `aria-invalid` matters as much as the text: without it the control is not reported as being in
+   * an error state at all, only as a field that happens to have a red sentence near it.
+   */
+  const helpId = help ? `${field.id}-help` : undefined;
+  const errorId = error ? `${field.id}-error` : undefined;
+  const describedBy = [helpId, errorId].filter(Boolean).join(' ') || undefined;
+  const invalid = error ? true : undefined;
+
+  /**
    * Grouped choices are a `fieldset` with a `legend`, not a `label` wrapped round several
    * inputs. A label may only name one control; wrapping a group makes clicking the question text
    * silently tick the first option, and leaves a screen reader announcing the wrong thing.
@@ -243,7 +259,11 @@ export function FieldInput({
       : new Set(value === null || value === undefined ? [] : [String(value)]);
 
     return (
-      <fieldset className={`choice choice--${group.appearance}`}>
+      <fieldset
+        className={`choice choice--${group.appearance}`}
+        aria-describedby={describedBy}
+        aria-invalid={invalid}
+      >
         <legend>
           {label}
           {required && ' *'}
@@ -281,8 +301,16 @@ export function FieldInput({
           ))}
         </div>
 
-        {help && <span className="small muted">{help}</span>}
-        {error && <span className="small status-down">{error}</span>}
+        {help && (
+          <span className="small muted" id={helpId}>
+            {help}
+          </span>
+        )}
+        {error && (
+          <span className="small status-down" id={errorId}>
+            {error}
+          </span>
+        )}
       </fieldset>
     );
   }
@@ -298,12 +326,16 @@ export function FieldInput({
         <textarea
           rows={field.rows ?? 4}
           required={required}
+          aria-describedby={describedBy}
+          aria-invalid={invalid}
           placeholder={placeholder}
           value={String(value ?? '')}
           onChange={(event) => onChange(field.key, event.target.value)}
         />
       ) : field.type === 'single_select' ? (
         <select
+          aria-describedby={describedBy}
+          aria-invalid={invalid}
           value={String(value ?? '')}
           onChange={(event) => onChange(field.key, event.target.value)}
         >
@@ -339,6 +371,8 @@ export function FieldInput({
         </span>
       ) : field.type === 'yes_no' ? (
         <select
+          aria-describedby={describedBy}
+          aria-invalid={invalid}
           value={value === true ? 'true' : value === false ? 'false' : ''}
           onChange={(event) => onChange(field.key, event.target.value === 'true')}
         >
@@ -350,14 +384,24 @@ export function FieldInput({
         <input
           type={inputType(field.type)}
           required={required}
+          aria-describedby={describedBy}
+          aria-invalid={invalid}
           placeholder={placeholder}
           value={String(value ?? '')}
           onChange={(event) => onChange(field.key, event.target.value)}
         />
       )}
 
-      {help && <span className="small muted">{help}</span>}
-      {error && <span className="small status-down">{error}</span>}
+      {help && (
+        <span className="small muted" id={helpId}>
+          {help}
+        </span>
+      )}
+      {error && (
+        <span className="small status-down" id={errorId}>
+          {error}
+        </span>
+      )}
     </label>
   );
 }
