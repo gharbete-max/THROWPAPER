@@ -18,3 +18,21 @@ export function isSiteRoute(path: string): boolean {
   const normal = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
   return SITE_ROUTES.includes(normal);
 }
+
+/**
+ * The URLs the service worker must fetch rather than answer from its precache.
+ *
+ * The worker precaches `index.html` and serves it for any navigation, which is right for the app —
+ * that is how the door screen opens on a venue's bad wifi — and wrong for everything the *server*
+ * builds per URL. It was quietly winning: a returning visitor to a feature page got the precached
+ * shell, so the server render never happened, the page title was the generic one from the shell,
+ * and React was downloaded to draw a page that would have arrived finished.
+ *
+ * Two kinds of URL belong here. Site pages, whose markup and `<title>` and social card are all
+ * built for that path. And `/f/:slug`, where the server injects the form's own link preview — and
+ * which cannot work offline regardless, because the answers it needs come from the API.
+ *
+ * `verify` keeps this honest against `SITE_ROUTES`, so a new page cannot be added to one and
+ * forgotten in the other.
+ */
+export const SERVER_RENDERED_PATHS: readonly RegExp[] = [/^\/$/, /^\/features\//, /^\/f\//];
