@@ -21,6 +21,7 @@ export {
   buttonSurface,
   shadow,
   accentInk,
+  glassSurface,
 } from './derive.js';
 
 /** Email target — resolved inline styles and table layout. Browser-safe, no dependencies. */

@@ -184,7 +184,7 @@ function SiteFooter() {
   return (
     <footer className="site__foot">
       <p className="muted small">
-        Formwork — forms, registrations and the door. The demo saves nothing and sends nothing.
+        Formwork. Forms, registrations and the door. The demo saves nothing and sends nothing.
       </p>
     </footer>
   );

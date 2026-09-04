@@ -2297,8 +2297,7 @@ h4 {
   inset-block-start: 0;
   z-index: 20;
   min-block-size: 56px;
-  background: color-mix(in srgb, var(--tp-colour-surface) 70%, var(--tp-colour-background));
-  backdrop-filter: saturate(1.4) blur(8px);
+  /* Tint, blur and edge come from the glass layer at the end of this file. */
 }
 
 /* Who you are is not a control. It was reading at the same weight as the sections. */
@@ -3059,10 +3058,6 @@ h4 {
 }
 
 .badge,
-.chip {
-  border-radius: var(--tp-radius-pill);
-}
-
 /* --- Elevation -------------------------------------------------------------
  *
  * A card sat on a border alone, which works on white and disappears the moment the surface and
@@ -3188,55 +3183,6 @@ h4 {
 .segmented__option:focus-visible {
   outline: 2px solid var(--tp-colour-secondary);
   outline-offset: 2px;
-}
-
-/* --- Skeletons -------------------------------------------------------------
- *
- * A shape where the content will be, rather than a spinner in the middle of an empty page. The
- * difference is that the layout does not jump when the data lands, which is the actual complaint
- * behind "it feels slow".
- *
- * A sweep, not a pulse: opacity pulsing on a warm palette looks like a rendering fault.
- */
-.skeleton {
-  --tp-skeleton-sheen: color-mix(
-    in srgb,
-    var(--tp-colour-background) 60%,
-    var(--tp-colour-surface)
-  );
-  background:
-    linear-gradient(90deg, transparent 0%, var(--tp-skeleton-sheen) 50%, transparent 100%) no-repeat,
-    var(--tp-colour-surface);
-  background-size:
-    40% 100%,
-    100% 100%;
-  border-radius: var(--tp-radius-sm);
-  block-size: 1em;
-  animation: skeleton-sweep 1.4s var(--tp-ease) infinite;
-}
-
-/* The one place a gradient is allowed: it is not decoration, it is the motion itself, and it is
-   composed of the theme's own two surface colours rather than an invented pair. */
-@keyframes skeleton-sweep {
-  from {
-    background-position:
-      -60% 0,
-      0 0;
-  }
-  to {
-    background-position:
-      160% 0,
-      0 0;
-  }
-}
-
-.skeleton--title {
-  block-size: 1.4em;
-  inline-size: 45%;
-}
-
-.skeleton--line:last-child {
-  inline-size: 70%;
 }
 
 /* --- Toasts ----------------------------------------------------------------
@@ -3415,12 +3361,6 @@ h4 {
   background: color-mix(in srgb, var(--tp-colour-primary) 10%, var(--tp-colour-background));
 }
 
-.palette__hint {
-  margin-inline-start: auto;
-  color: var(--tp-colour-muted);
-  font-size: var(--tp-text-xs);
-}
-
 .palette__empty {
   padding: calc(var(--tp-spacing-unit) * 2);
   color: var(--tp-colour-muted);
@@ -3447,7 +3387,6 @@ h4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton,
   .toast,
   .palette {
     animation: none;
@@ -3916,10 +3855,29 @@ h4 {
  * So the page is a column, the frame takes the remainder, and the rail simply stretches to the
  * grid row. It cannot be the wrong height because nothing tells it a height.
  */
-body:has(> .app) {
+body:has(.app) {
   display: flex;
   flex-direction: column;
   min-block-size: 100dvh;
+}
+
+/*
+ * `#root` is between them, and the child combinator did not know that.
+ *
+ * This was `body:has(> .app)`, which matches nothing: React mounts into `<div id="root">`, so the
+ * frame is a grandchild of `body`. The rule never applied, `.app` fell back to content height, and
+ * on any short screen the frame stopped partway down with bare page beneath it — invisible while
+ * every screen I happened to look at had enough cards to fill the window, and obvious the moment
+ * one did not.
+ *
+ * The height has to be handed down every step, so the middle element passes it on rather than
+ * collapsing to its contents.
+ */
+body:has(.app) > #root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-block-size: 0;
 }
 
 .app {
@@ -4170,25 +4128,6 @@ body:has(> .app) {
 }
 
 /*
- * The page header: what this is, and what can be done to it.
- *
- * The builder spent 340px of a 900px window on a title, a slug and a translation notice before any
- * field appeared. A header is a line, not a region.
- */
-.page-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: calc(var(--tp-spacing-unit) * 2);
-  flex-wrap: wrap;
-  margin-block-end: calc(var(--tp-spacing-unit) * 3);
-}
-
-.page-head h1 {
-  margin: 0;
-}
-
-/*
  * The form's own name, on the page it names.
  *
  * Sized down from the shell's default heading: on a page whose whole content is one document, a
@@ -4215,13 +4154,23 @@ body:has(> .app) {
   background: var(--tp-colour-background);
 }
 
+/*
+ * Full bleed, with the contents centred.
+ *
+ * It was `min(76rem, 100%)` and centred like the sections below it, which is right for a block in
+ * the flow and wrong the moment it became a sticky pane: the glass floated as a 76rem panel with
+ * hard edges, page scrolling past on both sides of it. A bar spans its window; the column inside
+ * it is what stays a readable width.
+ *
+ * The side padding is the gutter or half the leftover, whichever is larger, which centres the
+ * contents without an extra wrapper element.
+ */
 .site__bar {
   display: flex;
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 3);
-  inline-size: min(76rem, 100%);
-  margin-inline: auto;
-  padding: calc(var(--tp-spacing-unit) * 2) calc(var(--tp-spacing-unit) * 3);
+  padding-block: calc(var(--tp-spacing-unit) * 2);
+  padding-inline: max(calc(var(--tp-spacing-unit) * 3), calc((100% - 76rem) / 2));
 }
 
 .site__mark {
@@ -4545,4 +4494,266 @@ body:has(> .app) {
   .rise {
     animation: none;
   }
+}
+
+/* ==========================================================================
+ * Glass, for the things that float.
+ *
+ * ## What this is, honestly
+ *
+ * An **approximation** of Apple's Liquid Glass, built from `backdrop-filter`, layered edges and a
+ * specular hairline. Apple documents that material for Apple platforms; there is no official
+ * `liquid-glass.css`, and anything on the web calling itself that is an approximation too.
+ *
+ * The WebGL library that prompted this was considered and refused, for reasons that were not about
+ * taste: it drives refraction by screenshotting the page with `html2canvas` on every scroll and
+ * theme change, it renders nothing on the server — which would undo the server-rendered landing
+ * page — and its buttons are a `<canvas>` rather than a `<button>`, so they have no focus ring and
+ * no accessible name. This product has a check-in screen used at a door.
+ *
+ * ## Where it goes, and where it does not
+ *
+ * Only on surfaces with page behind them: the session row, the command palette, toasts, dialogs,
+ * the site header. Glass over nothing is a tinted rectangle pretending. It is deliberately **not**
+ * on cards, form fields or the public form, where blur behind text costs legibility and buys an
+ * effect nobody filling in a registration wants.
+ *
+ * The four things that make a pane read as glass, all native:
+ *   1. a translucent tint, so the page shows through;
+ *   2. blur *and saturation* behind, because real glass concentrates colour as well as scattering;
+ *   3. a bright inner hairline along the top, which is what gives a pane thickness;
+ *   4. a shadow, because glass floats.
+ * ========================================================================== */
+.glass,
+.topline,
+.palette,
+.toast,
+.site__bar {
+  background: var(--tp-glass);
+  /* Safari has needed the prefix since this effect existed and still does. */
+  -webkit-backdrop-filter: var(--tp-glass-blur);
+  backdrop-filter: var(--tp-glass-blur);
+  border-color: var(--tp-glass-edge);
+}
+
+/*
+ * The specular edge, as an inset shadow rather than a border.
+ *
+ * A border would take a layout box and colour all four sides; the highlight is only along the top,
+ * where light lands. This is the single detail that separates glass from a translucent rectangle.
+ */
+.palette,
+.toast,
+.site__bar {
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    var(--tp-shadow-overlay);
+}
+
+/* The session row is a strip rather than a pane: it gets the hairline and no cast shadow. */
+.topline {
+  box-shadow: inset 0 1px 0 var(--tp-glass-hairline);
+}
+
+/*
+ * The landing page header floats over the hero as it scrolls under.
+ *
+ * Sticky rather than fixed, so it participates in the layout on the way in and only pins once the
+ * page moves beneath it.
+ */
+.site__bar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 20;
+  border: var(--tp-border-width) solid var(--tp-glass-edge);
+  border-block-start: 0;
+  border-inline: 0;
+}
+
+/*
+ * Transparency is a preference, not a given.
+ *
+ * `prefers-reduced-transparency` is set by people who find layered translucency hard to read, and
+ * by anyone whose system is conserving power. The effect is removed rather than softened: the
+ * point of the setting is opacity, and half-transparent is still transparent.
+ */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .topline,
+  .palette,
+  .toast,
+  .site__bar {
+    background: var(--tp-colour-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: var(--tp-colour-border);
+  }
+
+  .palette,
+  .toast,
+  .site__bar {
+    box-shadow: var(--tp-shadow-overlay);
+  }
+
+  .topline {
+    box-shadow: none;
+  }
+}
+
+/*
+ * And a fallback for browsers without `backdrop-filter` at all.
+ *
+ * Without this the pane is simply translucent: the page reads straight through the palette and the
+ * text sits on top of whatever happens to be behind it, which is unreadable rather than merely
+ * unfashionable.
+ */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .topline,
+  .palette,
+  .toast,
+  .site__bar {
+    background: var(--tp-colour-background);
+  }
+}
+
+/* --- Controls, finished ----------------------------------------------------
+ *
+ * The buttons and sliders were correct and unfelt: right colours, right sizes, nothing under the
+ * finger. These are the three details that make a control feel like an object, and none of them
+ * change what anything does.
+ */
+
+/*
+ * A filled button gets the same specular hairline as the glass.
+ *
+ * One highlight along the top edge, from the same token, so a primary button and the pane it sits
+ * on are lit from the same direction. This is the whole trick of the material: it is not the blur,
+ * it is agreeing about where the light is.
+ */
+.button:not(.button--quiet):not(.button--danger) {
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
+}
+
+.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
+}
+
+/* A pressed button has nothing above it to catch the light. */
+.button:active:not(:disabled),
+.button:disabled {
+  box-shadow: none;
+}
+
+/*
+ * The slider, which was the browser's.
+ *
+ * `accent-color` gets the track and the thumb painted in the brand and stops there: the thumb is
+ * whatever size the platform decided, with no edge and nothing to grab. A range is dragged, which
+ * makes it the one control in the product where the handle is the whole interaction.
+ *
+ * Track and thumb are styled per engine because there is no shared selector for them, and both
+ * halves have to be written or one platform keeps the default.
+ */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  /* `accent-color` is left set as the fallback: an engine that ignores the rules below still
+     paints a branded slider rather than a blue one. */
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  block-size: 6px;
+  border-radius: var(--tp-radius-pill);
+  background: color-mix(in srgb, var(--tp-colour-primary) 18%, var(--tp-colour-surface));
+}
+
+input[type='range']::-moz-range-track {
+  block-size: 6px;
+  border-radius: var(--tp-radius-pill);
+  background: color-mix(in srgb, var(--tp-colour-primary) 18%, var(--tp-colour-surface));
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  inline-size: 20px;
+  block-size: 20px;
+  /* The track is 6px and the row is 44px, so the thumb is centred by hand. */
+  margin-block-start: -7px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-background);
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    var(--tp-shadow-raised);
+  cursor: grab;
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+input[type='range']::-moz-range-thumb {
+  inline-size: 20px;
+  block-size: 20px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-background);
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    var(--tp-shadow-raised);
+  cursor: grab;
+}
+
+/* Grows under the finger, so the thing being dragged is the thing that responds. */
+input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+  cursor: grabbing;
+}
+
+input[type='range']:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+}
+
+input[type='range']:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--tp-colour-secondary);
+  outline-offset: 2px;
+}
+
+/*
+ * The page behind the glass.
+ *
+ * A flat fill gives blur nothing to work with: `backdrop-filter` over one colour returns that
+ * colour, so a pane over an empty page is a rectangle. This is the faintest possible variation,
+ * two washes of the brand's own primary at a few percent, sitting under the whole document.
+ *
+ * Fixed rather than scrolling, so the glass finds something different behind it as the page moves,
+ * which is what makes the material read as a material rather than a static tint.
+ */
+body {
+  background-attachment: fixed;
+  background-image:
+    radial-gradient(
+      60rem 40rem at 15% -10%,
+      color-mix(in srgb, var(--tp-colour-primary) 6%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      50rem 35rem at 95% 5%,
+      color-mix(in srgb, var(--tp-colour-accent) 5%, transparent),
+      transparent
+    );
+}
+
+/*
+ * The exception, and it matters: the public form keeps a flat page.
+ *
+ * It is a document somebody fills in and may print, not a surface for the product to perform on.
+ * Nothing behind the questions.
+ */
+body:has(> #root .shell--narrow) {
+  background-image: none;
 }

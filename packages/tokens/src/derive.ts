@@ -206,6 +206,54 @@ export function accentInk(colour: ColourTokens): string {
   return colour.text;
 }
 
+/**
+ * The glass an overlay is made of.
+ *
+ * Liquid glass, done with the platform rather than with WebGL. The library that inspired this
+ * screenshots the page with `html2canvas` and refracts it through a WebGL surface, which is
+ * beautiful and wrong for this product: it re-rasterises on every scroll and theme change, it
+ * renders nothing on the server, and its buttons are a canvas rather than a `<button>` — no focus
+ * ring, no accessible name, on a product with a check-in screen used at a door.
+ *
+ * What actually reads as glass is four things, and a browser does all of them natively:
+ *
+ * 1. A **translucent tint** of the surface behind, so the page shows through.
+ * 2. **Blur and saturation** on what is behind — the saturation matters more than people expect,
+ *    because real glass concentrates colour as well as scattering it.
+ * 3. A **bright inner hairline** along the top edge, which is the specular highlight that makes a
+ *    pane look like it has thickness rather than being a coloured rectangle.
+ * 4. A **shadow beneath**, because glass floats.
+ *
+ * Derived per palette so it works in both themes without a second set of values: on a light theme
+ * the tint leans toward the page's own background and the highlight is white; on a dark one the
+ * tint is deeper and the highlight is a much quieter white, because a bright edge on a dark pane
+ * reads as a mistake rather than as light.
+ */
+export function glassSurface(colour: ColourTokens): {
+  tint: string;
+  edge: string;
+  hairline: string;
+} {
+  // A dark palette is one whose page is darker than its ink.
+  const dark = lightness(colour.background) < lightness(colour.text);
+
+  return {
+    /** The pane itself. Kept off full opacity, or there is no glass — only a panel. */
+    tint: withAlpha(mix(colour.background, colour.surface, dark ? 0.4 : 0.7), dark ? 0.72 : 0.68),
+    /** The outer edge: the border, picked up from the palette rather than invented. */
+    edge: withAlpha(colour.border, dark ? 0.55 : 0.7),
+    /** The specular highlight along the top. Much quieter on dark, where light is scarcer. */
+    hairline: dark ? 'rgb(255 255 255 / 0.10)' : 'rgb(255 255 255 / 0.55)',
+  };
+}
+
+/** `#rrggbb` to `rgb(r g b / a)`, so a token can carry transparency without a second field. */
+function withAlpha(hex: string, alpha: number): string {
+  const rgb = parseHex(hex);
+  if (!rgb) return hex;
+  return `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]} / ${alpha})`;
+}
+
 export function toDark(tokens: TokenSet): TokenSet {
   return { ...tokens, colour: toDarkColours(tokens.colour) };
 }

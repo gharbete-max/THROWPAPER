@@ -40,11 +40,11 @@ export const FEATURES: readonly Feature[] = [
     summary:
       'Seventeen field types, conditions that actually branch, and a preview that is the form.',
     intro:
-      'Drag a field in, write the question, see it. The preview beside the canvas is the same renderer a respondent gets, not an approximation of it — so what you are looking at while you build is what they will fill in.',
+      'Drag a field in, write the question, see it. The preview beside the canvas is the same renderer a respondent gets, not an approximation of it, so what you are looking at while you build is what they will fill in.',
     points: [
       {
         heading: 'Seventeen kinds of question',
-        body: 'Text, numbers, dates and times, single and multiple choice, ratings, files, signatures — and decoration: shapes and freehand drawing that collect nothing and never appear in the export.',
+        body: 'Text, numbers, dates and times, single and multiple choice, ratings, files, signatures. Then decoration: shapes and freehand drawing that collect nothing and never appear in the export.',
       },
       {
         heading: 'Conditions that cannot loop',
@@ -52,7 +52,7 @@ export const FEATURES: readonly Feature[] = [
       },
       {
         heading: 'Twenty-three templates',
-        body: 'Events, services, education, retail, membership, workplace, governance and research — each complete in all twelve languages, because a template that copies English into a Finnish form is not a starting point.',
+        body: 'Events, services, education, retail, membership, workplace, governance and research, each complete in all twelve languages. A template that copies English into a Finnish form is not a starting point.',
       },
     ],
   },
@@ -63,7 +63,7 @@ export const FEATURES: readonly Feature[] = [
     summary:
       'Registration, an admission card people can print, and a check-in screen for the entrance.',
     intro:
-      'An event is a form with a date, a capacity and a door. Everything after the registration — the confirmation, the admission card, the person scanning it at the entrance — is the part that usually gets improvised, so it is built in.',
+      'An event is a form with a date, a capacity and a door. Everything after the registration, from the confirmation to the person scanning a card at the entrance, is the part that usually gets improvised. So it is built in.',
     points: [
       {
         heading: 'An admission card that scans',
@@ -129,8 +129,7 @@ export const FEATURES: readonly Feature[] = [
     slug: 'languages',
     icon: 'globe',
     name: 'Twelve languages',
-    summary:
-      'The interface, the templates, the emails and the printed card — not just the buttons.',
+    summary: 'The interface, the templates, the emails and the printed card, not just the buttons.',
     intro:
       'English, Swedish, Danish, Norwegian, Finnish, Icelandic, French, German, Spanish, Chinese, Japanese and Russian. The interface is one language at a time and that is a personal setting; a form is a document and can offer its own switcher.',
     points: [
@@ -191,7 +190,7 @@ export const QUOTES: ReadonlyArray<{ text: string; who: string }> = [
 export const HERO = {
   eyebrow: 'Forms, registrations and the door',
   title: 'Ask people things. Properly.',
-  body: 'A form builder for organisations that have to get it right: twelve languages, your own brand on every surface, an admission card that scans at a door, and a ledger that will not let you rewrite history.',
+  body: 'Twelve languages, your brand on every surface, and an admission card that scans at a door.',
   primary: { label: 'Open the demo', href: '/login' },
   secondary: { label: 'See what it does', href: '#features' },
 } as const;

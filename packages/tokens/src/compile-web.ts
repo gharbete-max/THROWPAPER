@@ -1,4 +1,4 @@
-import { accentInk, buttonSurface, shadow, toDark } from './derive.js';
+import { accentInk, buttonSurface, glassSurface, shadow, toDark } from './derive.js';
 import type { TokenSet } from './types.js';
 import { px, pxValue, typeScale } from './units.js';
 
@@ -82,6 +82,16 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
    * They are constants for now — no control sets them — but they live here so a "reduce motion"
    * or "snappier" preference has somewhere to go that reaches email and native too.
    */
+  /**
+   * Glass, for the things that float over the page. See `glassSurface` for what makes a pane read
+   * as glass rather than as a translucent rectangle.
+   */
+  const glass = glassSurface(tokens.colour);
+  vars['--tp-glass'] = glass.tint;
+  vars['--tp-glass-edge'] = glass.edge;
+  vars['--tp-glass-hairline'] = glass.hairline;
+  vars['--tp-glass-blur'] = 'blur(20px) saturate(1.7)';
+
   vars['--tp-ease'] = 'cubic-bezier(0.2, 0, 0, 1)';
   vars['--tp-motion-fast'] = '110ms';
   vars['--tp-motion'] = '180ms';
