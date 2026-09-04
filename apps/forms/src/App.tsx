@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
@@ -49,6 +49,7 @@ const UserWorkspace = lazy(() =>
   import('./screens/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
 import { Loading } from './components/Loading.js';
+import { foldOnPress } from './lib/fold.js';
 
 /**
  * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,
@@ -60,6 +61,14 @@ const PublicForm = lazy(() => import('./screens/PublicForm.js'));
 const CheckIn = lazy(() => import('./screens/CheckIn.js'));
 
 export function App() {
+  /*
+   * One listener for every press in the app, attached once.
+   *
+   * It decorates controls inside `.system` and nothing else, which is what keeps the house
+   * animation off a published form — see `lib/fold.ts`.
+   */
+  useEffect(foldOnPress, []);
+
   return (
     <BrowserRouter>
       <DemoProvider>
@@ -160,7 +169,7 @@ function Shell() {
     !wide && (/^\/(forms|events|responses|users)$/.test(path) || /^\/users\/[^/]+$/.test(path));
 
   return (
-    <div className="app">
+    <div className="app system">
       {/* Inside the shell, so it exists only where there is somewhere to navigate to — the
           sign-in page has one screen and a palette on it would be a joke at the user's expense. */}
       <CommandPalette />

@@ -2,7 +2,7 @@ import { Link, Route, Routes } from 'react-router';
 import { FEATURES, HERO, QUOTES, type Feature } from './content.js';
 import { Icon } from '../components/Icon.js';
 import { Logo } from '../components/Logo.js';
-import { FortuneTeller } from '../components/FortuneTeller.js';
+import { Mark } from '../components/Mark.js';
 
 /**
  * The public site: a landing page and one page per thing the product does.
@@ -23,7 +23,7 @@ import { FortuneTeller } from '../components/FortuneTeller.js';
  */
 export function Site() {
   return (
-    <div className="site">
+    <div className="site system">
       <SiteHeader />
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -91,7 +91,7 @@ function Landing() {
           it is being made into something.
         */}
         <div className="hero__figure" aria-hidden="true">
-          <FortuneTeller mode="fold" className="hero__ft" />
+          <Mark mode="intro" className="hero__mark" />
         </div>
       </section>
 

@@ -19,7 +19,7 @@ export function Callback() {
   }, [params, signInWithToken]);
 
   return (
-    <main className="shell shell--narrow">
+    <main className="shell shell--narrow system">
       <div className="card">
         {failed ? (
           <>

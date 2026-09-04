@@ -3393,443 +3393,17 @@ h4 {
   }
 }
 
-/* --- The fortune teller ----------------------------------------------------
- *
- * See `FortuneTeller.tsx` for why every pose is four triangles of three points. The poses, in the
- * order they are used:
- *
- *   CLOSED  a regular diamond — the fortune teller seen from above, flaps down
- *   TALL    east and west squeezed toward the centre — opened along one axis
- *   WIDE    north and south squeezed — opened along the other
- *   OPENING the sheet coming apart, quarters swinging out of the square
- *   PLANE   the three faces of the mark, and one quarter folded away to the nose
- *
- * The stroke is what draws the creases: each flap outlined in the border colour, so the folds
- * appear where quarters meet. It fades to nothing by the end, which is what leaves the finished
- * plane flat and identical to `Logo`.
- */
-/*
- * No size here on purpose.
- *
- * This was `100%` in both axes, which is fine while the only users are the loading indicator and
- * the intro — both size their own box — and wrong the moment the mark in the top bar became one of
- * these too. `.ft` sits later in this file than `.logo`, so at equal specificity it won and the
- * logo rendered at its container's full width: a 384px mark in a 420px top bar. Each user sizes it.
- */
-.ft {
-  overflow: visible;
-}
-
-.ft__flap {
-  stroke: var(--tp-colour-border);
-  stroke-width: 1;
-  stroke-linejoin: round;
-  /* Fills never change: each quarter already wears the colour of the face it becomes. */
-}
-
-.ft__flap--nw,
-.ft__flap--se {
-  fill: var(--tp-colour-primary);
-}
-
-.ft__flap--ne,
-.ft__flap--sw {
-  fill: var(--tp-colour-accent);
-}
-
-/* ---- Working it: the loop ------------------------------------------------- */
-
-.ft--pinch .ft__flap--ne {
-  animation: ft-pinch-ne 2.6s var(--tp-ease) infinite;
-}
-.ft--pinch .ft__flap--nw {
-  animation: ft-pinch-nw 2.6s var(--tp-ease) infinite;
-}
-.ft--pinch .ft__flap--se {
-  animation: ft-pinch-se 2.6s var(--tp-ease) infinite;
-}
-.ft--pinch .ft__flap--sw {
-  animation: ft-pinch-sw 2.6s var(--tp-ease) infinite;
-}
-
-@keyframes ft-pinch-ne {
-  0%,
-  100% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-  22% {
-    d: path('M50 50 L50 2 L72 50 Z');
-  }
-  44% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-  66% {
-    d: path('M50 50 L50 28 L98 50 Z');
-  }
-  88% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-}
-
-@keyframes ft-pinch-nw {
-  0%,
-  100% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-  22% {
-    d: path('M50 50 L28 50 L50 2 Z');
-  }
-  44% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-  66% {
-    d: path('M50 50 L2 50 L50 28 Z');
-  }
-  88% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-}
-
-@keyframes ft-pinch-se {
-  0%,
-  100% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-  22% {
-    d: path('M50 50 L72 50 L50 98 Z');
-  }
-  44% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-  66% {
-    d: path('M50 50 L98 50 L50 72 Z');
-  }
-  88% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-}
-
-@keyframes ft-pinch-sw {
-  0%,
-  100% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-  22% {
-    d: path('M50 50 L50 98 L28 50 Z');
-  }
-  44% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-  66% {
-    d: path('M50 50 L50 72 L2 50 Z');
-  }
-  88% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-}
-
-/* ---- Folding into the plane: once ----------------------------------------
- *
- * Two pinches, then the fold. `forwards` because the last frame is the mark, and that is the frame
- * that stays on the screen.
- */
-.ft--fold .ft__flap {
-  animation-duration: 2.8s;
-  animation-timing-function: var(--tp-ease);
-  animation-fill-mode: forwards;
-}
-
-/*
- * Two animations per flap: its own fold, and the shared crease fade. Named together in one
- * declaration because `animation-name` is not additive — a second rule naming only the crease
- * would silently drop the fold.
- */
-.ft--fold .ft__flap--ne {
-  animation-name: ft-fold-ne, ft-crease;
-}
-.ft--fold .ft__flap--nw {
-  animation-name: ft-fold-nw, ft-crease;
-}
-.ft--fold .ft__flap--se {
-  animation-name: ft-fold-se, ft-crease;
-}
-.ft--fold .ft__flap--sw {
-  animation-name: ft-fold-sw, ft-crease;
-}
-
-@keyframes ft-crease {
-  0%,
-  55% {
-    stroke-opacity: 1;
-  }
-  100% {
-    stroke-opacity: 0;
-  }
-}
-
-@keyframes ft-fold-ne {
-  0% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-  14% {
-    d: path('M50 50 L50 2 L72 50 Z');
-  }
-  28% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-  42% {
-    d: path('M50 50 L50 28 L98 50 Z');
-  }
-  55% {
-    d: path('M50 50 L50 6 L94 50 Z');
-  }
-  /* The quarter that has to go: it swings toward the nose and folds under the wing. */
-  64% {
-    d: path('M58 50 L56 24 L95 50 Z');
-  }
-  75% {
-    d: path('M70 52 L62 22 L96 54 Z');
-  }
-  100% {
-    d: path('M96 56 L96 56 L96 56 Z');
-  }
-}
-
-@keyframes ft-fold-nw {
-  0% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-  14% {
-    d: path('M50 50 L28 50 L50 2 Z');
-  }
-  28% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-  42% {
-    d: path('M50 50 L2 50 L50 28 Z');
-  }
-  55% {
-    d: path('M50 50 L6 50 L50 6 Z');
-  }
-  64% {
-    d: path('M42 52 L8 46 L60 20 Z');
-  }
-  75% {
-    d: path('M34 56 L8 42 L74 30 Z');
-  }
-  100% {
-    d: path('M20 62.5 L6 30 L96 56 Z');
-  }
-}
-
-@keyframes ft-fold-se {
-  0% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-  14% {
-    d: path('M50 50 L72 50 L50 98 Z');
-  }
-  28% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-  42% {
-    d: path('M50 50 L98 50 L50 72 Z');
-  }
-  55% {
-    d: path('M50 50 L94 50 L50 94 Z');
-  }
-  64% {
-    d: path('M50 60 L95 52 L34 78 Z');
-  }
-  75% {
-    d: path('M48 68 L92 56 L30 82 Z');
-  }
-  100% {
-    d: path('M46 79 L96 56 L26 73 Z');
-  }
-}
-
-@keyframes ft-fold-sw {
-  0% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-  14% {
-    d: path('M50 50 L50 98 L28 50 Z');
-  }
-  28% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-  42% {
-    d: path('M50 50 L50 72 L2 50 Z');
-  }
-  55% {
-    d: path('M50 50 L50 94 L6 50 Z');
-  }
-  64% {
-    d: path('M36 58 L30 80 L90 52 Z');
-  }
-  75% {
-    d: path('M30 62 L24 84 L86 52 Z');
-  }
-  100% {
-    d: path('M20 62.5 L18 82 L96 56 Z');
-  }
-}
-
-/*
- * Standing still.
- *
- * Not a different picture: the same four quarters, closed, with their creases showing. Somebody
- * who turns motion off should get a quieter product, not a plainer one.
- */
-.ft--still .ft__flap {
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ft__flap {
-    animation: none !important;
-  }
-}
-
 /* The loading indicator's own frame: small, and beside its word. */
-.loading__ft {
+.loading__mark {
   inline-size: 40px;
   block-size: 40px;
   flex: none;
 }
 
 /* The intro plays it large, in the middle of the stage. */
-.intro__ft {
+.intro__mark {
   inline-size: min(38vmin, 220px);
   block-size: min(38vmin, 220px);
-}
-
-/* --- The mark, and what it does when pointed at ----------------------------
- *
- * At rest it is the plane and nothing moves. The logo used to spin — eight seconds, linear,
- * infinite, on every screen — and a mark that never stops is one people learn to stop seeing.
- *
- * On hover the paper comes apart into the fortune teller, gets pinched once and folds back. It
- * ends exactly where it started, so there is no state to unwind if somebody moves the pointer
- * away halfway: the animation simply stops and the `d` in the markup is already the mark.
- *
- * Driven from `.wordmark:hover` rather than the SVG's own `:hover` so that pointing anywhere at
- * the logo *or its name* plays it — a 28px target is a poor thing to ask someone to hit.
- */
-.wordmark:hover .ft--mark .ft__flap--ne,
-.wordmark:focus-visible .ft--mark .ft__flap--ne {
-  animation: ft-open-ne 900ms var(--tp-ease);
-}
-
-.wordmark:hover .ft--mark .ft__flap--nw,
-.wordmark:focus-visible .ft--mark .ft__flap--nw {
-  animation: ft-open-nw 900ms var(--tp-ease);
-}
-
-.wordmark:hover .ft--mark .ft__flap--se,
-.wordmark:focus-visible .ft--mark .ft__flap--se {
-  animation: ft-open-se 900ms var(--tp-ease);
-}
-
-.wordmark:hover .ft--mark .ft__flap--sw,
-.wordmark:focus-visible .ft--mark .ft__flap--sw {
-  animation: ft-open-sw 900ms var(--tp-ease);
-}
-
-/* The creases appear while the paper is open and are gone again by the time it is a plane. */
-.wordmark:hover .ft--mark .ft__flap,
-.wordmark:focus-visible .ft--mark .ft__flap {
-  animation-name: ft-open-ne, ft-mark-crease;
-}
-
-.wordmark:hover .ft--mark .ft__flap--nw,
-.wordmark:focus-visible .ft--mark .ft__flap--nw {
-  animation-name: ft-open-nw, ft-mark-crease;
-}
-
-.wordmark:hover .ft--mark .ft__flap--se,
-.wordmark:focus-visible .ft--mark .ft__flap--se {
-  animation-name: ft-open-se, ft-mark-crease;
-}
-
-.wordmark:hover .ft--mark .ft__flap--sw,
-.wordmark:focus-visible .ft--mark .ft__flap--sw {
-  animation-name: ft-open-sw, ft-mark-crease;
-}
-
-@keyframes ft-mark-crease {
-  0%,
-  100% {
-    stroke-opacity: 0;
-  }
-  50% {
-    stroke-opacity: 1;
-  }
-}
-
-/*
- * Unfold and back: the plane comes apart and reassembles, and that is all.
- *
- * It went further at first — all the way to the closed square, a pinch, and back — which is the
- * whole fold played in reverse and forwards again. Nice in a filmstrip and too much on a top bar
- * you pass the pointer over a hundred times a day: the mark left its own silhouette for most of
- * two seconds every time. One pose out and back keeps the idea (this plane is folded from
- * something) without the mark ever stopping being the mark.
- *
- * The single pose is one the fold already passes through, so the two animations still agree about
- * what the paper does.
- */
-@keyframes ft-open-ne {
-  0%,
-  100% {
-    d: path('M96 56 L96 56 L96 56 Z');
-  }
-  50% {
-    d: path('M70 52 L62 22 L96 54 Z');
-  }
-}
-
-@keyframes ft-open-nw {
-  0%,
-  100% {
-    d: path('M20 62.5 L6 30 L96 56 Z');
-  }
-  50% {
-    d: path('M34 56 L8 42 L74 30 Z');
-  }
-}
-
-@keyframes ft-open-se {
-  0%,
-  100% {
-    d: path('M46 79 L96 56 L26 73 Z');
-  }
-  50% {
-    d: path('M48 68 L92 56 L30 82 Z');
-  }
-}
-
-@keyframes ft-open-sw {
-  0%,
-  100% {
-    d: path('M20 62.5 L18 82 L96 56 Z');
-  }
-  50% {
-    d: path('M30 62 L24 84 L86 52 Z');
-  }
-}
-
-/*
- * The keel, a shade down from the primary.
- *
- * `color-mix` rather than a fourth token, because this is one shade of a colour the customer
- * already chose — asking them to pick a "dark primary" as well would be a setting that can only be
- * got wrong. It applies in every mode, so the frame the intro ends on and the mark in the top bar
- * are the same picture.
- */
-.ft__flap--se {
-  fill: color-mix(in srgb, var(--tp-colour-primary) 72%, #000);
 }
 
 /* ==========================================================================
@@ -4127,8 +3701,8 @@ body:has(.app) > #root {
   /*
    * The mark is allowed to shrink but not to spill.
    *
-   * `.ft` paints outside its box on purpose — the fold swings past its own edges — which on a
-   * phone put the nose of the plane through the left gutter.
+   * `.mark` paints outside its box on purpose — a facet swings past its own edge as it folds —
+   * which on a phone put the letter through the left gutter.
    */
   .topline__mark {
     min-inline-size: 0;
@@ -4266,7 +3840,7 @@ body:has(.app) > #root {
   place-items: center;
 }
 
-.hero__ft {
+.hero__mark {
   inline-size: min(28rem, 100%);
   block-size: auto;
   aspect-ratio: 1;
@@ -4450,7 +4024,7 @@ body:has(.app) > #root {
     order: -1;
   }
 
-  .hero__ft {
+  .hero__mark {
     inline-size: min(16rem, 60%);
   }
 
@@ -4768,4 +4342,189 @@ body {
  */
 body:has(> #root .shell--narrow) {
   background-image: none;
+}
+
+/* ===========================================================================
+ * The paper language
+ *
+ * One idea, applied in one place: every fold is a straight crease, so every shape that moves is a
+ * triangle and every motion is a rotation about an edge. The mark states it, the buttons repeat it
+ * quietly, and the intro plays it once.
+ *
+ * ## Where it is allowed to appear
+ *
+ * Under `.system` only. That class goes on the surfaces that are *Formwork* — the signed-in app,
+ * the marketing site, the sign-in screen — and never on a published form, which wears the
+ * organisation's brand and belongs to them. A respondent is looking at their association's
+ * registration page, not at our house style, and a folding animation nobody chose is our house
+ * style arriving uninvited.
+ *
+ * That boundary is structural rather than remembered: the public form renders outside the app
+ * shell entirely, so it cannot inherit this by accident. `system-scope.test.ts` holds it there.
+ * ------------------------------------------------------------------------ */
+
+.mark {
+  overflow: visible;
+  /* Each facet turns in three dimensions about its own crease, so they need a shared stage. */
+  transform-style: preserve-3d;
+}
+
+/*
+ * Four surfaces, because paper folded toward the light is not the colour of paper folded away.
+ *
+ * All four are derived from the brand's own two colours, so an organisation replacing the palette
+ * gets a mark in their colours rather than ours, and rule 4 holds without anybody remembering it.
+ */
+.mark__facet--face {
+  fill: var(--tp-colour-primary);
+}
+
+.mark__facet--fold {
+  fill: color-mix(in srgb, var(--tp-colour-primary) 62%, var(--tp-colour-background));
+}
+
+.mark__facet--warm {
+  fill: var(--tp-colour-accent);
+}
+
+.mark__facet--glow {
+  fill: color-mix(in srgb, var(--tp-colour-accent) 66%, var(--tp-colour-background));
+}
+
+.mark__facet {
+  /*
+   * The crease, in the drawing's own coordinates.
+   *
+   * `view-box` rather than `fill-box`: the axis a facet turns about is an edge it shares with its
+   * neighbour, which is a position in the letter, not a position inside one triangle's bounding
+   * box. With `fill-box` each facet would pivot about its own middle and the mark would scatter.
+   */
+  transform-box: view-box;
+  transform-origin: var(--crease-x) var(--crease-y);
+}
+
+/*
+ * The fold.
+ *
+ * A rotation about the diagonal `(1, -1, 0)`, which is the crease running corner to corner — the
+ * fold you make first in any sheet of paper. `perspective` inside the transform rather than on the
+ * parent, so each facet gets its own vanishing point and the near ones lift further than the far
+ * ones, which is what stops nine simultaneous rotations reading as one flat wipe.
+ *
+ * It returns to `none` at 100%, so the mark ends exactly where it started. Nothing to unwind if
+ * the pointer leaves halfway: the animation stops and the resting geometry is already in the
+ * markup.
+ */
+@keyframes mark-fold {
+  0% {
+    transform: none;
+  }
+  45% {
+    transform: perspective(200px) rotate3d(1, -1, 0, 58deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/*
+ * Driven from the wordmark, not the SVG, so pointing at the logo *or its name* plays it. A 28px
+ * target is a poor thing to ask somebody to hit.
+ */
+.system .wordmark:hover .mark--open .mark__facet,
+.system .mark--open:hover .mark__facet {
+  animation: mark-fold 820ms var(--tp-ease) calc(var(--i) * 42ms) both;
+}
+
+/* The intro plays the same fold once, slower, with the stagger opened out. */
+.mark--intro .mark__facet {
+  animation: mark-fold 1400ms var(--tp-ease) calc(var(--i) * 70ms) both;
+}
+
+/* --- Buttons fold when pressed ---------------------------------------------
+ *
+ * A press runs a crease across the control: two triangles, hinged on the diagonal, climbing from
+ * the corner the thumb is nearest. Two rather than a stack of them because a button is 44px tall —
+ * past two facets nothing is legible, it is just texture.
+ *
+ * `.is-folding` is added on pointerdown and removed when the animation ends, so the fold always
+ * finishes. On `:active` alone it would be cut off the instant the finger lifts, which is the
+ * failure that makes an effect feel broken rather than quick.
+ * ------------------------------------------------------------------------ */
+
+.system .button {
+  position: relative;
+  overflow: hidden;
+}
+
+.system .button::before,
+.system .button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  /* The crease: a triangle occupying the half of the button below the diagonal. */
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  background: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.system .button::after {
+  /* The opposite half, so the two together are the whole face folding along one line. */
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.system .button.is-folding::before {
+  animation: button-fold-near 420ms var(--tp-ease);
+}
+
+.system .button.is-folding::after {
+  animation: button-fold-far 420ms var(--tp-ease) 40ms;
+}
+
+/*
+ * Climbing, which is the part that reads as paper rather than as a flash: the facet starts folded
+ * flat along the diagonal and opens across the face, so the highlight travels rather than appears.
+ */
+@keyframes button-fold-near {
+  0% {
+    opacity: 0;
+    transform: translate3d(-14%, 14%, 0) scale(0.94);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+@keyframes button-fold-far {
+  0% {
+    opacity: 0;
+    transform: translate3d(14%, -14%, 0) scale(0.94);
+  }
+  35% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+/*
+ * Motion is decoration here, all of it.
+ *
+ * The mark still reads at rest, a button still reports its press through `:active`, and the intro
+ * is skipped elsewhere. So this removes the lot rather than shortening it.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .mark__facet,
+  .system .button::before,
+  .system .button::after {
+    animation: none !important;
+  }
 }

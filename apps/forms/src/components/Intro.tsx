@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { rememberIntroSeen, shouldPlayIntro, useReducedMotion } from '../lib/motion.js';
 import { useT } from '../lib/i18n.js';
-import { FortuneTeller } from './FortuneTeller.js';
+import { Mark } from './Mark.js';
 
 /**
  * The intro: a square of paper is worked like a fortune teller, then folds into the mark.
@@ -26,7 +26,7 @@ import { FortuneTeller } from './FortuneTeller.js';
  * is legible at any size.
  *
  * The fold is `d` interpolation between poses that are all four triangles — see
- * `FortuneTeller.tsx`. Where a browser will not interpolate `d`, the paths keep the pose in their
+ * `mark-geometry.ts`. Where a browser will not animate a transform, the letter simply sits still in
  * markup and the intro is a still fortune teller for its second on screen, which is a decoration
  * that did not move rather than a broken one.
  */
@@ -90,7 +90,7 @@ export function Intro() {
           It is the same component the loading indicator uses, in `fold` rather than `pinch`, so
           the shape somebody watches while waiting is the shape that becomes the logo.
         */}
-        <FortuneTeller mode="fold" className="intro__ft" />
+        <Mark mode="intro" className="intro__mark" />
 
         <p className="intro__word">{t('app.name')}</p>
       </div>

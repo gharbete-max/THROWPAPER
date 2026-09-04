@@ -20,7 +20,7 @@ export function Login() {
   }
 
   return (
-    <main className="shell shell--narrow">
+    <main className="shell shell--narrow system">
       <div>
         <Wordmark name={t('app.name')} />
         <h1>{t('login.title')}</h1>

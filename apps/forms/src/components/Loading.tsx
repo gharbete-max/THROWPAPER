@@ -1,5 +1,5 @@
 import { useReducedMotion } from '../lib/motion.js';
-import { FortuneTeller } from './FortuneTeller.js';
+import { Mark } from './Mark.js';
 import { useT } from '../lib/i18n.js';
 
 /**
@@ -11,7 +11,7 @@ import { useT } from '../lib/i18n.js';
  *
  * It is the same four quarters that fold into the mark in `Intro`, working rather than folding —
  * so the thing you watch while waiting and the thing that becomes the logo are one object. See
- * `FortuneTeller.tsx`.
+ * `mark-geometry.ts`.
  *
  * ## What it does when motion is unwelcome
  *
@@ -29,7 +29,7 @@ export function Loading({ label }: { label?: string }) {
 
   return (
     <p className={reduced ? 'loading loading--still' : 'loading'} role="status">
-      <FortuneTeller mode={reduced ? 'still' : 'pinch'} className="loading__ft" />
+      <Mark mode={reduced ? 'rest' : 'intro'} className="loading__mark" />
       <span className="muted">{text}</span>
     </p>
   );
