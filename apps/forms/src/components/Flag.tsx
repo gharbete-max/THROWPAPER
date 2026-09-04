@@ -39,15 +39,21 @@ export function Flag({ locale, className }: { locale: string; className?: string
       viewBox="0 0 24 18"
       aria-hidden="true"
       focusable="false"
-      // A hairline keeps a white or very pale flag from disappearing into a pale background.
-      style={{ borderRadius: 2 }}
     >
       {draw ?? <rect width="24" height="18" fill="var(--tp-colour-border)" />}
+      {/*
+        A hairline, so a white or very pale flag does not dissolve into a pale background.
+
+        The colour and the corner come from tokens rather than from here — CLAUDE.md rule 4. The
+        band colours above are national facts and stay literal; a border radius and a hairline are
+        design decisions, and they were the two values in this file that would not have followed
+        a change to the design system.
+      */}
       <rect
         width="24"
         height="18"
         fill="none"
-        stroke="rgb(0 0 0 / 0.18)"
+        stroke="var(--tp-colour-border)"
         strokeWidth="1"
         rx="2"
         vectorEffect="non-scaling-stroke"

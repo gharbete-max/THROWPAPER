@@ -83,6 +83,26 @@ export function registerPublicFormRoutes(
 
       const { tokens } = await resolveTokens(deps.repos, loaded.organisation.id);
 
+      // The languages **this form** offers, not the whole organisation's. An author who
+      // wrote a form in two of twelve should not show a switcher to ten untranslated ones.
+      const offered = formSchemas.formLocales(
+        loaded.definition.settings,
+        loaded.organisation.supportedLocales,
+      );
+
+      /*
+       * The default has to be one of the languages actually offered.
+       *
+       * `resolveChain` only ever returns locales from `supported`, so a default outside that list
+       * terminates nothing: a visitor whose browser language matches none of the offered ones
+       * gets an empty chain, and `resolveLocale` hands back the organisation's default — a
+       * language this form does not publish and the switcher does not list. The page then renders
+       * with a current locale that has no option beside it and no ticked row.
+       */
+      const defaultLocale = offered.includes(loaded.organisation.defaultLocale)
+        ? loaded.organisation.defaultLocale
+        : (offered[0] ?? loaded.organisation.defaultLocale);
+
       return reply.send({
         slug: loaded.form.slug,
         title: loaded.form.title,
@@ -90,13 +110,8 @@ export function registerPublicFormRoutes(
         formVersion: loaded.published.version,
         organisationName: loaded.organisation.name,
         brand: tokens,
-        // The languages **this form** offers, not the whole organisation's. An author who
-        // wrote a form in two of twelve should not show a switcher to ten untranslated ones.
-        supportedLocales: formSchemas.formLocales(
-          loaded.definition.settings,
-          loaded.organisation.supportedLocales,
-        ),
-        defaultLocale: loaded.organisation.defaultLocale,
+        supportedLocales: offered,
+        defaultLocale,
         open: loaded.availability.open,
         closedReason: loaded.availability.reason,
         closesAt: loaded.form.closesAt?.toISOString() ?? null,

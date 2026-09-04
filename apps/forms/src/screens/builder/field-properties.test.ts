@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { sourceFiles } from '../../lib/source-files.js';
 import { describe, expect, it } from 'vitest';
 import { FIELD_TYPES, fieldProperties, fieldSupports, type Field } from '@tp/shared/forms';
 import { rulesFor } from './FieldRules.js';
@@ -107,14 +107,6 @@ describe('the properties panel', () => {
  * `fieldSupports(type, property)` asks the schema instead. This test bans the old habit.
  */
 const BUILDER_ROOT = new URL('./', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-
-function sourceFiles(directory: string): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const full = join(directory, entry);
-    if (statSync(full).isDirectory()) return sourceFiles(full);
-    return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry) ? [full] : [];
-  });
-}
 
 /**
  * The properties Zod leaves off a freshly-created field — the ones `in` cannot be trusted for.

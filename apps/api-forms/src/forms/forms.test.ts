@@ -46,12 +46,18 @@ async function createForm(slug = 'varmotet') {
   return response;
 }
 
-function saveDraft(id: string, fields: unknown[]) {
+function saveDraft(id: string, fields: unknown[], settings: Record<string, unknown> = {}) {
   return harness.app.inject({
     method: 'PUT',
     url: `/v1/forms/${id}/draft`,
     headers: bearer(adminToken),
-    payload: { definition: { ...formSchemas.emptyDefinition, fields } },
+    payload: {
+      definition: {
+        ...formSchemas.emptyDefinition,
+        fields,
+        settings: { ...formSchemas.emptyDefinition.settings, ...settings },
+      },
+    },
   });
 }
 
@@ -336,6 +342,35 @@ describe('publishing', () => {
     const response = await publish(id);
     expect(response.statusCode).toBe(422);
     expect(response.json().error.code).toBe('translations-incomplete');
+    expect(response.json().error.fields['en-GB']).toContain('field.f1.label');
+  });
+
+  /**
+   * The gate asks about the languages the form offers, not every language the organisation has.
+   *
+   * `settings.locales` exists so an author can say "this form is in Swedish". Before this, saying
+   * so changed nothing: publishing still demanded English, and the only way through was the
+   * override — which is meant for a genuinely half-finished translation and records itself in the
+   * audit log as one. Narrowing the form is not an override; it is the form being finished.
+   */
+  it('does not demand a language the form has been narrowed out of', async () => {
+    const { id } = (await createForm()).json();
+    await saveDraft(id, [swedishOnlyField], { locales: ['sv-SE'] });
+
+    const response = await publish(id);
+    expect(response.statusCode).toBe(200);
+    expect(response.json().publishedVersion).toBe(1);
+    // Not an override — nothing incomplete was waved through.
+    expect(harness.state.formVersions[0]?.translationOverride).toBe(false);
+  });
+
+  /** Narrowing is a filter, not an escape hatch: a language it still claims is still required. */
+  it('still blocks on a language the form does claim', async () => {
+    const { id } = (await createForm()).json();
+    await saveDraft(id, [swedishOnlyField], { locales: ['sv-SE', 'en-GB'] });
+
+    const response = await publish(id);
+    expect(response.statusCode).toBe(422);
     expect(response.json().error.fields['en-GB']).toContain('field.f1.label');
   });
 

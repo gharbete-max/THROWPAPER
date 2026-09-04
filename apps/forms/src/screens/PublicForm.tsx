@@ -375,6 +375,8 @@ export default function PublicForm() {
           locales={form?.supportedLocales ?? []}
           current={resolved}
           onChange={setLocale}
+          // The form's translator, not the session's — the switcher belongs to this document.
+          t={t}
           variant="corner"
         />
       </header>

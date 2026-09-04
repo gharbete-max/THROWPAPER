@@ -441,9 +441,16 @@ export function registerFormRoutes(
         });
       }
 
+      /*
+       * The gate asks about the languages the form offers, not every language the organisation
+       * has configured. Otherwise narrowing a form to the two it is written in — the whole point
+       * of `settings.locales` — still blocks publishing on the ten it never claimed, and the
+       * author's only way out is the override, which is meant for a real half-finished
+       * translation rather than for languages nobody asked for.
+       */
       const completeness = formSchemas.definitionCompleteness(
         parsed.data,
-        auth.organisation.supportedLocales,
+        formSchemas.formLocales(parsed.data.settings, auth.organisation.supportedLocales),
       );
       const incomplete = completeness.filter((entry) => !entry.complete);
       if (incomplete.length > 0 && !body.overrideIncompleteTranslations) {

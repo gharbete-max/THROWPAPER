@@ -35,7 +35,7 @@ function clampWidth(width: number): number {
 export function FormBuilder() {
   const t = useT();
   const confirm = useConfirm();
-  const { locale, locales } = useSession();
+  const { contentLocale: locale, locales } = useSession();
   const { id } = useParams();
   const [form, setForm] = useState<FormResponse | null>(null);
   const [definition, setDefinition] = useState<FormDefinition | null>(null);

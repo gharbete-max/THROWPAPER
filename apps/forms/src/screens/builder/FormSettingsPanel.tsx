@@ -37,7 +37,7 @@ export function FormSettingsPanel({
   onChange: (definition: FormDefinition) => void;
 }) {
   const t = useT();
-  const { locale, locales } = useSession();
+  const { contentLocale: locale, locales } = useSession();
   const settings = definition.settings;
 
   function patch(changes: Partial<FormSettings>) {

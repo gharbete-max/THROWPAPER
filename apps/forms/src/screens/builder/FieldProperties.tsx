@@ -35,7 +35,7 @@ interface Props {
  */
 export function FieldProperties({ field, definition, onChange }: Props) {
   const t = useT();
-  const { locale, locales } = useSession();
+  const { contentLocale: locale, locales } = useSession();
 
   if (!field) return <p className="muted small">{t('builder.selectField')}</p>;
 
