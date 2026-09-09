@@ -47,6 +47,8 @@ export interface InvoiceStrings {
   readonly total: string;
   readonly toPay: string;
   readonly settled: string;
+  /** On the web page only: the link to the same document as a file. */
+  readonly download: string;
 }
 
 export interface InvoiceDocumentInput {
@@ -57,6 +59,15 @@ export interface InvoiceDocumentInput {
   readonly strings: InvoiceStrings;
   readonly tokens?: TokenSet;
   readonly media?: InvoiceMedia;
+  /**
+   * Where the same invoice can be had as a file. Web variant only.
+   *
+   * A tenant forwards an invoice to whoever actually pays it, files it with their accounts, or
+   * prints it. A page is the wrong shape for all three, and "print this page" gives them the
+   * browser's headers and footers over somebody's bank details. Omitted for `print`, where a link
+   * to the file you are already holding is nothing.
+   */
+  readonly pdfUrl?: string;
 }
 
 /** Thousandths back to something a person reads: `67500` is `67,5`. */
@@ -116,6 +127,21 @@ export function renderInvoiceDocument(input: InvoiceDocumentInput): string {
    * Residential rent is exempt in Sweden, so a row reading "VAT 0,00 kr" on every rent invoice is a
    * line that says nothing and invites the question of why it is there.
    */
+  /*
+   * The file, offered from the page — and only from the page.
+   *
+   * A tenant forwards an invoice to whoever actually pays it, files it, or prints it, and a web
+   * page is the wrong shape for all three. `download` rather than a plain link so the browser
+   * saves it instead of navigating; the print variant never gets this, because a link to the file
+   * you are already holding is nothing.
+   */
+  const downloadLink =
+    media === 'web' && input.pdfUrl
+      ? `<p class="download"><a href="${escapeHtml(input.pdfUrl)}" download>${escapeHtml(
+          strings.download,
+        )}</a></p>`
+      : '';
+
   const vatRow =
     invoice.vatMinor > 0n
       ? `<div class="totals__row"><span>${escapeHtml(strings.vat)}</span><span>${escapeHtml(
@@ -284,6 +310,7 @@ ${escapeHtml(invoice.recipientAddress)}`
     </div>
     ${invoice.paidAt ? `<p class="settled">${escapeHtml(strings.settled)}</p>` : ''}
   </section>
+  ${downloadLink}
 </main>
 </body>
 </html>`;
@@ -314,6 +341,26 @@ body {
   /* A four-column table on a 360px screen is a horizontal scrollbar nobody finds. */
   table { font-size: 14px; }
 }
+/*
+ * The download sits after the payment block, not before it.
+ *
+ * What a tenant came for is the amount and the reference; saving a copy is what they do next, if
+ * at all. A 44px target because this is a link people press with a thumb.
+ */
+.download { margin: 24px 0 0; text-align: center; }
+.download a {
+  display: inline-block;
+  min-height: 44px;
+  padding: 11px 20px;
+  color: ${tokens.colour.text};
+  border: 1px solid ${tokens.colour.border};
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 15px;
+}
+.download a:hover { border-color: ${tokens.colour.text}; }
+/* The page offers the file; the file does not offer itself. */
+@media print { .download { display: none; } }
 @media print {
   body { background: none; padding: 0; }
   .invoice { padding: 0; max-width: none; border-radius: 0; }

@@ -276,7 +276,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerFormRoutes(app, { repos, guard });
   registerAdminRoutes(app, { repos, guard });
   registerLedgerRoutes(app, { repos, guard });
-  registerPublicInvoiceRoutes(app, { repos });
+  registerPublicInvoiceRoutes(app, { repos, renderer });
   registerPublicFormRoutes(app, {
     repos,
     mail,
