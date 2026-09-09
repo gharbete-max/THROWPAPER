@@ -2575,7 +2575,12 @@ h4 {
 .shell--roomy > .stack > form,
 .shell--roomy > .stack > p,
 .shell--roomy > .stack > .inbox,
-.shell--roomy > .stack > .loading {
+.shell--roomy > .stack > .loading,
+/* A table is one wide thing, never a column of the grid: as a grid item it was sized to a single
+   26rem track and scrolled sideways inside it while half the page stayed empty. */
+.shell--roomy > .stack > .table-scroll,
+/* And the state that replaces it, or "no invoices yet" sits in the left half of the screen. */
+.shell--roomy > .stack > .empty {
   grid-column: 1 / -1;
 }
 
@@ -3658,6 +3663,18 @@ body:has(.app) > #root {
     border-block-start: 0;
   }
 
+  /*
+   * The sections take the width that is going spare.
+   *
+   * The bar is `space-around`, so with content-width groups the leftover was spent on gaps
+   * between them: six destinations shared 216px of a 390px bar and got 43px each, which is
+   * narrower than the word "Responses". Growing the group spends that space on the labels
+   * instead, which is what it is for.
+   */
+  .sidebar__sections {
+    flex: 1 1 auto;
+  }
+
   /* A bottom bar is icons over labels: the label alone is too wide for five across a phone. */
   .sidebar .nav-link {
     flex-direction: column;
@@ -3666,6 +3683,26 @@ body:has(.app) > #root {
     font-size: var(--tp-text-xs);
     /* The 44px floor, on the one control a phone user hits most. */
     min-block-size: 44px;
+    /*
+     * Equal shares of the bar, and each allowed to be narrower than its own label.
+     *
+     * The rule above was written for five sections. Invoices made six, and a row of
+     * content-width items simply overflowed: "Responses" was drawn across its neighbours rather
+     * than politely shrinking, because a flex item will not go below its content unless
+     * `min-inline-size` says it may. Sharing the width keeps every destination the same size,
+     * which is also what makes the row read as a set rather than a sentence.
+     */
+    flex: 1 1 0;
+    min-inline-size: 0;
+    text-align: center;
+    /*
+     * And a label that still does not fit is cut with an ellipsis rather than spilling. Six fit at
+     * 390px; a seventh, or a language with a longer word for "Responses", would not — and a
+     * truncated label under a recognisable icon beats two labels drawn over each other.
+     */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .sidebar .nav-link .icon--lead {
@@ -4941,4 +4978,83 @@ body:has(> #root .shell--narrow) {
 .wizard__summary .icon {
   color: var(--tp-colour-success);
   flex: none;
+}
+
+/* ==========================================================================
+ * Invoices: a book somebody scans down.
+ * ========================================================================== */
+
+/*
+ * The number and the money share a treatment, because they are the two columns an eye runs down.
+ * Tabular figures so the digits stack; without them a column of amounts is a ragged edge and the
+ * only check anybody performs on an invoice list — does this add up — stops being possible.
+ */
+.invoices__number,
+.grid__amount {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Money aligns on its last digit. Nothing else in this table does.
+ *
+ * Written as `.grid th`/`.grid td` rather than `.grid__amount` alone because the base rule is
+ * `.grid th, .grid td { text-align: left }` — element plus class outranks a lone class, so the
+ * short selector lost and a column of kronor stayed ragged.
+ */
+.grid th.grid__amount,
+.grid td.grid__amount {
+  text-align: right;
+}
+
+.invoices__outstanding {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+/*
+ * The date and its badge, kept on one line — without turning the cell into a flex container.
+ *
+ * `display: flex` on a `td` takes the cell out of the table's own layout: it stops sharing the
+ * column's width and draws its border independently of the row, which put a rule above and below
+ * this one date and no others.
+ */
+.invoices__due {
+  white-space: nowrap;
+}
+
+.invoices__due .badge {
+  margin-inline-start: calc(var(--tp-spacing-unit) * 0.75);
+}
+
+.invoices__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+/*
+ * Late, and the only row state worth a colour.
+ *
+ * `sent` and `issued` are the ordinary life of an invoice and read as rest, like a draft form.
+ * Paid is the good ending and gets the success colour the rest of the app already uses for one.
+ */
+.badge--overdue {
+  color: var(--tp-colour-danger);
+  border-color: color-mix(in srgb, var(--tp-colour-danger) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-danger) 10%, transparent);
+}
+
+.badge--paid {
+  color: var(--tp-colour-success);
+  border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
+}
+
+.badge--draft,
+.badge--issued,
+.badge--sent,
+.badge--cancelled {
+  color: var(--tp-colour-muted);
+  border-color: var(--tp-colour-border);
+  background: none;
 }

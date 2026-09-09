@@ -215,3 +215,17 @@ export const SendInvoiceBatch = z.object({
   testRecipient: Email.optional(),
 });
 export type SendInvoiceBatch = z.infer<typeof SendInvoiceBatch>;
+
+/**
+ * A page of invoices, for the screen that lists them.
+ *
+ * `outstanding` is summed by the server rather than in the browser. A total that a client adds up
+ * from the rows it happens to be showing is a total that changes when a filter does, and the one
+ * number a landlord opens this screen for is how much is still owed across all of it.
+ */
+export const InvoiceListResponse = z.object({
+  invoices: z.array(Invoice),
+  outstanding: MinorAmount,
+  currency: Currency,
+});
+export type InvoiceListResponse = z.infer<typeof InvoiceListResponse>;
