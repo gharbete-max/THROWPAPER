@@ -4,6 +4,31 @@ import { readFileSync } from 'node:fs';
 import { VitePWA } from 'vite-plugin-pwa';
 import { SERVER_RENDERED_PATHS } from './src/site/routes.js';
 
+const API_ORIGIN = 'http://localhost:4001';
+
+/**
+ * What the dev server hands to the API instead of answering itself.
+ *
+ * In production one origin serves both the app and the API, so a path like `/i/:token` is simply
+ * a page. In development they are two ports, and anything not listed here falls through to Vite's
+ * SPA fallback — which answers `200 text/html` with the app shell. That is the failure mode worth
+ * naming: nothing errors. The invoice link on the Invoices screen returned a 2 kB page titled
+ * "Formwork" instead of a 167 kB invoice, and the only way to notice was to open one.
+ *
+ * `/api` is the app's own calls, prefixed so they cannot collide with a route the SPA owns.
+ * `/i/` is a public document the API renders per token, passed through unrewritten because the
+ * tenant's URL is the real one.
+ *
+ * **The trailing slash on `/i/` is load-bearing.** Vite matches these keys as plain prefixes, so
+ * `/i` also captures `/invoices` — the app's own screen — and `/icon-192.png`. Written without it,
+ * the Invoices page answered `{"statusCode":404,"message":"Route GET:/invoices not found"}` from
+ * the API. `/i/` matches the token URLs and nothing the SPA owns.
+ */
+const DEV_PROXY = {
+  '/api': { target: API_ORIGIN, rewrite: (p: string) => p.replace(/^\/api/, '') },
+  '/i/': { target: API_ORIGIN },
+};
+
 /**
  * Read from the token JSON rather than importing @tp/tokens: Vite loads this config outside the
  * workspace's module resolution, so the package's source entry point is not reachable here. Still
@@ -69,11 +94,11 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    proxy: { '/api': { target: 'http://localhost:4001', rewrite: (p) => p.replace(/^\/api/, '') } },
+    proxy: DEV_PROXY,
   },
   // The e2e suite drives a built app rather than the dev server, so preview needs the same proxy.
   preview: {
     port: 4173,
-    proxy: { '/api': { target: 'http://localhost:4001', rewrite: (p) => p.replace(/^\/api/, '') } },
+    proxy: DEV_PROXY,
   },
 });

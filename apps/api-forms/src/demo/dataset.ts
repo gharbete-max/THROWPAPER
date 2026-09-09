@@ -1,7 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
-import type { MemoryState } from '../db/repositories/index.js';
+import type {
+  JournalEntryRecord,
+  JournalLineRecord,
+  LedgerAccountRecord,
+  MemoryState,
+} from '../db/repositories/index.js';
 import { generateReference } from '../forms/public-service.js';
 import { demoEventName, demoSchedule } from './schedule.js';
 
@@ -311,6 +316,95 @@ function demoInvoices(organisationId: string, now: Date) {
   return { batch, invoices };
 }
 
+/**
+ * The book, posted from the invoices above rather than written beside them.
+ *
+ * The ledger shipped with no demo data at all, so the one screen that proves this product can be
+ * trusted with money opened empty. Inventing a plausible-looking book would have been worse than
+ * that: a demo where the ledger and the invoices disagree is a demo that teaches somebody the
+ * numbers do not tie, which is the single thing double-entry exists to promise.
+ *
+ * So each invoice posts the entry it would actually post — the tenant owes it, the rent is
+ * income, the VAT is owed onward — and the trial balance the screen computes comes out at zero
+ * because it genuinely balances, not because anything here says so.
+ */
+function demoLedger(
+  organisationId: string,
+  invoices: ReturnType<typeof demoInvoices>['invoices'],
+  now: Date,
+) {
+  const account = (
+    code: string,
+    sv: string,
+    en: string,
+    type: LedgerAccountRecord['type'],
+  ): LedgerAccountRecord => ({
+    id: randomUUID(),
+    organisationId,
+    code,
+    name: { 'sv-SE': sv, 'en-GB': en },
+    type,
+    archivedAt: null,
+    createdAt: now,
+  });
+
+  /* BAS-style codes, because a Swedish bookkeeper reading this should recognise the shelf. */
+  const receivable = account('1510', 'Kundfordringar', 'Trade receivables', 'asset');
+  const rentIncome = account('3011', 'Hyresintäkter', 'Rental income', 'income');
+  const serviceIncome = account('3012', 'Tjänsteintäkter', 'Service income', 'income');
+  const vatOwed = account('2611', 'Utgående moms', 'VAT payable', 'liability');
+  const bank = account('1930', 'Bankkonto', 'Bank account', 'asset');
+  const accounts = [receivable, rentIncome, serviceIncome, vatOwed, bank];
+
+  const entries: JournalEntryRecord[] = [];
+  const lines: JournalLineRecord[] = [];
+
+  for (const invoice of invoices) {
+    const entryId = randomUUID();
+    entries.push({
+      id: entryId,
+      organisationId,
+      reference: `F${invoice.number}`,
+      description: `Hyra ${invoice.recipientReference} — ${invoice.recipientName}`,
+      occurredOn: invoice.issuedOn,
+      postedAt: now,
+      postedByUserId: null,
+      reversesEntryId: null,
+      reversedByEntryId: null,
+      currency: invoice.currency,
+    });
+
+    /* Rent is exempt; everything else on the invoice carries VAT. Split so the income lands on
+     * the right shelf rather than in one lump nobody could take apart afterwards. */
+    const rentMinor = invoice.lines
+      .filter((each) => each.vatRateBasisPoints === 0)
+      .reduce((total, each) => total + each.amountMinor, 0n);
+    const serviceMinor = invoice.lines
+      .filter((each) => each.vatRateBasisPoints > 0)
+      .reduce((total, each) => total + each.amountMinor, 0n);
+
+    const post = (accountId: string, debitMinor: bigint, creditMinor: bigint, memo: string) => {
+      if (debitMinor === 0n && creditMinor === 0n) return;
+      lines.push({
+        id: randomUUID(),
+        entryId,
+        accountId,
+        debitMinor,
+        creditMinor,
+        memo,
+        position: lines.filter((each) => each.entryId === entryId).length,
+      });
+    };
+
+    post(receivable.id, invoice.totalMinor, 0n, 'Fordran');
+    post(rentIncome.id, 0n, rentMinor, 'Hyra');
+    post(serviceIncome.id, 0n, serviceMinor, 'Tillägg');
+    post(vatOwed.id, 0n, invoice.vatMinor, 'Moms');
+  }
+
+  return { accounts, entries, lines };
+}
+
 export function buildDemoState(options: { registrations?: number; now?: Date } = {}): MemoryState {
   const now = options.now ?? new Date();
   const count = options.registrations ?? 40;
@@ -321,6 +415,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
   const formId = randomUUID();
   const versionId = randomUUID();
   const demoBilling = demoInvoices(organisationId, now);
+  const demoBook = demoLedger(organisationId, demoBilling.invoices, now);
 
   /**
    * Stable ids for the demo people, so the forms below can actually belong to somebody.
@@ -489,8 +584,8 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     // somebody could mistake for an example of correct bookkeeping.
     invoiceBatches: [demoBilling.batch],
     invoices: demoBilling.invoices,
-    ledgerAccounts: [],
-    journalEntries: [],
-    journalLines: [],
+    ledgerAccounts: demoBook.accounts,
+    journalEntries: demoBook.entries,
+    journalLines: demoBook.lines,
   };
 }

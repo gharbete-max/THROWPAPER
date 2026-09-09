@@ -73,6 +73,7 @@ export function CommandPalette() {
       { id: 'events', label: t('nav.events'), icon: 'events', to: '/events' },
       { id: 'forms', label: t('nav.forms'), icon: 'forms', to: '/forms' },
       { id: 'inbox', label: t('nav.inbox'), icon: 'inbox', to: '/responses' },
+      { id: 'invoices', label: t('nav.invoices'), icon: 'file', to: '/invoices' },
       { id: 'brand', label: t('nav.brand'), icon: 'brand', to: '/brand' },
     ];
     // Same rule as the top bar: support work only appears for the people who do it.

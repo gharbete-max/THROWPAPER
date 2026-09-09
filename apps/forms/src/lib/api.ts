@@ -1,4 +1,4 @@
-import type { api, forms as formSchemas } from '@tp/shared';
+import type { api, forms as formSchemas, invoicing as invoicingSchemas } from '@tp/shared';
 import type { TokenSet, ContrastFinding } from '@tp/tokens';
 import type { FormTemplate } from '@tp/shared/forms';
 
@@ -212,6 +212,9 @@ export const client = {
 
   listForms: (scope: formSchemas.FormScope = 'active') =>
     request<{ forms: formSchemas.FormResponse[] }>(`/v1/forms?scope=${scope}`),
+
+  /** The invoices this organisation has raised, newest first, with what is still owed. */
+  listInvoices: () => request<invoicingSchemas.InvoiceListResponse>('/v1/invoices'),
 
   trashForm: (id: string) =>
     request<formSchemas.FormResponse>(`/v1/forms/${id}/trash`, { method: 'POST' }),
