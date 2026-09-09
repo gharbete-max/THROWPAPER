@@ -18,6 +18,26 @@ const Env = z.object({
   JWT_SECRET: z.string().min(32).optional(),
   /** Base URL of apps/forms, used to build magic links and to scope CORS. */
   APP_URL: z.string().url().default('http://localhost:5173'),
+  /**
+   * Which proxies in front of this server may be believed. **Empty is wrong once deployed.**
+   *
+   * Every rate limit keys on `request.ip`, which without this is the socket address. Behind a TLS
+   * terminator that is the *proxy's* address for every visitor, so they all share one bucket — and
+   * `POST /v1/auth/magic-link` is capped at 5 per 15 minutes. Six requests from anywhere would
+   * disable sign-in for the whole tenant, and magic link is the only door. It also makes every
+   * `auditLog.ip` the proxy's rather than the actor's.
+   *
+   * **A list of addresses, deliberately not `true`.** `trustProxy: true` believes the entire
+   * `X-Forwarded-For` header including the part the client wrote, so anyone could forge their own
+   * address and walk around every limit — trading a denial-of-service for a bypass. Naming the
+   * proxies means only a hop that really is yours is believed.
+   *
+   * Comma-separated. Takes an address, a CIDR range, or one of proxy-addr's names: `loopback`,
+   * `linklocal`, `uniquelocal`. Example: `10.0.0.0/8,uniquelocal`.
+   *
+   * Empty is today's behaviour and is correct on localhost. See `PRE-LAUNCH-AUDIT.md`.
+   */
+  TRUST_PROXY: z.string().default(''),
 });
 
 export const env = Env.parse(process.env);

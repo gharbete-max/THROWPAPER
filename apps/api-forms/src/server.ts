@@ -101,7 +101,20 @@ async function loadDatabase() {
 export async function buildServer(options: ServerOptions = {}): Promise<FastifyInstance> {
   const appDir = options.serveAppFrom ?? process.env['SERVE_APP'];
 
+  /*
+   * Which proxies to believe about the client's address. See `TRUST_PROXY` in env.ts.
+   *
+   * A list rather than `true`, so a client cannot forge its own address by writing
+   * `X-Forwarded-For`. `false` — the default — means `request.ip` is the socket, which is right on
+   * localhost and wrong behind any TLS terminator.
+   */
+  const trusted = (process.env['TRUST_PROXY'] ?? '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
   const app = Fastify({
+    trustProxy: trusted.length > 0 ? trusted : false,
     logger: {
       level: process.env.NODE_ENV === 'test' ? 'silent' : 'info',
       /**

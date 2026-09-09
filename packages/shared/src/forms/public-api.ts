@@ -75,6 +75,15 @@ export const SaveDraftRequest = z.object({
   locale: Locale,
   values: z.record(AnswerValue),
   resumeToken: z.string().min(16).max(512).optional(),
+  /**
+   * The same honeypot the submit route has, for the same reason.
+   *
+   * Saving a draft emails a link to whatever address the answers contain. That makes this route an
+   * anonymous "send mail from the customer's verified domain to an address I choose" endpoint —
+   * the more attractive half of the pair, because unlike submitting it leaves no row anybody
+   * reviews. It shipped without the honeypot its sibling has.
+   */
+  website: z.string().max(200).optional(),
 });
 
 export const SaveDraftResponse = z.object({

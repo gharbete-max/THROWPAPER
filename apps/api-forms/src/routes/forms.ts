@@ -11,42 +11,9 @@ import type {
 } from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
 import { toFormResponse } from '../forms/service.js';
+import { resolveFormAccess as resolve } from '../forms/access.js';
 
 type Auth = { user: UserRecord; organisation: OrganisationRecord };
-
-/**
- * A form, plus what this person may do with it.
- *
- * The one place a route learns about permission. Every handler below asks this and then asks a
- * predicate from `@tp/shared` — nothing here compares roles by hand, because six handlers doing
- * that independently is how the Edit button and the endpoint behind it come to disagree.
- *
- * `null` covers both "no such form" and "not yours", deliberately: a 403 on somebody else's
- * private form confirms it exists, which is a fact the asker did not have. Both answer 404.
- */
-async function resolve(
-  repos: Repositories,
-  auth: Auth,
-  id: string,
-): Promise<{
-  form: FormRecord;
-  access: formSchemas.FormAccess;
-  shareCount: number;
-  sharedRole: formSchemas.FormShareRole | null;
-} | null> {
-  const form = await repos.forms.findById(auth.organisation.id, id);
-  if (!form) return null;
-  const shares = await repos.forms.listShares(auth.organisation.id, id);
-  const mine = shares.find((share) => share.userId === auth.user.id)?.role ?? null;
-  const access = formSchemas.accessFor({
-    userId: auth.user.id,
-    userRole: auth.user.role,
-    ownerUserId: form.ownerUserId,
-    shareRole: mine,
-  });
-  if (!access) return null;
-  return { form, access, shareCount: shares.length, sharedRole: mine };
-}
 
 /**
  * The response for a single form, with the owner's name filled in.
