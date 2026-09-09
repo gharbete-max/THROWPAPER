@@ -159,11 +159,35 @@ a screenshot of the marketing page.
 5. **The CSP permits no external origins.** Fonts are self-hosted and byte-inlined. Any new face
    must be OFL and self-hosted the same way — which also keeps the Phase 2 transfer answer at
    "none".
-6. **Baseline for comparison:** 36 screenshots (18 templates × desktop/mobile) were captured in
-   Phase 0 with the Playwright already in the repo. They live in a session scratchpad and **will
-   not survive** — recapture or commit them before starting Phase 3, or there is nothing to
-   compare against. Note they were taken against `pnpm demo`, which is Vite, so site-page titles in
-   them show the SPA shell rather than the SSR output.
+6. **Baseline for comparison:** see below. The images were **not** committed; the recipe is here
+   instead, because regenerating them takes a minute and a stale set is worse than none.
+
+### Regenerating the visual baseline
+
+Phase 0 captured 36 shots — 18 templates × desktop (1280×800) and mobile (375×812) — and the
+result is worth recording even though the files are gone: **36/36 rendered, 0 errors, and no page
+overflowed horizontally at 375px.** That is the number Phase 3 has to still be true afterwards.
+
+There is no script in the repo for this and it does not need one. The mechanics that are easy to
+get wrong:
+
+- **Playwright is already installed** (it renders admission PDFs) — do not add it. A script placed
+  outside the workspace cannot resolve it, so reach it with
+  `createRequire('<repo>/apps/api-forms/package.json')('playwright')`.
+- Run against `pnpm demo`, sign in once per browser context by clicking **Sign in as admin**, and
+  screenshot with `fullPage: true`.
+- Assert `document.documentElement.scrollWidth > clientWidth` per page. Overflow at 375px is
+  invisible in a screenshot and is the regression this catches.
+- Templates worth capturing: `/`, two `/features/*`, the five legal pages, `/login`, `/f/varmotet`,
+  `/i/de120100000000000000000000000000`, a 404, and the six app screens (`/events`, `/forms`,
+  `/responses`, `/invoices`, `/users`, `/brand`).
+
+**The caveat that matters:** `pnpm demo` runs Vite, which serves the SPA shell for site routes, so
+every site page in such a capture is titled "Formwork". That is a dev artefact, **not** a bug —
+`entry-server.tsx` does emit per-page meta. Anything about titles, meta or social cards must be
+checked against the built container instead. (There is a real duplicate-title bug underneath it:
+`metaFor()` only special-cases `/features/*`, so home and all five legal pages share one title.
+That is Phase 4, item 10.)
 
 ### Verdict
 
