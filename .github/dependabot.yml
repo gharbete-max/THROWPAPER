@@ -1,0 +1,31 @@
+# Automated dependency updates.
+#
+# Weekly rather than daily: this is a two-person repository, and a queue of twenty open pull
+# requests is a queue nobody reads, which is the failure mode that leaves the security updates
+# unmerged along with everything else.
+#
+# `groups` matters more than the interval. Ungrouped, a pnpm workspace this size produces a pull
+# request per package per week; grouped, it produces two that can be reviewed in one sitting.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Patch and minor together: these are the ones that should be boring to merge.
+      routine:
+        update-types: [minor, patch]
+    # Majors arrive on their own, because a major is a decision rather than an update.
+    labels: [dependencies]
+
+  # The Actions in .github/workflows pin to major tags; this keeps those current, including the
+  # gitleaks action that the supply-chain job depends on.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies, ci]
