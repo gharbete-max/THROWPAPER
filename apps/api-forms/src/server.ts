@@ -12,6 +12,8 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
+import type { FastifyError } from 'fastify';
+import { redactSecretsInUrl } from './log-redaction.js';
 import { CONTRACT_VERSION } from '@tp/shared';
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -100,7 +102,31 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   const appDir = options.serveAppFrom ?? process.env['SERVE_APP'];
 
   const app = Fastify({
-    logger: { level: process.env.NODE_ENV === 'test' ? 'silent' : 'info' },
+    logger: {
+      level: process.env.NODE_ENV === 'test' ? 'silent' : 'info',
+      /**
+       * The URL is logged on every request, and several of this app's URLs *are* the credential.
+       *
+       * Fastify's default `req` serializer emits `{method, url, …}`. Bodies and headers are never
+       * logged, so the bearer token is safe — but `/i/<token>`, `/public/forms/:slug/resume/<token>`
+       * and the signed document download all carry their secret in the path. Every one of those was
+       * being written to stdout in cleartext, on every hit, and then kept for as long as the log is
+       * kept — which is currently forever.
+       *
+       * Redacting by shape rather than by route on purpose: a route added next year gets this for
+       * free, and the alternative is a list that has to be remembered. A long run of hex or
+       * base64url is not something a slug or an id needs to be.
+       */
+      serializers: {
+        req(request: { method: string; url: string; ip?: string }) {
+          return {
+            method: request.method,
+            url: redactSecretsInUrl(request.url),
+            remoteAddress: request.ip,
+          };
+        },
+      },
+    },
     /**
      * The app calls `/api/v1/...`. In development Vite proxies that to this server and strips the
      * prefix; in the container there is no proxy, so the server strips it itself. Same rule, same
@@ -119,6 +145,39 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+
+  /**
+   * One error shape, and nothing internal in it.
+   *
+   * Fastify's default handler answers `{ statusCode, error, message }` — which is not the
+   * `ErrorResponse` contract every route in this app declares, so a client reading
+   * `body.error.code` got `undefined` for exactly the responses it most needed to branch on.
+   *
+   * It also puts `error.message` in the body. For a validation failure that is the point; for an
+   * unexpected throw it is whatever the layer below said, and the layer below is Postgres. A
+   * constraint violation would have replied with the constraint's name, the column, and by
+   * implication the schema. So 5xx says one sentence and the detail goes to the log, where it is
+   * useful and not public.
+   */
+  app.setErrorHandler((error: FastifyError, request, reply) => {
+    const status = error.statusCode ?? 500;
+
+    if (status >= 500) {
+      // Logged in full — this is the only copy of what actually happened.
+      request.log.error({ err: error }, 'unhandled error');
+      return reply.code(status).send({
+        error: { code: 'internal', message: 'Something went wrong. Try again.' },
+      });
+    }
+
+    /*
+     * Below 500 the message is ours: a Zod validation failure, or a route that threw a known
+     * HTTP error deliberately. Those are safe to return and are what a client acts on.
+     */
+    return reply.code(status).send({
+      error: { code: error.code ?? 'bad-request', message: error.message },
+    });
+  });
 
   const database = options.repos ? null : await loadDatabase();
   const repos = options.repos ?? database?.repos;

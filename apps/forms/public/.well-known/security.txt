@@ -1,0 +1,15 @@
+# Formwork — how to report a security problem
+#
+# RFC 9116. Served as a static file from the app's public root, so it is reachable at
+# /.well-known/security.txt without a route.
+#
+# PENDING: Contact, Canonical and the domain in Policy are business facts and are marked so that
+# this file cannot be mistaken for finished. See PRE-LAUNCH-AUDIT.md §8 and LEGAL-REVIEW.md.
+# A security.txt naming an address nobody reads is worse than none: it promises a channel that
+# silently drops reports.
+
+# Contact: mailto:PENDING-SECURITY-CONTACT-ADDRESS
+# Canonical: https://PENDING-DOMAIN/.well-known/security.txt
+
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: sv, en

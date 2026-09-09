@@ -6,6 +6,37 @@ on:
   pull_request:
 
 jobs:
+  # Secrets and vulnerable dependencies, before anything slower runs.
+  #
+  # Separate from `verify` on purpose: it needs no Postgres and no Chromium, so it answers in
+  # under a minute and fails a pull request on a committed credential before the five-minute
+  # suite has finished starting.
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # gitleaks compares against history; a shallow clone would only ever scan the tip and
+          # report clean on a repository with a secret three commits back.
+          fetch-depth: 0
+
+      - name: Scan the full history for committed secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Advisories only fail the build at high or critical. Moderate findings in a dev-only
+      # dependency should not block a release at 23:00; they should be visible in the log.
+      - name: Audit dependencies
+        run: pnpm audit --prod --audit-level high
+
   verify:
     runs-on: ubuntu-latest
     services:
