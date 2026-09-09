@@ -27,6 +27,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Summa',
     toPay: 'Att betala',
     settled: 'Betald. Tack.',
+    download: 'Ladda ner som PDF',
   },
   'en-GB': {
     invoice: 'Invoice',
@@ -44,6 +45,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Total',
     toPay: 'To pay',
     settled: 'Paid. Thank you.',
+    download: 'Download as PDF',
   },
   'da-DK': {
     invoice: 'Faktura',
@@ -61,6 +63,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'I alt',
     toPay: 'At betale',
     settled: 'Betalt. Tak.',
+    download: 'Hent som PDF',
   },
   'nb-NO': {
     invoice: 'Faktura',
@@ -78,6 +81,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Sum',
     toPay: 'Å betale',
     settled: 'Betalt. Takk.',
+    download: 'Last ned som PDF',
   },
   'fi-FI': {
     invoice: 'Lasku',
@@ -95,6 +99,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Yhteensä',
     toPay: 'Maksettava',
     settled: 'Maksettu. Kiitos.',
+    download: 'Lataa PDF-tiedostona',
   },
   'is-IS': {
     invoice: 'Reikningur',
@@ -112,6 +117,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Samtals',
     toPay: 'Til greiðslu',
     settled: 'Greitt. Takk.',
+    download: 'Sækja sem PDF',
   },
   'de-DE': {
     invoice: 'Rechnung',
@@ -129,6 +135,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Gesamt',
     toPay: 'Zu zahlen',
     settled: 'Bezahlt. Danke.',
+    download: 'Als PDF herunterladen',
   },
   'fr-FR': {
     invoice: 'Facture',
@@ -146,6 +153,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Total',
     toPay: 'À payer',
     settled: 'Payée. Merci.',
+    download: 'Télécharger en PDF',
   },
   'es-ES': {
     invoice: 'Factura',
@@ -163,6 +171,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Total',
     toPay: 'A pagar',
     settled: 'Pagada. Gracias.',
+    download: 'Descargar en PDF',
   },
   'ru-RU': {
     invoice: 'Счёт',
@@ -180,6 +189,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: 'Итого',
     toPay: 'К оплате',
     settled: 'Оплачено. Спасибо.',
+    download: 'Скачать в PDF',
   },
   'ja-JP': {
     invoice: '請求書',
@@ -197,6 +207,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: '合計',
     toPay: 'お支払金額',
     settled: 'お支払い済みです。ありがとうございます。',
+    download: 'PDF をダウンロード',
   },
   'zh-CN': {
     invoice: '账单',
@@ -214,6 +225,7 @@ export const INVOICE_COPY: Record<string, InvoiceStrings> = {
     total: '合计',
     toPay: '应付金额',
     settled: '已付款，谢谢。',
+    download: '下载 PDF',
   },
 };
 
