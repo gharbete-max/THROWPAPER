@@ -5,6 +5,7 @@ import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
 import type { Repositories } from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
+import { resolveFormAccess } from '../forms/access.js';
 import type { AdmissionDeps } from '../documents/admission-service.js';
 import { ADMISSION_BULK_JOB, renderAdmissionPdf } from '../documents/admission-service.js';
 import type { DocumentStore } from '../documents/store.js';
@@ -58,6 +59,17 @@ export function registerDocumentRoutes(
       // only this route would use.
       const submission = await findSubmission(deps.repos, auth.organisation.id, id);
       if (!submission) return notFound(reply);
+
+      /*
+       * And then the form's rules, because a submission inherits them.
+       *
+       * The organisation lookup above is necessary and was not sufficient: an admission card
+       * carries the attendee's name and email, so reaching one is reaching a registrant of
+       * whichever form collected it. A submission id is a UUID rather than a guess, but "hard to
+       * guess" is not access control — and an operator who was once shared a form has seen plenty
+       * of them.
+       */
+      if (!(await resolveFormAccess(deps.repos, auth, submission.formId))) return notFound(reply);
       if (!submission.eventId) {
         return reply.code(409).send({
           error: {
@@ -99,8 +111,19 @@ export function registerDocumentRoutes(
       if (!auth) return unauthenticated(reply);
       const { id } = IdParam.parse(request.params);
 
-      const form = await deps.repos.forms.findById(auth.organisation.id, id);
-      if (!form) return notFound(reply);
+      /*
+       * The form's own access rules, not merely "same organisation".
+       *
+       * This route bulk-exports an admission card — name, email, reference — for every registrant
+       * of a form. It checked `forms.findById`, which answers "is this in your company", while
+       * every route in `forms.ts` asks `resolveFormAccess`, which answers "is this yours". So any
+       * signed-in operator could export the entire registrant list of a colleague's private form
+       * by knowing its id. Same helper as the listing routes now, so the export cannot outlive the
+       * access that shows the form.
+       */
+      const found = await resolveFormAccess(deps.repos, auth, id);
+      if (!found) return notFound(reply);
+      const form = found.form;
 
       const submissions = await deps.repos.submissions.list(auth.organisation.id, id);
       const eligible = submissions.filter((s) => s.status === 'complete' && s.eventId);

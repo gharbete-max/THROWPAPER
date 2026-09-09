@@ -144,6 +144,30 @@ export function registerPublicFormRoutes(
           .send({ error: { code: 'resume-disabled', message: 'This form cannot be saved' } });
       }
 
+      /*
+       * The two guards the submit route has, which this one shipped without.
+       *
+       * Saving a draft sends mail — from the customer's verified sending domain, to whatever
+       * address the answers contain, with no account and no review. That is the more attractive
+       * half of the pair for anyone abusing it, because a draft leaves no row an operator reads.
+       * It was missing both the honeypot and the "is this form still open" check.
+       *
+       * A bot is answered 200 with a token that resumes nothing, exactly as the submit route
+       * pretends to accept: telling a script it was detected is telling it what to change.
+       */
+      if (body.website && body.website.trim() !== '') {
+        return reply.send({
+          resumeToken: generateSecret(),
+          expiresAt: expiryFrom(new Date(), RESUME_TTL_SECONDS).toISOString(),
+        });
+      }
+
+      if (!loaded.availability.open) {
+        return reply.code(409).send({
+          error: { code: 'closed', message: 'This form is no longer accepting answers' },
+        });
+      }
+
       const existing = body.resumeToken
         ? await deps.repos.submissions.findByResumeTokenHash(hashSecret(body.resumeToken))
         : null;
