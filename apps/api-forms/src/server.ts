@@ -20,6 +20,7 @@ import { pathToFileURL } from 'node:url';
 import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
+import { toThemedCssBlock } from '@tp/tokens';
 import { resolveTokens } from './routes/brand-kit.js';
 import { createAuthService } from './auth/service.js';
 import { createConsoleMailProvider, type MailProvider } from './auth/mail.js';
@@ -582,6 +583,12 @@ async function previewForSlug(
         ? new URL(tokens.logoLight, `${origin}/`).toString()
         : `${origin}/icon-512.png`,
       locale,
+      /*
+       * The whole theme, not only the light half. A respondent opening a form on a phone set to
+       * dark should get the organisation's dark palette in the first paint too, and `toThemedCss`
+       * carries the media query and the explicit `data-theme` opt-in together.
+       */
+      palette: toThemedCssBlock(tokens),
     };
   } catch {
     /**

@@ -64,13 +64,29 @@ export default function PublicForm() {
   /**
    * The public page is not inside the app shell, so it applies the brand itself.
    *
-   * The defaults go up immediately and are replaced when the form arrives with the organisation's
-   * kit. Waiting for the fetch would leave the page unstyled for a moment; painting the defaults
-   * first means the worst case is a brief flash of the wrong palette rather than of no palette.
+   * ## Why it now checks before painting
+   *
+   * This used to put the defaults up immediately and replace them when the form arrived, on the
+   * reasoning that "the worst case is a brief flash of the wrong palette rather than of no
+   * palette". That was the right call between those two, and it is no longer the choice being
+   * made: the server inlines the organisation's own compiled palette into the head of a published
+   * form, so the correct colours are in the bytes before any of this runs.
+   *
+   * Painting the defaults anyway would therefore *create* the flash it was written to soften —
+   * a page that arrives in the organisation's colours, blinks to ours, and blinks back. So when
+   * the server has already painted, this waits for the real kit and adds nothing in between.
+   *
+   * The fallback stays for every case where it has not: the dev server, which serves `index.html`
+   * without rendering it, and any deployment serving the shell unrewritten. There the old
+   * reasoning still applies exactly as written.
    */
   useEffect(() => {
+    const serverPainted = document.querySelector('style[data-tp-brand="server"]') !== null;
+    if (!form?.brand && serverPainted) return;
+
     const style = document.createElement('style');
     style.textContent = toCssBlock(form?.brand ?? defaultTokens);
+    // After the server's block, so the organisation's kit wins once it has actually arrived.
     document.head.appendChild(style);
     return () => style.remove();
   }, [form?.brand]);
