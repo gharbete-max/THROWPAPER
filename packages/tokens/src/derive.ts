@@ -372,9 +372,24 @@ export function buttonSurface(tokens: TokenSet): {
        */
       const label = readableOn(colour.primary, background, text);
       const readable = (contrastRatio(label, colour.primary) ?? 0) >= TEXT_CONTRAST;
+      const standsOff = (contrastRatio(colour.primary, background) ?? 0) >= BOUNDARY_CONTRAST;
 
+      /*
+       * When the fill cannot carry the edge, the label's colour can — and it is the right colour
+       * for it rather than a convenient one.
+       *
+       * The border was `brandFill`, the brand walked away from the page until it cleared 3:1. That
+       * works and it invents a colour: every darkening of a mid-tone is a muddier version of it,
+       * so a seafoam brand grew a dark teal edge that appears nowhere in the palette and that
+       * nobody chose. On a pale yellow it grew an olive one.
+       *
+       * `readableOn` has already found a colour that reads against the fill, and it picks it from
+       * the theme's own two poles — the page or the ink. Whichever it lands on is by construction
+       * far from the fill, and the ink is by construction far from the page, so the same value
+       * carries the label *and* the boundary without a third colour existing.
+       */
       return readable
-        ? { background: colour.primary, text: label, border: primary }
+        ? { background: colour.primary, text: label, border: standsOff ? colour.primary : label }
         : { background: primary, text: onPrimary, border: primary };
     }
   }

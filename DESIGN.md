@@ -123,15 +123,30 @@ the shipped colours; it may only assume the _relationships_ between them.
 | Token                        | Value                         | Used for                                                               |
 | ---------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
 | `primary`                    | `#6fb8a6`                     | Filled buttons, the current nav item, the mark's north and south flaps |
-| `secondary`                  | `#2f6b5c`                     | Links and focus rings — it is _read_, so it clears 4.5:1               |
+| `secondary`                  | `#2e3a38`                     | Links and focus rings                                                  |
 | `accent`                     | `#ef8874`                     | The mark's east and west flaps, quote rules. **Decoration, not text**  |
-| `accent-ink`                 | `#8f6156`                     | The accent where it must be _read_. See below                          |
+| `accent-ink`                 | `#8f6156`                     | The accent where it must be _read_. Derived, see below                 |
 | `background`                 | `#f6f5f2`                     | The page                                                               |
 | `surface`                    | `#eceae5`                     | Cards, the rail, raised areas                                          |
 | `text`                       | `#2e3a38`                     | Body copy                                                              |
-| `muted`                      | `#5c6a67`                     | Captions, help text, inactive nav                                      |
-| `border`                     | `#7a8783`                     | Every boundary                                                         |
-| `success` `warning` `danger` | `#2f6b45` `#8a5f00` `#a12b25` | Status only                                                            |
+| `muted`                      | `#666666`                     | Captions, help text, inactive nav                                      |
+| `border`                     | `#858585`                     | Every boundary                                                         |
+| `success` `warning` `danger` | `#2f6b45` `#8a5f00` `#a12b25` | Status only. The one exception below                                   |
+
+### The palette is the mark's, plus black and white
+
+**Five colours exist**: seafoam, its light tint, coral, its light tint, and ink — the five the mark is
+drawn in. Everything else on the page is that ink, that paper, or a grey between them. No sixth hue
+is invented, and that rule is what the greys above are for: `muted` and `border` are neutral, not a
+desaturated brand colour, because a green-grey is a sixth hue wearing a disguise.
+
+The exception is **status**, and it is deliberate. `success`, `warning` and `danger` are not brand
+colours and should not be — an error that is coral on a page whose buttons are seafoam is an error
+nobody reads as one, and the palette has no red or amber to lend. They stay conventional, they are
+never used for anything but status, and per the rule below they are never the only signal.
+
+Transparency is not a sixth colour. Hover fills, pressed states and overlays are the ink or the
+brand at reduced alpha, which is why they do not appear in this table.
 
 Seafoam and coral on a paper canvas, with a green-black ink. Two hue families, peers rather than
 primary and secondary: in the mark they sit opposite each other, and neither is allowed to
@@ -169,9 +184,16 @@ individual check still passing because each was asking about a different pair.
 
 So the two requirements are carried by two different parts of the button. **The fill keeps the
 colour somebody chose** and takes whichever of the ink and the page reads on it — for this palette,
-seafoam with an ink label at 5.11:1. **The border carries the boundary**, deepened by `brandFill`
-to `#499482` at 3.30:1, which is the same division the soft button tier has always used. The fill
-is only darkened when no label can be read on it either way.
+seafoam with an ink label at 5.11:1. **The border carries the boundary**, and it is the label's own
+colour: ink, at 10.83:1 against the page. The fill is only darkened when no label can be read on it
+either way.
+
+The border was `brandFill` — the brand walked away from the page until it cleared 3:1 — which
+worked and invented a colour. Every darkening of a mid-tone is a muddier version of it, so seafoam
+grew a `#499482` edge that is in no palette and that nobody picked; a pale yellow brand grew an
+olive one. Reusing the label solves it without a third colour existing: `readableOn` has already
+found something that reads against the fill, drawn from the theme's own two poles, and the ink is
+by construction far from the page.
 
 This is why `checkContrast` no longer reports "the page colour on top of the primary": nothing
 paints that pair. What it reports instead is a primary that _no_ label can be read on, which is a

@@ -1,13 +1,13 @@
 {
   "colour": {
     "primary": "#6fb8a6",
-    "secondary": "#2f6b5c",
+    "secondary": "#2e3a38",
     "accent": "#ef8874",
     "background": "#f6f5f2",
     "surface": "#eceae5",
     "text": "#2e3a38",
-    "muted": "#5c6a67",
-    "border": "#7a8783",
+    "muted": "#666666",
+    "border": "#858585",
     "success": "#2f6b45",
     "warning": "#8a5f00",
     "danger": "#a12b25"
