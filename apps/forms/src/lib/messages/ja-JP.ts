@@ -8,7 +8,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const jaJP: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'ログアウト',
   'app.language': '言語',
   'app.loading': '読み込み中…',

@@ -3,7 +3,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const fiFI: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'Kirjaudu ulos',
   'app.language': 'Kieli',
   'app.loading': 'Ladataan…',

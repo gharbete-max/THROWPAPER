@@ -22,8 +22,8 @@ export function App() {
     <main className="shell">
       <h1>Sendwork</h1>
       <p className="muted">
-        Scaffold only. v0.1 ships a thin transactional sending path inside Formwork; Sendwork
-        becomes a real product later — <code>docs/START-HERE.md</code> §About the parallel tracks.
+        Scaffold only. v0.1 ships a thin transactional sending path inside Paloppa; Sendwork becomes
+        a real product later — <code>docs/START-HERE.md</code> §About the parallel tracks.
       </p>
 
       <section className="card">

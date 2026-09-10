@@ -68,7 +68,7 @@ export function render(path: string, origin: string): Rendered {
    * `page` is what the router matches and what `metaFor` describes; `locale` decides every word on
    * it. Splitting here rather than inside `Site` keeps the head and the body reading the same two
    * values, which is what stops a German page being served with an English `<title>` — the exact
-   * class of bug that already produced an invoice titled "Formwork" twice.
+   * class of bug that already produced an invoice titled "Paloppa" twice.
    */
   const { locale, path: page } = splitLocale(path);
   const copy = copyFor(locale);
@@ -117,6 +117,12 @@ export function render(path: string, origin: string): Rendered {
       `${site}${localePath(SITE_DEFAULT_LOCALE, page)}`,
     )}" />`,
     `<meta property="og:type" content="website" />`,
+    /*
+     * The product's name, not the page's. `og:title` is already the page — for a feature page the
+     * two differ, and without this a shared link is attributed to whatever that page happened to be
+     * called rather than to Paloppa.
+     */
+    `<meta property="og:site_name" content="Paloppa" />`,
     `<meta property="og:title" content="${title}" />`,
     `<meta property="og:description" content="${description}" />`,
     `<meta property="og:url" content="${canonical}" />`,

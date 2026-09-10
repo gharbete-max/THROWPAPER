@@ -2,7 +2,7 @@
  * What a form's link looks like when somebody pastes it somewhere.
  *
  * The whole distribution model of this product is "send people a link". That link went into Slack,
- * WhatsApp, iMessage, Teams and LinkedIn and previewed as **"Formwork"** with no title, no
+ * WhatsApp, iMessage, Teams and LinkedIn and previewed as **"Paloppa"** with no title, no
  * organisation and no picture — because the container serves the built `index.html` for every
  * client route, and that file is written once at build time and says the same thing for every URL.
  *
@@ -83,7 +83,7 @@ export function withLinkPreview(html: string, preview: LinkPreview): string {
        * The tab title too, not only the card.
        *
        * Somebody who opens the link and leaves it in a background tab has the same problem as
-       * somebody reading the preview: twelve tabs all saying "Formwork" identify nothing.
+       * somebody reading the preview: twelve tabs all saying "Paloppa" identify nothing.
        */
       .replace(/<title>[^<]*<\/title>/, `<title>${title} — ${organisation}</title>`)
       .replace(/<\/head>/, `  ${tags}\n  </head>`)

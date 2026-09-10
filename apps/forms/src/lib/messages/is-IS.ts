@@ -3,7 +3,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const isIS: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'Skrá út',
   'app.language': 'Tungumál',
   'app.loading': 'Hleð…',

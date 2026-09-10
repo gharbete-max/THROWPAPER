@@ -61,7 +61,7 @@ describe('the site copy', () => {
    * likeliest one: a column filled in a hurry keeps a sentence or two of the source. Comparing
    * against English rather than eyeballing it means the check does not depend on knowing Danish.
    *
-   * Product nouns are the honest exception — "Formwork", "ICU", "CSV", "PDF", "bigint" and
+   * Product nouns are the honest exception — "Paloppa", "ICU", "CSV", "PDF", "bigint" and
    * "QR-kod" are the same word in every language, and demanding otherwise would be demanding a
    * mistranslation.
    */

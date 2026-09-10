@@ -8,7 +8,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const zhCN: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': '退出登录',
   'app.language': '语言',
   'app.loading': '加载中…',

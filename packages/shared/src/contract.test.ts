@@ -36,7 +36,7 @@ describe('SendMessageRequest', () => {
 });
 
 describe('UpsertContact', () => {
-  it('has no consent field — consent is Sendwork’s record, not Formwork’s', () => {
+  it('has no consent field — consent is Sendwork’s record, not Paloppa’s', () => {
     const parsed = UpsertContact.parse({ contactRef: 'c1', email: 'a@example.com', consent: true });
     expect(parsed).not.toHaveProperty('consent');
   });

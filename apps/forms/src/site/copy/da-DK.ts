@@ -12,10 +12,10 @@ import type { SiteCopy } from '../content.js';
  */
 export const daDK: SiteCopy = {
   meta: {
-    homeTitle: 'Formwork — formularer, tilmeldinger og døren',
+    homeTitle: 'Paloppa — formularer, tilmeldinger og døren',
     homeDescription:
       'Et formularværktøj til organisationer, der skal have det til at passe: tolv sprog, jeres eget design overalt, og et adgangskort, der kan scannes i døren.',
-    titleSuffix: ' — Formwork',
+    titleSuffix: ' — Paloppa',
   },
   chrome: {
     skipToContent: 'Spring til indhold',
@@ -24,7 +24,7 @@ export const daDK: SiteCopy = {
     languageLabel: 'Sprog',
     openTheDemo: 'Åbn demoen',
     footerTagline:
-      'Formwork. Formularer, tilmeldinger og døren. Demoen gemmer intet og sender intet.',
+      'Paloppa. Formularer, tilmeldinger og døren. Demoen gemmer intet og sender intet.',
   },
   hero: {
     eyebrow: 'Formularer, tilmeldinger og døren',

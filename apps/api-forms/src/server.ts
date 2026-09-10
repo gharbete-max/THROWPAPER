@@ -286,7 +286,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   await app.register(multipart, { limits: { fileSize: MAX_IMAGE_BYTES, files: 1 } });
   await app.register(swagger, {
     openapi: {
-      info: { title: 'Formwork API', version: '0.1.0' },
+      info: { title: 'Paloppa API', version: '0.1.0' },
       components: {
         securitySchemes: { bearer: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } },
       },

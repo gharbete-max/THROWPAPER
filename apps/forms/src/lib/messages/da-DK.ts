@@ -3,7 +3,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const daDK: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'Log ud',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',

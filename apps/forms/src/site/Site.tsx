@@ -98,7 +98,7 @@ function SiteHeader({ locale, copy }: { locale: string; copy: SiteCopy }) {
 
       <a className="site__mark" href={localePath(locale)}>
         <Logo />
-        <strong>Formwork</strong>
+        <strong>Paloppa</strong>
       </a>
 
       <nav className="site__nav" aria-label={copy.chrome.siteNavLabel}>

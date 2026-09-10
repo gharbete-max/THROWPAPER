@@ -1,5 +1,5 @@
 ---
-name: Formwork
+name: Paloppa
 description: Forms, registrations and the door, for organisations that have to get it right.
 colors:
   primary: '#6fb8a6'
@@ -94,11 +94,11 @@ components:
     padding: '8px 12px'
 ---
 
-# Formwork design system
+# Paloppa design system
 
 ## Overview
 
-Two products share these tokens: **Formwork**, a form builder with events, a door and a ledger,
+Two products share these tokens: **Paloppa**, a form builder with events, a door and a ledger,
 and **Sendwork**, its email counterpart. The audience is membership secretaries, event organisers
 and association treasurers — people who have to get a registration right the first time, in front
 of an audience, often at a door in bad weather.

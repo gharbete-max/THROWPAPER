@@ -3,7 +3,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const nbNO: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'Logg ut',
   'app.language': 'Språk',
   'app.loading': 'Laster…',

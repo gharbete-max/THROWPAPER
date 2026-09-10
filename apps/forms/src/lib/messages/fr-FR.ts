@@ -3,7 +3,7 @@
 import type { MessageKey } from './en-GB.js';
 
 export const frFR: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'Se déconnecter',
   'app.language': 'Langue',
   'app.loading': 'Chargement…',

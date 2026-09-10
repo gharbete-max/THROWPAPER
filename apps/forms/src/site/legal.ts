@@ -58,14 +58,14 @@ const CONTACT = pending('contact address for privacy requests');
 
 const ABOUT: LegalDocument = {
   slug: 'about',
-  title: 'About Formwork',
+  title: 'About Paloppa',
   lede: 'A form builder for organisations that have to get a registration right the first time, in front of people, often at a door in bad weather.',
   updated: UPDATED,
   sections: [
     {
       heading: 'What it is for',
       body: [
-        'Formwork is built for membership secretaries, event organisers and association treasurers. That audience decides everything about it. The people filling in a form are members, not customers, and they are often doing it once a year on a phone. The people running it are volunteers as often as they are staff.',
+        'Paloppa is built for membership secretaries, event organisers and association treasurers. That audience decides everything about it. The people filling in a form are members, not customers, and they are often doing it once a year on a phone. The people running it are volunteers as often as they are staff.',
         'It is a general form and registration tool. Annual meetings are the case it was first built for, but nothing in it is specific to them.',
       ],
     },
@@ -80,7 +80,7 @@ const ABOUT: LegalDocument = {
     {
       heading: 'Who runs it',
       body: [
-        `Formwork is operated by ${CONTROLLER}, registered at ${pending('registered address')}.`,
+        `Paloppa is operated by ${CONTROLLER}, registered at ${pending('registered address')}.`,
         `General enquiries: ${pending('general contact address')}.`,
       ],
     },
@@ -154,8 +154,8 @@ const PRIVACY: LegalDocument = {
     {
       heading: 'Two different roles, and the difference matters',
       body: [
-        'For the answers people give to a form, the organisation that published the form is the controller. They decide what to ask and why. Formwork is their processor and acts on their instructions.',
-        'For the accounts of the people who log in to build forms, Formwork is the controller.',
+        'For the answers people give to a form, the organisation that published the form is the controller. They decide what to ask and why. Paloppa is their processor and acts on their instructions.',
+        'For the accounts of the people who log in to build forms, Paloppa is the controller.',
         'This is not a formality. If you filled in somebody’s registration form and want your answers removed, the organisation that published it is who decides, and they are named on the form. We act on their instruction.',
       ],
     },
@@ -284,7 +284,7 @@ const COOKIES: LegalDocument = {
 const TERMS: LegalDocument = {
   slug: 'terms',
   title: 'Terms',
-  lede: 'The agreement between an organisation using Formwork and the company operating it.',
+  lede: 'The agreement between an organisation using Paloppa and the company operating it.',
   updated: UPDATED,
   sections: [
     {
@@ -296,7 +296,7 @@ const TERMS: LegalDocument = {
     {
       heading: 'The service',
       body: [
-        'Formwork provides form building, event registration, admission documents, check-in, and email sending on behalf of the organisation using it.',
+        'Paloppa provides form building, event registration, admission documents, check-in, and email sending on behalf of the organisation using it.',
         'An organisation’s data is isolated from every other organisation’s. Each request is scoped to the organisation that made it.',
         'Nothing is sent or deleted without a confirmation step, and every outbound action has a test mode.',
       ],

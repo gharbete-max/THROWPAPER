@@ -9,7 +9,7 @@ import {
   Recipient,
 } from './common.js';
 
-/** CONTRACT §1.1 — Formwork → Sendwork. One transactional email. */
+/** CONTRACT §1.1 — Paloppa → Sendwork. One transactional email. */
 export const SendMessageRequest = z.object({
   organisationId: OrganisationId,
   templateKey: z.string().min(1),
@@ -27,7 +27,7 @@ export const SendMessageResponse = z.object({
   status: z.literal('queued'),
 });
 
-/** CONTRACT §2.2 — Sendwork → Formwork webhook. */
+/** CONTRACT §2.2 — Sendwork → Paloppa webhook. */
 export const DeliveryEvent = z.object({
   messageId: z.string().min(1),
   contactRef: ContactRef,

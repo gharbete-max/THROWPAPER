@@ -41,7 +41,7 @@ export function Mark({
       /*
        * Hidden from the accessibility tree at every call site.
        *
-       * Each one already carries its own wording: the wordmark says "Formwork" beside it, the
+       * Each one already carries its own wording: the wordmark says "Paloppa" beside it, the
        * loading indicator has its label, the intro is decoration over a page that announces itself.
        * A mark that names itself a second time is a screen reader saying the product's name twice.
        */

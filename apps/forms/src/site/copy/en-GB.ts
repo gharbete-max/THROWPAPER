@@ -9,10 +9,10 @@ import type { SiteCopy } from '../content.js';
  */
 export const enGB: SiteCopy = {
   meta: {
-    homeTitle: 'Formwork — forms, registrations and the door',
+    homeTitle: 'Paloppa — forms, registrations and the door',
     homeDescription:
       'A form builder for organisations that have to get it right: twelve languages, your brand on every surface, and an admission card that scans at a door.',
-    titleSuffix: ' — Formwork',
+    titleSuffix: ' — Paloppa',
   },
   chrome: {
     skipToContent: 'Skip to content',
@@ -21,7 +21,7 @@ export const enGB: SiteCopy = {
     languageLabel: 'Language',
     openTheDemo: 'Open the demo',
     footerTagline:
-      'Formwork. Forms, registrations and the door. The demo saves nothing and sends nothing.',
+      'Paloppa. Forms, registrations and the door. The demo saves nothing and sends nothing.',
   },
   hero: {
     eyebrow: 'Forms, registrations and the door',

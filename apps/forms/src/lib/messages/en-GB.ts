@@ -9,7 +9,7 @@
  */
 
 export const enGB = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
   'app.signOut': 'Sign out',
   'app.language': 'Language',
   'app.loading': 'Loading…',

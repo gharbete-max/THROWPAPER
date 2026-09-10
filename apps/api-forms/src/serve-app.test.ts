@@ -98,13 +98,13 @@ beforeAll(async () => {
       '<html lang="en">',
       '  <head>',
       '    <meta charset="UTF-8" />',
-      '    <title>Formwork</title>',
+      '    <title>Paloppa</title>',
       '  </head>',
       '  <body><div id="root"></div></body>',
       '</html>',
     ].join('\n'),
   );
-  writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Formwork"}');
+  writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Paloppa"}');
   mkdirSync(join(dir, 'assets'));
   writeFileSync(join(dir, 'assets', 'index.js'), 'console.log(1)');
 
@@ -274,7 +274,7 @@ describe('serving the built app from the API', () => {
    * The link preview.
    *
    * The whole distribution model here is "send somebody a link", and that link previewed in Slack,
-   * WhatsApp and Teams as "Formwork" with no title and no organisation — an unlabelled link to an
+   * WhatsApp and Teams as "Paloppa" with no title and no organisation — an unlabelled link to an
    * unfamiliar domain asking for a name and an email, which is a reasonable thing to distrust.
    */
   describe('a public form link', () => {
