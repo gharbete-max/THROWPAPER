@@ -12,7 +12,7 @@ import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 import { defaultTokens } from '@tp/tokens';
 
-import { FACETS, MARK } from '../apps/forms/src/components/mark-geometry.js';
+import { FACETS, MARK, REDUCED, REDUCED_MARK } from '../apps/forms/src/components/mark-geometry.js';
 
 const SIZES = [192, 512];
 const OUT_DIR = resolve('apps/forms/public');
@@ -67,9 +67,13 @@ const TILE_TONES: Record<string, (colour: { background: string; accent: string }
  * The plane spans 62% of the tile, so the maskable variant survives a circular crop — a launcher
  * that clips the nose off leaves a shape nobody recognises.
  */
-export function markSvg(size = 100): string {
+export function markSvg(size = 100, drawing: 'full' | 'reduced' = 'full'): string {
   const { colour } = defaultTokens;
   const radius = Math.round(size * 0.22);
+  const shapes =
+    drawing === 'reduced'
+      ? REDUCED.map((flap) => ({ points: flap.points, d: REDUCED_MARK[flap.id]!, tone: flap.tone }))
+      : FACETS.map((facet) => ({ points: facet.points, d: MARK[facet.id]!, tone: facet.tone }));
 
   /*
    * Fit the letter to the tile from its own bounding box rather than from the 100x100 viewBox.
@@ -78,8 +82,8 @@ export function markSvg(size = 100): string {
    * would leave the letter small and off-centre inside the square. Measuring the shape means the
    * mark is optically centred whatever the geometry is changed to later.
    */
-  const xs = FACETS.flatMap((facet) => facet.points.map(([x]) => x));
-  const ys = FACETS.flatMap((facet) => facet.points.map(([, y]) => y));
+  const xs = shapes.flatMap((shape) => shape.points.map(([x]) => x));
+  const ys = shapes.flatMap((shape) => shape.points.map(([, y]) => y));
   const left = Math.min(...xs);
   const top = Math.min(...ys);
   const width = Math.max(...xs) - left;
@@ -94,9 +98,7 @@ export function markSvg(size = 100): string {
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">`,
     `<rect width="${size}" height="${size}" rx="${radius}" fill="${colour.primary}"/>`,
     `<g transform="translate(${dx} ${dy}) scale(${scale})">`,
-    ...FACETS.map(
-      (facet) => `<path d="${MARK[facet.id]}" fill="${TILE_TONES[facet.tone]!(colour)}"/>`,
-    ),
+    ...shapes.map((shape) => `<path d="${shape.d}" fill="${TILE_TONES[shape.tone]!(colour)}"/>`),
     '</g></svg>',
   ].join('');
 }
@@ -121,7 +123,15 @@ try {
     await page.close();
     console.log(`icon-${size}.png`);
   }
-  await writeFile(resolve(OUT_DIR, 'favicon.svg'), markSvg(), 'utf8');
+  /*
+   * The favicon takes the reduced drawing, which is the whole reason there are two.
+   *
+   * This file is read at 16 and 32 pixels. At that size the fold highlight is a few percent of
+   * value across three pixels — blur, not a crease — and the full drawing's 13° slits close up
+   * under antialiasing, so the mark fills in solid and stops saying that the pockets are open.
+   * `REDUCED` drops the highlight and opens the slits to 21°, which survives.
+   */
+  await writeFile(resolve(OUT_DIR, 'favicon.svg'), markSvg(100, 'reduced'), 'utf8');
   console.log('favicon.svg');
 } finally {
   await browser.close();

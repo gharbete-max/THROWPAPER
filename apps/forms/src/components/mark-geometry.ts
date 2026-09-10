@@ -8,12 +8,23 @@
  * folded `P`: a good letterform and an honest one, but it said "paper" and stopped there, and the
  * one thing worth saying without words is what the paper *does*.
  *
- * The trade being made deliberately: a letter survives being small because the reader is
- * recognising something they already know, and a picture has to earn it. This picture earns it on
- * silhouette — the outline is a plain diamond, which is a shape at 16px, not a smudge — and the
- * eight facets inside it are what appear as the square grows. A paper dart failed exactly this
- * test once already, so it is worth naming why this one is different: a dart's silhouette is a
- * thin acute wedge with no mass, and a diamond has mass.
+ * ## Why the pockets are separated, and why that reversed an earlier decision
+ *
+ * This drawing was a solid diamond: the four flaps met along shared edges, so the silhouette was
+ * one convex shape. The argument for it was legibility — *"a letterform survives being small
+ * because the reader already knows it; a picture has to survive on outline alone"* — and a diamond
+ * is a shape at 16px where a lumpy outline is a smudge.
+ *
+ * That argument was sound and it was solving the problem at the wrong end. A closed diamond is a
+ * fortune teller that is **shut**, and a shut fortune teller is a folded napkin: the whole idea is
+ * an object that opens onto a choice, and the drawing was showing the one state where it does not.
+ * The four slits are the pockets parted, which is the thing being described.
+ *
+ * Legibility is then paid for where it is actually spent — by drawing the mark twice. `FACETS` is
+ * the full mark for anything with room for it, and `REDUCED` is the same object with the fold
+ * highlights dropped and the slits widened, for favicon sizes where a thin slit and a two-tone
+ * flap both turn to mud. That is the trade the brand handoff makes and it is the right one: one
+ * drawing cannot be both delicate at 512px and blunt at 16px.
  *
  * ## Why eight triangles
  *
@@ -24,9 +35,9 @@
  * without inventing any geometry for it — `Mark.tsx` hinges each facet on the radial crease it
  * already has.
  *
- * The centre is load-bearing in a way the `P`'s counter was. Every facet owns it, so all eight
- * meet at one point; that convergence is what reads as "folded" rather than as a pinwheel sticker,
- * and it is what `mark-consistency.test.ts` protects.
+ * The centre is load-bearing. Every facet owns it, so all eight meet at one point; that convergence
+ * is what reads as "folded" rather than as a pinwheel sticker, and it is what
+ * `mark-consistency.test.ts` protects.
  *
  * ## One source, three consumers
  *
@@ -47,23 +58,50 @@ export type Point = readonly [number, number];
  */
 export const CENTRE: Point = [50, 50];
 
-/** The four points of the toy — the corners you put your fingers behind. */
-const N: Point = [50, 4];
-const E: Point = [96, 50];
-const S: Point = [50, 96];
-const W: Point = [4, 50];
+/**
+ * How far the four points of the toy reach.
+ *
+ * 46 of a 50 half-box, leaving an optical margin. This is the number every existing size decision
+ * in the product was tuned against — the header lockup, the loading mark, the icon script's own
+ * bounding-box fit — so the shape below changed and this deliberately did not.
+ */
+const TIP_RADIUS = 46;
 
 /**
- * The middle of each outer edge, where one flap ends and the next begins.
+ * The shape, as the two numbers that decide it.
  *
- * These sit exactly on the lines `N–E`, `E–S`, `S–W` and `W–N`, so the silhouette stays a clean
- * diamond however the facets are shaded. That is deliberate and is the reason the mark survives
- * being small: the outline is one convex shape with four corners, and the detail lives inside it.
+ * `SEAM_RATIO` is how far out along a flap the mouth of the pocket sits, as a fraction of the tip
+ * reach; `GAP` is half the slit between two neighbouring pockets, in degrees. Both are the brand
+ * handoff's own values — its generator writes them as `0.455/0.52` and `6.5°` — and they are kept
+ * as a ratio and an angle rather than baked into coordinates so that the drawing can be re-derived
+ * at any scale without anybody re-deriving the trigonometry.
  */
-const NE: Point = [73, 27];
-const SE: Point = [73, 73];
-const SW: Point = [27, 73];
-const NW: Point = [27, 27];
+const SEAM_RATIO = 0.455 / 0.52;
+const GAP = 6.5;
+
+/**
+ * The reduced drawing, for favicon sizes.
+ *
+ * Wider slits and the mouth pushed further out, both for the same reason: below about 32px a 13°
+ * slit closes up under antialiasing and the mark fills in solid, which loses the one thing that
+ * says the pockets are open. Widening the slit keeps the gap visible when it is two pixels across.
+ */
+const REDUCED_SEAM_RATIO = 0.69 / 0.754;
+const REDUCED_GAP = 10.5;
+
+/** Polar to the drawing's own coordinates. Screen `y` grows downward, so the sine is subtracted. */
+function at(degrees: number, radius: number): Point {
+  const radians = (degrees * Math.PI) / 180;
+  return [
+    round(CENTRE[0] + Math.cos(radians) * radius),
+    round(CENTRE[1] - Math.sin(radians) * radius),
+  ];
+}
+
+/** Two decimals: enough for a 100-unit box, and it keeps the path strings readable. */
+function round(value: number): number {
+  return Math.round(value * 100) / 100;
+}
 
 export interface Facet {
   /** Stable name, used for the per-facet class and by the icon script. */
@@ -77,9 +115,9 @@ export interface Facet {
    * either way — it makes the mark open about the wrong edge, which is the kind of bug that looks
    * like a taste problem.
    *
-   * Every hinge is a radius to an *edge* midpoint, never to a point of the diamond. That is what
-   * makes the two facets meeting at a point swing apart from each other and open a pocket there,
-   * which is the motion the toy actually has.
+   * Every hinge is a radius to the *mouth* of a pocket, never to a point of the toy. That is what
+   * makes the two facets of a flap swing apart from each other and open it, which is the motion the
+   * paper actually has.
    */
   readonly points: readonly [Point, Point, Point];
   /**
@@ -93,8 +131,8 @@ export interface Facet {
   /**
    * Which side of its pocket the facet is on.
    *
-   * The two facets meeting at a point are mirror images about it, so they take opposite senses of
-   * rotation about their own creases. Without this they swing the same way and the pair slides
+   * The two facets of a flap are mirror images about its crease, so they take opposite senses of
+   * rotation about their own edges. Without this they swing the same way and the pair slides
    * instead of opening.
    */
   readonly swing: 1 | -1;
@@ -120,28 +158,82 @@ export interface Facet {
 }
 
 /**
- * Eight facets, listed clockwise around the mark from the top point.
+ * The four flaps, by the direction they point and the pair of tones they are creased in.
  *
- * Consecutive entries share the centre *and* the radius between them, which is an edge — so their
- * tones must differ, and the test holds that. Facets opposite each other share only the centre,
- * which is a point and not an edge, so the four tones cycle twice around the ring without any
- * crease going undrawn.
+ * Listed anticlockwise from the top, which is the order the brand handoff's own generator writes
+ * them in — worth matching so the two drawings can be compared corner by corner.
  */
-export const FACETS: readonly Facet[] = [
-  { id: 'north-east', points: [CENTRE, NE, N], pocket: 'north', swing: 1, tone: 'face' },
-  { id: 'east-north', points: [CENTRE, NE, E], pocket: 'east', swing: -1, tone: 'warm' },
-  { id: 'east-south', points: [CENTRE, SE, E], pocket: 'east', swing: 1, tone: 'glow' },
-  { id: 'south-east', points: [CENTRE, SE, S], pocket: 'south', swing: -1, tone: 'fold' },
-  { id: 'south-west', points: [CENTRE, SW, S], pocket: 'south', swing: 1, tone: 'face' },
-  { id: 'west-south', points: [CENTRE, SW, W], pocket: 'west', swing: -1, tone: 'warm' },
-  { id: 'west-north', points: [CENTRE, NW, W], pocket: 'west', swing: 1, tone: 'glow' },
-  { id: 'north-west', points: [CENTRE, NW, N], pocket: 'north', swing: -1, tone: 'fold' },
-];
+const FLAPS = [
+  { pocket: 'north', tip: 90, tones: ['face', 'fold'] },
+  { pocket: 'west', tip: 180, tones: ['warm', 'glow'] },
+  { pocket: 'south', tip: 270, tones: ['face', 'fold'] },
+  { pocket: 'east', tip: 0, tones: ['warm', 'glow'] },
+] as const;
 
-const path = (points: readonly [Point, Point, Point]) =>
-  `M${points[0][0]} ${points[0][1]} L${points[1][0]} ${points[1][1]} L${points[2][0]} ${points[2][1]} Z`;
+/** Half a quadrant, less the slit: where one pocket's mouth ends and the gap begins. */
+const SEAM_OFFSET = 45 - GAP;
+const REDUCED_SEAM_OFFSET = 45 - REDUCED_GAP;
+
+export const FACETS: readonly Facet[] = FLAPS.flatMap(({ pocket, tip, tones }) => {
+  const point = at(tip, TIP_RADIUS);
+  const seam = (side: 1 | -1) => at(tip + side * SEAM_OFFSET, TIP_RADIUS * SEAM_RATIO);
+
+  return [
+    {
+      id: `${pocket}-lead`,
+      points: [CENTRE, seam(-1), point] as const,
+      pocket,
+      swing: 1,
+      tone: tones[0],
+    },
+    {
+      id: `${pocket}-trail`,
+      points: [CENTRE, seam(1), point] as const,
+      pocket,
+      swing: -1,
+      tone: tones[1],
+    },
+  ];
+});
+
+const path = (points: readonly Point[]) =>
+  `M${points[0]![0]} ${points[0]![1]}${points
+    .slice(1)
+    .map(([x, y]) => ` L${x} ${y}`)
+    .join('')} Z`;
 
 /** The mark at rest, by facet id. */
 export const MARK: Readonly<Record<string, string>> = Object.fromEntries(
   FACETS.map((facet) => [facet.id, path(facet.points)]),
+);
+
+export interface ReducedPocket {
+  readonly id: string;
+  /** `[centre, mouth, tip, mouth]` — the whole flap as one shape, uncreased. */
+  readonly points: readonly [Point, Point, Point, Point];
+  readonly tone: 'face' | 'warm';
+}
+
+/**
+ * The same object with the creases dropped: four solid flaps rather than eight facets.
+ *
+ * The fold highlight is the first thing to go at small sizes. It is a value step of a few percent
+ * across a shape a handful of pixels wide, so it survives as neither a crease nor a flat colour —
+ * it reads as the mark being slightly out of focus. Dropping it deliberately is sharper than
+ * letting the renderer average it away.
+ */
+export const REDUCED: readonly ReducedPocket[] = FLAPS.map(({ pocket, tip, tones }) => ({
+  id: pocket,
+  points: [
+    CENTRE,
+    at(tip - REDUCED_SEAM_OFFSET, TIP_RADIUS * REDUCED_SEAM_RATIO),
+    at(tip, TIP_RADIUS),
+    at(tip + REDUCED_SEAM_OFFSET, TIP_RADIUS * REDUCED_SEAM_RATIO),
+  ] as const,
+  tone: tones[0],
+}));
+
+/** The reduced mark, by pocket. */
+export const REDUCED_MARK: Readonly<Record<string, string>> = Object.fromEntries(
+  REDUCED.map((flap) => [flap.id, path(flap.points)]),
 );

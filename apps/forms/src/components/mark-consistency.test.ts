@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CENTRE, FACETS, MARK } from './mark-geometry.js';
+import { CENTRE, FACETS, MARK, REDUCED } from './mark-geometry.js';
 import { markSvg } from '../../../../scripts/generate-icons.js';
 
 /**
@@ -49,19 +49,107 @@ describe('the mark', () => {
   });
 
   /**
-   * The silhouette is a diamond, and that is the whole reason a picture is allowed to be the mark.
+   * Nothing reaches past the four points.
    *
-   * A letterform survives being small because the reader already knows it; a picture has to survive
-   * on outline alone. Every point of every facet must therefore sit on or inside the diamond
-   * `|x-50| + |y-50| <= 46` — one convex shape with four corners. A facet poking outside it turns
-   * the outline lumpy, which is invisible at hero size and fatal at 16px.
+   * This asserted a *diamond* — `|x-50| + |y-50| <= 46`, one convex shape with four corners — back
+   * when the flaps met along shared edges. The mark is drawn open now, so the mouths of the pockets
+   * sit out at 51.5° where that sum is 56.5, and the old test failed for the right reason: the
+   * silhouette genuinely is not a diamond any more.
+   *
+   * What still has to hold is the bound that the sizing was tuned against. Every point sits within
+   * the circle the four tips describe, so the mark occupies the box it claims to and a flap cannot
+   * quietly grow past the point it belongs to.
    */
-  it('keeps the outline a clean diamond', () => {
+  it('keeps every corner within the reach of its points', () => {
     for (const facet of FACETS) {
       for (const [x, y] of facet.points) {
-        const reach = Math.abs(x - 50) + Math.abs(y - 50);
-        expect(reach, `${facet.id} reaches outside the diamond`).toBeLessThanOrEqual(46.01);
+        const reach = Math.hypot(x - 50, y - 50);
+        expect(reach, `${facet.id} reaches past the tips`).toBeLessThanOrEqual(46.01);
       }
+    }
+  });
+
+  /**
+   * The pockets are open, which is the entire point of the drawing.
+   *
+   * A fortune teller with its flaps touching is a folded napkin: the object is only recognisable
+   * because it is parted. So the four slits are asserted rather than left to the geometry — the
+   * failure being prevented is a well-meaning tidy-up that closes the gap to make the outline
+   * "cleaner" and silently turns the mark back into a diamond.
+   *
+   * Measured between the mouths of neighbouring pockets, which is where the slit actually is. The
+   * tips are 90° apart and each pocket spans 77°, leaving 13° of daylight at each corner.
+   */
+  it('parts the four pockets', () => {
+    const angle = ([x, y]: readonly [number, number]) =>
+      (Math.atan2(50 - y, x - 50) * 180) / Math.PI;
+
+    // The mouth of each facet — points[1] — is the edge that faces the next pocket along.
+    const mouths = FACETS.map((facet) => angle(facet.points[1])).sort((a, b) => a - b);
+    expect(mouths).toHaveLength(8);
+
+    const gaps: number[] = [];
+    for (let i = 0; i < mouths.length; i += 1) {
+      const next = mouths[(i + 1) % mouths.length]!;
+      const span = (next - mouths[i]! + 360) % 360;
+      gaps.push(Math.round(span));
+    }
+
+    // Four slits of 13° between pockets, and four spans of 77° across a pocket.
+    expect(gaps.filter((gap) => gap === 13)).toHaveLength(4);
+    expect(gaps.filter((gap) => gap === 77)).toHaveLength(4);
+  });
+
+  /**
+   * The small drawing is the same object with less said, not a different one.
+   *
+   * Below about 32px the fold highlight is a few percent of value across a handful of pixels and
+   * reads as blur rather than as a crease, and a 13° slit closes up entirely under antialiasing.
+   * `REDUCED` drops the first and widens the second. What it must not do is move the toy: same
+   * centre, same four points, same two hue families in the same places.
+   */
+  it('reduces to four flaps on the same four points', () => {
+    expect(REDUCED).toHaveLength(4);
+
+    for (const flap of REDUCED) {
+      expect(flap.points[0], `${flap.id} does not start at the centre`).toEqual(CENTRE);
+
+      // The tip is shared with the full drawing's pair for the same pocket, to the last decimal.
+      const pair = FACETS.filter((facet) => facet.pocket === flap.id);
+      expect(pair).toHaveLength(2);
+      for (const facet of pair) {
+        expect(facet.points[2], `${flap.id} points somewhere else`).toEqual(flap.points[2]);
+      }
+    }
+
+    // Two families, alternating, exactly as the full drawing groups them.
+    expect(REDUCED.map((flap) => flap.tone)).toEqual(['face', 'warm', 'face', 'warm']);
+  });
+
+  /**
+   * Its slits are wider, or it would not be worth drawing twice.
+   *
+   * Measured as the angle between the two mouths of a flap rather than the distance between them,
+   * which is the trap this test fell into first: the reduced drawing pushes its mouths further out
+   * along the flap, so the *chord* between them can grow while the pocket narrows. The slit is an
+   * angle, so it is compared as one — 21° of daylight at each corner against the full drawing's 13.
+   */
+  it('opens the small drawing further than the full one', () => {
+    const angle = ([x, y]: readonly [number, number]) =>
+      (Math.atan2(50 - y, x - 50) * 180) / Math.PI;
+
+    /** A quadrant is 90°; whatever the pocket does not span is the slit beside it. */
+    const slitBeside = (a: readonly [number, number], b: readonly [number, number]) =>
+      Math.round(90 - Math.abs(((angle(a) - angle(b) + 540) % 360) - 180));
+
+    for (const flap of REDUCED) {
+      const pair = FACETS.filter((facet) => facet.pocket === flap.id);
+      const full = slitBeside(pair[0]!.points[1], pair[1]!.points[1]);
+      const reduced = slitBeside(flap.points[1], flap.points[3]);
+
+      expect(full, `${flap.id} full slit`).toBe(13);
+      expect(reduced, `${flap.id} reduced slit`).toBe(21);
+      expect(reduced).toBeGreaterThan(full);
     }
   });
 
