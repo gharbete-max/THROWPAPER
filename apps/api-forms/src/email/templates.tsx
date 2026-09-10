@@ -1,4 +1,14 @@
-import { Body, Container, Head, Html, Link, Preview, Section, Text } from '@react-email/components';
+import {
+  Body,
+  Container,
+  Head,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Section,
+  Text,
+} from '@react-email/components';
 import { render } from '@react-email/render';
 import { toEmailStyles, type TokenSet } from '@tp/tokens';
 
@@ -33,6 +43,22 @@ export interface ConfirmationContent {
   footer: string;
   webVersionLabel: string;
   webVersionUrl: string;
+  /**
+   * The organisation's logo, absolute, or null.
+   *
+   * Absolute because an email has no page to resolve a path against — a relative `src` in a mail
+   * client is a broken image every time. Null when they have not uploaded one, or when the format
+   * is one mail clients cannot be trusted with: see `mailSafeLogo` in `send-job.ts`.
+   */
+  logoUrl: string | null;
+  /**
+   * What the logo says when it does not load, which is often.
+   *
+   * A good proportion of recipients block images by default and see `alt` and nothing else, so this
+   * is the organisation's name rather than the word "logo". Same reasoning as the name in the
+   * footer: the email has to say who sent it without loading anything.
+   */
+  logoAlt: string;
 }
 
 export function ConfirmationEmail({
@@ -52,6 +78,17 @@ export function ConfirmationEmail({
         <Container style={s.container}>
           <Section style={s.cell}>
             <Section style={s.card}>
+              {/*
+                On the confirmation only. The notification goes to the organisation's own operator,
+                who does not need to be told which organisation they work for.
+
+                Height and no width: a width would decide the aspect ratio of a file whose shape is
+                the customer's, and a squashed logo is worse than a small one. 40 because this sits
+                above the heading rather than instead of it — a confirmation, not a brochure.
+              */}
+              {content.logoUrl && (
+                <Img src={content.logoUrl} alt={content.logoAlt} height="40" style={s.logo} />
+              )}
               <Text style={s.heading}>{content.heading}</Text>
               <Text style={s.text}>{content.intro}</Text>
 

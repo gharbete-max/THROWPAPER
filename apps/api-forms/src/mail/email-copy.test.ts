@@ -45,6 +45,8 @@ describe('transactional email copy', () => {
       footer: '',
       webVersionLabel: '',
       webVersionUrl: 'https://example.test/r/ABC123',
+      logoUrl: null,
+      logoAlt: 'Demo AB',
     });
 
     expect(html).toContain('lang="ja-JP"');

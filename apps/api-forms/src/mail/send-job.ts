@@ -225,6 +225,38 @@ function copyFor(locale: string) {
  * Sending runs as a job, never from a request handler — `SPEC-mailer.md` §8. A registration must
  * not fail because a provider was slow, and a retry must not re-register anybody.
  */
+/**
+ * An organisation's logo, as a mail client will actually see it — or `null`.
+ *
+ * Two things have to be true and neither is true by default.
+ *
+ * **Absolute.** An email has no page to resolve a relative path against, so `/public/assets/…` is a
+ * broken image in every client. The app's own URL is the origin, which also keeps the request
+ * first-party: this product does not send its customers' logos through a third-party image proxy.
+ *
+ * **A format mail clients render.** `AssetPath` permits `png`, `jpg`, `webp` and `gif`, which is
+ * the right set for a web page and the wrong one here — Outlook's rendering engine has no WebP, and
+ * a recipient there sees a broken-image box where the sender's logo should be. PNG and JPEG only,
+ * checked from the extension because the store keys files by content hash and the extension is the
+ * one part of the path that means something.
+ *
+ * The alternative to returning `null` is a broken image, and a confirmation email that looks broken
+ * is one somebody mistrusts — which for a registration confirmation is the whole of its job.
+ *
+ * ## Not gated on client mode, deliberately
+ *
+ * `BUILD-BRIEF.md` §4 lists email branding under what client mode turns on. It is ungated here
+ * because the confirmation is already the organisation's letter to their own member and has never
+ * carried any Paloppa branding — there is nothing for the switch to turn off. Gating it would mean
+ * an association that has not bought white-label sends unbranded confirmations for no reason that
+ * could be explained to them.
+ */
+export function mailSafeLogo(path: string | null, appUrl: string): string | null {
+  if (!path) return null;
+  if (!/\.(png|jpg)$/i.test(path)) return null;
+  return `${appUrl.replace(/\/$/, '')}${path}`;
+}
+
 export function createMailSendHandler(deps: MailDeps): JobHandler {
   return async ({ job }) => {
     const templateKey = String(job.payload['templateKey'] ?? '') as MailTemplateKey;
@@ -292,6 +324,8 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
         footer: `${organisation.name} · ${copy.footer}`,
         webVersionLabel: copy.webVersion,
         webVersionUrl: `${deps.appUrl.replace(/\/$/, '')}/r/${submission.reference}`,
+        logoUrl: mailSafeLogo(tokens.logoLight ?? tokens.logoDark, deps.appUrl),
+        logoAlt: organisation.name,
       });
 
       const sent = await deps.provider.send({

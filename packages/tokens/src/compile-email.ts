@@ -57,6 +57,24 @@ export function toEmailStyles(tokens: TokenSet) {
       padding: spacing(unit, 3),
     },
 
+    /**
+     * The organisation's logo above the heading.
+     *
+     * `display: block` because a mail client treats an image as inline text otherwise and leaves a
+     * few pixels of descender space under it, which reads as a misaligned logo rather than as a
+     * line-height. `auto` height so the file's own proportions survive — the template sets a height
+     * and never a width, for the same reason.
+     *
+     * No background and no border. On a dark mail client the card is inverted by the client and a
+     * background here would be inverted with it, putting a colour behind somebody's logo that
+     * neither they nor we chose.
+     */
+    logo: {
+      display: 'block',
+      height: 'auto',
+      margin: `0 0 ${spacing(unit, 2)} 0`,
+    },
+
     heading: {
       margin: `0 0 ${spacing(unit, 1)} 0`,
       fontFamily: typography.headingFont,
