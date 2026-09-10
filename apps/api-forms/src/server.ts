@@ -20,7 +20,11 @@ import { pathToFileURL } from 'node:url';
 import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
-import { withClientIdentity, type ClientIdentity } from './documents/client-identity.js';
+import {
+  accentTile,
+  withClientIdentity,
+  type ClientIdentity,
+} from './documents/client-identity.js';
 import { toThemedCssBlock } from '@tp/tokens';
 import { resolveTokens } from './routes/brand-kit.js';
 import { createAuthService } from './auth/service.js';
@@ -44,7 +48,8 @@ import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
-import { MAX_IMAGE_BYTES } from './uploads/image.js';
+import { MAX_IMAGE_BYTES, checkImage } from './uploads/image.js';
+import { imageSize, isNearSquare } from './uploads/image-size.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
 import { createSesMailProvider } from './mail/ses.js';
@@ -486,7 +491,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
        * no one. See `client-identity.ts` for why this cannot be done in the browser — the sign-in
        * screen has no session to hang a brand off, so the server is the only thing that knows.
        */
-      const identity = await clientIdentity(repos);
+      const identity = await clientIdentity(repos, assets);
       if (identity) {
         const shell = await readFile(join(appDir, 'index.html'), 'utf8');
         return reply.type('text/html; charset=utf-8').send(withClientIdentity(shell, identity));
@@ -569,7 +574,10 @@ async function renderSite(appDir: string, path: string, appUrl: string): Promise
  * has to load, and a database blip must serve the app rather than a 500. The cost of failing open
  * is one page in our branding, which is the state every page was in before this existed.
  */
-async function clientIdentity(repos: Repositories): Promise<ClientIdentity | null> {
+async function clientIdentity(
+  repos: Repositories,
+  assets: AssetStore,
+): Promise<ClientIdentity | null> {
   try {
     const organisation = await repos.organisations.first();
     if (!organisation) return null;
@@ -577,16 +585,55 @@ async function clientIdentity(repos: Repositories): Promise<ClientIdentity | nul
     const { tokens } = await resolveTokens(repos, organisation.id);
     if (!tokens.clientMode) return null;
 
+    const logo = tokens.logoLight ?? tokens.logoDark;
+    const usable = logo ? await logoSuitsAFavicon(assets, logo) : false;
+
     return {
       // Their brand name where they set one, the legal entity otherwise — the two often differ.
       wordmark: tokens.wordmark ?? organisation.name,
       logoLight: tokens.logoLight,
       logoDark: tokens.logoDark,
       palette: toThemedCssBlock(tokens),
+      /* Their mark only where it survives the size; their colour otherwise. */
+      favicon: usable && logo ? logo : accentTile(tokens.colour.primary),
+      touchIcon: logo,
     };
   } catch {
     return null;
   }
+}
+
+/**
+ * Whether a logo is square enough to be a favicon, answered once per file.
+ *
+ * Cached on the asset path, which is safe forever rather than merely convenient: the path is the
+ * SHA-256 of the file's own bytes, so it cannot come to mean a different image. A new upload is a
+ * new key and the old entry is simply never asked for again.
+ *
+ * Without the cache this is a two-megabyte disk read on every HTML request, to answer a question
+ * whose answer cannot change.
+ */
+const faviconSuitability = new Map<string, boolean>();
+
+async function logoSuitsAFavicon(assets: AssetStore, path: string): Promise<boolean> {
+  const cached = faviconSuitability.get(path);
+  if (cached !== undefined) return cached;
+
+  let answer = false;
+  try {
+    const key = path.slice(path.lastIndexOf('/') + 1);
+    const stored = await assets.get(key);
+    if (stored) {
+      const check = checkImage(stored.content);
+      // An unreadable header falls back to the tile, which is the safe direction to be wrong in.
+      if (check.ok) answer = isNearSquare(imageSize(stored.content, check.format));
+    }
+  } catch {
+    answer = false;
+  }
+
+  faviconSuitability.set(path, answer);
+  return answer;
 }
 
 async function previewForSlug(

@@ -35,6 +35,45 @@ export interface ClientIdentity {
   logoDark: string | null;
   /** The organisation's compiled palette, light and dark, for the first paint. */
   palette: string;
+  /**
+   * What goes in the browser tab.
+   *
+   * A logo when it is square enough to survive being 32 pixels wide, and a tile in the accent when
+   * it is not. See `faviconFor`: this is the one slot where a customer's own asset is often the
+   * worse answer, and the decision is made from the file's own header rather than hoped about.
+   */
+  favicon: string;
+  /**
+   * The home-screen icon, which is always their logo when they have one.
+   *
+   * **A known limitation, raised rather than hidden.** iOS does not letterbox an apple-touch-icon;
+   * it fills the square. A logo that is not square is therefore stretched on somebody's home
+   * screen, and there is no markup that prevents it — the fix is compositing the logo onto a tile
+   * server-side, which needs an image library this product does not have and should not grow for
+   * one icon. Until then a wide wordmark is distorted here, and the customer can see that the
+   * moment they add it.
+   */
+  touchIcon: string | null;
+}
+
+/**
+ * A tile in the customer's accent, as an SVG data URI.
+ *
+ * The fallback when a logo cannot be a favicon, and it is a real answer rather than a shrug: at 16
+ * pixels a solid field of somebody's brand colour is more identifiable in a strip of tabs than a
+ * detailed mark reduced to four grey pixels. It is the same reasoning that gives our own mark a
+ * separately drawn reduced version.
+ *
+ * Inline rather than a file because there is nothing to store — it is nine elements of markup — and
+ * `imgSrc` already permits `data:` for the admission card's QR code. The rounded corner matches the
+ * one the icon script gives our own tile, so the two look like they came from the same product.
+ */
+export function accentTile(accent: string): string {
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">` +
+    `<rect width="64" height="64" rx="14" fill="${accent}"/>` +
+    `</svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 /**
@@ -65,11 +104,33 @@ export function withClientIdentity(html: string, identity: ClientIdentity): stri
      * Marked the same way the form's palette is, and read the same way: it tells the client that
      * the page is already painted, so it must not put the defaults up while it waits for the kit.
      */
+    /*
+     * The icons, replacing the shipped ones rather than joining them.
+     *
+     * `index.html` already links our favicon and our touch icon. A browser presented with two
+     * `rel="icon"` links picks by its own rules, not by ours, so appending would make the tab show
+     * either brand depending on the browser — the worst kind of white-label bug, because it works
+     * on the machine of whoever tested it. The links below are inserted after the originals are
+     * stripped.
+     */
+    `<link rel="icon" href="${escapeAttribute(identity.favicon)}" />`,
+    identity.touchIcon
+      ? `<link rel="apple-touch-icon" href="${escapeAttribute(identity.touchIcon)}" />`
+      : '',
     `<style data-tp-brand="server">${identity.palette}</style>`,
   ].filter(Boolean);
 
   return (
     html
+      /*
+       * Our own icons out first, so the customer's are the only ones offered.
+       *
+       * Both `rel="icon"` and `rel="apple-touch-icon"` are stripped, including the `alternate icon`
+       * the shell carries for browsers that want a bitmap — leaving that one behind would hand a
+       * white-labelled tab our mark on exactly the browsers least likely to be the one anybody
+       * checked.
+       */
+      .replace(/\s*<link rel="(?:alternate )?(?:icon|apple-touch-icon)"[^>]*>/g, '')
       /*
        * The tab, too.
        *

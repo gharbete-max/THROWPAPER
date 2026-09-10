@@ -117,6 +117,27 @@ Revisit only with a rasterise-on-upload step — accept the SVG, render it to PN
 the PNG and discard the source. That gets the convenience without ever serving customer-authored
 markup.
 
+## Icons under white-label: two limitations, both real
+
+**A favicon cannot be generated from an arbitrary logo.** Our own mark needed a separately drawn
+reduced version to survive 32px — flat flaps, slits widened from 13° to 21° — and a customer's
+detailed logo, downscaled, is mud. So the tab shows their logo only when the file's own header says
+it is near square (within 1.3:1, symmetric), and a tile in their accent otherwise. A field of
+somebody's brand colour is more identifiable in a strip of tabs than a mark reduced to four grey
+pixels.
+
+The ratio is a proxy and only filters one failure mode: a *square* logo with fine detail is still
+mud at 16px, and nothing short of looking at it can tell. The line is drawn where it catches the
+common case — the wordmark — and it is drawn from the file rather than guessed.
+
+**A non-square logo is stretched on an iOS home screen**, and no markup prevents it.
+`apple-touch-icon` is filled, not letterboxed. The fix is compositing the logo onto a tile
+server-side, which needs an image library this product does not have and should not grow for one
+icon. Until then a wide wordmark is distorted there, and a customer can see it the moment they add
+one.
+
+Neither is worked around silently. The first is implemented and the second is stated.
+
 ## The contracts, for when those layers land
 
 **CLIENT CONTRACT** — `--accent`, `--accent-fg` (derived, never chosen), logo light + dark,

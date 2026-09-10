@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { withClientIdentity } from './client-identity.js';
+import { accentTile, withClientIdentity } from './client-identity.js';
 
 const SHELL = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Paloppa</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
   </head>
   <body><div id="root"></div></body>
 </html>`;
@@ -15,6 +18,8 @@ const IDENTITY = {
   logoLight: `/public/assets/${'a'.repeat(64)}.png`,
   logoDark: `/public/assets/${'b'.repeat(64)}.png`,
   palette: ':root {\n  --tp-colour-primary: #123456;\n}\n',
+  favicon: `/public/assets/${'a'.repeat(64)}.png`,
+  touchIcon: `/public/assets/${'a'.repeat(64)}.png`,
 };
 
 /**
@@ -87,5 +92,55 @@ describe('a white-labelled shell', () => {
     });
     expect(html).not.toContain('<script>alert(1)</script>');
     expect(html).toContain('&quot;&gt;&lt;script&gt;');
+  });
+});
+
+/**
+ * The tab, which is the one slot where a customer's own asset is often the worse answer.
+ *
+ * A wordmark two hundred pixels wide and sixty tall is a perfectly good logo and an illegible 32px
+ * icon. The decision is made from the file's header rather than hoped about, and the fallback is a
+ * field of their brand colour — which is more identifiable in a strip of tabs than a detailed mark
+ * reduced to four grey pixels.
+ */
+describe('the icons a white-labelled tab shows', () => {
+  it('replaces our icons rather than joining them', () => {
+    const html = withClientIdentity(SHELL, IDENTITY);
+    expect(html, 'our favicon survived').not.toContain('/favicon.svg');
+    expect(html, 'our bitmap fallback survived').not.toContain('/icon-192.png');
+    expect(html).toContain(`href="${IDENTITY.favicon}"`);
+  });
+
+  /**
+   * Both `rel` forms, including the `alternate icon` for browsers that want a bitmap.
+   *
+   * A browser given two `rel="icon"` links picks by its own rules rather than ours, so leaving one
+   * behind shows either brand depending on the browser — which works on the machine of whoever
+   * tested it and fails somewhere else.
+   */
+  it('leaves no icon link of ours behind', () => {
+    const html = withClientIdentity(SHELL, IDENTITY);
+    const ours = [...html.matchAll(/<link rel="(?:alternate )?(?:icon|apple-touch-icon)"[^>]*>/g)];
+    expect(ours).toHaveLength(2);
+    for (const [tag] of ours) expect(tag).toContain('/public/assets/');
+  });
+
+  /** A tile is a data URI, so there is nothing to store and nothing to serve. */
+  it('falls back to a tile in their colour', () => {
+    const tile = accentTile('#ef8874');
+    expect(tile.startsWith('data:image/svg+xml,')).toBe(true);
+    expect(decodeURIComponent(tile)).toContain('#ef8874');
+    expect(decodeURIComponent(tile)).toContain('<svg');
+
+    const html = withClientIdentity(SHELL, { ...IDENTITY, favicon: tile });
+    expect(html).toContain('data:image/svg+xml');
+  });
+
+  /** No logo at all means no touch icon tag, rather than one pointing at nothing. */
+  it('omits the home-screen icon when there is no logo', () => {
+    const html = withClientIdentity(SHELL, { ...IDENTITY, touchIcon: null });
+    expect(html).not.toContain('apple-touch-icon');
+    // The tab still gets something: the tile does not depend on a logo existing.
+    expect(html).toContain('rel="icon"');
   });
 });
