@@ -53,12 +53,19 @@ describe('the easing vocabulary', () => {
     expect(declarations).toEqual([]);
   });
 
-  it('animates the mark with the brand curves rather than the neutral one', () => {
-    // `mark-work` is the chomp: it is the pocket, so it takes the pocket's easing.
-    for (const match of STYLES.matchAll(/animation:\s*mark-work[^;]*;/g)) {
-      expect(match[0]).toContain('--tp-ease-chomp');
-    }
-    expect(STYLES).toContain('--tp-ease-unfurl');
+  /**
+   * Both brand curves are in use, named rather than counted.
+   *
+   * This asserted that every `mark-work` animation took the chomp — which was true, and became
+   * vacuous the moment the mark stopped being eight CSS triangles: a loop over no matches passes.
+   * A test that cannot fail is worse than no test, because it reads like cover.
+   *
+   * So it checks the two curves are actually reached for. `unfurl` is the button's press fold and
+   * the scroll reveal; `chomp` is what is left for a press or a pocket closing.
+   */
+  it('uses both brand curves', () => {
+    expect(STYLES).toContain('var(--tp-ease-unfurl)');
+    expect(STYLES).toContain('var(--tp-ease-chomp)');
   });
 });
 

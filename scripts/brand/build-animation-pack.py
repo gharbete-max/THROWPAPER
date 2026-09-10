@@ -267,6 +267,24 @@ if __name__ == "__main__":
         print(f"mark-loop-{size}.webp  {os.path.getsize(f'{ANI}/mark-loop-{size}.webp')//1024} KB"
               f"  {len(loop)} frames  {time.time()-started:.0f}s")
 
+    """
+    The angled still: the mark at rest, everywhere that is not the hero.
+
+    The flat pose is the logo's *first frame*, not the logo. Seen from directly overhead the
+    fortune teller is a flat rosette and the object it is a picture of — folded paper, held —
+    disappears; the whole reason the mark is this toy is the folding, and a top-down view is the
+    one angle that hides it. So the resting mark is a three-quarter view with the paper open.
+
+    `bite(0.5)` is mid-chomp, which is what puts all four flaps at different depths, and the
+    azimuth is only 20 deg off the loop's own start so the still and the animation read as the same
+    object caught at a different moment. Elevation is lifted 8 deg from the loop: a little more of
+    the top faces the viewer, which is what keeps the silhouette compact enough to survive being
+    small.
+    """
+    still = frame(bite(0.5), 1.0, AZ_3D + 20, EL_3D + 8, FOV_3D, 256)
+    still.save(f"{ANI}/mark-angled-256.png")
+    print("mark-angled-256.png", os.path.getsize(f"{ANI}/mark-angled-256.png") // 1024, "KB")
+
     # The poster is the logo pose itself — u = 0, unlit, no shadow — so it is rendered directly
     # rather than by building the whole intro to keep its first frame.
     poster = frame(1.0, 0.0, AZ_LOGO, EL_LOGO, FOV_LOGO, 256)

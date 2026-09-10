@@ -25,8 +25,8 @@ import { Mark } from './Mark.js';
  * structurally rather than by being remembered.
  */
 export function Logo() {
-  // `logo` carries the sizing; without it the SVG fills whatever it is put in.
-  return <Mark mode="open" className="logo" />;
+  // `logo` carries the sizing; without it the image fills whatever it is put in.
+  return <Mark className="logo" />;
 }
 
 /** The mark beside the product's name, for the sign-in screen and the top bar. */

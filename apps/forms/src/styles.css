@@ -1525,9 +1525,6 @@ input[type='range'] {
   block-size: 3.1em;
   margin-block: -0.95em;
   flex: none;
-  color: var(--tp-colour-primary);
-  /* Creases belong to the fold. At rest this is a plane, not a sheet of folded paper. */
-  stroke-opacity: 0;
 }
 
 .wordmark {
@@ -1535,12 +1532,6 @@ input[type='range'] {
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 1.25);
   font-size: var(--tp-text-base);
-}
-
-/* While it unfolds, the creases are what say it is paper. */
-.wordmark:hover .logo,
-.wordmark:focus-visible .logo {
-  stroke-opacity: 1;
 }
 
 /* --- The intro ------------------------------------------------------------
@@ -2925,19 +2916,6 @@ p {
   .builder__itemBody:active,
   .theme:active:not(:disabled) {
     transform: none;
-  }
-
-  /*
-   * The mark holds still and stays a plane.
-   *
-   * The tilt this rule used to apply existed to park a *spinning* logo at a flattering angle.
-   * Nothing spins now — the mark moves only while somebody points at it — so there is nothing to
-   * park, and leaving the transform in would skew a mark that is drawn straight. The crease
-   * override is what stops the hover doing anything at all.
-   */
-  .wordmark:hover .logo,
-  .wordmark:focus-visible .logo {
-    stroke-opacity: 0;
   }
 
   .signed--still .signed__stroke,
@@ -4657,137 +4635,21 @@ body:has(> #root .shell--narrow) {
  * shell entirely, so it cannot inherit this by accident. `system-scope.test.ts` holds it there.
  * ------------------------------------------------------------------------ */
 
+/*
+ * The mark is a rendered image now, so it has no facets to fold.
+ *
+ * The eight triangles and the `mark-work` keyframe that turned each about its own crease lived
+ * here, and they went with the drawing: `Mark.tsx` renders the three-quarter still, or the loop
+ * where motion is the message. What the fold cost to state in CSS, the render states in shading.
+ *
+ * The geometry itself is not gone — `mark-geometry.ts` still draws the favicon and the launcher
+ * icons, where a shaded render at 16px is mud. It simply no longer has a stylesheet.
+ */
 .mark {
-  overflow: visible;
-  /* Each facet turns in three dimensions about its own crease, so they need a shared stage. */
-  transform-style: preserve-3d;
-}
-
-/*
- * Four surfaces, because paper folded toward the light is not the colour of paper folded away.
- *
- * All four are derived from the brand's own two colours, so an organisation replacing the palette
- * gets a mark in their colours rather than ours, and rule 4 holds without anybody remembering it.
- */
-.mark__facet--face {
-  fill: var(--tp-colour-primary);
-}
-
-.mark__facet--fold {
-  /*
-   * 66%, matched to the brand's own published tint.
-   *
-   * The tints are mixed rather than stored because an organisation sets one brand colour and has
-   * to get a whole mark out of it — storing `#9cd2c3` would give every customer this palette's
-   * green on their own form. 66% is where the mix lands on the tint the brand actually publishes:
-   * `#9dcdc0` against `#9cd2c3`, which is under a point in each channel.
-   *
-   * It was 78%, chosen for a folded `P` whose larger facet wore this tone and went grey when it
-   * sat too near the page. The fortune teller splits its flaps evenly, so the tone is carrying
-   * half the mark rather than the bulk of it, and the lighter value is what makes the crease down
-   * each flap read as a crease.
-   */
-  fill: color-mix(in srgb, var(--tp-colour-primary) 66%, var(--tp-colour-background));
-}
-
-.mark__facet--warm {
-  fill: var(--tp-colour-accent);
-}
-
-.mark__facet--glow {
-  fill: color-mix(in srgb, var(--tp-colour-accent) 66%, var(--tp-colour-background));
-}
-
-.mark__facet {
-  /*
-   * The pinch, in the drawing's own coordinates.
-   *
-   * `view-box` rather than `fill-box`: every facet turns about a radius of the mark's centre, which
-   * is a position in the drawing, not a position inside one triangle's bounding box. With
-   * `fill-box` each facet would pivot about its own middle and the mark would scatter instead of
-   * opening. `Mark.tsx` sets all eight to the same point on purpose.
-   */
-  transform-box: view-box;
-  transform-origin: var(--crease-x) var(--crease-y);
-}
-
-/*
- * The pocket opening.
- *
- * A rotation about `(--axis-x, --axis-y, 0)` — the facet's own crease, handed down from the
- * geometry as a unit vector — multiplied by `--swing`, which is `+1` on one side of a point and
- * `-1` on the other. Two mirrored facets turning opposite ways about their own creases is a pocket
- * opening; the same sign on both is the pair sliding, which looks like a rendering fault.
- *
- * `perspective` sits inside the transform rather than on the parent so each facet gets its own
- * vanishing point. Without it eight simultaneous rotations flatten into a wipe: the whole reason
- * the toy reads as an object is that the near lip of a pocket lifts further than the far one.
- *
- * It returns to `none` at 100%, so the mark ends exactly where it started. Nothing to unwind if the
- * pointer leaves halfway — the animation stops and the resting geometry is already in the markup.
- */
-/*
- * One pocket's turn takes the *first half* of the cycle; the second half it lies flat.
- *
- * That shape is what lets a single keyframe serve all three uses. The pair with `--phase: 1` is
- * delayed by exactly half a cycle, so it works while the first pair rests and vice versa — the two
- * pairs alternate and are never open at once, whether the animation runs once or forever. Writing
- * the turn across the whole cycle instead needs a second keyframe for the looping case, and gets
- * the overlap wrong the moment anybody changes a duration.
- */
-@keyframes mark-work {
-  0% {
-    transform: none;
-  }
-  25% {
-    transform: perspective(220px)
-      rotate3d(var(--axis-x), var(--axis-y), 0, calc(var(--swing) * 52deg));
-  }
-  50%,
-  100% {
-    transform: none;
-  }
-}
-
-/*
- * Two pockets, then the other two — the toy being worked rather than a flower blooming.
- *
- * `--phase` is 0 for north/south and 1 for east/west, and **the delay is a whole duration**, so the
- * second pair starts as the first finishes closing rather than while it is still open. Overlapping
- * them was the first attempt and it fails in a way worth recording: with all eight facets turned at
- * once every tip foreshortens toward the centre, so the mark reads as shrinking rather than
- * opening. One pair at a time keeps the other pair flat, which is what holds the silhouette still
- * while a pocket parts inside it.
- *
- * Driven from the wordmark, not the SVG, so pointing at the logo *or its name* plays it. A 28px
- * target is a poor thing to ask somebody to hit.
- */
-.system .wordmark:hover .mark--open .mark__facet,
-.system .mark--open:hover .mark__facet {
-  animation: mark-work 1240ms var(--tp-ease-chomp) calc(var(--phase) * 620ms) both;
-}
-
-/*
- * The intro works the same two pockets once, slower, with the beat between them opened out.
- *
- * Scoped like the hover, though nothing renders an intro mark on a published form today. That is
- * the difference between a rule that is safe and a rule that happens to be unused: the second one
- * becomes the first bug the day somebody puts the mark on a form's header.
- */
-.system .mark--intro .mark__facet {
-  animation: mark-work 1800ms var(--tp-ease-chomp) calc(var(--phase) * 900ms) both;
-}
-
-/*
- * The loading mark keeps working, because a spinner that stops looks like a page that has hung.
- *
- * It is the same mark in the same mode as the intro — `Loading.tsx` asks for `intro` — so it
- * inherited a one-shot and froze mid-wait. Only the iteration count differs: the half-cycle shape
- * of `mark-work` means looping alternates the two pairs forever instead of drifting them into
- * step, so there is nothing else to say here.
- */
-.system .loading__mark .mark__facet {
-  animation-iteration-count: infinite;
+  /* The intrinsic size is 256; every use is smaller and sized by its own class. */
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 /* --- Buttons fold when pressed ---------------------------------------------
@@ -4871,7 +4733,6 @@ body:has(> #root .shell--narrow) {
  * is skipped elsewhere. So this removes the lot rather than shortening it.
  */
 @media (prefers-reduced-motion: reduce) {
-  .mark__facet,
   .system .button::before,
   .system .button::after {
     animation: none !important;
@@ -4928,8 +4789,16 @@ body:has(> #root .shell--narrow) {
   transform: scale(0.985);
 }
 
+/*
+ * The press takes the chomp, which is the curve it has always been.
+ *
+ * `--tp-ease-chomp` is the easing the fortune teller's pocket closes and opens on — quick in,
+ * held, quick out — and a button being pressed and released is the same gesture at a smaller
+ * scale. It sat on the mark's fold animation until the mark became a rendered image, and this is
+ * where it belonged anyway: the neutral curve made a press feel like a fade rather than a bite.
+ */
 .system .button {
-  transition: transform var(--tp-motion-fast) var(--tp-ease);
+  transition: transform var(--tp-motion-fast) var(--tp-ease-chomp);
 }
 
 /*

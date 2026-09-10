@@ -90,7 +90,7 @@ export function Intro() {
           It is the same component the loading indicator uses, in `fold` rather than `pinch`, so
           the shape somebody watches while waiting is the shape that becomes the logo.
         */}
-        <Mark mode="intro" className="intro__mark" />
+        <Mark motion className="intro__mark" />
 
         <p className="intro__word">{t('app.name')}</p>
       </div>
