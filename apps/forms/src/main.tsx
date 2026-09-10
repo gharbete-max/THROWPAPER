@@ -1,5 +1,28 @@
 import { isSiteRoute } from './site/routes.js';
 import { initTheme } from './lib/theme.js';
+/**
+ * The typeface the product has always claimed and never delivered.
+ *
+ * `Inter` has been the first family in the default stack since phase 0, is what `DESIGN.md`'s type
+ * scale was measured against, and is embedded in every PDF this product generates — and no page
+ * ever loaded it. There was no `@font-face` anywhere in this app, so the web fell through to
+ * `ui-sans-serif` and rendered in Segoe UI, SF Pro or Roboto depending on who was looking. An
+ * invoice and the page that produced it were set in different typefaces.
+ *
+ * Three weights, because three are used: `weightRegular` 400, `labelWeight` 500, `weightBold` 600.
+ * Nothing imports the italics; Inter's are synthesised well enough for the two places this design
+ * uses slant, and 24 KB per weight per subset is not worth spending on a fallback.
+ *
+ * Each file is `unicode-range`-gated by fontsource, so the bytes follow the language rather than
+ * the visitor: an English page fetches `latin` only, a Swedish one the same (å ä ö æ ø live in
+ * `latin`), and a Russian one fetches `cyrillic` instead. Nothing downloads all of it.
+ *
+ * Self-hosted and bundled, never a CDN link — the CSP permits no external origins, and that is also
+ * what keeps the Phase 2 third-country-transfer answer at "none".
+ */
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
 import './styles.css';
 
 /**
