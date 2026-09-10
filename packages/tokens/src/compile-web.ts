@@ -110,6 +110,21 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-motion'] = '180ms';
   vars['--tp-motion-slow'] = '320ms';
 
+  /*
+   * The mark's own two curves, so the interface moves the way the thing in the corner moves.
+   *
+   * These are not chosen here. They are the easings the fortune teller is animated with — `unfurl`
+   * is the paper opening out, `chomp` is a pocket closing and opening again — and the brand handoff
+   * ships them as the only curves the interface is allowed to use. Lifting them into the token
+   * layer is what makes that enforceable rather than remembered: a transition reaches for one of
+   * these or it is inventing a motion the product does not have.
+   *
+   * `--tp-ease` stays. It is the neutral one, right for a colour or an opacity that should not draw
+   * attention to how it arrived; these two are for movement, where the paper metaphor is the point.
+   */
+  vars['--tp-ease-unfurl'] = 'cubic-bezier(0.22, 0.75, 0.05, 1)';
+  vars['--tp-ease-chomp'] = 'cubic-bezier(0.58, 0.02, 0.42, 1)';
+
   return vars;
 }
 

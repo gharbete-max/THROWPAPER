@@ -32,6 +32,36 @@ describe('the reduced-motion switch', () => {
   });
 });
 
+/**
+ * The interface moves the way the mark moves, and nothing else.
+ *
+ * The brand ships exactly two curves — `unfurl` for paper opening out, `chomp` for a pocket closing
+ * and opening again — and they are the easings the fortune teller's own animation is built from.
+ * An interface that reaches for a fourth curve is not obviously wrong on any one screen; it is
+ * wrong across the product, which is precisely the kind of drift a comment does not survive.
+ *
+ * So the rule is mechanical: a stylesheet that writes its own `cubic-bezier` has invented a motion
+ * the product does not have. There were three — the Material standard curve twice and an ad-hoc
+ * overshoot on `.reveal` — and they are now the tokens.
+ */
+describe('the easing vocabulary', () => {
+  it('writes no curve of its own', () => {
+    // Comments may discuss a curve; rules may not declare one.
+    const declarations = STYLES.split('\n').filter(
+      (line) => line.includes('cubic-bezier') && !line.trimStart().startsWith('*'),
+    );
+    expect(declarations).toEqual([]);
+  });
+
+  it('animates the mark with the brand curves rather than the neutral one', () => {
+    // `mark-work` is the chomp: it is the pocket, so it takes the pocket's easing.
+    for (const match of STYLES.matchAll(/animation:\s*mark-work[^;]*;/g)) {
+      expect(match[0]).toContain('--tp-ease-chomp');
+    }
+    expect(STYLES).toContain('--tp-ease-unfurl');
+  });
+});
+
 describe('deciding whether the intro plays', () => {
   const withStorage = (getItem: () => string | null) => {
     // A stand-in for `window`, so this stays a plain function test like everything else here.

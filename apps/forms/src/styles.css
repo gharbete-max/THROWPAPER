@@ -1575,7 +1575,7 @@ input[type='range'] {
    * so this is now just a gentle push-in that settles — enough to feel like an entrance without
    * the pan that made it a shot.
    */
-  animation: intro-camera 1400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: intro-camera 1400ms var(--tp-ease-unfurl) forwards;
 }
 
 .intro__word {
@@ -1631,7 +1631,7 @@ input[type='range'] {
   /* Roughly the path length. Over-long is safe: the dash simply starts further off-screen. */
   stroke-dasharray: 260;
   stroke-dashoffset: 260;
-  animation: draw-signature 900ms 120ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: draw-signature 900ms 120ms var(--tp-ease-unfurl) forwards;
 }
 
 .signed__tick {
@@ -1662,8 +1662,8 @@ input[type='range'] {
   opacity: 0;
   transform: translateY(10px);
   transition:
-    opacity 340ms ease-out,
-    transform 340ms cubic-bezier(0.2, 0.8, 0.3, 1);
+    opacity 340ms var(--tp-ease-unfurl),
+    transform 340ms var(--tp-ease-unfurl);
 }
 
 .reveal--in {
@@ -4753,7 +4753,7 @@ body:has(> #root .shell--narrow) {
  */
 .system .wordmark:hover .mark--open .mark__facet,
 .system .mark--open:hover .mark__facet {
-  animation: mark-work 1240ms var(--tp-ease) calc(var(--phase) * 620ms) both;
+  animation: mark-work 1240ms var(--tp-ease-chomp) calc(var(--phase) * 620ms) both;
 }
 
 /*
@@ -4764,7 +4764,7 @@ body:has(> #root .shell--narrow) {
  * becomes the first bug the day somebody puts the mark on a form's header.
  */
 .system .mark--intro .mark__facet {
-  animation: mark-work 1800ms var(--tp-ease) calc(var(--phase) * 900ms) both;
+  animation: mark-work 1800ms var(--tp-ease-chomp) calc(var(--phase) * 900ms) both;
 }
 
 /*
@@ -4814,11 +4814,11 @@ body:has(> #root .shell--narrow) {
 }
 
 .system .button.is-folding::before {
-  animation: button-fold-near 420ms var(--tp-ease);
+  animation: button-fold-near 420ms var(--tp-ease-unfurl);
 }
 
 .system .button.is-folding::after {
-  animation: button-fold-far 420ms var(--tp-ease) 40ms;
+  animation: button-fold-far 420ms var(--tp-ease-unfurl) 40ms;
 }
 
 /*
