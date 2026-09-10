@@ -301,33 +301,101 @@ export function toDark(tokens: TokenSet): TokenSet {
  * darker" means to everybody except a computer. Toward whichever end of the scale the page is not:
  * a pale brand on a pale page darkens, and the same brand on a dark page lightens instead.
  */
+/**
+ * The focus ring, which is the one colour a customer is not allowed to break.
+ *
+ * Every focus outline in the product was `colour.secondary` or `colour.primary` — both settable
+ * from the Brand Kit, and neither checked against the surfaces a ring is actually drawn on. An
+ * organisation picking a pale brand got a focus ring nobody could see, which does not look like a
+ * bug to the person who picked it: they are using a mouse. It ends keyboard navigation for
+ * everybody else, silently, on their own public form.
+ *
+ * `checkContrast` cannot be what prevents this. Its findings are deliberately advisory — refusing
+ * to save somebody's brand over a subtle border would be obnoxious — so a warning is exactly the
+ * wrong instrument for a guarantee. This is the instrument: the ring is *derived*, so there is no
+ * value anybody can set that removes it.
+ *
+ * ## Against both surfaces, not just the page
+ *
+ * A ring is drawn around a control on the page *and* around one inside a card, and those are two
+ * different backgrounds. Checking only `background` passes a colour that disappears on `surface`,
+ * which is where most focusable things in this product actually sit.
+ *
+ * The brand's own colour is kept when it already clears both, so a themed interface keeps a themed
+ * ring. Only when it cannot is the hue walked away from the page, and only when *that* fails does
+ * it fall back to the palette's own ink or paper — which cannot fail, because one of them is by
+ * construction the far end of the page's own range.
+ */
+export function focusRing(colour: ColourTokens): string {
+  const clearsBoth = (candidate: string) =>
+    (contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST &&
+    (contrastRatio(candidate, colour.surface) ?? 0) >= BOUNDARY_CONTRAST;
+
+  if (clearsBoth(colour.secondary)) return colour.secondary;
+
+  const walked = walkAway(colour.secondary, colour.background, clearsBoth);
+  if (walked) return walked;
+
+  /*
+   * The palette's own poles, as the floor.
+   *
+   * A hue that cannot clear 3:1 at any lightness is a very desaturated one against a mid-grey page,
+   * and there is nothing left to preserve of it. Ink or paper always works: `text` and `background`
+   * are held to 4.5:1 against each other by the checker, so whichever is further from the surfaces
+   * clears 3:1 on both.
+   */
+  return readableOn(colour.surface, colour.background, colour.text);
+}
+
+/**
+ * Step a colour away from the page, keeping its hue, until it satisfies `passes`.
+ *
+ * The same twenty-step walk was written three times — once to make a brand fill visible, once to
+ * make a focus ring visible, once to make a button label readable — differing only in the test at
+ * the end of it. Three copies of a loop is three places for the direction to be got backwards, and
+ * getting it backwards means darkening a colour on a dark page, which is worse than doing nothing.
+ *
+ * Returns `null` rather than a best effort when nothing passes, so each caller decides its own
+ * fallback: a fill has something reasonable to keep, a focus ring does not and must reach for the
+ * palette's poles instead.
+ */
+function walkAway(
+  colour: string,
+  page: string,
+  passes: (candidate: string) => boolean,
+): string | null {
+  const hsl = toHsl(colour);
+  const pageLuminance = luminance(page);
+  /*
+   * A colour neither of these can read is a colour there is no basis for changing. Without the
+   * page's luminance there is no way to tell which direction is away from it, and a guess would be
+   * a brand darkened on a dark page.
+   */
+  if (!hsl || pageLuminance === null) return null;
+
+  const [hue, saturation, start] = hsl;
+  /* Away from the page: darken on a light one, lighten on a dark one. */
+  const target = pageLuminance > 0.5 ? 0 : 1;
+
+  for (let step = 1; step <= 20; step += 1) {
+    const candidate = fromHsl([hue, saturation, start + (target - start) * (step / 20)]);
+    if (passes(candidate)) return candidate;
+  }
+  return null;
+}
+
 export function brandFill(colour: ColourTokens): string {
   if ((contrastRatio(colour.primary, colour.background) ?? 0) >= BOUNDARY_CONTRAST) {
     return colour.primary;
   }
 
-  const hsl = toHsl(colour.primary);
-  const pageLuminance = luminance(colour.background);
-  /*
-   * A colour neither of these can read is a colour there is no basis for changing.
-   *
-   * Without the page's luminance there is no way to tell which direction is away from it, and a
-   * guess would be a brand darkened on a dark page — worse than leaving it alone.
-   */
-  if (!hsl || pageLuminance === null) return colour.primary;
-  /* Named to avoid shadowing this module's own `lightness`, which reads a colour rather than a step. */
-  const [hue, saturation, startLightness] = hsl;
-
-  /* Away from the page: darken on a light page, lighten on a dark one. */
-  const target = pageLuminance > 0.5 ? 0 : 1;
-
-  let candidate = colour.primary;
-  for (let step = 1; step <= 20; step += 1) {
-    const moved = startLightness + (target - startLightness) * (step / 20);
-    candidate = fromHsl([hue, saturation, moved]);
-    if ((contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST) return candidate;
-  }
-  return candidate;
+  return (
+    walkAway(
+      colour.primary,
+      colour.background,
+      (candidate) => (contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST,
+    ) ?? colour.primary
+  );
 }
 
 export function buttonSurface(tokens: TokenSet): {
@@ -339,7 +407,6 @@ export function buttonSurface(tokens: TokenSet): {
   const { background, text } = colour;
   /* Not `colour.primary`: see `brandFill`. A button has to be visible as well as legible. */
   const primary = brandFill(colour);
-  const onPrimary = readableOn(primary, background, text);
 
   switch (tokens.buttonStyle) {
     case 'outline':
@@ -388,9 +455,39 @@ export function buttonSurface(tokens: TokenSet): {
        * far from the fill, and the ink is by construction far from the page, so the same value
        * carries the label *and* the boundary without a third colour existing.
        */
-      return readable
-        ? { background: colour.primary, text: label, border: standsOff ? colour.primary : label }
-        : { background: primary, text: onPrimary, border: primary };
+      if (readable) {
+        return {
+          background: colour.primary,
+          text: label,
+          border: standsOff ? colour.primary : label,
+        };
+      }
+
+      /*
+       * Nothing reads on the colour as given, so it is walked until something does.
+       *
+       * `brandFill` has already moved it far enough to be *seen*, which is a lower bar than being
+       * read on: a mid-grey `#808080` clears 3:1 against a light page while offering 3.62 to the
+       * page and 2.83 to the ink, so the button is visible and its label is not. Walking on until a
+       * label clears 4.5 is the difference between reporting the problem and not having it.
+       *
+       * The organisation is still told — `checkContrast` reports a primary no label reads on — but
+       * a warning is advice and this is a button somebody has to press.
+       */
+      const legible =
+        walkAway(
+          primary,
+          background,
+          (candidate) =>
+            (contrastRatio(readableOn(candidate, background, text), candidate) ?? 0) >=
+            TEXT_CONTRAST,
+        ) ?? primary;
+
+      return {
+        background: legible,
+        text: readableOn(legible, background, text),
+        border: legible,
+      };
     }
   }
 }

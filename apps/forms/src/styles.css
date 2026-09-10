@@ -140,7 +140,7 @@ select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -660,7 +660,7 @@ textarea {
 
 .choice--buttons .choice__option:has(input:focus-visible),
 .choice--cards .choice__option:has(input:focus-visible) {
-  outline: 2px solid var(--tp-colour-primary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -871,7 +871,7 @@ textarea {
 }
 
 .template:has(input:focus-visible) {
-  outline: 2px solid var(--tp-colour-primary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -932,7 +932,7 @@ textarea {
 
 /* Ties a row in the list to the question it is on the page. */
 .preview__field--selected {
-  outline: 2px solid var(--tp-colour-primary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 4px;
   border-radius: var(--tp-radius);
 }
@@ -1407,7 +1407,7 @@ input[type='range'] {
 /* The ring is drawn on the glyph, because the input it belongs to is clipped to a pixel. */
 .rating__point input:focus-visible ~ .rating__glyph,
 .rating__point input:focus-visible ~ .rating__number {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -2444,7 +2444,7 @@ p {
  * background-coloured gap behind it — the gap is what makes it legible on top of a dark fill.
  */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--tp-colour-background);
 }
@@ -2942,7 +2942,7 @@ p {
 }
 
 .signature__pad:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -3052,7 +3052,7 @@ p {
 }
 
 .swatch:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 3px;
 }
 
@@ -3252,7 +3252,7 @@ p {
 }
 
 .segmented__option:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -4570,12 +4570,12 @@ input[type='range']:active::-webkit-slider-thumb {
 }
 
 input[type='range']:focus-visible::-webkit-slider-thumb {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
 input[type='range']:focus-visible::-moz-range-thumb {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -4981,7 +4981,7 @@ body:has(> #root .shell--narrow) {
 }
 
 .wizard__option:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 

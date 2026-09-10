@@ -1,4 +1,4 @@
-import { accentInk, buttonSurface, glassSurface, shadow, toDark } from './derive.js';
+import { accentInk, buttonSurface, focusRing, glassSurface, shadow, toDark } from './derive.js';
 import type { TokenSet } from './types.js';
 import { px, pxValue, typeScale } from './units.js';
 
@@ -104,6 +104,12 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-glass-edge'] = glass.edge;
   vars['--tp-glass-hairline'] = glass.hairline;
   vars['--tp-glass-blur'] = 'blur(20px) saturate(1.7)';
+
+  /*
+   * The focus ring, derived rather than picked. See `focusRing`: this is a locked guarantee, and
+   * the stylesheet must never reach for a brand colour for an outline again.
+   */
+  vars['--tp-focus'] = focusRing(tokens.colour);
 
   vars['--tp-ease'] = 'cubic-bezier(0.2, 0, 0, 1)';
   vars['--tp-motion-fast'] = '110ms';
