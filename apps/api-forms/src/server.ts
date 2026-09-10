@@ -493,7 +493,7 @@ let sitePromise: Promise<SiteRenderer | null> | null = null;
 
 interface SiteRenderer {
   isSiteRoute: (path: string) => boolean;
-  render: (path: string, origin: string) => { html: string; head: string };
+  render: (path: string, origin: string) => { html: string; head: string; lang: string };
 }
 
 async function loadSite(appDir: string): Promise<SiteRenderer | null> {
@@ -517,9 +517,16 @@ async function renderSite(appDir: string, path: string, appUrl: string): Promise
 
   try {
     const shell = await readFile(join(appDir, 'index.html'), 'utf8');
-    const { html, head } = site.render(path, appUrl);
+    const { html, head, lang } = site.render(path, appUrl);
     return (
       shell
+        /*
+         * The shell ships `lang="en"`, and the site is no longer only English. `/de/` served with
+         * an English `lang` is the same defect the invoice and the confirmation email each had
+         * once: nothing on screen looks wrong, and a screen reader pronounces German with English
+         * phonetics. `link-preview.ts` does the identical rewrite for `/f/:slug`.
+         */
+        .replace(/<html lang="[^"]*"/, `<html lang="${lang}"`)
         .replace(/<title>[^<]*<\/title>/, '')
         .replace(/<\/head>/, `  ${head}\n  </head>`)
         // The markup React will hydrate, so the page is readable before any script runs.

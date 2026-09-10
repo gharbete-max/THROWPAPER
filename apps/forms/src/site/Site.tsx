@@ -1,12 +1,16 @@
-import { Link, Route, Routes } from 'react-router';
-import { FEATURES, HERO, QUOTES, type Feature } from './content.js';
+import { Route, Routes, useLocation } from 'react-router';
+import { FEATURE_ICONS, FEATURE_SLUGS, type FeatureSlug, type SiteCopy } from './content.js';
 import { LEGAL_DOCUMENTS, PENDING_PATTERN, type LegalDocument } from './legal.js';
+import { SITE_DEFAULT_LOCALE, SITE_LOCALES, localePath } from './locale.js';
+import { siteLocaleLabel } from './locale-labels.js';
+import { copyFor } from './copy/index.js';
 import { Icon } from '../components/Icon.js';
 import { Logo } from '../components/Logo.js';
 import { Mark } from '../components/Mark.js';
 
 /**
- * The public site: a landing page and one page per thing the product does.
+ * The public site: a landing page and one page per thing the product does, in every language the
+ * site is published in.
  *
  * ## Why this is a separate tree from the app
  *
@@ -16,64 +20,145 @@ import { Mark } from '../components/Mark.js';
  * win. Server-rendering it would mean teaching the server to be signed in as somebody.
  *
  * These pages have the opposite shape: no session, no fetch, no state. They are a pure function of
- * `content.ts`, which is what makes `renderToString` on them trivial and what makes them worth
- * rendering at all — this is the surface a search engine and a link preview actually read.
+ * `locale` and `copy/`, which is what makes `renderToString` on them trivial and what makes them
+ * worth rendering at all — this is the surface a search engine and a link preview actually read.
  *
  * So the two trees stay apart. `entry-server.tsx` renders this one; `main.tsx` hydrates it where
  * the server has already drawn it, and mounts the app everywhere else.
+ *
+ * ## The locale is a prop, and the router carries a basename
+ *
+ * `/de/features/events` is a real address — see `locale.ts` for why the language is in the path and
+ * not in a cookie. The router is given `basename="/de"`, so every `<Route>` below is written once,
+ * unprefixed, and matching is unaffected by which language is being served.
+ *
+ * Anchors are the exception and have to say the prefix out loud, because `basename` only rewrites
+ * react-router's own `Link` and this tree deliberately has none. That is what `localePath` is for,
+ * and using it is not optional: a hand-written `/features/forms` in a German page is a trapdoor
+ * back into English that nothing else would catch.
+ *
+ * ## Why every link here is `<a href>` and never react-router's `Link`
+ *
+ * `SITE_ROUTES` is the list of URLs this tree owns. Everything else — `/login`, `/f/:slug`, the
+ * whole signed-in shell — belongs to `App`, which is a *different tree behind a different mount*.
+ * A `Link` client-navigates within whichever router is above it, so a `Link` to an address this
+ * tree does not own changes the URL and then finds nothing to render: header, footer, and a blank
+ * page between them.
+ *
+ * That is what "Open the demo" did. It is invisible in production, because a server-rendered site
+ * page is never hydrated — with no router mounted, `Link` had already degraded to the anchor it
+ * renders as — so it only appeared where the site *is* client-mounted, which is `pnpm demo`. The
+ * demo is the one build whose whole job is to be looked at.
+ *
+ * Anchors everywhere, rather than anchors for the off-site half, because "which links are ours"
+ * is a question nobody should have to re-answer per link. The site has no state to preserve
+ * across a navigation, and a full load is what production does for every one of these anyway.
+ * `Routes` below still earns its place: it picks the page in development, where Vite serves the
+ * shell and the server render never happened.
  */
-export function Site() {
+export function Site({ locale = SITE_DEFAULT_LOCALE }: { locale?: string }) {
+  const copy = copyFor(locale);
+
   return (
     <div className="site system">
-      <SiteHeader />
+      <SiteHeader locale={locale} copy={copy} />
       <Routes>
-        <Route path="/" element={<Landing />} />
-        {FEATURES.map((feature) => (
+        <Route path="/" element={<Landing locale={locale} copy={copy} />} />
+        {FEATURE_SLUGS.map((slug) => (
           <Route
-            key={feature.slug}
-            path={`/features/${feature.slug}`}
-            element={<FeaturePage feature={feature} />}
+            key={slug}
+            path={`/features/${slug}`}
+            element={<FeaturePage slug={slug} locale={locale} copy={copy} />}
           />
         ))}
         {LEGAL_DOCUMENTS.map((document) => (
           <Route
             key={document.slug}
             path={`/${document.slug}`}
-            element={<LegalPage document={document} />}
+            element={<LegalPage document={document} locale={locale} copy={copy} />}
           />
         ))}
       </Routes>
-      <SiteFooter />
+      <SiteFooter locale={locale} copy={copy} />
     </div>
   );
 }
 
-function SiteHeader() {
+function SiteHeader({ locale, copy }: { locale: string; copy: SiteCopy }) {
   return (
     <header className="site__bar">
-      <Link className="site__mark" to="/">
+      {/*
+        First in the tab order, so it is reachable before the bar it skips. Every page on this site
+        opens with these same links; without this they are several presses somebody repeats on
+        every navigation.
+      */}
+      <a className="skip-link" href="#main">
+        {copy.chrome.skipToContent}
+      </a>
+
+      <a className="site__mark" href={localePath(locale)}>
         <Logo />
         <strong>Formwork</strong>
-      </Link>
+      </a>
 
-      <nav className="site__nav" aria-label="Site">
+      <nav className="site__nav" aria-label={copy.chrome.siteNavLabel}>
         {/*
-          Two of the six, not all of them. A bar that lists every page is a table of contents; the
+          Three of the six, not all of them. A bar that lists every page is a table of contents; the
           landing page already has one, further down, with a sentence each.
         */}
-        <Link to="/features/forms">Forms</Link>
-        <Link to="/features/events">Events</Link>
-        <Link to="/features/languages">Languages</Link>
+        {(['forms', 'events', 'languages'] as const).map((slug) => (
+          <a key={slug} href={localePath(locale, `/features/${slug}`)}>
+            {copy.features[slug].name}
+          </a>
+        ))}
       </nav>
 
-      <Link className="button" to="/login">
-        Open the demo
-      </Link>
+      <SiteLanguages locale={locale} copy={copy} />
+
+      <a className="button" href="/login">
+        {copy.chrome.openTheDemo}
+      </a>
     </header>
   );
 }
 
-function Landing() {
+/**
+ * The language switcher: plain links to the same page in another language.
+ *
+ * A `<select>` or a disclosure would need JavaScript, and this tree is deliberately never hydrated
+ * in production — the control would be inert on the one surface it exists for. Links also give a
+ * crawler the alternates in the markup rather than only in the head, and let somebody open Swedish
+ * in a new tab.
+ *
+ * `useLocation` rather than the raw pathname: the router strips the basename, so this is the page
+ * without its language on the front, which is exactly what the other languages need appending to
+ * theirs. Switching language on `/features/events` therefore lands on `/de/features/events`, not
+ * back at the front page — losing your place is the usual failure of a language switcher and it is
+ * the reason people stop using them.
+ */
+function SiteLanguages({ locale, copy }: { locale: string; copy: SiteCopy }) {
+  const { pathname } = useLocation();
+
+  return (
+    <nav className="site__langs" aria-label={copy.chrome.languageLabel}>
+      {SITE_LOCALES.map((option) => (
+        <a
+          key={option}
+          href={localePath(option, pathname)}
+          /* The endonym is in that language, so it is marked as being in that language. */
+          lang={option}
+          hrefLang={option}
+          className={option === locale ? 'site__lang site__lang--on' : 'site__lang'}
+          aria-current={option === locale ? 'true' : undefined}
+        >
+          {siteLocaleLabel(option)}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
   /*
    * One `<main>`, and each section owns its own container.
    *
@@ -82,19 +167,20 @@ function Landing() {
    * as one long beige field with rules across it. A quiet page is not the same as a flat one.
    */
   return (
-    <main className="site__flow">
+    <main className="site__flow" id="main" tabIndex={-1}>
       <section className="hero-band">
         <div className="site__inner hero">
           <div className="hero__words">
-            <p className="hero__eyebrow">{HERO.eyebrow}</p>
-            <h1 className="hero__title">{HERO.title}</h1>
-            <p className="hero__body">{HERO.body}</p>
+            <p className="hero__eyebrow">{copy.hero.eyebrow}</p>
+            <h1 className="hero__title">{copy.hero.title}</h1>
+            <p className="hero__body">{copy.hero.body}</p>
             <div className="hero__actions">
-              <Link className="button" to={HERO.primary.href}>
-                {HERO.primary.label}
-              </Link>
-              <a className="button button--quiet" href={HERO.secondary.href}>
-                {HERO.secondary.label}
+              {/* The demo is the app, which has its own language picker and no locale prefix. */}
+              <a className="button" href="/login">
+                {copy.chrome.openTheDemo}
+              </a>
+              <a className="button button--quiet" href="#features">
+                {copy.hero.secondary}
               </a>
             </div>
           </div>
@@ -114,24 +200,24 @@ function Landing() {
 
       <section className="site__section" id="features">
         <div className="site__inner">
-          <p className="site__eyebrow">Everything it does</p>
-          <h2 className="site__sectionTitle">Built for the day it is used</h2>
+          <p className="site__eyebrow">{copy.sections.featuresEyebrow}</p>
+          <h2 className="site__sectionTitle">{copy.sections.featuresTitle}</h2>
           <div className="cards">
-            {FEATURES.map((feature) => (
-              <Link
+            {FEATURE_SLUGS.map((slug) => (
+              <a
                 className="feature-card rise"
-                key={feature.slug}
-                to={`/features/${feature.slug}`}
+                key={slug}
+                href={localePath(locale, `/features/${slug}`)}
               >
                 <span className="feature-card__mark" aria-hidden="true">
-                  <Icon name={feature.icon} />
+                  <Icon name={FEATURE_ICONS[slug]} />
                 </span>
-                <strong>{feature.name}</strong>
-                <span className="muted small">{feature.summary}</span>
+                <strong>{copy.features[slug].name}</strong>
+                <span className="muted small">{copy.features[slug].summary}</span>
                 <span className="feature-card__more">
-                  Read more <Icon name="arrow-right" />
+                  {copy.sections.readMore} <Icon name="arrow-right" />
                 </span>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -141,15 +227,15 @@ function Landing() {
         The one dark band on the page.
 
         Not decoration: it is where somebody else is talking rather than us, and giving that its own
-        ground is the cheapest way to say so. It also breaks a long parchment page into parts, which
-        is most of what "crisp" means on a page with no photographs in it.
+        ground is the cheapest way to say so. It also breaks a long page into parts, which is most
+        of what "crisp" means on a page with no photographs in it.
       */}
       <section className="site__band">
         <div className="site__inner">
-          <p className="site__eyebrow">In use</p>
-          <h2 className="site__sectionTitle">What people said afterwards</h2>
+          <p className="site__eyebrow">{copy.sections.quotesEyebrow}</p>
+          <h2 className="site__sectionTitle">{copy.sections.quotesTitle}</h2>
           <div className="quotes">
-            {QUOTES.map((quote) => (
+            {copy.quotes.map((quote) => (
               <figure className="quote" key={quote.who}>
                 <blockquote>{quote.text}</blockquote>
                 {/*
@@ -166,14 +252,11 @@ function Landing() {
       <section className="site__section site__cta">
         <div className="site__inner">
           <div className="site__ctaPanel">
-            <h2 className="site__sectionTitle">Nothing to install</h2>
-            <p className="muted">
-              The demo runs on made-up data, sends no email, and forgets everything when it
-              restarts.
-            </p>
-            <Link className="button" to="/login">
-              Open the demo
-            </Link>
+            <h2 className="site__sectionTitle">{copy.sections.ctaTitle}</h2>
+            <p className="muted">{copy.sections.ctaBody}</p>
+            <a className="button" href="/login">
+              {copy.chrome.openTheDemo}
+            </a>
           </div>
         </div>
       </section>
@@ -181,16 +264,26 @@ function Landing() {
   );
 }
 
-function FeaturePage({ feature }: { feature: Feature }) {
+function FeaturePage({
+  slug,
+  locale,
+  copy,
+}: {
+  slug: FeatureSlug;
+  locale: string;
+  copy: SiteCopy;
+}) {
+  const feature = copy.features[slug];
+
   return (
-    <main className="site__main">
+    <main className="site__main" id="main" tabIndex={-1}>
       <article className="site__article">
-        <Link className="site__back" to="/">
-          <Icon name="arrow-left" /> Everything it does
-        </Link>
+        <a className="site__back" href={localePath(locale)}>
+          <Icon name="arrow-left" /> {copy.featurePage.backToAll}
+        </a>
 
         <span className="feature-card__mark feature__mark" aria-hidden="true">
-          <Icon name={feature.icon} />
+          <Icon name={FEATURE_ICONS[slug]} />
         </span>
         <h1>{feature.name}</h1>
         <p className="site__lede">{feature.intro}</p>
@@ -205,13 +298,13 @@ function FeaturePage({ feature }: { feature: Feature }) {
         </div>
 
         {/* Somewhere to go next, so a feature page is not a dead end. */}
-        <nav className="site__more" aria-label="Other features">
-          {FEATURES.filter((other) => other.slug !== feature.slug)
+        <nav className="site__more" aria-label={copy.featurePage.otherFeatures}>
+          {FEATURE_SLUGS.filter((other) => other !== slug)
             .slice(0, 3)
             .map((other) => (
-              <Link key={other.slug} to={`/features/${other.slug}`}>
-                <Icon name={other.icon} /> {other.name}
-              </Link>
+              <a key={other} href={localePath(locale, `/features/${other}`)}>
+                <Icon name={FEATURE_ICONS[other]} /> {copy.features[other].name}
+              </a>
             ))}
         </nav>
       </article>
@@ -219,22 +312,31 @@ function FeaturePage({ feature }: { feature: Feature }) {
   );
 }
 
-function SiteFooter() {
+function SiteFooter({ locale, copy }: { locale: string; copy: SiteCopy }) {
   return (
     <footer className="site__foot">
       <div className="site__inner site__footInner">
-        <p className="muted small">
-          Formwork. Forms, registrations and the door. The demo saves nothing and sends nothing.
-        </p>
+        <p className="muted small">{copy.chrome.footerTagline}</p>
         {/*
           These belong in the footer because that is where people look for them, and a service that
           hides its privacy page is telling you something about the page.
+
+          They stay English in every language, and say so. `CLAUDE.md` rule 8 forbids generating
+          legal wording, and a machine-translated privacy policy is the worst possible instance of
+          that rule being broken — so the policies are English until a lawyer writes them in another
+          language. `lang` marks the switch honestly rather than hiding it: a screen reader changes
+          voice, and a sighted reader can see before clicking that this one link leaves their
+          language. A translated *title* over an English page would be the dishonest version.
         */}
-        <nav className="site__footNav" aria-label="Policies">
+        <nav className="site__footNav" aria-label={copy.chrome.policiesNavLabel}>
           {LEGAL_DOCUMENTS.map((document) => (
-            <Link key={document.slug} to={`/${document.slug}`}>
+            <a
+              key={document.slug}
+              href={localePath(locale, `/${document.slug}`)}
+              lang={SITE_DEFAULT_LOCALE}
+            >
               {document.title}
-            </Link>
+            </a>
           ))}
         </nav>
       </div>
@@ -247,14 +349,25 @@ function SiteFooter() {
  *
  * One renderer for all five, because they differ in words rather than in shape, and five hand-built
  * pages is five places for the wording to drift out of step with the software it describes.
+ *
+ * English in every locale, deliberately — see the footer. The page marks itself so, which is what
+ * stops a German-language document announcing itself as German while reading as English.
  */
-function LegalPage({ document }: { document: LegalDocument }) {
+function LegalPage({
+  document,
+  locale,
+  copy,
+}: {
+  document: LegalDocument;
+  locale: string;
+  copy: SiteCopy;
+}) {
   return (
-    <main className="site__main">
+    <main className="site__main" id="main" tabIndex={-1} lang={SITE_DEFAULT_LOCALE}>
       <article className="site__article legal">
-        <Link className="site__back" to="/">
-          <Icon name="arrow-left" /> Back
-        </Link>
+        <a className="site__back" href={localePath(locale)} lang={locale}>
+          <Icon name="arrow-left" /> {copy.featurePage.back}
+        </a>
         <h1>{document.title}</h1>
         <p className="site__lede">{document.lede}</p>
         <p className="muted small">Last reviewed {document.updated}</p>

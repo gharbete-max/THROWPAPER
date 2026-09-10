@@ -251,8 +251,14 @@ function Shell() {
         />
         {/* Beside the language, because both are "how this app is presented to me". */}
         <ThemeToggle />
+        {/*
+          The role reads as a word, not as a database value.
+          `Users.tsx` and `ShareDialog.tsx` both already translate it through `users.role.*`; this
+          was the one place that printed the raw enum, so the same person was "Administrator" on
+          the users screen and "admin" in the bar above it, in every language including English.
+        */}
         <span className="topline__who small muted">
-          {user.name} · {user.role}
+          {user.name} · {t(`users.role.${user.role}`)}
         </span>
         <button className="button button--quiet small" onClick={signOut}>
           {t('app.signOut')}

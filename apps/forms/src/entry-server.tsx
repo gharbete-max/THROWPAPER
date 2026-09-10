@@ -2,7 +2,9 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 import { defaultTokens, toThemedCssBlock } from '@tp/tokens';
 import { Site } from './site/Site.js';
-import { FEATURES } from './site/content.js';
+import { FEATURE_SLUGS, type SiteCopy } from './site/content.js';
+import { copyFor } from './site/copy/index.js';
+import { SITE_DEFAULT_LOCALE, SITE_LOCALES, localePath, splitLocale } from './site/locale.js';
 
 /**
  * The public site, rendered to HTML on the server.
@@ -25,19 +27,30 @@ export interface Rendered {
    * head content is one thing to splice in, and the tag belongs with the tags.
    */
   head: string;
+  /**
+   * The BCP 47 tag for `<html lang>`, which the caller must set.
+   *
+   * Returned rather than left to the template because the language is now decided per URL, and a
+   * German page announcing itself as English is the defect that has already been fixed twice in
+   * this product — once for transactional email, once for the public form. A screen reader reads
+   * German words with English phonetics and nothing on screen looks wrong.
+   */
+  lang: string;
 }
 
-/** What each page calls itself, kept beside the routes it describes rather than in a template. */
-function metaFor(path: string): { title: string; description: string } {
-  const feature = FEATURES.find((entry) => path === `/features/${entry.slug}`);
-  if (feature) {
-    return { title: `${feature.name} — Formwork`, description: feature.summary };
+/**
+ * What each page calls itself, kept beside the routes it describes rather than in a template.
+ *
+ * Takes the *page* — the path with its language already stripped — so one rule serves all of them
+ * rather than the match having to know about prefixes.
+ */
+function metaFor(page: string, copy: SiteCopy): { title: string; description: string } {
+  const slug = FEATURE_SLUGS.find((entry) => page === `/features/${entry}`);
+  if (slug) {
+    const feature = copy.features[slug];
+    return { title: `${feature.name}${copy.meta.titleSuffix}`, description: feature.summary };
   }
-  return {
-    title: 'Formwork — forms, registrations and the door',
-    description:
-      'A form builder for organisations that have to get it right: twelve languages, your brand on every surface, and an admission card that scans at a door.',
-  };
+  return { title: copy.meta.homeTitle, description: copy.meta.homeDescription };
 }
 
 function escapeAttribute(value: string): string {
@@ -49,7 +62,17 @@ function escapeAttribute(value: string): string {
 }
 
 export function render(path: string, origin: string): Rendered {
-  const meta = metaFor(path);
+  /*
+   * The language comes off the front of the URL before anything else looks at it.
+   *
+   * `page` is what the router matches and what `metaFor` describes; `locale` decides every word on
+   * it. Splitting here rather than inside `Site` keeps the head and the body reading the same two
+   * values, which is what stops a German page being served with an English `<title>` — the exact
+   * class of bug that already produced an invoice titled "Formwork" twice.
+   */
+  const { locale, path: page } = splitLocale(path);
+  const copy = copyFor(locale);
+  const meta = metaFor(page, copy);
   const site = origin.replace(/\/$/, '');
   const title = escapeAttribute(meta.title);
   const description = escapeAttribute(meta.description);
@@ -57,20 +80,48 @@ export function render(path: string, origin: string): Rendered {
   const image = escapeAttribute(`${site}/icon-512.png`);
 
   const html = renderToString(
-    <StaticRouter location={path}>
-      <Site />
+    /*
+     * `basename` carries the language, so every `<Route>` in `Site` is written unprefixed once.
+     * Without it each route would need twelve spellings and the twelfth would be the one missed.
+     */
+    <StaticRouter location={path} basename={localePath(locale)}>
+      <Site locale={locale} />
     </StaticRouter>,
   );
+
+  /**
+   * `hreflang` for every language this page exists in, including itself.
+   *
+   * Search engines treat translations as duplicates unless told otherwise, and the pair of rules
+   * they want is unintuitive: each alternate must be listed on *every* version including the one
+   * being served, and the set must be reciprocal. Generating all of them from `SITE_LOCALES`
+   * satisfies both by construction — a hand-written list is reciprocal until somebody adds the
+   * thirteenth language.
+   *
+   * `x-default` points at English, which is what an unprefixed URL serves and what somebody whose
+   * language the site does not publish in should land on.
+   */
+  const alternates = SITE_LOCALES.map(
+    (option) =>
+      `<link rel="alternate" hrefLang="${option}" href="${escapeAttribute(
+        `${site}${localePath(option, page)}`,
+      )}" />`,
+  ).join('\n    ');
 
   const head = [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}" />`,
     `<link rel="canonical" href="${canonical}" />`,
+    alternates,
+    `<link rel="alternate" hrefLang="x-default" href="${escapeAttribute(
+      `${site}${localePath(SITE_DEFAULT_LOCALE, page)}`,
+    )}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:title" content="${title}" />`,
     `<meta property="og:description" content="${description}" />`,
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:image" content="${image}" />`,
+    `<meta property="og:locale" content="${escapeAttribute(locale.replace('-', '_'))}" />`,
     `<meta name="twitter:card" content="summary" />`,
     /**
      * The palette inline, not fetched.
@@ -83,7 +134,8 @@ export function render(path: string, origin: string): Rendered {
     `<style>${toThemedCssBlock(defaultTokens)}</style>`,
   ].join('\n    ');
 
-  return { html, head };
+  return { html, head, lang: locale };
 }
 
-export { SITE_ROUTES, isSiteRoute } from './site/routes.js';
+export { SITE_ROUTES, SITE_PAGES, isSiteRoute } from './site/routes.js';
+export { SITE_LOCALES, SITE_DEFAULT_LOCALE, localePath, splitLocale } from './site/locale.js';

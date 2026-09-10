@@ -26,15 +26,29 @@ export function mount(container: HTMLElement, isSite: boolean): void {
   document.head.appendChild(style);
 
   if (isSite) {
-    void import('./site/Site.js').then(({ Site }) => {
-      createRoot(container).render(
-        <StrictMode>
-          <BrowserRouter>
-            <Site />
-          </BrowserRouter>
-        </StrictMode>,
-      );
-    });
+    void Promise.all([import('./site/Site.js'), import('./site/locale.js')]).then(
+      ([{ Site }, { splitLocale, localePath }]) => {
+        /*
+         * Development only, and the language still has to be right.
+         *
+         * Production never reaches this branch for a site route — the server rendered the page and
+         * `main.tsx` leaves it alone. Here Vite serves the shell for `/de/` and somebody has to
+         * draw it, so the locale is read back off the URL that asked for it. Defaulting to English
+         * instead would make `pnpm demo` the one build where the translations are invisible, which
+         * is the build people look at.
+         */
+        const { locale } = splitLocale(window.location.pathname);
+        document.documentElement.lang = locale;
+
+        createRoot(container).render(
+          <StrictMode>
+            <BrowserRouter basename={localePath(locale)}>
+              <Site locale={locale} />
+            </BrowserRouter>
+          </StrictMode>,
+        );
+      },
+    );
     return;
   }
 

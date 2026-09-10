@@ -46,7 +46,13 @@ export function Login() {
                     .catch(() => undefined);
                 }}
               >
-                {t('demo.signInAs', { role: user.role })}
+                {/*
+                  The role is translated before it is interpolated, not passed through raw.
+                  `demo.signInAs` is "Anmelden als {role}" in German, so a raw `user.role` produced
+                  "Anmelden als admin" — a translated sentence with an English word dropped into
+                  the middle of it. `users.role.*` already carries "Administrator" and "Mitglied".
+                */}
+                {t('demo.signInAs', { role: t(`users.role.${user.role}`) })}
               </button>
             ))}
           </div>
