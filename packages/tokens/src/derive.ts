@@ -335,9 +335,10 @@ export function buttonSurface(tokens: TokenSet): {
   text: string;
   border: string;
 } {
-  const { background, text } = tokens.colour;
+  const { colour } = tokens;
+  const { background, text } = colour;
   /* Not `colour.primary`: see `brandFill`. A button has to be visible as well as legible. */
-  const primary = brandFill(tokens.colour);
+  const primary = brandFill(colour);
   const onPrimary = readableOn(primary, background, text);
 
   switch (tokens.buttonStyle) {
@@ -350,8 +351,32 @@ export function buttonSurface(tokens: TokenSet): {
        * page.
        */
       return { background: mix(primary, background, 0.14), text: primary, border: primary };
-    default:
-      return { background: primary, text: onPrimary, border: primary };
+    default: {
+      /*
+       * The mid-tone brand is the case this used to get wrong, and it is not a rare one.
+       *
+       * Deepening the fill until it stands off the page and *then* choosing a label makes the two
+       * decisions in the right order, which is why it is done that way — but for a colour that
+       * starts in the middle, the deepening is what destroys the label. Seafoam `#6fb8a6` reads
+       * 5.11:1 against the palette's ink and 2.12:1 against its page; walked out to `#499482` it
+       * reads 3.30 against the page and 3.28 against the ink, so there is no longer any label that
+       * can be put on it. The button came out legible to nobody, and every check passed, because
+       * each one was asking about a different pair.
+       *
+       * A filled button has to satisfy two separate things: its label must be readable *on it*,
+       * and it must be visible *against the page*. Only the first needs the fill. So when the
+       * colour somebody chose can carry a label, it keeps it, and the border carries the boundary
+       * — which is the division the soft tier below already makes for the same reason. The fill is
+       * only walked when nothing can be read on it either way, where a duller button is the better
+       * of two bad outcomes.
+       */
+      const label = readableOn(colour.primary, background, text);
+      const readable = (contrastRatio(label, colour.primary) ?? 0) >= TEXT_CONTRAST;
+
+      return readable
+        ? { background: colour.primary, text: label, border: primary }
+        : { background: primary, text: onPrimary, border: primary };
+    }
   }
 }
 

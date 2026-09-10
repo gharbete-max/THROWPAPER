@@ -13,10 +13,14 @@
     <!--
       A placeholder, replaced at runtime with the organisation's own background colour so the
       phone's status bar matches the page it sits above. It was `#1f4b99` — the blue this product
-      shipped with before the palette moved to parchment and midnight, and hard-coded, so it could
-      not have followed a customer's brand even if it had been current.
+      shipped with two palettes ago, and hard-coded, so it could not have followed a customer's
+      brand even if it had been current.
+
+      It is the page colour and not the brand's, because `syncThemeColour` overwrites it with
+      `--tp-colour-background`: anything else here is a flash of the wrong colour before the first
+      paint. The brand handoff asks for seafoam in this slot, which is why that is worth stating.
     -->
-    <meta name="theme-color" content="#faf7f0" />
+    <meta name="theme-color" content="#f6f5f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <!--

@@ -74,11 +74,40 @@ describe('contrast', () => {
     expect(checkContrast(tokens).map((f) => f.token)).not.toContain('colour.border');
   });
 
-  it('checks the button, which paints background on top of primary', () => {
+  /**
+   * The button is checked as a question about the fill, not about one particular label.
+   *
+   * `buttonSurface` chooses the label with `readableOn`, so asking "is the page colour readable on
+   * the primary" answered a question nothing was asking: it failed every light primary, including
+   * the ones that render a perfectly good button with an ink label, and it passed a mid-tone that
+   * can carry neither.
+   *
+   * What is left is the failure that is real and unfixable by deriving — a primary in the middle
+   * of the range, where neither the page nor the ink clears 4.5:1 on it. `#808080` is that colour:
+   * 3.62 against the page, 2.83 against the ink. Only the person who chose it can fix it, which is
+   * why it is worth telling them.
+   */
+  it('catches a primary that no label can be read on', () => {
     const tokens: TokenSet = {
       ...defaultTokens,
-      colour: { ...defaultTokens.colour, primary: '#f0f0f0', background: '#ffffff' },
+      colour: { ...defaultTokens.colour, primary: '#808080' },
     };
-    expect(checkContrast(tokens).map((f) => f.token)).toContain('colour.background on primary');
+    expect(checkContrast(tokens).map((f) => f.token)).toContain('colour.primary as a button fill');
+  });
+
+  /**
+   * And the pale primary that the old pair reported is not a finding, because it is not a fault.
+   *
+   * A pale fill takes an ink label and reads at 9:1. What it cannot do is show its own edge against
+   * the page, and that is the border's job — asserted in `brand-fill.test.ts`, not here.
+   */
+  it('does not report a pale primary that an ink label reads on', () => {
+    const tokens: TokenSet = {
+      ...defaultTokens,
+      colour: { ...defaultTokens.colour, primary: '#f0f0f0' },
+    };
+    expect(checkContrast(tokens).map((f) => f.token)).not.toContain(
+      'colour.primary as a button fill',
+    );
   });
 });

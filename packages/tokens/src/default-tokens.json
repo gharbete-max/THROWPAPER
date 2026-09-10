@@ -1,13 +1,13 @@
 {
   "colour": {
-    "primary": "#1b2a45",
-    "secondary": "#3a5578",
-    "accent": "#b0763a",
-    "background": "#faf7f0",
-    "surface": "#f2ece1",
-    "text": "#171a20",
-    "muted": "#5f5a50",
-    "border": "#998b75",
+    "primary": "#6fb8a6",
+    "secondary": "#2f6b5c",
+    "accent": "#ef8874",
+    "background": "#f6f5f2",
+    "surface": "#eceae5",
+    "text": "#2e3a38",
+    "muted": "#5c6a67",
+    "border": "#7a8783",
     "success": "#2f6b45",
     "warning": "#8a5f00",
     "danger": "#a12b25"

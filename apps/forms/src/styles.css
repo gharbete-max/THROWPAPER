@@ -2038,8 +2038,18 @@ input[type='file']:disabled::file-selector-button {
   padding: calc(var(--tp-spacing-unit) * 0.4);
   list-style: none;
   min-inline-size: 12rem;
-  /* Twelve languages is taller than a phone. Scroll the list, never the page behind it. */
-  max-block-size: min(60vh, 24rem);
+  /*
+   * Twelve languages is taller than a phone. Scroll the list, never the page behind it.
+   *
+   * The cap is a **half row**, deliberately, rather than a round number that lands wherever it
+   * lands. At `24rem` it cut 0.65 of the way through the ninth language, which does not read as
+   * "there is more below" — it reads as a list that has been chopped, and it put a sliver of
+   * Español under the bottom edge. A row is `--tp-control-height`, so eight and a half of them
+   * plus the list's own padding always cuts a row cleanly in half however the brand resizes
+   * controls: the partial row is then obviously a partial row, which is the oldest scroll
+   * affordance there is.
+   */
+  max-block-size: min(60vh, calc(var(--tp-control-height) * 8.5 + var(--tp-spacing-unit) * 0.8));
   overflow-y: auto;
   overscroll-behavior: contain;
   border: var(--tp-border-width) solid var(--tp-colour-border);
@@ -2129,6 +2139,65 @@ html {
   /* Rotating a phone must not silently inflate every font. */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+
+  /*
+   * In-page anchors travel rather than teleport.
+   *
+   * The landing's "See what it does" points at `#features`, and an instant jump there is the one
+   * moment on the page where somebody loses their place — the header stays put, the body swaps, and
+   * it reads as a page load rather than as movement down the same page.
+   *
+   * Safe to state unconditionally: the reduced-motion block already forces
+   * `scroll-behavior: auto !important` on everything, so this cannot reach somebody who has asked
+   * for stillness. It is also the one kind of motion that has no `.system` question — an anchor on
+   * a published form scrolls the respondent's own page, not ours.
+   */
+  scroll-behavior: smooth;
+}
+
+/*
+ * Skip to content: the first thing in the tab order, invisible until it is reached.
+ *
+ * Every page here starts with a header of links, so without this a keyboard user tabs through the
+ * whole bar on every single page before reaching anything they came for. It is not a nicety — it
+ * is the standard remedy for repeated blocks, and it was simply missing.
+ *
+ * Positioned rather than clipped to nothing. The `width: 1px; clip` trick hides it from sighted
+ * keyboard users too, which defeats the point: this must *appear* when it takes focus, or nobody
+ * can tell they have found it.
+ */
+.skip-link {
+  position: absolute;
+  z-index: 200;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  border-end-end-radius: var(--tp-radius);
+  background: var(--tp-colour-primary);
+  color: var(--tp-colour-background);
+  font-size: var(--tp-text-ui);
+  text-decoration: none;
+  /* Off the top of the screen, not `display: none` — a hidden element cannot take focus. */
+  transform: translateY(-120%);
+  transition: transform var(--tp-motion) var(--tp-ease);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/*
+ * The target takes focus, which is the half everybody forgets.
+ *
+ * Following the link moves the *scroll* on its own, but several browsers leave the focus ring back
+ * on the link, so the next Tab returns to the header the user just escaped. `tabindex="-1"` in the
+ * markup makes `<main>` focusable for this and this only; the outline is suppressed because the
+ * page has visibly moved and a ring around the entire document says nothing.
+ */
+.site__flow:focus,
+.site__main:focus,
+.main:focus {
+  outline: none;
 }
 
 /* Wide content pans inside itself, and stops there. Without `contain`, reaching the end of a
@@ -2207,6 +2276,22 @@ h3,
 h4 {
   line-height: 1.25;
   letter-spacing: -0.005em;
+}
+
+/*
+ * Body copy does not end on a single stranded word.
+ *
+ * `pretty` rather than `balance`: balance evens every line and browsers cap it at a few lines, so
+ * on a paragraph it either does nothing or reflows the whole block. `pretty` touches only the last
+ * line, which is where the defect is — a lone "door." under three full lines reads as a mistake in
+ * the text rather than in the measure.
+ *
+ * Deliberately global, not scoped to `.system`. This is typesetting hygiene, not house style: it
+ * imposes no look on a published form, it only stops the organisation's own words from breaking
+ * badly. Unsupported browsers ignore it and get exactly what they get today.
+ */
+p {
+  text-wrap: pretty;
 }
 
 /* A heading needs room above it and little below: it belongs to what follows, not what precedes.
@@ -3826,6 +3911,47 @@ body:has(.app) > #root {
   color: var(--tp-colour-text);
 }
 
+/*
+ * The language switcher: the languages themselves, as links.
+ *
+ * A row rather than a dropdown, because the site publishes in a handful of languages and a
+ * disclosure that hides five words behind a press is a control protecting nothing. It also needs
+ * no JavaScript, which matters here more than anywhere else in the product: this tree is never
+ * hydrated in production, so a `<select>` would be inert on the one surface it exists for.
+ *
+ * `margin-inline-start: 0` cancels the `auto` on `.site__nav`, so the two navs sit as one group at
+ * the end of the bar instead of pushing each other apart.
+ */
+.site__langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  padding-inline-start: calc(var(--tp-spacing-unit) * 2.5);
+  border-inline-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.site__lang {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+  text-decoration: none;
+}
+
+.site__lang:hover {
+  color: var(--tp-colour-text);
+}
+
+/*
+ * The current language is marked, not removed.
+ *
+ * It stays a link so the row does not reflow when it changes, and so `aria-current` has something
+ * to sit on — a switcher that drops the option you are on makes you count the gap to work out
+ * where you are.
+ */
+.site__lang--on {
+  color: var(--tp-colour-text);
+  font-weight: var(--tp-type-label-weight);
+}
+
 .site__main {
   flex: 1;
   inline-size: min(76rem, 100%);
@@ -4538,13 +4664,19 @@ body:has(> #root .shell--narrow) {
 
 .mark__facet--fold {
   /*
-   * 78%, not 62%.
+   * 66%, matched to the brand's own published tint.
    *
-   * The stem's larger facet is this tone, so at 62% the bulk of the letter sat nearer the page
-   * than the brand and the mark read grey at hero size — a fold of paper, but not a fold of *this*
-   * paper. High enough to stay navy, low enough that the crease against `face` is still a crease.
+   * The tints are mixed rather than stored because an organisation sets one brand colour and has
+   * to get a whole mark out of it — storing `#9cd2c3` would give every customer this palette's
+   * green on their own form. 66% is where the mix lands on the tint the brand actually publishes:
+   * `#9dcdc0` against `#9cd2c3`, which is under a point in each channel.
+   *
+   * It was 78%, chosen for a folded `P` whose larger facet wore this tone and went grey when it
+   * sat too near the page. The fortune teller splits its flaps evenly, so the tone is carrying
+   * half the mark rather than the bulk of it, and the lighter value is what makes the crease down
+   * each flap read as a crease.
    */
-  fill: color-mix(in srgb, var(--tp-colour-primary) 78%, var(--tp-colour-background));
+  fill: color-mix(in srgb, var(--tp-colour-primary) 66%, var(--tp-colour-background));
 }
 
 .mark__facet--warm {
@@ -4557,58 +4689,94 @@ body:has(> #root .shell--narrow) {
 
 .mark__facet {
   /*
-   * The crease, in the drawing's own coordinates.
+   * The pinch, in the drawing's own coordinates.
    *
-   * `view-box` rather than `fill-box`: the axis a facet turns about is an edge it shares with its
-   * neighbour, which is a position in the letter, not a position inside one triangle's bounding
-   * box. With `fill-box` each facet would pivot about its own middle and the mark would scatter.
+   * `view-box` rather than `fill-box`: every facet turns about a radius of the mark's centre, which
+   * is a position in the drawing, not a position inside one triangle's bounding box. With
+   * `fill-box` each facet would pivot about its own middle and the mark would scatter instead of
+   * opening. `Mark.tsx` sets all eight to the same point on purpose.
    */
   transform-box: view-box;
   transform-origin: var(--crease-x) var(--crease-y);
 }
 
 /*
- * The fold.
+ * The pocket opening.
  *
- * A rotation about the diagonal `(1, -1, 0)`, which is the crease running corner to corner — the
- * fold you make first in any sheet of paper. `perspective` inside the transform rather than on the
- * parent, so each facet gets its own vanishing point and the near ones lift further than the far
- * ones, which is what stops nine simultaneous rotations reading as one flat wipe.
+ * A rotation about `(--axis-x, --axis-y, 0)` — the facet's own crease, handed down from the
+ * geometry as a unit vector — multiplied by `--swing`, which is `+1` on one side of a point and
+ * `-1` on the other. Two mirrored facets turning opposite ways about their own creases is a pocket
+ * opening; the same sign on both is the pair sliding, which looks like a rendering fault.
  *
- * It returns to `none` at 100%, so the mark ends exactly where it started. Nothing to unwind if
- * the pointer leaves halfway: the animation stops and the resting geometry is already in the
- * markup.
+ * `perspective` sits inside the transform rather than on the parent so each facet gets its own
+ * vanishing point. Without it eight simultaneous rotations flatten into a wipe: the whole reason
+ * the toy reads as an object is that the near lip of a pocket lifts further than the far one.
+ *
+ * It returns to `none` at 100%, so the mark ends exactly where it started. Nothing to unwind if the
+ * pointer leaves halfway — the animation stops and the resting geometry is already in the markup.
  */
-@keyframes mark-fold {
+/*
+ * One pocket's turn takes the *first half* of the cycle; the second half it lies flat.
+ *
+ * That shape is what lets a single keyframe serve all three uses. The pair with `--phase: 1` is
+ * delayed by exactly half a cycle, so it works while the first pair rests and vice versa — the two
+ * pairs alternate and are never open at once, whether the animation runs once or forever. Writing
+ * the turn across the whole cycle instead needs a second keyframe for the looping case, and gets
+ * the overlap wrong the moment anybody changes a duration.
+ */
+@keyframes mark-work {
   0% {
     transform: none;
   }
-  45% {
-    transform: perspective(200px) rotate3d(1, -1, 0, 58deg);
+  25% {
+    transform: perspective(220px)
+      rotate3d(var(--axis-x), var(--axis-y), 0, calc(var(--swing) * 52deg));
   }
+  50%,
   100% {
     transform: none;
   }
 }
 
 /*
+ * Two pockets, then the other two — the toy being worked rather than a flower blooming.
+ *
+ * `--phase` is 0 for north/south and 1 for east/west, and **the delay is a whole duration**, so the
+ * second pair starts as the first finishes closing rather than while it is still open. Overlapping
+ * them was the first attempt and it fails in a way worth recording: with all eight facets turned at
+ * once every tip foreshortens toward the centre, so the mark reads as shrinking rather than
+ * opening. One pair at a time keeps the other pair flat, which is what holds the silhouette still
+ * while a pocket parts inside it.
+ *
  * Driven from the wordmark, not the SVG, so pointing at the logo *or its name* plays it. A 28px
  * target is a poor thing to ask somebody to hit.
  */
 .system .wordmark:hover .mark--open .mark__facet,
 .system .mark--open:hover .mark__facet {
-  animation: mark-fold 820ms var(--tp-ease) calc(var(--i) * 42ms) both;
+  animation: mark-work 1240ms var(--tp-ease) calc(var(--phase) * 620ms) both;
 }
 
 /*
- * The intro plays the same fold once, slower, with the stagger opened out.
+ * The intro works the same two pockets once, slower, with the beat between them opened out.
  *
  * Scoped like the hover, though nothing renders an intro mark on a published form today. That is
  * the difference between a rule that is safe and a rule that happens to be unused: the second one
  * becomes the first bug the day somebody puts the mark on a form's header.
  */
 .system .mark--intro .mark__facet {
-  animation: mark-fold 1400ms var(--tp-ease) calc(var(--i) * 70ms) both;
+  animation: mark-work 1800ms var(--tp-ease) calc(var(--phase) * 900ms) both;
+}
+
+/*
+ * The loading mark keeps working, because a spinner that stops looks like a page that has hung.
+ *
+ * It is the same mark in the same mode as the intro — `Loading.tsx` asks for `intro` — so it
+ * inherited a one-shot and froze mid-wait. Only the iteration count differs: the half-cycle shape
+ * of `mark-work` means looping alternates the two pairs forever instead of drifting them into
+ * step, so there is nothing else to say here.
+ */
+.system .loading__mark .mark__facet {
+  animation-iteration-count: infinite;
 }
 
 /* --- Buttons fold when pressed ---------------------------------------------

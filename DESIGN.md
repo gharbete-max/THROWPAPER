@@ -2,15 +2,15 @@
 name: Formwork
 description: Forms, registrations and the door, for organisations that have to get it right.
 colors:
-  primary: '#1b2a45'
-  secondary: '#3a5578'
-  accent: '#b0763a'
-  accent-ink: '#916435'
-  background: '#faf7f0'
-  surface: '#f2ece1'
-  text: '#171a20'
-  muted: '#5f5a50'
-  border: '#998b75'
+  primary: '#6fb8a6'
+  secondary: '#2f6b5c'
+  accent: '#ef8874'
+  accent-ink: '#8f6156'
+  background: '#f6f5f2'
+  surface: '#eceae5'
+  text: '#2e3a38'
+  muted: '#5c6a67'
+  border: '#7a8783'
   success: '#2f6b45'
   warning: '#8a5f00'
   danger: '#a12b25'
@@ -120,32 +120,67 @@ the shipped colours; it may only assume the _relationships_ between them.
 
 ## Colors
 
-| Token                        | Value                         | Used for                                                    |
-| ---------------------------- | ----------------------------- | ----------------------------------------------------------- |
-| `primary`                    | `#1b2a45`                     | Filled buttons, the current nav item, the mark's top wing   |
-| `secondary`                  | `#3a5578`                     | Focus rings                                                 |
-| `accent`                     | `#b0763a`                     | The mark's near wing, quote rules. **Decoration, not text** |
-| `accent-ink`                 | `#916435`                     | The accent where it must be _read_. See below               |
-| `background`                 | `#faf7f0`                     | The page                                                    |
-| `surface`                    | `#f2ece1`                     | Cards, the rail, raised areas                               |
-| `text`                       | `#171a20`                     | Body copy                                                   |
-| `muted`                      | `#5f5a50`                     | Captions, help text, inactive nav                           |
-| `border`                     | `#998b75`                     | Every boundary                                              |
-| `success` `warning` `danger` | `#2f6b45` `#8a5f00` `#a12b25` | Status only                                                 |
+| Token                        | Value                         | Used for                                                               |
+| ---------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| `primary`                    | `#6fb8a6`                     | Filled buttons, the current nav item, the mark's north and south flaps |
+| `secondary`                  | `#2f6b5c`                     | Links and focus rings — it is _read_, so it clears 4.5:1               |
+| `accent`                     | `#ef8874`                     | The mark's east and west flaps, quote rules. **Decoration, not text**  |
+| `accent-ink`                 | `#8f6156`                     | The accent where it must be _read_. See below                          |
+| `background`                 | `#f6f5f2`                     | The page                                                               |
+| `surface`                    | `#eceae5`                     | Cards, the rail, raised areas                                          |
+| `text`                       | `#2e3a38`                     | Body copy                                                              |
+| `muted`                      | `#5c6a67`                     | Captions, help text, inactive nav                                      |
+| `border`                     | `#7a8783`                     | Every boundary                                                         |
+| `success` `warning` `danger` | `#2f6b45` `#8a5f00` `#a12b25` | Status only                                                            |
 
-Parchment and midnight, with cognac as the one warm note. **No pure white and no pure black
-anywhere** except where a machine needs it: the QR code's dark modules are `#000000` because that
-is the contrast a camera needs at a door, and that is the only exception in the product.
+Seafoam and coral on a paper canvas, with a green-black ink. Two hue families, peers rather than
+primary and secondary: in the mark they sit opposite each other, and neither is allowed to
+dominate the interface either.
+
+**The page is a warm off-white, and this reverses what this document said one revision ago.** That
+revision argued for pure white on the grounds that a cream page reads as an unset background rather
+than a chosen one. The argument was sound and the conclusion is still wrong, for a reason outside
+it: the product's own surfaces are the frame around a customer's palette, and pure white is the one
+background that is never a choice — it is what an unstyled page already is. `#f6f5f2` is close
+enough to white to disappear behind somebody else's brand and far enough from it to be a decision.
+
+**No pure white and no pure black anywhere**, except where a machine needs it: the QR code's dark
+modules are `#000000` because that is the contrast a camera needs at a door, and that is the only
+exception in the product.
+
+`border` is `#7a8783` (3.43:1 on the page) because `checkContrast` holds a boundary to 3:1 and a
+border may be a control's only edge.
 
 **`accent` is not a text colour.** `checkContrast` deliberately never tests it against the
-background, because in the app it is a wing of the logo and the edge of a quote. The moment it
-became words on the landing page it measured 3.57:1, under the 4.5 small text needs. Use
-`accent-ink`, which walks the accent toward the palette's own ink only until it clears the bar.
+background, because in the app it is a flap of the mark and the edge of a quote. Coral measures
+2.28:1 on the page — nowhere near the 4.5 small text needs. Use `accent-ink`, which walks the
+accent toward the palette's own ink only until it clears the bar.
+
+### The filled button, which is the one place this palette is hard
+
+A brand colour in the middle of the tonal range cannot do both jobs a filled button needs, and
+seafoam is exactly such a colour: 5.11:1 against the ink, 2.12:1 against the page. It carries a
+label beautifully and shows its own edge not at all.
+
+The old answer was to darken the fill until it stood off the page. That worked for a pale brand and
+fails for a mid-tone one — walked out to `#499482`, seafoam reads 3.30 against the page and 3.28
+against the ink, so the button becomes visible and unreadable in the same move, with every
+individual check still passing because each was asking about a different pair.
+
+So the two requirements are carried by two different parts of the button. **The fill keeps the
+colour somebody chose** and takes whichever of the ink and the page reads on it — for this palette,
+seafoam with an ink label at 5.11:1. **The border carries the boundary**, deepened by `brandFill`
+to `#499482` at 3.30:1, which is the same division the soft button tier has always used. The fill
+is only darkened when no label can be read on it either way.
+
+This is why `checkContrast` no longer reports "the page colour on top of the primary": nothing
+paints that pair. What it reports instead is a primary that _no_ label can be read on, which is a
+palette fault only the person choosing it can fix.
 
 **Dark mode is derived, never authored.** `toDark()` computes it from the light palette: the page
 becomes a dark tint of the brand's own ink so a warm palette stays warm, surfaces sit _above_ the
 page rather than below it, and brand colours are lifted in HSL so they keep their hue. Mixing
-toward white was tried and turned the midnight navy into a dead grey. Never write a second palette.
+toward white was tried and turned the brand colour into a dead grey. Never write a second palette.
 
 ## Typography
 
@@ -238,9 +273,17 @@ Borders are `1px` of `border` on every boundary. Inputs and buttons are `44px` t
   screen reader.
 - **Empty states** are a quiet mark, a sentence at full contrast, and the action that fixes it.
   Never a dashed box: that is what a drop zone looks like.
-- **The mark** is a paper plane folded from a fortune teller. It holds still and unfolds on hover.
-  Its geometry lives in `FortuneTeller.tsx` and is the single source for the favicon, the launcher
-  icons and the intro's final frame.
+- **The mark** is a paper fortune teller seen from above: one diamond, four flaps, eight triangles
+  meeting at the pinch. It holds still at rest and opens on hover — north and south part, close,
+  then east and west, which is how the toy is actually worked. The two pairs are the two brand
+  colours, so the pauses read as two separate choices rather than as one animation.
+  - Its geometry lives in `apps/forms/src/components/mark-geometry.ts` and is the single source for
+    the component, the favicon and the launcher icons. `mark-consistency.test.ts` holds them
+    together, and holds the silhouette to a clean diamond — a picture, unlike a letterform, has to
+    survive 16px on outline alone.
+  - The motion is real rotation, not a second drawing: each facet turns about its own crease, which
+    is a radius of the pinch, so `Mark.tsx` hands CSS a unit axis per facet and the browser folds
+    it in three dimensions. There is no folded pose anywhere to keep in step.
 
 ## Do's and Don'ts
 
