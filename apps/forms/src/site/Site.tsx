@@ -218,6 +218,20 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
           */}
           <div className="hero__figure" aria-hidden="true">
             <picture>
+              {/*
+                The retina variant is gated to desktop widths, not offered by density alone.
+
+                `2x` on its own would hand a 997 KB animation to any phone with a retina screen,
+                which is most of them, on the connection least able to take it — and the mark is
+                256 CSS px there against 304 on desktop, so it buys the least where it costs the
+                most. Above 900px the figure is larger, the connection is usually not a phone's,
+                and the sharpness is visible.
+              */}
+              <source
+                media="(prefers-reduced-motion: no-preference) and (min-width: 900px)"
+                srcSet="/mark-loop-256.webp 1x, /mark-loop-512.webp 2x"
+                type="image/webp"
+              />
               <source
                 media="(prefers-reduced-motion: no-preference)"
                 srcSet="/mark-loop-256.webp"

@@ -78,10 +78,27 @@ describe('the hero mark', () => {
   const SITE = readFileSync(new URL('../site/Site.tsx', import.meta.url), 'utf8');
 
   it('fetches the animation only when motion is welcome', () => {
-    const source = /<source\b[\s\S]*?\/>/.exec(SITE)?.[0];
-    expect(source, 'the hero has no <source> to gate').toBeDefined();
-    expect(source).toContain('(prefers-reduced-motion: no-preference)');
-    expect(source).toContain('.webp');
+    const sources = [...SITE.matchAll(/<source\b[\s\S]*?\/>/g)].map((match) => match[0]);
+    expect(sources.length, 'the hero has no <source> to gate').toBeGreaterThan(0);
+
+    // Every one of them, not just the first: an ungated fallback source defeats the whole gate.
+    for (const source of sources) {
+      expect(source).toContain('(prefers-reduced-motion: no-preference)');
+      expect(source).toContain('.webp');
+    }
+  });
+
+  /**
+   * The 2x animation is a desktop offer, not a density offer.
+   *
+   * `2x` alone would send 997 KB to any retina phone — most of them — on the connection least able
+   * to take it, to sharpen a mark that is *smaller* there than on desktop. The width gate is what
+   * keeps the phone on the 494 KB file.
+   */
+  it('keeps the retina variant off phones', () => {
+    const retina = SITE.match(/<source\b[^>]*mark-loop-512[\s\S]*?\/>/)?.[0];
+    expect(retina, 'no 2x source found').toBeDefined();
+    expect(retina).toMatch(/min-width:\s*900px/);
   });
 
   it('falls back to the poster, which is the animation frozen at frame 0', () => {
