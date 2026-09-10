@@ -6,7 +6,6 @@ import { siteLocaleLabel } from './locale-labels.js';
 import { copyFor } from './copy/index.js';
 import { Icon } from '../components/Icon.js';
 import { Logo } from '../components/Logo.js';
-import { Mark } from '../components/Mark.js';
 
 /**
  * The public site: a landing page and one page per thing the product does, in every language the
@@ -191,9 +190,48 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
             A stock photograph of somebody at a laptop would say nothing this page does not already
             say in words. The fold says the one thing worth saying without words: this is paper, and
             it is being made into something.
+
+            ## Why this is a `<picture>` and not the `<Mark>` component
+
+            The rendered loop is the real toy — shaded paper turning in three dimensions — and the
+            vector mark is its flat first frame. The hero is the one place worth paying for the
+            former, so this is the brand's own 256px animation rather than eight CSS triangles.
+
+            It has to work with **no JavaScript**. `main.tsx` deliberately never hydrates this tree
+            in production: the site is server-rendered, has no state and moves with CSS, so a React
+            effect here would run in development and be dead on the live page — which is the exact
+            shape of bug this codebase keeps writing comments about.
+
+            So reduced motion is honoured by the `media` attribute rather than by an effect, and
+            that is not a workaround, it is the better mechanism. A `<source>` whose query does not
+            match is **never fetched**, so somebody who asked for less motion does not quietly
+            download 673 KB of animation for it to be hidden — the motion layer is genuinely absent
+            rather than merely invisible.
+
+            No cross-fade between the two. The animation's first frame is the poster, so there is
+            nothing to hide; fading would invent a transition the object does not have.
+
+            `width` and `height` are the intrinsic size and stop the figure collapsing before the
+            image arrives — this is the only element on the page large enough to cost real layout
+            shift. Browsers stop decoding an animated image once it scrolls out of view, so the
+            "pause offscreen" requirement is the browser's rather than ours to implement.
           */}
           <div className="hero__figure" aria-hidden="true">
-            <Mark mode="intro" className="hero__mark" />
+            <picture>
+              <source
+                media="(prefers-reduced-motion: no-preference)"
+                srcSet="/mark-loop-256.webp"
+                type="image/webp"
+              />
+              <img
+                className="hero__mark"
+                src="/mark-poster-256.png"
+                width={256}
+                height={256}
+                alt=""
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </section>

@@ -4038,6 +4038,17 @@ body:has(.app) > #root {
   place-items: center;
 }
 
+/*
+ * `<picture>` is a wrapper with no box worth having.
+ *
+ * Left as its default inline it becomes the grid item and the image centres inside *it* rather
+ * than inside the figure, which puts the mark half a line off centre for no reason anybody could
+ * see. `display: contents` hands the grid its real child.
+ */
+.hero__figure picture {
+  display: contents;
+}
+
 .hero__mark {
   /*
    * 19rem, down from 28.

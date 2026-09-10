@@ -62,6 +62,41 @@ describe('the easing vocabulary', () => {
   });
 });
 
+/**
+ * The hero animation is withheld, not hidden.
+ *
+ * The landing page is server-rendered and `main.tsx` never hydrates it, so there is no effect to
+ * remove a motion layer on this surface — reduced motion has to be honoured by the markup itself.
+ * A `<source>` whose media query does not match is never fetched, so the query is what makes the
+ * 673 KB animation genuinely absent for somebody who asked for less motion.
+ *
+ * The failure being prevented is the plausible one: hiding the animation with CSS instead. That
+ * looks identical in a screenshot, still downloads the file, and still spends the battery decoding
+ * it — the reader asked for less motion and paid for all of it anyway.
+ */
+describe('the hero mark', () => {
+  const SITE = readFileSync(new URL('../site/Site.tsx', import.meta.url), 'utf8');
+
+  it('fetches the animation only when motion is welcome', () => {
+    const source = /<source\b[\s\S]*?\/>/.exec(SITE)?.[0];
+    expect(source, 'the hero has no <source> to gate').toBeDefined();
+    expect(source).toContain('(prefers-reduced-motion: no-preference)');
+    expect(source).toContain('.webp');
+  });
+
+  it('falls back to the poster, which is the animation frozen at frame 0', () => {
+    // Not a different drawing: a cross-fade between them would invent a transition to cover.
+    expect(SITE).toContain('/mark-poster-256.png');
+  });
+
+  it('reserves the figure so the largest thing on the page cannot shift it', () => {
+    const img = /<img\b[\s\S]*?hero__mark[\s\S]*?\/>/.exec(SITE)?.[0];
+    expect(img).toBeDefined();
+    expect(img).toMatch(/width=\{?256/);
+    expect(img).toMatch(/height=\{?256/);
+  });
+});
+
 describe('deciding whether the intro plays', () => {
   const withStorage = (getItem: () => string | null) => {
     // A stand-in for `window`, so this stays a plain function test like everything else here.

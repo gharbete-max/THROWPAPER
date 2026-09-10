@@ -65,6 +65,13 @@
         "rule": "design-system-font",
         "value": "sfmono-regular",
         "createdAt": "2026-09-04T00:44:19.534Z"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": ["apps/forms/src/lib/motion.test.ts"],
+        "createdAt": "2026-09-10T11:50:04.553Z",
+        "reason": "Test file: the <img> is a regex literal asserting on Site.tsx markup, not rendered output. No image ships from here."
       }
     ]
   }
