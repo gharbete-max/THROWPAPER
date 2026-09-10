@@ -20,6 +20,7 @@ import { pathToFileURL } from 'node:url';
 import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
+import { withClientIdentity, type ClientIdentity } from './documents/client-identity.js';
 import { toThemedCssBlock } from '@tp/tokens';
 import { resolveTokens } from './routes/brand-kit.js';
 import { createAuthService } from './auth/service.js';
@@ -477,6 +478,20 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         }
       }
 
+      /**
+       * A white-labelled deployment serves the shell wearing the customer's identity.
+       *
+       * Only when client mode is on: with it off there is nothing to correct, and reading the
+       * brand kit on every HTML request to discover that would be a database round trip bought for
+       * no one. See `client-identity.ts` for why this cannot be done in the browser — the sign-in
+       * screen has no session to hang a brand off, so the server is the only thing that knows.
+       */
+      const identity = await clientIdentity(repos);
+      if (identity) {
+        const shell = await readFile(join(appDir, 'index.html'), 'utf8');
+        return reply.type('text/html; charset=utf-8').send(withClientIdentity(shell, identity));
+      }
+
       return reply.sendFile('index.html');
     });
   }
@@ -547,6 +562,33 @@ async function renderSite(appDir: string, path: string, appUrl: string): Promise
  * either. A form that does not exist gets the plain shell for the same reason — a preview that
  * confirms which slugs are real is a way to enumerate them.
  */
+/**
+ * The customer's identity for the app shell, or `null` when this deployment is our own.
+ *
+ * Swallows its own failures for the same reason `previewForSlug` does: this decorates a page that
+ * has to load, and a database blip must serve the app rather than a 500. The cost of failing open
+ * is one page in our branding, which is the state every page was in before this existed.
+ */
+async function clientIdentity(repos: Repositories): Promise<ClientIdentity | null> {
+  try {
+    const organisation = await repos.organisations.first();
+    if (!organisation) return null;
+
+    const { tokens } = await resolveTokens(repos, organisation.id);
+    if (!tokens.clientMode) return null;
+
+    return {
+      // Their brand name where they set one, the legal entity otherwise — the two often differ.
+      wordmark: tokens.wordmark ?? organisation.name,
+      logoLight: tokens.logoLight,
+      logoDark: tokens.logoDark,
+      palette: toThemedCssBlock(tokens),
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function previewForSlug(
   repos: Repositories,
   slug: string,

@@ -118,3 +118,44 @@ describe('what the lockup does to a customer’s asset', () => {
     expect(rule).toMatch(/block-size:/);
   });
 });
+
+/**
+ * The sign-in screen is the page white-label matters most on and the only one with no session.
+ *
+ * Nobody is authenticated there, so there is no kit to fetch and nothing on the client can know
+ * whose product it is — the server has to say so in the document. Two things then have to hold, and
+ * both were wrong in the obvious first version.
+ */
+describe('white-label before there is a session', () => {
+  const BRAND = readFileSync(new URL('../lib/brand.tsx', import.meta.url), 'utf8');
+
+  /**
+   * Signing out must not put our mark back on their product.
+   *
+   * `setTokens(defaultTokens)` was right while a kit was only a palette — one organisation's
+   * colours should not outlive its session — and wrong the moment it carried identity, because it
+   * also discarded the deployment's own branding and returned the user to *our* sign-in screen.
+   */
+  it('keeps the deployment’s identity when the session ends', () => {
+    const signedOut = /if \(!user\) \{[\s\S]*?\n {4}\}/.exec(BRAND)?.[0] ?? '';
+    expect(signedOut, 'the signed-out branch was not found').not.toBe('');
+    expect(signedOut).toContain('identityFromDocument()');
+    expect(signedOut).not.toMatch(/setTokens\(defaultTokens\)/);
+  });
+
+  /**
+   * And the client must not paint the defaults over a page the server already painted.
+   *
+   * Doing so would *create* the flash the server render removes: their colours, a blink to ours,
+   * and a blink back. `PublicForm` carries the same guard against the same marker.
+   */
+  it('does not repaint over the server’s palette while the kit is in flight', () => {
+    expect(BRAND).toContain('style[data-tp-brand="server"]');
+  });
+
+  /** Meta tags, not an inline script: the CSP is `script-src 'self'` and would refuse one. */
+  it('reads the identity from meta rather than an inline script', () => {
+    expect(BRAND).toContain('tp-client-mode');
+    expect(BRAND).not.toMatch(/window\.__/);
+  });
+});
