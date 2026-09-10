@@ -95,6 +95,28 @@ advisory, and the locked list is absolute.
   consumer is the thing the reduction pass would delete. The boundary is the decision; the code
   arrives with the layer it bounds.
 
+## Client logos: SVG stays refused
+
+`BUILD-BRIEF.md` §4 says "SVG preferred, PNG accepted" and "sanitise uploaded SVG — strip
+`<script>`, event handlers and external references. An SVG upload field is an XSS vector; treat it
+as one."
+
+This repo already treats it as one, and more strongly: `checkImage` **refuses SVG outright**, with
+a distinct `svg-not-supported` code so the message can name a way forward, and `AssetPath` only
+matches `png|jpg|webp|gif`. There are tests for the ways a real file from a design tool disguises
+itself — a byte-order mark, an XML declaration, a doctype, uppercase tags.
+
+That is kept, deliberately, against the brief. Sanitising SVG is a denylist against a format that
+is a whole document language: `<foreignObject>`, `xlink:href`, CSS `@import`, entity expansion and
+namespace tricks are all live, and every sanitiser worth the name has had a bypass. The file is
+served from our own origin to a signed-in admin's browser, so a bypass is stored XSS against the
+tenant. Refusing the format removes the class of bug rather than filtering it, and the cost is that
+a customer converts a logo to PNG once.
+
+Revisit only with a rasterise-on-upload step — accept the SVG, render it to PNG server-side, store
+the PNG and discard the source. That gets the convenience without ever serving customer-authored
+markup.
+
 ## The contracts, for when those layers land
 
 **CLIENT CONTRACT** — `--accent`, `--accent-fg` (derived, never chosen), logo light + dark,
