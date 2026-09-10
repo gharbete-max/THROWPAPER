@@ -474,6 +474,11 @@ export const fiFI: Record<MessageKey, string> = {
   'brand.save': 'Tallenna',
   'brand.saving': 'Tallennetaan…',
   'brand.reset': 'Palauta oletukset',
+  'brand.clientMode': 'Asiakastila',
+  'brand.clientModeOn': 'Käytä omaa logoa ja nimeä',
+  'brand.clientModeHint':
+    'Korvaa Paloppan tunnuksen sovelluksessa ja kirjautumisnäytöllä. Julkaistut lomakkeenne käyttävät jo omaa ilmettänne.',
+  'brand.wordmark': 'Nimi kulmassa',
   'brand.colours': 'Värit',
   'brand.logo': 'Logo',
 

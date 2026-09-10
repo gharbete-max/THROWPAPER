@@ -485,6 +485,11 @@ export const deDE: Record<MessageKey, string> = {
   'brand.save': 'Speichern',
   'brand.saving': 'Wird gespeichert…',
   'brand.reset': 'Auf Standard zurücksetzen',
+  'brand.clientMode': 'Kundenmodus',
+  'brand.clientModeOn': 'Eigenes Logo und eigenen Namen verwenden',
+  'brand.clientModeHint':
+    'Ersetzt die Paloppa-Marke in der App und auf dem Anmeldebildschirm. Ihre veröffentlichten Formulare nutzen bereits Ihr Branding.',
+  'brand.wordmark': 'Name in der Ecke',
   'brand.colours': 'Farben',
   'brand.logo': 'Logo',
 

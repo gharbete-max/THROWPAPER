@@ -473,6 +473,11 @@ export const isIS: Record<MessageKey, string> = {
   'brand.save': 'Vista',
   'brand.saving': 'Vista…',
   'brand.reset': 'Endurstilla á sjálfgefið',
+  'brand.clientMode': 'Viðskiptavinahamur',
+  'brand.clientModeOn': 'Nota eigið merki og nafn',
+  'brand.clientModeHint':
+    'Kemur í stað Paloppa-merkisins í forritinu og á innskráningarskjánum. Birt eyðublöð ykkar nota nú þegar ykkar eigið útlit.',
+  'brand.wordmark': 'Nafn í horninu',
   'brand.colours': 'Litir',
   'brand.logo': 'Merki',
 

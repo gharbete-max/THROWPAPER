@@ -467,6 +467,10 @@ export const zhCN: Record<MessageKey, string> = {
   'brand.save': '保存',
   'brand.saving': '保存中…',
   'brand.reset': '恢复默认',
+  'brand.clientMode': '客户模式',
+  'brand.clientModeOn': '使用我们自己的标识和名称',
+  'brand.clientModeHint': '在应用和登录页面中替换 Paloppa 标识。您已发布的表单已在使用您的品牌。',
+  'brand.wordmark': '角落显示的名称',
   'brand.colours': '颜色',
   'brand.logo': '标志',
 

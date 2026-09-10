@@ -484,6 +484,11 @@ export const esES: Record<MessageKey, string> = {
   'brand.save': 'Guardar',
   'brand.saving': 'Guardando…',
   'brand.reset': 'Restablecer valores predeterminados',
+  'brand.clientMode': 'Modo cliente',
+  'brand.clientModeOn': 'Usar nuestro propio logotipo y nombre',
+  'brand.clientModeHint':
+    'Sustituye la marca de Paloppa en la aplicación y en la pantalla de inicio de sesión. Sus formularios publicados ya usan su marca.',
+  'brand.wordmark': 'Nombre en la esquina',
   'brand.colours': 'Colores',
   'brand.logo': 'Logotipo',
 

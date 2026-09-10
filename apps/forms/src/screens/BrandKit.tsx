@@ -57,11 +57,16 @@ const LENGTHS: ReadonlyArray<{
 ];
 
 /**
- * Fonts that are already on the machine.
+ * The stacks on offer.
  *
- * No web fonts: a downloaded typeface means a request before the form can be read, a flash of
- * unstyled text, and a third party told about every visitor. These stacks all resolve to
- * something installed, which is why the form appears immediately.
+ * This said "fonts that are already on the machine — no web fonts", which described the product
+ * for exactly as long as nobody checked: `Inter` was first in the shipped stack the whole time and
+ * was never delivered, so the app rendered in whatever `system-ui` resolved to. Inter is now
+ * bundled and self-hosted, which answers the objection the comment was making — the request is to
+ * our own origin, and no third party is told about any visitor.
+ *
+ * The rest still resolve to something installed, and that is the right offer: an organisation
+ * choosing Georgia should get Georgia without this product shipping it.
  */
 /**
  * Unquoted, and that is load-bearing rather than a style choice.
@@ -86,7 +91,7 @@ export const FONT_STACKS = [
 
 export function BrandKit() {
   const t = useT();
-  const { user } = useSession();
+  const { user, organisation } = useSession();
   const { refresh } = useBrand();
   const [tokens, setTokens] = useState<TokenSet>(defaultTokens);
   const [saved, setSaved] = useState<BrandKitResponse | null>(null);
@@ -237,6 +242,42 @@ export function BrandKit() {
               </button>
             </div>
           )}
+
+          {/*
+            Client mode, next to the logo because that is what it turns on.
+
+            A switch rather than an inference from "has a logo": somebody uploads, looks at it, and
+            decides later — and turning it off again must not delete what they uploaded.
+          */}
+          <h2 className="small">{t('brand.clientMode')}</h2>
+          <label className="choice__option">
+            <input
+              type="checkbox"
+              checked={tokens.clientMode}
+              disabled={readOnly}
+              onChange={(event) =>
+                setTokens((current) => ({ ...current, clientMode: event.target.checked }))
+              }
+            />
+            <span>{t('brand.clientModeOn')}</span>
+          </label>
+          <p className="small muted">{t('brand.clientModeHint')}</p>
+
+          <label className="field">
+            <span>{t('brand.wordmark')}</span>
+            <input
+              type="text"
+              maxLength={60}
+              value={tokens.wordmark ?? ''}
+              disabled={readOnly || !tokens.clientMode}
+              /* The organisation's own name, which is what it falls back to when left blank. */
+              placeholder={organisation?.name ?? ''}
+              onChange={(event) => {
+                const next = event.target.value.trim();
+                setTokens((current) => ({ ...current, wordmark: next === '' ? null : next }));
+              }}
+            />
+          </label>
 
           <h2 className="small">{t('brand.colours')}</h2>
 

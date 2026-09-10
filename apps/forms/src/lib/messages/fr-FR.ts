@@ -485,6 +485,11 @@ export const frFR: Record<MessageKey, string> = {
   'brand.save': 'Enregistrer',
   'brand.saving': 'Enregistrement…',
   'brand.reset': 'Rétablir les valeurs par défaut',
+  'brand.clientMode': 'Mode client',
+  'brand.clientModeOn': 'Utiliser notre propre logo et notre nom',
+  'brand.clientModeHint':
+    'Remplace la marque Paloppa dans l’application et sur l’écran de connexion. Vos formulaires publiés utilisent déjà votre identité.',
+  'brand.wordmark': 'Nom dans le coin',
   'brand.colours': 'Couleurs',
   'brand.logo': 'Logo',
 

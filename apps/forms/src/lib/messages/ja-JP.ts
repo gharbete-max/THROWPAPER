@@ -478,6 +478,11 @@ export const jaJP: Record<MessageKey, string> = {
   'brand.save': '保存',
   'brand.saving': '保存中…',
   'brand.reset': '既定値に戻す',
+  'brand.clientMode': 'クライアントモード',
+  'brand.clientModeOn': '自社のロゴと名称を使用する',
+  'brand.clientModeHint':
+    'アプリとサインイン画面の Paloppa のマークを置き換えます。公開済みのフォームにはすでに自社のブランドが適用されています。',
+  'brand.wordmark': '隅に表示する名称',
   'brand.colours': '色',
   'brand.logo': 'ロゴ',
 

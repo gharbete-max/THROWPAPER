@@ -32,6 +32,8 @@
   "logoLight": null,
   "logoDark": null,
   "favicon": null,
+  "clientMode": false,
+  "wordmark": null,
   "controlHeight": "44px",
   "contentWidth": "640px"
 }

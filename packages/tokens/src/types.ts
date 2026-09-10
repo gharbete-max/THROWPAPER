@@ -47,4 +47,14 @@ export interface TokenSet {
   logoLight: string | null;
   logoDark: string | null;
   favicon: string | null;
+  /**
+   * White-label. Neither of these compiles to anything.
+   *
+   * They are here because this type is the brand kit rather than the stylesheet — `logoLight` has
+   * never been a CSS value either — and because keeping them together is what lets one row, one
+   * schema and one editor cover the whole of an organisation's identity. The compilers ignore
+   * them, which is the correct amount of attention for a boolean and a name.
+   */
+  clientMode: boolean;
+  wordmark: string | null;
 }

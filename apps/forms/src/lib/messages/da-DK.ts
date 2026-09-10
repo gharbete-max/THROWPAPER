@@ -470,6 +470,11 @@ export const daDK: Record<MessageKey, string> = {
   'brand.save': 'Gem',
   'brand.saving': 'Gemmer…',
   'brand.reset': 'Nulstil til standard',
+  'brand.clientMode': 'Kundetilstand',
+  'brand.clientModeOn': 'Brug vores eget logo og navn',
+  'brand.clientModeHint':
+    'Erstatter Paloppas mærke i appen og på login-skærmen. Jeres offentliggjorte formularer bruger allerede jeres design.',
+  'brand.wordmark': 'Navn i hjørnet',
   'brand.colours': 'Farver',
   'brand.logo': 'Logo',
 

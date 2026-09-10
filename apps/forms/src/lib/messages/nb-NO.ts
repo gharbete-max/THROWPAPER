@@ -472,6 +472,11 @@ export const nbNO: Record<MessageKey, string> = {
   'brand.save': 'Lagre',
   'brand.saving': 'Lagrer…',
   'brand.reset': 'Tilbakestill til standard',
+  'brand.clientMode': 'Kundemodus',
+  'brand.clientModeOn': 'Bruk vår egen logo og vårt eget navn',
+  'brand.clientModeHint':
+    'Erstatter Paloppa-merket i appen og på innloggingsskjermen. De publiserte skjemaene deres bruker allerede profilen deres.',
+  'brand.wordmark': 'Navn i hjørnet',
   'brand.colours': 'Farger',
   'brand.logo': 'Logo',
 

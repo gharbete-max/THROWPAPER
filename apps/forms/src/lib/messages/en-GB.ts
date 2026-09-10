@@ -482,6 +482,11 @@ export const enGB = {
   'brand.save': 'Save',
   'brand.saving': 'Saving…',
   'brand.reset': 'Reset to default',
+  'brand.clientMode': 'Client mode',
+  'brand.clientModeOn': 'Use our own logo and name',
+  'brand.clientModeHint':
+    'Replaces the Paloppa mark in the app and on the sign-in screen. Your published forms already use your brand.',
+  'brand.wordmark': 'Name in the corner',
   'brand.colours': 'Colours',
   'brand.logo': 'Logo',
 

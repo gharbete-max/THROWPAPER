@@ -152,6 +152,33 @@ export const BrandKit = z.object({
   logoLight: AssetPath.nullable().default(null),
   logoDark: AssetPath.nullable().default(null),
   favicon: AssetPath.nullable().default(null),
+
+  /**
+   * White-label: whether this organisation's people see their own identity instead of ours.
+   *
+   * A separate flag rather than "has a logo", because the two questions are different. Somebody
+   * uploads a logo, looks at the preview, and decides on Tuesday whether to turn it on — and
+   * turning it off again must not mean deleting the assets they uploaded. Inferring the mode from
+   * the presence of a file makes the off switch destructive.
+   *
+   * It governs the app shell, the sign-in screens and email. It deliberately does **not** govern
+   * the marketing site, which is ours and which their members never visit.
+   */
+  clientMode: z.boolean().default(false),
+
+  /**
+   * The name shown in the corner when client mode is on, and the `alt` text for their logo.
+   *
+   * Capped rather than free: it sits in a top bar next to navigation, and a paragraph pasted in
+   * here would push the rest of the bar off a phone. Null means fall back to the organisation's
+   * own name, which the app already knows — this exists for the case where the legal entity and
+   * the brand are not the same word.
+   *
+   * No character restriction beyond length. It is rendered as text and as an `alt` attribute,
+   * both of which React escapes; the quote-free rule that `FontStack` carries exists because a
+   * font stack is interpolated into inline CSS, and nothing here is.
+   */
+  wordmark: z.string().trim().min(1).max(60).nullable().default(null),
 });
 
 export type BrandKit = z.infer<typeof BrandKit>;

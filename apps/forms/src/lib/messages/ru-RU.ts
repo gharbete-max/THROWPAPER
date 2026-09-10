@@ -484,6 +484,11 @@ export const ruRU: Record<MessageKey, string> = {
   'brand.save': 'Сохранить',
   'brand.saving': 'Сохранение…',
   'brand.reset': 'Вернуть значения по умолчанию',
+  'brand.clientMode': 'Режим клиента',
+  'brand.clientModeOn': 'Использовать собственный логотип и название',
+  'brand.clientModeHint':
+    'Заменяет знак Paloppa в приложении и на экране входа. Ваши опубликованные формы уже используют ваш стиль.',
+  'brand.wordmark': 'Название в углу',
   'brand.colours': 'Цвета',
   'brand.logo': 'Логотип',
 

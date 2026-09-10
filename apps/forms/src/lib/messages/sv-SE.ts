@@ -473,6 +473,11 @@ export const svSE: Record<MessageKey, string> = {
   'brand.save': 'Spara',
   'brand.saving': 'Sparar…',
   'brand.reset': 'Återställ standard',
+  'brand.clientMode': 'Kundläge',
+  'brand.clientModeOn': 'Använd vår egen logotyp och vårt namn',
+  'brand.clientModeHint':
+    'Ersätter Paloppas märke i appen och på inloggningsskärmen. Era publicerade formulär använder redan er profil.',
+  'brand.wordmark': 'Namn i hörnet',
   'brand.colours': 'Färger',
   'brand.logo': 'Logotyp',
 

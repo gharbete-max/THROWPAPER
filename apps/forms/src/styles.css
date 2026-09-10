@@ -1527,6 +1527,62 @@ input[type='range'] {
   flex: none;
 }
 
+/* --- The client lockup -----------------------------------------------------
+ *
+ * A customer's logo, and the only thing done to it is deciding how tall it is.
+ *
+ * No border, no background, no radius, no shadow, no filter and no glass. It is somebody else's
+ * asset and every one of those is a change to it — a container invents a boundary their designer
+ * did not draw, and a filter is recolouring by another name. The height is ours to set because the
+ * bar has a height; the rest is theirs.
+ *
+ * `width: auto` with a max, so a wide wordmark and a square badge both fit without either being
+ * squashed: the height governs, the width follows, and a very wide lockup is capped rather than
+ * pushing the navigation off a phone.
+ */
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.lockup__logo {
+  block-size: var(--lockup-logo-height, 2em);
+  inline-size: auto;
+  max-inline-size: 12rem;
+  /* Never fills or crops: whatever aspect ratio they uploaded is the one that renders. */
+  object-fit: contain;
+}
+
+/*
+ * Which variant shows, in the theme's own three states.
+ *
+ * Light is the default and dark replaces it, both under the media query and under an explicit
+ * `data-theme`, so somebody who has chosen light on a dark system still gets the light logo. This
+ * is the same shape as `toThemedCssBlock`, and it is why the two files are not a `<picture>`.
+ */
+.lockup__logo--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .lockup__logo--light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .lockup__logo--dark {
+    display: inline-block;
+  }
+}
+
+:root[data-theme='dark'] .lockup__logo--light {
+  display: none;
+}
+
+:root[data-theme='dark'] .lockup__logo--dark {
+  display: inline-block;
+}
+
 .wordmark {
   display: inline-flex;
   align-items: center;
