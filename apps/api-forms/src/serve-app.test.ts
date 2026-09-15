@@ -74,7 +74,7 @@ beforeAll(async () => {
   writeFileSync(
     join(root, 'dist-server', 'entry-server.js'),
     [
-      "export const SITE_ROUTES = ['/', '/features/ledger'];",
+      "export const SITE_ROUTES = ['/', '/features/ledger', '/contact', '/contact/sent', '/sv'];",
       'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
       "export const isSiteShaped = (path) => path.startsWith('/features/');",
       /*
@@ -503,5 +503,55 @@ describe('serving the built app from the API', () => {
       expect(response.statusCode).toBe(200);
       expect(response.headers['cache-control']).toBe('no-cache');
     });
+  });
+
+  /**
+   * Both of these answered 404 — as JSON, from the not-found handler — which is what a crawler got
+   * when it asked what it was allowed to read and what there was to read. The documents themselves
+   * are unit-tested in `sitemap.test.ts`; these are about them being reachable and correctly typed.
+   */
+  describe('telling a crawler what is here', () => {
+    it('serves robots.txt as plain text', async () => {
+      const response = await app.inject({ method: 'GET', url: '/robots.txt' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toContain('text/plain');
+      expect(response.body).toContain('User-agent: *');
+    });
+
+    /** The origin is `APP_URL`, not the request's `Host` — the same value the canonicals use. */
+    it('points robots.txt at the sitemap on the configured origin', async () => {
+      const response = await app.inject({ method: 'GET', url: '/robots.txt' });
+      expect(response.body).toContain('Sitemap: http://localhost:5173/sitemap.xml');
+    });
+
+    it('serves sitemap.xml as XML, built from the site’s own routes', async () => {
+      const response = await app.inject({ method: 'GET', url: '/sitemap.xml' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toContain('application/xml');
+      expect(response.body).toContain('<loc>http://localhost:5173/</loc>');
+      expect(response.body).toContain('<loc>http://localhost:5173/features/ledger</loc>');
+      expect(response.body).toContain('<loc>http://localhost:5173/sv</loc>');
+    });
+
+    it('leaves the contact confirmation out of the sitemap', async () => {
+      const response = await app.inject({ method: 'GET', url: '/sitemap.xml' });
+
+      expect(response.body).not.toContain('/contact/sent');
+      expect(response.body).toContain('<loc>http://localhost:5173/contact</loc>');
+    });
+
+    /**
+     * Neither may be swallowed by the SPA fallback. Answering `/robots.txt` with the app shell is
+     * the failure this replaces, only harder to notice — it would be a 200.
+     */
+    it.each(['/robots.txt', '/sitemap.xml'])(
+      'does not answer %s with the app shell',
+      async (url) => {
+        const response = await app.inject({ method: 'GET', url });
+        expect(response.body).not.toContain('id="root"');
+      },
+    );
   });
 });

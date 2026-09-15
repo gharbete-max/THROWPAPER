@@ -17,6 +17,7 @@ import type { FastifyError } from 'fastify';
 import { redactSecretsInUrl } from './log-redaction.js';
 import { constants as zlibConstants } from 'node:zlib';
 import { REVALIDATE, cacheControlForFile } from './cache-headers.js';
+import { buildRobots, buildSitemap } from './sitemap.js';
 import {
   BROTLI_QUALITY,
   compressPayload,
@@ -552,6 +553,41 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     });
 
     /**
+     * `robots.txt` and `sitemap.xml`, built from the site's own route list.
+     *
+     * Both answered 404 — as JSON, from the not-found handler below — which is what a search
+     * engine got when it asked this deployment what it was allowed to read and what there was to
+     * read. Registered as real routes rather than files on disk so the `Sitemap:` line and every
+     * `<loc>` carry this deployment's `APP_URL`; a checked-in file would have to name one host,
+     * and the product is meant to be deployable as somebody else's.
+     *
+     * They are also routes rather than special cases in the fallback because that is what makes
+     * them compressed: `@fastify/compress` attaches per route. See `sitemap.ts`.
+     */
+    app.get('/robots.txt', async (_request, reply) => {
+      return reply
+        .type('text/plain; charset=utf-8')
+        .header('cache-control', 'public, max-age=3600')
+        .send(buildRobots(appUrl));
+    });
+
+    app.get('/sitemap.xml', async (_request, reply) => {
+      const site = await siteRenderer(appDir);
+      /*
+       * No SSR bundle means no site to map. A 404 is the honest answer — an empty `<urlset>` would
+       * tell a crawler this deployment has no pages, which it would then believe.
+       */
+      if (!site) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+
+      return reply
+        .type('application/xml; charset=utf-8')
+        .header('cache-control', 'public, max-age=3600')
+        .send(buildSitemap(site.SITE_ROUTES, appUrl));
+    });
+
+    /**
      * SPA fallback. Anything that is not an API route and not a file on disk is a client route —
      * `/f/:slug`, `/events/:id/check-in` — and must return index.html rather than a 404.
      *
@@ -649,6 +685,14 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
 let sitePromise: Promise<SiteRenderer | null> | null = null;
 
 interface SiteRenderer {
+  /**
+   * Every address the site has: each page in each language it is published in.
+   *
+   * The sitemap is built from this, which is what the route list said it was for from the day it
+   * was written. Reading it here rather than restating it is what keeps a new page or a new
+   * language from being served and never indexed.
+   */
+  SITE_ROUTES: readonly string[];
   isSiteRoute: (path: string) => boolean;
   /** An address only the site could own and does not have — rendered as its 404, not the app's shell. */
   isSiteShaped: (path: string) => boolean;
@@ -656,6 +700,12 @@ interface SiteRenderer {
     path: string,
     origin: string,
   ) => { html: string; head: string; lang: string; status: 200 | 404 };
+}
+
+/** The bundle, loaded at most once per process. `import()` caches, but the promise is the guard. */
+function siteRenderer(appDir: string): Promise<SiteRenderer | null> {
+  sitePromise ??= loadSite(appDir);
+  return sitePromise;
 }
 
 async function loadSite(appDir: string): Promise<SiteRenderer | null> {
@@ -677,8 +727,7 @@ async function renderSite(
   path: string,
   appUrl: string,
 ): Promise<{ html: string; status: number } | null> {
-  sitePromise ??= loadSite(appDir);
-  const site = await sitePromise;
+  const site = await siteRenderer(appDir);
   if (!site) return null;
 
   try {
