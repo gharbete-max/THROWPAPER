@@ -465,7 +465,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
        * not have, and there is no crawler on the other side of a sign-in.
        */
       const site = await renderSite(appDir, path, appUrl);
-      if (site) return reply.type('text/html; charset=utf-8').send(site);
+      if (site) return reply.code(site.status).type('text/html; charset=utf-8').send(site.html);
 
       /**
        * A public form link gets a real preview card.
@@ -514,7 +514,12 @@ let sitePromise: Promise<SiteRenderer | null> | null = null;
 
 interface SiteRenderer {
   isSiteRoute: (path: string) => boolean;
-  render: (path: string, origin: string) => { html: string; head: string; lang: string };
+  /** An address only the site could own and does not have — rendered as its 404, not the app's shell. */
+  isSiteShaped: (path: string) => boolean;
+  render: (
+    path: string,
+    origin: string,
+  ) => { html: string; head: string; lang: string; status: 200 | 404 };
 }
 
 async function loadSite(appDir: string): Promise<SiteRenderer | null> {
@@ -531,16 +536,21 @@ async function loadSite(appDir: string): Promise<SiteRenderer | null> {
   }
 }
 
-async function renderSite(appDir: string, path: string, appUrl: string): Promise<string | null> {
+async function renderSite(
+  appDir: string,
+  path: string,
+  appUrl: string,
+): Promise<{ html: string; status: number } | null> {
   sitePromise ??= loadSite(appDir);
   const site = await sitePromise;
-  if (!site?.isSiteRoute(path)) return null;
+  if (!site || !(site.isSiteRoute(path) || site.isSiteShaped(path))) return null;
 
   try {
     const shell = await readFile(join(appDir, 'index.html'), 'utf8');
-    const { html, head, lang } = site.render(path, appUrl);
-    return (
-      shell
+    const { html, head, lang, status } = site.render(path, appUrl);
+    return {
+      status,
+      html: shell
         /*
          * The shell ships `lang="en"`, and the site is no longer only English. `/de/` served with
          * an English `lang` is the same defect the invoice and the confirmation email each had
@@ -551,8 +561,8 @@ async function renderSite(appDir: string, path: string, appUrl: string): Promise
         .replace(/<title>[^<]*<\/title>/, '')
         .replace(/<\/head>/, `  ${head}\n  </head>`)
         // The markup React will hydrate, so the page is readable before any script runs.
-        .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
-    );
+        .replace('<div id="root"></div>', `<div id="root">${html}</div>`),
+    };
   } catch {
     // A render that throws must not take the page down: fall through to the client-rendered shell.
     return null;

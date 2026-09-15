@@ -1,4 +1,12 @@
-import { accentInk, buttonSurface, focusRing, glassSurface, shadow, toDark } from './derive.js';
+import {
+  accentInk,
+  buttonSurface,
+  focusRing,
+  glassSurface,
+  headingInk,
+  shadow,
+  toDark,
+} from './derive.js';
 import type { TokenSet } from './types.js';
 import { px, pxValue, typeScale } from './units.js';
 
@@ -21,6 +29,8 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   }
   // The accent where it has to be read rather than seen. See `accentInk`.
   vars['--tp-colour-accent-ink'] = accentInk(tokens.colour);
+  // The brand where it reads as a heading, the ink where it does not. See `headingInk`.
+  vars['--tp-colour-heading'] = headingInk(tokens.colour);
   vars['--tp-spacing-unit'] = tokens.spacingUnit;
   vars['--tp-radius'] = tokens.radius;
   vars['--tp-border-width'] = tokens.borderWidth;

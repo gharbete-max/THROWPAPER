@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultTokens, toEmailStyles } from './index.js';
+import { buttonSurface, defaultTokens, toEmailStyles } from './index.js';
 
 const styles = toEmailStyles(defaultTokens);
 const serialised = JSON.stringify(styles);
@@ -23,23 +23,26 @@ describe('email token compiler', () => {
   });
 
   it('carries the token colours through as literals', () => {
-    expect(styles.heading.color).toBe(defaultTokens.colour.primary);
+    // The shipped primary is a pastel and cannot carry a heading; the ink does. See `headingInk`.
+    expect(styles.heading.color).toBe(defaultTokens.colour.text);
     expect(styles.button.backgroundColor).toBe(defaultTokens.colour.primary);
     expect(styles.text.color).toBe(defaultTokens.colour.text);
   });
 
-  it('follows a primary colour change', () => {
+  it('follows a primary colour change, when the primary can be read', () => {
     const changed = {
       ...defaultTokens,
-      colour: { ...defaultTokens.colour, primary: '#ff0000' },
+      colour: { ...defaultTokens.colour, primary: '#1b263b' },
     };
-    expect(toEmailStyles(changed).heading.color).toBe('#ff0000');
+    expect(toEmailStyles(changed).heading.color).toBe('#1b263b');
   });
 
   it('renders the outline button style without a filled background', () => {
-    const outline = toEmailStyles({ ...defaultTokens, buttonStyle: 'outline' });
+    const tokens = { ...defaultTokens, buttonStyle: 'outline' as const };
+    const outline = toEmailStyles(tokens);
+    // The same paint the web resolves, not a second switch: see `buttonSurface`.
     expect(outline.button.backgroundColor).toBe(defaultTokens.colour.background);
-    expect(outline.button.color).toBe(defaultTokens.colour.primary);
+    expect(outline.button.color).toBe(buttonSurface(tokens).text);
   });
 
   it('resolves spacing to literal multiples of the spacing unit', () => {

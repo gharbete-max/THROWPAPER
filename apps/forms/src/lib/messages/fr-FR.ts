@@ -51,6 +51,7 @@ export const frFR: Record<MessageKey, string> = {
   'event.cancel': 'Annuler',
   'event.createTitle': 'Nouvel événement',
   'event.editTitle': 'Modifier l’événement',
+  'event.notFound': 'Il n’y a aucun événement à cette adresse.',
 
   'nav.events': 'Événements',
   'nav.forms': 'Formulaires',
@@ -642,6 +643,8 @@ export const frFR: Record<MessageKey, string> = {
   'public.rejected.error':
     'Un problème est survenu de notre côté. Vos réponses sont toujours là — réessayez.',
   'public.notFound': 'Formulaire introuvable.',
+  'public.notFoundHint':
+    'Vérifiez le lien que vous avez reçu, ou demandez-en un nouveau à l’organisateur. Il a peut-être été retiré.',
   'public.yes': 'Oui',
   'public.no': 'Non',
   'public.choose': 'Choisir…',

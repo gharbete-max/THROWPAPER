@@ -1,6 +1,6 @@
 import { FEATURE_SLUGS } from './content.js';
 import { LEGAL_DOCUMENTS } from './legal.js';
-import { SITE_LOCALES, localePath } from './locale.js';
+import { SITE_DEFAULT_LOCALE, SITE_LOCALES, localePath, splitLocale } from './locale.js';
 
 /**
  * Which URLs the public site owns.
@@ -34,6 +34,21 @@ export function isSiteRoute(path: string): boolean {
 }
 
 /**
+ * An address the site should answer with its own not-found page, rather than hand to the app.
+ *
+ * `/de/anything` and `/features/anything` are addresses only the site could own: there is no
+ * `/de/login`, and the app has nothing under `/features/`. Before this they fell through to the
+ * shell — a 200, then a sign-in screen or a redirect to the event list — which for a product whose
+ * links live on printed brochures is the wrong answer to the most ordinary mistake. An unprefixed
+ * unknown path such as `/foo` is still the app's: its router owns that namespace and decides.
+ */
+export function isSiteShaped(path: string): boolean {
+  if (isSiteRoute(path)) return false;
+  const { locale, path: page } = splitLocale(path);
+  return locale !== SITE_DEFAULT_LOCALE || page.startsWith('/features/');
+}
+
+/**
  * The URLs the service worker must fetch rather than answer from its precache.
  *
  * The worker precaches `index.html` and serves it for any navigation, which is right for the app —
@@ -62,6 +77,8 @@ export const SERVER_RENDERED_PATHS: readonly RegExp[] = [
    * removes the possibility rather than testing for it.
    */
   ...SITE_ROUTES.map((route) => new RegExp(`^${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)),
+  /* The site's own not-found page, for an address shaped like one of its pages. See `isSiteShaped`. */
+  /^\/features\//,
   /* Not a site route: the server renders these per slug to give each form its own preview card. */
   /^\/f\//,
   /*

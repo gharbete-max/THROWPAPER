@@ -21,6 +21,7 @@ export {
   buttonSurface,
   shadow,
   accentInk,
+  headingInk,
   glassSurface,
 } from './derive.js';
 

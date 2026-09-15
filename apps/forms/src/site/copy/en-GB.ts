@@ -44,6 +44,10 @@ export const enGB: SiteCopy = {
     back: 'Back',
     otherFeatures: 'Other features',
   },
+  notFound: {
+    title: 'There is no page here',
+    body: 'The link may be old, or mistyped. Everything the product does is listed below, and the front page is one press away.',
+  },
   features: {
     forms: {
       name: 'The form builder',

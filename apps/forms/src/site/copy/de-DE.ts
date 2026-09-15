@@ -50,6 +50,10 @@ export const deDE: SiteCopy = {
     back: 'Zurück',
     otherFeatures: 'Weitere Funktionen',
   },
+  notFound: {
+    title: 'Hier gibt es keine Seite',
+    body: 'Der Link ist vielleicht veraltet oder falsch geschrieben. Alles, was das Produkt kann, steht unten, und die Startseite ist einen Klick entfernt.',
+  },
   features: {
     forms: {
       name: 'Der Formular-Editor',

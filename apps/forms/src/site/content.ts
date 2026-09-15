@@ -106,6 +106,11 @@ export interface SiteCopy {
     back: string;
     otherFeatures: string;
   };
+  /** The page for an address the site does not have. Served as a 404, in the visitor's language. */
+  notFound: {
+    title: string;
+    body: string;
+  };
   features: Record<FeatureSlug, FeatureCopy>;
   quotes: readonly [Quote, Quote, Quote];
 }

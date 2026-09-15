@@ -2,7 +2,7 @@
  * The phase 1 checkpoint, by hand:
  *
  *   pnpm tokens:proof
- *   pnpm tokens:proof --primary '#ff0000'
+ *   pnpm tokens:proof --primary '#c00000'
  *
  * Renders one card definition through all three compilers and writes a side-by-side page to
  * proof-out/. START-HERE.md: "If one token change does not reach web, PDF and email, stop and

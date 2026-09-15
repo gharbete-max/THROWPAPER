@@ -51,6 +51,7 @@ export const esES: Record<MessageKey, string> = {
   'event.cancel': 'Cancelar',
   'event.createTitle': 'Nuevo evento',
   'event.editTitle': 'Editar evento',
+  'event.notFound': 'No hay ningún evento en esa dirección.',
 
   'nav.events': 'Eventos',
   'nav.forms': 'Formularios',
@@ -640,6 +641,8 @@ export const esES: Record<MessageKey, string> = {
   'public.rejected.error':
     'Algo ha fallado por nuestra parte. Tus respuestas siguen aquí: inténtalo de nuevo.',
   'public.notFound': 'Formulario no encontrado.',
+  'public.notFoundHint':
+    'Comprueba el enlace que recibiste o pide uno nuevo al organizador. Puede que se haya retirado.',
   'public.yes': 'Sí',
   'public.no': 'No',
   'public.choose': 'Elegir…',

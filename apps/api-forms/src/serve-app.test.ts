@@ -76,7 +76,9 @@ beforeAll(async () => {
     [
       "export const SITE_ROUTES = ['/', '/features/ledger'];",
       'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
+      "export const isSiteShaped = (path) => path.startsWith('/features/');",
       'export const render = (path) => ({',
+      '  status: SITE_ROUTES.includes(path) ? 200 : 404,',
       '  html: `<div class="site">rendered ${path}</div>`,',
       `  head: '<title>Site</title><link rel="canonical" href="https://x.test/" />',`,
       `  styles: ':root{--x:1}',`,
@@ -348,6 +350,17 @@ describe('serving the built app from the API', () => {
       const response = await app.inject({ method: 'GET', url: '/events' });
       expect(response.body).not.toContain('class="site"');
       expect(response.body).toContain('id="root"');
+    });
+
+    /**
+     * An address only the site could own, and does not have, is the site's 404 — not the app's
+     * shell at 200. A crawler that gets a 200 for `/features/nothing` indexes it; a monitor never
+     * learns the link on the brochure is dead.
+     */
+    it('answers a site-shaped address it does not have with the site’s own 404', async () => {
+      const response = await app.inject({ method: 'GET', url: '/features/nothing' });
+      expect(response.statusCode).toBe(404);
+      expect(response.body).toContain('rendered /features/nothing');
     });
   });
 });

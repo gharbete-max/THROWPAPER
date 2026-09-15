@@ -50,6 +50,7 @@ export const svSE: Record<MessageKey, string> = {
   'event.cancel': 'Avbryt',
   'event.createTitle': 'Nytt evenemang',
   'event.editTitle': 'Redigera evenemang',
+  'event.notFound': 'Det finns inget evenemang på den adressen.',
 
   'nav.events': 'Evenemang',
   'nav.forms': 'Formulär',
@@ -627,6 +628,8 @@ export const svSE: Record<MessageKey, string> = {
     'Dina svar finns kvar, men de kunde inte skickas. Kontrollera din anslutning och försök igen.',
   'public.rejected.error': 'Något gick fel hos oss. Dina svar finns kvar — försök igen.',
   'public.notFound': 'Formuläret finns inte.',
+  'public.notFoundHint':
+    'Kontrollera länken du fick, eller be arrangören om en ny. Den kan ha tagits bort.',
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Välj…',

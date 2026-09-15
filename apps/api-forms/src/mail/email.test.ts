@@ -189,8 +189,9 @@ describe('the confirmation email itself', () => {
 
     expect(html).not.toContain('var(--');
     expect(html).toContain('<table');
-    // The brand's primary colour arrives resolved, from phase 1's compiler.
-    expect(html.toLowerCase()).toContain(defaultTokens.colour.primary.toLowerCase());
+    // The brand's colours arrive resolved, from phase 1's compiler.
+    expect(html.toLowerCase()).toContain(defaultTokens.colour.text.toLowerCase());
+    expect(html.toLowerCase()).toContain(defaultTokens.colour.border.toLowerCase());
   });
 
   it('keeps Swedish characters intact', async () => {

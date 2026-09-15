@@ -55,6 +55,7 @@ export const jaJP: Record<MessageKey, string> = {
   'event.cancel': 'キャンセル',
   'event.createTitle': '新しいイベント',
   'event.editTitle': 'イベントを編集',
+  'event.notFound': 'そのアドレスにイベントはありません。',
 
   'nav.events': 'イベント',
   'nav.forms': 'フォーム',
@@ -633,6 +634,8 @@ export const jaJP: Record<MessageKey, string> = {
   'public.rejected.error':
     'こちら側で問題が発生しました。回答は残っていますので、もう一度お試しください。',
   'public.notFound': 'フォームが見つかりません。',
+  'public.notFoundHint':
+    '受け取ったリンクを確認するか、主催者に新しいリンクを依頼してください。取り下げられた可能性があります。',
   'public.yes': 'はい',
   'public.no': 'いいえ',
   'public.choose': '選択してください…',

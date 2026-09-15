@@ -55,6 +55,7 @@ export const zhCN: Record<MessageKey, string> = {
   'event.cancel': '取消',
   'event.createTitle': '新建活动',
   'event.editTitle': '编辑活动',
+  'event.notFound': '该地址没有活动。',
 
   'nav.events': '活动',
   'nav.forms': '表单',
@@ -617,6 +618,7 @@ export const zhCN: Record<MessageKey, string> = {
   'public.rejected.offline': '你的回答还在，但没能发送出去。请检查网络连接后重试。',
   'public.rejected.error': '我们这边出了问题。你的回答还在，请重试。',
   'public.notFound': '未找到表单。',
+  'public.notFoundHint': '请检查您收到的链接，或向主办方索取新链接。该表单可能已被撤回。',
   'public.yes': '是',
   'public.no': '否',
   'public.choose': '请选择…',

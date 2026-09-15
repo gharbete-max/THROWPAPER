@@ -3,14 +3,14 @@ name: Paloppa
 description: Forms, registrations and the door, for organisations that have to get it right.
 colors:
   primary: '#6fb8a6'
-  secondary: '#2f6b5c'
+  secondary: '#2e3a38'
   accent: '#ef8874'
   accent-ink: '#8f6156'
   background: '#f6f5f2'
   surface: '#eceae5'
   text: '#2e3a38'
-  muted: '#5c6a67'
-  border: '#7a8783'
+  muted: '#666666'
+  border: '#858585'
   success: '#2f6b45'
   warning: '#8a5f00'
   danger: '#a12b25'
@@ -163,7 +163,7 @@ enough to white to disappear behind somebody else's brand and far enough from it
 modules are `#000000` because that is the contrast a camera needs at a door, and that is the only
 exception in the product.
 
-`border` is `#7a8783` (3.43:1 on the page) because `checkContrast` holds a boundary to 3:1 and a
+`border` is `#858585` (3.02:1 on the page) because `checkContrast` holds a boundary to 3:1 and a
 border may be a control's only edge.
 
 **`accent` is not a text colour.** `checkContrast` deliberately never tests it against the

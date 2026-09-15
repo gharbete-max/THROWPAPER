@@ -11,9 +11,16 @@ body {
   line-height: var(--tp-type-line-height);
 }
 
+/*
+ * `--tp-colour-heading` is the brand where it reads and the ink where it does not.
+ *
+ * It was `primary` outright, which is a fill colour a customer chooses for buttons and is checked
+ * for nothing as text. Under the shipped palette that is seafoam on paper at 2.12:1 — the sign-in
+ * screen's "Sign in" was the faintest thing on the page. See `headingInk`.
+ */
 .shell h1 {
   font-family: var(--tp-type-heading-font);
-  color: var(--tp-colour-primary);
+  color: var(--tp-colour-heading);
   margin: 0 0 var(--tp-spacing-unit);
 }
 
@@ -2220,7 +2227,8 @@ html {
   inset-inline-start: 0;
   padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
   border-end-end-radius: var(--tp-radius);
-  background: var(--tp-colour-primary);
+  /* Ink on paper, not the brand: this is the one control that exists for keyboard users. */
+  background: var(--tp-colour-text);
   color: var(--tp-colour-background);
   font-size: var(--tp-text-ui);
   text-decoration: none;
@@ -2245,6 +2253,20 @@ html {
 .site__main:focus,
 .main:focus {
   outline: none;
+}
+
+/*
+ * And the target lands *below* the sticky bar, which is the other half.
+ *
+ * The skip link and "See what it does" both jump to an anchor, and the site's header is sticky, so
+ * without this the browser scrolls the anchor to the top of the window and the bar covers it: the
+ * one link built for keyboard users delivered its content behind the header. Ten units clears the
+ * bar at every width it renders at.
+ */
+.site__flow,
+.site__main,
+.site__section {
+  scroll-margin-block-start: calc(var(--tp-spacing-unit) * 10);
 }
 
 /* Wide content pans inside itself, and stops there. Without `contain`, reaching the end of a
@@ -4159,7 +4181,8 @@ body:has(.app) > #root {
   gap: 6px;
   margin-block-start: auto;
   padding-block-start: var(--tp-spacing-unit);
-  color: var(--tp-colour-primary);
+  /* The accent as text, checked against the page — `primary` measured 1.92:1 here. */
+  color: var(--tp-colour-accent-ink);
   font-size: var(--tp-text-sm);
 }
 
@@ -4173,17 +4196,20 @@ body:has(.app) > #root {
 /*
  * The dark band: the one place on the page where somebody else is speaking.
  *
- * `primary` as a ground rather than a fifth shade of parchment, because the page had one tone from
- * the header to the footer and every section therefore looked like the same section. Giving the
- * quotes their own ground says who is talking without a line of copy.
+ * Ink as a ground rather than a fifth shade of parchment, because the page had one tone from the
+ * header to the footer and every section therefore looked like the same section. Giving the quotes
+ * their own ground says who is talking without a line of copy.
  *
- * The text colour is `background`, so this inverts with the brand rather than being a hard-coded
- * light-on-dark that breaks the moment an organisation picks a pale primary.
+ * It was `primary`, and `DESIGN.md` had already spent a page deriving why that cannot carry text:
+ * paper on seafoam measured 2.12:1, the figcaptions 1.69, the eyebrow 1.08. The page and the ink
+ * are the one pair in the palette that is guaranteed to read against each other, so the band is
+ * simply the page turned over — and in the derived dark scheme it turns back, a light band on a
+ * dark page, with the same guarantee.
  */
 .site__band {
   margin-block-start: calc(var(--tp-spacing-unit) * 2);
   padding-block: calc(var(--tp-spacing-unit) * 9);
-  background: var(--tp-colour-primary);
+  background: var(--tp-colour-text);
   color: var(--tp-colour-background);
 }
 
@@ -4191,9 +4217,13 @@ body:has(.app) > #root {
   color: var(--tp-colour-background);
 }
 
-/* Accent-ink is reckoned against the *page*; on the band the accent itself has the contrast. */
+/*
+ * The accent, pulled toward the band's own text so it reads there. `accent-ink` is reckoned
+ * against the page and is wrong on the inverted ground; the raw accent is a pastel and fails on a
+ * pale band in dark mode. Mixing toward whatever the band's text is tracks both schemes.
+ */
 .site__band .site__eyebrow {
-  color: var(--tp-colour-accent);
+  color: color-mix(in srgb, var(--tp-colour-accent) 60%, var(--tp-colour-background));
 }
 
 .quote {
@@ -4217,7 +4247,7 @@ body:has(.app) > #root {
 }
 
 .quote figcaption {
-  color: color-mix(in srgb, var(--tp-colour-background) 68%, var(--tp-colour-primary));
+  color: color-mix(in srgb, var(--tp-colour-background) 72%, var(--tp-colour-text));
 }
 
 /* --- A feature's own page -------------------------------------------------- */
@@ -4338,6 +4368,13 @@ body:has(.app) > #root {
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
 }
 
+/* The footer copy exists for phones; on a desktop the bar has room and shows its own. */
+.site__langs--foot {
+  display: none;
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+
 @media (max-width: 60rem) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
@@ -4356,6 +4393,34 @@ body:has(.app) > #root {
 
   .site__nav {
     display: none;
+  }
+
+  /*
+   * The bar keeps the mark and the one action; the languages go to the footer.
+   *
+   * With the nav gone, five wrapping language links were the header: 214px of sticky glass on a
+   * 812px screen, the CTA squeezed to 58px wide and three lines tall, the headline below the fold.
+   * See `SiteLanguages` for why the footer copy is a second render rather than the same one moved.
+   */
+  .site__langs--bar {
+    display: none;
+  }
+
+  .site__bar > .button {
+    margin-inline-start: auto;
+  }
+
+  .site__langs--foot {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  /* Footer links are thumb targets on a phone, not a line of small print. */
+  .site__langs--foot .site__lang,
+  .site__footNav a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
   }
 }
 

@@ -214,6 +214,20 @@ export function accentInk(colour: ColourTokens): string {
 }
 
 /**
+ * What a heading is painted in: the brand's primary where it reads on the page, the ink otherwise.
+ *
+ * Headings were `primary` unconditionally — on the web via `.shell h1`, in mail via the compiler —
+ * and a fill colour is checked for nothing as text. Under the shipped seafoam that was "Sign in" at
+ * 2.12:1, the faintest thing on the screen. A navy customer keeps navy headings; a pastel one gets
+ * ink, not a darkened pastel, because "the same colour, darker" of a seafoam is the muddy teal the
+ * palette was narrowed to be rid of. Either it is their colour or it is the ink.
+ */
+export function headingInk(colour: ColourTokens): string {
+  const reads = (contrastRatio(colour.primary, colour.background) ?? 0) >= TEXT_CONTRAST;
+  return reads ? colour.primary : colour.text;
+}
+
+/**
  * The glass an overlay is made of.
  *
  * Liquid glass, done with the platform rather than with WebGL. The library that inspired this

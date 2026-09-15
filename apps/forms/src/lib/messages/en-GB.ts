@@ -56,6 +56,7 @@ export const enGB = {
   'event.cancel': 'Cancel',
   'event.createTitle': 'New event',
   'event.editTitle': 'Edit event',
+  'event.notFound': 'There is no event with that address.',
 
   'nav.events': 'Events',
   'nav.forms': 'Forms',
@@ -637,6 +638,8 @@ export const enGB = {
   'public.rejected.error':
     'Something went wrong at our end. Your answers are still here — please try again.',
   'public.notFound': 'Form not found.',
+  'public.notFoundHint':
+    'Check the link you were given, or ask the organiser for a new one. It may have been withdrawn.',
   'public.yes': 'Yes',
   'public.no': 'No',
   'public.choose': 'Choose…',

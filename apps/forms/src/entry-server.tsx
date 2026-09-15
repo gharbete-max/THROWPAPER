@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router';
 import { defaultTokens, toThemedCssBlock } from '@tp/tokens';
 import { Site } from './site/Site.js';
 import { FEATURE_SLUGS, type SiteCopy } from './site/content.js';
+import { SITE_PAGES } from './site/routes.js';
 import { copyFor } from './site/copy/index.js';
 import { SITE_DEFAULT_LOCALE, SITE_LOCALES, localePath, splitLocale } from './site/locale.js';
 
@@ -36,6 +37,14 @@ export interface Rendered {
    * German words with English phonetics and nothing on screen looks wrong.
    */
   lang: string;
+  /**
+   * 200, or 404 for an address the site does not have.
+   *
+   * The not-found page is rendered like any other — same chrome, the visitor's language — and the
+   * one thing that must differ is the status, or a crawler indexes "There is no page here" as a
+   * page and a monitor never learns the link on the brochure is dead.
+   */
+  status: 200 | 404;
 }
 
 /**
@@ -49,6 +58,12 @@ function metaFor(page: string, copy: SiteCopy): { title: string; description: st
   if (slug) {
     const feature = copy.features[slug];
     return { title: `${feature.name}${copy.meta.titleSuffix}`, description: feature.summary };
+  }
+  if (!SITE_PAGES.includes(page)) {
+    return {
+      title: `${copy.notFound.title}${copy.meta.titleSuffix}`,
+      description: copy.notFound.body,
+    };
   }
   return { title: copy.meta.homeTitle, description: copy.meta.homeDescription };
 }
@@ -140,8 +155,8 @@ export function render(path: string, origin: string): Rendered {
     `<style>${toThemedCssBlock(defaultTokens)}</style>`,
   ].join('\n    ');
 
-  return { html, head, lang: locale };
+  return { html, head, lang: locale, status: SITE_PAGES.includes(page) ? 200 : 404 };
 }
 
-export { SITE_ROUTES, SITE_PAGES, isSiteRoute } from './site/routes.js';
+export { SITE_ROUTES, SITE_PAGES, isSiteRoute, isSiteShaped } from './site/routes.js';
 export { SITE_LOCALES, SITE_DEFAULT_LOCALE, localePath, splitLocale } from './site/locale.js';

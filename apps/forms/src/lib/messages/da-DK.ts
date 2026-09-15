@@ -50,6 +50,7 @@ export const daDK: Record<MessageKey, string> = {
   'event.cancel': 'Annullér',
   'event.createTitle': 'Nyt arrangement',
   'event.editTitle': 'Redigér arrangement',
+  'event.notFound': 'Der er ingen begivenhed på den adresse.',
 
   'nav.events': 'Arrangementer',
   'nav.forms': 'Formularer',
@@ -625,6 +626,8 @@ export const daDK: Record<MessageKey, string> = {
     'Dine svar er her stadig, men de kunne ikke sendes. Tjek din forbindelse, og prøv igen.',
   'public.rejected.error': 'Noget gik galt hos os. Dine svar er her stadig — prøv igen.',
   'public.notFound': 'Formularen blev ikke fundet.',
+  'public.notFoundHint':
+    'Tjek det link, du fik, eller bed arrangøren om et nyt. Det kan være trukket tilbage.',
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Vælg…',

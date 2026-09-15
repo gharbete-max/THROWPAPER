@@ -48,6 +48,10 @@ export const nbNO: SiteCopy = {
     back: 'Tilbake',
     otherFeatures: 'Andre funksjoner',
   },
+  notFound: {
+    title: 'Det finnes ingen side her',
+    body: 'Lenken kan være gammel eller feilstavet. Alt produktet gjør er listet nedenfor, og forsiden er ett trykk unna.',
+  },
   features: {
     forms: {
       name: 'Skjemabyggeren',

@@ -1,3 +1,4 @@
+import { buttonSurface, headingInk } from './derive.js';
 import type { TokenSet } from './types.js';
 import { pxValue, px, spacing, typeScale } from './units.js';
 
@@ -81,7 +82,7 @@ export function toEmailStyles(tokens: TokenSet) {
       fontSize: typeScale(typography.baseSize, typography.scaleRatio, 2),
       fontWeight: String(typography.weightBold),
       lineHeight: String(typography.lineHeight),
-      color: colour.primary,
+      color: headingInk(colour),
     },
 
     text: {
@@ -145,30 +146,19 @@ function buttonStyle(tokens: TokenSet) {
     msoPaddingAlt: '0',
   };
 
-  switch (tokens.buttonStyle) {
-    case 'outline':
-      return {
-        ...base,
-        backgroundColor: tokens.colour.background,
-        color: colour.primary,
-        border: `${tokens.borderWidth} solid ${colour.primary}`,
-      };
-    case 'soft':
-      return {
-        ...base,
-        backgroundColor: colour.surface,
-        color: colour.primary,
-        border: `${tokens.borderWidth} solid ${colour.surface}`,
-      };
-    case 'solid':
-    default:
-      return {
-        ...base,
-        backgroundColor: colour.primary,
-        color: colour.background,
-        border: `${tokens.borderWidth} solid ${colour.primary}`,
-      };
-  }
+  /*
+   * The same resolution the web gets — `buttonSurface` walks a pastel fill until its label reads
+   * and turns `outline` and `soft` into paint — rather than a second copy of the switch that
+   * still painted paper on seafoam at 2.12:1. `transparent` is resolved to the card, because a
+   * mail client given `transparent` on an anchor may paint anything behind it.
+   */
+  const surface = buttonSurface(tokens);
+  return {
+    ...base,
+    backgroundColor: surface.background === 'transparent' ? colour.background : surface.background,
+    color: surface.text,
+    border: `${tokens.borderWidth} solid ${surface.border}`,
+  };
 }
 
 export type EmailStyles = ReturnType<typeof toEmailStyles>;

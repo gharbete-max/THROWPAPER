@@ -1,4 +1,4 @@
-import { isSiteRoute } from './site/routes.js';
+import { isSiteRoute, isSiteShaped } from './site/routes.js';
 import { initTheme } from './lib/theme.js';
 /**
  * The typeface the product has always claimed and never delivered.
@@ -41,7 +41,8 @@ import './styles.css';
 const container = document.getElementById('root');
 if (!container) throw new Error('#root missing from index.html');
 
-const isSite = isSiteRoute(window.location.pathname);
+// Shaped counts too: `/features/nothing` is the site's not-found page, not the app's sign-in.
+const isSite = isSiteRoute(window.location.pathname) || isSiteShaped(window.location.pathname);
 
 /**
  * Whether the server actually drew this page, asked of the document rather than assumed.

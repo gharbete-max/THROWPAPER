@@ -4,7 +4,7 @@ import { FEATURE_SLUGS } from './content.js';
 import { SITE_COPY, copyFor } from './copy/index.js';
 import { SITE_DEFAULT_LOCALE, SITE_LOCALES, localePath, splitLocale } from './locale.js';
 import { SITE_LOCALES_PENDING } from './locale-labels.js';
-import { SITE_PAGES, SITE_ROUTES, isSiteRoute } from './routes.js';
+import { SITE_PAGES, SITE_ROUTES, isSiteRoute, isSiteShaped } from './routes.js';
 
 /**
  * The site is complete in every language it claims, and claims only the ones it is complete in.
@@ -129,6 +129,22 @@ describe('locale-prefixed addresses', () => {
     // The app's, in every language: there is no `/de/login`.
     expect(isSiteRoute('/de/login')).toBe(false);
     expect(isSiteRoute('/login')).toBe(false);
+  });
+
+  /**
+   * What the site answers for, beyond what it has: a locale prefix or `/features/` can only be
+   * the site's, so a wrong one is the site's not-found page rather than the app's sign-in.
+   */
+  it('claims addresses only it could own, and leaves the app its namespace', () => {
+    expect(isSiteShaped('/features/nothing')).toBe(true);
+    expect(isSiteShaped('/de/anything')).toBe(true);
+    expect(isSiteShaped('/de/login')).toBe(true);
+    // A real page is a route, not merely shaped like one.
+    expect(isSiteShaped('/de/features/events')).toBe(false);
+    // Unprefixed and not under `/features/`: the app's router decides.
+    expect(isSiteShaped('/login')).toBe(false);
+    expect(isSiteShaped('/events/abc')).toBe(false);
+    expect(isSiteShaped('/f/some-form')).toBe(false);
   });
 
   /** A locale nobody published falls back rather than throwing on the public site. */

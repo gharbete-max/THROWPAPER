@@ -51,6 +51,7 @@ export const deDE: Record<MessageKey, string> = {
   'event.cancel': 'Abbrechen',
   'event.createTitle': 'Neue Veranstaltung',
   'event.editTitle': 'Veranstaltung bearbeiten',
+  'event.notFound': 'Unter dieser Adresse gibt es keine Veranstaltung.',
 
   'nav.events': 'Veranstaltungen',
   'nav.forms': 'Formulare',
@@ -643,6 +644,8 @@ export const deDE: Record<MessageKey, string> = {
   'public.rejected.error':
     'Bei uns ist etwas schiefgegangen. Ihre Antworten sind noch da — bitte versuchen Sie es erneut.',
   'public.notFound': 'Formular nicht gefunden.',
+  'public.notFoundHint':
+    'Prüfen Sie den Link, den Sie erhalten haben, oder bitten Sie den Veranstalter um einen neuen. Er wurde möglicherweise zurückgezogen.',
   'public.yes': 'Ja',
   'public.no': 'Nein',
   'public.choose': 'Wählen…',

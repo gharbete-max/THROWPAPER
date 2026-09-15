@@ -49,6 +49,10 @@ export const svSE: SiteCopy = {
     back: 'Tillbaka',
     otherFeatures: 'Andra funktioner',
   },
+  notFound: {
+    title: 'Det finns ingen sida här',
+    body: 'Länken kan vara gammal eller felskriven. Allt produkten gör finns listat nedan, och startsidan är ett tryck bort.',
+  },
   features: {
     forms: {
       name: 'Formulärbyggaren',

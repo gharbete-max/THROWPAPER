@@ -51,6 +51,7 @@ export const nbNO: Record<MessageKey, string> = {
   'event.cancel': 'Avbryt',
   'event.createTitle': 'Nytt arrangement',
   'event.editTitle': 'Rediger arrangement',
+  'event.notFound': 'Det finnes ikke noe arrangement på den adressen.',
 
   'nav.events': 'Arrangementer',
   'nav.forms': 'Skjemaer',
@@ -627,6 +628,8 @@ export const nbNO: Record<MessageKey, string> = {
     'Svarene dine er her fortsatt, men de kunne ikke sendes. Sjekk tilkoblingen og prøv igjen.',
   'public.rejected.error': 'Noe gikk galt hos oss. Svarene dine er her fortsatt — prøv igjen.',
   'public.notFound': 'Skjemaet ble ikke funnet.',
+  'public.notFoundHint':
+    'Sjekk lenken du fikk, eller be arrangøren om en ny. Den kan ha blitt trukket tilbake.',
   'public.yes': 'Ja',
   'public.no': 'Nei',
   'public.choose': 'Velg…',

@@ -13,7 +13,9 @@ import {
   type ValidationIssue,
 } from '@tp/shared/forms';
 import { useTranslator } from '../lib/i18n.js';
+import { TRANSLATED_LOCALES } from '../lib/messages/index.js';
 import { LanguagePicker } from '../components/LanguagePicker.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
@@ -48,11 +50,17 @@ export default function PublicForm() {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  /*
+   * Without a form there is no author's language list, so the page speaks whatever the visitor's
+   * browser asks for, from everything the app has. It was pinned to Swedish, which made "Form not
+   * found" the one sentence on the public surface a Finnish member with a stale link could not
+   * read — and a stale link is the normal case for a product whose links live on printed paper.
+   */
   const locales: LocaleConfig = useMemo(
     () =>
       form
         ? { supported: form.supportedLocales, default: form.defaultLocale }
-        : { supported: ['sv-SE'], default: 'sv-SE' },
+        : { supported: TRANSLATED_LOCALES, default: 'sv-SE' },
     [form],
   );
   const resolved = resolveLocale(locales, locale);
@@ -355,9 +363,25 @@ export default function PublicForm() {
   if (phase === 'loading') return <main className="shell shell--narrow" />;
 
   if (phase === 'missing') {
+    /*
+     * The empty-state treatment, not a line of grey: a mark, the sentence at full contrast, and
+     * what to do about it. There is no organiser to name and nowhere to go back to — the person
+     * arrived from a brochure — so the way out is the hint, and the language control is the one
+     * thing on the page that helps them read it.
+     */
     return (
-      <main className="shell shell--narrow">
-        <p className="muted">{t('public.notFound')}</p>
+      <main className="shell shell--narrow stack">
+        <header className="row row--between">
+          <span />
+          <LanguagePicker
+            locales={TRANSLATED_LOCALES}
+            current={resolved}
+            onChange={setLocale}
+            t={t}
+            variant="corner"
+          />
+        </header>
+        <EmptyState icon="search" title={t('public.notFound')} hint={t('public.notFoundHint')} />
       </main>
     );
   }

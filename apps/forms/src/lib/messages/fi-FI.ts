@@ -51,6 +51,7 @@ export const fiFI: Record<MessageKey, string> = {
   'event.cancel': 'Peruuta',
   'event.createTitle': 'Uusi tapahtuma',
   'event.editTitle': 'Muokkaa tapahtumaa',
+  'event.notFound': 'Tässä osoitteessa ei ole tapahtumaa.',
 
   'nav.events': 'Tapahtumat',
   'nav.forms': 'Lomakkeet',
@@ -631,6 +632,8 @@ export const fiFI: Record<MessageKey, string> = {
   'public.rejected.error':
     'Meidän päässämme meni jokin vikaan. Vastauksesi ovat yhä tallessa — yritä uudelleen.',
   'public.notFound': 'Lomaketta ei löytynyt.',
+  'public.notFoundHint':
+    'Tarkista saamasi linkki tai pyydä järjestäjältä uusi. Se on saatettu poistaa.',
   'public.yes': 'Kyllä',
   'public.no': 'Ei',
   'public.choose': 'Valitse…',

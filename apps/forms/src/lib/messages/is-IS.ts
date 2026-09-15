@@ -51,6 +51,7 @@ export const isIS: Record<MessageKey, string> = {
   'event.cancel': 'Hætta við',
   'event.createTitle': 'Nýr viðburður',
   'event.editTitle': 'Breyta viðburði',
+  'event.notFound': 'Það er enginn viðburður á þessu vistfangi.',
 
   'nav.events': 'Viðburðir',
   'nav.forms': 'Eyðublöð',
@@ -629,6 +630,8 @@ export const isIS: Record<MessageKey, string> = {
   'public.rejected.error':
     'Eitthvað fór úrskeiðis hjá okkur. Svörin þín eru enn hér — reyndu aftur.',
   'public.notFound': 'Eyðublaðið fannst ekki.',
+  'public.notFoundHint':
+    'Athugaðu hlekkinn sem þú fékkst eða biddu skipuleggjanda um nýjan. Hann gæti hafa verið tekinn niður.',
   'public.yes': 'Já',
   'public.no': 'Nei',
   'public.choose': 'Veldu…',

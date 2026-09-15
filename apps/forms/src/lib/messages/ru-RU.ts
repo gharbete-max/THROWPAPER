@@ -58,6 +58,7 @@ export const ruRU: Record<MessageKey, string> = {
   'event.cancel': 'Отмена',
   'event.createTitle': 'Новое мероприятие',
   'event.editTitle': 'Изменить мероприятие',
+  'event.notFound': 'По этому адресу нет мероприятия.',
 
   'nav.events': 'Мероприятия',
   'nav.forms': 'Формы',
@@ -639,6 +640,8 @@ export const ruRU: Record<MessageKey, string> = {
     'Ваши ответы на месте, но отправить их не удалось. Проверьте соединение и попробуйте ещё раз.',
   'public.rejected.error': 'У нас произошла ошибка. Ваши ответы на месте — попробуйте ещё раз.',
   'public.notFound': 'Форма не найдена.',
+  'public.notFoundHint':
+    'Проверьте полученную ссылку или попросите у организатора новую. Возможно, форма была удалена.',
   'public.yes': 'Да',
   'public.no': 'Нет',
   'public.choose': 'Выберите…',

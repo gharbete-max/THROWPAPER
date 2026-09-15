@@ -47,6 +47,10 @@ export const daDK: SiteCopy = {
     back: 'Tilbage',
     otherFeatures: 'Andre funktioner',
   },
+  notFound: {
+    title: 'Der er ingen side her',
+    body: 'Linket kan være gammelt eller stavet forkert. Alt hvad produktet gør, er listet nedenfor, og forsiden er ét tryk væk.',
+  },
   features: {
     forms: {
       name: 'Formularbyggeren',

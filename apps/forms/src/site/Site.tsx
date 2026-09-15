@@ -77,6 +77,8 @@ export function Site({ locale = SITE_DEFAULT_LOCALE }: { locale?: string }) {
             element={<LegalPage document={document} locale={locale} copy={copy} />}
           />
         ))}
+        {/* The catch the comment above warns about: header, footer, and something between. */}
+        <Route path="*" element={<NotFoundPage locale={locale} copy={copy} />} />
       </Routes>
       <SiteFooter locale={locale} copy={copy} />
     </div>
@@ -112,7 +114,7 @@ function SiteHeader({ locale, copy }: { locale: string; copy: SiteCopy }) {
         ))}
       </nav>
 
-      <SiteLanguages locale={locale} copy={copy} />
+      <SiteLanguages locale={locale} copy={copy} place="bar" />
 
       <a className="button" href="/login">
         {copy.chrome.openTheDemo}
@@ -134,12 +136,28 @@ function SiteHeader({ locale, copy }: { locale: string; copy: SiteCopy }) {
  * theirs. Switching language on `/features/events` therefore lands on `/de/features/events`, not
  * back at the front page — losing your place is the usual failure of a language switcher and it is
  * the reason people stop using them.
+ *
+ * It is rendered twice — in the bar and in the footer — and the stylesheet shows exactly one of
+ * them at any width. On a phone the bar hides its nav and five wrapping language links were what
+ * remained: a 214px sticky header, a quarter of the screen, on every page, with the headline first
+ * appearing at y=518. The footer already holds the policy links, which is where a phone user looks
+ * for this anyway. Two renders rather than one moved by script, because nothing here runs script;
+ * `display: none` also takes the hidden copy out of the accessibility tree, so nobody hears it
+ * twice.
  */
-function SiteLanguages({ locale, copy }: { locale: string; copy: SiteCopy }) {
+function SiteLanguages({
+  locale,
+  copy,
+  place,
+}: {
+  locale: string;
+  copy: SiteCopy;
+  place: 'bar' | 'foot';
+}) {
   const { pathname } = useLocation();
 
   return (
-    <nav className="site__langs" aria-label={copy.chrome.languageLabel}>
+    <nav className={`site__langs site__langs--${place}`} aria-label={copy.chrome.languageLabel}>
       {SITE_LOCALES.map((option) => (
         <a
           key={option}
@@ -364,6 +382,38 @@ function FeaturePage({
   );
 }
 
+/**
+ * The page for an address the site does not have.
+ *
+ * Shaped like a feature page rather than an error: the same chrome, a heading that says what
+ * happened, and every feature as a link — because somebody who mistyped `/features/event` wanted
+ * one of these, and a page that lists them is more use than one that apologises. The server sends
+ * it as a 404; see `entry-server.tsx`.
+ */
+function NotFoundPage({ locale, copy }: { locale: string; copy: SiteCopy }) {
+  return (
+    <main className="site__main" id="main" tabIndex={-1}>
+      <article className="site__article">
+        <a className="site__back" href={localePath(locale)}>
+          <Icon name="arrow-left" /> {copy.featurePage.backToAll}
+        </a>
+        <span className="feature-card__mark feature__mark" aria-hidden="true">
+          <Icon name="search" />
+        </span>
+        <h1>{copy.notFound.title}</h1>
+        <p className="site__lede">{copy.notFound.body}</p>
+        <nav className="site__more" aria-label={copy.featurePage.otherFeatures}>
+          {FEATURE_SLUGS.map((slug) => (
+            <a key={slug} href={localePath(locale, `/features/${slug}`)}>
+              <Icon name={FEATURE_ICONS[slug]} /> {copy.features[slug].name}
+            </a>
+          ))}
+        </nav>
+      </article>
+    </main>
+  );
+}
+
 function SiteFooter({ locale, copy }: { locale: string; copy: SiteCopy }) {
   return (
     <footer className="site__foot">
@@ -391,6 +441,7 @@ function SiteFooter({ locale, copy }: { locale: string; copy: SiteCopy }) {
             </a>
           ))}
         </nav>
+        <SiteLanguages locale={locale} copy={copy} place="foot" />
       </div>
     </footer>
   );

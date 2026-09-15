@@ -16,7 +16,12 @@ import { renderEmail } from './render-email.js';
 import { renderPdf } from './render-pdf.js';
 import { NORDIC_PROBE, proofCard } from './card.js';
 
-const PRIMARY = '#ff0000';
+/*
+ * A red that reads as text. Pure `#ff0000` is 4.0:1 on the paper, and since `headingInk` a
+ * primary that cannot carry a heading is replaced by the ink — which would make this test prove
+ * the opposite of what it is for.
+ */
+const PRIMARY = '#c00000';
 const tokens: TokenSet = {
   ...defaultTokens,
   colour: { ...defaultTokens.colour, primary: PRIMARY },
@@ -46,7 +51,7 @@ describe('a single token change reaches every target', () => {
   });
 
   it('reaches the PDF — Chromium computes the heading in the new colour', () => {
-    expect(headingColour).toBe('rgb(255, 0, 0)');
+    expect(headingColour).toBe('rgb(192, 0, 0)');
   });
 });
 
