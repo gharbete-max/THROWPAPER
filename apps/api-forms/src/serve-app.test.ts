@@ -553,5 +553,39 @@ describe('serving the built app from the API', () => {
         expect(response.body).not.toContain('id="root"');
       },
     );
+
+    /**
+     * `robots.txt` asks a crawler not to fetch the signed-in screens; this refuses indexing for
+     * one that arrives anyway, from a link outside or by ignoring the file.
+     */
+    it.each(['/events', '/events/some-id/check-in', '/forms', '/users'])(
+      'refuses indexing for the signed-in screen %s',
+      async (url) => {
+        const response = await app.inject({ method: 'GET', url });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toContain('id="root"');
+        expect(response.headers['x-robots-tag']).toBe('noindex');
+      },
+    );
+
+    /**
+     * The boundary that matters. A published form is a customer's public registration page, left
+     * crawlable deliberately — the header must not quietly reverse that decision, and it is served
+     * from the same handler and the same shell as the screens above.
+     */
+    it('does not refuse indexing for a published form', async () => {
+      const response = await app.inject({ method: 'GET', url: '/f/varmotet' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['x-robots-tag']).toBeUndefined();
+    });
+
+    it('does not refuse indexing for a server-rendered site page', async () => {
+      const response = await app.inject({ method: 'GET', url: '/features/ledger' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['x-robots-tag']).toBeUndefined();
+    });
   });
 });

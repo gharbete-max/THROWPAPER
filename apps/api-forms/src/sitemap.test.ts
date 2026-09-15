@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildRobots, buildSitemap, isIndexable } from './sitemap.js';
+import { buildRobots, buildSitemap, isIndexable, isPrivatePath } from './sitemap.js';
 
 /**
  * Both files answered 404 before this — as JSON, from the API's not-found handler — which is what
@@ -112,5 +112,52 @@ describe('robots.txt', () => {
    */
   it('does not disallow everything', () => {
     expect(robots).not.toMatch(/^Disallow: \/$/m);
+  });
+});
+
+/**
+ * The other half of the same statement. `robots.txt` asks a crawler not to fetch; this refuses
+ * indexing for one that arrives anyway, via a link from outside or by ignoring `robots.txt`.
+ *
+ * Built from the same list, so the two cannot drift apart and say different things about a path.
+ */
+describe('refusing to be indexed', () => {
+  it.each(['/login', '/events', '/forms', '/responses', '/users', '/invoices', '/brand'])(
+    'marks %s private',
+    (path) => {
+      expect(isPrivatePath(path)).toBe(true);
+    },
+  );
+
+  /** Prefix matching, the same rule `robots.txt` uses. */
+  it.each(['/events/some-id/check-in', '/forms/abc/submissions', '/users/123'])(
+    'marks the deeper path %s private too',
+    (path) => {
+      expect(isPrivatePath(path)).toBe(true);
+    },
+  );
+
+  /**
+   * The site's own pages must never pick this up. `/features/forms` is the one that would catch a
+   * naive `includes` — it contains "forms" but begins with `/features/`.
+   */
+  it.each([
+    '/',
+    '/features/forms',
+    '/features/ledger',
+    '/privacy',
+    '/contact',
+    '/sv',
+    '/sv/contact',
+  ])('leaves the public page %s indexable', (path) => {
+    expect(isPrivatePath(path)).toBe(false);
+  });
+
+  /**
+   * A published form is a customer's public registration page. It is absent from the disallow
+   * list on purpose, and it must be absent from this too, or the header would quietly undo that.
+   */
+  it('leaves a published form indexable', () => {
+    expect(isPrivatePath('/f/varmotet')).toBe(false);
   });
 });

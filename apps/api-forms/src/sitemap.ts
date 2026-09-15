@@ -88,6 +88,24 @@ const DISALLOWED = [
 ];
 
 /**
+ * Whether a path is one of those screens, for the `X-Robots-Tag` on the response.
+ *
+ * The two halves say different things and are both worth saying. `robots.txt` asks a crawler not
+ * to fetch these; it does not stop one indexing the URL it found on somebody else's page, because
+ * a crawler that is not allowed to look is also not allowed to read the header telling it not to
+ * index. Sending `noindex` on the response covers the case where it arrives anyway — a link from
+ * outside, or a crawler that ignores `robots.txt` — and the two together are what actually keeps a
+ * sign-in screen out of a search results page.
+ *
+ * Prefix matching, the same rule `robots.txt` uses, so `/events/some-id/check-in` is covered by
+ * `/events`. No site route begins with any of these: the site owns `/`, `/features/…` and the
+ * policy pages, and `/features/forms` starts with `/features/` rather than `/forms`.
+ */
+export function isPrivatePath(pathname: string): boolean {
+  return DISALLOWED.some((prefix) => pathname === prefix || pathname.startsWith(prefix));
+}
+
+/**
  * `robots.txt`, permissive by default and pointing at the sitemap.
  *
  * Written from a list rather than kept as a file so that the `Sitemap:` line carries this

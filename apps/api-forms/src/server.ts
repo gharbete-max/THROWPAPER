@@ -17,7 +17,7 @@ import type { FastifyError } from 'fastify';
 import { redactSecretsInUrl } from './log-redaction.js';
 import { constants as zlibConstants } from 'node:zlib';
 import { REVALIDATE, cacheControlForFile } from './cache-headers.js';
-import { buildRobots, buildSitemap } from './sitemap.js';
+import { buildRobots, buildSitemap, isPrivatePath } from './sitemap.js';
 import {
   BROTLI_QUALITY,
   compressPayload,
@@ -624,6 +624,22 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
        * without it. `no-cache` still allows a 304 on the `ETag`, so the usual case stays cheap.
        */
       reply.header('cache-control', REVALIDATE);
+
+      /**
+       * And the signed-in screens refuse indexing outright.
+       *
+       * `robots.txt` already asks a crawler not to fetch these, which is the weaker of the two
+       * statements: a crawler that is not allowed to look is also not allowed to read the header
+       * saying "do not index", so a link to `/events` from somebody's blog can still put the URL
+       * in an index with nothing but a title guessed from the anchor text. This covers the arrival
+       * `robots.txt` cannot.
+       *
+       * Scoped to the same list `robots.txt` is built from, so the two cannot drift apart and say
+       * different things about the same path. A published form at `/f/:slug` is deliberately not
+       * in it — that is a customer's public page — and an invoice already sets its own header
+       * further up, on the route that renders it.
+       */
+      if (isPrivatePath(path)) reply.header('x-robots-tag', 'noindex');
 
       /**
        * The public site is rendered here, not in the browser.
