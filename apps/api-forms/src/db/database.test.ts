@@ -33,9 +33,15 @@ const migrated = connected
   : false;
 
 const SLUG = 'smoke-test-org';
+/** One organisation per user test — see `freshOrganisation`. Removed together in `afterAll`. */
+const USERS_SLUG_PREFIX = 'smoke-users-';
 
 afterAll(async () => {
-  if (migrated) await sql`delete from organisations where slug = ${SLUG}`;
+  if (migrated) {
+    await sql`delete from organisations where slug = ${SLUG}`;
+    // Users cascade with their organisation, so removing these removes the people too.
+    await sql`delete from organisations where slug like ${USERS_SLUG_PREFIX + '%'}`;
+  }
   await sql.end();
 });
 
@@ -85,6 +91,170 @@ describe.skipIf(!migrated)('drizzle repositories against a real database', () =>
 
     const updated = await repos.events.update(organisationId, created.id, { status: 'open' });
     expect(updated?.status).toBe('open');
+  });
+
+  /**
+   * The user writes, against the database that actually enforces them.
+   *
+   * Every other test of these two methods runs on the in-memory repository, which reimplements the
+   * last-administrator rule in JavaScript. That proves the *rule*, and proves nothing about the
+   * implementation that ships: the unique index, the `FOR UPDATE` lock and the transaction around
+   * them exist only here, and until this test ran they had never executed anywhere.
+   */
+  describe('administering people', () => {
+    /**
+     * A fresh organisation per test, unlike the shared one above.
+     *
+     * `organisation()` upserts a single slug, so every test that used it would share one tenant —
+     * and these tests are about *"the only enabled administrator"*, a property that stops being
+     * true the moment a previous test's administrator is still lying around. Which it is: the
+     * demotion tests deliberately leave theirs in place, because the write was refused.
+     */
+    let counter = 0;
+    async function freshOrganisation() {
+      counter += 1;
+      const slug = `${USERS_SLUG_PREFIX}${counter}`;
+      const [row] = await sql`
+        insert into organisations (name, slug, default_locale, supported_locales)
+        values ('Users Test AB', ${slug}, 'sv-SE', ${sql.array(['sv-SE'])})
+        returning id
+      `;
+      if (!row) throw new Error('could not create the users-test organisation');
+      return String(row['id']);
+    }
+
+    async function admin(organisationId: string, email: string) {
+      const person = await repos.users.create({
+        organisationId,
+        email,
+        name: 'Alva',
+        role: 'admin',
+      });
+      if (!person) throw new Error(`could not create ${email}`);
+      return person;
+    }
+
+    it('creates somebody and folds the address to lower case', async () => {
+      const organisationId = await freshOrganisation();
+      const person = await repos.users.create({
+        organisationId,
+        email: 'Kim@Example.COM',
+        name: 'Kim',
+        role: 'operator',
+      });
+
+      expect(person?.email).toBe('kim@example.com');
+      // And sign-in, which lower-cases what it is given, finds that same row.
+      expect((await repos.users.findByEmail(organisationId, 'KIM@example.com'))?.id).toBe(
+        person?.id,
+      );
+    });
+
+    /** `users_org_email_idx`, not a prior read — two administrators adding at once must not 500. */
+    it('reports a duplicate address as null rather than throwing', async () => {
+      const organisationId = await freshOrganisation();
+      await repos.users.create({
+        organisationId,
+        email: 'dup@example.com',
+        name: 'First',
+        role: 'operator',
+      });
+
+      await expect(
+        repos.users.create({
+          organisationId,
+          email: 'dup@example.com',
+          name: 'Second',
+          role: 'operator',
+        }),
+      ).resolves.toBeNull();
+    });
+
+    it('refuses to demote the only enabled administrator', async () => {
+      const organisationId = await freshOrganisation();
+      const only = await admin(organisationId, 'only@example.com');
+
+      const result = await repos.users.update(only.id, { role: 'operator' });
+
+      expect(result).toEqual({ ok: false, reason: 'last-admin' });
+      expect((await repos.users.findById(only.id))?.role).toBe('admin');
+    });
+
+    it('refuses to disable the only enabled administrator', async () => {
+      const organisationId = await freshOrganisation();
+      const only = await admin(organisationId, 'solo@example.com');
+
+      expect(await repos.users.update(only.id, { disabled: true })).toEqual({
+        ok: false,
+        reason: 'last-admin',
+      });
+    });
+
+    it('allows the demotion once a second administrator exists', async () => {
+      const organisationId = await freshOrganisation();
+      const first = await admin(organisationId, 'first@example.com');
+      await admin(organisationId, 'second@example.com');
+
+      const result = await repos.users.update(first.id, { role: 'operator' });
+      expect(result.ok).toBe(true);
+    });
+
+    /**
+     * The write skew the lock exists for, run for real.
+     *
+     * Two administrators demoting each other at the same moment. Without `FOR UPDATE` both
+     * transactions read the other as still an enabled administrator, both pass the check and both
+     * commit — leaving an organisation with none, recoverable only from a database. With it they
+     * serialise, so exactly one succeeds.
+     *
+     * This is the test that cannot be written against the in-memory repository at all: there is
+     * no concurrency there to lose to.
+     */
+    it('lets only one of two simultaneous demotions through', async () => {
+      const organisationId = await freshOrganisation();
+      const one = await admin(organisationId, 'race-one@example.com');
+      const two = await admin(organisationId, 'race-two@example.com');
+
+      /*
+       * A second connection, because the pool above is `max: 1`.
+       *
+       * Two transactions issued through one connection do not race — postgres.js queues the
+       * second until the first has committed, so the test would pass by running sequentially and
+       * prove nothing about the lock it is named after. Genuinely concurrent means two
+       * connections.
+       */
+      const otherSql = postgres(url, { max: 1, onnotice: () => {} });
+      const otherRepos = createDrizzleRepositories(drizzle(otherSql, { schema }));
+
+      let first, second;
+      try {
+        [first, second] = await Promise.all([
+          repos.users.update(one.id, { role: 'operator' }),
+          otherRepos.users.update(two.id, { role: 'operator' }),
+        ]);
+      } finally {
+        await otherSql.end();
+      }
+
+      expect([first.ok, second.ok].filter(Boolean)).toHaveLength(1);
+
+      const remaining = (await repos.users.list(organisationId)).filter(
+        (person) => person.role === 'admin' && person.disabledAt === null,
+      );
+      expect(remaining).toHaveLength(1);
+    });
+
+    it('clears the disabled date on re-enabling rather than keeping it', async () => {
+      const organisationId = await freshOrganisation();
+      await admin(organisationId, 'keeper@example.com');
+      const other = await admin(organisationId, 'toggled@example.com');
+
+      await repos.users.update(other.id, { disabled: true });
+      expect((await repos.users.findById(other.id))?.disabledAt).not.toBeNull();
+
+      await repos.users.update(other.id, { disabled: false });
+      expect((await repos.users.findById(other.id))?.disabledAt).toBeNull();
+    });
   });
 
   it('writes an audit row', async () => {
