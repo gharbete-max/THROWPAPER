@@ -142,6 +142,23 @@ export const enGB = {
   'users.viewingAs':
     "You are viewing {name}'s workspace as yourself. Anything you do is logged as you.",
   'users.notFound': 'No such user.',
+  'users.add': 'Add somebody',
+  'users.addName': 'Name',
+  'users.addEmail': 'Email address',
+  'users.addRole': 'Role',
+  'users.addHint': 'They receive a sign-in link at this address. There is nothing to accept.',
+  'users.addSubmit': 'Add',
+  'users.addCancel': 'Cancel',
+  'users.disable': 'Disable',
+  'users.enable': 'Enable',
+  'users.makeAdmin': 'Make administrator',
+  'users.makeMember': 'Make member',
+  'users.confirmDisable':
+    'Disable {name}? They keep their forms and their place in the log, and cannot sign in until you enable them again.',
+  'users.confirmRole': 'Change what {name} may do?',
+  'users.errorEmailTaken': 'Somebody with that address is already here.',
+  'users.errorLastAdmin': 'Promote another administrator first — an organisation must keep one.',
+  'users.errorFailed': 'That did not work. Try again.',
 
   'forms.title': 'Forms',
   'forms.new': 'New form',

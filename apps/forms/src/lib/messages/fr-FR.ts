@@ -138,6 +138,24 @@ export const frFR: Record<MessageKey, string> = {
   'users.viewingAs':
     'Vous consultez l’espace de travail de {name} en votre propre nom. Tout ce que vous faites est enregistré à votre nom.',
   'users.notFound': 'Utilisateur introuvable.',
+  'users.add': 'Ajouter une personne',
+  'users.addName': 'Nom',
+  'users.addEmail': 'Adresse e-mail',
+  'users.addRole': 'Rôle',
+  'users.addHint': 'Elle recevra un lien de connexion à cette adresse. Il n’y a rien à accepter.',
+  'users.addSubmit': 'Ajouter',
+  'users.addCancel': 'Annuler',
+  'users.disable': 'Désactiver',
+  'users.enable': 'Activer',
+  'users.makeAdmin': 'Nommer administrateur',
+  'users.makeMember': 'Nommer membre',
+  'users.confirmDisable':
+    'Désactiver {name} ? Ses formulaires et sa trace dans le journal sont conservés, et elle ne pourra pas se connecter tant que vous ne l’aurez pas réactivée.',
+  'users.confirmRole': 'Modifier ce que {name} peut faire ?',
+  'users.errorEmailTaken': 'Quelqu’un utilise déjà cette adresse ici.',
+  'users.errorLastAdmin':
+    'Nommez d’abord un autre administrateur — une organisation doit en garder un.',
+  'users.errorFailed': 'Cela n’a pas fonctionné. Réessayez.',
 
   'forms.title': 'Formulaires',
   'forms.new': 'Nouveau formulaire',

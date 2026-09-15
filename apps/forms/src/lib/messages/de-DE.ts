@@ -139,6 +139,25 @@ export const deDE: Record<MessageKey, string> = {
   'users.viewingAs':
     'Sie sehen den Arbeitsbereich von {name} als Sie selbst. Alles, was Sie tun, wird unter Ihrem Namen protokolliert.',
   'users.notFound': 'Benutzer nicht gefunden.',
+  'users.add': 'Jemanden hinzufügen',
+  'users.addName': 'Name',
+  'users.addEmail': 'E-Mail-Adresse',
+  'users.addRole': 'Rolle',
+  'users.addHint':
+    'Die Person erhält einen Anmeldelink an diese Adresse. Es gibt nichts zu bestätigen.',
+  'users.addSubmit': 'Hinzufügen',
+  'users.addCancel': 'Abbrechen',
+  'users.disable': 'Deaktivieren',
+  'users.enable': 'Aktivieren',
+  'users.makeAdmin': 'Zur Administratorin machen',
+  'users.makeMember': 'Zum Mitglied machen',
+  'users.confirmDisable':
+    '{name} deaktivieren? Formulare und Einträge im Protokoll bleiben erhalten, aber die Anmeldung ist erst wieder möglich, wenn Sie die Person aktivieren.',
+  'users.confirmRole': 'Ändern, was {name} tun darf?',
+  'users.errorEmailTaken': 'Jemand mit dieser Adresse ist bereits hier.',
+  'users.errorLastAdmin':
+    'Ernennen Sie zuerst eine andere Administratorin — eine Organisation braucht mindestens eine.',
+  'users.errorFailed': 'Das hat nicht geklappt. Bitte erneut versuchen.',
 
   'forms.title': 'Formulare',
   'forms.new': 'Neues Formular',

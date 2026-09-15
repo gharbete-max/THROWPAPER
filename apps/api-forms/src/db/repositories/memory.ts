@@ -148,6 +148,67 @@ export function createMemoryRepositories(
           .filter((u) => u.organisationId === organisationId)
           .slice()
           .sort((a, b) => a.name.localeCompare(b.name)),
+      create: async (input) => {
+        const email = input.email.toLowerCase();
+        // Stands in for `users_org_email_idx`, so a duplicate reads the same here as in Postgres.
+        const taken = state.users.some(
+          (u) => u.organisationId === input.organisationId && u.email === email,
+        );
+        if (taken) return null;
+
+        const record: UserRecord = {
+          id: randomUUID(),
+          organisationId: input.organisationId,
+          email,
+          name: input.name,
+          role: input.role,
+          disabledAt: null,
+        };
+        state.users.push(record);
+        return record;
+      },
+      update: async (id, changes) => {
+        const person = state.users.find((u) => u.id === id);
+        if (!person) return { ok: false as const, reason: 'not-found' as const };
+
+        const role = changes.role ?? person.role;
+        const disabled = changes.disabled ?? person.disabledAt !== null;
+        const wouldStopBeingAnEnabledAdmin =
+          person.role === 'admin' && person.disabledAt === null && (role !== 'admin' || disabled);
+
+        /*
+         * The same invariant the Drizzle repository locks rows to hold: an organisation must keep
+         * at least one enabled administrator. Enforced here too rather than only in SQL, because
+         * every test in this suite runs against this implementation — a guard that exists only in
+         * the half the tests never touch is a guard nobody has seen work.
+         */
+        const anotherAdminRemains = state.users.some(
+          (u) =>
+            u.organisationId === person.organisationId &&
+            u.id !== person.id &&
+            u.role === 'admin' &&
+            u.disabledAt === null,
+        );
+        if (wouldStopBeingAnEnabledAdmin && !anotherAdminRemains) {
+          return { ok: false as const, reason: 'last-admin' as const };
+        }
+
+        /*
+         * Replaced, not mutated in place.
+         *
+         * `state.users` is seeded with the exported test fixtures themselves, so assigning to
+         * `person.role` edits a module-level constant and every later test in the file inherits
+         * it — one test disabling the operator left the next one unable to sign in as them. The
+         * Drizzle repository returns a fresh row; this should behave the same way.
+         */
+        const updated: UserRecord = {
+          ...person,
+          role,
+          disabledAt: disabled ? (person.disabledAt ?? new Date()) : null,
+        };
+        state.users[state.users.indexOf(person)] = updated;
+        return { ok: true as const, user: updated };
+      },
     },
 
     tokens: {

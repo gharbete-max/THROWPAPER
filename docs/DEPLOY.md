@@ -82,12 +82,29 @@ the workspace packages are bundled into them. The container runs `node`.
 
 ```bash
 pnpm db:migrate
-pnpm db:seed      # optional; creates a demonstrable event and 200 registrations
+pnpm db:seed      # creates the first administrator, a demonstrable event and 200 registrations
 ```
 
 Migrations are not run automatically at boot. That is deliberate: two containers starting at once
 would race, and a migration that fails should stop a deploy rather than leave a half-started
 server answering requests.
+
+### `db:seed` is how the first administrator exists
+
+**It is not optional on a fresh database.** Everything else about people is done in the product —
+an administrator adds colleagues, changes roles and disables accounts on `/users` — but that
+requires an administrator to already be there, and there is deliberately no first-run flow that
+lets whoever arrives first become one. ADR 0002 records why: a bootstrap endpoint guarded only by
+"the organisation has no users yet" is an unauthenticated write whose guard an attacker can
+observe, and the race is narrow and completely fatal.
+
+So the first administrator comes from the seed, run by whoever has the database at the moment they
+have it. Change the seeded address to a real one before running it against anything but a demo —
+it is `admin@example.com`, and a magic link sent there reaches nobody.
+
+The consequence to know about: an organisation that disables or demotes its last administrator
+would be locked out, so the product refuses to do either. If it somehow happens anyway, the way
+back is this database, not a support screen.
 
 ## Before the first real event
 

@@ -137,6 +137,24 @@ export const isIS: Record<MessageKey, string> = {
   'users.viewingAs':
     'Þú skoðar vinnusvæði {name} sem þú sjálfur. Allt sem þú gerir er skráð í þínu nafni.',
   'users.notFound': 'Notandinn er ekki til.',
+  'users.add': 'Bæta við einhverjum',
+  'users.addName': 'Nafn',
+  'users.addEmail': 'Netfang',
+  'users.addRole': 'Hlutverk',
+  'users.addHint': 'Viðkomandi fær innskráningartengil á þetta netfang. Ekkert þarf að samþykkja.',
+  'users.addSubmit': 'Bæta við',
+  'users.addCancel': 'Hætta við',
+  'users.disable': 'Gera óvirkan',
+  'users.enable': 'Gera virkan',
+  'users.makeAdmin': 'Gera að stjórnanda',
+  'users.makeMember': 'Gera að meðlimi',
+  'users.confirmDisable':
+    'Gera {name} óvirkan? Eyðublöðin og færslurnar í annálnum haldast, en viðkomandi kemst ekki inn fyrr en þú gerir hann virkan aftur.',
+  'users.confirmRole': 'Breyta því hvað {name} má gera?',
+  'users.errorEmailTaken': 'Einhver með þetta netfang er þegar hér.',
+  'users.errorLastAdmin':
+    'Gerðu annan að stjórnanda fyrst — hver skipulagsheild verður að hafa einn.',
+  'users.errorFailed': 'Þetta tókst ekki. Reyndu aftur.',
 
   'forms.title': 'Eyðublöð',
   'forms.new': 'Nýtt eyðublað',

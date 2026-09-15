@@ -159,3 +159,177 @@ describe('looking at somebody else’s workspace', () => {
     expect(response.statusCode).toBe(403);
   });
 });
+
+describe('adding somebody to the organisation', () => {
+  function add(payload: Record<string, unknown>, token = adminToken) {
+    return harness.app.inject({
+      method: 'POST',
+      url: '/v1/admin/users',
+      headers: bearer(token),
+      payload,
+    });
+  }
+
+  it('creates a colleague who can then be signed in as', async () => {
+    const response = await add({ email: 'kim@example.com', name: 'Kim Karlsson' });
+
+    expect(response.statusCode).toBe(201);
+    expect(response.json()).toMatchObject({
+      email: 'kim@example.com',
+      name: 'Kim Karlsson',
+      // The lesser privilege is the default; the greater one has to be asked for.
+      role: 'operator',
+      disabled: false,
+    });
+
+    // The account is real from here: no acceptance step, and a magic link reaches it.
+    const session = await signIn(harness, 'kim@example.com');
+    expect(session.accessToken).toBeTruthy();
+  });
+
+  it('creates an administrator when asked to', async () => {
+    const response = await add({ email: 'ada@example.com', name: 'Ada', role: 'admin' });
+    expect(response.json().role).toBe('admin');
+  });
+
+  /**
+   * `Kim@Example.com` and `kim@example.com` must be one account. Stored as typed, they would be
+   * two — one of which can never receive a magic link, because sign-in lower-cases the address.
+   */
+  it('folds the address to lower case, so sign-in finds it', async () => {
+    const response = await add({ email: 'Kim@Example.COM', name: 'Kim' });
+
+    expect(response.json().email).toBe('kim@example.com');
+    await expect(signIn(harness, 'kim@example.com')).resolves.toBeTruthy();
+  });
+
+  it('reports a duplicate as already here rather than failing', async () => {
+    const response = await add({ email: adminUser.email, name: 'Another Alva' });
+
+    expect(response.statusCode).toBe(409);
+    expect(response.json().error.code).toBe('email-taken');
+  });
+
+  it('refuses an address that is not one', async () => {
+    expect((await add({ email: 'not-an-address', name: 'Kim' })).statusCode).toBe(400);
+  });
+
+  it('refuses a blank name', async () => {
+    expect((await add({ email: 'kim@example.com', name: '   ' })).statusCode).toBe(400);
+  });
+
+  it('is not for operators', async () => {
+    const response = await add({ email: 'kim@example.com', name: 'Kim' }, operatorToken);
+    expect(response.statusCode).toBe(403);
+  });
+
+  it('writes an audit entry naming the administrator who did it', async () => {
+    await add({ email: 'kim@example.com', name: 'Kim' });
+
+    const entry = harness.state.audit.find((row) => row.action === 'user.create');
+    expect(entry).toBeDefined();
+    expect(entry?.actorUserId).toBe(adminUser.id);
+  });
+});
+
+describe('changing somebody', () => {
+  function patch(id: string, payload: Record<string, unknown>, token = adminToken) {
+    return harness.app.inject({
+      method: 'PATCH',
+      url: `/v1/admin/users/${id}`,
+      headers: bearer(token),
+      payload,
+    });
+  }
+
+  it('promotes an operator', async () => {
+    const response = await patch(operatorId(), { role: 'admin' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().role).toBe('admin');
+  });
+
+  it('disables somebody, and the disabled cannot sign in', async () => {
+    const response = await patch(operatorId(), { disabled: true });
+
+    expect(response.json().disabled).toBe(true);
+    // `requestMagicLink` refuses a disabled user, and says nothing about why — see auth/service.
+    const before = harness.mail.sent.length;
+    await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/magic-link',
+      payload: { email: operatorUser.email },
+    });
+    expect(harness.mail.sent.length).toBe(before);
+  });
+
+  it('re-enables somebody, clearing the date rather than keeping it', async () => {
+    await patch(operatorId(), { disabled: true });
+    const response = await patch(operatorId(), { disabled: false });
+
+    expect(response.json().disabled).toBe(false);
+    const person = await harness.repos.users.findById(operatorId());
+    expect(person?.disabledAt).toBeNull();
+  });
+
+  /**
+   * The invariant an organisation cannot be talked out of. Disabling or demoting the final
+   * administrator locks everybody out of their own account, recoverable only by somebody with
+   * database access — so it is refused at the write, not discouraged in the interface.
+   */
+  describe('the last administrator', () => {
+    it('cannot be demoted', async () => {
+      const response = await patch(adminUser.id, { role: 'operator' });
+
+      expect(response.statusCode).toBe(409);
+      expect(response.json().error.code).toBe('last-admin');
+      // And nothing changed.
+      expect((await harness.repos.users.findById(adminUser.id))?.role).toBe('admin');
+    });
+
+    it('cannot be disabled', async () => {
+      const response = await patch(adminUser.id, { disabled: true });
+
+      expect(response.statusCode).toBe(409);
+      expect((await harness.repos.users.findById(adminUser.id))?.disabledAt).toBeNull();
+    });
+
+    it('can be demoted once somebody else is promoted', async () => {
+      await patch(operatorId(), { role: 'admin' });
+
+      expect((await patch(adminUser.id, { role: 'operator' })).statusCode).toBe(200);
+    });
+
+    /**
+     * A disabled administrator does not count as one. Two admins where one is already disabled is
+     * one administrator, and demoting the other still empties the organisation.
+     */
+    it('does not count a disabled administrator as cover', async () => {
+      await patch(operatorId(), { role: 'admin' });
+      await patch(operatorId(), { disabled: true });
+
+      expect((await patch(adminUser.id, { role: 'operator' })).statusCode).toBe(409);
+    });
+  });
+
+  it('refuses a body that asks for nothing', async () => {
+    expect((await patch(operatorId(), {})).statusCode).toBe(400);
+  });
+
+  it('answers 404 for somebody who does not exist', async () => {
+    const response = await patch('44444444-4444-4444-8444-444444444444', { role: 'admin' });
+    expect(response.statusCode).toBe(404);
+  });
+
+  it('is not for operators', async () => {
+    expect((await patch(operatorId(), { role: 'admin' }, operatorToken)).statusCode).toBe(403);
+  });
+
+  it('writes an audit entry with what changed', async () => {
+    await patch(operatorId(), { role: 'admin' });
+
+    const entry = harness.state.audit.find((row) => row.action === 'user.update');
+    expect(entry?.before).toMatchObject({ role: 'operator' });
+    expect(entry?.after).toMatchObject({ role: 'admin' });
+  });
+});

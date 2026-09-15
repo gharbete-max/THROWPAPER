@@ -137,6 +137,23 @@ export const nbNO: Record<MessageKey, string> = {
   'users.viewingAs':
     'Du ser på arbeidsområdet til {name} som deg selv. Alt du gjør logges i ditt navn.',
   'users.notFound': 'Brukeren finnes ikke.',
+  'users.add': 'Legg til noen',
+  'users.addName': 'Navn',
+  'users.addEmail': 'E-postadresse',
+  'users.addRole': 'Rolle',
+  'users.addHint': 'De får en innloggingslenke til denne adressen. Det er ingenting å godta.',
+  'users.addSubmit': 'Legg til',
+  'users.addCancel': 'Avbryt',
+  'users.disable': 'Deaktiver',
+  'users.enable': 'Aktiver',
+  'users.makeAdmin': 'Gjør til administrator',
+  'users.makeMember': 'Gjør til medlem',
+  'users.confirmDisable':
+    'Deaktiver {name}? De beholder skjemaene sine og plassen sin i loggen, og kan ikke logge inn før du aktiverer dem igjen.',
+  'users.confirmRole': 'Endre hva {name} får gjøre?',
+  'users.errorEmailTaken': 'Noen med den adressen er allerede her.',
+  'users.errorLastAdmin': 'Utnevn en annen administrator først — en organisasjon må ha minst én.',
+  'users.errorFailed': 'Det gikk ikke. Prøv igjen.',
 
   'forms.title': 'Skjemaer',
   'forms.new': 'Nytt skjema',
