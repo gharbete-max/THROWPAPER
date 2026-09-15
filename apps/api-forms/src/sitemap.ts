@@ -115,6 +115,58 @@ export function isPrivatePath(pathname: string): boolean {
  * There is no `Disallow: /` here and there never was one to leave behind — this repository has
  * never had a `robots.txt` at all, which is the other way to get the same outcome by accident.
  */
+/**
+ * `llms.txt` — what this site is, for something reading it rather than indexing it.
+ *
+ * The convention (llmstxt.org) is a short Markdown file at the root: a heading, a summary, and the
+ * pages worth reading. It is a description, not a permission — deciding whether AI crawlers may
+ * read this site at all is a `robots.txt` question and the owner's to answer, and nothing here
+ * grants or withholds anything.
+ *
+ * Built from the site's own `<title>` and `<meta name="description">` rather than a second copy of
+ * them written out here. Those are already the one place the product says what it is, they are
+ * already translated, and a hand-written summary beside them is a third description to keep true.
+ *
+ * Only the pages in the default language are listed. The file itself is English prose, and a
+ * reader that wants Swedish is better served by the `hreflang` set on the page than by sixty-five
+ * URLs in one list.
+ */
+export function buildLlmsTxt(input: {
+  title: string;
+  description: string;
+  routes: readonly string[];
+  origin: string;
+}): string {
+  const site = input.origin.replace(/\/$/, '');
+  const pages = input.routes
+    .filter(isIndexable)
+    .map((route) => `- [${route}](${site}${route})`)
+    .join('\n');
+
+  return [
+    `# ${input.title}`,
+    '',
+    `> ${input.description}`,
+    '',
+    '## Pages',
+    '',
+    pages,
+    '',
+    '## Notes',
+    '',
+    /*
+     * Worth stating plainly, because both are things a reader would otherwise have to discover by
+     * requesting them: the application is not public, and a form belongs to whoever published it.
+     */
+    '- The signed-in application is not public. Everything under /events, /forms, /responses,',
+    '  /users, /invoices and /brand requires an account and is served as an empty shell.',
+    '- A published form lives at /f/<slug> and belongs to the organisation that published it,',
+    '  not to this site.',
+    '- Machine-readable API description: ' + `${site}/openapi.json`,
+    '',
+  ].join('\n');
+}
+
 export function buildRobots(origin: string): string {
   const site = origin.replace(/\/$/, '');
   return [

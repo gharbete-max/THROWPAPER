@@ -77,6 +77,11 @@ beforeAll(async () => {
       "export const SITE_ROUTES = ['/', '/features/ledger', '/contact', '/contact/sent', '/sv'];",
       'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
       "export const isSiteShaped = (path) => path.startsWith('/features/');",
+      "export const SITE_DEFAULT_LOCALE = 'en-GB';",
+      /* `/sv` and anything under it is Swedish; everything else is the default language. */
+      "export const splitLocale = (path) => path === '/sv' || path.startsWith('/sv/')",
+      "  ? { locale: 'sv-SE', path: path.slice(3) || '/' }",
+      "  : { locale: 'en-GB', path };",
       /*
        * The rendered markup is padded to a realistic size on purpose.
        *
@@ -89,7 +94,10 @@ beforeAll(async () => {
       'export const render = (path) => ({',
       '  status: SITE_ROUTES.includes(path) ? 200 : 404,',
       '  html: `<div class="site">rendered ${path}${filler}</div>`,',
-      `  head: '<title>Site</title><link rel="canonical" href="https://x.test/" />',`,
+      /* A description too, because `llms.txt` lifts its summary out of this head. */
+      "  head: '<title>Loppa — forms</title>' +",
+      `    '<meta name="description" content="A form builder for organisations." />' +`,
+      `    '<link rel="canonical" href="https://x.test/" />',`,
       `  styles: ':root{--x:1}',`,
       '});',
     ].join('\n'),
@@ -586,6 +594,46 @@ describe('serving the built app from the API', () => {
 
       expect(response.statusCode).toBe(200);
       expect(response.headers['x-robots-tag']).toBeUndefined();
+    });
+
+    /**
+     * `llms.txt` describes the site for something reading it rather than indexing it. Its title
+     * and summary are lifted from the home page's own head, so there is no second copy of them to
+     * drift.
+     */
+    describe('llms.txt', () => {
+      it('describes the site using the page’s own title and description', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.headers['content-type']).toContain('text/plain');
+        expect(response.body).toContain('# Loppa — forms');
+        expect(response.body).toContain('> A form builder for organisations.');
+      });
+
+      it('lists the pages as absolute URLs', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+
+        expect(response.body).toContain('http://localhost:5173/features/ledger');
+        expect(response.body).toContain('http://localhost:5173/contact');
+      });
+
+      /** English prose listing sixty-five URLs in five languages helps nobody. */
+      it('lists only the default language', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+        expect(response.body).not.toContain('/sv)');
+      });
+
+      /** The same exclusion the sitemap makes: a thank-you page answers no question. */
+      it('leaves the contact confirmation out', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+        expect(response.body).not.toContain('/contact/sent');
+      });
+
+      it('is not swallowed by the app shell', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+        expect(response.body).not.toContain('id="root"');
+      });
     });
   });
 });
