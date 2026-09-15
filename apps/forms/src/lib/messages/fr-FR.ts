@@ -590,12 +590,21 @@ export const frFR: Record<MessageKey, string> = {
   'checkin.cameraUnavailable':
     'La caméra n’est pas disponible — saisissez la référence à la place.',
   'checkin.arrivedAt': 'Arrivé à {time}',
+  'checkin.leave': 'Quitter l’entrée',
+  'checkin.ofRegistered': 'sur {registered}',
+  'checkin.idle': 'Scannez une carte ou saisissez la référence',
+  'checkin.recent': 'Dernières arrivées',
+  'checkin.undo': 'Annuler',
+  'checkin.undoConfirm': 'Annuler l’enregistrement de {name} ?',
+  'checkin.offline':
+    'Hors ligne — les scans ne peuvent pas être vérifiés tant que la connexion n’est pas rétablie.',
   'checkin.outcome.admitted': 'Bienvenue',
   'checkin.outcome.already': 'Déjà enregistré',
   'checkin.outcome.revoked': 'Inscription retirée',
   'checkin.outcome.wrong-event': 'Mauvais événement',
   'checkin.outcome.not-found': 'Introuvable',
   'checkin.outcome.bad-signature': 'Carte invalide',
+  'checkin.outcome.undone': 'Enregistrement annulé',
 
   'attendance.title': 'Présence',
   'attendance.loadFailed': 'La liste des présences n’a pas pu être chargée.',

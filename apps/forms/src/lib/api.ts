@@ -296,6 +296,9 @@ export const client = {
       checkedInAt: string | null;
     }>(`/v1/events/${eventId}/check-ins`, { method: 'POST', body: JSON.stringify({ code }) }),
 
+  undoCheckIn: (eventId: string, submissionId: string) =>
+    request<null>(`/v1/events/${eventId}/check-ins/${submissionId}`, { method: 'DELETE' }),
+
   attendance: (eventId: string) =>
     request<{
       registered: number;

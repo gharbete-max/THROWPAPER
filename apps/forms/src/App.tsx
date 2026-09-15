@@ -165,106 +165,118 @@ function Shell() {
    * that works until two of them disagree.
    */
   const path = location.pathname;
+  /*
+   * The door is a mode, not a page. Somebody working a check-in is not navigating a product, and
+   * on a phone the sidebar-turned-bottom-bar took a fifth of the screen from the one input that
+   * matters. The rail and the session row go; the screen carries its own way out.
+   */
+  const door = /^\/events\/[^/]+\/check-in$/.test(path);
   const wide = /^\/forms\/[^/]+/.test(path);
   const roomy =
     !wide &&
     (/^\/(forms|events|responses|users|invoices)$/.test(path) || /^\/users\/[^/]+$/.test(path));
 
   return (
-    <div className="app system">
+    <div className={door ? 'app app--door system' : 'app system'}>
       {/* Inside the shell, so it exists only where there is somewhere to navigate to — the
           sign-in page has one screen and a palette on it would be a joke at the user's expense. */}
       <CommandPalette />
-      {/**
-       * A sidebar, because the bar could not hold what it was given.
-       *
-       * Events, Forms, Responses, Users, Brand, a language, a theme, a name and a way out were all
-       * asked to sit on one line. At 1440px — an ordinary laptop — that line wrapped, so the
-       * product's own sections floated at the right edge on one row while the account controls sat
-       * on another, six unlike things sharing an undifferentiated strip. A horizontal bar competes
-       * for the one axis a page has least of.
-       *
-       * Vertical navigation cannot wrap. The sections get a fixed place that does not move as the
-       * window changes, the mark sits above them where it reads as the product rather than as
-       * decoration, and the top of the page is left for the one thing that belongs there: what you
-       * are looking at and what you can do to it.
-       *
-       * On a narrow screen this becomes a bottom bar — the sections stay reachable by thumb, and
-       * `.topline` picks up the mark.
-       */}
-      <nav className="sidebar" aria-label={t('nav.sections')}>
-        <div className="sidebar__mark">
-          {brand.logoLight ? (
-            <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
-          ) : (
-            // The mark stands in for a customer logo until they upload one of their own.
-            <Wordmark name={organisation?.name ?? t('app.name')} />
-          )}
-        </div>
+      {door ? null : (
+        <>
+          {/**
+           * A sidebar, because the bar could not hold what it was given.
+           *
+           * Events, Forms, Responses, Users, Brand, a language, a theme, a name and a way out were all
+           * asked to sit on one line. At 1440px — an ordinary laptop — that line wrapped, so the
+           * product's own sections floated at the right edge on one row while the account controls sat
+           * on another, six unlike things sharing an undifferentiated strip. A horizontal bar competes
+           * for the one axis a page has least of.
+           *
+           * Vertical navigation cannot wrap. The sections get a fixed place that does not move as the
+           * window changes, the mark sits above them where it reads as the product rather than as
+           * decoration, and the top of the page is left for the one thing that belongs there: what you
+           * are looking at and what you can do to it.
+           *
+           * On a narrow screen this becomes a bottom bar — the sections stay reachable by thumb, and
+           * `.topline` picks up the mark.
+           */}
+          <nav className="sidebar" aria-label={t('nav.sections')}>
+            <div className="sidebar__mark">
+              {brand.logoLight ? (
+                <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
+              ) : (
+                // The mark stands in for a customer logo until they upload one of their own.
+                <Wordmark name={organisation?.name ?? t('app.name')} />
+              )}
+            </div>
 
-        <div className="sidebar__sections">
-          <NavSection to="/events" icon="events" label={t('nav.events')} />
-          <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
-          <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
-          <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
-          {/* Support work, so it only appears for the people who do it. */}
-          {user.role === 'admin' && <NavSection to="/users" icon="people" label={t('nav.users')} />}
-        </div>
+            <div className="sidebar__sections">
+              <NavSection to="/events" icon="events" label={t('nav.events')} />
+              <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
+              <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
+              <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
+              {/* Support work, so it only appears for the people who do it. */}
+              {user.role === 'admin' && (
+                <NavSection to="/users" icon="people" label={t('nav.users')} />
+              )}
+            </div>
 
-        {/* Brand configures the sections above rather than sitting among them, so it sits apart. */}
-        <div className="sidebar__foot">
-          <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
-        </div>
-      </nav>
+            {/* Brand configures the sections above rather than sitting among them, so it sits apart. */}
+            <div className="sidebar__foot">
+              <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
+            </div>
+          </nav>
 
-      {/*
+          {/*
         Everything about *this session* rather than about the work: which language it is read in,
         whether it is light or dark, who is signed in and how to stop being. It is a short row that
         cannot wrap, which is the whole reason the sections are no longer in it.
       */}
-      {/* A `header`, so the session row — and Sign out in particular — is inside a landmark. */}
-      <header className="topline">
-        <div className="topline__mark">
-          <Wordmark name={organisation?.name ?? t('app.name')} />
-        </div>
+          {/* A `header`, so the session row — and Sign out in particular — is inside a landmark. */}
+          <header className="topline">
+            <div className="topline__mark">
+              <Wordmark name={organisation?.name ?? t('app.name')} />
+            </div>
 
-        {/*
+            {/*
           The palette is invisible until pressed, so it needs somewhere to say it exists. Shown
           only where there is a keyboard to press it with — CSS hides it on coarse pointers and
           narrow screens rather than advertising a shortcut a phone cannot use.
         */}
-        <span className="kbd" aria-hidden="true">
-          <Icon name="command" />K
-        </span>
+            <span className="kbd" aria-hidden="true">
+              <Icon name="command" />K
+            </span>
 
-        {/*
+            {/*
           Driven by the organisation's supportedLocales, not a hard-coded list —
           SPEC-shared.md §packages/i18n. A flag and the language's own name: the list read
           "sv-SE, zh-CN, ru-RU" until recently, which only a developer could use, and at twelve
           entries not even them. The site is in **one** language at a time; a form can offer its
           own switcher separately, which is a different control on a different page.
         */}
-        <LanguagePicker
-          locales={interfaceLocales.supported}
-          current={locale}
-          onChange={setLocale}
-          t={t}
-        />
-        {/* Beside the language, because both are "how this app is presented to me". */}
-        <ThemeToggle />
-        {/*
+            <LanguagePicker
+              locales={interfaceLocales.supported}
+              current={locale}
+              onChange={setLocale}
+              t={t}
+            />
+            {/* Beside the language, because both are "how this app is presented to me". */}
+            <ThemeToggle />
+            {/*
           The role reads as a word, not as a database value.
           `Users.tsx` and `ShareDialog.tsx` both already translate it through `users.role.*`; this
           was the one place that printed the raw enum, so the same person was "Administrator" on
           the users screen and "admin" in the bar above it, in every language including English.
         */}
-        <span className="topline__who small muted">
-          {user.name} · {t(`users.role.${user.role}`)}
-        </span>
-        <button className="button button--quiet small" onClick={signOut}>
-          {t('app.signOut')}
-        </button>
-      </header>
+            <span className="topline__who small muted">
+              {user.name} · {t(`users.role.${user.role}`)}
+            </span>
+            <button className="button button--quiet small" onClick={signOut}>
+              {t('app.signOut')}
+            </button>
+          </header>
+        </>
+      )}
 
       <main className="main">
         <div className={`shell${wide ? ' shell--wide' : roomy ? ' shell--roomy' : ''}`}>

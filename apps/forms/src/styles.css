@@ -338,6 +338,101 @@ a:focus-visible {
 }
 
 /* Check-in. Loud on purpose: read at arm's length, in bad light, with a queue waiting. */
+.door {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  max-inline-size: 40rem;
+  margin-inline: auto;
+}
+
+.door__top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.door__title {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+/* The count: the largest number on the screen, because it is the one asked for across a room. */
+.door__count {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.door__countIn {
+  font-size: var(--tp-text-3xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.door__offline {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  border-radius: var(--tp-radius);
+  background: color-mix(in srgb, var(--tp-colour-warning) 14%, transparent);
+  color: var(--tp-colour-text);
+}
+
+.door__form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.door__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.door__check {
+  flex: 1 1 12rem;
+  min-block-size: calc(var(--tp-control-height) * 1.25);
+  font-size: var(--tp-text-lg);
+}
+
+.door__recent h2 {
+  margin: 0 0 var(--tp-spacing-unit);
+}
+
+.door__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.door__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  min-block-size: 44px;
+}
+
+.door__row + .door__row {
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.door__who {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .checkin__video {
   width: 100%;
   max-height: 40vh;
@@ -353,19 +448,33 @@ a:focus-visible {
 }
 
 .checkin__input {
-  font-size: var(--tp-text-xl);
+  /* Display size: read at arm's length, typed in gloves. */
+  font-size: var(--tp-text-2xl);
+  min-block-size: calc(var(--tp-control-height) * 1.5);
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  text-align: center;
 }
 
+/*
+ * A fixed height, so the page does not jump at the moment the operator needs certainty. The
+ * idle prompt fills it before the first scan.
+ */
 .verdict {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: calc(var(--tp-spacing-unit) * 0.5);
+  min-block-size: 9.5rem;
   padding: calc(var(--tp-spacing-unit) * 3);
   border-radius: var(--tp-radius);
   border: var(--tp-border-width) solid var(--tp-colour-border);
   color: var(--tp-colour-background);
+}
+
+.verdict--idle {
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-muted);
 }
 
 .verdict--good {
@@ -3769,6 +3878,22 @@ body:has(.app) > #root {
 
 .main > .shell {
   padding-inline: 0;
+}
+
+/*
+ * The door: nothing but the work.
+ *
+ * `.app.app--door` rather than `.app--door`, so it also wins over the narrow-screen rule below,
+ * which rewrites the areas for the bottom bar. A door has no bar to put at the bottom.
+ */
+.app.app--door {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-areas: 'main';
+}
+
+.app.app--door .main {
+  padding-block-end: calc(var(--tp-spacing-unit) * 4);
 }
 
 /* --- Narrow: the rail becomes a bottom bar --------------------------------- */

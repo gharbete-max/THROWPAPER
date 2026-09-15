@@ -472,6 +472,14 @@ export interface CheckInRepository {
     checkedInByUserId: string | null;
     method: 'scan' | 'manual';
   }): Promise<{ created: boolean; checkIn: CheckInRecord }>;
+  /**
+   * Take a check-in back — a mis-scan at the door, undone seconds later by the person who made it.
+   *
+   * A real delete rather than a flag, because a withdrawn check-in must not count, must not block
+   * the next scan of the same card, and must not show as an arrival. The audit row is the record
+   * that it happened. Returns whether there was anything to take back.
+   */
+  withdraw(organisationId: string, submissionId: string): Promise<boolean>;
 }
 
 export interface BrandKitRecord {

@@ -10,6 +10,7 @@ import { attendeeName } from '../documents/admission.js';
 
 const EventParam = z.object({ id: z.string().uuid() });
 const SubmissionParam = z.object({ id: z.string().uuid() });
+const UndoParam = z.object({ id: z.string().uuid(), submissionId: z.string().uuid() });
 
 const errorResponses = {
   401: api.ErrorResponse,
@@ -101,6 +102,42 @@ export function registerCheckInRoutes(
         attendee: result.submission ? toAttendee(result.submission, result.checkedInAt) : null,
         checkedInAt: result.checkedInAt?.toISOString() ?? null,
       });
+    },
+  });
+
+  /**
+   * Undo a check-in.
+   *
+   * The door's mistake is a mis-scan — the wrong card, or a card for the person behind — and the
+   * remedy is a button next to the arrival that was just made, not a support ticket. Same access
+   * as checking in: whoever can admit can un-admit. 204 whether or not there was anything to
+   * undo, because the state the caller wanted is the state they have.
+   */
+  app.delete('/v1/events/:id/check-ins/:submissionId', {
+    preHandler: authenticated,
+    schema: {
+      tags: ['check-in'],
+      params: UndoParam,
+      response: { 204: z.null(), ...errorResponses },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id, submissionId } = UndoParam.parse(request.params);
+
+      const event = await deps.repos.events.findById(auth.organisation.id, id);
+      if (!event) return notFound(reply);
+
+      const undone = await deps.repos.checkIns.withdraw(auth.organisation.id, submissionId);
+      if (undone) {
+        await recordAudit(deps.repos, request, {
+          action: 'checkin.undone',
+          entityType: 'submission',
+          entityId: submissionId,
+          after: { eventId: id },
+        });
+      }
+      return reply.code(204).send();
     },
   });
 

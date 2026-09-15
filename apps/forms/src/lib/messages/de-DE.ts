@@ -591,12 +591,21 @@ export const deDE: Record<MessageKey, string> = {
   'checkin.cameraUnavailable':
     'Die Kamera ist nicht verfügbar — geben Sie stattdessen die Referenz ein.',
   'checkin.arrivedAt': 'Angekommen {time}',
+  'checkin.leave': 'Einlass verlassen',
+  'checkin.ofRegistered': 'von {registered}',
+  'checkin.idle': 'Karte scannen oder Referenz eingeben',
+  'checkin.recent': 'Zuletzt eingetroffen',
+  'checkin.undo': 'Rückgängig',
+  'checkin.undoConfirm': 'Check-in für {name} rückgängig machen?',
+  'checkin.offline':
+    'Offline — Scans können erst geprüft werden, wenn die Verbindung wieder steht.',
   'checkin.outcome.admitted': 'Willkommen',
   'checkin.outcome.already': 'Bereits eingecheckt',
   'checkin.outcome.revoked': 'Anmeldung zurückgezogen',
   'checkin.outcome.wrong-event': 'Falsche Veranstaltung',
   'checkin.outcome.not-found': 'Nicht gefunden',
   'checkin.outcome.bad-signature': 'Ungültige Karte',
+  'checkin.outcome.undone': 'Check-in rückgängig gemacht',
 
   'attendance.title': 'Teilnahme',
   'attendance.loadFailed': 'Die Teilnehmerliste konnte nicht geladen werden.',
