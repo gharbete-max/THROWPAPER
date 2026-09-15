@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   answerableChildren,
   MAX_GROUP_ENTRIES,
@@ -7,7 +7,6 @@ import {
   type RepeatingGroupField,
 } from '@tp/shared/forms';
 import { pickText } from '@tp/i18n';
-import { useState } from 'react';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { LocalisedField } from './LocalisedField.js';
@@ -17,11 +16,12 @@ import { ENTRY_PALETTE, newField } from './field-defaults.js';
 /**
  * The properties only a repeating block has.
  *
- * The children are **not** edited here. They are ordinary fields, so they are selected on the
- * canvas and edited in the ordinary properties panel — which means a question inside a block gets
- * the same rules, the same conditional visibility and the same translation tab as one outside it.
- * A second, smaller editor for nested fields is a second editor to keep in step, and the one that
- * falls behind is always the one fewer people look at.
+ * What this panel owns is the **list**: add a question, remove one, reorder them. Editing one is
+ * the ordinary properties panel's job, opened in place through `renderChildEditor` — so a question
+ * inside a block gets the same rules, the same conditional visibility and the same translation tab
+ * as one outside it, because it is the same component. A second, smaller editor for nested fields
+ * is a second editor to keep in step, and the one that falls behind is always the one fewer people
+ * look at.
  *
  * What is here is the shape of the block itself: how many times it may repeat, what to call one
  * repetition, and whether each one is a person who is admitted in their own right.
