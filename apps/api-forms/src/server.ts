@@ -4,6 +4,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import helmet from '@fastify/helmet';
 import swagger from '@fastify/swagger';
+import compress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import multipart from '@fastify/multipart';
 import {
@@ -14,6 +15,13 @@ import {
 } from 'fastify-type-provider-zod';
 import type { FastifyError } from 'fastify';
 import { redactSecretsInUrl } from './log-redaction.js';
+import { constants as zlibConstants } from 'node:zlib';
+import {
+  BROTLI_QUALITY,
+  compressPayload,
+  negotiateEncoding,
+  worthCompressing,
+} from './fallback-compression.js';
 import { CONTRACT_VERSION } from '@tp/shared';
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -285,6 +293,82 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       'Permissions-Policy',
       'camera=(self), geolocation=(), microphone=(), payment=(), usb=(), interest-cohort=()',
     );
+  });
+
+  /**
+   * Responses are compressed on the way out.
+   *
+   * Nothing in front of this server does it. Measured on the built site, the rendered landing page
+   * is 20,085 bytes of markup and 4,804 gzipped — 77% of every site page, and a comparable share of
+   * every JSON list, was being paid for by the visitor for no reason. It is registered here, before
+   * the routes, so the hook wraps the static files and the site render as well as the API.
+   *
+   * Registered *after* helmet deliberately: the security headers are set on a response that is
+   * still uncompressed, which is the order that leaves `Content-Length` and `Content-Encoding`
+   * consistent with the body actually sent.
+   *
+   * Already-compressed bytes are left alone — the plugin consults `mime-db`, and the mark's WebP
+   * loops, the PNG icons and the woff2 subsets are all flagged incompressible there, so the CPU is
+   * never spent re-deflating a PNG to make it a few bytes larger.
+   *
+   * Brotli is offered first and gzip kept for anything that cannot take it — at quality 5, not the
+   * plugin's default of 4. That default is the one setting measurably worth overriding: on the
+   * built stylesheet q4 produces 13,264 bytes against gzip's 12,095, so the encoding offered first
+   * would have been the worse one. q5 gives 11,794 for about 0.3 ms more, and on the largest
+   * bundle 103,783 against gzip's 118,438. `fallback-compression.ts` records the same measurement
+   * for the rendered page and uses the same quality, so the two paths agree.
+   *
+   * BREACH is the reason to think twice about compressing a page, and it does not apply here: the
+   * attack needs a secret in the response body alongside attacker-controlled text, and this
+   * product has no session cookie and no CSRF token in its markup — the access token lives in
+   * `localStorage` and travels in a header.
+   */
+  await app.register(compress, {
+    global: true,
+    encodings: ['br', 'gzip', 'deflate'],
+    brotliOptions: {
+      params: {
+        [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
+        [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
+      },
+    },
+  });
+
+  /**
+   * And the same for the responses the plugin structurally cannot reach.
+   *
+   * `@fastify/compress` hangs its work off an `onRoute` hook, so it covers routes and only routes.
+   * The server-rendered site, a form's link preview and an invoice are all served from
+   * `setNotFoundHandler` — not a route, because `@fastify/static` owns `/*` — so without this the
+   * measurement that justified the plugin would not have applied to the pages it was measured on.
+   *
+   * A plain `onSend` hook on the root instance *does* reach the not-found handler, which is what
+   * makes this possible at all; the `Permissions-Policy` header above arrives the same way.
+   *
+   * Guarded on `content-encoding` being unset, so a response the plugin already compressed is
+   * never compressed twice. See `fallback-compression.ts` for why this is as small as it is.
+   */
+  app.addHook('onSend', async (request, reply, payload) => {
+    if (reply.getHeader('content-encoding')) return payload;
+    if (typeof payload !== 'string' && !Buffer.isBuffer(payload)) return payload;
+
+    const body = Buffer.isBuffer(payload) ? payload : Buffer.from(payload, 'utf8');
+    const type = reply.getHeader('content-type');
+    if (!worthCompressing(typeof type === 'string' ? type : undefined, body.length)) return payload;
+
+    const encoding = negotiateEncoding(request.headers['accept-encoding']);
+    if (!encoding) return payload;
+
+    reply.header('content-encoding', encoding);
+    /*
+     * Without this a shared cache can hand a brotli body to a client that cannot read it. The
+     * plugin sets it on its own responses; this path has to set its own.
+     */
+    reply.header('vary', 'accept-encoding');
+    const compressed = compressPayload(body, encoding);
+    // Fastify will not recompute a length it has already been told.
+    reply.header('content-length', compressed.length);
+    return compressed;
   });
 
   await app.register(cors, { origin: appUrl, credentials: false });

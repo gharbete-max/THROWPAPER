@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, rmSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
@@ -77,9 +77,18 @@ beforeAll(async () => {
       "export const SITE_ROUTES = ['/', '/features/ledger'];",
       'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
       "export const isSiteShaped = (path) => path.startsWith('/features/');",
+      /*
+       * The rendered markup is padded to a realistic size on purpose.
+       *
+       * A real site page is ~20 KB of prose and markup. A stub that returned one short `<div>`
+       * sat under the compression threshold, so the compression assertions below passed for
+       * static files and failed for the site — reporting a defect that exists only in the
+       * fixture. Padding it is what makes this stub stand in for the thing it is standing in for.
+       */
+      'const filler = `<p>${"the door is a mode ".repeat(120)}</p>`;',
       'export const render = (path) => ({',
       '  status: SITE_ROUTES.includes(path) ? 200 : 404,',
-      '  html: `<div class="site">rendered ${path}</div>`,',
+      '  html: `<div class="site">rendered ${path}${filler}</div>`,',
       `  head: '<title>Site</title><link rel="canonical" href="https://x.test/" />',`,
       `  styles: ':root{--x:1}',`,
       '});',
@@ -109,6 +118,18 @@ beforeAll(async () => {
   writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Paloppa"}');
   mkdirSync(join(dir, 'assets'));
   writeFileSync(join(dir, 'assets', 'index.js'), 'console.log(1)');
+  /**
+   * A second asset, big enough to compress and named the way Vite names one.
+   *
+   * `index.js` above is fourteen bytes: under the compression threshold, so it proves nothing
+   * about compression, and a test written against it would have passed whether or not the plugin
+   * was registered. The content hash in the name is the other half — it is what makes the file
+   * safe to cache forever, and the header assertions below are about exactly that name shape.
+   */
+  writeFileSync(
+    join(dir, 'assets', 'index-D34DB33F.js'),
+    `export const marks = ${JSON.stringify(Array.from({ length: 400 }, (_, i) => `mark-${i}`))};\n`,
+  );
 
   app = await buildServer({
     repos: createMemoryRepositories({
@@ -361,6 +382,77 @@ describe('serving the built app from the API', () => {
       const response = await app.inject({ method: 'GET', url: '/features/nothing' });
       expect(response.statusCode).toBe(404);
       expect(response.body).toContain('rendered /features/nothing');
+    });
+  });
+
+  /**
+   * Nothing sits in front of this server to compress for it.
+   *
+   * The deployment is one container answering the public internet directly, so a response that
+   * leaves here uncompressed is uncompressed when it arrives. That was every site page, every
+   * JSON list and every JavaScript bundle.
+   */
+  describe('compression', () => {
+    it('compresses a JavaScript bundle when the client offers brotli', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/assets/index-D34DB33F.js',
+        headers: { 'accept-encoding': 'br' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-encoding']).toBe('br');
+      // The point of the exercise: fewer bytes on the wire than the file has on disk.
+      const onDisk = statSync(join(dir, 'assets', 'index-D34DB33F.js')).size;
+      expect(response.rawPayload.length).toBeLessThan(onDisk);
+    });
+
+    it('falls back to gzip for a client that cannot take brotli', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/assets/index-D34DB33F.js',
+        headers: { 'accept-encoding': 'gzip' },
+      });
+
+      expect(response.headers['content-encoding']).toBe('gzip');
+    });
+
+    /**
+     * The server-rendered site is the reason this plugin is here at all, and it is built per
+     * request rather than read off disk — a different path through the plugin than a static file.
+     */
+    it('compresses the server-rendered site', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/',
+        headers: { 'accept-encoding': 'br' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-encoding']).toBe('br');
+      /*
+       * `Vary` is the half that is easy to forget and expensive to get wrong: without it a shared
+       * cache can hand a brotli body to a client that never asked for one.
+       */
+      expect(response.headers['vary']).toBe('accept-encoding');
+    });
+
+    /**
+     * A client that asks for no encoding gets none, and gets a readable body.
+     *
+     * Worth asserting rather than assuming: a plugin that compressed regardless would break every
+     * `curl` without flags, and — more to the point — every one of the assertions above this
+     * `describe` block, which read `response.body` as text.
+     */
+    it('leaves a response alone when nothing is offered', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/assets/index-D34DB33F.js',
+        headers: { 'accept-encoding': 'identity' },
+      });
+
+      expect(response.headers['content-encoding']).toBeUndefined();
+      expect(response.body).toContain('mark-399');
     });
   });
 });
