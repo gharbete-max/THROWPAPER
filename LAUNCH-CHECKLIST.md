@@ -3,7 +3,7 @@
 Everything that is temporary, unconfigured, unconfirmed or deliberately deferred, in one place.
 Maintained by hand; when an item is done, delete the row rather than ticking it, so the file only
 ever lists what is still open. Last reviewed **2026-09-15** at the end of the Loppa restyle
-(`phase-3-paloppa`, PR #67).
+(`phase-3-loppa`, PR #67).
 
 Three columns: **what**, **where it lives**, **who decides**. "You" is the product owner; "code"
 means an engineering task with no decision attached; "counsel" is a lawyer.
