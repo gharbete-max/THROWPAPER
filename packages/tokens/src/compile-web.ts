@@ -29,6 +29,16 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   }
   // The accent where it has to be read rather than seen. See `accentInk`.
   vars['--tp-colour-accent-ink'] = accentInk(tokens.colour);
+  /*
+   * The same, for the page turned over: the accent as a label on an ink ground. The same walk with
+   * the poles swapped, rather than a fixed mix in the stylesheet — a 60% mix read at 3.81:1 on the
+   * `minimal` preset, and no fixed fraction holds for every palette a customer can save.
+   */
+  vars['--tp-colour-accent-on-ink'] = accentInk({
+    ...tokens.colour,
+    text: tokens.colour.background,
+    background: tokens.colour.text,
+  });
   // The brand where it reads as a heading, the ink where it does not. See `headingInk`.
   vars['--tp-colour-heading'] = headingInk(tokens.colour);
   vars['--tp-spacing-unit'] = tokens.spacingUnit;

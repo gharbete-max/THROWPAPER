@@ -4231,12 +4231,12 @@ body:has(.app) > #root {
 }
 
 /*
- * The accent, pulled toward the band's own text so it reads there. `accent-ink` is reckoned
- * against the page and is wrong on the inverted ground; the raw accent is a pastel and fails on a
- * pale band in dark mode. Mixing toward whatever the band's text is tracks both schemes.
+ * The accent as a label on the inverted ground. `accent-ink` is reckoned against the page and is
+ * wrong here; this is the same derivation with the poles swapped, so it holds for every palette
+ * in both schemes rather than for the one that was measured.
  */
 .site__band .site__eyebrow {
-  color: color-mix(in srgb, var(--tp-colour-accent) 60%, var(--tp-colour-background));
+  color: var(--tp-colour-accent-on-ink);
 }
 
 .quote {

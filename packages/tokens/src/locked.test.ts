@@ -89,6 +89,30 @@ describe('the locked list, against a hostile theme', () => {
   });
 
   /**
+   * The brand where it becomes words.
+   *
+   * Two tokens turn a chosen colour into text — `accent-ink` for a label, `heading` for an `h1` —
+   * and both exist because the raw colour was painted as text and measured under 2.2:1. Whatever
+   * the customer chose, the derived value has to read on the page it is read on.
+   */
+  it.each(THEMES)('keeps derived text readable: %s', (_name, tokens) => {
+    for (const theme of [tokens, toDark(tokens)]) {
+      const vars = toCssVariables(theme);
+      for (const name of ['--tp-colour-accent-ink', '--tp-colour-heading']) {
+        expect(
+          contrastRatio(vars[name]!, theme.colour.background) ?? 0,
+          `${name} on the page`,
+        ).toBeGreaterThanOrEqual(TEXT_CONTRAST);
+      }
+      // And on the page turned over, which is what the site's dark band is.
+      expect(
+        contrastRatio(vars['--tp-colour-accent-on-ink']!, theme.colour.text) ?? 0,
+        'accent on ink',
+      ).toBeGreaterThanOrEqual(TEXT_CONTRAST);
+    }
+  });
+
+  /**
    * The sizes, which are the ones a customer breaks by picking a number that looks tidy.
    *
    * Clamped on the way in rather than rejected, so an organisation that sets a 30px control keeps
