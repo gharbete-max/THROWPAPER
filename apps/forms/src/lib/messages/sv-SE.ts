@@ -119,6 +119,8 @@ export const svSE: Record<MessageKey, string> = {
   'inbox.empty': 'Inga svar ännu.',
   'inbox.partial': 'Påbörjat',
   'inbox.complete': 'Inskickat',
+  'inbox.search': 'Sök',
+  'inbox.count': 'plural:one {count} svar | other {count} svar',
 
   'users.title': 'Användare',
   'users.intro': 'Alla i organisationen. Öppna någon för att se deras formulär och papperskorg.',

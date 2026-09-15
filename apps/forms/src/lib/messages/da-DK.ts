@@ -119,6 +119,8 @@ export const daDK: Record<MessageKey, string> = {
   'inbox.empty': 'Ingen svar endnu.',
   'inbox.partial': 'I gang',
   'inbox.complete': 'Indsendt',
+  'inbox.search': 'Søg',
+  'inbox.count': 'plural:one {count} svar | other {count} svar',
 
   'users.title': 'Brugere',
   'users.intro': 'Alle i organisationen. Åbn en for at se deres formularer og papirkurv.',

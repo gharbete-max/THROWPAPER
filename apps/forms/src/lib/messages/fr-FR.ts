@@ -120,6 +120,8 @@ export const frFR: Record<MessageKey, string> = {
   'inbox.empty': 'Aucune réponse pour le moment.',
   'inbox.partial': 'En cours',
   'inbox.complete': 'Envoyée',
+  'inbox.search': 'Rechercher',
+  'inbox.count': 'plural:one {count} réponse | other {count} réponses',
 
   'users.title': 'Utilisateurs',
   'users.intro':

@@ -215,6 +215,14 @@ export const InboxEntry = z.object({
   formTitle: LocalisedText,
   formSlug: FormSlug,
   reference: z.string(),
+  /**
+   * Who answered, as best the answers say — whatever the form called its name field, or empty.
+   *
+   * The question this screen is opened to answer is "did Anna register?", and a list of fourteen
+   * identical form titles with a reference code in grey cannot answer it. Same heuristic the
+   * admission card and the check-in screen already use.
+   */
+  who: z.string(),
   status: z.enum(['partial', 'complete']),
   locale: z.string(),
   submittedAt: IsoDateTime.nullable(),

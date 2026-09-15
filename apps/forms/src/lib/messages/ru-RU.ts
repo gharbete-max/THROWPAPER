@@ -128,6 +128,8 @@ export const ruRU: Record<MessageKey, string> = {
   'inbox.empty': 'Ответов пока нет.',
   'inbox.partial': 'В процессе',
   'inbox.complete': 'Отправлено',
+  'inbox.search': 'Поиск',
+  'inbox.count': 'plural:one {count} ответ | few {count} ответа | many {count} ответов',
 
   'users.title': 'Пользователи',
   'users.intro': 'Все в организации. Откройте кого-нибудь, чтобы увидеть его формы и корзину.',

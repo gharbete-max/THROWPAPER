@@ -120,6 +120,8 @@ export const fiFI: Record<MessageKey, string> = {
   'inbox.empty': 'Ei vielä vastauksia.',
   'inbox.partial': 'Kesken',
   'inbox.complete': 'Lähetetty',
+  'inbox.search': 'Hae',
+  'inbox.count': 'plural:one {count} vastaus | other {count} vastausta',
 
   'users.title': 'Käyttäjät',
   'users.intro': 'Kaikki organisaatiossa. Avaa joku nähdäksesi hänen lomakkeensa ja roskakorinsa.',

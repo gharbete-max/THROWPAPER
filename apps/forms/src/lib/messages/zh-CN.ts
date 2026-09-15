@@ -123,6 +123,8 @@ export const zhCN: Record<MessageKey, string> = {
   'inbox.empty': '暂无回复。',
   'inbox.partial': '进行中',
   'inbox.complete': '已提交',
+  'inbox.search': '搜索',
+  'inbox.count': 'plural:other {count} 条回复',
 
   'users.title': '用户',
   'users.intro': '组织中的所有人。打开某人可以查看其表单和回收站。',

@@ -177,3 +177,20 @@ describe('a form nobody owns', () => {
     }
   });
 });
+
+/**
+ * The inbox names the person, not only the form.
+ *
+ * Fourteen rows all titled "Spring meeting registration" with a reference code in grey cannot
+ * answer "did Anna register?" — the question the screen is opened for. The name comes from the
+ * answers by the same heuristic the admission card and the door already use.
+ */
+describe('the inbox', () => {
+  it('says who answered', async () => {
+    const response = await as(adminToken, 'GET', '/v1/submissions');
+    expect(response.statusCode).toBe(200);
+    const [entry] = response.json().submissions;
+    expect(entry.who).toBe('Anna Lindqvist');
+    expect(entry.reference).toBe('ABC12345');
+  });
+});

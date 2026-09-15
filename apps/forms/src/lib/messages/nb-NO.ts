@@ -120,6 +120,8 @@ export const nbNO: Record<MessageKey, string> = {
   'inbox.empty': 'Ingen svar ennå.',
   'inbox.partial': 'Påbegynt',
   'inbox.complete': 'Sendt inn',
+  'inbox.search': 'Søk',
+  'inbox.count': 'plural:one {count} svar | other {count} svar',
 
   'users.title': 'Brukere',
   'users.intro': 'Alle i organisasjonen. Åpne en for å se skjemaene og papirkurven deres.',

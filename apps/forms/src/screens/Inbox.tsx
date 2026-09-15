@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { pickText } from '@tp/i18n';
 import type { InboxEntry } from '@tp/shared/forms';
@@ -30,6 +30,7 @@ export function Inbox() {
   const t = useT();
   const { locale, locales } = useSession();
   const [entries, setEntries] = useState<InboxEntry[] | null>(null);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     client
@@ -37,6 +38,23 @@ export function Inbox() {
       .then((result) => setEntries(result.submissions))
       .catch(() => setEntries([]));
   }, []);
+
+  /**
+   * One box, matched against the three things somebody might type: a name, a reference read off
+   * a printed card, or a form's title. Client-side, because the inbox is already capped at the
+   * latest fifty and a round trip per keystroke would answer slower than the eye.
+   */
+  const shown = useMemo(() => {
+    if (!entries) return null;
+    const needle = query.trim().toLocaleLowerCase(locale);
+    if (!needle) return entries;
+    return entries.filter((entry) =>
+      [entry.who, entry.reference, pickText(locales, entry.formTitle, locale).value]
+        .join(' ')
+        .toLocaleLowerCase(locale)
+        .includes(needle),
+    );
+  }, [entries, query, locale, locales]);
 
   return (
     <section className="stack">
@@ -48,43 +66,70 @@ export function Inbox() {
       {entries === null && <Loading />}
       {entries?.length === 0 && <p className="muted empty">{t('inbox.empty')}</p>}
 
-      {entries && entries.length > 0 && (
-        <ul className="inbox">
-          {entries.map((entry) => (
-            <Reveal key={entry.id}>
-              <li className="inbox__row">
-                <Link className="inbox__link" to={`/forms/${entry.formId}/submissions`}>
-                  <span className="inbox__form">
-                    {pickText(locales, entry.formTitle, locale).value || entry.formSlug}
-                  </span>
-                  <span className="inbox__reference small muted">{entry.reference}</span>
-                  <span className="inbox__status">
-                    {/* Outlined, never filled: a filled badge takes the surface colour and the
-                        inbox rows are that colour, so it disappeared into the row it sat on. */}
-                    <span
-                      className={
-                        entry.status === 'complete'
-                          ? 'badge badge--quiet'
-                          : 'badge badge--quiet status-warning'
-                      }
-                    >
-                      {t(entry.status === 'complete' ? 'inbox.complete' : 'inbox.partial')}
+      {entries && entries.length > 0 && shown && (
+        <>
+          <div className="row row--between">
+            <label className="field field--search">
+              <span className="small muted">
+                <Icon name="search" className="icon--lead" />
+                {t('inbox.search')}
+              </span>
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </label>
+            {/* A count, so "did everyone register?" has a number on the same screen. */}
+            <p className="small muted" aria-live="polite">
+              {t('inbox.count', { count: shown.length })}
+            </p>
+          </div>
+
+          <ul className="inbox">
+            {shown.map((entry) => (
+              <Reveal key={entry.id}>
+                <li className="inbox__row">
+                  <Link className="inbox__link" to={`/forms/${entry.formId}/submissions`}>
+                    {/*
+                    The person first, the form second. Fourteen rows all bold "Spring meeting
+                    registration" with the one thing that differed in grey answered nothing; the
+                    name is what somebody scans for, and the reference stands in when a form
+                    collected none.
+                  */}
+                    <span className="inbox__who">{entry.who || entry.reference}</span>
+                    <span className="inbox__form small muted">
+                      {pickText(locales, entry.formTitle, locale).value || entry.formSlug}
+                      {entry.who && <span className="inbox__reference"> · {entry.reference}</span>}
                     </span>
-                  </span>
-                  {/**
-                   * The submission date, not the creation date, where there is one: a draft
-                   * started in March and finished in May arrived in May, and sorting a list of
-                   * arrivals by when somebody first opened the page reads as wrong.
-                   */}
-                  <span className="inbox__when small muted">
-                    <Icon name="clock" className="icon--lead" />
-                    {new Date(entry.submittedAt ?? entry.createdAt).toLocaleString(locale)}
-                  </span>
-                </Link>
-              </li>
-            </Reveal>
-          ))}
-        </ul>
+                    <span className="inbox__status">
+                      {/* Outlined, never filled: a filled badge takes the surface colour and the
+                        inbox rows are that colour, so it disappeared into the row it sat on. */}
+                      <span
+                        className={
+                          entry.status === 'complete'
+                            ? 'badge badge--quiet'
+                            : 'badge badge--quiet status-warning'
+                        }
+                      >
+                        {t(entry.status === 'complete' ? 'inbox.complete' : 'inbox.partial')}
+                      </span>
+                    </span>
+                    {/**
+                     * The submission date, not the creation date, where there is one: a draft
+                     * started in March and finished in May arrived in May, and sorting a list of
+                     * arrivals by when somebody first opened the page reads as wrong.
+                     */}
+                    <span className="inbox__when small muted">
+                      <Icon name="clock" className="icon--lead" />
+                      {new Date(entry.submittedAt ?? entry.createdAt).toLocaleString(locale)}
+                    </span>
+                  </Link>
+                </li>
+              </Reveal>
+            ))}
+          </ul>
+        </>
       )}
     </section>
   );

@@ -1990,8 +1990,14 @@ input[type='file']:disabled::file-selector-button {
   background: color-mix(in srgb, var(--tp-colour-primary) 6%, transparent);
 }
 
-.inbox__form {
+.inbox__who {
   font-weight: var(--tp-type-weight-bold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inbox__form {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -125,6 +125,8 @@ export const enGB = {
   'inbox.empty': 'No responses yet.',
   'inbox.partial': 'In progress',
   'inbox.complete': 'Submitted',
+  'inbox.search': 'Search',
+  'inbox.count': 'plural:one {count} response | other {count} responses',
 
   'users.title': 'Users',
   'users.intro': 'Everybody in the organisation. Open one to see their forms and bin.',
