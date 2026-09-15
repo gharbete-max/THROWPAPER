@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
  * wording. Our folding paper appearing on it is our design arriving somewhere nobody invited it —
  * and worse, it would be the one part of that page the organisation cannot switch off.
  *
- * So the paper language is scoped to `.system`, which goes on the surfaces that are Formwork's
+ * So the paper language is scoped to `.system`, which goes on the surfaces that are Paloppa's
  * own: the app shell, the marketing site, and the two sign-in screens. `PublicForm` renders
  * outside the shell entirely and never carries it.
  *
@@ -79,13 +79,25 @@ describe('the paper language', () => {
   });
 
   /**
-   * The mark's own hover is scoped too.
+   * The mark has no motion of its own to leak.
    *
-   * It is drawn on the public form's header in the organisation's colours, where it is their
-   * brand mark rather than an animation of ours.
+   * This used to assert that the mark's *hover* named the scope, back when the mark was eight CSS
+   * triangles that folded. It is a rendered image now: where it moves, it is the animation file
+   * moving, and there is no rule to scope.
+   *
+   * The property is still worth holding, and holding it this way is stronger than the old one. The
+   * mark is the single element allowed outside the `.system` region — it travels, because it may
+   * one day be drawn on a form — so a hover or a transition added to it is the one piece of house
+   * style that would reach a customer's page without tripping the check above.
    */
-  it('scopes the mark hover to .system', () => {
-    const hover = CSS.slice(CSS.indexOf('.wordmark:hover'), CSS.indexOf('mark--intro'));
-    expect(hover).toContain('.system');
+  it('gives the mark no motion of its own to leak', () => {
+    const rules = [...CSS.matchAll(/^\.mark\b[^{]*\{[^}]*\}/gm)].map((match) => match[0]);
+    expect(rules.length, 'the mark has no rules at all — has it been renamed?').toBeGreaterThan(0);
+
+    for (const rule of rules) {
+      expect(rule, 'the mark carries motion that a published form would inherit').not.toMatch(
+        /animation|transition/,
+      );
+    }
   });
 });

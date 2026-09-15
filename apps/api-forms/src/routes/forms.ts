@@ -1,3 +1,4 @@
+import { attendeeName } from '../documents/admission.js';
 import { z } from 'zod';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { api, forms as formSchemas } from '@tp/shared';
@@ -878,6 +879,7 @@ export function registerFormRoutes(
               formTitle: form.title,
               formSlug: form.slug,
               reference: row.reference,
+              who: attendeeName(row.data),
               status: row.status,
               locale: row.locale,
               submittedAt: row.submittedAt?.toISOString() ?? null,

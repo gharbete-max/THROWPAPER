@@ -10,7 +10,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const ruRU: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Работает на Paloppa',
   'app.signOut': 'Выйти',
   'app.language': 'Язык',
   'app.loading': 'Загрузка…',
@@ -58,6 +59,7 @@ export const ruRU: Record<MessageKey, string> = {
   'event.cancel': 'Отмена',
   'event.createTitle': 'Новое мероприятие',
   'event.editTitle': 'Изменить мероприятие',
+  'event.notFound': 'По этому адресу нет мероприятия.',
 
   'nav.events': 'Мероприятия',
   'nav.forms': 'Формы',
@@ -125,8 +127,11 @@ export const ruRU: Record<MessageKey, string> = {
   'inbox.title': 'Ответы',
   'inbox.intro': 'Последние ответы по всем формам, которые вам доступны.',
   'inbox.empty': 'Ответов пока нет.',
+  'inbox.loadFailed': 'Не удалось загрузить ответы.',
   'inbox.partial': 'В процессе',
   'inbox.complete': 'Отправлено',
+  'inbox.search': 'Поиск',
+  'inbox.count': 'plural:one {count} ответ | few {count} ответа | many {count} ответов',
 
   'users.title': 'Пользователи',
   'users.intro': 'Все в организации. Откройте кого-нибудь, чтобы увидеть его формы и корзину.',
@@ -484,6 +489,11 @@ export const ruRU: Record<MessageKey, string> = {
   'brand.save': 'Сохранить',
   'brand.saving': 'Сохранение…',
   'brand.reset': 'Вернуть значения по умолчанию',
+  'brand.clientMode': 'Режим клиента',
+  'brand.clientModeOn': 'Использовать собственный логотип и название',
+  'brand.clientModeHint':
+    'Заменяет знак Paloppa в приложении и на экране входа. Ваши опубликованные формы уже используют ваш стиль.',
+  'brand.wordmark': 'Название в углу',
   'brand.colours': 'Цвета',
   'brand.logo': 'Логотип',
 
@@ -567,7 +577,9 @@ export const ruRU: Record<MessageKey, string> = {
   'demo.banner': 'Демо-режим — ничего не сохраняется и письма никогда не отправляются.',
   'demo.reset': 'Сбросить демо-данные',
   'demo.signInAs': 'Войти как {role}',
-  'demo.signInHint': 'В демо-режиме почту прочитать нельзя, поэтому войдите напрямую:',
+  'demo.signInFailed': 'Не удалось войти. Запущен ли API?',
+  'demo.title': 'Открыть демо',
+  'demo.signInHint': 'Выберите роль. Здесь всё вымышлено, и ничего не сохраняется.',
 
   'checkin.title': 'Регистрация',
   'checkin.counts': 'зарегистрировано {checkedIn} из {registered}',
@@ -578,12 +590,20 @@ export const ruRU: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Выключить камеру',
   'checkin.cameraUnavailable': 'Камера недоступна — введите номер вручную.',
   'checkin.arrivedAt': 'Пришёл в {time}',
+  'checkin.leave': 'Покинуть вход',
+  'checkin.ofRegistered': 'из {registered}',
+  'checkin.idle': 'Отсканируйте карту или введите номер',
+  'checkin.recent': 'Последние прибывшие',
+  'checkin.undo': 'Отменить',
+  'checkin.undoConfirm': 'Отменить регистрацию прихода для {name}?',
+  'checkin.offline': 'Нет соединения — сканы нельзя проверить, пока связь не восстановится.',
   'checkin.outcome.admitted': 'Добро пожаловать',
   'checkin.outcome.already': 'Уже отмечен',
   'checkin.outcome.revoked': 'Регистрация отозвана',
   'checkin.outcome.wrong-event': 'Не то мероприятие',
   'checkin.outcome.not-found': 'Не найдено',
   'checkin.outcome.bad-signature': 'Недействительный билет',
+  'checkin.outcome.undone': 'Регистрация прихода отменена',
 
   'attendance.title': 'Посещаемость',
   'attendance.loadFailed': 'Не удалось загрузить список участников.',
@@ -634,6 +654,10 @@ export const ruRU: Record<MessageKey, string> = {
     'Ваши ответы на месте, но отправить их не удалось. Проверьте соединение и попробуйте ещё раз.',
   'public.rejected.error': 'У нас произошла ошибка. Ваши ответы на месте — попробуйте ещё раз.',
   'public.notFound': 'Форма не найдена.',
+  'public.retry': 'Повторить',
+  'public.loadFailed': 'Не удалось загрузить форму.',
+  'public.notFoundHint':
+    'Проверьте полученную ссылку или попросите у организатора новую. Возможно, форма была удалена.',
   'public.yes': 'Да',
   'public.no': 'Нет',
   'public.choose': 'Выберите…',

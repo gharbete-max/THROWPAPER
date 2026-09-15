@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const daDK: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Drevet af Paloppa',
   'app.signOut': 'Log ud',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',
@@ -50,6 +51,7 @@ export const daDK: Record<MessageKey, string> = {
   'event.cancel': 'Annullér',
   'event.createTitle': 'Nyt arrangement',
   'event.editTitle': 'Redigér arrangement',
+  'event.notFound': 'Der er ingen begivenhed på den adresse.',
 
   'nav.events': 'Arrangementer',
   'nav.forms': 'Formularer',
@@ -116,8 +118,11 @@ export const daDK: Record<MessageKey, string> = {
   'inbox.title': 'Svar',
   'inbox.intro': 'De seneste svar fra alle de formularer, du har adgang til.',
   'inbox.empty': 'Ingen svar endnu.',
+  'inbox.loadFailed': 'Svarene kunne ikke indlæses.',
   'inbox.partial': 'I gang',
   'inbox.complete': 'Indsendt',
+  'inbox.search': 'Søg',
+  'inbox.count': 'plural:one {count} svar | other {count} svar',
 
   'users.title': 'Brugere',
   'users.intro': 'Alle i organisationen. Åbn en for at se deres formularer og papirkurv.',
@@ -470,6 +475,11 @@ export const daDK: Record<MessageKey, string> = {
   'brand.save': 'Gem',
   'brand.saving': 'Gemmer…',
   'brand.reset': 'Nulstil til standard',
+  'brand.clientMode': 'Kundetilstand',
+  'brand.clientModeOn': 'Brug vores eget logo og navn',
+  'brand.clientModeHint':
+    'Erstatter Paloppas mærke i appen og på login-skærmen. Jeres offentliggjorte formularer bruger allerede jeres design.',
+  'brand.wordmark': 'Navn i hjørnet',
   'brand.colours': 'Farver',
   'brand.logo': 'Logo',
 
@@ -553,7 +563,9 @@ export const daDK: Record<MessageKey, string> = {
   'demo.banner': 'Demotilstand — intet gemmes, og der sendes aldrig e-mail.',
   'demo.reset': 'Nulstil demodata',
   'demo.signInAs': 'Log ind som {role}',
-  'demo.signInHint': 'Ingen e-mail kan læses i demotilstand, så log ind direkte:',
+  'demo.signInFailed': "Kunne ikke logge ind. Kører API'et?",
+  'demo.title': 'Åbn demoen',
+  'demo.signInHint': 'Vælg hvem du vil være. Intet her er ægte, og intet gemmes.',
 
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} af {registered} checket ind',
@@ -564,12 +576,20 @@ export const daDK: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Stop kamera',
   'checkin.cameraUnavailable': 'Kameraet er ikke tilgængeligt — skriv referencen i stedet.',
   'checkin.arrivedAt': 'Ankom {time}',
+  'checkin.leave': 'Forlad indgangen',
+  'checkin.ofRegistered': 'af {registered}',
+  'checkin.idle': 'Scan et kort, eller skriv referencen',
+  'checkin.recent': 'Seneste ankomster',
+  'checkin.undo': 'Fortryd',
+  'checkin.undoConfirm': 'Fortryd indtjekningen for {name}?',
+  'checkin.offline': 'Offline — scanninger kan ikke tjekkes, før forbindelsen er tilbage.',
   'checkin.outcome.admitted': 'Velkommen',
   'checkin.outcome.already': 'Allerede checket ind',
   'checkin.outcome.revoked': 'Tilmelding trukket tilbage',
   'checkin.outcome.wrong-event': 'Forkert arrangement',
   'checkin.outcome.not-found': 'Ikke fundet',
   'checkin.outcome.bad-signature': 'Ugyldigt kort',
+  'checkin.outcome.undone': 'Indtjekning fortrudt',
 
   'attendance.title': 'Fremmøde',
   'attendance.loadFailed': 'Deltagerlisten kunne ikke hentes.',
@@ -620,6 +640,10 @@ export const daDK: Record<MessageKey, string> = {
     'Dine svar er her stadig, men de kunne ikke sendes. Tjek din forbindelse, og prøv igen.',
   'public.rejected.error': 'Noget gik galt hos os. Dine svar er her stadig — prøv igen.',
   'public.notFound': 'Formularen blev ikke fundet.',
+  'public.retry': 'Prøv igen',
+  'public.loadFailed': 'Formularen kunne ikke indlæses.',
+  'public.notFoundHint':
+    'Tjek det link, du fik, eller bed arrangøren om et nyt. Det kan være trukket tilbage.',
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Vælg…',

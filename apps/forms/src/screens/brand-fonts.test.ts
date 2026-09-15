@@ -37,4 +37,18 @@ describe('the fonts the brand editor offers', () => {
     });
     expect(result.success).toBe(false);
   });
+
+  /**
+   * The same string is inlined verbatim inside a `<style>` block on a white-labelled page, where a
+   * comment opener swallows every declaration after it — the palette stops at the font.
+   */
+  it('refuses a stack that would open a CSS comment', () => {
+    for (const stack of ['Inter /* serif', 'Inter \\', 'Inter */']) {
+      const result = brand.BrandKit.safeParse({
+        ...defaultTokens,
+        typography: { ...defaultTokens.typography, bodyFont: stack },
+      });
+      expect(result.success, stack).toBe(false);
+    }
+  });
 });

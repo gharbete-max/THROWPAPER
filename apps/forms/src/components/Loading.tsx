@@ -29,7 +29,8 @@ export function Loading({ label }: { label?: string }) {
 
   return (
     <p className={reduced ? 'loading loading--still' : 'loading'} role="status">
-      <Mark mode={reduced ? 'rest' : 'intro'} className="loading__mark" />
+      {/* Still under reduced motion: a spinner that does not spin is better than nausea. */}
+      <Mark motion={!reduced} className="loading__mark" />
       <span className="muted">{text}</span>
     </p>
   );

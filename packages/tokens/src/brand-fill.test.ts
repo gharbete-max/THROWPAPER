@@ -22,9 +22,25 @@ const PALE = {
 };
 
 describe('the brand fill', () => {
+  /**
+   * The example had to move when the palette did, and that is the finding rather than the repair.
+   *
+   * This read `brandFill(defaultTokens.colour)` and asserted nothing moved, on the grounds that the
+   * shipped midnight was far from parchment. The shipped primary is now seafoam, which sits 2.12:1
+   * from the page and *is* rescued — so the old assertion was testing the palette, not the
+   * function. Naming a dark colour explicitly tests what the function promises whatever ships.
+   */
   it('leaves a colour alone when it already stands off the page', () => {
-    // The shipped midnight is far from parchment, so nothing should move.
-    expect(brandFill(defaultTokens.colour)).toBe(defaultTokens.colour.primary);
+    const dark = { ...defaultTokens.colour, primary: '#1b2a45' };
+    expect(brandFill(dark)).toBe('#1b2a45');
+  });
+
+  /** And the shipped default is now on the other side of that line, which is worth pinning down. */
+  it('rescues the shipped primary, which is a mid-tone', () => {
+    expect(brandFill(defaultTokens.colour)).not.toBe(defaultTokens.colour.primary);
+    expect(
+      contrastRatio(brandFill(defaultTokens.colour), defaultTokens.colour.background) ?? 0,
+    ).toBeGreaterThanOrEqual(BOUNDARY_CONTRAST);
   });
 
   it('rescues a pale colour that a logo could plausibly produce', () => {
@@ -51,10 +67,27 @@ describe('the brand fill', () => {
     expect(green!).toBeGreaterThan(blue!);
   });
 
+  /**
+   * It reaches the button through the border rather than the fill.
+   *
+   * This asserted the *fill* had cleared the boundary bar, which was how it worked and was wrong
+   * for the mid-tone case: walking a `#6fb8a6` fill out to `#499482` bought 3.30:1 against the page
+   * and cost the label, which fell to 3.28 against the ink and 3.30 against the page. The button
+   * became visible and unreadable in the same move.
+   *
+   * The two requirements are separable, so they are separated. The fill keeps the colour somebody
+   * chose whenever a label can be read on it, and the border — which the solid tier paints at the
+   * same width as every other button — carries the edge. `brandFill` is still what produces it, so
+   * this test still covers the same function; it just checks the part that now wears it.
+   */
   it('is used by the button, which is where it matters', () => {
     const surface = buttonSurface(PALE);
-    expect(contrastRatio(surface.background, PALE.colour.background) ?? 0).toBeGreaterThanOrEqual(
+    expect(contrastRatio(surface.border, PALE.colour.background) ?? 0).toBeGreaterThanOrEqual(
       BOUNDARY_CONTRAST,
+    );
+    // And the fill it protects still carries a readable label.
+    expect(contrastRatio(surface.text, surface.background) ?? 0).toBeGreaterThanOrEqual(
+      TEXT_CONTRAST,
     );
   });
 

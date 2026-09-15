@@ -163,6 +163,43 @@ describe('admitting', () => {
   });
 });
 
+/**
+ * A mis-scan is undone at the door, by the person who made it, seconds later.
+ *
+ * Undoing has to leave the record as if the arrival never happened: not counted, not blocking
+ * the next scan of the same card. The audit row is what remembers it.
+ */
+describe('undoing', () => {
+  it('takes the arrival back, and the card scans again', async () => {
+    const { eventId } = await setupEvent();
+    const reference = harness.state.submissions[0]!.reference;
+    const admitted = await scan(eventId, reference);
+    const submissionId = admitted.json().attendee.submissionId;
+
+    const undo = await harness.app.inject({
+      method: 'DELETE',
+      url: `/v1/events/${eventId}/check-ins/${submissionId}`,
+      headers: bearer(operatorToken),
+    });
+    expect(undo.statusCode).toBe(204);
+    expect(harness.state.checkIns).toHaveLength(0);
+    expect(harness.state.audit.some((entry) => entry.action === 'checkin.undone')).toBe(true);
+
+    expect((await scan(eventId, reference)).json().outcome).toBe('admitted');
+  });
+
+  it('is idempotent — nothing to undo is still the state that was asked for', async () => {
+    const { eventId } = await setupEvent();
+    const response = await harness.app.inject({
+      method: 'DELETE',
+      url: `/v1/events/${eventId}/check-ins/${harness.state.submissions[0]!.id}`,
+      headers: bearer(operatorToken),
+    });
+    expect(response.statusCode).toBe(204);
+    expect(harness.state.audit.some((entry) => entry.action === 'checkin.undone')).toBe(false);
+  });
+});
+
 describe('the second scan', () => {
   it('reports already-arrived with the original time, and is not an error', async () => {
     const { eventId } = await setupEvent();

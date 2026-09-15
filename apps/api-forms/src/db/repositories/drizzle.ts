@@ -742,6 +742,19 @@ export function createDrizzleRepositories(db: Db): Repositories {
         if (!existing) throw new Error('check-in neither inserted nor found');
         return { created: false, checkIn: existing };
       },
+
+      withdraw: async (organisationId, submissionId) => {
+        const gone = await db
+          .delete(checkIns)
+          .where(
+            and(
+              eq(checkIns.organisationId, organisationId),
+              eq(checkIns.submissionId, submissionId),
+            ),
+          )
+          .returning({ id: checkIns.id });
+        return gone.length > 0;
+      },
     },
 
     jobs: {

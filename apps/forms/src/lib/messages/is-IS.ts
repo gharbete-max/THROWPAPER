@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const isIS: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Knúið af Paloppa',
   'app.signOut': 'Skrá út',
   'app.language': 'Tungumál',
   'app.loading': 'Hleð…',
@@ -51,6 +52,7 @@ export const isIS: Record<MessageKey, string> = {
   'event.cancel': 'Hætta við',
   'event.createTitle': 'Nýr viðburður',
   'event.editTitle': 'Breyta viðburði',
+  'event.notFound': 'Það er enginn viðburður á þessu vistfangi.',
 
   'nav.events': 'Viðburðir',
   'nav.forms': 'Eyðublöð',
@@ -117,8 +119,11 @@ export const isIS: Record<MessageKey, string> = {
   'inbox.title': 'Svör',
   'inbox.intro': 'Nýjustu svörin úr öllum eyðublöðum sem þú hefur aðgang að.',
   'inbox.empty': 'Engin svör enn.',
+  'inbox.loadFailed': 'Ekki tókst að hlaða svörunum.',
   'inbox.partial': 'Í vinnslu',
   'inbox.complete': 'Sent',
+  'inbox.search': 'Leita',
+  'inbox.count': 'plural:one {count} svar | other {count} svör',
 
   'users.title': 'Notendur',
   'users.intro': 'Allir í stofnuninni. Opnaðu einn til að sjá eyðublöðin og ruslafötuna.',
@@ -473,6 +478,11 @@ export const isIS: Record<MessageKey, string> = {
   'brand.save': 'Vista',
   'brand.saving': 'Vista…',
   'brand.reset': 'Endurstilla á sjálfgefið',
+  'brand.clientMode': 'Viðskiptavinahamur',
+  'brand.clientModeOn': 'Nota eigið merki og nafn',
+  'brand.clientModeHint':
+    'Kemur í stað Paloppa-merkisins í forritinu og á innskráningarskjánum. Birt eyðublöð ykkar nota nú þegar ykkar eigið útlit.',
+  'brand.wordmark': 'Nafn í horninu',
   'brand.colours': 'Litir',
   'brand.logo': 'Merki',
 
@@ -556,7 +566,9 @@ export const isIS: Record<MessageKey, string> = {
   'demo.banner': 'Sýnihamur — ekkert er vistað og enginn tölvupóstur er nokkru sinni sendur.',
   'demo.reset': 'Endurstilla sýnigögn',
   'demo.signInAs': 'Skrá inn sem {role}',
-  'demo.signInHint': 'Ekki er hægt að lesa tölvupóst í sýniham, svo skráðu þig inn beint:',
+  'demo.signInFailed': 'Ekki tókst að skrá inn. Er API-ið í gangi?',
+  'demo.title': 'Opna sýnishornið',
+  'demo.signInHint': 'Veldu hlutverk. Ekkert hér er raunverulegt og ekkert er vistað.',
 
   'checkin.title': 'Innritun',
   'checkin.counts': '{checkedIn} af {registered} innritaðir',
@@ -567,12 +579,20 @@ export const isIS: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Stöðva myndavél',
   'checkin.cameraUnavailable': 'Myndavélin er ekki tiltæk — sláðu inn tilvísunina í staðinn.',
   'checkin.arrivedAt': 'Kom {time}',
+  'checkin.leave': 'Fara frá innganginum',
+  'checkin.ofRegistered': 'af {registered}',
+  'checkin.idle': 'Skannaðu kort eða sláðu inn tilvísun',
+  'checkin.recent': 'Síðast komin',
+  'checkin.undo': 'Afturkalla',
+  'checkin.undoConfirm': 'Afturkalla innritun fyrir {name}?',
+  'checkin.offline': 'Ótengt — ekki er hægt að athuga skannanir fyrr en tenging er komin aftur.',
   'checkin.outcome.admitted': 'Velkomin',
   'checkin.outcome.already': 'Þegar innritaður',
   'checkin.outcome.revoked': 'Skráning afturkölluð',
   'checkin.outcome.wrong-event': 'Rangur viðburður',
   'checkin.outcome.not-found': 'Fannst ekki',
   'checkin.outcome.bad-signature': 'Ógilt kort',
+  'checkin.outcome.undone': 'Innritun afturkölluð',
 
   'attendance.title': 'Mæting',
   'attendance.loadFailed': 'Ekki tókst að hlaða mætingarlistann.',
@@ -624,6 +644,10 @@ export const isIS: Record<MessageKey, string> = {
   'public.rejected.error':
     'Eitthvað fór úrskeiðis hjá okkur. Svörin þín eru enn hér — reyndu aftur.',
   'public.notFound': 'Eyðublaðið fannst ekki.',
+  'public.retry': 'Reyna aftur',
+  'public.loadFailed': 'Ekki tókst að hlaða eyðublaðinu.',
+  'public.notFoundHint':
+    'Athugaðu hlekkinn sem þú fékkst eða biddu skipuleggjanda um nýjan. Hann gæti hafa verið tekinn niður.',
   'public.yes': 'Já',
   'public.no': 'Nei',
   'public.choose': 'Veldu…',

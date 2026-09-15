@@ -4,6 +4,7 @@ import { resolveLocale } from '@tp/i18n';
 import { client } from './api.js';
 import { useTranslator } from './i18n.js';
 import { useSession } from './session.js';
+import { syncDocumentLanguage } from './theme.js';
 
 /**
  * Whether this server is a demo, and the banner that says so.
@@ -80,15 +81,41 @@ export function useDemo(): DemoValue {
 }
 
 /**
- * Tells the banner which language the screen is being read in, for as long as it is mounted.
+ * Tells the banner **and the document** which language the screen is being read in.
  *
  * Only screens that do not follow the session's locale need this; everything else can ignore it.
+ *
+ * ## Why `<html lang>` belongs here and not in the screen
+ *
+ * `SessionProvider` sets the document language from the *interface* locale, which is right for
+ * every screen that follows it and wrong for the one that does not. A public form carries its own
+ * locale by design — the respondent's language has nothing to do with whoever built the form — so
+ * the two disagree, and nothing was reconciling them: an English form was served with
+ * `lang="ru-RU"` because a previous session on that browser had left Russian in `localStorage`.
+ * A screen reader then pronounces English words with Russian phonetics, which is closer to
+ * unusable than to wrong.
+ *
+ * That is the same defect this hook already exists to fix for the banner, one layer down, so it
+ * is fixed in the same place rather than in a second `syncDocumentLanguage` call inside
+ * `PublicForm` that would race the session's effect and win or lose by mount order.
+ *
+ * The previous value is captured and restored on unmount. The session's effect keys on its own
+ * `resolved`, which has not changed while somebody was filling in a form, so it will not fire
+ * again to correct the attribute — leaving the form would otherwise strand the whole app in the
+ * respondent's language.
  */
 export function useAnnounceLocale(locale: string): void {
   const { announce } = useContext(DemoContext);
   useEffect(() => {
     announce(locale);
-    return () => announce(null);
+
+    const previous = document.documentElement.lang;
+    syncDocumentLanguage(locale);
+
+    return () => {
+      announce(null);
+      syncDocumentLanguage(previous);
+    };
   }, [announce, locale]);
 }
 

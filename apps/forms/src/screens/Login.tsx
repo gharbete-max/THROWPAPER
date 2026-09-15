@@ -2,13 +2,16 @@ import { useState, type FormEvent } from 'react';
 import { client, setSession } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useDemo } from '../lib/demo.js';
-import { Wordmark } from '../components/Logo.js';
+import { PoweredBy, Wordmark } from '../components/Logo.js';
+import { useBrand } from '../lib/brand.js';
 
 export function Login() {
   const t = useT();
   const { isDemo, users } = useDemo();
+  const { tokens } = useBrand();
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [demo, setDemo] = useState<'idle' | 'busy' | 'failed'>('idle');
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -22,20 +25,27 @@ export function Login() {
   return (
     <main className="shell shell--narrow system">
       <div>
-        <Wordmark name={t('app.name')} />
-        <h1>{t('login.title')}</h1>
+        {/* A way back to the site: the page that sent you here is one press away. */}
+        <a className="login__home" href="/">
+          <Wordmark name={t('app.name')} />
+        </a>
+        {/* "Open the demo" is what the button said; the page should not answer "Sign in". */}
+        <h1>{t(isDemo ? 'demo.title' : 'login.title')}</h1>
       </div>
 
       {isDemo && users.length > 0 && (
         <div className="card stack">
           <p className="small muted">{t('demo.signInHint')}</p>
           <div className="row">
-            {users.map((user) => (
+            {users.map((user, index) => (
               <button
                 key={user.email}
                 type="button"
-                className="button"
+                // One filled button per screen: the first role is the recommended door in.
+                className={index === 0 ? 'button' : 'button button--quiet'}
+                disabled={demo === 'busy'}
                 onClick={() => {
+                  setDemo('busy');
                   client
                     .demoSignIn(user.email)
                     .then((pair) => {
@@ -43,20 +53,33 @@ export function Login() {
                       // Full reload so the session provider picks the tokens up cleanly.
                       window.location.assign('/events');
                     })
-                    .catch(() => undefined);
+                    // It swallowed this: press the button, nothing moves, no message, forever.
+                    .catch(() => setDemo('failed'));
                 }}
               >
-                {t('demo.signInAs', { role: user.role })}
+                {/*
+                  The role is translated before it is interpolated, not passed through raw.
+                  `demo.signInAs` is "Anmelden als {role}" in German, so a raw `user.role` produced
+                  "Anmelden als admin" — a translated sentence with an English word dropped into
+                  the middle of it. `users.role.*` already carries "Administrator" and "Mitglied".
+                */}
+                {t('demo.signInAs', { role: t(`users.role.${user.role}`) })}
               </button>
             ))}
           </div>
+          {demo === 'failed' && (
+            <p className="status-down" role="alert">
+              {t('demo.signInFailed')}
+            </p>
+          )}
         </div>
       )}
 
       {state === 'sent' ? (
         <div className="card">
           <p>{t('login.sent')}</p>
-          <p className="muted small">{t('login.devHint')}</p>
+          {/* A note about the api-forms console has no business on a production screen. */}
+          {import.meta.env.DEV && <p className="muted small">{t('login.devHint')}</p>}
         </div>
       ) : (
         <form className="card stack" onSubmit={submit}>
@@ -75,6 +98,7 @@ export function Login() {
           </button>
         </form>
       )}
+      <PoweredBy tokens={tokens} />
     </main>
   );
 }

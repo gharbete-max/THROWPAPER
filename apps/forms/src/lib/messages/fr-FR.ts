@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const frFR: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Propulsé par Paloppa',
   'app.signOut': 'Se déconnecter',
   'app.language': 'Langue',
   'app.loading': 'Chargement…',
@@ -51,6 +52,7 @@ export const frFR: Record<MessageKey, string> = {
   'event.cancel': 'Annuler',
   'event.createTitle': 'Nouvel événement',
   'event.editTitle': 'Modifier l’événement',
+  'event.notFound': 'Il n’y a aucun événement à cette adresse.',
 
   'nav.events': 'Événements',
   'nav.forms': 'Formulaires',
@@ -117,8 +119,11 @@ export const frFR: Record<MessageKey, string> = {
   'inbox.title': 'Réponses',
   'inbox.intro': 'Les dernières réponses de tous les formulaires auxquels vous avez accès.',
   'inbox.empty': 'Aucune réponse pour le moment.',
+  'inbox.loadFailed': 'Les réponses n’ont pas pu être chargées.',
   'inbox.partial': 'En cours',
   'inbox.complete': 'Envoyée',
+  'inbox.search': 'Rechercher',
+  'inbox.count': 'plural:one {count} réponse | other {count} réponses',
 
   'users.title': 'Utilisateurs',
   'users.intro':
@@ -485,6 +490,11 @@ export const frFR: Record<MessageKey, string> = {
   'brand.save': 'Enregistrer',
   'brand.saving': 'Enregistrement…',
   'brand.reset': 'Rétablir les valeurs par défaut',
+  'brand.clientMode': 'Mode client',
+  'brand.clientModeOn': 'Utiliser notre propre logo et notre nom',
+  'brand.clientModeHint':
+    'Remplace la marque Paloppa dans l’application et sur l’écran de connexion. Vos formulaires publiés utilisent déjà votre identité.',
+  'brand.wordmark': 'Nom dans le coin',
   'brand.colours': 'Couleurs',
   'brand.logo': 'Logo',
 
@@ -568,7 +578,9 @@ export const frFR: Record<MessageKey, string> = {
   'demo.banner': 'Mode démo — rien n’est enregistré et aucun e-mail n’est jamais envoyé.',
   'demo.reset': 'Réinitialiser les données de démo',
   'demo.signInAs': 'Se connecter en tant que {role}',
-  'demo.signInHint': 'Aucun e-mail ne peut être lu en mode démo, connectez-vous donc directement :',
+  'demo.signInFailed': 'Connexion impossible. L’API est-elle lancée ?',
+  'demo.title': 'Ouvrir la démo',
+  'demo.signInHint': 'Choisissez un rôle. Rien ici n’est réel, et rien n’est enregistré.',
 
   'checkin.title': 'Accueil',
   'checkin.counts': '{checkedIn} sur {registered} enregistrés',
@@ -580,12 +592,21 @@ export const frFR: Record<MessageKey, string> = {
   'checkin.cameraUnavailable':
     'La caméra n’est pas disponible — saisissez la référence à la place.',
   'checkin.arrivedAt': 'Arrivé à {time}',
+  'checkin.leave': 'Quitter l’entrée',
+  'checkin.ofRegistered': 'sur {registered}',
+  'checkin.idle': 'Scannez une carte ou saisissez la référence',
+  'checkin.recent': 'Dernières arrivées',
+  'checkin.undo': 'Annuler',
+  'checkin.undoConfirm': 'Annuler l’enregistrement de {name} ?',
+  'checkin.offline':
+    'Hors ligne — les scans ne peuvent pas être vérifiés tant que la connexion n’est pas rétablie.',
   'checkin.outcome.admitted': 'Bienvenue',
   'checkin.outcome.already': 'Déjà enregistré',
   'checkin.outcome.revoked': 'Inscription retirée',
   'checkin.outcome.wrong-event': 'Mauvais événement',
   'checkin.outcome.not-found': 'Introuvable',
   'checkin.outcome.bad-signature': 'Carte invalide',
+  'checkin.outcome.undone': 'Enregistrement annulé',
 
   'attendance.title': 'Présence',
   'attendance.loadFailed': 'La liste des présences n’a pas pu être chargée.',
@@ -637,6 +658,10 @@ export const frFR: Record<MessageKey, string> = {
   'public.rejected.error':
     'Un problème est survenu de notre côté. Vos réponses sont toujours là — réessayez.',
   'public.notFound': 'Formulaire introuvable.',
+  'public.retry': 'Réessayer',
+  'public.loadFailed': 'Le formulaire n’a pas pu être chargé.',
+  'public.notFoundHint':
+    'Vérifiez le lien que vous avez reçu, ou demandez-en un nouveau à l’organisateur. Il a peut-être été retiré.',
   'public.yes': 'Oui',
   'public.no': 'Non',
   'public.choose': 'Choisir…',

@@ -5,7 +5,7 @@ const SHELL = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Formwork</title>
+    <title>Paloppa</title>
   </head>
   <body><div id="root"></div></body>
 </html>`;
@@ -16,6 +16,7 @@ const PREVIEW = {
   url: 'https://forms.example/f/varmotet',
   image: 'https://forms.example/icon-512.png',
   locale: 'sv-SE',
+  palette: ':root {\n  --tp-colour-primary: #123456;\n}\n',
 };
 
 describe('a shared form link', () => {
@@ -23,7 +24,7 @@ describe('a shared form link', () => {
     const html = withLinkPreview(SHELL, PREVIEW);
     expect(html).toContain('<meta property="og:title" content="Spring meeting registration" />');
     expect(html).toContain('<meta property="og:site_name" content="Demo AB" />');
-    // The tab too: twelve tabs all saying "Formwork" identify nothing.
+    // The tab too: twelve tabs all saying "Paloppa" identify nothing.
     expect(html).toContain('<title>Spring meeting registration — Demo AB</title>');
   });
 
@@ -71,5 +72,44 @@ describe('a shared form link', () => {
     );
     // Ampersand first, or the escapes escape each other.
     expect(escapeAttribute('&lt;')).toBe('&amp;lt;');
+  });
+});
+
+/**
+ * The organisation's colours are in the bytes, which is the whole point of rendering this here.
+ *
+ * A form wears the brand of whoever published it. Until the palette was inlined it arrived only
+ * after the page had fetched itself, so a respondent opening somebody's registration page saw
+ * *our* colours first and theirs a moment later — the most visible way a white-label promise
+ * fails, and invisible in every screenshot taken after the load.
+ */
+describe('the palette a form arrives in', () => {
+  it('is inlined, so the first paint is already the organisation’s', () => {
+    const html = withLinkPreview(SHELL, PREVIEW);
+    expect(html).toContain('--tp-colour-primary: #123456');
+    expect(html).toContain('data-tp-brand="server"');
+  });
+
+  /**
+   * Last in the head, because the app's stylesheet ships the defaults compiled into it.
+   *
+   * A block placed before that one loses to it and the page paints in the product's colours with
+   * the organisation's sitting inert above — which looks exactly like having done nothing.
+   */
+  it('comes after the tags, so it decides the first paint', () => {
+    const html = withLinkPreview(SHELL, PREVIEW);
+    expect(html.indexOf('data-tp-brand')).toBeGreaterThan(html.indexOf('og:title'));
+    expect(html.indexOf('data-tp-brand')).toBeLessThan(html.indexOf('</head>'));
+  });
+
+  /**
+   * The marker is load-bearing, not decoration.
+   *
+   * `PublicForm` reads it to decide whether to paint the defaults while it waits for the form.
+   * Without the attribute it paints them, and the page blinks from the organisation's colours to
+   * ours and back — the flash this change removes, reintroduced by the half of it that is missing.
+   */
+  it('marks itself so the client knows not to paint over it', () => {
+    expect(withLinkPreview(SHELL, PREVIEW)).toMatch(/<style data-tp-brand="server">/);
   });
 });

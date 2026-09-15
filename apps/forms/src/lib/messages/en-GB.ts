@@ -9,7 +9,8 @@
  */
 
 export const enGB = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Powered by Paloppa',
   'app.signOut': 'Sign out',
   'app.language': 'Language',
   'app.loading': 'Loading…',
@@ -56,6 +57,7 @@ export const enGB = {
   'event.cancel': 'Cancel',
   'event.createTitle': 'New event',
   'event.editTitle': 'Edit event',
+  'event.notFound': 'There is no event with that address.',
 
   'nav.events': 'Events',
   'nav.forms': 'Forms',
@@ -122,8 +124,11 @@ export const enGB = {
   'inbox.title': 'Responses',
   'inbox.intro': 'The latest responses across every form you can see.',
   'inbox.empty': 'No responses yet.',
+  'inbox.loadFailed': 'Responses could not be loaded.',
   'inbox.partial': 'In progress',
   'inbox.complete': 'Submitted',
+  'inbox.search': 'Search',
+  'inbox.count': 'plural:one {count} response | other {count} responses',
 
   'users.title': 'Users',
   'users.intro': 'Everybody in the organisation. Open one to see their forms and bin.',
@@ -482,6 +487,11 @@ export const enGB = {
   'brand.save': 'Save',
   'brand.saving': 'Saving…',
   'brand.reset': 'Reset to default',
+  'brand.clientMode': 'Client mode',
+  'brand.clientModeOn': 'Use our own logo and name',
+  'brand.clientModeHint':
+    'Replaces the Paloppa mark in the app and on the sign-in screen. Your published forms already use your brand.',
+  'brand.wordmark': 'Name in the corner',
   'brand.colours': 'Colours',
   'brand.logo': 'Logo',
 
@@ -564,7 +574,9 @@ export const enGB = {
   'demo.banner': 'Demo mode — nothing is saved and no email is ever sent.',
   'demo.reset': 'Reset demo data',
   'demo.signInAs': 'Sign in as {role}',
-  'demo.signInHint': 'No email can be read in demo mode, so sign in directly:',
+  'demo.signInFailed': 'Could not sign in. Is the API running?',
+  'demo.title': 'Open the demo',
+  'demo.signInHint': 'Pick who to be. Nothing here is real, and nothing is saved.',
 
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} of {registered} checked in',
@@ -575,12 +587,20 @@ export const enGB = {
   'checkin.stopCamera': 'Stop camera',
   'checkin.cameraUnavailable': 'The camera is unavailable — type the reference instead.',
   'checkin.arrivedAt': 'Arrived {time}',
+  'checkin.leave': 'Leave the door',
+  'checkin.ofRegistered': 'of {registered}',
+  'checkin.idle': 'Scan a card, or type the reference',
+  'checkin.recent': 'Last arrivals',
+  'checkin.undo': 'Undo',
+  'checkin.undoConfirm': 'Undo the check-in for {name}?',
+  'checkin.offline': 'Offline — scans cannot be checked until the connection is back.',
   'checkin.outcome.admitted': 'Welcome',
   'checkin.outcome.already': 'Already checked in',
   'checkin.outcome.revoked': 'Registration withdrawn',
   'checkin.outcome.wrong-event': 'Wrong event',
   'checkin.outcome.not-found': 'Not found',
   'checkin.outcome.bad-signature': 'Invalid card',
+  'checkin.outcome.undone': 'Check-in undone',
 
   'attendance.title': 'Attendance',
   'attendance.loadFailed': 'The attendance list could not be loaded.',
@@ -632,6 +652,10 @@ export const enGB = {
   'public.rejected.error':
     'Something went wrong at our end. Your answers are still here — please try again.',
   'public.notFound': 'Form not found.',
+  'public.retry': 'Try again',
+  'public.loadFailed': 'The form could not be loaded.',
+  'public.notFoundHint':
+    'Check the link you were given, or ask the organiser for a new one. It may have been withdrawn.',
   'public.yes': 'Yes',
   'public.no': 'No',
   'public.choose': 'Choose…',

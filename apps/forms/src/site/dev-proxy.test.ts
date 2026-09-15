@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
  * What the dev server must hand to the API rather than answer itself.
  *
  * This is the third time the same shape of bug has been found by opening a page rather than by a
- * failing test, and the first two both ended with an invoice titled "Formwork":
+ * failing test, and the first two both ended with an invoice titled "Paloppa":
  *
  * 1. The service worker answered `/i/` from its precache. Fixed, and guarded by
  *    `service-worker-scope.test.ts`.

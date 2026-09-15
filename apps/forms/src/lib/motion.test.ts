@@ -32,6 +32,96 @@ describe('the reduced-motion switch', () => {
   });
 });
 
+/**
+ * The interface moves the way the mark moves, and nothing else.
+ *
+ * The brand ships exactly two curves — `unfurl` for paper opening out, `chomp` for a pocket closing
+ * and opening again — and they are the easings the fortune teller's own animation is built from.
+ * An interface that reaches for a fourth curve is not obviously wrong on any one screen; it is
+ * wrong across the product, which is precisely the kind of drift a comment does not survive.
+ *
+ * So the rule is mechanical: a stylesheet that writes its own `cubic-bezier` has invented a motion
+ * the product does not have. There were three — the Material standard curve twice and an ad-hoc
+ * overshoot on `.reveal` — and they are now the tokens.
+ */
+describe('the easing vocabulary', () => {
+  it('writes no curve of its own', () => {
+    // Comments may discuss a curve; rules may not declare one.
+    const declarations = STYLES.split('\n').filter(
+      (line) => line.includes('cubic-bezier') && !line.trimStart().startsWith('*'),
+    );
+    expect(declarations).toEqual([]);
+  });
+
+  /**
+   * Both brand curves are in use, named rather than counted.
+   *
+   * This asserted that every `mark-work` animation took the chomp — which was true, and became
+   * vacuous the moment the mark stopped being eight CSS triangles: a loop over no matches passes.
+   * A test that cannot fail is worse than no test, because it reads like cover.
+   *
+   * So it checks the two curves are actually reached for. `unfurl` is the button's press fold and
+   * the scroll reveal; `chomp` is what is left for a press or a pocket closing.
+   */
+  it('uses both brand curves', () => {
+    expect(STYLES).toContain('var(--tp-ease-unfurl)');
+    expect(STYLES).toContain('var(--tp-ease-chomp)');
+  });
+});
+
+/**
+ * The hero animation is withheld, not hidden.
+ *
+ * The landing page is server-rendered and `main.tsx` never hydrates it, so there is no effect to
+ * remove a motion layer on this surface — reduced motion has to be honoured by the markup itself.
+ * A `<source>` whose media query does not match is never fetched, so the query is what makes the
+ * 673 KB animation genuinely absent for somebody who asked for less motion.
+ *
+ * The failure being prevented is the plausible one: hiding the animation with CSS instead. That
+ * looks identical in a screenshot, still downloads the file, and still spends the battery decoding
+ * it — the reader asked for less motion and paid for all of it anyway.
+ */
+describe('the hero mark', () => {
+  const SITE = readFileSync(new URL('../site/Site.tsx', import.meta.url), 'utf8');
+
+  it('fetches the animation only when motion is welcome', () => {
+    // Real tags only: the prose above the markup mentions `<source>` too.
+    const sources = [...SITE.matchAll(/<source\s[^>]*\/>/g)].map((match) => match[0]);
+    expect(sources.length, 'the hero has no <source> to gate').toBeGreaterThan(0);
+
+    // Every one of them, not just the first: an ungated fallback source defeats the whole gate.
+    for (const source of sources) {
+      expect(source).toContain('(prefers-reduced-motion: no-preference)');
+      expect(source).toContain('.webp');
+    }
+  });
+
+  /**
+   * The 2x animation is a desktop offer, not a density offer.
+   *
+   * `2x` alone would send 997 KB to any retina phone — most of them — on the connection least able
+   * to take it, to sharpen a mark that is *smaller* there than on desktop. The width gate is what
+   * keeps the phone on the 494 KB file.
+   */
+  it('keeps the retina variant off phones', () => {
+    const retina = SITE.match(/<source\b[^>]*mark-loop-512[\s\S]*?\/>/)?.[0];
+    expect(retina, 'no 2x source found').toBeDefined();
+    expect(retina).toMatch(/min-width:\s*900px/);
+  });
+
+  it('falls back to the poster, which is the animation frozen at frame 0', () => {
+    // Not a different drawing: a cross-fade between them would invent a transition to cover.
+    expect(SITE).toContain('/mark-poster-256.png');
+  });
+
+  it('reserves the figure so the largest thing on the page cannot shift it', () => {
+    const img = /<img\b[\s\S]*?hero__mark[\s\S]*?\/>/.exec(SITE)?.[0];
+    expect(img).toBeDefined();
+    expect(img).toMatch(/width=\{?256/);
+    expect(img).toMatch(/height=\{?256/);
+  });
+});
+
 describe('deciding whether the intro plays', () => {
   const withStorage = (getItem: () => string | null) => {
     // A stand-in for `window`, so this stays a plain function test like everything else here.

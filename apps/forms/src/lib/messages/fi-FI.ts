@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const fiFI: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Palvelun tarjoaa Paloppa',
   'app.signOut': 'Kirjaudu ulos',
   'app.language': 'Kieli',
   'app.loading': 'Ladataan…',
@@ -51,6 +52,7 @@ export const fiFI: Record<MessageKey, string> = {
   'event.cancel': 'Peruuta',
   'event.createTitle': 'Uusi tapahtuma',
   'event.editTitle': 'Muokkaa tapahtumaa',
+  'event.notFound': 'Tässä osoitteessa ei ole tapahtumaa.',
 
   'nav.events': 'Tapahtumat',
   'nav.forms': 'Lomakkeet',
@@ -117,8 +119,11 @@ export const fiFI: Record<MessageKey, string> = {
   'inbox.title': 'Vastaukset',
   'inbox.intro': 'Uusimmat vastaukset kaikista lomakkeista, jotka näet.',
   'inbox.empty': 'Ei vielä vastauksia.',
+  'inbox.loadFailed': 'Vastauksia ei voitu ladata.',
   'inbox.partial': 'Kesken',
   'inbox.complete': 'Lähetetty',
+  'inbox.search': 'Hae',
+  'inbox.count': 'plural:one {count} vastaus | other {count} vastausta',
 
   'users.title': 'Käyttäjät',
   'users.intro': 'Kaikki organisaatiossa. Avaa joku nähdäksesi hänen lomakkeensa ja roskakorinsa.',
@@ -474,6 +479,11 @@ export const fiFI: Record<MessageKey, string> = {
   'brand.save': 'Tallenna',
   'brand.saving': 'Tallennetaan…',
   'brand.reset': 'Palauta oletukset',
+  'brand.clientMode': 'Asiakastila',
+  'brand.clientModeOn': 'Käytä omaa logoa ja nimeä',
+  'brand.clientModeHint':
+    'Korvaa Paloppan tunnuksen sovelluksessa ja kirjautumisnäytöllä. Julkaistut lomakkeenne käyttävät jo omaa ilmettänne.',
+  'brand.wordmark': 'Nimi kulmassa',
   'brand.colours': 'Värit',
   'brand.logo': 'Logo',
 
@@ -557,7 +567,9 @@ export const fiFI: Record<MessageKey, string> = {
   'demo.banner': 'Esittelytila — mitään ei tallenneta eikä sähköpostia koskaan lähetetä.',
   'demo.reset': 'Palauta esittelytiedot',
   'demo.signInAs': 'Kirjaudu roolissa {role}',
-  'demo.signInHint': 'Esittelytilassa sähköpostia ei voi lukea, joten kirjaudu suoraan:',
+  'demo.signInFailed': 'Kirjautuminen epäonnistui. Onko API käynnissä?',
+  'demo.title': 'Avaa demo',
+  'demo.signInHint': 'Valitse rooli. Mikään täällä ei ole totta, eikä mitään tallenneta.',
 
   'checkin.title': 'Sisäänkirjaus',
   'checkin.counts': '{checkedIn} / {registered} kirjattu sisään',
@@ -568,12 +580,20 @@ export const fiFI: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Pysäytä kamera',
   'checkin.cameraUnavailable': 'Kamera ei ole käytettävissä — kirjoita viite sen sijaan.',
   'checkin.arrivedAt': 'Saapui {time}',
+  'checkin.leave': 'Poistu ovelta',
+  'checkin.ofRegistered': '/ {registered}',
+  'checkin.idle': 'Skannaa kortti tai kirjoita viite',
+  'checkin.recent': 'Viimeksi saapuneet',
+  'checkin.undo': 'Kumoa',
+  'checkin.undoConfirm': 'Kumotaanko sisäänkirjaus: {name}?',
+  'checkin.offline': 'Ei yhteyttä — skannauksia ei voi tarkistaa ennen kuin yhteys palaa.',
   'checkin.outcome.admitted': 'Tervetuloa',
   'checkin.outcome.already': 'Jo kirjattu sisään',
   'checkin.outcome.revoked': 'Ilmoittautuminen peruttu',
   'checkin.outcome.wrong-event': 'Väärä tapahtuma',
   'checkin.outcome.not-found': 'Ei löytynyt',
   'checkin.outcome.bad-signature': 'Virheellinen kortti',
+  'checkin.outcome.undone': 'Sisäänkirjaus kumottu',
 
   'attendance.title': 'Osallistuminen',
   'attendance.loadFailed': 'Osallistujalistaa ei voitu ladata.',
@@ -626,6 +646,10 @@ export const fiFI: Record<MessageKey, string> = {
   'public.rejected.error':
     'Meidän päässämme meni jokin vikaan. Vastauksesi ovat yhä tallessa — yritä uudelleen.',
   'public.notFound': 'Lomaketta ei löytynyt.',
+  'public.retry': 'Yritä uudelleen',
+  'public.loadFailed': 'Lomaketta ei voitu ladata.',
+  'public.notFoundHint':
+    'Tarkista saamasi linkki tai pyydä järjestäjältä uusi. Se on saatettu poistaa.',
   'public.yes': 'Kyllä',
   'public.no': 'Ei',
   'public.choose': 'Valitse…',

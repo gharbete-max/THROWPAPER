@@ -20,6 +20,12 @@ import { pathToFileURL } from 'node:url';
 import { pickText } from '@tp/i18n';
 import { createDrizzleRepositories, type Repositories } from './db/repositories/index.js';
 import { withLinkPreview, type LinkPreview } from './documents/link-preview.js';
+import {
+  accentTile,
+  withClientIdentity,
+  type ClientIdentity,
+} from './documents/client-identity.js';
+import { toThemedCssBlock } from '@tp/tokens';
 import { resolveTokens } from './routes/brand-kit.js';
 import { createAuthService } from './auth/service.js';
 import { createConsoleMailProvider, type MailProvider } from './auth/mail.js';
@@ -29,6 +35,7 @@ import { registerFormRoutes } from './routes/forms.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerLedgerRoutes } from './routes/ledger.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
+import { registerPublicContactRoutes } from './routes/public-contact.js';
 import { registerInvoiceRoutes } from './routes/invoices.js';
 import { registerPublicInvoiceRoutes } from './routes/public-invoices.js';
 import { registerDocumentRoutes } from './routes/documents.js';
@@ -42,7 +49,8 @@ import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
-import { MAX_IMAGE_BYTES } from './uploads/image.js';
+import { MAX_IMAGE_BYTES, checkImage } from './uploads/image.js';
+import { imageSize, isNearSquare } from './uploads/image-size.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
 import { createSesMailProvider } from './mail/ses.js';
@@ -68,6 +76,8 @@ export interface ServerOptions {
   resolver?: TxtResolver;
   /** Where the operator notification goes. */
   operatorAddress?: string | null;
+  /** Where the marketing site's "get in touch" form goes — our inbox, not a customer's. */
+  contactAddress?: string | null;
   /**
    * Present only in demo mode. Its presence is what registers the /demo routes — there is no
    * environment variable that turns them on in a normal server.
@@ -286,7 +296,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   await app.register(multipart, { limits: { fileSize: MAX_IMAGE_BYTES, files: 1 } });
   await app.register(swagger, {
     openapi: {
-      info: { title: 'Formwork API', version: '0.1.0' },
+      info: { title: 'Paloppa API', version: '0.1.0' },
       components: {
         securitySchemes: { bearer: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } },
       },
@@ -351,6 +361,13 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerLedgerRoutes(app, { repos, guard });
   registerInvoiceRoutes(app, { repos, guard });
   registerPublicInvoiceRoutes(app, { repos, renderer });
+  registerPublicContactRoutes(app, {
+    mail,
+    contactAddress:
+      options.contactAddress === undefined
+        ? (process.env['CONTACT_TO'] ?? null)
+        : options.contactAddress,
+  });
   registerPublicFormRoutes(app, {
     repos,
     mail,
@@ -458,7 +475,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
        * not have, and there is no crawler on the other side of a sign-in.
        */
       const site = await renderSite(appDir, path, appUrl);
-      if (site) return reply.type('text/html; charset=utf-8').send(site);
+      if (site) return reply.code(site.status).type('text/html; charset=utf-8').send(site.html);
 
       /**
        * A public form link gets a real preview card.
@@ -474,6 +491,20 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
           const shell = await readFile(join(appDir, 'index.html'), 'utf8');
           return reply.type('text/html; charset=utf-8').send(withLinkPreview(shell, preview));
         }
+      }
+
+      /**
+       * A white-labelled deployment serves the shell wearing the customer's identity.
+       *
+       * Only when client mode is on: with it off there is nothing to correct, and reading the
+       * brand kit on every HTML request to discover that would be a database round trip bought for
+       * no one. See `client-identity.ts` for why this cannot be done in the browser — the sign-in
+       * screen has no session to hang a brand off, so the server is the only thing that knows.
+       */
+      const identity = await clientIdentity(repos, assets);
+      if (identity) {
+        const shell = await readFile(join(appDir, 'index.html'), 'utf8');
+        return reply.type('text/html; charset=utf-8').send(withClientIdentity(shell, identity));
       }
 
       return reply.sendFile('index.html');
@@ -493,7 +524,12 @@ let sitePromise: Promise<SiteRenderer | null> | null = null;
 
 interface SiteRenderer {
   isSiteRoute: (path: string) => boolean;
-  render: (path: string, origin: string) => { html: string; head: string };
+  /** An address only the site could own and does not have — rendered as its 404, not the app's shell. */
+  isSiteShaped: (path: string) => boolean;
+  render: (
+    path: string,
+    origin: string,
+  ) => { html: string; head: string; lang: string; status: 200 | 404 };
 }
 
 async function loadSite(appDir: string): Promise<SiteRenderer | null> {
@@ -510,21 +546,36 @@ async function loadSite(appDir: string): Promise<SiteRenderer | null> {
   }
 }
 
-async function renderSite(appDir: string, path: string, appUrl: string): Promise<string | null> {
+async function renderSite(
+  appDir: string,
+  path: string,
+  appUrl: string,
+): Promise<{ html: string; status: number } | null> {
   sitePromise ??= loadSite(appDir);
   const site = await sitePromise;
-  if (!site?.isSiteRoute(path)) return null;
+  if (!site) return null;
 
   try {
+    // Inside the try: a bundle from an older build lacks `isSiteShaped`, and that must serve the
+    // shell rather than take down every page.
+    if (!(site.isSiteRoute(path) || site.isSiteShaped(path))) return null;
     const shell = await readFile(join(appDir, 'index.html'), 'utf8');
-    const { html, head } = site.render(path, appUrl);
-    return (
-      shell
+    const { html, head, lang, status } = site.render(path, appUrl);
+    return {
+      status,
+      html: shell
+        /*
+         * The shell ships `lang="en"`, and the site is no longer only English. `/de/` served with
+         * an English `lang` is the same defect the invoice and the confirmation email each had
+         * once: nothing on screen looks wrong, and a screen reader pronounces German with English
+         * phonetics. `link-preview.ts` does the identical rewrite for `/f/:slug`.
+         */
+        .replace(/<html lang="[^"]*"/, `<html lang="${lang}"`)
         .replace(/<title>[^<]*<\/title>/, '')
         .replace(/<\/head>/, `  ${head}\n  </head>`)
         // The markup React will hydrate, so the page is readable before any script runs.
-        .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
-    );
+        .replace('<div id="root"></div>', `<div id="root">${html}</div>`),
+    };
   } catch {
     // A render that throws must not take the page down: fall through to the client-rendered shell.
     return null;
@@ -539,6 +590,78 @@ async function renderSite(appDir: string, path: string, appUrl: string): Promise
  * either. A form that does not exist gets the plain shell for the same reason — a preview that
  * confirms which slugs are real is a way to enumerate them.
  */
+/**
+ * The customer's identity for the app shell, or `null` when this deployment is our own.
+ *
+ * Swallows its own failures for the same reason `previewForSlug` does: this decorates a page that
+ * has to load, and a database blip must serve the app rather than a 500. The cost of failing open
+ * is one page in our branding, which is the state every page was in before this existed.
+ */
+async function clientIdentity(
+  repos: Repositories,
+  assets: AssetStore,
+): Promise<ClientIdentity | null> {
+  try {
+    const organisation = await repos.organisations.first();
+    if (!organisation) return null;
+
+    const { tokens } = await resolveTokens(repos, organisation.id);
+    if (!tokens.clientMode) return null;
+
+    const logo = tokens.logoLight ?? tokens.logoDark;
+    const usable = logo ? await logoSuitsAFavicon(assets, logo) : false;
+
+    return {
+      // Their brand name where they set one, the legal entity otherwise — the two often differ.
+      wordmark: tokens.wordmark ?? organisation.name,
+      poweredBy: tokens.poweredBy,
+      logoLight: tokens.logoLight,
+      logoDark: tokens.logoDark,
+      palette: toThemedCssBlock(tokens),
+      /* Their mark only where it survives the size; their colour otherwise. */
+      favicon: usable && logo ? logo : accentTile(tokens.colour.primary),
+      touchIcon: logo,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Whether a logo is square enough to be a favicon, answered once per file.
+ *
+ * Cached on the asset path, which is safe forever rather than merely convenient: the path is the
+ * SHA-256 of the file's own bytes, so it cannot come to mean a different image. A new upload is a
+ * new key and the old entry is simply never asked for again.
+ *
+ * Without the cache this is a two-megabyte disk read on every HTML request, to answer a question
+ * whose answer cannot change.
+ */
+// ponytail: unbounded map keyed by upload hash, one entry per logo ever uploaded; an LRU if a tenant
+// somehow cycles thousands of logos.
+const faviconSuitability = new Map<string, boolean>();
+
+async function logoSuitsAFavicon(assets: AssetStore, path: string): Promise<boolean> {
+  const cached = faviconSuitability.get(path);
+  if (cached !== undefined) return cached;
+
+  let answer = false;
+  try {
+    const key = path.slice(path.lastIndexOf('/') + 1);
+    const stored = await assets.get(key);
+    if (stored) {
+      const check = checkImage(stored.content);
+      // An unreadable header falls back to the tile, which is the safe direction to be wrong in.
+      if (check.ok) answer = isNearSquare(imageSize(stored.content, check.format));
+    }
+  } catch {
+    answer = false;
+  }
+
+  faviconSuitability.set(path, answer);
+  return answer;
+}
+
 async function previewForSlug(
   repos: Repositories,
   slug: string,
@@ -575,6 +698,12 @@ async function previewForSlug(
         ? new URL(tokens.logoLight, `${origin}/`).toString()
         : `${origin}/icon-512.png`,
       locale,
+      /*
+       * The whole theme, not only the light half. A respondent opening a form on a phone set to
+       * dark should get the organisation's dark palette in the first paint too, and `toThemedCss`
+       * carries the media query and the explicit `data-theme` opt-in together.
+       */
+      palette: toThemedCssBlock(tokens),
     };
   } catch {
     /**

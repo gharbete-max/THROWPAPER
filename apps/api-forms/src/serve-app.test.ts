@@ -76,7 +76,9 @@ beforeAll(async () => {
     [
       "export const SITE_ROUTES = ['/', '/features/ledger'];",
       'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
+      "export const isSiteShaped = (path) => path.startsWith('/features/');",
       'export const render = (path) => ({',
+      '  status: SITE_ROUTES.includes(path) ? 200 : 404,',
       '  html: `<div class="site">rendered ${path}</div>`,',
       `  head: '<title>Site</title><link rel="canonical" href="https://x.test/" />',`,
       `  styles: ':root{--x:1}',`,
@@ -98,13 +100,13 @@ beforeAll(async () => {
       '<html lang="en">',
       '  <head>',
       '    <meta charset="UTF-8" />',
-      '    <title>Formwork</title>',
+      '    <title>Paloppa</title>',
       '  </head>',
       '  <body><div id="root"></div></body>',
       '</html>',
     ].join('\n'),
   );
-  writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Formwork"}');
+  writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Paloppa"}');
   mkdirSync(join(dir, 'assets'));
   writeFileSync(join(dir, 'assets', 'index.js'), 'console.log(1)');
 
@@ -274,7 +276,7 @@ describe('serving the built app from the API', () => {
    * The link preview.
    *
    * The whole distribution model here is "send somebody a link", and that link previewed in Slack,
-   * WhatsApp and Teams as "Formwork" with no title and no organisation — an unlabelled link to an
+   * WhatsApp and Teams as "Paloppa" with no title and no organisation — an unlabelled link to an
    * unfamiliar domain asking for a name and an email, which is a reasonable thing to distrust.
    */
   describe('a public form link', () => {
@@ -348,6 +350,17 @@ describe('serving the built app from the API', () => {
       const response = await app.inject({ method: 'GET', url: '/events' });
       expect(response.body).not.toContain('class="site"');
       expect(response.body).toContain('id="root"');
+    });
+
+    /**
+     * An address only the site could own, and does not have, is the site's 404 — not the app's
+     * shell at 200. A crawler that gets a 200 for `/features/nothing` indexes it; a monitor never
+     * learns the link on the brochure is dead.
+     */
+    it('answers a site-shaped address it does not have with the site’s own 404', async () => {
+      const response = await app.inject({ method: 'GET', url: '/features/nothing' });
+      expect(response.statusCode).toBe(404);
+      expect(response.body).toContain('rendered /features/nothing');
     });
   });
 });

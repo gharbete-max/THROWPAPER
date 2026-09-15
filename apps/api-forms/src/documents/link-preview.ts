@@ -2,7 +2,7 @@
  * What a form's link looks like when somebody pastes it somewhere.
  *
  * The whole distribution model of this product is "send people a link". That link went into Slack,
- * WhatsApp, iMessage, Teams and LinkedIn and previewed as **"Formwork"** with no title, no
+ * WhatsApp, iMessage, Teams and LinkedIn and previewed as **"Paloppa"** with no title, no
  * organisation and no picture — because the container serves the built `index.html` for every
  * client route, and that file is written once at build time and says the same thing for every URL.
  *
@@ -35,6 +35,22 @@ export interface LinkPreview {
   image: string;
   /** BCP-47, for the `lang` attribute on the served document. */
   locale: string;
+  /**
+   * The organisation's palette, compiled, for the first paint.
+   *
+   * A form wears the brand of the organisation that published it, and until this existed that
+   * brand arrived only after the page had fetched itself: the document painted in *our* colours
+   * and swapped to theirs a moment later. `PublicForm.tsx` said so out loud — "the worst case is a
+   * brief flash of the wrong palette rather than of no palette" — which was the right call given
+   * the choice, and the point of putting the palette in the bytes is that there is no longer a
+   * choice to make.
+   *
+   * Safe to interpolate into a `<style>` element because the token schema is the boundary that
+   * makes it safe: colours are hex-validated and `FontStack` rejects quotes, angle brackets,
+   * semicolons and braces, so no value here can close the element. `resolveTokens` re-parses the
+   * stored row rather than trusting it, so that holds for kits written by older versions too.
+   */
+  palette: string;
 }
 
 /** `&`, `<`, `>` and both quotes — this text goes into attribute values written by customers. */
@@ -75,6 +91,16 @@ export function withLinkPreview(html: string, preview: LinkPreview): string {
     `<link rel="canonical" href="${url}" />`,
   ].join('\n    ');
 
+  /*
+   * Last in the head, so it wins.
+   *
+   * `index.html` carries no palette of its own, but the app's stylesheet does arrive with the
+   * defaults compiled in; a block appended at the end of the head is the one that decides the
+   * first paint. The marker attribute is what `PublicForm` looks for to know the page is already
+   * wearing the right colours and that it must not paint the defaults over them.
+   */
+  const palette = `<style data-tp-brand="server">${preview.palette}</style>`;
+
   return (
     html
       // The document is in the form's language, not the build's.
@@ -83,9 +109,9 @@ export function withLinkPreview(html: string, preview: LinkPreview): string {
        * The tab title too, not only the card.
        *
        * Somebody who opens the link and leaves it in a background tab has the same problem as
-       * somebody reading the preview: twelve tabs all saying "Formwork" identify nothing.
+       * somebody reading the preview: twelve tabs all saying "Paloppa" identify nothing.
        */
       .replace(/<title>[^<]*<\/title>/, `<title>${title} — ${organisation}</title>`)
-      .replace(/<\/head>/, `  ${tags}\n  </head>`)
+      .replace(/<\/head>/, `  ${tags}\n    ${palette}\n  </head>`)
   );
 }

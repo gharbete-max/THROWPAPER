@@ -1,4 +1,12 @@
-import { accentInk, buttonSurface, glassSurface, shadow, toDark } from './derive.js';
+import {
+  accentInk,
+  buttonSurface,
+  focusRing,
+  glassSurface,
+  headingInk,
+  shadow,
+  toDark,
+} from './derive.js';
 import type { TokenSet } from './types.js';
 import { px, pxValue, typeScale } from './units.js';
 
@@ -21,6 +29,18 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   }
   // The accent where it has to be read rather than seen. See `accentInk`.
   vars['--tp-colour-accent-ink'] = accentInk(tokens.colour);
+  /*
+   * The same, for the page turned over: the accent as a label on an ink ground. The same walk with
+   * the poles swapped, rather than a fixed mix in the stylesheet — a 60% mix read at 3.81:1 on the
+   * `minimal` preset, and no fixed fraction holds for every palette a customer can save.
+   */
+  vars['--tp-colour-accent-on-ink'] = accentInk({
+    ...tokens.colour,
+    text: tokens.colour.background,
+    background: tokens.colour.text,
+  });
+  // The brand where it reads as a heading, the ink where it does not. See `headingInk`.
+  vars['--tp-colour-heading'] = headingInk(tokens.colour);
   vars['--tp-spacing-unit'] = tokens.spacingUnit;
   vars['--tp-radius'] = tokens.radius;
   vars['--tp-border-width'] = tokens.borderWidth;
@@ -88,14 +108,6 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-button-border'] = button.border;
 
   /**
-   * Motion, in the tokens rather than invented in the stylesheet.
-   *
-   * These were three hard-coded values in `styles.css`, which meant the one thing a brand cannot
-   * currently change is the one thing that most decides whether an interface feels expensive.
-   * They are constants for now — no control sets them — but they live here so a "reduce motion"
-   * or "snappier" preference has somewhere to go that reaches email and native too.
-   */
-  /**
    * Glass, for the things that float over the page. See `glassSurface` for what makes a pane read
    * as glass rather than as a translucent rectangle.
    */
@@ -105,10 +117,39 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-glass-hairline'] = glass.hairline;
   vars['--tp-glass-blur'] = 'blur(20px) saturate(1.7)';
 
+  /*
+   * The focus ring, derived rather than picked. See `focusRing`: this is a locked guarantee, and
+   * the stylesheet must never reach for a brand colour for an outline again.
+   */
+  vars['--tp-focus'] = focusRing(tokens.colour);
+
+  /**
+   * Motion, in the tokens rather than invented in the stylesheet.
+   *
+   * These were three hard-coded values in `styles.css`, which meant the one thing a brand cannot
+   * currently change is the one thing that most decides whether an interface feels expensive.
+   * They are constants for now — no control sets them — but they live here so a "reduce motion"
+   * or "snappier" preference has somewhere to go that reaches email and native too.
+   */
   vars['--tp-ease'] = 'cubic-bezier(0.2, 0, 0, 1)';
   vars['--tp-motion-fast'] = '110ms';
   vars['--tp-motion'] = '180ms';
   vars['--tp-motion-slow'] = '320ms';
+
+  /*
+   * The mark's own two curves, so the interface moves the way the thing in the corner moves.
+   *
+   * These are not chosen here. They are the easings the fortune teller is animated with — `unfurl`
+   * is the paper opening out, `chomp` is a pocket closing and opening again — and the brand handoff
+   * ships them as the only curves the interface is allowed to use. Lifting them into the token
+   * layer is what makes that enforceable rather than remembered: a transition reaches for one of
+   * these or it is inventing a motion the product does not have.
+   *
+   * `--tp-ease` stays. It is the neutral one, right for a colour or an opacity that should not draw
+   * attention to how it arrived; these two are for movement, where the paper metaphor is the point.
+   */
+  vars['--tp-ease-unfurl'] = 'cubic-bezier(0.22, 0.75, 0.05, 1)';
+  vars['--tp-ease-chomp'] = 'cubic-bezier(0.58, 0.02, 0.42, 1)';
 
   return vars;
 }

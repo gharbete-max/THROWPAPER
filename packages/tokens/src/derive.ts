@@ -58,12 +58,10 @@ export function mix(a: string, b: string, amount: number): string {
  * button, not `#fff`, or the button is the one pure white thing in a palette that has none.
  */
 export function readableOn(background: string, light: string, dark: string): string {
-  const bg = luminance(background);
-  const l = luminance(light);
-  const d = luminance(dark);
-  if (bg === null || l === null || d === null) return dark;
-  const ratio = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-  return ratio(bg, l) >= ratio(bg, d) ? light : dark;
+  const l = contrastRatio(background, light);
+  const d = contrastRatio(background, dark);
+  if (l === null || d === null) return dark;
+  return l >= d ? light : dark;
 }
 
 /** How light a colour is, 0–1, by the same maths the contrast checker uses. */
@@ -214,6 +212,20 @@ export function accentInk(colour: ColourTokens): string {
 }
 
 /**
+ * What a heading is painted in: the brand's primary where it reads on the page, the ink otherwise.
+ *
+ * Headings were `primary` unconditionally — on the web via `.shell h1`, in mail via the compiler —
+ * and a fill colour is checked for nothing as text. Under the shipped seafoam that was "Sign in" at
+ * 2.12:1, the faintest thing on the screen. A navy customer keeps navy headings; a pastel one gets
+ * ink, not a darkened pastel, because "the same colour, darker" of a seafoam is the muddy teal the
+ * palette was narrowed to be rid of. Either it is their colour or it is the ink.
+ */
+export function headingInk(colour: ColourTokens): string {
+  const reads = (contrastRatio(colour.primary, colour.background) ?? 0) >= TEXT_CONTRAST;
+  return reads ? colour.primary : colour.text;
+}
+
+/**
  * The glass an overlay is made of.
  *
  * Liquid glass, done with the platform rather than with WebGL. The library that inspired this
@@ -266,17 +278,88 @@ export function toDark(tokens: TokenSet): TokenSet {
 }
 
 /**
- * What a button of this theme's `buttonStyle` is actually painted with.
+ * The focus ring, which is the one colour a customer is not allowed to break.
  *
- * `buttonStyle` has been in `TokenSet` since phase 1, and four of the five shipped presets set it
- * to something other than `solid` — `minimal` asks for outline, `garden` for soft. None of it ever
- * reached the page, because the web compiler never emitted it and no stylesheet asked. Choosing
- * "Minimal" gave you the same solid button as everything else.
+ * Every focus outline in the product was `colour.secondary` or `colour.primary` — both settable
+ * from the Brand Kit, and neither checked against the surfaces a ring is actually drawn on. An
+ * organisation picking a pale brand got a focus ring nobody could see, which does not look like a
+ * bug to the person who picked it: they are using a mouse. It ends keyboard navigation for
+ * everybody else, silently, on their own public form.
  *
- * Resolving it here rather than in CSS is what fixes it for every target at once: a CSS custom
- * property cannot drive a selector, but it can carry a colour, and email and PDF can read the same
- * three values without knowing the word "outline".
+ * `checkContrast` cannot be what prevents this. Its findings are deliberately advisory — refusing
+ * to save somebody's brand over a subtle border would be obnoxious — so a warning is exactly the
+ * wrong instrument for a guarantee. This is the instrument: the ring is *derived*, so there is no
+ * value anybody can set that removes it.
+ *
+ * ## Against both surfaces, not just the page
+ *
+ * A ring is drawn around a control on the page *and* around one inside a card, and those are two
+ * different backgrounds. Checking only `background` passes a colour that disappears on `surface`,
+ * which is where most focusable things in this product actually sit.
+ *
+ * The brand's own colour is kept when it already clears both, so a themed interface keeps a themed
+ * ring. Only when it cannot is the hue walked away from the page, and only when *that* fails does
+ * it fall back to the palette's own ink or paper — which cannot fail, because one of them is by
+ * construction the far end of the page's own range.
  */
+export function focusRing(colour: ColourTokens): string {
+  const clearsBoth = (candidate: string) =>
+    (contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST &&
+    (contrastRatio(candidate, colour.surface) ?? 0) >= BOUNDARY_CONTRAST;
+
+  if (clearsBoth(colour.secondary)) return colour.secondary;
+
+  const walked = walkAway(colour.secondary, colour.background, clearsBoth);
+  if (walked) return walked;
+
+  /*
+   * The palette's own poles, as the floor.
+   *
+   * A hue that cannot clear 3:1 at any lightness is a very desaturated one against a mid-grey page,
+   * and there is nothing left to preserve of it. Ink or paper always works: `text` and `background`
+   * are held to 4.5:1 against each other by the checker, so whichever is further from the surfaces
+   * clears 3:1 on both.
+   */
+  return readableOn(colour.surface, colour.background, colour.text);
+}
+
+/**
+ * Step a colour away from the page, keeping its hue, until it satisfies `passes`.
+ *
+ * The same twenty-step walk was written three times — once to make a brand fill visible, once to
+ * make a focus ring visible, once to make a button label readable — differing only in the test at
+ * the end of it. Three copies of a loop is three places for the direction to be got backwards, and
+ * getting it backwards means darkening a colour on a dark page, which is worse than doing nothing.
+ *
+ * Returns `null` rather than a best effort when nothing passes, so each caller decides its own
+ * fallback: a fill has something reasonable to keep, a focus ring does not and must reach for the
+ * palette's poles instead.
+ */
+function walkAway(
+  colour: string,
+  page: string,
+  passes: (candidate: string) => boolean,
+): string | null {
+  const hsl = toHsl(colour);
+  const pageLuminance = luminance(page);
+  /*
+   * A colour neither of these can read is a colour there is no basis for changing. Without the
+   * page's luminance there is no way to tell which direction is away from it, and a guess would be
+   * a brand darkened on a dark page.
+   */
+  if (!hsl || pageLuminance === null) return null;
+
+  const [hue, saturation, start] = hsl;
+  /* Away from the page: darken on a light one, lighten on a dark one. */
+  const target = pageLuminance > 0.5 ? 0 : 1;
+
+  for (let step = 1; step <= 20; step += 1) {
+    const candidate = fromHsl([hue, saturation, start + (target - start) * (step / 20)]);
+    if (passes(candidate)) return candidate;
+  }
+  return null;
+}
+
 /**
  * The brand colour, taken far enough from the page that a filled shape reads as a shape.
  *
@@ -306,39 +389,36 @@ export function brandFill(colour: ColourTokens): string {
     return colour.primary;
   }
 
-  const hsl = toHsl(colour.primary);
-  const pageLuminance = luminance(colour.background);
-  /*
-   * A colour neither of these can read is a colour there is no basis for changing.
-   *
-   * Without the page's luminance there is no way to tell which direction is away from it, and a
-   * guess would be a brand darkened on a dark page — worse than leaving it alone.
-   */
-  if (!hsl || pageLuminance === null) return colour.primary;
-  /* Named to avoid shadowing this module's own `lightness`, which reads a colour rather than a step. */
-  const [hue, saturation, startLightness] = hsl;
-
-  /* Away from the page: darken on a light page, lighten on a dark one. */
-  const target = pageLuminance > 0.5 ? 0 : 1;
-
-  let candidate = colour.primary;
-  for (let step = 1; step <= 20; step += 1) {
-    const moved = startLightness + (target - startLightness) * (step / 20);
-    candidate = fromHsl([hue, saturation, moved]);
-    if ((contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST) return candidate;
-  }
-  return candidate;
+  return (
+    walkAway(
+      colour.primary,
+      colour.background,
+      (candidate) => (contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST,
+    ) ?? colour.primary
+  );
 }
 
+/**
+ * What a button of this theme's `buttonStyle` is actually painted with.
+ *
+ * `buttonStyle` has been in `TokenSet` since phase 1, and four of the five shipped presets set it
+ * to something other than `solid` — `minimal` asks for outline, `garden` for soft. None of it ever
+ * reached the page, because the web compiler never emitted it and no stylesheet asked. Choosing
+ * "Minimal" gave you the same solid button as everything else.
+ *
+ * Resolving it here rather than in CSS is what fixes it for every target at once: a CSS custom
+ * property cannot drive a selector, but it can carry a colour, and email and PDF can read the same
+ * three values without knowing the word "outline".
+ */
 export function buttonSurface(tokens: TokenSet): {
   background: string;
   text: string;
   border: string;
 } {
-  const { background, text } = tokens.colour;
+  const { colour } = tokens;
+  const { background, text } = colour;
   /* Not `colour.primary`: see `brandFill`. A button has to be visible as well as legible. */
-  const primary = brandFill(tokens.colour);
-  const onPrimary = readableOn(primary, background, text);
+  const primary = brandFill(colour);
 
   switch (tokens.buttonStyle) {
     case 'outline':
@@ -350,8 +430,77 @@ export function buttonSurface(tokens: TokenSet): {
        * page.
        */
       return { background: mix(primary, background, 0.14), text: primary, border: primary };
-    default:
-      return { background: primary, text: onPrimary, border: primary };
+    default: {
+      /*
+       * The mid-tone brand is the case this used to get wrong, and it is not a rare one.
+       *
+       * Deepening the fill until it stands off the page and *then* choosing a label makes the two
+       * decisions in the right order, which is why it is done that way — but for a colour that
+       * starts in the middle, the deepening is what destroys the label. Seafoam `#6fb8a6` reads
+       * 5.11:1 against the palette's ink and 2.12:1 against its page; walked out to `#499482` it
+       * reads 3.30 against the page and 3.28 against the ink, so there is no longer any label that
+       * can be put on it. The button came out legible to nobody, and every check passed, because
+       * each one was asking about a different pair.
+       *
+       * A filled button has to satisfy two separate things: its label must be readable *on it*,
+       * and it must be visible *against the page*. Only the first needs the fill. So when the
+       * colour somebody chose can carry a label, it keeps it, and the border carries the boundary
+       * — which is the division the soft tier below already makes for the same reason. The fill is
+       * only walked when nothing can be read on it either way, where a duller button is the better
+       * of two bad outcomes.
+       */
+      const label = readableOn(colour.primary, background, text);
+      const readable = (contrastRatio(label, colour.primary) ?? 0) >= TEXT_CONTRAST;
+      const standsOff = (contrastRatio(colour.primary, background) ?? 0) >= BOUNDARY_CONTRAST;
+
+      /*
+       * When the fill cannot carry the edge, the label's colour can — and it is the right colour
+       * for it rather than a convenient one.
+       *
+       * The border was `brandFill`, the brand walked away from the page until it cleared 3:1. That
+       * works and it invents a colour: every darkening of a mid-tone is a muddier version of it,
+       * so a seafoam brand grew a dark teal edge that appears nowhere in the palette and that
+       * nobody chose. On a pale yellow it grew an olive one.
+       *
+       * `readableOn` has already found a colour that reads against the fill, and it picks it from
+       * the theme's own two poles — the page or the ink. Whichever it lands on is by construction
+       * far from the fill, and the ink is by construction far from the page, so the same value
+       * carries the label *and* the boundary without a third colour existing.
+       */
+      if (readable) {
+        return {
+          background: colour.primary,
+          text: label,
+          border: standsOff ? colour.primary : label,
+        };
+      }
+
+      /*
+       * Nothing reads on the colour as given, so it is walked until something does.
+       *
+       * `brandFill` has already moved it far enough to be *seen*, which is a lower bar than being
+       * read on: a mid-grey `#808080` clears 3:1 against a light page while offering 3.62 to the
+       * page and 2.83 to the ink, so the button is visible and its label is not. Walking on until a
+       * label clears 4.5 is the difference between reporting the problem and not having it.
+       *
+       * The organisation is still told — `checkContrast` reports a primary no label reads on — but
+       * a warning is advice and this is a button somebody has to press.
+       */
+      const legible =
+        walkAway(
+          primary,
+          background,
+          (candidate) =>
+            (contrastRatio(readableOn(candidate, background, text), candidate) ?? 0) >=
+            TEXT_CONTRAST,
+        ) ?? primary;
+
+      return {
+        background: legible,
+        text: readableOn(legible, background, text),
+        border: legible,
+      };
+    }
   }
 }
 

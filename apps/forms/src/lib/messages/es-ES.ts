@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const esES: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Con tecnología de Paloppa',
   'app.signOut': 'Cerrar sesión',
   'app.language': 'Idioma',
   'app.loading': 'Cargando…',
@@ -51,6 +52,7 @@ export const esES: Record<MessageKey, string> = {
   'event.cancel': 'Cancelar',
   'event.createTitle': 'Nuevo evento',
   'event.editTitle': 'Editar evento',
+  'event.notFound': 'No hay ningún evento en esa dirección.',
 
   'nav.events': 'Eventos',
   'nav.forms': 'Formularios',
@@ -117,8 +119,11 @@ export const esES: Record<MessageKey, string> = {
   'inbox.title': 'Respuestas',
   'inbox.intro': 'Las últimas respuestas de todos los formularios que puedes ver.',
   'inbox.empty': 'Aún no hay respuestas.',
+  'inbox.loadFailed': 'No se pudieron cargar las respuestas.',
   'inbox.partial': 'En curso',
   'inbox.complete': 'Enviada',
+  'inbox.search': 'Buscar',
+  'inbox.count': 'plural:one {count} respuesta | other {count} respuestas',
 
   'users.title': 'Usuarios',
   'users.intro':
@@ -484,6 +489,11 @@ export const esES: Record<MessageKey, string> = {
   'brand.save': 'Guardar',
   'brand.saving': 'Guardando…',
   'brand.reset': 'Restablecer valores predeterminados',
+  'brand.clientMode': 'Modo cliente',
+  'brand.clientModeOn': 'Usar nuestro propio logotipo y nombre',
+  'brand.clientModeHint':
+    'Sustituye la marca de Paloppa en la aplicación y en la pantalla de inicio de sesión. Sus formularios publicados ya usan su marca.',
+  'brand.wordmark': 'Nombre en la esquina',
   'brand.colours': 'Colores',
   'brand.logo': 'Logotipo',
 
@@ -567,7 +577,9 @@ export const esES: Record<MessageKey, string> = {
   'demo.banner': 'Modo demo — no se guarda nada y nunca se envía ningún correo.',
   'demo.reset': 'Restablecer datos de demo',
   'demo.signInAs': 'Iniciar sesión como {role}',
-  'demo.signInHint': 'En modo demo no se puede leer el correo, así que inicia sesión directamente:',
+  'demo.signInFailed': 'No se pudo iniciar sesión. ¿Está la API en marcha?',
+  'demo.title': 'Abrir la demo',
+  'demo.signInHint': 'Elige quién quieres ser. Nada aquí es real y nada se guarda.',
 
   'checkin.title': 'Registro de entrada',
   'checkin.counts': '{checkedIn} de {registered} registrados',
@@ -578,12 +590,20 @@ export const esES: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Detener cámara',
   'checkin.cameraUnavailable': 'La cámara no está disponible — escribe la referencia en su lugar.',
   'checkin.arrivedAt': 'Llegó a las {time}',
+  'checkin.leave': 'Salir de la entrada',
+  'checkin.ofRegistered': 'de {registered}',
+  'checkin.idle': 'Escanea una tarjeta o escribe la referencia',
+  'checkin.recent': 'Últimas llegadas',
+  'checkin.undo': 'Deshacer',
+  'checkin.undoConfirm': '¿Deshacer el registro de entrada de {name}?',
+  'checkin.offline': 'Sin conexión: no se pueden comprobar escaneos hasta que vuelva la conexión.',
   'checkin.outcome.admitted': 'Bienvenido',
   'checkin.outcome.already': 'Ya registrado',
   'checkin.outcome.revoked': 'Inscripción retirada',
   'checkin.outcome.wrong-event': 'Evento equivocado',
   'checkin.outcome.not-found': 'No encontrado',
   'checkin.outcome.bad-signature': 'Tarjeta no válida',
+  'checkin.outcome.undone': 'Registro de entrada deshecho',
 
   'attendance.title': 'Asistencia',
   'attendance.loadFailed': 'No se ha podido cargar la lista de asistencia.',
@@ -635,6 +655,10 @@ export const esES: Record<MessageKey, string> = {
   'public.rejected.error':
     'Algo ha fallado por nuestra parte. Tus respuestas siguen aquí: inténtalo de nuevo.',
   'public.notFound': 'Formulario no encontrado.',
+  'public.retry': 'Reintentar',
+  'public.loadFailed': 'No se pudo cargar el formulario.',
+  'public.notFoundHint':
+    'Comprueba el enlace que recibiste o pide uno nuevo al organizador. Puede que se haya retirado.',
   'public.yes': 'Sí',
   'public.no': 'No',
   'public.choose': 'Elegir…',

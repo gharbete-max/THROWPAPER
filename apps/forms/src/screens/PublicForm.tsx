@@ -13,14 +13,17 @@ import {
   type ValidationIssue,
 } from '@tp/shared/forms';
 import { useTranslator } from '../lib/i18n.js';
+import { TRANSLATED_LOCALES } from '../lib/messages/index.js';
 import { LanguagePicker } from '../components/LanguagePicker.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
+import { PoweredBy } from '../components/Logo.js';
 
-type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
+type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
 
 /**
  * The public form. No authentication, no session — the only screen anonymous people reach.
@@ -48,11 +51,17 @@ export default function PublicForm() {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  /*
+   * Without a form there is no author's language list, so the page speaks whatever the visitor's
+   * browser asks for, from everything the app has. It was pinned to Swedish, which made "Form not
+   * found" the one sentence on the public surface a Finnish member with a stale link could not
+   * read — and a stale link is the normal case for a product whose links live on printed paper.
+   */
   const locales: LocaleConfig = useMemo(
     () =>
       form
         ? { supported: form.supportedLocales, default: form.defaultLocale }
-        : { supported: ['sv-SE'], default: 'sv-SE' },
+        : { supported: TRANSLATED_LOCALES, default: 'sv-SE' },
     [form],
   );
   const resolved = resolveLocale(locales, locale);
@@ -64,19 +73,38 @@ export default function PublicForm() {
   /**
    * The public page is not inside the app shell, so it applies the brand itself.
    *
-   * The defaults go up immediately and are replaced when the form arrives with the organisation's
-   * kit. Waiting for the fetch would leave the page unstyled for a moment; painting the defaults
-   * first means the worst case is a brief flash of the wrong palette rather than of no palette.
+   * ## Why it now checks before painting
+   *
+   * This used to put the defaults up immediately and replace them when the form arrived, on the
+   * reasoning that "the worst case is a brief flash of the wrong palette rather than of no
+   * palette". That was the right call between those two, and it is no longer the choice being
+   * made: the server inlines the organisation's own compiled palette into the head of a published
+   * form, so the correct colours are in the bytes before any of this runs.
+   *
+   * Painting the defaults anyway would therefore *create* the flash it was written to soften —
+   * a page that arrives in the organisation's colours, blinks to ours, and blinks back. So when
+   * the server has already painted, this waits for the real kit and adds nothing in between.
+   *
+   * The fallback stays for every case where it has not: the dev server, which serves `index.html`
+   * without rendering it, and any deployment serving the shell unrewritten. There the old
+   * reasoning still applies exactly as written.
    */
   useEffect(() => {
+    const serverPainted = document.querySelector('style[data-tp-brand="server"]') !== null;
+    if (!form?.brand && serverPainted) return;
+
     const style = document.createElement('style');
     style.textContent = toCssBlock(form?.brand ?? defaultTokens);
+    // After the server's block, so the organisation's kit wins once it has actually arrived.
     document.head.appendChild(style);
     return () => style.remove();
   }, [form?.brand]);
 
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
     if (!slug) return;
+    setPhase('loading');
     fetch(`/api/public/forms/${slug}`)
       .then((response) => (response.ok ? (response.json() as Promise<PublicFormResponse>) : null))
       .then((loaded) => {
@@ -96,8 +124,14 @@ export default function PublicForm() {
         }
         setValues((current) => ({ ...prefilled, ...current }));
       })
-      .catch(() => setPhase('missing'));
-  }, [slug, params]);
+      /*
+       * A connection that dropped is not a form that does not exist. This mapped every failure to
+       * `'missing'`, which told somebody on venue wifi that the form had been withdrawn — the same
+       * false statement the submit path below stopped making. A 404 arrives as `null` above; what
+       * lands here never reached the server.
+       */
+      .catch(() => setPhase('failed'));
+  }, [slug, params, attempt]);
 
   // Resuming replaces the answers, and the locale the draft was saved in.
   useEffect(() => {
@@ -319,7 +353,7 @@ export default function PublicForm() {
    * The tab, too.
    *
    * The server sends a per-form `<title>` for crawlers; a browser that has already loaded the app
-   * and navigated within it never asks the server again, so without this the tab says "Formwork"
+   * and navigated within it never asks the server again, so without this the tab says "Paloppa"
    * for every form somebody has open at once.
    *
    * Above the early returns, with the other hooks. It sat below them at first, so the loading
@@ -338,10 +372,53 @@ export default function PublicForm() {
 
   if (phase === 'loading') return <main className="shell shell--narrow" />;
 
-  if (phase === 'missing') {
+  if (phase === 'failed') {
     return (
-      <main className="shell shell--narrow">
-        <p className="muted">{t('public.notFound')}</p>
+      <main className="shell shell--narrow stack">
+        <EmptyState
+          icon="warning"
+          title={t('public.loadFailed')}
+          hint={t('public.rejected.offline')}
+          level="h1"
+          action={
+            <button
+              className="button"
+              type="button"
+              onClick={() => setAttempt((value) => value + 1)}
+            >
+              {t('public.retry')}
+            </button>
+          }
+        />
+      </main>
+    );
+  }
+
+  if (phase === 'missing') {
+    /*
+     * The empty-state treatment, not a line of grey: a mark, the sentence at full contrast, and
+     * what to do about it. There is no organiser to name and nowhere to go back to — the person
+     * arrived from a brochure — so the way out is the hint, and the language control is the one
+     * thing on the page that helps them read it.
+     */
+    return (
+      <main className="shell shell--narrow stack">
+        <header className="row row--between">
+          <span />
+          <LanguagePicker
+            locales={TRANSLATED_LOCALES}
+            current={resolved}
+            onChange={setLocale}
+            t={t}
+            variant="corner"
+          />
+        </header>
+        <EmptyState
+          icon="search"
+          title={t('public.notFound')}
+          hint={t('public.notFoundHint')}
+          level="h1"
+        />
       </main>
     );
   }
@@ -539,6 +616,7 @@ export default function PublicForm() {
           </div>
         </form>
       )}
+      {form && <PoweredBy tokens={form.brand} />}
     </main>
   );
 }

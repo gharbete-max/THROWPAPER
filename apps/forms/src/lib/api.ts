@@ -12,7 +12,7 @@ export interface BrandKitResponse {
 }
 
 /**
- * Typed client for the Formwork API.
+ * Typed client for the Paloppa API.
  *
  * Bearer tokens in memory, refresh token in localStorage: a token in localStorage is readable by
  * any script on the page, so the short-lived one never goes there. Rule 3 — every screen calls a
@@ -295,6 +295,9 @@ export const client = {
       } | null;
       checkedInAt: string | null;
     }>(`/v1/events/${eventId}/check-ins`, { method: 'POST', body: JSON.stringify({ code }) }),
+
+  undoCheckIn: (eventId: string, submissionId: string) =>
+    request<null>(`/v1/events/${eventId}/check-ins/${submissionId}`, { method: 'DELETE' }),
 
   attendance: (eventId: string) =>
     request<{

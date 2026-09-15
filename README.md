@@ -19,6 +19,8 @@ shared database.
 3. `docs/SPEC-forms.md` — Track A.
 4. `docs/SPEC-mailer.md` — Track B.
 5. `docs/ROADMAP.md` — phases for both tracks and how to run them in parallel.
+6. `LAUNCH-CHECKLIST.md` — everything still temporary, unconfigured or unconfirmed before the
+   product goes live: placeholder legal text, empty connectors, open audit items, your decisions.
 
 The specs below `START-HERE.md` are a destination, not a plan. Consult them when a decision has
 long-term consequences; build what `START-HERE.md` says.

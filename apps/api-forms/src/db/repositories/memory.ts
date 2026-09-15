@@ -627,6 +627,13 @@ export function createMemoryRepositories(
         state.checkIns.push(record);
         return { created: true, checkIn: { ...record } };
       },
+      withdraw: async (organisationId, submissionId) => {
+        const before = state.checkIns.length;
+        state.checkIns = state.checkIns.filter(
+          (c) => !(c.organisationId === organisationId && c.submissionId === submissionId),
+        );
+        return state.checkIns.length < before;
+      },
     },
 
     jobs: {

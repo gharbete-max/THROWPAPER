@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import type { api } from '@tp/shared';
 import { client } from '../lib/api.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { useSession } from '../lib/session.js';
 import { fromLocalInput, toLocalInput, useT } from '../lib/i18n.js';
 
@@ -39,6 +40,7 @@ export function EventForm() {
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [missing, setMissing] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -46,10 +48,26 @@ export function EventForm() {
       .listEvents()
       .then(({ events }) => events.find((event) => event.id === id))
       .then((event) => {
+        // A wrong id used to render a blank "Edit event" that would happily save nothing.
         if (event) setDraft(toDraft(event));
+        else setMissing(true);
       })
       .catch(() => setError('load-failed'));
   }, [id]);
+
+  if (missing) {
+    return (
+      <EmptyState
+        icon="events"
+        title={t('event.notFound')}
+        action={
+          <Link className="button button--quiet" to="/events">
+            {t('events.title')}
+          </Link>
+        }
+      />
+    );
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();

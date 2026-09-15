@@ -22,7 +22,7 @@ import { translatableTexts } from './helpers.js';
  * a Han character in a Swedish one. That is a narrow claim and a real one.
  *
  * Latin script is deliberately allowed everywhere — every language here borrows brand names,
- * units and codes ("PNG", "Formwork", "Ctrl+Z"), and forbidding it would be wrong far more often
+ * units and codes ("PNG", "Paloppa", "Ctrl+Z"), and forbidding it would be wrong far more often
  * than right.
  */
 

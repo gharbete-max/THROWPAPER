@@ -127,7 +127,7 @@ describe('the facts a human still owes', () => {
   /**
    * Every gap is marked, and the marker is what the page renders.
    *
-   * The failure this prevents is a placeholder that reads like an answer — "Formwork AB" sitting
+   * The failure this prevents is a placeholder that reads like an answer — "Paloppa AB" sitting
    * where a real company name belongs, shipped because it looked plausible in review.
    */
   it('marks them rather than guessing', () => {

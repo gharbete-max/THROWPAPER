@@ -77,7 +77,7 @@ export interface TestHarness {
 
 export async function createTestHarness(
   seed: Partial<MemoryState> = {},
-  options: { renderer?: PdfRenderer & { rendered: string[] } } = {},
+  options: { renderer?: PdfRenderer & { rendered: string[] }; contactAddress?: string | null } = {},
 ): Promise<TestHarness> {
   const repos = createMemoryRepositories({
     organisations: [testOrganisation],
@@ -102,6 +102,8 @@ export async function createTestHarness(
     probeDatabase: false,
     // Tests drain the queue by hand, so a job runs exactly when the test says it does.
     startWorker: false,
+    contactAddress:
+      options.contactAddress === undefined ? 'hello@paloppa.test' : options.contactAddress,
   });
   await app.ready();
 

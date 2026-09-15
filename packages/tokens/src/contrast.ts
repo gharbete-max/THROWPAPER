@@ -89,9 +89,15 @@ export function checkContrast(tokens: TokenSet): ContrastFinding[] {
     ['colour.success', colour.success, colour.background, 'text'],
     ['colour.warning', colour.warning, colour.background, 'text'],
     ['colour.danger', colour.danger, colour.background, 'text'],
-    // A solid button paints the page background colour on top of the primary.
-    ['colour.background on primary', colour.background, colour.primary, 'text'],
-    ['colour.background on secondary', colour.background, colour.secondary, 'text'],
+    /*
+     * `secondary` is read, not filled.
+     *
+     * This was checked as "the page colour on top of secondary", which described a filled
+     * secondary button the product has never had. Every use of the token is a focus ring or the
+     * link on `.form-link`, and a link is small text, so the bar it has to clear is the text one
+     * against the page it sits on — the pair below. All five shipped presets already clear it.
+     */
+    ['colour.secondary', colour.secondary, colour.background, 'text'],
     ['colour.border', colour.border, colour.background, 'boundary'],
   ];
 
@@ -104,6 +110,39 @@ export function checkContrast(tokens: TokenSet): ContrastFinding[] {
       findings.push({ token, against: background, ratio, required, kind });
     }
   }
+
+  /*
+   * The button, checked the way it is actually painted.
+   *
+   * This pair used to be written as "the page colour on top of the primary", which was true when
+   * a filled button was `background: primary; color: background`. It is not what happens now:
+   * `buttonSurface` picks the label with `readableOn`, so the button wears whichever of the page
+   * and the ink reads better on the fill. Checking the old pair reported a failure for every
+   * palette with a light primary — including ones the button renders perfectly — and reported
+   * nothing for a dark primary on a dark page, which is the case that actually breaks.
+   *
+   * So the question asked here is the one the button asks: **can this colour carry a label at
+   * all?** A colour in the middle of the range can carry neither, and no amount of deriving fixes
+   * it — that is a palette problem and the person choosing it is the only one who can solve it.
+   *
+   * Kept as a `max` here rather than importing `readableOn`, because `derive` imports this module
+   * and the cycle is not worth the four lines it would save. The two must agree; they are tested
+   * together in `brand-fill.test.ts`.
+   */
+  const labelOnPrimary = Math.max(
+    contrastRatio(colour.background, colour.primary) ?? 0,
+    contrastRatio(colour.text, colour.primary) ?? 0,
+  );
+  if (labelOnPrimary > 0 && labelOnPrimary < TEXT_CONTRAST) {
+    findings.push({
+      token: 'colour.primary as a button fill',
+      against: colour.primary,
+      ratio: round(labelOnPrimary),
+      required: TEXT_CONTRAST,
+      kind: 'text',
+    });
+  }
+
   return findings;
 }
 

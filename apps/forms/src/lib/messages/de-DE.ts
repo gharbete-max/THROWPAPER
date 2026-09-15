@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const deDE: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Bereitgestellt von Paloppa',
   'app.signOut': 'Abmelden',
   'app.language': 'Sprache',
   'app.loading': 'Wird geladen…',
@@ -51,6 +52,7 @@ export const deDE: Record<MessageKey, string> = {
   'event.cancel': 'Abbrechen',
   'event.createTitle': 'Neue Veranstaltung',
   'event.editTitle': 'Veranstaltung bearbeiten',
+  'event.notFound': 'Unter dieser Adresse gibt es keine Veranstaltung.',
 
   'nav.events': 'Veranstaltungen',
   'nav.forms': 'Formulare',
@@ -118,8 +120,11 @@ export const deDE: Record<MessageKey, string> = {
   'inbox.title': 'Antworten',
   'inbox.intro': 'Die neuesten Antworten aus allen Formularen, die Sie sehen können.',
   'inbox.empty': 'Noch keine Antworten.',
+  'inbox.loadFailed': 'Die Antworten konnten nicht geladen werden.',
   'inbox.partial': 'In Bearbeitung',
   'inbox.complete': 'Abgeschickt',
+  'inbox.search': 'Suchen',
+  'inbox.count': 'plural:one {count} Antwort | other {count} Antworten',
 
   'users.title': 'Benutzer',
   'users.intro':
@@ -485,6 +490,11 @@ export const deDE: Record<MessageKey, string> = {
   'brand.save': 'Speichern',
   'brand.saving': 'Wird gespeichert…',
   'brand.reset': 'Auf Standard zurücksetzen',
+  'brand.clientMode': 'Kundenmodus',
+  'brand.clientModeOn': 'Eigenes Logo und eigenen Namen verwenden',
+  'brand.clientModeHint':
+    'Ersetzt die Paloppa-Marke in der App und auf dem Anmeldebildschirm. Ihre veröffentlichten Formulare nutzen bereits Ihr Branding.',
+  'brand.wordmark': 'Name in der Ecke',
   'brand.colours': 'Farben',
   'brand.logo': 'Logo',
 
@@ -568,8 +578,9 @@ export const deDE: Record<MessageKey, string> = {
   'demo.banner': 'Demomodus — nichts wird gespeichert und es wird nie eine E-Mail versendet.',
   'demo.reset': 'Demodaten zurücksetzen',
   'demo.signInAs': 'Anmelden als {role}',
-  'demo.signInHint':
-    'Im Demomodus lassen sich keine E-Mails lesen, melden Sie sich also direkt an:',
+  'demo.signInFailed': 'Anmeldung nicht möglich. Läuft die API?',
+  'demo.title': 'Demo öffnen',
+  'demo.signInHint': 'Wählen Sie eine Rolle. Nichts hier ist echt, und nichts wird gespeichert.',
 
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} von {registered} eingecheckt',
@@ -581,12 +592,21 @@ export const deDE: Record<MessageKey, string> = {
   'checkin.cameraUnavailable':
     'Die Kamera ist nicht verfügbar — geben Sie stattdessen die Referenz ein.',
   'checkin.arrivedAt': 'Angekommen {time}',
+  'checkin.leave': 'Einlass verlassen',
+  'checkin.ofRegistered': 'von {registered}',
+  'checkin.idle': 'Karte scannen oder Referenz eingeben',
+  'checkin.recent': 'Zuletzt eingetroffen',
+  'checkin.undo': 'Rückgängig',
+  'checkin.undoConfirm': 'Check-in für {name} rückgängig machen?',
+  'checkin.offline':
+    'Offline — Scans können erst geprüft werden, wenn die Verbindung wieder steht.',
   'checkin.outcome.admitted': 'Willkommen',
   'checkin.outcome.already': 'Bereits eingecheckt',
   'checkin.outcome.revoked': 'Anmeldung zurückgezogen',
   'checkin.outcome.wrong-event': 'Falsche Veranstaltung',
   'checkin.outcome.not-found': 'Nicht gefunden',
   'checkin.outcome.bad-signature': 'Ungültige Karte',
+  'checkin.outcome.undone': 'Check-in rückgängig gemacht',
 
   'attendance.title': 'Teilnahme',
   'attendance.loadFailed': 'Die Teilnehmerliste konnte nicht geladen werden.',
@@ -638,6 +658,10 @@ export const deDE: Record<MessageKey, string> = {
   'public.rejected.error':
     'Bei uns ist etwas schiefgegangen. Ihre Antworten sind noch da — bitte versuchen Sie es erneut.',
   'public.notFound': 'Formular nicht gefunden.',
+  'public.retry': 'Erneut versuchen',
+  'public.loadFailed': 'Das Formular konnte nicht geladen werden.',
+  'public.notFoundHint':
+    'Prüfen Sie den Link, den Sie erhalten haben, oder bitten Sie den Veranstalter um einen neuen. Er wurde möglicherweise zurückgezogen.',
   'public.yes': 'Ja',
   'public.no': 'Nein',
   'public.choose': 'Wählen…',

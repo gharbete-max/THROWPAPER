@@ -13,7 +13,7 @@ const API_ORIGIN = 'http://localhost:4001';
  * a page. In development they are two ports, and anything not listed here falls through to Vite's
  * SPA fallback — which answers `200 text/html` with the app shell. That is the failure mode worth
  * naming: nothing errors. The invoice link on the Invoices screen returned a 2 kB page titled
- * "Formwork" instead of a 167 kB invoice, and the only way to notice was to open one.
+ * "Paloppa" instead of a 167 kB invoice, and the only way to notice was to open one.
  *
  * `/api` is the app's own calls, prefixed so they cannot collide with a route the SPA owns.
  * `/i/` is a public document the API renders per token, passed through unrewritten because the
@@ -58,6 +58,27 @@ export default defineConfig({
         clientsClaim: true,
         globPatterns: ['**/*.{js,css,html,woff2}'],
         /**
+         * Every font subset except the one nearly everybody reads.
+         *
+         * `woff2` in the pattern above was aspirational until this build — the app shipped no font
+         * files at all — and the moment it did, the worker started precaching all 21 of them:
+         * three weights across latin, latin-ext, cyrillic, cyrillic-ext, greek, greek-ext and
+         * vietnamese. That is 288 KB on install, and it undoes the whole point of `unicode-range`,
+         * which is that the bytes follow the language rather than the visitor.
+         *
+         * `latin` is kept because it is the offline case that exists. The surface that has to work
+         * without a network is door check-in at a venue, and `latin` carries every language this
+         * product ships that Inter can set except Russian — å ä ö æ ø ð þ are all in it. The rest
+         * are fetched when there is a network, and fall back to the system font when there is not,
+         * which is a degradation nobody at a door will notice.
+         */
+        globIgnores: [
+          '**/inter-latin-ext-*.woff2',
+          '**/inter-cyrillic-*.woff2',
+          '**/inter-greek-*.woff2',
+          '**/inter-vietnamese-*.woff2',
+        ],
+        /**
          * What the worker must not answer from its own precache.
          *
          * The API, because a cached registration count or attendee list is actively misleading.
@@ -71,8 +92,8 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api/, ...SERVER_RENDERED_PATHS],
       },
       manifest: {
-        name: 'Formwork',
-        short_name: 'Formwork',
+        name: 'Paloppa',
+        short_name: 'Paloppa',
         description: 'Forms, registrations and check-in',
         start_url: '/',
         display: 'standalone',

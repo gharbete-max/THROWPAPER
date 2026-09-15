@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const svSE: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Drivs av Paloppa',
   'app.signOut': 'Logga ut',
   'app.language': 'Språk',
   'app.loading': 'Laddar…',
@@ -50,6 +51,7 @@ export const svSE: Record<MessageKey, string> = {
   'event.cancel': 'Avbryt',
   'event.createTitle': 'Nytt evenemang',
   'event.editTitle': 'Redigera evenemang',
+  'event.notFound': 'Det finns inget evenemang på den adressen.',
 
   'nav.events': 'Evenemang',
   'nav.forms': 'Formulär',
@@ -116,8 +118,11 @@ export const svSE: Record<MessageKey, string> = {
   'inbox.title': 'Svar',
   'inbox.intro': 'De senaste svaren från alla formulär du har tillgång till.',
   'inbox.empty': 'Inga svar ännu.',
+  'inbox.loadFailed': 'Svaren kunde inte läsas in.',
   'inbox.partial': 'Påbörjat',
   'inbox.complete': 'Inskickat',
+  'inbox.search': 'Sök',
+  'inbox.count': 'plural:one {count} svar | other {count} svar',
 
   'users.title': 'Användare',
   'users.intro': 'Alla i organisationen. Öppna någon för att se deras formulär och papperskorg.',
@@ -473,6 +478,11 @@ export const svSE: Record<MessageKey, string> = {
   'brand.save': 'Spara',
   'brand.saving': 'Sparar…',
   'brand.reset': 'Återställ standard',
+  'brand.clientMode': 'Kundläge',
+  'brand.clientModeOn': 'Använd vår egen logotyp och vårt namn',
+  'brand.clientModeHint':
+    'Ersätter Paloppas märke i appen och på inloggningsskärmen. Era publicerade formulär använder redan er profil.',
+  'brand.wordmark': 'Namn i hörnet',
   'brand.colours': 'Färger',
   'brand.logo': 'Logotyp',
 
@@ -555,7 +565,9 @@ export const svSE: Record<MessageKey, string> = {
   'demo.banner': 'Demoläge — data sparas inte och e-post skickas aldrig.',
   'demo.reset': 'Återställ demodata',
   'demo.signInAs': 'Logga in som {role}',
-  'demo.signInHint': 'I demoläge går ingen e-post att läsa, så logga in direkt:',
+  'demo.signInFailed': 'Det gick inte att logga in. Kör API:et?',
+  'demo.title': 'Öppna demon',
+  'demo.signInHint': 'Välj vem du vill vara. Inget här är på riktigt, och inget sparas.',
 
   'checkin.title': 'Incheckning',
   'checkin.counts': '{checkedIn} av {registered} incheckade',
@@ -566,12 +578,20 @@ export const svSE: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Stoppa kameran',
   'checkin.cameraUnavailable': 'Kameran är inte tillgänglig — skriv in referensen i stället.',
   'checkin.arrivedAt': 'Anlände {time}',
+  'checkin.leave': 'Lämna entrén',
+  'checkin.ofRegistered': 'av {registered}',
+  'checkin.idle': 'Skanna ett kort eller skriv referensen',
+  'checkin.recent': 'Senast anlända',
+  'checkin.undo': 'Ångra',
+  'checkin.undoConfirm': 'Ångra incheckningen för {name}?',
+  'checkin.offline': 'Offline — skanningar kan inte kontrolleras förrän anslutningen är tillbaka.',
   'checkin.outcome.admitted': 'Välkommen',
   'checkin.outcome.already': 'Redan incheckad',
   'checkin.outcome.revoked': 'Anmälan återkallad',
   'checkin.outcome.wrong-event': 'Fel evenemang',
   'checkin.outcome.not-found': 'Hittades inte',
   'checkin.outcome.bad-signature': 'Ogiltigt kort',
+  'checkin.outcome.undone': 'Incheckning ångrad',
 
   'attendance.title': 'Närvaro',
   'attendance.loadFailed': 'Närvarolistan kunde inte hämtas.',
@@ -622,6 +642,10 @@ export const svSE: Record<MessageKey, string> = {
     'Dina svar finns kvar, men de kunde inte skickas. Kontrollera din anslutning och försök igen.',
   'public.rejected.error': 'Något gick fel hos oss. Dina svar finns kvar — försök igen.',
   'public.notFound': 'Formuläret finns inte.',
+  'public.retry': 'Försök igen',
+  'public.loadFailed': 'Formuläret kunde inte läsas in.',
+  'public.notFoundHint':
+    'Kontrollera länken du fick, eller be arrangören om en ny. Den kan ha tagits bort.',
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Välj…',

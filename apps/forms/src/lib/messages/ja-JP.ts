@@ -8,7 +8,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const jaJP: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Paloppa 提供',
   'app.signOut': 'ログアウト',
   'app.language': '言語',
   'app.loading': '読み込み中…',
@@ -55,6 +56,7 @@ export const jaJP: Record<MessageKey, string> = {
   'event.cancel': 'キャンセル',
   'event.createTitle': '新しいイベント',
   'event.editTitle': 'イベントを編集',
+  'event.notFound': 'そのアドレスにイベントはありません。',
 
   'nav.events': 'イベント',
   'nav.forms': 'フォーム',
@@ -121,8 +123,11 @@ export const jaJP: Record<MessageKey, string> = {
   'inbox.title': '回答',
   'inbox.intro': '閲覧できるすべてのフォームの最新の回答です。',
   'inbox.empty': '回答はまだありません。',
+  'inbox.loadFailed': '回答を読み込めませんでした。',
   'inbox.partial': '入力途中',
   'inbox.complete': '送信済み',
+  'inbox.search': '検索',
+  'inbox.count': 'plural:other {count} 件の回答',
 
   'users.title': 'ユーザー',
   'users.intro': '組織の全員です。開くとその人のフォームとごみ箱を見られます。',
@@ -478,6 +483,11 @@ export const jaJP: Record<MessageKey, string> = {
   'brand.save': '保存',
   'brand.saving': '保存中…',
   'brand.reset': '既定値に戻す',
+  'brand.clientMode': 'クライアントモード',
+  'brand.clientModeOn': '自社のロゴと名称を使用する',
+  'brand.clientModeHint':
+    'アプリとサインイン画面の Paloppa のマークを置き換えます。公開済みのフォームにはすでに自社のブランドが適用されています。',
+  'brand.wordmark': '隅に表示する名称',
   'brand.colours': '色',
   'brand.logo': 'ロゴ',
 
@@ -560,7 +570,9 @@ export const jaJP: Record<MessageKey, string> = {
   'demo.banner': 'デモモード — 何も保存されず、メールも一切送信されません。',
   'demo.reset': 'デモデータをリセット',
   'demo.signInAs': '{role} としてログイン',
-  'demo.signInHint': 'デモモードではメールを読めないため、直接ログインしてください：',
+  'demo.signInFailed': 'サインインできませんでした。APIは起動していますか？',
+  'demo.title': 'デモを開く',
+  'demo.signInHint': '役割を選んでください。ここにあるものはすべて架空で、何も保存されません。',
 
   'checkin.title': '受付',
   'checkin.counts': '{registered} 名中 {checkedIn} 名が受付済み',
@@ -571,12 +583,20 @@ export const jaJP: Record<MessageKey, string> = {
   'checkin.stopCamera': 'カメラを停止',
   'checkin.cameraUnavailable': 'カメラが使えません — 代わりに受付番号を入力してください。',
   'checkin.arrivedAt': '{time} に到着',
+  'checkin.leave': '受付を離れる',
+  'checkin.ofRegistered': '/ {registered}',
+  'checkin.idle': 'カードをスキャンするか、参照番号を入力してください',
+  'checkin.recent': '最近の到着',
+  'checkin.undo': '取り消す',
+  'checkin.undoConfirm': '{name} のチェックインを取り消しますか？',
+  'checkin.offline': 'オフラインです。接続が回復するまでスキャンを確認できません。',
   'checkin.outcome.admitted': 'ようこそ',
   'checkin.outcome.already': 'すでに受付済みです',
   'checkin.outcome.revoked': '申込は取り消されています',
   'checkin.outcome.wrong-event': 'イベントが違います',
   'checkin.outcome.not-found': '見つかりません',
   'checkin.outcome.bad-signature': '無効な受付票',
+  'checkin.outcome.undone': 'チェックインを取り消しました',
 
   'attendance.title': '出席',
   'attendance.loadFailed': '出席リストを読み込めませんでした。',
@@ -628,6 +648,10 @@ export const jaJP: Record<MessageKey, string> = {
   'public.rejected.error':
     'こちら側で問題が発生しました。回答は残っていますので、もう一度お試しください。',
   'public.notFound': 'フォームが見つかりません。',
+  'public.retry': '再試行',
+  'public.loadFailed': 'フォームを読み込めませんでした。',
+  'public.notFoundHint':
+    '受け取ったリンクを確認するか、主催者に新しいリンクを依頼してください。取り下げられた可能性があります。',
   'public.yes': 'はい',
   'public.no': 'いいえ',
   'public.choose': '選択してください…',

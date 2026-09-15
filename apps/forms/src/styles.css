@@ -11,9 +11,16 @@ body {
   line-height: var(--tp-type-line-height);
 }
 
+/*
+ * `--tp-colour-heading` is the brand where it reads and the ink where it does not.
+ *
+ * It was `primary` outright, which is a fill colour a customer chooses for buttons and is checked
+ * for nothing as text. Under the shipped palette that is seafoam on paper at 2.12:1 — the sign-in
+ * screen's "Sign in" was the faintest thing on the page. See `headingInk`.
+ */
 .shell h1 {
   font-family: var(--tp-type-heading-font);
-  color: var(--tp-colour-primary);
+  color: var(--tp-colour-heading);
   margin: 0 0 var(--tp-spacing-unit);
 }
 
@@ -140,7 +147,7 @@ select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -149,16 +156,19 @@ a:focus-visible {
   cursor: default;
 }
 
+/*
+ * No `color` here or on hover. Both were `primary`, a fill colour that measures 2.12:1 as text on
+ * the page and 1.92:1 on a card, and the hover reached every quiet button in the product — "Undo"
+ * at the door lost its label under the thumb. The label is the ink; the hover is the background.
+ */
 .button--quiet {
   background: transparent;
-  color: var(--tp-colour-primary);
   border-color: var(--tp-colour-border);
 }
 
 .button--quiet:hover:not(:disabled) {
   background: var(--tp-colour-surface);
   border-color: var(--tp-colour-primary);
-  color: var(--tp-colour-primary);
 }
 
 .button--danger:hover:not(:disabled) {
@@ -331,6 +341,101 @@ a:focus-visible {
 }
 
 /* Check-in. Loud on purpose: read at arm's length, in bad light, with a queue waiting. */
+.door {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  max-inline-size: 40rem;
+  margin-inline: auto;
+}
+
+.door__top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.door__title {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+/* The count: the largest number on the screen, because it is the one asked for across a room. */
+.door__count {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.door__countIn {
+  font-size: var(--tp-text-3xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.door__offline {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  border-radius: var(--tp-radius);
+  background: color-mix(in srgb, var(--tp-colour-warning) 14%, transparent);
+  color: var(--tp-colour-text);
+}
+
+.door__form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.door__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.door__check {
+  flex: 1 1 12rem;
+  min-block-size: calc(var(--tp-control-height) * 1.25);
+  font-size: var(--tp-text-lg);
+}
+
+.door__recent h2 {
+  margin: 0 0 var(--tp-spacing-unit);
+}
+
+.door__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.door__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  min-block-size: 44px;
+}
+
+.door__row + .door__row {
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.door__who {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .checkin__video {
   width: 100%;
   max-height: 40vh;
@@ -346,19 +451,33 @@ a:focus-visible {
 }
 
 .checkin__input {
-  font-size: var(--tp-text-xl);
+  /* Display size: read at arm's length, typed in gloves. */
+  font-size: var(--tp-text-2xl);
+  min-block-size: calc(var(--tp-control-height) * 1.5);
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  text-align: center;
 }
 
+/*
+ * A fixed height, so the page does not jump at the moment the operator needs certainty. The
+ * idle prompt fills it before the first scan.
+ */
 .verdict {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: calc(var(--tp-spacing-unit) * 0.5);
+  min-block-size: 9.5rem;
   padding: calc(var(--tp-spacing-unit) * 3);
   border-radius: var(--tp-radius);
   border: var(--tp-border-width) solid var(--tp-colour-border);
   color: var(--tp-colour-background);
+}
+
+.verdict--idle {
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-muted);
 }
 
 .verdict--good {
@@ -520,10 +639,6 @@ textarea {
 }
 
 @media (max-width: 600px) {
-  .shell {
-    padding: calc(var(--tp-spacing-unit) * 2) calc(var(--tp-spacing-unit) * 2);
-  }
-
   /* Stacked, full-width controls: thumbs are wide and screens are narrow. */
   .row .button,
   .row .button--quiet {
@@ -660,7 +775,7 @@ textarea {
 
 .choice--buttons .choice__option:has(input:focus-visible),
 .choice--cards .choice__option:has(input:focus-visible) {
-  outline: 2px solid var(--tp-colour-primary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -871,7 +986,7 @@ textarea {
 }
 
 .template:has(input:focus-visible) {
-  outline: 2px solid var(--tp-colour-primary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -932,7 +1047,7 @@ textarea {
 
 /* Ties a row in the list to the question it is on the page. */
 .preview__field--selected {
-  outline: 2px solid var(--tp-colour-primary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 4px;
   border-radius: var(--tp-radius);
 }
@@ -1407,7 +1522,7 @@ input[type='range'] {
 /* The ring is drawn on the glyph, because the input it belongs to is clipped to a pixel. */
 .rating__point input:focus-visible ~ .rating__glyph,
 .rating__point input:focus-visible ~ .rating__number {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -1525,9 +1640,62 @@ input[type='range'] {
   block-size: 3.1em;
   margin-block: -0.95em;
   flex: none;
-  color: var(--tp-colour-primary);
-  /* Creases belong to the fold. At rest this is a plane, not a sheet of folded paper. */
-  stroke-opacity: 0;
+}
+
+/* --- The client lockup -----------------------------------------------------
+ *
+ * A customer's logo, and the only thing done to it is deciding how tall it is.
+ *
+ * No border, no background, no radius, no shadow, no filter and no glass. It is somebody else's
+ * asset and every one of those is a change to it — a container invents a boundary their designer
+ * did not draw, and a filter is recolouring by another name. The height is ours to set because the
+ * bar has a height; the rest is theirs.
+ *
+ * `width: auto` with a max, so a wide wordmark and a square badge both fit without either being
+ * squashed: the height governs, the width follows, and a very wide lockup is capped rather than
+ * pushing the navigation off a phone.
+ */
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.lockup__logo {
+  block-size: var(--lockup-logo-height, 2em);
+  inline-size: auto;
+  max-inline-size: 12rem;
+  /* Never fills or crops: whatever aspect ratio they uploaded is the one that renders. */
+  object-fit: contain;
+}
+
+/*
+ * Which variant shows, in the theme's own three states.
+ *
+ * Light is the default and dark replaces it, both under the media query and under an explicit
+ * `data-theme`, so somebody who has chosen light on a dark system still gets the light logo. This
+ * is the same shape as `toThemedCssBlock`, and it is why the two files are not a `<picture>`.
+ */
+.lockup__logo--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .lockup__logo--light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .lockup__logo--dark {
+    display: inline-block;
+  }
+}
+
+:root[data-theme='dark'] .lockup__logo--light {
+  display: none;
+}
+
+:root[data-theme='dark'] .lockup__logo--dark {
+  display: inline-block;
 }
 
 .wordmark {
@@ -1535,12 +1703,6 @@ input[type='range'] {
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 1.25);
   font-size: var(--tp-text-base);
-}
-
-/* While it unfolds, the creases are what say it is paper. */
-.wordmark:hover .logo,
-.wordmark:focus-visible .logo {
-  stroke-opacity: 1;
 }
 
 /* --- The intro ------------------------------------------------------------
@@ -1575,7 +1737,7 @@ input[type='range'] {
    * so this is now just a gentle push-in that settles — enough to feel like an entrance without
    * the pan that made it a shot.
    */
-  animation: intro-camera 1400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: intro-camera 1400ms var(--tp-ease-unfurl) forwards;
 }
 
 .intro__word {
@@ -1631,7 +1793,7 @@ input[type='range'] {
   /* Roughly the path length. Over-long is safe: the dash simply starts further off-screen. */
   stroke-dasharray: 260;
   stroke-dashoffset: 260;
-  animation: draw-signature 900ms 120ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: draw-signature 900ms 120ms var(--tp-ease-unfurl) forwards;
 }
 
 .signed__tick {
@@ -1662,8 +1824,8 @@ input[type='range'] {
   opacity: 0;
   transform: translateY(10px);
   transition:
-    opacity 340ms ease-out,
-    transform 340ms cubic-bezier(0.2, 0.8, 0.3, 1);
+    opacity 340ms var(--tp-ease-unfurl),
+    transform 340ms var(--tp-ease-unfurl);
 }
 
 .reveal--in {
@@ -1940,8 +2102,14 @@ input[type='file']:disabled::file-selector-button {
   background: color-mix(in srgb, var(--tp-colour-primary) 6%, transparent);
 }
 
-.inbox__form {
+.inbox__who {
   font-weight: var(--tp-type-weight-bold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inbox__form {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2038,8 +2206,18 @@ input[type='file']:disabled::file-selector-button {
   padding: calc(var(--tp-spacing-unit) * 0.4);
   list-style: none;
   min-inline-size: 12rem;
-  /* Twelve languages is taller than a phone. Scroll the list, never the page behind it. */
-  max-block-size: min(60vh, 24rem);
+  /*
+   * Twelve languages is taller than a phone. Scroll the list, never the page behind it.
+   *
+   * The cap is a **half row**, deliberately, rather than a round number that lands wherever it
+   * lands. At `24rem` it cut 0.65 of the way through the ninth language, which does not read as
+   * "there is more below" — it reads as a list that has been chopped, and it put a sliver of
+   * Español under the bottom edge. A row is `--tp-control-height`, so eight and a half of them
+   * plus the list's own padding always cuts a row cleanly in half however the brand resizes
+   * controls: the partial row is then obviously a partial row, which is the oldest scroll
+   * affordance there is.
+   */
+  max-block-size: min(60vh, calc(var(--tp-control-height) * 8.5 + var(--tp-spacing-unit) * 0.8));
   overflow-y: auto;
   overscroll-behavior: contain;
   border: var(--tp-border-width) solid var(--tp-colour-border);
@@ -2129,6 +2307,80 @@ html {
   /* Rotating a phone must not silently inflate every font. */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+
+  /*
+   * In-page anchors travel rather than teleport.
+   *
+   * The landing's "See what it does" points at `#features`, and an instant jump there is the one
+   * moment on the page where somebody loses their place — the header stays put, the body swaps, and
+   * it reads as a page load rather than as movement down the same page.
+   *
+   * Safe to state unconditionally: the reduced-motion block already forces
+   * `scroll-behavior: auto !important` on everything, so this cannot reach somebody who has asked
+   * for stillness. It is also the one kind of motion that has no `.system` question — an anchor on
+   * a published form scrolls the respondent's own page, not ours.
+   */
+  scroll-behavior: smooth;
+}
+
+/*
+ * Skip to content: the first thing in the tab order, invisible until it is reached.
+ *
+ * Every page here starts with a header of links, so without this a keyboard user tabs through the
+ * whole bar on every single page before reaching anything they came for. It is not a nicety — it
+ * is the standard remedy for repeated blocks, and it was simply missing.
+ *
+ * Positioned rather than clipped to nothing. The `width: 1px; clip` trick hides it from sighted
+ * keyboard users too, which defeats the point: this must *appear* when it takes focus, or nobody
+ * can tell they have found it.
+ */
+.skip-link {
+  position: absolute;
+  z-index: 200;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  border-end-end-radius: var(--tp-radius);
+  /* Ink on paper, not the brand: this is the one control that exists for keyboard users. */
+  background: var(--tp-colour-text);
+  color: var(--tp-colour-background);
+  font-size: var(--tp-text-ui);
+  text-decoration: none;
+  /* Off the top of the screen, not `display: none` — a hidden element cannot take focus. */
+  transform: translateY(-120%);
+  transition: transform var(--tp-motion) var(--tp-ease);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/*
+ * The target takes focus, which is the half everybody forgets.
+ *
+ * Following the link moves the *scroll* on its own, but several browsers leave the focus ring back
+ * on the link, so the next Tab returns to the header the user just escaped. `tabindex="-1"` in the
+ * markup makes `<main>` focusable for this and this only; the outline is suppressed because the
+ * page has visibly moved and a ring around the entire document says nothing.
+ */
+.site__flow:focus,
+.site__main:focus,
+.main:focus {
+  outline: none;
+}
+
+/*
+ * And the target lands *below* the sticky bar, which is the other half.
+ *
+ * The skip link and "See what it does" both jump to an anchor, and the site's header is sticky, so
+ * without this the browser scrolls the anchor to the top of the window and the bar covers it: the
+ * one link built for keyboard users delivered its content behind the header. Ten units clears the
+ * bar at every width it renders at.
+ */
+.site__flow,
+.site__main,
+.site__section {
+  scroll-margin-block-start: calc(var(--tp-spacing-unit) * 10);
 }
 
 /* Wide content pans inside itself, and stops there. Without `contain`, reaching the end of a
@@ -2207,6 +2459,22 @@ h3,
 h4 {
   line-height: 1.25;
   letter-spacing: -0.005em;
+}
+
+/*
+ * Body copy does not end on a single stranded word.
+ *
+ * `pretty` rather than `balance`: balance evens every line and browsers cap it at a few lines, so
+ * on a paragraph it either does nothing or reflows the whole block. `pretty` touches only the last
+ * line, which is where the defect is — a lone "door." under three full lines reads as a mistake in
+ * the text rather than in the measure.
+ *
+ * Deliberately global, not scoped to `.system`. This is typesetting hygiene, not house style: it
+ * imposes no look on a published form, it only stops the organisation's own words from breaking
+ * badly. Unsupported browsers ignore it and get exactly what they get today.
+ */
+p {
+  text-wrap: pretty;
 }
 
 /* A heading needs room above it and little below: it belongs to what follows, not what precedes.
@@ -2368,7 +2636,7 @@ h4 {
  * background-coloured gap behind it — the gap is what makes it legible on top of a dark fill.
  */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--tp-colour-background);
 }
@@ -2460,6 +2728,7 @@ h4 {
 .empty__title {
   margin: 0;
   color: var(--tp-colour-text);
+  font-size: var(--tp-text-lg);
   font-weight: var(--tp-type-weight-bold);
 }
 
@@ -2498,7 +2767,6 @@ h4 {
 .topline > .button--quiet:not(.nav-link):hover:not(:disabled) {
   background: color-mix(in srgb, var(--tp-colour-primary) 7%, transparent);
   border-color: transparent;
-  color: var(--tp-colour-text);
 }
 
 /**
@@ -2842,19 +3110,6 @@ h4 {
     transform: none;
   }
 
-  /*
-   * The mark holds still and stays a plane.
-   *
-   * The tilt this rule used to apply existed to park a *spinning* logo at a flattering angle.
-   * Nothing spins now — the mark moves only while somebody points at it — so there is nothing to
-   * park, and leaving the transform in would skew a mark that is drawn straight. The crease
-   * override is what stops the hover doing anything at all.
-   */
-  .wordmark:hover .logo,
-  .wordmark:focus-visible .logo {
-    stroke-opacity: 0;
-  }
-
   .signed--still .signed__stroke,
   .signed--still .signed__tick {
     stroke-dashoffset: 0;
@@ -2879,7 +3134,7 @@ h4 {
 }
 
 .signature__pad:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -2989,7 +3244,7 @@ h4 {
 }
 
 .swatch:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 3px;
 }
 
@@ -3171,11 +3426,15 @@ h4 {
     color var(--tp-motion-fast) var(--tp-ease);
 }
 
-/* The visible pill stays 30px; what a finger has to hit is 44. */
+/*
+ * The visible pill stays 30px; what a finger has to hit is 44 tall. Not 44 wide: the pills sit
+ * 2px apart, and a hit area grown sideways lands on the neighbour — the right edge of "System"
+ * chose "Light". Height is where the room is.
+ */
 .segmented__option::after {
   content: '';
   position: absolute;
-  inset: -7px;
+  inset: -7px -1px;
 }
 
 .segmented__option:hover {
@@ -3184,12 +3443,13 @@ h4 {
 
 .segmented__option--on {
   background: var(--tp-colour-background);
-  color: var(--tp-colour-primary);
+  /* The ink, not the brand: this is a 16px icon and the seafoam was 2.12:1 on the page. */
+  color: var(--tp-colour-text);
   box-shadow: var(--tp-shadow);
 }
 
 .segmented__option:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -3608,7 +3868,34 @@ body:has(.app) > #root {
    */
   max-inline-size: var(--tp-measure, 52rem);
   margin-inline: auto;
-  padding: 0;
+  /*
+   * A gutter of its own, for the shells that stand alone — the public form and sign-in are not
+   * inside `.main` and had none: at 375px the inputs ran from bezel to bezel. A media rule near
+   * the top of the file meant to supply one lost to this `padding: 0`, which came later at equal
+   * specificity. Inside `.main` the gutter is the main's, so the shell's is taken back below.
+   */
+  padding-block: 0;
+  padding-inline: calc(var(--tp-spacing-unit) * 2);
+}
+
+.main > .shell {
+  padding-inline: 0;
+}
+
+/*
+ * The door: nothing but the work.
+ *
+ * `.app.app--door` rather than `.app--door`, so it also wins over the narrow-screen rule below,
+ * which rewrites the areas for the bottom bar. A door has no bar to put at the bottom.
+ */
+.app.app--door {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-areas: 'main';
+}
+
+.app.app--door .main {
+  padding-block-end: calc(var(--tp-spacing-unit) * 4);
 }
 
 /* --- Narrow: the rail becomes a bottom bar --------------------------------- */
@@ -3826,6 +4113,47 @@ body:has(.app) > #root {
   color: var(--tp-colour-text);
 }
 
+/*
+ * The language switcher: the languages themselves, as links.
+ *
+ * A row rather than a dropdown, because the site publishes in a handful of languages and a
+ * disclosure that hides five words behind a press is a control protecting nothing. It also needs
+ * no JavaScript, which matters here more than anywhere else in the product: this tree is never
+ * hydrated in production, so a `<select>` would be inert on the one surface it exists for.
+ *
+ * `margin-inline-start: 0` cancels the `auto` on `.site__nav`, so the two navs sit as one group at
+ * the end of the bar instead of pushing each other apart.
+ */
+.site__langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  padding-inline-start: calc(var(--tp-spacing-unit) * 2.5);
+  border-inline-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.site__lang {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+  text-decoration: none;
+}
+
+.site__lang:hover {
+  color: var(--tp-colour-text);
+}
+
+/*
+ * The current language is marked, not removed.
+ *
+ * It stays a link so the row does not reflow when it changes, and so `aria-current` has something
+ * to sit on — a switcher that drops the option you are on makes you count the gap to work out
+ * where you are.
+ */
+.site__lang--on {
+  color: var(--tp-colour-text);
+  font-weight: var(--tp-type-label-weight);
+}
+
 .site__main {
   flex: 1;
   inline-size: min(76rem, 100%);
@@ -3912,6 +4240,64 @@ body:has(.app) > #root {
   place-items: center;
 }
 
+/*
+ * `<picture>` is a wrapper with no box worth having.
+ *
+ * Left as its default inline it becomes the grid item and the image centres inside *it* rather
+ * than inside the figure, which puts the mark half a line off centre for no reason anybody could
+ * see. `display: contents` hands the grid its real child.
+ */
+.hero__figure picture,
+.hero__art {
+  display: contents;
+}
+
+/*
+ * Paused: the loop goes, the still takes its place, the label flips. All of it from one checkbox,
+ * which is the whole mechanism — see the note in `Site.tsx`.
+ */
+.hero__still,
+.hero__pause:checked ~ .hero__art picture,
+.hero__pause:checked ~ .hero__pauseLabel .hero__pauseLabel--playing,
+.hero__pauseLabel .hero__pauseLabel--paused {
+  display: none;
+}
+
+.hero__pause:checked ~ .hero__pauseLabel .hero__pauseLabel--paused {
+  display: inline;
+}
+
+.hero__pause:checked ~ .hero__art .hero__still {
+  display: block;
+}
+
+.hero__pauseLabel {
+  margin-block-start: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 0.5) var(--tp-spacing-unit);
+  border-radius: var(--tp-radius);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
+  cursor: pointer;
+}
+
+.hero__pauseLabel:hover {
+  color: var(--tp-colour-text);
+}
+
+/* The checkbox is what has focus; the label is what can be seen. */
+.hero__pause:focus-visible ~ .hero__pauseLabel {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+/* Nothing moves, so there is nothing to pause. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__pause,
+  .hero__pauseLabel {
+    display: none;
+  }
+}
+
 .hero__mark {
   /*
    * 19rem, down from 28.
@@ -3988,7 +4374,8 @@ body:has(.app) > #root {
   gap: 6px;
   margin-block-start: auto;
   padding-block-start: var(--tp-spacing-unit);
-  color: var(--tp-colour-primary);
+  /* The accent as text, checked against the page — `primary` measured 1.92:1 here. */
+  color: var(--tp-colour-accent-ink);
   font-size: var(--tp-text-sm);
 }
 
@@ -4002,17 +4389,20 @@ body:has(.app) > #root {
 /*
  * The dark band: the one place on the page where somebody else is speaking.
  *
- * `primary` as a ground rather than a fifth shade of parchment, because the page had one tone from
- * the header to the footer and every section therefore looked like the same section. Giving the
- * quotes their own ground says who is talking without a line of copy.
+ * Ink as a ground rather than a fifth shade of parchment, because the page had one tone from the
+ * header to the footer and every section therefore looked like the same section. Giving the quotes
+ * their own ground says who is talking without a line of copy.
  *
- * The text colour is `background`, so this inverts with the brand rather than being a hard-coded
- * light-on-dark that breaks the moment an organisation picks a pale primary.
+ * It was `primary`, and `DESIGN.md` had already spent a page deriving why that cannot carry text:
+ * paper on seafoam measured 2.12:1, the figcaptions 1.69, the eyebrow 1.08. The page and the ink
+ * are the one pair in the palette that is guaranteed to read against each other, so the band is
+ * simply the page turned over — and in the derived dark scheme it turns back, a light band on a
+ * dark page, with the same guarantee.
  */
 .site__band {
   margin-block-start: calc(var(--tp-spacing-unit) * 2);
   padding-block: calc(var(--tp-spacing-unit) * 9);
-  background: var(--tp-colour-primary);
+  background: var(--tp-colour-text);
   color: var(--tp-colour-background);
 }
 
@@ -4020,9 +4410,13 @@ body:has(.app) > #root {
   color: var(--tp-colour-background);
 }
 
-/* Accent-ink is reckoned against the *page*; on the band the accent itself has the contrast. */
+/*
+ * The accent as a label on the inverted ground. `accent-ink` is reckoned against the page and is
+ * wrong here; this is the same derivation with the poles swapped, so it holds for every palette
+ * in both schemes rather than for the one that was measured.
+ */
 .site__band .site__eyebrow {
-  color: var(--tp-colour-accent);
+  color: var(--tp-colour-accent-on-ink);
 }
 
 .quote {
@@ -4046,7 +4440,7 @@ body:has(.app) > #root {
 }
 
 .quote figcaption {
-  color: color-mix(in srgb, var(--tp-colour-background) 68%, var(--tp-colour-primary));
+  color: color-mix(in srgb, var(--tp-colour-background) 72%, var(--tp-colour-text));
 }
 
 /* --- A feature's own page -------------------------------------------------- */
@@ -4156,8 +4550,26 @@ body:has(.app) > #root {
   max-inline-size: 44rem;
 }
 
-.site__cta .button {
+.site__cta .site__ctaActions {
   margin-block-start: calc(var(--tp-spacing-unit) * 3);
+  justify-self: start;
+}
+
+/* Attribution at the foot of a white-labelled page: present, quiet, and never the brand colour. */
+.powered {
+  margin-block-start: calc(var(--tp-spacing-unit) * 4);
+  text-align: center;
+}
+
+.powered a {
+  color: var(--tp-colour-muted);
+  text-decoration: none;
+}
+
+.powered a:hover,
+.powered a:focus-visible {
+  color: var(--tp-colour-text);
+  text-decoration: underline;
 }
 
 .site__foot {
@@ -4165,6 +4577,31 @@ body:has(.app) > #root {
   margin-inline: auto;
   padding: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 3);
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+/* The contact form: one column, the reading measure, the app's own fields. */
+.site__form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  margin-block-start: calc(var(--tp-spacing-unit) * 2);
+}
+
+.site__form .button {
+  align-self: flex-start;
+}
+
+.site__ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+/* The footer copy exists for phones; on a desktop the bar has room and shows its own. */
+.site__langs--foot {
+  display: none;
+  padding-inline-start: 0;
+  border-inline-start: 0;
 }
 
 @media (max-width: 60rem) {
@@ -4185,6 +4622,34 @@ body:has(.app) > #root {
 
   .site__nav {
     display: none;
+  }
+
+  /*
+   * The bar keeps the mark and the one action; the languages go to the footer.
+   *
+   * With the nav gone, five wrapping language links were the header: 214px of sticky glass on a
+   * 812px screen, the CTA squeezed to 58px wide and three lines tall, the headline below the fold.
+   * See `SiteLanguages` for why the footer copy is a second render rather than the same one moved.
+   */
+  .site__langs--bar {
+    display: none;
+  }
+
+  .site__bar > .button {
+    margin-inline-start: auto;
+  }
+
+  .site__langs--foot {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  /* Footer links are thumb targets on a phone, not a line of small print. */
+  .site__langs--foot .site__lang,
+  .site__footNav a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
   }
 }
 
@@ -4455,12 +4920,12 @@ input[type='range']:active::-webkit-slider-thumb {
 }
 
 input[type='range']:focus-visible::-webkit-slider-thumb {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
 input[type='range']:focus-visible::-moz-range-thumb {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 
@@ -4520,95 +4985,21 @@ body:has(> #root .shell--narrow) {
  * shell entirely, so it cannot inherit this by accident. `system-scope.test.ts` holds it there.
  * ------------------------------------------------------------------------ */
 
+/*
+ * The mark is a rendered image now, so it has no facets to fold.
+ *
+ * The eight triangles and the `mark-work` keyframe that turned each about its own crease lived
+ * here, and they went with the drawing: `Mark.tsx` renders the three-quarter still, or the loop
+ * where motion is the message. What the fold cost to state in CSS, the render states in shading.
+ *
+ * The geometry itself is not gone — `mark-geometry.ts` still draws the favicon and the launcher
+ * icons, where a shaded render at 16px is mud. It simply no longer has a stylesheet.
+ */
 .mark {
-  overflow: visible;
-  /* Each facet turns in three dimensions about its own crease, so they need a shared stage. */
-  transform-style: preserve-3d;
-}
-
-/*
- * Four surfaces, because paper folded toward the light is not the colour of paper folded away.
- *
- * All four are derived from the brand's own two colours, so an organisation replacing the palette
- * gets a mark in their colours rather than ours, and rule 4 holds without anybody remembering it.
- */
-.mark__facet--face {
-  fill: var(--tp-colour-primary);
-}
-
-.mark__facet--fold {
-  /*
-   * 78%, not 62%.
-   *
-   * The stem's larger facet is this tone, so at 62% the bulk of the letter sat nearer the page
-   * than the brand and the mark read grey at hero size — a fold of paper, but not a fold of *this*
-   * paper. High enough to stay navy, low enough that the crease against `face` is still a crease.
-   */
-  fill: color-mix(in srgb, var(--tp-colour-primary) 78%, var(--tp-colour-background));
-}
-
-.mark__facet--warm {
-  fill: var(--tp-colour-accent);
-}
-
-.mark__facet--glow {
-  fill: color-mix(in srgb, var(--tp-colour-accent) 66%, var(--tp-colour-background));
-}
-
-.mark__facet {
-  /*
-   * The crease, in the drawing's own coordinates.
-   *
-   * `view-box` rather than `fill-box`: the axis a facet turns about is an edge it shares with its
-   * neighbour, which is a position in the letter, not a position inside one triangle's bounding
-   * box. With `fill-box` each facet would pivot about its own middle and the mark would scatter.
-   */
-  transform-box: view-box;
-  transform-origin: var(--crease-x) var(--crease-y);
-}
-
-/*
- * The fold.
- *
- * A rotation about the diagonal `(1, -1, 0)`, which is the crease running corner to corner — the
- * fold you make first in any sheet of paper. `perspective` inside the transform rather than on the
- * parent, so each facet gets its own vanishing point and the near ones lift further than the far
- * ones, which is what stops nine simultaneous rotations reading as one flat wipe.
- *
- * It returns to `none` at 100%, so the mark ends exactly where it started. Nothing to unwind if
- * the pointer leaves halfway: the animation stops and the resting geometry is already in the
- * markup.
- */
-@keyframes mark-fold {
-  0% {
-    transform: none;
-  }
-  45% {
-    transform: perspective(200px) rotate3d(1, -1, 0, 58deg);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-/*
- * Driven from the wordmark, not the SVG, so pointing at the logo *or its name* plays it. A 28px
- * target is a poor thing to ask somebody to hit.
- */
-.system .wordmark:hover .mark--open .mark__facet,
-.system .mark--open:hover .mark__facet {
-  animation: mark-fold 820ms var(--tp-ease) calc(var(--i) * 42ms) both;
-}
-
-/*
- * The intro plays the same fold once, slower, with the stagger opened out.
- *
- * Scoped like the hover, though nothing renders an intro mark on a published form today. That is
- * the difference between a rule that is safe and a rule that happens to be unused: the second one
- * becomes the first bug the day somebody puts the mark on a form's header.
- */
-.system .mark--intro .mark__facet {
-  animation: mark-fold 1400ms var(--tp-ease) calc(var(--i) * 70ms) both;
+  /* The intrinsic size is 256; every use is smaller and sized by its own class. */
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 /* --- Buttons fold when pressed ---------------------------------------------
@@ -4646,11 +5037,11 @@ body:has(> #root .shell--narrow) {
 }
 
 .system .button.is-folding::before {
-  animation: button-fold-near 420ms var(--tp-ease);
+  animation: button-fold-near 420ms var(--tp-ease-unfurl);
 }
 
 .system .button.is-folding::after {
-  animation: button-fold-far 420ms var(--tp-ease) 40ms;
+  animation: button-fold-far 420ms var(--tp-ease-unfurl) 40ms;
 }
 
 /*
@@ -4692,7 +5083,6 @@ body:has(> #root .shell--narrow) {
  * is skipped elsewhere. So this removes the lot rather than shortening it.
  */
 @media (prefers-reduced-motion: reduce) {
-  .mark__facet,
   .system .button::before,
   .system .button::after {
     animation: none !important;
@@ -4749,8 +5139,16 @@ body:has(> #root .shell--narrow) {
   transform: scale(0.985);
 }
 
+/*
+ * The press takes the chomp, which is the curve it has always been.
+ *
+ * `--tp-ease-chomp` is the easing the fortune teller's pocket closes and opens on — quick in,
+ * held, quick out — and a button being pressed and released is the same gesture at a smaller
+ * scale. It sat on the mark's fold animation until the mark became a rendered image, and this is
+ * where it belonged anyway: the neutral curve made a press feel like a fade rather than a bite.
+ */
 .system .button {
-  transition: transform var(--tp-motion-fast) var(--tp-ease);
+  transition: transform var(--tp-motion-fast) var(--tp-ease-chomp);
 }
 
 /*
@@ -4933,7 +5331,7 @@ body:has(> #root .shell--narrow) {
 }
 
 .wizard__option:focus-visible {
-  outline: 2px solid var(--tp-colour-secondary);
+  outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
 }
 

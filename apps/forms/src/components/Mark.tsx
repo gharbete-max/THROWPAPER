@@ -1,71 +1,77 @@
-import type { CSSProperties } from 'react';
-import { FACETS, MARK, type Facet } from './mark-geometry.js';
-
 /**
- * The house mark, and the only drawing of it.
+ * The house mark, and the only place it is drawn in the interface.
  *
- * `rest` is the letter, still, which is what a logo in a top bar should be. `open` folds while
- * somebody points at it. `intro` runs the same fold once, slower, as the app arrives.
+ * ## Why this is a picture and not the geometry
  *
- * ## The fold is a transform, not a second drawing
+ * It used to be the eight triangles from `mark-geometry.ts`, folded in three dimensions by CSS.
+ * That was a good piece of work and it drew the wrong pose: the flat rosette is the animation's
+ * *first frame*, not the mark. Seen from directly overhead a fortune teller is a flat rosette, and
+ * the object it is a picture of — folded paper, held, mid-choice — disappears. The whole reason
+ * the mark is this toy is the folding, and top-down is the one angle that hides it.
  *
- * The obvious way to animate folded paper is to write a folded pose and interpolate `d` between
- * the two. That was the previous mark's trick and it worked, but it meant the geometry existed
- * twice more — once in a CSS keyframe, which imports nothing and so had to be kept in step by a
- * test.
+ * So the resting mark is the three-quarter view, and it is a render rather than a drawing because
+ * what makes it read as paper is the shading — a lit surface, a fold catching more light than the
+ * one beside it, a shadow underneath. None of that is expressible as flat fills, which is exactly
+ * why the flat version had to state the fold with a value step instead of showing it.
  *
- * Rotating each facet about its own crease costs no second copy. The crease is an edge the facet
- * already has, so the origin comes out of the same numbers the shape does, and the browser folds
- * the triangle in three dimensions rather than sliding its corners around in two — which is what
- * paper actually does.
+ * ## What the geometry is still for
+ *
+ * `mark-geometry.ts` has not moved and is not dead. It is the *small* mark: the favicon and the
+ * launcher icons, where a shaded three-quarter render at 16px is mud and a flat drawing with four
+ * blunt flaps is legible. Two drawings for two jobs, which is the trade that file already makes
+ * between its full and reduced forms.
+ *
+ * ## Why the colours are fixed, which they were not before
+ *
+ * The facets used to fill from `--tp-colour-primary`, so the mark wore whatever palette it was
+ * rendered in. That was written for a published form — where the organisation's brand should
+ * win — but nothing puts the mark on a form: `PublicForm` shows the organisation's own logo, or
+ * their name, and never this. Under client mode the whole corner becomes the customer's logo
+ * rather than a recoloured version of ours.
+ *
+ * So this is Paloppa's mark in Paloppa's colours, and white-label replaces it instead of tinting
+ * it. A brand that can be repainted by whoever installs it is not a brand.
  */
 export function Mark({
-  mode = 'rest',
+  motion = false,
   className,
 }: {
-  mode?: 'rest' | 'open' | 'intro';
+  /**
+   * Whether the paper is working.
+   *
+   * Off is the resting three-quarter still, which is what a logo in a top bar should be — a mark
+   * that moves while somebody is trying to read the page beside it is a distraction wearing a
+   * brand. On is the loop, for the two places where motion is the message: something is loading,
+   * or the app is arriving.
+   */
+  motion?: boolean;
   className?: string;
 }) {
+  const source = motion ? '/mark-loop-256.webp' : '/mark-angled-256.png';
+
   return (
-    <svg
-      className={`mark mark--${mode}${className ? ` ${className}` : ''}`}
-      viewBox="0 0 100 100"
-      fill="none"
+    <img
+      className={`mark${className ? ` ${className}` : ''}`}
+      src={source}
+      /*
+       * The intrinsic size, so the box is reserved before the bytes arrive.
+       *
+       * Both files are 256 square. Every use is smaller than that and downscales, which is the
+       * direction that stays sharp; the header box is about 50px, so it has three times the pixels
+       * it needs even on a retina screen.
+       */
+      width={256}
+      height={256}
       /*
        * Hidden from the accessibility tree at every call site.
        *
-       * Each one already carries its own wording: the wordmark says "Formwork" beside it, the
+       * Each one already carries its own wording: the wordmark says "Paloppa" beside it, the
        * loading indicator has its label, the intro is decoration over a page that announces itself.
        * A mark that names itself a second time is a screen reader saying the product's name twice.
        */
+      alt=""
       aria-hidden="true"
-      focusable="false"
-    >
-      {FACETS.map((facet, index) => (
-        <path
-          key={facet.id}
-          className={`mark__facet mark__facet--${facet.tone}`}
-          style={creaseOf(facet, index)}
-          d={MARK[facet.id]}
-        />
-      ))}
-    </svg>
+      decoding="async"
+    />
   );
-}
-
-/**
- * Where this facet is hinged, and when its turn comes.
- *
- * The crease is the edge a facet shares with the one before it, so its midpoint is the axis the
- * fold turns about. `--i` staggers the nine so the mark folds across itself like a sheet rather
- * than collapsing all at once.
- */
-function creaseOf(facet: Facet, index: number): CSSProperties {
-  const [ax, ay] = facet.points[0];
-  const [bx, by] = facet.points[2];
-  return {
-    ['--crease-x' as string]: `${(ax + bx) / 2}px`,
-    ['--crease-y' as string]: `${(ay + by) / 2}px`,
-    ['--i' as string]: index,
-  };
 }

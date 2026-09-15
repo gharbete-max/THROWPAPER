@@ -4,6 +4,25 @@ import { defaultTokens } from '@tp/tokens';
 import { adminUser, bearer, createTestHarness, signIn, type TestHarness } from '../test-support.js';
 import { renderConfirmation } from '../email/templates.js';
 import { buildMimeMessage } from './ses.js';
+import { mailSafeLogo } from './send-job.js';
+
+/** The confirmation's content, minus whatever the test under way is varying. */
+const CONTENT = {
+  lang: 'sv-SE',
+  heading: 'Din anmälan är bekräftad',
+  intro: 'Tack.',
+  eventName: 'Vårmötet',
+  when: 'torsdag 14 maj',
+  where: 'Göteborg',
+  referenceLabel: 'Referens',
+  reference: 'AB12-CD34',
+  attachmentNote: 'Bifogat.',
+  footer: 'Demo AB',
+  webVersionLabel: 'Visa i webbläsare',
+  webVersionUrl: 'https://example.com/r/AB12-CD34',
+  logoUrl: null as string | null,
+  logoAlt: 'Demo AB',
+};
 import { createMemoryMailProvider } from './provider.js';
 import { createMailSendHandler } from './send-job.js';
 
@@ -164,12 +183,15 @@ describe('the confirmation email itself', () => {
       footer: 'Demo AB',
       webVersionLabel: 'Visa i webbläsare',
       webVersionUrl: 'https://example.com/r/AB12-CD34',
+      logoUrl: null,
+      logoAlt: 'Demo AB',
     });
 
     expect(html).not.toContain('var(--');
     expect(html).toContain('<table');
-    // The brand's primary colour arrives resolved, from phase 1's compiler.
-    expect(html.toLowerCase()).toContain(defaultTokens.colour.primary.toLowerCase());
+    // The brand's colours arrive resolved, from phase 1's compiler.
+    expect(html.toLowerCase()).toContain(defaultTokens.colour.text.toLowerCase());
+    expect(html.toLowerCase()).toContain(defaultTokens.colour.border.toLowerCase());
   });
 
   it('keeps Swedish characters intact', async () => {
@@ -186,6 +208,8 @@ describe('the confirmation email itself', () => {
       footer: '',
       webVersionLabel: 'Visa',
       webVersionUrl: 'https://example.com',
+      logoUrl: null,
+      logoAlt: 'Demo AB',
     });
     expect(html).toContain('anmälan');
     expect(html).toContain('Vårmötet');
@@ -268,5 +292,65 @@ describe('the no-override rule reaches the send path', () => {
         progress: async () => {},
       }),
     ).rejects.toThrow(/not verified/);
+  });
+});
+
+/**
+ * The organisation's logo in a confirmation, and the two ways it goes wrong silently.
+ *
+ * Both failures look fine from here and broken in somebody's inbox, which is the worst shape a bug
+ * can have: the person who could notice is the recipient, and they have no way to report it beyond
+ * mistrusting the email — which for a registration confirmation is the whole of its job.
+ */
+describe('the logo a confirmation carries', () => {
+  const APP = 'https://forms.example';
+  const png = `/public/assets/${'a'.repeat(64)}.png`;
+
+  it('makes the URL absolute, because an email has no page to resolve against', () => {
+    expect(mailSafeLogo(png, APP)).toBe(`${APP}${png}`);
+    // A trailing slash on the configured URL must not produce a doubled one.
+    expect(mailSafeLogo(png, `${APP}/`)).toBe(`${APP}${png}`);
+  });
+
+  /**
+   * WebP is a perfectly good web format and a broken image in Outlook, whose engine has never
+   * rendered it. `AssetPath` allows it because it is right for a page; email is not a page.
+   */
+  it.each([
+    ['webp', `/public/assets/${'a'.repeat(64)}.webp`],
+    ['gif', `/public/assets/${'a'.repeat(64)}.gif`],
+  ])('refuses %s rather than sending a broken image', (_name, path) => {
+    expect(mailSafeLogo(path, APP)).toBeNull();
+  });
+
+  it('accepts the two formats every client renders', () => {
+    expect(mailSafeLogo(png, APP)).not.toBeNull();
+    expect(mailSafeLogo(`/public/assets/${'a'.repeat(64)}.jpg`, APP)).not.toBeNull();
+  });
+
+  it('has nothing to send when no logo was uploaded', () => {
+    expect(mailSafeLogo(null, APP)).toBeNull();
+  });
+
+  /**
+   * The name is the fallback, and it is the common case rather than the edge one.
+   *
+   * A good proportion of recipients block images by default, so `alt` is what they read. "Logo"
+   * tells them nothing; the organisation's name tells them who sent it.
+   */
+  it('names the sender in the alt text', async () => {
+    const html = await renderConfirmation(defaultTokens, {
+      ...CONTENT,
+      logoUrl: `${APP}${png}`,
+      logoAlt: 'Demo AB',
+    });
+    expect(html).toContain('alt="Demo AB"');
+    expect(html).not.toMatch(/alt="logo"/i);
+  });
+
+  /** No logo means no `<img>` at all, rather than one pointing nowhere. */
+  it('emits no image when there is nothing to show', async () => {
+    const html = await renderConfirmation(defaultTokens, { ...CONTENT, logoUrl: null });
+    expect(html).not.toContain('<img');
   });
 });

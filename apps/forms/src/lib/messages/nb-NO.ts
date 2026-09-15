@@ -3,7 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const nbNO: Record<MessageKey, string> = {
-  'app.name': 'Formwork',
+  'app.name': 'Paloppa',
+  'app.poweredBy': 'Drevet av Paloppa',
   'app.signOut': 'Logg ut',
   'app.language': 'Språk',
   'app.loading': 'Laster…',
@@ -51,6 +52,7 @@ export const nbNO: Record<MessageKey, string> = {
   'event.cancel': 'Avbryt',
   'event.createTitle': 'Nytt arrangement',
   'event.editTitle': 'Rediger arrangement',
+  'event.notFound': 'Det finnes ikke noe arrangement på den adressen.',
 
   'nav.events': 'Arrangementer',
   'nav.forms': 'Skjemaer',
@@ -117,8 +119,11 @@ export const nbNO: Record<MessageKey, string> = {
   'inbox.title': 'Svar',
   'inbox.intro': 'De siste svarene fra alle skjemaene du har tilgang til.',
   'inbox.empty': 'Ingen svar ennå.',
+  'inbox.loadFailed': 'Svarene kunne ikke lastes.',
   'inbox.partial': 'Påbegynt',
   'inbox.complete': 'Sendt inn',
+  'inbox.search': 'Søk',
+  'inbox.count': 'plural:one {count} svar | other {count} svar',
 
   'users.title': 'Brukere',
   'users.intro': 'Alle i organisasjonen. Åpne en for å se skjemaene og papirkurven deres.',
@@ -472,6 +477,11 @@ export const nbNO: Record<MessageKey, string> = {
   'brand.save': 'Lagre',
   'brand.saving': 'Lagrer…',
   'brand.reset': 'Tilbakestill til standard',
+  'brand.clientMode': 'Kundemodus',
+  'brand.clientModeOn': 'Bruk vår egen logo og vårt eget navn',
+  'brand.clientModeHint':
+    'Erstatter Paloppa-merket i appen og på innloggingsskjermen. De publiserte skjemaene deres bruker allerede profilen deres.',
+  'brand.wordmark': 'Navn i hjørnet',
   'brand.colours': 'Farger',
   'brand.logo': 'Logo',
 
@@ -555,7 +565,9 @@ export const nbNO: Record<MessageKey, string> = {
   'demo.banner': 'Demomodus — ingenting lagres, og det sendes aldri e-post.',
   'demo.reset': 'Tilbakestill demodata',
   'demo.signInAs': 'Logg inn som {role}',
-  'demo.signInHint': 'Ingen e-post kan leses i demomodus, så logg inn direkte:',
+  'demo.signInFailed': 'Kunne ikke logge inn. Kjører API-et?',
+  'demo.title': 'Åpne demoen',
+  'demo.signInHint': 'Velg hvem du vil være. Ingenting her er ekte, og ingenting lagres.',
 
   'checkin.title': 'Innsjekk',
   'checkin.counts': '{checkedIn} av {registered} sjekket inn',
@@ -566,12 +578,20 @@ export const nbNO: Record<MessageKey, string> = {
   'checkin.stopCamera': 'Stopp kamera',
   'checkin.cameraUnavailable': 'Kameraet er utilgjengelig — skriv referansen i stedet.',
   'checkin.arrivedAt': 'Ankom {time}',
+  'checkin.leave': 'Forlat inngangen',
+  'checkin.ofRegistered': 'av {registered}',
+  'checkin.idle': 'Skann et kort, eller skriv referansen',
+  'checkin.recent': 'Siste ankomster',
+  'checkin.undo': 'Angre',
+  'checkin.undoConfirm': 'Angre innsjekkingen for {name}?',
+  'checkin.offline': 'Frakoblet — skanninger kan ikke sjekkes før tilkoblingen er tilbake.',
   'checkin.outcome.admitted': 'Velkommen',
   'checkin.outcome.already': 'Allerede sjekket inn',
   'checkin.outcome.revoked': 'Påmelding trukket tilbake',
   'checkin.outcome.wrong-event': 'Feil arrangement',
   'checkin.outcome.not-found': 'Ikke funnet',
   'checkin.outcome.bad-signature': 'Ugyldig kort',
+  'checkin.outcome.undone': 'Innsjekking angret',
 
   'attendance.title': 'Oppmøte',
   'attendance.loadFailed': 'Deltakerlisten kunne ikke lastes.',
@@ -622,6 +642,10 @@ export const nbNO: Record<MessageKey, string> = {
     'Svarene dine er her fortsatt, men de kunne ikke sendes. Sjekk tilkoblingen og prøv igjen.',
   'public.rejected.error': 'Noe gikk galt hos oss. Svarene dine er her fortsatt — prøv igjen.',
   'public.notFound': 'Skjemaet ble ikke funnet.',
+  'public.retry': 'Prøv igjen',
+  'public.loadFailed': 'Skjemaet kunne ikke lastes.',
+  'public.notFoundHint':
+    'Sjekk lenken du fikk, eller be arrangøren om en ny. Den kan ha blitt trukket tilbake.',
   'public.yes': 'Ja',
   'public.no': 'Nei',
   'public.choose': 'Velg…',
