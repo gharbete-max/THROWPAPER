@@ -1,17 +1,54 @@
 # Handover
 
-For a fresh session picking this up. Read `CLAUDE.md` first, then `docs/CONTRACT.md`, then
-`PRE-LAUNCH-AUDIT.md`. Do not paste specs into `CLAUDE.md`.
+For a fresh session picking this up. Read `CLAUDE.md` first, then `LAUNCH-CHECKLIST.md`, then
+`docs/adr/0001-theming-layers.md`. Do not paste specs into `CLAUDE.md`.
+
+## Paste-ready prompt for the next session
+
+```
+You are continuing work on THROWPAPER (product name: Paloppa) — a pnpm monorepo with two
+independent products (apps/forms + apps/api-forms; apps/mailer + apps/api-mailer) and shared
+packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
+docs/adr/0001-theming-layers.md before touching anything.
+
+State: main == origin/main at the merge of PR #67 (Phase 3, the Paloppa restyle: palette, mark,
+theming layers with a LOCKED list, client mode / white-label, two design-critique rounds, the
+door as a mode, Responses by name, a no-JS contact page). `pnpm verify` is green (109 test
+files). Playwright e2e specs were not run on the last machine (no database) — run them first.
+
+Rules that bite: one phase per branch, `pnpm verify` before "done", never mass-rename internal
+identifiers (throwpaper stays throwpaper in paths/tables/routes), no new dependencies without
+asking, no legal/clinical/tax/safety wording (rule 8), a brand colour never paints text
+unchecked — reach for the derived tokens (--tp-colour-heading, --tp-colour-accent-ink,
+--tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The owner dislikes dark teal and the
+flat mark. Design first, then one ponytail pass; never both in one pass.
+
+Pick up in this order:
+1. Run `pnpm test:e2e` against `pnpm demo` and fix anything the door/Responses changes broke.
+2. LAUNCH-CHECKLIST.md §2.3 — the nine open P2 findings from the second critique (contrast on
+   card surfaces, Reveal-inside-ul, door event name + wrong-id state, mobile verdict shrink,
+   the screen-reader items). Then re-run `/impeccable critique apps/forms/src/site/Site.tsx`
+   and record the trend (18 → 22 / 32 so far).
+3. LAUNCH-CHECKLIST.md §2.1 — audit items 8–17, each needing the owner's approval before the
+   diff (start with 8: TRUST_PROXY, and 12: the upload sweeper whose index already exists).
+4. Everything in LAUNCH-CHECKLIST.md §1 is the owner's to answer, not yours to invent: ask,
+   batch the questions, and never fill a `pending()` marker with plausible text.
+
+Do not start the catalogue/wizard work (docs/HANDOVER.md § The catalogue direction) without a
+paper decision first.
+```
 
 ## State
 
-- `main == origin/main`, clean, no open PRs. Last merge: #63.
-- PRs #53–#56 and #63 landed a code review, the invoice PDF, demo readiness, and Phase 1
-  security + authorisation. **1235 tests.** `pnpm verify` and `pnpm contract:check` both pass and
-  together are the definition of done.
-- A pre-launch brief is being worked in phases. **Phase 0 (audit) and Phase 1 (security) are
-  complete** and written up in `PRE-LAUNCH-AUDIT.md`. **Phase 2 (EU/Swedish legal) is blocked.**
-  Phase 3 is a fortune-teller / folding-paper restyle. Phase 4 is polish and SEO.
+- `main == origin/main`, clean. Last merge: **#67** (Phase 3 — Paloppa), 30 commits, merged
+  2026-09-15. No open PRs.
+- `pnpm verify` green: **109 test files**, both apps build. `pnpm verify` and
+  `pnpm contract:check` together are the definition of done.
+- Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
+  **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
+  complete**; 4 (polish and SEO) not started.
+- `LAUNCH-CHECKLIST.md` is the single list of what is still temporary, unconfigured or
+  unconfirmed. Delete rows as they close; never tick them.
 
 ## House rules that bite
 
@@ -44,18 +81,23 @@ marketing email.
 - Auth is magic-link only. There are no passwords, so "MFA" means a second factor on the link.
 - `LEGAL-REVIEW.md` already lists 22 pending business facts, rendered as visible amber markers on
   the five policy pages. Extend that file rather than duplicating it.
+- Fonts: Inter is self-hosted via Fontsource (`@fontsource/inter`, latin subsets precached); the
+  CSP still permits no external origins. The transfer answer is still "none".
+- Internal identifiers stay `throwpaper` (paths, packages, tables, routes) by the owner's explicit
+  instruction; only user-facing text says Paloppa.
+- The owner dislikes dark teal and the flat mark; a pastel that cannot carry text becomes the ink
+  (`headingInk`), never a darkened pastel.
 
-## Next unblocked work — pick one
+## Next unblocked work — in this order
 
-1. **Item 12 — the anonymous-upload sweeper.** The index already exists in `schema.ts`
-   (`form_uploads_unclaimed_idx`, commented *"finding what to sweep"*); only the job is missing.
-   Unbounded anonymous disk growth today, and also a Phase 2 retention item.
-2. **Items 14–17** in `PRE-LAUNCH-AUDIT.md`: `publicToken` in the invoice list, unchecked
-   `eventId`, `JWT_SECRET` doing double duty as the document HMAC key, and the single-tenant
-   public surface (`/f/:slug` resolves the org as `organisations.first()`).
-3. **The catalogue architecture note** (below). No code.
-4. `TRUST_PROXY` is configurable and empty. The day this deploys behind TLS, six requests disable
-   sign-in for a whole tenant. **The value depends on the host**, so it is blocked with Phase 2.
+1. **Run the Playwright e2e suite** (`pnpm test:e2e` against `pnpm demo`). The door and Responses
+   changed shape in #67; the specs were checked by eye against the new markup but not executed,
+   because the last machine had no database.
+2. **The nine open P2 findings** from critique #2 — `LAUNCH-CHECKLIST.md` §2.3, snapshot in
+   `.impeccable/critique/2026-09-15T07-51-16Z__…md`. `/impeccable polish` reads that file.
+3. **Audit items 8–17** — `LAUNCH-CHECKLIST.md` §2.1. Each needs the owner's approval before the
+   diff. Item 12 (upload sweeper) has its index already; item 8 (`TRUST_PROXY`) depends on the host.
+4. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
 
 ---
 
@@ -106,96 +148,33 @@ in particular a bulk-mail script is the opposite of rule 7 and of marknadsförin
 
 ---
 
-## Reconciliation of styling
+## What Phase 3 landed, and how to work inside it
 
-Phase 3 calls itself a redesign — *"treat the current look as evidence of what the site needs to
-do, not as something to preserve"*. That is right about the **visual world** and wrong if read as
-"start from an empty stylesheet". Here is what actually exists and how it reconciles.
+The planning notes that used to sit here are superseded by the code and by
+`docs/adr/0001-theming-layers.md`. The short version:
 
-### What already exists, and is an asset rather than debt
-
-| Thing | Where | Bearing on Phase 3 |
-|---|---|---|
-| **A real token layer** | `packages/tokens` | One JSON set compiles to **four** targets: web CSS vars (`--tp-*`), inline email styles, print CSS, and native values. A new palette and type scale propagate without touching components. |
-| **`DESIGN.md` + sidecar** | repo root, `.impeccable/` | `impeccable context` reads these as the incumbent authority. A redesign **replaces** `DESIGN.md`; it does not ignore it. |
-| **A fold interaction, already built** | `apps/forms/src/lib/fold.ts` | The crease-on-press already exists, as one document-level listener. Phase 3's motion vocabulary starts here, not from nothing. |
-| **The `.system` boundary** | `App.tsx`, `Login`, `Callback`, `site/Site.tsx` | **The single most important fact below.** |
-| **A reduced-motion guard with a test** | `styles.css`, `lib/motion.test.ts` | `motion.test.ts` asserts the property against the stylesheet itself. Any new motion must keep it passing. |
-| **Runtime brand override** | `lib/brand.tsx`, `PublicForm.tsx` | Tokens are re-emitted at runtime from the organisation's brand kit. |
-
-### The boundary that governs the whole restyle
-
-**`.system` marks the surfaces that are ours.** The app shell, the marketing site and the sign-in
-screens carry it. **The published form deliberately does not** — it wears the customer's brand and
-is read by their members. `fold.ts` says it plainly: *"a folding animation nobody chose is our
-design arriving uninvited on somebody else's registration page."* The CSS is scoped the same way,
-so neither half can drift into the form on its own.
-
-So Phase 3 splits cleanly, and the brief's "one confident accent" applies to only one side:
-
-- **Inside `.system`** — the marketing site, shell, sign-in. Formwork's own identity. This is where
-  the fortune teller, the fold motion, the crease shadows and the single accent belong, and where
-  the paper white / ink / crease grey palette is Formwork's to choose.
-- **Outside `.system`** — the published form, the invoice, the admission card. These are rendered
-  in **the customer's** palette from their brand kit. A fortune-teller accent applied here would
-  fight the organisation's own colours, which is the feature they pay for.
-
-Getting this wrong is the most likely way Phase 3 damages the product, and it will not show up in
-a screenshot of the marketing page.
-
-### Constraints the restyle inherits
-
-1. **Rule 4 still applies.** Crease gradients, fold shadows and the light direction must become
-   tokens in `packages/tokens`, not literals in `styles.css`. A hard-coded `rgb(0 0 0 / 0.18)` was
-   already removed once from `Flag.tsx` for exactly this reason.
-2. **A token change propagates to email, print and PDF.** The fold motion is web-only, but the
-   palette and type scale reach the invoice PDF and the admission card. Check
-   `compile-email.ts`, `compile-pdf.ts` and `compile-native.ts` before changing a primitive.
-3. **`styles.css` is one 5,060-line file with no module boundaries.** This is the main structural
-   risk: a redesign touches it everywhere at once. Consider splitting it *before* restyling, not
-   during.
-4. **`motion.test.ts` and the reduced-motion block must survive.** Phase 3's own brief agrees:
-   reduced motion replaces every fold with a cross-fade, including the loader.
-5. **The CSP permits no external origins.** Fonts are self-hosted and byte-inlined. Any new face
-   must be OFL and self-hosted the same way — which also keeps the Phase 2 transfer answer at
-   "none".
-6. **Baseline for comparison:** see below. The images were **not** committed; the recipe is here
-   instead, because regenerating them takes a minute and a stale set is worse than none.
-
-### Regenerating the visual baseline
-
-Phase 0 captured 36 shots — 18 templates × desktop (1280×800) and mobile (375×812) — and the
-result is worth recording even though the files are gone: **36/36 rendered, 0 errors, and no page
-overflowed horizontally at 375px.** That is the number Phase 3 has to still be true afterwards.
-
-There is no script in the repo for this and it does not need one. The mechanics that are easy to
-get wrong:
-
-- **Playwright is already installed** (it renders admission PDFs) — do not add it. A script placed
-  outside the workspace cannot resolve it, so reach it with
-  `createRequire('<repo>/apps/api-forms/package.json')('playwright')`.
-- Run against `pnpm demo`, sign in once per browser context by clicking **Sign in as admin**, and
-  screenshot with `fullPage: true`.
-- Assert `document.documentElement.scrollWidth > clientWidth` per page. Overflow at 375px is
-  invisible in a screenshot and is the regression this catches.
-- Templates worth capturing: `/`, two `/features/*`, the five legal pages, `/login`, `/f/varmotet`,
-  `/i/de120100000000000000000000000000`, a 404, and the six app screens (`/events`, `/forms`,
-  `/responses`, `/invoices`, `/users`, `/brand`).
-
-**The caveat that matters:** `pnpm demo` runs Vite, which serves the SPA shell for site routes, so
-every site page in such a capture is titled "Formwork". That is a dev artefact, **not** a bug —
-`entry-server.tsx` does emit per-page meta. Anything about titles, meta or social cards must be
-checked against the built container instead. (There is a real duplicate-title bug underneath it:
-`metaFor()` only special-cases `/features/*`, so home and all five legal pages share one title.
-That is Phase 4, item 10.)
-
-### Verdict
-
-**A token swap plus a targeted rewrite, not a rebuild.** Colour, type, spacing and radius all flow
-from `packages/tokens`, so the palette and scale are cheap. What is genuinely new work is the
-fortune-teller mark, the fold/motion system beyond the existing press crease, and the geometry of
-surfaces. Budget Phase 3 as *"tokens change cheaply; identity and motion are built from scratch;
-the `.system` boundary decides where either is allowed to appear."*
+- **Palette** is the mark's five colours + black and white (`packages/tokens/src/default-tokens.json`).
+  The Midnight/Saddle palette survives only as the seeded "Demo AB" kit.
+- **Derived tokens** are the mechanism, not the stylesheet: `focusRing`, `buttonSurface`,
+  `headingInk`, `accentInk` (and its inverted twin `--tp-colour-accent-on-ink`) in
+  `packages/tokens/src/derive.ts`. `locked.test.ts` proves the LOCKED list against six hostile
+  kits in both schemes; if you add a guarantee, add it there and verify it by deleting the
+  derivation once.
+- **The `.system` boundary still governs.** Ours: shell, sign-in, marketing site. Theirs: the
+  published form, invoice, admission card, email. The Paloppa intro now lives inside the shell
+  only — it once leaked over customers' forms; do not move it back up.
+- **The marketing site ships no JavaScript in production.** Anything interactive there is CSS
+  (`:checked` for the hero pause) or a plain `<form method="post">` (the contact page). A React
+  effect in `site/` works in dev and is dead on the live page.
+- **The mark** is the rendered PNG/WebP (`public/mark-angled-256.png`, `mark-loop-*.webp`,
+  `mark-poster-256.png`); regenerate with `scripts/brand/build-animation-pack.py` (numpy +
+  Pillow). The reduced vector drawing exists only for the favicon.
+- **Client mode** is server-first: `client-identity.ts` inlines the palette and meta tags so the
+  sign-in screen is the customer's from the first byte; `brand.tsx` reads them and never paints
+  over a server-painted page until the real kit arrives.
+- **Critique method** that worked: `/impeccable critique` with A and B as isolated sub-agents, B
+  measuring in a real browser at 1280/375 × light/dark. Both snapshots are in
+  `.impeccable/critique/`; the trend is 18 → 22 / 32 on the site, 21 → 23 / 40 in the shell.
 
 Do not run `impeccable` and `ponytail` in the same pass — they pull in opposite directions. Design
 first, then a single ponytail pass to remove what turned out to be dead.
