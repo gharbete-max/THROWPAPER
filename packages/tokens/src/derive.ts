@@ -58,12 +58,10 @@ export function mix(a: string, b: string, amount: number): string {
  * button, not `#fff`, or the button is the one pure white thing in a palette that has none.
  */
 export function readableOn(background: string, light: string, dark: string): string {
-  const bg = luminance(background);
-  const l = luminance(light);
-  const d = luminance(dark);
-  if (bg === null || l === null || d === null) return dark;
-  const ratio = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-  return ratio(bg, l) >= ratio(bg, d) ? light : dark;
+  const l = contrastRatio(background, light);
+  const d = contrastRatio(background, dark);
+  if (l === null || d === null) return dark;
+  return l >= d ? light : dark;
 }
 
 /** How light a colour is, 0–1, by the same maths the contrast checker uses. */
@@ -280,42 +278,6 @@ export function toDark(tokens: TokenSet): TokenSet {
 }
 
 /**
- * What a button of this theme's `buttonStyle` is actually painted with.
- *
- * `buttonStyle` has been in `TokenSet` since phase 1, and four of the five shipped presets set it
- * to something other than `solid` — `minimal` asks for outline, `garden` for soft. None of it ever
- * reached the page, because the web compiler never emitted it and no stylesheet asked. Choosing
- * "Minimal" gave you the same solid button as everything else.
- *
- * Resolving it here rather than in CSS is what fixes it for every target at once: a CSS custom
- * property cannot drive a selector, but it can carry a colour, and email and PDF can read the same
- * three values without knowing the word "outline".
- */
-/**
- * The brand colour, taken far enough from the page that a filled shape reads as a shape.
- *
- * `accentInk` solves the same problem for *text*. This is the other half, and it was missing: a
- * filled button whose label is perfectly readable can still be invisible as a button, because
- * nothing was checking the fill against the page behind it. WCAG asks for 3:1 on the boundary of a
- * control for exactly this reason.
- *
- * It matters much more now than it did. The Brand Kit reads an organisation's logo and offers its
- * dominant colour as the primary, so the palette is no longer something a person chose by looking
- * at it — a pale yellow wordmark yields a pale yellow primary, and a pale yellow button on
- * parchment is a rectangle nobody can see the edge of.
- *
- * ## Why this moves lightness rather than mixing toward the ink
- *
- * Mixing toward `text` was the first implementation and it fails the one property that matters
- * here: the shipped ink is a near-black with a blue cast, so a pale yellow walked toward it comes
- * out greener and then bluer. The organisation whose logo that yellow came from would be right to
- * ask what happened to it.
- *
- * Moving along lightness in HSL keeps hue and saturation exactly, which is what "the same colour,
- * darker" means to everybody except a computer. Toward whichever end of the scale the page is not:
- * a pale brand on a pale page darkens, and the same brand on a dark page lightens instead.
- */
-/**
  * The focus ring, which is the one colour a customer is not allowed to break.
  *
  * Every focus outline in the product was `colour.secondary` or `colour.primary` — both settable
@@ -398,6 +360,30 @@ function walkAway(
   return null;
 }
 
+/**
+ * The brand colour, taken far enough from the page that a filled shape reads as a shape.
+ *
+ * `accentInk` solves the same problem for *text*. This is the other half, and it was missing: a
+ * filled button whose label is perfectly readable can still be invisible as a button, because
+ * nothing was checking the fill against the page behind it. WCAG asks for 3:1 on the boundary of a
+ * control for exactly this reason.
+ *
+ * It matters much more now than it did. The Brand Kit reads an organisation's logo and offers its
+ * dominant colour as the primary, so the palette is no longer something a person chose by looking
+ * at it — a pale yellow wordmark yields a pale yellow primary, and a pale yellow button on
+ * parchment is a rectangle nobody can see the edge of.
+ *
+ * ## Why this moves lightness rather than mixing toward the ink
+ *
+ * Mixing toward `text` was the first implementation and it fails the one property that matters
+ * here: the shipped ink is a near-black with a blue cast, so a pale yellow walked toward it comes
+ * out greener and then bluer. The organisation whose logo that yellow came from would be right to
+ * ask what happened to it.
+ *
+ * Moving along lightness in HSL keeps hue and saturation exactly, which is what "the same colour,
+ * darker" means to everybody except a computer. Toward whichever end of the scale the page is not:
+ * a pale brand on a pale page darkens, and the same brand on a dark page lightens instead.
+ */
 export function brandFill(colour: ColourTokens): string {
   if ((contrastRatio(colour.primary, colour.background) ?? 0) >= BOUNDARY_CONTRAST) {
     return colour.primary;
@@ -412,6 +398,18 @@ export function brandFill(colour: ColourTokens): string {
   );
 }
 
+/**
+ * What a button of this theme's `buttonStyle` is actually painted with.
+ *
+ * `buttonStyle` has been in `TokenSet` since phase 1, and four of the five shipped presets set it
+ * to something other than `solid` — `minimal` asks for outline, `garden` for soft. None of it ever
+ * reached the page, because the web compiler never emitted it and no stylesheet asked. Choosing
+ * "Minimal" gave you the same solid button as everything else.
+ *
+ * Resolving it here rather than in CSS is what fixes it for every target at once: a CSS custom
+ * property cannot drive a selector, but it can carry a colour, and email and PDF can read the same
+ * three values without knowing the word "outline".
+ */
 export function buttonSurface(tokens: TokenSet): {
   background: string;
   text: string;

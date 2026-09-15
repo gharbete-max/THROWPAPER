@@ -623,6 +623,8 @@ async function clientIdentity(
  * Without the cache this is a two-megabyte disk read on every HTML request, to answer a question
  * whose answer cannot change.
  */
+// ponytail: unbounded map keyed by upload hash, one entry per logo ever uploaded; an LRU if a tenant
+// somehow cycles thousands of logos.
 const faviconSuitability = new Map<string, boolean>();
 
 async function logoSuitsAFavicon(assets: AssetStore, path: string): Promise<boolean> {

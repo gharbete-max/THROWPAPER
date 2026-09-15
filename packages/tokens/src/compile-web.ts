@@ -98,14 +98,6 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-button-border'] = button.border;
 
   /**
-   * Motion, in the tokens rather than invented in the stylesheet.
-   *
-   * These were three hard-coded values in `styles.css`, which meant the one thing a brand cannot
-   * currently change is the one thing that most decides whether an interface feels expensive.
-   * They are constants for now — no control sets them — but they live here so a "reduce motion"
-   * or "snappier" preference has somewhere to go that reaches email and native too.
-   */
-  /**
    * Glass, for the things that float over the page. See `glassSurface` for what makes a pane read
    * as glass rather than as a translucent rectangle.
    */
@@ -121,6 +113,14 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
    */
   vars['--tp-focus'] = focusRing(tokens.colour);
 
+  /**
+   * Motion, in the tokens rather than invented in the stylesheet.
+   *
+   * These were three hard-coded values in `styles.css`, which meant the one thing a brand cannot
+   * currently change is the one thing that most decides whether an interface feels expensive.
+   * They are constants for now — no control sets them — but they live here so a "reduce motion"
+   * or "snappier" preference has somewhere to go that reaches email and native too.
+   */
   vars['--tp-ease'] = 'cubic-bezier(0.2, 0, 0, 1)';
   vars['--tp-motion-fast'] = '110ms';
   vars['--tp-motion'] = '180ms';

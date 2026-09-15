@@ -39,7 +39,7 @@ export interface ClientIdentity {
    * What goes in the browser tab.
    *
    * A logo when it is square enough to survive being 32 pixels wide, and a tile in the accent when
-   * it is not. See `faviconFor`: this is the one slot where a customer's own asset is often the
+   * it is not. See `logoSuitsAFavicon`: this is the one slot where a customer's own asset is often the
    * worse answer, and the decision is made from the file's own header rather than hoped about.
    */
   favicon: string;
@@ -101,10 +101,6 @@ export function withClientIdentity(html: string, identity: ClientIdentity): stri
       ? `<meta name="tp-logo-dark" content="${escapeAttribute(identity.logoDark)}" />`
       : '',
     /*
-     * Marked the same way the form's palette is, and read the same way: it tells the client that
-     * the page is already painted, so it must not put the defaults up while it waits for the kit.
-     */
-    /*
      * The icons, replacing the shipped ones rather than joining them.
      *
      * `index.html` already links our favicon and our touch icon. A browser presented with two
@@ -117,6 +113,10 @@ export function withClientIdentity(html: string, identity: ClientIdentity): stri
     identity.touchIcon
       ? `<link rel="apple-touch-icon" href="${escapeAttribute(identity.touchIcon)}" />`
       : '',
+    /*
+     * Marked the same way the form's palette is, and read the same way: it tells the client that
+     * the page is already painted, so it must not put the defaults up while it waits for the kit.
+     */
     `<style data-tp-brand="server">${identity.palette}</style>`,
   ].filter(Boolean);
 

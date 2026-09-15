@@ -15,8 +15,6 @@ export { toCssVariables, toCssBlock, toThemedCssBlock } from './compile-web.js';
  */
 export {
   toDark,
-  toDarkColours,
-  mix,
   readableOn,
   buttonSurface,
   shadow,
