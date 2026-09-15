@@ -42,7 +42,7 @@
     "@types/react-dom": "^19.0.2",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "globals": "^15.14.0",
+    "globals": "^17.12.0",
     "pdfjs-dist": "^6.3.289",
     "playwright": "^1.62.1",
     "postgres": "^3.4.5",
