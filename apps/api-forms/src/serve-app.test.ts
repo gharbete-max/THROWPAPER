@@ -455,4 +455,53 @@ describe('serving the built app from the API', () => {
       expect(response.body).toContain('mark-399');
     });
   });
+
+  /**
+   * Everything went out as `max-age=0` — `fastify-static`'s default, and a round trip per bundle
+   * per navigation to be told nothing had changed. The policy itself is unit-tested in
+   * `cache-headers.test.ts`; these are about the wiring, which is the half that was wrong.
+   */
+  describe('cache headers', () => {
+    it('keeps a content-hashed bundle for a year', async () => {
+      const response = await app.inject({ method: 'GET', url: '/assets/index-D34DB33F.js' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['cache-control']).toBe('public, max-age=31536000, immutable');
+    });
+
+    /**
+     * The plugin writes its own `cache-control` unless told not to, and when both are set the
+     * plugin wins — so this asserts the absence of the old value as much as the presence of the
+     * new one.
+     */
+    it('no longer sends the plugin’s own max-age=0', async () => {
+      const response = await app.inject({ method: 'GET', url: '/assets/index-D34DB33F.js' });
+      expect(response.headers['cache-control']).not.toContain('max-age=0');
+    });
+
+    it('revalidates the shell rather than keeping it', async () => {
+      // `/events` is a client route: no site page, no preview — the plain shipped shell.
+      const response = await app.inject({ method: 'GET', url: '/events' });
+
+      expect(response.body).toContain('id="root"');
+      expect(response.headers['cache-control']).toBe('no-cache');
+    });
+
+    /**
+     * A site page changes with the build and cannot be renamed the way a bundle can.
+     */
+    it('revalidates a server-rendered page', async () => {
+      const response = await app.inject({ method: 'GET', url: '/' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['cache-control']).toBe('no-cache');
+    });
+
+    it('revalidates the manifest', async () => {
+      const response = await app.inject({ method: 'GET', url: '/manifest.webmanifest' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['cache-control']).toBe('no-cache');
+    });
+  });
 });

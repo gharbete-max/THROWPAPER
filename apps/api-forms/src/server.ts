@@ -16,6 +16,7 @@ import {
 import type { FastifyError } from 'fastify';
 import { redactSecretsInUrl } from './log-redaction.js';
 import { constants as zlibConstants } from 'node:zlib';
+import { REVALIDATE, cacheControlForFile } from './cache-headers.js';
 import {
   BROTLI_QUALITY,
   compressPayload,
@@ -521,7 +522,34 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
      *
      * The file is still served everywhere it should be: the fallback below reaches for it by name.
      */
-    await app.register(fastifyStatic, { root: appDir, wildcard: false, index: false });
+    /**
+     * `cacheControl: false` so the plugin stops writing its own `max-age=0` and `setHeaders`
+     * decides instead. Left on, the two disagree and the plugin wins.
+     *
+     * See `cache-headers.ts`: a hashed bundle is kept for a year, an unhashed name — `index.html`,
+     * `sw.js` — is revalidated every time. Before this, all 83 bundles were re-requested on every
+     * navigation to be told nothing had changed.
+     *
+     * Two things about this API are worth writing down, because both fail quietly:
+     *
+     * The first argument is a Fastify reply, not a Node `ServerResponse`. `res.setHeader` — the
+     * name the parameter invites — is not a function on it, and the throw surfaces as a 500 from
+     * the static route rather than as anything mentioning `setHeaders`.
+     *
+     * And the plugin's own `maxAge` is milliseconds. `maxAge: 31536000`, which reads as a year in
+     * the unit `Cache-Control` actually uses, emits `max-age=31536` — eight and three quarter
+     * hours. Writing the header directly is not a workaround for that; it is the reason the header
+     * is written directly, since the value then says what it means.
+     */
+    await app.register(fastifyStatic, {
+      root: appDir,
+      wildcard: false,
+      index: false,
+      cacheControl: false,
+      setHeaders: (reply, filePath) => {
+        reply.header('cache-control', cacheControlForFile(appDir, filePath));
+      },
+    });
 
     /**
      * SPA fallback. Anything that is not an API route and not a file on disk is a client route —
@@ -546,6 +574,20 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       if (isApi || request.method !== 'GET' || looksLikeAsset(path)) {
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       }
+
+      /**
+       * Every HTML document below is revalidated rather than kept.
+       *
+       * They share a property that makes caching them by time wrong: the URL does not determine
+       * the bytes. A site page changes with the build, `/f/:slug` carries a preview of a form its
+       * author can retitle, `/i/:token` is somebody's invoice, and the shell is rewritten per
+       * deployment with the customer's own palette and wordmark. None of those can be renamed the
+       * way a hashed bundle can, so none of them may be served from a cache without asking.
+       *
+       * Set once here rather than at the four `send` sites below, so a fifth cannot be added
+       * without it. `no-cache` still allows a 304 on the `ETag`, so the usual case stays cheap.
+       */
+      reply.header('cache-control', REVALIDATE);
 
       /**
        * The public site is rendered here, not in the browser.
