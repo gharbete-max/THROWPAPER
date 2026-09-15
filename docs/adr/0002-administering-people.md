@@ -1,6 +1,6 @@
 # ADR 0002 — Administering people, and what the product refuses to do about them
 
-**Status:** proposed
+**Status:** accepted
 **Date:** 2026-09-15
 
 ## Context

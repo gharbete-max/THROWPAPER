@@ -138,6 +138,23 @@ export const esES: Record<MessageKey, string> = {
   'users.viewingAs':
     'Estás viendo el espacio de trabajo de {name} como tú mismo. Todo lo que hagas se registra a tu nombre.',
   'users.notFound': 'No existe ese usuario.',
+  'users.add': 'Añadir a alguien',
+  'users.addName': 'Nombre',
+  'users.addEmail': 'Dirección de correo',
+  'users.addRole': 'Función',
+  'users.addHint': 'Recibirá un enlace de acceso en esta dirección. No hay nada que aceptar.',
+  'users.addSubmit': 'Añadir',
+  'users.addCancel': 'Cancelar',
+  'users.disable': 'Desactivar',
+  'users.enable': 'Activar',
+  'users.makeAdmin': 'Hacer administrador',
+  'users.makeMember': 'Hacer miembro',
+  'users.confirmDisable':
+    '¿Desactivar a {name}? Conserva sus formularios y su rastro en el registro, y no podrá acceder hasta que vuelvas a activarlo.',
+  'users.confirmRole': '¿Cambiar lo que {name} puede hacer?',
+  'users.errorEmailTaken': 'Ya hay alguien con esa dirección.',
+  'users.errorLastAdmin': 'Nombra antes a otro administrador: una organización debe conservar uno.',
+  'users.errorFailed': 'No ha funcionado. Inténtalo de nuevo.',
 
   'forms.title': 'Formularios',
   'forms.new': 'Nuevo formulario',

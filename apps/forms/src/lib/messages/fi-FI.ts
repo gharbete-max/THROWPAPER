@@ -137,6 +137,24 @@ export const fiFI: Record<MessageKey, string> = {
   'users.viewingAs':
     'Katselet käyttäjän {name} työtilaa omana itsenäsi. Kaikki tekemäsi kirjataan sinun nimiisi.',
   'users.notFound': 'Käyttäjää ei löytynyt.',
+  'users.add': 'Lisää henkilö',
+  'users.addName': 'Nimi',
+  'users.addEmail': 'Sähköpostiosoite',
+  'users.addRole': 'Rooli',
+  'users.addHint': 'Hän saa kirjautumislinkin tähän osoitteeseen. Mitään ei tarvitse hyväksyä.',
+  'users.addSubmit': 'Lisää',
+  'users.addCancel': 'Peruuta',
+  'users.disable': 'Poista käytöstä',
+  'users.enable': 'Ota käyttöön',
+  'users.makeAdmin': 'Tee ylläpitäjäksi',
+  'users.makeMember': 'Tee jäseneksi',
+  'users.confirmDisable':
+    'Poistetaanko {name} käytöstä? Lomakkeet ja lokimerkinnät säilyvät, mutta hän ei voi kirjautua ennen kuin otat hänet uudelleen käyttöön.',
+  'users.confirmRole': 'Muutetaanko, mitä {name} saa tehdä?',
+  'users.errorEmailTaken': 'Tällä osoitteella on jo joku täällä.',
+  'users.errorLastAdmin':
+    'Nimeä ensin toinen ylläpitäjä — organisaatiolla on oltava vähintään yksi.',
+  'users.errorFailed': 'Se ei onnistunut. Yritä uudelleen.',
 
   'forms.title': 'Lomakkeet',
   'forms.new': 'Uusi lomake',

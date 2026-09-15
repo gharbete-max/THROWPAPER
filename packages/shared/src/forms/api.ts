@@ -249,6 +249,46 @@ export const UserSummary = z.object({
 
 export const UserListResponse = z.object({ users: z.array(UserSummary) });
 
+/**
+ * A new colleague, created by an administrator.
+ *
+ * No password, because there are none — the person receives an ordinary magic link at this
+ * address and that is the whole of the sign-in. Which is also why `email` is the load-bearing
+ * field: it is not a contact detail beside the account, it *is* the account's identity.
+ *
+ * `role` defaults to `operator`. An administrator who means to create another administrator can
+ * say so, but the default is the lesser privilege — the opposite default is the kind that is only
+ * noticed after somebody has had it for a month.
+ */
+export const CreateUser = z.object({
+  /** 320 is the maximum length of an address: 64 for the local part, 255 for the domain, one @. */
+  email: z.string().email().max(320),
+  name: z.string().trim().min(1).max(200),
+  role: z.enum(['admin', 'operator']).default('operator'),
+});
+
+/**
+ * What an administrator may change about somebody: their role, and whether they are disabled.
+ *
+ * Not their email. The address is the login identity, so changing it without confirming at the
+ * new address first is an account-takeover primitive wearing an edit form — see ADR 0002, which
+ * defers it along with the invitation flow it would need.
+ *
+ * Not their name either, in this phase: it is the one field the person themselves should own, and
+ * there is no screen for them to own it on yet.
+ *
+ * At least one of the two must be present. A `PATCH` with an empty body is a request that means
+ * nothing, and answering it 200 would report a change that did not happen.
+ */
+export const UpdateUser = z
+  .object({
+    role: z.enum(['admin', 'operator']).optional(),
+    disabled: z.boolean().optional(),
+  })
+  .refine((body) => body.role !== undefined || body.disabled !== undefined, {
+    message: 'Provide role, disabled, or both',
+  });
+
 export type CreateForm = z.infer<typeof CreateForm>;
 export type UpdateForm = z.infer<typeof UpdateForm>;
 export type FormResponse = z.infer<typeof FormResponse>;
@@ -258,3 +298,5 @@ export type FormShareResponse = z.infer<typeof FormShareResponse>;
 export type CreateFormShare = z.infer<typeof CreateFormShare>;
 export type InboxEntry = z.infer<typeof InboxEntry>;
 export type UserSummary = z.infer<typeof UserSummary>;
+export type CreateUser = z.infer<typeof CreateUser>;
+export type UpdateUser = z.infer<typeof UpdateUser>;

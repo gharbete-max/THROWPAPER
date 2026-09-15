@@ -136,6 +136,24 @@ export const daDK: Record<MessageKey, string> = {
   'users.viewingAs':
     'Du ser {name}s arbejdsområde som dig selv. Alt hvad du gør, logges i dit navn.',
   'users.notFound': 'Brugeren findes ikke.',
+  'users.add': 'Tilføj nogen',
+  'users.addName': 'Navn',
+  'users.addEmail': 'E-mailadresse',
+  'users.addRole': 'Rolle',
+  'users.addHint': 'De får et login-link på denne adresse. Der er ikke noget at acceptere.',
+  'users.addSubmit': 'Tilføj',
+  'users.addCancel': 'Annullér',
+  'users.disable': 'Deaktivér',
+  'users.enable': 'Aktivér',
+  'users.makeAdmin': 'Gør til administrator',
+  'users.makeMember': 'Gør til medlem',
+  'users.confirmDisable':
+    'Deaktivér {name}? De beholder deres formularer og deres plads i loggen og kan ikke logge ind, før du aktiverer dem igen.',
+  'users.confirmRole': 'Ændr hvad {name} må?',
+  'users.errorEmailTaken': 'Nogen med den adresse er her allerede.',
+  'users.errorLastAdmin':
+    'Udpeg en anden administrator først — en organisation skal have mindst én.',
+  'users.errorFailed': 'Det virkede ikke. Prøv igen.',
 
   'forms.title': 'Formularer',
   'forms.new': 'Ny formular',

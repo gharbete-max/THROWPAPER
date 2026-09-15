@@ -119,6 +119,90 @@ export function createDrizzleRepositories(db: Db): Repositories {
             .where(eq(users.organisationId, organisationId))
             .orderBy(asc(users.name))
         ).map((row) => toUser(row) as UserRecord),
+      create: async (input) => {
+        /*
+         * Lower-cased on the way in, because `findByEmail` lower-cases on the way out and the
+         * unique index is on the stored value. Somebody typed in as `Kim@Example.com` who then
+         * signs in as `kim@example.com` would otherwise be two accounts, one of which can never
+         * receive a magic link.
+         */
+        const [row] = await db
+          .insert(users)
+          .values({
+            organisationId: input.organisationId,
+            email: input.email.toLowerCase(),
+            name: input.name,
+            role: input.role,
+          })
+          /*
+           * The unique index decides, not a prior read. Two administrators adding the same
+           * colleague in the same moment is ordinary; it should read as "already there" rather
+           * than arrive at the error handler as a 500.
+           */
+          .onConflictDoNothing({ target: [users.organisationId, users.email] })
+          .returning();
+        return toUser(row ?? null);
+      },
+      update: async (id, changes) => {
+        /**
+         * One transaction, and the organisation's administrators locked inside it.
+         *
+         * `SELECT … FOR UPDATE` is the load-bearing part. Without it two administrators demoting
+         * each other at the same moment each read the other as still in place, each pass the
+         * check, and the organisation is left with none — a write skew that reads correctly in
+         * the code and only happens under concurrency. The lock makes the two serialise, so the
+         * second one sees the first one's result and is refused.
+         */
+        return db.transaction(async (tx) => {
+          const person = toUser(
+            first(await tx.select().from(users).where(eq(users.id, id)).limit(1)),
+          );
+          if (!person) return { ok: false as const, reason: 'not-found' as const };
+
+          const remainingAdmins = await tx
+            .select({ id: users.id })
+            .from(users)
+            .where(
+              and(
+                eq(users.organisationId, person.organisationId),
+                eq(users.role, 'admin'),
+                isNull(users.disabledAt),
+              ),
+            )
+            .for('update');
+
+          const role = changes.role ?? person.role;
+          const disabled = changes.disabled ?? person.disabledAt !== null;
+          const wouldStopBeingAnEnabledAdmin =
+            person.role === 'admin' && person.disabledAt === null && (role !== 'admin' || disabled);
+
+          if (
+            wouldStopBeingAnEnabledAdmin &&
+            !remainingAdmins.some((admin) => admin.id !== person.id)
+          ) {
+            return { ok: false as const, reason: 'last-admin' as const };
+          }
+
+          const [row] = await tx
+            .update(users)
+            .set({
+              role,
+              /*
+               * Re-enabling clears the timestamp rather than setting a second one. The column
+               * records when somebody was disabled, and a disabled date on an enabled account is
+               * the sort of thing that reads as true in a report a year later.
+               */
+              disabledAt: disabled ? (person.disabledAt ?? new Date()) : null,
+            })
+            .where(eq(users.id, id))
+            .returning();
+
+          const updated = toUser(row ?? null);
+          return updated
+            ? { ok: true as const, user: updated }
+            : { ok: false as const, reason: 'not-found' as const };
+        });
+      },
     },
 
     tokens: {

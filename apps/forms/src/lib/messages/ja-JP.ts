@@ -141,6 +141,23 @@ export const jaJP: Record<MessageKey, string> = {
   'users.viewingAs':
     '{name} さんのワークスペースをあなた自身として見ています。行った操作はすべてあなたの名前で記録されます。',
   'users.notFound': 'そのユーザーは存在しません。',
+  'users.add': 'メンバーを追加',
+  'users.addName': '名前',
+  'users.addEmail': 'メールアドレス',
+  'users.addRole': '役割',
+  'users.addHint': 'このアドレスにサインインリンクが届きます。承認の手続きはありません。',
+  'users.addSubmit': '追加',
+  'users.addCancel': 'キャンセル',
+  'users.disable': '無効にする',
+  'users.enable': '有効にする',
+  'users.makeAdmin': '管理者にする',
+  'users.makeMember': 'メンバーにする',
+  'users.confirmDisable':
+    '{name} を無効にしますか？フォームと履歴は残りますが、再度有効にするまでサインインできません。',
+  'users.confirmRole': '{name} の権限を変更しますか？',
+  'users.errorEmailTaken': 'そのアドレスの方はすでに登録されています。',
+  'users.errorLastAdmin': '先に別の管理者を指定してください。組織には管理者が一人必要です。',
+  'users.errorFailed': 'うまくいきませんでした。もう一度お試しください。',
 
   'forms.title': 'フォーム',
   'forms.new': '新しいフォーム',

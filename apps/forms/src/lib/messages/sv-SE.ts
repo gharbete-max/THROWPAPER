@@ -136,6 +136,24 @@ export const svSE: Record<MessageKey, string> = {
   'users.viewingAs':
     'Du tittar på {name}s arbetsyta som dig själv. Allt du gör loggas i ditt namn.',
   'users.notFound': 'Användaren finns inte.',
+  'users.add': 'Lägg till någon',
+  'users.addName': 'Namn',
+  'users.addEmail': 'E-postadress',
+  'users.addRole': 'Roll',
+  'users.addHint':
+    'De får en inloggningslänk till den här adressen. Det finns inget att acceptera.',
+  'users.addSubmit': 'Lägg till',
+  'users.addCancel': 'Avbryt',
+  'users.disable': 'Inaktivera',
+  'users.enable': 'Aktivera',
+  'users.makeAdmin': 'Gör till administratör',
+  'users.makeMember': 'Gör till medlem',
+  'users.confirmDisable':
+    'Inaktivera {name}? De behåller sina formulär och sin plats i loggen, och kan inte logga in förrän du aktiverar dem igen.',
+  'users.confirmRole': 'Ändra vad {name} får göra?',
+  'users.errorEmailTaken': 'Någon med den adressen finns redan här.',
+  'users.errorLastAdmin': 'Utse en annan administratör först — en organisation måste ha minst en.',
+  'users.errorFailed': 'Det gick inte. Försök igen.',
 
   'forms.title': 'Formulär',
   'forms.new': 'Nytt formulär',

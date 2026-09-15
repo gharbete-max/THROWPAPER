@@ -145,6 +145,24 @@ export const ruRU: Record<MessageKey, string> = {
   'users.viewingAs':
     'Вы смотрите рабочее пространство {name} от своего имени. Всё, что вы делаете, записывается на вас.',
   'users.notFound': 'Такого пользователя нет.',
+  'users.add': 'Добавить человека',
+  'users.addName': 'Имя',
+  'users.addEmail': 'Адрес электронной почты',
+  'users.addRole': 'Роль',
+  'users.addHint': 'На этот адрес придёт ссылка для входа. Ничего подтверждать не нужно.',
+  'users.addSubmit': 'Добавить',
+  'users.addCancel': 'Отмена',
+  'users.disable': 'Отключить',
+  'users.enable': 'Включить',
+  'users.makeAdmin': 'Назначить администратором',
+  'users.makeMember': 'Сделать участником',
+  'users.confirmDisable':
+    'Отключить {name}? Формы и записи в журнале сохранятся, но войти будет нельзя, пока вы не включите доступ снова.',
+  'users.confirmRole': 'Изменить права {name}?',
+  'users.errorEmailTaken': 'Человек с таким адресом уже здесь.',
+  'users.errorLastAdmin':
+    'Сначала назначьте другого администратора — в организации должен остаться хотя бы один.',
+  'users.errorFailed': 'Не получилось. Попробуйте ещё раз.',
 
   'forms.title': 'Формы',
   'forms.new': 'Новая форма',

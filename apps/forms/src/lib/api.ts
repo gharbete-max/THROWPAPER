@@ -243,6 +243,29 @@ export const client = {
 
   listUsers: () => request<{ users: formSchemas.UserSummary[] }>('/v1/admin/users'),
 
+  /**
+   * Adds a colleague. They receive an ordinary magic link at this address — there is no
+   * invitation to accept, because a magic link already is one. See ADR 0002.
+   */
+  createUser: (input: formSchemas.CreateUser) =>
+    request<formSchemas.UserSummary>('/v1/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }),
+
+  /**
+   * Changes a role, disables somebody, or re-enables them.
+   *
+   * Answers 409 `last-admin` when the change would leave the organisation without an enabled
+   * administrator. The screen has to say what that means rather than show "something went wrong":
+   * it is the one refusal here that the person reading can act on themselves.
+   */
+  updateUser: (id: string, changes: formSchemas.UpdateUser) =>
+    request<formSchemas.UserSummary>(`/v1/admin/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(changes),
+    }),
+
   /** One colleague's workspace, read as yourself — see `routes/admin.ts` on why not impersonation. */
   userForms: (id: string, scope: formSchemas.FormScope = 'active') =>
     request<{ forms: formSchemas.FormResponse[] }>(`/v1/admin/users/${id}/forms?scope=${scope}`),

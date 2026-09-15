@@ -40,7 +40,33 @@ export function registerAdminRoutes(
     404: api.ErrorResponse,
   } as const;
 
+  /** The two ways a well-formed request about a real person can still be refused. */
+  const writeErrorResponses = { ...errorResponses, 409: api.ErrorResponse } as const;
+
   const UserParam = z.object({ id: z.string().uuid() });
+
+  /**
+   * A person, in the shape the list already uses.
+   *
+   * The counts are zero on creation and not recomputed on an update, which is the honest answer
+   * for both: a new colleague owns nothing, and changing somebody's role does not move their
+   * forms. The list is what reports counts, and it recounts every time it is drawn.
+   */
+  const summarise = (person: {
+    id: string;
+    name: string;
+    email: string;
+    role: 'admin' | 'operator';
+    disabledAt: Date | null;
+  }) => ({
+    id: person.id,
+    name: person.name,
+    email: person.email,
+    role: person.role,
+    disabled: person.disabledAt !== null,
+    formCount: 0,
+    trashCount: 0,
+  });
 
   /**
    * Everybody in the organisation, with enough numbers beside each name to be useful.
@@ -86,6 +112,102 @@ export function registerAdminRoutes(
           trashCount: trashed.get(person.id) ?? 0,
         })),
       });
+    },
+  });
+
+  /**
+   * Adds somebody to the organisation.
+   *
+   * There is no invitation and no acceptance step, because the product already has a token with
+   * an expiry and a single use and it is called a magic link. The account exists from here; the
+   * person signs in the ordinary way, at the address given. ADR 0002 records why that is enough
+   * and what it costs.
+   *
+   * No password is set because there are none to set.
+   */
+  app.post('/v1/admin/users', {
+    preHandler: adminOnly,
+    schema: {
+      tags: ['admin'],
+      body: formSchemas.CreateUser,
+      response: { 201: formSchemas.UserSummary, ...writeErrorResponses },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const body = formSchemas.CreateUser.parse(request.body);
+
+      const person = await deps.repos.users.create({
+        organisationId: auth.organisation.id,
+        email: body.email,
+        name: body.name,
+        role: body.role,
+      });
+      // `null` is the unique index answering, which is a duplicate rather than a failure.
+      if (!person) return alreadyHere(reply);
+
+      await recordAudit(deps.repos, request, {
+        action: 'user.create',
+        entityType: 'user',
+        entityId: person.id,
+        after: { email: person.email, name: person.name, role: person.role },
+      });
+
+      return reply.code(201).send(summarise(person));
+    },
+  });
+
+  /**
+   * Changes somebody's role, disables them, or re-enables them.
+   *
+   * The last-administrator guard is **not** here. It lives in the repository, where it can be
+   * atomic with the write — checked in the route and written after, two administrators demoting
+   * each other in the same moment would both read the other as still in place, both pass, and
+   * leave the organisation with none. See `UserUpdateResult`.
+   *
+   * Disabling rather than deleting, which the schema decided before this endpoint existed: a
+   * deleted user orphans every audit row naming them, and the log's only job is to answer who did
+   * something.
+   */
+  app.patch('/v1/admin/users/:id', {
+    preHandler: adminOnly,
+    schema: {
+      tags: ['admin'],
+      params: UserParam,
+      body: formSchemas.UpdateUser,
+      response: { 200: formSchemas.UserSummary, ...writeErrorResponses },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id } = UserParam.parse(request.params);
+      const changes = formSchemas.UpdateUser.parse(request.body);
+
+      /*
+       * Checked against the administrator's own organisation before the write, not only that the
+       * row exists. A uuid from another tenant must not become a way to change somebody there —
+       * the same boundary the workspace endpoint below draws, for the same reason.
+       */
+      const person = await deps.repos.users.findById(id);
+      if (!person || person.organisationId !== auth.organisation.id) return notFound(reply);
+
+      const before = { role: person.role, disabled: person.disabledAt !== null };
+      const result = await deps.repos.users.update(id, changes);
+
+      if (!result.ok) {
+        return result.reason === 'last-admin' ? lastAdmin(reply) : notFound(reply);
+      }
+
+      const after = { role: result.user.role, disabled: result.user.disabledAt !== null };
+      await recordAudit(deps.repos, request, {
+        action: 'user.update',
+        entityType: 'user',
+        entityId: result.user.id,
+        before,
+        after,
+      });
+
+      return reply.send(summarise(result.user));
     },
   });
 
@@ -175,6 +297,27 @@ export function registerAdminRoutes(
 
 function notFound(reply: FastifyReply) {
   return reply.code(404).send({ error: { code: 'not-found', message: 'No such user' } });
+}
+
+function alreadyHere(reply: FastifyReply) {
+  return reply.code(409).send({
+    error: { code: 'email-taken', message: 'Somebody with that address is already here' },
+  });
+}
+
+/**
+ * The message names the way out, not just the refusal.
+ *
+ * "Forbidden" sends an administrator to the database. "Promote another administrator first" is
+ * the same refusal with the next step in it, and the next step is one they can take themselves.
+ */
+function lastAdmin(reply: FastifyReply) {
+  return reply.code(409).send({
+    error: {
+      code: 'last-admin',
+      message: 'Promote another administrator first — an organisation must keep one',
+    },
+  });
 }
 
 function unauthenticated(reply: FastifyReply) {

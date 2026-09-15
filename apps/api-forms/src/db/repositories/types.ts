@@ -81,11 +81,53 @@ export interface OrganisationRepository {
   first(): Promise<OrganisationRecord | null>;
 }
 
+/**
+ * The outcome of changing somebody's role or disabling them.
+ *
+ * `last-admin` is not an error in the sense of something going wrong — the request was
+ * well-formed and the caller was allowed to make it. It is the one invariant an organisation
+ * cannot be talked out of: **at least one enabled administrator must remain.** Disabling or
+ * demoting the final one locks everybody out of their own account, recoverable only by somebody
+ * with database access, so it is refused at the write rather than discouraged in the interface.
+ *
+ * Returned as a value rather than thrown because the caller has to say something specific about
+ * it — "promote another administrator first" — and a thrown error would arrive at the generic
+ * handler as a 500.
+ */
+export type UserUpdateResult =
+  { ok: true; user: UserRecord } | { ok: false; reason: 'not-found' | 'last-admin' };
+
 export interface UserRepository {
   findByEmail(organisationId: string, email: string): Promise<UserRecord | null>;
   findById(id: string): Promise<UserRecord | null>;
   /** Everybody in the organisation, for the administrator's user list. Ordered by name. */
   list(organisationId: string): Promise<UserRecord[]>;
+  /**
+   * Adds somebody to the organisation.
+   *
+   * `null` when the address is already taken inside this organisation — which the unique index
+   * `users_org_email_idx` enforces regardless, so this reports a race rather than preventing one.
+   * Two administrators adding the same colleague at the same moment is an ordinary thing to
+   * happen and should read as "already there", not as a 500.
+   */
+  create(input: {
+    organisationId: string;
+    email: string;
+    name: string;
+    role: UserRecord['role'];
+  }): Promise<UserRecord | null>;
+  /**
+   * Changes a role, a disabled state, or both, honouring the last-administrator invariant.
+   *
+   * The guard lives here rather than in the route because it has to be **atomic with the write**.
+   * Checked first and written after, two administrators demoting each other at the same moment
+   * both see the other still in place, both pass, and the organisation ends up with none — a
+   * write skew that no amount of checking beforehand can close.
+   */
+  update(
+    id: string,
+    changes: { role?: UserRecord['role']; disabled?: boolean },
+  ): Promise<UserUpdateResult>;
 }
 
 export interface TokenRepository {
