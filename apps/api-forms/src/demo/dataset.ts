@@ -92,6 +92,14 @@ const FIRST_NAMES = ['Alva', 'Björn', 'Cecilia', 'Dag', 'Elsa', 'Fredrik', 'Gö
 const LAST_NAMES = ['Öberg', 'Ångström', 'Ekström', 'Lindqvist', 'Sjöberg', 'Häggkvist'];
 const ORGS = ['Nordvik AB', 'Sjöström & Co', 'Ålands Bruk', 'Västra Handels'];
 const MEALS = ['standard', 'veg', 'gluten'];
+/**
+ * Guests get their own first names, drawn from a list the registrants do not use.
+ *
+ * A door screen showing two rows both called "Alva Öberg" is the exact confusion per-entry names
+ * exist to remove, so the demo must not manufacture it. They keep the registrant's surname, which
+ * is what a party usually looks like and what makes the grouping on the attendance list read.
+ */
+const GUEST_NAMES = ['Ingrid', 'Jonas', 'Karin', 'Lars', 'Maja', 'Nils'];
 
 export const DEMO_DEFINITION: formSchemas.FormDefinition = {
   schemaVersion: 1,
@@ -137,15 +145,71 @@ export const DEMO_DEFINITION: formSchemas.FormDefinition = {
       // phone, and the demo should show what the builder can now do.
       appearance: 'cards',
     },
+    /**
+     * Guests, as a repeating block rather than as a count.
+     *
+     * This was `type: 'number'` — "how many are you bringing?" — which is the shape a form builder
+     * forces on you when it cannot ask the same question twice. It collected a digit, so the door
+     * knew two people were coming and not who either of them was, and the CSV had a column of
+     * ones that nobody could sort by name.
+     *
+     * Now each guest is an entry with a name, and `admits` gives each one their own card and their
+     * own check-in. It is the clearest thing in the demo to point at, because the before and after
+     * are the same question asked by the same form.
+     */
     {
       id: 'guests',
       key: 'guests',
-      type: 'number',
-      width: 'half',
+      type: 'repeating_group',
+      width: 'full',
       label: { 'sv-SE': 'Medföljande gäster', 'en-GB': 'Accompanying guests' },
+      helpText: {
+        'sv-SE': 'Varje gäst får ett eget inträdeskort.',
+        'en-GB': 'Each guest gets an admission card of their own.',
+      },
       required: false,
       min: 0,
+      // Two, matching the cap the number field had. A demo should show a real limit being reached.
       max: 2,
+      addLabel: { 'sv-SE': 'Lägg till en gäst', 'en-GB': 'Add a guest' },
+      entryLabel: { 'sv-SE': 'Gäst', 'en-GB': 'Guest' },
+      admits: true,
+      admitNameKey: 'guest_name',
+      fields: [
+        {
+          id: 'guest_name',
+          key: 'guest_name',
+          type: 'short_text',
+          label: { 'sv-SE': 'Namn', 'en-GB': 'Name' },
+          required: true,
+          width: 'half',
+        },
+        {
+          id: 'guest_meal',
+          key: 'guest_meal',
+          type: 'single_select',
+          label: { 'sv-SE': 'Måltid', 'en-GB': 'Meal' },
+          required: false,
+          width: 'half',
+          options: [
+            { value: 'standard', label: { 'sv-SE': 'Standard', 'en-GB': 'Standard' }, image: null },
+            { value: 'veg', label: { 'sv-SE': 'Vegetariskt', 'en-GB': 'Vegetarian' }, image: null },
+            {
+              value: 'gluten',
+              label: { 'sv-SE': 'Glutenfritt', 'en-GB': 'Gluten free' },
+              image: null,
+            },
+          ],
+          /*
+           * A dropdown, where the registrant's own meal is cards.
+           *
+           * The same three choices, but repeated up to twice inside a block: three cards per guest
+           * would be six cards below the question they belong to, and the page would be mostly
+           * meal. Presentation is per field for exactly this reason — the answers are identical.
+           */
+          appearance: 'dropdown',
+        },
+      ],
     },
   ],
   // Spread from the schema's own defaults, so a new setting does not have to be remembered here.
@@ -186,7 +250,7 @@ export function demoRegistration(
       email,
       organisation: ORGS[index % ORGS.length],
       meal: MEALS[index % MEALS.length],
-      guests: index % 7 === 0 ? 1 : 0,
+      guests: guestsFor(index, last),
     },
     resumeTokenHash: null,
     resumeExpiresAt: null,
@@ -195,6 +259,24 @@ export function demoRegistration(
     createdAt: new Date(now.getTime() - index * 3_600_000),
     updatedAt: new Date(now.getTime() - index * 3_600_000),
   };
+}
+
+/**
+ * Who each registration is bringing, keyed by the child's own key.
+ *
+ * Roughly one in seven brings somebody and one in seventeen brings two, so an attendance figure
+ * that counts people is visibly different from one that counts rows — which is the point of the
+ * change and would be invisible if every registration were a party of one.
+ *
+ * The guest is deliberately not the registrant's namesake: a door screen showing two rows called
+ * "Alva Öberg" is the exact confusion per-entry names exist to remove.
+ */
+function guestsFor(index: number, last: string) {
+  const bringing = index % 7 === 0 ? (index % 17 === 0 ? 2 : 1) : 0;
+  return Array.from({ length: bringing }, (_unused, at) => ({
+    guest_name: `${GUEST_NAMES[(index + at) % GUEST_NAMES.length]} ${last}`,
+    guest_meal: MEALS[(index + at + 1) % MEALS.length],
+  }));
 }
 
 /**
