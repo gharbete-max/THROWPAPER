@@ -561,6 +561,7 @@ export const svSE: Record<MessageKey, string> = {
   'demo.banner': 'Demoläge — data sparas inte och e-post skickas aldrig.',
   'demo.reset': 'Återställ demodata',
   'demo.signInAs': 'Logga in som {role}',
+  'demo.signInFailed': 'Det gick inte att logga in. Kör API:et?',
   'demo.signInHint': 'I demoläge går ingen e-post att läsa, så logga in direkt:',
 
   'checkin.title': 'Incheckning',

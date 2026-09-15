@@ -222,7 +222,8 @@ function Shell() {
         whether it is light or dark, who is signed in and how to stop being. It is a short row that
         cannot wrap, which is the whole reason the sections are no longer in it.
       */}
-      <div className="topline">
+      {/* A `header`, so the session row — and Sign out in particular — is inside a landmark. */}
+      <header className="topline">
         <div className="topline__mark">
           <Wordmark name={organisation?.name ?? t('app.name')} />
         </div>
@@ -263,7 +264,7 @@ function Shell() {
         <button className="button button--quiet small" onClick={signOut}>
           {t('app.signOut')}
         </button>
-      </div>
+      </header>
 
       <main className="main">
         <div className={`shell${wide ? ' shell--wide' : roomy ? ' shell--roomy' : ''}`}>

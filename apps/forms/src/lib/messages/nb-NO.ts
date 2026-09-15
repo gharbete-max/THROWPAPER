@@ -561,6 +561,7 @@ export const nbNO: Record<MessageKey, string> = {
   'demo.banner': 'Demomodus — ingenting lagres, og det sendes aldri e-post.',
   'demo.reset': 'Tilbakestill demodata',
   'demo.signInAs': 'Logg inn som {role}',
+  'demo.signInFailed': 'Kunne ikke logge inn. Kjører API-et?',
   'demo.signInHint': 'Ingen e-post kan leses i demomodus, så logg inn direkte:',
 
   'checkin.title': 'Innsjekk',

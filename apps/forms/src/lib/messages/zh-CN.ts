@@ -552,6 +552,7 @@ export const zhCN: Record<MessageKey, string> = {
   'demo.banner': '演示模式 — 不保存任何内容，也永远不会发送邮件。',
   'demo.reset': '重置演示数据',
   'demo.signInAs': '以 {role} 身份登录',
+  'demo.signInFailed': '无法登录。API 是否正在运行？',
   'demo.signInHint': '演示模式下无法读取邮件，请直接登录：',
 
   'checkin.title': '签到',

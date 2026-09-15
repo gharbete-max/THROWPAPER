@@ -9,6 +9,7 @@ export function Login() {
   const { isDemo, users } = useDemo();
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [demo, setDemo] = useState<'idle' | 'busy' | 'failed'>('idle');
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -35,7 +36,9 @@ export function Login() {
                 key={user.email}
                 type="button"
                 className="button"
+                disabled={demo === 'busy'}
                 onClick={() => {
+                  setDemo('busy');
                   client
                     .demoSignIn(user.email)
                     .then((pair) => {
@@ -43,7 +46,8 @@ export function Login() {
                       // Full reload so the session provider picks the tokens up cleanly.
                       window.location.assign('/events');
                     })
-                    .catch(() => undefined);
+                    // It swallowed this: press the button, nothing moves, no message, forever.
+                    .catch(() => setDemo('failed'));
                 }}
               >
                 {/*
@@ -56,6 +60,11 @@ export function Login() {
               </button>
             ))}
           </div>
+          {demo === 'failed' && (
+            <p className="status-down" role="alert">
+              {t('demo.signInFailed')}
+            </p>
+          )}
         </div>
       )}
 

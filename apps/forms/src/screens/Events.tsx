@@ -113,7 +113,12 @@ export function Events() {
                 <Meter
                   value={event.registeredCount}
                   max={event.capacity}
-                  label={t('events.capacity', { count: event.capacity })}
+                  /* Both numbers: "250 places" alone labelled the denominator, so a screen
+                     reader heard "250 places, 40" and had to guess which was which. */
+                  label={`${t('events.registered', { count: event.registeredCount })} · ${t(
+                    'events.capacity',
+                    { count: event.capacity },
+                  )}`}
                 />
               )}
 

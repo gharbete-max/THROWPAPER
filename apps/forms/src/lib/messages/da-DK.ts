@@ -559,6 +559,7 @@ export const daDK: Record<MessageKey, string> = {
   'demo.banner': 'Demotilstand — intet gemmes, og der sendes aldrig e-mail.',
   'demo.reset': 'Nulstil demodata',
   'demo.signInAs': 'Log ind som {role}',
+  'demo.signInFailed': "Kunne ikke logge ind. Kører API'et?",
   'demo.signInHint': 'Ingen e-mail kan læses i demotilstand, så log ind direkte:',
 
   'checkin.title': 'Check-in',

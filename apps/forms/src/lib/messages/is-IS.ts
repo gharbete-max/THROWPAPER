@@ -562,6 +562,7 @@ export const isIS: Record<MessageKey, string> = {
   'demo.banner': 'Sýnihamur — ekkert er vistað og enginn tölvupóstur er nokkru sinni sendur.',
   'demo.reset': 'Endurstilla sýnigögn',
   'demo.signInAs': 'Skrá inn sem {role}',
+  'demo.signInFailed': 'Ekki tókst að skrá inn. Er API-ið í gangi?',
   'demo.signInHint': 'Ekki er hægt að lesa tölvupóst í sýniham, svo skráðu þig inn beint:',
 
   'checkin.title': 'Innritun',

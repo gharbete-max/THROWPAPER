@@ -573,6 +573,7 @@ export const ruRU: Record<MessageKey, string> = {
   'demo.banner': 'Демо-режим — ничего не сохраняется и письма никогда не отправляются.',
   'demo.reset': 'Сбросить демо-данные',
   'demo.signInAs': 'Войти как {role}',
+  'demo.signInFailed': 'Не удалось войти. Запущен ли API?',
   'demo.signInHint': 'В демо-режиме почту прочитать нельзя, поэтому войдите напрямую:',
 
   'checkin.title': 'Регистрация',

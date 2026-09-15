@@ -573,6 +573,7 @@ export const esES: Record<MessageKey, string> = {
   'demo.banner': 'Modo demo — no se guarda nada y nunca se envía ningún correo.',
   'demo.reset': 'Restablecer datos de demo',
   'demo.signInAs': 'Iniciar sesión como {role}',
+  'demo.signInFailed': 'No se pudo iniciar sesión. ¿Está la API en marcha?',
   'demo.signInHint': 'En modo demo no se puede leer el correo, así que inicia sesión directamente:',
 
   'checkin.title': 'Registro de entrada',

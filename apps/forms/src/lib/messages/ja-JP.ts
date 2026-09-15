@@ -566,6 +566,7 @@ export const jaJP: Record<MessageKey, string> = {
   'demo.banner': 'デモモード — 何も保存されず、メールも一切送信されません。',
   'demo.reset': 'デモデータをリセット',
   'demo.signInAs': '{role} としてログイン',
+  'demo.signInFailed': 'サインインできませんでした。APIは起動していますか？',
   'demo.signInHint': 'デモモードではメールを読めないため、直接ログインしてください：',
 
   'checkin.title': '受付',

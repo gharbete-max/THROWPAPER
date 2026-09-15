@@ -527,10 +527,6 @@ textarea {
 }
 
 @media (max-width: 600px) {
-  .shell {
-    padding: calc(var(--tp-spacing-unit) * 2) calc(var(--tp-spacing-unit) * 2);
-  }
-
   /* Stacked, full-width controls: thumbs are wide and screens are narrow. */
   .row .button,
   .row .button--quiet {
@@ -2614,6 +2610,7 @@ p {
 .empty__title {
   margin: 0;
   color: var(--tp-colour-text);
+  font-size: var(--tp-text-lg);
   font-weight: var(--tp-type-weight-bold);
 }
 
@@ -3312,11 +3309,15 @@ p {
     color var(--tp-motion-fast) var(--tp-ease);
 }
 
-/* The visible pill stays 30px; what a finger has to hit is 44. */
+/*
+ * The visible pill stays 30px; what a finger has to hit is 44 tall. Not 44 wide: the pills sit
+ * 2px apart, and a hit area grown sideways lands on the neighbour — the right edge of "System"
+ * chose "Light". Height is where the room is.
+ */
 .segmented__option::after {
   content: '';
   position: absolute;
-  inset: -7px;
+  inset: -7px -1px;
 }
 
 .segmented__option:hover {
@@ -3325,7 +3326,8 @@ p {
 
 .segmented__option--on {
   background: var(--tp-colour-background);
-  color: var(--tp-colour-primary);
+  /* The ink, not the brand: this is a 16px icon and the seafoam was 2.12:1 on the page. */
+  color: var(--tp-colour-text);
   box-shadow: var(--tp-shadow);
 }
 
@@ -3749,7 +3751,18 @@ body:has(.app) > #root {
    */
   max-inline-size: var(--tp-measure, 52rem);
   margin-inline: auto;
-  padding: 0;
+  /*
+   * A gutter of its own, for the shells that stand alone — the public form and sign-in are not
+   * inside `.main` and had none: at 375px the inputs ran from bezel to bezel. A media rule near
+   * the top of the file meant to supply one lost to this `padding: 0`, which came later at equal
+   * specificity. Inside `.main` the gutter is the main's, so the shell's is taken back below.
+   */
+  padding-block: 0;
+  padding-inline: calc(var(--tp-spacing-unit) * 2);
+}
+
+.main > .shell {
+  padding-inline: 0;
 }
 
 /* --- Narrow: the rail becomes a bottom bar --------------------------------- */

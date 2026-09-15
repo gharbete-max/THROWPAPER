@@ -574,6 +574,7 @@ export const deDE: Record<MessageKey, string> = {
   'demo.banner': 'Demomodus — nichts wird gespeichert und es wird nie eine E-Mail versendet.',
   'demo.reset': 'Demodaten zurücksetzen',
   'demo.signInAs': 'Anmelden als {role}',
+  'demo.signInFailed': 'Anmeldung nicht möglich. Läuft die API?',
   'demo.signInHint':
     'Im Demomodus lassen sich keine E-Mails lesen, melden Sie sich also direkt an:',
 

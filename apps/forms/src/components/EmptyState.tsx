@@ -19,6 +19,7 @@ export function EmptyState({
   title,
   hint,
   action,
+  level = 'h2',
 }: {
   icon: IconName;
   title: string;
@@ -26,7 +27,13 @@ export function EmptyState({
   hint?: string;
   /** Omitted where there is nothing to offer — a trash bin has no "create" to suggest. */
   action?: ReactNode;
+  /**
+   * A heading, not a paragraph: somebody navigating by heading has to be able to land on "no
+   * events yet". `h2` under a screen's own `h1`; `h1` where the empty state *is* the page.
+   */
+  level?: 'h1' | 'h2';
 }) {
+  const Title = level;
   return (
     <div className="empty">
       {/*
@@ -36,7 +43,7 @@ export function EmptyState({
       <span className="empty__mark" aria-hidden="true">
         <Icon name={icon} />
       </span>
-      <p className="empty__title">{title}</p>
+      <Title className="empty__title">{title}</Title>
       {hint && <p className="empty__hint small muted">{hint}</p>}
       {action}
     </div>

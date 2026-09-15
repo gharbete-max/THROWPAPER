@@ -570,6 +570,7 @@ export const enGB = {
   'demo.banner': 'Demo mode — nothing is saved and no email is ever sent.',
   'demo.reset': 'Reset demo data',
   'demo.signInAs': 'Sign in as {role}',
+  'demo.signInFailed': 'Could not sign in. Is the API running?',
   'demo.signInHint': 'No email can be read in demo mode, so sign in directly:',
 
   'checkin.title': 'Check-in',

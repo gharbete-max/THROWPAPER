@@ -381,7 +381,12 @@ export default function PublicForm() {
             variant="corner"
           />
         </header>
-        <EmptyState icon="search" title={t('public.notFound')} hint={t('public.notFoundHint')} />
+        <EmptyState
+          icon="search"
+          title={t('public.notFound')}
+          hint={t('public.notFoundHint')}
+          level="h1"
+        />
       </main>
     );
   }

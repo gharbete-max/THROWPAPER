@@ -574,6 +574,7 @@ export const frFR: Record<MessageKey, string> = {
   'demo.banner': 'Mode démo — rien n’est enregistré et aucun e-mail n’est jamais envoyé.',
   'demo.reset': 'Réinitialiser les données de démo',
   'demo.signInAs': 'Se connecter en tant que {role}',
+  'demo.signInFailed': 'Connexion impossible. L’API est-elle lancée ?',
   'demo.signInHint': 'Aucun e-mail ne peut être lu en mode démo, connectez-vous donc directement :',
 
   'checkin.title': 'Accueil',

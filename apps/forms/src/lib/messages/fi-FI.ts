@@ -563,6 +563,7 @@ export const fiFI: Record<MessageKey, string> = {
   'demo.banner': 'Esittelytila — mitään ei tallenneta eikä sähköpostia koskaan lähetetä.',
   'demo.reset': 'Palauta esittelytiedot',
   'demo.signInAs': 'Kirjaudu roolissa {role}',
+  'demo.signInFailed': 'Kirjautuminen epäonnistui. Onko API käynnissä?',
   'demo.signInHint': 'Esittelytilassa sähköpostia ei voi lukea, joten kirjaudu suoraan:',
 
   'checkin.title': 'Sisäänkirjaus',
