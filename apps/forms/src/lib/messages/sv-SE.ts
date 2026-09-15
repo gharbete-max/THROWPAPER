@@ -118,6 +118,7 @@ export const svSE: Record<MessageKey, string> = {
   'inbox.title': 'Svar',
   'inbox.intro': 'De senaste svaren från alla formulär du har tillgång till.',
   'inbox.empty': 'Inga svar ännu.',
+  'inbox.loadFailed': 'Svaren kunde inte läsas in.',
   'inbox.partial': 'Påbörjat',
   'inbox.complete': 'Inskickat',
   'inbox.search': 'Sök',
@@ -565,7 +566,8 @@ export const svSE: Record<MessageKey, string> = {
   'demo.reset': 'Återställ demodata',
   'demo.signInAs': 'Logga in som {role}',
   'demo.signInFailed': 'Det gick inte att logga in. Kör API:et?',
-  'demo.signInHint': 'I demoläge går ingen e-post att läsa, så logga in direkt:',
+  'demo.title': 'Öppna demon',
+  'demo.signInHint': 'Välj vem du vill vara. Inget här är på riktigt, och inget sparas.',
 
   'checkin.title': 'Incheckning',
   'checkin.counts': '{checkedIn} av {registered} incheckade',
@@ -640,6 +642,8 @@ export const svSE: Record<MessageKey, string> = {
     'Dina svar finns kvar, men de kunde inte skickas. Kontrollera din anslutning och försök igen.',
   'public.rejected.error': 'Något gick fel hos oss. Dina svar finns kvar — försök igen.',
   'public.notFound': 'Formuläret finns inte.',
+  'public.retry': 'Försök igen',
+  'public.loadFailed': 'Formuläret kunde inte läsas in.',
   'public.notFoundHint':
     'Kontrollera länken du fick, eller be arrangören om en ny. Den kan ha tagits bort.',
   'public.yes': 'Ja',

@@ -6,6 +6,7 @@ import { client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
 
@@ -30,14 +31,19 @@ export function Inbox() {
   const t = useT();
   const { locale, locales } = useSession();
   const [entries, setEntries] = useState<InboxEntry[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [query, setQuery] = useState('');
 
   useEffect(() => {
+    setFailed(false);
     client
       .inbox()
       .then((result) => setEntries(result.submissions))
-      .catch(() => setEntries([]));
-  }, []);
+      // Not `[]`: an empty list says "no responses yet", which is a claim about the data, and a
+      // failed fetch knows nothing about the data.
+      .catch(() => setFailed(true));
+  }, [attempt]);
 
   /**
    * One box, matched against the three things somebody might type: a name, a reference read off
@@ -63,7 +69,22 @@ export function Inbox() {
         <p className="muted small">{t('inbox.intro')}</p>
       </header>
 
-      {entries === null && <Loading />}
+      {failed && (
+        <EmptyState
+          icon="warning"
+          title={t('inbox.loadFailed')}
+          action={
+            <button
+              className="button button--quiet"
+              type="button"
+              onClick={() => setAttempt((value) => value + 1)}
+            >
+              {t('public.retry')}
+            </button>
+          }
+        />
+      )}
+      {!failed && entries === null && <Loading />}
       {entries?.length === 0 && <p className="muted empty">{t('inbox.empty')}</p>}
 
       {entries && entries.length > 0 && shown && (

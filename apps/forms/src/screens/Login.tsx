@@ -25,19 +25,24 @@ export function Login() {
   return (
     <main className="shell shell--narrow system">
       <div>
-        <Wordmark name={t('app.name')} />
-        <h1>{t('login.title')}</h1>
+        {/* A way back to the site: the page that sent you here is one press away. */}
+        <a className="login__home" href="/">
+          <Wordmark name={t('app.name')} />
+        </a>
+        {/* "Open the demo" is what the button said; the page should not answer "Sign in". */}
+        <h1>{t(isDemo ? 'demo.title' : 'login.title')}</h1>
       </div>
 
       {isDemo && users.length > 0 && (
         <div className="card stack">
           <p className="small muted">{t('demo.signInHint')}</p>
           <div className="row">
-            {users.map((user) => (
+            {users.map((user, index) => (
               <button
                 key={user.email}
                 type="button"
-                className="button"
+                // One filled button per screen: the first role is the recommended door in.
+                className={index === 0 ? 'button' : 'button button--quiet'}
                 disabled={demo === 'busy'}
                 onClick={() => {
                   setDemo('busy');
@@ -73,7 +78,8 @@ export function Login() {
       {state === 'sent' ? (
         <div className="card">
           <p>{t('login.sent')}</p>
-          <p className="muted small">{t('login.devHint')}</p>
+          {/* A note about the api-forms console has no business on a production screen. */}
+          {import.meta.env.DEV && <p className="muted small">{t('login.devHint')}</p>}
         </div>
       ) : (
         <form className="card stack" onSubmit={submit}>

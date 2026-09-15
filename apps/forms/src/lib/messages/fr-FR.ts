@@ -119,6 +119,7 @@ export const frFR: Record<MessageKey, string> = {
   'inbox.title': 'Réponses',
   'inbox.intro': 'Les dernières réponses de tous les formulaires auxquels vous avez accès.',
   'inbox.empty': 'Aucune réponse pour le moment.',
+  'inbox.loadFailed': 'Les réponses n’ont pas pu être chargées.',
   'inbox.partial': 'En cours',
   'inbox.complete': 'Envoyée',
   'inbox.search': 'Rechercher',
@@ -578,7 +579,8 @@ export const frFR: Record<MessageKey, string> = {
   'demo.reset': 'Réinitialiser les données de démo',
   'demo.signInAs': 'Se connecter en tant que {role}',
   'demo.signInFailed': 'Connexion impossible. L’API est-elle lancée ?',
-  'demo.signInHint': 'Aucun e-mail ne peut être lu en mode démo, connectez-vous donc directement :',
+  'demo.title': 'Ouvrir la démo',
+  'demo.signInHint': 'Choisissez un rôle. Rien ici n’est réel, et rien n’est enregistré.',
 
   'checkin.title': 'Accueil',
   'checkin.counts': '{checkedIn} sur {registered} enregistrés',
@@ -656,6 +658,8 @@ export const frFR: Record<MessageKey, string> = {
   'public.rejected.error':
     'Un problème est survenu de notre côté. Vos réponses sont toujours là — réessayez.',
   'public.notFound': 'Formulaire introuvable.',
+  'public.retry': 'Réessayer',
+  'public.loadFailed': 'Le formulaire n’a pas pu être chargé.',
   'public.notFoundHint':
     'Vérifiez le lien que vous avez reçu, ou demandez-en un nouveau à l’organisateur. Il a peut-être été retiré.',
   'public.yes': 'Oui',

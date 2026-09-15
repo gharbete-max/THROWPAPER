@@ -119,6 +119,7 @@ export const isIS: Record<MessageKey, string> = {
   'inbox.title': 'Svör',
   'inbox.intro': 'Nýjustu svörin úr öllum eyðublöðum sem þú hefur aðgang að.',
   'inbox.empty': 'Engin svör enn.',
+  'inbox.loadFailed': 'Ekki tókst að hlaða svörunum.',
   'inbox.partial': 'Í vinnslu',
   'inbox.complete': 'Sent',
   'inbox.search': 'Leita',
@@ -566,7 +567,8 @@ export const isIS: Record<MessageKey, string> = {
   'demo.reset': 'Endurstilla sýnigögn',
   'demo.signInAs': 'Skrá inn sem {role}',
   'demo.signInFailed': 'Ekki tókst að skrá inn. Er API-ið í gangi?',
-  'demo.signInHint': 'Ekki er hægt að lesa tölvupóst í sýniham, svo skráðu þig inn beint:',
+  'demo.title': 'Opna sýnishornið',
+  'demo.signInHint': 'Veldu hlutverk. Ekkert hér er raunverulegt og ekkert er vistað.',
 
   'checkin.title': 'Innritun',
   'checkin.counts': '{checkedIn} af {registered} innritaðir',
@@ -642,6 +644,8 @@ export const isIS: Record<MessageKey, string> = {
   'public.rejected.error':
     'Eitthvað fór úrskeiðis hjá okkur. Svörin þín eru enn hér — reyndu aftur.',
   'public.notFound': 'Eyðublaðið fannst ekki.',
+  'public.retry': 'Reyna aftur',
+  'public.loadFailed': 'Ekki tókst að hlaða eyðublaðinu.',
   'public.notFoundHint':
     'Athugaðu hlekkinn sem þú fékkst eða biddu skipuleggjanda um nýjan. Hann gæti hafa verið tekinn niður.',
   'public.yes': 'Já',

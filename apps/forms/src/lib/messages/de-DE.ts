@@ -120,6 +120,7 @@ export const deDE: Record<MessageKey, string> = {
   'inbox.title': 'Antworten',
   'inbox.intro': 'Die neuesten Antworten aus allen Formularen, die Sie sehen können.',
   'inbox.empty': 'Noch keine Antworten.',
+  'inbox.loadFailed': 'Die Antworten konnten nicht geladen werden.',
   'inbox.partial': 'In Bearbeitung',
   'inbox.complete': 'Abgeschickt',
   'inbox.search': 'Suchen',
@@ -578,8 +579,8 @@ export const deDE: Record<MessageKey, string> = {
   'demo.reset': 'Demodaten zurücksetzen',
   'demo.signInAs': 'Anmelden als {role}',
   'demo.signInFailed': 'Anmeldung nicht möglich. Läuft die API?',
-  'demo.signInHint':
-    'Im Demomodus lassen sich keine E-Mails lesen, melden Sie sich also direkt an:',
+  'demo.title': 'Demo öffnen',
+  'demo.signInHint': 'Wählen Sie eine Rolle. Nichts hier ist echt, und nichts wird gespeichert.',
 
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} von {registered} eingecheckt',
@@ -657,6 +658,8 @@ export const deDE: Record<MessageKey, string> = {
   'public.rejected.error':
     'Bei uns ist etwas schiefgegangen. Ihre Antworten sind noch da — bitte versuchen Sie es erneut.',
   'public.notFound': 'Formular nicht gefunden.',
+  'public.retry': 'Erneut versuchen',
+  'public.loadFailed': 'Das Formular konnte nicht geladen werden.',
   'public.notFoundHint':
     'Prüfen Sie den Link, den Sie erhalten haben, oder bitten Sie den Veranstalter um einen neuen. Er wurde möglicherweise zurückgezogen.',
   'public.yes': 'Ja',

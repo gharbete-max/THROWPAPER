@@ -119,6 +119,7 @@ export const fiFI: Record<MessageKey, string> = {
   'inbox.title': 'Vastaukset',
   'inbox.intro': 'Uusimmat vastaukset kaikista lomakkeista, jotka näet.',
   'inbox.empty': 'Ei vielä vastauksia.',
+  'inbox.loadFailed': 'Vastauksia ei voitu ladata.',
   'inbox.partial': 'Kesken',
   'inbox.complete': 'Lähetetty',
   'inbox.search': 'Hae',
@@ -567,7 +568,8 @@ export const fiFI: Record<MessageKey, string> = {
   'demo.reset': 'Palauta esittelytiedot',
   'demo.signInAs': 'Kirjaudu roolissa {role}',
   'demo.signInFailed': 'Kirjautuminen epäonnistui. Onko API käynnissä?',
-  'demo.signInHint': 'Esittelytilassa sähköpostia ei voi lukea, joten kirjaudu suoraan:',
+  'demo.title': 'Avaa demo',
+  'demo.signInHint': 'Valitse rooli. Mikään täällä ei ole totta, eikä mitään tallenneta.',
 
   'checkin.title': 'Sisäänkirjaus',
   'checkin.counts': '{checkedIn} / {registered} kirjattu sisään',
@@ -644,6 +646,8 @@ export const fiFI: Record<MessageKey, string> = {
   'public.rejected.error':
     'Meidän päässämme meni jokin vikaan. Vastauksesi ovat yhä tallessa — yritä uudelleen.',
   'public.notFound': 'Lomaketta ei löytynyt.',
+  'public.retry': 'Yritä uudelleen',
+  'public.loadFailed': 'Lomaketta ei voitu ladata.',
   'public.notFoundHint':
     'Tarkista saamasi linkki tai pyydä järjestäjältä uusi. Se on saatettu poistaa.',
   'public.yes': 'Kyllä',

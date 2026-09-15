@@ -118,6 +118,7 @@ export const daDK: Record<MessageKey, string> = {
   'inbox.title': 'Svar',
   'inbox.intro': 'De seneste svar fra alle de formularer, du har adgang til.',
   'inbox.empty': 'Ingen svar endnu.',
+  'inbox.loadFailed': 'Svarene kunne ikke indlæses.',
   'inbox.partial': 'I gang',
   'inbox.complete': 'Indsendt',
   'inbox.search': 'Søg',
@@ -563,7 +564,8 @@ export const daDK: Record<MessageKey, string> = {
   'demo.reset': 'Nulstil demodata',
   'demo.signInAs': 'Log ind som {role}',
   'demo.signInFailed': "Kunne ikke logge ind. Kører API'et?",
-  'demo.signInHint': 'Ingen e-mail kan læses i demotilstand, så log ind direkte:',
+  'demo.title': 'Åbn demoen',
+  'demo.signInHint': 'Vælg hvem du vil være. Intet her er ægte, og intet gemmes.',
 
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} af {registered} checket ind',
@@ -638,6 +640,8 @@ export const daDK: Record<MessageKey, string> = {
     'Dine svar er her stadig, men de kunne ikke sendes. Tjek din forbindelse, og prøv igen.',
   'public.rejected.error': 'Noget gik galt hos os. Dine svar er her stadig — prøv igen.',
   'public.notFound': 'Formularen blev ikke fundet.',
+  'public.retry': 'Prøv igen',
+  'public.loadFailed': 'Formularen kunne ikke indlæses.',
   'public.notFoundHint':
     'Tjek det link, du fik, eller bed arrangøren om et nyt. Det kan være trukket tilbage.',
   'public.yes': 'Ja',

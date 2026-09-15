@@ -119,6 +119,7 @@ export const esES: Record<MessageKey, string> = {
   'inbox.title': 'Respuestas',
   'inbox.intro': 'Las últimas respuestas de todos los formularios que puedes ver.',
   'inbox.empty': 'Aún no hay respuestas.',
+  'inbox.loadFailed': 'No se pudieron cargar las respuestas.',
   'inbox.partial': 'En curso',
   'inbox.complete': 'Enviada',
   'inbox.search': 'Buscar',
@@ -577,7 +578,8 @@ export const esES: Record<MessageKey, string> = {
   'demo.reset': 'Restablecer datos de demo',
   'demo.signInAs': 'Iniciar sesión como {role}',
   'demo.signInFailed': 'No se pudo iniciar sesión. ¿Está la API en marcha?',
-  'demo.signInHint': 'En modo demo no se puede leer el correo, así que inicia sesión directamente:',
+  'demo.title': 'Abrir la demo',
+  'demo.signInHint': 'Elige quién quieres ser. Nada aquí es real y nada se guarda.',
 
   'checkin.title': 'Registro de entrada',
   'checkin.counts': '{checkedIn} de {registered} registrados',
@@ -653,6 +655,8 @@ export const esES: Record<MessageKey, string> = {
   'public.rejected.error':
     'Algo ha fallado por nuestra parte. Tus respuestas siguen aquí: inténtalo de nuevo.',
   'public.notFound': 'Formulario no encontrado.',
+  'public.retry': 'Reintentar',
+  'public.loadFailed': 'No se pudo cargar el formulario.',
   'public.notFoundHint':
     'Comprueba el enlace que recibiste o pide uno nuevo al organizador. Puede que se haya retirado.',
   'public.yes': 'Sí',

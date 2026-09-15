@@ -119,6 +119,7 @@ export const nbNO: Record<MessageKey, string> = {
   'inbox.title': 'Svar',
   'inbox.intro': 'De siste svarene fra alle skjemaene du har tilgang til.',
   'inbox.empty': 'Ingen svar ennå.',
+  'inbox.loadFailed': 'Svarene kunne ikke lastes.',
   'inbox.partial': 'Påbegynt',
   'inbox.complete': 'Sendt inn',
   'inbox.search': 'Søk',
@@ -565,7 +566,8 @@ export const nbNO: Record<MessageKey, string> = {
   'demo.reset': 'Tilbakestill demodata',
   'demo.signInAs': 'Logg inn som {role}',
   'demo.signInFailed': 'Kunne ikke logge inn. Kjører API-et?',
-  'demo.signInHint': 'Ingen e-post kan leses i demomodus, så logg inn direkte:',
+  'demo.title': 'Åpne demoen',
+  'demo.signInHint': 'Velg hvem du vil være. Ingenting her er ekte, og ingenting lagres.',
 
   'checkin.title': 'Innsjekk',
   'checkin.counts': '{checkedIn} av {registered} sjekket inn',
@@ -640,6 +642,8 @@ export const nbNO: Record<MessageKey, string> = {
     'Svarene dine er her fortsatt, men de kunne ikke sendes. Sjekk tilkoblingen og prøv igjen.',
   'public.rejected.error': 'Noe gikk galt hos oss. Svarene dine er her fortsatt — prøv igjen.',
   'public.notFound': 'Skjemaet ble ikke funnet.',
+  'public.retry': 'Prøv igjen',
+  'public.loadFailed': 'Skjemaet kunne ikke lastes.',
   'public.notFoundHint':
     'Sjekk lenken du fikk, eller be arrangøren om en ny. Den kan ha blitt trukket tilbake.',
   'public.yes': 'Ja',

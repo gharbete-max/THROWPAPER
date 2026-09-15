@@ -127,6 +127,7 @@ export const ruRU: Record<MessageKey, string> = {
   'inbox.title': 'Ответы',
   'inbox.intro': 'Последние ответы по всем формам, которые вам доступны.',
   'inbox.empty': 'Ответов пока нет.',
+  'inbox.loadFailed': 'Не удалось загрузить ответы.',
   'inbox.partial': 'В процессе',
   'inbox.complete': 'Отправлено',
   'inbox.search': 'Поиск',
@@ -577,7 +578,8 @@ export const ruRU: Record<MessageKey, string> = {
   'demo.reset': 'Сбросить демо-данные',
   'demo.signInAs': 'Войти как {role}',
   'demo.signInFailed': 'Не удалось войти. Запущен ли API?',
-  'demo.signInHint': 'В демо-режиме почту прочитать нельзя, поэтому войдите напрямую:',
+  'demo.title': 'Открыть демо',
+  'demo.signInHint': 'Выберите роль. Здесь всё вымышлено, и ничего не сохраняется.',
 
   'checkin.title': 'Регистрация',
   'checkin.counts': 'зарегистрировано {checkedIn} из {registered}',
@@ -652,6 +654,8 @@ export const ruRU: Record<MessageKey, string> = {
     'Ваши ответы на месте, но отправить их не удалось. Проверьте соединение и попробуйте ещё раз.',
   'public.rejected.error': 'У нас произошла ошибка. Ваши ответы на месте — попробуйте ещё раз.',
   'public.notFound': 'Форма не найдена.',
+  'public.retry': 'Повторить',
+  'public.loadFailed': 'Не удалось загрузить форму.',
   'public.notFoundHint':
     'Проверьте полученную ссылку или попросите у организатора новую. Возможно, форма была удалена.',
   'public.yes': 'Да',

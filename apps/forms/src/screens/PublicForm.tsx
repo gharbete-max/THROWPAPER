@@ -23,7 +23,7 @@ import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
 import { PoweredBy } from '../components/Logo.js';
 
-type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
+type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
 
 /**
  * The public form. No authentication, no session — the only screen anonymous people reach.
@@ -100,8 +100,11 @@ export default function PublicForm() {
     return () => style.remove();
   }, [form?.brand]);
 
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
     if (!slug) return;
+    setPhase('loading');
     fetch(`/api/public/forms/${slug}`)
       .then((response) => (response.ok ? (response.json() as Promise<PublicFormResponse>) : null))
       .then((loaded) => {
@@ -121,8 +124,14 @@ export default function PublicForm() {
         }
         setValues((current) => ({ ...prefilled, ...current }));
       })
-      .catch(() => setPhase('missing'));
-  }, [slug, params]);
+      /*
+       * A connection that dropped is not a form that does not exist. This mapped every failure to
+       * `'missing'`, which told somebody on venue wifi that the form had been withdrawn — the same
+       * false statement the submit path below stopped making. A 404 arrives as `null` above; what
+       * lands here never reached the server.
+       */
+      .catch(() => setPhase('failed'));
+  }, [slug, params, attempt]);
 
   // Resuming replaces the answers, and the locale the draft was saved in.
   useEffect(() => {
@@ -362,6 +371,28 @@ export default function PublicForm() {
   }, [formTitle, form?.organisationName]);
 
   if (phase === 'loading') return <main className="shell shell--narrow" />;
+
+  if (phase === 'failed') {
+    return (
+      <main className="shell shell--narrow stack">
+        <EmptyState
+          icon="warning"
+          title={t('public.loadFailed')}
+          hint={t('public.rejected.offline')}
+          level="h1"
+          action={
+            <button
+              className="button"
+              type="button"
+              onClick={() => setAttempt((value) => value + 1)}
+            >
+              {t('public.retry')}
+            </button>
+          }
+        />
+      </main>
+    );
+  }
 
   if (phase === 'missing') {
     /*

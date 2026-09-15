@@ -124,6 +124,7 @@ export const enGB = {
   'inbox.title': 'Responses',
   'inbox.intro': 'The latest responses across every form you can see.',
   'inbox.empty': 'No responses yet.',
+  'inbox.loadFailed': 'Responses could not be loaded.',
   'inbox.partial': 'In progress',
   'inbox.complete': 'Submitted',
   'inbox.search': 'Search',
@@ -574,7 +575,8 @@ export const enGB = {
   'demo.reset': 'Reset demo data',
   'demo.signInAs': 'Sign in as {role}',
   'demo.signInFailed': 'Could not sign in. Is the API running?',
-  'demo.signInHint': 'No email can be read in demo mode, so sign in directly:',
+  'demo.title': 'Open the demo',
+  'demo.signInHint': 'Pick who to be. Nothing here is real, and nothing is saved.',
 
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} of {registered} checked in',
@@ -650,6 +652,8 @@ export const enGB = {
   'public.rejected.error':
     'Something went wrong at our end. Your answers are still here — please try again.',
   'public.notFound': 'Form not found.',
+  'public.retry': 'Try again',
+  'public.loadFailed': 'The form could not be loaded.',
   'public.notFoundHint':
     'Check the link you were given, or ask the organiser for a new one. It may have been withdrawn.',
   'public.yes': 'Yes',

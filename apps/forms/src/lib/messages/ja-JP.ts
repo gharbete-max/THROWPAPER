@@ -123,6 +123,7 @@ export const jaJP: Record<MessageKey, string> = {
   'inbox.title': '回答',
   'inbox.intro': '閲覧できるすべてのフォームの最新の回答です。',
   'inbox.empty': '回答はまだありません。',
+  'inbox.loadFailed': '回答を読み込めませんでした。',
   'inbox.partial': '入力途中',
   'inbox.complete': '送信済み',
   'inbox.search': '検索',
@@ -570,7 +571,8 @@ export const jaJP: Record<MessageKey, string> = {
   'demo.reset': 'デモデータをリセット',
   'demo.signInAs': '{role} としてログイン',
   'demo.signInFailed': 'サインインできませんでした。APIは起動していますか？',
-  'demo.signInHint': 'デモモードではメールを読めないため、直接ログインしてください：',
+  'demo.title': 'デモを開く',
+  'demo.signInHint': '役割を選んでください。ここにあるものはすべて架空で、何も保存されません。',
 
   'checkin.title': '受付',
   'checkin.counts': '{registered} 名中 {checkedIn} 名が受付済み',
@@ -646,6 +648,8 @@ export const jaJP: Record<MessageKey, string> = {
   'public.rejected.error':
     'こちら側で問題が発生しました。回答は残っていますので、もう一度お試しください。',
   'public.notFound': 'フォームが見つかりません。',
+  'public.retry': '再試行',
+  'public.loadFailed': 'フォームを読み込めませんでした。',
   'public.notFoundHint':
     '受け取ったリンクを確認するか、主催者に新しいリンクを依頼してください。取り下げられた可能性があります。',
   'public.yes': 'はい',
