@@ -1,11 +1,15 @@
 import {
   answerableFields,
+  entryIssueKey,
   isDangerousPattern,
   isUploadKey,
   isVisible,
   MAX_MATCHED_LENGTH,
-  type AnswerableField,
+  minEntries,
+  PRESENTATIONAL_TYPES,
   type FormDefinition,
+  type RepeatingGroupField,
+  type ScalarField,
 } from './index.js';
 
 /**
@@ -19,7 +23,19 @@ import {
  * through the locale catalogue; a hard-coded English string here would break CLAUDE.md rule 4 and
  * reach a Swedish visitor untranslated.
  */
-export type AnswerValue = string | number | boolean | string[] | null | undefined;
+/** A field that holds one value holds one of these. */
+export type ScalarValue = string | number | boolean | string[] | null | undefined;
+
+/**
+ * One entry of a repeating group, keyed by the **child's own key** rather than a flattened one.
+ *
+ * `{ name: 'Alva', meal: 'veg' }`, not `{ guests_1_name: 'Alva' }`. The flattening happens in the
+ * export, where it is a presentation concern, and nowhere else — so the answer a respondent gave
+ * and the answer the API returns have the same shape they would have if the CSV did not exist.
+ */
+export type GroupEntry = Record<string, ScalarValue>;
+
+export type AnswerValue = ScalarValue | GroupEntry[];
 export type SubmissionValues = Record<string, AnswerValue>;
 
 export interface ValidationIssue {
@@ -60,11 +76,24 @@ export function validateSubmission(
      * "was not asked" consistently across every row.
      */
     if (!isVisible(field, input)) {
-      values[field.key] = field.type === 'multi_select' ? [] : null;
+      // A hidden group stores nought entries, which is what a list-shaped answer's blank is.
+      values[field.key] = field.type === 'repeating_group' ? [] : emptyValueFor(field.type);
       continue;
     }
 
-    const raw = input[field.key];
+    /**
+     * A group is validated entry by entry, not as a value.
+     *
+     * Taken before the emptiness check below because "empty" means something different here: an
+     * absent group is nought entries, which a `min` of nought accepts and a `min` of one refuses,
+     * and neither of those is the `validation.required` the scalar path would have raised.
+     */
+    if (field.type === 'repeating_group') {
+      values[field.key] = validateGroup(field, input[field.key], issues, options);
+      continue;
+    }
+
+    const raw = asScalar(input[field.key]);
     const empty = isEmpty(raw);
 
     // A partial save (save-and-resume) keeps whatever has been entered without demanding the rest.
@@ -72,7 +101,7 @@ export function validateSubmission(
       if (!options.partial && 'required' in field && field.required) {
         issues.push({ key: field.key, code: 'validation.required' });
       }
-      values[field.key] = field.type === 'multi_select' ? [] : null;
+      values[field.key] = emptyValueFor(field.type);
       continue;
     }
 
@@ -86,10 +115,131 @@ export function validateSubmission(
   return { ok: issues.length === 0, issues, values };
 }
 
-function validateField(
-  field: AnswerableField,
+/**
+ * A repeating group, entry by entry.
+ *
+ * ## Why the entry count is checked even when the group is empty
+ *
+ * "Not answered" and "nought entries" are the same state for a group, and `min` is the only thing
+ * that decides whether that state is acceptable. Routing an absent group through the scalar path's
+ * `validation.required` would have said "this is required" about a block of six questions, which
+ * tells the respondent nothing about what to do.
+ *
+ * ## Why a visibility rule inside an entry sees only that entry
+ *
+ * `showWhen` is evaluated against the entry's own answers, never the surrounding form's. "Show the
+ * dietary question when the name is answered" has an obvious meaning per entry and no meaning at
+ * all across entries; and the earlier-reference rule that makes cycles impossible by construction
+ * is a rule about position within one list of fields, which an entry is.
+ *
+ * Issues are keyed `guests[0].name` so an error can be attached to the box it came from rather
+ * than to the group as a whole — six identical "required" markers on one block is not feedback.
+ */
+function validateGroup(
+  group: RepeatingGroupField,
   raw: AnswerValue,
-): { value?: AnswerValue; issue?: Omit<ValidationIssue, 'key'> } {
+  issues: ValidationIssue[],
+  options: { partial?: boolean },
+): GroupEntry[] {
+  if (raw === null || raw === undefined) raw = [];
+
+  if (!Array.isArray(raw)) {
+    issues.push({ key: group.key, code: 'validation.group' });
+    return [];
+  }
+
+  /**
+   * Too many entries is refused rather than trimmed.
+   *
+   * Trimming to `max` would silently drop somebody's answers, and the respondent would find out at
+   * the door. The cap is also enforced by the renderer, which stops offering the add button — so
+   * reaching here means a client that is stale or is not ours.
+   */
+  if (raw.length > group.max) {
+    issues.push({ key: group.key, code: 'validation.groupMax', params: { max: group.max } });
+    return [];
+  }
+
+  const entries: GroupEntry[] = [];
+
+  for (const [index, candidate] of raw.entries()) {
+    // An entry is an object keyed by child key. Anything else is a client sending the wrong shape,
+    // and guessing at what it meant would store answers under keys nobody asked about.
+    if (candidate === null || typeof candidate !== 'object' || Array.isArray(candidate)) {
+      issues.push({ key: entryIssueKey(group.key, index), code: 'validation.group' });
+      continue;
+    }
+
+    const given = candidate as GroupEntry;
+    const entry: GroupEntry = {};
+
+    for (const child of group.fields) {
+      if (presentational.has(child.type)) continue;
+
+      /**
+       * The entry's own answers, as validated **so far** — not the raw entry the client sent.
+       *
+       * Two consequences, both wanted. A condition can only name a child that came earlier, which
+       * is the rule `definitionProblems` enforces, made true by construction here rather than only
+       * checked at publish time. And hiding a child hides whatever depended on it, so an answer
+       * smuggled in beside a question nobody was shown cannot go on to demand a second one.
+       *
+       * This deliberately differs from the top level, which reads the raw input. Changing that is
+       * a behaviour change to every form already published, so it is not made here.
+       */
+      if (!isVisible(child, entry)) {
+        entry[child.key] = emptyValueFor(child.type);
+        continue;
+      }
+
+      const value = asScalar(given[child.key]);
+      if (isEmpty(value)) {
+        if (!options.partial && 'required' in child && child.required) {
+          issues.push({
+            key: entryIssueKey(group.key, index, child.key),
+            code: 'validation.required',
+          });
+        }
+        entry[child.key] = emptyValueFor(child.type);
+        continue;
+      }
+
+      const outcome = validateField(child as ScalarField, value);
+      if (outcome.issue) {
+        issues.push({ key: entryIssueKey(group.key, index, child.key), ...outcome.issue });
+      } else {
+        entry[child.key] = outcome.value;
+      }
+    }
+
+    entries.push(entry);
+  }
+
+  /**
+   * Checked last, and against what survived, so "add another guest" is not demanded of somebody
+   * whose one guest was rejected for a bad email address — they would fix the count and still be
+   * refused. A partial save asks for nothing.
+   */
+  const min = minEntries(group);
+  if (!options.partial && entries.length < min) {
+    issues.push({ key: group.key, code: 'validation.groupMin', params: { min } });
+  }
+
+  return entries;
+}
+
+/**
+ * Presentational children collect nothing, exactly as they do at the top level.
+ *
+ * Read from the same list the top level reads, rather than written out again. A second copy is how
+ * a new decoration ends up collecting an answer inside a group and nowhere else.
+ */
+const presentational = new Set<string>(PRESENTATIONAL_TYPES);
+
+function validateField(
+  field: ScalarField,
+  raw: ScalarValue,
+): { value?: ScalarValue; issue?: Omit<ValidationIssue, 'key'> } {
   switch (field.type) {
     case 'short_text':
     case 'long_text':
@@ -249,11 +399,37 @@ function assertHandled(field: never): { issue: Omit<ValidationIssue, 'key'> } {
   throw new Error(`validateField has no case for field type "${type}"`);
 }
 
-function isEmpty(value: AnswerValue): boolean {
+function isEmpty(value: ScalarValue): boolean {
   if (value === null || value === undefined) return true;
   if (typeof value === 'string') return value.trim() === '';
   if (Array.isArray(value)) return value.length === 0;
   return false;
+}
+
+/**
+ * What an unanswered field of this type stores.
+ *
+ * Written rather than omitted, so the column still exists in the export and a blank means "was not
+ * asked" consistently across every row. A list-shaped field stores an empty list rather than null
+ * for the same reason `multi_select` always has: a caller that maps over the answer should not have
+ * to ask whether there is one.
+ */
+function emptyValueFor(type: string): ScalarValue {
+  return type === 'multi_select' ? [] : null;
+}
+
+/**
+ * An answer narrowed to something a single-value field could have.
+ *
+ * A list answer is a list of choice values, and numbers are stringified the way `multi_select` has
+ * always stringified them. An array of *objects* is what a group's answer looks like — handed to a
+ * field that is not a group, it is not an answer at all, so it is dropped rather than becoming the
+ * string `[object Object]` and passing a text field's length rules.
+ */
+function asScalar(value: AnswerValue): ScalarValue {
+  if (!Array.isArray(value)) return value;
+  if (value.some((entry) => entry !== null && typeof entry === 'object')) return null;
+  return value.map((entry) => String(entry));
 }
 
 /**
