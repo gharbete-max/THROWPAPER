@@ -4298,6 +4298,26 @@ body:has(.app) > #root {
   }
 }
 
+/*
+ * Below 700px the hero is a still image, so the same reasoning applies.
+ *
+ * `Site.tsx` gates the animated `<source>` at `min-width: 700px` to keep 505 KB of WebP off
+ * phones; what is left there is the poster, which does not move. WCAG 2.2.2 asks for a way to stop
+ * motion, not for a button that stops nothing — and a pause control on a static image is a promise
+ * the page does not keep.
+ *
+ * `not all and (min-width: 700px)` rather than `max-width: 699px`, so this is the exact complement
+ * of the query in `Site.tsx`. Two rules written from the same number cannot disagree; `max-width`
+ * and `min-width` set to the same value both match at exactly 700px, and off-by-one values leave a
+ * gap at fractional viewport widths where the control would appear beside a still.
+ */
+@media not all and (min-width: 700px) {
+  .hero__pause,
+  .hero__pauseLabel {
+    display: none;
+  }
+}
+
 .hero__mark {
   /*
    * 19rem, down from 28.
