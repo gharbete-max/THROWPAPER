@@ -7,7 +7,7 @@ import { SERVER_RENDERED_PATHS, SITE_ROUTES } from './routes.js';
  * Its navigation fallback serves the precached `index.html` for any URL, which is exactly what the
  * door screen needs on a venue's bad wifi and exactly wrong for the public site. It was winning
  * silently: a returning visitor to a feature page got the shell, so the server render never
- * happened, the tab said "Paloppa" instead of the page's own title, and React was fetched to draw
+ * happened, the tab said "Loppa" instead of the page's own title, and React was fetched to draw
  * a page that would otherwise have arrived complete. Only crawlers — which run no worker — ever
  * saw the server-rendered version.
  *
@@ -27,7 +27,7 @@ describe('what the service worker may serve from cache', () => {
   /**
    * Every path the server renders per URL, not only the ones somebody remembered.
    *
-   * `/i/` was missed when invoices arrived, and the symptom was an invoice page titled "Paloppa"
+   * `/i/` was missed when invoices arrived, and the symptom was an invoice page titled "Loppa"
    * because the worker answered with the precached shell. Listing them here means adding a
    * server-rendered surface without adding it to the denylist fails a test rather than shipping.
    */

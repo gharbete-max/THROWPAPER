@@ -15,10 +15,10 @@ import type { SiteCopy } from '../content.js';
  */
 export const deDE: SiteCopy = {
   meta: {
-    homeTitle: 'Paloppa — Formulare, Anmeldungen und der Einlass',
+    homeTitle: 'Loppa — Formulare, Anmeldungen und der Einlass',
     homeDescription:
       'Ein Formularwerkzeug für Organisationen, die es richtig machen müssen: zwölf Sprachen, Ihr Erscheinungsbild auf jeder Fläche und eine Eintrittskarte, die am Einlass gescannt wird.',
-    titleSuffix: ' — Paloppa',
+    titleSuffix: ' — Loppa',
   },
   chrome: {
     skipToContent: 'Zum Inhalt springen',
@@ -27,7 +27,7 @@ export const deDE: SiteCopy = {
     languageLabel: 'Sprache',
     openTheDemo: 'Demo öffnen',
     footerTagline:
-      'Paloppa. Formulare, Anmeldungen und der Einlass. Die Demo speichert nichts und versendet nichts.',
+      'Loppa. Formulare, Anmeldungen und der Einlass. Die Demo speichert nichts und versendet nichts.',
   },
   hero: {
     eyebrow: 'Formulare, Anmeldungen und der Einlass',

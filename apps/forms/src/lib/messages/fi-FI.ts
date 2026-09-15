@@ -3,8 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const fiFI: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Palvelun tarjoaa Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Palvelun tarjoaa Loppa',
   'app.signOut': 'Kirjaudu ulos',
   'app.language': 'Kieli',
   'app.loading': 'Ladataan…',
@@ -482,7 +482,7 @@ export const fiFI: Record<MessageKey, string> = {
   'brand.clientMode': 'Asiakastila',
   'brand.clientModeOn': 'Käytä omaa logoa ja nimeä',
   'brand.clientModeHint':
-    'Korvaa Paloppan tunnuksen sovelluksessa ja kirjautumisnäytöllä. Julkaistut lomakkeenne käyttävät jo omaa ilmettänne.',
+    'Korvaa Loppan tunnuksen sovelluksessa ja kirjautumisnäytöllä. Julkaistut lomakkeenne käyttävät jo omaa ilmettänne.',
   'brand.wordmark': 'Nimi kulmassa',
   'brand.colours': 'Värit',
   'brand.logo': 'Logo',

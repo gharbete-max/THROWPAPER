@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildDemoState } from './dataset.js';
 
 /**
- * What a demonstrable Paloppa contains.
+ * What a demonstrable Loppa contains.
  *
  * `CLAUDE.md` §Demo data makes this a contract rather than a nicety: a broken seed blocks demos,
  * and the way it breaks is never a crash. A feature ships, nothing seeds it, and the screen that

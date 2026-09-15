@@ -4,7 +4,7 @@ import { z } from 'zod';
  * Product API schemas — the endpoints apps/forms calls.
  *
  * Deliberately kept beside `contract/`, not inside it: the integration contract between the two
- * products is versioned and frozen by joint decision, while this surface belongs to Paloppa
+ * products is versioned and frozen by joint decision, while this surface belongs to Loppa
  * alone and changes with its UI.
  */
 export const Uuid = z.string().uuid();

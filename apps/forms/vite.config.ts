@@ -13,7 +13,7 @@ const API_ORIGIN = 'http://localhost:4001';
  * a page. In development they are two ports, and anything not listed here falls through to Vite's
  * SPA fallback — which answers `200 text/html` with the app shell. That is the failure mode worth
  * naming: nothing errors. The invoice link on the Invoices screen returned a 2 kB page titled
- * "Paloppa" instead of a 167 kB invoice, and the only way to notice was to open one.
+ * "Loppa" instead of a 167 kB invoice, and the only way to notice was to open one.
  *
  * `/api` is the app's own calls, prefixed so they cannot collide with a route the SPA owns.
  * `/i/` is a public document the API renders per token, passed through unrewritten because the
@@ -92,8 +92,8 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api/, ...SERVER_RENDERED_PATHS],
       },
       manifest: {
-        name: 'Paloppa',
-        short_name: 'Paloppa',
+        name: 'Loppa',
+        short_name: 'Loppa',
         description: 'Forms, registrations and check-in',
         start_url: '/',
         display: 'standalone',

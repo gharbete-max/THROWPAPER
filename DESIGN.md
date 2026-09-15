@@ -1,5 +1,5 @@
 ---
-name: Paloppa
+name: Loppa
 description: Forms, registrations and the door, for organisations that have to get it right.
 colors:
   primary: '#6fb8a6'
@@ -94,11 +94,11 @@ components:
     padding: '8px 12px'
 ---
 
-# Paloppa design system
+# Loppa design system
 
 ## Overview
 
-Two products share these tokens: **Paloppa**, a form builder with events, a door and a ledger,
+Two products share these tokens: **Loppa**, a form builder with events, a door and a ledger,
 and **Sendwork**, its email counterpart. The audience is membership secretaries, event organisers
 and association treasurers — people who have to get a registration right the first time, in front
 of an audience, often at a door in bad weather.

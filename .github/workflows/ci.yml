@@ -70,6 +70,10 @@ jobs:
       - run: pnpm run db:seed
       - run: pnpm run verify
       - run: pnpm run contract:check
+      # The build `verify` just produced, measured against a budget. Bundles grow one
+      # reasonable import at a time; a number that fails here is the only version of this
+      # check that works, because a number in a document is a number nobody reads.
+      - run: pnpm run bundle:budget
       - run: pnpm run format:check
       # The only place the end-to-end suite can run: it needs the Postgres this job provides.
       - run: pnpm run test:e2e

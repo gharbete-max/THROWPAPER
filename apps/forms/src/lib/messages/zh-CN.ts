@@ -8,8 +8,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const zhCN: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': '由 Paloppa 提供支持',
+  'app.name': 'Loppa',
+  'app.poweredBy': '由 Loppa 提供支持',
   'app.signOut': '退出登录',
   'app.language': '语言',
   'app.loading': '加载中…',
@@ -474,7 +474,7 @@ export const zhCN: Record<MessageKey, string> = {
   'brand.reset': '恢复默认',
   'brand.clientMode': '客户模式',
   'brand.clientModeOn': '使用我们自己的标识和名称',
-  'brand.clientModeHint': '在应用和登录页面中替换 Paloppa 标识。您已发布的表单已在使用您的品牌。',
+  'brand.clientModeHint': '在应用和登录页面中替换 Loppa 标识。您已发布的表单已在使用您的品牌。',
   'brand.wordmark': '角落显示的名称',
   'brand.colours': '颜色',
   'brand.logo': '标志',

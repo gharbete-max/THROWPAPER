@@ -5,7 +5,7 @@ import { useBrand } from '../lib/brand.js';
 import { useT } from '../lib/i18n.js';
 
 /**
- * The mark alone, in Paloppa's colours, with no idea whose page it is on.
+ * The mark alone, in Loppa's colours, with no idea whose page it is on.
  *
  * Deliberately dumb. The marketing site renders this and is never hydrated in production, so
  * anything here that read context or state would work in development and be inert on the live
@@ -15,7 +15,7 @@ import { useT } from '../lib/i18n.js';
  * `Wordmark` below is the one that knows about client mode.
  */
 /**
- * "Powered by Paloppa", where a white-labelled surface would otherwise carry no trace of us.
+ * "Powered by Loppa", where a white-labelled surface would otherwise carry no trace of us.
  *
  * Rendered only under client mode — with our own mark in the corner the line would say what the
  * corner already says — and only while the kit's `poweredBy` is on, which is a contract term, not

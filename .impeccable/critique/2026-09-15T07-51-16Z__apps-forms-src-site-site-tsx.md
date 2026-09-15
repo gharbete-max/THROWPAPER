@@ -1,5 +1,5 @@
 ---
-target: Paloppa marketing site and app shell
+target: Loppa marketing site and app shell
 total_score: 22
 max_score: 32
 na_heuristics: 7,10
@@ -61,7 +61,7 @@ Method: dual-agent (A: design review · B: detector + live browser, Playwright, 
 
 ## Overall Impression
 
-Round one's two P0s are gone and measured gone. What the second pass finds is different in kind: not colours, but *leaks* — the Paloppa intro overlay mounted above every public form, a hover state that repaints every quiet label in the product in the one colour the palette cannot read, and two places where a lost connection is reported as a fact about the data. The biggest single opportunity is one line: move `<Intro />` inside the signed-in shell.
+Round one's two P0s are gone and measured gone. What the second pass finds is different in kind: not colours, but *leaks* — the Loppa intro overlay mounted above every public form, a hover state that repaints every quiet label in the product in the one colour the palette cannot read, and two places where a lost connection is reported as a fact about the data. The biggest single opportunity is one line: move `<Intro />` inside the signed-in shell.
 
 ## What's Working
 
@@ -71,8 +71,8 @@ Round one's two P0s are gone and measured gone. What the second pass finds is di
 
 ## Priority Issues
 
-**[P0] The Paloppa intro plays over every published form and every door**
-- *Why it matters:* `App.tsx:82` mounts `<Intro />` above all routes, including `/f/:slug`. `Intro.tsx:95` prints "PALOPPA" in a `position:fixed; inset:0; z-index:100` overlay for ~3 s on first visit, and swallows the first tap as "dismiss". Every respondent is a first-time visitor on their own phone, so every white-labelled form opens with our name over their brand — the exact leak client mode exists to prevent — and the first tap on the form does nothing. Same on a fresh phone at a door.
+**[P0] The Loppa intro plays over every published form and every door**
+- *Why it matters:* `App.tsx:82` mounts `<Intro />` above all routes, including `/f/:slug`. `Intro.tsx:95` prints "LOPPA" in a `position:fixed; inset:0; z-index:100` overlay for ~3 s on first visit, and swallows the first tap as "dismiss". Every respondent is a first-time visitor on their own phone, so every white-labelled form opens with our name over their brand — the exact leak client mode exists to prevent — and the first tap on the form does nothing. Same on a fresh phone at a door.
 - *Fix:* Render `<Intro />` inside `Shell` only (or gate on `!/^\/f\//.test(pathname) && !door`). One-line move.
 - *Suggested command:* /impeccable harden
 

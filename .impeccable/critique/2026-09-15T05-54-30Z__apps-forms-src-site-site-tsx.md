@@ -1,5 +1,5 @@
 ---
-target: Paloppa marketing site and app shell
+target: Loppa marketing site and app shell
 total_score: 18
 max_score: 32
 na_heuristics: 7,10
@@ -119,7 +119,7 @@ The words are doing all the work and the pixels are letting them down. Two thing
 ## Questions to Consider
 
 1. `DESIGN.md` derived that a label on seafoam must be the ink, and `.site__band` paints paper on seafoam anyway. If a twenty-five-line argument did not stop that, what would? Would a `checkContrast` case for "text on a brand fill" have caught what a paragraph did not?
-2. "Open the demo" appears four times and every one lands in a navy product called Demo AB. If the demo is the entire conversion path, why does it show a customer's brand instead of Paloppa's — and if white-labelling *is* the demonstration, why does nothing on the way in say so?
+2. "Open the demo" appears four times and every one lands in a navy product called Demo AB. If the demo is the entire conversion path, why does it show a customer's brand instead of Loppa's — and if white-labelling *is* the demonstration, why does nothing on the way in say so?
 3. The check-in screen is the emotional climax of the whole positioning and it is a 350px card inside a desktop sidebar. Has anyone opened it on a phone, standing up, in gloves?
 4. The site publishes in five languages and gives that fact 26% of a phone's viewport, permanently, on every page. Which number is larger: visitors who switch language, or visitors who never reach the headline?
 5. The hero's animated mark is 494 KB; the poster it hides is 17 KB. The comment defending the retina gate says it "buys the least where it costs the most" — and then serves the 1x to every phone anyway. What is the fold worth on a phone?

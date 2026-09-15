@@ -7,7 +7,7 @@ export const MergeFieldSpec = z.object({
   fallback: z.string().optional(),
 });
 
-/** CONTRACT §1.4 — so Paloppa's admin UI offers real template keys, not free text. */
+/** CONTRACT §1.4 — so Loppa's admin UI offers real template keys, not free text. */
 export const TemplateSummary = z.object({
   key: z.string().min(1),
   name: z.string().min(1),

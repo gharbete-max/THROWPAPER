@@ -3,8 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const nbNO: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Drevet av Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Drevet av Loppa',
   'app.signOut': 'Logg ut',
   'app.language': 'Språk',
   'app.loading': 'Laster…',
@@ -480,7 +480,7 @@ export const nbNO: Record<MessageKey, string> = {
   'brand.clientMode': 'Kundemodus',
   'brand.clientModeOn': 'Bruk vår egen logo og vårt eget navn',
   'brand.clientModeHint':
-    'Erstatter Paloppa-merket i appen og på innloggingsskjermen. De publiserte skjemaene deres bruker allerede profilen deres.',
+    'Erstatter Loppa-merket i appen og på innloggingsskjermen. De publiserte skjemaene deres bruker allerede profilen deres.',
   'brand.wordmark': 'Navn i hjørnet',
   'brand.colours': 'Farger',
   'brand.logo': 'Logo',

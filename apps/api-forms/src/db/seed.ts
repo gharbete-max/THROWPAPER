@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { db, sql } from './client.js';
+import { createMaintenanceClient } from './client.js';
 import {
   events,
   formShares,
@@ -18,6 +18,12 @@ import {
   DEMO_OPERATOR_EMAIL,
 } from '../demo/dataset.js';
 import { forms as formSchemas } from '@tp/shared';
+
+/*
+ * Its own connection rather than the serving pool: seeding inserts ~200 registrations in one
+ * sequential script, which is maintenance work and not a request to be timed out.
+ */
+const { db, sql } = createMaintenanceClient();
 
 /**
  * CLAUDE.md §Demo data — a broken seed blocks demos, so it grows with the schema.

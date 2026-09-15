@@ -4,6 +4,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import helmet from '@fastify/helmet';
 import swagger from '@fastify/swagger';
+import compress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import multipart from '@fastify/multipart';
 import {
@@ -14,6 +15,15 @@ import {
 } from 'fastify-type-provider-zod';
 import type { FastifyError } from 'fastify';
 import { redactSecretsInUrl } from './log-redaction.js';
+import { constants as zlibConstants } from 'node:zlib';
+import { REVALIDATE, cacheControlForFile } from './cache-headers.js';
+import { buildLlmsTxt, buildRobots, buildSitemap, isPrivatePath } from './sitemap.js';
+import {
+  BROTLI_QUALITY,
+  compressPayload,
+  negotiateEncoding,
+  worthCompressing,
+} from './fallback-compression.js';
 import { CONTRACT_VERSION } from '@tp/shared';
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -287,6 +297,82 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     );
   });
 
+  /**
+   * Responses are compressed on the way out.
+   *
+   * Nothing in front of this server does it. Measured on the built site, the rendered landing page
+   * is 20,085 bytes of markup and 4,804 gzipped — 77% of every site page, and a comparable share of
+   * every JSON list, was being paid for by the visitor for no reason. It is registered here, before
+   * the routes, so the hook wraps the static files and the site render as well as the API.
+   *
+   * Registered *after* helmet deliberately: the security headers are set on a response that is
+   * still uncompressed, which is the order that leaves `Content-Length` and `Content-Encoding`
+   * consistent with the body actually sent.
+   *
+   * Already-compressed bytes are left alone — the plugin consults `mime-db`, and the mark's WebP
+   * loops, the PNG icons and the woff2 subsets are all flagged incompressible there, so the CPU is
+   * never spent re-deflating a PNG to make it a few bytes larger.
+   *
+   * Brotli is offered first and gzip kept for anything that cannot take it — at quality 5, not the
+   * plugin's default of 4. That default is the one setting measurably worth overriding: on the
+   * built stylesheet q4 produces 13,264 bytes against gzip's 12,095, so the encoding offered first
+   * would have been the worse one. q5 gives 11,794 for about 0.3 ms more, and on the largest
+   * bundle 103,783 against gzip's 118,438. `fallback-compression.ts` records the same measurement
+   * for the rendered page and uses the same quality, so the two paths agree.
+   *
+   * BREACH is the reason to think twice about compressing a page, and it does not apply here: the
+   * attack needs a secret in the response body alongside attacker-controlled text, and this
+   * product has no session cookie and no CSRF token in its markup — the access token lives in
+   * `localStorage` and travels in a header.
+   */
+  await app.register(compress, {
+    global: true,
+    encodings: ['br', 'gzip', 'deflate'],
+    brotliOptions: {
+      params: {
+        [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
+        [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
+      },
+    },
+  });
+
+  /**
+   * And the same for the responses the plugin structurally cannot reach.
+   *
+   * `@fastify/compress` hangs its work off an `onRoute` hook, so it covers routes and only routes.
+   * The server-rendered site, a form's link preview and an invoice are all served from
+   * `setNotFoundHandler` — not a route, because `@fastify/static` owns `/*` — so without this the
+   * measurement that justified the plugin would not have applied to the pages it was measured on.
+   *
+   * A plain `onSend` hook on the root instance *does* reach the not-found handler, which is what
+   * makes this possible at all; the `Permissions-Policy` header above arrives the same way.
+   *
+   * Guarded on `content-encoding` being unset, so a response the plugin already compressed is
+   * never compressed twice. See `fallback-compression.ts` for why this is as small as it is.
+   */
+  app.addHook('onSend', async (request, reply, payload) => {
+    if (reply.getHeader('content-encoding')) return payload;
+    if (typeof payload !== 'string' && !Buffer.isBuffer(payload)) return payload;
+
+    const body = Buffer.isBuffer(payload) ? payload : Buffer.from(payload, 'utf8');
+    const type = reply.getHeader('content-type');
+    if (!worthCompressing(typeof type === 'string' ? type : undefined, body.length)) return payload;
+
+    const encoding = negotiateEncoding(request.headers['accept-encoding']);
+    if (!encoding) return payload;
+
+    reply.header('content-encoding', encoding);
+    /*
+     * Without this a shared cache can hand a brotli body to a client that cannot read it. The
+     * plugin sets it on its own responses; this path has to set its own.
+     */
+    reply.header('vary', 'accept-encoding');
+    const compressed = compressPayload(body, encoding);
+    // Fastify will not recompute a length it has already been told.
+    reply.header('content-length', compressed.length);
+    return compressed;
+  });
+
   await app.register(cors, { origin: appUrl, credentials: false });
   await app.register(rateLimit, { global: false, max: 100, timeWindow: '1 minute' });
   /**
@@ -296,7 +382,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   await app.register(multipart, { limits: { fileSize: MAX_IMAGE_BYTES, files: 1 } });
   await app.register(swagger, {
     openapi: {
-      info: { title: 'Paloppa API', version: '0.1.0' },
+      info: { title: 'Loppa API', version: '0.1.0' },
       components: {
         securitySchemes: { bearer: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } },
       },
@@ -437,7 +523,106 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
      *
      * The file is still served everywhere it should be: the fallback below reaches for it by name.
      */
-    await app.register(fastifyStatic, { root: appDir, wildcard: false, index: false });
+    /**
+     * `cacheControl: false` so the plugin stops writing its own `max-age=0` and `setHeaders`
+     * decides instead. Left on, the two disagree and the plugin wins.
+     *
+     * See `cache-headers.ts`: a hashed bundle is kept for a year, an unhashed name — `index.html`,
+     * `sw.js` — is revalidated every time. Before this, all 83 bundles were re-requested on every
+     * navigation to be told nothing had changed.
+     *
+     * Two things about this API are worth writing down, because both fail quietly:
+     *
+     * The first argument is a Fastify reply, not a Node `ServerResponse`. `res.setHeader` — the
+     * name the parameter invites — is not a function on it, and the throw surfaces as a 500 from
+     * the static route rather than as anything mentioning `setHeaders`.
+     *
+     * And the plugin's own `maxAge` is milliseconds. `maxAge: 31536000`, which reads as a year in
+     * the unit `Cache-Control` actually uses, emits `max-age=31536` — eight and three quarter
+     * hours. Writing the header directly is not a workaround for that; it is the reason the header
+     * is written directly, since the value then says what it means.
+     */
+    await app.register(fastifyStatic, {
+      root: appDir,
+      wildcard: false,
+      index: false,
+      cacheControl: false,
+      setHeaders: (reply, filePath) => {
+        reply.header('cache-control', cacheControlForFile(appDir, filePath));
+      },
+    });
+
+    /**
+     * `robots.txt` and `sitemap.xml`, built from the site's own route list.
+     *
+     * Both answered 404 — as JSON, from the not-found handler below — which is what a search
+     * engine got when it asked this deployment what it was allowed to read and what there was to
+     * read. Registered as real routes rather than files on disk so the `Sitemap:` line and every
+     * `<loc>` carry this deployment's `APP_URL`; a checked-in file would have to name one host,
+     * and the product is meant to be deployable as somebody else's.
+     *
+     * They are also routes rather than special cases in the fallback because that is what makes
+     * them compressed: `@fastify/compress` attaches per route. See `sitemap.ts`.
+     */
+    app.get('/robots.txt', async (_request, reply) => {
+      return reply
+        .type('text/plain; charset=utf-8')
+        .header('cache-control', 'public, max-age=3600')
+        .send(buildRobots(appUrl));
+    });
+
+    /**
+     * `llms.txt` — a description of the site, for something reading rather than indexing it.
+     *
+     * Its title and summary are lifted from the home page's own `<title>` and description rather
+     * than written again here: those are already where the product says what it is, and a second
+     * copy is a second thing to keep true. See `buildLlmsTxt`.
+     *
+     * This does **not** decide whether AI crawlers are welcome. That is a `robots.txt` question
+     * and the owner's to answer; `llms.txt` grants nothing and withholds nothing.
+     */
+    app.get('/llms.txt', async (_request, reply) => {
+      const site = await siteRenderer(appDir);
+      if (!site) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+
+      const { head } = site.render('/', appUrl);
+      const title = /<title>([^<]*)<\/title>/.exec(head)?.[1];
+      const description = /<meta name="description" content="([^"]*)"/.exec(head)?.[1];
+      /*
+       * If the head ever stops carrying either, say nothing rather than something made up: an
+       * `llms.txt` describing the site as "undefined" is worse than no file.
+       */
+      if (!title || !description) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+
+      const english = site.SITE_ROUTES.filter(
+        (route) => site.splitLocale(route).locale === site.SITE_DEFAULT_LOCALE,
+      );
+
+      return reply
+        .type('text/plain; charset=utf-8')
+        .header('cache-control', 'public, max-age=3600')
+        .send(buildLlmsTxt({ title, description, routes: english, origin: appUrl }));
+    });
+
+    app.get('/sitemap.xml', async (_request, reply) => {
+      const site = await siteRenderer(appDir);
+      /*
+       * No SSR bundle means no site to map. A 404 is the honest answer — an empty `<urlset>` would
+       * tell a crawler this deployment has no pages, which it would then believe.
+       */
+      if (!site) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+
+      return reply
+        .type('application/xml; charset=utf-8')
+        .header('cache-control', 'public, max-age=3600')
+        .send(buildSitemap(site.SITE_ROUTES, appUrl));
+    });
 
     /**
      * SPA fallback. Anything that is not an API route and not a file on disk is a client route —
@@ -462,6 +647,36 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       if (isApi || request.method !== 'GET' || looksLikeAsset(path)) {
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       }
+
+      /**
+       * Every HTML document below is revalidated rather than kept.
+       *
+       * They share a property that makes caching them by time wrong: the URL does not determine
+       * the bytes. A site page changes with the build, `/f/:slug` carries a preview of a form its
+       * author can retitle, `/i/:token` is somebody's invoice, and the shell is rewritten per
+       * deployment with the customer's own palette and wordmark. None of those can be renamed the
+       * way a hashed bundle can, so none of them may be served from a cache without asking.
+       *
+       * Set once here rather than at the four `send` sites below, so a fifth cannot be added
+       * without it. `no-cache` still allows a 304 on the `ETag`, so the usual case stays cheap.
+       */
+      reply.header('cache-control', REVALIDATE);
+
+      /**
+       * And the signed-in screens refuse indexing outright.
+       *
+       * `robots.txt` already asks a crawler not to fetch these, which is the weaker of the two
+       * statements: a crawler that is not allowed to look is also not allowed to read the header
+       * saying "do not index", so a link to `/events` from somebody's blog can still put the URL
+       * in an index with nothing but a title guessed from the anchor text. This covers the arrival
+       * `robots.txt` cannot.
+       *
+       * Scoped to the same list `robots.txt` is built from, so the two cannot drift apart and say
+       * different things about the same path. A published form at `/f/:slug` is deliberately not
+       * in it — that is a customer's public page — and an invoice already sets its own header
+       * further up, on the route that renders it.
+       */
+      if (isPrivatePath(path)) reply.header('x-robots-tag', 'noindex');
 
       /**
        * The public site is rendered here, not in the browser.
@@ -523,6 +738,18 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
 let sitePromise: Promise<SiteRenderer | null> | null = null;
 
 interface SiteRenderer {
+  /**
+   * Every address the site has: each page in each language it is published in.
+   *
+   * The sitemap is built from this, which is what the route list said it was for from the day it
+   * was written. Reading it here rather than restating it is what keeps a new page or a new
+   * language from being served and never indexed.
+   */
+  SITE_ROUTES: readonly string[];
+  /** The language an unprefixed URL serves, and the one `llms.txt` is written in. */
+  SITE_DEFAULT_LOCALE: string;
+  /** Splits `/sv/contact` into its language and its page — see `site/locale.ts`. */
+  splitLocale: (path: string) => { locale: string; path: string };
   isSiteRoute: (path: string) => boolean;
   /** An address only the site could own and does not have — rendered as its 404, not the app's shell. */
   isSiteShaped: (path: string) => boolean;
@@ -530,6 +757,12 @@ interface SiteRenderer {
     path: string,
     origin: string,
   ) => { html: string; head: string; lang: string; status: 200 | 404 };
+}
+
+/** The bundle, loaded at most once per process. `import()` caches, but the promise is the guard. */
+function siteRenderer(appDir: string): Promise<SiteRenderer | null> {
+  sitePromise ??= loadSite(appDir);
+  return sitePromise;
 }
 
 async function loadSite(appDir: string): Promise<SiteRenderer | null> {
@@ -551,8 +784,7 @@ async function renderSite(
   path: string,
   appUrl: string,
 ): Promise<{ html: string; status: number } | null> {
-  sitePromise ??= loadSite(appDir);
-  const site = await sitePromise;
+  const site = await siteRenderer(appDir);
   if (!site) return null;
 
   try {

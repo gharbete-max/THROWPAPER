@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, rmSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
@@ -74,13 +74,30 @@ beforeAll(async () => {
   writeFileSync(
     join(root, 'dist-server', 'entry-server.js'),
     [
-      "export const SITE_ROUTES = ['/', '/features/ledger'];",
+      "export const SITE_ROUTES = ['/', '/features/ledger', '/contact', '/contact/sent', '/sv'];",
       'export const isSiteRoute = (path) => SITE_ROUTES.includes(path);',
       "export const isSiteShaped = (path) => path.startsWith('/features/');",
+      "export const SITE_DEFAULT_LOCALE = 'en-GB';",
+      /* `/sv` and anything under it is Swedish; everything else is the default language. */
+      "export const splitLocale = (path) => path === '/sv' || path.startsWith('/sv/')",
+      "  ? { locale: 'sv-SE', path: path.slice(3) || '/' }",
+      "  : { locale: 'en-GB', path };",
+      /*
+       * The rendered markup is padded to a realistic size on purpose.
+       *
+       * A real site page is ~20 KB of prose and markup. A stub that returned one short `<div>`
+       * sat under the compression threshold, so the compression assertions below passed for
+       * static files and failed for the site — reporting a defect that exists only in the
+       * fixture. Padding it is what makes this stub stand in for the thing it is standing in for.
+       */
+      'const filler = `<p>${"the door is a mode ".repeat(120)}</p>`;',
       'export const render = (path) => ({',
       '  status: SITE_ROUTES.includes(path) ? 200 : 404,',
-      '  html: `<div class="site">rendered ${path}</div>`,',
-      `  head: '<title>Site</title><link rel="canonical" href="https://x.test/" />',`,
+      '  html: `<div class="site">rendered ${path}${filler}</div>`,',
+      /* A description too, because `llms.txt` lifts its summary out of this head. */
+      "  head: '<title>Loppa — forms</title>' +",
+      `    '<meta name="description" content="A form builder for organisations." />' +`,
+      `    '<link rel="canonical" href="https://x.test/" />',`,
       `  styles: ':root{--x:1}',`,
       '});',
     ].join('\n'),
@@ -100,15 +117,27 @@ beforeAll(async () => {
       '<html lang="en">',
       '  <head>',
       '    <meta charset="UTF-8" />',
-      '    <title>Paloppa</title>',
+      '    <title>Loppa</title>',
       '  </head>',
       '  <body><div id="root"></div></body>',
       '</html>',
     ].join('\n'),
   );
-  writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Paloppa"}');
+  writeFileSync(join(dir, 'manifest.webmanifest'), '{"name":"Loppa"}');
   mkdirSync(join(dir, 'assets'));
   writeFileSync(join(dir, 'assets', 'index.js'), 'console.log(1)');
+  /**
+   * A second asset, big enough to compress and named the way Vite names one.
+   *
+   * `index.js` above is fourteen bytes: under the compression threshold, so it proves nothing
+   * about compression, and a test written against it would have passed whether or not the plugin
+   * was registered. The content hash in the name is the other half — it is what makes the file
+   * safe to cache forever, and the header assertions below are about exactly that name shape.
+   */
+  writeFileSync(
+    join(dir, 'assets', 'index-D34DB33F.js'),
+    `export const marks = ${JSON.stringify(Array.from({ length: 400 }, (_, i) => `mark-${i}`))};\n`,
+  );
 
   app = await buildServer({
     repos: createMemoryRepositories({
@@ -276,7 +305,7 @@ describe('serving the built app from the API', () => {
    * The link preview.
    *
    * The whole distribution model here is "send somebody a link", and that link previewed in Slack,
-   * WhatsApp and Teams as "Paloppa" with no title and no organisation — an unlabelled link to an
+   * WhatsApp and Teams as "Loppa" with no title and no organisation — an unlabelled link to an
    * unfamiliar domain asking for a name and an email, which is a reasonable thing to distrust.
    */
   describe('a public form link', () => {
@@ -361,6 +390,250 @@ describe('serving the built app from the API', () => {
       const response = await app.inject({ method: 'GET', url: '/features/nothing' });
       expect(response.statusCode).toBe(404);
       expect(response.body).toContain('rendered /features/nothing');
+    });
+  });
+
+  /**
+   * Nothing sits in front of this server to compress for it.
+   *
+   * The deployment is one container answering the public internet directly, so a response that
+   * leaves here uncompressed is uncompressed when it arrives. That was every site page, every
+   * JSON list and every JavaScript bundle.
+   */
+  describe('compression', () => {
+    it('compresses a JavaScript bundle when the client offers brotli', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/assets/index-D34DB33F.js',
+        headers: { 'accept-encoding': 'br' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-encoding']).toBe('br');
+      // The point of the exercise: fewer bytes on the wire than the file has on disk.
+      const onDisk = statSync(join(dir, 'assets', 'index-D34DB33F.js')).size;
+      expect(response.rawPayload.length).toBeLessThan(onDisk);
+    });
+
+    it('falls back to gzip for a client that cannot take brotli', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/assets/index-D34DB33F.js',
+        headers: { 'accept-encoding': 'gzip' },
+      });
+
+      expect(response.headers['content-encoding']).toBe('gzip');
+    });
+
+    /**
+     * The server-rendered site is the reason this plugin is here at all, and it is built per
+     * request rather than read off disk — a different path through the plugin than a static file.
+     */
+    it('compresses the server-rendered site', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/',
+        headers: { 'accept-encoding': 'br' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-encoding']).toBe('br');
+      /*
+       * `Vary` is the half that is easy to forget and expensive to get wrong: without it a shared
+       * cache can hand a brotli body to a client that never asked for one.
+       */
+      expect(response.headers['vary']).toBe('accept-encoding');
+    });
+
+    /**
+     * A client that asks for no encoding gets none, and gets a readable body.
+     *
+     * Worth asserting rather than assuming: a plugin that compressed regardless would break every
+     * `curl` without flags, and — more to the point — every one of the assertions above this
+     * `describe` block, which read `response.body` as text.
+     */
+    it('leaves a response alone when nothing is offered', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/assets/index-D34DB33F.js',
+        headers: { 'accept-encoding': 'identity' },
+      });
+
+      expect(response.headers['content-encoding']).toBeUndefined();
+      expect(response.body).toContain('mark-399');
+    });
+  });
+
+  /**
+   * Everything went out as `max-age=0` — `fastify-static`'s default, and a round trip per bundle
+   * per navigation to be told nothing had changed. The policy itself is unit-tested in
+   * `cache-headers.test.ts`; these are about the wiring, which is the half that was wrong.
+   */
+  describe('cache headers', () => {
+    it('keeps a content-hashed bundle for a year', async () => {
+      const response = await app.inject({ method: 'GET', url: '/assets/index-D34DB33F.js' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['cache-control']).toBe('public, max-age=31536000, immutable');
+    });
+
+    /**
+     * The plugin writes its own `cache-control` unless told not to, and when both are set the
+     * plugin wins — so this asserts the absence of the old value as much as the presence of the
+     * new one.
+     */
+    it('no longer sends the plugin’s own max-age=0', async () => {
+      const response = await app.inject({ method: 'GET', url: '/assets/index-D34DB33F.js' });
+      expect(response.headers['cache-control']).not.toContain('max-age=0');
+    });
+
+    it('revalidates the shell rather than keeping it', async () => {
+      // `/events` is a client route: no site page, no preview — the plain shipped shell.
+      const response = await app.inject({ method: 'GET', url: '/events' });
+
+      expect(response.body).toContain('id="root"');
+      expect(response.headers['cache-control']).toBe('no-cache');
+    });
+
+    /**
+     * A site page changes with the build and cannot be renamed the way a bundle can.
+     */
+    it('revalidates a server-rendered page', async () => {
+      const response = await app.inject({ method: 'GET', url: '/' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['cache-control']).toBe('no-cache');
+    });
+
+    it('revalidates the manifest', async () => {
+      const response = await app.inject({ method: 'GET', url: '/manifest.webmanifest' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['cache-control']).toBe('no-cache');
+    });
+  });
+
+  /**
+   * Both of these answered 404 — as JSON, from the not-found handler — which is what a crawler got
+   * when it asked what it was allowed to read and what there was to read. The documents themselves
+   * are unit-tested in `sitemap.test.ts`; these are about them being reachable and correctly typed.
+   */
+  describe('telling a crawler what is here', () => {
+    it('serves robots.txt as plain text', async () => {
+      const response = await app.inject({ method: 'GET', url: '/robots.txt' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toContain('text/plain');
+      expect(response.body).toContain('User-agent: *');
+    });
+
+    /** The origin is `APP_URL`, not the request's `Host` — the same value the canonicals use. */
+    it('points robots.txt at the sitemap on the configured origin', async () => {
+      const response = await app.inject({ method: 'GET', url: '/robots.txt' });
+      expect(response.body).toContain('Sitemap: http://localhost:5173/sitemap.xml');
+    });
+
+    it('serves sitemap.xml as XML, built from the site’s own routes', async () => {
+      const response = await app.inject({ method: 'GET', url: '/sitemap.xml' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toContain('application/xml');
+      expect(response.body).toContain('<loc>http://localhost:5173/</loc>');
+      expect(response.body).toContain('<loc>http://localhost:5173/features/ledger</loc>');
+      expect(response.body).toContain('<loc>http://localhost:5173/sv</loc>');
+    });
+
+    it('leaves the contact confirmation out of the sitemap', async () => {
+      const response = await app.inject({ method: 'GET', url: '/sitemap.xml' });
+
+      expect(response.body).not.toContain('/contact/sent');
+      expect(response.body).toContain('<loc>http://localhost:5173/contact</loc>');
+    });
+
+    /**
+     * Neither may be swallowed by the SPA fallback. Answering `/robots.txt` with the app shell is
+     * the failure this replaces, only harder to notice — it would be a 200.
+     */
+    it.each(['/robots.txt', '/sitemap.xml'])(
+      'does not answer %s with the app shell',
+      async (url) => {
+        const response = await app.inject({ method: 'GET', url });
+        expect(response.body).not.toContain('id="root"');
+      },
+    );
+
+    /**
+     * `robots.txt` asks a crawler not to fetch the signed-in screens; this refuses indexing for
+     * one that arrives anyway, from a link outside or by ignoring the file.
+     */
+    it.each(['/events', '/events/some-id/check-in', '/forms', '/users'])(
+      'refuses indexing for the signed-in screen %s',
+      async (url) => {
+        const response = await app.inject({ method: 'GET', url });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toContain('id="root"');
+        expect(response.headers['x-robots-tag']).toBe('noindex');
+      },
+    );
+
+    /**
+     * The boundary that matters. A published form is a customer's public registration page, left
+     * crawlable deliberately — the header must not quietly reverse that decision, and it is served
+     * from the same handler and the same shell as the screens above.
+     */
+    it('does not refuse indexing for a published form', async () => {
+      const response = await app.inject({ method: 'GET', url: '/f/varmotet' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['x-robots-tag']).toBeUndefined();
+    });
+
+    it('does not refuse indexing for a server-rendered site page', async () => {
+      const response = await app.inject({ method: 'GET', url: '/features/ledger' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['x-robots-tag']).toBeUndefined();
+    });
+
+    /**
+     * `llms.txt` describes the site for something reading it rather than indexing it. Its title
+     * and summary are lifted from the home page's own head, so there is no second copy of them to
+     * drift.
+     */
+    describe('llms.txt', () => {
+      it('describes the site using the page’s own title and description', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.headers['content-type']).toContain('text/plain');
+        expect(response.body).toContain('# Loppa — forms');
+        expect(response.body).toContain('> A form builder for organisations.');
+      });
+
+      it('lists the pages as absolute URLs', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+
+        expect(response.body).toContain('http://localhost:5173/features/ledger');
+        expect(response.body).toContain('http://localhost:5173/contact');
+      });
+
+      /** English prose listing sixty-five URLs in five languages helps nobody. */
+      it('lists only the default language', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+        expect(response.body).not.toContain('/sv)');
+      });
+
+      /** The same exclusion the sitemap makes: a thank-you page answers no question. */
+      it('leaves the contact confirmation out', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+        expect(response.body).not.toContain('/contact/sent');
+      });
+
+      it('is not swallowed by the app shell', async () => {
+        const response = await app.inject({ method: 'GET', url: '/llms.txt' });
+        expect(response.body).not.toContain('id="root"');
+      });
     });
   });
 });

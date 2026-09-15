@@ -12,7 +12,7 @@ export interface BrandKitResponse {
 }
 
 /**
- * Typed client for the Paloppa API.
+ * Typed client for the Loppa API.
  *
  * Bearer tokens in memory, refresh token in localStorage: a token in localStorage is readable by
  * any script on the page, so the short-lived one never goes there. Rule 3 — every screen calls a
