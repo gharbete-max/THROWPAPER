@@ -157,10 +157,32 @@ describe('a guest has an identity, and it is derived', () => {
     expect(partySizeOf(version.definition, submission)).toBe(3);
   });
 
-  it('counts one for a form with no admitting group', async () => {
-    const { submission, formId } = await setupWithGuests([]);
-    const version = harness.state.formVersions.find((v) => v.formId === formId)!;
-    expect(partySizeOf({ ...version.definition, fields: [] }, submission)).toBe(1);
+  /**
+   * `admits` is what makes a block a queue of people, and it is off by default.
+   *
+   * The same submission, the same two entries, read against the same block with the flag turned
+   * off: one person. A group of meter readings is not a party, and turning every repeating block
+   * into a stack of tickets would give the feature a second meaning nobody asked it for.
+   */
+  it('counts one when the block admits nobody, however many entries it holds', async () => {
+    const { submission } = await setupWithGuests(['Björn', 'Cecilia']);
+
+    const admitting = formSchemas.FormDefinition.parse({
+      ...formSchemas.emptyDefinition,
+      fields: [guestGroup],
+    });
+    const silent = formSchemas.FormDefinition.parse({
+      ...formSchemas.emptyDefinition,
+      fields: [{ ...guestGroup, admits: false }],
+    });
+
+    expect(partySizeOf(admitting, submission)).toBe(3);
+    expect(partySizeOf(silent, submission)).toBe(1);
+  });
+
+  it('counts one for a form with no block at all', async () => {
+    const { submission } = await setupWithGuests(['Björn']);
+    expect(partySizeOf(formSchemas.emptyDefinition, submission)).toBe(1);
   });
 });
 
