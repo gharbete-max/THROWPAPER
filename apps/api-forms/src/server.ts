@@ -17,7 +17,7 @@ import type { FastifyError } from 'fastify';
 import { redactSecretsInUrl } from './log-redaction.js';
 import { constants as zlibConstants } from 'node:zlib';
 import { REVALIDATE, cacheControlForFile } from './cache-headers.js';
-import { buildRobots, buildSitemap, isPrivatePath } from './sitemap.js';
+import { buildLlmsTxt, buildRobots, buildSitemap, isPrivatePath } from './sitemap.js';
 import {
   BROTLI_QUALITY,
   compressPayload,
@@ -571,6 +571,43 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         .send(buildRobots(appUrl));
     });
 
+    /**
+     * `llms.txt` — a description of the site, for something reading rather than indexing it.
+     *
+     * Its title and summary are lifted from the home page's own `<title>` and description rather
+     * than written again here: those are already where the product says what it is, and a second
+     * copy is a second thing to keep true. See `buildLlmsTxt`.
+     *
+     * This does **not** decide whether AI crawlers are welcome. That is a `robots.txt` question
+     * and the owner's to answer; `llms.txt` grants nothing and withholds nothing.
+     */
+    app.get('/llms.txt', async (_request, reply) => {
+      const site = await siteRenderer(appDir);
+      if (!site) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+
+      const { head } = site.render('/', appUrl);
+      const title = /<title>([^<]*)<\/title>/.exec(head)?.[1];
+      const description = /<meta name="description" content="([^"]*)"/.exec(head)?.[1];
+      /*
+       * If the head ever stops carrying either, say nothing rather than something made up: an
+       * `llms.txt` describing the site as "undefined" is worse than no file.
+       */
+      if (!title || !description) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+
+      const english = site.SITE_ROUTES.filter(
+        (route) => site.splitLocale(route).locale === site.SITE_DEFAULT_LOCALE,
+      );
+
+      return reply
+        .type('text/plain; charset=utf-8')
+        .header('cache-control', 'public, max-age=3600')
+        .send(buildLlmsTxt({ title, description, routes: english, origin: appUrl }));
+    });
+
     app.get('/sitemap.xml', async (_request, reply) => {
       const site = await siteRenderer(appDir);
       /*
@@ -709,6 +746,10 @@ interface SiteRenderer {
    * language from being served and never indexed.
    */
   SITE_ROUTES: readonly string[];
+  /** The language an unprefixed URL serves, and the one `llms.txt` is written in. */
+  SITE_DEFAULT_LOCALE: string;
+  /** Splits `/sv/contact` into its language and its page — see `site/locale.ts`. */
+  splitLocale: (path: string) => { locale: string; path: string };
   isSiteRoute: (path: string) => boolean;
   /** An address only the site could own and does not have — rendered as its 404, not the app's shell. */
   isSiteShaped: (path: string) => boolean;
