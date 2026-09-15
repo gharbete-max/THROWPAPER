@@ -66,13 +66,20 @@ const PxAtLeast = (floor: number, why: string) =>
 /**
  * A font stack. Length-capped and quote-free — this string is interpolated into an inline `style`
  * attribute in email, where an unescaped quote ends the attribute early.
+ *
+ * No slash, star or backslash either: the same string lands verbatim inside a `<style>` block the
+ * server inlines, where `/*` opens a comment that swallows every declaration after it. Not an
+ * escape — the CSP and the tag boundary hold — but a palette that silently stops at the font.
  */
 const FontStack = z
   .string()
   .trim()
   .min(1)
   .max(200)
-  .refine((value) => !/["'<>;{}]/.test(value), 'Font names cannot contain quotes or punctuation');
+  .refine(
+    (value) => !/["'<>;{}/*\\]/.test(value),
+    'Font names cannot contain quotes or punctuation',
+  );
 
 export const ColourTokens = z.object({
   primary: Hex,

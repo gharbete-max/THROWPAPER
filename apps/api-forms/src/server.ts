@@ -543,9 +543,12 @@ async function renderSite(
 ): Promise<{ html: string; status: number } | null> {
   sitePromise ??= loadSite(appDir);
   const site = await sitePromise;
-  if (!site || !(site.isSiteRoute(path) || site.isSiteShaped(path))) return null;
+  if (!site) return null;
 
   try {
+    // Inside the try: a bundle from an older build lacks `isSiteShaped`, and that must serve the
+    // shell rather than take down every page.
+    if (!(site.isSiteRoute(path) || site.isSiteShaped(path))) return null;
     const shell = await readFile(join(appDir, 'index.html'), 'utf8');
     const { html, head, lang, status } = site.render(path, appUrl);
     return {
