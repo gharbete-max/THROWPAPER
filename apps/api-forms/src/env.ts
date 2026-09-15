@@ -9,6 +9,30 @@ const Env = z.object({
     .url()
     .default('postgres://throwpaper:throwpaper@localhost:5432/throwpaper'),
   API_FORMS_PORT: z.coerce.number().int().default(4001),
+  /**
+   * Connection pool and query limits. See `db/client.ts` for what each one prevents.
+   *
+   * Environment variables rather than constants because the right values depend on the hosting
+   * decision that is still open (`LAUNCH-CHECKLIST.md` §3): a long-lived container wants a real
+   * pool, a serverless runtime wants one connection per instance in front of a pooler. The
+   * defaults suit the container the Dockerfile builds today.
+   */
+  DATABASE_POOL_MAX: z.coerce.number().int().min(1).default(10),
+  /** Seconds a pooled connection may sit unused before it is closed. */
+  DATABASE_IDLE_TIMEOUT_SECONDS: z.coerce.number().int().min(0).default(30),
+  /** Seconds to wait for a connection before failing, rather than hanging on it. */
+  DATABASE_CONNECT_TIMEOUT_SECONDS: z.coerce.number().int().min(1).default(10),
+  /**
+   * Milliseconds after which Postgres cancels a query. A limit on the pathological case, not a
+   * target — the queries here are indexed lookups that return in milliseconds.
+   */
+  DATABASE_STATEMENT_TIMEOUT_MS: z.coerce.number().int().min(0).default(15_000),
+  /**
+   * Milliseconds after which a transaction left open — by a handler that threw between `BEGIN`
+   * and `COMMIT` — is closed. A statement timeout does not catch it: the session is idle, and
+   * still holding every lock it took.
+   */
+  DATABASE_IDLE_TRANSACTION_TIMEOUT_MS: z.coerce.number().int().min(0).default(30_000),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   /**
    * Signs access tokens. No default — a predictable secret mints admin sessions.
