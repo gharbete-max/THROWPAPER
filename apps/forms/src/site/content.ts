@@ -90,6 +90,9 @@ export interface SiteCopy {
     body: string;
     /** The secondary action is an in-page anchor, so only its label is here. */
     secondary: string;
+    /** The one control on the page: stop the folding mark, and start it again. */
+    pause: string;
+    play: string;
   };
   sections: {
     featuresEyebrow: string;

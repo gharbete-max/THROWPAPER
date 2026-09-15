@@ -85,7 +85,8 @@ describe('the hero mark', () => {
   const SITE = readFileSync(new URL('../site/Site.tsx', import.meta.url), 'utf8');
 
   it('fetches the animation only when motion is welcome', () => {
-    const sources = [...SITE.matchAll(/<source\b[\s\S]*?\/>/g)].map((match) => match[0]);
+    // Real tags only: the prose above the markup mentions `<source>` too.
+    const sources = [...SITE.matchAll(/<source\s[^>]*\/>/g)].map((match) => match[0]);
     expect(sources.length, 'the hero has no <source> to gate').toBeGreaterThan(0);
 
     // Every one of them, not just the first: an ungated fallback source defeats the whole gate.

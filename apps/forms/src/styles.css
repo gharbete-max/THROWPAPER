@@ -4114,8 +4114,55 @@ body:has(.app) > #root {
  * than inside the figure, which puts the mark half a line off centre for no reason anybody could
  * see. `display: contents` hands the grid its real child.
  */
-.hero__figure picture {
+.hero__figure picture,
+.hero__art {
   display: contents;
+}
+
+/*
+ * Paused: the loop goes, the still takes its place, the label flips. All of it from one checkbox,
+ * which is the whole mechanism — see the note in `Site.tsx`.
+ */
+.hero__still,
+.hero__pause:checked ~ .hero__art picture,
+.hero__pause:checked ~ .hero__pauseLabel .hero__pauseLabel--playing,
+.hero__pauseLabel .hero__pauseLabel--paused {
+  display: none;
+}
+
+.hero__pause:checked ~ .hero__pauseLabel .hero__pauseLabel--paused {
+  display: inline;
+}
+
+.hero__pause:checked ~ .hero__art .hero__still {
+  display: block;
+}
+
+.hero__pauseLabel {
+  margin-block-start: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 0.5) var(--tp-spacing-unit);
+  border-radius: var(--tp-radius);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
+  cursor: pointer;
+}
+
+.hero__pauseLabel:hover {
+  color: var(--tp-colour-text);
+}
+
+/* The checkbox is what has focus; the label is what can be seen. */
+.hero__pause:focus-visible ~ .hero__pauseLabel {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+/* Nothing moves, so there is nothing to pause. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__pause,
+  .hero__pauseLabel {
+    display: none;
+  }
 }
 
 .hero__mark {

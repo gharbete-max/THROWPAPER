@@ -28,6 +28,8 @@ export const enGB: SiteCopy = {
     title: 'Ask people things. Properly.',
     body: 'Twelve languages, your brand on every surface, and an admission card that scans at a door.',
     secondary: 'See what it does',
+    pause: 'Pause the animation',
+    play: 'Play the animation',
   },
   sections: {
     featuresEyebrow: 'Everything it does',

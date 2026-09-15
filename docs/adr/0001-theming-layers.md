@@ -160,7 +160,6 @@ Each of these was seen, weighed, and left. None is forgotten; each names what wo
 | Typed `CLIENT` / `FORM` contract objects | No consumer yet — see Consequences | Layer 1 narrows or layer 3 lands |
 | Tenant by host on the public surface (audit 17) | One organisation in v0.1; the identifier does not exist | A second customer is onboarded |
 | Touch icon composited onto a tile | Needs an image library the API does not have | A customer with a wide wordmark complains, or the library arrives for another reason |
-| A pause control on the hero animation (WCAG 2.2.2) | The site ships no JavaScript; `prefers-reduced-motion` gates the loop instead | Strict AA is required — a CSS-only `:has(:checked)` toggle is ~6 lines |
 | `outline` / `soft` email buttons walk a pastel to 3:1 | Matches the web; no shipped preset uses it with a pastel | A customer chooses outline with a pastel and objects to the deepened edge |
 | Check-in as a mode; Responses hierarchy (critique P2s) | Product shape, not theming; scoped for their own pass | The next critique round |
 | `.rise` stagger stops at six; grid has six | Cosmetic | The grid grows |

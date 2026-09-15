@@ -33,6 +33,8 @@ export const svSE: SiteCopy = {
     title: 'Fråga folk ordentligt.',
     body: 'Tolv språk, er egen grafiska profil överallt och ett inträdeskort som fungerar i entrén.',
     secondary: 'Se vad det gör',
+    pause: 'Pausa animationen',
+    play: 'Spela animationen',
   },
   sections: {
     featuresEyebrow: 'Allt det gör',

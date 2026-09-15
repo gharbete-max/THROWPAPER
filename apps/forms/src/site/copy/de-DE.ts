@@ -34,6 +34,8 @@ export const deDE: SiteCopy = {
     title: 'Fragen Sie richtig.',
     body: 'Zwölf Sprachen, Ihr Erscheinungsbild auf jeder Fläche und eine Eintrittskarte, die am Einlass gescannt wird.',
     secondary: 'Ansehen, was es kann',
+    pause: 'Animation anhalten',
+    play: 'Animation abspielen',
   },
   sections: {
     featuresEyebrow: 'Alles, was es kann',

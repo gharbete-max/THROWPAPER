@@ -234,9 +234,23 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
             shift. Browsers stop decoding an animated image once it scrolls out of view, so the
             "pause offscreen" requirement is the browser's rather than ours to implement.
           */}
-          <div className="hero__figure" aria-hidden="true">
-            <picture>
-              {/*
+          <div className="hero__figure">
+            {/*
+              A pause control, with no script.
+
+              WCAG 2.2.2: anything that moves for more than five seconds needs a way to stop it,
+              and honouring `prefers-reduced-motion` is not that — it is a setting most people
+              never find. A checkbox is the one stateful control HTML has without JavaScript, and
+              `:checked` is enough CSS to swap the loop for its own first frame. The control is
+              hidden when reduced motion is on, because there is nothing left to pause.
+
+              Outside the `aria-hidden` wrapper, so a screen reader can reach the one thing here
+              that does something, and not the decoration it acts on.
+            */}
+            <input type="checkbox" id="hero-pause" className="hero__pause visually-hidden" />
+            <div className="hero__art" aria-hidden="true">
+              <picture>
+                {/*
                 The retina variant is gated to desktop widths, not offered by density alone.
 
                 `2x` on its own would hand a 997 KB animation to any phone with a retina screen,
@@ -245,25 +259,39 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
                 most. Above 900px the figure is larger, the connection is usually not a phone's,
                 and the sharpness is visible.
               */}
-              <source
-                media="(prefers-reduced-motion: no-preference) and (min-width: 900px)"
-                srcSet="/mark-loop-256.webp 1x, /mark-loop-512.webp 2x"
-                type="image/webp"
-              />
-              <source
-                media="(prefers-reduced-motion: no-preference)"
-                srcSet="/mark-loop-256.webp"
-                type="image/webp"
-              />
+                <source
+                  media="(prefers-reduced-motion: no-preference) and (min-width: 900px)"
+                  srcSet="/mark-loop-256.webp 1x, /mark-loop-512.webp 2x"
+                  type="image/webp"
+                />
+                <source
+                  media="(prefers-reduced-motion: no-preference)"
+                  srcSet="/mark-loop-256.webp"
+                  type="image/webp"
+                />
+                <img
+                  className="hero__mark"
+                  src="/mark-poster-256.png"
+                  width={256}
+                  height={256}
+                  alt=""
+                  decoding="async"
+                />
+              </picture>
+              {/* The still, shown in place of the loop while paused. Same file as the poster. */}
               <img
-                className="hero__mark"
+                className="hero__mark hero__still"
                 src="/mark-poster-256.png"
                 width={256}
                 height={256}
                 alt=""
-                decoding="async"
+                loading="lazy"
               />
-            </picture>
+            </div>
+            <label className="hero__pauseLabel" htmlFor="hero-pause">
+              <span className="hero__pauseLabel--playing">{copy.hero.pause}</span>
+              <span className="hero__pauseLabel--paused">{copy.hero.play}</span>
+            </label>
           </div>
         </div>
       </section>

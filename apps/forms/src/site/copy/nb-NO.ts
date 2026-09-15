@@ -32,6 +32,8 @@ export const nbNO: SiteCopy = {
     title: 'Spør folk skikkelig.',
     body: 'Tolv språk, deres egen profil overalt, og et adgangskort som kan skannes i døra.',
     secondary: 'Se hva det gjør',
+    pause: 'Sett animasjonen på pause',
+    play: 'Spill animasjonen',
   },
   sections: {
     featuresEyebrow: 'Alt det gjør',

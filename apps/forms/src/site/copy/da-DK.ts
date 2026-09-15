@@ -31,6 +31,8 @@ export const daDK: SiteCopy = {
     title: 'Spørg folk ordentligt.',
     body: 'Tolv sprog, jeres eget design overalt, og et adgangskort, der kan scannes i døren.',
     secondary: 'Se hvad det kan',
+    pause: 'Sæt animationen på pause',
+    play: 'Afspil animationen',
   },
   sections: {
     featuresEyebrow: 'Alt hvad det gør',
