@@ -1,4 +1,10 @@
-import { FIELD_TYPES, MAX_UPLOAD_BYTES, type Field, type FieldType } from '@tp/shared/forms';
+import {
+  EntryField,
+  FIELD_TYPES,
+  MAX_UPLOAD_BYTES,
+  type Field,
+  type FieldType,
+} from '@tp/shared/forms';
 import { currentMessages } from '../../lib/messages/index.js';
 
 /**
@@ -36,7 +42,25 @@ export const PALETTE_GROUPS: ReadonlyArray<{ id: string; types: readonly FieldTy
    * only how it looks, and an author scanning for one would keep finding the other.
    */
   { id: 'decoration', types: ['shape', 'drawing'] },
+  /**
+   * A group of one, because a repeating block is not like anything else in the palette.
+   *
+   * It is the only type that contains other fields, and putting it beside "short text" would read
+   * as one more question rather than as a container an author drops questions into.
+   */
+  { id: 'repeating', types: ['repeating_group'] },
 ];
+
+/**
+ * The types a question inside a repeating block may be.
+ *
+ * Read off `EntryField` rather than written out, so a new field type is offered inside a block the
+ * moment the schema allows it there — and is *not* offered the moment it does not. A hand-kept
+ * list here would be a third list to keep in step with `FIELD_TYPES` and the union.
+ */
+export const ENTRY_PALETTE: readonly EntryField['type'][] = EntryField.options.map(
+  (option) => option.shape.type.value,
+);
 
 /**
  * A default for the language being written in — and only that one.
@@ -200,6 +224,39 @@ export function newField(
         strokeWidth: 3,
         viewBoxWidth: 1000,
         viewBoxHeight: 300,
+      };
+    /**
+     * A new group starts with one text question in it, and a cap of five.
+     *
+     * Not empty: a group with no children fails `FormDefinition` — `fields` requires at least one
+     * — so an empty one could be dropped on the canvas and would then block publishing with a
+     * parse error rather than a problem anybody could act on. One question is also the thing an
+     * author would add first anyway.
+     *
+     * Five because `max` is required and a default of one would make the field pointless while a
+     * default of twenty would put twenty blocks of columns in every export. Five is a guest list.
+     */
+    case 'repeating_group':
+      return {
+        id,
+        key,
+        type,
+        label,
+        required: false,
+        width,
+        min: 0,
+        max: 5,
+        admits: false,
+        fields: [
+          {
+            id: crypto.randomUUID(),
+            key: 'item',
+            type: 'short_text',
+            label: {},
+            required: false,
+            width: 'full',
+          },
+        ],
       };
     default:
       return { id, key, type, label, required: false, width };

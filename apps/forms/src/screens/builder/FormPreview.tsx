@@ -6,9 +6,11 @@ import {
   widthOf,
   type AnswerValue,
   type FormDefinition,
+  type GroupEntry,
   type SubmissionValues,
 } from '@tp/shared/forms';
 import { FieldInput } from '../../components/FieldInput.js';
+import { RepeatingGroup, groupLabels } from '../../components/RepeatingGroup.js';
 import { useT } from '../../lib/i18n.js';
 
 /**
@@ -96,17 +98,35 @@ export function FormPreview({
                 .filter(Boolean)
                 .join(' ')}
             >
-              <FieldInput
-                field={field}
-                locale={locale}
-                locales={locales}
-                value={values[field.key] ?? null}
-                error={null}
-                chooseLabel={t('public.choose')}
-                yesLabel={t('public.yes')}
-                noLabel={t('public.no')}
-                onChange={setValue}
-              />
+              {field.type === 'repeating_group' ? (
+                <RepeatingGroup
+                  field={field}
+                  locale={locale}
+                  locales={locales}
+                  entries={
+                    Array.isArray(values[field.key]) ? (values[field.key] as GroupEntry[]) : []
+                  }
+                  labels={groupLabels(t, field.max)}
+                  chooseLabel={t('public.choose')}
+                  yesLabel={t('public.yes')}
+                  noLabel={t('public.no')}
+                  /* Nothing is validated in a preview, so nothing has an error to attach. */
+                  issueFor={() => null}
+                  onChange={setValue}
+                />
+              ) : (
+                <FieldInput
+                  field={field}
+                  locale={locale}
+                  locales={locales}
+                  value={values[field.key] ?? null}
+                  error={null}
+                  chooseLabel={t('public.choose')}
+                  yesLabel={t('public.yes')}
+                  noLabel={t('public.no')}
+                  onChange={setValue}
+                />
+              )}
             </div>
           ))}
         </div>

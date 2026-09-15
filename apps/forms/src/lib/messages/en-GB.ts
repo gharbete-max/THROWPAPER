@@ -700,6 +700,50 @@ export const enGB = {
   'validation.time': 'Enter a time.',
   'validation.timeMin': 'No earlier than {min}.',
   'validation.timeMax': 'No later than {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Add another',
+  'group.remove': 'Remove',
+  'group.removeEntry': 'Remove {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Nothing added yet.',
+  'group.full': 'That is as many as this form allows ({max}).',
+  'fieldType.repeating_group': 'Repeating block',
+  'palette.repeating': 'Repeating',
+  'field.fields': 'Questions in this block',
+  'field.fieldsHint': 'Select one to edit it. Every question here is asked once per entry.',
+  'field.minEntries': 'Fewest entries',
+  'field.maxEntries': 'Most entries',
+  'field.maxEntriesHint':
+    'Required. The export has one set of columns per entry, so the form has to say how many.',
+  'field.addLabel': 'Button text',
+  'field.entryLabel': 'What one entry is called',
+  'field.entryLabelHint': 'Drawn as a heading above each one — “Guest 1”, “Guest 2”.',
+  'field.admits': 'Each entry gets its own admission card',
+  'field.admitsHint':
+    'For guests at an event. They are checked in separately from the person who registered, and only one block per form can do this.',
+  'field.admitNameKey': 'Which question is their name',
+  'field.admitNameKeyHint': 'Printed on the card and shown on the door screen.',
+  'problem.group-min-above-max':
+    'The block “{key}” asks for at least {min} entries but allows at most {max}.',
+  'problem.group-duplicate-child-key':
+    'The field key “{key}” is used more than once inside “{group}”.',
+  'problem.group-admit-name-unknown':
+    '“{group}” names “{key}” as the attendee, but has no such question.',
+  'problem.multiple-admitting-groups':
+    'Only one block on a form can give its entries their own admission card.',
+  'validation.group': 'This answer is not in the expected form.',
+  'validation.groupMin': 'Add at least {min}.',
+  'validation.groupMax': 'At most {max}.',
+  'checkin.outcome.no-such-guest': 'Guest not on this registration',
+  'submissions.column.entry': '{group} {number} — {child}',
+  'checkin.guestOf': 'Guest of {name}',
 } as const;
 
 /**

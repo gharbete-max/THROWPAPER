@@ -44,6 +44,7 @@ export type IconName =
   | 'hidden'
   | 'shape'
   | 'drawing'
+  | 'repeating_group'
   // Actions and navigation.
   | 'arrow-left'
   | 'arrow-right'
@@ -106,6 +107,14 @@ const PATHS: Record<IconName, string> = {
     'M18 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1',
   paperclip: 'M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 5',
   signature: 'M3 17c4-9 6-9 8-2s4 7 6 0M3 21h18',
+  /**
+   * Two stacked cards with a plus — a block that repeats, and a way to add another.
+   *
+   * Not a list icon: every other "some horizontal lines" glyph in this file is already taken, and
+   * what distinguishes this field is that the *same block* appears more than once, which two
+   * offset rectangles say and a list does not.
+   */
+  repeating_group: 'M4 7h11v10H4zM8 4h11v10M17 16v6M14 19h6',
   /**
    * A heading, not another stack of lines.
    *

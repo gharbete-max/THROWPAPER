@@ -18,6 +18,7 @@ import { LocalisedField } from './LocalisedField.js';
 import { FieldRules } from './FieldRules.js';
 import { FieldVisibility } from './FieldVisibility.js';
 import { DecorationProperties } from './DecorationProperties.js';
+import { GroupProperties } from './GroupProperties.js';
 
 interface Props {
   field: Field | null;
@@ -331,6 +332,29 @@ export function FieldProperties({ field, definition, onChange }: Props) {
 
       {(field.type === 'shape' || field.type === 'drawing') && (
         <DecorationProperties field={field} patch={patch} />
+      )}
+
+      {field.type === 'repeating_group' && (
+        <GroupProperties
+          field={field}
+          patch={patch}
+          renderChildEditor={(child, onChildChange) => (
+            <FieldProperties
+              field={child}
+              /*
+               * The block's own questions stand in for the form.
+               *
+               * A condition inside an entry may only name an earlier question *of that entry* —
+               * see ADR 0003 — so the list the visibility editor offers has to be the entry's,
+               * not the form's. Handing it the whole form would offer references that
+               * `definitionProblems` then refuses at publish, which is a builder inviting a
+               * mistake it already knows how to reject.
+               */
+              definition={{ ...definition, fields: field.fields }}
+              onChange={(updated) => onChildChange(updated as typeof child)}
+            />
+          )}
+        />
       )}
 
       {hasOptions(field) && (

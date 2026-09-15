@@ -691,4 +691,47 @@ export const svSE: Record<MessageKey, string> = {
   'validation.time': 'Ange en tid.',
   'validation.timeMin': 'Tidigast {min}.',
   'validation.timeMax': 'Senast {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Lägg till en till',
+  'group.remove': 'Ta bort',
+  'group.removeEntry': 'Ta bort {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Inget tillagt ännu.',
+  'group.full': 'Fler än {max} går inte att lägga till i det här formuläret.',
+  'fieldType.repeating_group': 'Upprepat block',
+  'palette.repeating': 'Upprepning',
+  'field.fields': 'Frågor i det här blocket',
+  'field.fieldsHint': 'Välj en för att redigera den. Varje fråga här ställs en gång per post.',
+  'field.minEntries': 'Minsta antal poster',
+  'field.maxEntries': 'Största antal poster',
+  'field.maxEntriesHint':
+    'Obligatoriskt. Exporten får en uppsättning kolumner per post, så formuläret måste ange hur många.',
+  'field.addLabel': 'Knapptext',
+  'field.entryLabel': 'Vad en post heter',
+  'field.entryLabelHint': 'Visas som rubrik ovanför varje — ”Gäst 1”, ”Gäst 2”.',
+  'field.admits': 'Varje post får ett eget inträdeskort',
+  'field.admitsHint':
+    'För gäster på ett evenemang. De checkas in separat från den som anmälde sig, och bara ett block per formulär kan göra det här.',
+  'field.admitNameKey': 'Vilken fråga är deras namn',
+  'field.admitNameKeyHint': 'Trycks på kortet och visas på entréskärmen.',
+  'problem.group-min-above-max':
+    'Blocket ”{key}” kräver minst {min} poster men tillåter högst {max}.',
+  'problem.group-duplicate-child-key': 'Fältnyckeln ”{key}” används mer än en gång i ”{group}”.',
+  'problem.group-admit-name-unknown':
+    '”{group}” anger ”{key}” som deltagarens namn, men har ingen sådan fråga.',
+  'problem.multiple-admitting-groups':
+    'Bara ett block per formulär kan ge sina poster egna inträdeskort.',
+  'validation.group': 'Det här svaret har inte rätt form.',
+  'validation.groupMin': 'Lägg till minst {min}.',
+  'validation.groupMax': 'Högst {max}.',
+  'checkin.outcome.no-such-guest': 'Gästen finns inte på anmälan',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Gäst hos {name}',
 };

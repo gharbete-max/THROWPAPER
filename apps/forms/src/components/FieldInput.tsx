@@ -48,6 +48,16 @@ export function FieldInput({
 
   if (field.type === 'hidden' || field.type === 'page_break') return null;
 
+  /**
+   * A group is drawn by `RepeatingGroup`, which renders **this** component for each of its
+   * children.
+   *
+   * Dispatched by the caller rather than here, so the import runs one way only. A component that
+   * imported the thing importing it would work today and break the first time either is loaded
+   * lazily, which is exactly what this app does with its heavier screens.
+   */
+  if (field.type === 'repeating_group') return null;
+
   if (field.type === 'section_break') {
     return (
       <div className="stack">
@@ -349,7 +359,15 @@ export function FieldInput({
       ) : field.type === 'multi_select' ? (
         <span className="stack">
           {field.options.map((option) => {
-            const selected = Array.isArray(value) ? value : [];
+            /*
+             * Strings only. `AnswerValue` also covers a group's list of entries, which cannot
+             * reach a multi-select through a valid definition — but narrowing it here is what
+             * makes that true rather than assumed, and costs one filter over at most a few dozen
+             * chosen options.
+             */
+            const selected = Array.isArray(value)
+              ? value.filter((entry): entry is string => typeof entry === 'string')
+              : [];
             return (
               <label className="field field--inline" key={option.value}>
                 <input

@@ -703,4 +703,48 @@ export const esES: Record<MessageKey, string> = {
   'validation.time': 'Introduce una hora.',
   'validation.timeMin': 'No antes de {min}.',
   'validation.timeMax': 'No después de {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Añadir otro',
+  'group.remove': 'Quitar',
+  'group.removeEntry': 'Quitar {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Todavía no se ha añadido nada.',
+  'group.full': 'Este formulario admite como máximo {max}.',
+  'fieldType.repeating_group': 'Bloque repetido',
+  'palette.repeating': 'Repetición',
+  'field.fields': 'Preguntas de este bloque',
+  'field.fieldsHint': 'Selecciona una para editarla. Cada pregunta se hace una vez por entrada.',
+  'field.minEntries': 'Número mínimo de entradas',
+  'field.maxEntries': 'Número máximo de entradas',
+  'field.maxEntriesHint':
+    'Obligatorio. La exportación tiene un conjunto de columnas por entrada, así que el formulario debe indicar cuántas.',
+  'field.addLabel': 'Texto del botón',
+  'field.entryLabel': 'Cómo se llama una entrada',
+  'field.entryLabelHint': 'Se muestra como encabezado sobre cada una: «Invitado 1», «Invitado 2».',
+  'field.admits': 'Cada entrada recibe su propia entrada de acceso',
+  'field.admitsHint':
+    'Para invitados a un evento. Se registran en la puerta por separado de quien se inscribió, y solo un bloque por formulario puede hacerlo.',
+  'field.admitNameKey': 'Qué pregunta es su nombre',
+  'field.admitNameKeyHint': 'Se imprime en la entrada y se muestra en la pantalla de la puerta.',
+  'problem.group-min-above-max':
+    'El bloque «{key}» exige al menos {min} entradas pero permite como máximo {max}.',
+  'problem.group-duplicate-child-key':
+    'La clave de campo «{key}» se usa más de una vez dentro de «{group}».',
+  'problem.group-admit-name-unknown':
+    '«{group}» indica «{key}» como nombre del asistente, pero no existe esa pregunta.',
+  'problem.multiple-admitting-groups':
+    'Solo un bloque por formulario puede dar a sus entradas su propia entrada de acceso.',
+  'validation.group': 'Esta respuesta no tiene el formato esperado.',
+  'validation.groupMin': 'Añade al menos {min}.',
+  'validation.groupMax': 'Como máximo {max}.',
+  'checkin.outcome.no-such-guest': 'El invitado no figura en esta inscripción',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Invitado de {name}',
 };

@@ -696,4 +696,47 @@ export const jaJP: Record<MessageKey, string> = {
   'validation.time': '時刻を入力してください。',
   'validation.timeMin': '{min} より前にはできません。',
   'validation.timeMax': '{max} より後にはできません。',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': '追加する',
+  'group.remove': '削除',
+  'group.removeEntry': '{entry}を削除',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'まだ何も追加されていません。',
+  'group.full': 'このフォームで追加できるのは最大 {max} 件です。',
+  'fieldType.repeating_group': '繰り返しブロック',
+  'palette.repeating': '繰り返し',
+  'field.fields': 'このブロックの質問',
+  'field.fieldsHint': '編集するものを選んでください。ここの質問は 1 件につき 1 回ずつ聞かれます。',
+  'field.minEntries': '最小件数',
+  'field.maxEntries': '最大件数',
+  'field.maxEntriesHint':
+    '必須です。書き出しでは 1 件ごとに 1 組の列ができるため、フォームで件数を決める必要があります。',
+  'field.addLabel': 'ボタンの文言',
+  'field.entryLabel': '1 件の呼び名',
+  'field.entryLabelHint': '各項目の見出しとして表示されます（「同伴者 1」「同伴者 2」）。',
+  'field.admits': '各項目に個別の入場券を発行する',
+  'field.admitsHint':
+    'イベントの同伴者向けです。申込者とは別に受付され、これを使えるブロックは 1 フォームにつき 1 つだけです。',
+  'field.admitNameKey': 'どの質問が名前か',
+  'field.admitNameKeyHint': '券に印刷され、受付画面にも表示されます。',
+  'problem.group-min-above-max':
+    'ブロック「{key}」は最低 {min} 件を求めていますが、上限は {max} 件です。',
+  'problem.group-duplicate-child-key': 'フィールドキー「{key}」が「{group}」の中で重複しています。',
+  'problem.group-admit-name-unknown':
+    '「{group}」は参加者名として「{key}」を指定していますが、その質問がありません。',
+  'problem.multiple-admitting-groups':
+    '入場券を個別に発行できるブロックは、1 つのフォームにつき 1 つだけです。',
+  'validation.group': 'この回答の形式が正しくありません。',
+  'validation.groupMin': '少なくとも {min} 件追加してください。',
+  'validation.groupMax': '最大 {max} 件です。',
+  'checkin.outcome.no-such-guest': 'この申込にこの同伴者はいません',
+  'submissions.column.entry': '{group} {number} — {child}',
+  'checkin.guestOf': '{name} さんの同伴者',
 };

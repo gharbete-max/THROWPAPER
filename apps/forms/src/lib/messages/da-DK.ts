@@ -689,4 +689,47 @@ export const daDK: Record<MessageKey, string> = {
   'validation.time': 'Indtast et klokkeslæt.',
   'validation.timeMin': 'Ikke tidligere end {min}.',
   'validation.timeMax': 'Ikke senere end {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Tilføj endnu en',
+  'group.remove': 'Fjern',
+  'group.removeEntry': 'Fjern {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Intet tilføjet endnu.',
+  'group.full': 'Der kan højst tilføjes {max} i denne formular.',
+  'fieldType.repeating_group': 'Gentaget blok',
+  'palette.repeating': 'Gentagelse',
+  'field.fields': 'Spørgsmål i denne blok',
+  'field.fieldsHint': 'Vælg en for at redigere den. Hvert spørgsmål her stilles én gang pr. post.',
+  'field.minEntries': 'Færreste poster',
+  'field.maxEntries': 'Flest poster',
+  'field.maxEntriesHint':
+    'Påkrævet. Eksporten har ét sæt kolonner pr. post, så formularen skal angive hvor mange.',
+  'field.addLabel': 'Knaptekst',
+  'field.entryLabel': 'Hvad én post hedder',
+  'field.entryLabelHint': 'Vises som overskrift over hver enkelt — »Gæst 1«, »Gæst 2«.',
+  'field.admits': 'Hver post får sit eget adgangskort',
+  'field.admitsHint':
+    'Til gæster til et arrangement. De tjekkes ind separat fra den, der tilmeldte sig, og kun én blok pr. formular kan gøre dette.',
+  'field.admitNameKey': 'Hvilket spørgsmål er deres navn',
+  'field.admitNameKeyHint': 'Trykkes på kortet og vises på indgangsskærmen.',
+  'problem.group-min-above-max':
+    'Blokken "{key}" kræver mindst {min} poster, men tillader højst {max}.',
+  'problem.group-duplicate-child-key': 'Feltnøglen "{key}" bruges mere end én gang i "{group}".',
+  'problem.group-admit-name-unknown':
+    '"{group}" angiver "{key}" som deltagerens navn, men har ikke et sådant spørgsmål.',
+  'problem.multiple-admitting-groups':
+    'Kun én blok pr. formular kan give sine poster deres eget adgangskort.',
+  'validation.group': 'Dette svar har ikke den forventede form.',
+  'validation.groupMin': 'Tilføj mindst {min}.',
+  'validation.groupMax': 'Højst {max}.',
+  'checkin.outcome.no-such-guest': 'Gæsten står ikke på tilmeldingen',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Gæst hos {name}',
 };
