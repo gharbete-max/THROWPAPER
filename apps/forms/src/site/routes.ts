@@ -21,6 +21,8 @@ export const SITE_PAGES: readonly string[] = [
   '/',
   ...FEATURE_SLUGS.map((slug) => `/features/${slug}`),
   ...LEGAL_DOCUMENTS.map((document) => `/${document.slug}`),
+  '/contact',
+  '/contact/sent',
 ];
 
 export const SITE_ROUTES: readonly string[] = SITE_LOCALES.flatMap((locale) =>

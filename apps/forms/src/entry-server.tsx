@@ -59,6 +59,12 @@ function metaFor(page: string, copy: SiteCopy): { title: string; description: st
     const feature = copy.features[slug];
     return { title: `${feature.name}${copy.meta.titleSuffix}`, description: feature.summary };
   }
+  if (page === '/contact' || page === '/contact/sent') {
+    return {
+      title: `${copy.contact.title}${copy.meta.titleSuffix}`,
+      description: copy.contact.lede,
+    };
+  }
   if (!SITE_PAGES.includes(page)) {
     return {
       title: `${copy.notFound.title}${copy.meta.titleSuffix}`,

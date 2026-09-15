@@ -77,6 +77,8 @@ export function Site({ locale = SITE_DEFAULT_LOCALE }: { locale?: string }) {
             element={<LegalPage document={document} locale={locale} copy={copy} />}
           />
         ))}
+        <Route path="/contact" element={<ContactPage locale={locale} copy={copy} />} />
+        <Route path="/contact/sent" element={<ContactSentPage locale={locale} copy={copy} />} />
         {/* The catch the comment above warns about: header, footer, and something between. */}
         <Route path="*" element={<NotFoundPage locale={locale} copy={copy} />} />
       </Routes>
@@ -352,9 +354,18 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
           <div className="site__ctaPanel">
             <h2 className="site__sectionTitle">{copy.sections.ctaTitle}</h2>
             <p className="muted">{copy.sections.ctaBody}</p>
-            <a className="button" href="/login">
-              {copy.chrome.openTheDemo}
-            </a>
+            <div className="site__ctaActions">
+              <a className="button" href="/login">
+                {copy.chrome.openTheDemo}
+              </a>
+              {/*
+                The way onward for somebody the demo has convinced. The page sold a demo three
+                times and offered nowhere to go afterwards; this is where.
+              */}
+              <a className="button button--quiet" href={localePath(locale, '/contact')}>
+                {copy.contact.link}
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -442,6 +453,71 @@ function NotFoundPage({ locale, copy }: { locale: string; copy: SiteCopy }) {
   );
 }
 
+/**
+ * The "get in touch" form, which posts with no script.
+ *
+ * A plain `<form method="post">` to the API, `application/x-www-form-urlencoded`, answered with a
+ * 303 to the thank-you page below in the visitor's language — the hidden `next` carries that path
+ * and the server holds it to one shape. `website` is the honeypot: no person sees it, a bot fills
+ * it, and the server answers a filled one with the same redirect so nothing is learned.
+ */
+function ContactPage({ locale, copy }: { locale: string; copy: SiteCopy }) {
+  const c = copy.contact;
+  return (
+    <main className="site__main" id="main" tabIndex={-1}>
+      <article className="site__article">
+        <a className="site__back" href={localePath(locale)}>
+          <Icon name="arrow-left" /> {copy.featurePage.back}
+        </a>
+        <h1>{c.title}</h1>
+        <p className="site__lede">{c.lede}</p>
+
+        <form className="site__form" method="post" action="/api/public/contact">
+          <input type="hidden" name="next" value={localePath(locale, '/contact/sent')} />
+          <label className="field">
+            <span>{c.name}</span>
+            <input name="name" required maxLength={120} autoComplete="name" />
+          </label>
+          <label className="field">
+            <span>{c.organisation}</span>
+            <input name="organisation" maxLength={120} autoComplete="organization" />
+          </label>
+          <label className="field">
+            <span>{c.email}</span>
+            <input name="email" type="email" required maxLength={254} autoComplete="email" />
+          </label>
+          <label className="field">
+            <span>{c.message}</span>
+            <textarea name="message" required maxLength={4000} rows={6} />
+          </label>
+          {/* The honeypot. Out of the accessibility tree too: it is nobody's field. */}
+          <label className="visually-hidden" aria-hidden="true">
+            <span>website</span>
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+          <button className="button" type="submit">
+            {c.send}
+          </button>
+        </form>
+      </article>
+    </main>
+  );
+}
+
+function ContactSentPage({ locale, copy }: { locale: string; copy: SiteCopy }) {
+  return (
+    <main className="site__main" id="main" tabIndex={-1}>
+      <article className="site__article">
+        <a className="site__back" href={localePath(locale)}>
+          <Icon name="arrow-left" /> {copy.featurePage.back}
+        </a>
+        <h1>{copy.contact.sentTitle}</h1>
+        <p className="site__lede">{copy.contact.sentBody}</p>
+      </article>
+    </main>
+  );
+}
+
 function SiteFooter({ locale, copy }: { locale: string; copy: SiteCopy }) {
   return (
     <footer className="site__foot">
@@ -459,6 +535,7 @@ function SiteFooter({ locale, copy }: { locale: string; copy: SiteCopy }) {
           language. A translated *title* over an English page would be the dishonest version.
         */}
         <nav className="site__footNav" aria-label={copy.chrome.policiesNavLabel}>
+          <a href={localePath(locale, '/contact')}>{copy.contact.link}</a>
           {LEGAL_DOCUMENTS.map((document) => (
             <a
               key={document.slug}

@@ -56,6 +56,18 @@ export const deDE: SiteCopy = {
     title: 'Hier gibt es keine Seite',
     body: 'Der Link ist vielleicht veraltet oder falsch geschrieben. Alles, was das Produkt kann, steht unten, und die Startseite ist einen Klick entfernt.',
   },
+  contact: {
+    link: 'Kontakt aufnehmen',
+    title: 'Kontakt aufnehmen',
+    lede: 'Sagen Sie uns, wer Sie sind und was Sie betreiben. Ein Mensch liest das und antwortet innerhalb von ein, zwei Tagen.',
+    name: 'Ihr Name',
+    organisation: 'Organisation (optional)',
+    email: 'E-Mail',
+    message: 'Was möchten Sie fragen?',
+    send: 'Senden',
+    sentTitle: 'Gesendet. Danke.',
+    sentBody: 'Wir antworten an die angegebene Adresse, in der Regel innerhalb von zwei Werktagen.',
+  },
   features: {
     forms: {
       name: 'Der Formular-Editor',

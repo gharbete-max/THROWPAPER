@@ -54,6 +54,18 @@ export const nbNO: SiteCopy = {
     title: 'Det finnes ingen side her',
     body: 'Lenken kan være gammel eller feilstavet. Alt produktet gjør er listet nedenfor, og forsiden er ett trykk unna.',
   },
+  contact: {
+    link: 'Ta kontakt',
+    title: 'Ta kontakt',
+    lede: 'Fortell hvem du er og hva dere driver. Et menneske leser dette og svarer i løpet av en dag eller to.',
+    name: 'Navnet ditt',
+    organisation: 'Organisasjon (valgfritt)',
+    email: 'E-post',
+    message: 'Hva vil du spørre om?',
+    send: 'Send',
+    sentTitle: 'Sendt. Takk.',
+    sentBody: 'Vi svarer til adressen du oppga, som regel innen to virkedager.',
+  },
   features: {
     forms: {
       name: 'Skjemabyggeren',

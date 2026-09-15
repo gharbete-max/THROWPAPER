@@ -55,6 +55,18 @@ export const svSE: SiteCopy = {
     title: 'Det finns ingen sida här',
     body: 'Länken kan vara gammal eller felskriven. Allt produkten gör finns listat nedan, och startsidan är ett tryck bort.',
   },
+  contact: {
+    link: 'Hör av dig',
+    title: 'Hör av dig',
+    lede: 'Berätta vem du är och vad ni driver. En människa läser detta och svarar inom någon dag.',
+    name: 'Ditt namn',
+    organisation: 'Organisation (valfritt)',
+    email: 'E-post',
+    message: 'Vad vill du fråga om?',
+    send: 'Skicka',
+    sentTitle: 'Skickat. Tack.',
+    sentBody: 'Vi svarar till adressen du angav, oftast inom två arbetsdagar.',
+  },
   features: {
     forms: {
       name: 'Formulärbyggaren',

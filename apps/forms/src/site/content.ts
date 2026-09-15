@@ -114,6 +114,23 @@ export interface SiteCopy {
     title: string;
     body: string;
   };
+  /**
+   * The way onward for somebody the demo has convinced. A plain form that posts without script,
+   * and the page it lands on.
+   */
+  contact: {
+    /** The link's label, in the header, the CTA panel and the footer. */
+    link: string;
+    title: string;
+    lede: string;
+    name: string;
+    organisation: string;
+    email: string;
+    message: string;
+    send: string;
+    sentTitle: string;
+    sentBody: string;
+  };
   features: Record<FeatureSlug, FeatureCopy>;
   quotes: readonly [Quote, Quote, Quote];
 }

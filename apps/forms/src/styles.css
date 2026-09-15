@@ -4550,8 +4550,9 @@ body:has(.app) > #root {
   max-inline-size: 44rem;
 }
 
-.site__cta .button {
+.site__cta .site__ctaActions {
   margin-block-start: calc(var(--tp-spacing-unit) * 3);
+  justify-self: start;
 }
 
 /* Attribution at the foot of a white-labelled page: present, quiet, and never the brand colour. */
@@ -4576,6 +4577,24 @@ body:has(.app) > #root {
   margin-inline: auto;
   padding: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 3);
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+/* The contact form: one column, the reading measure, the app's own fields. */
+.site__form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  margin-block-start: calc(var(--tp-spacing-unit) * 2);
+}
+
+.site__form .button {
+  align-self: flex-start;
+}
+
+.site__ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
 }
 
 /* The footer copy exists for phones; on a desktop the bar has room and shows its own. */

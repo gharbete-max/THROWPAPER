@@ -50,6 +50,18 @@ export const enGB: SiteCopy = {
     title: 'There is no page here',
     body: 'The link may be old, or mistyped. Everything the product does is listed below, and the front page is one press away.',
   },
+  contact: {
+    link: 'Get in touch',
+    title: 'Get in touch',
+    lede: 'Tell us who you are and what you run. A person reads this, and answers in a day or two.',
+    name: 'Your name',
+    organisation: 'Organisation (optional)',
+    email: 'Email',
+    message: 'What would you like to ask?',
+    send: 'Send',
+    sentTitle: 'Sent. Thank you.',
+    sentBody: 'We reply to the address you gave, usually within two working days.',
+  },
   features: {
     forms: {
       name: 'The form builder',

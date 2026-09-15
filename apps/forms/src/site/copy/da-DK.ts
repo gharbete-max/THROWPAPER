@@ -53,6 +53,18 @@ export const daDK: SiteCopy = {
     title: 'Der er ingen side her',
     body: 'Linket kan være gammelt eller stavet forkert. Alt hvad produktet gør, er listet nedenfor, og forsiden er ét tryk væk.',
   },
+  contact: {
+    link: 'Skriv til os',
+    title: 'Skriv til os',
+    lede: 'Fortæl hvem du er, og hvad I driver. Et menneske læser det og svarer inden for en dag eller to.',
+    name: 'Dit navn',
+    organisation: 'Organisation (valgfrit)',
+    email: 'E-mail',
+    message: 'Hvad vil du spørge om?',
+    send: 'Send',
+    sentTitle: 'Sendt. Tak.',
+    sentBody: 'Vi svarer til den adresse, du angav, som regel inden for to arbejdsdage.',
+  },
   features: {
     forms: {
       name: 'Formularbyggeren',

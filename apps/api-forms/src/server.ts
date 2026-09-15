@@ -35,6 +35,7 @@ import { registerFormRoutes } from './routes/forms.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerLedgerRoutes } from './routes/ledger.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
+import { registerPublicContactRoutes } from './routes/public-contact.js';
 import { registerInvoiceRoutes } from './routes/invoices.js';
 import { registerPublicInvoiceRoutes } from './routes/public-invoices.js';
 import { registerDocumentRoutes } from './routes/documents.js';
@@ -75,6 +76,8 @@ export interface ServerOptions {
   resolver?: TxtResolver;
   /** Where the operator notification goes. */
   operatorAddress?: string | null;
+  /** Where the marketing site's "get in touch" form goes — our inbox, not a customer's. */
+  contactAddress?: string | null;
   /**
    * Present only in demo mode. Its presence is what registers the /demo routes — there is no
    * environment variable that turns them on in a normal server.
@@ -358,6 +361,13 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerLedgerRoutes(app, { repos, guard });
   registerInvoiceRoutes(app, { repos, guard });
   registerPublicInvoiceRoutes(app, { repos, renderer });
+  registerPublicContactRoutes(app, {
+    mail,
+    contactAddress:
+      options.contactAddress === undefined
+        ? (process.env['CONTACT_TO'] ?? null)
+        : options.contactAddress,
+  });
   registerPublicFormRoutes(app, {
     repos,
     mail,

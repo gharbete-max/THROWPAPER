@@ -27,6 +27,17 @@ describe('the site’s not-found page', () => {
     expect(html).toContain(copyFor('de-DE').notFound.title);
   });
 
+  /** The way onward, in every language, posting without script to the one path it may land on. */
+  it('renders the contact form as a plain post with a held redirect', () => {
+    const { html, status } = render('/de/contact', 'https://x.test');
+    expect(status).toBe(200);
+    expect(html).toContain('method="post"');
+    expect(html).toContain('action="/api/public/contact"');
+    expect(html).toContain('name="next" value="/de/contact/sent"');
+    expect(html).toContain('name="website"');
+    expect(render('/de/contact/sent', 'https://x.test').status).toBe(200);
+  });
+
   it('leaves a real page at 200', () => {
     expect(render('/', 'https://x.test').status).toBe(200);
     expect(render('/sv/features/events', 'https://x.test').status).toBe(200);
