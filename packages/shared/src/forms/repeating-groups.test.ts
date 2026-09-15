@@ -7,11 +7,14 @@ import {
   emptyDefinition,
   entryColumnKey,
   entryIssueKey,
+  entryReference,
   EntryField,
   Field,
   flattenAnswers,
   MAX_GROUP_ENTRIES,
   minEntries,
+  parseEntryReference,
+  REGISTRANT_ENTRY,
   repeatingGroups,
   validateSubmission,
   type FormDefinition,
@@ -497,5 +500,53 @@ describe('the two ways of naming an answer inside a group', () => {
     expect(entryColumnKey('guests', 1, 'name')).toBe('guests_1_name');
     expect(entryIssueKey('guests', 0, 'name')).toBe('guests[0].name');
     expect(entryIssueKey('guests', 0)).toBe('guests[0]');
+  });
+});
+
+describe('a guest reference', () => {
+  it('is the registration plus an ordinal, and the registrant is the reference itself', () => {
+    expect(entryReference('ABCD-EFGH', REGISTRANT_ENTRY)).toBe('ABCD-EFGH');
+    expect(entryReference('ABCD-EFGH', 1)).toBe('ABCD-EFGH:1');
+  });
+
+  it('round-trips', () => {
+    expect(parseEntryReference('ABCD-EFGH')).toEqual({
+      reference: 'ABCD-EFGH',
+      entryNumber: REGISTRANT_ENTRY,
+    });
+    expect(parseEntryReference('ABCD-EFGH:2')).toEqual({
+      reference: 'ABCD-EFGH',
+      entryNumber: 2,
+    });
+  });
+
+  /**
+   * The reason the separator is `:` and not `-`.
+   *
+   * A reference is `XXXX-XXXX` over an alphabet that includes digits, so `ABCD-1234` is an ordinary
+   * reference — and hyphen-numbering would read it as entry 1234 of a submission called `ABCD`.
+   */
+  it('does not read a reference that happens to end in digits as a guest', () => {
+    expect(parseEntryReference('ABCD-1234')).toEqual({
+      reference: 'ABCD-1234',
+      entryNumber: REGISTRANT_ENTRY,
+    });
+  });
+
+  it('normalises case and whitespace, the way somebody types at a door', () => {
+    expect(parseEntryReference('  abcd-efgh:1 ')).toEqual({
+      reference: 'ABCD-EFGH',
+      entryNumber: 1,
+    });
+  });
+
+  it('refuses an ordinal that is not one a group could have had', () => {
+    expect(parseEntryReference('ABCD-EFGH:0')).toBeNull();
+    expect(parseEntryReference(`ABCD-EFGH:${MAX_GROUP_ENTRIES + 1}`)).toBeNull();
+    expect(parseEntryReference('ABCD-EFGH:x')).toBeNull();
+    expect(parseEntryReference('ABCD-EFGH:1:2')).toBeNull();
+    expect(parseEntryReference('ABCD-EFGH:')).toBeNull();
+    expect(parseEntryReference(':1')).toBeNull();
+    expect(parseEntryReference('   ')).toBeNull();
   });
 });

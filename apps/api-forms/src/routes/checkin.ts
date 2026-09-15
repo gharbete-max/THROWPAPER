@@ -1,16 +1,29 @@
 import { z } from 'zod';
 import type { FastifyInstance, FastifyReply } from 'fastify';
-import { api } from '@tp/shared';
+import { api, forms as formSchemas } from '@tp/shared';
+
+const { entryReference, MAX_GROUP_ENTRIES, REGISTRANT_ENTRY } = formSchemas;
 import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
 import type { Repositories } from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
 import { attendanceOf, checkIn } from '../checkin/service.js';
+import { guestsForAll } from '../checkin/party.js';
 import { attendeeName } from '../documents/admission.js';
 
 const EventParam = z.object({ id: z.string().uuid() });
 const SubmissionParam = z.object({ id: z.string().uuid() });
 const UndoParam = z.object({ id: z.string().uuid(), submissionId: z.string().uuid() });
+
+/**
+ * Which card to take back, defaulting to the registrant's.
+ *
+ * A query parameter rather than a second path segment, so every existing caller keeps working and
+ * keeps meaning what it meant: before guests, a submission had exactly one arrival.
+ */
+const UndoQuery = z.object({
+  entry: z.coerce.number().int().min(0).max(MAX_GROUP_ENTRIES).default(REGISTRANT_ENTRY),
+});
 
 const errorResponses = {
   401: api.ErrorResponse,
@@ -25,22 +38,42 @@ const CheckInRequest = z.object({
 
 const AttendeeSummary = z.object({
   submissionId: z.string().uuid(),
+  /** The card's own reference: `ABCD-EFGH` for the registrant, `ABCD-EFGH:2` for their guest. */
   reference: z.string(),
   name: z.string(),
   email: z.string().nullable(),
   locale: z.string(),
   revoked: z.boolean(),
   checkedInAt: z.string().nullable(),
+  /**
+   * 0 for the registrant, 1-based for a guest.
+   *
+   * Defaulted so a response written before guests existed still parses as the registrant, which is
+   * what it was.
+   */
+  entryIndex: z.number().int().nonnegative().default(0),
+  /** Who brought them, for a guest. Null for a registrant, who brought themselves. */
+  broughtBy: z.string().nullable().default(null),
 });
 
 const CheckInResponse = z.object({
-  outcome: z.enum(['admitted', 'already', 'revoked', 'wrong-event', 'not-found', 'bad-signature']),
+  outcome: z.enum([
+    'admitted',
+    'already',
+    'revoked',
+    'wrong-event',
+    'not-found',
+    'no-such-guest',
+    'bad-signature',
+  ]),
   attendee: AttendeeSummary.nullable(),
   checkedInAt: z.string().nullable(),
 });
 
 const AttendanceResponse = z.object({
+  /** People expected, counting guests. `registrations` is the number of rows behind them. */
   registered: z.number().int(),
+  registrations: z.number().int(),
   checkedIn: z.number().int(),
   noShow: z.number().int(),
   revoked: z.number().int(),
@@ -99,7 +132,12 @@ export function registerCheckInRoutes(
 
       return reply.send({
         outcome: result.outcome,
-        attendee: result.submission ? toAttendee(result.submission, result.checkedInAt) : null,
+        attendee: result.submission
+          ? toAttendee(result.submission, result.checkedInAt, {
+              entryIndex: result.entryIndex,
+              guestName: result.guestName,
+            })
+          : null,
         checkedInAt: result.checkedInAt?.toISOString() ?? null,
       });
     },
@@ -118,23 +156,27 @@ export function registerCheckInRoutes(
     schema: {
       tags: ['check-in'],
       params: UndoParam,
+      querystring: UndoQuery,
       response: { 204: z.null(), ...errorResponses },
     },
     handler: async (request, reply) => {
       const auth = request.auth;
       if (!auth) return unauthenticated(reply);
       const { id, submissionId } = UndoParam.parse(request.params);
+      const { entry } = UndoQuery.parse(request.query);
 
       const event = await deps.repos.events.findById(auth.organisation.id, id);
       if (!event) return notFound(reply);
 
-      const undone = await deps.repos.checkIns.withdraw(auth.organisation.id, submissionId);
+      // One card. Taking the registrant's arrival back must not silently take their guests'
+      // arrivals back with it — those people are still standing in the room.
+      const undone = await deps.repos.checkIns.withdraw(auth.organisation.id, submissionId, entry);
       if (undone) {
         await recordAudit(deps.repos, request, {
           action: 'checkin.undone',
           entityType: 'submission',
           entityId: submissionId,
-          after: { eventId: id },
+          after: { eventId: id, entryIndex: entry },
         });
       }
       return reply.code(204).send();
@@ -161,14 +203,41 @@ export function registerCheckInRoutes(
       const submissions = await deps.repos.submissions.listForEvent(auth.organisation.id, id);
 
       const checkIns = await deps.repos.checkIns.listForEvent(auth.organisation.id, id);
-      const byId = new Map(checkIns.map((entry) => [entry.submissionId, entry.checkedInAt]));
-      const attendance = attendanceOf(submissions, checkIns);
+      /**
+       * Keyed by card, not by submission: a registration and each of its guests arrive separately.
+       */
+      const arrivals = new Map(
+        checkIns.map((entry) => [`${entry.submissionId}:${entry.entryIndex}`, entry.checkedInAt]),
+      );
+
+      const parties = await guestsForAll(deps.repos, submissions);
+      const attendance = attendanceOf(
+        submissions,
+        checkIns,
+        (submission) => 1 + (parties.get(submission.id)?.length ?? 0),
+      );
+
+      const complete = submissions.filter((submission) => submission.status === 'complete');
 
       return reply.send({
         ...attendance,
-        attendees: submissions
-          .filter((submission) => submission.status === 'complete')
-          .map((submission) => toAttendee(submission, byId.get(submission.id) ?? null)),
+        /**
+         * One row per person, guests immediately after whoever brought them.
+         *
+         * Grouped rather than sorted by name, because the door screen is read by somebody with a
+         * queue in front of them: "this is the member, these two are theirs" is the question being
+         * asked, and a flat alphabetical list separates a party across the page.
+         */
+        attendees: complete.flatMap((submission) => [
+          toAttendee(submission, arrivals.get(`${submission.id}:${REGISTRANT_ENTRY}`) ?? null),
+          ...(parties.get(submission.id) ?? []).map((guest) =>
+            toAttendee(
+              submission,
+              arrivals.get(`${submission.id}:${guest.entryIndex}`) ?? null,
+              guest,
+            ),
+          ),
+        ]),
       });
     },
   });
@@ -202,6 +271,13 @@ export function registerCheckInRoutes(
   });
 }
 
+/**
+ * One row on the door screen: a registrant, or one of the guests they brought.
+ *
+ * A guest borrows almost everything from the registration — the same email, the same language, the
+ * same revoked state — because they have none of their own. What is theirs is the reference on
+ * their card, their own name where the form names it, and the fact that somebody brought them.
+ */
 function toAttendee(
   submission: {
     id: string;
@@ -212,15 +288,31 @@ function toAttendee(
     data: Record<string, unknown>;
   },
   checkedInAt: Date | null,
+  guest: { entryIndex: number; guestName: string | null } = {
+    entryIndex: REGISTRANT_ENTRY,
+    guestName: null,
+  },
 ) {
+  const registrant = attendeeName(submission.data);
+  const isGuest = guest.entryIndex !== REGISTRANT_ENTRY;
+
   return {
     submissionId: submission.id,
-    reference: submission.reference,
-    name: attendeeName(submission.data),
+    reference: entryReference(submission.reference, guest.entryIndex),
+    /**
+     * A guest with no name answer shows as empty rather than borrowing the registrant's.
+     *
+     * Two rows reading "Alva Öberg" on a door screen is worse than one reading "Alva Öberg" and
+     * one blank: the second is obviously a guest whose name was not asked for, and the first is a
+     * duplicate somebody will try to resolve.
+     */
+    name: isGuest ? (guest.guestName ?? '') : registrant,
     email: submission.email,
     locale: submission.locale,
     revoked: submission.revokedAt !== null,
     checkedInAt: checkedInAt?.toISOString() ?? null,
+    entryIndex: guest.entryIndex,
+    broughtBy: isGuest ? registrant || submission.reference : null,
   };
 }
 

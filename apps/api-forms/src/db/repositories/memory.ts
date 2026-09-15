@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { ocrForInvoice } from '@tp/shared/invoicing';
+import { forms as formSchemas } from '@tp/shared';
 import type {
   AuditEntryInput,
   CheckInRecord,
@@ -666,14 +667,20 @@ export function createMemoryRepositories(
         state.checkIns
           .filter((c) => c.organisationId === organisationId && c.eventId === eventId)
           .map((c) => ({ ...c })),
-      findBySubmission: async (submissionId) => {
-        const found = state.checkIns.find((c) => c.submissionId === submissionId);
+      findBySubmission: async (submissionId, entryIndex = formSchemas.REGISTRANT_ENTRY) => {
+        const found = state.checkIns.find(
+          (c) => c.submissionId === submissionId && c.entryIndex === entryIndex,
+        );
         return found ? { ...found } : null;
       },
       // Find and insert with no `await` between them, mirroring the unique index in Postgres:
-      // two simultaneous scans of one card produce one row.
+      // two simultaneous scans of one card produce one row. The card, not the party — a guest and
+      // the member who brought them are separate arrivals with separate rows.
       admit: async (input) => {
-        const existing = state.checkIns.find((c) => c.submissionId === input.submissionId);
+        const entryIndex = input.entryIndex ?? formSchemas.REGISTRANT_ENTRY;
+        const existing = state.checkIns.find(
+          (c) => c.submissionId === input.submissionId && c.entryIndex === entryIndex,
+        );
         if (existing) return { created: false, checkIn: { ...existing } };
 
         const record: CheckInRecord = {
@@ -684,14 +691,20 @@ export function createMemoryRepositories(
           checkedInAt: new Date(),
           checkedInByUserId: input.checkedInByUserId,
           method: input.method,
+          entryIndex,
         };
         state.checkIns.push(record);
         return { created: true, checkIn: { ...record } };
       },
-      withdraw: async (organisationId, submissionId) => {
+      withdraw: async (organisationId, submissionId, entryIndex = formSchemas.REGISTRANT_ENTRY) => {
         const before = state.checkIns.length;
         state.checkIns = state.checkIns.filter(
-          (c) => !(c.organisationId === organisationId && c.submissionId === submissionId),
+          (c) =>
+            !(
+              c.organisationId === organisationId &&
+              c.submissionId === submissionId &&
+              c.entryIndex === entryIndex
+            ),
         );
         return state.checkIns.length < before;
       },

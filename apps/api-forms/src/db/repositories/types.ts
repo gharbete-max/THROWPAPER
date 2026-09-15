@@ -496,11 +496,20 @@ export interface CheckInRecord {
   checkedInAt: Date;
   checkedInByUserId: string | null;
   method: 'scan' | 'manual';
+  /**
+   * Which card was scanned: 0 for the registrant, 1-based for a guest.
+   *
+   * A registration and the people it brought are separate arrivals — see
+   * `docs/adr/0003-repeating-groups.md`. Every method below takes it, and every one of them
+   * defaults it to the registrant, because that is what every caller written before guests existed
+   * meant and what every row already in the table is.
+   */
+  entryIndex: number;
 }
 
 export interface CheckInRepository {
   listForEvent(organisationId: string, eventId: string): Promise<CheckInRecord[]>;
-  findBySubmission(submissionId: string): Promise<CheckInRecord | null>;
+  findBySubmission(submissionId: string, entryIndex?: number): Promise<CheckInRecord | null>;
   /**
    * Idempotent admit.
    *
@@ -513,6 +522,7 @@ export interface CheckInRepository {
     eventId: string;
     checkedInByUserId: string | null;
     method: 'scan' | 'manual';
+    entryIndex?: number;
   }): Promise<{ created: boolean; checkIn: CheckInRecord }>;
   /**
    * Take a check-in back — a mis-scan at the door, undone seconds later by the person who made it.
@@ -520,8 +530,12 @@ export interface CheckInRepository {
    * A real delete rather than a flag, because a withdrawn check-in must not count, must not block
    * the next scan of the same card, and must not show as an arrival. The audit row is the record
    * that it happened. Returns whether there was anything to take back.
+   *
+   * One card, not a party: undoing a mis-scan means undoing the scan that was made. Taking the
+   * registrant's arrival back would otherwise silently take their guests' arrivals back with it,
+   * and those people are still standing in the room.
    */
-  withdraw(organisationId: string, submissionId: string): Promise<boolean>;
+  withdraw(organisationId: string, submissionId: string, entryIndex?: number): Promise<boolean>;
 }
 
 export interface BrandKitRecord {
