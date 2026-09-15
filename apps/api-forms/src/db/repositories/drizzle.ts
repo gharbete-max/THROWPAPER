@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { and, asc, desc, eq, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import { ocrForInvoice } from '@tp/shared/invoicing';
+import { forms as formSchemas } from '@tp/shared';
 import {
   brandKits,
   auditLog,
@@ -792,16 +793,27 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .where(and(eq(checkIns.organisationId, organisationId), eq(checkIns.eventId, eventId)))
           .orderBy(desc(checkIns.checkedInAt))) as CheckInRecord[],
 
-      findBySubmission: async (submissionId) =>
+      findBySubmission: async (submissionId, entryIndex = formSchemas.REGISTRANT_ENTRY) =>
         first(
-          await db.select().from(checkIns).where(eq(checkIns.submissionId, submissionId)).limit(1),
+          await db
+            .select()
+            .from(checkIns)
+            .where(
+              and(eq(checkIns.submissionId, submissionId), eq(checkIns.entryIndex, entryIndex)),
+            )
+            .limit(1),
         ) as CheckInRecord | null,
 
       /**
-       * The unique index on submission_id is the guarantee, not a prior read: `do nothing` means
-       * a concurrent scan loses the insert race harmlessly and we return the row that won.
+       * The unique index is the guarantee, not a prior read: `do nothing` means a concurrent scan
+       * loses the insert race harmlessly and we return the row that won.
+       *
+       * The conflict target is both columns, matching the index. Naming only `submission_id` would
+       * not match any unique constraint now, and Postgres answers that with an error rather than
+       * with the quiet fallback the name suggests.
        */
       admit: async (input) => {
+        const entryIndex = input.entryIndex ?? formSchemas.REGISTRANT_ENTRY;
         const [row] = await db
           .insert(checkIns)
           .values({
@@ -810,8 +822,9 @@ export function createDrizzleRepositories(db: Db): Repositories {
             eventId: input.eventId,
             checkedInByUserId: input.checkedInByUserId,
             method: input.method,
+            entryIndex,
           })
-          .onConflictDoNothing({ target: checkIns.submissionId })
+          .onConflictDoNothing({ target: [checkIns.submissionId, checkIns.entryIndex] })
           .returning();
 
         if (row) return { created: true, checkIn: row as CheckInRecord };
@@ -820,20 +833,26 @@ export function createDrizzleRepositories(db: Db): Repositories {
           await db
             .select()
             .from(checkIns)
-            .where(eq(checkIns.submissionId, input.submissionId))
+            .where(
+              and(
+                eq(checkIns.submissionId, input.submissionId),
+                eq(checkIns.entryIndex, entryIndex),
+              ),
+            )
             .limit(1),
         ) as CheckInRecord | null;
         if (!existing) throw new Error('check-in neither inserted nor found');
         return { created: false, checkIn: existing };
       },
 
-      withdraw: async (organisationId, submissionId) => {
+      withdraw: async (organisationId, submissionId, entryIndex = formSchemas.REGISTRANT_ENTRY) => {
         const gone = await db
           .delete(checkIns)
           .where(
             and(
               eq(checkIns.organisationId, organisationId),
               eq(checkIns.submissionId, submissionId),
+              eq(checkIns.entryIndex, entryIndex),
             ),
           )
           .returning({ id: checkIns.id });

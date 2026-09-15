@@ -319,12 +319,23 @@ export const client = {
       checkedInAt: string | null;
     }>(`/v1/events/${eventId}/check-ins`, { method: 'POST', body: JSON.stringify({ code }) }),
 
-  undoCheckIn: (eventId: string, submissionId: string) =>
-    request<null>(`/v1/events/${eventId}/check-ins/${submissionId}`, { method: 'DELETE' }),
+  /**
+   * Take back **one card**, not a party.
+   *
+   * `entry` is 0 for the registrant and 1-based for a guest. Defaulted, so a caller that knows
+   * nothing of guests undoes exactly what it always undid — and so undoing a member's arrival
+   * never silently undoes their guests', who are still standing in the room.
+   */
+  undoCheckIn: (eventId: string, submissionId: string, entry = 0) =>
+    request<null>(`/v1/events/${eventId}/check-ins/${submissionId}?entry=${entry}`, {
+      method: 'DELETE',
+    }),
 
   attendance: (eventId: string) =>
     request<{
+      /** People expected, guests included. `registrations` is the number of rows behind them. */
       registered: number;
+      registrations: number;
       checkedIn: number;
       noShow: number;
       revoked: number;

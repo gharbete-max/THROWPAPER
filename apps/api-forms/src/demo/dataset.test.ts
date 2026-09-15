@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { buildDemoState } from './dataset.js';
+import { forms as formSchemas } from '@tp/shared';
+import { buildDemoState, DEMO_DEFINITION } from './dataset.js';
+import { partySizeOf } from '../checkin/service.js';
 
 /**
  * What a demonstrable Loppa contains.
@@ -95,5 +97,91 @@ describe('the demo dataset', () => {
       .map((invoice) => invoice.number);
 
     expect(bad).toEqual([]);
+  });
+
+  /**
+   * The seed and the schema, held against each other.
+   *
+   * This is the way a seed actually rots: the definition gains a field type or a rule, the seeded
+   * answers keep the old shape, and nothing notices until a demo opens a form whose answers it
+   * refuses to show. Parsing the definition and validating every seeded answer against it is the
+   * cheapest possible version of the check, and it runs in milliseconds.
+   */
+  describe('the demo form and the answers seeded against it', () => {
+    const definition = formSchemas.FormDefinition.parse(DEMO_DEFINITION);
+
+    it('is a form the product would let you publish', () => {
+      expect(formSchemas.definitionProblems(definition)).toEqual([]);
+    });
+
+    it('is fully translated into both languages it claims', () => {
+      const completeness = formSchemas.definitionCompleteness(definition, ['sv-SE', 'en-GB']);
+      expect(completeness.filter((locale) => !locale.complete)).toEqual([]);
+    });
+
+    it('seeds answers the validator accepts', () => {
+      const rejected = state.submissions
+        .map((submission) => ({
+          reference: submission.reference,
+          result: formSchemas.validateSubmission(
+            definition,
+            submission.data as formSchemas.SubmissionValues,
+          ),
+        }))
+        .filter((entry) => !entry.result.ok)
+        .map((entry) => `${entry.reference}: ${entry.result.issues.map((i) => i.key).join(', ')}`);
+
+      expect(rejected).toEqual([]);
+    });
+  });
+
+  /**
+   * Guests, which is the feature the demo exists to show off and the one most easily seeded flat.
+   *
+   * `CLAUDE.md` §Demo data does not list guests by name, but it does say the seed must leave the
+   * product "fully demonstrable" — and a repeating block that admits people demonstrates nothing
+   * if every seeded registration is a party of one.
+   */
+  describe('the guests it brings', () => {
+    const definition = formSchemas.FormDefinition.parse(DEMO_DEFINITION);
+    const group = formSchemas.admittingGroup(definition);
+
+    it('has exactly one block that admits its entries', () => {
+      expect(group?.key).toBe('guests');
+      expect(group?.admitNameKey).toBe('guest_name');
+    });
+
+    it('seeds registrations that actually bring somebody', () => {
+      const parties = state.submissions.map(
+        (submission) => partySizeOf(DEMO_DEFINITION, submission) - 1,
+      );
+
+      // Some bring nobody, some bring one, some bring two: all three states are on screen.
+      expect(parties.filter((guests) => guests === 0).length).toBeGreaterThan(0);
+      expect(parties.filter((guests) => guests === 1).length).toBeGreaterThan(0);
+      expect(parties.filter((guests) => guests === 2).length).toBeGreaterThan(0);
+    });
+
+    it('expects more people than registrations, which is the whole point', () => {
+      const people = state.submissions.reduce(
+        (total, submission) => total + partySizeOf(DEMO_DEFINITION, submission),
+        0,
+      );
+      expect(people).toBeGreaterThan(state.submissions.length);
+    });
+
+    /** A door screen with two rows called "Alva Öberg" is what per-entry names exist to prevent. */
+    it('never names a guest after the person who brought them', () => {
+      const clashes = state.submissions.filter((submission) => {
+        const entries = submission.data['guests'];
+        if (!Array.isArray(entries)) return false;
+        return entries.some(
+          (entry) =>
+            (entry as Record<string, unknown>)['guest_name'] === submission.data['full_name'],
+        );
+      });
+
+      expect(clashes).toEqual([]);
+    });
   });
 });

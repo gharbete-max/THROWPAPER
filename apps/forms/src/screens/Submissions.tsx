@@ -13,6 +13,7 @@ import { pickText } from '@tp/i18n';
 import {
   answerableFields,
   columnsFor,
+  flattenAnswers,
   toCsv,
   toSheetRows,
   type ExportColumn,
@@ -62,14 +63,23 @@ export function Submissions({ formId }: { formId: string }) {
   const exportColumns: ExportColumn[] = useMemo(() => {
     if (!definition) return [];
     const fieldLabels = new Map(
-      answerableFields(definition).map((field) => [
-        field.key,
-        pickText(locales, 'label' in field ? field.label : {}, locale).value || field.key,
-      ]),
+      /*
+       * A repeating block's children are named too, so `guests_1_name` gets a heading a person
+       * wrote rather than the key. Flat, because the map is keyed by field key and a child's key
+       * is unique within its block — which is all `entryHeader` looks up.
+       */
+      answerableFields(definition).flatMap((field) =>
+        [field, ...(field.type === 'repeating_group' ? field.fields : [])].map((entry) => [
+          entry.key,
+          pickText(locales, 'label' in entry ? entry.label : {}, locale).value || entry.key,
+        ]),
+      ) as [string, string][],
     );
     return columnsFor(definition, {
       header: (key) => t(`submissions.column.${key}`),
       fieldHeader: (key) => fieldLabels.get(key) ?? key,
+      entryHeader: (group, number, child) =>
+        t('submissions.column.entry', { group, number, child }),
     });
   }, [definition, locale, locales, t]);
 
@@ -80,12 +90,19 @@ export function Submissions({ formId }: { formId: string }) {
         submittedAt: row.submittedAt ?? row.createdAt,
         locale: row.locale,
         status: row.status,
-        ...row.data,
+        /*
+         * Answers with each block's entries spread across its numbered columns.
+         *
+         * The stored answer keeps its nested shape everywhere else — this is the one place it is
+         * flattened, and it is flattened here rather than on the server so that what the grid
+         * shows and what the CSV contains come from the same call.
+         */
+        ...(definition ? flattenAnswers(definition, row.data) : row.data),
         // Carried alongside the answers so a cell can find the name for the key it holds.
         __submissionId: row.id,
         __uploads: row.uploads,
       })),
-    [rows],
+    [rows, definition],
   );
 
   /**

@@ -40,6 +40,14 @@ export const FIELD_TYPES = [
    */
   'shape',
   'drawing',
+  /**
+   * A block of questions asked a variable number of times — guests, readings, items inspected.
+   *
+   * The one field type that contains other fields, and the reason `Field` is built from two unions
+   * rather than one. `docs/adr/0003-repeating-groups.md` has the design; the short version is that
+   * the CSV decides everything about it, which is why `max` is required rather than optional.
+   */
+  'repeating_group',
 ] as const;
 
 export const FieldType = z.enum(FIELD_TYPES);
@@ -216,7 +224,15 @@ const TextRules = {
   pattern: z.string().max(200).optional(),
 };
 
-export const Field = z.discriminatedUnion('type', [
+/**
+ * Every variant that may appear **inside a repeating group's entry**, which is also every variant
+ * that may appear outside one — minus the two that cannot be nested.
+ *
+ * Declared once and spread into both unions rather than listed twice. A second list is a list that
+ * drifts: the day somebody adds a field type to one of them, a form built with it stops parsing
+ * inside a group, or starts parsing inside one when it should not.
+ */
+const entryVariants = [
   z.object({ ...base, type: z.literal('short_text'), ...TextRules }),
   z.object({
     ...base,
@@ -338,7 +354,6 @@ export const Field = z.discriminatedUnion('type', [
     label: LocalisedText,
     helpText: LocalisedText.optional(),
   }),
-  z.object({ id: base.id, key: base.key, type: z.literal('page_break') }),
   z.object({
     id: base.id,
     key: base.key,
@@ -474,9 +489,83 @@ export const Field = z.discriminatedUnion('type', [
     viewBoxWidth: z.number().int().min(1).max(4000).default(1000),
     viewBoxHeight: z.number().int().min(1).max(4000).default(300),
   }),
+] as const;
+
+/**
+ * A field as it appears inside one entry of a repeating group.
+ *
+ * Everything except a page break and another group. A page is a property of the form, and "page
+ * three of entry two" is not a place; nesting is refused because the numbered export above cannot
+ * survive it — `guests_2_children_3_name` is a column heading nobody reads.
+ */
+export const EntryField = z.discriminatedUnion('type', [...entryVariants]);
+export type EntryField = z.infer<typeof EntryField>;
+
+/**
+ * How many times a group may repeat, at the outside.
+ *
+ * A cap exists because `max` is what turns the export's column set back into a pure function of
+ * the definition. Twenty because a group that could repeat a hundred times is a spreadsheet
+ * wearing a form, and the product for that is a spreadsheet.
+ */
+export const MAX_GROUP_ENTRIES = 20;
+
+const repeatingGroupVariant = z.object({
+  id: base.id,
+  key: base.key,
+  label: base.label,
+  helpText: base.helpText,
+  /** At least one entry. The per-entry count lives in `min`; this is the author's shorthand. */
+  required: base.required,
+  width: base.width,
+  showWhen: base.showWhen,
+  type: z.literal('repeating_group'),
+  fields: z.array(EntryField).min(1),
+  min: z.number().int().min(0).max(MAX_GROUP_ENTRIES).default(0),
+  /**
+   * **Required, not optional.** The whole export design rests on it: with a maximum, the columns a
+   * form produces are a function of the form; without one, you cannot know how many columns you
+   * need until you have read every submission, and `columnsFor(definition)` takes a definition and
+   * nothing else.
+   *
+   * It is also the honest thing to make an author decide. "How many guests may somebody bring" has
+   * a real answer, because a room has a capacity.
+   */
+  max: z.number().int().min(1).max(MAX_GROUP_ENTRIES),
+  /** The button — "Add a guest". Falls back to a generic label from the catalogue. */
+  addLabel: LocalisedText.optional(),
+  /** The heading above each entry — "Guest", drawn as "Guest 1", "Guest 2". */
+  entryLabel: LocalisedText.optional(),
+  /**
+   * Whether each entry is a person who is admitted in their own right.
+   *
+   * `false` by default, and that default is the point: a group of meter readings or inspected
+   * items is not a queue of people, and turning every repeating group into a stack of tickets
+   * would give the feature a second meaning nobody asked it for. At most one group per form may
+   * set this — see `definitionProblems`.
+   *
+   * Only honoured on a form bound to an event, exactly like the registrant's own card.
+   */
+  admits: z.boolean().default(false),
+  /**
+   * Which child question names the person, for the card and the door screen.
+   *
+   * Named rather than guessed. The registrant's name is found by a heuristic over well-known keys
+   * because a form's top level is not ours to constrain, but a group's children were laid out by
+   * the author two fields ago — asking them which one is the name costs one dropdown and removes
+   * an entire class of card that says "—" where a name should be.
+   */
+  admitNameKey: FieldKey.optional(),
+});
+
+export const Field = z.discriminatedUnion('type', [
+  ...entryVariants,
+  z.object({ id: base.id, key: base.key, type: z.literal('page_break') }),
+  repeatingGroupVariant,
 ]);
 
 export type Field = z.infer<typeof Field>;
+export type RepeatingGroupField = z.infer<typeof repeatingGroupVariant>;
 
 export type PresentationalType = (typeof PRESENTATIONAL_TYPES)[number];
 
@@ -489,6 +578,15 @@ export type PresentationalType = (typeof PRESENTATIONAL_TYPES)[number];
  * the way through to an empty column in the export.
  */
 export type AnswerableField = Exclude<Field, { type: PresentationalType }>;
+
+/**
+ * An answerable field holding **one** value, which is every answerable field but a group.
+ *
+ * A group's answer is an array of objects, so it goes nowhere near `validateField`'s per-value
+ * switch — and saying so in the type is what keeps that switch exhaustive rather than growing a
+ * case that would have to invent a scalar meaning for a list of entries.
+ */
+export type ScalarField = Exclude<AnswerableField, { type: 'repeating_group' }>;
 
 /**
  * Every property a field of this type carries, read out of the schema itself.

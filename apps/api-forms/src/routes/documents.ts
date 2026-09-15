@@ -6,6 +6,7 @@ import { requireAuth } from '../auth/plugin.js';
 import type { Repositories } from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
 import { resolveFormAccess } from '../forms/access.js';
+import { definitionsByVersion, partyOf } from '../checkin/party.js';
 import type { AdmissionDeps } from '../documents/admission-service.js';
 import { ADMISSION_BULK_JOB, renderAdmissionPdf } from '../documents/admission-service.js';
 import type { DocumentStore } from '../documents/store.js';
@@ -128,6 +129,23 @@ export function registerDocumentRoutes(
       const submissions = await deps.repos.submissions.list(auth.organisation.id, id);
       const eligible = submissions.filter((s) => s.status === 'complete' && s.eventId);
 
+      /*
+       * The total is **cards**, not registrations.
+       *
+       * A form whose registrations bring guests produces more documents than it has rows, and the
+       * job counts what it writes. Counting rows here would leave an operator watching a progress
+       * figure that runs past its own total and never reports finishing.
+       */
+      const definitions = await definitionsByVersion(
+        deps.repos,
+        eligible.map((submission) => submission.formId),
+      );
+      const cardCount = eligible.reduce(
+        (total, submission) =>
+          total + partyOf(definitions.get(submission.formVersionId), submission).length,
+        0,
+      );
+
       // Keyed on the form and its published version: re-asking for the same documents returns the
       // job already running rather than starting a second Chromium marathon.
       const job = await deps.repos.jobs.enqueue({
@@ -135,14 +153,14 @@ export function registerDocumentRoutes(
         kind: ADMISSION_BULK_JOB,
         idempotencyKey: `${ADMISSION_BULK_JOB}:${id}:${form.publishedVersion ?? 0}`,
         payload: { formId: id },
-        progressTotal: eligible.length,
+        progressTotal: cardCount,
       });
 
       await recordAudit(deps.repos, request, {
         action: 'admission.bulk_requested',
         entityType: 'form',
         entityId: id,
-        after: { jobId: job.id, count: eligible.length },
+        after: { jobId: job.id, registrations: eligible.length, cards: cardCount },
       });
 
       return reply.code(202).send(toJobResponse(job));

@@ -1033,6 +1033,80 @@ textarea {
   padding-block: calc(var(--tp-spacing-unit) * 0.5);
 }
 
+/* A repeating block's questions, in the properties panel. Indented against a rule, so the nesting
+ * is visible without a second panel: these belong to the block above them. */
+.builder__nested {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+}
+
+.builder__nested-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+}
+
+.builder__nested-open {
+  justify-content: flex-start;
+  min-width: 0;
+  text-align: start;
+}
+
+.builder__nested-open span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The child's own panel, opened in place. Spans every column of the row above it. */
+.builder__nested-editor {
+  grid-column: 1 / -1;
+  border-inline-start: var(--tp-border-width) solid var(--tp-colour-border);
+  padding-inline-start: var(--tp-spacing-unit);
+  margin-block: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.builder__nested-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+}
+
+/* A repeating block on the form itself.
+ *
+ * Each entry is a real `fieldset`, which browsers give a default border and padding that fight the
+ * form's own spacing. Reset, then given the same card treatment everything else on the page has,
+ * so a block reads as one thing containing several rather than as a stray outline. */
+.repeating-group {
+  gap: var(--tp-spacing-unit);
+}
+
+.repeating-group__entry {
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  padding: var(--tp-spacing-unit);
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+}
+
+.repeating-group__legend {
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
+  font-weight: 600;
+}
+
+/* Trailing, and quiet: removing an entry is not what somebody came to this block to do. */
+.repeating-group__remove {
+  align-self: flex-end;
+}
+
 /* The preview renders the real public components, so it needs the page's own colours around it
  * rather than the panel's — otherwise it reads as part of the editor instead of as the form. */
 .preview__page {

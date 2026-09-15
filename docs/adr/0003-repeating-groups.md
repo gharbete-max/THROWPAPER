@@ -114,14 +114,93 @@ impossible by construction rather than by a detector.
 - Sixteen or so new message keys across twelve catalogues, per rule 4.
 - The report and print CSS need a repeated block, which is the part most likely to surprise.
 
-## Deferred, deliberately
+## Amendment: a guest *is* admitted, and here is how
 
-**A guest is not a registrant.** The obvious next question for an AGM is whether each entry in a
-"guests" group should get its own admission card and its own check-in — and under this design it
-does not, because the submission is still one row with one reference. That is the right default:
-an entry is an *answer*, not a person with a ticket.
+**This section replaces a deferral.** The original text said an entry is an answer rather than a
+person with a ticket, and that making entries independently admissible needed its own ADR because
+it needed a per-entry identity, a per-entry QR, and an answer to "what does the door do when the
+member arrives and the guest does not". That was asked for, so those three questions are answered
+here rather than in a fourth document — the design only makes sense read against the export
+decision above, and splitting it would separate the constraint from the thing it constrains.
 
-Making entries independently admissible is a different feature with its own model — it needs a
-per-entry identity, a per-entry QR, and an answer to "what does the door do when the member arrives
-and the guest does not". It should not be reached by quietly giving repeating groups a second
-meaning. When somebody asks for it, it is its own ADR.
+The default does not change. **A group admits nobody unless it says it does**: `admits` is `false`,
+and a group of readings or inspected items stays exactly what it was. What follows applies to the
+one group on a form that sets `admits: true`.
+
+### The identity is derived, so the unique index stays true
+
+The obvious implementation gives each entry a row and a reference of its own, and it is the wrong
+one: `submissions_org_reference_idx` is unique on `(organisation, reference)`, and the whole export
+design above rests on one submission being one row. Minting references for guests puts three rows
+in a table whose uniqueness constraint was the thing keeping the CSV and the database agreeing.
+
+So an entry's identity is **derived from the submission's, never stored**:
+
+```
+ABCD-EFGH      the registrant
+ABCD-EFGH:1    their first guest
+ABCD-EFGH:2    their second
+```
+
+Nothing new is written. `ABCD-EFGH:1` is a pure function of a reference and an ordinal, so there is
+no second identifier to keep in step, no second uniqueness constraint, and no way for a guest to
+exist without the registration that brought them.
+
+**The separator is `:` and not `-` because `-` is already in the reference.** A reference is
+`XXXX-XXXX` over the Crockford alphabet, which includes digits — so `ABCD-1234` is a reference that
+already exists, and hyphen-numbering would read it as entry 1234 of a submission called `ABCD`.
+That is not a rare collision to be handled; it is an ambiguity in the grammar, and the fix is a
+separator the alphabet cannot produce.
+
+**Zero is the registrant.** Entry ordinals start at 1 and the registrant is 0, so the number in the
+reference and the number in the database are the same number, and "who is this card for" has one
+answer everywhere rather than an off-by-one between the door and the table.
+
+### The QR changes in no way at all
+
+The token is `<reference>.<signature>` and the signature covers `<reference> <eventId>`. Feeding it
+`ABCD-EFGH:1` instead of `ABCD-EFGH` is the entire change: each guest gets a distinct signature,
+bound to that guest and that event, and forging one from another means forging an HMAC.
+
+Verification stays offline — reference plus signature, no database round trip — which is what the
+door depends on and what a signed-but-separate guest table would have cost.
+
+### The door: the member arriving says nothing about the guest
+
+**Each card is admitted independently.** Scanning the member's card admits the member. The guest is
+a second scan, or does not arrive, and the check-in table says so honestly.
+
+The alternative — the member's scan admits their whole party — was considered and refused. It is
+how a paper list works, and it destroys the one number an event organiser wants at 19:30: how many
+people are in the room. A party of four admitted by one scan is three people the fire officer
+cannot account for.
+
+`check_ins` therefore gains `entry_index`, `NOT NULL DEFAULT 0`, and the unique index moves from
+`(submission_id)` to `(submission_id, entry_index)`. Not nullable: Postgres treats NULLs as
+distinct in a unique index, so a nullable column would have quietly made the registrant's check-in
+non-idempotent — and idempotency is the property the offline scanner is built on.
+
+**Revoking the registration revokes the party.** A guest has no registration of their own to
+survive; they exist because somebody registered and said they were bringing them. `revokedAt` stays
+on the submission and the door refuses every card derived from it.
+
+### What this costs, stated plainly
+
+- **`registered` stops meaning `count(submissions)`.** An event with 80 registrations and 40 guests
+  expects 120 people, and an attendance figure that says 80 is wrong in the direction that matters.
+  Counting admissions rather than submissions is the change; capacity has to be read the same way
+  or a room fills past its limit while the number says there is space.
+- **One admitting group per form**, enforced as a definition problem. Two would make `:1` ambiguous,
+  and a reference whose meaning depends on which group you had in mind is not an identity.
+- **Bulk generation produces more documents than submissions.** A ZIP for 200 registrations with
+  guests is no longer 200 files, and the progress count has to be of cards rather than of rows.
+
+### Still deferred
+
+**Revoking one guest.** The party is revoked or it is not. Per-entry revocation needs somewhere to
+record the state, which is the stored per-entry row this design exists to avoid — so it wants a real
+reason before it is built, and "a guest dropped out" is answered today by editing the submission.
+
+**A guest's own email.** Cards go to the person who registered, who hands them on. Mailing guests
+directly would make a guest a contactable party with a preferred language and an unsubscribe state,
+which is a person in the mailer's sense and belongs to that product's model, not this one.

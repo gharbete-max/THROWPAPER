@@ -60,6 +60,20 @@ const PANEL_CONTROLS = [
   'viewBoxHeight',
 ];
 
+/**
+ * Controls a **particular** field type has that nothing else does.
+ *
+ * Scoped rather than added to the list above, because `min` and `max` mean entry counts on a
+ * repeating block and value bounds on a number — and putting them in the global list would have
+ * quietly excused a number field losing its bounds, which is one of the eleven holes this test
+ * was written to close.
+ */
+const PANEL_CONTROLS_BY_TYPE: Partial<Record<string, readonly string[]>> = {
+  // A repeating block, in `GroupProperties.tsx`. `fields` is add, remove and reorder there; each
+  // child is then edited by this very panel, rendered in place.
+  repeating_group: ['fields', 'min', 'max', 'addLabel', 'entryLabel', 'admits', 'admitNameKey'],
+};
+
 /** Deliberately not editable: an id is internal, and the type is chosen from the palette. */
 const NO_CONTROL_BY_DESIGN = ['id', 'type'];
 
@@ -69,6 +83,7 @@ describe('the properties panel', () => {
     const reachable = new Set<string>([
       ...NO_CONTROL_BY_DESIGN,
       ...PANEL_CONTROLS,
+      ...(PANEL_CONTROLS_BY_TYPE[type] ?? []),
       ...rulesFor({ type } as unknown as Field),
     ]);
 

@@ -693,4 +693,49 @@ export const isIS: Record<MessageKey, string> = {
   'validation.time': 'Sláðu inn tíma.',
   'validation.timeMin': 'Ekki fyrr en {min}.',
   'validation.timeMax': 'Ekki síðar en {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Bæta við öðru',
+  'group.remove': 'Fjarlægja',
+  'group.removeEntry': 'Fjarlægja {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Engu bætt við enn.',
+  'group.full': 'Þetta eyðublað leyfir mest {max}.',
+  'fieldType.repeating_group': 'Endurtekin eining',
+  'palette.repeating': 'Endurtekning',
+  'field.fields': 'Spurningar í þessari einingu',
+  'field.fieldsHint':
+    'Veldu eina til að breyta henni. Hver spurning hér er spurð einu sinni fyrir hverja færslu.',
+  'field.minEntries': 'Fæstu færslur',
+  'field.maxEntries': 'Flestar færslur',
+  'field.maxEntriesHint':
+    'Nauðsynlegt. Útflutningurinn hefur eitt dálkasett fyrir hverja færslu, svo eyðublaðið verður að tilgreina fjöldann.',
+  'field.addLabel': 'Texti á hnappi',
+  'field.entryLabel': 'Hvað ein færsla heitir',
+  'field.entryLabelHint': 'Birtist sem fyrirsögn yfir hverri — „Gestur 1“, „Gestur 2“.',
+  'field.admits': 'Hver færsla fær sitt eigið aðgangskort',
+  'field.admitsHint':
+    'Fyrir gesti á viðburði. Þeir eru skráðir inn sérstaklega frá þeim sem skráði sig, og aðeins ein eining á eyðublaði getur gert þetta.',
+  'field.admitNameKey': 'Hvaða spurning er nafnið þeirra',
+  'field.admitNameKeyHint': 'Prentað á kortið og birt á skjánum við innganginn.',
+  'problem.group-min-above-max':
+    'Einingin „{key}“ krefst að minnsta kosti {min} færslna en leyfir mest {max}.',
+  'problem.group-duplicate-child-key':
+    'Reitalykillinn „{key}“ er notaður oftar en einu sinni í „{group}“.',
+  'problem.group-admit-name-unknown':
+    '„{group}“ tilgreinir „{key}“ sem nafn þátttakanda en hefur enga slíka spurningu.',
+  'problem.multiple-admitting-groups':
+    'Aðeins ein eining á eyðublaði getur gefið færslum sínum eigið aðgangskort.',
+  'validation.group': 'Þetta svar er ekki á réttu formi.',
+  'validation.groupMin': 'Bættu við að minnsta kosti {min}.',
+  'validation.groupMax': 'Mest {max}.',
+  'checkin.outcome.no-such-guest': 'Gesturinn er ekki á þessari skráningu',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Gestur hjá {name}',
 };

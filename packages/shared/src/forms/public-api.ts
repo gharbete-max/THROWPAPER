@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { UploadKey } from './uploads.js';
 import { BrandKit } from '../brand/index.js';
 import { Locale, LocalisedText } from '../api/common.js';
-import { FormDefinition } from './definition.js';
+import { FormDefinition, MAX_GROUP_ENTRIES } from './definition.js';
 
 /** Shapes for the public, unauthenticated form endpoints. */
 
@@ -45,7 +45,22 @@ export const ValidationIssueResponse = z.object({
   params: z.record(z.union([z.string(), z.number()])).optional(),
 });
 
-const AnswerValue = z.union([z.string(), z.number(), z.boolean(), z.array(z.string()), z.null()]);
+const ScalarAnswer = z.union([z.string(), z.number(), z.boolean(), z.array(z.string()), z.null()]);
+
+/**
+ * One entry of a repeating group, keyed by the child's own key.
+ *
+ * Deliberately not recursive: a group may not contain a group, so an entry holds single values and
+ * nothing else. Making the schema mirror that is what stops a client posting arbitrarily nested
+ * JSON into a form's answers, which is a parser running on a stranger's bytes with no bottom.
+ *
+ * `MAX_GROUP_ENTRIES` bounds the list here as well as in the validator. The validator's version
+ * produces a message a respondent can act on; this one exists so a request with ten thousand
+ * entries is refused before anything walks it.
+ */
+const GroupAnswer = z.array(z.record(ScalarAnswer)).max(MAX_GROUP_ENTRIES);
+
+const AnswerValue = z.union([ScalarAnswer, GroupAnswer]);
 
 export const SubmitRequest = z.object({
   locale: Locale,

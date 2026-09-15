@@ -2,9 +2,11 @@ import {
   PRESENTATIONAL_TYPES,
   type AnswerableField,
   type Condition,
+  type EntryField,
   type Field,
   type FieldWidth,
   type FormDefinition,
+  type RepeatingGroupField,
 } from './definition.js';
 import { isDangerousPattern } from './pattern-safety.js';
 
@@ -15,6 +17,52 @@ export function answerableFields(definition: FormDefinition): AnswerableField[] 
   return definition.fields.filter(
     (field): field is AnswerableField => !presentational.has(field.type),
   );
+}
+
+/** The children of a group that collect an answer. Same rule, one level down. */
+export function answerableChildren(group: RepeatingGroupField): EntryField[] {
+  return group.fields.filter((child) => !presentational.has(child.type));
+}
+
+/** Every repeating group on a form, in the order they appear. */
+export function repeatingGroups(definition: FormDefinition): RepeatingGroupField[] {
+  return definition.fields.filter(
+    (field): field is RepeatingGroupField => field.type === 'repeating_group',
+  );
+}
+
+/**
+ * The group whose entries are admitted in their own right, if a form has one.
+ *
+ * At most one, enforced by `definitionProblems` — an entry's identity is its submission's reference
+ * plus an ordinal, and an ordinal that could mean "second guest" or "second vehicle" depending on
+ * which group you had in mind is not an identity. See `docs/adr/0003-repeating-groups.md`.
+ */
+export function admittingGroup(definition: FormDefinition): RepeatingGroupField | null {
+  return repeatingGroups(definition).find((group) => group.admits) ?? null;
+}
+
+/**
+ * How few entries a group will accept.
+ *
+ * `required` on the group is the author's shorthand for "at least one", so it raises a `min` of
+ * nought to one and leaves a larger `min` alone. Two ways to say the same thing exist because the
+ * builder's required toggle is the one every other field type has, and an author should not have
+ * to know that this field type spells it with a number.
+ */
+export function minEntries(group: Pick<RepeatingGroupField, 'min' | 'required'>): number {
+  return group.required ? Math.max(1, group.min) : group.min;
+}
+
+/**
+ * Where an answer inside a group lives, as one string: `guests[0].name`.
+ *
+ * Validation issues and rendered inputs both need to name a box inside an entry, and they have to
+ * agree or an error is attached to nothing. One function, so they cannot disagree.
+ */
+export function entryIssueKey(groupKey: string, index: number, childKey?: string): string {
+  const entry = `${groupKey}[${index}]`;
+  return childKey === undefined ? entry : `${entry}.${childKey}`;
 }
 
 /**
@@ -55,77 +103,18 @@ export function translatableTexts(definition: FormDefinition): TranslatableText[
   const texts: TranslatableText[] = [];
 
   for (const field of definition.fields) {
-    if (field.type === 'page_break') continue;
-
-    if (field.type === 'rich_text') {
-      texts.push({
-        path: `field.${field.id}.content`,
-        fieldId: field.id,
-        text: field.content,
-        required: true,
-      });
-      continue;
-    }
-    /**
-     * Alt text is translatable but **not required**, unlike a label.
-     *
-     * An empty alt is a real choice — it means "decorative, skip this" — and a banner across the
-     * top of a form is exactly that. Requiring it would push people to type something rather than
-     * nothing, and a screen reader announcing "image" over and over is worse than silence.
-     */
-    if (field.type === 'image') {
-      texts.push({
-        path: `field.${field.id}.alt`,
-        fieldId: field.id,
-        text: field.alt,
-        required: false,
-      });
-      continue;
-    }
+    collectTexts(field, texts);
 
     /**
-     * Some fields carry no text at all, so there is nothing here to translate.
+     * A group's children are translated too, and a missing one blocks publishing just as it would
+     * at the top level.
      *
-     * Asked structurally rather than as a list of types. A hidden field has no label because
-     * nobody sees it; a shape and a drawing have none because a decoration that announced itself
-     * would be read aloud to somebody who gains nothing from hearing it. Either way the question
-     * is "does this have a label", and a list of type names would need extending every time the
-     * answer becomes true for a new one — which is exactly the drift these helpers exist to avoid.
+     * Walked here rather than forgotten: a group whose children were skipped would report a form
+     * as fully translated while half its questions existed in one language, and the person who
+     * found out would be the respondent.
      */
-    if (!('label' in field)) continue;
-
-    texts.push({
-      path: `field.${field.id}.label`,
-      fieldId: field.id,
-      text: field.label,
-      required: true,
-    });
-
-    if ('helpText' in field && field.helpText) {
-      texts.push({
-        path: `field.${field.id}.helpText`,
-        fieldId: field.id,
-        text: field.helpText,
-        required: false,
-      });
-    }
-    if ('placeholder' in field && field.placeholder) {
-      texts.push({
-        path: `field.${field.id}.placeholder`,
-        fieldId: field.id,
-        text: field.placeholder,
-        required: false,
-      });
-    }
-    if ('options' in field) {
-      for (const [index, option] of field.options.entries()) {
-        texts.push({
-          path: `field.${field.id}.options.${index}`,
-          fieldId: field.id,
-          text: option.label,
-          required: true,
-        });
-      }
+    if (field.type === 'repeating_group') {
+      for (const child of field.fields) collectTexts(child, texts);
     }
   }
 
@@ -143,6 +132,107 @@ export function translatableTexts(definition: FormDefinition): TranslatableText[
   });
 
   return texts;
+}
+
+function collectTexts(field: Field, texts: TranslatableText[]): void {
+  if (field.type === 'page_break') return;
+
+  if (field.type === 'rich_text') {
+    texts.push({
+      path: `field.${field.id}.content`,
+      fieldId: field.id,
+      text: field.content,
+      required: true,
+    });
+    return;
+  }
+  /**
+   * Alt text is translatable but **not required**, unlike a label.
+   *
+   * An empty alt is a real choice — it means "decorative, skip this" — and a banner across the
+   * top of a form is exactly that. Requiring it would push people to type something rather than
+   * nothing, and a screen reader announcing "image" over and over is worse than silence.
+   */
+  if (field.type === 'image') {
+    texts.push({
+      path: `field.${field.id}.alt`,
+      fieldId: field.id,
+      text: field.alt,
+      required: false,
+    });
+    return;
+  }
+
+  /**
+   * Some fields carry no text at all, so there is nothing here to translate.
+   *
+   * Asked structurally rather than as a list of types. A hidden field has no label because
+   * nobody sees it; a shape and a drawing have none because a decoration that announced itself
+   * would be read aloud to somebody who gains nothing from hearing it. Either way the question
+   * is "does this have a label", and a list of type names would need extending every time the
+   * answer becomes true for a new one — which is exactly the drift these helpers exist to avoid.
+   */
+  if (!('label' in field)) return;
+
+  texts.push({
+    path: `field.${field.id}.label`,
+    fieldId: field.id,
+    text: field.label,
+    required: true,
+  });
+
+  if ('helpText' in field && field.helpText) {
+    texts.push({
+      path: `field.${field.id}.helpText`,
+      fieldId: field.id,
+      text: field.helpText,
+      required: false,
+    });
+  }
+  if ('placeholder' in field && field.placeholder) {
+    texts.push({
+      path: `field.${field.id}.placeholder`,
+      fieldId: field.id,
+      text: field.placeholder,
+      required: false,
+    });
+  }
+  if ('options' in field) {
+    for (const [index, option] of field.options.entries()) {
+      texts.push({
+        path: `field.${field.id}.options.${index}`,
+        fieldId: field.id,
+        text: option.label,
+        required: true,
+      });
+    }
+  }
+
+  /**
+   * A group's own wording, beyond its label: the button and the per-entry heading.
+   *
+   * Neither is required. Both fall back to a catalogue string — "Add another", "Entry 1" — which
+   * is translated into every language already, so an author who never writes them still gets a
+   * form that reads correctly in all twelve.
+   */
+  if (field.type === 'repeating_group') {
+    if (field.addLabel) {
+      texts.push({
+        path: `field.${field.id}.addLabel`,
+        fieldId: field.id,
+        text: field.addLabel,
+        required: false,
+      });
+    }
+    if (field.entryLabel) {
+      texts.push({
+        path: `field.${field.id}.entryLabel`,
+        fieldId: field.id,
+        text: field.entryLabel,
+        required: false,
+      });
+    }
+  }
 }
 
 export interface LocaleCompleteness {
@@ -175,7 +265,15 @@ export interface DefinitionProblem {
     | 'empty-options'
     | 'condition-unknown-field'
     | 'condition-forward-reference'
-    | 'unsafe-pattern';
+    | 'unsafe-pattern'
+    /** `min` above `max` is a group that can never be filled in correctly. */
+    | 'group-min-above-max'
+    /** Child keys are scoped to their group, so this is a collision *within* one. */
+    | 'group-duplicate-child-key'
+    /** `admitNameKey` names a child that is not there, so every card would say "—". */
+    | 'group-admit-name-unknown'
+    /** Two admitting groups make an entry's ordinal ambiguous — see ADR 0003. */
+    | 'multiple-admitting-groups';
   /**
    * English, for logs and for an API client that has no catalogue.
    *
@@ -215,8 +313,93 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
    * A reference to a deleted field is worse than a forward one: the condition silently never
    * holds, so the field simply never appears and nothing says why.
    */
+  checkFieldList(definition.fields, problems);
+
+  for (const group of repeatingGroups(definition)) {
+    /**
+     * An entry's own fields are checked as their own list.
+     *
+     * Which is also what refuses a condition reaching out of an entry: `showWhen` inside a group
+     * may only name a child that came earlier in the same entry, and a reference to a top-level
+     * field simply is not in this list, so it is reported as unknown. That is the same rule that
+     * makes cycles impossible between pages, applied one level down rather than reimplemented.
+     */
+    checkFieldList(group.fields, problems);
+
+    if (minEntries(group) > group.max) {
+      problems.push({
+        code: 'group-min-above-max',
+        message: `"${group.key}" asks for at least ${minEntries(group)} entries but allows at most ${group.max}`,
+        params: { key: group.key, min: String(minEntries(group)), max: String(group.max) },
+        fieldId: group.id,
+      });
+    }
+
+    const seenChildKeys = new Set<string>();
+    for (const child of group.fields) {
+      if (seenChildKeys.has(child.key)) {
+        problems.push({
+          code: 'group-duplicate-child-key',
+          message: `Field key "${child.key}" is used more than once inside "${group.key}"`,
+          params: { key: child.key, group: group.key },
+          fieldId: group.id,
+        });
+      }
+      seenChildKeys.add(child.key);
+    }
+
+    if (group.admitNameKey !== undefined && !seenChildKeys.has(group.admitNameKey)) {
+      problems.push({
+        code: 'group-admit-name-unknown',
+        message: `"${group.key}" names "${group.admitNameKey}" as the attendee's name, but has no such question`,
+        params: { key: group.admitNameKey, group: group.key },
+        fieldId: group.id,
+      });
+    }
+  }
+
+  /**
+   * One admitting group, or none.
+   *
+   * Reported on every offending group rather than only the second, because "one of these is the
+   * problem" is not something an author can act on without being told which ones.
+   */
+  const admitting = repeatingGroups(definition).filter((group) => group.admits);
+  if (admitting.length > 1) {
+    for (const group of admitting) {
+      problems.push({
+        code: 'multiple-admitting-groups',
+        message: 'Only one group on a form can give its entries their own admission card',
+        params: { key: group.key },
+        fieldId: group.id,
+      });
+    }
+  }
+
+  return problems;
+}
+
+/**
+ * The checks that apply to any ordered list of fields — a form, or one entry of a group.
+ *
+ * Shared because an entry is a list of fields in every way that matters to these rules, and a
+ * second copy would be a second copy that stops agreeing.
+ */
+function checkFieldList(fields: readonly Field[], problems: DefinitionProblem[]): void {
+  /**
+   * Conditions may only ask about a field that exists and comes **earlier**.
+   *
+   * Forward references are refused rather than supported, and that is what makes cycles impossible
+   * by construction: A can depend on B only if B is above it, so no chain can close. The
+   * alternative is a cycle detector, which is more code, is only exercised by a mistake, and would
+   * still have to say something at publish time anyway.
+   *
+   * A reference to a deleted field is worse than a forward one: the condition silently never
+   * holds, so the field simply never appears and nothing says why.
+   */
   const seenKeys = new Set<string>();
-  for (const field of definition.fields) {
+
+  for (const field of fields) {
     if ('options' in field && field.options.length === 0) {
       problems.push({
         code: 'empty-options',
@@ -244,7 +427,7 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
     const rule = 'showWhen' in field ? field.showWhen : undefined;
     for (const condition of rule?.conditions ?? []) {
       if (seenKeys.has(condition.fieldKey)) continue;
-      const existsLater = definition.fields.some((other) => other.key === condition.fieldKey);
+      const existsLater = fields.some((other) => other.key === condition.fieldKey);
       problems.push(
         existsLater
           ? {
@@ -264,8 +447,6 @@ export function definitionProblems(definition: FormDefinition): DefinitionProble
 
     seenKeys.add(field.key);
   }
-
-  return problems;
 }
 
 /**

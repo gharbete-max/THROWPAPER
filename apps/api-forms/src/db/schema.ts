@@ -442,12 +442,17 @@ export const messages = pgTable(
 export const checkInMethod = pgEnum('check_in_method', ['scan', 'manual']);
 
 /**
- * One arrival.
+ * One arrival — of one **person**, which is not the same as one submission.
  *
- * The unique index on `submission_id` is the idempotency guarantee: the database refuses a second
- * row, so a scanner that retries after a dropped response cannot double-admit anybody. That is
- * what START-HERE means by "idempotent, because that is what makes an offline mobile scanner
- * cheap" — the client can replay freely.
+ * The unique index is the idempotency guarantee: the database refuses a second row, so a scanner
+ * that retries after a dropped response cannot double-admit anybody. That is what START-HERE means
+ * by "idempotent, because that is what makes an offline mobile scanner cheap" — the client can
+ * replay freely.
+ *
+ * It is on `(submission_id, entry_index)` rather than on `submission_id` alone, because a
+ * registration can bring guests and each of them is admitted in their own right. See
+ * `docs/adr/0003-repeating-groups.md`: the member arriving says nothing about whether the guest
+ * did, and a party admitted by one scan is a party the fire officer cannot account for.
  */
 export const checkIns = pgTable(
   'check_ins',
@@ -467,9 +472,19 @@ export const checkIns = pgTable(
       onDelete: 'set null',
     }),
     method: checkInMethod('method').notNull().default('scan'),
+    /**
+     * Which card was scanned: 0 for the registrant, 1-based for an entry of the admitting group.
+     *
+     * **Not nullable**, deliberately. Postgres treats NULLs as distinct in a unique index, so a
+     * nullable column here would have quietly made the registrant's own check-in non-idempotent —
+     * two NULL rows for the same submission, both accepted — and idempotency is the single property
+     * the offline scanner is built on. Every row that existed before this column is a registrant,
+     * which is exactly what the default backfills them to.
+     */
+    entryIndex: integer('entry_index').notNull().default(0),
   },
   (table) => [
-    uniqueIndex('check_ins_submission_idx').on(table.submissionId),
+    uniqueIndex('check_ins_submission_idx').on(table.submissionId, table.entryIndex),
     index('check_ins_event_idx').on(table.eventId, table.checkedInAt),
   ],
 );

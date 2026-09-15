@@ -690,4 +690,48 @@ export const nbNO: Record<MessageKey, string> = {
   'validation.time': 'Skriv inn et klokkeslett.',
   'validation.timeMin': 'Ikke tidligere enn {min}.',
   'validation.timeMax': 'Ikke senere enn {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Legg til en til',
+  'group.remove': 'Fjern',
+  'group.removeEntry': 'Fjern {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Ingenting lagt til ennå.',
+  'group.full': 'Det går ikke an å legge til flere enn {max} i dette skjemaet.',
+  'fieldType.repeating_group': 'Gjentatt blokk',
+  'palette.repeating': 'Gjentakelse',
+  'field.fields': 'Spørsmål i denne blokken',
+  'field.fieldsHint':
+    'Velg ett for å redigere det. Hvert spørsmål her stilles én gang per oppføring.',
+  'field.minEntries': 'Færrest oppføringer',
+  'field.maxEntries': 'Flest oppføringer',
+  'field.maxEntriesHint':
+    'Påkrevd. Eksporten får ett sett kolonner per oppføring, så skjemaet må si hvor mange.',
+  'field.addLabel': 'Knappetekst',
+  'field.entryLabel': 'Hva én oppføring heter',
+  'field.entryLabelHint': 'Vises som overskrift over hver enkelt — «Gjest 1», «Gjest 2».',
+  'field.admits': 'Hver oppføring får sitt eget adgangskort',
+  'field.admitsHint':
+    'For gjester på et arrangement. De sjekkes inn separat fra den som meldte seg på, og bare én blokk per skjema kan gjøre dette.',
+  'field.admitNameKey': 'Hvilket spørsmål er navnet deres',
+  'field.admitNameKeyHint': 'Trykkes på kortet og vises på inngangsskjermen.',
+  'problem.group-min-above-max':
+    'Blokken «{key}» krever minst {min} oppføringer, men tillater høyst {max}.',
+  'problem.group-duplicate-child-key': 'Feltnøkkelen «{key}» brukes mer enn én gang i «{group}».',
+  'problem.group-admit-name-unknown':
+    '«{group}» oppgir «{key}» som deltakerens navn, men har ikke et slikt spørsmål.',
+  'problem.multiple-admitting-groups':
+    'Bare én blokk per skjema kan gi oppføringene sine egne adgangskort.',
+  'validation.group': 'Dette svaret har ikke riktig form.',
+  'validation.groupMin': 'Legg til minst {min}.',
+  'validation.groupMax': 'Høyst {max}.',
+  'checkin.outcome.no-such-guest': 'Gjesten står ikke på påmeldingen',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Gjest hos {name}',
 };

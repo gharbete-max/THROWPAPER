@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FormDefinition } from './definition.js';
+import { FormDefinition, MAX_GROUP_ENTRIES } from './definition.js';
 import { importSurveyJson } from './import-surveyjs.js';
 
 /**
@@ -66,20 +66,15 @@ describe('question types with an equivalent here', () => {
  * author wrote, and somebody would discover that after collecting answers.
  */
 describe('question types with no equivalent', () => {
-  it.each([
-    'matrix',
-    'matrixdropdown',
-    'matrixdynamic',
-    'paneldynamic',
-    'ranking',
-    'expression',
-    'multipletext',
-  ])('reports %s rather than guessing', (type) => {
-    const { definition, skipped } = importSurveyJson(survey({ type, name: 'grid', title: 'X' }));
+  it.each(['matrix', 'matrixdropdown', 'matrixdynamic', 'ranking', 'expression', 'multipletext'])(
+    'reports %s rather than guessing',
+    (type) => {
+      const { definition, skipped } = importSurveyJson(survey({ type, name: 'grid', title: 'X' }));
 
-    expect(definition.fields).toHaveLength(0);
-    expect(skipped).toEqual([{ type, name: 'grid', reason: 'no-equivalent' }]);
-  });
+      expect(definition.fields).toHaveLength(0);
+      expect(skipped).toEqual([{ type, name: 'grid', reason: 'no-equivalent' }]);
+    },
+  );
 
   /**
    * Their image points anywhere on the web; ours is a path into this organisation's own store.
@@ -270,5 +265,149 @@ describe('the document as a whole', () => {
       survey({ type: 'radiogroup', name: 'q', title: 'Pick', choices: [] }),
     );
     expect(skipped[0]).toMatchObject({ type: 'radiogroup', reason: 'unreadable' });
+  });
+});
+
+/**
+ * `paneldynamic`, which this importer used to report as having no equivalent.
+ *
+ * It was the one the module's own notes called "the one that looks most relevant to this product",
+ * and the repeating group built in the following phase is what makes it importable. These tests
+ * exist mostly to hold the two decisions that are easy to get wrong in the convenient direction.
+ */
+describe('a dynamic panel becomes a repeating block', () => {
+  const panel = (overrides: Record<string, unknown> = {}) => ({
+    type: 'paneldynamic',
+    name: 'guests',
+    title: 'Guests',
+    maxPanelCount: 3,
+    templateElements: [
+      { type: 'text', name: 'guest_name', title: 'Name', isRequired: true },
+      { type: 'comment', name: 'notes', title: 'Notes' },
+    ],
+    ...overrides,
+  });
+
+  it('maps the panel and its children', () => {
+    const { definition, skipped } = importSurveyJson(survey(panel()));
+
+    expect(skipped).toEqual([]);
+    expect(definition.fields).toHaveLength(1);
+
+    const group = definition.fields[0];
+    expect(group?.type).toBe('repeating_group');
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+
+    expect(group.key).toBe('guests');
+    expect(group.max).toBe(3);
+    expect(group.fields.map((child) => [child.key, child.type])).toEqual([
+      ['guest_name', 'short_text'],
+      ['notes', 'long_text'],
+    ]);
+    // Asked of the list rather than of `fields[0]`: a presentational child has no `required` at
+    // all, so indexing into the union and reaching for it is a question the type cannot answer.
+    expect(
+      group.fields.filter((child) => 'required' in child && child.required).map((c) => c.key),
+    ).toEqual(['guest_name']);
+  });
+
+  /**
+   * The decision this module would most easily have got wrong.
+   *
+   * `max` is required on a group because the export has one block of columns per possible entry.
+   * SurveyJS does not require `maxPanelCount`, so defaulting would put twenty blocks of columns in
+   * somebody's spreadsheet because their survey happened not to mention a limit.
+   */
+  it('refuses a panel that never says how many, rather than inventing a cap', () => {
+    const { definition, skipped } = importSurveyJson(survey(panel({ maxPanelCount: undefined })));
+
+    expect(definition.fields).toHaveLength(0);
+    expect(skipped).toEqual([{ type: 'paneldynamic', name: 'guests', reason: 'needs-limit' }]);
+  });
+
+  it('clamps a panel that asks for more than the schema carries', () => {
+    const { definition } = importSurveyJson(survey(panel({ maxPanelCount: 100 })));
+    const group = definition.fields[0];
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.max).toBe(MAX_GROUP_ENTRIES);
+  });
+
+  it('carries the minimum, and reads it as required', () => {
+    const { definition } = importSurveyJson(survey(panel({ minPanelCount: 2 })));
+    const group = definition.fields[0];
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.min).toBe(2);
+    expect(group.required).toBe(true);
+  });
+
+  it('never lets the minimum exceed the maximum', () => {
+    const { definition } = importSurveyJson(survey(panel({ minPanelCount: 9, maxPanelCount: 2 })));
+    const group = definition.fields[0];
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.min).toBeLessThanOrEqual(group.max);
+  });
+
+  it('takes their add-button text', () => {
+    const { definition } = importSurveyJson(survey(panel({ panelAddText: 'Add a guest' })));
+    const group = definition.fields[0];
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.addLabel).toEqual({ 'en-GB': 'Add a guest' });
+  });
+
+  /** Their placeholder syntax means nothing here, and ours numbers entries itself. */
+  it('strips their index placeholder out of the entry heading', () => {
+    const { definition } = importSurveyJson(survey(panel({ templateTitle: 'Guest {panelIndex}' })));
+    const group = definition.fields[0];
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.entryLabel).toEqual({ 'en-GB': 'Guest' });
+  });
+
+  /**
+   * Nothing in their document says "each of these is a person who gets a ticket".
+   *
+   * That is a decision about an event, which their schema has no concept of — so a panel called
+   * "guests" must not hand out admission cards on the strength of a word.
+   */
+  it('never decides on its own that a block admits people', () => {
+    const { definition } = importSurveyJson(survey(panel()));
+    const group = definition.fields[0];
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.admits).toBe(false);
+    expect(group.admitNameKey).toBeUndefined();
+  });
+
+  it('refuses a panel inside a panel, and says that is what it was', () => {
+    const { definition, skipped } = importSurveyJson(
+      survey(panel({ templateElements: [panel({ name: 'inner' })] })),
+    );
+
+    expect(definition.fields).toHaveLength(0);
+    expect(skipped).toContainEqual({ type: 'paneldynamic', name: 'inner', reason: 'nested-group' });
+  });
+
+  /**
+   * A panel whose every question was skipped is not an empty block — it is one we could not read.
+   * `fields` requires at least one child, so importing it would fail the parse at the end of the
+   * importer and take the entire form down with it.
+   */
+  it('reports a panel whose children were all unreadable instead of importing an empty one', () => {
+    const { definition, skipped } = importSurveyJson(
+      survey(panel({ templateElements: [{ type: 'matrix', name: 'grid', title: 'X' }] })),
+    );
+
+    expect(definition.fields).toHaveLength(0);
+    expect(skipped).toContainEqual({ type: 'paneldynamic', name: 'guests', reason: 'unreadable' });
+  });
+
+  /** Child keys are scoped to their block, so a panel may reuse a key the form already has. */
+  it('lets a child reuse a key the surrounding form uses', () => {
+    const { definition } = importSurveyJson(
+      survey({ type: 'text', name: 'guest_name', title: 'Your name' }, panel()),
+    );
+
+    const [top, group] = definition.fields;
+    expect(top?.key).toBe('guest_name');
+    if (group?.type !== 'repeating_group') throw new Error('expected a repeating group');
+    expect(group.fields[0]?.key).toBe('guest_name');
   });
 });

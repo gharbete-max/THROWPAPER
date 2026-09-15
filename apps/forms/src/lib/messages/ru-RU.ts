@@ -703,4 +703,49 @@ export const ruRU: Record<MessageKey, string> = {
   'validation.time': 'Введите время.',
   'validation.timeMin': 'Не раньше {min}.',
   'validation.timeMax': 'Не позже {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Добавить ещё',
+  'group.remove': 'Удалить',
+  'group.removeEntry': 'Удалить: {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Пока ничего не добавлено.',
+  'group.full': 'В этой форме можно добавить не более {max}.',
+  'fieldType.repeating_group': 'Повторяющийся блок',
+  'palette.repeating': 'Повторение',
+  'field.fields': 'Вопросы в этом блоке',
+  'field.fieldsHint':
+    'Выберите вопрос, чтобы изменить его. Каждый задаётся один раз для каждой записи.',
+  'field.minEntries': 'Минимум записей',
+  'field.maxEntries': 'Максимум записей',
+  'field.maxEntriesHint':
+    'Обязательно. В выгрузке на каждую запись приходится свой набор столбцов, поэтому форма должна указать их число.',
+  'field.addLabel': 'Текст кнопки',
+  'field.entryLabel': 'Как называется одна запись',
+  'field.entryLabelHint': 'Показывается заголовком над каждой записью — «Гость 1», «Гость 2».',
+  'field.admits': 'Каждая запись получает свой входной билет',
+  'field.admitsHint':
+    'Для гостей на мероприятии. Их отмечают на входе отдельно от того, кто регистрировался; такой блок в форме может быть только один.',
+  'field.admitNameKey': 'Какой вопрос — это их имя',
+  'field.admitNameKeyHint': 'Печатается на билете и показывается на экране у входа.',
+  'problem.group-min-above-max':
+    'Блок «{key}» требует не менее {min} записей, но допускает не более {max}.',
+  'problem.group-duplicate-child-key':
+    'Ключ поля «{key}» используется в «{group}» более одного раза.',
+  'problem.group-admit-name-unknown':
+    '«{group}» указывает «{key}» как имя участника, но такого вопроса нет.',
+  'problem.multiple-admitting-groups':
+    'Только один блок в форме может выдавать своим записям отдельные входные билеты.',
+  'validation.group': 'Этот ответ имеет неверный формат.',
+  'validation.groupMin': 'Добавьте не менее {min}.',
+  'validation.groupMax': 'Не более {max}.',
+  'checkin.outcome.no-such-guest': 'Гостя нет в этой регистрации',
+  'submissions.column.entry': '{group} {number} — {child}',
+  'checkin.guestOf': 'Гость: {name}',
 };

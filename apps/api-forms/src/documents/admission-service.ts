@@ -1,4 +1,5 @@
 import { ZipArchive } from 'archiver';
+import { forms as formSchemas } from '@tp/shared';
 import type { Repositories, SubmissionRecord } from '../db/repositories/index.js';
 import type { DocumentStore } from './store.js';
 import type { PdfRenderer } from './render.js';
@@ -6,6 +7,9 @@ import { attendeeName, renderAdmissionHtml } from './admission.js';
 import { resolveTokens } from '../routes/brand-kit.js';
 import { deriveQrKey, signAdmissionToken } from './qr-token.js';
 import type { JobContext, JobHandler } from '../jobs/worker.js';
+import { definitionsByVersion, partyOf, type PartyMember } from '../checkin/party.js';
+
+const { entryReference, REGISTRANT_ENTRY } = formSchemas;
 
 export const ADMISSION_BULK_JOB = 'admission.bulk';
 
@@ -17,11 +21,19 @@ export interface AdmissionDeps {
   jwtSecret: string;
 }
 
-/** One admission PDF. Shared by the single-document route and the bulk job. */
+/**
+ * One admission PDF — for one **person**. Shared by the single-document route and the bulk job.
+ *
+ * `member` says whose card: the registrant by default, or one of the guests they brought. The
+ * token signs that person's own reference (`ABCD-EFGH:2`), so each card in a party has a distinct
+ * signature bound to that guest and that event, and forging one from another means forging an
+ * HMAC. See `docs/adr/0003-repeating-groups.md`.
+ */
 export async function renderAdmissionPdf(
   deps: AdmissionDeps,
   organisationId: string,
   submission: SubmissionRecord,
+  member: PartyMember = { entryIndex: REGISTRANT_ENTRY, guestName: null },
 ): Promise<{ pdf: Buffer; filename: string; token: string } | null> {
   if (!submission.eventId) return null;
 
@@ -29,23 +41,45 @@ export async function renderAdmissionPdf(
   const event = await deps.repos.events.findById(organisationId, submission.eventId);
   if (!organisation || !event) return null;
 
+  const cardReference = entryReference(submission.reference, member.entryIndex);
+
   const token = signAdmissionToken(
-    { reference: submission.reference, eventId: event.id },
+    { reference: cardReference, eventId: event.id },
     deriveQrKey(deps.jwtSecret),
   );
 
   const { tokens } = await resolveTokens(deps.repos, organisationId);
-  const html = await renderAdmissionHtml({ organisation, event, submission, token, tokens });
+  const html = await renderAdmissionHtml({
+    organisation,
+    event,
+    submission,
+    token,
+    tokens,
+    entryIndex: member.entryIndex,
+    guestName: member.guestName,
+  });
   const pdf = await deps.renderer.render(html, {
     header: organisation.name,
-    footer: submission.reference,
+    footer: cardReference,
   });
 
-  return {
-    pdf,
-    token,
-    filename: `${safeName(attendeeName(submission.data))}-${submission.reference}.pdf`,
-  };
+  const named =
+    member.entryIndex === REGISTRANT_ENTRY
+      ? attendeeName(submission.data)
+      : (member.guestName ?? '');
+
+  /*
+   * `:` is forbidden in a filename on Windows and `safeName` strips it, which would turn
+   * `ABCD-EFGH:2` into `ABCD-EFGH2` — a name that reads like a different reference. A hyphen says
+   * the same thing and survives every filesystem, and inside a ZIP of one event's cards the
+   * ordinal only has to be distinguishable, not parseable.
+   */
+  const stem =
+    member.entryIndex === REGISTRANT_ENTRY
+      ? submission.reference
+      : `${submission.reference}-${member.entryIndex}`;
+
+  return { pdf, token, filename: `${safeName(named)}-${safeName(stem)}.pdf` };
 }
 
 /**
@@ -62,6 +96,24 @@ export function createAdmissionBulkHandler(deps: AdmissionDeps): JobHandler {
       (submission) => submission.status === 'complete' && submission.eventId,
     );
 
+    /**
+     * One card per **person**, so a run produces more documents than there are rows.
+     *
+     * Which means the progress count is of cards rather than of registrations — an operator
+     * watching "142 of 200" while 260 cards are being written would be watching a number that
+     * cannot reach its total.
+     */
+    const definitions = await definitionsByVersion(
+      deps.repos,
+      submissions.map((submission) => submission.formId),
+    );
+    const cards = submissions.flatMap((submission) =>
+      partyOf(definitions.get(submission.formVersionId), submission).map((member) => ({
+        submission,
+        member,
+      })),
+    );
+
     // archiver v8 exports classes rather than the old callable factory.
     const archive = new ZipArchive({ zlib: { level: 9 } });
     const chunks: Buffer[] = [];
@@ -74,13 +126,14 @@ export function createAdmissionBulkHandler(deps: AdmissionDeps): JobHandler {
     const failures: string[] = [];
     let done = 0;
 
-    for (const submission of submissions) {
+    for (const { submission, member } of cards) {
+      const cardReference = entryReference(submission.reference, member.entryIndex);
       try {
-        const rendered = await renderAdmissionPdf(deps, job.organisationId, submission);
+        const rendered = await renderAdmissionPdf(deps, job.organisationId, submission, member);
         if (rendered) archive.append(rendered.pdf, { name: rendered.filename });
-        else failures.push(submission.reference);
+        else failures.push(cardReference);
       } catch (error) {
-        failures.push(submission.reference);
+        failures.push(cardReference);
         // Recorded on the job rather than thrown: see the note above.
         deps.repos.audit
           .record({
@@ -95,7 +148,7 @@ export function createAdmissionBulkHandler(deps: AdmissionDeps): JobHandler {
       }
 
       done += 1;
-      if (done % 10 === 0 || done === submissions.length) await progress(done);
+      if (done % 10 === 0 || done === cards.length) await progress(done);
     }
 
     await archive.finalize();
@@ -109,7 +162,7 @@ export function createAdmissionBulkHandler(deps: AdmissionDeps): JobHandler {
     return {
       key: stored.key,
       bytes: stored.bytes,
-      generated: submissions.length - failures.length,
+      generated: cards.length - failures.length,
       failed: failures.length,
       failedReferences: failures.slice(0, 50),
       downloadPath: deps.store.signedPath(stored.key),

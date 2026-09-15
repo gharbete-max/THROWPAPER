@@ -677,4 +677,42 @@ export const zhCN: Record<MessageKey, string> = {
   'validation.time': '请输入时间。',
   'validation.timeMin': '不得早于 {min}。',
   'validation.timeMax': '不得晚于 {max}。',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': '添加一项',
+  'group.remove': '移除',
+  'group.removeEntry': '移除{entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': '尚未添加任何内容。',
+  'group.full': '此表单最多允许 {max} 项。',
+  'fieldType.repeating_group': '可重复区块',
+  'palette.repeating': '重复',
+  'field.fields': '此区块中的问题',
+  'field.fieldsHint': '选择一项进行编辑。每个问题在每条记录中各问一次。',
+  'field.minEntries': '最少项数',
+  'field.maxEntries': '最多项数',
+  'field.maxEntriesHint': '必填。导出会为每条记录生成一组列，因此表单必须说明数量。',
+  'field.addLabel': '按钮文字',
+  'field.entryLabel': '单条记录的名称',
+  'field.entryLabelHint': '显示为每条记录上方的标题——“来宾 1”“来宾 2”。',
+  'field.admits': '每条记录获得独立的入场凭证',
+  'field.admitsHint': '用于活动来宾。他们与报名者分别签到，且每个表单只能有一个区块启用此项。',
+  'field.admitNameKey': '哪个问题是他们的姓名',
+  'field.admitNameKeyHint': '印在凭证上，并显示在入口屏幕上。',
+  'problem.group-min-above-max': '区块“{key}”要求至少 {min} 项，但最多只允许 {max} 项。',
+  'problem.group-duplicate-child-key': '字段键“{key}”在“{group}”中出现多次。',
+  'problem.group-admit-name-unknown': '“{group}”将“{key}”指定为参加者姓名，但没有该问题。',
+  'problem.multiple-admitting-groups': '每个表单只能有一个区块为其条目签发独立入场凭证。',
+  'validation.group': '此回答的格式不正确。',
+  'validation.groupMin': '请至少添加 {min} 项。',
+  'validation.groupMax': '最多 {max} 项。',
+  'checkin.outcome.no-such-guest': '此报名中没有该来宾',
+  'submissions.column.entry': '{group} {number} — {child}',
+  'checkin.guestOf': '{name} 的来宾',
 };
