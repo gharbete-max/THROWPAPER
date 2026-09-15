@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import type { TokenSet } from '@tp/tokens';
 import { Mark } from './Mark.js';
 import { useBrand } from '../lib/brand.js';
+import { useT } from '../lib/i18n.js';
 
 /**
  * The mark alone, in Paloppa's colours, with no idea whose page it is on.
@@ -12,6 +14,26 @@ import { useBrand } from '../lib/brand.js';
  *
  * `Wordmark` below is the one that knows about client mode.
  */
+/**
+ * "Powered by Paloppa", where a white-labelled surface would otherwise carry no trace of us.
+ *
+ * Rendered only under client mode — with our own mark in the corner the line would say what the
+ * corner already says — and only while the kit's `poweredBy` is on, which is a contract term, not
+ * a checkbox. Small, muted, at the foot: it is attribution, not advertising, and a customer's
+ * member filling in a form should barely notice it.
+ */
+export function PoweredBy({ tokens }: { tokens: TokenSet }) {
+  const t = useT();
+  if (!tokens.clientMode || !tokens.poweredBy) return null;
+  return (
+    <p className="powered small muted">
+      <a href="/" rel="noopener">
+        {t('app.poweredBy')}
+      </a>
+    </p>
+  );
+}
+
 export function Logo() {
   // `logo` carries the sizing; without it the image fills whatever it is put in.
   return <Mark className="logo" />;

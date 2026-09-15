@@ -4,6 +4,7 @@ import type { MessageKey } from './en-GB.js';
 
 export const deDE: Record<MessageKey, string> = {
   'app.name': 'Paloppa',
+  'app.poweredBy': 'Bereitgestellt von Paloppa',
   'app.signOut': 'Abmelden',
   'app.language': 'Sprache',
   'app.loading': 'Wird geladen…',

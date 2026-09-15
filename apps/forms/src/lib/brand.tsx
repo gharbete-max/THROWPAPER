@@ -48,6 +48,7 @@ function identityFromDocument(): TokenSet {
     ...defaultTokens,
     clientMode: true,
     wordmark: meta('tp-wordmark'),
+    poweredBy: meta('tp-powered-by') !== '0',
     logoLight: meta('tp-logo-light'),
     logoDark: meta('tp-logo-dark'),
   };

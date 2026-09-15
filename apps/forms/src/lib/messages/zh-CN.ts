@@ -9,6 +9,7 @@ import type { MessageKey } from './en-GB.js';
 
 export const zhCN: Record<MessageKey, string> = {
   'app.name': 'Paloppa',
+  'app.poweredBy': '由 Paloppa 提供支持',
   'app.signOut': '退出登录',
   'app.language': '语言',
   'app.loading': '加载中…',

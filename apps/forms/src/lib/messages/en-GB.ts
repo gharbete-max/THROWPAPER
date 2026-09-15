@@ -10,6 +10,7 @@
 
 export const enGB = {
   'app.name': 'Paloppa',
+  'app.poweredBy': 'Powered by Paloppa',
   'app.signOut': 'Sign out',
   'app.language': 'Language',
   'app.loading': 'Loading…',

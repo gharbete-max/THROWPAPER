@@ -33,6 +33,7 @@
   "logoDark": null,
   "favicon": null,
   "clientMode": false,
+  "poweredBy": true,
   "wordmark": null,
   "controlHeight": "44px",
   "contentWidth": "640px"

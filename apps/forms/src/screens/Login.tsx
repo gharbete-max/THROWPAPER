@@ -2,11 +2,13 @@ import { useState, type FormEvent } from 'react';
 import { client, setSession } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useDemo } from '../lib/demo.js';
-import { Wordmark } from '../components/Logo.js';
+import { PoweredBy, Wordmark } from '../components/Logo.js';
+import { useBrand } from '../lib/brand.js';
 
 export function Login() {
   const t = useT();
   const { isDemo, users } = useDemo();
+  const { tokens } = useBrand();
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [demo, setDemo] = useState<'idle' | 'busy' | 'failed'>('idle');
@@ -90,6 +92,7 @@ export function Login() {
           </button>
         </form>
       )}
+      <PoweredBy tokens={tokens} />
     </main>
   );
 }

@@ -31,6 +31,8 @@ import { escapeAttribute } from './link-preview.js';
 export interface ClientIdentity {
   /** What the corner and the tab say. Never empty: the caller falls back to the org's own name. */
   wordmark: string;
+  /** Whether the sign-in screen carries the "Powered by" line. A contract can buy its absence. */
+  poweredBy: boolean;
   logoLight: string | null;
   logoDark: string | null;
   /** The organisation's compiled palette, light and dark, for the first paint. */
@@ -94,6 +96,8 @@ export function withClientIdentity(html: string, identity: ClientIdentity): stri
      */
     `<meta name="tp-client-mode" content="1" />`,
     `<meta name="tp-wordmark" content="${wordmark}" />`,
+    // Only its absence is stated: the default is on, and a page with no tag behaves as default.
+    identity.poweredBy ? '' : `<meta name="tp-powered-by" content="0" />`,
     identity.logoLight
       ? `<meta name="tp-logo-light" content="${escapeAttribute(identity.logoLight)}" />`
       : '',

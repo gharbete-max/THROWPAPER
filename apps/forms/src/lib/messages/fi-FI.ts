@@ -4,6 +4,7 @@ import type { MessageKey } from './en-GB.js';
 
 export const fiFI: Record<MessageKey, string> = {
   'app.name': 'Paloppa',
+  'app.poweredBy': 'Palvelun tarjoaa Paloppa',
   'app.signOut': 'Kirjaudu ulos',
   'app.language': 'Kieli',
   'app.loading': 'Ladataan…',

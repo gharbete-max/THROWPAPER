@@ -4427,6 +4427,23 @@ body:has(.app) > #root {
   margin-block-start: calc(var(--tp-spacing-unit) * 3);
 }
 
+/* Attribution at the foot of a white-labelled page: present, quiet, and never the brand colour. */
+.powered {
+  margin-block-start: calc(var(--tp-spacing-unit) * 4);
+  text-align: center;
+}
+
+.powered a {
+  color: var(--tp-colour-muted);
+  text-decoration: none;
+}
+
+.powered a:hover,
+.powered a:focus-visible {
+  color: var(--tp-colour-text);
+  text-decoration: underline;
+}
+
 .site__foot {
   inline-size: min(76rem, 100%);
   margin-inline: auto;

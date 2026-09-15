@@ -4,6 +4,7 @@ import type { MessageKey } from './en-GB.js';
 
 export const daDK: Record<MessageKey, string> = {
   'app.name': 'Paloppa',
+  'app.poweredBy': 'Drevet af Paloppa',
   'app.signOut': 'Log ud',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',

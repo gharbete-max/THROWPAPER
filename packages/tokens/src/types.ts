@@ -56,5 +56,6 @@ export interface TokenSet {
    * them, which is the correct amount of attention for a boolean and a name.
    */
   clientMode: boolean;
+  poweredBy: boolean;
   wordmark: string | null;
 }

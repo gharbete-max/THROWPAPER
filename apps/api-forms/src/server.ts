@@ -604,6 +604,7 @@ async function clientIdentity(
     return {
       // Their brand name where they set one, the legal entity otherwise — the two often differ.
       wordmark: tokens.wordmark ?? organisation.name,
+      poweredBy: tokens.poweredBy,
       logoLight: tokens.logoLight,
       logoDark: tokens.logoDark,
       palette: toThemedCssBlock(tokens),

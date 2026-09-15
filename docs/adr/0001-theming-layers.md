@@ -143,6 +143,11 @@ Neither is worked around silently. The first is implemented and the second is st
 **CLIENT CONTRACT** — `--accent`, `--accent-fg` (derived, never chosen), logo light + dark,
 wordmark text, favicon source, email header logo and accent.
 
+**"Powered by Paloppa"** — decided 2026-09-15: a quiet muted line at the foot of the public form
+and the sign-in screen, under client mode only, governed by the kit's `poweredBy` (default on).
+It is a contract term rather than a preference, so it is not in the brand editor; it is set with
+the contract, by us.
+
 **FORM CONTRACT** — `--accent`, `--accent-fg` (derived), `--surface`, `--radius-scale`,
 `--font-body`, `--font-heading` from a curated set, form logo, cover image, button shape.
 

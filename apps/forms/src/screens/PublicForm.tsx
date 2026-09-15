@@ -21,6 +21,7 @@ import { FieldInput } from '../components/FieldInput.js';
 import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
+import { PoweredBy } from '../components/Logo.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing';
 
@@ -584,6 +585,7 @@ export default function PublicForm() {
           </div>
         </form>
       )}
+      {form && <PoweredBy tokens={form.brand} />}
     </main>
   );
 }

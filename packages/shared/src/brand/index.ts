@@ -174,6 +174,16 @@ export const BrandKit = z.object({
   clientMode: z.boolean().default(false),
 
   /**
+   * Whether a white-labelled surface still says, quietly, what it runs on.
+   *
+   * A commercial term, not a design one: a contract may buy silence, and nothing else does. So it
+   * is a token — the server can read it before anyone signs in — and it is deliberately **not** in
+   * the brand editor; it changes with the contract, by us. Meaningful only under client mode, where
+   * there is otherwise no trace of the product. Default on.
+   */
+  poweredBy: z.boolean().default(true),
+
+  /**
    * The name shown in the corner when client mode is on, and the `alt` text for their logo.
    *
    * Capped rather than free: it sits in a top bar next to navigation, and a paragraph pasted in

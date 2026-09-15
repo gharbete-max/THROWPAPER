@@ -15,6 +15,7 @@ const SHELL = `<!doctype html>
 
 const IDENTITY = {
   wordmark: 'Acme Förening',
+  poweredBy: true,
   logoLight: `/public/assets/${'a'.repeat(64)}.png`,
   logoDark: `/public/assets/${'b'.repeat(64)}.png`,
   palette: ':root {\n  --tp-colour-primary: #123456;\n}\n',
@@ -49,6 +50,14 @@ describe('a white-labelled shell', () => {
     const html = withClientIdentity(SHELL, { ...IDENTITY, wordmark: 'Bara Namn' });
     expect(html).toContain('name="tp-client-mode" content="1"');
     expect(html).toContain('Bara Namn');
+  });
+
+  /** The line is on by default, so only a contract that bought silence puts a tag in the page. */
+  it('states only when the "Powered by" line is off', () => {
+    expect(withClientIdentity(SHELL, IDENTITY)).not.toContain('tp-powered-by');
+    expect(withClientIdentity(SHELL, { ...IDENTITY, poweredBy: false })).toContain(
+      'name="tp-powered-by" content="0"',
+    );
   });
 
   /** A missing dark logo emits no tag at all, rather than an empty one the client must sift. */
