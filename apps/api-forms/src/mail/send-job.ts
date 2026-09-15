@@ -247,7 +247,7 @@ function copyFor(locale: string) {
  *
  * `BUILD-BRIEF.md` §4 lists email branding under what client mode turns on. It is ungated here
  * because the confirmation is already the organisation's letter to their own member and has never
- * carried any Paloppa branding — there is nothing for the switch to turn off. Gating it would mean
+ * carried any Loppa branding — there is nothing for the switch to turn off. Gating it would mean
  * an association that has not bought white-label sends unbranded confirmations for no reason that
  * could be explained to them.
  */

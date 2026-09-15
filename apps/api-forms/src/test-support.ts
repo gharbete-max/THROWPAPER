@@ -103,7 +103,7 @@ export async function createTestHarness(
     // Tests drain the queue by hand, so a job runs exactly when the test says it does.
     startWorker: false,
     contactAddress:
-      options.contactAddress === undefined ? 'hello@paloppa.test' : options.contactAddress,
+      options.contactAddress === undefined ? 'hello@loppa.test' : options.contactAddress,
   });
   await app.ready();
 

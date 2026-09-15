@@ -33,7 +33,7 @@ describe('the contact form', () => {
     expect(response.statusCode).toBe(303);
     expect(response.headers.location).toBe('/sv/contact/sent');
     expect(harness.mail.sent).toHaveLength(1);
-    expect(harness.mail.sent[0]!.to).toBe('hello@paloppa.test');
+    expect(harness.mail.sent[0]!.to).toBe('hello@loppa.test');
     expect(harness.mail.sent[0]!.text).toContain('anna@example.com');
     expect(harness.mail.sent[0]!.text).toContain('årsmöte');
   });

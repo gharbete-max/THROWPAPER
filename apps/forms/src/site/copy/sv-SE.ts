@@ -14,10 +14,10 @@ import type { SiteCopy } from '../content.js';
  */
 export const svSE: SiteCopy = {
   meta: {
-    homeTitle: 'Paloppa — formulär, anmälningar och entrén',
+    homeTitle: 'Loppa — formulär, anmälningar och entrén',
     homeDescription:
       'Ett formulärverktyg för organisationer som måste få det rätt: tolv språk, er egen grafiska profil överallt och ett inträdeskort som fungerar i entrén.',
-    titleSuffix: ' — Paloppa',
+    titleSuffix: ' — Loppa',
   },
   chrome: {
     skipToContent: 'Hoppa till innehållet',
@@ -26,7 +26,7 @@ export const svSE: SiteCopy = {
     languageLabel: 'Språk',
     openTheDemo: 'Öppna demon',
     footerTagline:
-      'Paloppa. Formulär, anmälningar och entrén. Demon sparar ingenting och skickar ingenting.',
+      'Loppa. Formulär, anmälningar och entrén. Demon sparar ingenting och skickar ingenting.',
   },
   hero: {
     eyebrow: 'Formulär, anmälningar och entrén',

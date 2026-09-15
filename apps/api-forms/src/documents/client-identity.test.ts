@@ -5,7 +5,7 @@ const SHELL = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Paloppa</title>
+    <title>Loppa</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate icon" href="/icon-192.png" type="image/png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
@@ -70,13 +70,13 @@ describe('a white-labelled shell', () => {
   /**
    * The tab, too.
    *
-   * A white-labelled product whose browser tab says "Paloppa" is white-labelled everywhere except
+   * A white-labelled product whose browser tab says "Loppa" is white-labelled everywhere except
    * the one place the customer looks at all day.
    */
   it('renames the tab', () => {
     const html = withClientIdentity(SHELL, IDENTITY);
     expect(html).toContain('<title>Acme Förening</title>');
-    expect(html).not.toContain('<title>Paloppa</title>');
+    expect(html).not.toContain('<title>Loppa</title>');
   });
 
   /** The palette is inlined and marked, so the client knows not to paint the defaults over it. */

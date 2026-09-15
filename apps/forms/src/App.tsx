@@ -184,7 +184,7 @@ function Shell() {
         <>
           {/*
             The intro, here and nowhere else. It was mounted above every route, which put
-            "PALOPPA" over a customer's white-labelled form for three seconds and ate the
+            "LOPPA" over a customer's white-labelled form for three seconds and ate the
             respondent's first tap — the exact leak client mode exists to prevent, on the one
             surface their members actually see. It is ours; it plays for our users, inside our
             chrome, and not at a door.

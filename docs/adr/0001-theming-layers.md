@@ -5,7 +5,7 @@
 
 ## Context
 
-Two requirements pull against each other. Paloppa has an identity — a mark, two hue families, a
+Two requirements pull against each other. Loppa has an identity — a mark, two hue families, a
 paper canvas — and the product's selling point is that an organisation replaces it. Left
 unstructured, "the customer can change things" becomes "every value in the app is customer
 controlled", at which point nothing can be designed and nothing can be tested.
@@ -22,8 +22,8 @@ What it lacked was a floor.
 ### The layers, and what each one is for
 
 ```
-0. Paloppa brand      packages/tokens/default-tokens.json   always present, the fallback
-1. Client theme       per organisation, white-label         Paloppa's own chrome wears the
+0. Loppa brand      packages/tokens/default-tokens.json   always present, the fallback
+1. Client theme       per organisation, white-label         Loppa's own chrome wears the
                                                             customer's identity
 2. Organisation kit   brand_kits, the whole TokenSet        the customer's documents look like
                                                             theirs — already shipped
@@ -36,7 +36,7 @@ the one this repo already has are **not the same thing** and collapsing them wou
 
 - **The client theme is narrow on purpose.** It overrides *our* chrome: accent, logo light and
   dark, wordmark text, favicon, email header. We keep design control of everything else, because
-  what is being themed is the Paloppa application, not the customer's document.
+  what is being themed is the Loppa application, not the customer's document.
 - **The organisation kit is wide on purpose.** It themes *their* outputs. Narrowing it to an accent
   would take away a feature customers already have, to satisfy a contract written for the other
   scope.
@@ -143,7 +143,7 @@ Neither is worked around silently. The first is implemented and the second is st
 **CLIENT CONTRACT** — `--accent`, `--accent-fg` (derived, never chosen), logo light + dark,
 wordmark text, favicon source, email header logo and accent.
 
-**"Powered by Paloppa"** — decided 2026-09-15: a quiet muted line at the foot of the public form
+**"Powered by Loppa"** — decided 2026-09-15: a quiet muted line at the foot of the public form
 and the sign-in screen, under client mode only, governed by the kit's `poweredBy` (default on).
 It is a contract term rather than a preference, so it is not in the brand editor; it is set with
 the contract, by us.

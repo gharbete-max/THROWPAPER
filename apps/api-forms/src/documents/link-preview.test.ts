@@ -5,7 +5,7 @@ const SHELL = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Paloppa</title>
+    <title>Loppa</title>
   </head>
   <body><div id="root"></div></body>
 </html>`;
@@ -24,7 +24,7 @@ describe('a shared form link', () => {
     const html = withLinkPreview(SHELL, PREVIEW);
     expect(html).toContain('<meta property="og:title" content="Spring meeting registration" />');
     expect(html).toContain('<meta property="og:site_name" content="Demo AB" />');
-    // The tab too: twelve tabs all saying "Paloppa" identify nothing.
+    // The tab too: twelve tabs all saying "Loppa" identify nothing.
     expect(html).toContain('<title>Spring meeting registration — Demo AB</title>');
   });
 

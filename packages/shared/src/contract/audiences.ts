@@ -8,7 +8,7 @@ export const AudienceMember = z.object({
   mergeData: MergeData.optional(),
 });
 
-/** CONTRACT §1.3 — Paloppa pushes a computed audience; Sendwork stores it as a snapshot. */
+/** CONTRACT §1.3 — Loppa pushes a computed audience; Sendwork stores it as a snapshot. */
 export const PushAudienceRequest = z.object({
   organisationId: OrganisationId,
   members: z.array(AudienceMember),

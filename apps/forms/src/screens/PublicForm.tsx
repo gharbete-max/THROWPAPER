@@ -353,7 +353,7 @@ export default function PublicForm() {
    * The tab, too.
    *
    * The server sends a per-form `<title>` for crawlers; a browser that has already loaded the app
-   * and navigated within it never asks the server again, so without this the tab says "Paloppa"
+   * and navigated within it never asks the server again, so without this the tab says "Loppa"
    * for every form somebody has open at once.
    *
    * Above the early returns, with the other hooks. It sat below them at first, so the loading

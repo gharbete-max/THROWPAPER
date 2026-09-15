@@ -6,12 +6,12 @@ For a fresh session picking this up. Read `CLAUDE.md` first, then `LAUNCH-CHECKL
 ## Paste-ready prompt for the next session
 
 ```
-You are continuing work on THROWPAPER (product name: Paloppa) — a pnpm monorepo with two
+You are continuing work on THROWPAPER (product name: Loppa) — a pnpm monorepo with two
 independent products (apps/forms + apps/api-forms; apps/mailer + apps/api-mailer) and shared
 packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
 docs/adr/0001-theming-layers.md before touching anything.
 
-State: main == origin/main at the merge of PR #67 (Phase 3, the Paloppa restyle: palette, mark,
+State: main == origin/main at the merge of PR #67 (Phase 3, the Loppa restyle: palette, mark,
 theming layers with a LOCKED list, client mode / white-label, two design-critique rounds, the
 door as a mode, Responses by name, a no-JS contact page). `pnpm verify` is green (109 test
 files). Playwright e2e specs were not run on the last machine (no database) — run them first.
@@ -40,7 +40,7 @@ paper decision first.
 
 ## State
 
-- `main == origin/main`, clean. Last merge: **#67** (Phase 3 — Paloppa), 30 commits, merged
+- `main == origin/main`, clean. Last merge: **#67** (Phase 3 — Loppa), 30 commits, merged
   2026-09-15. No open PRs.
 - `pnpm verify` green: **109 test files**, both apps build. `pnpm verify` and
   `pnpm contract:check` together are the definition of done.
@@ -84,7 +84,7 @@ marketing email.
 - Fonts: Inter is self-hosted via Fontsource (`@fontsource/inter`, latin subsets precached); the
   CSP still permits no external origins. The transfer answer is still "none".
 - Internal identifiers stay `throwpaper` (paths, packages, tables, routes) by the owner's explicit
-  instruction; only user-facing text says Paloppa.
+  instruction; only user-facing text says Loppa.
 - The owner dislikes dark teal and the flat mark; a pastel that cannot carry text becomes the ink
   (`headingInk`), never a darkened pastel.
 
@@ -161,7 +161,7 @@ The planning notes that used to sit here are superseded by the code and by
   kits in both schemes; if you add a guarantee, add it there and verify it by deleting the
   derivation once.
 - **The `.system` boundary still governs.** Ours: shell, sign-in, marketing site. Theirs: the
-  published form, invoice, admission card, email. The Paloppa intro now lives inside the shell
+  published form, invoice, admission card, email. The Loppa intro now lives inside the shell
   only — it once leaked over customers' forms; do not move it back up.
 - **The marketing site ships no JavaScript in production.** Anything interactive there is CSS
   (`:checked` for the hero pause) or a plain `<form method="post">` (the contact page). A React

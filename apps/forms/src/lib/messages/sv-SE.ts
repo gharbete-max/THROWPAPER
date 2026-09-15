@@ -3,8 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const svSE: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Drivs av Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Drivs av Loppa',
   'app.signOut': 'Logga ut',
   'app.language': 'Språk',
   'app.loading': 'Laddar…',
@@ -481,7 +481,7 @@ export const svSE: Record<MessageKey, string> = {
   'brand.clientMode': 'Kundläge',
   'brand.clientModeOn': 'Använd vår egen logotyp och vårt namn',
   'brand.clientModeHint':
-    'Ersätter Paloppas märke i appen och på inloggningsskärmen. Era publicerade formulär använder redan er profil.',
+    'Ersätter Loppas märke i appen och på inloggningsskärmen. Era publicerade formulär använder redan er profil.',
   'brand.wordmark': 'Namn i hörnet',
   'brand.colours': 'Färger',
   'brand.logo': 'Logotyp',

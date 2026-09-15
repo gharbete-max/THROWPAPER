@@ -9,8 +9,8 @@
  */
 
 export const enGB = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Powered by Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Powered by Loppa',
   'app.signOut': 'Sign out',
   'app.language': 'Language',
   'app.loading': 'Loading…',
@@ -490,7 +490,7 @@ export const enGB = {
   'brand.clientMode': 'Client mode',
   'brand.clientModeOn': 'Use our own logo and name',
   'brand.clientModeHint':
-    'Replaces the Paloppa mark in the app and on the sign-in screen. Your published forms already use your brand.',
+    'Replaces the Loppa mark in the app and on the sign-in screen. Your published forms already use your brand.',
   'brand.wordmark': 'Name in the corner',
   'brand.colours': 'Colours',
   'brand.logo': 'Logo',

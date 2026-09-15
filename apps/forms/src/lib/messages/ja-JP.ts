@@ -8,8 +8,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const jaJP: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Paloppa 提供',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Loppa 提供',
   'app.signOut': 'ログアウト',
   'app.language': '言語',
   'app.loading': '読み込み中…',
@@ -486,7 +486,7 @@ export const jaJP: Record<MessageKey, string> = {
   'brand.clientMode': 'クライアントモード',
   'brand.clientModeOn': '自社のロゴと名称を使用する',
   'brand.clientModeHint':
-    'アプリとサインイン画面の Paloppa のマークを置き換えます。公開済みのフォームにはすでに自社のブランドが適用されています。',
+    'アプリとサインイン画面の Loppa のマークを置き換えます。公開済みのフォームにはすでに自社のブランドが適用されています。',
   'brand.wordmark': '隅に表示する名称',
   'brand.colours': '色',
   'brand.logo': 'ロゴ',

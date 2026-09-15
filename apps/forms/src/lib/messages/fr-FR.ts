@@ -3,8 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const frFR: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Propulsé par Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Propulsé par Loppa',
   'app.signOut': 'Se déconnecter',
   'app.language': 'Langue',
   'app.loading': 'Chargement…',
@@ -493,7 +493,7 @@ export const frFR: Record<MessageKey, string> = {
   'brand.clientMode': 'Mode client',
   'brand.clientModeOn': 'Utiliser notre propre logo et notre nom',
   'brand.clientModeHint':
-    'Remplace la marque Paloppa dans l’application et sur l’écran de connexion. Vos formulaires publiés utilisent déjà votre identité.',
+    'Remplace la marque Loppa dans l’application et sur l’écran de connexion. Vos formulaires publiés utilisent déjà votre identité.',
   'brand.wordmark': 'Nom dans le coin',
   'brand.colours': 'Couleurs',
   'brand.logo': 'Logo',

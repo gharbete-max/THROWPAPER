@@ -3,7 +3,7 @@ import type { ContractRegistry } from '@tp/shared/contract';
 /**
  * Sendwork is a later product (START-HERE.md §About the parallel tracks).
  *
- * Phase 4 built the transactional sending path **inside Paloppa**, not here — so `messages.send`
+ * Phase 4 built the transactional sending path **inside Loppa**, not here — so `messages.send`
  * moved from "phase 4" to B6. Leaving it pointing at phase 4 would have made `pnpm contract:check`
  * document something that is no longer true.
  */

@@ -13,10 +13,10 @@ import type { SiteCopy } from '../content.js';
  */
 export const nbNO: SiteCopy = {
   meta: {
-    homeTitle: 'Paloppa — skjemaer, påmeldinger og døra',
+    homeTitle: 'Loppa — skjemaer, påmeldinger og døra',
     homeDescription:
       'Et skjemaverktøy for organisasjoner som må få det riktig: tolv språk, deres egen profil overalt, og et adgangskort som kan skannes i døra.',
-    titleSuffix: ' — Paloppa',
+    titleSuffix: ' — Loppa',
   },
   chrome: {
     skipToContent: 'Hopp til innholdet',
@@ -25,7 +25,7 @@ export const nbNO: SiteCopy = {
     languageLabel: 'Språk',
     openTheDemo: 'Åpne demoen',
     footerTagline:
-      'Paloppa. Skjemaer, påmeldinger og døra. Demoen lagrer ingenting og sender ingenting.',
+      'Loppa. Skjemaer, påmeldinger og døra. Demoen lagrer ingenting og sender ingenting.',
   },
   hero: {
     eyebrow: 'Skjemaer, påmeldinger og døra',

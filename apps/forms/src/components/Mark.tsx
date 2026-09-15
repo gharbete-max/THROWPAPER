@@ -29,7 +29,7 @@
  * their name, and never this. Under client mode the whole corner becomes the customer's logo
  * rather than a recoloured version of ours.
  *
- * So this is Paloppa's mark in Paloppa's colours, and white-label replaces it instead of tinting
+ * So this is Loppa's mark in Loppa's colours, and white-label replaces it instead of tinting
  * it. A brand that can be repainted by whoever installs it is not a brand.
  */
 export function Mark({
@@ -65,7 +65,7 @@ export function Mark({
       /*
        * Hidden from the accessibility tree at every call site.
        *
-       * Each one already carries its own wording: the wordmark says "Paloppa" beside it, the
+       * Each one already carries its own wording: the wordmark says "Loppa" beside it, the
        * loading indicator has its label, the intro is decoration over a page that announces itself.
        * A mark that names itself a second time is a screen reader saying the product's name twice.
        */

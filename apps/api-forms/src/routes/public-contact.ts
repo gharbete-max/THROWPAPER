@@ -66,7 +66,7 @@ export function registerPublicContactRoutes(
 
       await deps.mail.send({
         to: deps.contactAddress,
-        subject: `Paloppa: ${body.name}${body.organisation ? ` (${body.organisation})` : ''}`,
+        subject: `Loppa: ${body.name}${body.organisation ? ` (${body.organisation})` : ''}`,
         text: `${body.name} <${body.email}>${body.organisation ? `\n${body.organisation}` : ''}\n\n${body.message}\n`,
       });
 

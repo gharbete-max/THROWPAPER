@@ -3,8 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const daDK: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Drevet af Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Drevet af Loppa',
   'app.signOut': 'Log ud',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',
@@ -478,7 +478,7 @@ export const daDK: Record<MessageKey, string> = {
   'brand.clientMode': 'Kundetilstand',
   'brand.clientModeOn': 'Brug vores eget logo og navn',
   'brand.clientModeHint':
-    'Erstatter Paloppas mærke i appen og på login-skærmen. Jeres offentliggjorte formularer bruger allerede jeres design.',
+    'Erstatter Loppas mærke i appen og på login-skærmen. Jeres offentliggjorte formularer bruger allerede jeres design.',
   'brand.wordmark': 'Navn i hjørnet',
   'brand.colours': 'Farver',
   'brand.logo': 'Logo',

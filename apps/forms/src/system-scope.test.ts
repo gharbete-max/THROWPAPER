@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
  * wording. Our folding paper appearing on it is our design arriving somewhere nobody invited it —
  * and worse, it would be the one part of that page the organisation cannot switch off.
  *
- * So the paper language is scoped to `.system`, which goes on the surfaces that are Paloppa's
+ * So the paper language is scoped to `.system`, which goes on the surfaces that are Loppa's
  * own: the app shell, the marketing site, and the two sign-in screens. `PublicForm` renders
  * outside the shell entirely and never carries it.
  *

@@ -5,7 +5,7 @@ import { escapeAttribute } from './link-preview.js';
  *
  * Client mode replaces our mark and our name with the customer's, and until this existed it did so
  * *after* the page had fetched its brand kit. So the one thing white-label is bought to prevent was
- * exactly what happened on every load: Paloppa's mark and Paloppa's name in the corner of somebody
+ * exactly what happened on every load: Loppa's mark and Loppa's name in the corner of somebody
  * else's product, for as long as a round trip takes, on a connection nobody controls.
  *
  * The sign-in screen is worse than the shell, and it is why this cannot be solved on the client at
@@ -138,7 +138,7 @@ export function withClientIdentity(html: string, identity: ClientIdentity): stri
       /*
        * The tab, too.
        *
-       * A white-labelled product whose browser tab says "Paloppa" is white-labelled everywhere
+       * A white-labelled product whose browser tab says "Loppa" is white-labelled everywhere
        * except the one place the customer looks at all day.
        */
       .replace(/<title>[^<]*<\/title>/, `<title>${wordmark}</title>`)

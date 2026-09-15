@@ -11,7 +11,7 @@ import { generateReference } from '../forms/public-service.js';
 import { demoEventName, demoSchedule } from './schedule.js';
 
 /**
- * The demo dataset, and the single definition of what a demonstrable Paloppa looks like.
+ * The demo dataset, and the single definition of what a demonstrable Loppa looks like.
  *
  * Both `pnpm db:seed` (Postgres) and `pnpm demo` (in memory) build from this, so the two cannot
  * drift into showing different products — which is how a demo ends up being the thing nobody
@@ -198,7 +198,7 @@ export function demoRegistration(
 }
 
 /**
- * A complete in-memory Paloppa: organisation, users, a scheduled event, a published form and
+ * A complete in-memory Loppa: organisation, users, a scheduled event, a published form and
  * registrations against it.
  *
  * Fewer registrations than the SQL seed's 200 — a demo wants a list somebody can read, and

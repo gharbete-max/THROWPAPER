@@ -10,8 +10,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const ruRU: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Работает на Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Работает на Loppa',
   'app.signOut': 'Выйти',
   'app.language': 'Язык',
   'app.loading': 'Загрузка…',
@@ -492,7 +492,7 @@ export const ruRU: Record<MessageKey, string> = {
   'brand.clientMode': 'Режим клиента',
   'brand.clientModeOn': 'Использовать собственный логотип и название',
   'brand.clientModeHint':
-    'Заменяет знак Paloppa в приложении и на экране входа. Ваши опубликованные формы уже используют ваш стиль.',
+    'Заменяет знак Loppa в приложении и на экране входа. Ваши опубликованные формы уже используют ваш стиль.',
   'brand.wordmark': 'Название в углу',
   'brand.colours': 'Цвета',
   'brand.logo': 'Логотип',

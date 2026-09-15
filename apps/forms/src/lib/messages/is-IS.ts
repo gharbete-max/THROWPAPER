@@ -3,8 +3,8 @@
 import type { MessageKey } from './en-GB.js';
 
 export const isIS: Record<MessageKey, string> = {
-  'app.name': 'Paloppa',
-  'app.poweredBy': 'Knúið af Paloppa',
+  'app.name': 'Loppa',
+  'app.poweredBy': 'Knúið af Loppa',
   'app.signOut': 'Skrá út',
   'app.language': 'Tungumál',
   'app.loading': 'Hleð…',
@@ -481,7 +481,7 @@ export const isIS: Record<MessageKey, string> = {
   'brand.clientMode': 'Viðskiptavinahamur',
   'brand.clientModeOn': 'Nota eigið merki og nafn',
   'brand.clientModeHint':
-    'Kemur í stað Paloppa-merkisins í forritinu og á innskráningarskjánum. Birt eyðublöð ykkar nota nú þegar ykkar eigið útlit.',
+    'Kemur í stað Loppa-merkisins í forritinu og á innskráningarskjánum. Birt eyðublöð ykkar nota nú þegar ykkar eigið útlit.',
   'brand.wordmark': 'Nafn í horninu',
   'brand.colours': 'Litir',
   'brand.logo': 'Merki',
