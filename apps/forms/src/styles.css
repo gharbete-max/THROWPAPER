@@ -5569,3 +5569,102 @@ body:has(> #root .shell--narrow) {
   border-color: var(--tp-colour-border);
   background: none;
 }
+
+/* --- Paper ----------------------------------------------------------------
+ * A form drawn on the page it came from (`screens/builder/paper/`). The page is an image or a
+ * canvas at the pane's width; each question is a box positioned in percentages of it, so the same
+ * anchor holds at any width and on any screen.
+ */
+.button--quiet[aria-pressed='true'] {
+  background: var(--tp-colour-surface);
+  border-color: var(--tp-colour-primary);
+}
+
+.paper__surface {
+  position: relative;
+  /* Draw, move and resize are pointer gestures here; the page must not scroll under them. */
+  touch-action: none;
+  user-select: none;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+  background: var(--tp-colour-background);
+}
+
+.paper__image {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* A box is a button so the keyboard can reach it, but it has to look like a marked region rather
+ * than a control: transparent fill, the brand border, and the label on a tab so a small box can
+ * still say what it is. */
+.paper__box {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--tp-colour-primary);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tp-colour-primary) 12%, transparent);
+  color: var(--tp-colour-text);
+  font: inherit;
+  cursor: move;
+  text-align: start;
+}
+
+.paper__box--selected {
+  border-width: 3px;
+  background: color-mix(in srgb, var(--tp-colour-primary) 24%, transparent);
+}
+
+.paper__box--ghost {
+  border-style: dashed;
+  pointer-events: none;
+}
+
+.paper__box-label {
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-start: -2px;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+  max-inline-size: 16rem;
+  padding: 0 calc(var(--tp-spacing-unit) * 0.5);
+  border: 1px solid var(--tp-colour-primary);
+  border-block-end: 0;
+  border-radius: var(--tp-radius-sm) var(--tp-radius-sm) 0 0;
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font-size: var(--tp-text-xs);
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paper__box-label .icon {
+  inline-size: 0.9em;
+  block-size: 0.9em;
+}
+
+.paper__handle {
+  position: absolute;
+  inset-block-end: -6px;
+  inset-inline-end: -6px;
+  inline-size: 12px;
+  block-size: 12px;
+  border-radius: 50%;
+  background: var(--tp-colour-primary);
+  cursor: nwse-resize;
+}
+
+.paper__picker {
+  position: absolute;
+  inset-inline-start: var(--tp-spacing-unit);
+  inset-block-end: var(--tp-spacing-unit);
+  max-inline-size: calc(100% - var(--tp-spacing-unit) * 2);
+  z-index: 1;
+}

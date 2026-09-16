@@ -1,6 +1,6 @@
 # ADR 0004 — People have old forms, and most of them are PDFs
 
-**Status:** proposed — this is the thinking, not a decision
+**Status:** accepted 2026-09-16 — see "Decided" at the end
 **Date:** 2026-09-15
 
 > **Since written:** the **mapping** half of step one is built —
@@ -109,3 +109,21 @@ tooling already in the repository — then a measurement, then a decision about 
 
 The request behind "a PDF editor" is "let people keep their old forms". An importer answers that
 better, because the output is a form this product can actually run.
+
+## Decided (2026-09-16)
+
+The open questions above were answered, and the file half is built (`PROGRESS.md`, "A form from
+paper"):
+
+- **Where the file lives:** the private upload store, alongside respondent attachments, keyed by
+  content hash. Read back only through `GET /v1/forms/:id/paper/:key`, which checks the key is
+  in the form's current draft. No new table: `definition.paper.sources` is the ownership record.
+- **Kept, not discarded.** The anchors are meaningless without the page they point at, and the
+  next phase writes answers back onto it. Retention follows respondent attachments exactly —
+  nothing purges yet, and that gap is already on the launch checklist.
+- **Caps:** 10 MB (the existing attachment cap) and 20 pages. Parsing happens in the author's
+  browser, so the server never runs `pdfjs` on a stranger's bytes.
+- **Step three was taken now rather than after measuring**, because the product owner asked for
+  photographed paper to work on day one. It is manual placement, as this ADR proposed — not OCR,
+  not inference. Digital PDFs offer the printed text beside a box as its label, verbatim.
+- **Overlay output** is the next phase, not this one.

@@ -1012,6 +1012,53 @@ the same person ten minutes apart, which is why the split is theirs to set rathe
 guess.
 
 
+## A form from paper · done
+
+The request was a scanner and a PDF editor inside the forms app — photograph a page, make it a
+PDF, add radio buttons, extract the text, sign. `docs/adr/0004-old-forms-on-paper.md` had already
+argued that the thing people want is *their old form, running here*, and that an importer answers
+that better than an editor because its output is a form this product can actually run. This is
+the file half of that importer; the mapping half (`importAcroFields`) landed with #74.
+
+**From paper**, beside Import in the builder. A PDF or a set of photographs. A PDF made by a form
+tool declares its fields, and they arrive as questions — text, tick box, radio group, list,
+signature — each with its place on the page; a push button or a read-only field is listed as
+skipped, with the reason, exactly as the SurveyJS importer does. A photograph, or a PDF that is
+only a picture, arrives as pages. The file is read in the browser first and described — pages,
+fields, skipped — before anything is stored; the button under that description is rule 7's
+confirmation, and nothing reaches the server until it is pressed.
+
+**The paper view.** A form with paper has two views of the same field list. The list is the one
+that existed; the paper is every page, stacked, with a box on it per question. Dragging on empty
+paper draws a box and asks what kind of answer it takes; on a digital PDF the printed words just
+left of the box are offered as its label, verbatim, because rule 8 forbids improving what the
+document says. Boxes are buttons — the keyboard reaches them, arrows move them, Shift resizes —
+so placement is not pointer-only. Selecting one opens the same `FieldProperties` as the list.
+
+**Anchors are fractions of the page**, not points or pixels: the same anchor is right on a
+thumbnail, a phone photograph and, later, the original at native size. A field with an anchor is
+an ordinary field with one extra optional property, so every form built from scratch is unchanged
+and `schemaVersion` stays at 1. This touches `packages/shared`.
+
+**In the browser, lazily.** `pdfjs-dist` is a megabyte and exists for one button, so it is loaded
+with `import()` from one module and `bundle-split.test.ts` now refuses a static import of it
+anywhere. The server never draws a stranger's PDF: it stores the bytes in the private upload
+store, 10 MB and 20 pages at most, judged by magic bytes rather than filename, and hands them back
+only through `GET /v1/forms/:id/paper/:key` — authenticated, scoped through the form, and only
+for a key the current draft lists. That list is the ownership record; there is no new table.
+
+**Never "scan" and never "sign."** The first would promise edge detection and OCR this does not
+do; the second claims a legal act (`SPEC-forms.md` §8). The drawn signature field is what a PDF's
+signature field becomes, and it is described as it always was.
+
+**Deliberately not built.** OCR on photographs (the author types the label; Tesseract is a
+follow-up if photographs turn out to outnumber PDFs). Edge detection and deskew (a phone camera's
+document mode does this before the file exists). Writing answers and the drawn mark back onto the
+original — the next phase; the anchors are what make it a rendering job. Purging source files: they
+live in the same content-addressed store as respondent attachments, which nothing purges yet
+either, and that gap is already on the launch checklist. The seed gets no paper, because a
+`paper` block pointing at a file that is not on disk would be a broken demo.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

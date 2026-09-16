@@ -73,6 +73,12 @@ export default defineConfig({
          * which is a degradation nobody at a door will notice.
          */
         globIgnores: [
+          /**
+           * The PDF reader, for the same reason: it is a megabyte the builder loads when somebody
+           * presses "From paper", and a door screen never will.
+           */
+          '**/pdf-*.js',
+          '**/pdf.worker*',
           '**/inter-latin-ext-*.woff2',
           '**/inter-cyrillic-*.woff2',
           '**/inter-greek-*.woff2',

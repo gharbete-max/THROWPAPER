@@ -38,7 +38,10 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
 /**
  * Budgets in gzipped kilobytes.
  *
- * Measured on the build at the time of writing: **entry 6.7, stylesheet 11.8, total 499.4.** Each
+ * Measured on the build at the time of writing: **entry 6.7, stylesheet 11.8, total 499.4.** The
+ * paper importer then added `pdfjs-dist` — one lazily-loaded chunk of ~180 KB gzipped that only a
+ * builder pressing "From paper" ever downloads — and the total was raised to keep the same
+ * headroom above it (entry and stylesheet did not move). Each
  * budget is set well above its measurement, so an ordinary feature does not trip it and a doubling
  * does.
  *
@@ -54,7 +57,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 650,
+  total: 850,
 } as const;
 
 function gzippedKb(path: string): number {

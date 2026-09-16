@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Locale, LocalisedText } from '../api/common.js';
 import { AssetPath } from '../assets.js';
-import { FileAccept, MAX_UPLOAD_BYTES } from './uploads.js';
+import { FileAccept, MAX_UPLOAD_BYTES, UploadKey } from './uploads.js';
 
 /**
  * A form definition is a **versioned JSON document, never an HTML string** (`SPEC-forms.md` §7).
@@ -129,6 +129,22 @@ export type VisibilityRule = z.infer<typeof VisibilityRule>;
  */
 const showWhen = VisibilityRule.optional();
 
+/**
+ * Where a question sits on the paper it was imported from — see `Paper` below.
+ *
+ * Fractions of the page rather than PDF points or pixels, so the same anchor is right on a
+ * 72 dpi thumbnail, a phone photograph and, later, when answers are written back onto the
+ * original at its native size. `page` indexes the flattened page list across every source.
+ */
+export const PaperAnchor = z.object({
+  page: z.number().int().nonnegative(),
+  x: z.number().min(0).max(1),
+  y: z.number().min(0).max(1),
+  w: z.number().min(0).max(1),
+  h: z.number().min(0).max(1),
+});
+export type PaperAnchor = z.infer<typeof PaperAnchor>;
+
 const base = {
   id: z.string().min(1).max(64),
   key: FieldKey,
@@ -138,6 +154,7 @@ const base = {
   required: z.boolean().default(false),
   width: FieldWidth.default('full'),
   showWhen,
+  paper: PaperAnchor.optional(),
 };
 
 export const SelectOption = z.object({
@@ -351,6 +368,7 @@ const entryVariants = [
     type: z.literal('section_break'),
     width: FieldWidth.default('full'),
     showWhen,
+    paper: PaperAnchor.optional(),
     label: LocalisedText,
     helpText: LocalisedText.optional(),
   }),
@@ -360,6 +378,7 @@ const entryVariants = [
     type: z.literal('rich_text'),
     width: FieldWidth.default('full'),
     showWhen,
+    paper: PaperAnchor.optional(),
     /** Plain text with paragraph breaks. Not HTML — that would be a stored-XSS surface. */
     content: LocalisedText,
   }),
@@ -377,6 +396,7 @@ const entryVariants = [
     type: z.literal('image'),
     width: FieldWidth.default('full'),
     showWhen,
+    paper: PaperAnchor.optional(),
     src: AssetPath,
     alt: LocalisedText.default({}),
     /** Caps the rendered width in pixels. Unset means as wide as the form allows. */
@@ -399,6 +419,7 @@ const entryVariants = [
     type: z.literal('link'),
     width: FieldWidth.default('full'),
     showWhen,
+    paper: PaperAnchor.optional(),
     label: LocalisedText.default({}),
     href: z
       .string()
@@ -414,6 +435,7 @@ const entryVariants = [
     id: base.id,
     key: base.key,
     type: z.literal('hidden'),
+    paper: PaperAnchor.optional(),
     /** Query-string parameter this reads from, e.g. `?ref=abc`. */
     fromParameter: z.string().max(64).optional(),
     defaultValue: z.string().max(500).optional(),
@@ -438,6 +460,7 @@ const entryVariants = [
     type: z.literal('shape'),
     width: FieldWidth.default('full'),
     showWhen,
+    paper: PaperAnchor.optional(),
     kind: ShapeKind.default('rectangle'),
     fill: DecorationColour.default('none'),
     stroke: DecorationColour.default('border'),
@@ -470,6 +493,7 @@ const entryVariants = [
     type: z.literal('drawing'),
     width: FieldWidth.default('full'),
     showWhen,
+    paper: PaperAnchor.optional(),
     /**
      * One entry per stroke — a stroke being one press, drag and release, so lifting the pen starts
      * another. Kept apart rather than concatenated so that a single stroke can be undone.
@@ -519,6 +543,7 @@ const repeatingGroupVariant = z.object({
   required: base.required,
   width: base.width,
   showWhen: base.showWhen,
+  paper: base.paper,
   type: z.literal('repeating_group'),
   fields: z.array(EntryField).min(1),
   min: z.number().int().min(0).max(MAX_GROUP_ENTRIES).default(0),
@@ -560,7 +585,12 @@ const repeatingGroupVariant = z.object({
 
 export const Field = z.discriminatedUnion('type', [
   ...entryVariants,
-  z.object({ id: base.id, key: base.key, type: z.literal('page_break') }),
+  z.object({
+    id: base.id,
+    key: base.key,
+    type: z.literal('page_break'),
+    paper: PaperAnchor.optional(),
+  }),
   repeatingGroupVariant,
 ]);
 
@@ -694,11 +724,34 @@ export function formLocales(
   return offered.length > 0 ? offered : [...organisationLocales];
 }
 
+/** Twenty pages. A membership form is two; a stranger's PDF is whatever they like. */
+export const MAX_PAPER_PAGES = 20;
+
+/**
+ * The paper this form was made from: one PDF, or a photograph per page.
+ *
+ * `docs/adr/0004-old-forms-on-paper.md`. The files live in the private upload store and are
+ * owned by the form — this list is the ownership record, and the only way to read one back is
+ * through the form's own route, which checks the key is here. No separate table.
+ *
+ * Kept, not discarded after extraction, because the anchors above are meaningless without the
+ * page they point at, and because the next phase writes answers back onto it.
+ */
+export const Paper = z.object({
+  sources: z
+    .array(z.object({ key: UploadKey, pages: z.number().int().positive().max(MAX_PAPER_PAGES) }))
+    .min(1)
+    .max(MAX_PAPER_PAGES),
+});
+export type Paper = z.infer<typeof Paper>;
+
 export const FormDefinition = z.object({
   /** Bumped when the document shape changes in a way old versions cannot be read as. */
   schemaVersion: z.literal(1),
   fields: z.array(Field).default([]),
   settings: FormSettings.default({}),
+  /** Absent on every form built from scratch, which is why `schemaVersion` stays at 1. */
+  paper: Paper.optional(),
 });
 
 export type FormDefinition = z.infer<typeof FormDefinition>;

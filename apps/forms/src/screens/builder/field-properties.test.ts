@@ -58,6 +58,9 @@ const PANEL_CONTROLS = [
   'paths',
   'viewBoxWidth',
   'viewBoxHeight',
+  // Where a field sits on the paper it came from, in `paper/PaperCanvas.tsx`: drawn, dragged and
+  // nudged with the arrow keys rather than typed as four numbers — but reachable.
+  'paper',
 ];
 
 /**

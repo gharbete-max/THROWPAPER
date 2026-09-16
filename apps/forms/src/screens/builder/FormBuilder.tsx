@@ -15,6 +15,8 @@ import { useConfirm } from '../../components/Confirm.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
 import { ImportSurvey } from './ImportSurvey.js';
+import { ImportPaper } from './paper/ImportPaper.js';
+import { PaperCanvas } from './paper/PaperCanvas.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
 import { FormSettingsPanel } from './FormSettingsPanel.js';
@@ -45,6 +47,8 @@ export function FormBuilder() {
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** Paper is the default view of a form that has some: it is why the author brought it. */
+  const [view, setView] = useState<'list' | 'paper'>('paper');
   const history = useHistory();
 
   /**
@@ -372,6 +376,16 @@ export function FormBuilder() {
               setSelectedId(null);
             }}
           />
+          {id && (
+            <ImportPaper
+              formId={id}
+              onImport={(definition) => {
+                edit(definition);
+                setSelectedId(null);
+                setView('paper');
+              }}
+            />
+          )}
 
           <span className="small muted">{t(`builder.${saveState}`)}</span>
           <button
@@ -439,19 +453,55 @@ export function FormBuilder() {
             <span className="small muted">{t('builder.addHint')}</span>
           </div>
 
+          {/*
+            A form made from paper has two views of the same field list: the paper, where each
+            question is a box on the page it came from, and the list, where order and removal
+            live. Neither is a copy of the other.
+          */}
+          {definition.paper && id && (
+            <div className="row" role="group" aria-label={t('paper.view')}>
+              {(['paper', 'list'] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className="button button--quiet small"
+                  aria-pressed={view === option}
+                  onClick={() => setView(option)}
+                >
+                  <Icon name={option === 'paper' ? 'file' : 'forms'} />
+                  {t(`paper.view.${option}`)}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="card builder__canvas">
-            <FieldCanvas
-              fields={definition.fields}
-              selectedId={selectedId}
-              onSelect={(fieldId) => setSelectedId(fieldId === selectedId ? null : fieldId)}
-              onReorder={(fields) => edit({ ...definition, fields })}
-              onRemove={removeField}
-              onMove={moveField}
-              onDuplicate={duplicateField}
-              renderEditor={(field) => (
-                <FieldProperties field={field} definition={definition} onChange={updateField} />
-              )}
-            />
+            {definition.paper && id && view === 'paper' ? (
+              <PaperCanvas
+                formId={id}
+                saved={saveState === 'saved'}
+                definition={definition}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+                onChange={edit}
+                renderEditor={(field) => (
+                  <FieldProperties field={field} definition={definition} onChange={updateField} />
+                )}
+              />
+            ) : (
+              <FieldCanvas
+                fields={definition.fields}
+                selectedId={selectedId}
+                onSelect={(fieldId) => setSelectedId(fieldId === selectedId ? null : fieldId)}
+                onReorder={(fields) => edit({ ...definition, fields })}
+                onRemove={removeField}
+                onMove={moveField}
+                onDuplicate={duplicateField}
+                renderEditor={(field) => (
+                  <FieldProperties field={field} definition={definition} onChange={updateField} />
+                )}
+              />
+            )}
           </div>
         </div>
 

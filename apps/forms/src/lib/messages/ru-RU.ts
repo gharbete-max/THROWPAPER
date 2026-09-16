@@ -774,4 +774,31 @@ export const ruRU: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'его изображение находится в другом месте в сети',
   'import.reason.nested-group': 'повторяющийся блок внутри другого',
   'import.reason.needs-limit': 'в нём не указано, сколько записей допускается',
+  'paper.open': 'С бумаги',
+  'paper.heading': 'Сделать форму из бумаги',
+  'paper.explain':
+    'Загрузите PDF, который у вас уже есть, или сфотографируйте каждую страницу. Поля, объявленные в PDF, читаются как есть; на фотографии вы рисуете рамки сами.',
+  'paper.choose': 'PDF или фотографии',
+  'paper.reading': 'Чтение…',
+  'paper.storing': 'Сохранение…',
+  'paper.pages':
+    'plural:one {count} страница | few {count} страницы | many {count} страниц | other {count} страницы',
+  'paper.fieldsFound':
+    'plural:one найдено {count} поле | few найдено {count} поля | many найдено {count} полей | other найдено {count} поля',
+  'paper.noFields': 'Поля не объявлены — нарисуйте их на странице после импорта.',
+  'paper.skipped':
+    'plural:one {count} поле пропущено | few {count} поля пропущено | many {count} полей пропущено | other {count} поля пропущено',
+  'paper.tooManyPages': 'Это {count} страниц; максимум — {max}.',
+  'paper.notReadable': 'Не удалось прочитать файл.',
+  'paper.reason.no-answer': 'кнопка, которая ничего не собирает',
+  'paper.reason.not-a-question': 'заполняется документом, а не читателем',
+  'paper.reason.unreadable': 'выбор без читаемых вариантов',
+  'paper.reason.unknown-type': 'неизвестный тип поля',
+  'paper.view': 'Вид',
+  'paper.view.paper': 'Бумага',
+  'paper.view.list': 'Список',
+  'paper.draw':
+    'Потяните по странице, чтобы добавить туда вопрос. Стрелки двигают выбранную рамку; Shift со стрелками меняет её размер.',
+  'paper.pickType': 'Какой вид ответа?',
+  'paper.page': 'Страница {n}',
 };
