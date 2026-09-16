@@ -80,6 +80,7 @@ export type IconName =
   | 'theme-light'
   | 'theme-dark'
   | 'command'
+  | 'upload'
   | 'redo';
 
 /** 24×24 paths, stroke-width 2, round caps. */
@@ -107,6 +108,13 @@ const PATHS: Record<IconName, string> = {
     'M18 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1',
   paperclip: 'M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 5',
   signature: 'M3 17c4-9 6-9 8-2s4 7 6 0M3 21h18',
+  /**
+   * An arrow going *into* a tray — bringing something in, rather than sending it out.
+   *
+   * Deliberately the mirror of nothing else here: `publish` points away, and an import that
+   * borrowed it would read as the opposite of what it does.
+   */
+  upload: 'M12 16V4M8 8l4-4 4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3',
   /**
    * Two stacked cards with a plus — a block that repeats, and a way to add another.
    *

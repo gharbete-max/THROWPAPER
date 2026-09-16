@@ -740,4 +740,29 @@ export const fiFI: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Vierasta ei ole tässä ilmoittautumisessa',
   'submissions.column.entry': '{group} {number} – {child}',
   'checkin.guestOf': 'Vieraana: {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Tuo',
+  'import.heading': 'Tuo SurveyJS-kysely',
+  'import.explain':
+    'Liitä kyselyn JSON. Kysymykset, joille ei ole vastinetta, luetellaan eikä arvata.',
+  'import.paste': 'Kyselyn JSON',
+  'import.notASurvey': 'Tätä kyselyä ei voi lukea.',
+  'import.willImport': 'one {{n} kysymys tuodaan} other {{n} kysymystä tuodaan}',
+  'import.willSkip':
+    'one {{n} kysymykselle ei ole vastinetta} other {{n} kysymykselle ei ole vastinetta}',
+  'import.replaces': 'Tuonti korvaa kaiken, mitä lomakkeessa nyt on.',
+  'import.confirm': 'Korvaa lomake',
+  'import.cancel': 'Peruuta',
+  'import.reason.no-equivalent': 'ei vastinetta',
+  'import.reason.unknown-type': 'tuntematon kysymystyyppi',
+  'import.reason.unreadable': 'ei mitään luettavaa tuotavaksi',
+  'import.reason.needs-asset': 'sen kuva sijaitsee muualla verkossa',
+  'import.reason.nested-group': 'toistuva lohko toisen sisällä',
+  'import.reason.needs-limit': 'se ei kerro, montako kohtaa sallitaan',
 };

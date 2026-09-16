@@ -739,4 +739,28 @@ export const jaJP: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'この申込にこの同伴者はいません',
   'submissions.column.entry': '{group} {number} — {child}',
   'checkin.guestOf': '{name} さんの同伴者',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'インポート',
+  'import.heading': 'SurveyJS のアンケートをインポート',
+  'import.explain':
+    'アンケートの JSON を貼り付けてください。対応するものがない設問は、推測せず一覧で示されます。',
+  'import.paste': 'アンケートの JSON',
+  'import.notASurvey': 'これは読み取れるアンケートではありません。',
+  'import.willImport': 'other {{n} 件の設問をインポートします}',
+  'import.willSkip': 'other {{n} 件の設問には対応するものがありません}',
+  'import.replaces': 'インポートすると、このフォームの現在の内容はすべて置き換わります。',
+  'import.confirm': 'このフォームを置き換える',
+  'import.cancel': 'キャンセル',
+  'import.reason.no-equivalent': '対応するものがありません',
+  'import.reason.unknown-type': '不明な設問の種類',
+  'import.reason.unreadable': '読み取れる内容がありません',
+  'import.reason.needs-asset': '画像がウェブ上の別の場所にあります',
+  'import.reason.nested-group': '繰り返しブロックの入れ子',
+  'import.reason.needs-limit': '何件まで許可するかが書かれていません',
 };

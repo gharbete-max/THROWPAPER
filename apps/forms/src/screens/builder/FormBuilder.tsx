@@ -14,6 +14,7 @@ import { useSession } from '../../lib/session.js';
 import { useConfirm } from '../../components/Confirm.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { FieldProperties } from './FieldProperties.js';
+import { ImportSurvey } from './ImportSurvey.js';
 import { PALETTE_GROUPS, newField, uniqueKey } from './field-defaults.js';
 import { FormPreview } from './FormPreview.js';
 import { FormSettingsPanel } from './FormSettingsPanel.js';
@@ -360,6 +361,17 @@ export function FormBuilder() {
           >
             <Icon name="redo" />
           </button>
+
+          {/*
+            Import sits beside undo rather than in the palette: it is something you do to the
+            whole form, once, near the start — not a field you drop on it.
+          */}
+          <ImportSurvey
+            onImport={(definition) => {
+              edit(definition);
+              setSelectedId(null);
+            }}
+          />
 
           <span className="small muted">{t(`builder.${saveState}`)}</span>
           <button

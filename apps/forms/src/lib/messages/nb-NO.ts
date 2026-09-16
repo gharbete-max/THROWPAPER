@@ -734,4 +734,29 @@ export const nbNO: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Gjesten står ikke på påmeldingen',
   'submissions.column.entry': '{group} {number} – {child}',
   'checkin.guestOf': 'Gjest hos {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Importer',
+  'import.heading': 'Importer en SurveyJS-undersøkelse',
+  'import.explain':
+    'Lim inn undersøkelsens JSON. Spørsmål uten en tilsvarende her listes opp i stedet for å gjettes.',
+  'import.paste': 'Undersøkelsens JSON',
+  'import.notASurvey': 'Dette er ikke en undersøkelse som kan leses.',
+  'import.willImport': 'one {{n} spørsmål importeres} other {{n} spørsmål importeres}',
+  'import.willSkip':
+    'one {{n} spørsmål har ingen tilsvarende her} other {{n} spørsmål har ingen tilsvarende her}',
+  'import.replaces': 'Importen erstatter alt som er i skjemaet nå.',
+  'import.confirm': 'Erstatt skjemaet',
+  'import.cancel': 'Avbryt',
+  'import.reason.no-equivalent': 'ingen tilsvarende her',
+  'import.reason.unknown-type': 'en ukjent spørsmålstype',
+  'import.reason.unreadable': 'ingenting lesbart å importere',
+  'import.reason.needs-asset': 'bildet ligger et annet sted på nettet',
+  'import.reason.nested-group': 'en gjentatt blokk inne i en annen',
+  'import.reason.needs-limit': 'den sier aldri hvor mange oppføringer som tillates',
 };

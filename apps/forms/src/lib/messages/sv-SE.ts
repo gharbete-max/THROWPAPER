@@ -734,4 +734,29 @@ export const svSE: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Gästen finns inte på anmälan',
   'submissions.column.entry': '{group} {number} – {child}',
   'checkin.guestOf': 'Gäst hos {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Importera',
+  'import.heading': 'Importera en SurveyJS-enkät',
+  'import.explain':
+    'Klistra in enkätens JSON. Frågor som saknar motsvarighet här listas i stället för att gissas.',
+  'import.paste': 'Enkätens JSON',
+  'import.notASurvey': 'Det här är inte en enkät som kan läsas.',
+  'import.willImport': 'one {{n} fråga importeras} other {{n} frågor importeras}',
+  'import.willSkip':
+    'one {{n} fråga saknar motsvarighet här} other {{n} frågor saknar motsvarighet här}',
+  'import.replaces': 'Importen ersätter allt som finns i formuläret nu.',
+  'import.confirm': 'Ersätt formuläret',
+  'import.cancel': 'Avbryt',
+  'import.reason.no-equivalent': 'saknar motsvarighet här',
+  'import.reason.unknown-type': 'en okänd frågetyp',
+  'import.reason.unreadable': 'inget läsbart att importera',
+  'import.reason.needs-asset': 'dess bild ligger någon annanstans på webben',
+  'import.reason.nested-group': 'ett upprepat block inuti ett annat',
+  'import.reason.needs-limit': 'den anger aldrig hur många poster som tillåts',
 };

@@ -744,6 +744,31 @@ export const enGB = {
   'checkin.outcome.no-such-guest': 'Guest not on this registration',
   'submissions.column.entry': '{group} {number} — {child}',
   'checkin.guestOf': 'Guest of {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Import',
+  'import.heading': 'Import a SurveyJS survey',
+  'import.explain':
+    'Paste the survey’s JSON. Questions that have no equivalent here are listed rather than guessed at.',
+  'import.paste': 'Survey JSON',
+  'import.notASurvey': 'That is not a survey this can read.',
+  'import.willImport': 'one {{n} question will be imported} other {{n} questions will be imported}',
+  'import.willSkip':
+    'one {{n} question has no equivalent here} other {{n} questions have no equivalent here}',
+  'import.replaces': 'Importing replaces everything currently in this form.',
+  'import.confirm': 'Replace this form',
+  'import.cancel': 'Cancel',
+  'import.reason.no-equivalent': 'no equivalent here',
+  'import.reason.unknown-type': 'an unknown question type',
+  'import.reason.unreadable': 'nothing readable to import',
+  'import.reason.needs-asset': 'its picture lives somewhere else on the web',
+  'import.reason.nested-group': 'a repeating block inside another one',
+  'import.reason.needs-limit': 'it never says how many entries it allows',
 } as const;
 
 /**
