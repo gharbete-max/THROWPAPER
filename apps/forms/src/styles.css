@@ -5088,7 +5088,7 @@ body:has(> #root .shell--narrow) {
  *
  * ## Where it is allowed to appear
  *
- * Under `.system` only. That class goes on the surfaces that are *Formwork* — the signed-in app,
+ * Under `.system` only. That class goes on the surfaces that are *Forms* — the signed-in app,
  * the marketing site, the sign-in screen — and never on a published form, which wears the
  * organisation's brand and belongs to them. A respondent is looking at their association's
  * registration page, not at our house style, and a folding animation nobody chose is our house

@@ -1,4 +1,4 @@
-# Formwork — how to report a security problem
+# Loppa — how to report a security problem
 #
 # RFC 9116. Served as a static file from the app's public root, so it is reachable at
 # /.well-known/security.txt without a route.

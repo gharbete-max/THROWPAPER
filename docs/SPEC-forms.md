@@ -1,4 +1,4 @@
-# Formwork — forms, inspections, measurements and reports
+# Forms — forms, inspections, measurements and reports
 
 Read `SPEC-shared.md` first; this document assumes the grid, tokens, i18n and calc packages.
 

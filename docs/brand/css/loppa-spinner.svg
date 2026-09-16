@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Loading">
+  <style>
+    .p { transform-origin: 256.0px 256.0px; animation: 1.9s cubic-bezier(.66,0,.34,1) infinite; }
+    .a { animation-name: chompA; }
+    .b { animation-name: chompB; }
+    .turn { transform-origin: 256.0px 256.0px; animation: turn 3.4s linear infinite; }
+    @keyframes chompA { 0%,100% { transform: rotate(7deg);  } 50% { transform: rotate(-7deg); } }
+    @keyframes chompB { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg);  } }
+    @keyframes turn   { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .p, .turn { animation: none; } }
+  </style>
+  <g class="turn">
+    <g class="p a">
+      <path d="M 256.0 256.0 L 372.6 109.4 L 256.0 42.0 Z" fill="#CEA85C"/>
+      <path d="M 256.0 256.0 L 256.0 42.0 L 139.4 109.4 Z" fill="#C6CAD1"/>
+    </g>
+    <g class="p b">
+      <path d="M 256.0 256.0 L 109.4 139.4 L 42.0 256.0 Z" fill="#CEA85C"/>
+      <path d="M 256.0 256.0 L 42.0 256.0 L 109.4 372.6 Z" fill="#C6CAD1"/>
+    </g>
+    <g class="p a">
+      <path d="M 256.0 256.0 L 139.4 402.6 L 256.0 470.0 Z" fill="#CEA85C"/>
+      <path d="M 256.0 256.0 L 256.0 470.0 L 372.6 402.6 Z" fill="#C6CAD1"/>
+    </g>
+    <g class="p b">
+      <path d="M 256.0 256.0 L 402.6 372.6 L 470.0 256.0 Z" fill="#CEA85C"/>
+      <path d="M 256.0 256.0 L 470.0 256.0 L 402.6 139.4 Z" fill="#C6CAD1"/>
+    </g>
+  </g>
+</svg>

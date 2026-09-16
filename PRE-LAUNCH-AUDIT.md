@@ -25,7 +25,7 @@ set. Where something could not be determined from the repository it says so rath
 | Auth           | Magic link → bearer access + refresh token. **No passwords stored.** | `apps/api-forms/src/auth/service.ts`                    |
 | Documents      | Playwright/Chromium renders PDFs in-process                          | `apps/api-forms/src/documents/render.ts`                |
 | Mail           | `console` or Amazon SES, region `eu-north-1` (Stockholm)             | `.env.example`, `apps/api-forms/src/mail/`              |
-| Second product | `apps/mailer` + `apps/api-mailer` (Sendwork)                         | `pnpm-workspace.yaml`                                   |
+| Second product | `apps/mailer` + `apps/api-mailer` (Mailer)                           | `pnpm-workspace.yaml`                                   |
 | Shared         | `packages/{tokens,i18n,ui,calc,shared}`                              | —                                                       |
 
 ### Things that are absent, which is itself the finding
@@ -112,7 +112,7 @@ Playwright already in the repo against `pnpm demo`.
 
 > ⚠️ **The baseline is a dev-server capture and under-reports the public pages.** `pnpm demo`
 > runs Vite, which serves the SPA shell for site routes; the SSR entry only runs in the built
-> container. So every site page in the baseline shows the shell title "Formwork". That is an
+> container. So every site page in the baseline shows the old working-name shell title. That is an
 > artefact, **not** a production bug — `entry-server.tsx:31` does emit per-page meta. Phase 4's
 > SEO checks must be run against the built image, not the demo.
 

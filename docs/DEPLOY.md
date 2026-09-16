@@ -24,13 +24,13 @@ This document is what makes that decision actionable. It does not make it for yo
 ## One image, two modes
 
 ```bash
-docker build -t formwork .
+docker build -t loppa .
 ```
 
 **Demo** — in memory, no database, mail never sent:
 
 ```bash
-docker run -p 4001:4001 -e DEMO=true -e DEMO_ALLOW_PRODUCTION=true formwork
+docker run -p 4001:4001 -e DEMO=true -e DEMO_ALLOW_PRODUCTION=true loppa
 ```
 
 Both variables are needed, and that is deliberate. The image runs as `NODE_ENV=production`, and a
@@ -47,8 +47,8 @@ docker run -p 4001:4001 \
   -e MAIL_PROVIDER=ses \
   -e MAIL_REGION=eu-north-1 \
   -e MAIL_FROM=anmalan@example.com \
-  -v formwork-documents:/app/.documents \
-  formwork
+  -v loppa-documents:/app/.documents \
+  loppa
 ```
 
 The API serves the built app as well, so this single container is the whole product. That is a

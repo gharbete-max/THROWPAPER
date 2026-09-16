@@ -27,3 +27,4 @@ blob-report/
 
 # design hook cache (generated)
 .impeccable/hook.cache.json
+__pycache__/

@@ -1,7 +1,7 @@
-# Sendwork — customised and recurring email
+# Mailer — customised and recurring email
 
 Read `SPEC-shared.md` first. This product stands alone: a customer can buy it with no forms
-product at all, importing audiences from CSV. Its integration with Formwork is the contract in
+product at all, importing audiences from CSV. Its integration with Forms is the contract in
 `CONTRACT.md` and nothing more.
 
 ## 0. Parameters
@@ -109,7 +109,7 @@ health by domain. All in the shared grid with export parity, plus charts from `p
 
 ## 8. Stack
 
-Same foundation as Formwork: React + TypeScript, typed API with shared Zod schemas, PostgreSQL,
+Same foundation as Forms: React + TypeScript, typed API with shared Zod schemas, PostgreSQL,
 S3-compatible storage. The **durable job queue is load-bearing here** — every send is a job with
 retries and an idempotency key, and a send is never issued from a request handler or a naive cron
 loop. Rendering runs per recipient and stores the rendered output reference on the message row.

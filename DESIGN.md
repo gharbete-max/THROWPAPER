@@ -99,7 +99,7 @@ components:
 ## Overview
 
 Two products share these tokens: **Loppa**, a form builder with events, a door and a ledger,
-and **Sendwork**, its email counterpart. The audience is membership secretaries, event organisers
+and **Mailer**, its email counterpart. The audience is membership secretaries, event organisers
 and association treasurers — people who have to get a registration right the first time, in front
 of an audience, often at a door in bad weather.
 

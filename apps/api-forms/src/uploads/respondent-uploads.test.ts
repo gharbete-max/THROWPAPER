@@ -23,7 +23,7 @@ const png = Buffer.concat([Buffer.from([0x89]), Buffer.from('PNG\r\n\n'), Buffer
 const pdf = Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.alloc(32)]);
 
 function multipart(content: Buffer, filename = 'cv.pdf') {
-  const boundary = '----formworktest';
+  const boundary = '----loppatest';
   const head = Buffer.from(
     `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\n` +
       `Content-Type: application/octet-stream\r\n\r\n`,

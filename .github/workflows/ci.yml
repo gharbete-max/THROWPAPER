@@ -81,7 +81,7 @@ jobs:
           CI: 'true'
       # The Dockerfile is only ever proven by building it, and nobody here has Docker.
       - name: Build the deployment image
-        run: docker build -t formwork:ci .
+        run: docker build -t loppa:ci .
 
       # A container that boots and answers is the difference between "it compiled" and "it runs".
       - name: Smoke-test the image in demo mode
@@ -89,15 +89,15 @@ jobs:
           # Whatever happens, print the container's own account of it. The first version of this
           # step exited before reaching `docker logs`, so a crash-at-boot reported nothing but a
           # column of refused connections.
-          trap 'echo "--- container logs ---"; docker logs formwork-demo 2>&1 || true; docker rm -f formwork-demo > /dev/null 2>&1 || true' EXIT
+          trap 'echo "--- container logs ---"; docker logs loppa-demo 2>&1 || true; docker rm -f loppa-demo > /dev/null 2>&1 || true' EXIT
 
           # The image is NODE_ENV=production, and demo mode refuses that unless it is asked for
           # twice. That guard is the point, so the smoke test opts in rather than weakening it.
-          docker run -d --name formwork-demo -p 4100:4001 -e DEMO=true -e DEMO_ALLOW_PRODUCTION=true formwork:ci
+          docker run -d --name loppa-demo -p 4100:4001 -e DEMO=true -e DEMO_ALLOW_PRODUCTION=true loppa:ci
 
           for i in $(seq 1 30); do
             if curl -fsS http://localhost:4100/health > /dev/null; then break; fi
-            if [ -z "$(docker ps -q -f name=formwork-demo)" ]; then
+            if [ -z "$(docker ps -q -f name=loppa-demo)" ]; then
               echo "The container exited before it ever answered."
               exit 1
             fi

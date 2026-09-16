@@ -1,0 +1,65 @@
+/* Loppa — design tokens.
+   Two materials, not four: gold and platinum, split 50/50 across every fold of
+   the mark. Bronze and pewter are not separate colours — they are the shadow
+   tier of each ramp, which is where you would see them on real folded foil.
+
+   Measured WCAG ratios. Face tones are FILLS. Deep tones carry text.
+     gold          #CEA85C  on white 2.14 ✗   on black  8.61 ✓
+     gold-deep     #8F6B3A  on white 4.64 ✓   on black  3.98 ✓
+     platinum      #C6CAD1  on white 1.57 ✗   on black 11.73 ✓
+     platinum-deep #7C8188  on white 3.75 ✗   on black  4.92 ✓
+     graphite      #4A4E55  on white 8.00 ✓   on black  2.31 ✗
+     white/black                        18.45 ✓
+*/
+:root {
+  /* materials — face tone (fills only, never text on white) */
+  --loppa-gold:          #CEA85C;
+  --loppa-platinum:      #C6CAD1;
+
+  /* shadow tier — the crease colour, and the text-safe version on white */
+  --loppa-bronze:        #8F6B3A;
+  --loppa-pewter:        #7C8188;
+
+  /* highlight tier — sheen band, tinted surfaces, hover fills */
+  --loppa-gold-pale:     #F0E2C2;
+  --loppa-platinum-pale: #E9EBEE;
+
+  /* surfaces */
+  --loppa-white:         #FAFAF8;   /* never pure #FFF */
+  --loppa-black:         #0E0E10;   /* never pure #000 */
+  --loppa-graphite:      #4A4E55;
+
+  --loppa-surface:       var(--loppa-white);
+  --loppa-text:          var(--loppa-black);
+  --loppa-text-muted:    var(--loppa-graphite);
+  --loppa-accent:        var(--loppa-bronze);   /* 4.64 on white — text-safe */
+  --loppa-accent-fill:   var(--loppa-gold);     /* fill only, black label */
+
+  /* motion — slow, accelerate through the middle, slow again. No overshoot. */
+  --loppa-ease-settle:   cubic-bezier(.66, 0, .34, 1);
+  --loppa-ease-in-fast:  cubic-bezier(.85, 0, .22, 1);
+  --loppa-dur-fast:      200ms;
+  --loppa-dur-base:      420ms;
+}
+
+[data-theme="dark"] {
+  --loppa-surface:        var(--loppa-black);
+  --loppa-surface-raised: #1A1A1D;
+  --loppa-surface-sunk:   #070709;
+  --loppa-text:           var(--loppa-white);
+  --loppa-text-muted:     #9AA0A8;
+  --loppa-accent:         var(--loppa-gold);      /* 8.61 on black */
+  --loppa-accent-fill:    var(--loppa-gold);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --loppa-surface:        var(--loppa-black);
+    --loppa-surface-raised: #1A1A1D;
+    --loppa-surface-sunk:   #070709;
+    --loppa-text:           var(--loppa-white);
+    --loppa-text-muted:     #9AA0A8;
+    --loppa-accent:         var(--loppa-gold);
+    --loppa-accent-fill:    var(--loppa-gold);
+  }
+}

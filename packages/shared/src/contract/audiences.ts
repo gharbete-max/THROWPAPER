@@ -8,7 +8,7 @@ export const AudienceMember = z.object({
   mergeData: MergeData.optional(),
 });
 
-/** CONTRACT §1.3 — Loppa pushes a computed audience; Sendwork stores it as a snapshot. */
+/** CONTRACT §1.3 — Loppa pushes a computed audience; Mailer stores it as a snapshot. */
 export const PushAudienceRequest = z.object({
   organisationId: OrganisationId,
   members: z.array(AudienceMember),
@@ -21,7 +21,7 @@ export const PushAudienceResponse = z.object({
   snapshotAt: z.string().datetime(),
 });
 
-/** CONTRACT §2.1 — Sendwork pulls a live audience at send time. Paginated. */
+/** CONTRACT §2.1 — Mailer pulls a live audience at send time. Paginated. */
 export const PullAudienceResponse = z.object({
   members: z.array(AudienceMember),
   nextCursor: z.string().optional(),

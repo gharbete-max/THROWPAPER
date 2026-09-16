@@ -20,9 +20,9 @@ export function App() {
 
   return (
     <main className="shell">
-      <h1>Sendwork</h1>
+      <h1>Loppa Mailer</h1>
       <p className="muted">
-        Scaffold only. v0.1 ships a thin transactional sending path inside Loppa; Sendwork becomes a
+        Scaffold only. v0.1 ships a thin transactional sending path inside Loppa; Mailer becomes a
         real product later — <code>docs/START-HERE.md</code> §About the parallel tracks.
       </p>
 
