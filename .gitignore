@@ -28,3 +28,6 @@ blob-report/
 # design hook cache (generated)
 .impeccable/hook.cache.json
 __pycache__/
+
+# OCR runtime, copied out of node_modules by scripts/ocr-assets.ts
+apps/forms/public/ocr/

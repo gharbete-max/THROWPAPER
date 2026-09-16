@@ -9,6 +9,8 @@ export default tseslint.config(
       '**/dist/**',
       // Build output, like `dist` — it is generated code and lints as if it were ours.
       '**/dist-server/**',
+      // The OCR runtime, copied out of node_modules by scripts/ocr-assets.ts. Not ours either.
+      'apps/forms/public/ocr/**',
       '**/coverage/**',
       '**/node_modules/**',
       '**/drizzle/**',

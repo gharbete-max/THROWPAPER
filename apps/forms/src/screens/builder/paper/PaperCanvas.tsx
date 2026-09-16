@@ -14,7 +14,8 @@ import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
 import { hasLabel, newField } from '../field-defaults.js';
-import { labelNear, openPdf, type PaperPdf } from './extract.js';
+import { labelNear, openPdf, type PaperPdf, type TextRun } from './extract.js';
+import { readPage } from './ocr.js';
 
 /**
  * The paper, with the questions drawn on it.
@@ -63,7 +64,8 @@ interface Props {
   renderEditor: (field: Field) => ReactNode;
 }
 
-type Page = { kind: 'pdf'; pdf: PaperPdf; index: number } | { kind: 'image'; url: string };
+type Page =
+  { kind: 'pdf'; pdf: PaperPdf; index: number } | { kind: 'image'; url: string; blob: Blob };
 
 export function PaperCanvas({
   formId,
@@ -117,7 +119,7 @@ export function PaperCanvas({
         } else {
           const url = URL.createObjectURL(blob);
           urls.push(url);
-          loaded.push({ kind: 'image', url });
+          loaded.push({ kind: 'image', url, blob });
         }
       }
       if (!cancelled) setPages(loaded);
@@ -147,24 +149,77 @@ export function PaperCanvas({
     });
   }
 
-  async function add(type: FieldType) {
+  /**
+   * The words on a page, read once and remembered.
+   *
+   * A PDF hands its text over at once. A photograph is read by `ocr.ts` the first time a box is
+   * drawn on it — several seconds and a language model the first time, so it is not done on load
+   * for a page nobody may draw on — and a failed read is an empty page, not an error: the
+   * suggestion is a convenience, and the author types the label as they would have anyway.
+   */
+  const texts = useRef(new Map<number, Promise<TextRun[]>>());
+  const [reading, setReading] = useState<Set<number>>(new Set());
+  function textFor(index: number): Promise<TextRun[]> {
+    const page = pages[index];
+    if (!page) return Promise.resolve([]);
+    let pending = texts.current.get(index);
+    if (!pending) {
+      if (page.kind === 'pdf') {
+        pending = page.pdf.text(page.index);
+      } else {
+        setReading((was) => new Set(was).add(index));
+        pending = readPage(page.blob, locale)
+          .catch((error: unknown) => {
+            console.warn('paper: could not read the page', error);
+            return [];
+          })
+          .finally(() =>
+            setReading((was) => {
+              const next = new Set(was);
+              next.delete(index);
+              return next;
+            }),
+          );
+      }
+      texts.current.set(index, pending);
+    }
+    return pending;
+  }
+
+  /** The definition as of the last render, for work that finishes after a later edit. */
+  const latest = useRef(definition);
+  latest.current = definition;
+
+  function add(type: FieldType) {
     if (!pending) return;
     const field = newField(
       type,
       definition.fields.map((f) => f.key),
       locale,
     );
-    const page = pages[pending.page];
-    const suggested =
-      page?.kind === 'pdf' ? labelNear(pending.box, await page.pdf.text(page.index)) : undefined;
-    const placed: Field = {
-      ...field,
-      ...(suggested && hasLabel(field) ? { label: { [locale]: suggested } } : {}),
-      paper: { page: pending.page, ...pending.box },
-    };
+    const placed: Field = { ...field, paper: { page: pending.page, ...pending.box } };
     onChange({ ...definition, fields: [...definition.fields, placed] });
     onSelect(placed.id);
+    const { page, box } = pending;
     setPending(null);
+
+    // The box is placed now; the printed words beside it arrive when the page has been read,
+    // and only replace a label the author has not touched in the meantime.
+    if (!hasLabel(placed)) return;
+    const untouched = placed.label;
+    void textFor(page).then((runs) => {
+      const suggested = labelNear(box, runs);
+      if (!suggested) return;
+      const current = latest.current;
+      const still = current.fields.find((f) => f.id === placed.id);
+      if (!still || !hasLabel(still) || still.label !== untouched) return;
+      onChange({
+        ...current,
+        fields: current.fields.map((f) =>
+          f.id === placed.id ? { ...f, label: { [locale]: suggested } } : f,
+        ),
+      });
+    });
   }
 
   function nudge(field: Field, event: ReactKeyboardEvent) {
@@ -202,6 +257,7 @@ export function PaperCanvas({
           onMove={(field, box) => update({ ...field, paper: { page: index, ...box } })}
           onNudge={nudge}
           pending={pending?.page === index ? pending.box : null}
+          reading={reading.has(index)}
           picker={
             pending?.page === index ? (
               <div
@@ -253,6 +309,7 @@ function PaperPage({
   onMove,
   onNudge,
   pending,
+  reading,
   picker,
   label,
 }: {
@@ -265,6 +322,7 @@ function PaperPage({
   onMove: (field: Field, box: Omit<PaperAnchor, 'page'>) => void;
   onNudge: (field: Field, event: ReactKeyboardEvent) => void;
   pending: Omit<PaperAnchor, 'page'> | null;
+  reading: boolean;
   picker: ReactNode;
   label: (field: Field) => string;
 }) {
@@ -329,7 +387,10 @@ function PaperPage({
 
   return (
     <div className="paper__page stack">
-      <span className="small muted">{t('paper.page', { n: index + 1 })}</span>
+      <span className="small muted" role="status">
+        {t('paper.page', { n: index + 1 })}
+        {reading ? ` · ${t('paper.reading')}` : ''}
+      </span>
       <div
         ref={surface}
         className="paper__surface"

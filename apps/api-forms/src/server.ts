@@ -238,8 +238,15 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        /* No inline scripts anywhere: the shipped HTML loads two modules by src and nothing else. */
-        scriptSrc: ["'self'"],
+        /*
+         * No inline scripts anywhere: the shipped HTML loads two modules by src and nothing else.
+         *
+         * `wasm-unsafe-eval` is the one addition, for the OCR engine in the builder
+         * (`screens/builder/paper/ocr.ts`): Chromium refuses to instantiate WebAssembly under a
+         * bare `'self'`. It permits WebAssembly compilation and nothing else — no `eval`, no
+         * `Function`, no inline handlers — which is why it is not `unsafe-eval`.
+         */
+        scriptSrc: ["'self'", "'wasm-unsafe-eval'"],
         /*
          * Styles need `unsafe-inline` and that is a deliberate cost, not an oversight. The brand
          * palette is injected as a `<style>` block — inline on the server for a page whose first

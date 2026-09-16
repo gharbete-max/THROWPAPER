@@ -27,6 +27,13 @@ This document is what makes that decision actionable. It does not make it for yo
 docker build -t loppa .
 ```
 
+The build copies the OCR runtime — `tesseract.js`'s worker, its WebAssembly cores and twelve
+language models, about 45 MB — out of `node_modules` into `apps/forms/public/ocr/`
+(`scripts/ocr-assets.ts`, run by the app's `build` and `dev` scripts). It needs no network
+beyond `pnpm install`: the models are ordinary npm packages (`@tesseract.js-data/<lang>`). They
+are served from this origin because the content security policy allows no CDN, and they are
+fetched by a browser only when somebody draws a box on a photographed page in the builder.
+
 **Demo** — in memory, no database, mail never sent:
 
 ```bash

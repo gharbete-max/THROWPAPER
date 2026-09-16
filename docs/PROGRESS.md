@@ -1091,6 +1091,37 @@ their answers, and therefore a privacy-page decision. Repeating groups on paper:
 hold N entries. Flattening the original's own form widgets: they stay, and the answers are drawn
 over them, which is what a pen would do.
 
+## Reading a photographed page · done
+
+Phase one offered a drawn box the printed words beside it — on a digital PDF, where pdfjs hands
+the text over. A photograph has no text layer, so the author typed every label. Now a
+photograph is read with Tesseract, in the browser, and gets the same offer.
+
+**A suggestion, never a field.** ADR 0004 rules out guessing questions from a scan: a form that
+asks slightly the wrong questions is worse than one the author drew. OCR here creates nothing.
+The author draws a box; the words next to it are offered, verbatim (rule 8); a box beside
+nothing readable simply keeps its default label. The read happens the first time a box is drawn
+on a page — several seconds and a language model the first time — not on load, because a page
+nobody draws on should cost nothing. A failed read is logged and otherwise silent: it is a
+convenience, and the author types the label as they would have anyway.
+
+**From this origin, and nowhere else.** `tesseract.js` defaults its worker, WebAssembly core and
+language data to a CDN, and the content security policy is `'self'` with no CDN, on purpose.
+So all three are copied out of `node_modules` into `public/ocr/` by `scripts/ocr-assets.ts`
+before Vite runs — the language models arrive through `pnpm install` as `@tesseract.js-data/*`
+packages, so a build needs no network it did not already need — and the folder is gitignored:
+45 MB of binaries in git is a file somebody will edit. The photograph never leaves the browser.
+Excluded from the PWA precache with the PDF reader; `bundle-split.test.ts` refuses a static
+import of either.
+
+**One CSP change.** `script-src` gains `'wasm-unsafe-eval'`: Chromium will not instantiate
+WebAssembly under a bare `'self'`. It permits WebAssembly compilation and nothing else — not
+`eval`, not `Function` — which is why it is not `unsafe-eval`. `security-headers.test.ts` pins
+the exact directive.
+
+**Not built.** Automatic field detection; deskew or crop; reading respondents' uploads;
+server-side OCR.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
