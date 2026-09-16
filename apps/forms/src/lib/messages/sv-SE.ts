@@ -786,4 +786,12 @@ export const svSE: Record<MessageKey, string> = {
     'Dra på en sida för att lägga till en fråga där. Piltangenterna flyttar den markerade rutan; Skift och pilar ändrar storlek.',
   'paper.pickType': 'Vilken sorts svar?',
   'paper.page': 'Sida {n}',
+  'paper.crop':
+    'Dra hörnen till sidans hörn. Piltangenterna flyttar det markerade hörnet; Skift flyttar längre.',
+  'paper.cropReset': 'Använd hela bilden',
+  'paper.cropNotAPage': 'De hörnen bildar ingen sida.',
+  'paper.corner.0': 'Övre vänstra hörnet',
+  'paper.corner.1': 'Övre högra hörnet',
+  'paper.corner.2': 'Nedre högra hörnet',
+  'paper.corner.3': 'Nedre vänstra hörnet',
 };

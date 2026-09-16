@@ -791,4 +791,12 @@ export const isIS: Record<MessageKey, string> = {
     'Dragðu á síðu til að bæta spurningu við þar. Örvatakkar færa valda reitinn; Shift og örvar breyta stærð.',
   'paper.pickType': 'Hvers konar svar?',
   'paper.page': 'Síða {n}',
+  'paper.crop':
+    'Dragðu hornin að hornum síðunnar. Örvatakkar færa valda hornið; Shift færir lengra.',
+  'paper.cropReset': 'Nota alla myndina',
+  'paper.cropNotAPage': 'Þessi horn mynda ekki síðu.',
+  'paper.corner.0': 'Efra vinstra horn',
+  'paper.corner.1': 'Efra hægra horn',
+  'paper.corner.2': 'Neðra hægra horn',
+  'paper.corner.3': 'Neðra vinstra horn',
 };

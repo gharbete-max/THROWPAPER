@@ -764,4 +764,11 @@ export const zhCN: Record<MessageKey, string> = {
   'paper.draw': '在页面上拖动即可在该处添加问题。方向键移动选中的框；Shift+方向键调整大小。',
   'paper.pickType': '哪种类型的答案？',
   'paper.page': '第 {n} 页',
+  'paper.crop': '将四个角拖到页面的四角上。方向键移动选中的角；按住 Shift 移动更远。',
+  'paper.cropReset': '使用整张照片',
+  'paper.cropNotAPage': '这些角点无法构成页面。',
+  'paper.corner.0': '左上角',
+  'paper.corner.1': '右上角',
+  'paper.corner.2': '右下角',
+  'paper.corner.3': '左下角',
 };

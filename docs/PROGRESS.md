@@ -1122,6 +1122,34 @@ the exact directive.
 **Not built.** Automatic field detection; deskew or crop; reading respondents' uploads;
 server-side OCR.
 
+## Straightening a photographed page · done
+
+A phone photograph of a form is taken at an angle, with the table around it. Until now it was
+stored as it was: the boxes were drawn on the skewed picture and the filled sheet came back
+skewed. Now, between choosing the photograph and pressing "Replace this form", four handles
+sit on the picture and the author drags them onto the page's corners; on confirm the page is
+lifted out flat and upright.
+
+**By hand, not by detection.** What a scanner app finds automatically it finds wrongly on a
+dark table, at the cost of an 8 MB computer-vision library; a person puts four handles on four
+corners in as many seconds. The handles start on the picture's own corners, so doing nothing
+keeps the photograph as it is, and "Use the whole picture" puts them back. A handle dragged
+across the opposite edge makes a bow-tie, which is not a page: the outline turns red and the
+confirm waits. Handles are buttons — arrows move them, Shift moves further — so straightening
+is not pointer-only.
+
+**The maths is forty lines.** A flat page photographed at an angle is a projective transform
+of the page: eight numbers, and four corner correspondences give exactly eight equations
+(`warp.ts`, direct linear solution with partial pivoting). Every output pixel is mapped back
+into the photograph and sampled bilinearly — a plain loop over `Uint8ClampedArray`, DOM-free,
+so the test paints a skewed white quadrilateral on a dark picture and checks that all four
+corners of the result are paper. The output is capped at 1600 px on the long side, which is
+enough for OCR and for anchors and turns an 8 MB phone JPEG into a few hundred KB — the
+private store and the 10 MB cap both prefer it. JPEG, because it is a photograph.
+
+**Not built.** Automatic edge detection; whitening or contrast filters; re-cropping a page
+after import.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

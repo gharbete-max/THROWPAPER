@@ -792,4 +792,12 @@ export const fiFI: Record<MessageKey, string> = {
     'Vedä sivulla lisätäksesi kysymyksen siihen kohtaan. Nuolinäppäimet siirtävät valittua ruutua; Vaihto ja nuolet muuttavat kokoa.',
   'paper.pickType': 'Millainen vastaus?',
   'paper.page': 'Sivu {n}',
+  'paper.crop':
+    'Vedä kulmat sivun kulmiin. Nuolinäppäimet siirtävät valittua kulmaa; Vaihto siirtää pidemmälle.',
+  'paper.cropReset': 'Käytä koko kuvaa',
+  'paper.cropNotAPage': 'Nuo kulmat eivät muodosta sivua.',
+  'paper.corner.0': 'Vasen yläkulma',
+  'paper.corner.1': 'Oikea yläkulma',
+  'paper.corner.2': 'Oikea alakulma',
+  'paper.corner.3': 'Vasen alakulma',
 };

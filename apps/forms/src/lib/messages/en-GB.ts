@@ -804,6 +804,14 @@ export const enGB = {
     'Drag on a page to add a question there. Arrow keys move the selected box; Shift and arrows resize it.',
   'paper.pickType': 'What kind of answer?',
   'paper.page': 'Page {n}',
+  'paper.crop':
+    'Drag the corners onto the page’s corners. Arrow keys move the selected corner; Shift moves it further.',
+  'paper.cropReset': 'Use the whole picture',
+  'paper.cropNotAPage': 'Those corners do not make a page.',
+  'paper.corner.0': 'Top-left corner',
+  'paper.corner.1': 'Top-right corner',
+  'paper.corner.2': 'Bottom-right corner',
+  'paper.corner.3': 'Bottom-left corner',
 } as const;
 
 /**

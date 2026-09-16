@@ -790,4 +790,12 @@ export const jaJP: Record<MessageKey, string> = {
     'ページ上でドラッグすると、そこに設問を追加します。矢印キーで選択中の枠を移動、Shift+矢印でサイズ変更。',
   'paper.pickType': 'どの種類の回答ですか？',
   'paper.page': '{n} ページ目',
+  'paper.crop':
+    '四隅をページの角に合わせてドラッグしてください。矢印キーで選択中の角を移動、Shiftでより大きく移動します。',
+  'paper.cropReset': '写真全体を使う',
+  'paper.cropNotAPage': 'この四隅ではページになりません。',
+  'paper.corner.0': '左上の角',
+  'paper.corner.1': '右上の角',
+  'paper.corner.2': '右下の角',
+  'paper.corner.3': '左下の角',
 };
