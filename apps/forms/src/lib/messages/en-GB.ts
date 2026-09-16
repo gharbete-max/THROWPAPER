@@ -776,6 +776,10 @@ export const enGB = {
    * the second claims a legal act (`SPEC-forms.md` §8). It reads what the file declares, and the
    * author draws the rest.
    */
+  /** The filled-in sheet, per row — a form made from paper only. */
+  'submissions.paper': 'Paper',
+  'submissions.noPaper': 'Filled in before this form had paper',
+
   'paper.open': 'From paper',
   'paper.heading': 'Make a form from paper',
   'paper.explain':

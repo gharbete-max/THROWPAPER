@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { client } from '../lib/api.js';
+import { ApiError, client } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
-import { Icon } from './Icon.js';
+import { Icon, type IconName } from './Icon.js';
 
 /**
  * Downloads a file somebody attached to a submission.
@@ -21,18 +21,23 @@ export function AttachmentLink({
   submissionId,
   storageKey,
   filename,
+  icon = 'paperclip',
 }: {
   submissionId: string;
-  storageKey: string;
+  /** A stored upload's key — or, absent, the submission written back onto its paper. */
+  storageKey?: string;
   filename: string;
+  icon?: IconName;
 }) {
   const t = useT();
-  const [state, setState] = useState<'idle' | 'fetching' | 'failed'>('idle');
+  const [state, setState] = useState<'idle' | 'fetching' | 'failed' | 'no-paper'>('idle');
 
   async function download() {
     setState('fetching');
     try {
-      const blob = await client.submissionFile(submissionId, storageKey);
+      const blob = storageKey
+        ? await client.submissionFile(submissionId, storageKey)
+        : await client.submissionPaper(submissionId);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -40,8 +45,9 @@ export function AttachmentLink({
       link.click();
       URL.revokeObjectURL(url);
       setState('idle');
-    } catch {
-      setState('failed');
+    } catch (error) {
+      // A submission filled in before the form had paper: nothing to write on, not a failure.
+      setState(error instanceof ApiError && error.code === 'no-paper' ? 'no-paper' : 'failed');
     }
   }
 
@@ -54,8 +60,12 @@ export function AttachmentLink({
       // The filename can be long; the title gives it back in full when the cell truncates it.
       title={filename}
     >
-      <Icon name="paperclip" className="icon--lead" />
-      {state === 'failed' ? t('file.error.network') : filename}
+      <Icon name={icon} className="icon--lead" />
+      {state === 'failed'
+        ? t('file.error.network')
+        : state === 'no-paper'
+          ? t('submissions.noPaper')
+          : filename}
     </button>
   );
 }

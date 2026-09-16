@@ -10,6 +10,9 @@ import { definitionsByVersion, partyOf } from '../checkin/party.js';
 import type { AdmissionDeps } from '../documents/admission-service.js';
 import { ADMISSION_BULK_JOB, renderAdmissionPdf } from '../documents/admission-service.js';
 import type { DocumentStore } from '../documents/store.js';
+import { fillPaper } from '../documents/paper.js';
+import type { PrivateUploadStore } from '../uploads/private-store.js';
+import { forms as formSchemas } from '@tp/shared';
 
 const IdParam = z.object({ id: z.string().uuid() });
 
@@ -43,9 +46,60 @@ export function registerDocumentRoutes(
     guard: AuthGuardDeps;
     admission: AdmissionDeps;
     store: DocumentStore;
+    uploadStore: PrivateUploadStore;
   },
 ): void {
   const authenticated = requireAuth(deps.guard);
+
+  /**
+   * The submission written back onto the paper its form was made from — `documents/paper.ts`.
+   *
+   * Access is the admission card's, for the same reason: the page carries everything the person
+   * wrote. The definition is the **version they filled in**, not the draft, so an author who
+   * later redraws a box does not move an answer on paper that was already returned.
+   */
+  app.get('/v1/submissions/:id/paper.pdf', {
+    preHandler: authenticated,
+    schema: { tags: ['documents'], params: IdParam, response: { ...errorResponses } },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id } = IdParam.parse(request.params);
+
+      const submission = await findSubmission(deps.repos, auth.organisation.id, id);
+      if (!submission) return notFound(reply);
+      if (!(await resolveFormAccess(deps.repos, auth, submission.formId))) return notFound(reply);
+
+      const version = (await deps.repos.forms.listVersions(submission.formId)).find(
+        (candidate) => candidate.id === submission.formVersionId,
+      );
+      const definition = formSchemas.FormDefinition.safeParse(version?.definition);
+      if (!definition.success || !definition.data.paper) {
+        return reply.code(409).send({
+          error: { code: 'no-paper', message: 'This form was not made from paper' },
+        });
+      }
+
+      const filled = await fillPaper(
+        { uploadStore: deps.uploadStore, renderer: deps.admission.renderer },
+        submission,
+        definition.data,
+        { supported: auth.organisation.supportedLocales, default: auth.organisation.defaultLocale },
+      );
+      if (!filled) return notFound(reply);
+
+      await recordAudit(deps.repos, request, {
+        action: 'paper.filled',
+        entityType: 'submission',
+        entityId: submission.id,
+      });
+
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', `attachment; filename="${filled.filename}"`)
+        .send(filled.pdf);
+    },
+  });
 
   /** One admission PDF, streamed straight back — no job needed for a single document. */
   app.get('/v1/submissions/:id/admission.pdf', {

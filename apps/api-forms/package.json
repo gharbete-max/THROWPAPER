@@ -40,6 +40,7 @@
     "fastify": "^5.12.4",
     "fastify-type-provider-zod": "^4.0.2",
     "jose": "^6.2.12",
+    "pdf-lib": "^1.17.1",
     "playwright": "^1.63.0",
     "postgres": "^3.4.5",
     "qrcode": "^1.5.4",

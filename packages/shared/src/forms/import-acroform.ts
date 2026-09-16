@@ -57,7 +57,7 @@ export interface AcroField {
   readOnly?: boolean;
   hidden?: boolean;
   /** For a radio group or a choice list: the stored value and what the reader sees. */
-  options?: Array<{ value: string; label: string }>;
+  options?: Array<{ value: string; label: string; paper?: PaperAnchor }>;
   /** A list box that accepts more than one selection. */
   multiSelect?: boolean;
   /** Where the field's widget sits on the page, when the extractor read one. */
@@ -227,7 +227,12 @@ function toOptions(options: AcroField['options'], locale: string) {
     if (!value || seen.has(value)) continue;
     seen.add(value);
     /* The reader's text where the document has one, and the stored value where it does not. */
-    out.push({ value, label: { [locale]: option.label.trim() || value }, image: null });
+    out.push({
+      value,
+      label: { [locale]: option.label.trim() || value },
+      image: null,
+      ...(option.paper ? { paper: option.paper } : {}),
+    });
   }
   return out;
 }

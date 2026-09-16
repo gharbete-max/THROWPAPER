@@ -126,4 +126,6 @@ paper"):
 - **Step three was taken now rather than after measuring**, because the product owner asked for
   photographed paper to work on day one. It is manual placement, as this ADR proposed — not OCR,
   not inference. Digital PDFs offer the printed text beside a box as its label, verbatim.
-- **Overlay output** is the next phase, not this one.
+- **Overlay output** followed as its own phase, as a rendering target rather than an editor:
+  `documents/paper.ts` draws the answers with Chromium and puts them on the original with pdf-lib
+  (`PROGRESS.md`, "Answers back onto the paper").

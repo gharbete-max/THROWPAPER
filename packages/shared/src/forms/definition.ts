@@ -160,6 +160,8 @@ const base = {
 export const SelectOption = z.object({
   value: z.string().min(1).max(128),
   label: LocalisedText,
+  /** This choice's own box on the paper — a radio button's — so a tick can land on it. */
+  paper: PaperAnchor.optional(),
   /**
    * A picture for this choice. Shown by the `cards` and `buttons` appearances, ignored by a
    * dropdown, which has nowhere to put it.

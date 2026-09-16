@@ -757,6 +757,9 @@ export const daDK: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'dets billede ligger et andet sted på nettet',
   'import.reason.nested-group': 'en gentaget blok inde i en anden',
   'import.reason.needs-limit': 'den angiver aldrig, hvor mange poster der tillades',
+  'submissions.paper': 'Papir',
+  'submissions.noPaper': 'Udfyldt før formularen havde papir',
+
   'paper.open': 'Fra papir',
   'paper.heading': 'Lav en formular af papir',
   'paper.explain':

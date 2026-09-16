@@ -119,6 +119,9 @@ describe('error responses', () => {
           async render() {
             throw new Error(leak);
           },
+          async renderPages() {
+            throw new Error(leak);
+          },
           async close() {},
         },
       },
