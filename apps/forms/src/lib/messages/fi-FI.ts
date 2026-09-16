@@ -695,4 +695,49 @@ export const fiFI: Record<MessageKey, string> = {
   'validation.time': 'Anna kellonaika.',
   'validation.timeMin': 'Ei aikaisempi kuin {min}.',
   'validation.timeMax': 'Ei myöhäisempi kuin {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Lisää uusi',
+  'group.remove': 'Poista',
+  'group.removeEntry': 'Poista {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Ei vielä lisätty mitään.',
+  'group.full': 'Tähän lomakkeeseen voi lisätä enintään {max}.',
+  'fieldType.repeating_group': 'Toistuva lohko',
+  'palette.repeating': 'Toisto',
+  'field.fields': 'Tämän lohkon kysymykset',
+  'field.fieldsHint':
+    'Valitse muokattava. Jokainen kysymys esitetään kerran kutakin kohtaa kohden.',
+  'field.minEntries': 'Vähiten kohtia',
+  'field.maxEntries': 'Eniten kohtia',
+  'field.maxEntriesHint':
+    'Pakollinen. Viennissä on yksi sarakejoukko kutakin kohtaa kohden, joten lomakkeen on kerrottava määrä.',
+  'field.addLabel': 'Painikkeen teksti',
+  'field.entryLabel': 'Yhden kohdan nimi',
+  'field.entryLabelHint': 'Näytetään otsikkona kunkin yläpuolella — ”Vieras 1”, ”Vieras 2”.',
+  'field.admits': 'Jokainen kohta saa oman pääsylippunsa',
+  'field.admitsHint':
+    'Tapahtuman vieraille. Heidät kirjataan sisään erikseen ilmoittautujasta, ja vain yksi lohko lomaketta kohden voi tehdä tämän.',
+  'field.admitNameKey': 'Mikä kysymys on heidän nimensä',
+  'field.admitNameKeyHint': 'Tulostetaan lippuun ja näytetään sisäänkäynnin näytöllä.',
+  'problem.group-min-above-max':
+    'Lohko ”{key}” vaatii vähintään {min} kohtaa mutta sallii enintään {max}.',
+  'problem.group-duplicate-child-key':
+    'Kenttätunnusta ”{key}” käytetään useammin kuin kerran lohkossa ”{group}”.',
+  'problem.group-admit-name-unknown':
+    '”{group}” nimeää osallistujaksi kentän ”{key}”, jota ei ole olemassa.',
+  'problem.multiple-admitting-groups':
+    'Vain yksi lohko lomaketta kohden voi antaa kohdilleen oman pääsylipun.',
+  'validation.group': 'Tämä vastaus ei ole odotetun muotoinen.',
+  'validation.groupMin': 'Lisää vähintään {min}.',
+  'validation.groupMax': 'Enintään {max}.',
+  'checkin.outcome.no-such-guest': 'Vierasta ei ole tässä ilmoittautumisessa',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Vieraana: {name}',
 };

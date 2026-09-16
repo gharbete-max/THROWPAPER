@@ -8,6 +8,7 @@ import {
   widthOf,
   validateSubmission,
   type AnswerValue,
+  type GroupEntry,
   type PublicFormResponse,
   type SubmissionValues,
   type ValidationIssue,
@@ -18,6 +19,7 @@ import { LanguagePicker } from '../components/LanguagePicker.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { useAnnounceLocale } from '../lib/demo.js';
 import { FieldInput } from '../components/FieldInput.js';
+import { RepeatingGroup, groupLabels } from '../components/RepeatingGroup.js';
 import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
@@ -515,18 +517,36 @@ export default function PublicForm() {
           <div className="form-grid">
             {currentPage.map((field) => (
               <div className={`form-grid__cell form-grid__cell--${widthOf(field)}`} key={field.id}>
-                <FieldInput
-                  field={field}
-                  slug={slug}
-                  locale={resolved}
-                  locales={locales}
-                  value={values[field.key]}
-                  error={issueFor(field.key)}
-                  chooseLabel={t('public.choose')}
-                  yesLabel={t('public.yes')}
-                  noLabel={t('public.no')}
-                  onChange={setValue}
-                />
+                {field.type === 'repeating_group' ? (
+                  <RepeatingGroup
+                    field={field}
+                    slug={slug}
+                    locale={resolved}
+                    locales={locales}
+                    entries={
+                      Array.isArray(values[field.key]) ? (values[field.key] as GroupEntry[]) : []
+                    }
+                    labels={groupLabels(t, field.max)}
+                    chooseLabel={t('public.choose')}
+                    yesLabel={t('public.yes')}
+                    noLabel={t('public.no')}
+                    issueFor={issueFor}
+                    onChange={setValue}
+                  />
+                ) : (
+                  <FieldInput
+                    field={field}
+                    slug={slug}
+                    locale={resolved}
+                    locales={locales}
+                    value={values[field.key]}
+                    error={issueFor(field.key)}
+                    chooseLabel={t('public.choose')}
+                    yesLabel={t('public.yes')}
+                    noLabel={t('public.no')}
+                    onChange={setValue}
+                  />
+                )}
               </div>
             ))}
           </div>

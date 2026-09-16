@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   FIELD_TYPES,
+  MAX_GROUP_ENTRIES,
   FormDefinition,
   SelectOption,
   type Field,
@@ -42,13 +43,17 @@ import {
  * | `rating`, `slider` | `rating` | |
  * | `file`, `signaturepad`, `image`, `html` | `file`, `signature`, `image`, `rich_text` | |
  * | `matrix`, `matrixdropdown`, `matrixdynamic` | — | a grid of questions; no equivalent |
- * | `paneldynamic` | — | a repeating group; no equivalent |
+ * | `paneldynamic` | `repeating_group` | needs their `maxPanelCount`; see `mapPanel` |
  * | `ranking` | — | ordering an answer; no equivalent |
  * | `expression` | — | a computed value; `packages/calc` could back one |
  * | `multipletext` | — | several inputs under one label |
  *
- * Adding any of the five is a change to `FIELD_TYPES`, which that file calls "a scope change, not a
- * detail" — so this reports them and does not decide them.
+ * Adding any of the four remaining is a change to `FIELD_TYPES`, which that file calls "a scope
+ * change, not a detail" — so this reports them and does not decide them.
+ *
+ * `paneldynamic` used to be a fifth. It was the one this module's own notes called "the one that
+ * looks most relevant to this product", and the repeating group built in the phase after this one
+ * is what makes it importable.
  */
 
 /**
@@ -76,7 +81,15 @@ export interface SkippedQuestion {
   type: string;
   /** Their `name`, which is what the author will recognise. */
   name: string;
-  reason: 'no-equivalent' | 'unknown-type' | 'unreadable' | 'needs-asset';
+  reason:
+    | 'no-equivalent'
+    | 'unknown-type'
+    | 'unreadable'
+    | 'needs-asset'
+    /** A panel inside a panel. Ours are one level deep — see `docs/adr/0003-repeating-groups.md`. */
+    | 'nested-group'
+    /** A `paneldynamic` with no `maxPanelCount`. Ours requires one; see `mapPanel`. */
+    | 'needs-limit';
 }
 
 export interface SurveyImport {
@@ -137,7 +150,6 @@ const NO_EQUIVALENT = new Set([
   'matrix',
   'matrixdropdown',
   'matrixdynamic',
-  'paneldynamic',
   'ranking',
   'expression',
   'multipletext',
@@ -290,99 +302,57 @@ export function importSurveyJson(input: unknown): SurveyImport {
     }
 
     for (const element of page.elements ?? []) {
-      const item = element as Record<string, unknown>;
-      const type = typeof item['type'] === 'string' ? item['type'] : '';
-      const name = typeof item['name'] === 'string' ? item['name'] : '';
-
-      if (NO_EQUIVALENT.has(type)) {
-        skipped.push({ type, name, reason: 'no-equivalent' });
+      const outcome = mapQuestion(element, fields.length, taken, { insideGroup: false });
+      if (outcome.skipped) {
+        skipped.push(outcome.skipped);
         continue;
       }
+      if (!outcome.field) continue;
 
       /*
-       * Their `image` carries an `imageLink` pointing anywhere on the web; ours carries an
-       * `AssetPath` into this organisation's own store. Importing one would mean fetching a
-       * remote file at import time and re-hosting it — a network call, an upload and a size
-       * limit, none of which belong in a pure function that reads a document. Reported rather
-       * than half-done.
+       * A `paneldynamic` becomes a repeating group, which needs its children mapped too.
+       *
+       * Their children go through the **same** mapper, with `insideGroup` set — so a question
+       * behaves the same way inside a panel as outside one, and the two things a group may not
+       * contain (another group, a page break) are refused in one place rather than two.
        */
-      if (type === 'image') {
-        skipped.push({ type, name, reason: 'needs-asset' });
-        continue;
-      }
+      if (outcome.field['type'] === 'repeating_group') {
+        const template = Array.isArray(
+          element ? (element as Record<string, unknown>)['templateElements'] : null,
+        )
+          ? ((element as Record<string, unknown>)['templateElements'] as unknown[])
+          : [];
 
-      const mapped =
-        type === 'text'
-          ? (TEXT_INPUT[String(item['inputType'] ?? '')] ?? 'short_text')
-          : DIRECT[type];
+        const childTaken = new Set<string>();
+        const children: Field[] = [];
+        for (const child of template) {
+          const mapped = mapQuestion(child, children.length, childTaken, { insideGroup: true });
+          if (mapped.skipped) {
+            skipped.push(mapped.skipped);
+            continue;
+          }
+          if (mapped.field) children.push(mapped.field as Field);
+        }
 
-      if (!mapped || !FIELD_TYPES.includes(mapped)) {
-        skipped.push({ type: type || '(none)', name, reason: 'unknown-type' });
-        continue;
-      }
-
-      /*
-       * `rich_text` holds `content`, not `label`, and its schema says why: "Plain text with
-       * paragraph breaks. Not HTML — that would be a stored-XSS surface." Their `html` question is
-       * markup, so the tags come off rather than riding in through an importer. The same rule the
-       * field was built around applies to text arriving from a file somebody else wrote.
-       */
-      if (mapped === 'rich_text') {
-        const markup = item['html'];
-        const text = localise(typeof markup === 'string' ? stripTags(markup) : markup);
-        if (!text) {
-          skipped.push({ type, name, reason: 'unreadable' });
+        /*
+         * A panel whose every question was skipped is not an empty panel — it is a panel we could
+         * not read. `fields` requires at least one child, so importing it would fail the parse at
+         * the bottom of this function and take the whole form with it.
+         */
+        if (children.length === 0) {
+          skipped.push({
+            type: 'paneldynamic',
+            name: String((element as Record<string, unknown>)['name'] ?? ''),
+            reason: 'unreadable',
+          });
+          taken.delete(String(outcome.field['key']));
           continue;
         }
-        fields.push({
-          id: `imported_${fields.length + 1}`,
-          key: toKey(name || 'text', fields.length, taken),
-          type: 'rich_text',
-          content: text,
-          width: 'full',
-        } as Field);
-        continue;
+
+        outcome.field['fields'] = children;
       }
 
-      const label = localise(item['title']) ?? localise(item['name']);
-      if (!label) {
-        /* Every field here carries a label, and a question nobody can read is not importable. */
-        skipped.push({ type, name, reason: 'unreadable' });
-        continue;
-      }
-
-      const field: Record<string, unknown> = {
-        id: `imported_${fields.length + 1}`,
-        key: toKey(name || label['en-GB'], fields.length, taken),
-        type: mapped,
-        label,
-        required: item['isRequired'] === true,
-        width: 'full',
-      };
-
-      const help = localise(item['description']);
-      if (help) field['helpText'] = help;
-      const placeholder = localise(item['placeholder'] ?? item['placeHolder']);
-      if (placeholder) field['placeholder'] = placeholder;
-
-      if (mapped === 'single_select' || mapped === 'multi_select') {
-        const options = toOptions(item['choices']);
-        /* A choice question with no readable choices is not a choice question. */
-        if (options.length === 0) {
-          skipped.push({ type, name, reason: 'unreadable' });
-          continue;
-        }
-        field['options'] = options;
-        const appearance = SELECT_APPEARANCE[type];
-        if (appearance) field['appearance'] = appearance;
-      }
-
-      if (mapped === 'rating') {
-        const max = Number(item['rateMax'] ?? item['max']);
-        if (Number.isFinite(max) && max >= 2 && max <= 10) field['max'] = Math.round(max);
-      }
-
-      fields.push(field as Field);
+      fields.push(outcome.field as Field);
     }
   });
 
@@ -393,4 +363,200 @@ export function importSurveyJson(input: unknown): SurveyImport {
    */
   const definition = FormDefinition.parse({ schemaVersion: 1, fields, settings: {} });
   return { definition, skipped };
+}
+
+/**
+ * One of their questions, as one of ours — or the reason it could not be.
+ *
+ * Extracted from the page loop when `paneldynamic` became importable, because a panel's children
+ * are questions in exactly the same sense as a page's. Two copies of this mapping would be two
+ * copies that stop agreeing, and the one inside the panel is the one fewer people would look at.
+ */
+function mapQuestion(
+  element: unknown,
+  position: number,
+  taken: Set<string>,
+  context: { insideGroup: boolean },
+): { field?: Record<string, unknown>; skipped?: SkippedQuestion } {
+  const item = (element ?? {}) as Record<string, unknown>;
+  const type = typeof item['type'] === 'string' ? item['type'] : '';
+  const name = typeof item['name'] === 'string' ? item['name'] : '';
+
+  /*
+   * A group may not contain a group. Refused here rather than left to the schema, so the report
+   * says *why* — `nested-group` is a fact about their document, where a Zod error would be a fact
+   * about ours. See `docs/adr/0003-repeating-groups.md` for why nesting is refused at all.
+   */
+  if (context.insideGroup && type === 'paneldynamic') {
+    return { skipped: { type, name, reason: 'nested-group' } };
+  }
+
+  if (type === 'paneldynamic') return mapPanel(item, position, taken);
+
+  if (NO_EQUIVALENT.has(type)) return { skipped: { type, name, reason: 'no-equivalent' } };
+
+  /*
+   * Their `image` carries an `imageLink` pointing anywhere on the web; ours carries an
+   * `AssetPath` into this organisation's own store. Importing one would mean fetching a
+   * remote file at import time and re-hosting it — a network call, an upload and a size
+   * limit, none of which belong in a pure function that reads a document. Reported rather
+   * than half-done.
+   */
+  if (type === 'image') return { skipped: { type, name, reason: 'needs-asset' } };
+
+  const mapped =
+    type === 'text' ? (TEXT_INPUT[String(item['inputType'] ?? '')] ?? 'short_text') : DIRECT[type];
+
+  if (!mapped || !FIELD_TYPES.includes(mapped)) {
+    return { skipped: { type: type || '(none)', name, reason: 'unknown-type' } };
+  }
+
+  /*
+   * `rich_text` holds `content`, not `label`, and its schema says why: "Plain text with
+   * paragraph breaks. Not HTML — that would be a stored-XSS surface." Their `html` question is
+   * markup, so the tags come off rather than riding in through an importer. The same rule the
+   * field was built around applies to text arriving from a file somebody else wrote.
+   */
+  if (mapped === 'rich_text') {
+    const markup = item['html'];
+    const text = localise(typeof markup === 'string' ? stripTags(markup) : markup);
+    if (!text) return { skipped: { type, name, reason: 'unreadable' } };
+    return {
+      field: {
+        id: `imported_${position + 1}`,
+        key: toKey(name || 'text', position, taken),
+        type: 'rich_text',
+        content: text,
+        width: 'full',
+      },
+    };
+  }
+
+  const label = localise(item['title']) ?? localise(item['name']);
+  /* Every field here carries a label, and a question nobody can read is not importable. */
+  if (!label) return { skipped: { type, name, reason: 'unreadable' } };
+
+  const field: Record<string, unknown> = {
+    id: `imported_${position + 1}`,
+    key: toKey(name || label['en-GB'], position, taken),
+    type: mapped,
+    label,
+    required: item['isRequired'] === true,
+    width: 'full',
+  };
+
+  const help = localise(item['description']);
+  if (help) field['helpText'] = help;
+  const placeholder = localise(item['placeholder'] ?? item['placeHolder']);
+  if (placeholder) field['placeholder'] = placeholder;
+
+  if (mapped === 'single_select' || mapped === 'multi_select') {
+    const options = toOptions(item['choices']);
+    /* A choice question with no readable choices is not a choice question. */
+    if (options.length === 0) return { skipped: { type, name, reason: 'unreadable' } };
+    field['options'] = options;
+    const appearance = SELECT_APPEARANCE[type];
+    if (appearance) field['appearance'] = appearance;
+  }
+
+  if (mapped === 'rating') {
+    const max = Number(item['rateMax'] ?? item['max']);
+    if (Number.isFinite(max) && max >= 2 && max <= 10) field['max'] = Math.round(max);
+  }
+
+  return { field };
+}
+
+/**
+ * Their `paneldynamic` as our repeating group — the one type this importer used to report as
+ * having no equivalent, and no longer does.
+ *
+ * ## Why a panel with no stated maximum is reported rather than capped
+ *
+ * `max` is **required** on a repeating group, and `docs/adr/0003-repeating-groups.md` explains
+ * that this is the point rather than an inconvenience: the export has one block of columns per
+ * possible entry, so the column set is a function of the form only because the form states how
+ * many entries there can be. SurveyJS does not require `maxPanelCount`, so a panel often carries
+ * no such number.
+ *
+ * Inventing one was considered and refused. Defaulting to the schema cap would put twenty blocks
+ * of columns into somebody's CSV because their survey happened not to mention a limit — a decision
+ * about their spreadsheet, made silently, by an importer. This module's whole posture is to map
+ * what maps and report what does not, and a target field that requires information the source does
+ * not carry is the definition of the second case.
+ *
+ * The cost, stated plainly: an author importing a panel with no limit gets it in `skipped` and has
+ * to say how many. That is one number, asked once, and the alternative is a number nobody chose.
+ */
+function mapPanel(
+  item: Record<string, unknown>,
+  position: number,
+  taken: Set<string>,
+): { field?: Record<string, unknown>; skipped?: SkippedQuestion } {
+  const name = typeof item['name'] === 'string' ? item['name'] : '';
+  const label = localise(item['title']) ?? localise(item['name']);
+  if (!label) return { skipped: { type: 'paneldynamic', name, reason: 'unreadable' } };
+
+  const stated = Number(item['maxPanelCount']);
+  if (!Number.isFinite(stated) || stated < 1) {
+    return { skipped: { type: 'paneldynamic', name, reason: 'needs-limit' } };
+  }
+
+  /*
+   * Clamped rather than refused. A panel that says 100 is an author who meant "plenty", and 20 is
+   * the most this product will carry; refusing it over a number they did not think hard about
+   * would lose a block that maps perfectly well otherwise. The cap is reported nowhere because it
+   * is visible in the builder, on a required field, next to a hint explaining it.
+   */
+  const max = Math.min(MAX_GROUP_ENTRIES, Math.round(stated));
+
+  const wanted = Number(item['minPanelCount']);
+  const min = Number.isFinite(wanted) ? Math.min(max, Math.max(0, Math.round(wanted))) : 0;
+
+  const field: Record<string, unknown> = {
+    id: `imported_${position + 1}`,
+    key: toKey(name || label['en-GB'], position, taken),
+    type: 'repeating_group',
+    label,
+    required: item['isRequired'] === true || min > 0,
+    width: 'full',
+    min,
+    max,
+    /* Filled in by the caller once the children have been mapped. */
+    fields: [],
+  };
+
+  const help = localise(item['description']);
+  if (help) field['helpText'] = help;
+
+  const addText = localise(item['panelAddText']);
+  if (addText) field['addLabel'] = addText;
+
+  /*
+   * `templateTitle` is their per-entry heading, and it usually contains `{panelIndex}` — their
+   * placeholder syntax, which means nothing to us. Ours numbers entries itself, so the token is
+   * removed rather than carried through as literal text on every heading.
+   */
+  const entryTitle = localise(item['templateTitle']);
+  if (entryTitle) {
+    const cleaned = Object.fromEntries(
+      Object.entries(entryTitle).map(([locale, text]) => [
+        locale,
+        text
+          .replace(/\{panel(Index|Count)\}/g, '')
+          .replace(/\s+/g, ' ')
+          .trim(),
+      ]),
+    );
+    if (Object.values(cleaned).some((text) => text)) field['entryLabel'] = cleaned;
+  }
+
+  /*
+   * `admits` is deliberately **not** set from anything in their document.
+   *
+   * Nothing in a SurveyJS panel says "each of these is a person who gets a ticket" — it is a
+   * decision about an event, which their schema has no concept of. Guessing it from a panel named
+   * "guests" would hand out admission cards because of a word.
+   */
+  return { field };
 }

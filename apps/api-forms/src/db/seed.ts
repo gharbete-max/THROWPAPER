@@ -9,9 +9,9 @@ import {
   submissions,
   users,
 } from './schema.js';
-import { generateReference } from '../forms/public-service.js';
 import { demoEventName, demoSchedule } from '../demo/schedule.js';
 import {
+  demoRegistration,
   DEMO_ADMIN_EMAIL,
   DEMO_DEFINITION,
   DEMO_FORM_SLUG,
@@ -185,35 +185,18 @@ if (existingForm.length === 0) {
     .set({ publishedVersionId: version.id, publishedVersion: 1 })
     .where(eq(forms.id, form.id));
 
-  // Nordic names on purpose: the CSV export and the PDF both have to survive å ä ö, and a seed
-  // full of "Test User 4" would never show that up.
-  const firstNames = ['Alva', 'Björn', 'Cecilia', 'Dag', 'Elsa', 'Fredrik', 'Göran', 'Hanna'];
-  const lastNames = ['Öberg', 'Ångström', 'Ekström', 'Lindqvist', 'Sjöberg', 'Häggkvist'];
-  const orgs = ['Nordvik AB', 'Sjöström & Co', 'Ålands Bruk', 'Västra Handels'];
-  const meals = ['standard', 'veg', 'gluten'];
-
-  const rows = Array.from({ length: 200 }, (_, index) => {
-    const first = firstNames[index % firstNames.length] ?? 'Alva';
-    const last = lastNames[index % lastNames.length] ?? 'Öberg';
-    return {
-      organisationId: organisation.id,
-      formId: form.id,
-      formVersionId: version.id,
-      eventId,
-      reference: generateReference(),
-      status: 'complete' as const,
-      locale: index % 5 === 0 ? 'en-GB' : 'sv-SE',
-      email: `deltagare${index + 1}@example.com`,
-      data: {
-        full_name: `${first} ${last}`,
-        email: `deltagare${index + 1}@example.com`,
-        organisation: orgs[index % orgs.length],
-        meal: meals[index % meals.length],
-        guests: index % 7 === 0 ? 1 : 0,
-      },
-      submittedAt: new Date(Date.now() - index * 3_600_000),
-    };
-  });
+  /**
+   * The same rows demo mode builds, not a second set that looks like them.
+   *
+   * These two lists of names, organisations and meals used to be written out twice — once here and
+   * once in `demo/dataset.ts` — with only the *definition* shared. So the header on that file
+   * ("the two cannot drift into showing different products") was true of the form and false of the
+   * answers, and adding guests to the form would have meant adding them to the answers in two
+   * places, of which one would have been forgotten.
+   */
+  const rows = Array.from({ length: 200 }, (_unused, index) =>
+    demoRegistration(index, form.id, version.id, eventId, organisation.id, new Date()),
+  );
 
   await db.insert(submissions).values(rows);
 }

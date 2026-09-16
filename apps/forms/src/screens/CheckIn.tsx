@@ -7,15 +7,28 @@ import { useConfirm } from '../components/Confirm.js';
 import { Icon } from '../components/Icon.js';
 
 type Outcome =
-  'admitted' | 'already' | 'revoked' | 'wrong-event' | 'not-found' | 'bad-signature' | 'undone';
+  | 'admitted'
+  | 'already'
+  | 'revoked'
+  | 'wrong-event'
+  | 'not-found'
+  /** A guest card whose registration no longer names that guest — see ADR 0003. */
+  | 'no-such-guest'
+  | 'bad-signature'
+  | 'undone';
 
 interface Attendee {
   submissionId: string;
+  /** The card's own reference: `ABCD-EFGH`, or `ABCD-EFGH:2` for a guest. */
   reference: string;
   name: string;
   email: string | null;
   revoked: boolean;
   checkedInAt: string | null;
+  /** 0 for the registrant, 1-based for a guest. Needed to undo the right card. */
+  entryIndex?: number;
+  /** Who brought them, for a guest. Null for somebody who brought themselves. */
+  broughtBy?: string | null;
 }
 
 interface CheckInResult {
@@ -115,7 +128,11 @@ export default function CheckIn() {
     });
     if (!ok) return;
     try {
-      await client.undoCheckIn(eventId, arrival.attendee.submissionId);
+      await client.undoCheckIn(
+        eventId,
+        arrival.attendee.submissionId,
+        arrival.attendee.entryIndex ?? 0,
+      );
       setRecent((current) => current.filter((entry) => entry !== arrival));
       setResult({ outcome: 'undone', attendee: arrival.attendee, checkedInAt: null });
       refreshCounts();
@@ -305,6 +322,18 @@ function Verdict({ result }: { result: CheckInResult | null }) {
         <>
           <span className="verdict__name">{result.attendee.name || result.attendee.reference}</span>
           <span className="verdict__meta">{result.attendee.reference}</span>
+          {/*
+            Whose guest this is, when it is a guest's card.
+
+            The door's next question after "who is this" is "and are they with somebody" — a guest
+            with no name answer shows only a reference otherwise, and the person on the door has no
+            way to put them back together with the member in front of them.
+          */}
+          {result.attendee.broughtBy && (
+            <span className="verdict__meta">
+              {t('checkin.guestOf', { name: result.attendee.broughtBy })}
+            </span>
+          )}
         </>
       )}
 

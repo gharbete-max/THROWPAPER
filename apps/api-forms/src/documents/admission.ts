@@ -1,5 +1,6 @@
 import QRCode from 'qrcode';
 import { pickText, type LocaleConfig } from '@tp/i18n';
+import { forms as formSchemas } from '@tp/shared';
 import { defaultTokens, type TokenSet } from '@tp/tokens';
 import { toPrintCss, type PrintOptions } from '@tp/tokens/pdf';
 import type {
@@ -7,6 +8,8 @@ import type {
   OrganisationRecord,
   SubmissionRecord,
 } from '../db/repositories/index.js';
+
+const { entryReference, REGISTRANT_ENTRY } = formSchemas;
 
 /**
  * The admission document — START-HERE §In scope: "branded, in the attendee's language, with the
@@ -25,6 +28,10 @@ export interface AdmissionStrings {
   admission: string;
   instructions: string;
   scanNote: string;
+  /** A guest's card says whose guest they are, so the door can put a party back together. */
+  guestOf: string;
+  /** The heading on a guest's card, in place of "Admission card". */
+  guestTitle: string;
 }
 
 /**
@@ -52,6 +59,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Admission',
     instructions: 'Bring this card to the entrance.',
     scanNote: 'The QR code is scanned on arrival.',
+    guestOf: 'Guest of',
+    guestTitle: 'Guest card',
   },
   'sv-SE': {
     title: 'Inträdeskort',
@@ -63,6 +72,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Inträde',
     instructions: 'Ta med det här kortet till entrén.',
     scanNote: 'QR-koden läses av vid ankomst.',
+    guestOf: 'Gäst hos',
+    guestTitle: 'Gästkort',
   },
   'da-DK': {
     title: 'Adgangskort',
@@ -74,6 +85,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Adgang',
     instructions: 'Tag dette kort med til indgangen.',
     scanNote: 'QR-koden scannes ved ankomst.',
+    guestOf: 'Gæst hos',
+    guestTitle: 'Gæstekort',
   },
   'nb-NO': {
     title: 'Adgangskort',
@@ -85,6 +98,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Adgang',
     instructions: 'Ta med dette kortet til inngangen.',
     scanNote: 'QR-koden skannes ved ankomst.',
+    guestOf: 'Gjest hos',
+    guestTitle: 'Gjestekort',
   },
   'fi-FI': {
     title: 'Pääsylippu',
@@ -96,6 +111,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Pääsy',
     instructions: 'Ota tämä lippu mukaan sisäänkäynnille.',
     scanNote: 'QR-koodi luetaan saavuttaessa.',
+    guestOf: 'Vieraana',
+    guestTitle: 'Vieraslippu',
   },
   'is-IS': {
     title: 'Aðgangskort',
@@ -107,6 +124,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Aðgangur',
     instructions: 'Taktu þetta kort með að innganginum.',
     scanNote: 'QR-kóðinn er skannaður við komu.',
+    guestOf: 'Gestur hjá',
+    guestTitle: 'Gestakort',
   },
   'fr-FR': {
     title: 'Carte d’accès',
@@ -118,6 +137,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Accès',
     instructions: 'Présentez cette carte à l’entrée.',
     scanNote: 'Le code QR est scanné à l’arrivée.',
+    guestOf: 'Invité de',
+    guestTitle: 'Carte d’invité',
   },
   'de-DE': {
     title: 'Eintrittskarte',
@@ -129,6 +150,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Eintritt',
     instructions: 'Bringen Sie diese Karte zum Eingang mit.',
     scanNote: 'Der QR-Code wird beim Einlass gescannt.',
+    guestOf: 'Gast von',
+    guestTitle: 'Gästekarte',
   },
   'es-ES': {
     title: 'Entrada',
@@ -140,6 +163,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Acceso',
     instructions: 'Lleva esta entrada a la puerta.',
     scanNote: 'El código QR se escanea a la llegada.',
+    guestOf: 'Invitado de',
+    guestTitle: 'Entrada de invitado',
   },
   'zh-CN': {
     title: '入场凭证',
@@ -151,6 +176,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: '入场',
     instructions: '请携带此凭证到入口。',
     scanNote: '二维码将在入场时扫描。',
+    guestOf: '受邀于',
+    guestTitle: '来宾凭证',
   },
   'ja-JP': {
     title: '入場券',
@@ -162,6 +189,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: '入場',
     instructions: 'この券を入口までお持ちください。',
     scanNote: 'QRコードは受付で読み取ります。',
+    guestOf: '同伴者',
+    guestTitle: '同伴者入場券',
   },
   'ru-RU': {
     title: 'Входной билет',
@@ -173,6 +202,8 @@ const STRINGS: Record<string, AdmissionStrings> = {
     admission: 'Вход',
     instructions: 'Возьмите этот билет с собой на вход.',
     scanNote: 'QR-код сканируется на входе.',
+    guestOf: 'Гость',
+    guestTitle: 'Гостевой билет',
   },
 };
 
@@ -238,6 +269,15 @@ export interface AdmissionInput {
   /** The signed `<reference>.<signature>` payload. */
   token: string;
   tokens?: TokenSet;
+  /**
+   * Whose card this is: 0 for the registrant, 1-based for one of the guests they brought.
+   *
+   * Defaulted, so every caller written before guests existed keeps producing exactly the card it
+   * produced. See `docs/adr/0003-repeating-groups.md`.
+   */
+  entryIndex?: number;
+  /** The guest's own name, where the form names one. Ignored for the registrant's card. */
+  guestName?: string | null;
 }
 
 /** Best-effort attendee name from the answers: whatever the form called it. */
@@ -252,6 +292,23 @@ export function attendeeName(data: Record<string, unknown>): string {
 export async function renderAdmissionHtml(input: AdmissionInput): Promise<string> {
   const { organisation, event, submission } = input;
   const tokens = input.tokens ?? defaultTokens;
+  const entryIndex = input.entryIndex ?? REGISTRANT_ENTRY;
+  const isGuest = entryIndex !== REGISTRANT_ENTRY;
+
+  /**
+   * A guest's card carries **its own** reference, which is the registration's plus an ordinal.
+   *
+   * Nothing is stored under it — see the ADR. It is what the QR signs, what the door parses back,
+   * and what somebody reads out when the camera will not focus.
+   */
+  const cardReference = entryReference(submission.reference, entryIndex);
+  const registrant = attendeeName(submission.data);
+  /*
+   * An unnamed guest shows as a dash rather than borrowing the registrant's name. Two cards
+   * reading "Alva Öberg" is worse than one named and one obviously blank: the second is plainly a
+   * guest whose name was not asked for, and the first is a duplicate somebody will try to resolve.
+   */
+  const attendee = isGuest ? (input.guestName ?? '') : registrant;
   const locales: LocaleConfig = {
     supported: organisation.supportedLocales,
     default: organisation.defaultLocale,
@@ -277,13 +334,14 @@ export async function renderAdmissionHtml(input: AdmissionInput): Promise<string
   });
 
   const when = formatRange(locale, event.startsAt, event.endsAt);
+  const title = isGuest ? strings.guestTitle : strings.title;
   const where = [event.venueName, event.venueAddress].filter(Boolean).join(', ');
 
   return `<!doctype html>
 <html lang="${escapeHtml(locale)}">
 <head>
 <meta charset="utf-8" />
-<title>${escapeHtml(strings.title)} — ${escapeHtml(submission.reference)}</title>
+<title>${escapeHtml(title)} — ${escapeHtml(cardReference)}</title>
 <style>
 ${toPrintCss(tokens, printOptions)}
 
@@ -316,13 +374,15 @@ dd { margin: 2px 0 0 0; font-size: 16px; }
 <body>
 <div class="tp-card">
   <p class="tp-muted">${escapeHtml(strings.admission)}</p>
-  <h1>${escapeHtml(strings.title)}</h1>
+  <h1>${escapeHtml(title)}</h1>
 
   <div class="admission">
     <div class="admission__details">
       <dl>
         <dt>${escapeHtml(strings.attendee)}</dt>
-        <dd>${escapeHtml(attendeeName(submission.data) || '—')}</dd>
+        <dd>${escapeHtml(attendee || '—')}</dd>
+
+        ${isGuest ? `<dt>${escapeHtml(strings.guestOf)}</dt><dd>${escapeHtml(registrant || submission.reference)}</dd>` : ''}
 
         <dt>${escapeHtml(strings.event)}</dt>
         <dd>${escapeHtml(eventName)}</dd>
@@ -333,7 +393,7 @@ dd { margin: 2px 0 0 0; font-size: 16px; }
         ${where ? `<dt>${escapeHtml(strings.where)}</dt><dd>${escapeHtml(where)}</dd>` : ''}
 
         <dt>${escapeHtml(strings.reference)}</dt>
-        <dd>${escapeHtml(submission.reference)}</dd>
+        <dd>${escapeHtml(cardReference)}</dd>
       </dl>
 
       <p class="tp-muted">${escapeHtml(strings.instructions)}</p>
@@ -341,7 +401,7 @@ dd { margin: 2px 0 0 0; font-size: 16px; }
 
     <div class="admission__qr">
       ${qr}
-      <p class="admission__reference">${escapeHtml(submission.reference)}</p>
+      <p class="admission__reference">${escapeHtml(cardReference)}</p>
       <p class="tp-muted" style="font-size:11px">${escapeHtml(strings.scanNote)}</p>
     </div>
   </div>

@@ -708,4 +708,48 @@ export const deDE: Record<MessageKey, string> = {
   'validation.time': 'Geben Sie eine Uhrzeit ein.',
   'validation.timeMin': 'Nicht früher als {min}.',
   'validation.timeMax': 'Nicht später als {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Weitere hinzufügen',
+  'group.remove': 'Entfernen',
+  'group.removeEntry': '{entry} entfernen',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Noch nichts hinzugefügt.',
+  'group.full': 'Dieses Formular erlaubt höchstens {max}.',
+  'fieldType.repeating_group': 'Wiederholter Block',
+  'palette.repeating': 'Wiederholung',
+  'field.fields': 'Fragen in diesem Block',
+  'field.fieldsHint': 'Zum Bearbeiten auswählen. Jede Frage wird einmal pro Eintrag gestellt.',
+  'field.minEntries': 'Mindestanzahl Einträge',
+  'field.maxEntries': 'Höchstanzahl Einträge',
+  'field.maxEntriesHint':
+    'Pflichtangabe. Der Export erhält pro Eintrag einen Spaltensatz, also muss das Formular die Anzahl nennen.',
+  'field.addLabel': 'Beschriftung der Schaltfläche',
+  'field.entryLabel': 'Bezeichnung eines Eintrags',
+  'field.entryLabelHint': 'Erscheint als Überschrift über jedem Eintrag — „Gast 1“, „Gast 2“.',
+  'field.admits': 'Jeder Eintrag erhält eine eigene Eintrittskarte',
+  'field.admitsHint':
+    'Für Gäste bei einer Veranstaltung. Sie werden getrennt von der angemeldeten Person eingelassen, und nur ein Block pro Formular kann das.',
+  'field.admitNameKey': 'Welche Frage ist ihr Name',
+  'field.admitNameKeyHint': 'Wird auf die Karte gedruckt und am Einlass angezeigt.',
+  'problem.group-min-above-max':
+    'Der Block „{key}“ verlangt mindestens {min} Einträge, erlaubt aber höchstens {max}.',
+  'problem.group-duplicate-child-key':
+    'Der Feldschlüssel „{key}“ wird in „{group}“ mehrfach verwendet.',
+  'problem.group-admit-name-unknown':
+    '„{group}“ nennt „{key}“ als Namen der teilnehmenden Person, hat aber keine solche Frage.',
+  'problem.multiple-admitting-groups':
+    'Nur ein Block pro Formular kann seinen Einträgen eine eigene Eintrittskarte geben.',
+  'validation.group': 'Diese Antwort hat nicht die erwartete Form.',
+  'validation.groupMin': 'Fügen Sie mindestens {min} hinzu.',
+  'validation.groupMax': 'Höchstens {max}.',
+  'checkin.outcome.no-such-guest': 'Gast steht nicht auf dieser Anmeldung',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Gast von {name}',
 };

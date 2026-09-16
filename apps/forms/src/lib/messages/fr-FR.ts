@@ -707,4 +707,49 @@ export const frFR: Record<MessageKey, string> = {
   'validation.time': 'Saisissez une heure.',
   'validation.timeMin': 'Pas avant {min}.',
   'validation.timeMax': 'Pas après {max}.',
+
+  /**
+   * Repeating blocks, and the guests they can admit.
+   *
+   * `docs/adr/0003-repeating-groups.md` has the design. The wording deliberately says "block"
+   * rather than "group": the palette already groups field types, and an author reading "group"
+   * would reasonably think of those.
+   */
+  'group.add': 'Ajouter',
+  'group.remove': 'Supprimer',
+  'group.removeEntry': 'Supprimer {entry}',
+  'group.entryHeading': '{label} {number}',
+  'group.empty': 'Rien d’ajouté pour l’instant.',
+  'group.full': 'Ce formulaire n’en accepte pas plus de {max}.',
+  'fieldType.repeating_group': 'Bloc répété',
+  'palette.repeating': 'Répétition',
+  'field.fields': 'Questions de ce bloc',
+  'field.fieldsHint':
+    'Sélectionnez-en une pour la modifier. Chaque question est posée une fois par entrée.',
+  'field.minEntries': 'Nombre minimum d’entrées',
+  'field.maxEntries': 'Nombre maximum d’entrées',
+  'field.maxEntriesHint':
+    'Obligatoire. L’export comporte un jeu de colonnes par entrée : le formulaire doit donc dire combien.',
+  'field.addLabel': 'Texte du bouton',
+  'field.entryLabel': 'Nom d’une entrée',
+  'field.entryLabelHint': 'Affiché en titre au-dessus de chacune — « Invité 1 », « Invité 2 ».',
+  'field.admits': 'Chaque entrée reçoit sa propre carte d’accès',
+  'field.admitsHint':
+    'Pour les invités d’un événement. Ils sont enregistrés à l’entrée séparément de la personne inscrite, et un seul bloc par formulaire peut le faire.',
+  'field.admitNameKey': 'Quelle question porte leur nom',
+  'field.admitNameKeyHint': 'Imprimé sur la carte et affiché à l’entrée.',
+  'problem.group-min-above-max':
+    'Le bloc « {key} » exige au moins {min} entrées mais n’en autorise que {max}.',
+  'problem.group-duplicate-child-key':
+    'La clé de champ « {key} » est utilisée plusieurs fois dans « {group} ».',
+  'problem.group-admit-name-unknown':
+    '« {group} » désigne « {key} » comme nom du participant, mais cette question n’existe pas.',
+  'problem.multiple-admitting-groups':
+    'Un seul bloc par formulaire peut donner à ses entrées leur propre carte d’accès.',
+  'validation.group': 'Cette réponse n’a pas la forme attendue.',
+  'validation.groupMin': 'Ajoutez-en au moins {min}.',
+  'validation.groupMax': 'Au plus {max}.',
+  'checkin.outcome.no-such-guest': 'Invité absent de cette inscription',
+  'submissions.column.entry': '{group} {number} – {child}',
+  'checkin.guestOf': 'Invité de {name}',
 };
