@@ -79,10 +79,21 @@ function referencedByTheShell(): { entry: string; stylesheet: string } {
   return { entry, stylesheet };
 }
 
+/**
+ * Copied runtimes that are not this build.
+ *
+ * `ocr/` is tesseract.js's worker and WebAssembly cores, copied out of `node_modules` by
+ * `scripts/ocr-assets.ts` — 12 MB of `.wasm.js` glue that carries the module as base64. It is
+ * fetched only when somebody draws a box on a photographed page in the builder, its size is
+ * decided upstream rather than by anything in this repository, and counting it would put the
+ * total permanently at 5 MB and make the doubling-detector unable to detect anything.
+ */
+const NOT_OURS = new Set(['ocr']);
+
 function everyBundleFile(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((item) => {
     const path = join(directory, item.name);
-    if (item.isDirectory()) return everyBundleFile(path);
+    if (item.isDirectory()) return NOT_OURS.has(item.name) ? [] : everyBundleFile(path);
     return /\.(js|css)$/.test(item.name) ? [path] : [];
   });
 }
