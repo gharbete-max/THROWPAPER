@@ -805,4 +805,12 @@ export const deDE: Record<MessageKey, string> = {
     'Ziehen Sie auf einer Seite, um dort eine Frage hinzuzufügen. Pfeiltasten verschieben das gewählte Kästchen; Umschalt und Pfeile ändern die Größe.',
   'paper.pickType': 'Welche Art von Antwort?',
   'paper.page': 'Seite {n}',
+  'paper.crop':
+    'Ziehen Sie die Ecken auf die Ecken der Seite. Pfeiltasten verschieben die gewählte Ecke; Umschalt verschiebt weiter.',
+  'paper.cropReset': 'Ganzes Bild verwenden',
+  'paper.cropNotAPage': 'Diese Ecken ergeben keine Seite.',
+  'paper.corner.0': 'Ecke oben links',
+  'paper.corner.1': 'Ecke oben rechts',
+  'paper.corner.2': 'Ecke unten rechts',
+  'paper.corner.3': 'Ecke unten links',
 };

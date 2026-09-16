@@ -786,4 +786,12 @@ export const nbNO: Record<MessageKey, string> = {
     'Dra på en side for å legge til et spørsmål der. Piltastene flytter den valgte boksen; Skift og piler endrer størrelsen.',
   'paper.pickType': 'Hva slags svar?',
   'paper.page': 'Side {n}',
+  'paper.crop':
+    'Dra hjørnene til sidens hjørner. Piltastene flytter det valgte hjørnet; Skift flytter lenger.',
+  'paper.cropReset': 'Bruk hele bildet',
+  'paper.cropNotAPage': 'De hjørnene danner ikke en side.',
+  'paper.corner.0': 'Øvre venstre hjørne',
+  'paper.corner.1': 'Øvre høyre hjørne',
+  'paper.corner.2': 'Nedre høyre hjørne',
+  'paper.corner.3': 'Nedre venstre hjørne',
 };

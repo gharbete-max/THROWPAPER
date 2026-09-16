@@ -785,4 +785,12 @@ export const daDK: Record<MessageKey, string> = {
     'Træk på en side for at tilføje et spørgsmål dér. Piletasterne flytter det valgte felt; Skift og pile ændrer størrelsen.',
   'paper.pickType': 'Hvilken slags svar?',
   'paper.page': 'Side {n}',
+  'paper.crop':
+    'Træk hjørnerne til sidens hjørner. Piletasterne flytter det valgte hjørne; Skift flytter længere.',
+  'paper.cropReset': 'Brug hele billedet',
+  'paper.cropNotAPage': 'De hjørner danner ikke en side.',
+  'paper.corner.0': 'Øverste venstre hjørne',
+  'paper.corner.1': 'Øverste højre hjørne',
+  'paper.corner.2': 'Nederste højre hjørne',
+  'paper.corner.3': 'Nederste venstre hjørne',
 };

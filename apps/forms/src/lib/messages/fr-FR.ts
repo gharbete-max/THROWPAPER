@@ -804,4 +804,12 @@ export const frFR: Record<MessageKey, string> = {
     'Faites glisser sur une page pour y ajouter une question. Les flèches déplacent la case sélectionnée ; Maj et flèches la redimensionnent.',
   'paper.pickType': 'Quel type de réponse ?',
   'paper.page': 'Page {n}',
+  'paper.crop':
+    'Placez les coins sur ceux de la page. Les flèches déplacent le coin sélectionné ; Maj le déplace davantage.',
+  'paper.cropReset': 'Utiliser toute la photo',
+  'paper.cropNotAPage': 'Ces coins ne forment pas une page.',
+  'paper.corner.0': 'Coin supérieur gauche',
+  'paper.corner.1': 'Coin supérieur droit',
+  'paper.corner.2': 'Coin inférieur droit',
+  'paper.corner.3': 'Coin inférieur gauche',
 };

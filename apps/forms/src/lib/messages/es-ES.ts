@@ -799,4 +799,12 @@ export const esES: Record<MessageKey, string> = {
     'Arrastre sobre una página para añadir allí una pregunta. Las flechas mueven la casilla seleccionada; Mayús y flechas cambian su tamaño.',
   'paper.pickType': '¿Qué tipo de respuesta?',
   'paper.page': 'Página {n}',
+  'paper.crop':
+    'Arrastre las esquinas hasta las esquinas de la página. Las flechas mueven la esquina seleccionada; Mayús la mueve más.',
+  'paper.cropReset': 'Usar toda la imagen',
+  'paper.cropNotAPage': 'Esas esquinas no forman una página.',
+  'paper.corner.0': 'Esquina superior izquierda',
+  'paper.corner.1': 'Esquina superior derecha',
+  'paper.corner.2': 'Esquina inferior derecha',
+  'paper.corner.3': 'Esquina inferior izquierda',
 };

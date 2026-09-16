@@ -11,6 +11,8 @@ import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
 import { openPdf, TooManyPages } from './extract.js';
+import { CropPhoto, WHOLE_PICTURE } from './CropPhoto.js';
+import { isUsable, straightenFile, type Corners } from './warp.js';
 
 /**
  * A form from the paper somebody already has.
@@ -61,8 +63,10 @@ export function ImportPaper({
     setState({ ...state, kind: 'storing' });
     try {
       const sources = [];
-      for (const { file, pages } of state.files) {
-        const stored = await client.addPaper(formId, file);
+      for (const { file, pages, corners } of state.files) {
+        // A photograph is straightened here, once, on the corners the author placed.
+        const page = corners ? await straightenFile(file, corners) : file;
+        const stored = await client.addPaper(formId, page);
         sources.push({ key: stored.key, pages });
       }
       onImport({ ...state.definition, paper: { sources } });
@@ -141,6 +145,27 @@ export function ImportPaper({
         )}
       </div>
 
+      {(state.kind === 'ready' || state.kind === 'storing') &&
+        state.files.map((entry, index) =>
+          entry.corners ? (
+            <CropPhoto
+              key={index}
+              file={entry.file}
+              corners={entry.corners}
+              onChange={(corners) =>
+                setState((was) =>
+                  was.kind === 'ready'
+                    ? {
+                        ...was,
+                        files: was.files.map((f, i) => (i === index ? { ...f, corners } : f)),
+                      }
+                    : was,
+                )
+              }
+            />
+          ) : null,
+        )}
+
       <p className="small status-warning">{t('import.replaces')}</p>
 
       <div className="row">
@@ -148,7 +173,9 @@ export function ImportPaper({
           type="button"
           className="button"
           onClick={() => void apply()}
-          disabled={state.kind !== 'ready'}
+          disabled={
+            state.kind !== 'ready' || state.files.some((f) => f.corners && !isUsable(f.corners))
+          }
         >
           {state.kind === 'storing' ? t('paper.storing') : t('import.confirm')}
         </button>
@@ -162,7 +189,8 @@ export function ImportPaper({
 
 type Ready = {
   kind: 'ready' | 'storing';
-  files: Array<{ file: File; pages: number }>;
+  /** `corners` only on a photograph: where the author says the page is, as fractions. */
+  files: Array<{ file: File; pages: number; corners?: Corners }>;
   pages: number;
   definition: FormDefinition;
   skipped: SkippedAcroField[];
@@ -184,7 +212,7 @@ async function read(files: File[], locale: string): Promise<Ready> {
       pages += pdf.pageCount;
       await pdf.close();
     } else {
-      counted.push({ file, pages: 1 });
+      counted.push({ file, pages: 1, corners: WHOLE_PICTURE });
       pages += 1;
     }
     if (pages > MAX_PAPER_PAGES) throw new TooManyPages(pages);

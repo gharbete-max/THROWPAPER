@@ -126,6 +126,8 @@ paper"):
 - **Step three was taken now rather than after measuring**, because the product owner asked for
   photographed paper to work on day one. It is manual placement, as this ADR proposed — not OCR,
   not inference. Digital PDFs offer the printed text beside a box as its label, verbatim.
+- **Photographs are straightened by hand**: four handles the author puts on the page's corners,
+  and a projective warp in the browser (`warp.ts`). No edge detection.
 - **OCR arrived, for photographs, as a label suggestion only** — never as field detection. The
   author still draws every box; Tesseract offers the printed words beside it, verbatim.
 - **Overlay output** followed as its own phase, as a rendering target rather than an editor:

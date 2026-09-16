@@ -5668,3 +5668,52 @@ body:has(> #root .shell--narrow) {
   max-inline-size: calc(100% - var(--tp-spacing-unit) * 2);
   z-index: 1;
 }
+
+/* --- Straightening a photograph (`paper/CropPhoto.tsx`) -------------------
+ * Four handles the author drags onto the page's corners; the outline between them is SVG
+ * stretched over the picture so it needs no maths of its own. */
+.crop__surface {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+  background: var(--tp-colour-surface);
+}
+
+.crop__outline {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.crop__outline polygon {
+  fill: color-mix(in srgb, var(--tp-colour-primary) 14%, transparent);
+  stroke: var(--tp-colour-primary);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.crop__outline--bad polygon {
+  fill: color-mix(in srgb, var(--tp-colour-danger) 14%, transparent);
+  stroke: var(--tp-colour-danger);
+}
+
+/* A handle is a target for a thumb, not a pixel: 28px, centred on the corner it stands for. */
+.crop__handle {
+  position: absolute;
+  inline-size: 28px;
+  block-size: 28px;
+  margin: -14px 0 0 -14px;
+  padding: 0;
+  border: 2px solid var(--tp-colour-background);
+  border-radius: 50%;
+  background: var(--tp-colour-primary);
+  cursor: grab;
+}
+
+.crop__handle:active {
+  cursor: grabbing;
+}
