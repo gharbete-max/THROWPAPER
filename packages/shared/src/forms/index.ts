@@ -10,6 +10,7 @@ export * from './vocabulary.js';
 export * from './templates.js';
 export * from './rich-text.js';
 export * from './import-surveyjs.js';
+export * from './import-acroform.js';
 export * from './pattern-safety.js';
 export * from './uploads.js';
 export * from './wizard.js';

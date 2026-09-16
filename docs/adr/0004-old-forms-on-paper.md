@@ -3,6 +3,16 @@
 **Status:** proposed — this is the thinking, not a decision
 **Date:** 2026-09-15
 
+> **Since written:** the **mapping** half of step one is built —
+> `packages/shared/src/forms/import-acroform.ts` turns a list of AcroForm field descriptors into a
+> `FormDefinition`, mirroring `importSurveyJson`. That needs none of the decisions below, because
+> it takes descriptors rather than bytes and therefore stores nothing.
+>
+> The **extraction** half — `pdfjs` reading a real file — is deliberately not built, because it is
+> the half that needs an uploaded PDF, and every open question in "What would need deciding" is
+> about that file: where it lives, whether it is kept, and what caps a parser runs under. Those are
+> still yours. This ADR stays *proposed* until they are answered.
+
 ## Context
 
 The request was "a PDF editor embedded would be great". The reason given is the one that matters:
