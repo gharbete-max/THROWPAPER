@@ -25,7 +25,7 @@ rather than discovering later — see *Open, from the direction note* at the end
 
 After week 0 the tracks run independently. They re-sync only on contract changes.
 
-## Track A — Formwork
+## Track A — Forms
 
 **A1.** Auth, tenancy, roles, audit log, locale config, app shell.
 **A2.** Contacts and reference tables. Import with column mapping and merge. Seed data.
@@ -122,7 +122,7 @@ resolved here:
 
 Ask before building either. Cutting them is cheaper than cutting them later.
 
-## Track B — Sendwork
+## Track B — Mailer
 
 **B1.** Auth, tenancy, roles, audit log, app shell. Shares the pattern with A1 — agree it once.
 **B2.** Contacts: import with mapping and merge, custom fields, tags, preferred locale, the
@@ -141,7 +141,7 @@ endpoints.
 not stop a rent notice, and that a marketing campaign to the same contact is stopped.
 **B10.** Recurring schedules, draft generation, approval flow, next-five-dates preview.
 **B11.** Delivery events: bounce and complaint webhooks, suppression rules, preference centre,
-one-click unsubscribe headers, delivery webhook back to Formwork.
+one-click unsubscribe headers, delivery webhook back to Forms.
 **B12.** Per-recipient charts rendered as images with alt text.
 **B13.** Reporting and deliverability health.
 **B14.** Hardening: throttling, domain warm-up, load test of a full-size send, GDPR export and
@@ -171,8 +171,8 @@ erasure.
 ## Later
 
 Mobile apps for each product, consuming the existing APIs unchanged: an attendee and inspector
-app for Formwork (admission QR, assigned forms, offline-capable check-in and inspection capture),
-and a light approvals app for Sendwork. If any phase above makes those hard, that is a bug in the
+app for Forms (admission QR, assigned forms, offline-capable check-in and inspection capture),
+and a light approvals app for Mailer. If any phase above makes those hard, that is a bug in the
 phase.
 
 The regulated modules in `SPEC-forms.md` §8 — legal e-signature, AGM voting and POA, accounting —

@@ -1,13 +1,13 @@
-# Formwork — one image containing the API and the built app.
+# Loppa — one image containing the API and the built app.
 #
 # Chromium is a hard requirement, not an optimisation: phase 4a renders admission PDFs through
 # Playwright, so a slim Node base would produce an image that boots happily and then fails the
 # first time somebody asks for a document. The Playwright base image carries the browser and its
 # system libraries at matching versions, which is the part that is painful to assemble by hand.
 #
-# Build:  docker build -t formwork .
-# Run:    docker run -p 4001:4001 -e DATABASE_URL=... -e JWT_SECRET=... formwork
-# Demo:   docker run -p 4001:4001 -e DEMO=true formwork
+# Build:  docker build -t loppa .
+# Run:    docker run -p 4001:4001 -e DATABASE_URL=... -e JWT_SECRET=... loppa
+# Demo:   docker run -p 4001:4001 -e DEMO=true loppa
 
 # Keep this in step with the playwright version in package.json — a mismatch between the browser
 # in the image and the client driving it fails at runtime, not at build time.

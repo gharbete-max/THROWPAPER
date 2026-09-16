@@ -5,7 +5,7 @@ export const CustomFieldValue = z.union([z.string(), z.number(), z.boolean(), z.
 
 /**
  * CONTRACT §1.2 — idempotent on contactRef.
- * Consent is Sendwork's record. Loppa never sends it, so it is not in this schema.
+ * Consent is Mailer's record. Loppa never sends it, so it is not in this schema.
  */
 export const UpsertContact = z.object({
   contactRef: ContactRef,

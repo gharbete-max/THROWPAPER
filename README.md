@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/loppa-lockup-h-dark.svg">
-    <img src="docs/brand/loppa-lockup-h-light.svg" width="420" height="139" alt="Loppa">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/title/vector/loppa-lockup-h-dark.svg">
+    <img src="docs/brand/title/vector/loppa-lockup-h-light.svg" width="420" height="139" alt="Loppa">
   </picture>
 </p>
 
@@ -59,7 +59,7 @@ packages/i18n     Translation catalogues and ICU collation
 packages/ui       Headless + styled primitives, including the data grid
 packages/calc     Formula AST, statistics, chart definitions
 packages/shared   Types and Zod schemas, including the contract schemas
-docs/brand        The mark and lockups (vector only — rasters are not committed)
+docs/brand        The Loppa brand bundle: tokens, motion CSS, marks, lockups, animations (rasters in Git LFS)
 ```
 
 ## Read in this order
@@ -91,6 +91,6 @@ Internal identifiers, package names, database tables and API routes keep the `th
 
 The mark is a folded paper fortune-teller in gold and platinum. Gold measures 2.14:1 on white,
 so the identity is at its strongest on near-black; on light surfaces text takes the bronze tier
-(`#8F6B3A`, 4.64:1), never the face gold. Vectors are in `docs/brand`; the application tokens
+(`#8F6B3A`, 4.64:1), never the face gold. The bundle — tokens, usage rules, marks, motion — is in `docs/brand`; the application tokens
 in `packages/tokens` and `DESIGN.md` still carry the previous palette and move over in a
 separate PR series. See `SECURITY.md` for reporting.

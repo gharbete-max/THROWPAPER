@@ -45,7 +45,7 @@ file — START-HERE.md §Running it with Claude Code.
 
 1. Who is the first real user?
 2. Which segment first? (recommendation in the doc: Events & registrations)
-3. One builder or two? (if one: build sequentially, Sendwork stays a scaffold)
+3. One builder or two? (if one: build sequentially, Mailer stays a scaffold)
 4. Hosting region and email provider region?
 5. What would make you stop?
 
@@ -91,7 +91,7 @@ unmangled, with the running header and `1 / 1` page number present.
 - Email engine is **React Email**, PDF engine is **Playwright Chromium** (both chosen deliberately;
   Playwright is reused for phase 3 e2e).
 - The React Email components live in `scripts/proof/`, not in a package. They move to a real home
-  when Sendwork's block editor (B4) needs them — `packages/tokens` stays framework-free.
+  when Mailer's block editor (B4) needs them — `packages/tokens` stays framework-free.
 - Inter is the only family with embedded font files. Any other family falls back to the host's
   system fonts, which is the correct degradation but means a Brand Kit font picker (A3) must warn.
 
@@ -379,9 +379,9 @@ development.
 
 **Two corrections to things that had become false**
 
-- `messages.send` was deferred to "phase 4". Phase 4 built the sending path **inside Formwork**,
+- `messages.send` was deferred to "phase 4". Phase 4 built the sending path **inside Forms**,
   so it is now B6. 
-- `delivery.webhook` was deferred to "phase 4" too; it waits for Sendwork's bounce handling in
+- `delivery.webhook` was deferred to "phase 4" too; it waits for Mailer's bounce handling in
   B11.
 
 Left alone, `pnpm contract:check` would have cheerfully printed both lies on every run.

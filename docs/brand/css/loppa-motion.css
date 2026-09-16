@@ -1,0 +1,80 @@
+/* Loppa — motion utilities.
+   Requires tokens-loppa.css. Every rule here honours prefers-reduced-motion. */
+
+/* ---------------------------------------------------------------- loader -- */
+/* Use the vector spinner, not a raster one. 1.5 KB, crisp at any size,
+   and it carries its own reduced-motion rule. */
+.loppa-spinner {
+  width: 2.75rem;          /* 44px — also the minimum tap target */
+  height: 2.75rem;
+  display: block;
+}
+.loppa-spinner--sm { width: 1.5rem;  height: 1.5rem; }
+.loppa-spinner--lg { width: 4.5rem;  height: 4.5rem; }
+
+/* ------------------------------------------------------------ mark swap --- */
+/* Still mark that plays an animation on hover or focus. The animated file must
+   have its src reset on enter, or it will be mid-cycle by the time anyone
+   hovers — see the script note in USAGE.md. */
+.loppa-mark { position: relative; display: inline-block; line-height: 0; }
+.loppa-mark img { display: block; width: 100%; height: auto; }
+.loppa-mark .loppa-mark__motion {
+  position: absolute; inset: 0; opacity: 0;
+  transition: opacity 120ms linear;
+}
+.loppa-mark:hover .loppa-mark__motion,
+.loppa-mark:focus-visible .loppa-mark__motion { opacity: 1; }
+.loppa-mark:hover .loppa-mark__still,
+.loppa-mark:focus-visible .loppa-mark__still { opacity: 0; }
+
+/* ------------------------------------------------------------- entrance --- */
+@keyframes loppa-rise {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+.loppa-rise {
+  animation: loppa-rise var(--loppa-dur-base) var(--loppa-ease-settle) both;
+}
+.loppa-rise--delay-1 { animation-delay: 60ms; }
+.loppa-rise--delay-2 { animation-delay: 120ms; }
+.loppa-rise--delay-3 { animation-delay: 180ms; }
+
+/* --------------------------------------------------------------- states --- */
+/* Motion reinforces; it never carries the meaning on its own. Always pair
+   these with text. */
+@keyframes loppa-shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-6px) rotate(-1.5deg); }
+  35%     { transform: translateX(5px)  rotate(1.2deg); }
+  55%     { transform: translateX(-3px) rotate(-.8deg); }
+  78%     { transform: translateX(2px)  rotate(.4deg); }
+}
+.loppa-invalid { animation: loppa-shake 420ms var(--loppa-ease-in-fast) 1; }
+
+@keyframes loppa-pop {
+  0%   { transform: scale(.94); }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.loppa-confirm { animation: loppa-pop 360ms var(--loppa-ease-settle) 1; }
+
+/* ------------------------------------------------------------ interactive - */
+.loppa-lift {
+  transition: transform var(--loppa-dur-fast) var(--loppa-ease-settle),
+              box-shadow var(--loppa-dur-fast) var(--loppa-ease-settle);
+}
+.loppa-lift:hover  { transform: translateY(-1px); }
+.loppa-lift:active { transform: translateY(0) scale(.985); }
+
+/* --------------------------------------------------------------- global --- */
+@media (prefers-reduced-motion: reduce) {
+  .loppa-rise,
+  .loppa-invalid,
+  .loppa-confirm { animation: none; opacity: 1; transform: none; }
+  .loppa-lift,
+  .loppa-mark .loppa-mark__motion { transition: none; }
+  .loppa-lift:hover, .loppa-lift:active { transform: none; }
+  /* the animated mark is removed entirely, not just un-transitioned */
+  .loppa-mark .loppa-mark__motion { display: none; }
+  .loppa-mark .loppa-mark__still  { opacity: 1 !important; }
+}

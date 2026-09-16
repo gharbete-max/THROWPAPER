@@ -147,7 +147,7 @@ Rules worth holding to:
 structure and the wrong sequence for one person.
 
 Build v0.1 with a **thin transactional sending path** — provider integration, domain
-verification, a handful of templates. You need that anyway for confirmations. Sendwork becomes a
+verification, a handful of templates. You need that anyway for confirmations. Mailer becomes a
 real product later, when you have a customer who wants campaigns and does not want forms. The
 contract already exists on paper, so splitting it out then is a refactor, not a rewrite. That is
 what the contract document is actually buying you: permission to delay.
