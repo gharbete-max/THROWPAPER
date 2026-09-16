@@ -29,7 +29,16 @@ async function upload(
   const form = new FormData();
   form.set(
     'file',
-    new File([content], options.filename ?? 'logo.png', {
+    /*
+     * The bytes, not the Buffer.
+     *
+     * `@types/node` 26 made `Buffer` generic over its backing store, so a plain `Buffer` is
+     * `Buffer<ArrayBufferLike>` — and `ArrayBufferLike` includes `SharedArrayBuffer`, which is not
+     * a `BlobPart`. Reaching for the underlying bytes says what this actually wants and is exact
+     * for both backings, rather than asserting past a distinction the types have just started
+     * making correctly.
+     */
+    new File([new Uint8Array(content)], options.filename ?? 'logo.png', {
       type: options.type ?? 'image/png',
     }),
   );
