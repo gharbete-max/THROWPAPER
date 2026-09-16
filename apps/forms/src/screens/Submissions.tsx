@@ -131,8 +131,8 @@ export function Submissions({ formId }: { formId: string }) {
   const collator = useMemo(() => new Intl.Collator(locale, { numeric: true }), [locale]);
 
   const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(
-    () =>
-      exportColumns.map((column) => ({
+    () => [
+      ...exportColumns.map<ColumnDef<Record<string, unknown>>>((column) => ({
         id: column.key,
         accessorKey: column.key,
         header: column.header,
@@ -168,7 +168,30 @@ export function Submissions({ formId }: { formId: string }) {
             }
           : {}),
       })),
-    [exportColumns, locale, collator, fileFields],
+      /*
+       * The submission written back onto the paper the form was made from — only for a form
+       * that has paper, and only once the submission is complete: a half-filled sheet is not a
+       * document anybody wants returned.
+       */
+      ...(definition?.paper
+        ? [
+            {
+              id: 'paper',
+              header: t('submissions.paper'),
+              enableSorting: false,
+              cell: (info) =>
+                info.row.original['status'] === 'complete' ? (
+                  <AttachmentLink
+                    submissionId={String(info.row.original['__submissionId'])}
+                    filename={`${String(info.row.original['reference'])}-paper.pdf`}
+                    icon="file"
+                  />
+                ) : null,
+            } satisfies ColumnDef<Record<string, unknown>>,
+          ]
+        : []),
+    ],
+    [exportColumns, locale, collator, fileFields, definition?.paper, t],
   );
 
   const table = useReactTable({

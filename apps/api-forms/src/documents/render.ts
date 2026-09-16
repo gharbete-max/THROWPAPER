@@ -10,6 +10,12 @@ import { printMargins, toPdfFooterTemplate, toPdfHeaderTemplate } from '@tp/toke
  */
 export interface PdfRenderer {
   render(html: string, options?: { header?: string; footer?: string }): Promise<Buffer>;
+  /**
+   * The document exactly as its own CSS lays it out: `@page` sizes honoured, no margins, no
+   * running header or footer. For pages that must match another document point for point —
+   * the answers drawn back onto somebody's paper — rather than for a branded A4 document.
+   */
+  renderPages(html: string): Promise<Buffer>;
   close(): Promise<void>;
 }
 
@@ -43,6 +49,20 @@ export function createPdfRenderer(tokens: TokenSet = defaultTokens): PdfRenderer
           footerTemplate: toPdfFooterTemplate(tokens, options),
           margin: printMargins(),
         });
+      } finally {
+        await page.close();
+      }
+    },
+
+    async renderPages(html) {
+      const page = await (await ensureBrowser()).newPage();
+      try {
+        await page.setContent(html, { waitUntil: 'load' });
+        await page.emulateMedia({ media: 'print' });
+        await page.evaluate(
+          '(async () => { await document.fonts.ready; })()' as unknown as () => Promise<void>,
+        );
+        return await page.pdf({ preferCSSPageSize: true, printBackground: true, margin: {} });
       } finally {
         await page.close();
       }

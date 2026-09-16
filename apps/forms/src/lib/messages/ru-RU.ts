@@ -774,6 +774,9 @@ export const ruRU: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'его изображение находится в другом месте в сети',
   'import.reason.nested-group': 'повторяющийся блок внутри другого',
   'import.reason.needs-limit': 'в нём не указано, сколько записей допускается',
+  'submissions.paper': 'Бумага',
+  'submissions.noPaper': 'Заполнено до того, как у формы появилась бумага',
+
   'paper.open': 'С бумаги',
   'paper.heading': 'Сделать форму из бумаги',
   'paper.explain':

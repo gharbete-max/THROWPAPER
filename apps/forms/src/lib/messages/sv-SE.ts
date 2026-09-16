@@ -759,6 +759,9 @@ export const svSE: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'dess bild ligger någon annanstans på webben',
   'import.reason.nested-group': 'ett upprepat block inuti ett annat',
   'import.reason.needs-limit': 'den anger aldrig hur många poster som tillåts',
+  'submissions.paper': 'Papper',
+  'submissions.noPaper': 'Ifylld innan formuläret hade papper',
+
   'paper.open': 'Från papper',
   'paper.heading': 'Gör ett formulär av papper',
   'paper.explain':

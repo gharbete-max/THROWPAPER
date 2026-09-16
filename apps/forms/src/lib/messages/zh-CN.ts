@@ -738,6 +738,9 @@ export const zhCN: Record<MessageKey, string> = {
   'import.reason.needs-asset': '其图片位于网络上的其他位置',
   'import.reason.nested-group': '可重复区块嵌套在另一个之中',
   'import.reason.needs-limit': '它没有说明允许多少条记录',
+  'submissions.paper': '纸张',
+  'submissions.noPaper': '填写时该表单尚未关联纸张',
+
   'paper.open': '来自纸张',
   'paper.heading': '用纸质表单创建表单',
   'paper.explain':

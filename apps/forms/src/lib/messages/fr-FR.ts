@@ -777,6 +777,9 @@ export const frFR: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'son image se trouve ailleurs sur le web',
   'import.reason.nested-group': 'un bloc répété dans un autre',
   'import.reason.needs-limit': 'il ne dit jamais combien d’entrées il autorise',
+  'submissions.paper': 'Papier',
+  'submissions.noPaper': 'Rempli avant que le formulaire ait du papier',
+
   'paper.open': 'Depuis du papier',
   'paper.heading': 'Créer un formulaire à partir du papier',
   'paper.explain':

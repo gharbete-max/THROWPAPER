@@ -149,7 +149,7 @@ export function mergeWidgets(
       const value = widget.buttonValue ?? '';
       const existing = into.find((f) => f.name === widget.fieldName && f.type === 'radio');
       if (existing) {
-        existing.options?.push({ value, label: value });
+        existing.options?.push({ value, label: value, paper: anchor });
         if (existing.paper && existing.paper.page === page) {
           existing.paper = union(existing.paper, anchor);
         }
@@ -158,7 +158,7 @@ export function mergeWidgets(
       into.push({
         ...common(widget),
         type: 'radio',
-        options: [{ value, label: value }],
+        options: [{ value, label: value, paper: anchor }],
         paper: anchor,
       });
       continue;

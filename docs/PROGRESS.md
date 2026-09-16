@@ -1059,6 +1059,38 @@ live in the same content-addressed store as respondent attachments, which nothin
 either, and that gap is already on the launch checklist. The seed gets no paper, because a
 `paper` block pointing at a file that is not on disk would be a broken demo.
 
+## Answers back onto the paper · done
+
+The other half of "a form from paper": for a submission of a form that has paper, **the
+original page with the answers written in their boxes** — `GET /v1/submissions/:id/paper.pdf`,
+and a Paper button per complete row on the Submissions screen. ADR 0004 calls it overlay
+output and holds it for the document that must be submitted as itself; that is what it is for.
+
+**Chromium draws, pdf-lib composites.** pdf-lib's own fonts are WinAnsi and would throw on a
+Russian surname, and embedding a family that covers CJK is a bigger job than the feature — while
+text in twelve languages is already solved in `render.ts`. So the answers are rendered as an
+overlay: one transparent page per paper page, same size in points, each answer positioned at its
+anchor. pdf-lib (new, server only, pure JS) copies the source PDF's pages and draws the overlay
+over each. A photographed page needs no compositing: the photograph is the overlay page's
+background, and that page is the output page. `renderPages` is `render` without the A4 chrome —
+`preferCSSPageSize`, no margins, no running header.
+
+**What is written.** The answer, verbatim, in the respondent's language: option labels rather
+than stored values, dates and numbers through `Intl`, a tick in a box the size a tick box
+arrives as and the word Yes/No in any larger one, the drawn mark as an image in its box. A field
+with no anchor was never on the paper and is not drawn.
+
+**The version they filled in, not the draft.** An author who redraws a box a month later must
+not move an answer on paper that was already returned, so the definition comes from
+`submission.formVersionId`. Access is the admission card's: the sheet carries everything the
+person wrote.
+
+**Not built, on purpose.** Bulk generation (the admission job's shape, when somebody needs two
+hundred). Sending the sheet to the respondent — a privacy decision, since it carries all of
+their answers, and therefore a privacy-page decision. Repeating groups on paper: no box can
+hold N entries. Flattening the original's own form widgets: they stay, and the answers are drawn
+over them, which is what a pen would do.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

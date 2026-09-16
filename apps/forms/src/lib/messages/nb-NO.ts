@@ -759,6 +759,9 @@ export const nbNO: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'bildet ligger et annet sted på nettet',
   'import.reason.nested-group': 'en gjentatt blokk inne i en annen',
   'import.reason.needs-limit': 'den sier aldri hvor mange oppføringer som tillates',
+  'submissions.paper': 'Papir',
+  'submissions.noPaper': 'Fylt ut før skjemaet hadde papir',
+
   'paper.open': 'Fra papir',
   'paper.heading': 'Lag et skjema av papir',
   'paper.explain':

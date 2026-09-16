@@ -59,6 +59,10 @@ export function createFakePdfRenderer(
       rendered.push(html);
       return Buffer.from(`%PDF-1.4 fake ${rendered.length}`);
     },
+    async renderPages(html) {
+      rendered.push(html);
+      return Buffer.from(`%PDF-1.4 fake ${rendered.length}`);
+    },
     async close() {},
   };
 }

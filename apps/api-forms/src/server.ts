@@ -474,7 +474,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       }
     },
   });
-  registerDocumentRoutes(app, { repos, guard, admission, store });
+  registerDocumentRoutes(app, { repos, guard, admission, store, uploadStore });
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
   registerCheckInRoutes(app, { repos, guard, jwtSecret });
   registerBrandKitRoutes(app, { repos, guard });

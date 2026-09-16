@@ -132,7 +132,13 @@ async function requestBlob(path: string, retry = true): Promise<Blob> {
     return requestBlob(path, false);
   }
   if (!response.ok) {
-    throw new ApiError(response.status, 'download-failed', 'That file could not be downloaded');
+    // The server's own code where it gave one: a 409 saying why is not a failed download.
+    const body: unknown = await response.json().catch(() => null);
+    const code =
+      body && typeof body === 'object' && 'error' in body
+        ? String((body as { error: { code?: string } }).error.code ?? 'download-failed')
+        : 'download-failed';
+    throw new ApiError(response.status, code, 'That file could not be downloaded');
   }
   return response.blob();
 }
@@ -196,6 +202,10 @@ export const client = {
   },
 
   paper: (formId: string, key: string) => requestBlob(`/v1/forms/${formId}/paper/${key}`),
+
+  /** A submission written back onto the paper its form was made from. */
+  submissionPaper: (submissionId: string) =>
+    requestBlob(`/v1/submissions/${submissionId}/paper.pdf`),
 
   logout: async () => {
     const refreshToken = storedRefreshToken();

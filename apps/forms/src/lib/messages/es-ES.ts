@@ -772,6 +772,9 @@ export const esES: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'su imagen está en otro lugar de la web',
   'import.reason.nested-group': 'un bloque repetido dentro de otro',
   'import.reason.needs-limit': 'nunca indica cuántas entradas permite',
+  'submissions.paper': 'Papel',
+  'submissions.noPaper': 'Rellenado antes de que el formulario tuviera papel',
+
   'paper.open': 'Desde papel',
   'paper.heading': 'Crear un formulario a partir de papel',
   'paper.explain':

@@ -43,10 +43,12 @@ describe('reading the widgets on a page', () => {
       ['submit', 'button'],
       ['name', 'text'],
     ]);
-    expect(fields[0]!.options).toEqual([
-      { value: 'yes', label: 'yes' },
-      { value: 'no', label: 'no' },
+    // Each button keeps its own box, so a tick can land on the one that was chosen.
+    expect(fields[0]!.options?.map((o) => [o.value, o.label, o.paper?.page])).toEqual([
+      ['yes', 'yes', 3],
+      ['no', 'no', 3],
     ]);
+    expect(fields[0]!.options?.[1]?.paper?.x).toBeCloseTo(150 / 595);
     // The group's anchor spans both buttons.
     expect(fields[0]!.paper?.page).toBe(3);
     expect(fields[0]!.paper?.x).toBeCloseTo(50 / 595);
