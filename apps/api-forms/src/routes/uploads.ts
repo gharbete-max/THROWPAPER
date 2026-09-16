@@ -8,7 +8,19 @@ import { recordAudit } from '../audit.js';
 import { checkImage, MAX_IMAGE_BYTES } from '../uploads/image.js';
 import { assetPath, isAssetKey, type AssetStore } from '../uploads/store.js';
 import type { PrivateUploadStore } from '../uploads/private-store.js';
-import { isUploadKey } from '@tp/shared/forms';
+import {
+  checkAttachment,
+  contentTypeFor,
+  type AttachmentRejection,
+} from '../uploads/attachment.js';
+import { resolveFormAccess } from '../forms/access.js';
+import {
+  canEdit,
+  FormDefinition,
+  isUploadKey,
+  MAX_UPLOAD_BYTES,
+  type UploadExtension,
+} from '@tp/shared/forms';
 
 const UploadResponse = z.object({
   key: z.string(),
@@ -193,6 +205,145 @@ export function registerUploadRoutes(
       );
     },
   });
+
+  /**
+   * The paper a form is being made from — a PDF, or a photograph of a page.
+   *
+   * `docs/adr/0004-old-forms-on-paper.md`. Stored in the **private** store, like a respondent's
+   * attachment, because an old membership form is an organisation's document and not a logo.
+   * This route only stores the bytes: the client writes the key into `definition.paper` and saves
+   * the draft as usual, so undo, versions and publish need no new code to know about it.
+   */
+  app.post('/v1/forms/:id/paper', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 30, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['uploads'],
+      params: FormIdParam,
+      response: {
+        201: PaperResponse,
+        400: api.ErrorResponse,
+        401: api.ErrorResponse,
+        403: api.ErrorResponse,
+        404: api.ErrorResponse,
+        413: api.ErrorResponse,
+      },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id } = FormIdParam.parse(request.params);
+
+      const found = await resolveFormAccess(deps.repos, auth, id);
+      if (!found) return notFound(reply);
+      if (!canEdit(found.access)) {
+        return reply
+          .code(403)
+          .send({ error: { code: 'forbidden', message: 'You cannot change this form' } });
+      }
+
+      const file = await request.file({ limits: { fileSize: MAX_UPLOAD_BYTES } });
+      if (!file) {
+        return reply
+          .code(400)
+          .send({ error: { code: 'no-file', message: 'Send one file as multipart form data' } });
+      }
+      const content = await file.toBuffer();
+      if (file.file.truncated) {
+        return reply.code(413).send({ error: { code: 'too-large', message: tooLarge() } });
+      }
+
+      // The bytes decide what this is; the filename and declared type are the uploader's words.
+      const checked = checkAttachment(content, 'both');
+      if (!checked.ok) {
+        const status = checked.code === 'too-large' ? 413 : 400;
+        return reply
+          .code(status)
+          .send({ error: { code: checked.code, message: attachmentMessage(checked.code) } });
+      }
+
+      const stored = await deps.uploadStore.put(content, checked.extension);
+      await recordAudit(deps.repos, request, {
+        action: 'form.paper.add',
+        entityType: 'form',
+        entityId: id,
+        after: { key: stored.key, bytes: stored.bytes, contentType: checked.contentType },
+      });
+
+      return reply
+        .code(201)
+        .send({ key: stored.key, contentType: checked.contentType, bytes: stored.bytes });
+    },
+  });
+
+  /**
+   * Read a form's paper back, to draw on in the builder.
+   *
+   * Authenticated and scoped through the form: the key must be one the current draft lists.
+   * That list *is* the ownership record — a key that is not in it is not this form's file, whoever
+   * else may have uploaded identical bytes.
+   */
+  app.get('/v1/forms/:id/paper/:key', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 120, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['uploads'],
+      params: PaperParam,
+      response: { 401: api.ErrorResponse, 404: api.ErrorResponse },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id, key } = PaperParam.parse(request.params);
+      if (!isUploadKey(key)) return notFound(reply);
+
+      const found = await resolveFormAccess(deps.repos, auth, id);
+      if (!found) return notFound(reply);
+
+      const draft = FormDefinition.safeParse(found.form.draftDefinition);
+      const listed = draft.success && draft.data.paper?.sources.some((s) => s.key === key);
+      if (!listed) return notFound(reply);
+
+      const content = await deps.uploadStore.get(key);
+      if (!content) return notFound(reply);
+
+      return reply
+        .header('content-type', contentTypeFor(key.split('.')[1] as UploadExtension))
+        .header('cache-control', 'private, no-store')
+        .header('x-content-type-options', 'nosniff')
+        .header('content-security-policy', "default-src 'none'; sandbox")
+        .send(content);
+    },
+  });
+}
+
+const FormIdParam = z.object({ id: z.string().uuid() });
+const PaperParam = FormIdParam.extend({ key: z.string().min(1).max(128) });
+const PaperResponse = z.object({
+  key: z.string(),
+  contentType: z.string(),
+  bytes: z.number().int().nonnegative(),
+});
+
+function tooLarge(): string {
+  return `Files must be ${Math.floor(MAX_UPLOAD_BYTES / 1024 / 1024)}MB or smaller`;
+}
+
+function attachmentMessage(code: AttachmentRejection['code']): string {
+  switch (code) {
+    case 'too-large':
+      return tooLarge();
+    case 'empty':
+      return 'The file is empty';
+    default:
+      return 'Send a PDF or a photograph (PNG, JPEG or WebP)';
+  }
+}
+
+function unauthenticated(reply: FastifyReply) {
+  return reply
+    .code(401)
+    .send({ error: { code: 'unauthenticated', message: 'Sign in to continue' } });
 }
 
 function notFound(reply: FastifyReply) {

@@ -41,3 +41,19 @@ describe('the language catalogues', () => {
     expect([...TRANSLATED_LOCALES].sort()).toEqual([...LOCALE_CODES].sort());
   });
 });
+
+/**
+ * The PDF reader is a megabyte, and it exists for one button in the builder.
+ *
+ * `screens/builder/paper/extract.ts` loads it with `import()`. A static import anywhere else
+ * would put it in the entry chunk for every member of the public opening a form on a phone —
+ * and, as with the catalogues, nothing else would notice.
+ */
+describe('the PDF reader', () => {
+  it('is only ever imported dynamically, from the paper extractor', () => {
+    const offenders = sourceFiles(ROOT)
+      .filter((path) => /(^|\s)import\s[^;]*from\s+'pdfjs-dist/m.test(readFileSync(path, 'utf8')))
+      .map((path) => path.slice(ROOT.length));
+    expect(offenders, `these would put pdfjs in the entry chunk: ${offenders}`).toEqual([]);
+  });
+});

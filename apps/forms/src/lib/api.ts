@@ -185,6 +185,18 @@ export const client = {
     );
   },
 
+  /** The paper a form is made from: stored with the form, read back only through it. */
+  addPaper: (formId: string, file: File) => {
+    const body = new FormData();
+    body.set('file', file);
+    return request<{ key: string; contentType: string; bytes: number }>(
+      `/v1/forms/${formId}/paper`,
+      { method: 'POST', body },
+    );
+  },
+
+  paper: (formId: string, key: string) => requestBlob(`/v1/forms/${formId}/paper/${key}`),
+
   logout: async () => {
     const refreshToken = storedRefreshToken();
     if (refreshToken) {

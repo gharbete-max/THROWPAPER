@@ -769,6 +769,37 @@ export const enGB = {
   'import.reason.needs-asset': 'its picture lives somewhere else on the web',
   'import.reason.nested-group': 'a repeating block inside another one',
   'import.reason.needs-limit': 'it never says how many entries it allows',
+  /**
+   * A form from the paper somebody already has — `screens/builder/paper/`.
+   *
+   * Never "scan" and never "sign". The first promises edge detection and OCR this does not do;
+   * the second claims a legal act (`SPEC-forms.md` §8). It reads what the file declares, and the
+   * author draws the rest.
+   */
+  'paper.open': 'From paper',
+  'paper.heading': 'Make a form from paper',
+  'paper.explain':
+    'Upload the PDF you already have, or photograph each page. Fields the PDF declares are read as they are; on a photograph you draw the boxes yourself.',
+  'paper.choose': 'PDF or photographs',
+  'paper.reading': 'Reading…',
+  'paper.storing': 'Saving…',
+  'paper.pages': 'plural:one {count} page | other {count} pages',
+  'paper.fieldsFound': 'plural:one {count} field found | other {count} fields found',
+  'paper.noFields': 'No fields declared — draw them on the page after importing.',
+  'paper.skipped': 'plural:one {count} field was skipped | other {count} fields were skipped',
+  'paper.tooManyPages': 'That is {count} pages; the most this can take is {max}.',
+  'paper.notReadable': 'That file could not be read.',
+  'paper.reason.no-answer': 'a button, which collects nothing',
+  'paper.reason.not-a-question': 'filled in by the document, not the reader',
+  'paper.reason.unreadable': 'a choice with no readable options',
+  'paper.reason.unknown-type': 'an unknown field type',
+  'paper.view': 'View',
+  'paper.view.paper': 'Paper',
+  'paper.view.list': 'List',
+  'paper.draw':
+    'Drag on a page to add a question there. Arrow keys move the selected box; Shift and arrows resize it.',
+  'paper.pickType': 'What kind of answer?',
+  'paper.page': 'Page {n}',
 } as const;
 
 /**

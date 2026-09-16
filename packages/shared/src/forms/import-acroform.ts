@@ -1,4 +1,4 @@
-import { FormDefinition, type Field, type FieldType } from './definition.js';
+import { FormDefinition, type Field, type FieldType, type PaperAnchor } from './definition.js';
 
 /**
  * Reads the fields of a PDF form and produces one of ours.
@@ -60,6 +60,8 @@ export interface AcroField {
   options?: Array<{ value: string; label: string }>;
   /** A list box that accepts more than one selection. */
   multiSelect?: boolean;
+  /** Where the field's widget sits on the page, when the extractor read one. */
+  paper?: PaperAnchor;
 }
 
 export interface SkippedAcroField {
@@ -152,6 +154,7 @@ export function importAcroFields(
       required: field.required === true,
       width: 'full',
     };
+    if (field.paper) built['paper'] = field.paper;
 
     if (type === 'short_text' || type === 'long_text') {
       /* `/MaxLen` is a real constraint from the original form, so it survives the import. */
