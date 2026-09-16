@@ -41,19 +41,21 @@ describe('the language catalogues', () => {
     expect([...TRANSLATED_LOCALES].sort()).toEqual([...LOCALE_CODES].sort());
   });
 });
-
 /**
- * The PDF reader is a megabyte, and it exists for one button in the builder.
+ * The PDF reader is a megabyte and the OCR engine is another; each exists for one button in
+ * the builder.
  *
- * `screens/builder/paper/extract.ts` loads it with `import()`. A static import anywhere else
- * would put it in the entry chunk for every member of the public opening a form on a phone —
- * and, as with the catalogues, nothing else would notice.
+ * `screens/builder/paper/extract.ts` and `ocr.ts` load them with `import()`. A static import
+ * anywhere else would put them in the entry chunk for every member of the public opening a form
+ * on a phone — and, as with the catalogues, nothing else would notice.
  */
-describe('the PDF reader', () => {
-  it('is only ever imported dynamically, from the paper extractor', () => {
+describe('the PDF reader and the OCR engine', () => {
+  it.each(['pdfjs-dist', 'tesseract.js'])('%s is only ever imported dynamically', (name) => {
+    const escaped = name.replace('.', '[.]');
+    const pattern = new RegExp(`(^|\\s)import\\s[^;]*from\\s+'${escaped}`, 'm');
     const offenders = sourceFiles(ROOT)
-      .filter((path) => /(^|\s)import\s[^;]*from\s+'pdfjs-dist/m.test(readFileSync(path, 'utf8')))
+      .filter((path) => pattern.test(readFileSync(path, 'utf8')))
       .map((path) => path.slice(ROOT.length));
-    expect(offenders, `these would put pdfjs in the entry chunk: ${offenders}`).toEqual([]);
+    expect(offenders, `these would put ${name} in the entry chunk: ${offenders}`).toEqual([]);
   });
 });

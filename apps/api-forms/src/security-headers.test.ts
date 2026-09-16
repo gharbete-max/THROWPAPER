@@ -42,7 +42,10 @@ describe('security headers', () => {
   });
 
   it.each([
-    ["script-src 'self'", 'a script from anywhere else cannot run'],
+    [
+      "script-src 'self' 'wasm-unsafe-eval'",
+      'a script from anywhere else cannot run, and WebAssembly (the OCR engine) can be compiled without opening eval',
+    ],
     ["object-src 'none'", 'no plugins'],
     ["frame-ancestors 'none'", 'a registration page cannot be framed and clickjacked'],
     ["base-uri 'self'", 'an injected <base> cannot redirect every relative URL'],

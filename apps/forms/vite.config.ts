@@ -79,6 +79,8 @@ export default defineConfig({
            */
           '**/pdf-*.js',
           '**/pdf.worker*',
+          /** The OCR runtime and its language models, likewise: builder-only, and 30 MB. */
+          '**/ocr/**',
           '**/inter-latin-ext-*.woff2',
           '**/inter-cyrillic-*.woff2',
           '**/inter-greek-*.woff2',

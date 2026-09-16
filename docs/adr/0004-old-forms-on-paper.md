@@ -126,6 +126,8 @@ paper"):
 - **Step three was taken now rather than after measuring**, because the product owner asked for
   photographed paper to work on day one. It is manual placement, as this ADR proposed — not OCR,
   not inference. Digital PDFs offer the printed text beside a box as its label, verbatim.
+- **OCR arrived, for photographs, as a label suggestion only** — never as field detection. The
+  author still draws every box; Tesseract offers the printed words beside it, verbatim.
 - **Overlay output** followed as its own phase, as a rendering target rather than an editor:
   `documents/paper.ts` draws the answers with Chromium and puts them on the original with pdf-lib
   (`PROGRESS.md`, "Answers back onto the paper").

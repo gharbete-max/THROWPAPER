@@ -1,6 +1,7 @@
 node_modules
 dist
 dist-server
+apps/forms/public/ocr
 coverage
 pnpm-lock.yaml
 docs
