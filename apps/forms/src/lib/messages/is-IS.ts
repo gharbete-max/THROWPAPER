@@ -738,4 +738,30 @@ export const isIS: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Gesturinn er ekki á þessari skráningu',
   'submissions.column.entry': '{group} {number} – {child}',
   'checkin.guestOf': 'Gestur hjá {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Flytja inn',
+  'import.heading': 'Flytja inn SurveyJS-könnun',
+  'import.explain':
+    'Límdu inn JSON könnunarinnar. Spurningar sem eiga sér enga hliðstæðu hér eru taldar upp í stað þess að vera giskað á.',
+  'import.paste': 'JSON könnunarinnar',
+  'import.notASurvey': 'Þetta er ekki könnun sem hægt er að lesa.',
+  'import.willImport':
+    'one {{n} spurning verður flutt inn} other {{n} spurningar verða fluttar inn}',
+  'import.willSkip':
+    'one {{n} spurning á sér enga hliðstæðu hér} other {{n} spurningar eiga sér enga hliðstæðu hér}',
+  'import.replaces': 'Innflutningurinn kemur í stað alls sem nú er á eyðublaðinu.',
+  'import.confirm': 'Skipta út eyðublaðinu',
+  'import.cancel': 'Hætta við',
+  'import.reason.no-equivalent': 'engin hliðstæða hér',
+  'import.reason.unknown-type': 'óþekkt tegund spurningar',
+  'import.reason.unreadable': 'ekkert læsilegt til að flytja inn',
+  'import.reason.needs-asset': 'myndin er annars staðar á vefnum',
+  'import.reason.nested-group': 'endurtekin eining inni í annarri',
+  'import.reason.needs-limit': 'hún tilgreinir aldrei hversu margar færslur eru leyfðar',
 };

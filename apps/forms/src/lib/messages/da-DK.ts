@@ -732,4 +732,29 @@ export const daDK: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Gæsten står ikke på tilmeldingen',
   'submissions.column.entry': '{group} {number} – {child}',
   'checkin.guestOf': 'Gæst hos {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Importér',
+  'import.heading': 'Importér en SurveyJS-undersøgelse',
+  'import.explain':
+    'Indsæt undersøgelsens JSON. Spørgsmål uden en tilsvarende her bliver vist i stedet for gættet.',
+  'import.paste': 'Undersøgelsens JSON',
+  'import.notASurvey': 'Det er ikke en undersøgelse, der kan læses.',
+  'import.willImport': 'one {{n} spørgsmål importeres} other {{n} spørgsmål importeres}',
+  'import.willSkip':
+    'one {{n} spørgsmål har ingen tilsvarende her} other {{n} spørgsmål har ingen tilsvarende her}',
+  'import.replaces': 'Importen erstatter alt, der er i formularen nu.',
+  'import.confirm': 'Erstat formularen',
+  'import.cancel': 'Annullér',
+  'import.reason.no-equivalent': 'ingen tilsvarende her',
+  'import.reason.unknown-type': 'en ukendt spørgsmålstype',
+  'import.reason.unreadable': 'intet læsbart at importere',
+  'import.reason.needs-asset': 'dets billede ligger et andet sted på nettet',
+  'import.reason.nested-group': 'en gentaget blok inde i en anden',
+  'import.reason.needs-limit': 'den angiver aldrig, hvor mange poster der tillades',
 };

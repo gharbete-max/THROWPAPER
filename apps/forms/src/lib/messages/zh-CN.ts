@@ -715,4 +715,27 @@ export const zhCN: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': '此报名中没有该来宾',
   'submissions.column.entry': '{group} {number} — {child}',
   'checkin.guestOf': '{name} 的来宾',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': '导入',
+  'import.heading': '导入 SurveyJS 问卷',
+  'import.explain': '粘贴问卷的 JSON。此处没有对应类型的问题会被列出，而不是猜测。',
+  'import.paste': '问卷 JSON',
+  'import.notASurvey': '这不是可以读取的问卷。',
+  'import.willImport': 'other {将导入 {n} 个问题}',
+  'import.willSkip': 'other {有 {n} 个问题在此没有对应类型}',
+  'import.replaces': '导入将替换此表单中现有的全部内容。',
+  'import.confirm': '替换此表单',
+  'import.cancel': '取消',
+  'import.reason.no-equivalent': '此处没有对应类型',
+  'import.reason.unknown-type': '未知的问题类型',
+  'import.reason.unreadable': '没有可读取的内容',
+  'import.reason.needs-asset': '其图片位于网络上的其他位置',
+  'import.reason.nested-group': '可重复区块嵌套在另一个之中',
+  'import.reason.needs-limit': '它没有说明允许多少条记录',
 };

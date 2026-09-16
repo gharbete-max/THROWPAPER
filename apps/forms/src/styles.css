@@ -1033,6 +1033,25 @@ textarea {
   padding-block: calc(var(--tp-spacing-unit) * 0.5);
 }
 
+/* The import panel, opened over the builder rather than on a page of its own: what it replaces is
+ * on screen behind it, which is the thing somebody is deciding about. */
+.import textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* On the ramp, like every other size here: a brand raising `scaleRatio` moves this with it. */
+  font-size: var(--tp-text-sm);
+  /* Pasted JSON is long lines; wrapping them is worse than a scrollbar for spotting the shape. */
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+/* Reasons, indented under the count they belong to and kept quiet: this is a list to read once. */
+.import__skipped {
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 2);
+  color: var(--tp-colour-muted);
+}
+
 /* A repeating block's questions, in the properties panel. Indented against a rule, so the nesting
  * is visible without a second panel: these belong to the block above them. */
 .builder__nested {

@@ -752,4 +752,29 @@ export const frFR: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Invité absent de cette inscription',
   'submissions.column.entry': '{group} {number} – {child}',
   'checkin.guestOf': 'Invité de {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Importer',
+  'import.heading': 'Importer un questionnaire SurveyJS',
+  'import.explain':
+    'Collez le JSON du questionnaire. Les questions sans équivalent ici sont listées plutôt que devinées.',
+  'import.paste': 'JSON du questionnaire',
+  'import.notASurvey': 'Ce n’est pas un questionnaire lisible ici.',
+  'import.willImport': 'one {{n} question sera importée} other {{n} questions seront importées}',
+  'import.willSkip':
+    'one {{n} question n’a pas d’équivalent ici} other {{n} questions n’ont pas d’équivalent ici}',
+  'import.replaces': 'L’import remplace tout ce que contient actuellement ce formulaire.',
+  'import.confirm': 'Remplacer ce formulaire',
+  'import.cancel': 'Annuler',
+  'import.reason.no-equivalent': 'pas d’équivalent ici',
+  'import.reason.unknown-type': 'type de question inconnu',
+  'import.reason.unreadable': 'rien de lisible à importer',
+  'import.reason.needs-asset': 'son image se trouve ailleurs sur le web',
+  'import.reason.nested-group': 'un bloc répété dans un autre',
+  'import.reason.needs-limit': 'il ne dit jamais combien d’entrées il autorise',
 };

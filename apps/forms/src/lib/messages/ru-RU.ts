@@ -748,4 +748,30 @@ export const ruRU: Record<MessageKey, string> = {
   'checkin.outcome.no-such-guest': 'Гостя нет в этой регистрации',
   'submissions.column.entry': '{group} {number} — {child}',
   'checkin.guestOf': 'Гость: {name}',
+
+  /**
+   * Bringing a form in from somewhere else.
+   *
+   * The reasons are listed one by one rather than counted: "3 questions were skipped" sends an
+   * author hunting, and reporting *why* is the whole point of an importer that refuses to guess.
+   */
+  'import.open': 'Импорт',
+  'import.heading': 'Импорт опроса SurveyJS',
+  'import.explain':
+    'Вставьте JSON опроса. Вопросы без соответствия здесь перечисляются, а не угадываются.',
+  'import.paste': 'JSON опроса',
+  'import.notASurvey': 'Это не опрос, который можно прочитать.',
+  'import.willImport':
+    'one {будет импортирован {n} вопрос} few {будет импортировано {n} вопроса} many {будет импортировано {n} вопросов} other {будет импортировано {n} вопроса}',
+  'import.willSkip':
+    'one {{n} вопрос не имеет соответствия} few {{n} вопроса не имеют соответствия} many {{n} вопросов не имеют соответствия} other {{n} вопроса не имеют соответствия}',
+  'import.replaces': 'Импорт заменит всё, что сейчас есть в этой форме.',
+  'import.confirm': 'Заменить эту форму',
+  'import.cancel': 'Отмена',
+  'import.reason.no-equivalent': 'нет соответствия',
+  'import.reason.unknown-type': 'неизвестный тип вопроса',
+  'import.reason.unreadable': 'нечего импортировать',
+  'import.reason.needs-asset': 'его изображение находится в другом месте в сети',
+  'import.reason.nested-group': 'повторяющийся блок внутри другого',
+  'import.reason.needs-limit': 'в нём не указано, сколько записей допускается',
 };
