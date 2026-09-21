@@ -1462,6 +1462,53 @@ checkout whose `.env` predates this change needs the line added before `pnpm dev
 11 passed (Playwright starts the API with the new variable, so the startup guard is exercised).
 Row 16 deleted; §1.3 gains the secret beside `JWT_SECRET`.
 
+## L6 — Audit item 12: the anonymous-upload sweeper · done
+
+`form_uploads_unclaimed_idx` — `created_at where submission_id is null`, commented "finding what
+to sweep" — existed since A15b, and nothing read it. Somebody who attached a CV and closed the
+tab left bytes on disk forever. This is the sweep.
+
+**The threshold is derived, not invented.** The brief said not to choose a retention period, and
+none was. A saved-and-resumed draft can still claim its upload for as long as its resume link
+lives (`RESUME_TTL_SECONDS`, 30 days), and nothing else can claim an upload later than that. So
+"unclaimed for longer than the resume window" is the one cutoff the code already commits to,
+read back: `UPLOAD_CLAIM_WINDOW_SECONDS` in `uploads/lifecycle.ts`, and `RESUME_TTL_SECONDS` now
+*is* that constant. The owner confirmed the basis. The §1.1 retention decisions (responses,
+closed accounts) are untouched and still theirs.
+
+**Safe against a claim by construction.** `findUnclaimed` now also requires
+`created_at >= now − window`; the sweep deletes `submission_id is null and created_at < now −
+window`. The predicates are complements: a row the sweep may take is a row the submit path
+already refuses to claim, so there is no interleaving in which both act on the same row. A
+respondent whose attachment is older than the window gets the existing 422 `validation.file`
+and attaches it again.
+
+**Rows, then bytes, conservatively.** `uploads.sweepExpired(before, limit)` deletes one bounded
+batch (`delete … where id in (select … order by created_at limit n) returning storage_key`) —
+`delete … limit` is not SQL, so the subselect walks the partial index. Then, per distinct key:
+kept if any `form_uploads` row still holds it (the store is content-addressed and deduplicated),
+kept if any form's draft or published version lists it as a paper source (paper pages live in
+the same store with no row at all — a `like` over the JSON cast to text, which a 64-hex key
+cannot false-match), otherwise `uploadStore.delete(key)`. A second pass finds nothing.
+
+**Scheduled like the worker.** An hourly timer inside the API process, one pass at a time,
+errors logged rather than thrown, one pass at boot, gated by the same flag as the worker so tests
+run it by hand. Not a queued job: the queue belongs to an organisation and the sweep belongs to
+none. Two instances sweeping at once is harmless.
+
+**Proven.** `uploads/sweeper.test.ts`, committed red (no module): expired removed — row and
+bytes; newer kept; claimed kept however old; shared bytes kept when a claimed row has the same
+key; bytes kept when a form's paper names the key; a second run reports zeros; `limit: 1` takes
+one per run, oldest first; the window equals the resume TTL. The complement in
+`respondent-uploads.test.ts`, also red first (`expected 201 to be 422`): a 31-day-old upload is
+refused at submit. And `database.test.ts` runs the real SQL against Postgres: the bounded
+subselect, the `returning`, `isReferenced`, and `referencesUpload` before and after a form takes
+the key as paper.
+
+**Ran:** `pnpm verify` — 131 files, **1744 tests**; `pnpm contract:check` passed; `pnpm test:e2e`
+11 passed with the sweep running at API boot (0 unclaimed rows, nothing logged). Row 12 deleted
+— the last §2.1 audit row. No migration, no `packages/`, no dependency.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

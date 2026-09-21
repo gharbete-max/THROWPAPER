@@ -85,7 +85,7 @@ the workspace packages are bundled into them. The container runs `node`.
 | `MAIL_FROM` | with `ses` | Must be on a verified domain, or sending is refused with no override. |
 | `MAIL_OPERATOR` | no | Where new-registration notifications go. |
 | `CONTACT_TO` | no | Where the marketing site's "get in touch" form goes — your inbox. Unset, the form answers 503. |
-| `DOCUMENT_DIR` | no | Defaults to `/app/.documents`. |
+| `DOCUMENT_DIR` | no | Defaults to `/app/.documents`. Respondent uploads live under `uploads/` beside it (`UPLOAD_DIR` overrides); the API sweeps uploads nobody claimed within 30 days once an hour, inside the process. |
 | `DEMO` | no | `true` starts the in-memory build. |
 | `DEMO_ALLOW_PRODUCTION` | with `DEMO` | The image is `NODE_ENV=production`, so a demo needs this too. |
 
