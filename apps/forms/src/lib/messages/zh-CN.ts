@@ -249,6 +249,7 @@ export const zhCN: Record<MessageKey, string> = {
 
   'field.href': '链接地址',
   'field.hrefHint': '在新标签页中打开，这样已填写的答案不会丢失。',
+  'url.placeholder': 'https://',
   'field.linkAppearance': '显示为',
   'field.linkAppearance.button': '按钮',
   'field.linkAppearance.link': '文字链接',
@@ -579,6 +580,7 @@ export const zhCN: Record<MessageKey, string> = {
   'checkin.title': '签到',
   'checkin.counts': '已签到 {checkedIn} / {registered} 人',
   'checkin.reference': '编号',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': '签到',
   'checkin.checking': '检查中…',
   'checkin.startCamera': '启动摄像头',

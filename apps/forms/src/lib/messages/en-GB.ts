@@ -255,6 +255,7 @@ export const enGB = {
 
   'field.href': 'Link address',
   'field.hrefHint': 'Opens in a new tab, so answers already filled in are not lost.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Shown as',
   'field.linkAppearance.button': 'Button',
   'field.linkAppearance.link': 'Text link',
@@ -598,6 +599,7 @@ export const enGB = {
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} of {registered} checked in',
   'checkin.reference': 'Reference',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Check in',
   'checkin.checking': 'Checking…',
   'checkin.startCamera': 'Start camera',

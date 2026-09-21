@@ -259,6 +259,7 @@ export const ruRU: Record<MessageKey, string> = {
 
   'field.href': 'Адрес ссылки',
   'field.hrefHint': 'Откроется в новой вкладке, чтобы уже введённые ответы не пропали.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Показывать как',
   'field.linkAppearance.button': 'Кнопку',
   'field.linkAppearance.link': 'Текстовую ссылку',
@@ -602,6 +603,7 @@ export const ruRU: Record<MessageKey, string> = {
   'checkin.title': 'Регистрация',
   'checkin.counts': 'зарегистрировано {checkedIn} из {registered}',
   'checkin.reference': 'Номер',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Отметить',
   'checkin.checking': 'Проверка…',
   'checkin.startCamera': 'Включить камеру',

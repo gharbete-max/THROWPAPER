@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import type { api } from '@tp/shared';
+import { localeLabel } from '@tp/i18n';
+import type { MessageKey } from '../lib/messages/index.js';
 import { client } from '../lib/api.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { useSession } from '../lib/session.js';
@@ -39,7 +41,7 @@ export function EventForm() {
 
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<MessageKey | null>(null);
   const [missing, setMissing] = useState(false);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function EventForm() {
         if (event) setDraft(toDraft(event));
         else setMissing(true);
       })
-      .catch(() => setError('load-failed'));
+      .catch(() => setError('users.errorFailed'));
   }, [id]);
 
   if (missing) {
@@ -78,8 +80,9 @@ export function EventForm() {
       if (id) await client.updateEvent(id, payload);
       else await client.createEvent(payload as api.EventInput);
       navigate('/events');
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+    } catch {
+      // A message key, never the exception's own words: those are English and not for a screen.
+      setError('users.errorFailed');
     } finally {
       setSaving(false);
     }
@@ -102,7 +105,7 @@ export function EventForm() {
           <legend>{t(`event.${field}`)}</legend>
           {locales.supported.map((locale) => (
             <label className="field" key={locale}>
-              <span>{locale}</span>
+              <span>{localeLabel(locale)}</span>
               {field === 'name' ? (
                 <input
                   value={draft.name[locale] ?? ''}
@@ -189,7 +192,11 @@ export function EventForm() {
         </label>
       </fieldset>
 
-      {error && <p className="status-down">{error}</p>}
+      {error && (
+        <p className="status-down" role="alert">
+          {t(error)}
+        </p>
+      )}
 
       <div className="row">
         <button className="button" type="submit" disabled={saving}>

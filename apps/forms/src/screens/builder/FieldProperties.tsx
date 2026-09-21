@@ -267,7 +267,7 @@ export function FieldProperties({ field, definition, onChange }: Props) {
             <input
               type="url"
               inputMode="url"
-              placeholder="https://"
+              placeholder={t('url.placeholder')}
               value={field.href}
               onChange={(event) => patch({ href: event.target.value } as Partial<Field>)}
             />

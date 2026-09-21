@@ -251,6 +251,7 @@ export const fiFI: Record<MessageKey, string> = {
 
   'field.href': 'Linkkiosoite',
   'field.hrefHint': 'Avautuu uuteen välilehteen, joten jo täytetyt vastaukset eivät katoa.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Näytetään muodossa',
   'field.linkAppearance.button': 'Painike',
   'field.linkAppearance.link': 'Tekstilinkki',
@@ -592,6 +593,7 @@ export const fiFI: Record<MessageKey, string> = {
   'checkin.title': 'Sisäänkirjaus',
   'checkin.counts': '{checkedIn} / {registered} kirjattu sisään',
   'checkin.reference': 'Viite',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Kirjaa sisään',
   'checkin.checking': 'Tarkistetaan…',
   'checkin.startCamera': 'Käynnistä kamera',

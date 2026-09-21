@@ -254,6 +254,7 @@ export const jaJP: Record<MessageKey, string> = {
 
   'field.href': 'リンクのアドレス',
   'field.hrefHint': '新しいタブで開くので、入力済みの回答は失われません。',
+  'url.placeholder': 'https://',
   'field.linkAppearance': '表示方法',
   'field.linkAppearance.button': 'ボタン',
   'field.linkAppearance.link': 'テキストリンク',
@@ -594,6 +595,7 @@ export const jaJP: Record<MessageKey, string> = {
   'checkin.title': '受付',
   'checkin.counts': '{registered} 名中 {checkedIn} 名が受付済み',
   'checkin.reference': '受付番号',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': '受付する',
   'checkin.checking': '確認中…',
   'checkin.startCamera': 'カメラを起動',

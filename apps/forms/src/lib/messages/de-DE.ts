@@ -256,6 +256,7 @@ export const deDE: Record<MessageKey, string> = {
   'field.href': 'Linkadresse',
   'field.hrefHint':
     'Öffnet sich in einem neuen Tab, damit bereits ausgefüllte Antworten nicht verloren gehen.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Angezeigt als',
   'field.linkAppearance.button': 'Schaltfläche',
   'field.linkAppearance.link': 'Textlink',
@@ -604,6 +605,7 @@ export const deDE: Record<MessageKey, string> = {
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} von {registered} eingecheckt',
   'checkin.reference': 'Referenz',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Einchecken',
   'checkin.checking': 'Wird geprüft…',
   'checkin.startCamera': 'Kamera starten',

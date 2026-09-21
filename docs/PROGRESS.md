@@ -1509,6 +1509,40 @@ the key as paper.
 11 passed with the sweep running at API boot (0 unclaimed rows, nothing logged). Row 12 deleted
 — the last §2.1 audit row. No migration, no `packages/`, no dependency.
 
+## L7 — §2.2 strings and the accessible error · done
+
+The mechanical rows, closed with the security track green. The checklist's line numbers were
+stale; each item was located in current code first.
+
+**Placeholders.** `placeholder="AB12-CD34"` on the door's reference field and
+`placeholder="https://"` twice in the builder were the only literal placeholders in the app.
+They are keys now — `checkin.referencePlaceholder` and `url.placeholder`, in all twelve
+catalogues, with the same format example in each, because a format example is not a sentence.
+The door's field also gained `autoCapitalize="characters"` (a reference is upper-case letters and
+digits) and `enterKeyHint="go"` (pressing the key checks the person in).
+
+**EventForm.** It rendered the state value `load-failed` as if it were a sentence, and on a save
+failure the exception's own English words. Both now show `users.errorFailed`, an existing key —
+no new sentence was written for twelve languages — in a paragraph with `role="alert"`, which
+also settles the §2.3 fragment that named it. The per-language fields are labelled through
+`localeLabel()` from `@tp/i18n`, the helper the language picker already used: **Svenska /
+English** rather than `sv-SE` / `en-GB`.
+
+**Login.** The development hint is gated on `import.meta.env.DEV` and only renders after a link
+has been sent, which is why a glance at the sign-in screen cannot prove it. Proven in the state
+that matters: after submitting an address, the dev server shows "Development mode: the link is
+printed in the api-forms console" and the production bundle served by `vite preview`, in the
+same state, does not (`devHintShown: false`, `bundleIsBuilt: true`). No change made.
+
+**Guard.** `lib/no-literal-strings.test.ts`, committed red naming the four files, refuses a
+`placeholder="…"` literal anywhere in the app and the `load-failed` state; `messages.test.ts`
+already fails the build on a key missing from any language.
+
+**Ran:** `pnpm verify` — 132 files, **1747 tests**; `pnpm contract:check` passed; `pnpm test:e2e`
+11 passed (the door spec types into the changed field). Browser: door field attributes read
+back, EventForm labels read back, Login proven as above. Four §2.2 rows deleted; the demo brand
+kit row stays (owner's). `packages/` untouched.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
