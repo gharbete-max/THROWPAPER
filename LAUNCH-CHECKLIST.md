@@ -77,19 +77,15 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.1 Security and data (from `PRE-LAUNCH-AUDIT.md`, items 8–17 — each needs your approval before the diff is written)
 
-| #   | What                                                                                                  | Severity |
-| --- | ----------------------------------------------------------------------------------------------------- | -------- |
-| 8   | Rate limits key on socket IP; `TRUST_PROXY` unset in production locks everyone out                    | High     |
-| 9   | `POST /v1/forms/:id/admission-documents` skips the form access check                                  | Medium   |
-| 10  | `GET /v1/events/:id/attendance` returns every registrant's name and email past the ownership boundary | Medium   |
-| 11  | `POST /public/forms/:slug/draft` mails an attacker-chosen address; no open-check, no honeypot         | Medium   |
-| 12  | Anonymous uploads have no sweeper and no quota (the index exists, the job does not)                   | Medium   |
-| 13  | Admission PDF and attachment download scoped to organisation, not form                                | Low      |
-| 14  | `GET /v1/invoices` returns every invoice's permanent `publicToken` to any operator                    | Low      |
-| 15  | `body.eventId` written to a form without checking the event belongs to the caller                     | Low      |
-| 16  | `JWT_SECRET` doubles as the HMAC key for download URLs                                                | Low      |
-| —   | Backups and a tested restore — impossible before a host exists                                        | —        |
-| —   | MFA on admin accounts (a second factor on the magic link) — product decision                          | —        |
+| #   | What                                                                                | Severity |
+| --- | ----------------------------------------------------------------------------------- | -------- |
+| 8   | Rate limits key on socket IP; `TRUST_PROXY` unset in production locks everyone out  | High     |
+| 12  | Anonymous uploads have no sweeper and no quota (the index exists, the job does not) | Medium   |
+| 14  | `GET /v1/invoices` returns every invoice's permanent `publicToken` to any operator  | Low      |
+| 15  | `body.eventId` written to a form without checking the event belongs to the caller   | Low      |
+| 16  | `JWT_SECRET` doubles as the HMAC key for download URLs                              | Low      |
+| —   | Backups and a tested restore — impossible before a host exists                      | —        |
+| —   | MFA on admin accounts (a second factor on the magic link) — product decision        | —        |
 
 ### 2.2 Temporary and literal strings in the app
 
