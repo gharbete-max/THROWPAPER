@@ -1,9 +1,7 @@
 {
   "detector": {
     "ignoreRules": [],
-    "ignoreFiles": [
-      "apps/forms/src/site/hero-motion.test.ts"
-    ],
+    "ignoreFiles": ["apps/forms/src/site/hero-motion.test.ts"],
     "ignoreValues": [
       {
         "rule": "bounce-easing",
@@ -71,9 +69,7 @@
       {
         "rule": "broken-image",
         "value": "*",
-        "files": [
-          "apps/forms/src/lib/motion.test.ts"
-        ],
+        "files": ["apps/forms/src/lib/motion.test.ts"],
         "createdAt": "2026-09-10T11:50:04.553Z",
         "reason": "Test file: the <img> is a regex literal asserting on Site.tsx markup, not rendered output. No image ships from here."
       },
