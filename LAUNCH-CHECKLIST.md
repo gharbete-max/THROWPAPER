@@ -89,21 +89,20 @@ safe default; the server refuses or degrades loudly when they are missing.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
 | The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one) | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
 
-### 2.3 Open findings from the second design critique (P2, not yet actioned)
+### 2.3 Open findings from the second design critique — the app shell (P2, not yet actioned)
 
-Snapshot: `.impeccable/critique/2026-09-15T07-51-16Z__apps-forms-src-site-site-tsx.md`.
+Snapshot: `.impeccable/critique/2026-09-15T07-51-16Z__apps-forms-src-site-site-tsx.md`. The site's rows
+closed in the design pass of 2026-09-22 (`docs/PROGRESS.md`); what remains is the app shell, which the
+later critiques did not re-score.
 
-| What                                                                                                                                          | Where                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| "Read more" on feature cards is 4.35:1 on the card surface (12.8px); related-feature links on feature pages and the 404 are seafoam at 2.12:1 | `styles.css` `.feature-card__more`, `.site__more a`             |
-| `<Reveal>` renders a `<div>` between `<ul>` and `<li>` on Responses — invalid list, and the row dividers never match                          | `screens/Inbox.tsx`, `components/Signed.tsx`                    |
-| The door never names its event; a wrong event id renders a working-looking door that says "Not found" to every scan                           | `screens/CheckIn.tsx`                                           |
-| At 375px the idle verdict wraps and the panel shrinks 178 → 152 on the first scan                                                             | `styles.css` `.verdict--idle`                                   |
-| Five "Undo" buttons share one accessible name; `aria-label` on a `<p>`; `<video>` unnamed; no `aria-current` on the active site nav link      | `screens/CheckIn.tsx`, `screens/EventForm.tsx`, `site/Site.tsx` |
-| Refocusing the reference input after every scan raises the Android keyboard over the viewfinder                                               | `screens/CheckIn.tsx`                                           |
-| The 494 KB hero loop is fetched on every phone without reduced motion; only the 2x is width-gated                                             | `site/Site.tsx` `<source>`                                      |
-| Confirmation screen drops the form title and never says a card or email is coming                                                             | `screens/PublicForm.tsx`                                        |
-| Feature-page paragraphs run ~88 characters per line at 1280                                                                                   | `styles.css` `.site__article`                                   |
+| What                                                                                                                 | Where                                          |
+| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `<Reveal>` renders a `<div>` between `<ul>` and `<li>` on Responses — invalid list, and the row dividers never match | `screens/Inbox.tsx`, `components/Signed.tsx`   |
+| The door never names its event; a wrong event id renders a working-looking door that says "Not found" to every scan  | `screens/CheckIn.tsx`                          |
+| At 375px the idle verdict wraps and the panel shrinks 178 → 152 on the first scan                                    | `styles.css` `.verdict--idle`                  |
+| Five "Undo" buttons share one accessible name; `aria-label` on a `<p>`                                               | `screens/CheckIn.tsx`, `screens/EventForm.tsx` |
+| Refocusing the reference input after every scan raises the Android keyboard over the viewfinder                      | `screens/CheckIn.tsx`                          |
+| Confirmation screen drops the form title and never says a card or email is coming                                    | `screens/PublicForm.tsx`                       |
 
 ---
 

@@ -4186,6 +4186,7 @@ body:has(.app) > #root {
   display: inline-flex;
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 1.25);
+  min-block-size: 44px;
   color: var(--tp-colour-text);
   text-decoration: none;
   font-size: var(--tp-text-base);
@@ -4202,8 +4203,13 @@ body:has(.app) > #root {
   text-decoration: none;
 }
 
-.site__nav a:hover {
+.site__nav a:hover,
+.site__nav a[aria-current] {
   color: var(--tp-colour-text);
+}
+
+.site__nav a[aria-current] {
+  font-weight: var(--tp-type-label-weight);
 }
 
 /*
@@ -4226,6 +4232,9 @@ body:has(.app) > #root {
 }
 
 .site__lang {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
   color: var(--tp-colour-muted);
   font-size: var(--tp-text-ui);
   text-decoration: none;
@@ -4276,8 +4285,11 @@ body:has(.app) > #root {
  * Two sizes of the same voice reads as indecision. This is a different voice — small, spaced,
  * accent-ink — so the heading below it can be the only thing at that size on the screen.
  */
-.site__eyebrow {
+/* One rule for both eyebrows; `.hero__eyebrow` was a byte-identical copy. */
+.site__eyebrow,
+.hero__eyebrow {
   margin: 0 0 var(--tp-spacing-unit);
+  /* Not `--tp-colour-accent`: as small uppercase text that is 3.57:1 on parchment. See `accentInk`. */
   color: var(--tp-colour-accent-ink);
   font-size: var(--tp-text-sm);
   font-weight: var(--tp-type-weight-bold);
@@ -4293,16 +4305,6 @@ body:has(.app) > #root {
   align-items: center;
   /* Was 10. The hero had a hand's width of nothing under the buttons before the first rule. */
   padding-block: calc(var(--tp-spacing-unit) * 9) calc(var(--tp-spacing-unit) * 7);
-}
-
-.hero__eyebrow {
-  margin: 0 0 var(--tp-spacing-unit);
-  /* Not `--tp-colour-accent`: as small uppercase text that is 3.57:1 on parchment. See `accentInk`. */
-  color: var(--tp-colour-accent-ink);
-  font-size: var(--tp-text-sm);
-  font-weight: var(--tp-type-weight-bold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .hero__title {
@@ -4472,7 +4474,8 @@ body:has(.app) > #root {
   /* A folded corner rather than a circle: the same language as the mark, at the size of a chip. */
   border-radius: var(--tp-radius-lg) var(--tp-radius-sm) var(--tp-radius-lg) var(--tp-radius-lg);
   background: color-mix(in srgb, var(--tp-colour-primary) 12%, transparent);
-  color: var(--tp-colour-primary);
+  /* The glyph is the ink; seafoam on a seafoam tint measured 1.79:1 and the chips were the cards' only colour. */
+  color: var(--tp-colour-text);
   font-size: 20px;
   transition: background-color var(--tp-motion) var(--tp-ease);
 }
@@ -4487,9 +4490,10 @@ body:has(.app) > #root {
   gap: 6px;
   margin-block-start: auto;
   padding-block-start: var(--tp-spacing-unit);
-  /* The accent as text, checked against the page — `primary` measured 1.92:1 here. */
-  color: var(--tp-colour-accent-ink);
-  font-size: var(--tp-text-sm);
+  /* The ink, not the accent: accent-ink measured 4.35:1 at 12.8px on the card surface. */
+  color: var(--tp-colour-text);
+  font-size: var(--tp-text-ui);
+  font-weight: var(--tp-type-label-weight);
 }
 
 /* --- Quotes ---------------------------------------------------------------- */
@@ -4567,7 +4571,8 @@ body:has(.app) > #root {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-block-end: calc(var(--tp-spacing-unit) * 4);
+  min-block-size: 44px;
+  margin-block-end: calc(var(--tp-spacing-unit) * 3);
   color: var(--tp-colour-muted);
   text-decoration: none;
   font-size: var(--tp-text-sm);
@@ -4581,13 +4586,18 @@ body:has(.app) > #root {
   margin: 0 0 var(--tp-spacing-unit);
   font-size: var(--tp-text-3xl);
   letter-spacing: -0.02em;
+  /* "Formulärbyggaren" at 39px is 336px in a 327px column; a compound noun may break. */
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 .site__lede {
   margin: 0;
-  color: var(--tp-colour-muted);
+  /* The argument is set in the ink; 83% of a feature page was `muted` and read as an aside. */
+  color: var(--tp-colour-text);
   font-size: var(--tp-text-lg);
   line-height: 1.55;
+  max-inline-size: 38rem;
 }
 
 .site__points {
@@ -4605,6 +4615,15 @@ body:has(.app) > #root {
 .site__points p {
   margin: 0;
   line-height: 1.6;
+  /* ~70 characters at 16px; the article is 44rem for headings and the actions, prose is narrower. */
+  max-inline-size: 38rem;
+}
+
+.site__pointsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  margin-block-start: calc(var(--tp-spacing-unit) * 6);
 }
 
 .site__more {
@@ -4616,13 +4635,25 @@ body:has(.app) > #root {
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
 }
 
+/*
+ * Links, so they are set in the ink. They were `primary` — seafoam on the page, 2.12:1 at 12.8px
+ * and 20px tall — which is the one thing `DESIGN.md` says a brand colour may never do. The tint
+ * stays on the chip beside each; the words are read.
+ */
 .site__more a {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--tp-colour-primary);
+  min-block-size: 44px;
+  color: var(--tp-colour-text);
   text-decoration: none;
-  font-size: var(--tp-text-sm);
+  font-size: var(--tp-text-ui);
+  font-weight: var(--tp-type-label-weight);
+}
+
+.site__more a:hover,
+.site__more a:focus-visible {
+  text-decoration: underline;
 }
 
 /*
@@ -4724,10 +4755,10 @@ body:has(.app) > #root {
     padding-block: calc(var(--tp-spacing-unit) * 6);
   }
 
-  /* The fold goes first on a phone: it is the one thing here that is decoration. */
-  .hero__figure {
-    order: -1;
-  }
+  /*
+   * The words come first on a phone. The fold used to, and measured: the headline landed at
+   * y=381 and the first button at y=603 on a 375px screen, below a 196px decoration.
+   */
 
   .hero__mark {
     inline-size: min(16rem, 60%);
@@ -5302,6 +5333,8 @@ body:has(> #root .shell--narrow) {
 .legal__section p {
   margin: 0 0 var(--tp-spacing-unit);
   line-height: 1.6;
+  /* The longest text on the site was its widest; the same measure as the feature pages. */
+  max-inline-size: 38rem;
 }
 
 /*
@@ -5350,10 +5383,12 @@ body:has(> #root .shell--narrow) {
  */
 .pending {
   padding: 2px 6px;
-  border-radius: var(--tp-radius-sm);
+  border-radius: var(--tp-radius-sm) var(--tp-radius-sm) 0 0;
   background: color-mix(in srgb, var(--tp-colour-warning) 18%, var(--tp-colour-background));
-  color: var(--tp-colour-warning);
-  font-size: var(--tp-text-sm);
+  /* Read in the ink; the warning colour is the edge, where it need only reach 3:1. */
+  border-block-end: 2px solid var(--tp-colour-warning);
+  color: var(--tp-colour-text);
+  font-size: inherit;
   font-weight: var(--tp-type-label-weight);
 }
 
@@ -5373,6 +5408,9 @@ body:has(> #root .shell--narrow) {
 }
 
 .site__footNav a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
   color: var(--tp-colour-muted);
   font-size: var(--tp-text-sm);
   text-decoration: none;

@@ -106,7 +106,10 @@ describe('the hero mark', () => {
   it('keeps the retina variant off phones', () => {
     const retina = SITE.match(/<source\b[^>]*mark-loop-512[\s\S]*?\/>/)?.[0];
     expect(retina, 'no 2x source found').toBeDefined();
-    expect(retina).toMatch(/min-width:\s*900px/);
+    // At least a laptop. The gate moved from 900 to 1200px so a 2x screen that draws the mark at
+    // 304px takes the 506 KB file it cannot tell apart from the 1,021 KB one.
+    const gate = Number(/min-width:\s*(\d+)px/.exec(retina ?? '')?.[1]);
+    expect(gate).toBeGreaterThanOrEqual(900);
   });
 
   it('falls back to the poster, which is the animation frozen at frame 0', () => {

@@ -88,6 +88,8 @@ export function Site({ locale = SITE_DEFAULT_LOCALE }: { locale?: string }) {
 }
 
 function SiteHeader({ locale, copy }: { locale: string; copy: SiteCopy }) {
+  // The page being read, so the bar can say so. Rendered on the server like everything here.
+  const { pathname } = useLocation();
   return (
     <header className="site__bar">
       {/*
@@ -109,16 +111,23 @@ function SiteHeader({ locale, copy }: { locale: string; copy: SiteCopy }) {
           Three of the six, not all of them. A bar that lists every page is a table of contents; the
           landing page already has one, further down, with a sentence each.
         */}
-        {(['forms', 'events', 'languages'] as const).map((slug) => (
-          <a key={slug} href={localePath(locale, `/features/${slug}`)}>
-            {copy.features[slug].name}
-          </a>
-        ))}
+        {(['forms', 'events', 'languages'] as const).map((slug) => {
+          const href = localePath(locale, `/features/${slug}`);
+          return (
+            <a key={slug} href={href} aria-current={href === pathname ? 'page' : undefined}>
+              {copy.features[slug].name}
+            </a>
+          );
+        })}
       </nav>
 
       <SiteLanguages locale={locale} copy={copy} place="bar" />
 
-      <a className="button" href="/login">
+      {/*
+        Quiet here. The page had three filled "Open the demo" and a phone showed two at once; the
+        hero's is the one that is filled, and this one is the same door in the corner.
+      */}
+      <a className="button button--quiet" href="/login">
         {copy.chrome.openTheDemo}
       </a>
     </header>
@@ -168,7 +177,7 @@ function SiteLanguages({
           lang={option}
           hrefLang={option}
           className={option === locale ? 'site__lang site__lang--on' : 'site__lang'}
-          aria-current={option === locale ? 'true' : undefined}
+          aria-current={option === locale ? 'page' : undefined}
         >
           {siteLocaleLabel(option)}
         </a>
@@ -262,7 +271,7 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
                 and the sharpness is visible.
               */}
                 <source
-                  media="(prefers-reduced-motion: no-preference) and (min-width: 900px)"
+                  media="(prefers-reduced-motion: no-preference) and (min-width: 1200px)"
                   srcSet="/mark-loop-256.webp 1x, /mark-loop-512.webp 2x"
                   type="image/webp"
                 />
@@ -335,7 +344,8 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
                 </span>
                 <strong>{copy.features[slug].name}</strong>
                 <span className="muted small">{copy.features[slug].summary}</span>
-                <span className="feature-card__more">
+                {/* The link is named by its title and summary; "Read more" six times over is noise to a reader. */}
+                <span className="feature-card__more" aria-hidden="true">
                   {copy.sections.readMore} <Icon name="arrow-right" />
                 </span>
               </a>
@@ -409,7 +419,7 @@ function FeaturePage({
     <main className="site__main" id="main" tabIndex={-1}>
       <article className="site__article">
         <a className="site__back" href={localePath(locale)}>
-          <Icon name="arrow-left" /> {copy.featurePage.backToAll}
+          <Icon name="arrow-left" /> {copy.featurePage.back}
         </a>
 
         <span className="feature-card__mark feature__mark" aria-hidden="true">
@@ -422,9 +432,19 @@ function FeaturePage({
           {feature.points.map((point) => (
             <section className="rise" key={point.heading}>
               <h2>{point.heading}</h2>
-              <p className="muted">{point.body}</p>
+              <p>{point.body}</p>
             </section>
           ))}
+        </div>
+
+        {/* The same two doors as the closing panel: a feature page had no action in it at all. */}
+        <div className="site__pointsActions">
+          <a className="button" href="/login">
+            {copy.chrome.openTheDemo}
+          </a>
+          <a className="button button--quiet" href={localePath(locale, '/contact')}>
+            {copy.contact.link}
+          </a>
         </div>
 
         {/* Somewhere to go next, so a feature page is not a dead end. */}
@@ -455,7 +475,7 @@ function NotFoundPage({ locale, copy }: { locale: string; copy: SiteCopy }) {
     <main className="site__main" id="main" tabIndex={-1}>
       <article className="site__article">
         <a className="site__back" href={localePath(locale)}>
-          <Icon name="arrow-left" /> {copy.featurePage.backToAll}
+          <Icon name="arrow-left" /> {copy.featurePage.back}
         </a>
         <span className="feature-card__mark feature__mark" aria-hidden="true">
           <Icon name="search" />

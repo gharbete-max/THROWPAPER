@@ -1543,6 +1543,60 @@ already fails the build on a key missing from any language.
 back, EventForm labels read back, Login proven as above. Four §2.2 rows deleted; the demo brand
 kit row stays (owner's). `packages/` untouched.
 
+## The design pass — the site, from the fourth critique · done
+
+With the security track green, the site was worked from the 2026-09-21 snapshot in the order the
+handoff set: accessibility, contrast and tokens, the phone, hierarchy, motion, copy. Every value
+is a token and a brand colour paints nothing that is read; no copy was written — the two wording
+changes reuse keys the site already had.
+
+**Accessibility.** The related-feature links were seafoam on the page at 12.8px and 20px tall —
+2.12:1, the one P0. They are the ink at `--tp-text-ui`, 44px, underlined on hover. The bar marks
+the page being read (`aria-current="page"`, server-rendered from `useLocation` as the language
+switcher already did; the switcher's `"true"` became `"page"`). The card's "Read more" is
+`aria-hidden`, so a link already named by its title is not read six times over. Header mark,
+back link, language and footer links are 44px targets.
+
+**Contrast.** The chip glyph (seafoam on a seafoam tint, 1.79:1), the card's "Read more"
+(accent-ink 4.35:1 at 12.8px) and the pending marker (warning on its tint at 4.06:1, 12.8px
+inside 16px prose) are read in the ink; the marker keeps its warning colour as a 2px edge, where
+3:1 is what is asked. `site-chrome.test.ts` holds those four rules to `--tp-colour-text` and
+refuses `primary`, `accent` or `warning` there, on every shipped palette in both schemes —
+committed red, green after.
+
+**The phone.** The fold no longer sits above the headline: h1 at y=153 (was 381), the first
+button at y=374 (was 603). The bar's "Open the demo" is quiet, so one filled button is in the
+first viewport and two are on the page rather than three.
+
+**Hierarchy.** Feature pages set their argument in the ink (83% of the characters were `muted`),
+at a 38rem measure (608px, ~71 cpl), with the closing panel's two doors after the points — a
+feature page had no action in it. One eyebrow rule. "Back" rather than "Everything it does".
+
+**Motion.** The 2x hero loop (1,021 KB) is offered from 1200px rather than 900, where it is drawn
+large enough to tell; a 2x laptop under that takes the 506 KB file it renders at 304px anyway.
+Two detector false positives recorded with reasons in `.impeccable/config.json` (a curve that
+lives only in a comment about its own removal; a regex literal in a test).
+
+**Measured, both schemes.** `.site__more a` 10.83:1 / 17.32:1 at 44px; `.feature-card__more`
+9.82:1 / 15.78:1; chip glyph 9.12:1 / 12.74:1 over its tint; `.pending` 8.49:1 / 11.48:1 at the
+prose size; lede and points 10.83:1 / 17.32:1; no horizontal overflow at 375; only the off-canvas
+skip link under 44px.
+
+**Fourth critique: 18 → 22 → 23 → 25 / 32 (Good).** Snapshot
+`.impeccable/critique/2026-09-21T22-16-30Z__apps-forms-src-site-site-tsx.md`. Every fixable
+finding from the third run confirmed fixed with a number. Two one-line findings from the fourth
+were fixed after the snapshot and measured: the 404's back link says "Back", and
+"Formulärbyggaren" at 39px fits its 327px column at 375 (`overflow-wrap: anywhere; hyphens:
+auto` on the article h1); legal prose took the 38rem measure. Still open, deliberately: the
+section nav is hidden at 375 with no menu (P1, a layout decision), the contact form has no
+feedback contract (P1, needs copy — the owner's), the 2x loop is still 1 MB where it is served
+(P3), and the two owner decisions (pricing; twelve languages vs five on the site).
+
+**Ran:** `pnpm verify` — 132 files, **1756 tests**; `pnpm contract:check` passed; `pnpm test:e2e`
+11 passed. `LAUNCH-CHECKLIST.md` §2.3 loses the site rows (card contrast, hero loop, measure,
+`aria-current`); the app-shell rows stay for a shell pass, which the later critiques did not
+re-score. `packages/` untouched.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
