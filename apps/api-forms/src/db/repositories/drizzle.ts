@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { and, asc, desc, eq, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 import type { Db } from '../client.js';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
@@ -472,6 +472,26 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .from(formVersions)
           .where(eq(formVersions.formId, formId))
           .orderBy(desc(formVersions.version))) as FormVersionRecord[],
+      /*
+       * A text search over the JSON, on purpose. A key is 64 hex characters plus an extension and
+       * appears nowhere else in a definition, so `like` cannot false-match, and it needs no index
+       * of its own for a sweep that runs hourly over a handful of keys.
+       */
+      referencesUpload: async (storageKey) => {
+        const needle = `%${storageKey}%`;
+        const [draft] = await db
+          .select({ id: forms.id })
+          .from(forms)
+          .where(sql`${forms.draftDefinition}::text like ${needle}`)
+          .limit(1);
+        if (draft) return true;
+        const [version] = await db
+          .select({ id: formVersions.id })
+          .from(formVersions)
+          .where(sql`${formVersions.definition}::text like ${needle}`)
+          .limit(1);
+        return version !== undefined;
+      },
       findVersion: async (formId, version) =>
         first(
           await db
@@ -734,7 +754,7 @@ export function createDrizzleRepositories(db: Db): Repositories {
         return row as UploadRecord;
       },
 
-      findUnclaimed: async (formId, storageKeys) => {
+      findUnclaimed: async (formId, storageKeys, notBefore) => {
         if (storageKeys.length === 0) return [];
         return (await db
           .select()
@@ -743,10 +763,35 @@ export function createDrizzleRepositories(db: Db): Repositories {
             and(
               eq(formUploads.formId, formId),
               isNull(formUploads.submissionId),
+              gte(formUploads.createdAt, notBefore),
               inArray(formUploads.storageKey, [...storageKeys]),
             ),
           )) as UploadRecord[];
       },
+
+      sweepExpired: async (before, limit) => {
+        // `delete … limit` is not SQL; the bounded subselect walks the partial index instead.
+        const expired = db
+          .select({ id: formUploads.id })
+          .from(formUploads)
+          .where(and(isNull(formUploads.submissionId), lt(formUploads.createdAt, before)))
+          .orderBy(asc(formUploads.createdAt))
+          .limit(limit);
+        const rows = await db
+          .delete(formUploads)
+          .where(inArray(formUploads.id, expired))
+          .returning({ storageKey: formUploads.storageKey });
+        return rows.map((row) => row.storageKey);
+      },
+
+      isReferenced: async (storageKey) =>
+        (
+          await db
+            .select({ id: formUploads.id })
+            .from(formUploads)
+            .where(eq(formUploads.storageKey, storageKey))
+            .limit(1)
+        ).length > 0,
 
       claim: async (ids, submissionId) => {
         if (ids.length === 0) return;

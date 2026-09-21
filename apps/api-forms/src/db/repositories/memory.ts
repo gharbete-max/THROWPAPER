@@ -419,6 +419,11 @@ export function createMemoryRepositories(
         return counts;
       },
 
+      referencesUpload: async (storageKey) =>
+        state.forms.some((form) => JSON.stringify(form.draftDefinition).includes(storageKey)) ||
+        state.formVersions.some((version) =>
+          JSON.stringify(version.definition).includes(storageKey),
+        ),
       listVersions: async (formId) =>
         state.formVersions
           .filter((v) => v.formId === formId)
@@ -620,17 +625,29 @@ export function createMemoryRepositories(
         return { ...record };
       },
 
-      findUnclaimed: async (formId, storageKeys) => {
+      findUnclaimed: async (formId, storageKeys, notBefore) => {
         const wanted = new Set(storageKeys);
         return state.uploads
           .filter(
             (upload) =>
               upload.formId === formId &&
               upload.submissionId === null &&
+              upload.createdAt >= notBefore &&
               wanted.has(upload.storageKey),
           )
           .map((upload) => ({ ...upload }));
       },
+      sweepExpired: async (before, limit) => {
+        const expired = state.uploads
+          .filter((upload) => upload.submissionId === null && upload.createdAt < before)
+          .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+          .slice(0, limit);
+        const gone = new Set(expired.map((upload) => upload.id));
+        state.uploads = state.uploads.filter((upload) => !gone.has(upload.id));
+        return expired.map((upload) => upload.storageKey);
+      },
+      isReferenced: async (storageKey) =>
+        state.uploads.some((upload) => upload.storageKey === storageKey),
 
       claim: async (ids, submissionId) => {
         const wanted = new Set(ids);

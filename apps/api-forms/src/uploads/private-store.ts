@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
 import { isUploadKey, type UploadExtension } from '@tp/shared/forms';
 
@@ -28,6 +28,8 @@ export interface StoredUpload {
 export interface PrivateUploadStore {
   put(content: Buffer, extension: UploadExtension): Promise<StoredUpload>;
   get(key: string): Promise<Buffer | null>;
+  /** Removes the bytes. Only the sweep calls this, and only once nothing names the key. */
+  delete(key: string): Promise<void>;
 }
 
 export function createLocalUploadStore(directory: string): PrivateUploadStore {
@@ -62,6 +64,13 @@ export function createLocalUploadStore(directory: string): PrivateUploadStore {
         return null;
       }
     },
+
+    async delete(key) {
+      if (!isUploadKey(key)) return;
+      const target = resolve(join(root, key));
+      if (target !== root && !target.startsWith(root + sep)) return;
+      await rm(target, { force: true });
+    },
   };
 }
 
@@ -79,6 +88,9 @@ export function createMemoryUploadStore(): PrivateUploadStore & { files: Map<str
     async get(key) {
       if (!isUploadKey(key)) return null;
       return files.get(key) ?? null;
+    },
+    async delete(key) {
+      files.delete(key);
     },
   };
 }

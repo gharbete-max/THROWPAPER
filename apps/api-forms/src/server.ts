@@ -59,6 +59,7 @@ import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
+import { sweepExpiredUploads } from './uploads/lifecycle.js';
 import { MAX_IMAGE_BYTES, checkImage } from './uploads/image.js';
 import { imageSize, isNearSquare } from './uploads/image-size.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
@@ -455,6 +456,32 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     createLocalUploadStore(
       process.env['UPLOAD_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'uploads'),
     );
+
+  /**
+   * Housekeeping, on the same terms as the worker: a timer inside the process, one pass at a
+   * time, an error logged rather than thrown, gated by the same flag so tests run it by hand.
+   * Not a queued job — the queue belongs to an organisation and this belongs to none. Two
+   * instances sweeping at once is harmless; every statement is idempotent.
+   */
+  if (options.startWorker ?? options.repos === undefined) {
+    let sweeping = false;
+    const sweep = () => {
+      if (sweeping) return;
+      sweeping = true;
+      sweepExpiredUploads({ repos, uploadStore })
+        .then((result) => {
+          if (result.rowsDeleted > 0) app.log.info(result, 'swept expired uploads');
+        })
+        .catch((err: unknown) => app.log.error({ err }, 'upload sweep failed'))
+        .finally(() => {
+          sweeping = false;
+        });
+    };
+    const timer = setInterval(sweep, 60 * 60 * 1000);
+    timer.unref?.();
+    app.addHook('onClose', async () => clearInterval(timer));
+    app.addHook('onReady', async () => sweep());
+  }
 
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
