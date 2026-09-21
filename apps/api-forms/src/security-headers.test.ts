@@ -22,6 +22,7 @@ beforeAll(async () => {
   app = await buildServer({
     repos: createMemoryRepositories(),
     jwtSecret: 'test-secret-that-is-at-least-32-characters-long',
+    documentSigningSecret: 'test-document-secret-at-least-32-characters-x',
     probeDatabase: false,
   });
   await app.ready();

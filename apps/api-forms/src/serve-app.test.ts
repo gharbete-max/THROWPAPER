@@ -7,7 +7,12 @@ import { buildServer } from './server.js';
 import { createMemoryMailProvider } from './auth/mail.js';
 import { createMemoryRepositories } from './db/repositories/index.js';
 import { createMemoryDocumentStore } from './documents/store.js';
-import { TEST_JWT_SECRET, createFakePdfRenderer, testOrganisation } from './test-support.js';
+import {
+  TEST_DOCUMENT_SECRET,
+  TEST_JWT_SECRET,
+  createFakePdfRenderer,
+  testOrganisation,
+} from './test-support.js';
 
 /**
  * The deployed image is one container: the API also serves the built app, so a client route like
@@ -146,9 +151,10 @@ beforeAll(async () => {
       formVersions: [PUBLISHED_VERSION],
     }),
     mail: createMemoryMailProvider(),
-    store: createMemoryDocumentStore(TEST_JWT_SECRET),
+    store: createMemoryDocumentStore(TEST_DOCUMENT_SECRET),
     renderer: createFakePdfRenderer(),
     jwtSecret: TEST_JWT_SECRET,
+    documentSigningSecret: TEST_DOCUMENT_SECRET,
     appUrl: 'http://localhost:5173',
     probeDatabase: false,
     startWorker: false,

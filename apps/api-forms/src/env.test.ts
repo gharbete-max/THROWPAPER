@@ -73,3 +73,17 @@ describe('database limits', () => {
     await expect(loadEnv()).rejects.toThrow();
   });
 });
+
+describe('the download-signing secret', () => {
+  /** Same floor as `JWT_SECRET`: a short secret is refused at parse time, not discovered later. */
+  it('must be at least 32 characters when set', async () => {
+    vi.stubEnv('DOCUMENT_SIGNING_SECRET', 'short');
+    await expect(loadEnv()).rejects.toThrow();
+
+    vi.resetModules();
+    vi.stubEnv('DOCUMENT_SIGNING_SECRET', 'a-document-secret-that-is-thirty-two-plus');
+    await expect(loadEnv()).resolves.toMatchObject({
+      DOCUMENT_SIGNING_SECRET: 'a-document-secret-that-is-thirty-two-plus',
+    });
+  });
+});

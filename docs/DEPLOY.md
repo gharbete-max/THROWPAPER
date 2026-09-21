@@ -50,6 +50,7 @@ designing against — so it has to be asked for twice.
 docker run -p 4001:4001 \
   -e DATABASE_URL=postgres://user:pass@host:5432/throwpaper \
   -e JWT_SECRET="$(openssl rand -base64 32)" \
+  -e DOCUMENT_SIGNING_SECRET="$(openssl rand -base64 32)" \
   -e APP_URL=https://forms.example.com \
   -e MAIL_PROVIDER=ses \
   -e MAIL_REGION=eu-north-1 \
@@ -75,6 +76,7 @@ the workspace packages are bundled into them. The container runs `node`.
 |---|---|---|
 | `DATABASE_URL` | yes, unless `DEMO=true` | |
 | `JWT_SECRET` | yes | ≥32 characters. **No default** — the server refuses to start without it, because a predictable secret mints admin sessions. |
+| `DOCUMENT_SIGNING_SECRET` | yes | ≥32 characters, and not the same string as `JWT_SECRET` — the server refuses both. Signs download links; rotating it invalidates every outstanding link and nothing else. |
 | `APP_URL` | yes | Magic links point here and CORS is scoped to it. |
 | `TRUST_PROXY` | behind any proxy | Which forwarders to believe about the visitor's address, as a comma-separated list of addresses, CIDRs or `loopback` / `linklocal` / `uniquelocal`. Empty (the default) means the socket is the visitor — right with nothing in front, wrong behind a TLS terminator, where every rate limit then keys on the proxy. Never `true`: that believes what the client wrote. |
 | `API_FORMS_HOST` | no | Interface to listen on. Defaults to `0.0.0.0`, which the container needs. |

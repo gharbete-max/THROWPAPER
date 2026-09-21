@@ -71,6 +71,8 @@ export interface ServerOptions {
   repos?: Repositories;
   mail?: MailProvider;
   jwtSecret?: string;
+  /** Signs download links. Required, and must differ from `jwtSecret`. See env.ts. */
+  documentSigningSecret?: string;
   appUrl?: string;
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
   probeDatabase?: boolean;
@@ -217,7 +219,14 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   if (!repos) throw new Error('no repositories available');
 
   const mail = options.mail ?? configuredMailProvider((message: string) => app.log.info(message));
-  const jwtSecret = options.jwtSecret ?? requireSecret();
+  const jwtSecret = options.jwtSecret ?? requireSecret('JWT_SECRET');
+  const documentSigningSecret =
+    options.documentSigningSecret ?? requireSecret('DOCUMENT_SIGNING_SECRET');
+  if (documentSigningSecret === jwtSecret) {
+    throw new Error(
+      'DOCUMENT_SIGNING_SECRET must differ from JWT_SECRET: one signs sessions, the other download links.',
+    );
+  }
   const appUrl = options.appUrl ?? process.env['APP_URL'] ?? 'http://localhost:5173';
   const probeDatabase = options.probeDatabase ?? database !== null;
   /* HSTS and upgrade-insecure-requests are correct in front of TLS and break a localhost page. */
@@ -405,7 +414,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     options.store ??
     createLocalDocumentStore({
       directory: process.env['DOCUMENT_DIR'] ?? '.documents',
-      signingSecret: jwtSecret,
+      signingSecret: documentSigningSecret,
     });
 
   const admission = { repos, renderer, store, jwtSecret };
@@ -996,13 +1005,14 @@ function configuredMailProvider(log: (message: string) => void): MailProvider {
 }
 
 /**
- * Refuses to start without a signing secret rather than falling back to a default. A predictable
- * secret in production would let anyone mint an admin access token.
+ * Refuses to start without a secret rather than falling back to a default. A predictable
+ * `JWT_SECRET` in production would let anyone mint an admin access token; a predictable
+ * `DOCUMENT_SIGNING_SECRET` would let anyone mint a link to a ZIP of registrations.
  */
-function requireSecret(): string {
-  const secret = process.env['JWT_SECRET'];
+function requireSecret(name: 'JWT_SECRET' | 'DOCUMENT_SIGNING_SECRET'): string {
+  const secret = process.env[name];
   if (!secret || secret.length < 32) {
-    throw new Error('JWT_SECRET must be set to at least 32 characters. See .env.example.');
+    throw new Error(`${name} must be set to at least 32 characters. See .env.example.`);
   }
   return secret;
 }
