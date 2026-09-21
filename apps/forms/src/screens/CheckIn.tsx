@@ -59,8 +59,12 @@ const RECENT = 5;
  * What is large is what is read at arm's length: the count, the verdict, the reference. The
  * verdict has a fixed height and is always present — an idle prompt before the first scan — so the
  * layout does not jump at the exact moment the operator needs certainty. The reference field is
- * always there and refocuses after every scan, because the camera is the fast path and typing is
- * the one that always works.
+ * always there, because the camera is the fast path and typing is the one that always works.
+ *
+ * Focus follows one rule: while the camera runs, the camera is the input and focus stays where it
+ * is; otherwise typing is the input and the field takes focus back after a check-in or an undo.
+ * Refocusing after a *scan* raised the phone's keyboard over the viewfinder, which sits below the
+ * form — the next guest was being scanned into a screen that had just hidden the camera.
  *
  * The last five arrivals stay on screen with an undo each. The door's mistake is a mis-scan — the
  * wrong card, or the card of the person behind — and the remedy is a button beside the arrival that
@@ -95,6 +99,11 @@ export default function CheckIn() {
   // Guards against the decoder firing the same card ten times a second while it sits in frame.
   const lastScan = useRef<{ code: string; at: number }>({ code: '', at: 0 });
 
+  /** The camera is the input while it runs; the field is when it does not. See the top of the file. */
+  const refocus = useCallback(() => {
+    if (!controlsRef.current) inputRef.current?.focus();
+  }, []);
+
   const refreshCounts = useCallback(() => {
     if (!eventId) return;
     client
@@ -124,10 +133,10 @@ export default function CheckIn() {
         }
       } finally {
         setBusy(false);
-        inputRef.current?.focus();
+        refocus();
       }
     },
-    [eventId, busy, refreshCounts],
+    [eventId, busy, refreshCounts, refocus],
   );
 
   async function undo(arrival: Arrival) {
@@ -150,7 +159,7 @@ export default function CheckIn() {
     } catch {
       // Left on the list: the arrival still stands, and the operator can try again.
     } finally {
-      inputRef.current?.focus();
+      refocus();
     }
   }
 
@@ -193,7 +202,7 @@ export default function CheckIn() {
       // Camera denied, absent, or not on a secure origin. Typing still works, so say so and move on.
       setCameraError(error instanceof Error ? error.message : String(error));
       setScanning(false);
-      inputRef.current?.focus();
+      refocus();
     }
   }
 

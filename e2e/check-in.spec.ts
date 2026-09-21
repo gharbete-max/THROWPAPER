@@ -55,6 +55,8 @@ test('a reference admits once and reports already-arrived on the second attempt'
   await page.getByRole('button', { name: 'Checka in' }).click();
 
   await expect(page.getByText('Välkommen')).toBeVisible();
+  // Typed in, so the field takes focus back: the next reference can be typed straight away.
+  await expect(page.getByLabel(/Referens/)).toBeFocused();
 
   // The whole point of the phase: a second scan is not an error.
   await page.getByLabel(/Referens/).fill(reference);
