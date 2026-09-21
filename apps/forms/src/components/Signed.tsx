@@ -73,14 +73,27 @@ export function Signed() {
  * `useReveal` starts revealed under reduced motion, without `IntersectionObserver`, and in any
  * environment where it cannot observe. The worst case is text that is simply there.
  */
-export function Reveal({ children, className }: { children: ReactNode; className?: string }) {
-  const { ref, revealed } = useReveal<HTMLDivElement>();
+export function Reveal({
+  children,
+  className,
+  as: Tag = 'div',
+}: {
+  children: ReactNode;
+  className?: string;
+  /**
+   * `li` when the children are a list item's contents. A wrapper *around* an `<li>` breaks the
+   * list — `<ul><div><li>` — so inside a list the effect has to be the item itself.
+   */
+  as?: 'div' | 'li';
+}) {
+  // Whichever tag was asked for; the observer only needs an element to watch.
+  const { ref, revealed } = useReveal<HTMLDivElement & HTMLLIElement>();
   return (
-    <div
+    <Tag
       ref={ref}
       className={[className, 'reveal', revealed && 'reveal--in'].filter(Boolean).join(' ')}
     >
       {children}
-    </div>
+    </Tag>
   );
 }

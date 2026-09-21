@@ -109,44 +109,42 @@ export function Inbox() {
 
           <ul className="inbox">
             {shown.map((entry) => (
-              <Reveal key={entry.id}>
-                <li className="inbox__row">
-                  <Link className="inbox__link" to={`/forms/${entry.formId}/submissions`}>
-                    {/*
+              <Reveal as="li" className="inbox__row" key={entry.id}>
+                <Link className="inbox__link" to={`/forms/${entry.formId}/submissions`}>
+                  {/*
                     The person first, the form second. Fourteen rows all bold "Spring meeting
                     registration" with the one thing that differed in grey answered nothing; the
                     name is what somebody scans for, and the reference stands in when a form
                     collected none.
                   */}
-                    <span className="inbox__who">{entry.who || entry.reference}</span>
-                    <span className="inbox__form small muted">
-                      {pickText(locales, entry.formTitle, locale).value || entry.formSlug}
-                      {entry.who && <span className="inbox__reference"> · {entry.reference}</span>}
-                    </span>
-                    <span className="inbox__status">
-                      {/* Outlined, never filled: a filled badge takes the surface colour and the
+                  <span className="inbox__who">{entry.who || entry.reference}</span>
+                  <span className="inbox__form small muted">
+                    {pickText(locales, entry.formTitle, locale).value || entry.formSlug}
+                    {entry.who && <span className="inbox__reference"> · {entry.reference}</span>}
+                  </span>
+                  <span className="inbox__status">
+                    {/* Outlined, never filled: a filled badge takes the surface colour and the
                         inbox rows are that colour, so it disappeared into the row it sat on. */}
-                      <span
-                        className={
-                          entry.status === 'complete'
-                            ? 'badge badge--quiet'
-                            : 'badge badge--quiet status-warning'
-                        }
-                      >
-                        {t(entry.status === 'complete' ? 'inbox.complete' : 'inbox.partial')}
-                      </span>
+                    <span
+                      className={
+                        entry.status === 'complete'
+                          ? 'badge badge--quiet'
+                          : 'badge badge--quiet status-warning'
+                      }
+                    >
+                      {t(entry.status === 'complete' ? 'inbox.complete' : 'inbox.partial')}
                     </span>
-                    {/**
-                     * The submission date, not the creation date, where there is one: a draft
-                     * started in March and finished in May arrived in May, and sorting a list of
-                     * arrivals by when somebody first opened the page reads as wrong.
-                     */}
-                    <span className="inbox__when small muted">
-                      <Icon name="clock" className="icon--lead" />
-                      {new Date(entry.submittedAt ?? entry.createdAt).toLocaleString(locale)}
-                    </span>
-                  </Link>
-                </li>
+                  </span>
+                  {/**
+                   * The submission date, not the creation date, where there is one: a draft
+                   * started in March and finished in May arrived in May, and sorting a list of
+                   * arrivals by when somebody first opened the page reads as wrong.
+                   */}
+                  <span className="inbox__when small muted">
+                    <Icon name="clock" className="icon--lead" />
+                    {new Date(entry.submittedAt ?? entry.createdAt).toLocaleString(locale)}
+                  </span>
+                </Link>
               </Reveal>
             ))}
           </ul>
