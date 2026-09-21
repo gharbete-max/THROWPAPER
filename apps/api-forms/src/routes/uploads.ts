@@ -120,9 +120,11 @@ export function registerUploadRoutes(
    * and a link gets forwarded, logged and pasted into chat. Somebody's CV should need a session,
    * not a string.
    *
-   * The lookup is the access control: a row matching this organisation, this submission and this
-   * key, or nothing. The key alone proves nothing — it is the hash of the content, so anybody
-   * holding the same file can compute it.
+   * The lookup is the first half of the access control: a row matching this organisation, this
+   * submission and this key, or nothing. The key alone proves nothing — it is the hash of the
+   * content, so anybody holding the same file can compute it. The second half is the form's own
+   * rules, because a respondent's file belongs to the form that collected it: "same organisation"
+   * let any operator with a session read the CVs sent to a colleague's private form (audit 13).
    *
    * Served as an attachment with the type read from the bytes at upload, never the one declared,
    * so an HTML file renamed `.pdf` cannot execute against this origin.
@@ -158,6 +160,7 @@ export function registerUploadRoutes(
         params.key,
       );
       if (!record) return notFound(reply);
+      if (!(await resolveFormAccess(deps.repos, auth, record.formId))) return notFound(reply);
 
       const content = await deps.uploadStore.get(record.storageKey);
       if (!content) return notFound(reply);

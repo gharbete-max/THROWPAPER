@@ -234,6 +234,15 @@ export function registerDocumentRoutes(
       const { id } = IdParam.parse(request.params);
       const job = await deps.repos.jobs.findById(auth.organisation.id, id);
       if (!job) return notFound(reply);
+      /*
+       * A bulk job's result is a signed link to a ZIP of every registrant's card, so reading the
+       * job is reading the form. Jobs that name a form answer to that form's access rules; a job
+       * without one (mail.send) carries no link and stays organisation-scoped. Audit item 13.
+       */
+      const formId = job.payload['formId'];
+      if (typeof formId === 'string' && !(await resolveFormAccess(deps.repos, auth, formId))) {
+        return notFound(reply);
+      }
       return reply.send(toJobResponse(job));
     },
   });
