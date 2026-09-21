@@ -668,6 +668,9 @@ export const deDE: Record<MessageKey, string> = {
   'public.copied': 'Kopiert',
   'public.thanks': 'Vielen Dank.',
   'public.reference': 'Ihre Referenz: {reference}',
+  'public.confirmation': 'Eine Bestätigung ist unterwegs an {email}.',
+  'public.confirmationWithCard':
+    'Eine Bestätigung mit Ihrer Eintrittskarte ist unterwegs an {email}.',
   'public.closed.not-open-yet': 'Dieses Formular ist noch nicht geöffnet.',
   'public.closed.full': 'Alle Plätze sind belegt.',
   'public.closed.unpublished': 'Formular nicht gefunden.',

@@ -381,6 +381,8 @@ export function registerPublicFormRoutes(
           status: 'received' as const,
           reference: generateReference(),
           confirmationMessage: '',
+          confirmationTo: null,
+          admissionCard: false,
         });
       }
 
@@ -435,6 +437,7 @@ export function registerPublicFormRoutes(
         ? await deps.repos.submissions.findByResumeTokenHash(hashSecret(body.resumeToken))
         : null;
 
+      const email = emailAnswer(loaded.definition.fields, validated.values);
       const result = await deps.repos.submissions.complete({
         ...(draft?.status === 'partial' && { id: draft.id }),
         organisationId: loaded.organisation.id,
@@ -443,7 +446,7 @@ export function registerPublicFormRoutes(
         eventId: loaded.form.eventId,
         reference: draft?.reference ?? generateReference(),
         locale: body.locale,
-        email: emailAnswer(loaded.definition.fields, validated.values),
+        email,
         data: validated.values as Record<string, unknown>,
         capacity: capacityFor(loaded.event),
         duplicateControl: loaded.definition.settings.duplicateControl,
@@ -481,6 +484,10 @@ export function registerPublicFormRoutes(
         status: 'received' as const,
         reference: result.submission.reference,
         confirmationMessage: confirmation.value,
+        // The mail job sends to this address and attaches the card when there is an event
+        // (`mail/send-job.ts`); the screen may say so because this is where it was decided.
+        confirmationTo: email,
+        admissionCard: loaded.event !== null,
       });
     },
   });

@@ -79,6 +79,13 @@ test('a visitor fills in the form across both pages and gets a reference', async
   const reference = referenceIn(await page.getByText(/Din referens:/).textContent());
   created.push(reference);
 
+  // The confirmation still says what was registered for, and what is coming: the seeded form is
+  // bound to an event, so the mail carries the card, and the screen says so to the typed address.
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Vårmötet');
+  await expect(
+    page.getByText(`En bekräftelse med ditt inträdeskort är på väg till ${email}.`),
+  ).toBeVisible();
+
   // It reached the database, with the answers and the locale it was filled in.
   const [row] = await sql`
     select data, locale, status from submissions where reference = ${reference}

@@ -641,6 +641,8 @@ export const zhCN: Record<MessageKey, string> = {
   'public.copied': '已复制',
   'public.thanks': '谢谢。',
   'public.reference': '你的编号：{reference}',
+  'public.confirmation': '确认邮件正在发送至 {email}。',
+  'public.confirmationWithCard': '附有入场凭证的确认邮件正在发送至 {email}。',
   'public.closed.not-open-yet': '该表单尚未开放。',
   'public.closed.full': '名额已满。',
   'public.closed.unpublished': '未找到表单。',

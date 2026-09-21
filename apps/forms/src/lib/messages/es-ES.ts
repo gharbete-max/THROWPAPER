@@ -663,6 +663,8 @@ export const esES: Record<MessageKey, string> = {
   'public.copied': 'Copiado',
   'public.thanks': 'Gracias.',
   'public.reference': 'Tu referencia: {reference}',
+  'public.confirmation': 'Una confirmación va de camino a {email}.',
+  'public.confirmationWithCard': 'Una confirmación con tu entrada va de camino a {email}.',
   'public.closed.not-open-yet': 'Este formulario todavía no ha abierto.',
   'public.closed.full': 'Todas las plazas están ocupadas.',
   'public.closed.unpublished': 'Formulario no encontrado.',

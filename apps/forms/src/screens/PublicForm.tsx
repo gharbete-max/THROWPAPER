@@ -47,6 +47,8 @@ export default function PublicForm() {
   const [issues, setIssues] = useState<ValidationIssue[]>([]);
   const [reference, setReference] = useState('');
   const [confirmation, setConfirmation] = useState('');
+  /** What the server queued on submit, so the screen promises only what is actually coming. */
+  const [coming, setComing] = useState<{ email: string; card: boolean } | null>(null);
   const [rejected, setRejected] = useState<string | null>(null);
   const [resumeToken, setResumeToken] = useState<string | null>(params.get('resume'));
   const [resumeLink, setResumeLink] = useState<string | null>(null);
@@ -286,6 +288,9 @@ export default function PublicForm() {
       if (response.status === 201) {
         setReference(body.reference);
         setConfirmation(body.confirmationMessage);
+        setComing(
+          body.confirmationTo ? { email: body.confirmationTo, card: body.admissionCard } : null,
+        );
         setPhase('done');
 
         /**
@@ -469,8 +474,11 @@ export default function PublicForm() {
 
         `h1` and not a caption: on a page whose whole purpose is one document, the document's name
         is the heading, and a screen reader jumping by heading should land on it.
+
+        Kept on the confirmation too: it used to vanish the moment the form was sent, so the one
+        screen somebody might photograph did not say what they had registered for.
       */}
-      {formTitle && phase !== 'done' && <h1 className="public__title">{formTitle}</h1>}
+      {formTitle && <h1 className="public__title">{formTitle}</h1>}
 
       {phase === 'closed' && (
         <div className="card">
@@ -483,8 +491,17 @@ export default function PublicForm() {
           {/* Drawn rather than already there: a mark appearing *now* is what says it worked,
               which is the thing people are unsure about on a confirmation screen. */}
           <Signed />
-          <h1>{confirmation || t('public.thanks')}</h1>
+          <h2>{confirmation || t('public.thanks')}</h2>
           <p className="muted">{t('public.reference', { reference })}</p>
+          {/* Only what the server said it queued: a mail to the address given, the card with it
+              when the form is bound to an event. Nothing is promised that is not on its way. */}
+          {coming && (
+            <p>
+              {t(coming.card ? 'public.confirmationWithCard' : 'public.confirmation', {
+                email: coming.email,
+              })}
+            </p>
+          )}
         </div>
       )}
 

@@ -655,6 +655,8 @@ export const fiFI: Record<MessageKey, string> = {
   'public.copied': 'Kopioitu',
   'public.thanks': 'Kiitos.',
   'public.reference': 'Viitteesi: {reference}',
+  'public.confirmation': 'Vahvistus on matkalla osoitteeseen {email}.',
+  'public.confirmationWithCard': 'Vahvistus ja pääsylippusi ovat matkalla osoitteeseen {email}.',
   'public.closed.not-open-yet': 'Tämä lomake ei ole vielä auennut.',
   'public.closed.full': 'Kaikki paikat on varattu.',
   'public.closed.unpublished': 'Lomaketta ei löytynyt.',

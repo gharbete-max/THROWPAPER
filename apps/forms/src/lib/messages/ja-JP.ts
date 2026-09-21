@@ -656,6 +656,8 @@ export const jaJP: Record<MessageKey, string> = {
   'public.copied': 'コピーしました',
   'public.thanks': 'ありがとうございました。',
   'public.reference': '受付番号：{reference}',
+  'public.confirmation': '確認メールを {email} 宛に送信しています。',
+  'public.confirmationWithCard': '入場券を添付した確認メールを {email} 宛に送信しています。',
   'public.closed.not-open-yet': 'このフォームはまだ公開されていません。',
   'public.closed.full': '定員に達しました。',
   'public.closed.unpublished': 'フォームが見つかりません。',

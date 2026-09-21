@@ -78,6 +78,15 @@ export const SubmitResponse = z.object({
   status: z.literal('received'),
   reference: z.string(),
   confirmationMessage: z.string(),
+  /**
+   * What happens next, as the server knows it, so the confirmation screen states only facts.
+   *
+   * The screen said "Thank you" and a reference, and people were left unsure whether anything
+   * was coming. A mail is queued to the address the form collected — `null` when it collected
+   * none — and the admission card rides with that mail only when the form is bound to an event.
+   */
+  confirmationTo: z.string().nullable(),
+  admissionCard: z.boolean(),
 });
 
 export const SubmitRejected = z.object({

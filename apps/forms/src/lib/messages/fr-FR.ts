@@ -667,6 +667,9 @@ export const frFR: Record<MessageKey, string> = {
   'public.copied': 'Copié',
   'public.thanks': 'Merci.',
   'public.reference': 'Votre référence : {reference}',
+  'public.confirmation': 'Une confirmation est en route vers {email}.',
+  'public.confirmationWithCard':
+    'Une confirmation avec votre carte d’accès est en route vers {email}.',
   'public.closed.not-open-yet': 'Ce formulaire n’est pas encore ouvert.',
   'public.closed.full': 'Toutes les places sont prises.',
   'public.closed.unpublished': 'Formulaire introuvable.',

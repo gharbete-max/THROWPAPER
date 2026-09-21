@@ -651,6 +651,8 @@ export const nbNO: Record<MessageKey, string> = {
   'public.copied': 'Kopiert',
   'public.thanks': 'Takk.',
   'public.reference': 'Referansen din: {reference}',
+  'public.confirmation': 'En bekreftelse er på vei til {email}.',
+  'public.confirmationWithCard': 'En bekreftelse med adgangskortet ditt er på vei til {email}.',
   'public.closed.not-open-yet': 'Dette skjemaet har ikke åpnet ennå.',
   'public.closed.full': 'Alle plasser er tatt.',
   'public.closed.unpublished': 'Skjemaet ble ikke funnet.',

@@ -664,6 +664,8 @@ export const ruRU: Record<MessageKey, string> = {
   'public.copied': 'Скопировано',
   'public.thanks': 'Спасибо.',
   'public.reference': 'Ваш номер: {reference}',
+  'public.confirmation': 'Подтверждение отправлено на {email}.',
+  'public.confirmationWithCard': 'Подтверждение с входным билетом отправлено на {email}.',
   'public.closed.not-open-yet': 'Эта форма ещё не открыта.',
   'public.closed.full': 'Все места заняты.',
   'public.closed.unpublished': 'Форма не найдена.',

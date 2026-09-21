@@ -287,6 +287,37 @@ describe('submitting', () => {
     expect(harness.state.submissions[0]?.status).toBe('complete');
   });
 
+  /**
+   * The confirmation screen tells the respondent what happens next, and it must only say what
+   * the server actually queued: a mail goes to the address the form collected, and the admission
+   * card rides with it only when the form is bound to an event.
+   */
+  it('says where the confirmation goes, and whether a card comes with it', async () => {
+    await publishForm({ capacity: null });
+    const withEvent = await submit({ locale: 'sv-SE', values: answers });
+    expect(withEvent.statusCode).toBe(201);
+    expect(withEvent.json().confirmationTo).toBe('alva@example.com');
+    expect(withEvent.json().admissionCard).toBe(true);
+  });
+
+  it('promises no card without an event, and no mail without an address', async () => {
+    await publishForm();
+    const noEvent = await submit({ locale: 'sv-SE', values: answers });
+    expect(noEvent.json().confirmationTo).toBe('alva@example.com');
+    expect(noEvent.json().admissionCard).toBe(false);
+
+    await harness.close();
+    harness = await createTestHarness();
+    adminToken = (await signIn(harness, adminUser.email)).accessToken;
+    await publishForm({ fields: [nameField, pageBreak, mealField] });
+    const noAddress = await submit({
+      locale: 'sv-SE',
+      values: { first_name: 'Alva', meal: 'veg' },
+    });
+    expect(noAddress.statusCode).toBe(201);
+    expect(noAddress.json().confirmationTo).toBeNull();
+  });
+
   it('binds the answers to the version that was on screen', async () => {
     const id = await publishForm();
     await submit({ locale: 'sv-SE', values: answers });

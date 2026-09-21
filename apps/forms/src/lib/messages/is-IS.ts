@@ -653,6 +653,8 @@ export const isIS: Record<MessageKey, string> = {
   'public.copied': 'Afritað',
   'public.thanks': 'Takk fyrir.',
   'public.reference': 'Tilvísunin þín: {reference}',
+  'public.confirmation': 'Staðfesting er á leiðinni á {email}.',
+  'public.confirmationWithCard': 'Staðfesting með aðgangskortinu þínu er á leiðinni á {email}.',
   'public.closed.not-open-yet': 'Þetta eyðublað hefur ekki opnað enn.',
   'public.closed.full': 'Öll sæti eru upptekin.',
   'public.closed.unpublished': 'Eyðublaðið fannst ekki.',
