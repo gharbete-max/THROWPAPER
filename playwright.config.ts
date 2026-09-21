@@ -30,6 +30,8 @@ const EXTERNAL_URL = process.env['E2E_BASE_URL'];
 const DATABASE_URL =
   process.env['DATABASE_URL'] ?? 'postgres://throwpaper:throwpaper@localhost:5432/throwpaper';
 const JWT_SECRET = process.env['JWT_SECRET'] ?? 'e2e-only-secret-at-least-thirty-two-characters';
+const DOCUMENT_SIGNING_SECRET =
+  process.env['DOCUMENT_SIGNING_SECRET'] ?? 'e2e-only-document-secret-at-least-thirty-two';
 
 export default defineConfig({
   testDir: './e2e',
@@ -64,6 +66,7 @@ export default defineConfig({
           env: {
             DATABASE_URL,
             JWT_SECRET,
+            DOCUMENT_SIGNING_SECRET,
             API_FORMS_PORT: String(API_PORT),
             APP_URL,
             // Console, so nothing is ever sent from a test run.

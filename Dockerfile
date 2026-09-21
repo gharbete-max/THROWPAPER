@@ -6,7 +6,7 @@
 # system libraries at matching versions, which is the part that is painful to assemble by hand.
 #
 # Build:  docker build -t loppa .
-# Run:    docker run -p 4001:4001 -e DATABASE_URL=... -e JWT_SECRET=... loppa
+# Run:    docker run -p 4001:4001 -e DATABASE_URL=... -e JWT_SECRET=... -e DOCUMENT_SIGNING_SECRET=... loppa
 # Demo:   docker run -p 4001:4001 -e DEMO=true loppa
 
 # Keep this in step with the playwright version in package.json — a mismatch between the browser

@@ -56,11 +56,12 @@ Not only an intrusion. Confidentiality, integrity _and_ availability all count:
 
 ### Rotation runbook
 
-| Secret               | Where it lives          | Effect of rotating                                               |
-| -------------------- | ----------------------- | ---------------------------------------------------------------- |
-| `JWT_SECRET`         | Host secret store       | Every access token invalid immediately; everyone signs in again. |
-| Database credentials | Host secret store       | Requires redeploy.                                               |
-| SES credentials      | Host secret store / IAM | Mail stops until replaced.                                       |
+| Secret                    | Where it lives          | Effect of rotating                                                                    |
+| ------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
+| `JWT_SECRET`              | Host secret store       | Every access token invalid immediately; everyone signs in again.                      |
+| `DOCUMENT_SIGNING_SECRET` | Host secret store       | Every outstanding download link invalid; a bulk export is re-run. Sessions untouched. |
+| Database credentials      | Host secret store       | Requires redeploy.                                                                    |
+| SES credentials           | Host secret store / IAM | Mail stops until replaced.                                                            |
 
 ### Known historical exposure
 
