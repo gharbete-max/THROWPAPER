@@ -1245,6 +1245,58 @@ three filled primaries and no `aria-current` on the section nav, chips at 1.79:1
 changed in response — the final design pass reads that snapshot, after L1–L7. The app shell was
 not re-scored in this run.
 
+## L1 — Audit items 9, 10, 11, 13 · done
+
+Verification, not feature work: each `LAUNCH-CHECKLIST.md` §2.1 row was traced to its data
+boundary and either proven closed by a test that is shown to discriminate, or closed with the
+smallest guard in the shape its siblings already use. Mutation evidence below is the actual
+vitest output with a temporary edit in place, reverted with `git checkout --` afterwards.
+
+**9 — `POST /v1/forms/:id/admission-documents`.** Already fixed: `routes/documents.ts` asks
+`resolveFormAccess` and answers 404. Proven by `forms/form-access.test.ts` "the bulk export":
+Oskar (operator) against Alva's private form → 404 with no name or email in the body; Alva → 202.
+Discriminates: with the check swapped back to `forms.findById(organisationId, id)` the test fails
+(`Tests 1 failed | 6 passed`); restored, `7 passed`.
+
+**10 — `GET /v1/events/:id/attendance`.** Already scoped at the query: `events.findById`,
+`submissions.listForEvent` and `checkIns.listForEvent` all carry `organisation_id` in their
+`where` (`db/repositories/drizzle.ts`); `guestsForAll → listVersions(formId)` is unscoped but only
+walks forms of rows already scoped. What was missing was the proof from outside: a new
+`describe('another organisation')` seeds a second organisation with its own administrator, signs
+her in through the real `/v1/auth/refresh` (the magic link resolves `organisations.first()`, audit
+17, so it cannot sign in a second tenant), and asks for Alva's event → 404, no attendee in the
+body. Discriminates: with the organisation predicate dropped from the fake's `events.findById`,
+`expected 200 to be 404`; restored, passes.
+
+**11 — `POST /public/forms/:slug/draft`.** Already fixed: honeypot, open/closed check and a
+30-per-minute route limit (`routes/public-forms.ts`), mail through the `MailProvider` seam. Proven
+by `forms/draft-guards.test.ts`: a person → 200 and one mail; honeypot → 200, a token that resumes
+nothing, no mail, no row; closed → 409 `closed`, no mail. The transport in tests is the memory
+provider; locally and in e2e it is the console provider (`--- mail (console provider) --- to:
+resume-…` in the L0 e2e log). Discriminates: with both guards removed, `2 failed | 1 passed`;
+restored, `3 passed`. The rate limit was left as it is.
+
+**13 — admission PDF and attachment download.** Two of four boundaries were already the form's:
+`GET /v1/submissions/:id/admission.pdf` and `paper.pdf` look the submission up by organisation
+*and then* ask `resolveFormAccess(submission.formId)`. Two were not:
+
+- `GET /v1/submissions/:submissionId/files/:key` — a respondent's attachment — was
+  `uploads.findForDownload(organisationId, submissionId, key)` and nothing more, so any operator
+  with a session could download the CVs sent to a colleague's private form.
+- `GET /v1/jobs/:id` was `jobs.findById(organisationId, id)`, and a finished bulk job's `result`
+  is `downloadPath`, a signed link to a ZIP of every registrant's card — a signed key, obtainable
+  from an organisation-level id.
+
+Both now ask `resolveFormAccess` (the upload row already carries `formId`; the bulk job's payload
+does too) and answer 404. A job without a `formId` (`mail.send`) carries no link and stays
+organisation-scoped. Two rows added to the `it.each` in `form-access.test.ts`; committed before
+the guard, where both fail with `expected 200 to be 404`, and passing after it. The owner still
+downloads the file and reads the job (pinned). `GET /v1/documents/download` itself is unchanged:
+signature plus expiry, unauthenticated by design, as `routes/documents.ts` explains.
+
+**Ran:** `pnpm verify` — 127 files, **1715 tests** (five new), both builds; `pnpm contract:check`
+passed; `pnpm test:e2e` **11 passed**. Rows 9, 10, 11 and 13 deleted from the checklist.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
