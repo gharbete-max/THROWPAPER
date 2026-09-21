@@ -43,3 +43,39 @@ describe('the site’s not-found page', () => {
     expect(render('/sv/features/events', 'https://x.test').status).toBe(200);
   });
 });
+
+/**
+ * What the third critique asked of the chrome and the feature pages, held in the rendered HTML.
+ */
+describe('the site, as rendered', () => {
+  it('marks the page being read in the bar, with the conventional token', () => {
+    const { html } = render('/features/events', 'https://x.test');
+    expect(html).toContain('href="/features/events" aria-current="page"');
+    expect(html).not.toContain('href="/features/forms" aria-current');
+    // The language switcher used `aria-current="true"`; a page is a page.
+    expect(html).not.toContain('aria-current="true"');
+    expect(html).toContain('aria-current="page"');
+  });
+
+  it('fills exactly one button on the landing page, the hero’s', () => {
+    const { html } = render('/', 'https://x.test');
+    const filled = html.match(/class="button"/g) ?? [];
+    // The hero and the closing panel; the bar's is quiet now. Never two in one viewport.
+    expect(filled).toHaveLength(2);
+    expect(html).toContain('class="button button--quiet" href="/login"');
+  });
+
+  it('gives a feature page an action and a way back that says so', () => {
+    const { html } = render('/features/events', 'https://x.test');
+    expect(html).toContain('class="site__pointsActions"');
+    expect(html).toContain(`${copyFor('en-GB').featurePage.back}</a>`);
+    expect(html).not.toContain(copyFor('en-GB').featurePage.backToAll);
+  });
+
+  it('does not read "Read more" aloud six times', () => {
+    const { html } = render('/', 'https://x.test');
+    expect(html.match(/class="feature-card__more" aria-hidden="true"/g)).toHaveLength(
+      FEATURE_SLUGS.length,
+    );
+  });
+});
