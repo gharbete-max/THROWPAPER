@@ -11,10 +11,11 @@ independent products (apps/forms + apps/api-forms; apps/mailer + apps/api-mailer
 packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
 docs/adr/0001-theming-layers.md before touching anything.
 
-State: main == origin/main at the merge of PR #67 (Phase 3, the Loppa restyle: palette, mark,
-theming layers with a LOCKED list, client mode / white-label, two design-critique rounds, the
-door as a mode, Responses by name, a no-JS contact page). `pnpm verify` is green (109 test
-files). Playwright e2e specs were not run on the last machine (no database) — run them first.
+State: see docs/PROGRESS.md § L0 for the measured baseline (2026-09-21): origin/main at the merge
+of PR #81, `pnpm verify` green (127 test files, 1710 tests), `pnpm test:e2e` 11/11 passed against
+a local portable Postgres 16 (start command in that section — there is no Docker on this machine).
+Five dependabot PRs are open. The local track (L1–L7) is described in the owner's handoff prompt;
+each phase is one branch, plan mode first.
 
 Rules that bite: one phase per branch, `pnpm verify` before "done", never mass-rename internal
 identifiers (throwpaper stays throwpaper in paths/tables/routes), no new dependencies without
@@ -24,13 +25,13 @@ unchecked — reach for the derived tokens (--tp-colour-heading, --tp-colour-acc
 flat mark. Design first, then one ponytail pass; never both in one pass.
 
 Pick up in this order:
-1. Run `pnpm test:e2e` against `pnpm demo` and fix anything the door/Responses changes broke.
-2. LAUNCH-CHECKLIST.md §2.3 — the nine open P2 findings from the second critique (contrast on
-   card surfaces, Reveal-inside-ul, door event name + wrong-id state, mobile verdict shrink,
-   the screen-reader items). Then re-run `/impeccable critique apps/forms/src/site/Site.tsx`
-   and record the trend (18 → 22 / 32 so far).
-3. LAUNCH-CHECKLIST.md §2.1 — audit items 8–17, each needing the owner's approval before the
-   diff (start with 8: TRUST_PROXY, and 12: the upload sweeper whose index already exists).
+1. Start the local Postgres (docs/PROGRESS.md § L0), then `pnpm test:e2e` — it must say
+   "11 passed", not SKIPPED, before anything else is trusted.
+2. LAUNCH-CHECKLIST.md §2.1 — audit items 8–16 (L1–L6 of the local track). Several rows are
+   already fixed in code; the task there is to prove it with a discriminating test and delete the
+   row, never to re-implement it.
+3. LAUNCH-CHECKLIST.md §2.2 strings (L7), then the design pass from the latest critique
+   snapshot in `.impeccable/critique/` — never from the old plan.
 4. Everything in LAUNCH-CHECKLIST.md §1 is the owner's to answer, not yours to invent: ask,
    batch the questions, and never fill a `pending()` marker with plausible text.
 
@@ -40,10 +41,12 @@ paper decision first.
 
 ## State
 
-- `main == origin/main`, clean. Last merge: **#67** (Phase 3 — Loppa), 30 commits, merged
-  2026-09-15. No open PRs.
-- `pnpm verify` green: **109 test files**, both apps build. `pnpm verify` and
-  `pnpm contract:check` together are the definition of done.
+- `origin/main` at **#81** (`claude/paper-crop`, merged 2026-09-21). Five dependabot PRs open
+  (#62, #83–#86). The numbers below were measured on 2026-09-21; `docs/PROGRESS.md` § L0 is the
+  record.
+- `pnpm verify` green: **127 test files, 1710 tests**, both apps build. `pnpm test:e2e`:
+  **11 passed** against a real Postgres. `pnpm verify` and `pnpm contract:check` together are
+  the definition of done.
 - Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
   **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
   complete**; 4 (polish and SEO) not started.
@@ -90,14 +93,12 @@ marketing email.
 
 ## Next unblocked work — in this order
 
-1. **Run the Playwright e2e suite** (`pnpm test:e2e` against `pnpm demo`). The door and Responses
-   changed shape in #67; the specs were checked by eye against the new markup but not executed,
-   because the last machine had no database.
-2. **The nine open P2 findings** from critique #2 — `LAUNCH-CHECKLIST.md` §2.3, snapshot in
-   `.impeccable/critique/2026-09-15T07-51-16Z__…md`. `/impeccable polish` reads that file.
-3. **Audit items 8–17** — `LAUNCH-CHECKLIST.md` §2.1. Each needs the owner's approval before the
-   diff. Item 12 (upload sweeper) has its index already; item 8 (`TRUST_PROXY`) depends on the host.
-4. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
+1. **Audit items 8–16** — `LAUNCH-CHECKLIST.md` §2.1, as the local track's L1–L6. Each needs
+   the owner's approval before the diff. Item 12 (upload sweeper) has its index already; item 8
+   (`TRUST_PROXY`) is about the local/ngrok hop, not a host.
+2. **§2.2 strings** (L7), then **the design pass** from the latest snapshot in
+   `.impeccable/critique/` — `/impeccable polish` reads that file.
+3. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
 
 ---
 

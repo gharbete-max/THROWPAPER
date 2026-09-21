@@ -1150,6 +1150,101 @@ private store and the 10 MB cap both prefer it. JPEG, because it is a photograph
 **Not built.** Automatic edge detection; whitening or contrast filters; re-cropping a page
 after import.
 
+## L0 — Reconcile state + real e2e baseline · done
+
+First phase of the local/ngrok track. No product code changed; this is what was measured on
+2026-09-21 so that L1–L7 start from evidence rather than from `docs/HANDOVER.md` as it read at #67.
+
+**Repository state, observed**
+
+- `origin/main` = `691d40a` (merge of PR #81, `claude/paper-crop`). Fourteen PRs after #67.
+- Open PRs: five dependabot bumps (#62, #83, #84, #85, #86). "No open PRs" was stale.
+- Vitest: **127 test files, 1710 tests**, 0 skipped. "109 test files" was stale.
+- Playwright: **2 specs, 11 tests**, and they had never been executed on this machine.
+- Worktree `claude/l0-baseline` created from `origin/main`; the main checkout holds unrelated,
+  uncommitted scan-feature work on `claude/scan` and was left untouched.
+
+**The database this machine did not have**
+
+There is no Docker, no WSL and no PostgreSQL service here, so `pnpm db:up` cannot run. The
+substitute is the EDB **portable** PostgreSQL 16.12 binaries (no installer, no service), unpacked
+to `C:\Users\gusta\pg16` and initialised with the same arguments as `docker-compose.yml`
+(`--locale-provider=icu --icu-locale=sv-SE -E UTF8`, rule 6), user/password/db `throwpaper`, so
+the shipped `DATABASE_URL` works unchanged. `pg_database` confirms `datlocprovider = i`,
+`daticulocale = sv-SE`.
+
+```
+C:\Users\gusta\pg16\pgsql\bin\pg_ctl -D C:\Users\gusta\pg16\data -l C:\Users\gusta\pg16\postgres.log -o "-p 5432" start
+C:\Users\gusta\pg16\pgsql\bin\pg_ctl -D C:\Users\gusta\pg16\data stop
+```
+
+The cluster persists between sessions; only `start` is needed next time.
+
+**What ran, and what it said**
+
+| Command              | Result                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------------- |
+| `pnpm db:migrate`    | `migrations applied` — 16 rows in `drizzle.__drizzle_migrations`                                       |
+| `pnpm db:seed`       | `seed complete` — 1 organisation, 2 users, 1 event, 3 forms (1 published), 200 submissions             |
+| `pnpm demo`          | `/health` → `{"mode":"demo","database":"skipped"}`; `/f/varmotet` renders; no console errors           |
+| `pnpm verify`        | exit 0 — format, typecheck, lint (2 `exhaustive-deps` warnings, 0 errors), 127 files / 1710 tests, both builds |
+| `pnpm contract:check`| passed — 0/6 implemented, 6 deferred (unchanged)                                                        |
+| `pnpm test:e2e`      | **11 passed (27.1s)** — genuinely ran, not SKIPPED                                                     |
+
+`apps/api-forms/src/db/database.test.ts` — the `describe.skipIf(!migrated)` block — ran its ten
+tests against the real database for the first time on this machine (0 skipped in the run).
+
+**Two things the e2e run surfaced that are not regressions**
+
+- The API log prints `job failed` nine times during the suite. Every one is a `mail.send` job
+  whose `error` column reads `submission <id> not found`: the specs' `afterAll` deletes the
+  submissions they created, and the confirmation-mail job that the submission enqueued runs after
+  that. Six jobs, zero of their submission ids present, zero e2e rows left behind. Harness
+  side-effect, left alone.
+- `server.ts` logs the failure as `{ error, jobId }`, and pino serialises an `Error` under the key
+  `error` as `{}`, so the log line carries no message — the text survives only in `jobs.error`.
+  A diagnostic nit for a later pass (`err` is the key pino serialises), not an L0 change.
+
+**Leads for later phases, recorded here rather than acted on**
+
+- In demo mode `api-forms` logs `Server listening at http://192.168.0.4:4001` as well as
+  `127.0.0.1` — it binds every interface. L2 (audit 8) must decide whether that is wanted beside a
+  trusted local forwarding hop.
+- `LAUNCH-CHECKLIST.md` §2.1 rows 9, 10 and 11 already have tests in the tree
+  (`forms/form-access.test.ts`, `forms/draft-guards.test.ts`); §1.3 says `TRUST_PROXY` exists and
+  is wired. Those rows are stale leads for L1/L2 to prove and delete — not closed here, because L0
+  produced no discriminating evidence for them.
+- The Postgres seed writes **no brand kit** (`brand_kits` = 0 rows); the "Demo AB" kit exists only
+  in the in-memory demo dataset (`demo/dataset.ts`). `CLAUDE.md` §Demo data asks the seed for one.
+  The §2.2 checklist row that points at `seed.ts` for the demo kit is therefore aimed at the wrong
+  file.
+
+**What the e2e suite covers today, and what it does not**
+
+Covered (11 tests): the public form filled across both pages to a reference; language switch
+mid-flow keeping typed answers; required-field and malformed-email refusal; duplicate-address
+refusal; save-and-resume; the door admitting once and answering `already` on the retry; an
+unknown reference refused; a revoked registration refused; the attendance report counting
+arrivals and no-shows; an operator working the door but unable to revoke.
+
+Not covered: sign-in through a real magic link (the suite plants a refresh token); the builder;
+publishing; the admission PDF download and bulk generation; invoices and the public invoice page;
+the brand kit; paper import; sending-domain verification; the marketing site and its contact form;
+anything in `apps/mailer`. Later phases add coverage only where it proves a fix.
+
+**Design critique, re-run.** `/impeccable critique apps/forms/src/site/Site.tsx`, dual-agent
+(design review; detector + browser at 1280/375 × light/dark), snapshot
+`.impeccable/critique/2026-09-21T16-52-02Z__apps-forms-src-site-site-tsx.md`.
+
+**Trend for the site: 18 → 22 → 23 / 32.** Fixed since the last run: the hero loop is gated on
+both width and reduced motion (a phone gets the 17 KB poster), the skip link clears the 77px bar,
+`/login` now says "Open the demo" and "nothing here is real", and there is no unnamed `<video>`
+(it is a `<picture>`). Still present, now with measured numbers: related-feature links at
+**2.12:1** (the one P0), feature pages 83% in `#666` at a 704px measure with no call to action,
+three filled primaries and no `aria-current` on the section nav, chips at 1.79:1. Nothing was
+changed in response — the final design pass reads that snapshot, after L1–L7. The app shell was
+not re-scored in this run.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

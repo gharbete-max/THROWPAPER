@@ -2,8 +2,8 @@
 
 Everything that is temporary, unconfigured, unconfirmed or deliberately deferred, in one place.
 Maintained by hand; when an item is done, delete the row rather than ticking it, so the file only
-ever lists what is still open. Last reviewed **2026-09-15** at the end of the Loppa restyle
-(`phase-3-loppa`, PR #67).
+ever lists what is still open. Last reviewed **2026-09-21** in L0 of the local track
+(`claude/l0-baseline`); the measured baseline behind that review is `docs/PROGRESS.md` § L0.
 
 Three columns: **what**, **where it lives**, **who decides**. "You" is the product owner; "code"
 means an engineering task with no decision attached; "counsel" is a lawyer.
@@ -93,13 +93,13 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.2 Temporary and literal strings in the app
 
-| What                                                                                                                                                                                       | Where                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| `placeholder="AB12-CD34"` on the door's reference field — a literal, not a message key; also no `autoCapitalize="characters"` / `enterKeyHint="go"`                                        | `screens/CheckIn.tsx:226`                                             |
-| `placeholder="https://"` on URL fields in the builder                                                                                                                                      | `builder/FieldProperties.tsx:269`, `builder/FormSettingsPanel.tsx:82` |
-| `EventForm` shows the literal `load-failed` when the event list cannot be fetched, and labels translation fields with raw locale codes (`sv-SE`)                                           | `screens/EventForm.tsx:55`, `:105`                                    |
-| "Development mode: the link is printed in the api-forms console" — now gated on `import.meta.env.DEV`; confirm it never appears on the deployed sign-in                                    | `screens/Login.tsx`                                                   |
-| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's | `apps/api-forms/src/db/seed.ts`                                       |
+| What                                                                                                                                                                                                                                                                           | Where                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| `placeholder="AB12-CD34"` on the door's reference field — a literal, not a message key; also no `autoCapitalize="characters"` / `enterKeyHint="go"`                                                                                                                            | `screens/CheckIn.tsx:226`                                             |
+| `placeholder="https://"` on URL fields in the builder                                                                                                                                                                                                                          | `builder/FieldProperties.tsx:269`, `builder/FormSettingsPanel.tsx:82` |
+| `EventForm` shows the literal `load-failed` when the event list cannot be fetched, and labels translation fields with raw locale codes (`sv-SE`)                                                                                                                               | `screens/EventForm.tsx:55`, `:105`                                    |
+| "Development mode: the link is printed in the api-forms console" — now gated on `import.meta.env.DEV`; confirm it never appears on the deployed sign-in                                                                                                                        | `screens/Login.tsx`                                                   |
+| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one) | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts`                    |
 
 ### 2.3 Open findings from the second design critique (P2, not yet actioned)
 
