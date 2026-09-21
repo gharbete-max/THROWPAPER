@@ -1358,6 +1358,45 @@ ngrok `Host` until allowed, which is recorded here and not configured.
 **Ran:** `pnpm verify`, `pnpm contract:check`, `pnpm test:e2e` (local default) — green, see the PR.
 Checklist row 8 deleted; the §1.3 `TRUST_PROXY` row stays, reworded, because deployment is open.
 
+## L3 — Audit item 14: the tenant's key in the operator listing · done
+
+`GET /v1/invoices` handed every signed-in operator every invoice's `publicToken` — the permanent,
+random string that *is* the tenant's session at `/i/:token`. The audit rated it Low, and the
+question was whether the operator screen needed the token or only the two documents it used the
+token to reach.
+
+**Traced.** The token's only consumers were the two links on the Invoices screen: "Open"
+(`/i/<token>`, the tenant's page) and "PDF" (`/i/<token>/pdf`). Nothing else reads it off the
+wire; nothing in the product sends the `/i/` link to a tenant yet (there is no send path), and the
+request log already redacts it. `PublicInvoice` in `packages/shared` omitted it for the public
+shape, and no route used that shape either — the tenant page is HTML.
+
+**Changed.** The operator wire shape (`packages/shared/src/invoicing/api.ts`, `Invoice`) no
+longer carries `publicToken`; the record does, and the tenant's routes are untouched. Operators
+get the file from `GET /v1/invoices/:id/pdf` — bearer, `findInvoice(organisation, id)` → 404 for
+anyone else's, rendered by `invoiceDocument()`, which is the render half of the public route's
+loader extracted so the page, the tenant's file and the operator's file cannot disagree on
+organisation name, palette or language. The two links became two buttons on the `AttachmentLink`
+pattern: "Open" opens the PDF in a new tab (the tab is opened inside the click, before the fetch,
+so a pop-up blocker sees a gesture), "PDF" saves it as `<number>.pdf`. Same keys, same words.
+
+**What an operator loses.** The tenant's HTML page as a page. It cannot be opened in a new tab
+behind a bearer without putting a credential in the URL, which is the thing being removed, and a
+short-lived signed link would be one credential exposure replaced with another. The PDF is the
+same document from the same renderer.
+
+**Proven.** `routes/invoices.test.ts`, committed red first: the listing test failed with
+`expected { … } to not have property "publicToken"` on the old code and passes after; the file is
+served to an operator of the organisation with the tenant's headers (`1042.pdf`, `no-store,
+private`), refused with 404 for another organisation's id (and nothing rendered), 401 without a
+session; and `/i/<token>` and `/i/<token>/pdf` still answer 200 for the holder. In the demo: the
+Invoices screen renders three rows with Open/PDF buttons, `document.body.innerHTML` contains no
+`/i/<token>`, and both buttons produce `GET /api/v1/invoices/<id>/pdf → 200`.
+
+**Ran:** `pnpm verify` — 129 files, **1725 tests**; `pnpm contract:check` passed (the invoice
+schema is not part of the Forms ⇄ Mailer contract); `pnpm test:e2e` 11 passed. Row 14 deleted.
+`packages/shared` touched.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
