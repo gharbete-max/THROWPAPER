@@ -1597,6 +1597,30 @@ feedback contract (P1, needs copy — the owner's), the 2x loop is still 1 MB wh
 `aria-current`); the app-shell rows stay for a shell pass, which the later critiques did not
 re-score. `packages/` untouched.
 
+## Dependabot, 2026-09-22 — five open pull requests, judged one by one · done
+
+Each read for what it changes and what its CI run says, never merged on green alone.
+
+- **#83 routine group — merged.** `@aws-sdk/client-sesv2` and `@fastify/static` patches,
+  `fastify` 5.12.4 → 5.12.5, `react-router` 8.3.1 → 8.4.0, `prettier` 3.4.2 → 3.9.8. Merged onto
+  the current `main` locally first: `pnpm verify` (132 files, 1756 tests, `format:check` clean —
+  the Prettier minor reformats nothing here), `pnpm contract:check`, `pnpm test:e2e` 11 passed.
+- **#62 `@vitejs/plugin-react` 4 → 6 — closed.** Its build fails with
+  `ERR_PACKAGE_PATH_NOT_EXPORTED './internal'` from Vite 6.4.3: plugin-react 6 requires Vite 7,
+  and a Vite major is the actual decision.
+- **#84 `typescript` 5.9 → 6 — closed.** `packages/tokens/src/fonts.ts` loses `node:fs`,
+  `node:module` and `import.meta.url` under TS 6's changed default types and module resolution;
+  every tsconfig in the workspace needs the migration, taken deliberately.
+- **#85 `fastify-type-provider-zod` 4 → 7 — closed.** Requires Zod 4 (`zod/v4/core` `safeEncode`);
+  `packages/shared` is Zod 3 throughout. Coupled to a Zod 4 migration of every schema.
+- **#86 `eslint-plugin-react-hooks` 5 → 7 — closed.** Turns on the React Compiler rule set and
+  reports ten "setState synchronously within an effect" errors across screens. Ten effect
+  refactors, each wanting its own test, are a task — not a bump's side effect. Follow-up.
+
+`.github/dependabot.yml` now ignores the major line of those four, with the prerequisite named
+beside each, so the queue does not refill every Monday with decisions already made; remove an
+entry when its prerequisite has been taken.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

@@ -21,6 +21,22 @@ updates:
         update-types: [minor, patch]
     # Majors arrive on their own, because a major is a decision rather than an update.
     labels: [dependencies]
+    # Four majors were decided against on 2026-09-22 (docs/PROGRESS.md § Dependabot) and would
+    # otherwise reopen every Monday. Each names the prerequisite that has to be taken on purpose
+    # first; remove the entry when it has been.
+    ignore:
+      # 6.x requires Vite 7; the SSR site, the PWA plugin and the e2e preview are built on Vite 6.
+      - dependency-name: '@vitejs/plugin-react'
+        update-types: ['version-update:semver-major']
+      # 6.x changes default types/module resolution; every tsconfig in the workspace needs the migration.
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      # 7.x requires Zod 4; packages/shared is Zod 3 throughout.
+      - dependency-name: 'fastify-type-provider-zod'
+        update-types: ['version-update:semver-major']
+      # 7.x turns on the React Compiler rules: ten effect refactors, each needing its own test.
+      - dependency-name: 'eslint-plugin-react-hooks'
+        update-types: ['version-update:semver-major']
 
   # The Actions in .github/workflows pin to major tags; this keeps those current, including the
   # gitleaks action that the supply-chain job depends on.
