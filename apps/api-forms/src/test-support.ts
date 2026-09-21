@@ -14,6 +14,7 @@ import type { PdfRenderer } from './documents/render.js';
  * Postgres to hand. CI runs the Drizzle implementation against a real database as well.
  */
 export const TEST_JWT_SECRET = 'test-secret-at-least-thirty-two-characters-long';
+export const TEST_DOCUMENT_SECRET = 'test-document-secret-at-least-thirty-two-chars';
 
 export const testOrganisation: OrganisationRecord = {
   id: '11111111-1111-4111-8111-111111111111',
@@ -89,7 +90,7 @@ export async function createTestHarness(
     ...seed,
   });
   const mail = createMemoryMailProvider();
-  const store = createMemoryDocumentStore(TEST_JWT_SECRET);
+  const store = createMemoryDocumentStore(TEST_DOCUMENT_SECRET);
   const assets = createMemoryAssetStore();
   const uploadStore = createMemoryUploadStore();
   const renderer = options.renderer ?? createFakePdfRenderer();
@@ -102,6 +103,7 @@ export async function createTestHarness(
     uploadStore,
     renderer,
     jwtSecret: TEST_JWT_SECRET,
+    documentSigningSecret: TEST_DOCUMENT_SECRET,
     appUrl: 'http://localhost:5173',
     probeDatabase: false,
     // Tests drain the queue by hand, so a job runs exactly when the test says it does.

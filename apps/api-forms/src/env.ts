@@ -46,6 +46,14 @@ const Env = z.object({
    * main.ts refuses to start the server without it.
    */
   JWT_SECRET: z.string().min(32).optional(),
+  /**
+   * Signs download links. Its own secret, not `JWT_SECRET`: the one signs an administrator's
+   * session, the other a link to a ZIP of registrations, and a key that does both is a key whose
+   * leak does both. Same rule as `JWT_SECRET` — at least 32 characters, no default — and the
+   * server refuses the two being equal. Rotating it invalidates every outstanding link and
+   * nothing else. See `PRE-LAUNCH-AUDIT.md` item 16.
+   */
+  DOCUMENT_SIGNING_SECRET: z.string().min(32).optional(),
   /** Base URL of apps/forms, used to build magic links and to scope CORS. */
   APP_URL: z.string().url().default('http://localhost:5173'),
   /**

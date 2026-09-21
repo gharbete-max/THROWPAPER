@@ -33,6 +33,9 @@ const APP_URL = process.env['APP_URL'] ?? 'http://localhost:5173';
  * does not survive a restart either is not a regression. It is the data's own lifetime.
  */
 const JWT_SECRET = process.env['JWT_SECRET'] ?? randomBytes(32).toString('base64url');
+/** Same reasoning, same lifetime: a download link from a demo does not outlive the demo. */
+const DOCUMENT_SIGNING_SECRET =
+  process.env['DOCUMENT_SIGNING_SECRET'] ?? randomBytes(32).toString('base64url');
 
 /**
  * A demo binary that boots as production with no database and no real mail would be a quiet
@@ -57,12 +60,13 @@ const mail = createMemoryMailProvider();
 const app = await buildServer({
   repos,
   mail,
-  store: createMemoryDocumentStore(JWT_SECRET),
+  store: createMemoryDocumentStore(DOCUMENT_SIGNING_SECRET),
   // In memory too, so a demo cannot leave uploaded files behind on whatever it is running on.
   assets: createMemoryAssetStore(),
   // The real renderer: admission PDFs are half the point of a demo.
   renderer: createPdfRenderer(),
   jwtSecret: JWT_SECRET,
+  documentSigningSecret: DOCUMENT_SIGNING_SECRET,
   appUrl: APP_URL,
   probeDatabase: false,
   startWorker: true,
