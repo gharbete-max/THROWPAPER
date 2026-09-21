@@ -73,3 +73,39 @@ describe('the language switcher', () => {
     expect(barHidden).toBeGreaterThan(narrow);
   });
 });
+
+/**
+ * A brand colour never becomes text — `docs/adr/0001-theming-layers.md`, and `DESIGN.md`: "Don't
+ * use `accent` as text. Use `accent-ink`." The third critique measured the three places the site
+ * had let it through: the related-feature links (primary on the page, 2.12:1), the feature-card
+ * "Read more" (accent-ink at 12.8px on the card, 4.35:1) and the pending marker (warning on its
+ * own tint, 4.06:1) — and the chip glyph, primary on a primary tint at 1.79:1. Each of these
+ * rules now paints in the ink, and this holds them there.
+ */
+describe('text that is read is set in the ink', () => {
+  const rule = (selector: string) => {
+    const start = STYLES.indexOf(`${selector} {`);
+    expect(start, selector).toBeGreaterThan(-1);
+    return STYLES.slice(start, STYLES.indexOf('}', start));
+  };
+
+  it.each(['.site__more a', '.feature-card__more', '.pending', '.feature-card__mark'])(
+    '%s',
+    (selector) => {
+      const body = rule(selector);
+      expect(body).toMatch(/color: var\(--tp-colour-text\);/);
+      expect(body).not.toMatch(/color: var\(--tp-colour-(primary|accent|warning)\);/);
+    },
+  );
+
+  it('keeps the ink readable on every shipped palette, on the page and on a card', () => {
+    for (const [name, colour] of PALETTES) {
+      expect(contrastRatio(colour.text, colour.background) ?? 0, name).toBeGreaterThanOrEqual(
+        TEXT_CONTRAST,
+      );
+      expect(contrastRatio(colour.text, colour.surface) ?? 0, name).toBeGreaterThanOrEqual(
+        TEXT_CONTRAST,
+      );
+    }
+  });
+});
