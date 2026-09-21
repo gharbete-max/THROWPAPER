@@ -80,7 +80,6 @@ safe default; the server refuses or degrades loudly when they are missing.
 | #   | What                                                                                | Severity |
 | --- | ----------------------------------------------------------------------------------- | -------- |
 | 12  | Anonymous uploads have no sweeper and no quota (the index exists, the job does not) | Medium   |
-| 15  | `body.eventId` written to a form without checking the event belongs to the caller   | Low      |
 | 16  | `JWT_SECRET` doubles as the HMAC key for download URLs                              | Low      |
 | —   | Backups and a tested restore — impossible before a host exists                      | —        |
 | —   | MFA on admin accounts (a second factor on the magic link) — product decision        | —        |
