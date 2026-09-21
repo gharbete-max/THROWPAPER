@@ -10,6 +10,12 @@ const Env = z.object({
     .default('postgres://throwpaper:throwpaper@localhost:5432/throwpaper'),
   API_FORMS_PORT: z.coerce.number().int().default(4001),
   /**
+   * Which interface to listen on. Every interface by default, because the Docker image needs it;
+   * `127.0.0.1` on a laptop, so that trusting a loopback forwarder (`TRUST_PROXY=loopback`) does
+   * not sit beside a port the whole LAN can reach directly.
+   */
+  API_FORMS_HOST: z.string().default('0.0.0.0'),
+  /**
    * Connection pool and query limits. See `db/client.ts` for what each one prevents.
    *
    * Environment variables rather than constants because the right values depend on the hosting

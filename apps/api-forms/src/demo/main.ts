@@ -19,6 +19,7 @@ import { createPdfRenderer } from '../documents/render.js';
 import { buildDemoState, DEMO_FORM_SLUG, DEMO_USERS } from './dataset.js';
 
 const PORT = Number(process.env['API_FORMS_PORT'] ?? 4001);
+const HOST = process.env['API_FORMS_HOST'] ?? '0.0.0.0';
 const APP_URL = process.env['APP_URL'] ?? 'http://localhost:5173';
 /**
  * A fresh secret every boot, rather than one written down here.
@@ -80,7 +81,7 @@ const app = await buildServer({
   },
 });
 
-await app.listen({ port: PORT, host: '0.0.0.0' });
+await app.listen({ port: PORT, host: HOST });
 
 app.log.info(
   `\n  Demo mode — in memory, no database.\n` +

@@ -8,4 +8,4 @@ if (!env.JWT_SECRET) {
 }
 
 const app = await buildServer({ jwtSecret: env.JWT_SECRET, appUrl: env.APP_URL });
-await app.listen({ port: env.API_FORMS_PORT, host: '0.0.0.0' });
+await app.listen({ port: env.API_FORMS_PORT, host: env.API_FORMS_HOST });
