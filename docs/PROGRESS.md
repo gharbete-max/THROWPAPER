@@ -1232,8 +1232,18 @@ publishing; the admission PDF download and bulk generation; invoices and the pub
 the brand kit; paper import; sending-domain verification; the marketing site and its contact form;
 anything in `apps/mailer`. Later phases add coverage only where it proves a fix.
 
-**Design critique, re-run** — see `.impeccable/critique/` for the 2026-09-21 snapshot and the
-trend line recorded below.
+**Design critique, re-run.** `/impeccable critique apps/forms/src/site/Site.tsx`, dual-agent
+(design review; detector + browser at 1280/375 × light/dark), snapshot
+`.impeccable/critique/2026-09-21T16-52-02Z__apps-forms-src-site-site-tsx.md`.
+
+**Trend for the site: 18 → 22 → 23 / 32.** Fixed since the last run: the hero loop is gated on
+both width and reduced motion (a phone gets the 17 KB poster), the skip link clears the 77px bar,
+`/login` now says "Open the demo" and "nothing here is real", and there is no unnamed `<video>`
+(it is a `<picture>`). Still present, now with measured numbers: related-feature links at
+**2.12:1** (the one P0), feature pages 83% in `#666` at a 704px measure with no call to action,
+three filled primaries and no `aria-current` on the section nav, chips at 1.79:1. Nothing was
+changed in response — the final design pass reads that snapshot, after L1–L7. The app shell was
+not re-scored in this run.
 
 ## Next
 
