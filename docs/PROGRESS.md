@@ -1426,6 +1426,42 @@ event → 201, detaching → 200 `null`, reattaching → 200 — the legitimate 
 `pnpm test:e2e` 11 passed. Row 15 deleted. `packages/` untouched (the schema is shape; ownership
 is data).
 
+## L5 — Audit item 16: download links get their own secret · done
+
+The `DocumentStore` was built with `JWT_SECRET` verbatim as its HMAC key (`server.ts`), so the
+string that mints an administrator's session also signed every link to a ZIP of registrations,
+and rotating one silently rotated the other. The admission QR already derived its own key; the
+store did not.
+
+**Now.** `DOCUMENT_SIGNING_SECRET`: at least 32 characters (`env.ts`, same rule as `JWT_SECRET`),
+required — `main.ts` refuses to start without it, with the same sentence shape — and refused
+outright when it equals `JWT_SECRET`, because two keys was the point. `buildServer` takes it as
+`documentSigningSecret` and builds the store with it; `signedPath` (reached from the bulk
+admission job) signs with it and `verifySignedPath` (reached from `GET /v1/documents/download`)
+checks with it. Expiry semantics unchanged. Demo mode mints one per boot, as it does for the
+session secret: demo data does not outlive the process and neither should its links.
+
+**Rollout.** Every download link signed before this change answers 403 `link-expired` afterwards.
+Pre-launch, that is one re-run of a bulk export; recorded in `SECURITY.md`'s rotation runbook so
+the same consequence is written down for the day the secret is rotated on purpose.
+
+**Proven.** `documents/signing-secret.test.ts`, committed red, builds the server *without* a
+store so the wiring is what is tested: a link signed with `JWT_SECRET` → 403 (it was reaching the
+file lookup, `expected 404 to be 403`); a link signed with the document secret → 200; equal
+secrets → refused; absent → refused naming the variable; read from the environment when not
+passed. `env.test.ts` pins the 32-character floor. On the real entry point: without the
+variable, `DOCUMENT_SIGNING_SECRET must be set to at least 32 characters before the server can
+start`; with it equal to `JWT_SECRET`, `DOCUMENT_SIGNING_SECRET must differ from JWT_SECRET`;
+demo boots on a random one.
+
+**Set everywhere `JWT_SECRET` is set:** `.env.example`, the local `.env`, the e2e server in
+`playwright.config.ts`, CI, the Dockerfile run line, `docs/DEPLOY.md`, `SECURITY.md`. A
+checkout whose `.env` predates this change needs the line added before `pnpm dev:forms` starts.
+
+**Ran:** `pnpm verify` — 130 files, **1734 tests**; `pnpm contract:check` passed; `pnpm test:e2e`
+11 passed (Playwright starts the API with the new variable, so the startup guard is exercised).
+Row 16 deleted; §1.3 gains the secret beside `JWT_SECRET`.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
