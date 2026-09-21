@@ -17,7 +17,7 @@
   "dependencies": {
     "@tp/shared": "workspace:*",
     "dotenv": "^16.4.7",
-    "fastify": "^5.12.4",
+    "fastify": "^5.12.5",
     "zod": "^3.24.1"
   },
   "devDependencies": {
