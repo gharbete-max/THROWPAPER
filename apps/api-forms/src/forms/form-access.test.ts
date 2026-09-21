@@ -145,8 +145,12 @@ afterEach(async () => {
   await harness.close();
 });
 
-const as = (token: string, method: 'GET' | 'POST' | 'PATCH', url: string, payload?: unknown) =>
-  harness.app.inject({ method, url, headers: bearer(token), ...(payload && { payload }) });
+const as = (
+  token: string,
+  method: 'GET' | 'POST' | 'PATCH',
+  url: string,
+  payload?: Record<string, unknown>,
+) => harness.app.inject({ method, url, headers: bearer(token), ...(payload ? { payload } : {}) });
 
 describe("a colleague's form", () => {
   /**
