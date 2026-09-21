@@ -131,14 +131,16 @@ export const Invoice = z.object({
   total: MinorAmount,
   vatTotal: MinorAmount,
   payment: PaymentDetails,
-  /**
-   * The token in the public link, which is not the OCR.
+  /*
+   * No `publicToken` here, on purpose.
    *
-   * The OCR is printed on the invoice, quoted in bank statements and readable by anyone handling
-   * the payment. Using it to authorise a web page would mean anybody who has seen a payment line
-   * can open the invoice behind it. This is separate, random, and long.
+   * The token in the tenant's link is their whole session — random, long, and permanent — and
+   * it is deliberately not the OCR, which is printed on the invoice and quoted on every bank
+   * statement. It is also not the operator's: the listing once carried it so the Invoices screen
+   * could link to the tenant's page, and that put a credential that never expires into every
+   * staff browser. Operators reach the file through `GET /v1/invoices/:id/pdf` with their
+   * session instead. The record keeps the token; the wire does not.
    */
-  publicToken: z.string().min(24).max(64),
   createdAt: z.string().datetime(),
   sentAt: z.string().datetime().optional(),
   paidAt: z.string().datetime().optional(),
@@ -148,7 +150,6 @@ export type Invoice = z.infer<typeof Invoice>;
 /** What a public visitor is allowed to see: the invoice, without the internal identifiers. */
 export const PublicInvoice = Invoice.omit({
   id: true,
-  publicToken: true,
   status: true,
 }).extend({
   /** Only whether it is settled, not the internal state machine. */

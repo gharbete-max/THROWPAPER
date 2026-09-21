@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { FastifyInstance } from 'fastify';
 import { resolveTokens } from './brand-kit.js';
-import type { Repositories } from '../db/repositories/index.js';
+import type { InvoiceRecord, Repositories } from '../db/repositories/index.js';
 import type { PdfRenderer } from '../documents/render.js';
 import { renderInvoiceDocument, type InvoiceMedia } from '../documents/invoice.js';
 import { invoiceCopy } from '../documents/invoice-copy.js';
@@ -44,33 +44,7 @@ export function registerPublicInvoiceRoutes(
   async function load(token: string, lang: string | undefined) {
     const invoice = await deps.repos.invoices.findByPublicToken(token);
     if (!invoice) return null;
-
-    const organisation = await deps.repos.organisations.findById(invoice.organisationId);
-    if (!organisation) return null;
-
-    const locale =
-      lang && organisation.supportedLocales.includes(lang) ? lang : organisation.defaultLocale;
-
-    /* The organisation's own palette, so their tenant sees their brand and not ours. */
-    const { tokens } = await resolveTokens(deps.repos, invoice.organisationId);
-
-    return {
-      invoice,
-      html: (media: InvoiceMedia, pdfUrl?: string) =>
-        renderInvoiceDocument({
-          invoice,
-          organisationName: organisation.name,
-          locale,
-          locales: {
-            supported: organisation.supportedLocales,
-            default: organisation.defaultLocale,
-          },
-          strings: invoiceCopy(locale, organisation.defaultLocale),
-          tokens,
-          media,
-          pdfUrl,
-        }),
-    };
+    return invoiceDocument(deps.repos, invoice, lang);
   }
 
   app.get(
@@ -198,3 +172,44 @@ const NOT_FOUND = `<!doctype html>
      Whoever sent it can send it again.</p>
 </main></body>
 </html>`;
+
+/**
+ * One invoice, ready to render — for whoever is entitled to it.
+ *
+ * The tenant reaches it by token above; the operator reaches it by id and session in
+ * `routes/invoices.ts`. Both come through here so the two cannot drift on organisation name,
+ * palette or the language rule, which is the difference nobody would notice until a PDF arrived
+ * in the wrong one.
+ */
+export async function invoiceDocument(
+  repos: Repositories,
+  invoice: InvoiceRecord,
+  lang: string | undefined,
+) {
+  const organisation = await repos.organisations.findById(invoice.organisationId);
+  if (!organisation) return null;
+
+  const locale =
+    lang && organisation.supportedLocales.includes(lang) ? lang : organisation.defaultLocale;
+
+  /* The organisation's own palette, so their tenant sees their brand and not ours. */
+  const { tokens } = await resolveTokens(repos, invoice.organisationId);
+
+  return {
+    invoice,
+    html: (media: InvoiceMedia, pdfUrl?: string) =>
+      renderInvoiceDocument({
+        invoice,
+        organisationName: organisation.name,
+        locale,
+        locales: {
+          supported: organisation.supportedLocales,
+          default: organisation.defaultLocale,
+        },
+        strings: invoiceCopy(locale, organisation.defaultLocale),
+        tokens,
+        media,
+        pdfUrl,
+      }),
+  };
+}

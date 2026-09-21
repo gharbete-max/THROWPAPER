@@ -452,7 +452,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerFormRoutes(app, { repos, guard });
   registerAdminRoutes(app, { repos, guard });
   registerLedgerRoutes(app, { repos, guard });
-  registerInvoiceRoutes(app, { repos, guard });
+  registerInvoiceRoutes(app, { repos, guard, renderer });
   registerPublicInvoiceRoutes(app, { repos, renderer });
   registerPublicContactRoutes(app, {
     mail,
