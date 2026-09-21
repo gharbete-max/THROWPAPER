@@ -111,26 +111,14 @@ export function Invoices() {
                           {t(`invoiceStatus.${invoice.status}`)}
                         </span>
                         {/*
-                          The tenant's own page and the file, reached the way the tenant reaches
-                          them. An operator ringing somebody back needs to see exactly what was
-                          sent, and these are those two documents rather than a rendering of them.
+                          The file the tenant receives, fetched with the operator's session. An
+                          operator ringing somebody back needs to see exactly what was sent —
+                          and that used to be a link to the tenant's own `/i/:token` page, which
+                          put the tenant's permanent key into every staff browser. Same document,
+                          reached the operator's way.
                         */}
-                        <a
-                          className="button button--quiet small"
-                          href={`/i/${invoice.publicToken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Icon name="external" />
-                          {t('invoices.open')}
-                        </a>
-                        <a
-                          className="button button--quiet small"
-                          href={`/i/${invoice.publicToken}/pdf`}
-                        >
-                          <Icon name="file" />
-                          {t('invoices.pdf')}
-                        </a>
+                        <InvoiceFile invoice={invoice} mode="open" />
+                        <InvoiceFile invoice={invoice} mode="download" />
                       </span>
                     </td>
                   </tr>
@@ -141,5 +129,60 @@ export function Invoices() {
         </div>
       )}
     </section>
+  );
+}
+
+/**
+ * One button per way of looking at the file: in a new tab, or saved as `<number>.pdf`.
+ *
+ * A button rather than an `<a href>`, for the reason `AttachmentLink` gives: the file is behind
+ * the session and a browser will not attach a bearer to a link. The tab is opened *before* the
+ * fetch, inside the click, because a window opened after an `await` is a pop-up to the browser
+ * and gets blocked.
+ */
+function InvoiceFile({
+  invoice,
+  mode,
+}: {
+  invoice: invoicingSchemas.Invoice;
+  mode: 'open' | 'download';
+}) {
+  const t = useT();
+  const [state, setState] = useState<'idle' | 'fetching' | 'failed'>('idle');
+
+  async function fetchFile() {
+    const tab = mode === 'open' ? window.open('', '_blank', 'noopener') : null;
+    setState('fetching');
+    try {
+      const blob = await client.invoicePdf(invoice.id);
+      const url = URL.createObjectURL(blob);
+      if (tab) {
+        tab.location.href = url;
+      } else {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${invoice.number}.pdf`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+      setState('idle');
+    } catch {
+      tab?.close();
+      setState('failed');
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className="button button--quiet small"
+      onClick={fetchFile}
+      disabled={state === 'fetching'}
+    >
+      <Icon name={mode === 'open' ? 'external' : 'file'} />
+      {state === 'failed'
+        ? t('users.errorFailed')
+        : t(mode === 'open' ? 'invoices.open' : 'invoices.pdf')}
+    </button>
   );
 }

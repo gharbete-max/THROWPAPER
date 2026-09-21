@@ -1,9 +1,15 @@
+import { z } from 'zod';
 import type { FastifyInstance } from 'fastify';
 import { api, invoicing as invoicingSchemas } from '@tp/shared';
 import { isValidOcr } from '@tp/shared/invoicing';
 import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
 import type { InvoiceRecord, Repositories } from '../db/repositories/index.js';
+import type { PdfRenderer } from '../documents/render.js';
+import { invoiceDocument } from './public-invoices.js';
+
+const IdParam = z.object({ id: z.string().uuid() });
+const LangQuery = z.object({ lang: z.string().max(16).optional() });
 
 /**
  * The invoices an organisation has raised, for the people who raised them.
@@ -25,9 +31,52 @@ import type { InvoiceRecord, Repositories } from '../db/repositories/index.js';
  */
 export function registerInvoiceRoutes(
   app: FastifyInstance,
-  deps: { repos: Repositories; guard: AuthGuardDeps },
+  deps: { repos: Repositories; guard: AuthGuardDeps; renderer: PdfRenderer },
 ): void {
   const authenticated = requireAuth(deps.guard);
+
+  /**
+   * The file, for the people who raised it.
+   *
+   * Reached with a session and the invoice's id, scoped to the organisation like every other
+   * operator route — not through the tenant's `/i/:token`, whose token is the tenant's permanent
+   * key and used to be handed to every operator by the listing for exactly this link. Same
+   * document, same renderer, same headers as the tenant's copy (audit item 14).
+   */
+  app.get('/v1/invoices/:id/pdf', {
+    preHandler: authenticated,
+    config: { rateLimit: { max: 12, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['invoicing'],
+      params: IdParam,
+      querystring: LangQuery,
+      response: { 401: api.ErrorResponse, 403: api.ErrorResponse, 404: api.ErrorResponse },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) {
+        return reply
+          .code(401)
+          .send({ error: { code: 'unauthenticated', message: 'Sign in first' } });
+      }
+      const { id } = IdParam.parse(request.params);
+      const { lang } = LangQuery.parse(request.query);
+
+      const invoice = await deps.repos.invoices.findInvoice(auth.organisation.id, id);
+      const loaded = invoice && (await invoiceDocument(deps.repos, invoice, lang));
+      if (!loaded) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'No such invoice' } });
+      }
+
+      const pdf = await deps.renderer.render(loaded.html('print'));
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', `attachment; filename="${loaded.invoice.number}.pdf"`)
+        .header('cache-control', 'no-store, private')
+        .header('x-robots-tag', 'noindex, nofollow')
+        .send(pdf);
+    },
+  });
 
   app.get('/v1/invoices', {
     preHandler: authenticated,
@@ -124,7 +173,6 @@ function toInvoiceResponse(invoice: InvoiceRecord): invoicingSchemas.Invoice {
        */
       ocrLengthControl: isValidOcr(invoice.ocr, { lengthControl: true }),
     },
-    publicToken: invoice.publicToken,
     createdAt: invoice.createdAt.toISOString(),
     ...(invoice.sentAt ? { sentAt: invoice.sentAt.toISOString() } : {}),
     ...(invoice.paidAt ? { paidAt: invoice.paidAt.toISOString() } : {}),

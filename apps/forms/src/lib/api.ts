@@ -237,6 +237,8 @@ export const client = {
 
   /** The invoices this organisation has raised, newest first, with what is still owed. */
   listInvoices: () => request<invoicingSchemas.InvoiceListResponse>('/v1/invoices'),
+  /** The invoice as the tenant receives it, fetched with the session rather than their link. */
+  invoicePdf: (id: string) => requestBlob(`/v1/invoices/${id}/pdf`),
 
   trashForm: (id: string) =>
     request<formSchemas.FormResponse>(`/v1/forms/${id}/trash`, { method: 'POST' }),
