@@ -148,3 +148,32 @@ test('a wrong event id is not a door', async ({ page }) => {
   await expect(page.getByLabel(/Referens/)).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Evenemang' })).toBeVisible();
 });
+
+test('the verdict panel keeps its height at phone width', async ({ page, request }) => {
+  const reference = await register(request);
+  await signInAs(page, sql, 'operator@example.com');
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto(`/events/${eventId}/check-in`);
+
+  // The fixed height exists so the layout does not move at the moment of judgement. The idle
+  // prompt is the one text long enough to wrap, and at 375 it once pushed the panel taller than
+  // the verdict that replaced it — the exact jump the fixed height was meant to remove.
+  const verdict = page.locator('.verdict');
+  await expect(verdict).toContainText('Skanna ett kort');
+  const idle = (await verdict.boundingBox())?.height;
+
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(verdict).toContainText('Välkommen');
+  const admitted = (await verdict.boundingBox())?.height;
+
+  // "Already checked in" carries one line more (when they arrived) and must fit the same panel.
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(verdict).toContainText('Redan incheckad');
+  const already = (await verdict.boundingBox())?.height;
+
+  expect(idle).toBeGreaterThan(0);
+  expect(admitted).toBe(idle);
+  expect(already).toBe(idle);
+});
