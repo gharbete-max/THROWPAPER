@@ -78,11 +78,10 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.1 Security and data (from `PRE-LAUNCH-AUDIT.md`, items 8–17 — each needs your approval before the diff is written)
 
-| #   | What                                                                                | Severity |
-| --- | ----------------------------------------------------------------------------------- | -------- |
-| 12  | Anonymous uploads have no sweeper and no quota (the index exists, the job does not) | Medium   |
-| —   | Backups and a tested restore — impossible before a host exists                      | —        |
-| —   | MFA on admin accounts (a second factor on the magic link) — product decision        | —        |
+| #   | What                                                                         | Severity |
+| --- | ---------------------------------------------------------------------------- | -------- |
+| —   | Backups and a tested restore — impossible before a host exists               | —        |
+| —   | MFA on admin accounts (a second factor on the magic link) — product decision | —        |
 
 ### 2.2 Temporary and literal strings in the app
 

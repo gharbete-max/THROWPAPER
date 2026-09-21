@@ -14,10 +14,12 @@ import {
   formAvailability,
   generateReference,
 } from '../forms/public-service.js';
+import { UPLOAD_CLAIM_WINDOW_SECONDS } from '../uploads/lifecycle.js';
 
 const SlugParam = z.object({ slug: z.string().min(1).max(64) });
 
-const RESUME_TTL_SECONDS = 30 * 24 * 60 * 60;
+/** One window for drafts and for unclaimed uploads — see `uploads/lifecycle.ts` for why. */
+const RESUME_TTL_SECONDS = UPLOAD_CLAIM_WINDOW_SECONDS;
 
 /** A signature this app drew is small. Anything larger is not a signature. */
 const SIGNATURE_MAX_BYTES = 512 * 1024;
@@ -411,7 +413,11 @@ export function registerPublicFormRoutes(
        */
       const attachedKeys = attachedUploadKeys(loaded.definition, validated.values);
       const claimable = attachedKeys.length
-        ? await deps.repos.uploads.findUnclaimed(loaded.form.id, attachedKeys)
+        ? await deps.repos.uploads.findUnclaimed(
+            loaded.form.id,
+            attachedKeys,
+            new Date(Date.now() - UPLOAD_CLAIM_WINDOW_SECONDS * 1000),
+          )
         : [];
 
       if (claimable.length !== attachedKeys.length) {

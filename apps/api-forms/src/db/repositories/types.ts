@@ -285,6 +285,12 @@ export interface FormRepository {
   shareCounts(organisationId: string, formIds: readonly string[]): Promise<Record<string, number>>;
 
   listVersions(formId: string): Promise<FormVersionRecord[]>;
+  /**
+   * Whether any form still names this upload key as one of its paper sources — in the draft or
+   * in any published version. Paper pages live in the private upload store with no
+   * `form_uploads` row, so this is the only record that the bytes are wanted.
+   */
+  referencesUpload(storageKey: string): Promise<boolean>;
   findVersion(formId: string, version: number): Promise<FormVersionRecord | null>;
   /** Next version number is derived, not supplied, so two publishes cannot collide on one number. */
   createVersion(input: {
@@ -710,7 +716,19 @@ export interface UploadRepository {
    * guessable by anybody who has the same file, so "the answer names a real upload" is not enough
    * on its own — it has to be an upload *this form* received and no submission has taken.
    */
-  findUnclaimed(formId: string, storageKeys: readonly string[]): Promise<UploadRecord[]>;
+  findUnclaimed(
+    formId: string,
+    storageKeys: readonly string[],
+    /** Nothing older is claimable: the sweep may take it. See `uploads/lifecycle.ts`. */
+    notBefore: Date,
+  ): Promise<UploadRecord[]>;
+  /**
+   * Deletes up to `limit` unclaimed rows that arrived before `before`, oldest first, and returns
+   * their storage keys so the caller can decide about the bytes. Idempotent by construction.
+   */
+  sweepExpired(before: Date, limit: number): Promise<string[]>;
+  /** Whether any row, claimed or not, still holds this key. */
+  isReferenced(storageKey: string): Promise<boolean>;
   /** Attaches uploads to the submission that finally arrived, so they stop looking abandoned. */
   claim(ids: readonly string[], submissionId: string): Promise<void>;
   /** Filenames for a page of submissions, so a grid can show names rather than hashes. */

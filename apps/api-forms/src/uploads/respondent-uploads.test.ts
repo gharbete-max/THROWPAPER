@@ -149,6 +149,24 @@ describe('submitting with an attachment', () => {
   });
 
   /**
+   * The other half of the sweeper. It removes anonymous uploads older than the resume window; the
+   * submit path refuses to claim one that old, so the two never want the same row and the race
+   * between them cannot happen. The respondent sees the ordinary "attach it again".
+   */
+  it('refuses a key that arrived longer ago than the resume window', async () => {
+    const { key } = (await upload(pdf)).json() as { key: string };
+    const stored = harness.state.uploads.find((entry) => entry.storageKey === key)!;
+    stored.createdAt = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000);
+
+    const response = await submit({ attachment: key });
+    expect(response.statusCode).toBe(422);
+    expect((response.json() as { issues: Array<{ code: string }> }).issues).toEqual([
+      { key: 'attachment', code: 'validation.file' },
+    ]);
+    expect(stored.submissionId).toBeNull();
+  });
+
+  /**
    * A storage key is the SHA-256 of the content, so anybody holding the same file can work one
    * out. "The answer names a real upload" is therefore not a check at all — being an upload *this
    * form* received, that nothing has claimed, is.

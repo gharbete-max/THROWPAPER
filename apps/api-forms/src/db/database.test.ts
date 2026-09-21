@@ -271,6 +271,59 @@ describe.skipIf(!migrated)('drizzle repositories against a real database', () =>
     const entries = await repos.audit.list(organisationId);
     expect(entries.some((entry) => entry.action === 'test.smoke')).toBe(true);
   });
+
+  /**
+   * The sweep's SQL, for real: the bounded subselect over the partial index, the `returning`,
+   * the `like` over JSONB cast to text. The fake proves the rules; this proves Postgres agrees.
+   */
+  it('sweeps expired anonymous uploads, oldest first, within the limit', async () => {
+    const organisationId = await organisation();
+    const form = await repos.forms.create({
+      organisationId,
+      eventId: null,
+      slug: 'smoke-sweep',
+      title: { 'sv-SE': 'Sopning' },
+      draftDefinition: { schemaVersion: 1, fields: [], settings: {} },
+      opensAt: null,
+      closesAt: null,
+      ownerUserId: null,
+    });
+    const key = (letter: string) => `${letter.repeat(64)}.pdf`;
+    const row = async (letter: string, daysAgo: number) => {
+      const created = await repos.uploads.create({
+        organisationId,
+        formId: form.id,
+        storageKey: key(letter),
+        filename: 'cv.pdf',
+        contentType: 'application/pdf',
+        bytes: 3,
+      });
+      await sql`update form_uploads set created_at = now() - make_interval(days => ${daysAgo}) where id = ${created.id}`;
+      return created;
+    };
+    await row('a', 45);
+    await row('b', 40);
+    await row('c', 1);
+
+    const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    expect(await repos.uploads.sweepExpired(cutoff, 1)).toEqual([key('a')]);
+    expect(await repos.uploads.sweepExpired(cutoff, 10)).toEqual([key('b')]);
+    expect(await repos.uploads.sweepExpired(cutoff, 10)).toEqual([]);
+    expect(await repos.uploads.isReferenced(key('c'))).toBe(true);
+    expect(await repos.uploads.isReferenced(key('a'))).toBe(false);
+
+    // A key a form lists as its paper is referenced even with no upload row at all.
+    expect(await repos.forms.referencesUpload(key('z'))).toBe(false);
+    await repos.forms.update(organisationId, form.id, {
+      draftDefinition: {
+        schemaVersion: 1,
+        fields: [],
+        settings: {},
+        paper: { sources: [{ key: key('z'), pages: 1 }] },
+      },
+    });
+    expect(await repos.forms.referencesUpload(key('z'))).toBe(true);
+  });
 });
 
 if (!migrated) {
