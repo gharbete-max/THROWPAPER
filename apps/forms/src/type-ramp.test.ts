@@ -15,8 +15,12 @@ import { describe, expect, it } from 'vitest';
  */
 const CSS = readFileSync(new URL('./styles.css', import.meta.url), 'utf8');
 
-/** Anything that is not a token, a `clamp()` or the iOS `max()` guard. */
-const HAND_WRITTEN = /font-size: (?!var|max|clamp)([^;]+);/g;
+/**
+ * Anything that is not a token, a `clamp()`, the iOS `max()` guard, or `inherit` — which is not
+ * a size at all but a refusal to have one (the pending marker takes the size of the prose it
+ * sits in).
+ */
+const HAND_WRITTEN = /font-size: (?!var|max|clamp|inherit)([^;]+);/g;
 
 describe('font sizes', () => {
   it('come from the ramp', () => {
