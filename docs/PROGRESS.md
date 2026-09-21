@@ -1397,6 +1397,35 @@ Invoices screen renders three rows with Open/PDF buttons, `document.body.innerHT
 schema is not part of the Forms ⇄ Mailer contract); `pnpm test:e2e` 11 passed. Row 14 deleted.
 `packages/shared` touched.
 
+## L4 — Audit item 15: a form pointed at somebody else's event · done
+
+`POST /v1/forms` and `PATCH /v1/forms/:id` wrote `body.eventId` after a UUID-shape check and
+nothing else. Traced to the repository: the insert and the update take the id as given, and the
+foreign key is `events(id)` alone — no organisation in it.
+
+**What it would have done.** Not a name leak: `submissions.listForEvent` and
+`checkIns.listForEvent` are organisation-scoped, so another organisation's registrants never
+appear on the attendee list. But `events.countRegistrations(eventId)` counts submissions by event
+id with no organisation predicate, so a form in organisation B aimed at A's event would have
+counted B's registrants against A's capacity and closed A's registration as "full". The public
+form's own event lookup is scoped, so B's form would have rendered as if it had no event.
+
+**Fixed at the boundary.** Both handlers now ask `events.findById(auth.organisation.id, eventId)`
+before writing and answer **422 `unknown-event`** otherwise — the same shape as
+`unknown-template` in the same handler, and before anything is written. `eventId: null` (detach)
+is unchanged. `countRegistrations` is left as it is: once no form can point across the boundary,
+nothing counts across it, and there is no pre-existing row to worry about before launch.
+
+**Proven.** Three tests in `form-access.test.ts` under "another organisation", the first two
+committed red (`expected 201 to be 422`, `expected 200 to be 422`) and green after the guard:
+Greta (organisation B) creating a form with Alva's event id → 422 and no form written; Greta
+patching her own form to Alva's event → 422 and `eventId` still `null`; Alva creating with her
+event → 201, detaching → 200 `null`, reattaching → 200 — the legitimate case works.
+
+**Ran:** `pnpm verify` — 129 files, **1728 tests**; `pnpm contract:check` passed;
+`pnpm test:e2e` 11 passed. Row 15 deleted. `packages/` untouched (the schema is shape; ownership
+is data).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

@@ -107,6 +107,22 @@ export function registerFormRoutes(
   const authenticated = requireAuth(deps.guard);
 
   /**
+   * The event a form is pointed at has to be the caller's own.
+   *
+   * `eventId` used to be written as given after a UUID-shape check. Names never crossed over —
+   * the attendee and check-in queries are organisation-scoped — but the registration count is
+   * not, so a form in one organisation aimed at another's event would have counted its
+   * registrants against that event's capacity. Audit item 15. Refused like an unknown template:
+   * a 422 the caller can read, before anything is written.
+   */
+  const ownsEvent = async (auth: Auth, eventId: string) =>
+    (await deps.repos.events.findById(auth.organisation.id, eventId)) !== null;
+  const unknownEvent = (reply: FastifyReply) =>
+    reply.code(422).send({
+      error: { code: 'unknown-event', message: 'That event does not exist' },
+    });
+
+  /**
    * The forms you can see, in whichever pile you asked for.
    *
    * `scope=all` is refused to anybody but an administrator. Without that check the scope parameter
@@ -233,6 +249,8 @@ export function registerFormRoutes(
         draftDefinition = structuredClone(template.definition);
       }
 
+      if (body.eventId && !(await ownsEvent(auth, body.eventId))) return unknownEvent(reply);
+
       const record = await deps.repos.forms.create({
         organisationId: auth.organisation.id,
         eventId: body.eventId ?? null,
@@ -282,6 +300,8 @@ export function registerFormRoutes(
       if (!found) return notFound(reply);
       if (!formSchemas.canEdit(found.access)) return forbidden(reply);
       const before = found.form;
+
+      if (body.eventId && !(await ownsEvent(auth, body.eventId))) return unknownEvent(reply);
 
       const updated = await deps.repos.forms.update(auth.organisation.id, id, {
         ...(body.title !== undefined && { title: body.title }),

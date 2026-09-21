@@ -145,8 +145,12 @@ afterEach(async () => {
   await harness.close();
 });
 
-const as = (token: string, method: 'GET' | 'POST', url: string) =>
-  harness.app.inject({ method, url, headers: bearer(token) });
+const as = (
+  token: string,
+  method: 'GET' | 'POST' | 'PATCH',
+  url: string,
+  payload?: Record<string, unknown>,
+) => harness.app.inject({ method, url, headers: bearer(token), ...(payload ? { payload } : {}) });
 
 describe("a colleague's form", () => {
   /**
@@ -304,6 +308,96 @@ describe('another organisation', () => {
     } finally {
       await both.close();
     }
+  });
+
+  /**
+   * Audit item 15: a form must not be pointed at an event across the boundary.
+   *
+   * `eventId` was written as given after a UUID-shape check. The names never leaked — the attendee
+   * and check-in queries are organisation-scoped — but `events.countRegistrations` is not, so a
+   * form in Greta's organisation pointing at Alva's event would have counted Greta's registrants
+   * against Alva's capacity. The event has to be the caller's, on create and on update alike.
+   */
+  describe("pointing a form at somebody else's event", () => {
+    const GRETAS_FORM: FormRecord = {
+      ...ALVAS_FORM,
+      id: 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+      organisationId: OTHER.id,
+      eventId: null,
+      slug: 'gretas-form',
+      ownerUserId: OTHER_ADMIN.id,
+    };
+
+    async function bothOrganisations() {
+      return createTestHarness({
+        organisations: [testOrganisation, OTHER],
+        users: [adminUser, operatorUser, OTHER_ADMIN],
+        events: [EVENT],
+        forms: [ALVAS_FORM, GRETAS_FORM],
+        submissions: [REGISTRANT],
+      });
+    }
+
+    it('is refused on create, and nothing is written', async () => {
+      const both = await bothOrganisations();
+      try {
+        const token = await signInElsewhere(both);
+        const response = await both.app.inject({
+          method: 'POST',
+          url: '/v1/forms',
+          headers: bearer(token),
+          payload: { slug: 'smuggled', title: { 'sv-SE': 'Anmälan' }, eventId: EVENT.id },
+        });
+
+        expect(response.statusCode).toBe(422);
+        expect(response.json().error.code).toBe('unknown-event');
+        expect(both.state.forms.filter((form) => form.slug === 'smuggled')).toEqual([]);
+      } finally {
+        await both.close();
+      }
+    });
+
+    it('is refused on update, and the form is unchanged', async () => {
+      const both = await bothOrganisations();
+      try {
+        const token = await signInElsewhere(both);
+        const response = await both.app.inject({
+          method: 'PATCH',
+          url: `/v1/forms/${GRETAS_FORM.id}`,
+          headers: bearer(token),
+          payload: { eventId: EVENT.id },
+        });
+
+        expect(response.statusCode).toBe(422);
+        expect(response.json().error.code).toBe('unknown-event');
+        expect(both.state.forms.find((form) => form.id === GRETAS_FORM.id)?.eventId).toBeNull();
+      } finally {
+        await both.close();
+      }
+    });
+
+    /** The same requests, by the event's own organisation, still work. */
+    it('is allowed for the organisation that owns the event', async () => {
+      const created = await as(adminToken, 'POST', '/v1/forms', {
+        slug: 'own-event',
+        title: { 'sv-SE': 'Anmälan' },
+        eventId: EVENT.id,
+      });
+      expect(created.statusCode).toBe(201);
+      expect(created.json().eventId).toBe(EVENT.id);
+
+      const detached = await as(adminToken, 'PATCH', `/v1/forms/${ALVAS_FORM.id}`, {
+        eventId: null,
+      });
+      expect(detached.statusCode).toBe(200);
+      expect(detached.json().eventId).toBeNull();
+
+      const reattached = await as(adminToken, 'PATCH', `/v1/forms/${ALVAS_FORM.id}`, {
+        eventId: EVENT.id,
+      });
+      expect(reattached.statusCode).toBe(200);
+      expect(reattached.json().eventId).toBe(EVENT.id);
+    });
   });
 });
 
