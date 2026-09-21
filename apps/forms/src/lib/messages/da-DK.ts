@@ -249,6 +249,7 @@ export const daDK: Record<MessageKey, string> = {
 
   'field.href': 'Linkadresse',
   'field.hrefHint': 'Åbner i en ny fane, så allerede udfyldte svar ikke går tabt.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Vises som',
   'field.linkAppearance.button': 'Knap',
   'field.linkAppearance.link': 'Tekstlink',
@@ -588,6 +589,7 @@ export const daDK: Record<MessageKey, string> = {
   'checkin.title': 'Check-in',
   'checkin.counts': '{checkedIn} af {registered} checket ind',
   'checkin.reference': 'Reference',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Check ind',
   'checkin.checking': 'Kontrollerer…',
   'checkin.startCamera': 'Start kamera',

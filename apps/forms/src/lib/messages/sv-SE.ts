@@ -250,6 +250,7 @@ export const svSE: Record<MessageKey, string> = {
 
   'field.href': 'Länkadress',
   'field.hrefHint': 'Öppnas i en ny flik så att ifyllda svar inte går förlorade.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Visas som',
   'field.linkAppearance.button': 'Knapp',
   'field.linkAppearance.link': 'Textlänk',
@@ -590,6 +591,7 @@ export const svSE: Record<MessageKey, string> = {
   'checkin.title': 'Incheckning',
   'checkin.counts': '{checkedIn} av {registered} incheckade',
   'checkin.reference': 'Referens',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Checka in',
   'checkin.checking': 'Kontrollerar…',
   'checkin.startCamera': 'Starta kameran',

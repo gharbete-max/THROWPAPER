@@ -240,7 +240,11 @@ export default function CheckIn() {
             className="checkin__input"
             value={code}
             onChange={(event) => setCode(event.target.value)}
-            placeholder="AB12-CD34"
+            placeholder={t('checkin.referencePlaceholder')}
+            // A reference is upper-case letters and digits; the phone's keyboard should start there,
+            // and its action key should say "go" because pressing it checks the person in.
+            autoCapitalize="characters"
+            enterKeyHint="go"
           />
         </label>
         <div className="door__actions">

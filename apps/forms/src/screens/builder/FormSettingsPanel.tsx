@@ -79,7 +79,7 @@ export function FormSettingsPanel({
         <input
           type="url"
           inputMode="url"
-          placeholder="https://"
+          placeholder={t('url.placeholder')}
           value={settings.redirectUrl ?? ''}
           onChange={(event) => patch({ redirectUrl: event.target.value || undefined })}
         />

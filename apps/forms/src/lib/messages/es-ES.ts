@@ -254,6 +254,7 @@ export const esES: Record<MessageKey, string> = {
   'field.href': 'Dirección del enlace',
   'field.hrefHint':
     'Se abre en una pestaña nueva, para que no se pierdan las respuestas ya rellenadas.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Se muestra como',
   'field.linkAppearance.button': 'Botón',
   'field.linkAppearance.link': 'Enlace de texto',
@@ -601,6 +602,7 @@ export const esES: Record<MessageKey, string> = {
   'checkin.title': 'Registro de entrada',
   'checkin.counts': '{checkedIn} de {registered} registrados',
   'checkin.reference': 'Referencia',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Registrar entrada',
   'checkin.checking': 'Comprobando…',
   'checkin.startCamera': 'Iniciar cámara',

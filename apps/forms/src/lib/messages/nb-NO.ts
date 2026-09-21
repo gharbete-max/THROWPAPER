@@ -249,6 +249,7 @@ export const nbNO: Record<MessageKey, string> = {
 
   'field.href': 'Lenkeadresse',
   'field.hrefHint': 'Åpnes i en ny fane, så svar som allerede er fylt ut ikke går tapt.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Vises som',
   'field.linkAppearance.button': 'Knapp',
   'field.linkAppearance.link': 'Tekstlenke',
@@ -589,6 +590,7 @@ export const nbNO: Record<MessageKey, string> = {
   'checkin.title': 'Innsjekk',
   'checkin.counts': '{checkedIn} av {registered} sjekket inn',
   'checkin.reference': 'Referanse',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Sjekk inn',
   'checkin.checking': 'Sjekker…',
   'checkin.startCamera': 'Start kamera',

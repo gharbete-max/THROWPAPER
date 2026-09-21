@@ -250,6 +250,7 @@ export const isIS: Record<MessageKey, string> = {
 
   'field.href': 'Slóð',
   'field.hrefHint': 'Opnast í nýjum flipa svo svör sem þegar eru útfyllt tapist ekki.',
+  'url.placeholder': 'https://',
   'field.linkAppearance': 'Birt sem',
   'field.linkAppearance.button': 'Hnappur',
   'field.linkAppearance.link': 'Textahlekkur',
@@ -591,6 +592,7 @@ export const isIS: Record<MessageKey, string> = {
   'checkin.title': 'Innritun',
   'checkin.counts': '{checkedIn} af {registered} innritaðir',
   'checkin.reference': 'Tilvísun',
+  'checkin.referencePlaceholder': 'AB12-CD34',
   'checkin.check': 'Innrita',
   'checkin.checking': 'Athuga…',
   'checkin.startCamera': 'Ræsa myndavél',
