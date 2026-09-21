@@ -9,44 +9,58 @@ For a fresh session picking this up. Read `CLAUDE.md` first, then `LAUNCH-CHECKL
 You are continuing work on THROWPAPER (product name: Loppa) — a pnpm monorepo with two
 independent products (apps/forms + apps/api-forms; apps/mailer + apps/api-mailer) and shared
 packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
-docs/adr/0001-theming-layers.md before touching anything.
+docs/adr/0001-theming-layers.md, then docs/PROGRESS.md from § L0 to the end before touching
+anything. Do not re-derive anything HANDOVER marks as established.
 
-State: see docs/PROGRESS.md § L0 for the measured baseline (2026-09-21): origin/main at the merge
-of PR #81, `pnpm verify` green (127 test files, 1710 tests), `pnpm test:e2e` 11/11 passed against
-a local portable Postgres 16 (start command in that section — there is no Docker on this machine).
-Five dependabot PRs are open. The local track (L1–L7) is described in the owner's handoff prompt;
-each phase is one branch, plan mode first.
+State (measured 2026-09-22): origin/main at the merge of PR #96. The local track L0–L7 and the
+site design pass are DONE and merged (#87–#95): audit items 8–16 proven with committed-red
+tests, §2.2 strings closed, TRUST_PROXY=loopback proven on ngrok, DOCUMENT_SIGNING_SECRET in
+place, upload sweeper running. The routine dependabot group is merged (#83, via #96); the four
+majors were decided against in docs/adr/0005-dependency-majors.md and dependabot ignores them.
+`pnpm verify` green (132 test files, 1756 tests), `pnpm test:e2e` 11/11 against the portable
+Postgres 16 — start command in docs/PROGRESS.md § L0; there is no Docker on this machine. It
+must say "11 passed", not SKIPPED, before anything else is trusted. Site critique trend
+18 → 22 → 23 → 25 / 32; the app shell has not been re-scored.
 
-Rules that bite: one phase per branch, `pnpm verify` before "done", never mass-rename internal
-identifiers (throwpaper stays throwpaper in paths/tables/routes), no new dependencies without
-asking, no legal/clinical/tax/safety wording (rule 8), a brand colour never paints text
-unchecked — reach for the derived tokens (--tp-colour-heading, --tp-colour-accent-ink,
---tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The owner dislikes dark teal and the
-flat mark. Design first, then one ponytail pass; never both in one pass.
+Rules that bite: one task per branch, plan mode first, `pnpm verify` and `pnpm contract:check`
+before "done"; every fix gets a discriminating test committed red first; never mass-rename
+internal identifiers (throwpaper stays throwpaper in paths/tables/routes); no new dependencies
+without asking (majors: see ADR 0005); no legal/clinical/tax/safety wording (rule 8); a brand
+colour never paints text unchecked — reach for the derived tokens (--tp-colour-text,
+--tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The owner
+dislikes dark teal and the flat mark. Design first, then one ponytail pass; never both in one.
 
-Pick up in this order:
-1. Start the local Postgres (docs/PROGRESS.md § L0), then `pnpm test:e2e` — it must say
-   "11 passed", not SKIPPED, before anything else is trusted.
-2. LAUNCH-CHECKLIST.md §2.1 — audit items 8–16 (L1–L6 of the local track). Several rows are
-   already fixed in code; the task there is to prove it with a discriminating test and delete the
-   row, never to re-implement it.
-3. LAUNCH-CHECKLIST.md §2.2 strings (L7), then the design pass from the latest critique
-   snapshot in `.impeccable/critique/` — never from the old plan.
-4. Everything in LAUNCH-CHECKLIST.md §1 is the owner's to answer, not yours to invent: ask,
-   batch the questions, and never fill a `pending()` marker with plausible text.
+Pick up in this order, one task per session:
+1. App-shell design pass — LAUNCH-CHECKLIST.md §2.3, the six app-shell rows, from the LATEST
+   snapshot in .impeccable/critique/ (never the old plan). Re-run the critique after; record
+   the shell trend next to the site's 25/32; delete the closed rows.
+2. e2e where money and documents live — the builder, the admission PDF download, bulk PDF
+   generation: one spec per commit, asserting user-visible outcomes (a downloaded file's name
+   and headers; a job's completion state), still 11+ passed against the portable Postgres and CI.
+3. The seed's brand kit — DECIDED by the owner 2026-09-22: the demo lands in Loppa's own
+   palette. seed.ts writes a Loppa brand kit consistent with packages/tokens; demo/dataset.ts
+   agrees (no "Demo AB" navy as the landing point); the low-contrast border becomes a derived
+   token, never the raw hex. Delete the §2.2 row.
+4. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
 
-Do not start the catalogue/wizard work (docs/HANDOVER.md § The catalogue direction) without a
-paper decision first.
+Do not start the catalogue/wizard work (§ The catalogue direction) without a paper decision.
+Do not take a dependency major without reading docs/adr/0005-dependency-majors.md.
 ```
 
 ## State
 
-- `origin/main` at **#81** (`claude/paper-crop`, merged 2026-09-21). Five dependabot PRs open
-  (#62, #83–#86). The numbers below were measured on 2026-09-21; `docs/PROGRESS.md` § L0 is the
-  record.
-- `pnpm verify` green: **127 test files, 1710 tests**, both apps build. `pnpm test:e2e`:
-  **11 passed** against a real Postgres. `pnpm verify` and `pnpm contract:check` together are
-  the definition of done.
+- `origin/main` at **#96** (2026-09-22). No pull requests open. The routine dependabot group
+  (#83) is merged; the four majors (#62, #84, #85, #86) were closed for the reasons in
+  `docs/adr/0005-dependency-majors.md`, and `.github/dependabot.yml` ignores their major lines.
+- The local track **L0–L7 and the site design pass are done** (#87–#95): every numbered §2.1
+  audit row and the four §2.2 string rows closed on evidence; `docs/PROGRESS.md` § L0 … § Design
+  pass are the record. §2.1 now holds only backups (no host) and MFA (owner decision).
+- `pnpm verify` green: **132 test files, 1756 tests**, both apps build. `pnpm test:e2e`:
+  **11 passed** against the portable Postgres 16 (`docs/PROGRESS.md` § L0 has the start command;
+  no Docker on this machine). `pnpm verify` and `pnpm contract:check` together are the
+  definition of done.
+- Site critique trend **18 → 22 → 23 → 25 / 32**; the app shell was not re-scored by the later
+  runs and its §2.3 rows are the next design task.
 - Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
   **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
   complete**; 4 (polish and SEO) not started.
@@ -93,12 +107,13 @@ marketing email.
 
 ## Next unblocked work — in this order
 
-1. **Audit items 8–16** — `LAUNCH-CHECKLIST.md` §2.1, as the local track's L1–L6. Each needs
-   the owner's approval before the diff. Item 12 (upload sweeper) has its index already; item 8
-   (`TRUST_PROXY`) is about the local/ngrok hop, not a host.
-2. **§2.2 strings** (L7), then **the design pass** from the latest snapshot in
-   `.impeccable/critique/` — `/impeccable polish` reads that file.
-3. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
+1. **App-shell design pass** — `LAUNCH-CHECKLIST.md` §2.3, from the latest snapshot in
+   `.impeccable/critique/`; `/impeccable polish` reads that file.
+2. **e2e for the builder, the admission PDF download and bulk generation** — user-visible
+   outcomes, one spec per commit.
+3. **The seed's brand kit** — decided (Loppa's palette); make `seed.ts` and `demo/dataset.ts`
+   agree and derive the border token.
+4. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
 
 ---
 
