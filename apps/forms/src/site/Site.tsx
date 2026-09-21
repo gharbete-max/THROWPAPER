@@ -475,7 +475,7 @@ function NotFoundPage({ locale, copy }: { locale: string; copy: SiteCopy }) {
     <main className="site__main" id="main" tabIndex={-1}>
       <article className="site__article">
         <a className="site__back" href={localePath(locale)}>
-          <Icon name="arrow-left" /> {copy.featurePage.backToAll}
+          <Icon name="arrow-left" /> {copy.featurePage.back}
         </a>
         <span className="feature-card__mark feature__mark" aria-hidden="true">
           <Icon name="search" />

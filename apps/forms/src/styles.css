@@ -4586,6 +4586,9 @@ body:has(.app) > #root {
   margin: 0 0 var(--tp-spacing-unit);
   font-size: var(--tp-text-3xl);
   letter-spacing: -0.02em;
+  /* "Formulärbyggaren" at 39px is 336px in a 327px column; a compound noun may break. */
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 .site__lede {
@@ -5330,6 +5333,8 @@ body:has(> #root .shell--narrow) {
 .legal__section p {
   margin: 0 0 var(--tp-spacing-unit);
   line-height: 1.6;
+  /* The longest text on the site was its widest; the same measure as the feature pages. */
+  max-inline-size: 38rem;
 }
 
 /*
