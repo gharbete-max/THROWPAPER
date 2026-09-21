@@ -220,6 +220,8 @@ export const client = {
 
   listEvents: () => request<{ events: api.EventResponse[] }>('/v1/events'),
 
+  getEvent: (id: string) => request<api.EventResponse>(`/v1/events/${id}`),
+
   createEvent: (input: api.EventInput) =>
     request<api.EventResponse>('/v1/events', { method: 'POST', body: JSON.stringify(input) }),
 

@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
-import { client } from '../lib/api.js';
+import type { api } from '@tp/shared';
+import { pickText } from '@tp/i18n';
+import { ApiError, client } from '../lib/api.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useConfirm } from '../components/Confirm.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { Icon } from '../components/Icon.js';
 
 type Outcome =
@@ -66,9 +69,17 @@ const RECENT = 5;
 export default function CheckIn() {
   const t = useT();
   const { id: eventId } = useParams();
-  const { user, locale } = useSession();
+  const { user, locale, locales } = useSession();
   const confirm = useConfirm();
 
+  /**
+   * The event this door belongs to, `'missing'` when the id names none.
+   *
+   * A wrong id used to render a fully working door whose every scan said "Not found" — the
+   * attendance 404 was swallowed with the counts — which sends a queue away from a door that was
+   * never open. Now the door is only a door once its event exists.
+   */
+  const [event, setEvent] = useState<api.EventResponse | 'missing' | null>(null);
   const [code, setCode] = useState('');
   const [result, setResult] = useState<CheckInResult | null>(null);
   const [busy, setBusy] = useState(false);
@@ -145,6 +156,18 @@ export default function CheckIn() {
 
   useEffect(refreshCounts, [refreshCounts]);
 
+  useEffect(() => {
+    if (!eventId) return;
+    client
+      .getEvent(eventId)
+      .then(setEvent)
+      .catch((cause: unknown) => {
+        // Only "there is no such event" closes the door. A dropped connection leaves it working
+        // without a name; the offline banner already says what happened.
+        if (cause instanceof ApiError && cause.status === 404) setEvent('missing');
+      });
+  }, [eventId]);
+
   async function startScanning() {
     setCameraError(null);
     try {
@@ -189,6 +212,22 @@ export default function CheckIn() {
 
   if (!user) return null;
 
+  if (event === 'missing') {
+    return (
+      <EmptyState
+        icon="events"
+        title={t('event.notFound')}
+        action={
+          <Link className="button button--quiet" to="/events">
+            {t('events.title')}
+          </Link>
+        }
+      />
+    );
+  }
+
+  const eventName = event ? pickText(locales, event.name, locale).value : '';
+
   return (
     <section className="door">
       <header className="door__top">
@@ -196,7 +235,17 @@ export default function CheckIn() {
           <Icon name="arrow-left" className="icon--lead" />
           {t('checkin.leave')}
         </Link>
-        <h1 className="door__title">{t('checkin.title')}</h1>
+        {/* The event in the heading: the first thing read is which queue this is. */}
+        <h1 className="door__title">
+          {t('checkin.title')}
+          {/* The space is for the reader: the span is a block to the eye and a run-on to a voice. */}
+          {eventName && (
+            <>
+              {' '}
+              <span className="door__event small muted">{eventName}</span>
+            </>
+          )}
+        </h1>
         {/*
           The count is the largest number on the screen: it is the one the organiser asks for
           across the room, and it was the smallest type on the old page.

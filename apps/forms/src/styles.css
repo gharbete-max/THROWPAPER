@@ -361,6 +361,13 @@ a:focus-visible {
   font-size: var(--tp-text-lg);
 }
 
+/* Which event, under the word "Check-in": body weight, so the count stays the loudest thing. */
+.door__event {
+  display: block;
+  font-size: var(--tp-text-ui);
+  font-weight: var(--tp-type-weight-regular);
+}
+
 /* The count: the largest number on the screen, because it is the one asked for across a room. */
 .door__count {
   display: flex;

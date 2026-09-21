@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
 import { db, deleteSubmission, seededForm, signInAs, uniqueEmail } from './support.js';
 
 /**
@@ -124,4 +125,26 @@ test('an operator can work the door but cannot revoke', async ({ page, request }
 
   // Revoking is admin-only, so the control is not rendered for an operator at all.
   await expect(page.getByRole('button', { name: 'Arkivera' })).toHaveCount(0);
+});
+
+test('the door names the event it is working', async ({ page }) => {
+  const [event] = await sql`select name from events where id = ${eventId}`;
+  const name = String((event?.['name'] as Record<string, string>)['sv-SE']);
+  expect(name).not.toBe('undefined');
+
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${eventId}/check-in`);
+
+  // In the heading, so the first thing read is which queue this is.
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(name);
+});
+
+test('a wrong event id is not a door', async ({ page }) => {
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${randomUUID()}/check-in`);
+
+  await expect(page.getByText('Det finns inget evenemang på den adressen.')).toBeVisible();
+  // Nothing to scan into: a screen that can only ever say "not found" must not offer a field.
+  await expect(page.getByLabel(/Referens/)).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Evenemang' })).toBeVisible();
 });
