@@ -1,7 +1,9 @@
 {
   "detector": {
     "ignoreRules": [],
-    "ignoreFiles": [],
+    "ignoreFiles": [
+      "apps/forms/src/site/hero-motion.test.ts"
+    ],
     "ignoreValues": [
       {
         "rule": "bounce-easing",
@@ -69,9 +71,17 @@
       {
         "rule": "broken-image",
         "value": "*",
-        "files": ["apps/forms/src/lib/motion.test.ts"],
+        "files": [
+          "apps/forms/src/lib/motion.test.ts"
+        ],
         "createdAt": "2026-09-10T11:50:04.553Z",
         "reason": "Test file: the <img> is a regex literal asserting on Site.tsx markup, not rendered output. No image ships from here."
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.2, 0.8, 0.3, 1.4)",
+        "createdAt": "2026-09-22T00:00:00.000Z",
+        "reason": "appears only in a comment in styles.css recording that this curve was removed; nothing animates with it"
       }
     ]
   }
