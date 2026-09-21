@@ -250,16 +250,21 @@ export default function CheckIn() {
           The count is the largest number on the screen: it is the one the organiser asks for
           across the room, and it was the smallest type on the old page.
         */}
-        <p
-          className="door__count"
-          aria-label={
-            counts
-              ? t('checkin.counts', { checkedIn: counts.checkedIn, registered: counts.registered })
-              : undefined
-          }
-        >
-          <strong className="door__countIn">{counts?.checkedIn ?? '–'}</strong>
-          <span className="door__countOf small muted">
+        <p className="door__count">
+          {/*
+            Read as one sentence. The two visual fragments — a big number, "of 232" — are hidden
+            from the reader, and the sentence is hidden from the eye: an `aria-label` on a
+            paragraph is not something every browser passes on.
+          */}
+          {counts && (
+            <span className="visually-hidden">
+              {t('checkin.counts', { checkedIn: counts.checkedIn, registered: counts.registered })}
+            </span>
+          )}
+          <strong className="door__countIn" aria-hidden="true">
+            {counts?.checkedIn ?? '–'}
+          </strong>
+          <span className="door__countOf small muted" aria-hidden="true">
             {t('checkin.ofRegistered', { registered: counts?.registered ?? '–' })}
           </span>
         </p>
@@ -325,22 +330,28 @@ export default function CheckIn() {
         <section className="door__recent" aria-label={t('checkin.recent')}>
           <h2 className="small muted">{t('checkin.recent')}</h2>
           <ul className="door__list">
-            {recent.map((arrival) => (
-              <li className="door__row" key={arrival.attendee.submissionId}>
-                <span className="door__who">
-                  {arrival.attendee.name || arrival.attendee.reference}
-                </span>
-                <span className="door__when small muted">{formatDateTime(locale, arrival.at)}</span>
-                <button
-                  className="button button--quiet small"
-                  type="button"
-                  onClick={() => void undo(arrival)}
-                >
-                  <Icon name="undo" className="icon--lead" />
-                  {t('checkin.undo')}
-                </button>
-              </li>
-            ))}
+            {recent.map((arrival) => {
+              const who = arrival.attendee.name || arrival.attendee.reference;
+              return (
+                // Keyed by card: a member and their guest share a submission id.
+                <li className="door__row" key={arrival.attendee.reference}>
+                  <span className="door__who">{who}</span>
+                  <span className="door__when small muted">
+                    {formatDateTime(locale, arrival.at)}
+                  </span>
+                  <button
+                    className="button button--quiet small"
+                    type="button"
+                    onClick={() => void undo(arrival)}
+                  >
+                    <Icon name="undo" className="icon--lead" />
+                    {t('checkin.undo')}
+                    {/* Five "Undo" buttons are five buttons only if each says whose. */}
+                    <span className="visually-hidden"> {who}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

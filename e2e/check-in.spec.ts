@@ -177,3 +177,18 @@ test('the verdict panel keeps its height at phone width', async ({ page, request
   expect(admitted).toBe(idle);
   expect(already).toBe(idle);
 });
+
+test('each undo is named after its arrival', async ({ page, request }) => {
+  const reference = await register(request);
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${eventId}/check-in`);
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(page.getByText('Välkommen')).toBeVisible();
+
+  // The accessible name carries the person, so five undo buttons are five different buttons.
+  const undo = page.getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
+  await expect(undo).toBeVisible();
+  // And the count is one sentence, not a number with a label a paragraph cannot carry.
+  await expect(page.getByText(/^\d+ av \d+ incheckade$/)).toBeAttached();
+});
