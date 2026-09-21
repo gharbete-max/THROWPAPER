@@ -1297,6 +1297,67 @@ signature plus expiry, unauthenticated by design, as `routes/documents.ts` expla
 **Ran:** `pnpm verify` — 127 files, **1715 tests** (five new), both builds; `pnpm contract:check`
 passed; `pnpm test:e2e` **11 passed**. Rows 9, 10, 11 and 13 deleted from the checklist.
 
+## L2 — Audit item 8: `TRUST_PROXY` on the local/ngrok hop · done
+
+`TRUST_PROXY` already existed (`env.ts`, wired in `server.ts` as a proxy-addr list, never `true`).
+What was missing was evidence for the topology this product is actually run in today: a laptop,
+with ngrok in front for a phone at the door. No proxy logic was added.
+
+**The topology, observed.** The ngrok agent runs on the laptop and connects to `127.0.0.1:4001`,
+so the socket the API sees is loopback. ngrok's inspection API (`127.0.0.1:4040`) shows exactly
+what it hands over: `X-Forwarded-For: 188.151.212.102` and `X-Forwarded-Proto: https`; a client
+that writes its own header arrives as `X-Forwarded-For: 1.2.3.4, 188.151.212.102` — ngrok
+**appends** the address it saw. proxy-addr walks that list from the right and stops at the first
+address that is not a trusted hop, so with `TRUST_PROXY=loopback` the forged `1.2.3.4` is never
+reached. That is the whole argument for `loopback`: it names the one hop that is ours and nothing
+else, and `true` — which believes the client's half of the header — is never the answer.
+
+**Automated.** `apps/api-forms/src/proxy-trust.test.ts`, five cases through `app.inject` with a
+`remoteAddress` and a forwarded header, reading the address the magic-link route hands
+`createLoginToken`: empty `TRUST_PROXY` ignores the header (socket `127.0.0.1`); `loopback`
+believes a loopback hop (`203.0.113.5`); a forged chain `198.51.100.7, 203.0.113.5` resolves to
+`203.0.113.5`; a LAN socket `192.168.0.9` with a forged header stays `192.168.0.9`; and five
+requests as one visitor then one as another give 202 → 429 → 202 — two visitors, two buckets.
+Mutation: with `trustProxy: true` forced, three of the five fail (the empty case, the forgery and
+the neighbour); restored, `5 passed`.
+
+**The real tunnel, 2026-09-21.** `ngrok http 4001` →
+`https://unison-drier-silly.ngrok-free.dev`; the built app served by the API (`SERVE_APP`,
+`APP_URL=<that origin>`, `TRUST_PROXY=loopback`, `API_FORMS_HOST=127.0.0.1`,
+`MAIL_PROVIDER=console`) against the local Postgres. `netstat` showed `127.0.0.1:4001` only.
+Through the tunnel: `/health` → `mode: live, database: up`; `/f/varmotet-2026` → 200 `text/html`;
+`POST /v1/auth/magic-link` → 202 and the console mail carried
+`https://unison-drier-silly.ngrok-free.dev/auth/callback?token=…`; `login_tokens.requested_ip`
+= `188.151.212.102` (the laptop's public address, from `api.ipify.org`), not `127.0.0.1`; the
+same request with `X-Forwarded-For: 1.2.3.4` → still `188.151.212.102`. Then the sixth request
+through the tunnel → **429**, while a plain request from `127.0.0.1` at the same instant → 202 —
+two identities, two buckets — and a local request *claiming* to be the tunnel visitor → 429,
+which is the documented cost of trusting a local hop: a process on the laptop is inside the
+boundary. `E2E_BASE_URL=<origin> pnpm test:e2e` then drove the whole Playwright suite through the
+tunnel: **11 passed (29.8s)**, 260 requests by ngrok's count, every one recorded with the public
+address, and the save-and-resume mail pointed at `https://unison-drier-silly…/f/varmotet?resume=`.
+With `TRUST_PROXY` empty, restarted locally: a forged header from `127.0.0.1` → `127.0.0.1`, and
+the magic link pointed at `http://localhost:5173`. No real mail: the `messages` table gained no
+row during the session (its nine rows are console rows from the L1 e2e run), and every mail in
+the API log is `--- mail (console provider) ---`. Tunnel and server stopped; the public URL now
+answers ngrok's own 404.
+
+**Two small changes.** `API_FORMS_HOST` (default `0.0.0.0`, so the image is unchanged; `127.0.0.1`
+in `.env.example`) — the L0 log had shown the API on `192.168.0.4:4001`, and a port the LAN can
+reach beside a trusted loopback forwarder is a worse shape than it needs to be, even though the
+LAN case is safe on its own (the fourth test). And `E2E_BASE_URL` in `playwright.config.ts`:
+when set, no server is started and the suite drives that origin with ngrok's
+`ngrok-skip-browser-warning` header; unset, the config is what CI runs.
+
+**Documented.** `.env.example` carries the proven ngrok block — the free-plan URL is new every run
+and is read from `127.0.0.1:4040`, so it is an argument to that run, not a value to write down.
+`docs/DEPLOY.md` gained `TRUST_PROXY` and `API_FORMS_HOST` rows; it had neither. The Vite dev
+server was deliberately not put behind the tunnel (owner's choice): Vite 6.4 would also refuse the
+ngrok `Host` until allowed, which is recorded here and not configured.
+
+**Ran:** `pnpm verify`, `pnpm contract:check`, `pnpm test:e2e` (local default) — green, see the PR.
+Checklist row 8 deleted; the §1.3 `TRUST_PROXY` row stays, reworded, because deployment is open.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
