@@ -12,17 +12,17 @@ packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
 docs/adr/0001-theming-layers.md, then docs/PROGRESS.md from § L0 to the end before touching
 anything. Do not re-derive anything HANDOVER marks as established.
 
-State (measured 2026-09-22, night): origin/main at the merge of dependabot #98 (after #104).
-Done and merged: the local track L0–L7 and the site design pass (#87–#95); the app-shell design
-pass (#103 — the six §2.3 rows closed, shell critique 21 → 23 → 23 / 40, the undo that never
-worked from a browser fixed at the root in lib/api.ts); the restart proof (#104 —
-e2e/restart.spec.ts kills the API with SIGKILL and gets data, a document, an asset and an
-in-flight job back; orphaned `running` jobs are requeued after 15 min; SIGTERM/SIGINT close the
-server); dependabot #98–#102 judged (S1): #98 merged after a local verify + e2e on current
-main, the four majors closed and ignored per docs/adr/0005-dependency-majors.md (eight now).
-`pnpm verify` green (138 test files, 1777 tests), `pnpm test:e2e`
-16/16 against the portable Postgres 16 — start command in docs/PROGRESS.md § L0; no Docker on
-this machine. It must say "16 passed", not SKIPPED, before anything else is trusted. Site
+State (measured 2026-09-22, late): origin/main at the merge of S2 (claude/l8b-door). Done and
+merged: the local track L0–L7 and the site design pass (#87–#95); the app-shell pass (#103); the
+restart proof (#104 — SIGKILL survival, orphaned `running` jobs requeued after 15 min,
+SIGTERM/SIGINT close the server); dependabot batch two (#105 — #98 merged, four majors closed
+per ADR 0005, eight ignored now); S2 the door readiness (nine rows: the door's sizes, header at
+375, meta contrast, not-found echo, undo verdict, camera error, the last page that opened marked
+wrong — a React node-patching submit —, the thank-you focus, Responses rows, the bulk export that
+ran again; plus a 429 that read as "closed"). Shell critique 21 → 23 → 23 → 26 / 40.
+`pnpm verify` green (139 test files, 1782 tests), `pnpm test:e2e`
+19/19 against the portable Postgres 16 — start command in docs/PROGRESS.md § L0; no Docker on
+this machine. It must say "19 passed", not SKIPPED, before anything else is trusted. Site
 critique 18 → 22 → 23 → 25 / 32; app shell 21 → 23 → 23 / 40 (snapshot 2026-09-22T02-29-37Z).
 
 Rules that bite: one task per branch, plan mode first, `pnpm verify` and `pnpm contract:check`
@@ -33,46 +33,53 @@ colour never paints text unchecked — reach for the derived tokens (--tp-colour
 --tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The owner
 dislikes dark teal and the flat mark. Design first, then one ponytail pass; never both in one.
 
-Pick up in this order, one task per session (the owner's order; backups stay deferred until
-there is a host, even though e2e/restart.spec.ts would make a local restore proof cheap):
-1. e2e where money and documents live, in the browser — the builder, the admission PDF
-   download (a file's name and headers), bulk generation from the Submissions screen: one spec
-   per commit, user-visible outcomes. restart.spec.ts already drives bulk generation through
-   the API; the browser path is what is missing.
-2. The seed's brand kit — DECIDED by the owner 2026-09-22: the demo lands in Loppa's own
-   palette. seed.ts writes a Loppa brand kit consistent with packages/tokens; demo/dataset.ts
-   agrees (no "Demo AB" navy as the landing point); the low-contrast border becomes a derived
-   token, never the raw hex. Delete the §2.2 row.
-3. The §2.3 rows from the shell re-run (P1: the door's sizes lost in the cascade; the
-   not-found verdict — its sentence is the owner's) and the §2.2 stale bulk-export row.
-4. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
+Pick up in this order, one task per session (the owner's order of 2026-09-22 late; the owner
+cannot test by hand — Playwright driving real browsers is the acceptance channel):
+1. S3 — the simulated user, one loop end to end (branch claude/sim-v01-loop): sign in via the
+   console-logged magic link → create the event → build the form in the builder UI → publish →
+   fill it as an attendee with save-and-resume → find the confirmation in the console log,
+   assert language and attachment → bulk-generate admission PDFs → download the ZIP → decode a
+   QR (pdfjs + zxing) → check in typed, scan again, assert the idempotent refusal. Known before
+   it starts: bulk generation has NO UI (only POST /v1/forms/:id/admission-documents); the
+   public submit is limited to 10/min per address; S3 logs every dead end in PROGRESS.md
+   § Simulation findings and fixes only v0.1-loop bugs with red-first tests.
+2. S4 — the onboarding wizard (branch claude/wizard): docs/adr/0006-onboarding-wizard.md FIRST
+   (owner decision 2026-09-22: Akinator-style onboarding before every feature's deep UI, the
+   scanner excepted; composition not retrieval; replace WizardOption.next with a sector-selected
+   question set and everyPath() with three invariants as property tests; trades and law blocked
+   until a human authors their wording — rule 8), then the form-builder entry only.
+3. S5 — the seed's brand kit (branch claude/l10-seed-brandkit): decided — Loppa's palette from
+   packages/tokens values, demo/dataset.ts agrees, the border a derived token. Delete the §2.2 row.
+4. The §2.3 rows from the S2 re-run (three P1: not-found remedy — the sentence is the owner's;
+   the recent row's name at 375; two primaries on the public form's last page) and the P2s.
+5. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
 
-Do not start the catalogue/wizard work (§ The catalogue direction) without a paper decision.
+The wizard's paper decision exists (owner, 2026-09-22): S4 writes it down as ADR 0006 before any
+wizard code. Trades and law stay blocked until a human authors their wording (rule 8).
 Do not take a dependency major without reading docs/adr/0005-dependency-majors.md.
 ```
 
 ## State
 
-- `origin/main` at **#98's merge** (2026-09-22, after #104). No pull requests open. Eight majors
-  (#62, #84, #85, #86, #99, #100, #101, #102) were closed for the reasons in
-  `docs/adr/0005-dependency-majors.md`, and `.github/dependabot.yml` ignores their major lines.
-- **L0–L7, the site design pass, the app-shell pass and the restart proof are done** (#87–#95,
-  #103, #104); `docs/PROGRESS.md` § L0 … § The restart proof are the record. §2.1 holds only
-  backups (no host) and MFA (owner decision); §2.2 holds the demo brand kit (decided, not built)
-  and the stale bulk export; §2.3 holds the eight rows the shell re-run measured.
-- `pnpm verify` green: **138 test files, 1777 tests**, both apps build. `pnpm test:e2e`:
-  **16 passed** against the portable Postgres 16 (`docs/PROGRESS.md` § L0 has the start command;
+- `origin/main` at **S2's merge** (2026-09-22, late). No pull requests open. Eight majors are
+  closed for the reasons in `docs/adr/0005-dependency-majors.md` and ignored by dependabot.
+- **L0–L7, the site pass, the app-shell pass, the restart proof, dependabot batch two and the
+  door readiness are done** (#87–#95, #103, #104, #105, S2); `docs/PROGRESS.md` § L0 … § S2 are
+  the record. §2.1 holds backups (no host) and MFA (owner decision); §2.2 holds the demo brand
+  kit (decided, S5); §2.3 holds the not-found sentence (owner's) and the seven rows the S2
+  re-run measured.
+- `pnpm verify` green: **139 test files, 1782 tests**, both apps build. `pnpm test:e2e`:
+  **19 passed** against the portable Postgres 16 (`docs/PROGRESS.md` § L0 has the start command;
   no Docker on this machine). `pnpm verify` and `pnpm contract:check` together are the
   definition of done.
-- Critique trends: site **18 → 22 → 23 → 25 / 32**; app shell **21 → 23 → 23 / 40** (the last
-  run scored the dead undo at 1 on heuristic 3; it was fixed after the snapshot).
+- Critique trends: site **18 → 22 → 23 → 25 / 32**; app shell **21 → 23 → 23 → 26 / 40**.
 - Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
   **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
   complete**; 4 (polish and SEO) not started.
 - `LAUNCH-CHECKLIST.md` is the single list of what is still temporary, unconfigured or
   unconfirmed. Delete rows as they close; never tick them.
-- The owner's next step, not code: the click-through — tunnel up, fill the form on a phone, open
-  the console link, scan at the door.
+- The owner cannot test by hand (decision 2026-09-22): the simulated user (S3) is the
+  acceptance channel; "ready" is the v0.1 done-means list executed by Playwright.
 
 ## House rules that bite
 
@@ -114,17 +121,16 @@ marketing email.
 
 ## Next unblocked work — in this order
 
-1. **e2e in the browser for the builder, the admission PDF download and bulk generation** —
-   user-visible outcomes, one spec per commit.
-2. **The seed's brand kit** — decided (Loppa's palette); make `seed.ts` and `demo/dataset.ts`
-   agree and derive the border token.
-3. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
-4. **Backup and tested restore** — deferred by the owner until there is a host; when it comes,
-   database + document volume as one dataset, proven with the restart spec's assertions.
+1. **S3 — the simulated user, one loop end to end**, in the browser, against the portable
+   Postgres; findings to `docs/PROGRESS.md` § Simulation findings.
+2. **S4 — the onboarding wizard**, ADR 0006 first; the form-builder entry only.
+3. **S5 — the seed's brand kit** — decided (Loppa's palette).
+4. **The S2 re-run's §2.3 rows** (three P1s, the not-found sentence the owner's).
+5. **Phase 4** — polish and SEO. **Backups** stay deferred until there is a host.
 
 ---
 
-## The catalogue direction — decide on paper before authoring templates
+## The catalogue direction — decided on paper 2026-09-22 (S4 records it as ADR 0006)
 
 The product is to cover forms across verticals — real estate, AGM/EGM, small business, trades,
 misc events — through an Akinator-style flow: *"what business are you in"* (including **none**,

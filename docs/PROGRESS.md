@@ -1824,6 +1824,98 @@ the current one first.
 section that says what reopens it. `docs/adr/0005-dependency-majors.md` retitled ("Four" was
 the count, not the decision) and extended with the four paragraphs. No code changed.
 
+## S2 — The door readiness · done
+
+The eight §2.3 rows from the 2026-09-22 morning re-run of the shell critique and the §2.2 row the
+restart proof left (a finished bulk export handed back forever). Branch `claude/l8b-door` from
+`fa75258` (#105). No dependency, no migration, no `docs/CONTRACT.md` change, no `packages/`
+change. Measurements below are Playwright against `pnpm demo` unless a spec is named.
+
+**The door's own sizes reach the screen.** `.field input` (0,1,1) beat `.checkin__input`, a later
+`.button` beat `.door__check`, `.shell h2` beat the `.small` on "Last arrivals" — the door
+designed for arm's length shipped at desk size. The three rules are `.door .x` now, one class
+deeper, values unchanged. Measured: field **16 → 31.25px** at 1280 and **25px** at 375, primary
+**44 → 55px**, caption **25 → 14.31px**. The e2e holds all three.
+
+**The header fits a phone.** Three columns at 375 wrapped "Lämna entrén" to two lines (52px) and
+clipped it 17px. Under 600px the header is two rows: the way out and the count, then the title
+with its event on a line of its own; the link and the count never wrap. Measured at 375: link
+**44px**, nothing clipped, h1 below it; no horizontal overflow at either width.
+
+**The meta line reads.** `.verdict__meta` at `opacity: 0.85` measured 3.9:1 on success and 4.4:1
+on warning; size alone marks it now. The e2e computes the composited contrast on the warning
+panel and asks for ≥ 4.5.
+
+**"Not found" says what it refused.** The field is cleared for the next card, so the verdict shows
+what was scanned or typed whenever there is nobody to name (not-found, bad-signature, wrong-event):
+"Hittades inte / ZZZZ-ZZZZ". The sentence telling the operator what to do next is not written —
+that wording is the owner's, and the row is reworded to only that.
+
+**A failed undo says so.** The `catch` set nothing; a confirm that changed nothing and said nothing
+was the door's one silence. It now shows a `bad` verdict — the existing `users.errorFailed` with
+the person's name — and the arrival stays on the list. e2e intercepts the DELETE with a 500 and
+expects the verdict and the surviving row; red against `main`'s file (the verdict still read
+"Välkommen").
+
+**The camera error is ours.** A camera that would not start printed the browser's own English
+`error.message` on a Swedish door; only `checkin.cameraUnavailable` is shown and the raw error goes
+to the console. Source test refuses `{cameraError}` in the markup.
+
+**The last page opened already marked wrong — and the cause was a submit nobody asked for.** The
+critique saw `aria-invalid` on the final page's required question before any interaction; the
+code filtered validation to the current page, so it could not be that. Instrumented: `validatePage`
+ran **twice** — once for page 1 on the click, once for page 2 as a *form submit*. React patched the
+same `<button>` node from `type="button"` to `type="submit"` during the click that moved to the
+last page, and the browser ran the click's default action on the node as it now was. A mouse user
+hit it too. The two buttons are keyed apart, so they are two nodes. e2e: page two opens with zero
+`aria-invalid` elements (red against `main`: `Received: 1`).
+
+**The thank-you takes focus.** The confirmation card is new to the page and a live region that
+did not exist a moment ago is not something every screen reader announces; focus moves to the
+card's heading (`tabIndex={-1}`). e2e: the level-2 heading is focused after sending (was `body`).
+
+**Responses rows on a phone.** The name shared its row with the form's title and was cut to a
+dozen letters while the title kept its width; under 720px the name has the first row (the badge
+beside it when there is one) and the form and the time share the second — measured at 375: name
+168px wide, form beneath it. Forty-one identical "Submitted" badges marked nothing; the badge is
+for a response still in progress only, and `inbox.complete` left the twelve catalogues. The time
+was `toLocaleString` with seconds; it is `formatDateTime`, as the door: "22 sep. 2026 09:50".
+
+**A finished bulk export runs again.** `JobRepository.restart(id)` runs a done or failed job from
+the start — same row, same key, so a click during the new run still joins it; the route restarts
+what `enqueue` hands back when it is finished. API test red first (`Expected: "queued", Received:
+"done"`), the join-during-run test unchanged, real-SQL coverage of restart and its no-op on a
+running job, `e2e/restart.spec.ts` re-run green.
+
+**Two things the suite found on the way.** (1) The public submit endpoint is limited to ten a
+minute per address (`routes/public-forms.ts`), and the enlarged suite became the eleventh visitor:
+the duplicate-address spec got a 429 — which the client reported as *"the form closed while you
+were filling this in"*, the same false statement the 500 case was cured of. A 429 now reads as the
+transient fault it is (source test red first). The door specs write their registrations straight
+into the table (`register()` copies a seeded row) rather than spending the public budget; the
+public endpoint is exercised by the spec that is about it. The limit itself — a hall of members
+behind one NAT share one address — is an S3 finding, not changed here. (2) **Bulk generation has
+no UI**: only `POST /v1/forms/:id/admission-documents` exists; nothing in `apps/forms` calls it.
+S3's "bulk-generate from the Submissions screen" needs that screen to exist first.
+
+**Ran.** `pnpm verify` exit 0 — **139 files / 1782 tests**, both builds, lint 0 errors;
+`pnpm contract:check` passed; `pnpm test:e2e` **19 passed (1.9m)**, zero 429s in the run.
+
+**Critique, re-run on the shell.** `/impeccable critique apps/forms/src/screens/CheckIn.tsx`,
+dual-agent (A: design review; B: detector + browser, 1280/375 × light/dark, overlay injected in
+the built-in browser), at `61ea7bf`. Snapshot
+`.impeccable/critique/2026-09-22T08-02-59Z__apps-forms-src-screens-checkin-tsx.md`.
+**App shell 21 → 23 → 23 → 26 / 40.** B measured every S2 row closed (the numbers above are
+B's). The detector was clean on the five files; in-page it flagged the bottom bar's nav labels at
+10.24px at 375. A's three P1s are the next layer — no in-product remedy after "not found" (the
+owner's sentence, and a product decision on a name lookup inside the door), the door's recent row
+clipping the name at 375, and two filled buttons on the public form's last page — with a P2 the
+door still owes: a server fault while online reads as "Not found". All recorded as the new §2.3
+rows; the not-found sentence stays the owner's.
+
+**Checklist.** The eight rows and the §2.2 export row deleted; the not-found sentence stays as
+the copy row; seven rows from the re-run take their place. No `packages/` change.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

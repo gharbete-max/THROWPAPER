@@ -85,27 +85,27 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.2 Temporary and literal strings in the app
 
-| What                                                                                                                                                                                                                                                                                       | Where                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one)             | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
-| The bulk admission export is keyed on form + published version, so once its job is `done` every later request returns that same job: its signed link expires after an hour and its ZIP never gains the registrations that arrived since. Start a new job when the existing one is finished | `routes/documents.ts` `admission-documents`        |
+| What                                                                                                                                                                                                                                                                           | Where                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one) | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
 
-### 2.3 Open findings from the app-shell critique (P1–P3, not yet actioned)
+### 2.3 Open findings from the app-shell critique
 
-The six app-shell rows from the 2026-09-15 critique closed in the app-shell pass of 2026-09-22
-(`docs/PROGRESS.md` § The app-shell pass). These are what the re-run found; snapshot
-`.impeccable/critique/2026-09-22T02-29-37Z__apps-forms-src-screens-checkin-tsx.md`, 23/40.
+The eight rows the 2026-09-22 morning re-run measured closed in the door-readiness pass the same
+day (`docs/PROGRESS.md` § S2); the evening re-run's snapshot is the latest
+`…apps-forms-src-screens-checkin-tsx.md` in `.impeccable/critique/`. What is left is copy, not
+code, plus whatever that re-run found:
 
-| What                                                                                                                                                                                              | Where                                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| The door's sizes are lost in the cascade: `.field input` beats `.checkin__input` (16px, not 2xl), a later `.button` beats `.door__check` (44px, not 55px), `h2` beats `.small` on "Last arrivals" | `styles.css` `.checkin__input`, `.door__check`, `.door__recent h2` |
-| "Not found" clears the field and says nothing else — a typo and the wrong queue look the same; needs the typed reference echoed and one sentence of what to do (the sentence is yours)            | `screens/CheckIn.tsx` `Verdict`                                    |
-| A failed undo shows no verdict (the request now succeeds; the `catch` is still silent)                                                                                                            | `screens/CheckIn.tsx` `undo`                                       |
-| At 375 "Leave the door" wraps to two lines and clips 17px; title and count share one row                                                                                                          | `styles.css` `.door__top`                                          |
-| Verdict meta at `opacity: .85` measures 3.9:1 on success and 4.4:1 on warning at 14.3px                                                                                                           | `styles.css` `.verdict__meta`                                      |
-| Confirmation screen: no live region, focus left on `body` after submit; step 2 shows "required" before any interaction                                                                            | `screens/PublicForm.tsx`                                           |
-| Responses at 375 truncates the name while the form title keeps its width; every row wears the same "Complete" badge; timestamps carry seconds                                                     | `screens/Inbox.tsx`, `styles.css` `.inbox__link`                   |
-| Camera failure prints the browser's own `error.message`, untranslated                                                                                                                             | `screens/CheckIn.tsx` `startScanning`                              |
+| What                                                                                                                                                                                                                 | Where                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| The not-found verdict now echoes what was refused; the one sentence that tells the operator what to do next (a typo, or the wrong queue) is yours to word                                                            | `screens/CheckIn.tsx` `Verdict`                  |
+| No in-product remedy after "not found": no name lookup, no manual admit; "Leave the door" lands on a report with no search — a product decision (does a name lookup live inside the door?) beside the sentence above | `screens/CheckIn.tsx`, `screens/EventReport.tsx` |
+| The door's recent-arrival row clips the name to ~10 characters at 375 while the full date keeps 118px: time only in the row, a fixed `ch` width on the time, the name takes the rest                                 | `styles.css` `.door__row`, `.door__when`         |
+| Two filled buttons on the public form's last page at 375: "Add a guest" (343×44) directly above the submit — the guest button should be quiet                                                                        | `components/RepeatingGroup.tsx`                  |
+| A server fault while online renders "Not found" (the submit `catch` maps every non-network error to it): a `failed` outcome that keeps the field's value                                                             | `screens/CheckIn.tsx` `submit`                   |
+| Bottom-bar nav labels are 10.24px at 375 (detector: six `undersized-ui-text`, below the 11px floor)                                                                                                                  | `styles.css` `.nav-link` under 64rem             |
+| The confirmation's reference — the credential the door relies on — is the smallest thing on the card (16px, muted)                                                                                                   | `screens/PublicForm.tsx` done card               |
+| Full date in the verdict's "arrived at" line and the recent rows; the five arrivals are component state and vanish on reload; "Start camera" has no `aria-pressed` and the `<video>` no name (P3)                    | `screens/CheckIn.tsx`                            |
 
 ---
 
