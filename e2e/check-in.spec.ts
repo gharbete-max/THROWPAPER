@@ -325,3 +325,30 @@ test('a Responses row on a phone gives the name its own line', async ({ page }) 
   // No badge on a finished response: the mark is for the exception.
   await expect(page.locator('.inbox__status .badge').first()).toHaveCount(0);
 });
+
+test('the recent-arrival row gives the name the room, at 375', async ({ page }) => {
+  /*
+   * The row used to carry a full medium date — "12 okt. 2026 14:03" — in an `auto` column that
+   * held about 118px, and the name got what was left: roughly ten characters before the ellipsis.
+   * Every arrival in this list happened today, and the person on the door is looking at who just
+   * came in, so the row shows the time in a column sized in `ch`.
+   */
+  const reference = await register();
+  await signInAs(page, sql, 'operator@example.com');
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto(`/events/${eventId}/check-in`);
+
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(page.getByText('Välkommen')).toBeVisible();
+
+  // The time, not a date clipped to fit. A 6ch column holds either; only one of them reads.
+  await expect(page.locator('.door__row .door__when').first()).toHaveText(/^\d{1,2}[:.]\d{2}$/);
+
+  const who = page.locator('.door__row .door__who').first();
+  await expect(who).toHaveText('Göran Häggkvist');
+  expect(
+    await who.evaluate((el) => el.scrollWidth <= el.clientWidth),
+    'the name is ellipsised at 375',
+  ).toBe(true);
+});

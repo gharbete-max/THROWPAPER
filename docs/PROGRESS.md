@@ -2382,6 +2382,66 @@ the value keeps its literal object type and still goes into a jsonb column witho
 
 **Not done here.** §2.3's ten rows and §2.4's four. The not-found sentence is still the owner's.
 
+## S6 — the four engineering P1s · done
+
+`LAUNCH-CHECKLIST.md` §2.3 and §2.4 lose four P1 rows, closed on measurement. The two P1 halves
+that are the owner's — the not-found sentence and whether a name lookup lives inside the door —
+are untouched.
+
+**No filled button in the product had a hover state.** `.button:hover:not(:disabled)` existed, was
+correct, and never reached the page: `.button:not(.button--quiet):not(.button--danger)` repaints
+the filled tier from `--tp-button-*` at **equal specificity (0,3,0)** and comes later, so it won on
+hover too. Only the shadow moved. The hover rule now carries the same two exclusions — (0,5,0),
+and a truthful scope, since quiet and danger have their own hovers.
+
+**A hover that made the boundary harder to see.** The quiet tier's hover edge was
+`--tp-colour-primary` — measured in the browser at **1.81:1** against the surface it hovers onto,
+against a resting border of 3.75:1. It takes `--tp-colour-accent-ink` now, which `derive.ts` walks
+until it clears the text bar: **3.91:1**, still the brand's own accent. A brand colour never paints
+a boundary unchecked.
+
+**`button--secondary` was asked for and defined nowhere**, so "Add a guest" rendered as a second
+primary above the submit. One word fixes the call site — and the row itself warned that any other
+screen reaching for a plausible-sounding tier gets the same silence, because an undefined class is
+not an error in CSS. So `apps/forms/src/lib/button-classes.test.ts` scans every `button--*` used in
+a `.tsx` and fails when the stylesheet does not define it.
+
+**It found a second one immediately.** `button--bare`, in `Wizard.tsx` — the "build it yourself"
+escape — was also undefined, so it rendered as a filled primary wearing `--tp-colour-muted` as its
+label: grey text on the ink. `.wizard__skip` sets only a colour and a margin, which is a rule that
+only makes sense on a button with nothing else to it. The tier is defined now.
+
+**The door's recent arrivals gave the name ten characters at 375.** The row carried a full medium
+date in an `auto` column holding ~118px. Every arrival in that list happened today and the operator
+is looking at a person, so the row shows the time in a column sized in `ch`, and the name takes the
+rest.
+
+### What the proofs cost, and what that taught
+
+Three of the four are rendered behaviour, so they are checked in a browser — a stylesheet assertion
+would have passed throughout on the one bug that was *entirely* about a rule not reaching the page.
+Getting those proofs honest took three corrections worth recording:
+
+- **A stale bundle.** `vite preview` serves a build and `reuseExistingServer` kept an old server
+  alive, so edits did not reach the page and a reverted fix still "passed". The servers are killed
+  between a red run and a green one.
+- **A colour parser that inverted the answer.** Chromium returns both `rgb(206, 168, 92)` and
+  `color(srgb 0.907 0.905 0.898)`. Reading the second as 0–255 rounds every channel to 0 or 1 —
+  near black — and turned a failing 1.81:1 into a passing 9.32:1. A guard reporting the opposite of
+  the truth is worse than no guard.
+- **The wrong surface, twice.** Both button tests first ran against a public form, which wears the
+  demo brand kit: its `primary` and `text` are both `#1b263b`, so the hover swap paints an
+  identical colour, and its navy clears 3:1 where the shipped gold does not. They run against the
+  marketing site, which is painted in the shipped palette the findings were measured on.
+
+**A flake, named rather than buried.** One e2e run in five reported `1 failed | 23 passed` and the
+next four were green; `test-results/` is cleared by a passing run, so the failing spec could not be
+identified afterwards. This is the second unidentified single flake (§ S4a was the first), and the
+lesson is procedural: capture the run's output to a file *before* re-running, because the evidence
+is destroyed by the retry that proves nothing.
+
+**Not done here.** §2.3's P2s, §2.4's two P2s, and the owner's two rows.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

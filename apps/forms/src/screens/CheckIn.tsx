@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router';
 import type { api } from '@tp/shared';
 import { pickText } from '@tp/i18n';
 import { ApiError, client } from '../lib/api.js';
-import { formatDateTime, useT } from '../lib/i18n.js';
+import { formatDateTime, formatTime, useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useConfirm } from '../components/Confirm.js';
 import { EmptyState } from '../components/EmptyState.js';
@@ -358,9 +358,7 @@ export default function CheckIn() {
                 // Keyed by card: a member and their guest share a submission id.
                 <li className="door__row" key={arrival.attendee.reference}>
                   <span className="door__who">{who}</span>
-                  <span className="door__when small muted">
-                    {formatDateTime(locale, arrival.at)}
-                  </span>
+                  <span className="door__when small muted">{formatTime(locale, arrival.at)}</span>
                   <button
                     className="button button--quiet small"
                     type="button"

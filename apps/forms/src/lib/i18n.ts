@@ -66,6 +66,16 @@ export function formatDateTime(locale: string, value: string): string {
   );
 }
 
+/**
+ * The time alone, for a list where every row is from today.
+ *
+ * The door's recent arrivals carried a full medium date, which holds roughly 118px and left ten
+ * characters for the name at 375. A person working a door is looking at who just came in.
+ */
+export function formatTime(locale: string, value: string): string {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(new Date(value));
+}
+
 /** `datetime-local` inputs need a value with no zone; the API always speaks UTC ISO strings. */
 export function toLocalInput(value: string | null): string {
   if (!value) return '';
