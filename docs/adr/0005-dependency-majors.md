@@ -11,6 +11,28 @@ were each read for what they change and what their CI run actually did, and each
 decision already made; this file is the durable "no", and the condition beside each is what
 reopens it.
 
+## Re-review: **2026-12-22**, and what forces it sooner
+
+The per-major conditions below are good and stay as they are — each says what reopens its own
+decision. What was missing is a **date**, because a dependabot ignore has no expiry and a "no for
+now" with only a condition attached is a "no forever" that nobody ever notices becoming permanent.
+
+**On 2026-12-22, re-read every section of this file** and either restate the no with a fresh
+reason or take the bump. Three months is chosen to be shorter than the interval over which an
+unmaintained major becomes a security problem, and longer than the noise it would otherwise create.
+
+Sooner, unconditionally, if any of these happen first:
+
+- **A security advisory** against any ignored line. An advisory ends the decision immediately; it
+  is not weighed against the reasons below.
+- **The blocking task lands.** Several conditions below wait on something specific — the Vite
+  major, the tsconfig migration, S3. When that thing is done, its dependant is due, not eligible.
+- **A sixth major arrives.** Five was a batch; a growing pile means the policy, not the packages,
+  needs the look.
+
+Recording the outcome of a re-review in this file is the point of it — a re-review that leaves no
+trace did not happen.
+
 ## #62 — `@vitejs/plugin-react` 4 → 6
 
 Its build fails on `ERR_PACKAGE_PATH_NOT_EXPORTED './internal'` from `vite/package.json`: plugin-react

@@ -41,6 +41,9 @@ entry at all.
    test mode.
 8. **Do not generate legal, clinical, tax or safety-critical wording.** Templates come from a
    human. See the deferred list in each spec.
+9. **Internal names stay `throwpaper` / `@tp/*`** by owner instruction. Only user-facing strings
+   say Loppa. **Never mass-rename** — a sweep across package names, imports and identifiers is a
+   large diff that buys nothing a user can see.
 
 ## Commands
 
@@ -66,3 +69,30 @@ blocks demos — keep it current with the schema.
 - Batch your questions rather than asking one at a time.
 - If a change touches `packages/` or `docs/CONTRACT.md`, say so explicitly — the other track
   depends on it.
+
+## Never mistake a proxy for the thing
+
+This project's recurring defect is not a kind of bug, it is a kind of **reading**: something cheap
+is checked and the expensive thing is assumed. It has happened four times, each time convincingly.
+
+- A suite that **skipped** printed `SKIPPED` and exited **0**, so it read as nineteen passing tests.
+  `scripts/run-e2e.ts` now exits 2. **A green `verify` is still not a green `e2e`** — `verify` does
+  not run the suite at all.
+- A **background command's** exit code was read as `pnpm verify`'s. It was the wrapper's. **Never
+  trust a backgrounded exit code** — re-run in the foreground, or read the log.
+- `pnpm verify` is a serial `&&` chain. Its exit 1 tells you only the **first** step that failed.
+  When it fails, run `format:check`, `typecheck`, `lint`, `test` and `build` **individually**, or
+  you will fix one thing and discover two more.
+- A file was read at `691d40a`, the checkout moved to `main`, and the earlier read was asserted as
+  current. It was two commits stale and the claim was wrong. **A measurement carries the commit it
+  was taken at, and any `git switch` invalidates every prior read.** Re-read after switching.
+
+The same shape one layer up, and the reason this section exists before any agent fan-out:
+
+- **`.claude/` is ignored by prettier, eslint and vitest**, because nested worktrees hold a second
+  full copy of the source. So `pnpm verify` **from the parent checkout does not examine anything
+  inside a worktree**. An agent working in a worktree runs its gates _inside that worktree_; the
+  parent's green says nothing whatever about the agent's work.
+- e2e is a **shared, unshareable** resource: one Postgres, fixed ports, and `restart.spec.ts` alone
+  takes 1.5 minutes. **At most one `pnpm test:e2e` at a time**, ever. Two concurrent runs produce
+  flake that looks exactly like a real regression.

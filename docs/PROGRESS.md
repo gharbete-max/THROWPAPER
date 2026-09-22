@@ -2142,6 +2142,70 @@ loop when the bundle renders one; the "materials rotate during the chomp" questi
 START-HERE §5); the demo's Demo AB navy kit is S5's row and is untouched — the signed-in shell
 under `pnpm demo` still wears it, so the shell critique measures navy until S5.
 
+## Phase 2 — The queue landed, the documents reconciled · done
+
+Four pull requests merged in the order the fix required, then one branch of documentation. No
+product behaviour changed; the only non-documentation edit is a CI job.
+
+**The queue, in dependency order.** #110 first, because it is the branch that makes `main` green —
+#109's red was *inherited* from `f030000`, so rebasing it onto a still-red `main` would have left
+it red. It went green on rebase the moment #110 was in, exactly as that ordering predicts. Then
+#108, then #106.
+
+**#108 was already in flight and nobody had noticed.** Phase 0 inventoried worktrees and branches
+but never listed open pull requests, so the palette migration — done, green, mergeable — was
+missing from the scorecard's §9 and from the phase plan, which still described it as work to be
+scoped. Reading it before merging paid twice: it contains **the identical D1 fix**, the same
+`clock.at = new Date(job.runAfter)` in both stale-lease tests, arrived at independently. That is
+why its CI was green off a red base. Its commit was dropped in the rebase as redundant, and
+`main`'s version kept, because that one also deletes the two now-dead date literals #108 left
+behind.
+
+**#108 is also more than a recolour**, which is the other reason it was read rather than ticked.
+The near-black ink exposed a real defect in the dark-mode derivation: `surface` was
+`mix(ink, black, 0.52)`, which sat above the page only because 0.52 is more ink than 0.34, and for
+a near-black ink the two collapsed to **1.01:1**. It now mixes toward the paper, which lifts a
+card for every ink. The contrast guard was not loosened — `contrast.test.ts` moved its probe
+colour from `#808080` to `#767676` because the shipped ink went near-black and `#808080` started
+to read on it, and `loppa.test.ts` pins the default to the brand bundle's measured table.
+
+**§2.3 was ten rows, not eight.** The count in `docs/MODULE-STATUS.md` was taken before the
+palette pass added two P2s — a measurement that was right when made and stale when used, which is
+the failure this phase names. Each row now carries a severity, who must act, and whether
+engineering can start. Nothing closed, no wording changed; the not-found sentence stays the
+owner's.
+
+**The recurring defect has a name now.** `CLAUDE.md` § Never mistake a proxy for the thing. Four
+instances, each convincing on its own: a skipped suite exiting 0 read as nineteen passing tests; a
+background wrapper's exit code read as `verify`'s; `verify`'s serial `&&` chain read as a full
+result when it reports only its first failure; and a file read at `691d40a` asserted after the
+checkout moved to `main`. Two consequences of this project's own fixes sit beside them, and the
+second matters before any fan-out: `pnpm verify` from the parent checkout no longer examines
+anything under `.claude/`, so a worktree agent must run its gates **inside its worktree**; and e2e
+is one Postgres on fixed ports, so two concurrent runs make flake indistinguishable from a
+regression.
+
+**Two deferrals now have dates or owners instead of good intentions.** ADR 0005's eight ignored
+majors gain a re-review date of **2026-12-22** and three triggers that fire sooner — an advisory,
+the blocking task landing, or a sixth major arriving. The per-major conditions were already good
+and were left alone; only the date was missing, and a dependabot ignore has no expiry. And
+`memory.ts`'s clock asymmetry — the thing that *allowed* the time bomb, as distinct from the two
+tests that suffered it — moves out of a pull request body and into `LAUNCH-CHECKLIST.md` §2.2a
+with an owner and a severity.
+
+**A lint rule was measured and rejected.** The obvious guard against D1's class is to ban date
+literals in tests. Measured: the broad form hits 12 files and ~30 occurrences plus 8 more using
+`Date.now()`, needing a twelve-file allowlist on day one; the narrow form — a literal assigned to
+a clock-shaped name — hits exactly one file, `demo/schedule.test.ts`, and that one is a **false
+positive**, because its `now` feeds a pure `demoSchedule(now)` with every assertion relative to
+that same `now`. Both are rubber stamps. The `clock-drift` CI job runs the whole suite under
+`faketime '+1y'` instead: no guessing which literal is dangerous, no allowlist, and it catches
+`Date.now()` and a literal alike. It would have caught the original.
+
+**Not done here.** No ADRs, no module work, no branch deletions. `docs/BRANCH-TRIAGE.md` is Phase
+3's, and it is now nearly mechanical — 26 remote branches are merged into `main` and only the open
+pull requests are not.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

@@ -77,29 +77,17 @@ Do not take a dependency major without reading docs/adr/0005-dependency-majors.m
 
 ## State
 
-- `origin/main` at **S2's merge** (2026-09-22, late); **P0 the palette** (`claude/palette-loppa`)
-  is done and open as a pull request. Eight majors are closed for the reasons in
-  `docs/adr/0005-dependency-majors.md` and ignored by dependabot.
-- **L0–L7, the site pass, the app-shell pass, the restart proof, dependabot batch two, the
-  door readiness and the palette are done** (#87–#95, #103, #104, #105, S2, P0);
-  `docs/PROGRESS.md` § L0 … § P0 are the record. §2.1 holds backups (no host) and MFA (owner
-  decision); §2.2 holds the demo brand kit (decided, S5 — **now trivial: the values exist**);
-  §2.3 holds the not-found sentence (owner's) and the rows the S2 and P0 re-runs measured; §2.4
-  holds the four the site critique found on the gold palette.
-- **The palette is Loppa's** and every value derives from `default-tokens.json`:
-  gold `#cea85c`, bronze `#8f6b3a`, paper `#fafaf8`, platinum `#e9ebee`, ink `#0e0e10`, graphite,
-  pewter. `packages/tokens/src/loppa.test.ts` holds the default to the brand bundle's measured
-  table; the seafoam/coral round is now one of the hostile kits in `locked.test.ts`. Gold is
-  2.14:1 on the page **by design** — the filled button keeps the brand and takes its label and
-  boundary from the ink.
-- `pnpm verify` green: **141 test files, 1793 tests**, both apps build. `pnpm contract:check`
-  passed. `pnpm test:e2e`: **19 passed** against the portable Postgres 16 (`docs/PROGRESS.md`
-  § L0 has the start command; no Docker on this machine). `pnpm verify` and `pnpm contract:check`
-  together are the definition of done.
-- Critique trends: site **18 → 22 → 23 → 25 → 23 / 32**; app shell
-  **21 → 23 → 23 → 26 → 26 / 40**. The site's drop is two hover states measured for the first
-  time (a filled button with no hover state anywhere in the product; a quiet button whose hover
-  edge is gold at 2.14:1) — §2.4. The shell is flat because `CheckIn.tsx` did not change.
+**`docs/PROGRESS.md` is the record of what shipped and when. This section does not restate it.**
+It previously did, in parallel, and the two drifted — `origin/main` was described as "at S2's
+merge" with the palette "open as a pull request" after the palette had merged. One log, one place.
+
+- **Where to look:** `docs/PROGRESS.md` § L0 … § P0 for the phases; § Phase 0 for the four-module
+  scorecard and § Phase 1 for the gate repair. `docs/MODULE-STATUS.md` for what each of the four
+  modules actually is, measured with the command behind every number.
+- **The gate, and what it is worth:** `pnpm verify` and `pnpm contract:check` together are the
+  definition of done — but a green `verify` is **not** a green `e2e`; `verify` does not run the
+  suite. Run `pnpm test:e2e` and read the count. See `CLAUDE.md` § Never mistake a proxy for the
+  thing before trusting any of the three.
 - Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
   **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
   complete**; 4 (polish and SEO) not started.
@@ -107,6 +95,31 @@ Do not take a dependency major without reading docs/adr/0005-dependency-majors.m
   unconfirmed. Delete rows as they close; never tick them.
 - The owner cannot test by hand (decision 2026-09-22): the simulated user (S3) is the
   acceptance channel; "ready" is the v0.1 done-means list executed by Playwright.
+
+## The palette: what is authoritative, and where
+
+The migration is **done and merged** (P0, PR #108). This is the record of where each thing now
+lives, because the README's promise of "a separate PR series" is what this replaces.
+
+| Artefact | Status | What it is |
+| --- | --- | --- |
+| `docs/brand/` | **Source of truth for the identity** | The bundle the mark, the metals and the measured WCAG table come from. Rasters are in Git LFS. Nothing derives *from* the app back into here. |
+| `packages/tokens/src/default-tokens.json` | **Authoritative for the product** | Every colour the app renders derives from this. Gold `#cea85c`, bronze `#8f6b3a`, paper `#fafaf8`, platinum `#e9ebee`, ink `#0e0e10`, plus graphite and pewter. |
+| `packages/tokens/src/loppa.test.ts` | **The guard** | Pins the shipped default to the brand bundle's measured table, so a future palette change fails CI instead of shipping. |
+| `packages/tokens/src/locked.test.ts` | Historical | The seafoam/coral round survives here as one of the hostile customer kits the mechanism is held against. It is no longer anybody's palette. |
+| `DESIGN.md` | **Argues the decision** | Why two metals, how the button re-derives, what the paper answers. |
+| `apps/forms/src/styles.css` | Consumes | Reads the compiled variables. A literal colour here is a bug — `CLAUDE.md` rule 4. |
+
+**The constraint that does not move.** Gold is **2.14:1 on white** — by design, not by oversight.
+A filled button keeps the brand and takes its *label and boundary from the ink*. Text on a light
+surface takes the **bronze tier `#8F6B3A` (4.64:1)**, never the face gold. A brand colour never
+paints text or a boundary unchecked, and `packages/tokens` owns the contrast guard that enforces
+it — it is a mechanism, not a convention.
+
+**What is left**, and it is small: the four rows in `LAUNCH-CHECKLIST.md` §2.4 that the site
+critique measured on the gold palette. Two are P1 — a filled button with no hover state anywhere
+in the product, and a quiet button whose hover edge is gold at 2.14:1. Neither is new with the
+palette; both were measured for the first time on it.
 
 ## House rules that bite
 
