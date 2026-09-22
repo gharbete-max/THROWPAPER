@@ -33,6 +33,12 @@ describe('the door, unseen', () => {
     expect(SOURCE).toContain('key={arrival.attendee.reference}');
   });
 
+  it('never prints the browser’s own camera error on the screen', () => {
+    // `error.message` is English on a Swedish door; the catalogue sentence is what is shown.
+    expect(SOURCE).not.toMatch(/\{cameraError\}/);
+    expect(SOURCE).toContain("t('checkin.cameraUnavailable')");
+  });
+
   it('puts no aria-label on a paragraph', () => {
     expect(SOURCE).not.toMatch(/<p\b[^>]*aria-label/);
   });

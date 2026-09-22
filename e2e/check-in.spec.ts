@@ -82,6 +82,9 @@ test('a reference nobody holds is refused', async ({ page }) => {
   await page.getByRole('button', { name: 'Checka in' }).click();
 
   await expect(page.getByText('Hittades inte')).toBeVisible();
+  // The field is cleared for the next scan, so the verdict has to say what was refused: a typo
+  // and the wrong queue look identical otherwise.
+  await expect(page.locator('.verdict')).toContainText('ZZZZ-ZZZZ');
 });
 
 test('a revoked registration is refused at the door', async ({ page, request }) => {
@@ -205,4 +208,97 @@ test('each undo is named after its arrival', async ({ page, request }) => {
     where s.reference = ${reference}
   `;
   expect(rows).toHaveLength(0);
+});
+
+/** WCAG contrast of an element's text against the nearest painted background, in the page. */
+async function contrastOf(
+  page: import('@playwright/test').Page,
+  selector: string,
+): Promise<number> {
+  return page.evaluate((sel) => {
+    const element = document.querySelector(sel) as HTMLElement;
+    const parse = (value: string) =>
+      value
+        .match(/[\d.]+/g)!
+        .slice(0, 3)
+        .map(Number) as [number, number, number];
+    const luminance = ([r, g, b]: [number, number, number]) => {
+      const channel = (c: number) => {
+        const v = c / 255;
+        return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+    };
+    let node: HTMLElement | null = element;
+    let background = 'rgba(0, 0, 0, 0)';
+    while (node && /rgba\(0, 0, 0, 0\)|transparent/.test(background)) {
+      background = getComputedStyle(node).backgroundColor;
+      node = node.parentElement;
+    }
+    const style = getComputedStyle(element);
+    const opacity = Number(style.opacity);
+    const fg = parse(style.color);
+    const bg = parse(background);
+    // Composite the text over its background at the element's opacity, as the eye does.
+    const seen = fg.map((c, i) => c * opacity + bg[i]! * (1 - opacity)) as [number, number, number];
+    const [l1, l2] = [luminance(seen), luminance(bg)].sort((a, b) => b - a) as [number, number];
+    return (l1 + 0.05) / (l2 + 0.05);
+  }, selector);
+}
+
+test("the door is set at arm's length, and reads at it", async ({ page, request }) => {
+  const reference = await register(request);
+  await signInAs(page, sql, 'operator@example.com');
+
+  // Rows 1 and 5 at desktop width: the door's own sizes, not the form kit's.
+  await page.goto(`/events/${eventId}/check-in`);
+  const fontSize = (selector: string) =>
+    page.locator(selector).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(await fontSize('.checkin__input')).toBeCloseTo(31.25, 0);
+  expect((await page.locator('.door__check').boundingBox())!.height).toBeGreaterThanOrEqual(55);
+
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(page.getByText('Välkommen')).toBeVisible();
+  expect(await fontSize('.door__recent h2')).toBeCloseTo(14.31, 0);
+
+  // Already checked in: the panel is warning-coloured and the meta line must still read.
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(page.getByText('Redan incheckad')).toBeVisible();
+  expect(await contrastOf(page, '.verdict__meta')).toBeGreaterThanOrEqual(4.5);
+
+  // Row 4 at phone width: the leave link on one line, the title on its own row beneath.
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.reload();
+  await expect(page.locator('.verdict')).toContainText('Skanna ett kort');
+  expect(await fontSize('.checkin__input')).toBeCloseTo(25, 0);
+  const leave = page.getByRole('link', { name: /Lämna entrén/ });
+  const box = (await leave.boundingBox())!;
+  expect(box.height).toBeLessThanOrEqual(44);
+  expect(await leave.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+  const title = (await page.getByRole('heading', { level: 1 }).boundingBox())!;
+  expect(title.y).toBeGreaterThanOrEqual(box.y + box.height);
+});
+
+test('an undo that fails says so, and the arrival stands', async ({ page, request }) => {
+  const reference = await register(request);
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${eventId}/check-in`);
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(page.getByText('Välkommen')).toBeVisible();
+
+  // The server is unreachable for exactly this request.
+  await page.route(/\/check-ins\//, (route) =>
+    route.request().method() === 'DELETE' ? route.fulfill({ status: 500 }) : route.continue(),
+  );
+  const undo = page.getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
+  await undo.click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Ångra' }).click();
+
+  // Not silence: the verdict names the failure and the person, and the row is still there.
+  await expect(page.locator('.verdict')).toContainText('Det gick inte');
+  await expect(page.locator('.verdict')).toContainText('Göran Häggkvist');
+  await expect(undo).toBeVisible();
 });
