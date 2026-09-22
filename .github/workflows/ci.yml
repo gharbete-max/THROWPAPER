@@ -70,8 +70,13 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y faketime
       # A year, not a day: long enough that any test anchored to "around now" has drifted well
       # past it, short enough to stay inside every certificate and dependency support window.
+      #
+      # `-f` is required for a relative offset. Without it `faketime` parses the argument as an
+      # absolute date and answers "Timestamp to fake not recognized" — which fails the job without
+      # running a single test, and would read as "the suite is broken under a shifted clock" to
+      # anyone who checked the job's colour rather than its log.
       - name: Run the suite one year ahead
-        run: faketime '+1y' pnpm run test
+        run: faketime -f '+1y' pnpm run test
 
   verify:
     runs-on: ubuntu-latest
