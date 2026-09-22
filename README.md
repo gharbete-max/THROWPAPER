@@ -91,6 +91,6 @@ Internal identifiers, package names, database tables and API routes keep the `th
 
 The mark is a folded paper fortune-teller in gold and platinum. Gold measures 2.14:1 on white,
 so the identity is at its strongest on near-black; on light surfaces text takes the bronze tier
-(`#8F6B3A`, 4.64:1), never the face gold. The bundle — tokens, usage rules, marks, motion — is in `docs/brand`; the application tokens
-in `packages/tokens` and `DESIGN.md` still carry the previous palette and move over in a
-separate PR series. See `SECURITY.md` for reporting.
+(`#8F6B3A`, 4.64:1), never the face gold. The bundle — tokens, usage rules, marks, motion — is in
+`docs/brand`; `packages/tokens` ships those values and `DESIGN.md` records why. See `SECURITY.md`
+for reporting.
