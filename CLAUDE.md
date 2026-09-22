@@ -91,7 +91,7 @@ The same shape one layer up, and the reason this section exists before any agent
 
 - **`.claude/` is ignored by prettier, eslint and vitest**, because nested worktrees hold a second
   full copy of the source. So `pnpm verify` **from the parent checkout does not examine anything
-  inside a worktree**. An agent working in a worktree runs its gates *inside that worktree*; the
+  inside a worktree**. An agent working in a worktree runs its gates _inside that worktree_; the
   parent's green says nothing whatever about the agent's work.
 - e2e is a **shared, unshareable** resource: one Postgres, fixed ports, and `restart.spec.ts` alone
   takes 1.5 minutes. **At most one `pnpm test:e2e` at a time**, ever. Two concurrent runs produce
