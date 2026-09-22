@@ -37,6 +37,42 @@ jobs:
       - name: Audit dependencies
         run: pnpm audit --prod --audit-level high
 
+  # The same suite, a year from now.
+  #
+  # Two tests in `jobs/worker.test.ts` once pinned a clock to `2026-09-22T10:00:00Z` and compared
+  # it against a `runAfter` the repository stamps from the wall clock. The real assertion was
+  # therefore "the current time is before 10:00 UTC on 2026-09-22": green the morning they were
+  # written, red that afternoon, and red for good. `docs/PROGRESS.md` § Phase 1 has the mechanism.
+  #
+  # A lint rule against date literals was measured first and rejected: a broad one needs a
+  # twelve-file allowlist on day one, and a narrow one's only hit — `demo/schedule.test.ts` — is a
+  # false positive, because its `now` feeds a pure function with every assertion relative to that
+  # same `now`. An allowlist that large is a rubber stamp, and a rubber stamp is the proxy this
+  # project keeps mistaking for the thing.
+  #
+  # Running the suite under a shifted clock has no false positives by construction: it does not
+  # guess which literal is dangerous, it just runs the tests in a world where the date has moved.
+  # It catches `Date.now()` and a hard-coded literal alike, and it would have caught the original.
+  # It needs no Postgres — `database.test.ts` self-skips — but it does need Chromium, because the
+  # proof test renders a real PDF and a missing browser would fail it for the wrong reason.
+  clock-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Install faketime
+        run: sudo apt-get update && sudo apt-get install -y faketime
+      # A year, not a day: long enough that any test anchored to "around now" has drifted well
+      # past it, short enough to stay inside every certificate and dependency support window.
+      - name: Run the suite one year ahead
+        run: faketime '+1y' pnpm run test
+
   verify:
     runs-on: ubuntu-latest
     services:
