@@ -174,52 +174,20 @@ marketing email.
 
 ---
 
-## The catalogue direction — decided on paper 2026-09-22 (S4 records it as ADR 0006)
+## The catalogue direction — now `docs/adr/0006-catalogue-direction.md`
 
-The product is to cover forms across verticals — real estate, AGM/EGM, small business, trades,
-misc events — through an Akinator-style flow: *"what business are you in"* (including **none**,
-which covers misc events), then a multi-select matrix of what the form should contain, then a
-composed result, then easy-or-advanced customisation. Community sharing of forms is wanted later.
+One wizard across verticals, by **composing blocks** rather than retrieving one form from a
+library. The decision, the argument against the "will not scale to millions" objection, what
+survives in `packages/shared/src/wizard/tree.ts` (`contributes` and `keyOf`), what changes
+(`next` becomes a sector-selected facet set), what is lost (`everyPath()`, and the four-press
+promise that has to be restated rather than quietly dropped), the rule-8 position on trades and
+law, and the DSA obligations community sharing would bring — all of it is in the ADR.
 
-**This is composition, not retrieval.** You author blocks, not paths, and the millions are
-combinations. That distinction matters: an earlier critique in this project claimed the wizard
-"will not scale to millions of forms", and that critique was aimed at *selecting one leaf from a
-library*. It does not apply to composing a form from selected blocks, which scales on a few dozen
-authored blocks.
+Two things from it that belong in front of whoever picks this up:
 
-`packages/shared/src/wizard/tree.ts` **already composes**: `WizardOption.contributes` supplies
-items and `WizardTree.keyOf` deduplicates them — *"two paths can both ask for an email address; a
-form with two email boxes is a form somebody fills in twice."*
-
-**What must change is the guarantee, not the model.** `WizardOption.next` fixes the question
-order, and `everyPath()` — today's proof that no path dead-ends and nothing takes more than four
-presses — becomes 2ⁿ once answers are multi-select. So:
-
-- Keep `contributes` and `keyOf`.
-- Replace `next` with a sector-selected question **set** (order-independent facets).
-- Replace exhaustive path enumeration with three cheaper invariants: every question reachable,
-  every contributed key resolvable, and no duplicate keys in any combination.
-
-Two consequences to decide deliberately rather than drift into:
-
-- **Trades and law are safety-critical and legal wording** — rule 8. Ship structure with bracketed
-  placeholders, as the proxy template does.
-- **Community sharing introduces public UGC**, which flips the Phase 0 classification and brings
-  DSA notice-and-action, a published point of contact, moderation terms, and a contribution
-  licence. Phase 0 concluded DSA does not currently apply *because* there is no public UGC.
-
-### Verified-MIT resources — never ship anything unverified
-
-`surveyjs/survey-library` (MIT; Creator/PDF/Dashboard are separate commercial products) — **do not
-adopt**; it would replace a builder and renderer already translated into twelve languages with
-SSR, print CSS and PDF. Take its question-type taxonomy as a checklist and its JSON schema as an
-**import target**, which is worth more to a community catalogue than a rendering engine.
-`FormBold/html-form-examples-templates` (MIT, no attribution required) — useful as field-list
-content, not code. `formml/formml` (MIT) — skip; the Zod `FormDefinition` already covers it. The
-other four repositories suggested are irrelevant to a TypeScript stack or actively wrong for it —
-in particular a bulk-mail script is the opposite of rule 7 and of marknadsföringslagen.
-
----
+- The model change is a **breaking change to a shared package**. It is its own phase.
+- **Community sharing is an owner decision, not an engineering one.** Public UGC flips the Phase 0
+  DSA conclusion, which held *because* there is no public UGC.
 
 ## What Phase 3 landed, and how to work inside it
 

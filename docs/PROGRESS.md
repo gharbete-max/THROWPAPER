@@ -2259,6 +2259,46 @@ Leftovers from failed runs of this spec put an extra row in `/responses` and fai
 unrelated** check-in tests. The cleanup now sweeps by pattern rather than by the ids a run happened
 to reach, because a test that dies at step three never sets them.
 
+## S4a — ADR 0006, the catalogue direction · done
+
+Documentation only. The owner's 2026-09-22 decision was the last one living in a handover section
+rather than an ADR, and `docs/HANDOVER.md` said so itself: *"S4 records it as ADR 0006"*. It now
+does, and HANDOVER points at it.
+
+**The direction is composition, not retrieval.** The objection this meets — that a wizard "will
+not scale to millions of forms" — was aimed at selecting one leaf from a library of millions. You
+author blocks; the millions are combinations. A few dozen blocks compose into more forms than
+anybody needs, and adding a vertical adds blocks rather than depth.
+
+**Most of the model survives, which the ADR says rather than implies.**
+`packages/shared/src/wizard/tree.ts` already composes: `contributes` supplies items and `keyOf`
+deduplicates them, for the reason written at `tree.ts:60` — *"two paths can both ask for an email
+address; a form with two email boxes on it is a form somebody fills in twice and then queries."*
+Both stay. Three of the existing tree tests are already invariant-shaped and survive untouched.
+
+**What changes is `next`, and what breaks is `everyPath()`.** `next` names one following question,
+so question order is a property of the data — right for a decision tree, wrong for facets, because
+"needs payment" and "needs a signature" are independent and making one come second is an
+invention. It becomes a sector-selected question set. `everyPath()` then cannot survive:
+enumeration is 2ⁿ once an answer is multi-select.
+
+**The honest part of that trade is written down.** Three invariants replace it — every question
+reachable, every contributed key resolvable, no duplicate key in any combination. Cycle detection
+is not lost but made unnecessary, since a set has no `next` to point backwards through. The
+**four-press promise is genuinely lost** and is restated as a bound on facets per sector, with the
+instruction that whoever implements this writes that test first. A replacement that quietly drops
+a promise is worse than no replacement.
+
+**Two things the ADR deliberately does not decide.** Trades and law are safety-critical and legal
+wording under rule 8, so those verticals ship structure with bracketed placeholders — that is the
+decision, not a limitation to engineer around. And **community sharing is the owner's question**:
+public UGC flips the Phase 0 conclusion that the DSA does not apply, which held precisely
+*because* there is no public UGC. It brings notice-and-action, a published point of contact,
+moderation terms and a contribution licence.
+
+**Not done here.** The model change itself. It is a breaking change to `packages/shared`, a
+lead-owned conflict zone, which is the whole reason the ADR came first.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
