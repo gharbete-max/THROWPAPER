@@ -10,13 +10,13 @@ import { db, deleteSubmission, seededForm, signInAs, uniqueEmail } from './suppo
  * slower and more brittle. What matters here is what happens at the check-in screen.
  */
 const sql = db();
-let slug: string;
 let eventId: string;
+let formId: string;
 const created: string[] = [];
 
 test.beforeAll(async () => {
   const form = await seededForm(sql);
-  slug = form.slug;
+  formId = form.formId;
   if (!form.eventId) throw new Error('The seeded form is not attached to an event.');
   eventId = form.eventId;
 });
@@ -26,28 +26,37 @@ test.afterAll(async () => {
   await sql.end();
 });
 
-async function register(request: import('@playwright/test').APIRequestContext): Promise<string> {
-  const response = await request.post(`/api/public/forms/${slug}`, {
-    data: {
-      locale: 'sv-SE',
-      values: {
-        full_name: 'Göran Häggkvist',
-        email: uniqueEmail('door'),
-        meal: 'standard',
-      },
-    },
-  });
-  expect(response.status()).toBe(201);
-  const reference = (await response.json()).reference as string;
+/**
+ * A registration for the door to admit, written straight into the database.
+ *
+ * It used to go through the public submit endpoint, which is what public-form.spec.ts proves,
+ * and which is rate-limited to ten a minute per address — a fair limit for a stranger and a hard
+ * one for a test suite: the door specs and the public specs together were the eleventh visitor
+ * in a minute, and the public spec then failed on a 429. The door does not care where the row
+ * came from; only that it is there.
+ */
+async function register(): Promise<string> {
+  const reference = `E2E${Date.now().toString(36).slice(-4).toUpperCase()}${Math.random()
+    .toString(36)
+    .slice(2, 6)
+    .toUpperCase()}`;
+  const [row] = await sql`
+    insert into submissions
+      (organisation_id, form_id, form_version_id, event_id, reference, status, locale, email, data, submitted_at)
+    select organisation_id, form_id, form_version_id, event_id, ${reference}, 'complete', 'sv-SE',
+      ${uniqueEmail('door')}, ${sql.json({ full_name: 'Göran Häggkvist', email: 'door@example.com', meal: 'standard' })}, now()
+    from submissions where form_id = ${formId} limit 1
+    returning reference
+  `;
+  if (!row) throw new Error('No seeded submission to copy — run pnpm db:seed first.');
   created.push(reference);
   return reference;
 }
 
 test('a reference admits once and reports already-arrived on the second attempt', async ({
   page,
-  request,
 }) => {
-  const reference = await register(request);
+  const reference = await register();
   await signInAs(page, sql, 'operator@example.com');
 
   await page.goto(`/events/${eventId}/check-in`);
@@ -87,8 +96,8 @@ test('a reference nobody holds is refused', async ({ page }) => {
   await expect(page.locator('.verdict')).toContainText('ZZZZ-ZZZZ');
 });
 
-test('a revoked registration is refused at the door', async ({ page, request }) => {
-  const reference = await register(request);
+test('a revoked registration is refused at the door', async ({ page }) => {
+  const reference = await register();
   await sql`update submissions set revoked_at = now() where reference = ${reference}`;
 
   await signInAs(page, sql, 'operator@example.com');
@@ -99,9 +108,9 @@ test('a revoked registration is refused at the door', async ({ page, request }) 
   await expect(page.getByText('Anmälan återkallad')).toBeVisible();
 });
 
-test('the attendance report counts arrivals and lists no-shows', async ({ page, request }) => {
-  const arriving = await register(request);
-  const notArriving = await register(request);
+test('the attendance report counts arrivals and lists no-shows', async ({ page }) => {
+  const arriving = await register();
+  const notArriving = await register();
 
   await signInAs(page, sql, 'admin@example.com');
 
@@ -121,8 +130,8 @@ test('the attendance report counts arrivals and lists no-shows', async ({ page, 
   await expect(page.getByRole('cell', { name: arriving })).toHaveCount(0);
 });
 
-test('an operator can work the door but cannot revoke', async ({ page, request }) => {
-  const reference = await register(request);
+test('an operator can work the door but cannot revoke', async ({ page }) => {
+  const reference = await register();
   await signInAs(page, sql, 'operator@example.com');
 
   await page.goto(`/events/${eventId}/attendance`);
@@ -154,8 +163,8 @@ test('a wrong event id is not a door', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Evenemang' })).toBeVisible();
 });
 
-test('the verdict panel keeps its height at phone width', async ({ page, request }) => {
-  const reference = await register(request);
+test('the verdict panel keeps its height at phone width', async ({ page }) => {
+  const reference = await register();
   await signInAs(page, sql, 'operator@example.com');
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto(`/events/${eventId}/check-in`);
@@ -183,8 +192,8 @@ test('the verdict panel keeps its height at phone width', async ({ page, request
   expect(already).toBe(idle);
 });
 
-test('each undo is named after its arrival', async ({ page, request }) => {
-  const reference = await register(request);
+test('each undo is named after its arrival', async ({ page }) => {
+  const reference = await register();
   await signInAs(page, sql, 'operator@example.com');
   await page.goto(`/events/${eventId}/check-in`);
   await page.getByLabel(/Referens/).fill(reference);
@@ -246,14 +255,14 @@ async function contrastOf(
   }, selector);
 }
 
-test("the door is set at arm's length, and reads at it", async ({ page, request }) => {
-  const reference = await register(request);
+test("the door is set at arm's length, and reads at it", async ({ page }) => {
+  const reference = await register();
   await signInAs(page, sql, 'operator@example.com');
 
   // Rows 1 and 5 at desktop width: the door's own sizes, not the form kit's.
   await page.goto(`/events/${eventId}/check-in`);
   const fontSize = (selector: string) =>
-    page.locator(selector).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    page.locator(selector).evaluate((el) => Number.parseFloat(getComputedStyle(el).fontSize));
   expect(await fontSize('.checkin__input')).toBeCloseTo(31.25, 0);
   expect((await page.locator('.door__check').boundingBox())!.height).toBeGreaterThanOrEqual(55);
 
@@ -281,8 +290,8 @@ test("the door is set at arm's length, and reads at it", async ({ page, request 
   expect(title.y).toBeGreaterThanOrEqual(box.y + box.height);
 });
 
-test('an undo that fails says so, and the arrival stands', async ({ page, request }) => {
-  const reference = await register(request);
+test('an undo that fails says so, and the arrival stands', async ({ page }) => {
+  const reference = await register();
   await signInAs(page, sql, 'operator@example.com');
   await page.goto(`/events/${eventId}/check-in`);
   await page.getByLabel(/Referens/).fill(reference);
