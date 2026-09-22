@@ -120,18 +120,19 @@ the shipped colours; it may only assume the _relationships_ between them.
 
 ## Colors
 
-| Token                        | Value                         | Used for                                                               |
-| ---------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
-| `primary`                    | `#6fb8a6`                     | Filled buttons, the current nav item, the mark's north and south flaps |
-| `secondary`                  | `#2e3a38`                     | Links and focus rings                                                  |
-| `accent`                     | `#ef8874`                     | The mark's east and west flaps, quote rules. **Decoration, not text**  |
-| `accent-ink`                 | `#8f6156`                     | The accent where it must be _read_. Derived, see below                 |
-| `background`                 | `#f6f5f2`                     | The page                                                               |
-| `surface`                    | `#eceae5`                     | Cards, the rail, raised areas                                          |
-| `text`                       | `#2e3a38`                     | Body copy                                                              |
-| `muted`                      | `#666666`                     | Captions, help text, inactive nav                                      |
-| `border`                     | `#858585`                     | Every boundary                                                         |
-| `success` `warning` `danger` | `#2f6b45` `#8a5f00` `#a12b25` | Status only. The one exception below                                   |
+| Token                        | Value                         | Used for                                                                                                                              |
+| ---------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `primary`                    | `#6fb8a6`                     | Filled buttons, the current nav item, the mark's north and south flaps                                                                |
+| `secondary`                  | `#2e3a38`                     | Links and focus rings                                                                                                                 |
+| `accent`                     | `#ef8874`                     | The mark's east and west flaps, quote rules. **Decoration, not text**                                                                 |
+| `accent-ink`                 | `#8f6156`                     | The accent where it must be _read_. Derived, see below                                                                                |
+| `heading`                    | `#2e3a38`                     | Headings: the primary where it reads on the page, the ink otherwise. Derived (`headingInk`) — seafoam does not read, so it is the ink |
+| `background`                 | `#f6f5f2`                     | The page                                                                                                                              |
+| `surface`                    | `#eceae5`                     | Cards, the rail, raised areas                                                                                                         |
+| `text`                       | `#2e3a38`                     | Body copy                                                                                                                             |
+| `muted`                      | `#666666`                     | Captions, help text, inactive nav                                                                                                     |
+| `border`                     | `#858585`                     | Every boundary                                                                                                                        |
+| `success` `warning` `danger` | `#2f6b45` `#8a5f00` `#a12b25` | Status only. The one exception below                                                                                                  |
 
 ### The palette is the mark's, plus black and white
 

@@ -12,36 +12,41 @@ packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
 docs/adr/0001-theming-layers.md, then docs/PROGRESS.md from § L0 to the end before touching
 anything. Do not re-derive anything HANDOVER marks as established.
 
-State (measured 2026-09-22): origin/main at the merge of PR #96. The local track L0–L7 and the
-site design pass are DONE and merged (#87–#95): audit items 8–16 proven with committed-red
-tests, §2.2 strings closed, TRUST_PROXY=loopback proven on ngrok, DOCUMENT_SIGNING_SECRET in
-place, upload sweeper running. The routine dependabot group is merged (#83, via #96); the four
-majors were decided against in docs/adr/0005-dependency-majors.md and dependabot ignores them.
-`pnpm verify` green (132 test files, 1756 tests), `pnpm test:e2e` 11/11 against the portable
-Postgres 16 — start command in docs/PROGRESS.md § L0; there is no Docker on this machine. It
-must say "11 passed", not SKIPPED, before anything else is trusted. Site critique trend
-18 → 22 → 23 → 25 / 32; the app shell has not been re-scored.
+State (measured 2026-09-22, evening): origin/main at the merge of PR #104. Done and merged:
+the local track L0–L7 and the site design pass (#87–#95); the app-shell design pass (#103 —
+the six §2.3 rows closed, shell critique 21 → 23 → 23 / 40, the undo that never worked from a
+browser fixed at the root in lib/api.ts); the restart proof (#104 — e2e/restart.spec.ts kills
+the API with SIGKILL and gets data, a document, an asset and an in-flight job back; orphaned
+`running` jobs are requeued after 15 min; SIGTERM/SIGINT close the server). The four
+dependency majors are closed per docs/adr/0005-dependency-majors.md; dependabot #98–#102 are
+open and NOT yet inspected. `pnpm verify` green (138 test files, 1777 tests), `pnpm test:e2e`
+16/16 against the portable Postgres 16 — start command in docs/PROGRESS.md § L0; no Docker on
+this machine. It must say "16 passed", not SKIPPED, before anything else is trusted. Site
+critique 18 → 22 → 23 → 25 / 32; app shell 21 → 23 → 23 / 40 (snapshot 2026-09-22T02-29-37Z).
 
 Rules that bite: one task per branch, plan mode first, `pnpm verify` and `pnpm contract:check`
 before "done"; every fix gets a discriminating test committed red first; never mass-rename
 internal identifiers (throwpaper stays throwpaper in paths/tables/routes); no new dependencies
 without asking (majors: see ADR 0005); no legal/clinical/tax/safety wording (rule 8); a brand
-colour never paints text unchecked — reach for the derived tokens (--tp-colour-text,
+colour never paints text unchecked — reach for the derived tokens (--tp-colour-heading,
 --tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The owner
 dislikes dark teal and the flat mark. Design first, then one ponytail pass; never both in one.
 
-Pick up in this order, one task per session:
-1. App-shell design pass — LAUNCH-CHECKLIST.md §2.3, the six app-shell rows, from the LATEST
-   snapshot in .impeccable/critique/ (never the old plan). Re-run the critique after; record
-   the shell trend next to the site's 25/32; delete the closed rows.
-2. e2e where money and documents live — the builder, the admission PDF download, bulk PDF
-   generation: one spec per commit, asserting user-visible outcomes (a downloaded file's name
-   and headers; a job's completion state), still 11+ passed against the portable Postgres and CI.
-3. The seed's brand kit — DECIDED by the owner 2026-09-22: the demo lands in Loppa's own
+Pick up in this order, one task per session (the owner's order; backups stay deferred until
+there is a host, even though e2e/restart.spec.ts would make a local restore proof cheap):
+1. e2e where money and documents live, in the browser — the builder, the admission PDF
+   download (a file's name and headers), bulk generation from the Submissions screen: one spec
+   per commit, user-visible outcomes. restart.spec.ts already drives bulk generation through
+   the API; the browser path is what is missing.
+2. The seed's brand kit — DECIDED by the owner 2026-09-22: the demo lands in Loppa's own
    palette. seed.ts writes a Loppa brand kit consistent with packages/tokens; demo/dataset.ts
    agrees (no "Demo AB" navy as the landing point); the low-contrast border becomes a derived
    token, never the raw hex. Delete the §2.2 row.
-4. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
+3. Dependabot #98–#102: judge one by one as PROGRESS.md § Dependabot did — routine on green
+   verify locally; zod 4, vite 8, tanstack-table 9 and dotenv 18 are majors, ADR 0005 applies.
+4. The §2.3 rows from the shell re-run (P1: the door's sizes lost in the cascade; the
+   not-found verdict — its sentence is the owner's) and the §2.2 stale bulk-export row.
+5. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
 
 Do not start the catalogue/wizard work (§ The catalogue direction) without a paper decision.
 Do not take a dependency major without reading docs/adr/0005-dependency-majors.md.
@@ -49,23 +54,26 @@ Do not take a dependency major without reading docs/adr/0005-dependency-majors.m
 
 ## State
 
-- `origin/main` at **#96** (2026-09-22). No pull requests open. The routine dependabot group
-  (#83) is merged; the four majors (#62, #84, #85, #86) were closed for the reasons in
+- `origin/main` at **#104** (2026-09-22). Open: dependabot #98–#102, not yet inspected. The
+  four majors (#62, #84, #85, #86) were closed for the reasons in
   `docs/adr/0005-dependency-majors.md`, and `.github/dependabot.yml` ignores their major lines.
-- The local track **L0–L7 and the site design pass are done** (#87–#95): every numbered §2.1
-  audit row and the four §2.2 string rows closed on evidence; `docs/PROGRESS.md` § L0 … § Design
-  pass are the record. §2.1 now holds only backups (no host) and MFA (owner decision).
-- `pnpm verify` green: **132 test files, 1756 tests**, both apps build. `pnpm test:e2e`:
-  **11 passed** against the portable Postgres 16 (`docs/PROGRESS.md` § L0 has the start command;
+- **L0–L7, the site design pass, the app-shell pass and the restart proof are done** (#87–#95,
+  #103, #104); `docs/PROGRESS.md` § L0 … § The restart proof are the record. §2.1 holds only
+  backups (no host) and MFA (owner decision); §2.2 holds the demo brand kit (decided, not built)
+  and the stale bulk export; §2.3 holds the eight rows the shell re-run measured.
+- `pnpm verify` green: **138 test files, 1777 tests**, both apps build. `pnpm test:e2e`:
+  **16 passed** against the portable Postgres 16 (`docs/PROGRESS.md` § L0 has the start command;
   no Docker on this machine). `pnpm verify` and `pnpm contract:check` together are the
   definition of done.
-- Site critique trend **18 → 22 → 23 → 25 / 32**; the app shell was not re-scored by the later
-  runs and its §2.3 rows are the next design task.
+- Critique trends: site **18 → 22 → 23 → 25 / 32**; app shell **21 → 23 → 23 / 40** (the last
+  run scored the dead undo at 1 on heuristic 3; it was fixed after the snapshot).
 - Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
   **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
   complete**; 4 (polish and SEO) not started.
 - `LAUNCH-CHECKLIST.md` is the single list of what is still temporary, unconfigured or
   unconfirmed. Delete rows as they close; never tick them.
+- The owner's next step, not code: the click-through — tunnel up, fill the form on a phone, open
+  the console link, scan at the door.
 
 ## House rules that bite
 
@@ -107,13 +115,14 @@ marketing email.
 
 ## Next unblocked work — in this order
 
-1. **App-shell design pass** — `LAUNCH-CHECKLIST.md` §2.3, from the latest snapshot in
-   `.impeccable/critique/`; `/impeccable polish` reads that file.
-2. **e2e for the builder, the admission PDF download and bulk generation** — user-visible
-   outcomes, one spec per commit.
-3. **The seed's brand kit** — decided (Loppa's palette); make `seed.ts` and `demo/dataset.ts`
+1. **e2e in the browser for the builder, the admission PDF download and bulk generation** —
+   user-visible outcomes, one spec per commit.
+2. **The seed's brand kit** — decided (Loppa's palette); make `seed.ts` and `demo/dataset.ts`
    agree and derive the border token.
+3. **Dependabot #98–#102**, one by one; majors against ADR 0005.
 4. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
+5. **Backup and tested restore** — deferred by the owner until there is a host; when it comes,
+   database + document volume as one dataset, proven with the restart spec's assertions.
 
 ---
 
