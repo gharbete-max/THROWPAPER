@@ -89,20 +89,22 @@ safe default; the server refuses or degrades loudly when they are missing.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
 | The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one) | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
 
-### 2.3 Open findings from the second design critique — the app shell (P2, not yet actioned)
+### 2.3 Open findings from the app-shell critique (P1–P3, not yet actioned)
 
-Snapshot: `.impeccable/critique/2026-09-15T07-51-16Z__apps-forms-src-site-site-tsx.md`. The site's rows
-closed in the design pass of 2026-09-22 (`docs/PROGRESS.md`); what remains is the app shell, which the
-later critiques did not re-score.
+The six app-shell rows from the 2026-09-15 critique closed in the app-shell pass of 2026-09-22
+(`docs/PROGRESS.md` § The app-shell pass). These are what the re-run found; snapshot
+`.impeccable/critique/2026-09-22T02-29-37Z__apps-forms-src-screens-checkin-tsx.md`, 23/40.
 
-| What                                                                                                                 | Where                                          |
-| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `<Reveal>` renders a `<div>` between `<ul>` and `<li>` on Responses — invalid list, and the row dividers never match | `screens/Inbox.tsx`, `components/Signed.tsx`   |
-| The door never names its event; a wrong event id renders a working-looking door that says "Not found" to every scan  | `screens/CheckIn.tsx`                          |
-| At 375px the idle verdict wraps and the panel shrinks 178 → 152 on the first scan                                    | `styles.css` `.verdict--idle`                  |
-| Five "Undo" buttons share one accessible name; `aria-label` on a `<p>`                                               | `screens/CheckIn.tsx`, `screens/EventForm.tsx` |
-| Refocusing the reference input after every scan raises the Android keyboard over the viewfinder                      | `screens/CheckIn.tsx`                          |
-| Confirmation screen drops the form title and never says a card or email is coming                                    | `screens/PublicForm.tsx`                       |
+| What                                                                                                                                                                                              | Where                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| The door's sizes are lost in the cascade: `.field input` beats `.checkin__input` (16px, not 2xl), a later `.button` beats `.door__check` (44px, not 55px), `h2` beats `.small` on "Last arrivals" | `styles.css` `.checkin__input`, `.door__check`, `.door__recent h2` |
+| "Not found" clears the field and says nothing else — a typo and the wrong queue look the same; needs the typed reference echoed and one sentence of what to do (the sentence is yours)            | `screens/CheckIn.tsx` `Verdict`                                    |
+| A failed undo shows no verdict (the request now succeeds; the `catch` is still silent)                                                                                                            | `screens/CheckIn.tsx` `undo`                                       |
+| At 375 "Leave the door" wraps to two lines and clips 17px; title and count share one row                                                                                                          | `styles.css` `.door__top`                                          |
+| Verdict meta at `opacity: .85` measures 3.9:1 on success and 4.4:1 on warning at 14.3px                                                                                                           | `styles.css` `.verdict__meta`                                      |
+| Confirmation screen: no live region, focus left on `body` after submit; step 2 shows "required" before any interaction                                                                            | `screens/PublicForm.tsx`                                           |
+| Responses at 375 truncates the name while the form title keeps its width; every row wears the same "Complete" badge; timestamps carry seconds                                                     | `screens/Inbox.tsx`, `styles.css` `.inbox__link`                   |
+| Camera failure prints the browser's own `error.message`, untranslated                                                                                                                             | `screens/CheckIn.tsx` `startScanning`                              |
 
 ---
 
