@@ -202,13 +202,23 @@ export function registerDocumentRoutes(
 
       // Keyed on the form and its published version: re-asking for the same documents returns the
       // job already running rather than starting a second Chromium marathon.
-      const job = await deps.repos.jobs.enqueue({
+      const queued = await deps.repos.jobs.enqueue({
         organisationId: auth.organisation.id,
         kind: ADMISSION_BULK_JOB,
         idempotencyKey: `${ADMISSION_BULK_JOB}:${id}:${form.publishedVersion ?? 0}`,
         payload: { formId: id },
         progressTotal: cardCount,
       });
+      /*
+       * Joining a run in progress is the point of the key; joining a run that finished last week
+       * is not. `enqueue` is idempotent across time too, so a finished job came back forever —
+       * its link an hour from expiry, its ZIP missing everyone who registered since. A finished
+       * job is started again: same row, same key, so the next click during the new run joins it.
+       */
+      const job =
+        queued.status === 'done' || queued.status === 'failed'
+          ? ((await deps.repos.jobs.restart(queued.id)) ?? queued)
+          : queued;
 
       await recordAudit(deps.repos, request, {
         action: 'admission.bulk_requested',

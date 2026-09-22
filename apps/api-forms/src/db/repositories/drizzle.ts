@@ -1022,6 +1022,25 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .returning({ id: jobs.id });
         return rows.length;
       },
+
+      restart: async (id) => {
+        await db
+          .update(jobs)
+          .set({
+            status: 'queued',
+            attempts: 0,
+            result: null,
+            error: null,
+            progressDone: 0,
+            startedAt: null,
+            finishedAt: null,
+            runAfter: new Date(),
+          })
+          .where(and(eq(jobs.id, id), inArray(jobs.status, ['done', 'failed'])));
+        return first(
+          await db.select().from(jobs).where(eq(jobs.id, id)).limit(1),
+        ) as JobRecord | null;
+      },
     },
 
     brandKits: {

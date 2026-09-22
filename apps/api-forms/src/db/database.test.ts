@@ -367,6 +367,15 @@ describe.skipIf(!migrated)('drizzle repositories against a real database', () =>
     const dead = await repos.jobs.findById(organisationId, job.id);
     expect(dead?.status).toBe('failed');
     expect(dead?.finishedAt).not.toBeNull();
+
+    // A finished job runs again from the start; one that is queued is left as it is.
+    const restarted = await repos.jobs.restart(job.id);
+    expect(restarted?.status).toBe('queued');
+    expect(restarted?.attempts).toBe(0);
+    expect(restarted?.error).toBeNull();
+    expect(restarted?.finishedAt).toBeNull();
+    await sql`update jobs set status = 'running', started_at = now() where id = ${job.id}`;
+    expect((await repos.jobs.restart(job.id))?.status).toBe('running');
     await sql`delete from jobs where id = ${job.id}`;
   });
 });
