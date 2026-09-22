@@ -653,6 +653,7 @@ export const frFR: Record<MessageKey, string> = {
   'wizard.done': 'Terminé',
   'wizard.review': 'Voici ce que cela donne',
   'wizard.open': 'Ouvrir dans l’éditeur',
+  'wizard.next': 'Suivant',
   'wizard.back': 'Retour',
   'wizard.advanced': 'Le construire moi-même',
   'public.back': 'Précédent',

@@ -641,6 +641,7 @@ export const fiFI: Record<MessageKey, string> = {
   'wizard.done': 'Valmis',
   'wizard.review': 'Tästä tulee tämä',
   'wizard.open': 'Avaa muokkaimessa',
+  'wizard.next': 'Seuraava',
   'wizard.back': 'Takaisin',
   'wizard.advanced': 'Rakennan itse',
   'public.back': 'Takaisin',

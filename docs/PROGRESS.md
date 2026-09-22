@@ -2299,6 +2299,52 @@ moderation terms and a contribution licence.
 **Not done here.** The model change itself. It is a breaking change to `packages/shared`, a
 lead-owned conflict zone, which is the whole reason the ADR came first.
 
+## S4b — the wizard becomes facets · done
+
+ADR 0006's model change, mechanism only. Today's three purposes reshaped into a sector and its
+facets; no new verticals, which are content and partly gated on the owner's wording under rule 8.
+**Touches `packages/shared`** — a lead-owned conflict zone, which is why the ADR came first. The
+contract does not move: `wizardAnswers` is still a list of option ids.
+
+**`next` became `selects`.** An option used to name the one question that followed, so question
+*order* was a property of the data — right for a decision tree, wrong for what this asks, because
+"needs payment" and "needs a signature" are independent and making one come second was an
+invention. A sector option now selects a set of facets, answered in any order, and `activeQuestions`
+is what everything else is built on.
+
+**The option that proves the change was worth making.** `signup-extras` carried a fourth option,
+"Both of those", whose contributions were `dietary` and `guests` copied out verbatim. Nobody wanted
+that option; it existed because one answer per question could not say "these two". Multi-select
+says it, so the copy is gone — and `collect-what` became a matrix for the same reason.
+
+**`everyPath()` is deleted, and the promise it carried is not.** Enumeration is 2ⁿ once a facet
+takes several answers. Four invariants replace it, and the fourth is the four-press promise written
+as `maxFacets: 3` — ADR 0006 is explicit that it otherwise disappears without anybody deciding to
+drop it. Cycles are not detected any more but made impossible: a set has no `next` to point
+backwards through.
+
+**One invariant was written too broad and the test said so.** "No two options contribute the same
+key with different definitions" fired on the real tree at once: `signup` asks for a required email,
+`collect` for an optional one. But those are two options of the same **single-select** question —
+alternatives, never both chosen, never a collision. A check that flags a non-problem teaches the
+reader to ignore it, so it was narrowed to options that can actually co-occur: within a facet only
+when it is `multiple`, across questions only when a sector puts both in the same run. Then proven
+to still have teeth by adding a conflicting `email` to `contact-message/message` — it named the
+exact pair and key.
+
+**Two guarantees the old walk gave for free, kept deliberately.** An unknown answer id used to fail
+because it had no successor; matching against a set would have ignored it silently, so `collect`
+checks. `wizardAnswers` arrives over HTTP, and a typo producing a form missing half its fields
+would be found by the person filling it in.
+
+**Pressed, not reasoned about.** `e2e/wizard.spec.ts` is new: the wizard was the one entry S3's
+loop deliberately walks past, so nothing in a browser had ever touched it. It answers a facet with
+two options and checks the persisted draft is `name, email, meal, guests` — the four the review
+screen promised. **The suite is 21, up from 20.**
+
+**Not done here.** The verticals: real estate, AGM/EGM, small business, trades. Trades and law ship
+bracketed placeholders whenever they come, per rule 8.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

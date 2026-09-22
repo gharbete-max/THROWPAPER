@@ -654,6 +654,7 @@ export const deDE: Record<MessageKey, string> = {
   'wizard.done': 'Fertig',
   'wizard.review': 'Das kommt dabei heraus',
   'wizard.open': 'Im Editor öffnen',
+  'wizard.next': 'Weiter',
   'wizard.back': 'Zurück',
   'wizard.advanced': 'Selbst aufbauen',
   'public.back': 'Zurück',

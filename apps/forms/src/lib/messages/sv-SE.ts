@@ -638,6 +638,7 @@ export const svSE: Record<MessageKey, string> = {
   'wizard.done': 'Klart',
   'wizard.review': 'Så här blir det',
   'wizard.open': 'Öppna i redigeraren',
+  'wizard.next': 'Nästa',
   'wizard.back': 'Tillbaka',
   'wizard.advanced': 'Bygga själv',
   'public.back': 'Tillbaka',

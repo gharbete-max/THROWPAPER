@@ -637,6 +637,7 @@ export const nbNO: Record<MessageKey, string> = {
   'wizard.done': 'Ferdig',
   'wizard.review': 'Slik blir det',
   'wizard.open': 'Åpne i editoren',
+  'wizard.next': 'Neste',
   'wizard.back': 'Tilbake',
   'wizard.advanced': 'Bygge det selv',
   'public.back': 'Tilbake',

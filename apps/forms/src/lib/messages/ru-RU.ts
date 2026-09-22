@@ -650,6 +650,7 @@ export const ruRU: Record<MessageKey, string> = {
   'wizard.done': 'Готово',
   'wizard.review': 'Вот что получится',
   'wizard.open': 'Открыть в редакторе',
+  'wizard.next': 'Далее',
   'wizard.back': 'Назад',
   'wizard.advanced': 'Собрать самому',
   'public.back': 'Назад',

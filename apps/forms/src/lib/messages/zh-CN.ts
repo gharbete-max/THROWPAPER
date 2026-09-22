@@ -627,6 +627,7 @@ export const zhCN: Record<MessageKey, string> = {
   'wizard.done': '完成',
   'wizard.review': '结果是这样',
   'wizard.open': '在编辑器中打开',
+  'wizard.next': '下一步',
   'wizard.back': '返回',
   'wizard.advanced': '自己搭建',
   'public.back': '上一步',

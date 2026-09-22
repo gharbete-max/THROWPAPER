@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { collect, currentQuestion, type WizardTree } from '@tp/shared/wizard';
+import { activeQuestions, collect, currentQuestion, type WizardTree } from '@tp/shared/wizard';
 import { pickText, type LocaleConfig } from '@tp/i18n';
 import { Icon } from './Icon.js';
 import { useT } from '../lib/i18n.js';
@@ -50,9 +50,36 @@ export function Wizard<TItem>({
 }) {
   const t = useT();
   const [answers, setAnswers] = useState<readonly string[]>([]);
+  /*
+   * The step is here rather than derived from the answers.
+   *
+   * A facet may take several answers or none, so a flat list of ids cannot tell "chose nothing
+   * here" from "has not been asked yet" — and guessing would silently skip a facet somebody
+   * deliberately left empty.
+   */
+  const [step, setStep] = useState(0);
 
-  const question = currentQuestion(tree, answers);
+  const question = currentQuestion(tree, answers, step);
   const items = collect(tree, answers);
+  const asked = activeQuestions(tree, answers);
+
+  /** The answers belonging to one question, so Back can take a whole facet off at once. */
+  const answersTo = (id: string) => {
+    const target = asked.find((candidate) => candidate.id === id);
+    const ids = new Set((target?.options ?? []).map((option) => option.id));
+    return answers.filter((answer) => ids.has(answer));
+  };
+
+  /** Back: off the current step, and drop everything the previous question collected. */
+  const back = () => {
+    const previous = asked[step - 1];
+    if (!previous) return;
+    const dropped = new Set(answersTo(previous.id));
+    setAnswers(answers.filter((answer) => !dropped.has(answer)));
+    setStep(step - 1);
+  };
+
+  const chosenHere = question ? new Set(answersTo(question.id)) : new Set<string>();
   const text = (value: Record<string, string>) => pickText(locales, value, locale).value;
 
   /*
@@ -80,11 +107,7 @@ export function Wizard<TItem>({
           <button type="button" className="button" onClick={() => onFinish(items, answers)}>
             {t('wizard.open')}
           </button>
-          <button
-            type="button"
-            className="button button--quiet"
-            onClick={() => setAnswers(answers.slice(0, -1))}
-          >
+          <button type="button" className="button button--quiet" onClick={back}>
             <Icon name="arrow-left" /> {t('wizard.back')}
           </button>
         </div>
@@ -100,30 +123,51 @@ export function Wizard<TItem>({
         The tree branches, so the number of questions left depends on what gets pressed next and a
         progress bar would be a guess presented as a fact.
       */}
-      <p className="wizard__step">{t('wizard.step', { n: String(answers.length + 1) })}</p>
+      <p className="wizard__step">{t('wizard.step', { n: String(step + 1) })}</p>
       <h2 className="wizard__prompt">{text(question.prompt)}</h2>
 
       <div className="wizard__options">
-        {question.options.map((option) => (
-          <button
-            type="button"
-            className="wizard__option"
-            key={option.id}
-            onClick={() => setAnswers([...answers, option.id])}
-          >
-            <strong>{text(option.label)}</strong>
-            {option.detail ? <span className="muted small">{text(option.detail)}</span> : null}
-          </button>
-        ))}
+        {question.options.map((option) => {
+          const chosen = chosenHere.has(option.id);
+          return (
+            <button
+              type="button"
+              className="wizard__option"
+              key={option.id}
+              /*
+               * A facet is a matrix, so its buttons toggle and the step advances on "Next". A
+               * sector is a choice, so pressing one answers it and moves on.
+               */
+              aria-pressed={question.multiple ? chosen : undefined}
+              onClick={() => {
+                if (!question.multiple) {
+                  setAnswers([...answers, option.id]);
+                  setStep(step + 1);
+                  return;
+                }
+                setAnswers(
+                  chosen
+                    ? answers.filter((answer) => answer !== option.id)
+                    : [...answers, option.id],
+                );
+              }}
+            >
+              <strong>{text(option.label)}</strong>
+              {option.detail ? <span className="muted small">{text(option.detail)}</span> : null}
+            </button>
+          );
+        })}
       </div>
 
       <div className="wizard__actions">
-        {answers.length > 0 ? (
-          <button
-            type="button"
-            className="button button--quiet"
-            onClick={() => setAnswers(answers.slice(0, -1))}
-          >
+        {question.multiple ? (
+          <button type="button" className="button" onClick={() => setStep(step + 1)}>
+            {t('wizard.next')}
+          </button>
+        ) : null}
+
+        {step > 0 ? (
+          <button type="button" className="button button--quiet" onClick={back}>
             <Icon name="arrow-left" /> {t('wizard.back')}
           </button>
         ) : null}
