@@ -2206,6 +2206,59 @@ that same `now`. Both are rubber stamps. The `clock-drift` CI job runs the whole
 3's, and it is now nearly mechanical — 26 remote branches are merged into `main` and only the open
 pull requests are not.
 
+## S3 — the simulated user, one loop · done
+
+One person, one journey, in a real browser: signs in through the emailed link, creates an event,
+builds and publishes a form, and — as a stranger, in a second browser with no session — registers,
+leaves halfway, comes back by the link, submits, and is admitted at the door by the code on their
+own admission card. `e2e/simulated-user.spec.ts`. The suite is **20 passed**, up from 19.
+
+It is deliberately one test rather than ten. The other specs assert the pieces and are better at
+it, because a focused failure names its own cause. What none of them could show is that the pieces
+still join up, and every step here is the input to the next.
+
+### Simulation findings
+
+**The magic link went nowhere. Fixed.** The exchange returned 200, the session was real, the
+refresh token was stored — and `/auth/callback` is matched before `/*`, so the callback screen kept
+rendering. Measured before the fix: `url=/auth/callback refresh=yes body="Loggar in…"` at 2s, 6s
+and 15s. After: `/events` at 2s. **Nothing caught this because nothing used it** — every existing
+spec plants a refresh token in localStorage and skips the callback, which for what those specs
+assert is the right trade. This is the whole argument for a front-door test.
+
+**A form cannot be attached to its event from any screen.** `createForm` accepts `eventId` and
+`PATCH /v1/forms/:id` honours it; no screen sends either. Without an event there is no door, so
+S3 drives this through the API and says so rather than hiding it. It is the one gap that stops an
+operator completing this journey unaided.
+
+**`login_tokens.redirect_to` is written and never read back.** The magic-link request stores where
+the person was heading; the exchange does not return it, so a link cannot deliver them there. Needs
+a server and contract change — recorded, not taken.
+
+**The two ways of making a form end in different places.** The wizard opens the new form; the
+manual route returns to the list. Small, but it is the difference between "built it" and "where
+did it go".
+
+**Not defects, but the loop only works when you know them:** the field key lives behind the
+"Avancerat" disclosure; event names are one input per locale labelled by the language, inside a
+`Namn` fieldset; the builder autosaves, so publishing immediately after an edit can ship the form
+as it was two edits ago. The spec waits on the **draft row**, not on the "Sparat" indicator —
+which was already showing from earlier edits and proved nothing.
+
+### What the test proves that no unit test can
+
+The ZIP is parsed for real — its End Of Central Directory record, no library, because `archiver`
+only writes. The QR is decoded from the **pixels** of the rendered PDF, in Chromium, with
+`pdfjs-dist` and `@zxing/library` served to the page from `node_modules`: no new dependency, and
+the claim is the one a camera at a door actually depends on. The decoded string is then typed into
+the door, which is exactly what `CheckIn.tsx:210` does with a scan.
+
+### Cost of getting it wrong
+
+Leftovers from failed runs of this spec put an extra row in `/responses` and failed **two
+unrelated** check-in tests. The cleanup now sweeps by pattern rather than by the ids a run happened
+to reach, because a test that dies at step three never sets them.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
