@@ -78,14 +78,17 @@ async function start(): Promise<void> {
   throw new Error(`API did not answer /health within 30s:\n${output}`);
 }
 
-/** SIGKILL: nothing in the process gets to run — the failure a pulled plug produces. */
-async function kill(): Promise<void> {
+/**
+ * SIGKILL: nothing in the process gets to run — the failure a pulled plug produces. SIGTERM is
+ * what `docker stop` sends, and the entry point is expected to close cleanly on it.
+ */
+async function stop(signal: 'SIGKILL' | 'SIGTERM' = 'SIGKILL'): Promise<number | null> {
   const child = api;
   api = null;
-  if (!child || child.exitCode !== null) return;
-  await new Promise<void>((done) => {
-    child.once('exit', () => done());
-    child.kill('SIGKILL');
+  if (!child || child.exitCode !== null) return child?.exitCode ?? null;
+  return new Promise((done) => {
+    child.once('exit', (code) => done(code));
+    child.kill(signal);
   });
 }
 
@@ -120,7 +123,7 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
-  await kill();
+  await stop();
   for (const reference of created) await deleteSubmission(sql, reference);
   if (jobIds.length > 0) await sql`delete from jobs where id in ${sql(jobIds)}`;
   await sql.end();
@@ -191,7 +194,7 @@ test('data, a document, an asset and an in-flight job all survive a hard restart
   jobIds.push(queuedId);
 
   // 5. The crash, and the restart.
-  await kill();
+  await stop('SIGKILL');
   await start();
   token = await signIn(request);
 
@@ -206,4 +209,10 @@ test('data, a document, an asset and an in-flight job all survive a hard restart
   const recovered = await waitForJob(request, token, jobId, 60_000);
   expect(recovered.status).toBe('done');
   expect((await request.get(`${BASE}${recovered.result?.downloadPath}`)).status()).toBe(200);
+
+  // 7. And a polite stop is a clean exit. Not on Windows, where a signal to a child is always a
+  //    hard kill and there is nothing to observe; CI runs on Linux.
+  if (process.platform !== 'win32') {
+    expect(await stop('SIGTERM')).toBe(0);
+  }
 });
