@@ -41,6 +41,9 @@ entry at all.
    test mode.
 8. **Do not generate legal, clinical, tax or safety-critical wording.** Templates come from a
    human. See the deferred list in each spec.
+9. **Internal names stay `throwpaper` / `@tp/*`** by owner instruction. Only user-facing strings
+   say Loppa. **Never mass-rename** — a sweep across package names, imports and identifiers is a
+   large diff that buys nothing a user can see.
 
 ## Commands
 
