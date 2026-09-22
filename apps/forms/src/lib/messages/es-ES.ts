@@ -121,7 +121,6 @@ export const esES: Record<MessageKey, string> = {
   'inbox.empty': 'Aún no hay respuestas.',
   'inbox.loadFailed': 'No se pudieron cargar las respuestas.',
   'inbox.partial': 'En curso',
-  'inbox.complete': 'Enviada',
   'inbox.search': 'Buscar',
   'inbox.count': 'plural:one {count} respuesta | other {count} respuestas',
 

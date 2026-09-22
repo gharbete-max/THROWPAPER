@@ -122,7 +122,6 @@ export const deDE: Record<MessageKey, string> = {
   'inbox.empty': 'Noch keine Antworten.',
   'inbox.loadFailed': 'Die Antworten konnten nicht geladen werden.',
   'inbox.partial': 'In Bearbeitung',
-  'inbox.complete': 'Abgeschickt',
   'inbox.search': 'Suchen',
   'inbox.count': 'plural:one {count} Antwort | other {count} Antworten',
 

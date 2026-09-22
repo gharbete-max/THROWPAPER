@@ -302,3 +302,17 @@ test('an undo that fails says so, and the arrival stands', async ({ page, reques
   await expect(page.locator('.verdict')).toContainText('Göran Häggkvist');
   await expect(undo).toBeVisible();
 });
+
+test('a Responses row on a phone gives the name its own line', async ({ page }) => {
+  await signInAs(page, sql, 'admin@example.com');
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/responses');
+  const row = page.locator('.inbox__link').first();
+  await expect(row).toBeVisible();
+  const who = (await row.locator('.inbox__who').boundingBox())!;
+  const form = (await row.locator('.inbox__form').boundingBox())!;
+  // The form's title sits beneath the name, not beside it eating its width.
+  expect(form.y).toBeGreaterThanOrEqual(who.y + who.height - 1);
+  // No badge on a finished response: the mark is for the exception.
+  await expect(page.locator('.inbox__status .badge').first()).toHaveCount(0);
+});

@@ -2277,19 +2277,33 @@ input[type='file']:disabled::file-selector-button {
   white-space: nowrap;
 }
 
-/* On a phone the four columns become two rows: what it was and when, then the reference and the
- * badge. A four-column grid at 375px puts three characters in each. */
+/* On a phone the four columns become two rows. The name has the first row to itself (the badge
+ * beside it when there is one), the form and the time share the second: sharing the first row
+ * with the form's title truncated the name to a dozen letters, and the name is what somebody
+ * scans for. A four-column grid at 375px puts three characters in each. */
 @media (max-width: 720px) {
   .inbox__link {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
-  .inbox__reference {
-    order: 3;
+  .inbox__who {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .inbox__status {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .inbox__form {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .inbox__when {
-    order: 4;
+    grid-column: 2;
+    grid-row: 2;
     justify-content: flex-end;
   }
 }

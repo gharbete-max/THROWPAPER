@@ -125,7 +125,6 @@ export const jaJP: Record<MessageKey, string> = {
   'inbox.empty': '回答はまだありません。',
   'inbox.loadFailed': '回答を読み込めませんでした。',
   'inbox.partial': '入力途中',
-  'inbox.complete': '送信済み',
   'inbox.search': '検索',
   'inbox.count': 'plural:other {count} 件の回答',
 

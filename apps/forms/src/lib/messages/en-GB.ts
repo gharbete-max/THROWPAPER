@@ -126,7 +126,6 @@ export const enGB = {
   'inbox.empty': 'No responses yet.',
   'inbox.loadFailed': 'Responses could not be loaded.',
   'inbox.partial': 'In progress',
-  'inbox.complete': 'Submitted',
   'inbox.search': 'Search',
   'inbox.count': 'plural:one {count} response | other {count} responses',
 
