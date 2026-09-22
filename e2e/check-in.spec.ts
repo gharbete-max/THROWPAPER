@@ -193,4 +193,16 @@ test('each undo is named after its arrival', async ({ page, request }) => {
   await expect(undo).toBeVisible();
   // And the count is one sentence, not a number with a label a paragraph cannot carry.
   await expect(page.getByText(/^\d+ av \d+ incheckade$/)).toBeAttached();
+
+  // And pressing it takes the arrival back — from a browser, with the headers a browser sends.
+  await undo.click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Ångra' }).click();
+  await expect(page.getByText('Incheckning ångrad')).toBeVisible();
+  await expect(undo).toHaveCount(0);
+  const rows = await sql`
+    select 1 from check_ins c
+    join submissions s on s.id = c.submission_id
+    where s.reference = ${reference}
+  `;
+  expect(rows).toHaveLength(0);
 });
