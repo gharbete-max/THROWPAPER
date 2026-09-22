@@ -37,8 +37,33 @@ const hostile = (colour: Partial<TokenSet['colour']>, rest: Partial<TokenSet> = 
 const THEMES: Array<[string, TokenSet]> = [
   ['near-white brand', hostile({ primary: '#fdfdfb', secondary: '#f7f7f5', accent: '#fbfbf9' })],
   ['near-black brand', hostile({ primary: '#050505', secondary: '#0a0a0a', accent: '#020202' })],
-  ['mid-grey, readable by nothing', hostile({ primary: '#808080', secondary: '#7f7f7f' })],
-  ['brand identical to the page', hostile({ primary: '#f6f5f2', secondary: '#f6f5f2' })],
+  // `#767676`, not `#808080`: the ink went near-black and an ink label reads on `#808080` at 4.6.
+  ['mid-grey, readable by nothing', hostile({ primary: '#767676', secondary: '#7f7f7f' })],
+  [
+    'brand identical to the page',
+    hostile({
+      primary: defaultTokens.colour.background,
+      secondary: defaultTokens.colour.background,
+    }),
+  ],
+  /**
+   * The palette this product shipped with before Loppa's: seafoam, coral, a green-black ink on
+   * warm paper. A customer who liked it can save it, so it is held to the same floors as anything
+   * else — and it is the mid-tone case the filled-button mechanism was worked out on.
+   */
+  [
+    'the seafoam and coral round',
+    hostile({
+      primary: '#6fb8a6',
+      secondary: '#2e3a38',
+      accent: '#ef8874',
+      background: '#f6f5f2',
+      surface: '#eceae5',
+      text: '#2e3a38',
+      muted: '#666666',
+      border: '#858585',
+    }),
+  ],
   ['dark page, light ink', hostile({ background: '#101010', surface: '#1c1c1c', text: '#f2f2f2' })],
   [
     'one colour for everything',

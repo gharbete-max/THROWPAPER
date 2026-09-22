@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { defaultTokens } from './index.js';
+import { buttonSurface, headingInk } from './derive.js';
 import { fontFaceCss, primaryFamily, toPdfFooterTemplate, toPrintCss } from './pdf.js';
 
 const css = toPrintCss(defaultTokens, { header: 'Demo AB', footer: 'Anmälan' });
@@ -21,6 +22,22 @@ describe('print stylesheet', () => {
   it('carries token colours through as literals', () => {
     expect(css).toContain(defaultTokens.colour.primary);
     expect(css).not.toContain('var(');
+  });
+
+  /**
+   * The print target resolves the brand the way the web and email targets do.
+   *
+   * Headings were `colour.primary` outright and the button was paper on primary — the pair the
+   * web fixed with `headingInk` and `buttonSurface` while the PDF kept painting them. Under a
+   * mid-tone brand that is a 2.14:1 heading on an admission card somebody prints for a door.
+   */
+  it('paints headings and the button with the derived colours, not the raw primary', () => {
+    const button = buttonSurface(defaultTokens);
+    expect(css).toContain(`color: ${headingInk(defaultTokens.colour)};\n  margin: 0 0`);
+    expect(css).toContain(`background: ${button.background};\n  color: ${button.text};`);
+    expect(css).toContain(`solid ${button.border};`);
+    // Which, for the shipped gold, is the ink and not gold-on-paper.
+    expect(headingInk(defaultTokens.colour)).not.toBe(defaultTokens.colour.primary);
   });
 
   it('keeps backgrounds when printing', () => {

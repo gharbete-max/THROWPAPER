@@ -26,9 +26,10 @@ describe('the brand fill', () => {
    * The example had to move when the palette did, and that is the finding rather than the repair.
    *
    * This read `brandFill(defaultTokens.colour)` and asserted nothing moved, on the grounds that the
-   * shipped midnight was far from parchment. The shipped primary is now seafoam, which sits 2.12:1
-   * from the page and *is* rescued — so the old assertion was testing the palette, not the
-   * function. Naming a dark colour explicitly tests what the function promises whatever ships.
+   * shipped midnight was far from parchment. The shipped primary has been a mid-tone twice since —
+   * seafoam at 2.12:1 from the page, now Loppa's gold at 2.14:1 — and *is* rescued, so the old
+   * assertion was testing the palette, not the function. Naming a dark colour explicitly tests
+   * what the function promises whatever ships.
    */
   it('leaves a colour alone when it already stands off the page', () => {
     const dark = { ...defaultTokens.colour, primary: '#1b2a45' };

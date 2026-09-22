@@ -10,6 +10,7 @@
  * tokens so whichever engine renders, the result matches.
  */
 import type { TokenSet } from './types.js';
+import { buttonSurface, headingInk } from './derive.js';
 import { fontFaceCss } from './fonts.js';
 import { pxValue, px, spacing, typeScale } from './units.js';
 
@@ -35,6 +36,13 @@ export function toPrintCss(tokens: TokenSet, options: PrintOptions = {}): string
   const unit = tokens.spacingUnit;
   const pageSize = options.pageSize ?? 'A4';
   const margin = printMargins(options);
+  /*
+   * The brand where it becomes words, resolved the way the web and email targets resolve it.
+   * Headings were the raw primary and the button paper-on-primary — a 2.14:1 heading under a
+   * mid-tone brand, on the one document somebody prints and reads at a door.
+   */
+  const heading = headingInk(colour);
+  const button = buttonSurface(tokens);
   const fonts = fontFaceCss(
     [typography.headingFont, typography.bodyFont],
     [typography.weightRegular, typography.weightBold],
@@ -78,7 +86,7 @@ body {
 h1, h2, h3 {
   font-family: ${typography.headingFont};
   font-weight: ${typography.weightBold};
-  color: ${colour.primary};
+  color: ${heading};
   margin: 0 0 ${spacing(unit, 1)} 0;
   break-after: avoid;
 }
@@ -103,9 +111,9 @@ p { margin: 0 0 ${spacing(unit, 2)} 0; }
   display: inline-block;
   padding: ${spacing(unit, 1.5)} ${spacing(unit, 3)};
   border-radius: ${tokens.radius};
-  background: ${colour.primary};
-  color: ${colour.background};
-  border: ${tokens.borderWidth} solid ${colour.primary};
+  background: ${button.background};
+  color: ${button.text};
+  border: ${tokens.borderWidth} solid ${button.border};
   font-weight: ${typography.weightBold};
   text-decoration: none;
 }

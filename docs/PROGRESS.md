@@ -2031,6 +2031,116 @@ corrected in place.
 
 **Not done here.** The two `exhaustive-deps` warnings stay — they are warnings, 0 errors, and § L0
 recorded them too. No doc reconciliation, no ADRs, no module work.
+## P0 — The palette: seafoam and coral to Loppa's gold · done
+
+The owner's insertion before the seed (2026-09-22, late): the application palette moves to the
+Loppa identity — gold, platinum, paper, ink, nothing else — from `docs/brand/tokens-loppa.css`.
+Branch `claude/palette-loppa` from `f030000` (#107). **`packages/tokens` changed** (values, one
+mechanism, one compiler); no dependency, no migration, no `docs/CONTRACT.md` change. Owner
+decisions taken at plan time: light default with the dark theme derived; the derived dark page is
+floored at the ink rather than tinted past it.
+
+**The mapping, every value the bundle's.** `primary` gold `#cea85c` (the face; fills, selected
+states); `secondary` and `accent` bronze `#8f6b3a` (links, focus, eyebrows, quote rules — the
+one brand tone that reads on paper, 4.64:1); `background` `#fafaf8`; `surface` `#e9ebee`
+(platinum's pale tier); `text` `#0e0e10`; `muted` graphite `#4a4e55` (8.00:1); `border` pewter
+`#7c8188` (3.75:1). Status colours unchanged. `loppa.test.ts` holds the default to the bundle's
+measured table (2.14, 8.61, 4.64, 3.75, 8.00, 18.45) — red first on six of six against `main`'s
+JSON — and pins what derives from it: heading = ink, accent-ink = bronze exactly, focus = bronze,
+the filled button gold with an ink label (8.61:1) and an ink boundary (18.45:1). Gold failing 3:1
+on the page is the expected case, and the mechanism did what it was built for: fill keeps the
+brand, label and edge come from the ink pole. Brand-walking gold would have landed on `#ac8434`,
+a bronze nobody chose; `DESIGN.md` records the number.
+
+**Two mechanism faults gold surfaced, both fixed at the root.** (1) `toDarkColours` tinted the
+ink toward black: a near-black ink came out as a `#050505` page with the card two units above it
+(1.01:1) and the border at 2.96. An ink darker than `#202020` is now the page itself, and a
+surface is always a 6% step toward the paper. The derived dark theme lands on `#0e0e10` /
+`#1c1c1e` / border 3.46:1 / gold 8.61:1 — the bundle's own dark numbers, derived not authored.
+Red first: `expected '#050505' to be '#0e0e10'`. (2) `compile-pdf.ts` still painted `h1–h3` in
+the raw primary and `.tp-button` as paper-on-primary — the pair web and email had already routed
+through `headingInk`/`buttonSurface`. Under gold that is a 2.14:1 heading on the admission card.
+Red first in `compile-pdf.test.ts`; `pnpm tokens:proof` now reports `chromium computed
+rgb(14, 14, 16)` for the default heading and `rgb(192, 0, 0)` for `--primary "#c00000"` — one
+change still moves web, email and PDF together (`proof.test.ts` 7/7).
+
+**The hostile kits.** The seafoam/coral round joins `locked.test.ts` as a full kit; "brand
+identical to the page" reads the default background instead of `#f6f5f2`; the "readable by
+nothing" grey moves `#808080` → `#767676` because an ink label reads on `#808080` at 4.6 under
+the new ink (4.35 / 4.25 on the new grey, both under 4.5). 127 tokens tests green.
+
+**The survivors were rasters, not hexes.** The grep sweep found no hex outside fixtures and
+worked examples — and the site's hero, header and poster were still the seafoam round's
+*renders*. They are now the bundle's gold-and-platinum render, via
+`scripts/brand/blacken-shadow.py`: the bundle bakes a warm-grey shadow (rgb 119,111,103 at α39)
+that composited as a pale smear on the near-black page — the same fault `fd91e72` fixed for the
+old pack — so its frames get a black shadow at α14 (light page unchanged). The 512 retina loop is
+dropped, not faked: the bundle renders 256 and 128 only. `build-animation-pack.py` (seafoam
+hard-coded) is deleted. `pnpm icons` regenerated the favicon and launcher tiles (gold tile, paper
+and bronze flaps); `index.html`'s `theme-color` follows the page (`document-chrome.test.ts`).
+
+**Found on the way.** The sign-in wordmark was an unstyled `<a class="login__home">` — the
+product's name on its front door in the browser's `#0000ee`, under seafoam too. One rule;
+`login-wordmark.test.ts` red first.
+
+**Measured (Playwright against `pnpm demo`, 1280 and 375, both schemes).** Light: page
+`rgb(250,250,248)`, h1 ink, eyebrow `rgb(143,107,58)`, hero button `rgb(206,168,92)` / ink label /
+ink border, quiet border pewter, band ink with eyebrow `#9a794d` (4.79:1). Dark: page
+`rgb(14,14,16)`, sign-in heading gold (`headingInk` keeps a brand that reads: 8.61:1), buttons
+gold with a gold edge, eyebrow `#d1af7f`, fields pewter-lifted `#686868`.
+
+**DESIGN.md** rewritten where it argued: the two-metal palette and the sixth-hue rule restated
+(gold, gold's tiers, the greys); the filled-button section re-derived for gold; the warm-off-white
+argument reversed for a gold identity (`#fafaf8`, the brand's own "never pure white"); the dark
+floor recorded; the mark bullet describes the raster the header shows. `README` no longer promises
+the move "in a separate PR series".
+
+**Ran.** `pnpm verify` exit 0 — **141 test files / 1793 tests** (139 / 1782 before), both builds,
+lint 0 errors (the two pre-existing exhaustive-deps warnings); `pnpm contract:check` passed (0/6
+implemented, 6 deferred); `pnpm test:e2e` **19 passed (2.0m)** against the portable Postgres 16.
+
+**A time bomb found by running verify in the afternoon.** `worker.test.ts`'s two stale-lease tests
+pinned their clock to the literal `2026-09-22T10:00:00Z`, while the in-memory `enqueue` stamps
+`runAfter` from the real clock — it takes none — and `claim` only takes a job whose `runAfter` has
+passed. So they were green every morning and red every afternoon UTC, which is the worst kind of
+red: it looks like the change under test. This branch touches nothing under `apps/api-forms`; the
+failure reproduced against `main`'s own bytes. Both tests now start their clock at the row's own
+`runAfter`, which removes the wall clock from the test entirely. Red before the fix, green after,
+in the same minute.
+
+**Critiques, re-run on the final identity.** Both dual-agent (A design review, B detector +
+Playwright at 1280/375 × light/dark; the desktop pane is unreliable here, so B drove a headless
+browser and there is no [Human] overlay tab this time). Snapshots
+`2026-09-22T12-22-52Z__…site-tsx.md` and `2026-09-22T12-37-42Z__…checkin-tsx.md`.
+
+**Site 18 → 22 → 23 → 25 → 23 / 32.** B walked every rendered colour on six pages in both schemes:
+**no seafoam, no coral, no legacy value anywhere** — the three non-token hits are UA defaults on
+visually-hidden inputs and the derived `--tp-glass`. That is the result the run was for. The
+two-point drop is two hover states measured for the first time, neither new with gold: the filled
+button has **no hover or pressed state anywhere in the product** (`styles.css:149`'s ink swap is
+out-specified by the `--tp-button-*` paint at `:3517`, equal specificity, later — only the shadow
+moves), and the quiet button's hover edge is `--tp-colour-primary`, gold on paper at **2.14:1**,
+weaker than its resting pewter at 3.75:1. Both are §2.4 rows. A's verdict is worth recording
+whole: on a light page gold is about 2% of the pixels, and the derived dark scheme — pale-gold
+eyebrows, gold-edged buttons, the paper band on `#0e0e10` — is the identity at full strength with
+nothing authored. The owner chose light default; whether the *site* is the exception is now a §3
+row.
+
+**App shell 21 → 23 → 23 → 26 → 26 / 40**, flat, and correctly so: `CheckIn.tsx` is byte-identical
+to the previous run (`sha256:31bfb57a…`). The detector is clean on all five screens with zero
+suppressions. Two root causes nobody had traced: **`button--secondary` is asked for in
+`RepeatingGroup.tsx:177` and defined in no stylesheet**, so it renders as the primary — that *is*
+the "two filled buttons on the last page" P1, and any screen reaching for a secondary tier gets a
+second primary today; and the verdict panel's fixed height holds at 375 (224px in all four states)
+but not at 1280, where "already" is 194.78px against 176px. The three open §2.3 P1s are still open
+and unchanged. On the product's own tokens (`/login` before sign-in) B measured the palette
+correct: paper/ink light, gold h1 on ink in dark, the filled button gold with an ink label and ink
+border on light and a gold border on dark, and the wordmark ink rather than `#0000ee`.
+
+**Deferred, named.** Favicon and launcher icons from `loppa-mark-flat.svg` (asset task); a 512
+loop when the bundle renders one; the "materials rotate during the chomp" question (owner,
+START-HERE §5); the demo's Demo AB navy kit is S5's row and is untouched — the signed-in shell
+under `pnpm demo` still wears it, so the shell critique measures navy until S5.
 
 ## Next
 

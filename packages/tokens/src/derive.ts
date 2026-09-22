@@ -128,26 +128,44 @@ function fromHsl([h, s, l]: [number, number, number]): string {
  *
  * - The page becomes a very dark tint *of the brand's own text colour*, so a warm palette stays
  *   warm and a cool one stays cool. A neutral `#111` for everybody is what makes dark modes look
- *   like a different product.
+ *   like a different product. An ink that is already night-dark is not tinted further: it *is*
+ *   the page, which is where the shipped near-black lands.
  * - Surfaces sit **above** the page, not below it. On light backgrounds a card is darker than the
- *   page; on dark ones it must be lighter, or every card reads as a hole.
+ *   page; on dark ones it must be lighter, or every card reads as a hole. So a surface is a step
+ *   from the page toward the paper, whatever the ink.
  * - Brand colours are lifted toward the light end until they carry on a dark ground. A navy
  *   primary at 0.05 luminance is invisible on a dark page and unusable as a button.
  *
  * `derive.test.ts` runs the contrast checker over the dark form of every shipped preset, so a
  * derivation that produces something unreadable fails the build rather than shipping.
  */
+/** Luminance of `#202020`: an ink darker than this is a night page already, not a colour to tint. */
+const NIGHT = luminance('#202020') ?? 0;
+
 export function toDarkColours(colour: ColourTokens): ColourTokens {
   // The darkest ink in the palette is the hue the page should be tinted with.
   const ink =
     lightness(colour.text) <= lightness(colour.background) ? colour.text : colour.background;
 
-  const background = mix(ink, '#000000', 0.34);
-  const surface = mix(ink, '#000000', 0.52);
+  /*
+   * An ink that is already a night page is the night page.
+   *
+   * Tinting was written for a mid-dark ink — a green-black `#2e3a38` becomes a `#101413` page — and
+   * it walks a near-black one past the floor: `#0e0e10` came out as `#050505`, with the surface two
+   * steps above it and the border under 3:1. Nothing is gained by darkening what is already dark;
+   * the brand's own dark theme is its ink, so an ink below the floor is used as it is.
+   */
+  const background = lightness(ink) <= NIGHT ? ink : mix(ink, '#000000', 0.34);
   // The paper colour becomes the ink, pulled off pure white so it is not glaring at night.
   const paper =
     lightness(colour.background) >= lightness(colour.text) ? colour.background : colour.text;
   const text = mix(paper, '#ffffff', 0.82);
+  /*
+   * A card is a step toward the paper, not a second darkening of the ink. The old `mix(ink, black,
+   * 0.52)` sat above the page only because 0.52 is more ink than 0.34, and for a near-black ink the
+   * two collapsed together (1.01:1). Mixing toward the paper lifts it for every ink.
+   */
+  const surface = mix(paper, background, 0.06);
 
   /**
    * Lift a brand colour until it carries on the dark page, keeping its hue.
@@ -215,10 +233,11 @@ export function accentInk(colour: ColourTokens): string {
  * What a heading is painted in: the brand's primary where it reads on the page, the ink otherwise.
  *
  * Headings were `primary` unconditionally — on the web via `.shell h1`, in mail via the compiler —
- * and a fill colour is checked for nothing as text. Under the shipped seafoam that was "Sign in" at
- * 2.12:1, the faintest thing on the screen. A navy customer keeps navy headings; a pastel one gets
- * ink, not a darkened pastel, because "the same colour, darker" of a seafoam is the muddy teal the
- * palette was narrowed to be rid of. Either it is their colour or it is the ink.
+ * and a fill colour is checked for nothing as text. Under the seafoam that shipped before Loppa's
+ * gold that was "Sign in" at 2.12:1, the faintest thing on the screen; gold is 2.14:1, the same
+ * class. A navy customer keeps navy headings; a mid-tone one gets ink, not a darkened brand,
+ * because "the same colour, darker" of a seafoam is a muddy teal and of a gold a muddy olive —
+ * colours in no palette. Either it is their colour or it is the ink.
  */
 export function headingInk(colour: ColourTokens): string {
   const reads = (contrastRatio(colour.primary, colour.background) ?? 0) >= TEXT_CONTRAST;
@@ -436,8 +455,9 @@ export function buttonSurface(tokens: TokenSet): {
        *
        * Deepening the fill until it stands off the page and *then* choosing a label makes the two
        * decisions in the right order, which is why it is done that way — but for a colour that
-       * starts in the middle, the deepening is what destroys the label. Seafoam `#6fb8a6` reads
-       * 5.11:1 against the palette's ink and 2.12:1 against its page; walked out to `#499482` it
+       * starts in the middle, the deepening is what destroys the label. The seafoam `#6fb8a6` this
+       * was worked out on read 5.11:1 against its ink and 2.12:1 against its page (the shipped gold
+       * `#cea85c` is the same case: 8.61 and 2.14); walked out to `#499482` the seafoam
        * reads 3.30 against the page and 3.28 against the ink, so there is no longer any label that
        * can be put on it. The button came out legible to nobody, and every check passed, because
        * each one was asking about a different pair.
@@ -479,8 +499,8 @@ export function buttonSurface(tokens: TokenSet): {
        * Nothing reads on the colour as given, so it is walked until something does.
        *
        * `brandFill` has already moved it far enough to be *seen*, which is a lower bar than being
-       * read on: a mid-grey `#808080` clears 3:1 against a light page while offering 3.62 to the
-       * page and 2.83 to the ink, so the button is visible and its label is not. Walking on until a
+       * read on: a mid-grey `#767676` clears 3:1 against the page while offering 4.35 to the page
+       * and 4.25 to the ink, so the button is visible and its label is not. Walking on until a
        * label clears 4.5 is the difference between reporting the problem and not having it.
        *
        * The organisation is still told — `checkContrast` reports a primary no label reads on — but

@@ -97,19 +97,18 @@ describe('the hero mark', () => {
   });
 
   /**
-   * The 2x animation is a desktop offer, not a density offer.
+   * A 2x animation, if one is offered, is a desktop offer and not a density offer.
    *
-   * `2x` alone would send 997 KB to any retina phone — most of them — on the connection least able
-   * to take it, to sharpen a mark that is *smaller* there than on desktop. The width gate is what
-   * keeps the phone on the 494 KB file.
+   * `2x` alone would send a megabyte to any retina phone — most of them — on the connection least
+   * able to take it, to sharpen a mark that is *smaller* there than on desktop. There is no 2x
+   * source today (the gold render ships at 256 only); this holds the gate for the day it returns,
+   * and cannot pass by finding nothing because the first test above already requires a source.
    */
-  it('keeps the retina variant off phones', () => {
-    const retina = SITE.match(/<source\b[^>]*mark-loop-512[\s\S]*?\/>/)?.[0];
-    expect(retina, 'no 2x source found').toBeDefined();
-    // At least a laptop. The gate moved from 900 to 1200px so a 2x screen that draws the mark at
-    // 304px takes the 506 KB file it cannot tell apart from the 1,021 KB one.
-    const gate = Number(/min-width:\s*(\d+)px/.exec(retina ?? '')?.[1]);
-    expect(gate).toBeGreaterThanOrEqual(900);
+  it('keeps any retina variant off phones', () => {
+    for (const source of SITE.match(/<source\b[^>]*\b2x\b[\s\S]*?\/>/g) ?? []) {
+      const gate = Number(/min-width:\s*(\d+)px/.exec(source)?.[1]);
+      expect(gate, source).toBeGreaterThanOrEqual(900);
+    }
   });
 
   it('falls back to the poster, which is the animation frozen at frame 0', () => {

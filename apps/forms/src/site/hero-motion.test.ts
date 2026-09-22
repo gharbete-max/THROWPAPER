@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 /**
- * The hero animation costs 505 KB, and the rule is that no phone pays it.
+ * The hero animation costs 1,120 KB, and the rule is that no phone pays it.
  *
  * This is a regression test for a defect that shipped and survived a design critique: the 2x
  * variant was gated to desktop widths and the animation itself was not, so every phone without a

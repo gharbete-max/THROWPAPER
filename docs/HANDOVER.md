@@ -12,29 +12,39 @@ packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
 docs/adr/0001-theming-layers.md, then docs/PROGRESS.md from § L0 to the end before touching
 anything. Do not re-derive anything HANDOVER marks as established.
 
-State (measured 2026-09-22, late): origin/main at the merge of S2 (claude/l8b-door). Done and
-merged: the local track L0–L7 and the site design pass (#87–#95); the app-shell pass (#103); the
-restart proof (#104 — SIGKILL survival, orphaned `running` jobs requeued after 15 min,
-SIGTERM/SIGINT close the server); dependabot batch two (#105 — #98 merged, four majors closed
-per ADR 0005, eight ignored now); S2 the door readiness (nine rows: the door's sizes, header at
-375, meta contrast, not-found echo, undo verdict, camera error, the last page that opened marked
-wrong — a React node-patching submit —, the thank-you focus, Responses rows, the bulk export that
-ran again; plus a 429 that read as "closed"). Shell critique 21 → 23 → 23 → 26 / 40.
-`pnpm verify` green (139 test files, 1782 tests), `pnpm test:e2e`
-19/19 against the portable Postgres 16 — start command in docs/PROGRESS.md § L0; no Docker on
-this machine. It must say "19 passed", not SKIPPED, before anything else is trusted. Site
-critique 18 → 22 → 23 → 25 / 32; app shell 21 → 23 → 23 / 40 (snapshot 2026-09-22T02-29-37Z).
+State (measured 2026-09-22, midday): origin/main at the merge of S2 (claude/l8b-door); the
+palette series (P0, branch claude/palette-loppa) is done and in review. Done and merged: the
+local track L0–L7 and the site design pass (#87–#95); the app-shell pass (#103); the restart
+proof (#104); dependabot batch two (#105); S2 the door readiness (#107). P0 THE PALETTE moved
+packages/tokens to the Loppa identity — gold #cea85c fills, bronze #8f6b3a where the brand is
+read, paper #fafaf8, platinum #e9ebee, ink #0e0e10, graphite, pewter, every value from
+docs/brand/tokens-loppa.css and held there by packages/tokens/src/loppa.test.ts — and fixed the
+two mechanism faults gold exposed: toDarkColours walked a near-black ink past the floor (page
+#050505, card 1.01:1, border 2.96) and now floors the page at the ink with the surface stepping
+toward the paper (#0e0e10 / #1c1c1e / 3.46:1 / gold 8.61:1), and compile-pdf.ts still painted
+headings and the button with the raw primary instead of headingInk/buttonSurface. The site's
+hero and header rasters were the seafoam round's renders and are now the brand bundle's own,
+through scripts/brand/blacken-shadow.py. `pnpm verify` green (141 test files, 1793 tests),
+`pnpm contract:check` passed, `pnpm test:e2e` 19/19 against the portable Postgres 16 — start
+command in docs/PROGRESS.md § L0; no Docker on this machine. It must say "19 passed", not
+SKIPPED, before anything else is trusted. Site critique 18 → 22 → 23 → 25 → 23 / 32 (the drop is
+two hover states measured for the first time, neither new with gold); app shell
+21 → 23 → 23 → 26 → 26 / 40 (flat: CheckIn.tsx is byte-identical).
 
 Rules that bite: one task per branch, plan mode first, `pnpm verify` and `pnpm contract:check`
 before "done"; every fix gets a discriminating test committed red first; never mass-rename
 internal identifiers (throwpaper stays throwpaper in paths/tables/routes); no new dependencies
 without asking (majors: see ADR 0005); no legal/clinical/tax/safety wording (rule 8); a brand
 colour never paints text unchecked — reach for the derived tokens (--tp-colour-heading,
---tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The owner
-dislikes dark teal and the flat mark. Design first, then one ponytail pass; never both in one.
+--tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The palette is
+Loppa's gold/bronze/paper/platinum/ink and nothing else may be added to it: gold is a FILL (2.14:1
+on the page, by design), bronze is the brand where it is read, and every value comes from
+docs/brand — never invent a hex. The owner dislikes dark teal and the flat mark. Design first,
+then one ponytail pass; never both in one.
 
 Pick up in this order, one task per session (the owner's order of 2026-09-22 late; the owner
-cannot test by hand — Playwright driving real browsers is the acceptance channel):
+cannot test by hand — Playwright driving real browsers is the acceptance channel). P0 the palette
+is done; S5 is now trivial because the values it seeds exist:
 1. S3 — the simulated user, one loop end to end (branch claude/sim-v01-loop): sign in via the
    console-logged magic link → create the event → build the form in the builder UI → publish →
    fill it as an attendee with save-and-resume → find the confirmation in the console log,
@@ -48,10 +58,16 @@ cannot test by hand — Playwright driving real browsers is the acceptance chann
    scanner excepted; composition not retrieval; replace WizardOption.next with a sector-selected
    question set and everyPath() with three invariants as property tests; trades and law blocked
    until a human authors their wording — rule 8), then the form-builder entry only.
-3. S5 — the seed's brand kit (branch claude/l10-seed-brandkit): decided — Loppa's palette from
-   packages/tokens values, demo/dataset.ts agrees, the border a derived token. Delete the §2.2 row.
-4. The §2.3 rows from the S2 re-run (three P1: not-found remedy — the sentence is the owner's;
-   the recent row's name at 375; two primaries on the public form's last page) and the P2s.
+3. S5 — the seed's brand kit (branch claude/l10-seed-brandkit): unblocked by P0 and small —
+   seed.ts and demo/dataset.ts write the migrated packages/tokens values (no hard-coded hex), the
+   1.28:1 border becomes a derived token, CLAUDE.md §Demo data still passes. Delete the §2.2 row.
+   Until it lands, `pnpm demo` renders the signed-in shell in the seeded Demo AB navy, so a
+   critique of the shell must judge the palette on /login before sign-in.
+4. The §2.3 and §2.4 rows (three P1 carried: not-found remedy — the sentence is the owner's; the
+   recent row's name at 375; two primaries on the public form's last page, whose root cause is
+   that `button--secondary` is asked for in RepeatingGroup.tsx:177 and defined in no stylesheet.
+   Plus §2.4: a filled button has no hover or pressed state anywhere in the product because
+   styles.css:149 is out-specified by :3517, and the quiet button's hover edge is gold at 2.14:1).
 5. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
 
 The wizard's paper decision exists (owner, 2026-09-22): S4 writes it down as ADR 0006 before any
@@ -61,18 +77,29 @@ Do not take a dependency major without reading docs/adr/0005-dependency-majors.m
 
 ## State
 
-- `origin/main` at **S2's merge** (2026-09-22, late). No pull requests open. Eight majors are
-  closed for the reasons in `docs/adr/0005-dependency-majors.md` and ignored by dependabot.
-- **L0–L7, the site pass, the app-shell pass, the restart proof, dependabot batch two and the
-  door readiness are done** (#87–#95, #103, #104, #105, S2); `docs/PROGRESS.md` § L0 … § S2 are
-  the record. §2.1 holds backups (no host) and MFA (owner decision); §2.2 holds the demo brand
-  kit (decided, S5); §2.3 holds the not-found sentence (owner's) and the seven rows the S2
-  re-run measured.
-- `pnpm verify` green: **139 test files, 1782 tests**, both apps build. `pnpm test:e2e`:
-  **19 passed** against the portable Postgres 16 (`docs/PROGRESS.md` § L0 has the start command;
-  no Docker on this machine). `pnpm verify` and `pnpm contract:check` together are the
-  definition of done.
-- Critique trends: site **18 → 22 → 23 → 25 / 32**; app shell **21 → 23 → 23 → 26 / 40**.
+- `origin/main` at **S2's merge** (2026-09-22, late); **P0 the palette** (`claude/palette-loppa`)
+  is done and open as a pull request. Eight majors are closed for the reasons in
+  `docs/adr/0005-dependency-majors.md` and ignored by dependabot.
+- **L0–L7, the site pass, the app-shell pass, the restart proof, dependabot batch two, the
+  door readiness and the palette are done** (#87–#95, #103, #104, #105, S2, P0);
+  `docs/PROGRESS.md` § L0 … § P0 are the record. §2.1 holds backups (no host) and MFA (owner
+  decision); §2.2 holds the demo brand kit (decided, S5 — **now trivial: the values exist**);
+  §2.3 holds the not-found sentence (owner's) and the rows the S2 and P0 re-runs measured; §2.4
+  holds the four the site critique found on the gold palette.
+- **The palette is Loppa's** and every value derives from `default-tokens.json`:
+  gold `#cea85c`, bronze `#8f6b3a`, paper `#fafaf8`, platinum `#e9ebee`, ink `#0e0e10`, graphite,
+  pewter. `packages/tokens/src/loppa.test.ts` holds the default to the brand bundle's measured
+  table; the seafoam/coral round is now one of the hostile kits in `locked.test.ts`. Gold is
+  2.14:1 on the page **by design** — the filled button keeps the brand and takes its label and
+  boundary from the ink.
+- `pnpm verify` green: **141 test files, 1793 tests**, both apps build. `pnpm contract:check`
+  passed. `pnpm test:e2e`: **19 passed** against the portable Postgres 16 (`docs/PROGRESS.md`
+  § L0 has the start command; no Docker on this machine). `pnpm verify` and `pnpm contract:check`
+  together are the definition of done.
+- Critique trends: site **18 → 22 → 23 → 25 → 23 / 32**; app shell
+  **21 → 23 → 23 → 26 → 26 / 40**. The site's drop is two hover states measured for the first
+  time (a filled button with no hover state anywhere in the product; a quiet button whose hover
+  edge is gold at 2.14:1) — §2.4. The shell is flat because `CheckIn.tsx` did not change.
 - Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
   **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
   complete**; 4 (polish and SEO) not started.
@@ -124,8 +151,12 @@ marketing email.
 1. **S3 — the simulated user, one loop end to end**, in the browser, against the portable
    Postgres; findings to `docs/PROGRESS.md` § Simulation findings.
 2. **S4 — the onboarding wizard**, ADR 0006 first; the form-builder entry only.
-3. **S5 — the seed's brand kit** — decided (Loppa's palette).
-4. **The S2 re-run's §2.3 rows** (three P1s, the not-found sentence the owner's).
+3. **S5 — the seed's brand kit** — unblocked and small: `seed.ts` and `demo/dataset.ts` write the
+   migrated `packages/tokens` values (no hard-coded hex), which closes the §2.2 row and the
+   1.28:1 border with it.
+4. **The §2.3 and §2.4 rows** (three P1s carried, the not-found sentence the owner's; plus the
+   two hover states and `button--secondary`, which is requested in `RepeatingGroup.tsx:177` and
+   defined in no stylesheet — that one class is the "two filled buttons" row's root cause).
 5. **Phase 4** — polish and SEO. **Backups** stay deferred until there is a host.
 
 ---
@@ -182,8 +213,11 @@ in particular a bulk-mail script is the opposite of rule 7 and of marknadsförin
 The planning notes that used to sit here are superseded by the code and by
 `docs/adr/0001-theming-layers.md`. The short version:
 
-- **Palette** is the mark's five colours + black and white (`packages/tokens/src/default-tokens.json`).
-  The Midnight/Saddle palette survives only as the seeded "Demo AB" kit.
+- **Palette** is Loppa's: gold `#cea85c` (fills), bronze `#8f6b3a` (links, focus, the read
+  accent), paper `#fafaf8`, platinum `#e9ebee`, ink `#0e0e10`, graphite, pewter — every value from
+  `docs/brand/tokens-loppa.css`, held there by `packages/tokens/src/loppa.test.ts`. Dark is derived
+  and floors at the ink (`#0e0e10`). The Midnight/Saddle palette survives only as the seeded
+  "Demo AB" kit (S5 replaces it); the seafoam/coral round survives only as a hostile kit.
 - **Derived tokens** are the mechanism, not the stylesheet: `focusRing`, `buttonSurface`,
   `headingInk`, `accentInk` (and its inverted twin `--tp-colour-accent-on-ink`) in
   `packages/tokens/src/derive.ts`. `locked.test.ts` proves the LOCKED list against six hostile
@@ -195,15 +229,23 @@ The planning notes that used to sit here are superseded by the code and by
 - **The marketing site ships no JavaScript in production.** Anything interactive there is CSS
   (`:checked` for the hero pause) or a plain `<form method="post">` (the contact page). A React
   effect in `site/` works in dev and is dead on the live page.
-- **The mark** is the rendered PNG/WebP (`public/mark-angled-256.png`, `mark-loop-*.webp`,
-  `mark-poster-256.png`); regenerate with `scripts/brand/build-animation-pack.py` (numpy +
-  Pillow). The reduced vector drawing exists only for the favicon.
+- **The mark** is the brand bundle's gold-and-platinum render (`public/mark-angled-256.png`,
+  `mark-loop-256.webp`, `mark-poster-256.png`), produced from `docs/brand/animation` and
+  `docs/brand/still` by `scripts/brand/blacken-shadow.py` (Pillow; `py -3` on this machine),
+  which turns the bundle's warm-grey baked shadow black so it darkens on the dark page. There is
+  no 512 loop until the bundle renders one. The favicon and launcher icons are still drawn from
+  the geometry by `pnpm icons` on a gold tile; cutting them over to
+  `docs/brand/vector/loppa-mark-flat.svg` is an asset task.
 - **Client mode** is server-first: `client-identity.ts` inlines the palette and meta tags so the
   sign-in screen is the customer's from the first byte; `brand.tsx` reads them and never paints
   over a server-painted page until the real kit arrives.
 - **Critique method** that worked: `/impeccable critique` with A and B as isolated sub-agents, B
   measuring in a real browser at 1280/375 × light/dark. Both snapshots are in
-  `.impeccable/critique/`; the trend is 18 → 22 / 32 on the site, 21 → 23 / 40 in the shell.
+  `.impeccable/critique/`; the trend is 18 → 22 → 23 → 25 → 23 / 32 on the site and
+  21 → 23 → 23 → 26 → 26 / 40 in the shell. When the desktop browser pane misbehaves — it does —
+  B can drive a headless Playwright browser instead and inject `detect.js` from
+  `impeccable live-server --background`; there is then no [Human] overlay tab, and the report
+  must say so.
 
 Do not run `impeccable` and `ponytail` in the same pass — they pull in opposite directions. Design
 first, then a single ponytail pass to remove what turned out to be dead.
