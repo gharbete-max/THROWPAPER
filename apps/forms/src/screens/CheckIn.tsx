@@ -18,7 +18,9 @@ type Outcome =
   /** A guest card whose registration no longer names that guest — see ADR 0003. */
   | 'no-such-guest'
   | 'bad-signature'
-  | 'undone';
+  | 'undone'
+  /** The undo request itself failed; the arrival stands. Client-side only. */
+  | 'undo-failed';
 
 interface Attendee {
   submissionId: string;
@@ -38,6 +40,11 @@ interface CheckInResult {
   outcome: Outcome;
   attendee: Attendee | null;
   checkedInAt: string | null;
+  /**
+   * What was scanned or typed, kept for the verdict when there is nobody to name: the field is
+   * cleared for the next card, so without this a typo and the wrong queue look the same.
+   */
+  code?: string;
 }
 
 /** An arrival this operator made, kept so it can be taken back. */
@@ -88,7 +95,7 @@ export default function CheckIn() {
   const [result, setResult] = useState<CheckInResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [scanning, setScanning] = useState(false);
-  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [cameraError, setCameraError] = useState(false);
   const [counts, setCounts] = useState<{ checkedIn: number; registered: number } | null>(null);
   const [recent, setRecent] = useState<Arrival[]>([]);
   const online = useOnline();
@@ -118,7 +125,7 @@ export default function CheckIn() {
       setBusy(true);
       try {
         const response = await client.checkIn(eventId, value.trim());
-        setResult(response);
+        setResult({ ...response, code: value.trim() });
         setCode('');
         if (response.outcome === 'admitted' && response.attendee && response.checkedInAt) {
           const arrival = { attendee: response.attendee, at: response.checkedInAt };
@@ -129,7 +136,12 @@ export default function CheckIn() {
         // A dropped connection must not read as "not found", which sends somebody away. The
         // offline banner says what happened and the verdict stays as it was.
         if (navigator.onLine) {
-          setResult({ outcome: 'not-found', attendee: null, checkedInAt: null });
+          setResult({
+            outcome: 'not-found',
+            attendee: null,
+            checkedInAt: null,
+            code: value.trim(),
+          });
         }
       } finally {
         setBusy(false);
@@ -157,7 +169,9 @@ export default function CheckIn() {
       setResult({ outcome: 'undone', attendee: arrival.attendee, checkedInAt: null });
       refreshCounts();
     } catch {
-      // Left on the list: the arrival still stands, and the operator can try again.
+      // Left on the list: the arrival still stands, and the operator can try again — and is
+      // told so. A confirm that changed nothing and said nothing was the door's one silence.
+      setResult({ outcome: 'undo-failed', attendee: arrival.attendee, checkedInAt: null });
     } finally {
       refocus();
     }
@@ -178,7 +192,7 @@ export default function CheckIn() {
   }, [eventId]);
 
   async function startScanning() {
-    setCameraError(null);
+    setCameraError(false);
     try {
       // Loaded on demand: only the door needs a QR decoder, and it is not small.
       const { BrowserQRCodeReader } = await import('@zxing/browser');
@@ -199,8 +213,11 @@ export default function CheckIn() {
       controlsRef.current = controls;
       setScanning(true);
     } catch (error) {
-      // Camera denied, absent, or not on a secure origin. Typing still works, so say so and move on.
-      setCameraError(error instanceof Error ? error.message : String(error));
+      // Camera denied, absent, or not on a secure origin. Typing still works, so say so and move
+      // on. The browser's own sentence is for whoever debugs, not for the screen: it is English
+      // on a Swedish door.
+      console.warn('camera unavailable', error);
+      setCameraError(true);
       setScanning(false);
       refocus();
     }
@@ -326,11 +343,7 @@ export default function CheckIn() {
             </button>
           )}
         </div>
-        {cameraError && (
-          <p className="small muted">
-            {t('checkin.cameraUnavailable')} {cameraError}
-          </p>
-        )}
+        {cameraError && <p className="small muted">{t('checkin.cameraUnavailable')}</p>}
       </form>
 
       <video ref={videoRef} className={scanning ? 'checkin__video' : 'checkin__video--off'} />
@@ -389,7 +402,14 @@ function Verdict({ result }: { result: CheckInResult | null }) {
 
   return (
     <div className={`verdict verdict--${tone}`} role="status">
-      <strong className="verdict__headline">{t(`checkin.outcome.${result.outcome}`)}</strong>
+      <strong className="verdict__headline">
+        {result.outcome === 'undo-failed'
+          ? t('users.errorFailed')
+          : t(`checkin.outcome.${result.outcome}`)}
+      </strong>
+
+      {/* Nobody to name: say what was refused, so a typo can be seen as one. */}
+      {!result.attendee && result.code && <span className="verdict__name">{result.code}</span>}
 
       {result.attendee && (
         <>

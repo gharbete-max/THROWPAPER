@@ -815,6 +815,26 @@ export function createMemoryRepositories(
         });
         return touched;
       },
+
+      restart: async (id) => {
+        const index = state.jobs.findIndex((j) => j.id === id);
+        const job = state.jobs[index];
+        if (!job) return null;
+        if (job.status === 'done' || job.status === 'failed') {
+          state.jobs[index] = {
+            ...job,
+            status: 'queued',
+            attempts: 0,
+            result: null,
+            error: null,
+            progressDone: 0,
+            startedAt: null,
+            finishedAt: null,
+            runAfter: new Date(),
+          };
+        }
+        return { ...state.jobs[index]! };
+      },
     },
 
     brandKits: {

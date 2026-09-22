@@ -121,7 +121,6 @@ export const isIS: Record<MessageKey, string> = {
   'inbox.empty': 'Engin svör enn.',
   'inbox.loadFailed': 'Ekki tókst að hlaða svörunum.',
   'inbox.partial': 'Í vinnslu',
-  'inbox.complete': 'Sent',
   'inbox.search': 'Leita',
   'inbox.count': 'plural:one {count} svar | other {count} svör',
 

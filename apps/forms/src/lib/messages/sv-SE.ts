@@ -120,7 +120,6 @@ export const svSE: Record<MessageKey, string> = {
   'inbox.empty': 'Inga svar ännu.',
   'inbox.loadFailed': 'Svaren kunde inte läsas in.',
   'inbox.partial': 'Påbörjat',
-  'inbox.complete': 'Inskickat',
   'inbox.search': 'Sök',
   'inbox.count': 'plural:one {count} svar | other {count} svar',
 

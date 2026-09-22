@@ -65,6 +65,11 @@ test('a visitor fills in the form across both pages and gets a reference', async
   await page.getByLabel(/Organisation/).fill('Sjöström & Co');
   await page.getByRole('button', { name: 'Nästa' }).click();
 
+  // Page two opens clean: nothing on it has been touched, so nothing on it may be marked wrong.
+  // (A click that patched the Next button into the submit button used to submit the form.)
+  await expect(page.getByText('Vegetariskt', { exact: true })).toBeVisible();
+  await expect(page.locator('[aria-invalid="true"]')).toHaveCount(0);
+
   // Page two only exists because of the page break in the definition.
   //
   // The meal question is rendered as cards, so the radio itself is clipped out of sight and only
@@ -82,6 +87,8 @@ test('a visitor fills in the form across both pages and gets a reference', async
   // The confirmation still says what was registered for, and what is coming: the seeded form is
   // bound to an event, so the mail carries the card, and the screen says so to the typed address.
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Vårmötet');
+  // The thank-you is where focus lands, so a screen reader hears that it worked.
+  await expect(page.getByRole('heading', { level: 2 })).toBeFocused();
   await expect(
     page.getByText(`En bekräftelse med ditt inträdeskort är på väg till ${email}.`),
   ).toBeVisible();

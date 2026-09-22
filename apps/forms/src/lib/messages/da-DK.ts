@@ -120,7 +120,6 @@ export const daDK: Record<MessageKey, string> = {
   'inbox.empty': 'Ingen svar endnu.',
   'inbox.loadFailed': 'Svarene kunne ikke indlæses.',
   'inbox.partial': 'I gang',
-  'inbox.complete': 'Indsendt',
   'inbox.search': 'Søg',
   'inbox.count': 'plural:one {count} svar | other {count} svar',
 

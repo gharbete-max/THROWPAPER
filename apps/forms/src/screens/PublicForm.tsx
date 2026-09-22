@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 import { pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { defaultTokens, toCssBlock } from '@tp/tokens';
@@ -49,6 +49,16 @@ export default function PublicForm() {
   const [confirmation, setConfirmation] = useState('');
   /** What the server queued on submit, so the screen promises only what is actually coming. */
   const [coming, setComing] = useState<{ email: string; card: boolean } | null>(null);
+  /**
+   * Focus lands on the thank-you when the form is sent. The card is new to the page, and a live
+   * region that did not exist a moment ago is not something every screen reader announces;
+   * focus on its heading is read by all of them, and it is where the next question — is a card
+   * coming? — is answered.
+   */
+  const doneHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (phase === 'done') doneHeading.current?.focus();
+  }, [phase]);
   const [rejected, setRejected] = useState<string | null>(null);
   const [resumeToken, setResumeToken] = useState<string | null>(params.get('resume'));
   const [resumeLink, setResumeLink] = useState<string | null>(null);
@@ -330,7 +340,9 @@ export default function PublicForm() {
        * that makes somebody give up rather than press the button again — which is exactly what
        * would have worked.
        */
-      if (response.status >= 500) {
+      if (response.status >= 500 || response.status === 429) {
+        // 429 is our rate limit refusing, not a form that closed — the same false statement
+        // by another route. The answers are still here, and a moment later it works.
         setRejected('error');
         return;
       }
@@ -491,7 +503,9 @@ export default function PublicForm() {
           {/* Drawn rather than already there: a mark appearing *now* is what says it worked,
               which is the thing people are unsure about on a confirmation screen. */}
           <Signed />
-          <h2>{confirmation || t('public.thanks')}</h2>
+          <h2 ref={doneHeading} tabIndex={-1}>
+            {confirmation || t('public.thanks')}
+          </h2>
           <p className="muted">{t('public.reference', { reference })}</p>
           {/* Only what the server said it queued: a mail to the address given, the card with it
               when the form is bound to an event. Nothing is promised that is not on its way. */}
@@ -633,8 +647,18 @@ export default function PublicForm() {
               )}
             </div>
 
+            {/*
+              Two buttons, not one button whose `type` changes.
+
+              Keyed apart on purpose. Without the keys React patched the same DOM node from
+              `type="button"` to `type="submit"` *during* the click that moved to the last page,
+              and the browser then ran the click's default action on that node as it now was — a
+              form submit — so the final page opened with its required question already marked
+              wrong before anybody had touched it. The critique saw the symptom; this is the cause.
+            */}
             {forwardPage !== null ? (
               <button
+                key="forward"
                 type="button"
                 className="button form-actions__forward"
                 onClick={() => {
@@ -645,7 +669,12 @@ export default function PublicForm() {
                 <Icon name="arrow-right" />
               </button>
             ) : (
-              <button type="submit" className="button form-actions__forward" disabled={busy}>
+              <button
+                key="submit"
+                type="submit"
+                className="button form-actions__forward"
+                disabled={busy}
+              >
                 <Icon name="check" />
                 {busy ? t('public.submitting') : submitLabel}
               </button>

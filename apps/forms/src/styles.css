@@ -340,7 +340,14 @@ a:focus-visible {
   padding: 0;
 }
 
-/* Check-in. Loud on purpose: read at arm's length, in bad light, with a queue waiting. */
+/*
+ * Check-in. Loud on purpose: read at arm's length, in bad light, with a queue waiting.
+ *
+ * The door's own sizes are written as `.door .x`, one class deeper than the kit's rules, because
+ * the kit's `.field input`, the later `.button` and `.shell h2` each outranked the door's plain
+ * class and quietly shipped the screen at desk size: a 16px reference field, a 44px primary and a
+ * 25px "Last arrivals". A critique measured it; the rules below are the ones it lost.
+ */
 .door {
   display: flex;
   flex-direction: column;
@@ -354,6 +361,11 @@ a:focus-visible {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+/* "Leave the door" is one line: a two-line link in a header is a header nobody can read. */
+.door__top > .button {
+  white-space: nowrap;
 }
 
 .door__title {
@@ -370,6 +382,7 @@ a:focus-visible {
 
 /* The count: the largest number on the screen, because it is the one asked for across a room. */
 .door__count {
+  white-space: nowrap;
   display: flex;
   align-items: baseline;
   gap: calc(var(--tp-spacing-unit) * 0.75);
@@ -405,14 +418,15 @@ a:focus-visible {
   gap: var(--tp-spacing-unit);
 }
 
-.door__check {
+.door .door__check {
   flex: 1 1 12rem;
   min-block-size: calc(var(--tp-control-height) * 1.25);
   font-size: var(--tp-text-lg);
 }
 
-.door__recent h2 {
+.door .door__recent h2 {
   margin: 0 0 var(--tp-spacing-unit);
+  font-size: var(--tp-text-ui);
 }
 
 .door__list {
@@ -457,7 +471,7 @@ a:focus-visible {
   display: none;
 }
 
-.checkin__input {
+.door .checkin__input {
   /* Display size: read at arm's length, typed in gloves. */
   font-size: var(--tp-text-2xl);
   min-block-size: calc(var(--tp-control-height) * 1.5);
@@ -518,8 +532,8 @@ a:focus-visible {
   font-size: var(--tp-text-lg);
 }
 
+/* Size alone marks the meta line: at 0.85 opacity it measured 3.9:1 on success, under AA. */
 .verdict__meta {
-  opacity: 0.85;
   font-size: var(--tp-text-ui);
 }
 
@@ -663,8 +677,27 @@ textarea {
     text-align: center;
   }
 
-  .checkin__input {
+  .door .checkin__input {
     font-size: var(--tp-text-xl);
+  }
+
+  /*
+   * Two rows: the way out and the count first, the title and its event beneath on a line of
+   * their own. Three columns at 375 wrapped "Leave the door" onto two lines and clipped it.
+   */
+  .door__top {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+  }
+
+  .door__count {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .door__title {
+    grid-row: 2;
+    grid-column: 1 / -1;
   }
 
   .verdict__headline {
@@ -2244,19 +2277,33 @@ input[type='file']:disabled::file-selector-button {
   white-space: nowrap;
 }
 
-/* On a phone the four columns become two rows: what it was and when, then the reference and the
- * badge. A four-column grid at 375px puts three characters in each. */
+/* On a phone the four columns become two rows. The name has the first row to itself (the badge
+ * beside it when there is one), the form and the time share the second: sharing the first row
+ * with the form's title truncated the name to a dozen letters, and the name is what somebody
+ * scans for. A four-column grid at 375px puts three characters in each. */
 @media (max-width: 720px) {
   .inbox__link {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
-  .inbox__reference {
-    order: 3;
+  .inbox__who {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .inbox__status {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .inbox__form {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .inbox__when {
-    order: 4;
+    grid-column: 2;
+    grid-row: 2;
     justify-content: flex-end;
   }
 }

@@ -270,6 +270,49 @@ describe('bulk generation', () => {
     expect(harness.state.jobs.filter((job) => job.kind === 'admission.bulk')).toHaveLength(1);
   });
 
+  /**
+   * Joining a run in progress is right; joining a run that finished last week is not. The job
+   * is keyed on the form and its version so two clicks during a run make one run, but
+   * `enqueue` is idempotent across time too — so once the job was done, every later request
+   * got the same finished job back, with a link that expires after an hour and a ZIP that never
+   * gains the registrations that arrived since. A finished job is started again instead.
+   */
+  it('starts a new run when the last one is finished, and hands back a new ZIP', async () => {
+    const { formId } = await setupRegistrations(2);
+    const first = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/forms/${formId}/admission-documents`,
+      headers: bearer(adminToken),
+    });
+    await harness.app.worker.drain();
+    const done = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/jobs/${first.json().id}`,
+      headers: bearer(adminToken),
+    });
+    expect(done.json().status).toBe('done');
+    const firstLink = done.json().result.downloadPath as string;
+
+    const again = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/forms/${formId}/admission-documents`,
+      headers: bearer(adminToken),
+    });
+    expect(again.statusCode).toBe(202);
+    expect(again.json().status).toBe('queued');
+    expect(again.json().result).toBeNull();
+
+    await harness.app.worker.drain();
+    const second = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/jobs/${again.json().id}`,
+      headers: bearer(adminToken),
+    });
+    expect(second.json().status).toBe('done');
+    expect(second.json().result.downloadPath).not.toBe(firstLink);
+    expect(harness.store.files.size).toBe(2);
+  });
+
   it('survives one document failing and still delivers the rest', async () => {
     await harness.close();
     // Fail exactly the second attendee's document.

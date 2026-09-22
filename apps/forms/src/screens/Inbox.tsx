@@ -4,7 +4,7 @@ import { pickText } from '@tp/i18n';
 import type { InboxEntry } from '@tp/shared/forms';
 import { client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
-import { useT } from '../lib/i18n.js';
+import { formatDateTime, useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { Loading } from '../components/Loading.js';
@@ -123,17 +123,14 @@ export function Inbox() {
                     {entry.who && <span className="inbox__reference"> · {entry.reference}</span>}
                   </span>
                   <span className="inbox__status">
-                    {/* Outlined, never filled: a filled badge takes the surface colour and the
-                        inbox rows are that colour, so it disappeared into the row it sat on. */}
-                    <span
-                      className={
-                        entry.status === 'complete'
-                          ? 'badge badge--quiet'
-                          : 'badge badge--quiet status-warning'
-                      }
-                    >
-                      {t(entry.status === 'complete' ? 'inbox.complete' : 'inbox.partial')}
-                    </span>
+                    {/* Only the exception wears a badge: forty rows all marked "Submitted" marked
+                        nothing. Outlined, never filled — a filled badge takes the surface colour
+                        and the rows are that colour, so it disappeared into the row it sat on. */}
+                    {entry.status !== 'complete' && (
+                      <span className="badge badge--quiet status-warning">
+                        {t('inbox.partial')}
+                      </span>
+                    )}
                   </span>
                   {/**
                    * The submission date, not the creation date, where there is one: a draft
@@ -142,7 +139,7 @@ export function Inbox() {
                    */}
                   <span className="inbox__when small muted">
                     <Icon name="clock" className="icon--lead" />
-                    {new Date(entry.submittedAt ?? entry.createdAt).toLocaleString(locale)}
+                    {formatDateTime(locale, entry.submittedAt ?? entry.createdAt)}
                   </span>
                 </Link>
               </Reveal>

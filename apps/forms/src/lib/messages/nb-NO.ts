@@ -121,7 +121,6 @@ export const nbNO: Record<MessageKey, string> = {
   'inbox.empty': 'Ingen svar ennå.',
   'inbox.loadFailed': 'Svarene kunne ikke lastes.',
   'inbox.partial': 'Påbegynt',
-  'inbox.complete': 'Sendt inn',
   'inbox.search': 'Søk',
   'inbox.count': 'plural:one {count} svar | other {count} svar',
 

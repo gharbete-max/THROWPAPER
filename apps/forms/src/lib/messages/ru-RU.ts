@@ -129,7 +129,6 @@ export const ruRU: Record<MessageKey, string> = {
   'inbox.empty': 'Ответов пока нет.',
   'inbox.loadFailed': 'Не удалось загрузить ответы.',
   'inbox.partial': 'В процессе',
-  'inbox.complete': 'Отправлено',
   'inbox.search': 'Поиск',
   'inbox.count': 'plural:one {count} ответ | few {count} ответа | many {count} ответов',
 

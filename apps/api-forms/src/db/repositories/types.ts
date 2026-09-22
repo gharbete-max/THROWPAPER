@@ -451,6 +451,12 @@ export interface JobRepository {
    * many it touched.
    */
   requeueStale(before: Date): Promise<number>;
+  /**
+   * Runs a finished job again from the start — same row, same key, so callers that join a run
+   * in progress keep joining it. A job that is queued or running is left alone. Returns the row
+   * as it now is, or null when there is no such job.
+   */
+  restart(id: string): Promise<JobRecord | null>;
 }
 
 export interface SendingDomainRecord {

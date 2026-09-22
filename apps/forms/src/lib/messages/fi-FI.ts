@@ -121,7 +121,6 @@ export const fiFI: Record<MessageKey, string> = {
   'inbox.empty': 'Ei vielä vastauksia.',
   'inbox.loadFailed': 'Vastauksia ei voitu ladata.',
   'inbox.partial': 'Kesken',
-  'inbox.complete': 'Lähetetty',
   'inbox.search': 'Hae',
   'inbox.count': 'plural:one {count} vastaus | other {count} vastausta',
 
