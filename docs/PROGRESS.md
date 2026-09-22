@@ -1916,6 +1916,65 @@ rows; the not-found sentence stays the owner's.
 **Checklist.** The eight rows and the §2.2 export row deleted; the not-found sentence stays as
 the copy row; seven rows from the re-run take their place. No `packages/` change.
 
+## Phase 1 — main green again · done
+
+`docs/MODULE-STATUS.md` found the gate red at `f030000` while § L0 had recorded it green at
+`691d40a` the day before. Four defects, measured at `39d7872`:
+
+```
+pnpm verify          exit 0 — prettier clean, 0 eslint errors, 139 files / 1782 tests, both builds
+pnpm contract:check  exit 0 — 0/6 implemented, rest deferred
+pnpm test:e2e        19 passed (2.0m) — bare, no env preamble
+```
+
+**The two failing tests were a date, not a defect.** Both tests in "a job the last worker never
+finished" set a fixed clock of `2026-09-22T10:00:00Z`, but the fake clock reaches `createWorker`
+only — `createMemoryRepositories` takes no clock, and `jobs.enqueue` stamps `runAfter` from the
+wall clock. Since `claim` matches `runAfter <= now`, the real predicate was "the current time is
+before 2026-09-22T10:00:00Z". They passed the morning they were written (`dcd203d`) and went red at
+10:00 UTC that day, permanently. Nothing in the #107 merge touched them: its only change to the job
+repositories (`6171546`) adds `restart` and leaves `claim` and `requeueStale` alone. Proven by
+moving the literal to 2030 with the test otherwise untouched — 12 passed. The fixture now starts
+from the row's own `runAfter`. **The lease-reclaim code was never broken.**
+
+Left as a follow-up: `memory.ts` `enqueue` uses `new Date()` while `claim` takes `now` as an
+argument. That asymmetry is what allowed the bomb. Injecting a clock into
+`createMemoryRepositories` touches a double used across ~100 test files and was too wide for a P0
+branch.
+
+**The worktrees were lying to prettier and eslint.** `.claude/worktrees/` holds live git worktrees,
+each a full checkout, and every ignore pattern in the repo is anchored at the root — so
+`apps/forms/public/ocr` never matched `.claude/worktrees/l0-baseline/apps/forms/public/ocr`, and
+vendored tesseract wasm was judged as ours. That is the whole gap between a red local `verify` and
+a CI run that failed only on the two worker tests: CI clones fresh. `.claude/` is now ignored by
+prettier and eslint, with the reason written beside it. vitest was already safe — `include` is
+anchored at `{apps,packages}/*/src` and `scripts/` — but says so now rather than relying on the
+glob. `bundle-budget.ts` and `ocr-assets.ts` walk fixed paths and were left alone.
+
+**A skipped e2e suite no longer looks like a passing one.** `scripts/run-e2e.ts` exited 0 when
+there was no database, and an exit code is what scripts and agents read. It exits 2 now — distinct
+from Playwright's 1, so "did not run" is separable from "ran and failed" — with a greppable
+`E2E SKIPPED:` prefix and `--allow-skip` for anyone who means it. CI has a Postgres service and
+never reaches that path.
+
+**Two package descriptions were written from intent.** `packages/ui` claimed the data grid; it has
+one `cn()` helper and its own `index.ts` says the grid is deliberately not in v0.1. `packages/calc`
+claimed a formula AST, statistics and charts; it has errors, money and the ledger. Both corrected,
+the other three checked against their exports, and the rule that follows written down: a
+description changes in the same PR that changes the package.
+
+**A correction to `docs/MODULE-STATUS.md`.** Its finding E-2 — that `playwright.config.ts` does not
+pass `DOCUMENT_SIGNING_SECRET` — is **wrong**. `main` has declared and passed it since #104
+(`playwright.config.ts:33-34, 69`), and a bare `pnpm test:e2e` needs no env preamble. The Phase 0
+session read that file while its checkout was still on `claude/scan` at `691d40a` and never re-read
+it after switching to `main`; the `tsx src/main.ts` failure it reproduced bypasses the Playwright
+config entirely and never evidenced the claim. What is true and unchanged: the root `.env` lacks
+the secret, so `pnpm dev:forms` from this checkout still refuses to start. MODULE-STATUS.md is
+corrected in place.
+
+**Not done here.** The two `exhaustive-deps` warnings stay — they are warnings, 0 errors, and § L0
+recorded them too. No doc reconciliation, no ADRs, no module work.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

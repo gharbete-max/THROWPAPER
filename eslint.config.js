@@ -14,6 +14,10 @@ export default tseslint.config(
       '**/coverage/**',
       '**/node_modules/**',
       '**/drizzle/**',
+      // Agent git worktrees, each a full copy of the source. `apps/forms/public/ocr/**` above is
+      // anchored at the repo root and so misses the copy inside a worktree, which then lints as
+      // ours — a vendored wasm file is thousands of errors. Do not remove; it is not redundant.
+      '.claude/**',
     ],
   },
   js.configs.recommended,

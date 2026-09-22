@@ -174,7 +174,7 @@ describe('a job the last worker never finished', () => {
 
   it('is taken back once it is older than the lease, and runs again', async () => {
     let runs = 0;
-    const clock = { at: new Date('2026-09-22T10:00:00Z') };
+    const clock = { at: new Date() };
     const { repos, worker } = setup(
       {
         'test.job': async () => {
@@ -185,6 +185,10 @@ describe('a job the last worker never finished', () => {
       () => clock.at,
     );
     const job = await enqueue(repos);
+    // The clock is the worker's, not the repository's: `enqueue` stamps `runAfter` from the wall
+    // clock of whatever machine runs this. Start from the row's own instant rather than a literal,
+    // or `claim` sees a job scheduled in its future and the test passes only until that date.
+    clock.at = new Date(job.runAfter);
     // Claimed by a worker that then died.
     expect((await repos.jobs.claim(clock.at))?.id).toBe(job.id);
 
@@ -203,9 +207,11 @@ describe('a job the last worker never finished', () => {
   });
 
   it('fails for good when its attempts are spent', async () => {
-    const clock = { at: new Date('2026-09-22T10:00:00Z') };
+    const clock = { at: new Date() };
     const { repos, worker } = setup({ 'test.job': async () => ({}) }, () => clock.at);
     const job = await enqueue(repos, { maxAttempts: 1 });
+    // Same reason as above: follow the row's own instant, never a literal.
+    clock.at = new Date(job.runAfter);
     await repos.jobs.claim(clock.at);
 
     clock.at = new Date(clock.at.getTime() + HOUR);
