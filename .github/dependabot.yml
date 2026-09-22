@@ -37,6 +37,18 @@ updates:
       # 7.x turns on the React Compiler rules: ten effect refactors, each needing its own test.
       - dependency-name: 'eslint-plugin-react-hooks'
         update-types: ['version-update:semver-major']
+      # 4.x rewrites every schema in packages/shared, contract first — a planned migration (ADR 0005 §#99).
+      - dependency-name: 'zod'
+        update-types: ['version-update:semver-major']
+      # 9.x renames the row-model API; the Submissions grid is a rewrite wanting its browser spec first (§#100).
+      - dependency-name: '@tanstack/react-table'
+        update-types: ['version-update:semver-major']
+      # 8.x is the deliberate Vite-major task, taken with plugin-react 6 / -oxc and the deprecations (§#101).
+      - dependency-name: 'vite'
+        update-types: ['version-update:semver-major']
+      # 17+ prints to stdout at boot unless quiet; taken on purpose with quiet: true, or on an advisory (§#102).
+      - dependency-name: 'dotenv'
+        update-types: ['version-update:semver-major']
 
   # The Actions in .github/workflows pin to major tags; this keeps those current, including the
   # gitleaks action that the supply-chain job depends on.
