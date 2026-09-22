@@ -51,6 +51,17 @@ body {
   --tp-measure: var(--tp-content-width);
 }
 
+/*
+ * The wordmark on the sign-in page is a link home, and until this rule it was an unstyled one:
+ * the product's own name on its front door in the browser's `#0000ee`, the one hue on that page
+ * in no palette. The name is read in the ink; the arrow home is the whole lockup.
+ */
+.login__home {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+}
+
 .stack {
   display: flex;
   flex-direction: column;
@@ -4466,7 +4477,7 @@ body:has(.app) > #root {
 /*
  * Below 700px the hero is a still image, so the same reasoning applies.
  *
- * `Site.tsx` gates the animated `<source>` at `min-width: 700px` to keep 505 KB of WebP off
+ * `Site.tsx` gates the animated `<source>` at `min-width: 700px` to keep 1,120 KB of WebP off
  * phones; what is left there is the poster, which does not move. WCAG 2.2.2 asks for a way to stop
  * motion, not for a button that stops nothing — and a pause control on a static image is a promise
  * the page does not keep.

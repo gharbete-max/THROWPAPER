@@ -262,20 +262,15 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
             <div className="hero__art" aria-hidden="true">
               <picture>
                 {/*
-                The retina variant is gated to desktop widths, not offered by density alone.
+                One size of the loop, because the brand bundle renders one.
 
-                `2x` on its own would hand a 997 KB animation to any phone with a retina screen,
-                which is most of them, on the connection least able to take it — and the mark is
-                256 CSS px there against 304 on desktop, so it buys the least where it costs the
-                most. Above 900px the figure is larger, the connection is usually not a phone's,
-                and the sharpness is visible.
-              */}
-                <source
-                  media="(prefers-reduced-motion: no-preference) and (min-width: 1200px)"
-                  srcSet="/mark-loop-256.webp 1x, /mark-loop-512.webp 2x"
-                  type="image/webp"
-                />
-                {/*
+                There was a 512px retina variant, gated to desktop widths so no phone fetched a
+                997 KB file to sharpen a mark that is smaller there than on desktop. The gold
+                render exists at 256 and 128 only; a 2x that pointed at the 256 file would cost
+                the bytes and buy nothing, and upscaling a raster is what `docs/brand/USAGE.md`
+                forbids. When `loppa-512.webp` is regenerated from source, the gated source comes
+                back — at 1200px, as before.
+
                 And the animation itself stops at 700px, so a phone never fetches it.
 
                 This source used to have no width gate at all, which meant every phone without a
@@ -285,13 +280,13 @@ function Landing({ locale, copy }: { locale: string; copy: SiteCopy }) {
                 expensive file was the *cheap-sounding* one.
 
                 A `<source>` whose query does not match is never fetched, so below 700px the
-                animation is genuinely absent rather than hidden, and the poster below — 17 KB —
-                is what a phone gets. Measured: 505 KB to 17 KB on every phone landing.
+                animation is genuinely absent rather than hidden, and the poster below — 24 KB —
+                is what a phone gets. Measured: 505 KB to 17 KB on every phone landing under the
+                seafoam render; the gold loop is 1,120 KB and its still 24 KB, so the gate matters
+                more now, not less.
 
-                700px rather than the 900px above it, deliberately. 900 would have collapsed these
-                two sources into one and taken the animation off tablets and small laptop windows
-                too, which is not what was asked for and not where the bandwidth problem is. The
-                gap between them — 700 to 899 — keeps the 1x loop, as it does today.
+                700px rather than a laptop width, deliberately: taking the animation off tablets
+                and small laptop windows is not where the bandwidth problem is.
 
                 `styles.css` hides the pause control under the same 700px, because a control for
                 stopping something that does not move is worse than no control.
