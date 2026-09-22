@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import postgres from 'postgres';
 import type { Page } from '@playwright/test';
@@ -121,4 +122,117 @@ export async function deleteSubmission(
 /** A fresh address per run, so duplicate control does not reject the second execution. */
 export function uniqueEmail(prefix = 'e2e'): string {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}@example.com`;
+}
+
+/**
+ * Mints a magic-link token the way the server does and returns the secret.
+ *
+ * `login_tokens` stores only a SHA-256 hash, so the plaintext exists nowhere but in the email —
+ * which a spec cannot read, because the API's stdout belongs to Playwright's shared `webServer`.
+ * Minting one here and visiting `/auth/callback?token=<secret>` drives the real `Callback` screen
+ * and the real `POST /v1/auth/token` exchange; only the mail hop is skipped. Same trade as
+ * `plantRefreshToken`, one step earlier in the flow.
+ */
+export async function plantLoginToken(sql: ReturnType<typeof db>, email: string): Promise<string> {
+  const [user] = await sql`select id from users where email = ${email} limit 1`;
+  if (!user) throw new Error(`No seeded user ${email} — run pnpm db:seed first.`);
+
+  const secret = randomBytes(32).toString('base64url');
+  await sql`
+    insert into login_tokens (user_id, token_hash, expires_at)
+    values (
+      ${String(user['id'])},
+      ${createHash('sha256').update(secret).digest('hex')},
+      now() + interval '15 minutes'
+    )
+  `;
+  return secret;
+}
+
+/**
+ * How many files a ZIP holds, without a library.
+ *
+ * `archiver` writes ZIPs and cannot read them, and nothing else in the tree can either. Rather
+ * than add a dependency for one assertion, this reads the End Of Central Directory record — the
+ * last thing in a ZIP — whose entry count is two little-endian bytes at offset 10. The signature
+ * is scanned for backwards because the record is followed by a comment of unknown length.
+ */
+export function zipEntryCount(archive: Buffer): number {
+  const EOCD = 0x06054b50;
+  for (let at = archive.length - 22; at >= 0; at -= 1) {
+    if (archive.readUInt32LE(at) === EOCD) return archive.readUInt16LE(at + 10);
+  }
+  throw new Error('Not a ZIP: no end-of-central-directory record found');
+}
+
+/**
+ * Decodes the QR out of a generated admission PDF, in the browser Playwright already runs.
+ *
+ * A door reads this code with a camera, so the thing worth proving is that the *pixels* decode —
+ * not that the token the PDF was built from is valid, which is a different and weaker claim.
+ *
+ * Decoding in Node would mean rasterising the page there, and `pdfjs-dist` has no canvas backend
+ * installed; adding one is a native dependency carried forever for one assertion. Chromium is
+ * already here and already has a canvas. `pdfjs-dist` and `@zxing/library` are already
+ * dependencies of `apps/forms` — zxing is what `screens/CheckIn.tsx` drives the camera with — so
+ * both are served to the page from `node_modules` off a routed URL rather than installed anew.
+ *
+ * pdfjs 6 ships ESM only, so it arrives by dynamic `import()`; zxing's UMD build is a classic
+ * script and lands on `window`.
+ */
+export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> {
+  const read = (relative: string) =>
+    readFileSync(new URL(`../apps/forms/node_modules/${relative}`, import.meta.url));
+
+  for (const [route, file] of [
+    ['**/__e2e/pdf.mjs', 'pdfjs-dist/build/pdf.min.mjs'],
+    ['**/__e2e/pdf.worker.mjs', 'pdfjs-dist/build/pdf.worker.min.mjs'],
+  ] as const) {
+    await page.route(route, (r) =>
+      r.fulfill({ body: read(file), contentType: 'text/javascript; charset=utf-8' }),
+    );
+  }
+  await page.addScriptTag({ content: read('@zxing/library/umd/index.min.js').toString('utf8') });
+
+  return page.evaluate(async (bytes: number[]) => {
+    // Through `new Function`, because a literal `import()` of a path that exists only behind a
+    // Playwright route is a module the compiler cannot resolve and will refuse to believe in.
+    const load = new Function('url', 'return import(url)') as (u: string) => Promise<unknown>;
+    const pdfjs = (await load('/__e2e/pdf.mjs')) as {
+      GlobalWorkerOptions: { workerSrc: string };
+      getDocument: (o: unknown) => { promise: Promise<unknown> };
+    };
+    pdfjs.GlobalWorkerOptions.workerSrc = '/__e2e/pdf.worker.mjs';
+
+    const doc = (await pdfjs.getDocument({ data: new Uint8Array(bytes) }).promise) as {
+      getPage: (n: number) => Promise<{
+        getViewport: (o: { scale: number }) => { width: number; height: number };
+        render: (o: unknown) => { promise: Promise<void> };
+      }>;
+    };
+    const first = await doc.getPage(1);
+    // Generous, because a QR that only decodes at print resolution is still a QR that decodes;
+    // the door photographs it large.
+    const viewport = first.getViewport({ scale: 3 });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    const context = canvas.getContext('2d')!;
+    await first.render({ canvasContext: context, viewport, canvas }).promise;
+
+    // The core reader, not one of the `Browser*` wrappers: those are built around a camera or an
+    // <img>, and their surface moves between zxing minors. Luminance → binarizer → bitmap →
+    // decode is the API underneath all of them and has not changed.
+    const zxing = window as unknown as {
+      ZXing: {
+        HTMLCanvasElementLuminanceSource: new (c: HTMLCanvasElement) => unknown;
+        HybridBinarizer: new (s: unknown) => unknown;
+        BinaryBitmap: new (b: unknown) => unknown;
+        QRCodeReader: new () => { decode: (b: unknown) => { getText: () => string } };
+      };
+    };
+    const source = new zxing.ZXing.HTMLCanvasElementLuminanceSource(canvas);
+    const bitmap = new zxing.ZXing.BinaryBitmap(new zxing.ZXing.HybridBinarizer(source));
+    return new zxing.ZXing.QRCodeReader().decode(bitmap).getText();
+  }, Array.from(pdf));
 }
