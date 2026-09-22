@@ -12,14 +12,15 @@ packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
 docs/adr/0001-theming-layers.md, then docs/PROGRESS.md from § L0 to the end before touching
 anything. Do not re-derive anything HANDOVER marks as established.
 
-State (measured 2026-09-22, evening): origin/main at the merge of PR #104. Done and merged:
-the local track L0–L7 and the site design pass (#87–#95); the app-shell design pass (#103 —
-the six §2.3 rows closed, shell critique 21 → 23 → 23 / 40, the undo that never worked from a
-browser fixed at the root in lib/api.ts); the restart proof (#104 — e2e/restart.spec.ts kills
-the API with SIGKILL and gets data, a document, an asset and an in-flight job back; orphaned
-`running` jobs are requeued after 15 min; SIGTERM/SIGINT close the server). The four
-dependency majors are closed per docs/adr/0005-dependency-majors.md; dependabot #98–#102 are
-open and NOT yet inspected. `pnpm verify` green (138 test files, 1777 tests), `pnpm test:e2e`
+State (measured 2026-09-22, night): origin/main at the merge of dependabot #98 (after #104).
+Done and merged: the local track L0–L7 and the site design pass (#87–#95); the app-shell design
+pass (#103 — the six §2.3 rows closed, shell critique 21 → 23 → 23 / 40, the undo that never
+worked from a browser fixed at the root in lib/api.ts); the restart proof (#104 —
+e2e/restart.spec.ts kills the API with SIGKILL and gets data, a document, an asset and an
+in-flight job back; orphaned `running` jobs are requeued after 15 min; SIGTERM/SIGINT close the
+server); dependabot #98–#102 judged (S1): #98 merged after a local verify + e2e on current
+main, the four majors closed and ignored per docs/adr/0005-dependency-majors.md (eight now).
+`pnpm verify` green (138 test files, 1777 tests), `pnpm test:e2e`
 16/16 against the portable Postgres 16 — start command in docs/PROGRESS.md § L0; no Docker on
 this machine. It must say "16 passed", not SKIPPED, before anything else is trusted. Site
 critique 18 → 22 → 23 → 25 / 32; app shell 21 → 23 → 23 / 40 (snapshot 2026-09-22T02-29-37Z).
@@ -42,11 +43,9 @@ there is a host, even though e2e/restart.spec.ts would make a local restore proo
    palette. seed.ts writes a Loppa brand kit consistent with packages/tokens; demo/dataset.ts
    agrees (no "Demo AB" navy as the landing point); the low-contrast border becomes a derived
    token, never the raw hex. Delete the §2.2 row.
-3. Dependabot #98–#102: judge one by one as PROGRESS.md § Dependabot did — routine on green
-   verify locally; zod 4, vite 8, tanstack-table 9 and dotenv 18 are majors, ADR 0005 applies.
-4. The §2.3 rows from the shell re-run (P1: the door's sizes lost in the cascade; the
+3. The §2.3 rows from the shell re-run (P1: the door's sizes lost in the cascade; the
    not-found verdict — its sentence is the owner's) and the §2.2 stale bulk-export row.
-5. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
+4. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
 
 Do not start the catalogue/wizard work (§ The catalogue direction) without a paper decision.
 Do not take a dependency major without reading docs/adr/0005-dependency-majors.md.
@@ -54,8 +53,8 @@ Do not take a dependency major without reading docs/adr/0005-dependency-majors.m
 
 ## State
 
-- `origin/main` at **#104** (2026-09-22). Open: dependabot #98–#102, not yet inspected. The
-  four majors (#62, #84, #85, #86) were closed for the reasons in
+- `origin/main` at **#98's merge** (2026-09-22, after #104). No pull requests open. Eight majors
+  (#62, #84, #85, #86, #99, #100, #101, #102) were closed for the reasons in
   `docs/adr/0005-dependency-majors.md`, and `.github/dependabot.yml` ignores their major lines.
 - **L0–L7, the site design pass, the app-shell pass and the restart proof are done** (#87–#95,
   #103, #104); `docs/PROGRESS.md` § L0 … § The restart proof are the record. §2.1 holds only
@@ -119,9 +118,8 @@ marketing email.
    user-visible outcomes, one spec per commit.
 2. **The seed's brand kit** — decided (Loppa's palette); make `seed.ts` and `demo/dataset.ts`
    agree and derive the border token.
-3. **Dependabot #98–#102**, one by one; majors against ADR 0005.
-4. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
-5. **Backup and tested restore** — deferred by the owner until there is a host; when it comes,
+3. **Phase 4** — polish and SEO: a real social card, Lighthouse decision, baseline screenshots.
+4. **Backup and tested restore** — deferred by the owner until there is a host; when it comes,
    database + document volume as one dataset, proven with the restart spec's assertions.
 
 ---

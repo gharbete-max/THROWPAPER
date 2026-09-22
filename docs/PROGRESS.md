@@ -1794,6 +1794,36 @@ had completed and the asset and ZIP had answered 200. `claim()` only takes `queu
 pre-existing warnings); `pnpm contract:check` passed (0/6, unchanged); `pnpm test:e2e` **16
 passed (2.0m)** — the fifteen from #103 plus the restart proof, genuinely run.
 
+## Dependabot, 2026-09-22 — the second batch, #98–#102 · done
+
+Each read for what it changes and what its CI run says, never merged on green alone; all five
+were opened against the pre-#103 `main` (132 files / 1756 tests, 11 e2e), so #98 was proven on
+the current one first.
+
+- **#98 routine group — merged.** `@aws-sdk/client-sesv2` 3.1135 → 3.1136. Merged onto `main`
+  (after #104) locally: `pnpm verify` exit 0 — 138 files / 1777 tests, both builds;
+  `pnpm contract:check` passed; `pnpm test:e2e` **16 passed (2.1m)**. Then merged as `cc9297e`.
+- **#99 `zod` 3 → 4 — closed.** Its CI fails first in the contract:
+  `packages/shared/src/contract/common.ts(13,28)` and `contract/contacts.ts(16,19)`, `TS2554:
+  Expected 2-3 arguments, but got 1`. A migration of every schema in `packages/shared`, and of
+  `docs/CONTRACT.md` through them — the same decision as #85. ADR 0005 §#99.
+- **#100 `@tanstack/react-table` 8 → 9 — closed.** `Submissions.tsx` fails typecheck on the
+  renamed row-model API (`getCoreRowModel` → `createCoreRowModel`, `useReactTable` →
+  `ReactTable`), the dropped `VisibilityState`, `ColumnDef`'s new arity and five implicit
+  `any`s: a rewrite of the response grid, which has no browser spec until S3. ADR 0005 §#100.
+- **#101 `vite` 6 → 8 — closed, by the owner's decision.** CI was green on the old base
+  (132/1756, 11 e2e) with three deprecations in the build log (`optimizeDeps.rollupOptions`,
+  the `esbuild` option, "switch to `plugin-react-oxc`") and `@vitejs/plugin-react` still on 4 —
+  the pairing ADR 0005 §#62 says to take together, as a deliberate task. ADR 0005 §#101.
+- **#102 `dotenv` 16 → 18 — closed.** Probed in a scratch directory outside the repo: 18.0.0
+  prints `◇ injected env (1) from .env,missing.env` to stdout at boot unless `quiet: true`;
+  both `env.ts` call `config({ path: [...] })` into pino's JSON stream. Nothing the product needs
+  in exchange. ADR 0005 §#102 names the two-line way to take it on purpose.
+
+`.github/dependabot.yml` ignores the four major lines with the reason beside each and the ADR
+section that says what reopens it. `docs/adr/0005-dependency-majors.md` retitled ("Four" was
+the count, not the decision) and extended with the four paragraphs. No code changed.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
