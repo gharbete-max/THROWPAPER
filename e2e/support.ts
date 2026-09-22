@@ -50,17 +50,14 @@ export async function seededForm(sql: ReturnType<typeof db>): Promise<SeededForm
  * `/v1/auth/refresh`. Anything the test does afterwards is authenticated exactly as a user would
  * be.
  */
-export async function signInAs(
-  page: Page,
+/**
+ * Mints a refresh token for a seeded user the way the server does — random secret, SHA-256 hash
+ * stored — and returns the secret. `POST /v1/auth/refresh` with it is a real sign-in from there.
+ */
+export async function plantRefreshToken(
   sql: ReturnType<typeof db>,
   email: string,
-  /**
-   * Pinned, not inherited. The authenticated shell takes its language from the browser, and CI's
-   * Chromium reports `en-US` — so assertions written against Swedish labels silently looked for
-   * text that was never on the page.
-   */
-  locale: 'sv-SE' | 'en-GB' = 'sv-SE',
-): Promise<void> {
+): Promise<string> {
   const [user] = await sql`select id from users where email = ${email} limit 1`;
   if (!user) throw new Error(`No seeded user ${email} — run pnpm db:seed first.`);
 
@@ -74,6 +71,21 @@ export async function signInAs(
       now() + interval '1 day'
     )
   `;
+  return secret;
+}
+
+export async function signInAs(
+  page: Page,
+  sql: ReturnType<typeof db>,
+  email: string,
+  /**
+   * Pinned, not inherited. The authenticated shell takes its language from the browser, and CI's
+   * Chromium reports `en-US` — so assertions written against Swedish labels silently looked for
+   * text that was never on the page.
+   */
+  locale: 'sv-SE' | 'en-GB' = 'sv-SE',
+): Promise<void> {
+  const secret = await plantRefreshToken(sql, email);
 
   /**
    * Must be set for the app's origin before the first load, or restoreSession finds nothing.
