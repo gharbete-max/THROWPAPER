@@ -42,7 +42,7 @@ C:/Users/gusta/pg16/pgsql/bin/postgres.exe "-D" "C:/Users/gusta/pg16/data" "-p" 
 | `pnpm test` | **1** | 1 file failed of 139; 2 tests failed of 1782. |
 | `pnpm build` | 0 | Clean. |
 | `pnpm contract:check` | 0 | `contract:check passed — 0/6 implemented, rest deferred` |
-| `pnpm test:e2e` | 0 | **`19 passed (2.0m)`** — see E-2 for what it took |
+| `pnpm test:e2e` | 0 | **`19 passed (2.0m)`** — bare, no env preamble needed (see E-2) |
 
 `pnpm verify` is a serial chain (`format:check && typecheck && lint && test && build`), so its
 exit 1 hides everything downstream. The typecheck / lint / test / build rows were obtained by
@@ -59,9 +59,7 @@ This is a **regression**, not a standing condition. `docs/PROGRESS.md` § L0 rec
 
 Today at `f030000` — 1 merge commit later — verify exits 1, and the tree has grown to 139 files /
 1782 tests and 19 e2e tests. The two `exhaustive-deps` warnings are unchanged and were already
-known. **What is new is the two test failures (E-1b) and the worktree noise (E-1a).** L0 also ran
-e2e successfully on this machine without mentioning `DOCUMENT_SIGNING_SECRET` — at 11 tests there
-was no `restart.spec.ts`, and the document routes it exercises came in with it.
+known. **What is new is the two test failures (E-1b) and the worktree noise (E-1a).**
 
 Three distinct causes:
 
@@ -106,33 +104,35 @@ apps/forms/src/components/LanguagePicker.tsx     91:6  warning  missing dependen
 apps/forms/src/screens/builder/FormBuilder.tsx  129:6  warning  missing dependency: 'history'
 ```
 
-### E-2 — `pnpm test:e2e` cannot run on this machine as configured
+### E-2 — ~~`pnpm test:e2e` cannot run on this machine as configured~~ · **WITHDRAWN, this was wrong**
 
-`apps/api-forms/src/main.ts:9` refuses to start without `DOCUMENT_SIGNING_SECRET`. The root `.env`
-does not set it — `.env.example` does, and marks it required. Playwright's `webServer` block in
-`playwright.config.ts` passes `DATABASE_URL`, `JWT_SECRET`, `API_FORMS_PORT`, `APP_URL`,
-`MAIL_PROVIDER` and `NODE_ENV`, but not this one. Reproduced with the exact command Playwright
-runs:
+**This finding was incorrect and is retracted.** `playwright.config.ts` **does** pass
+`DOCUMENT_SIGNING_SECRET` — it declares it at lines 33–34 with the same default shape
+`e2e/restart.spec.ts:51` uses, and passes it in the api-forms `webServer` env at line 69. It has
+since #104. A bare `pnpm test:e2e` on a clean checkout needs **no environment preamble**:
+
+```
+$ pnpm test:e2e
+  19 passed (2.1m)
+```
+
+**How the error was made**, because it is the same trap twice in one session: this file was read at
+the start of the session, while the checkout was still on `claude/scan` at `691d40a`, and was never
+re-read after switching to `main`. The config was restructured between those commits. The failure
+that *was* reproduced —
 
 ```
 $ pnpm --filter @tp/api-forms exec tsx src/main.ts
 Error: DOCUMENT_SIGNING_SECRET must be set to at least 32 characters before the server can start.
-See .env.example.
-    at <anonymous> (C:\Users\gusta\projects\THROWPAPER\apps\api-forms\src\main.ts:10:9)
 ```
 
-`e2e/restart.spec.ts:51` already defaults this secret for the server *it* spawns, so the repo knows
-the suite needs it; the gap is only the shared `webServer` block. Supplying it in the environment
-produced the gate:
+— runs `main.ts` directly and never loads `playwright.config.ts`, so it never evidenced the claim
+it was cited for. The `19 passed` recorded above was real, but the env preamble it was run with was
+not doing anything.
 
-```
-$ DOCUMENT_SIGNING_SECRET='...32+ chars...' pnpm test:e2e
-  ok 19 e2e\restart.spec.ts:132:1 › data, a document, an asset and an in-flight job all survive a hard restart (1.5m)
-  19 passed (2.0m)
-```
-
-The `.env` file was not modified. The fix is one line in `playwright.config.ts`'s `webServer` env,
-mirroring `restart.spec.ts` — proposed, not done.
+**What remains true:** the root `.env` does not set `DOCUMENT_SIGNING_SECRET`, so `pnpm dev:forms`
+and any direct `tsx src/main.ts` from this checkout still refuse to start. That is a local `.env`
+gap, not a repo defect, and the `.env` was not modified.
 
 ### E-3 — the e2e suite skips silently by design
 
@@ -380,7 +380,7 @@ stub nor module** — 2,769 lines of shipping code with nine importers and no bo
 | Postgres start command is in `docs/PROGRESS.md` § L0 | Correct. Cited in §1 above |
 | Mailer "believed partially built" | Skeleton: 0 tests, 0 tables, 1 endpoint |
 | `LAUNCH-CHECKLIST.md` §2.3 has "seven measured rows" | **8** rows |
-| e2e "must report 19 passed" | Correct — but only on `main`, and only with `DOCUMENT_SIGNING_SECRET` set (E-2) |
+| e2e "must report 19 passed" | Correct, and reproducible bare on `main`. An earlier claim here that it needed `DOCUMENT_SIGNING_SECRET` was wrong — see E-2 |
 | `pnpm verify` is the gate | It is **red at `main`** (E-1), and was green at `691d40a` a day earlier. A regression, not a standing condition |
 
 Two further drifts found while measuring, both in `CLAUDE.md`'s package descriptions:
