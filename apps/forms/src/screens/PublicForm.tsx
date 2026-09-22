@@ -340,7 +340,9 @@ export default function PublicForm() {
        * that makes somebody give up rather than press the button again — which is exactly what
        * would have worked.
        */
-      if (response.status >= 500) {
+      if (response.status >= 500 || response.status === 429) {
+        // 429 is our rate limit refusing, not a form that closed — the same false statement
+        // by another route. The answers are still here, and a moment later it works.
         setRejected('error');
         return;
       }

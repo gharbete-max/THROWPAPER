@@ -39,6 +39,12 @@ describe('a submission that does not arrive', () => {
     expect(SOURCE).toContain("setRejected('error')");
   });
 
+  it('does not call the rate limit a closed form either', () => {
+    // A 429 carries no `reason`, and the fall-through said "the form closed while you were
+    // filling this in" — found when the e2e suite itself became the eleventh visitor in a minute.
+    expect(SOURCE).toContain('response.status === 429');
+  });
+
   it('announces the failure, which arrives after a button press', () => {
     expect(SOURCE).toContain('role="alert"');
   });
