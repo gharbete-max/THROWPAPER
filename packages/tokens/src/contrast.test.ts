@@ -83,14 +83,15 @@ describe('contrast', () => {
    * can carry neither.
    *
    * What is left is the failure that is real and unfixable by deriving — a primary in the middle
-   * of the range, where neither the page nor the ink clears 4.5:1 on it. `#808080` is that colour:
-   * 3.62 against the page, 2.83 against the ink. Only the person who chose it can fix it, which is
-   * why it is worth telling them.
+   * of the range, where neither the page nor the ink clears 4.5:1 on it. `#767676` is that colour
+   * under the shipped ink: 4.35 against the page, 4.25 against the ink. (`#808080` was, until the
+   * ink went near-black and started to read on it at 4.6.) Only the person who chose it can fix
+   * it, which is why it is worth telling them.
    */
   it('catches a primary that no label can be read on', () => {
     const tokens: TokenSet = {
       ...defaultTokens,
-      colour: { ...defaultTokens.colour, primary: '#808080' },
+      colour: { ...defaultTokens.colour, primary: '#767676' },
     };
     expect(checkContrast(tokens).map((f) => f.token)).toContain('colour.primary as a button fill');
   });

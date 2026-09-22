@@ -149,7 +149,8 @@ function buttonStyle(tokens: TokenSet) {
   /*
    * The same resolution the web gets — `buttonSurface` walks a pastel fill until its label reads
    * and turns `outline` and `soft` into paint — rather than a second copy of the switch that
-   * still painted paper on seafoam at 2.12:1. `transparent` is resolved to the card, because a
+   * still painted paper on the primary — 2.12:1 under the seafoam of the day, 2.14:1 under gold.
+   * `transparent` is resolved to the card, because a
    * mail client given `transparent` on an anchor may paint anything behind it.
    */
   const surface = buttonSurface(tokens);
