@@ -636,6 +636,7 @@ export const daDK: Record<MessageKey, string> = {
   'wizard.done': 'Færdig',
   'wizard.review': 'Sådan bliver det',
   'wizard.open': 'Åbn i editoren',
+  'wizard.next': 'Næste',
   'wizard.back': 'Tilbage',
   'wizard.advanced': 'Byg det selv',
   'public.back': 'Tilbage',

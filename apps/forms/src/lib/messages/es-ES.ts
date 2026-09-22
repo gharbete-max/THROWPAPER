@@ -649,6 +649,7 @@ export const esES: Record<MessageKey, string> = {
   'wizard.done': 'Listo',
   'wizard.review': 'Esto es lo que obtienes',
   'wizard.open': 'Abrir en el editor',
+  'wizard.next': 'Siguiente',
   'wizard.back': 'Atrás',
   'wizard.advanced': 'Crearlo yo',
   'public.back': 'Atrás',

@@ -646,6 +646,7 @@ export const enGB = {
   'wizard.done': 'Done',
   'wizard.review': 'Here is what that gives you',
   'wizard.open': 'Open it in the editor',
+  'wizard.next': 'Next',
   'wizard.back': 'Back',
   'wizard.advanced': 'Build it myself',
   'public.back': 'Back',

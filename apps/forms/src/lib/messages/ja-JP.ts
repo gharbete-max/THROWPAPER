@@ -642,6 +642,7 @@ export const jaJP: Record<MessageKey, string> = {
   'wizard.done': '完了',
   'wizard.review': 'こうなります',
   'wizard.open': 'エディターで開く',
+  'wizard.next': '次へ',
   'wizard.back': '戻る',
   'wizard.advanced': '自分で作る',
   'public.back': '戻る',

@@ -8,20 +8,29 @@
  * copies of the same walk, each with its own bugs, is not a pattern. So the tree is generic over
  * what an answer contributes, and each surface supplies its own questions and its own outcome type.
  *
- * The structure is the part worth sharing: a question, two to four buttons, each button adding
- * something and choosing what to ask next. That shape is identical whether the buttons are choosing
- * fields on a form or who a mailing goes to.
+ * ## A sector, then facets — not a path
+ *
+ * This used to be a decision tree: each answer named the one question that followed, so the *order*
+ * of questions was a property of the data. That is right for a decision tree and wrong for what
+ * this actually asks. "Does it need payment" and "does it need a signature" are independent, and
+ * making one of them come second was an invention nobody decided on.
+ *
+ * So the first question chooses a **sector**, and the sector chooses a **set of facets**. Facets
+ * are answered in any order, and a facet may take several answers at once. `docs/adr/0006` is the
+ * decision and the argument.
  *
  * ## What an answer may do
  *
- * Contribute items, and choose the next question. That is the whole vocabulary, and it is
- * deliberately smaller than "run code per answer".
+ * Contribute items, and — if it is a sector — select which facets apply. That is the whole
+ * vocabulary, and it is deliberately smaller than "run code per answer", because a tree of data can
+ * be checked and a branch written as an `if` inside a component can only be guessed at.
  *
- * The reason is that a tree of data can be *enumerated*: every path through it can be walked and
- * checked. A branch written as an `if` inside a component can only be tested by guessing which
- * combinations somebody might press. Every guarantee these trees carry — no dead ends, no
- * unreachable questions, nothing that takes more than four presses — exists because the tree is a
- * value rather than a function.
+ * ## Composition, and the one rule that carries it
+ *
+ * Two facets can both ask for an email address. A form with two email boxes on it is a form
+ * somebody fills in twice and then queries, so `keyOf` decides when two contributed items are the
+ * same thing and the first one wins. That rule is the load-bearing part of composing blocks, and
+ * it is why a few dozen authored blocks cover more forms than anybody will author by hand.
  *
  * ## This is a head start, not a walled garden
  *
@@ -38,28 +47,50 @@ export interface WizardOption<TItem> {
   readonly detail?: Record<string, string>;
   /** What choosing this adds, in order. */
   readonly contributes?: readonly TItem[];
-  /** The next question, or nothing to finish here. */
-  readonly next?: string;
+  /**
+   * Which facets this answer brings into play.
+   *
+   * A sector option has these; a facet option does not. Order here is the order they are asked in,
+   * which is a presentation choice — the answers themselves are order-independent.
+   */
+  readonly selects?: readonly string[];
 }
 
 export interface WizardQuestion<TItem> {
   readonly id: string;
   readonly prompt: Record<string, string>;
+  /**
+   * Whether several answers may be given at once.
+   *
+   * A sector is a choice; a facet is a matrix. This is the difference between "what is this for"
+   * and "which of these does it need".
+   */
+  readonly multiple?: boolean;
   readonly options: readonly WizardOption<TItem>[];
 }
 
 /** A tree, and where a run through it starts. */
 export interface WizardTree<TItem> {
   readonly id: string;
+  /** The sector question. Always asked, always first, always one answer. */
   readonly first: string;
   readonly questions: readonly WizardQuestion<TItem>[];
   /**
-   * How an item identifies itself, so the same thing contributed by two branches appears once.
+   * How an item identifies itself, so the same thing contributed by two facets appears once.
    *
-   * Two paths can both ask for an email address; a form with two email boxes on it is a form
+   * Two facets can both ask for an email address; a form with two email boxes on it is a form
    * somebody fills in twice and then queries.
    */
   readonly keyOf: (item: TItem) => string;
+  /**
+   * The most facets a sector may select.
+   *
+   * This is the four-press promise written as a number a test can read. It used to be proved by
+   * enumerating every complete run, which is 2ⁿ once a facet takes several answers at once — so
+   * the enumeration went and this took its place. Without it the promise disappears without
+   * anybody deciding to drop it. See `docs/adr/0006-catalogue-direction.md`.
+   */
+  readonly maxFacets: number;
 }
 
 export class WizardError extends Error {
@@ -80,88 +111,96 @@ export function questionById<TItem>(
   return index(tree).get(id);
 }
 
-/** Walk a run of answers and collect what they contributed. */
+/**
+ * The questions a run is actually asking: the sector, then the facets its answer selected.
+ *
+ * Everything else here is built on this. Answers are matched against the active set rather than
+ * walked in sequence, which is what makes them order-independent — the same answers in a different
+ * order produce the same form.
+ */
+export function activeQuestions<TItem>(
+  tree: WizardTree<TItem>,
+  answers: readonly string[],
+): readonly WizardQuestion<TItem>[] {
+  const byId = index(tree);
+  const sector = byId.get(tree.first);
+  if (!sector) throw new WizardError(`No question ${tree.first} in ${tree.id}`);
+
+  const chosen = sector.options.find((option) => answers.includes(option.id));
+  if (!chosen) return [sector];
+
+  const facets = (chosen.selects ?? []).map((id) => {
+    const facet = byId.get(id);
+    if (!facet)
+      throw new WizardError(`${tree.id}/${chosen.id} selects ${id}, which does not exist`);
+    return facet;
+  });
+
+  return [sector, ...facets];
+}
+
+/**
+ * What a set of answers produces, deduplicated by `keyOf`.
+ *
+ * Order-independent on purpose: an answer is looked up in the active set rather than consumed in
+ * sequence. Within one question the declared option order still decides which contribution wins a
+ * key, so the result is deterministic whatever order the buttons were pressed in.
+ */
 export function collect<TItem>(
   tree: WizardTree<TItem>,
   answers: readonly string[],
 ): readonly TItem[] {
-  const byId = index(tree);
+  const questions = activeQuestions(tree, answers);
+  const chosen = new Set(answers);
   const items: TItem[] = [];
   const seen = new Set<string>();
 
-  let questionId: string | undefined = tree.first;
-
+  /*
+   * An answer nobody offered is a mistake, not a no-op.
+   *
+   * Walking `next` used to catch this for free, because an unknown id simply had no successor.
+   * Matching against a set does not, so it is checked: `wizardAnswers` arrives over HTTP, and a
+   * typo that silently produced a form missing half its fields would be found by the person
+   * filling it in.
+   */
+  const offered = new Set(questions.flatMap((q) => q.options.map((option) => option.id)));
   for (const answer of answers) {
-    if (!questionId) throw new WizardError('The run already finished; there is nothing to answer');
-
-    const question: WizardQuestion<TItem> | undefined = byId.get(questionId);
-    if (!question) throw new WizardError(`No question ${questionId} in ${tree.id}`);
-
-    const option = question.options.find((candidate) => candidate.id === answer);
-    if (!option) throw new WizardError(`${answer} is not an answer to ${questionId}`);
-
-    for (const item of option.contributes ?? []) {
-      const key = tree.keyOf(item);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      items.push(item);
+    if (!offered.has(answer)) {
+      throw new WizardError(`${answer} is not an answer to anything in ${tree.id}`);
     }
+  }
 
-    questionId = option.next;
+  for (const question of questions) {
+    for (const option of question.options) {
+      if (!chosen.has(option.id)) continue;
+      for (const item of option.contributes ?? []) {
+        const key = tree.keyOf(item);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        items.push(item);
+      }
+    }
   }
 
   return items;
 }
 
-/** The question in front of somebody, or nothing when the run has finished. */
+/**
+ * The question at a given step, or nothing when the run has finished.
+ *
+ * The step is the caller's, not this module's. With a facet that takes several answers there is no
+ * way to tell "chose nothing here" from "has not been asked yet" out of a flat list of ids, and
+ * guessing would silently skip a facet somebody deliberately left empty.
+ */
 export function currentQuestion<TItem>(
   tree: WizardTree<TItem>,
   answers: readonly string[],
+  step: number,
 ): WizardQuestion<TItem> | undefined {
-  const byId = index(tree);
-  let questionId: string | undefined = tree.first;
-
-  for (const answer of answers) {
-    const question: WizardQuestion<TItem> | undefined = questionId
-      ? byId.get(questionId)
-      : undefined;
-    if (!question) return undefined;
-    questionId = question.options.find((candidate) => candidate.id === answer)?.next;
-  }
-
-  return questionId ? byId.get(questionId) : undefined;
+  return activeQuestions(tree, answers)[step];
 }
 
-/**
- * Every complete run the tree allows.
- *
- * Exported rather than kept in a test, because it is what the tests for each individual tree are
- * written on top of — and because a tree that cannot be enumerated has grown a cycle, which this
- * says out loud instead of hanging.
- */
-export function everyPath<TItem>(tree: WizardTree<TItem>): string[][] {
-  const byId = index(tree);
-  const paths: string[][] = [];
-
-  const walk = (questionId: string | undefined, answers: string[], visited: readonly string[]) => {
-    if (!questionId) {
-      paths.push(answers);
-      return;
-    }
-    if (visited.includes(questionId)) {
-      throw new WizardError(
-        `${tree.id} loops: ${[...visited, questionId].join(' > ')}. A run that can return to a question it has already asked cannot finish.`,
-      );
-    }
-
-    const question = byId.get(questionId);
-    if (!question) throw new WizardError(`No question ${questionId} in ${tree.id}`);
-
-    for (const option of question.options) {
-      walk(option.next, [...answers, option.id], [...visited, questionId]);
-    }
-  };
-
-  walk(tree.first, [], []);
-  return paths;
+/** How many questions this run will ask in total, once its sector is known. */
+export function questionCount<TItem>(tree: WizardTree<TItem>, answers: readonly string[]): number {
+  return activeQuestions(tree, answers).length;
 }

@@ -639,6 +639,7 @@ export const isIS: Record<MessageKey, string> = {
   'wizard.done': 'Lokið',
   'wizard.review': 'Svona verður það',
   'wizard.open': 'Opna í ritlinum',
+  'wizard.next': 'Áfram',
   'wizard.back': 'Til baka',
   'wizard.advanced': 'Byggja sjálf',
   'public.back': 'Til baka',

@@ -61,7 +61,7 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
         id: 'contact',
         label: sv('Getting in touch', 'Kontakta oss'),
         detail: sv('People send you a message.', 'Folk skickar ett meddelande.'),
-        next: 'contact-reply',
+        selects: ['contact-reply', 'contact-message'],
       },
       {
         id: 'signup',
@@ -81,7 +81,7 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
             required: true,
           },
         ],
-        next: 'signup-extras',
+        selects: ['signup-extras'],
       },
       {
         id: 'collect',
@@ -91,7 +91,7 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
           { type: 'short_text', key: 'name', label: sv('Name', 'Namn'), required: true },
           { type: 'email', key: 'email', label: sv('Email address', 'E-postadress') },
         ],
-        next: 'collect-what',
+        selects: ['collect-what'],
       },
     ],
   },
@@ -112,7 +112,6 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
             required: true,
           },
         ],
-        next: 'contact-message',
       },
       {
         id: 'phone',
@@ -121,7 +120,6 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
           { type: 'short_text', key: 'name', label: sv('Name', 'Namn'), required: true },
           { type: 'phone', key: 'phone', label: sv('Telephone', 'Telefon'), required: true },
         ],
-        next: 'contact-message',
       },
       {
         id: 'either',
@@ -131,7 +129,6 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
           { type: 'email', key: 'email', label: sv('Email address', 'E-postadress') },
           { type: 'phone', key: 'phone', label: sv('Telephone', 'Telefon') },
         ],
-        next: 'contact-message',
       },
     ],
   },
@@ -196,12 +193,16 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
   {
     id: 'signup-extras',
     prompt: sv('Anything else you need from them?', 'Behöver ni något mer?'),
+    /*
+     * A matrix, not a choice — and this is the question that shows why.
+     *
+     * It used to carry a fourth option, "Both of those", whose contributions were `dietary` and
+     * `guests` copied out verbatim. That option was never a thing anybody wanted; it existed
+     * because one answer per question could not say "these two". Multi-select says it, so the copy
+     * is gone. "Nothing else" went with it: choosing nothing is choosing nothing.
+     */
+    multiple: true,
     options: [
-      {
-        id: 'nothing',
-        label: sv('Nothing else', 'Inget mer'),
-        detail: sv('Name and email is enough.', 'Namn och e-post räcker.'),
-      },
       {
         id: 'dietary',
         label: sv('What they eat', 'Specialkost'),
@@ -232,35 +233,14 @@ const WIZARD_QUESTIONS: readonly WizardQuestion<WizardField>[] = [
           },
         ],
       },
-      {
-        id: 'both',
-        label: sv('Both of those', 'Båda'),
-        contributes: [
-          {
-            type: 'single_select',
-            key: 'meal',
-            label: sv('Meal', 'Måltid'),
-            required: true,
-            options: [
-              { value: 'standard', label: sv('Standard', 'Standard') },
-              { value: 'vegetarian', label: sv('Vegetarian', 'Vegetarisk') },
-              { value: 'vegan', label: sv('Vegan', 'Vegansk') },
-              { value: 'gluten-free', label: sv('Gluten free', 'Glutenfri') },
-            ],
-          },
-          {
-            type: 'number',
-            key: 'guests',
-            label: sv('Accompanying guests', 'Medföljande gäster'),
-          },
-        ],
-      },
     ],
   },
 
   {
     id: 'collect-what',
     prompt: sv('What are you updating?', 'Vad vill ni uppdatera?'),
+    /** Address, contact details and consents are independent of one another. */
+    multiple: true,
     options: [
       {
         id: 'address',
@@ -313,6 +293,12 @@ export const FORM_WIZARD: WizardTree<WizardField> = {
   first: 'purpose',
   questions: WIZARD_QUESTIONS,
   keyOf: (field) => field.key,
+  /*
+   * Sector plus three facets. The promise used to be proved by enumerating every complete run;
+   * that is 2^n once a facet takes several answers, so it is a number now. ADR 0006 is explicit
+   * that without this the promise disappears without anybody deciding to drop it.
+   */
+  maxFacets: 3,
 };
 
 /** Where every run starts. Kept as a name because screens read better for it. */
@@ -327,7 +313,10 @@ export function fieldsFromAnswers(answers: readonly string[]): readonly WizardFi
   return collect(FORM_WIZARD, answers);
 }
 
-/** The question in front of somebody, or nothing when the run has finished. */
-export function nextQuestion(answers: readonly string[]): WizardQuestion<WizardField> | undefined {
-  return currentQuestion(FORM_WIZARD, answers);
+/** The question at a given step, or nothing when the run has finished. */
+export function nextQuestion(
+  answers: readonly string[],
+  step: number,
+): WizardQuestion<WizardField> | undefined {
+  return currentQuestion(FORM_WIZARD, answers, step);
 }
