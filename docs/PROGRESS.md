@@ -1916,6 +1916,63 @@ rows; the not-found sentence stays the owner's.
 **Checklist.** The eight rows and the §2.2 export row deleted; the not-found sentence stays as
 the copy row; seven rows from the re-run take their place. No `packages/` change.
 
+## Phase 0 — Four-module ground truth · done
+
+No product code changed. Measured on 2026-09-22 at `f0300002` so that the four-module plan starts
+from numbers rather than from the brief's beliefs. Full scorecard in `docs/MODULE-STATUS.md`; only
+what it changes is here.
+
+**The gate is red, and it was green the day before.** § L0 recorded `pnpm verify` exit 0 at
+`691d40a` on 2026-09-21. At `f030000` it exits 1. Three separate causes, and only one is the
+product's:
+
+- **Two real test failures**, both job-lease reclaim in `apps/api-forms/src/jobs/worker.test.ts`
+  — a job is not taken back after its lease expires (line 189), and a job with its attempts spent
+  stays `queued` instead of going `failed` (line 214). 1780 of 1782 tests pass. New since L0,
+  which ran 1710/1710 green.
+- **`format:check` and `lint` fail on the nested worktrees.** All 15 prettier offenders and every
+  eslint error are under `.claude/worktrees/`. `.prettierignore` anchors its patterns at the repo
+  root, so the worktrees' copies of `apps/forms/public/ocr/*.js` and `.impeccable/critique/*` are
+  not matched, and `eslint .` walks them for the same reason. Not a product defect; it appeared
+  when the worktrees accumulated content.
+- **The two `exhaustive-deps` warnings are unchanged** from L0 and are warnings, not errors.
+
+**e2e needs a secret nothing supplies.** `apps/api-forms/src/main.ts:9` refuses to start without
+`DOCUMENT_SIGNING_SECRET`; the root `.env` does not set it and `playwright.config.ts`'s `webServer`
+env block does not pass it. `e2e/restart.spec.ts:51` already defaults it for the server it spawns
+itself, which is why the gap went unseen — `restart.spec.ts` arrived after L0, together with the
+document routes it drives. With the secret supplied in the environment the suite gives
+**19 passed (2.0m)**. One line in `playwright.config.ts` fixes it; not written here, because Phase
+0 is doc-only.
+
+**Capture is not missing.** The brief's premise was that it does not exist. It does: 9 source
+files, 1,998 LOC, 40 tests across `screens/builder/paper/`, `documents/paper.ts`,
+`packages/shared/src/invoicing/ocr.ts` and `scripts/ocr-assets.ts` — and `docs/adr/0004` is
+**accepted**, not open. It already rules that OCR never creates a field, and the shipped engine is
+`tesseract.js` self-hosted under a `'self'` CSP, recognising in a browser worker so the photograph
+never leaves the device. A server-side Python cascade would be a step away from that, not toward
+it. The real gap is handwriting, plus zero e2e coverage, plus ADR 0004's own open questions —
+where an uploaded file lives, whether it is kept, what caps a parser runs under — which are the
+same retention and region answers still owed.
+
+**Reports has no boundary.** 15 files, 2,769 LOC, and nine modules outside `documents/` import it:
+check-in takes its QR verification from it, mail takes the admission attachment, `server.ts` wires
+the renderer at startup. Extraction is dependency inversion, not a file move — which is what ADR
+0008 has to be written against.
+
+**Mailer is a skeleton**, and says so in its own UI. 8 files, 125 lines — fewer than
+`packages/calc` — with 0 tests, 0 tables and one `GET /health`. Against Forms' 180 files, 44,469
+LOC, 776 tests, 74 routes, 25 tables and all 19 e2e tests.
+
+**Two drifts in `CLAUDE.md`.** `packages/calc` is described as "Formula AST, statistics library,
+chart definitions" and contains `errors.ts`, `money.ts`, `ledger.ts`. `packages/ui` is described as
+"Headless + styled primitives, including the data grid" and contains one 4-line `cn()` helper —
+its own `index.ts` says the grid is deliberately not in v0.1, so the code is honest and the
+description is not.
+
+**Not done here.** Nothing was moved, no row closed, no fix applied. The four repairs this phase
+identified — the two worker tests, the worktree ignore patterns, the Playwright secret, and the
+two `CLAUDE.md` package descriptions — are Phase 1's, and each has its evidence recorded above.
 ## Phase 1 — main green again · done
 
 `docs/MODULE-STATUS.md` found the gate red at `f030000` while § L0 had recorded it green at
