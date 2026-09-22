@@ -21,6 +21,20 @@ export interface JobContext {
 
 export type JobHandler = (context: JobContext) => Promise<Record<string, unknown>>;
 
+/**
+ * How long a job may sit `running` before it is presumed orphaned.
+ *
+ * A worker killed mid-job — a deploy, a crash, a pulled plug — leaves its row `running`, and
+ * `claim()` only takes `queued` rows, so the export somebody asked for would never arrive. Every
+ * pass first takes back anything running longer than this; the claim already counted as an
+ * attempt, so a job cannot be lost forever either. Longer than any job here takes: the bulk
+ * cards for two hundred registrations finish in well under a minute.
+ *
+ * ponytail: a lease by age. When several instances run long jobs, a heartbeat column is the
+ * upgrade — until then a job on one instance that legitimately runs past this is re-run once.
+ */
+export const STALE_RUNNING_MS = 15 * 60 * 1000;
+
 export interface WorkerOptions {
   repos: Repositories;
   handlers: Record<string, JobHandler>;
@@ -50,6 +64,7 @@ export function createWorker(options: WorkerOptions): Worker {
   let running = false;
 
   async function runOnce(): Promise<boolean> {
+    await repos.jobs.requeueStale(new Date(now().getTime() - STALE_RUNNING_MS));
     const job = await repos.jobs.claim(now());
     if (!job) return false;
 

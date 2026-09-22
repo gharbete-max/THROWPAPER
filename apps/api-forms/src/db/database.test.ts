@@ -324,6 +324,51 @@ describe.skipIf(!migrated)('drizzle repositories against a real database', () =>
     });
     expect(await repos.forms.referencesUpload(key('z'))).toBe(true);
   });
+
+  it('takes back a job a dead worker left running, and fails it once attempts are spent', async () => {
+    const organisationId = await organisation();
+    const job = await repos.jobs.enqueue({
+      organisationId,
+      kind: 'smoke.job',
+      idempotencyKey: `smoke:${Date.now()}`,
+      payload: {},
+      progressTotal: 1,
+      maxAttempts: 2,
+    });
+    // As a worker that claimed it an hour ago and then died would have left it. Set directly:
+    // `claim()` takes the oldest queued row, which on a shared database is not necessarily this.
+    const lost = sql`
+      update jobs set status = 'running', started_at = now() - interval '1 hour',
+        attempts = attempts + 1
+      where id = ${job.id}
+    `;
+    await lost;
+
+    // Younger than the cutoff: left alone. (Its own row, not the count — the database is shared
+    // with the e2e suite, whose rows this test does not own.)
+    await repos.jobs.requeueStale(new Date(Date.now() - 2 * 60 * 60 * 1000));
+    expect((await repos.jobs.findById(organisationId, job.id))?.status).toBe('running');
+    // Older: queued again, and the lost claim counts as an attempt.
+    expect(
+      await repos.jobs.requeueStale(new Date(Date.now() - 30 * 60 * 1000)),
+    ).toBeGreaterThanOrEqual(1);
+    const requeued = await repos.jobs.findById(organisationId, job.id);
+    expect(requeued?.status).toBe('queued');
+    expect(requeued?.startedAt).toBeNull();
+    expect(requeued?.attempts).toBe(1);
+
+    // The second loss spends the last attempt.
+    await sql`
+      update jobs set status = 'running', started_at = now() - interval '1 hour',
+        attempts = attempts + 1
+      where id = ${job.id}
+    `;
+    await repos.jobs.requeueStale(new Date(Date.now() - 30 * 60 * 1000));
+    const dead = await repos.jobs.findById(organisationId, job.id);
+    expect(dead?.status).toBe('failed');
+    expect(dead?.finishedAt).not.toBeNull();
+    await sql`delete from jobs where id = ${job.id}`;
+  });
 });
 
 if (!migrated) {

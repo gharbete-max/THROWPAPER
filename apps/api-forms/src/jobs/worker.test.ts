@@ -164,3 +164,54 @@ describe('failure', () => {
     expect(finished?.error).toContain('No handler registered');
   });
 });
+
+/**
+ * A worker that dies mid-job leaves the row `running`, and `claim()` never looks at `running`.
+ * Without recovery the export somebody asked for never arrives, and nothing says why.
+ */
+describe('a job the last worker never finished', () => {
+  const HOUR = 60 * 60 * 1000;
+
+  it('is taken back once it is older than the lease, and runs again', async () => {
+    let runs = 0;
+    const clock = { at: new Date('2026-09-22T10:00:00Z') };
+    const { repos, worker } = setup(
+      {
+        'test.job': async () => {
+          runs += 1;
+          return { ok: true };
+        },
+      },
+      () => clock.at,
+    );
+    const job = await enqueue(repos);
+    // Claimed by a worker that then died.
+    expect((await repos.jobs.claim(clock.at))?.id).toBe(job.id);
+
+    // Not yet: a job that started a minute ago may simply be long.
+    clock.at = new Date(clock.at.getTime() + 60 * 1000);
+    await worker.runOnce();
+    expect(runs).toBe(0);
+    expect((await repos.jobs.findById(testOrganisation.id, job.id))?.status).toBe('running');
+
+    clock.at = new Date(clock.at.getTime() + HOUR);
+    await worker.runOnce();
+    expect(runs).toBe(1);
+    const finished = await repos.jobs.findById(testOrganisation.id, job.id);
+    expect(finished?.status).toBe('done');
+    expect(finished?.attempts).toBe(2);
+  });
+
+  it('fails for good when its attempts are spent', async () => {
+    const clock = { at: new Date('2026-09-22T10:00:00Z') };
+    const { repos, worker } = setup({ 'test.job': async () => ({}) }, () => clock.at);
+    const job = await enqueue(repos, { maxAttempts: 1 });
+    await repos.jobs.claim(clock.at);
+
+    clock.at = new Date(clock.at.getTime() + HOUR);
+    expect(await worker.runOnce()).toBe(false);
+    const dead = await repos.jobs.findById(testOrganisation.id, job.id);
+    expect(dead?.status).toBe('failed');
+    expect(dead?.error).toContain('worker');
+  });
+});

@@ -998,6 +998,30 @@ export function createDrizzleRepositories(db: Db): Repositories {
           )
           .where(eq(jobs.id, id));
       },
+
+      /**
+       * One statement: the claim already counted as an attempt, so a job that has now lost as
+       * many workers as it was allowed attempts is failed rather than queued a fourth time.
+       */
+      requeueStale: async (before) => {
+        const rows = await db
+          .update(jobs)
+          .set({
+            // Cast: a bare string literal in a `case` is text, and the column is an enum.
+            status: sql`(case when ${jobs.attempts} >= ${jobs.maxAttempts} then 'failed' else 'queued' end)::job_status`,
+            startedAt: null,
+            error: 'worker lost before the job finished',
+            finishedAt: sql`case when ${jobs.attempts} >= ${jobs.maxAttempts} then now() else null end`,
+          })
+          .where(
+            and(
+              eq(jobs.status, 'running'),
+              sql`${jobs.startedAt} < ${before.toISOString()}::timestamptz`,
+            ),
+          )
+          .returning({ id: jobs.id });
+        return rows.length;
+      },
     },
 
     brandKits: {

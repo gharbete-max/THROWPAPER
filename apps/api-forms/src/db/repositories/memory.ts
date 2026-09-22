@@ -802,6 +802,19 @@ export function createMemoryRepositories(
           ? { ...job, status: 'queued', error, runAfter: retryAt }
           : { ...job, status: 'failed', error, finishedAt: new Date() };
       },
+
+      requeueStale: async (before) => {
+        let touched = 0;
+        state.jobs = state.jobs.map((job) => {
+          if (job.status !== 'running' || !job.startedAt || job.startedAt >= before) return job;
+          touched += 1;
+          const error = 'worker lost before the job finished';
+          return job.attempts >= job.maxAttempts
+            ? { ...job, status: 'failed', error, startedAt: null, finishedAt: new Date() }
+            : { ...job, status: 'queued', error, startedAt: null };
+        });
+        return touched;
+      },
     },
 
     brandKits: {
