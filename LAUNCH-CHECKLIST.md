@@ -85,9 +85,10 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.2 Temporary and literal strings in the app
 
-| What                                                                                                                                                                                                                                                                           | Where                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one) | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
+| What                                                                                                                                                                                                                                                                                       | Where                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one)             | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
+| The bulk admission export is keyed on form + published version, so once its job is `done` every later request returns that same job: its signed link expires after an hour and its ZIP never gains the registrations that arrived since. Start a new job when the existing one is finished | `routes/documents.ts` `admission-documents`        |
 
 ### 2.3 Open findings from the app-shell critique (P1–P3, not yet actioned)
 

@@ -1733,6 +1733,67 @@ are the new §2.3 rows; the not-found sentence is the owner's to word.
 with a measured number where there is one. `EventForm.tsx`, named in the old accessible-name
 row, needed nothing. `packages/shared` touched (`SubmitResponse`).
 
+## The restart proof — data, documents, assets and in-flight work survive · done
+
+The first phase after the app-shell pass, chosen because it most directly separates "tests
+pass" from "I can run it on one server": rows in Postgres surviving a restart was never in doubt,
+but nobody had shown that a generated ZIP, an uploaded logo and a job in flight at the moment
+the process died come back. Branch `claude/persistence-proof` from `8f8179e` (#103). No
+dependency, no migration, no `docs/CONTRACT.md` change, no `packages/` change.
+
+**The spec.** `e2e/restart.spec.ts` runs its own API (`node --import tsx src/main.ts`, port
+4102) against the same Postgres, signs in through the real refresh endpoint with a planted token
+(`plantRefreshToken`, extracted from `signInAs`), registers a submission on the seeded form,
+uploads a logo (`POST /v1/uploads`, `icon-192.png`) and reads it back, runs the bulk admission
+export through the queue (`POST /v1/forms/:id/admission-documents` → 202, polls `/v1/jobs/:id`
+to `done`, downloads the signed ZIP → 200 `application/zip`), then leaves that job as a dead
+worker leaves it (`running`, `started_at` an hour ago) and inserts a second, queued copy. SIGKILL.
+Start again. The submission row is there, the asset answers 200, the earlier ZIP answers 200
+through the same signed path, the queued job reaches `done`, and — the point — the orphaned job
+reaches `done` with a fresh link. On Linux the spec ends with a SIGTERM stop and expects exit 0;
+on Windows a signal to a child is always a hard kill, so that step is skipped here and runs in CI.
+
+**Committed red.** With the recovery absent, everything survived except the job the dead worker
+was running: `job … did not finish within 60000ms` at the orphan's wait, after the queued copy
+had completed and the asset and ZIP had answered 200. `claim()` only takes `queued` rows.
+
+**Two things the spec exposed, and how they were closed.**
+
+1. *A job a dead worker left `running` stayed `running` forever.* `JobRepository.requeueStale`
+   (`repositories/types.ts`, `drizzle.ts`, `memory.ts`): one statement that queues again every
+   `running` row started before a cutoff, or fails it when the lost claim was its last attempt —
+   the claim already counts as one, so an orphan cannot loop. The worker calls it before every
+   claim with `STALE_RUNNING_MS = 15 min`, longer than any job here. Red first in three places:
+   `jobs/worker.test.ts` (memory; a job started a minute ago is left alone, an hour ago is run
+   again with `attempts: 2`, and one out of attempts becomes `failed`), `db/database.test.ts`
+   (the real SQL — which caught that a bare `'failed'` in a `case` is `text`, not `job_status`,
+   and needs the cast), and the restart spec end to end (1.7 min). Recorded as a lease by age; a
+   heartbeat column is the upgrade when several instances run long jobs.
+2. *A stop was a crash.* `main.ts` installed no signal handler, so `docker stop` (SIGTERM) and
+   Ctrl-C (SIGINT) ended the process without `app.close()` — worker timer, upload sweeper and
+   Chromium all cut off. Both signals now close the app and exit with its result;
+   `shutdown.test.ts` holds the entry point to it (the source pattern, because the entry point
+   listens and Windows cannot deliver the signal), and the spec's last step observes it in CI.
+
+**Two things the spec found that are recorded, not fixed here.**
+
+- *A finished bulk export is handed back forever.* The export job is keyed on the form and its
+  published version so a second request during a run joins it — but `enqueue` is idempotent
+  across time too, so after the job is `done` every later request returns the same job, whose
+  signed link expires after an hour and whose ZIP never includes registrations that arrived
+  since. The spec deletes prior export jobs for the seeded form to stay independent of earlier
+  runs. A product fix (start a new job when the existing one is finished) is a row in
+  `LAUNCH-CHECKLIST.md` §2.2.
+- *Two instances, two disks.* The spec's API and the one Playwright starts share the `jobs`
+  table, so either worker took the export; when they had different `DOCUMENT_DIR`s the ZIP was
+  a 404 from the other. They now share the directory — which is the honest statement of what
+  local file storage can do, and the case for an object store the day there are two instances
+  (`docs/DEPLOY.md` § What survives a restart).
+
+**Ran.** `pnpm verify` exit 0 — **138 files / 1777 tests**, both builds, lint 0 errors (the two
+pre-existing warnings); `pnpm contract:check` passed (0/6, unchanged); `pnpm test:e2e` **16
+passed (2.0m)** — the fifteen from #103 plus the restart proof, genuinely run.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

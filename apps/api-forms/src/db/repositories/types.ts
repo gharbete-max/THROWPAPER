@@ -445,6 +445,12 @@ export interface JobRepository {
   succeed(id: string, result: Record<string, unknown>): Promise<void>;
   /** Re-queues with backoff while attempts remain, and fails permanently once they run out. */
   fail(id: string, error: string, retryAt: Date | null): Promise<void>;
+  /**
+   * Takes back jobs a dead worker left `running` — started before `before` and never finished —
+   * so they are queued again, or failed when the lost claim was their last attempt. Returns how
+   * many it touched.
+   */
+  requeueStale(before: Date): Promise<number>;
 }
 
 export interface SendingDomainRecord {

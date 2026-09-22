@@ -18,3 +18,18 @@ const app = await buildServer({
   appUrl: env.APP_URL,
 });
 await app.listen({ port: env.API_FORMS_PORT, host: env.API_FORMS_HOST });
+
+/**
+ * A stop is a stop, not a crash. `docker stop` sends SIGTERM and Ctrl-C sends SIGINT; without
+ * this, Node exits at once and the worker's timer, the upload sweeper and Chromium die
+ * mid-whatever they were doing. `app.close()` runs the `onClose` hooks that stop them.
+ */
+for (const signal of ['SIGTERM', 'SIGINT'] as const) {
+  process.once(signal, () => {
+    app.log.info({ signal }, 'stopping');
+    app.close().then(
+      () => process.exit(0),
+      () => process.exit(1),
+    );
+  });
+}
