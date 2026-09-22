@@ -12,3 +12,9 @@ docs
 
 .impeccable/hook.cache.json
 .impeccable/critique/
+
+# Agent git worktrees. Each holds a FULL copy of the source, so every pattern above — which is
+# anchored at the repo root — misses its copy: `apps/forms/public/ocr` does not match
+# `.claude/worktrees/x/apps/forms/public/ocr`. Without this line, a vendored wasm file inside a
+# worktree fails `format:check` for the whole repo. Do not remove; it is not redundant.
+.claude/
