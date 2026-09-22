@@ -652,6 +652,8 @@ export const svSE: Record<MessageKey, string> = {
   'public.copied': 'Kopierad',
   'public.thanks': 'Tack!',
   'public.reference': 'Din referens: {reference}',
+  'public.confirmation': 'En bekräftelse är på väg till {email}.',
+  'public.confirmationWithCard': 'En bekräftelse med ditt inträdeskort är på väg till {email}.',
   'public.closed.not-open-yet': 'Anmälan har inte öppnat än.',
   'public.closed.full': 'Alla platser är tagna.',
   'public.closed.unpublished': 'Formuläret finns inte.',

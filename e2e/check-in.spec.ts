@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
 import { db, deleteSubmission, seededForm, signInAs, uniqueEmail } from './support.js';
 
 /**
@@ -54,6 +55,8 @@ test('a reference admits once and reports already-arrived on the second attempt'
   await page.getByRole('button', { name: 'Checka in' }).click();
 
   await expect(page.getByText('Välkommen')).toBeVisible();
+  // Typed in, so the field takes focus back: the next reference can be typed straight away.
+  await expect(page.getByLabel(/Referens/)).toBeFocused();
 
   // The whole point of the phase: a second scan is not an error.
   await page.getByLabel(/Referens/).fill(reference);
@@ -124,4 +127,82 @@ test('an operator can work the door but cannot revoke', async ({ page, request }
 
   // Revoking is admin-only, so the control is not rendered for an operator at all.
   await expect(page.getByRole('button', { name: 'Arkivera' })).toHaveCount(0);
+});
+
+test('the door names the event it is working', async ({ page }) => {
+  const [event] = await sql`select name from events where id = ${eventId}`;
+  const name = String((event?.['name'] as Record<string, string>)['sv-SE']);
+  expect(name).not.toBe('undefined');
+
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${eventId}/check-in`);
+
+  // In the heading, so the first thing read is which queue this is.
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(name);
+});
+
+test('a wrong event id is not a door', async ({ page }) => {
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${randomUUID()}/check-in`);
+
+  await expect(page.getByText('Det finns inget evenemang på den adressen.')).toBeVisible();
+  // Nothing to scan into: a screen that can only ever say "not found" must not offer a field.
+  await expect(page.getByLabel(/Referens/)).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Evenemang' })).toBeVisible();
+});
+
+test('the verdict panel keeps its height at phone width', async ({ page, request }) => {
+  const reference = await register(request);
+  await signInAs(page, sql, 'operator@example.com');
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto(`/events/${eventId}/check-in`);
+
+  // The fixed height exists so the layout does not move at the moment of judgement. The idle
+  // prompt is the one text long enough to wrap, and at 375 it once pushed the panel taller than
+  // the verdict that replaced it — the exact jump the fixed height was meant to remove.
+  const verdict = page.locator('.verdict');
+  await expect(verdict).toContainText('Skanna ett kort');
+  const idle = (await verdict.boundingBox())?.height;
+
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(verdict).toContainText('Välkommen');
+  const admitted = (await verdict.boundingBox())?.height;
+
+  // "Already checked in" carries one line more (when they arrived) and must fit the same panel.
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(verdict).toContainText('Redan incheckad');
+  const already = (await verdict.boundingBox())?.height;
+
+  expect(idle).toBeGreaterThan(0);
+  expect(admitted).toBe(idle);
+  expect(already).toBe(idle);
+});
+
+test('each undo is named after its arrival', async ({ page, request }) => {
+  const reference = await register(request);
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${eventId}/check-in`);
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+  await expect(page.getByText('Välkommen')).toBeVisible();
+
+  // The accessible name carries the person, so five undo buttons are five different buttons.
+  const undo = page.getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
+  await expect(undo).toBeVisible();
+  // And the count is one sentence, not a number with a label a paragraph cannot carry.
+  await expect(page.getByText(/^\d+ av \d+ incheckade$/)).toBeAttached();
+
+  // And pressing it takes the arrival back — from a browser, with the headers a browser sends.
+  await undo.click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Ångra' }).click();
+  await expect(page.getByText('Incheckning ångrad')).toBeVisible();
+  await expect(undo).toHaveCount(0);
+  const rows = await sql`
+    select 1 from check_ins c
+    join submissions s on s.id = c.submission_id
+    where s.reference = ${reference}
+  `;
+  expect(rows).toHaveLength(0);
 });

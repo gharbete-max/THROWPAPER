@@ -650,6 +650,8 @@ export const daDK: Record<MessageKey, string> = {
   'public.copied': 'Kopieret',
   'public.thanks': 'Tak.',
   'public.reference': 'Din reference: {reference}',
+  'public.confirmation': 'En bekræftelse er på vej til {email}.',
+  'public.confirmationWithCard': 'En bekræftelse med dit adgangskort er på vej til {email}.',
   'public.closed.not-open-yet': 'Denne formular er endnu ikke åbnet.',
   'public.closed.full': 'Alle pladser er optaget.',
   'public.closed.unpublished': 'Formularen blev ikke fundet.',

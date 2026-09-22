@@ -361,6 +361,13 @@ a:focus-visible {
   font-size: var(--tp-text-lg);
 }
 
+/* Which event, under the word "Check-in": body weight, so the count stays the loudest thing. */
+.door__event {
+  display: block;
+  font-size: var(--tp-text-ui);
+  font-weight: var(--tp-type-weight-regular);
+}
+
 /* The count: the largest number on the screen, because it is the one asked for across a room. */
 .door__count {
   display: flex;
@@ -461,14 +468,15 @@ a:focus-visible {
 
 /*
  * A fixed height, so the page does not jump at the moment the operator needs certainty. The
- * idle prompt fills it before the first scan.
+ * idle prompt fills it before the first scan. The floor fits the tallest verdict a phone shows —
+ * headline, name, reference and one more line (arrived at, or whose guest) — measured at 375.
  */
 .verdict {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: calc(var(--tp-spacing-unit) * 0.5);
-  min-block-size: 9.5rem;
+  min-block-size: 11rem;
   padding: calc(var(--tp-spacing-unit) * 3);
   border-radius: var(--tp-radius);
   border: var(--tp-border-width) solid var(--tp-colour-border);
@@ -495,6 +503,15 @@ a:focus-visible {
 .verdict__headline {
   font-size: var(--tp-text-2xl);
   line-height: 1.1;
+}
+
+/*
+ * The idle prompt is an instruction, not a verdict. At verdict size it wrapped to three lines on a
+ * phone and made the panel taller than any verdict — the one jump the fixed height exists to
+ * remove. Sized with the name line, so it reads as the quiet state.
+ */
+.verdict--idle .verdict__headline {
+  font-size: var(--tp-text-lg);
 }
 
 .verdict__name {
@@ -654,6 +671,11 @@ textarea {
     font-size: var(--tp-text-3xl);
   }
 
+  /* At this size a two-word verdict wraps, so the floor holds two headline lines and three below. */
+  .verdict {
+    min-block-size: 14rem;
+  }
+
   .grid th,
   .grid td {
     padding: calc(var(--tp-spacing-unit) * 0.75);
@@ -668,6 +690,7 @@ textarea {
 
   .verdict {
     padding: calc(var(--tp-spacing-unit) * 1.5);
+    min-block-size: 9.5rem;
   }
 
   .verdict__headline {

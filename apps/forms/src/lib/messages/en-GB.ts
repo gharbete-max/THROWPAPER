@@ -660,6 +660,9 @@ export const enGB = {
   'public.copied': 'Copied',
   'public.thanks': 'Thank you.',
   'public.reference': 'Your reference: {reference}',
+  'public.confirmation': 'A confirmation is on its way to {email}.',
+  'public.confirmationWithCard':
+    'A confirmation with your admission card is on its way to {email}.',
   'public.closed.not-open-yet': 'This form has not opened yet.',
   'public.closed.full': 'All places are taken.',
   'public.closed.unpublished': 'Form not found.',

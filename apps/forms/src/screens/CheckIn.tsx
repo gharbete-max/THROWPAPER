@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
-import { client } from '../lib/api.js';
+import type { api } from '@tp/shared';
+import { pickText } from '@tp/i18n';
+import { ApiError, client } from '../lib/api.js';
 import { formatDateTime, useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useConfirm } from '../components/Confirm.js';
+import { EmptyState } from '../components/EmptyState.js';
 import { Icon } from '../components/Icon.js';
 
 type Outcome =
@@ -56,8 +59,12 @@ const RECENT = 5;
  * What is large is what is read at arm's length: the count, the verdict, the reference. The
  * verdict has a fixed height and is always present — an idle prompt before the first scan — so the
  * layout does not jump at the exact moment the operator needs certainty. The reference field is
- * always there and refocuses after every scan, because the camera is the fast path and typing is
- * the one that always works.
+ * always there, because the camera is the fast path and typing is the one that always works.
+ *
+ * Focus follows one rule: while the camera runs, the camera is the input and focus stays where it
+ * is; otherwise typing is the input and the field takes focus back after a check-in or an undo.
+ * Refocusing after a *scan* raised the phone's keyboard over the viewfinder, which sits below the
+ * form — the next guest was being scanned into a screen that had just hidden the camera.
  *
  * The last five arrivals stay on screen with an undo each. The door's mistake is a mis-scan — the
  * wrong card, or the card of the person behind — and the remedy is a button beside the arrival that
@@ -66,9 +73,17 @@ const RECENT = 5;
 export default function CheckIn() {
   const t = useT();
   const { id: eventId } = useParams();
-  const { user, locale } = useSession();
+  const { user, locale, locales } = useSession();
   const confirm = useConfirm();
 
+  /**
+   * The event this door belongs to, `'missing'` when the id names none.
+   *
+   * A wrong id used to render a fully working door whose every scan said "Not found" — the
+   * attendance 404 was swallowed with the counts — which sends a queue away from a door that was
+   * never open. Now the door is only a door once its event exists.
+   */
+  const [event, setEvent] = useState<api.EventResponse | 'missing' | null>(null);
   const [code, setCode] = useState('');
   const [result, setResult] = useState<CheckInResult | null>(null);
   const [busy, setBusy] = useState(false);
@@ -83,6 +98,11 @@ export default function CheckIn() {
   const controlsRef = useRef<{ stop: () => void } | null>(null);
   // Guards against the decoder firing the same card ten times a second while it sits in frame.
   const lastScan = useRef<{ code: string; at: number }>({ code: '', at: 0 });
+
+  /** The camera is the input while it runs; the field is when it does not. See the top of the file. */
+  const refocus = useCallback(() => {
+    if (!controlsRef.current) inputRef.current?.focus();
+  }, []);
 
   const refreshCounts = useCallback(() => {
     if (!eventId) return;
@@ -113,10 +133,10 @@ export default function CheckIn() {
         }
       } finally {
         setBusy(false);
-        inputRef.current?.focus();
+        refocus();
       }
     },
-    [eventId, busy, refreshCounts],
+    [eventId, busy, refreshCounts, refocus],
   );
 
   async function undo(arrival: Arrival) {
@@ -139,11 +159,23 @@ export default function CheckIn() {
     } catch {
       // Left on the list: the arrival still stands, and the operator can try again.
     } finally {
-      inputRef.current?.focus();
+      refocus();
     }
   }
 
   useEffect(refreshCounts, [refreshCounts]);
+
+  useEffect(() => {
+    if (!eventId) return;
+    client
+      .getEvent(eventId)
+      .then(setEvent)
+      .catch((cause: unknown) => {
+        // Only "there is no such event" closes the door. A dropped connection leaves it working
+        // without a name; the offline banner already says what happened.
+        if (cause instanceof ApiError && cause.status === 404) setEvent('missing');
+      });
+  }, [eventId]);
 
   async function startScanning() {
     setCameraError(null);
@@ -170,7 +202,7 @@ export default function CheckIn() {
       // Camera denied, absent, or not on a secure origin. Typing still works, so say so and move on.
       setCameraError(error instanceof Error ? error.message : String(error));
       setScanning(false);
-      inputRef.current?.focus();
+      refocus();
     }
   }
 
@@ -189,6 +221,22 @@ export default function CheckIn() {
 
   if (!user) return null;
 
+  if (event === 'missing') {
+    return (
+      <EmptyState
+        icon="events"
+        title={t('event.notFound')}
+        action={
+          <Link className="button button--quiet" to="/events">
+            {t('events.title')}
+          </Link>
+        }
+      />
+    );
+  }
+
+  const eventName = event ? pickText(locales, event.name, locale).value : '';
+
   return (
     <section className="door">
       <header className="door__top">
@@ -196,21 +244,36 @@ export default function CheckIn() {
           <Icon name="arrow-left" className="icon--lead" />
           {t('checkin.leave')}
         </Link>
-        <h1 className="door__title">{t('checkin.title')}</h1>
+        {/* The event in the heading: the first thing read is which queue this is. */}
+        <h1 className="door__title">
+          {t('checkin.title')}
+          {/* The space is for the reader: the span is a block to the eye and a run-on to a voice. */}
+          {eventName && (
+            <>
+              {' '}
+              <span className="door__event small muted">{eventName}</span>
+            </>
+          )}
+        </h1>
         {/*
           The count is the largest number on the screen: it is the one the organiser asks for
           across the room, and it was the smallest type on the old page.
         */}
-        <p
-          className="door__count"
-          aria-label={
-            counts
-              ? t('checkin.counts', { checkedIn: counts.checkedIn, registered: counts.registered })
-              : undefined
-          }
-        >
-          <strong className="door__countIn">{counts?.checkedIn ?? '–'}</strong>
-          <span className="door__countOf small muted">
+        <p className="door__count">
+          {/*
+            Read as one sentence. The two visual fragments — a big number, "of 232" — are hidden
+            from the reader, and the sentence is hidden from the eye: an `aria-label` on a
+            paragraph is not something every browser passes on.
+          */}
+          {counts && (
+            <span className="visually-hidden">
+              {t('checkin.counts', { checkedIn: counts.checkedIn, registered: counts.registered })}
+            </span>
+          )}
+          <strong className="door__countIn" aria-hidden="true">
+            {counts?.checkedIn ?? '–'}
+          </strong>
+          <span className="door__countOf small muted" aria-hidden="true">
             {t('checkin.ofRegistered', { registered: counts?.registered ?? '–' })}
           </span>
         </p>
@@ -276,22 +339,28 @@ export default function CheckIn() {
         <section className="door__recent" aria-label={t('checkin.recent')}>
           <h2 className="small muted">{t('checkin.recent')}</h2>
           <ul className="door__list">
-            {recent.map((arrival) => (
-              <li className="door__row" key={arrival.attendee.submissionId}>
-                <span className="door__who">
-                  {arrival.attendee.name || arrival.attendee.reference}
-                </span>
-                <span className="door__when small muted">{formatDateTime(locale, arrival.at)}</span>
-                <button
-                  className="button button--quiet small"
-                  type="button"
-                  onClick={() => void undo(arrival)}
-                >
-                  <Icon name="undo" className="icon--lead" />
-                  {t('checkin.undo')}
-                </button>
-              </li>
-            ))}
+            {recent.map((arrival) => {
+              const who = arrival.attendee.name || arrival.attendee.reference;
+              return (
+                // Keyed by card: a member and their guest share a submission id.
+                <li className="door__row" key={arrival.attendee.reference}>
+                  <span className="door__who">{who}</span>
+                  <span className="door__when small muted">
+                    {formatDateTime(locale, arrival.at)}
+                  </span>
+                  <button
+                    className="button button--quiet small"
+                    type="button"
+                    onClick={() => void undo(arrival)}
+                  >
+                    <Icon name="undo" className="icon--lead" />
+                    {t('checkin.undo')}
+                    {/* Five "Undo" buttons are five buttons only if each says whose. */}
+                    <span className="visually-hidden"> {who}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

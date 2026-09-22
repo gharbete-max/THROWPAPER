@@ -86,11 +86,15 @@ async function refreshOnce(): Promise<boolean> {
 async function request<T>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
   const headers = new Headers(init.headers);
   /**
-   * A multipart body sets its own content type, including the boundary the browser generated.
-   * Overriding it with application/json produces a request the server cannot parse — and the
-   * failure looks like a broken upload rather than a wrong header.
+   * Only a JSON body is declared as one. A multipart body sets its own content type, including
+   * the boundary the browser generated, and a request with no body must not claim to have one:
+   * Fastify answers a bodiless DELETE or POST that says `application/json` with
+   * `400 FST_ERR_CTP_EMPTY_JSON_BODY`, which is how undo at the door, archive, trash and delete
+   * all failed from a browser while every API test — injecting without the header — passed.
    */
-  if (!(init.body instanceof FormData)) headers.set('content-type', 'application/json');
+  if (init.body !== undefined && !(init.body instanceof FormData)) {
+    headers.set('content-type', 'application/json');
+  }
   if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
 
   const response = await fetch(`${BASE}${path}`, { ...init, headers });
@@ -219,6 +223,8 @@ export const client = {
   },
 
   listEvents: () => request<{ events: api.EventResponse[] }>('/v1/events'),
+
+  getEvent: (id: string) => request<api.EventResponse>(`/v1/events/${id}`),
 
   createEvent: (input: api.EventInput) =>
     request<api.EventResponse>('/v1/events', { method: 'POST', body: JSON.stringify(input) }),

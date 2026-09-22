@@ -1621,6 +1621,118 @@ Each read for what it changes and what its CI run says, never merged on green al
 beside each, so the queue does not refill every Monday with decisions already made; remove an
 entry when its prerequisite has been taken.
 
+## The app-shell pass — the six §2.3 rows, from the 2026-09-15 critique · done
+
+The site rows closed in the design pass; these are the app-shell rows the later, site-focused
+critiques never re-scored. The evidence is still the 2026-09-15T07-51-16Z snapshot — the two
+2026-09-21 snapshots carry no shell findings — and each row was mapped to current code before
+anything was edited. Branch `claude/app-shell-a11y` from `origin/main` at #97, one commit per row
+(two rows share the one event fetch). No dependency, no migration, no `docs/CONTRACT.md` change,
+no legal copy; **`packages/shared` touched** for the last row, said below.
+
+**Responses list.** `Inbox.tsx` wrapped each `<li>` in `<Reveal>`, a `<div>`, so the DOM read
+`<ul><div><li>`: a screen reader stops counting, and `.inbox__row + .inbox__row` — the divider —
+matched nothing. `Reveal` takes `as="li"` and *is* the item; the other four callers wrap cards
+outside lists and are unchanged. `components/reveal-list.test.tsx` renders `<ul><Reveal as="li">`
+with `react-dom/server` (already installed; no DOM setup needed) and asks for
+`<ul><li class="row reveal reveal--in">`, plus a source check that no `<Reveal` precedes `<li` in
+Inbox: `2 failed | 1 passed` before, `3 passed` after. In the demo: 40 `LI` children, no `DIV`,
+every row's `border-top-width` 1px.
+
+**The door names its event; a wrong id is not a door.** `GET /v1/events/:id` existed and the
+client had no `getEvent`; it has one now. The localised name sits under "Check-in" *inside* the h1
+(`.door__event`, body weight, `--tp-text-ui`), so the heading reads "Incheckning Vårmötet 2026".
+A 404 on the event renders the `EmptyState` `EventForm` already uses (`event.notFound`, a link to
+`events.title`) — no field, no camera, no verdict; a dropped connection keeps the door working
+without a name, which the offline banner covers. Two e2e tests, both red on the old code (`the
+door names the event it is working`: heading lacked the name; `a wrong event id is not a door`:
+the not-found text was never on the page), green after.
+
+**The verdict panel at 375.** The idle prompt, set at verdict size (3xl, 39px), wrapped to three
+lines: 179px, and the first verdict fell to the 152px floor. Measured by Playwright at 375×812:
+`Expected: 178.90625, Received: 154.140625`. The prompt is an instruction, not a verdict, and is
+set with the name line (`.verdict--idle .verdict__headline { font-size: var(--tp-text-lg) }`).
+That alone left 152 → 154 (the floor was two pixels short of a verdict with name and reference)
+and "Redan incheckad" at 223 — the headline itself wraps at 3xl in Swedish, and the fixed height
+had never held for it. The floor now fits the tallest verdict where the headline is largest:
+`14rem` under 600px, `11rem` otherwise, and the landscape mode keeps its compact `9.5rem`, which
+its xl headline fits. The e2e test asks idle, admitted and already-arrived for one number: 224
+throughout at 375; 176 at 1280. No horizontal overflow at 375 in either scheme.
+
+**Accessible names.** The five "Undo" buttons keep their visible word and carry the person's name
+(or the card's reference) in `.visually-hidden`, so each is announced "Ångra Göran Häggkvist"; rows
+are keyed by card, not registration (a member and their guest share a `submissionId`). The count's
+sentence (`checkin.counts`) moved from an `aria-label` on the `<p>` — not reliably exposed — to
+hidden text inside it, with the two visual fragments `aria-hidden`, so the number is read once as
+a sentence. No new key. `screens/door-names.test.ts` (source, the field-test pattern) was `4
+failed`; the e2e `each undo is named after its arrival` finds
+`getByRole('button', { name: /Ångra.*Göran Häggkvist/ })` and the sentence `n av m incheckade`.
+`EventForm.tsx`, named in the row, needed nothing: its `role="alert"` landed in L7.
+
+**Focus after a scan.** `submit()` and `undo()` refocused the reference field in `finally`, on
+the camera path too, and on a phone that is the keyboard, over the viewfinder below the form. One
+rule, in one place: `refocus()` focuses the field only when `controlsRef.current` is null — while
+the camera runs, the camera is the input; otherwise typing is, and the field takes focus back
+after a check-in, an undo, or a camera that failed to start. A keyboard-wedge scanner on a laptop
+is unchanged. `screens/door-focus.test.ts` holds it (exactly one `inputRef.current?.focus()`,
+gated; both `finally` blocks call `refocus()`): `2 failed` before. The e2e typed path now asserts
+`toBeFocused()` on the field after a check-in. No device sniffing.
+
+**The confirmation screen.** The title was gated on `phase !== 'done'` and vanished on send; the
+card said "Thank you." and a reference. The title stays as the h1 and the thank-you becomes the
+card's h2. What comes next is stated from facts the server had when it queued the mail:
+`SubmitResponse` (`packages/shared/src/forms/public-api.ts`) gains `confirmationTo` — the address
+the form collected, or `null` — and `admissionCard`, true only when the form is bound to an event,
+which is exactly when `mail/send-job.ts` attaches the card; the honeypot branch answers
+`null`/`false`. Two keys in twelve catalogues, `public.confirmation` ("A confirmation is on its way
+to {email}.") and `public.confirmationWithCard` ("… with your admission card …"), drafted for the
+owner's review — they claim nothing the job does not do. The owner chose this server-backed shape
+over leaving the row open. `public-forms.test.ts` (api) committed red: `confirmationTo` and
+`admissionCard: true` for the event-bound form, `false` without an event, `null` without an email
+field. `screens/public-form-confirmation.test.ts` was red on the title gate; the e2e public-form
+run asserts the heading "Vårmötet" and the sentence with the typed address. In the demo at 375:
+h1 "Anmälan till Vårmötet", h2 "Tack för din anmälan! Vi ses snart.", then the reference and "En
+bekräftelse med ditt inträdeskort är på väg till bjorn@example.com."
+
+**Ran.** `pnpm verify` exit 0 — format clean, typecheck, lint (the two pre-existing
+`exhaustive-deps` warnings, 0 errors), **137 files / 1773 tests** (was 132 / 1756), both builds
+— the final run, after the undo fix below.
+`pnpm contract:check` passed (0/6 implemented, 6 deferred — the public form's submit shape is not
+part of the Forms ⇄ Mailer contract). `pnpm test:e2e` **15 passed (29.8s)** against the portable
+Postgres — the 11 that were there plus four new door tests. The browser check was done with a
+Playwright script against `pnpm demo` because the desktop app's browser pane reported a 0×0
+viewport this session.
+
+**A defect the re-run found, fixed on the branch.** Assessment A pressed Undo and nothing
+happened: `lib/api.ts` set `content-type: application/json` on every request that was not
+multipart, a bodiless DELETE included, and Fastify answers that with `400
+FST_ERR_CTP_EMPTY_JSON_BODY`, which `undo`'s `catch` swallowed. Reproduced through `app.inject`
+with the header: DELETE undo → 400, POST archive → 400 — so archive event, trash/restore/delete
+form and the brand-kit reset had never worked from a browser either, while every API test passed
+because the tests inject without the header. The header is now set only when there is a JSON
+body. `lib/api-bodiless.test.ts` stubs `fetch` and reads the headers (`expected
+'application/json' to be null` before); the undo e2e test now presses the button, confirms, and
+asks the database for zero `check_ins` rows — with the fix stashed, "Incheckning ångrad" never
+appears; restored, `1 passed`. Not a §2.3 row; recorded here because it was found by the pass.
+
+**Critique, re-run on the shell.** `/impeccable critique apps/forms/src/screens/CheckIn.tsx`,
+dual-agent (A: design review; B: detector + browser, 1280/375 × light/dark, overlay injected in
+the built-in browser), assessed at `91d90d1` — the six rows closed, the undo fix not yet made.
+Snapshot `.impeccable/critique/2026-09-22T02-29-37Z__apps-forms-src-screens-checkin-tsx.md`.
+**App shell 21 → 23 → 23 / 40.** Flat, and honestly so: the six rows measure closed (B's
+numbers are in the snapshot — `ul > li` only with 1px dividers; the heading names the event;
+176/176 and 224/224; "Ångra Alva Öberg"; no `p[aria-label]`; focus in the field after a typed
+check-in; the confirmation's h1, h2 and sentence), but heuristic 3 scored 1 for the dead undo,
+which A estimates at ~3 points, and the run found three things the September snapshot had not:
+the door's own sizes lost in the cascade (`.field input` beats `.checkin__input`, `.button` beats
+`.door__check`), "Not found" clearing the field and offering nothing, and the 375 header clipping
+"Lämna entrén" by 17px. The detector was clean on all five files. Those, and the smaller ones,
+are the new §2.3 rows; the not-found sentence is the owner's to word.
+
+**Checklist.** The six app-shell rows deleted; eight rows from the re-run take their place, each
+with a measured number where there is one. `EventForm.tsx`, named in the old accessible-name
+row, needed nothing. `packages/shared` touched (`SubmitResponse`).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
