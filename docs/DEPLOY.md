@@ -117,6 +117,27 @@ The consequence to know about: an organisation that disables or demotes its last
 would be locked out, so the product refuses to do either. If it somehow happens anyway, the way
 back is this database, not a support screen.
 
+## What survives a restart, and what does not
+
+Proven by `e2e/restart.spec.ts`, which kills the API with SIGKILL between creating things and
+asking for them back — so this is measured, not assumed.
+
+- **Rows** — organisations, users, forms, submissions, events, check-ins, jobs, audit — are in
+  Postgres and survive anything the process does.
+- **Bytes** — generated documents (`DOCUMENT_DIR`), respondent uploads (`uploads/` beside it) and
+  public assets such as logos (`assets/` beside it) — are files on the container's disk. They
+  survive a restart **only if `/app/.documents` is a volume.** Lose the volume and every signed
+  download link and every logo answers 404 while the rows that point at them remain. A second
+  instance sees the same rows and a different disk; that is the day an object store is needed.
+- **Queued work** is rows, so it survives. A job that was *running* at the moment the process
+  died is taken back after fifteen minutes and run again; the lost run counts against its
+  `max_attempts`, so a job cannot be lost and cannot loop forever either.
+- **A stop is not a crash.** SIGTERM (`docker stop`) and SIGINT close the server: the worker's
+  timer, the upload sweeper and Chromium are stopped before the process exits.
+
+One customer's dataset is therefore **the database plus the document volume**, together. A backup
+of one without the other is not a backup.
+
 ## Before the first real event
 
 1. **Request SES production access.** A new account only delivers to verified addresses. Until AWS
