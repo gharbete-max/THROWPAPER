@@ -2345,6 +2345,43 @@ screen promised. **The suite is 21, up from 20.**
 **Not done here.** The verticals: real estate, AGM/EGM, small business, trades. Trades and law ship
 bracketed placeholders whenever they come, per rule 8.
 
+## S5 — the demo brand kit: seeded, complete, and readable · done
+
+`LAUNCH-CHECKLIST.md` §2.2 is now empty. Two defects behind it, one decision three documents
+disagreed about, and two more defects the work turned up on the way.
+
+**The decision: the demo keeps a customer's own palette.** §2.2 said "decide"; HANDOVER said write
+the migrated `packages/tokens` values; and `dataset.ts:44` argued in code for the third option and
+was right. The shipped defaults are what a *new customer* starts from and should be neutral — a
+demo painted in Loppa's own gold would demonstrate the product's defaults rather than the feature
+the brand kit exists for. The HANDOVER line is corrected in place rather than deleted, so it is not
+re-litigated.
+
+**The guard was never pointed at the one palette anybody looks at.** `packages/tokens` has owned
+`checkContrast` since phase 1, applied to the shipped presets and to whatever a customer saves —
+and never to `DEMO_BRAND`. Its border sat at **1.28:1** against the page, on a bar of 3, for
+months. `apps/api-forms/src/demo/brand.test.ts` points the guard there; the border moves to
+`#8f8268`, measured at **3.35:1** with the repo's own `contrastRatio`. The row is closed because a
+mechanism runs on every build, not because somebody edited a hex value.
+
+**The seed wrote no brand kit at all.** `CLAUDE.md` §Demo data asks for one by name. The in-memory
+demo had one and the seeded database did not, so `pnpm demo` and `pnpm db:seed` showed two products
+that did not look alike — and the seeded one fell back to the neutral defaults, which is exactly
+what a brand kit replaces. Seeded now from the same constant, upserted: `brand_kits` went 0 → 1,
+and 1 again on a second run.
+
+**Two defects the typing found.** Annotating `DEMO_BRAND` against `TokenSet` — which is what
+`saveBrandKit` takes, so a kit is meant to be whole — refused it: **eight tokens were missing.**
+`labelWeight`, `labelStyle` and `labelDecoration`, which set the text a respondent reads most; and
+`controlHeight`, `contentWidth`, `clientMode`, `poweredBy`, `wordmark`. The demo kit was the only
+incomplete one in the product. All eight take the shipped defaults, because the demo has no opinion
+about any of them — the point is that it is a complete kit.
+
+`satisfies TokenSet` rather than an annotation, so the compiler keeps checking completeness while
+the value keeps its literal object type and still goes into a jsonb column without a cast.
+
+**Not done here.** §2.3's ten rows and §2.4's four. The not-found sentence is still the owner's.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

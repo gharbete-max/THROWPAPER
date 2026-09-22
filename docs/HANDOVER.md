@@ -164,9 +164,11 @@ marketing email.
 1. **S3 — the simulated user, one loop end to end**, in the browser, against the portable
    Postgres; findings to `docs/PROGRESS.md` § Simulation findings.
 2. **S4 — the onboarding wizard**, ADR 0006 first; the form-builder entry only.
-3. **S5 — the seed's brand kit** — unblocked and small: `seed.ts` and `demo/dataset.ts` write the
-   migrated `packages/tokens` values (no hard-coded hex), which closes the §2.2 row and the
-   1.28:1 border with it.
+3. ~~**S5 — the seed's brand kit**~~ — **done 2026-09-22.** Note the line below was wrong: it said
+   the seed should write "the migrated `packages/tokens` values". It should not, and does not.
+   Those are the neutral defaults a *new customer* starts from; the demo keeps a customer's own
+   palette, which is the whole point of a brand kit. What was actually wrong was that the palette
+   had never been through the contrast guard (border at 1.28:1) and the seed wrote no kit at all.
 4. **The §2.3 and §2.4 rows** (three P1s carried, the not-found sentence the owner's; plus the
    two hover states and `button--secondary`, which is requested in `RepeatingGroup.tsx:177` and
    defined in no stylesheet — that one class is the "two filled buttons" row's root cause).

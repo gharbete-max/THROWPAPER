@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import type { TokenSet } from '@tp/tokens';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
 import type {
@@ -60,7 +61,10 @@ export const DEMO_BRAND = {
     surface: '#fbfaf6',
     text: '#1b263b',
     muted: '#5a6478',
-    border: '#ddd6c8',
+    // Parchment's own tone, dark enough to be a boundary: 3.35:1 on the page, against a bar of 3.
+    // It was `#ddd6c8` at 1.28:1 — a border nobody could see, on the one palette the guard in
+    // `packages/tokens` was never pointed at. `brand.test.ts` points it there now.
+    border: '#8f8268',
     success: '#1f7a45',
     warning: '#7a5e10',
     danger: '#b3261e',
@@ -73,6 +77,17 @@ export const DEMO_BRAND = {
     lineHeight: 1.5,
     weightRegular: 400,
     weightBold: 600,
+    /*
+     * The label tokens, which this kit did not have.
+     *
+     * A brand kit is a whole `TokenSet` — `saveBrandKit` takes one, and what a customer saves
+     * carries these three. The demo's did not, so the one kit anybody actually looks at was the
+     * only incomplete one in the product. Shipped defaults, because the demo has no opinion about
+     * label weight; the point is that it is a complete kit.
+     */
+    labelWeight: 500,
+    labelStyle: 'normal',
+    labelDecoration: 'none',
   },
   spacingUnit: '8px',
   // Flat and quiet: no gradients, and corners kept small rather than rounded off.
@@ -83,7 +98,23 @@ export const DEMO_BRAND = {
   logoLight: null,
   logoDark: null,
   favicon: null,
-} as const;
+  /*
+   * And the five below, which were missing too — eight tokens in all. `controlHeight` and
+   * `contentWidth` are layout, `clientMode` and `poweredBy` are what the public form says about
+   * whose product it is, and `wordmark` is the logo text. Shipped defaults again: the demo has no
+   * opinion about any of them, and an incomplete kit is the thing being fixed.
+   */
+  controlHeight: '44px',
+  contentWidth: '640px',
+  clientMode: false,
+  poweredBy: true,
+  wordmark: null,
+  /*
+   * `satisfies`, not an annotation: the compiler checks this really is a complete `TokenSet` — which
+   * is how the three missing label tokens above were found — while the value keeps its literal
+   * object type, so it still goes into a jsonb column and into `MemoryState` without a cast.
+   */
+} satisfies TokenSet;
 
 export const DEMO_FORM_SLUG = 'varmotet';
 
