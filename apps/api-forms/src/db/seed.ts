@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { createMaintenanceClient } from './client.js';
 import {
+  brandKits,
   events,
   formShares,
   formVersions,
@@ -13,6 +14,7 @@ import { demoEventName, demoSchedule } from '../demo/schedule.js';
 import {
   demoRegistration,
   DEMO_ADMIN_EMAIL,
+  DEMO_BRAND,
   DEMO_DEFINITION,
   DEMO_FORM_SLUG,
   DEMO_OPERATOR_EMAIL,
@@ -200,6 +202,19 @@ if (existingForm.length === 0) {
 
   await db.insert(submissions).values(rows);
 }
+
+/*
+ * The brand kit, which `CLAUDE.md` §Demo data asks for by name and the seed did not write.
+ *
+ * The in-memory demo has had one all along, so `pnpm demo` and `pnpm db:seed` produced two demos
+ * that did not look alike — and the seeded one fell back to the shipped neutral defaults, which is
+ * precisely the thing a brand kit exists to replace. Same values as the in-memory demo, from the
+ * same constant, so there is one palette rather than two that drift.
+ */
+await db
+  .insert(brandKits)
+  .values({ organisationId: organisation.id, tokens: DEMO_BRAND })
+  .onConflictDoUpdate({ target: brandKits.organisationId, set: { tokens: DEMO_BRAND } });
 
 console.log('seed complete — sign in as admin@example.com, form at /f/varmotet-2026');
 await sql.end();

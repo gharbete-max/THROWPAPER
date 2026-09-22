@@ -97,9 +97,8 @@ recorded only in a PR body is how a decision becomes permanent by accident — t
 
 ### 2.2 Temporary and literal strings in the app
 
-| What                                                                                                                                                                                                                                                                           | Where                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| The demo brand kit ("Demo AB", navy `#1b263b`, border `#ddd6c8` at 1.28:1) is what every "Open the demo" lands in. Decide whether the demo should show Loppa's own palette or a customer's. The Postgres seed writes no brand kit at all (`CLAUDE.md` §Demo data asks for one) | `apps/api-forms/src/demo/dataset.ts`; `db/seed.ts` |
+Empty. The demo brand kit row closed on 2026-09-22 (`docs/PROGRESS.md` § S5): the seed writes a
+kit, its border clears 3:1, and `apps/api-forms/src/demo/brand.test.ts` holds it there.
 
 ### 2.3 Open findings from the app-shell critique
 
