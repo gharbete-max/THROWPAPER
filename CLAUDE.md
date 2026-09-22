@@ -10,11 +10,18 @@ apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend
 apps/api-mailer Product B backend
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
-packages/i18n   Translation catalogues and locale utilities
-packages/ui     Headless + styled primitives, including the data grid
-packages/calc    Formula AST, statistics library, chart definitions
-packages/shared  Types and Zod schemas, including the CONTRACT schemas
+                / native tokens. Owns the contrast guard
+packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
+packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
+                — see its own src/index.ts
+packages/calc   Calculation errors and propagation, exact money, the ledger
+packages/shared Types and Zod schemas, including the CONTRACT schemas
 ```
+
+Descriptions above are of what a package **contains**, not what it is planned to contain, and a
+description changes in the same PR that changes the package. Two of them were written from intent
+and survived long enough to be planned around; a data grid that does not exist is worse than no
+entry at all.
 
 ## Rules that apply to every session
 
