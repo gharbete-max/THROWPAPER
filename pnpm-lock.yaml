@@ -84,8 +84,8 @@ importers:
   apps/api-forms:
     dependencies:
       '@aws-sdk/client-sesv2':
-        specifier: ^3.1135.0
-        version: 3.1135.0
+        specifier: ^3.1136.0
+        version: 3.1136.0
       '@fastify/compress':
         specifier: ^9.2.0
         version: 9.2.0
@@ -361,8 +361,8 @@ packages:
     peerDependencies:
       ajv: '>=8'
 
-  '@aws-sdk/client-sesv2@3.1135.0':
-    resolution: {integrity: sha512-AENgG8Xu5fFkifQgEYsdmMcUrqhdc+Plb9a2cztUbbRjAZAwvds0dATkEYkcUJUYg+TlPGHuty5QulabO7guww==}
+  '@aws-sdk/client-sesv2@3.1136.0':
+    resolution: {integrity: sha512-CbDMGe3NMq2XQ/RCsbAEEas4X/pmoTpWZpc4FU41yHJ5rtBp33VnXr/rkIq/wZoB3y6CN3m+1U59PwZEDCOXOQ==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.978.0':
@@ -4755,7 +4755,7 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@aws-sdk/client-sesv2@3.1135.0':
+  '@aws-sdk/client-sesv2@3.1136.0':
     dependencies:
       '@aws-sdk/core': 3.978.0
       '@aws-sdk/credential-provider-node': 3.972.83
