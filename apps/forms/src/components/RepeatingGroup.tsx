@@ -174,7 +174,7 @@ export function RepeatingGroup({
       {canAdd ? (
         <button
           type="button"
-          className="button button--secondary repeating-group__add"
+          className="button button--quiet repeating-group__add"
           onClick={() => write([...shown, {}])}
         >
           {text(field.addLabel) || labels.add}
