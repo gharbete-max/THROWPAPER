@@ -202,8 +202,20 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
   await page.getByRole('button', { name: 'Publicera' }).first().click();
   // A form whose twelve locales are not all translated asks before publishing. Answering it is
   // part of the journey: the operator publishes in Swedish and fills the rest in later.
-  const override = page.getByRole('button', { name: 'Publicera' }).last();
-  if (await override.isVisible().catch(() => false)) await override.click();
+  //
+  // Inside the dialog and exact: a role name matches by substring, so `'Publicera'` also finds the
+  // header's disabled "Publicerar…" while the question is open, and `.last()` picked that one and
+  // waited four minutes for it to enable. Waited for, not glanced at: `isVisible` does not wait,
+  // so a dialog one frame late was skipped and the form never published.
+  const override = page.getByRole('dialog').getByRole('button', { name: 'Publicera', exact: true });
+  if (
+    await override.waitFor({ timeout: 5_000 }).then(
+      () => true,
+      () => false,
+    )
+  ) {
+    await override.click();
+  }
 
   // Published, and published *with the settings the builder was left in* — the version is a
   // snapshot, so "a version exists" is not the same claim.
