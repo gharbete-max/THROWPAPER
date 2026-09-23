@@ -5,7 +5,6 @@ import {
   FIRST_QUESTION,
   FORM_WIZARD,
   fieldsFromAnswers,
-  nextQuestion,
   wizardQuestion,
   type WizardField,
 } from './wizard.js';
@@ -128,16 +127,6 @@ describe('the tree holds its shape', () => {
     }
   });
 
-  it('notices a sector that takes too many presses', () => {
-    const greedy = fixture({ maxFacets: 1 });
-    const sector = greedy.questions.find((question) => question.id === 'sector')!;
-    const over = {
-      ...sector,
-      options: [{ ...sector.options[0]!, selects: ['facet', 'facet', 'facet'] }],
-    };
-    expect(over.options[0]!.selects!.length).toBeGreaterThan(greedy.maxFacets);
-  });
-
   /** Invariant 2. */
   it('gives every contributed item a key, and never the same key twice in one option', () => {
     for (const { question, option } of options(FORM_WIZARD)) {
@@ -201,30 +190,6 @@ describe('the tree holds its shape', () => {
         }
       }
     }
-  });
-
-  it('notices two options that disagree about the same key', () => {
-    const broken = fixture();
-    const facet = broken.questions.find((question) => question.id === 'facet')!;
-    const disagreeing = [
-      facet.options[0]!,
-      {
-        ...facet.options[1]!,
-        contributes: [
-          {
-            type: 'email' as const,
-            key: 'email',
-            label: { 'en-GB': 'Email', 'sv-SE': 'E-post' },
-            required: true,
-          },
-        ],
-      },
-    ];
-
-    const first = disagreeing[0]!.contributes![0]!;
-    const second = disagreeing[1]!.contributes![0]!;
-    expect(broken.keyOf(first)).toBe(broken.keyOf(second));
-    expect(JSON.stringify(second)).not.toBe(JSON.stringify(first));
   });
 
   it('never asks a question with more than four answers', () => {
@@ -297,7 +262,7 @@ describe('the example from the brief', () => {
     expect(fields.map((field) => field.type)).toEqual(['short_text', 'email', 'long_text']);
     expect(fields.every((field) => field.required)).toBe(true);
     // And the run is over: three questions asked, nothing at step three.
-    expect(nextQuestion(answers, 3)).toBeUndefined();
+    expect(activeQuestions(FORM_WIZARD, answers)[3]).toBeUndefined();
   });
 
   it('asks for a telephone number instead when that is how they reply', () => {
@@ -341,10 +306,10 @@ describe('facets', () => {
 
 describe('walking a run', () => {
   it('reports the question at each step', () => {
-    expect(nextQuestion([], 0)?.id).toBe('purpose');
-    expect(nextQuestion(['contact'], 1)?.id).toBe('contact-reply');
-    expect(nextQuestion(['contact', 'email'], 2)?.id).toBe('contact-message');
-    expect(nextQuestion(['contact', 'email', 'message'], 3)).toBeUndefined();
+    expect(activeQuestions(FORM_WIZARD, [])[0]?.id).toBe('purpose');
+    expect(activeQuestions(FORM_WIZARD, ['contact'])[1]?.id).toBe('contact-reply');
+    expect(activeQuestions(FORM_WIZARD, ['contact', 'email'])[2]?.id).toBe('contact-message');
+    expect(activeQuestions(FORM_WIZARD, ['contact', 'email', 'message'])[3]).toBeUndefined();
   });
 
   it('refuses an answer that is not on offer', () => {

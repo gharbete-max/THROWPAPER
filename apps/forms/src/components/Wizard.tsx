@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { activeQuestions, collect, currentQuestion, type WizardTree } from '@tp/shared/wizard';
+import { activeQuestions, collect, type WizardTree } from '@tp/shared/wizard';
 import { pickText, type LocaleConfig } from '@tp/i18n';
 import { Icon } from './Icon.js';
 import { useT } from '../lib/i18n.js';
@@ -59,9 +59,9 @@ export function Wizard<TItem>({
    */
   const [step, setStep] = useState(0);
 
-  const question = currentQuestion(tree, answers, step);
   const items = collect(tree, answers);
   const asked = activeQuestions(tree, answers);
+  const question = asked[step];
 
   /** The answers belonging to one question, so Back can take a whole facet off at once. */
   const answersTo = (id: string) => {

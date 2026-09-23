@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Every button tier a screen asks for has to exist in the stylesheet.
@@ -13,15 +14,7 @@ import { join } from 'node:path';
  * reaching for a tier that sounds plausible gets a second primary in exactly the same silence.
  * This is the mechanism instead of the row.
  */
-const SOURCE = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-
-function filesUnder(directory: string, extension: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) return filesUnder(path, extension);
-    return entry.name.endsWith(extension) ? [path] : [];
-  });
-}
+const SOURCE = fileURLToPath(new URL('../', import.meta.url));
 
 /** `button--quiet`, `button--danger`… as written in a `className`, wherever it appears. */
 function tiersAskedFor(source: string): string[] {
@@ -35,10 +28,13 @@ describe('button tiers', () => {
   it('defines every tier the screens ask for', () => {
     const missing = new Map<string, string[]>();
 
-    for (const file of filesUnder(SOURCE, '.tsx')) {
-      for (const tier of tiersAskedFor(readFileSync(file, 'utf8'))) {
+    const screens = readdirSync(SOURCE, { recursive: true, encoding: 'utf8' }).filter((f) =>
+      f.endsWith('.tsx'),
+    );
+    for (const file of screens) {
+      for (const tier of tiersAskedFor(readFileSync(join(SOURCE, file), 'utf8'))) {
         if (defined.has(tier)) continue;
-        const at = file.slice(SOURCE.length).replace(/\\/g, '/');
+        const at = file.replace(/\\/g, '/');
         missing.set(tier, [...(missing.get(tier) ?? []), at]);
       }
     }

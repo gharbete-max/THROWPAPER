@@ -184,23 +184,3 @@ export function collect<TItem>(
 
   return items;
 }
-
-/**
- * The question at a given step, or nothing when the run has finished.
- *
- * The step is the caller's, not this module's. With a facet that takes several answers there is no
- * way to tell "chose nothing here" from "has not been asked yet" out of a flat list of ids, and
- * guessing would silently skip a facet somebody deliberately left empty.
- */
-export function currentQuestion<TItem>(
-  tree: WizardTree<TItem>,
-  answers: readonly string[],
-  step: number,
-): WizardQuestion<TItem> | undefined {
-  return activeQuestions(tree, answers)[step];
-}
-
-/** How many questions this run will ask in total, once its sector is known. */
-export function questionCount<TItem>(tree: WizardTree<TItem>, answers: readonly string[]): number {
-  return activeQuestions(tree, answers).length;
-}

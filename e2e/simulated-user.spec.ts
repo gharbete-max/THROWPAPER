@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import type { APIRequestContext, Page } from '@playwright/test';
+import type { APIRequestContext } from '@playwright/test';
 import {
   db,
   decodeQrFromPdf,
@@ -96,14 +96,6 @@ async function drain(request: APIRequestContext, headers: Record<string, string>
   throw new Error('admission.bulk never finished');
 }
 
-/**
- * The authenticated shell takes its language from the browser and CI's Chromium says `en-US`, so
- * every assertion below would look for Swedish that was never rendered. Pinned before first load.
- */
-async function pinSwedish(page: Page) {
-  await page.addInitScript(() => window.localStorage.setItem('tp.locale', 'sv-SE'));
-}
-
 test('one person: signs in, builds an event and a form, and admits a stranger at the door', async ({
   page,
   browser,
@@ -114,7 +106,9 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
 
   // ── 1. Sign in, through the magic link's own landing screen ───────────────────────────────
   const secret = await plantLoginToken(sql, 'admin@example.com');
-  await pinSwedish(page);
+  // The shell takes its language from the browser, and CI's Chromium says en-US: pinned before
+  // first load, or every assertion below looks for Swedish that was never rendered.
+  await page.addInitScript(() => window.localStorage.setItem('tp.locale', 'sv-SE'));
   await page.goto(`/auth/callback?token=${secret}`);
   await expect(page.getByRole('heading', { name: 'Evenemang' })).toBeVisible();
 
