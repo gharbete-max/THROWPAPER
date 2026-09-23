@@ -1,6 +1,6 @@
 import type { FieldType } from './definition.js';
 import type { WizardQuestion, WizardTree } from '../wizard/tree.js';
-import { collect, currentQuestion, questionById } from '../wizard/tree.js';
+import { collect, questionById } from '../wizard/tree.js';
 
 /**
  * Building a form by ruling things out, instead of by filling a form in.
@@ -311,12 +311,4 @@ export function wizardQuestion(id: string): WizardQuestion<WizardField> | undefi
 /** The fields a run of answers produces. */
 export function fieldsFromAnswers(answers: readonly string[]): readonly WizardField[] {
   return collect(FORM_WIZARD, answers);
-}
-
-/** The question at a given step, or nothing when the run has finished. */
-export function nextQuestion(
-  answers: readonly string[],
-  step: number,
-): WizardQuestion<WizardField> | undefined {
-  return currentQuestion(FORM_WIZARD, answers, step);
 }
