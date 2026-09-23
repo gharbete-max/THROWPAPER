@@ -2442,6 +2442,58 @@ is destroyed by the retry that proves nothing.
 
 **Not done here.** §2.3's P2s, §2.4's two P2s, and the owner's two rows.
 
+## S7 — the door tells the truth, and the small text can be read · done
+
+Three §2.3 P2 rows. One was a correctness bug at the door; two were below the accessibility floor.
+
+**A server fault told the operator to turn somebody away.** `POST /v1/events/:id/check-ins` answers
+**200 with a verdict for every outcome it has**, not-found included — so nothing reaching the
+client's `catch` is an answer about the card. It is a 500, a 403, a timeout, a parse error. Every
+one of them rendered **"Hittades inte"**, and the person on the door sent away somebody who was on
+the list. The offline case had been thought about; the fault case had not.
+
+A `failed` outcome fixes it. `Outcome` is a client-side union — it already carried `undo-failed`,
+marked "Client-side only" — so **no contract change**: the API never returns `failed`, the screen
+derives it. The typed value was already kept (`setCode('')` runs only on success); the test now
+pins that so it stays true.
+
+**Wording.** *"Kunde inte kontrolleras"* — states what happened, instructs nothing. What is
+reserved to the owner is the not-found **remedy** sentence, which tells an operator what to do
+next; this is a verdict title like the seven already in the product. **The eleven non-Swedish
+catalogues carry a plain equivalent that has not been reviewed by a speaker.**
+
+**The bottom bar was under the floor.** `.sidebar .nav-link` under `64rem` took
+`var(--tp-text-xs)`, which at the shipped 16px base and 1.25 ratio computes to **10.24px** against
+an 11px floor — on the control a phone user presses most. It takes `max(11px, var(--tp-text-xs))`:
+the token still chooses the size, the floor only stops it going under, and a brand with a gentler
+ratio keeps its own.
+
+**The reference was the smallest thing on the confirmation.** A muted 16px paragraph — the same
+size as the body around it — for the credential the door asks for and the thing a visitor
+screenshots. It gets the ink, a step up the scale, and `tabular-nums`, because somebody reads it
+aloud and `0` against `O` in a proportional face is a person turned away.
+
+### What the session cost before any of that
+
+The machine restarted mid-phase. Postgres came back down, and the e2e run in flight died partway —
+**the D4 skip guard from Phase 1 is what made that legible**: it exits 2 and says so, rather than
+reporting a pass. Nothing was lost; the branch's edits were all intact and the seed survived.
+
+Three test bugs of my own, each caught by the test failing rather than by review:
+
+- `--grep="several words"` is split by `run-e2e.ts`'s `shell: true` on Windows and matches nothing
+  ("No tests found"). Single-token patterns only.
+- The nav test looked for the bottom bar **on the door**, which is a mode with its own chrome and
+  no sidebar at all; and then raced the code-split shell, because `goto` resolves before React has
+  rendered.
+- The reference test first located the element **by the class that styles it**, so removing the
+  class failed it on "element not found" — proving the class exists, not that the text is bigger.
+  Located by what it says now, it fails on `the reference is 16px against body 16px`, which is the
+  claim.
+
+**Not done here.** The verdict panel's height at 1280, `/responses` clipping at 375, §2.4's two
+site P2s, and the owner's two rows.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

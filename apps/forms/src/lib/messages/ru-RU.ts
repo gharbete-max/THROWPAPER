@@ -620,6 +620,7 @@ export const ruRU: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Уже отмечен',
   'checkin.outcome.revoked': 'Регистрация отозвана',
   'checkin.outcome.wrong-event': 'Не то мероприятие',
+  'checkin.outcome.failed': 'Не удалось проверить',
   'checkin.outcome.not-found': 'Не найдено',
   'checkin.outcome.bad-signature': 'Недействительный билет',
   'checkin.outcome.undone': 'Регистрация прихода отменена',

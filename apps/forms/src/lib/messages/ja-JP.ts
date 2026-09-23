@@ -612,6 +612,7 @@ export const jaJP: Record<MessageKey, string> = {
   'checkin.outcome.already': 'すでに受付済みです',
   'checkin.outcome.revoked': '申込は取り消されています',
   'checkin.outcome.wrong-event': 'イベントが違います',
+  'checkin.outcome.failed': '確認できませんでした',
   'checkin.outcome.not-found': '見つかりません',
   'checkin.outcome.bad-signature': '無効な受付票',
   'checkin.outcome.undone': 'チェックインを取り消しました',

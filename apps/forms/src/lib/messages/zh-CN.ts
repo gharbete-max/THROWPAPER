@@ -597,6 +597,7 @@ export const zhCN: Record<MessageKey, string> = {
   'checkin.outcome.already': '已经签到过了',
   'checkin.outcome.revoked': '报名已撤回',
   'checkin.outcome.wrong-event': '活动不对',
+  'checkin.outcome.failed': '无法验证',
   'checkin.outcome.not-found': '未找到',
   'checkin.outcome.bad-signature': '无效凭证',
   'checkin.outcome.undone': '签到已撤销',

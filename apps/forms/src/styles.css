@@ -490,6 +490,19 @@ a:focus-visible {
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
 }
 
+/*
+ * The reference is the credential, not a footnote.
+ *
+ * It was a muted 16px paragraph — the smallest thing on the card — and it is what the door asks
+ * for and what a visitor screenshots. Tabular figures because somebody reads it aloud, and `0`
+ * against `O` in a proportional face is a person turned away at a door.
+ */
+.public__reference {
+  font-size: var(--tp-text-lg);
+  color: var(--tp-colour-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .door__who {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4183,7 +4196,15 @@ body:has(.app) > #root {
     flex-direction: column;
     gap: 2px;
     padding: calc(var(--tp-spacing-unit) * 0.5);
-    font-size: var(--tp-text-xs);
+    /*
+     * The token still chooses the size; the floor only stops it going under.
+     *
+     * `--tp-text-xs` is two steps down the brand's own scale, and at the shipped 16px base with a
+     * 1.25 ratio that computes to 10.24px — under the 11px floor, on the control a phone user
+     * presses most. A floor is not a hard-coded choice: a brand with a gentler ratio keeps its own
+     * size and only a brand that would go too small is caught.
+     */
+    font-size: max(11px, var(--tp-text-xs));
     /* The 44px floor, on the one control a phone user hits most. */
     min-block-size: 44px;
     /*

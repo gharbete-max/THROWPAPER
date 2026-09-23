@@ -506,7 +506,7 @@ export default function PublicForm() {
           <h2 ref={doneHeading} tabIndex={-1}>
             {confirmation || t('public.thanks')}
           </h2>
-          <p className="muted">{t('public.reference', { reference })}</p>
+          <p className="public__reference">{t('public.reference', { reference })}</p>
           {/* Only what the server said it queued: a mail to the address given, the card with it
               when the form is bound to an event. Nothing is promised that is not on its way. */}
           {coming && (

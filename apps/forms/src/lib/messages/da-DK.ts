@@ -606,6 +606,7 @@ export const daDK: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Allerede checket ind',
   'checkin.outcome.revoked': 'Tilmelding trukket tilbage',
   'checkin.outcome.wrong-event': 'Forkert arrangement',
+  'checkin.outcome.failed': 'Kunne ikke kontrolleres',
   'checkin.outcome.not-found': 'Ikke fundet',
   'checkin.outcome.bad-signature': 'Ugyldigt kort',
   'checkin.outcome.undone': 'Indtjekning fortrudt',

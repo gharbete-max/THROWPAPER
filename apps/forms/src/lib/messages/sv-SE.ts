@@ -608,6 +608,7 @@ export const svSE: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Redan incheckad',
   'checkin.outcome.revoked': 'Anmälan återkallad',
   'checkin.outcome.wrong-event': 'Fel evenemang',
+  'checkin.outcome.failed': 'Kunde inte kontrolleras',
   'checkin.outcome.not-found': 'Hittades inte',
   'checkin.outcome.bad-signature': 'Ogiltigt kort',
   'checkin.outcome.undone': 'Incheckning ångrad',

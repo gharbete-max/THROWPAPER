@@ -619,6 +619,7 @@ export const esES: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Ya registrado',
   'checkin.outcome.revoked': 'Inscripción retirada',
   'checkin.outcome.wrong-event': 'Evento equivocado',
+  'checkin.outcome.failed': 'No se pudo comprobar',
   'checkin.outcome.not-found': 'No encontrado',
   'checkin.outcome.bad-signature': 'Tarjeta no válida',
   'checkin.outcome.undone': 'Registro de entrada deshecho',

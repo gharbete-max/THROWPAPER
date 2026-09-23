@@ -352,3 +352,48 @@ test('the recent-arrival row gives the name the room, at 375', async ({ page }) 
     'the name is ellipsised at 375',
   ).toBe(true);
 });
+
+test('a server fault is not a verdict about the card', async ({ page }) => {
+  /*
+   * The route answers 200 with a verdict for every outcome it has, not-found included — so
+   * anything the client throws on is a fault, not an answer. It used to render "Hittades inte",
+   * which tells the person on the door to turn away somebody who is on the list.
+   */
+  const reference = await register();
+  await signInAs(page, sql, 'operator@example.com');
+  await page.goto(`/events/${eventId}/check-in`);
+
+  await page.route('**/v1/events/*/check-ins', (route) =>
+    route.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"boom"}' }),
+  );
+
+  await page.getByLabel(/Referens/).fill(reference);
+  await page.getByRole('button', { name: 'Checka in' }).click();
+
+  const verdict = page.locator('.verdict__headline');
+  await expect(verdict).toBeVisible();
+  await expect(verdict, 'a 500 still reads as "not found"').not.toHaveText('Hittades inte');
+
+  // And the code stays put, so the operator can try again without asking for the card back.
+  await expect(page.getByLabel(/Referens/)).toHaveValue(reference);
+});
+
+test('the bottom bar labels clear the 11px floor at 375', async ({ page }) => {
+  // The ordinary shell, not the door: check-in is a mode with its own chrome and no bottom bar.
+  await signInAs(page, sql, 'operator@example.com');
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/events');
+
+  // The shell is code-split, so `goto` resolves before React has rendered the nav.
+  const labels = page.locator('.sidebar .nav-link');
+  await expect(labels.first()).toBeVisible();
+  const count = await labels.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let index = 0; index < count; index += 1) {
+    const size = await labels
+      .nth(index)
+      .evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
+    expect(size, `nav label ${index} is ${size}px`).toBeGreaterThanOrEqual(11);
+  }
+});

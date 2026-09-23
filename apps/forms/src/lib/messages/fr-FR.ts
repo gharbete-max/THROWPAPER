@@ -623,6 +623,7 @@ export const frFR: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Déjà enregistré',
   'checkin.outcome.revoked': 'Inscription retirée',
   'checkin.outcome.wrong-event': 'Mauvais événement',
+  'checkin.outcome.failed': 'Vérification impossible',
   'checkin.outcome.not-found': 'Introuvable',
   'checkin.outcome.bad-signature': 'Carte invalide',
   'checkin.outcome.undone': 'Enregistrement annulé',
