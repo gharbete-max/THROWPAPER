@@ -40,7 +40,7 @@ What is left, and whose it is:
 1. The owner's, not yours to invent — LAUNCH-CHECKLIST.md §1 (legal entity, hosting and region,
    retention), §3, the door's not-found remedy sentence, whether a name lookup lives inside the
    door, and whether site and app headings should agree on the ink or on --tp-colour-heading.
-2. One feature: the door's five most recent arrivals vanish on reload.
+2. ~~The door's recent arrivals vanish on reload~~ — done in #128: the server keeps each operator's last five.
 3. The plan is docs/ROADMAP.md, and the owner's latest decision in it wins: **signing first**,
    approved 2026-09-23. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
    proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
