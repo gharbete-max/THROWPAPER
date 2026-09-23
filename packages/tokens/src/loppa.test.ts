@@ -98,3 +98,19 @@ describe('the shipped palette is Loppa', () => {
     }
   });
 });
+
+/**
+ * Loppa's own gold is 2.14:1 on white, which is why a chosen answer's edge is derived rather than
+ * painted in the raw primary. Pinned here, beside the palette, so the default theme is proven to
+ * clear the floor that `locked.test.ts` holds hostile ones to.
+ */
+describe('the shipped palette marks a chosen answer at 3:1', () => {
+  it('walks the gold for the edge, and keeps the ink ones as they are', () => {
+    const vars = toCssVariables(defaultTokens);
+    const edge = vars['--tp-colour-primary-edge']!;
+    expect(edge).not.toBe(defaultTokens.colour.primary);
+    for (const ground of [defaultTokens.colour.background, defaultTokens.colour.surface]) {
+      expect(contrastRatio(edge, ground) ?? 0).toBeGreaterThanOrEqual(3);
+    }
+  });
+});

@@ -164,8 +164,8 @@ end, and done only when `pnpm verify`, `pnpm contract:check` and the relevant `p
 
 P1 is three branches, because it touches two products and a new one:
 
-**P1a — Forms: choice controls and the vector signature.** *Vector signature done
-(`docs/PROGRESS.md` § P1a part 1); choice controls next.*
+**P1a — Forms: choice controls and the vector signature.** *Done — `docs/PROGRESS.md` § P1a
+parts 1 and 2. Option icons deferred (part 2 says why).*
 - Choice controls: author-chosen shape, icon, size and per-field colour through derived tokens;
   every option added to `locked.test.ts`'s hostile kits in both schemes.
 - Signature field stores the vector path beside the PNG; no timing or pressure (ADR 0009).

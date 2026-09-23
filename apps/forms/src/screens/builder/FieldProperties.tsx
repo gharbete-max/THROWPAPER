@@ -1,6 +1,11 @@
 import {
   FIELD_WIDTHS,
   fieldSupports,
+  CHOICE_ACCENTS,
+  CHOICE_COLUMNS,
+  CHOICE_SHAPES,
+  CHOICE_SIZES,
+  ChoiceStyle,
   FILE_ACCEPTS,
   MAX_UPLOAD_BYTES,
   MULTI_SELECT_APPEARANCES,
@@ -175,6 +180,14 @@ export function FieldProperties({ field, definition, onChange }: Props) {
           </select>
           <span className="small muted">{t('field.appearanceHint')}</span>
         </label>
+      )}
+
+      {styleable(field) && (
+        <ChoiceStyleControls
+          style={field.style}
+          columns={field.appearance === 'buttons' || field.appearance === 'cards'}
+          onChange={(style) => patch({ style } as Partial<Field>)}
+        />
       )}
 
       {field.type === 'rating' && (
@@ -455,6 +468,102 @@ export function FieldProperties({ field, definition, onChange }: Props) {
         </label>
       </details>
     </div>
+  );
+}
+
+/**
+ * A choice field whose appearance draws its own options. A dropdown is the browser's `select`,
+ * which has no shape, size or columns to style, so it is offered nothing.
+ */
+function styleable(
+  field: Field,
+): field is Extract<Field, { type: 'single_select' | 'multi_select' | 'yes_no' }> {
+  return (
+    (field.type === 'single_select' || field.type === 'multi_select' || field.type === 'yes_no') &&
+    field.appearance !== 'dropdown'
+  );
+}
+
+/**
+ * Shape, size, the colour that marks the chosen answer, and columns.
+ *
+ * The lists come from the schema, and none of them offers a way under the floor: there is no size
+ * smaller than the default, and the colour is a brand role whose edge is derived and held to 3:1 —
+ * see `ChoiceStyle` in `@tp/shared/forms`. So there is nothing here to warn about.
+ */
+function ChoiceStyleControls({
+  style,
+  columns,
+  onChange,
+}: {
+  style: ChoiceStyle | undefined;
+  columns: boolean;
+  onChange: (style: ChoiceStyle) => void;
+}) {
+  const t = useT();
+  const current = ChoiceStyle.parse(style ?? {});
+  const set = <K extends keyof ChoiceStyle>(key: K, value: ChoiceStyle[K]) =>
+    onChange({ ...current, [key]: value });
+
+  return (
+    <fieldset className="stack stack--tight">
+      <legend>{t('field.choiceStyle')}</legend>
+      <label className="field">
+        <span>{t('field.shape')}</span>
+        <select
+          value={current.shape}
+          onChange={(event) => set('shape', event.target.value as ChoiceStyle['shape'])}
+        >
+          {CHOICE_SHAPES.map((shape) => (
+            <option key={shape} value={shape}>
+              {t(`field.shape.${shape}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="field">
+        <span>{t('field.size')}</span>
+        <select
+          value={current.size}
+          onChange={(event) => set('size', event.target.value as ChoiceStyle['size'])}
+        >
+          {CHOICE_SIZES.map((size) => (
+            <option key={size} value={size}>
+              {t(`field.size.${size}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="field">
+        <span>{t('field.accent')}</span>
+        <select
+          value={current.accent}
+          onChange={(event) => set('accent', event.target.value as ChoiceStyle['accent'])}
+        >
+          {CHOICE_ACCENTS.map((accent) => (
+            <option key={accent} value={accent}>
+              {t(`brand.colour.${accent}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+      {columns && (
+        <label className="field">
+          <span>{t('field.columns')}</span>
+          <select
+            value={current.columns}
+            onChange={(event) => set('columns', event.target.value as ChoiceStyle['columns'])}
+          >
+            {CHOICE_COLUMNS.map((count) => (
+              <option key={count} value={count}>
+                {count === 'auto' ? t('field.columns.auto') : count}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      <span className="small muted">{t('field.choiceStyleHint')}</span>
+    </fieldset>
   );
 }
 

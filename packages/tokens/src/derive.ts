@@ -230,6 +230,28 @@ export function accentInk(colour: ColourTokens): string {
 }
 
 /**
+ * A brand colour where it becomes an edge: the border and ring that mark a chosen answer.
+ *
+ * WCAG 1.4.11 asks 3:1 of a boundary that identifies a state, and a chosen choice is identified by
+ * nothing else. The raw brand colour was used, and Loppa's own gold is 2.14:1 on white — so the
+ * default theme failed the floor, invisibly, on every button and card question.
+ *
+ * The same shape as {@link focusRing}: the colour itself when it clears both surfaces a choice sits
+ * on, the colour walked away from the page when it does not, and the palette's own pole when no
+ * lightness of that hue will do — which cannot fail, for the reason `focusRing` gives.
+ */
+export function edgeInk(colour: ColourTokens, role: 'primary' | 'secondary' | 'accent'): string {
+  const clearsBoth = (candidate: string) =>
+    (contrastRatio(candidate, colour.background) ?? 0) >= BOUNDARY_CONTRAST &&
+    (contrastRatio(candidate, colour.surface) ?? 0) >= BOUNDARY_CONTRAST;
+
+  if (clearsBoth(colour[role])) return colour[role];
+  const walked = walkAway(colour[role], colour.background, clearsBoth);
+  if (walked) return walked;
+  return readableOn(colour.surface, colour.background, colour.text);
+}
+
+/**
  * What a heading is painted in: the brand's primary where it reads on the page, the ink otherwise.
  *
  * Headings were `primary` unconditionally — on the web via `.shell h1`, in mail via the compiler —

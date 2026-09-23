@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react';
 import { pickText, type LocaleConfig } from '@tp/i18n';
-import { parseRichTextBlock, type AnswerValue, type Field } from '@tp/shared/forms';
+import {
+  parseRichTextBlock,
+  type AnswerValue,
+  type ChoiceStyle,
+  type Field,
+} from '@tp/shared/forms';
 import { DrawingField, ShapeField } from './Decoration.js';
 import { FileField } from './FileField.js';
 import { SignaturePad } from './SignaturePad.js';
@@ -270,7 +275,7 @@ export function FieldInput({
 
     return (
       <fieldset
-        className={`choice choice--${group.appearance}`}
+        className={choiceClasses(group.appearance, 'style' in field ? field.style : undefined)}
         aria-describedby={describedBy}
         aria-invalid={invalid}
       >
@@ -482,6 +487,27 @@ function choiceGroup(
   }
 
   return null;
+}
+
+/**
+ * The classes that carry an author's choice style.
+ *
+ * Classes rather than inline styles, so every value the stylesheet can reach is one it defines:
+ * the shape maps to the theme's own radius scale, the size only ever grows the 44px target, and
+ * the accent names a derived edge token that `packages/tokens` holds to 3:1 — never a colour.
+ * A field with no style gets exactly the classes it always had.
+ */
+export function choiceClasses(appearance: string, style: ChoiceStyle | undefined): string {
+  const classes = ['choice', `choice--${appearance}`];
+  if (style) {
+    classes.push(
+      `choice--shape-${style.shape}`,
+      `choice--size-${style.size}`,
+      `choice--accent-${style.accent}`,
+      `choice--columns-${style.columns}`,
+    );
+  }
+  return classes.join(' ');
 }
 
 function inputType(type: Field['type']): string {

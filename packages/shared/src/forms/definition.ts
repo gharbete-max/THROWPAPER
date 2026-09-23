@@ -201,6 +201,43 @@ export const RatingAppearance = z.enum(RATING_APPEARANCES);
 export type RatingAppearance = z.infer<typeof RatingAppearance>;
 
 /**
+ * How an author styles a question's choices, beyond which appearance it takes.
+ *
+ * **What an author can set:** the corner shape, how big the choices are, which of the brand's
+ * colours marks the chosen one, and how many columns buttons and cards sit in.
+ *
+ * **What an author cannot set, by construction rather than by validation:**
+ *
+ * - **A size below the tap target.** There is no `small`. The choices are 44px at the least on
+ *   every option, and `large` only grows them — the floor is the absence of an option to go under
+ *   it, not a check somebody could click past.
+ * - **A colour.** Only a brand *role*. The mark is painted with that role's derived edge
+ *   (`--tp-colour-<role>-edge`, `packages/tokens/src/derive.ts` `edgeInk`), which `locked.test.ts`
+ *   holds to 3:1 on both surfaces in both schemes against hostile themes. A free hex here would be
+ *   a way around the floor.
+ * - **The focus ring**, which stays `--tp-focus` on every variant.
+ *
+ * Optional, not defaulted: a definition that never set a style parses to exactly what it was,
+ * byte for byte, and renders exactly as it did. Presentation only, like `appearance` — restyling
+ * a question never touches a submission.
+ */
+export const CHOICE_SHAPES = ['theme', 'square', 'rounded', 'pill'] as const;
+export const CHOICE_SIZES = ['regular', 'large'] as const;
+export const CHOICE_ACCENTS = ['primary', 'secondary', 'accent'] as const;
+/** `auto` fits as many as the width allows; a number is the most per row on a wide screen. */
+export const CHOICE_COLUMNS = ['auto', '1', '2', '3', '4'] as const;
+
+export const ChoiceStyle = z
+  .object({
+    shape: z.enum(CHOICE_SHAPES).default('theme'),
+    size: z.enum(CHOICE_SIZES).default('regular'),
+    accent: z.enum(CHOICE_ACCENTS).default('primary'),
+    columns: z.enum(CHOICE_COLUMNS).default('auto'),
+  })
+  .strict();
+export type ChoiceStyle = z.infer<typeof ChoiceStyle>;
+
+/**
  * A colour on a decoration: a brand token by name, or a literal the author picked.
  *
  * `CLAUDE.md` rule 4 says no hard-coded colours, and it means the *product's* colours — the
@@ -280,6 +317,7 @@ const entryVariants = [
     type: z.literal('single_select'),
     options: z.array(SelectOption).min(1),
     appearance: SingleSelectAppearance.default('dropdown'),
+    style: ChoiceStyle.optional(),
   }),
   z.object({
     ...base,
@@ -288,8 +326,14 @@ const entryVariants = [
     minSelected: z.number().int().nonnegative().optional(),
     maxSelected: z.number().int().positive().optional(),
     appearance: MultiSelectAppearance.default('checkboxes'),
+    style: ChoiceStyle.optional(),
   }),
-  z.object({ ...base, type: z.literal('yes_no'), appearance: YesNoAppearance.default('dropdown') }),
+  z.object({
+    ...base,
+    type: z.literal('yes_no'),
+    appearance: YesNoAppearance.default('dropdown'),
+    style: ChoiceStyle.optional(),
+  }),
 
   /**
    * A rating or a linear scale — satisfaction, likelihood to recommend, how good the coffee was.
