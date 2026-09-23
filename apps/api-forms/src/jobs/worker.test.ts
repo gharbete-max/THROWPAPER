@@ -3,8 +3,13 @@ import { createMemoryRepositories } from '../db/repositories/index.js';
 import { testOrganisation } from '../test-support.js';
 import { createWorker, type JobHandler } from './worker.js';
 
+/**
+ * One clock for the worker and the repository both. They used to take different ones — the worker
+ * the test's, the repository the wall — which is how two tests below passed only before 10:00 UTC
+ * on the day they were written.
+ */
 function setup(handlers: Record<string, JobHandler>, now = () => new Date()) {
-  const repos = createMemoryRepositories({ organisations: [testOrganisation] });
+  const repos = createMemoryRepositories({ organisations: [testOrganisation] }, now);
   const worker = createWorker({ repos, handlers, now, backoffBaseMs: 1_000 });
   return { repos, worker };
 }
@@ -174,7 +179,9 @@ describe('a job the last worker never finished', () => {
 
   it('is taken back once it is older than the lease, and runs again', async () => {
     let runs = 0;
-    const clock = { at: new Date() };
+    // The very literal that used to expire at 10:00 UTC that day. Safe for good now the clock is
+    // shared — which is the proof that the cause is gone, not merely stepped around.
+    const clock = { at: new Date('2026-09-22T10:00:00Z') };
     const { repos, worker } = setup(
       {
         'test.job': async () => {
@@ -185,10 +192,6 @@ describe('a job the last worker never finished', () => {
       () => clock.at,
     );
     const job = await enqueue(repos);
-    // The clock is the worker's, not the repository's: `enqueue` stamps `runAfter` from the wall
-    // clock of whatever machine runs this. Start from the row's own instant rather than a literal,
-    // or `claim` sees a job scheduled in its future and the test passes only until that date.
-    clock.at = new Date(job.runAfter);
     // Claimed by a worker that then died.
     expect((await repos.jobs.claim(clock.at))?.id).toBe(job.id);
 
@@ -207,11 +210,9 @@ describe('a job the last worker never finished', () => {
   });
 
   it('fails for good when its attempts are spent', async () => {
-    const clock = { at: new Date() };
+    const clock = { at: new Date('2026-09-22T10:00:00Z') };
     const { repos, worker } = setup({ 'test.job': async () => ({}) }, () => clock.at);
     const job = await enqueue(repos, { maxAttempts: 1 });
-    // Same reason as above: follow the row's own instant, never a literal.
-    clock.at = new Date(job.runAfter);
     await repos.jobs.claim(clock.at);
 
     clock.at = new Date(clock.at.getTime() + HOUR);

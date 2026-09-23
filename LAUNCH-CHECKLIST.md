@@ -85,15 +85,9 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.2a Deferred engineering, tracked so it cannot expire quietly
 
-| Sev | Owner       | Status | What                                                                                                                                                                                                                                                                                                                                                                                               | Where                                                         |
-| --- | ----------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| P2  | Engineering | Ready  | The in-memory job repository stamps `runAfter` with `new Date()` while `claim` takes `now` as an argument, so a test can inject a clock into the worker and silently not into the repository. That asymmetry is what made the stale-lease tests pass only before 10:00 UTC on the day they were written (`docs/PROGRESS.md` § Phase 1). Both tests are fixed; the asymmetry that allowed it is not | `apps/api-forms/src/db/repositories/memory.ts` `jobs.enqueue` |
-
-Deferred on purpose in the P0 branch — giving `createMemoryRepositories` a clock touches a test
-double used across ~100 test files, which is the wrong blast radius for a branch whose job was to
-turn `main` green. It is here rather than in the pull request that deferred it because a deferral
-recorded only in a PR body is how a decision becomes permanent by accident — the same failure
-`docs/adr/0005-dependency-majors.md` now carries a date to prevent.
+Empty. The one row it held — `memory.ts` stamping from the wall clock while `claim` took `now` —
+closed in S8: the double takes one clock, and the two lease tests run on the literal that used to
+expire.
 
 ### 2.2 Temporary and literal strings in the app
 
@@ -113,23 +107,20 @@ where it marked one. **Status** is only whether engineering can start: every row
 "should be fixed before launch", so none of them blocks launch on its own — §1 is the list that
 does.
 
-| Sev | Owner       | Status                         | What                                                                                                                                                                                                                                      | Where                                            |
-| --- | ----------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| P1  | Owner       | Blocked — the wording is yours | The not-found verdict now echoes what was refused; the one sentence that tells the operator what to do next (a typo, or the wrong queue) is yours to word                                                                                 | `screens/CheckIn.tsx` `Verdict`                  |
-| P1  | Owner       | Blocked — product decision     | No in-product remedy after "not found": no name lookup, no manual admit; "Leave the door" lands on a report with no search — a product decision (does a name lookup live inside the door?) beside the sentence above                      | `screens/CheckIn.tsx`, `screens/EventReport.tsx` |
-| P3  | Engineering | Ready                          | Full date in the verdict's "arrived at" line and the recent rows; the five arrivals are component state and vanish on reload; "Start camera" has no `aria-pressed` and the `<video>` no name (P3)                                         | `screens/CheckIn.tsx`                            |
-| P2  | Engineering | Ready                          | **P2, measured 2026-09-22:** the verdict panel's fixed height holds at 375 (224px in all four states) but not at 1280, where "already" is 194.78px against 176px — the panel jumps between the admit and the repeat scan                  | `styles.css` `.verdict`                          |
-| P2  | Engineering | Ready                          | **P2, measured 2026-09-22:** `/responses` at 375 clips by the same mechanism as the door's row — 13 `text-overflow` hits on `inbox__who`, `inbox__form` and `inbox__reference`; the reference is the field that matches a human to a card | `styles.css` `.inbox__*`                         |
+| Sev | Owner       | Status                         | What                                                                                                                                                                                                                                                                                                                                                                                                                          | Where                                            |
+| --- | ----------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| P1  | Owner       | Blocked — the wording is yours | The not-found verdict now echoes what was refused; the one sentence that tells the operator what to do next (a typo, or the wrong queue) is yours to word                                                                                                                                                                                                                                                                     | `screens/CheckIn.tsx` `Verdict`                  |
+| P1  | Owner       | Blocked — product decision     | No in-product remedy after "not found": no name lookup, no manual admit; "Leave the door" lands on a report with no search — a product decision (does a name lookup live inside the door?) beside the sentence above                                                                                                                                                                                                          | `screens/CheckIn.tsx`, `screens/EventReport.tsx` |
+| P3  | Engineering | Ready                          | The five most recent arrivals are component state and vanish on reload — a door that is refreshed forgets who just came in. A feature (persist them, or fetch the latest few), not a defect. The rest of this row was declined on inspection: the verdict keeps its full date because it can describe a previous day, and "Start camera" already swaps its label, so adding `aria-pressed` too is the known ARIA anti-pattern | `screens/CheckIn.tsx`                            |
 
 ### 2.4 Open findings from the site critique on the Loppa palette (2026-09-22, 23/32)
 
 Measured on the gold palette; neither hover state is new with it, both were measured for the first
 time. The snapshot is `2026-09-22T12-22-52Z__apps-forms-src-site-site-tsx.md`.
 
-| What                                                                                                                                                                                             | Where                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| **P2** The folded-corner chips are 12% gold over platinum: 1.08:1 light, 1.24:1 dark. Gold belongs in a fill, not a 12% wash                                                                     | `styles.css` `.feature-card__mark`         |
-| **P2** The site's h1s are the ink while the app's take `--tp-colour-heading` (gold in dark) — app and site disagree; and the band eyebrow's derived `#836f53` / `#9a794d` is a tone nobody chose | `styles.css` `.hero__title`, `.site__band` |
+| What                                                                                                                                                                                                     | Where                                      |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| **P2 · Owner** The site's h1s are the ink while the app's take `--tp-colour-heading` (gold in dark) — app and site disagree; and the band eyebrow's derived `#836f53` / `#9a794d` is a tone nobody chose | `styles.css` `.hero__title`, `.site__band` |
 
 ---
 
