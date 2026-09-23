@@ -276,8 +276,9 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
     const from = sendingDomain?.fromAddress ?? '';
 
     // The rule with no override. A console provider is development only and is exempt, because
-    // there is no domain to burn.
-    if (deps.provider.name !== 'console' && deps.provider.name !== 'memory') {
+    // there is no domain to burn — and so is the desktop's outbox, which writes files and sends
+    // nothing (`smtp.ts`).
+    if (!['console', 'memory', 'outbox'].includes(deps.provider.name)) {
       const verification = sendingDomain
         ? {
             domain: sendingDomain.domain,

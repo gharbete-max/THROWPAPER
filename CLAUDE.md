@@ -11,6 +11,8 @@ apps/api-forms  Product A backend
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. A scaffold: health check and a two-language screen
 apps/api-sign   Product C backend. A scaffold: health check, contract registry, the signing seam
+apps/desktop    Loppa for Windows: Forms in an Electron window on an embedded Postgres (PGlite),
+                offline first. Part of the Forms product, not a fourth one (docs/adr/0016)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
                 / native tokens. Owns the contrast guard
 packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
@@ -53,6 +55,8 @@ entry at all.
 
 ```
 pnpm dev:forms      pnpm dev:mailer      pnpm dev:sign
+pnpm --filter @tp/desktop start        # the desktop app, unpackaged
+pnpm --filter @tp/desktop package:win  # installer + portable .exe (a zip when not on Windows)
 pnpm verify         # format + typecheck + lint + test + build across the workspace — must pass before a phase is done
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
@@ -62,10 +66,13 @@ pnpm test:e2e
 
 ## Demo data
 
-`pnpm db:seed` must always leave both products fully demonstrable: a brand kit, ~200 contacts
-across three audiences, one event with registrations, one inspection template with completed
-inspections, one measurement dataset with results, and three email templates. A broken seed
-blocks demos — keep it current with the schema.
+`pnpm db:seed` (and the desktop's "open with demo data", which runs the same `seedDemo`) writes,
+today: the Demo AB organisation with an admin and an operator, its brand kit, one event with ~200
+registrations through a published form, a draft form shared with the admin, and a form in the
+bin. That is what it **contains**. The target it must grow into as the products do: ~200 contacts
+across three audiences, an inspection template with completed inspections, a measurement dataset
+with results, and three email templates — none of which has a table yet. A broken seed blocks
+demos — keep it current with the schema.
 
 ## Working style
 

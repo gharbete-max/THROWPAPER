@@ -31,3 +31,7 @@ __pycache__/
 
 # OCR runtime, copied out of node_modules by scripts/ocr-assets.ts
 apps/forms/public/ocr/
+
+# The desktop edition: its staging folder and the installers built from it (ADR 0016).
+apps/desktop/.stage/
+apps/desktop/release/

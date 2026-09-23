@@ -11,7 +11,7 @@
 
 # Keep this in step with the playwright version in package.json — a mismatch between the browser
 # in the image and the client driving it fails at runtime, not at build time.
-ARG PLAYWRIGHT_VERSION=v1.62.1
+ARG PLAYWRIGHT_VERSION=v1.63.0
 
 # --- build -------------------------------------------------------------------
 FROM mcr.microsoft.com/playwright:${PLAYWRIGHT_VERSION}-noble AS build
@@ -20,6 +20,9 @@ WORKDIR /app
 ENV CI=true
 # corepack asks before downloading a pinned pnpm, and there is nobody here to answer.
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+# apps/desktop depends on Electron, whose install downloads a 100 MB browser. The image never runs
+# the desktop shell, so it never needs that binary (ADR 0016).
+ENV ELECTRON_SKIP_BINARY_DOWNLOAD=1
 
 RUN corepack enable
 
@@ -29,9 +32,13 @@ COPY apps/api-forms/package.json apps/api-forms/
 COPY apps/api-mailer/package.json apps/api-mailer/
 COPY apps/forms/package.json apps/forms/
 COPY apps/mailer/package.json apps/mailer/
+COPY apps/api-sign/package.json apps/api-sign/
+COPY apps/sign/package.json apps/sign/
+COPY apps/desktop/package.json apps/desktop/
 COPY packages/calc/package.json packages/calc/
 COPY packages/i18n/package.json packages/i18n/
 COPY packages/shared/package.json packages/shared/
+COPY packages/signing/package.json packages/signing/
 COPY packages/tokens/package.json packages/tokens/
 COPY packages/ui/package.json packages/ui/
 

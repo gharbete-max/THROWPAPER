@@ -1,0 +1,122 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font-family: var(--tp-type-body-font);
+  font-size: var(--tp-type-base-size);
+  line-height: var(--tp-type-line-height);
+}
+
+.panel {
+  padding: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 3);
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.panel h1,
+.panel h2 {
+  font-family: var(--tp-type-heading-font);
+  /* The derived heading ink: gold is 2.14:1 on paper and never paints text. */
+  color: var(--tp-colour-heading);
+  margin: 0 0 var(--tp-spacing-unit);
+}
+
+.panel h2 {
+  font-size: var(--tp-type-base-size);
+}
+
+.muted {
+  color: var(--tp-colour-muted);
+}
+
+fieldset {
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  margin: 0 0 calc(var(--tp-spacing-unit) * 2);
+}
+
+legend {
+  font-weight: 600;
+  padding: 0 var(--tp-spacing-unit);
+}
+
+label {
+  display: block;
+  margin: var(--tp-spacing-unit) 0;
+}
+
+label.choice {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  align-items: flex-start;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='url'],
+input[type='number'],
+input[type='password'] {
+  display: block;
+  width: 100%;
+  margin-top: calc(var(--tp-spacing-unit) / 2);
+  padding: var(--tp-spacing-unit);
+  font: inherit;
+  color: var(--tp-colour-text);
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+.note {
+  margin: var(--tp-spacing-unit) 0 0;
+  color: var(--tp-colour-muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: calc(var(--tp-spacing-unit) * 2);
+}
+
+button {
+  font: inherit;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  border-radius: var(--tp-radius);
+  cursor: pointer;
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+/* The filled button re-derives its label and boundary from the ink (DESIGN.md). */
+button.primary {
+  background: var(--tp-button-background);
+  color: var(--tp-button-text);
+  border-color: var(--tp-button-border);
+}
+
+button:disabled {
+  cursor: progress;
+}
+
+.error {
+  color: var(--tp-colour-danger);
+}
+
+.ok {
+  color: var(--tp-colour-success);
+}

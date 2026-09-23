@@ -14,6 +14,9 @@ export default tseslint.config(
       '**/coverage/**',
       '**/node_modules/**',
       '**/drizzle/**',
+      // The desktop edition's staging folder and installers (ADR 0016): bundles, not source.
+      'apps/desktop/.stage/**',
+      'apps/desktop/release/**',
       // Agent git worktrees, each a full copy of the source. `apps/forms/public/ocr/**` above is
       // anchored at the repo root and so misses the copy inside a worktree, which then lints as
       // ours — a vendored wasm file is thousands of errors. Do not remove; it is not redundant.
@@ -54,7 +57,8 @@ export default tseslint.config(
  */
 function productBoundaries() {
   const products = {
-    forms: ['forms', 'api-forms'],
+    // `desktop` is Forms in a window (ADR 0016): it may run api-forms, never Mailer or Sign.
+    forms: ['forms', 'api-forms', 'desktop'],
     mailer: ['mailer', 'api-mailer'],
     sign: ['sign', 'api-sign'],
   };

@@ -1,0 +1,32 @@
+{
+  "name": "@tp/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Loppa for Windows \u2014 the Forms product on one machine, offline first (docs/adr/0016-desktop-edition.md)",
+  "scripts": {
+    "build": "tsx scripts/build.ts",
+    "start": "tsx scripts/build.ts && electron .stage/main.js",
+    "package:win": "tsx scripts/build.ts --package win",
+    "package:linux": "tsx scripts/build.ts --package linux",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tp/api-forms": "workspace:*",
+    "@tp/i18n": "workspace:*",
+    "@tp/tokens": "workspace:*",
+    "@tp/ui": "workspace:*",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@tp/forms": "workspace:*",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^44.4.5",
+    "electron-builder": "^26",
+    "esbuild": "^0.28.2",
+    "vite": "^6.0.7"
+  }
+}

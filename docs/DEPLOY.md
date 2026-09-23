@@ -80,9 +80,9 @@ the workspace packages are bundled into them. The container runs `node`.
 | `APP_URL` | yes | Magic links point here and CORS is scoped to it. |
 | `TRUST_PROXY` | behind any proxy | Which forwarders to believe about the visitor's address, as a comma-separated list of addresses, CIDRs or `loopback` / `linklocal` / `uniquelocal`. Empty (the default) means the socket is the visitor — right with nothing in front, wrong behind a TLS terminator, where every rate limit then keys on the proxy. Never `true`: that believes what the client wrote. |
 | `API_FORMS_HOST` | no | Interface to listen on. Defaults to `0.0.0.0`, which the container needs. |
-| `MAIL_PROVIDER` | `console` \| `ses` | `console` logs instead of sending. |
+| `MAIL_PROVIDER` | `console` \| `ses` \| `smtp` \| `outbox` | `console` logs instead of sending. `smtp` is the direct fallback (`CLAUDE.md` rule 2) through `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_SECURE` (`true` for 465; otherwise STARTTLS is required), `SMTP_USER`, `SMTP_PASSWORD`. `outbox` writes each message as an `.eml` to `MAIL_OUTBOX_DIR` and sends nothing. The sending-domain check applies to `ses` and `smtp`. |
 | `MAIL_REGION` | with `ses` | `eu-north-1`. |
-| `MAIL_FROM` | with `ses` | Must be on a verified domain, or sending is refused with no override. |
+| `MAIL_FROM` | with `ses`, `smtp`, `outbox` | Must be on a verified domain for `ses` and `smtp`, or sending is refused with no override. |
 | `MAIL_OPERATOR` | no | Where new-registration notifications go. |
 | `CONTACT_TO` | no | Where the marketing site's "get in touch" form goes — your inbox. Unset, the form answers 503. |
 | `DOCUMENT_DIR` | no | Defaults to `/app/.documents`. Respondent uploads live under `uploads/` beside it (`UPLOAD_DIR` overrides); the API sweeps uploads nobody claimed within 30 days once an hour, inside the process. |
@@ -148,6 +148,14 @@ of one without the other is not a backup.
 3. **Send to a real Gmail and a real Outlook address** and confirm neither lands in spam. This is
    `START-HERE.md`'s own check and there is no substitute for it.
 4. **Scan a QR with a phone.** No test replaces a camera.
+
+## On one PC instead
+
+Loppa for Windows (`apps/desktop`, ADR 0016) is the same server with local parts: an embedded
+Postgres (PGlite) in `%APPDATA%\Loppa\workspace`, mail to an outbox folder or the user's SMTP
+server, PDFs through Microsoft Edge. Nothing on this page is needed for it; the `Desktop` workflow
+builds the installer. The same thing without a window, on any OS:
+`LOPPA_DATA_DIR=./local pnpm --filter @tp/api-forms desktop --demo`.
 
 ## What is deliberately not here
 

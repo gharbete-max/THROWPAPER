@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { satisfiable } from './licence-check.js';
+import { allowed, satisfiable } from './licence-check.js';
 
 describe('the licence allowlist', () => {
   it('passes permissive licences and expressions made of them', () => {
@@ -22,5 +22,11 @@ describe('the licence allowlist', () => {
   it('refuses what it does not recognise, rather than waving it through', () => {
     expect(satisfiable('UNKNOWN')).toBe(false);
     expect(satisfiable('SEE LICENSE IN LICENSE.md')).toBe(false);
+  });
+
+  it('allows a named build tool, and not its licence for anybody else', () => {
+    expect(satisfiable('MIT-0')).toBe(true);
+    expect(allowed('WTFPL', 'truncate-utf8-bytes')).toBe(true);
+    expect(allowed('WTFPL', 'some-other-package')).toBe(false);
   });
 });

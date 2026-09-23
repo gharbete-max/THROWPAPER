@@ -2702,6 +2702,99 @@ anything outside the ADR 0015 allowlist, evaluating SPDX `OR`/`AND` properly (a 
 
 **Moved to P1c**, because nothing is stored yet: Sign's own database, and its standalone mode.
 
+
+## Audit and reconcile, then D1 — Loppa for Windows, offline first · done
+
+Branch `claude/local-exe-offline-mode-u0ap32`, from `main` at `f6e46fb` (P1b merged).
+
+### The audit, each gate read on its own
+
+At `f6e46fb`, in a Linux cloud container: `format:check` 0, `typecheck` 0, `lint` 0 (two
+pre-existing hook warnings, `LanguagePicker.tsx` and `FormBuilder.tsx`), `contract:check` 0,
+`licence:check` 0 (729 packages), `build` 0. **`test` exited 1 — and none of it was the code**:
+three suites that launch Chromium failed with "Executable doesn't exist at
+…/chromium_headless_shell-1243": the container ships r1194, Playwright 1.63 wants r1243. With a
+scratch `PLAYWRIGHT_BROWSERS_PATH` aliasing r1194 in, all three pass. What the audit did find:
+
+- **The Dockerfile could not build.** Its manifest-first `COPY` list predates P1b: no
+  `apps/api-sign`, `apps/sign` or `packages/signing`, while the root `package.json` depends on
+  `@tp/api-sign` — so `pnpm install --frozen-lockfile` has nothing to link. Fixed, with
+  `apps/desktop` added.
+- **The Dockerfile's Playwright image was 1.62.1** under a 1.63.0 client — the exact runtime
+  mismatch its own comment warns about. Now `v1.63.0`.
+- **`CLAUDE.md` rule 2 was untrue.** "Falls back to direct SMTP" — there was no SMTP provider. Now
+  there is (`mail/smtp.ts`, `MAIL_PROVIDER=smtp`).
+- **The "Demo data" paragraph described intent, not content** — the defect `CLAUDE.md` itself
+  names. The seed writes an organisation, two people, a brand kit, one event, ~200 registrations
+  and three forms; no contacts, inspections, measurements or email templates, because none of
+  those has a table. `CLAUDE.md` and the README now say what it contains and what it must grow into.
+- **The README** had `pnpm demo` after `db:up … db:seed` (demo is in memory and needs neither),
+  and `contract:check` checking "both apps" (three since P1b).
+- **The seed printed `/f/varmotet-2026`**; the slug is `varmotet`. (`MODULE-STATUS.md` quotes the
+  old line as a past measurement and is left as one.)
+
+### D1 — what shipped (ADR 0016)
+
+**The database comes with the app.** `db/pglite.ts` opens PGlite (Postgres 18.3 in WebAssembly)
+from a folder and runs the sixteen migrations unchanged. The repositories needed one change:
+`Db` widened from postgres.js to Drizzle's Postgres dialect (`db/types.ts`). `db/pglite.test.ts`
+seeds the whole demo through the repositories, claims a job exactly once, and reopens a directory
+to prove persistence — and, unlike `database.test.ts`, it never skips. The seed became
+`seedDemo(db)` (`db/seed-demo.ts`) so both drivers share it; `pnpm db:seed` against Postgres 16
+ran twice, idempotent.
+
+**Mail without SES.** `createSmtpMailProvider` (nodemailer, fed the same raw MIME `ses.ts` builds,
+STARTTLS required off port 465) and `createOutboxMailProvider` — test mode, one `.eml` per message,
+attachment included. The outbox is exempt from the sending-domain check like `console`; SMTP is
+not. Both reachable from the server's environment too (`MAIL_PROVIDER=smtp|outbox`).
+
+**The desktop server.** `desktop/start.ts` is `buildServer` with local parts: PGlite, documents
+and uploads in the workspace, the outbox or SMTP from `settings.json`, PDFs through
+Edge → Chrome → Playwright's own (`createPdfRenderer` now takes a browser choice), on
+`127.0.0.1:47017`. Secrets are generated once and kept `0600`. First run creates the organisation
+in-process (ADR 0002 has no endpoint to reopen); sign-in is an ordinary magic-link token the shell
+mints and opens itself — `desktop/start.test.ts` exchanges it through `/v1/auth/token` and a replay
+fails. `pnpm --filter @tp/api-forms desktop --demo` runs it headless on any OS.
+
+**The shell.** `apps/desktop`: Electron 44 (Node 24), a main window that is the unchanged Forms
+app with no preload, a panel window (first run, demo data, settings) with a five-call bridge,
+DPAPI for the SMTP password, backup by stop-copy-restart, camera for our origin only. Settings
+carry the owner's three-way choice for **AI** (off / connect online / work in cloud — placeholder)
+and **signing** (local drawn signatures / connect online / cloud — placeholder); the online and
+cloud choices are recorded and call nothing, and the screen says so in English and Swedish.
+Leaving mail test mode needs a confirmation tick enforced in the main process
+(`settings-form.test.ts`). The panel's strings are an en/sv table like Sign's scaffold.
+
+**Packaging.** `scripts/build.ts` bundles the main process with esbuild (every `@tp/*` and the
+whole API inlined), keeps three packages real (`@electric-sql/pglite`, `playwright-core`,
+`@fontsource/inter` — each for a reason in the file), and runs electron-builder with the stage as
+its project. That last part mattered: pointed at `apps/desktop`, electron-builder detected pnpm and
+packed 11,048 files of workspace; from the stage, 832. `.github/workflows/desktop.yml` builds the
+NSIS installer and a portable `.exe` on windows-latest, launches `Loppa.exe` and waits for
+`/health`, and publishes both on a `desktop-v*` tag. Off Windows, `package:win` produces a zip
+(NSIS and rcedit need wine) — 206 MB, `Loppa.exe` inside.
+
+**Measured here, by driving it rather than reading it:** Electron under Xvfb over CDP — first run →
+the Forms app signed in as the new administrator; a first-run bug found and fixed on the way (the
+setup window closed before the main window existed, and its `closed` handler quit the app). The
+**packaged** Linux build of the same bundle: demo data → public form → registration → the job
+worker rendered the admission card through Chromium → an `.eml` in the outbox carrying
+"Björn-Ödlund-Z8XR-M2ER.pdf", whose text reads "Björn Ödlund … Näringslivets Hus, Göteborg".
+Headless desktop: a registration survived a restart (201 = 200 + 1).
+
+**Gates at the end,** each on its own: `format:check` 0, `typecheck` 0, `lint` 0 (the same two
+warnings), `build` 0 (now stages the desktop), `contract:check` 0, `licence:check` 0 (871
+packages; `MIT-0` added, `truncate-utf8-bytes` allowed by name as an electron-builder tool that
+never ships), `bundle:budget` 0. `test`: 1874 passed, 13 skipped with the aliased browser; without
+it, the same three Chromium suites fail as at baseline. `database.test.ts` 12/12 against Postgres
+16. **`test:e2e`: 31 passed, 1 failed** — `simulated-user.spec.ts`, inside the harness's in-browser
+pdf.js (`Map.prototype.getOrInsertComputed is not a function`), which the stand-in r1194 Chromium
+lacks. It is the browser alias, not the diff, but it is **not** a green e2e; CI's matching browser
+is where that is settled.
+
+**Not verified here:** the NSIS installer and portable `.exe` themselves (need windows-latest —
+`desktop.yml` is their first run), Edge as the PDF browser, DPAPI, and a real SMTP send.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

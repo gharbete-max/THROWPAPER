@@ -182,6 +182,9 @@ that needs it waits for it.
 | Which payment references beyond Swedish OCR (KID, RF) are wanted                                                                 | P3            | you           |
 | **App-store accounts** (Apple Developer, Google Play) and who owns them                                                          | P4            | you           |
 | iOS build route: hosted macOS CI or a cloud build service (cost)                                                                 | P4            | you           |
+| **Desktop: local-only product, or the offline half of the hosted one?** Decides whether ADR 0016's D4 (sync) is next             | D2            | you           |
+| **Desktop: code-signing certificate** (or Microsoft's signing service) and whose name is on it — SmartScreen warns until then    | D1 release    | you           |
+| Desktop: distribution (GitHub releases — built; the site; Microsoft Store) and pricing/licensing of a local copy                 | D1 release    | you           |
 | **AI provider and region** (ADR 0013), with a no-training term in the contract                                                   | P5            | you           |
 | Privacy page change when an AI provider becomes a sub-processor; the "no transfers" answer changes                               | P5            | counsel       |
 | Which enterprise connectors first (Microsoft 365, Google Workspace, Zapier/Make)                                                 | P6            | you           |

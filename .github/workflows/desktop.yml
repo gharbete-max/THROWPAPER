@@ -1,0 +1,92 @@
+name: Desktop
+
+# Loppa for Windows (docs/adr/0016-desktop-edition.md): the installer and the portable .exe.
+#
+# Built on windows-latest because both need Windows tools at build time (NSIS, and rcedit to stamp
+# the icon into Loppa.exe); a cross-build elsewhere can only produce a zip. Runs on pull requests
+# that touch what goes into the app, by hand, and on a `desktop-v*` tag — which also publishes the
+# two files as a GitHub release, the "download" in "downloadable".
+
+on:
+  pull_request:
+    paths:
+      - 'apps/desktop/**'
+      - 'apps/api-forms/src/desktop/**'
+      - 'apps/api-forms/src/db/pglite.ts'
+      - 'apps/api-forms/drizzle/**'
+      - '.github/workflows/desktop.yml'
+  workflow_dispatch:
+  push:
+    tags: ['desktop-v*']
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        env:
+          # PDFs render through the Edge every Windows has; Playwright's own browsers are not needed.
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - run: pnpm --filter @tp/forms build
+      - run: pnpm --filter @tp/desktop package:win
+
+      # An installer that builds is not an app that starts. Launch the unpacked Loppa.exe against a
+      # throwaway profile and wait for its local server to answer — the same /health the container
+      # smoke test reads — then stop it.
+      - name: Smoke-test Loppa.exe
+        shell: pwsh
+        run: |
+          $profile = Join-Path $env:RUNNER_TEMP 'loppa-profile'
+          $app = Start-Process -FilePath 'apps/desktop/release/win-unpacked/Loppa.exe' `
+            -ArgumentList "--user-data-dir=$profile" -PassThru
+          $ok = $false
+          for ($i = 0; $i -lt 60; $i++) {
+            try {
+              $health = Invoke-RestMethod -Uri 'http://127.0.0.1:47017/health' -TimeoutSec 2
+              if ($health.status -eq 'ok') { $ok = $true; break }
+            } catch { }
+            if ($app.HasExited) { break }
+            Start-Sleep -Seconds 2
+          }
+          Stop-Process -Id $app.Id -Force -ErrorAction SilentlyContinue
+          Get-ChildItem -Recurse (Join-Path $profile 'workspace') | Select-Object FullName | Format-Table -HideTableHeaders
+          if (-not $ok) { throw 'Loppa.exe did not answer on 127.0.0.1:47017' }
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: loppa-windows
+          path: |
+            apps/desktop/release/Loppa-Setup-*.exe
+            apps/desktop/release/Loppa-*-portable.exe
+          retention-days: 14
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/desktop-v')
+    needs: windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: loppa-windows
+          path: dist
+      # Unsigned until the owner's code-signing certificate exists (LAUNCH-CHECKLIST §6); the
+      # release notes say so, because SmartScreen will.
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.exe \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Loppa for Windows ${GITHUB_REF_NAME#desktop-v}" \
+            --notes "Installer (Loppa-Setup) and portable build. Not yet code-signed: Windows SmartScreen will warn on first run. See docs/adr/0016-desktop-edition.md."
