@@ -208,13 +208,25 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.6.1
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(gel@2.2.0)(postgres@3.4.9)
       fastify:
         specifier: ^5.12.5
         version: 5.12.5
+      fastify-type-provider-zod:
+        specifier: ^4.0.2
+        version: 4.0.2(fastify@5.12.5)(zod@3.25.76)
+      postgres:
+        specifier: ^3.4.5
+        version: 3.4.9
       zod:
         specifier: ^3.24.1
         version: 3.25.76
     devDependencies:
+      drizzle-kit:
+        specifier: ^0.31.10
+        version: 0.31.10
       tsup:
         specifier: ^8.3.5
         version: 8.5.1(postcss@8.5.26)(tsx@4.23.13)(typescript@5.9.3)(yaml@2.9.0)

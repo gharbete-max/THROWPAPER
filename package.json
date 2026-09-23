@@ -28,9 +28,9 @@
     "test:e2e": "tsx scripts/run-e2e.ts",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:migrate": "pnpm --filter @tp/api-forms db:migrate",
+    "db:migrate": "pnpm --filter @tp/api-forms --filter @tp/api-sign db:migrate",
     "db:generate": "pnpm --filter @tp/api-forms db:generate",
-    "db:seed": "pnpm --filter @tp/api-forms db:seed"
+    "db:seed": "pnpm --filter @tp/api-forms --filter @tp/api-sign db:seed"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

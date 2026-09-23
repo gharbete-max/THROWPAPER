@@ -56,7 +56,7 @@ apps/api-forms    Forms backend
 apps/mailer       Mailer
 apps/api-mailer   Mailer backend
 apps/sign         Sign — scaffold
-apps/api-sign     Sign backend — scaffold
+apps/api-sign     Sign backend — envelopes, audit trail, typed signing (P1c-1); no sealing yet
 packages/tokens   Design tokens → CSS vars, inline email styles, print CSS. Contrast guard lives here
 packages/i18n     Translation catalogues and ICU collation
 packages/ui       One `cn()` helper; the data grid is deliberately not in v0.1

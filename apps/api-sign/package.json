@@ -12,16 +12,23 @@
     "dev": "tsx watch src/main.ts",
     "start": "node dist/main.js",
     "build": "tsup src/main.ts --format esm --target node20 --clean",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate-cli.ts",
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "@tp/shared": "workspace:*",
     "@tp/signing": "workspace:*",
     "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.45.2",
     "fastify": "^5.12.5",
+    "fastify-type-provider-zod": "^4.0.2",
+    "postgres": "^3.4.5",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.31.10",
     "tsup": "^8.3.5"
   }
 }

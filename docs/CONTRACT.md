@@ -84,7 +84,7 @@ Neither fallback may be allowed to rot. CI runs the standalone configuration of 
 ## 5. Forms ⇄ Sign
 
 Sign is the third product: envelopes, eID, multi-party signing and sealed PDFs. Identity data and
-evidence live only in its own database. Shapes come from `@tp/signing`. **All deferred to P1c.**
+evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1); §5.3 and §5.4 are deferred to P1c-2 and P1c-3.
 
 ### `POST /v1/envelopes` — ask for a document to be signed (§5.1)
 ```
