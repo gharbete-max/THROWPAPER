@@ -211,14 +211,6 @@ export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> 
       }>;
     };
     const first = await doc.getPage(1);
-    // Generous, because a QR that only decodes at print resolution is still a QR that decodes;
-    // the door photographs it large.
-    const viewport = first.getViewport({ scale: 3 });
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.ceil(viewport.width);
-    canvas.height = Math.ceil(viewport.height);
-    const context = canvas.getContext('2d')!;
-    await first.render({ canvasContext: context, viewport, canvas }).promise;
 
     // The core reader, not one of the `Browser*` wrappers: those are built around a camera or an
     // <img>, and their surface moves between zxing minors. Luminance → binarizer → bitmap →
@@ -227,12 +219,46 @@ export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> 
       ZXing: {
         HTMLCanvasElementLuminanceSource: new (c: HTMLCanvasElement) => unknown;
         HybridBinarizer: new (s: unknown) => unknown;
+        GlobalHistogramBinarizer: new (s: unknown) => unknown;
         BinaryBitmap: new (b: unknown) => unknown;
-        QRCodeReader: new () => { decode: (b: unknown) => { getText: () => string } };
+        DecodeHintType: { TRY_HARDER: number };
+        QRCodeReader: new () => {
+          decode: (b: unknown, hints?: Map<number, unknown>) => { getText: () => string };
+        };
       };
     };
-    const source = new zxing.ZXing.HTMLCanvasElementLuminanceSource(canvas);
-    const bitmap = new zxing.ZXing.BinaryBitmap(new zxing.ZXing.HybridBinarizer(source));
-    return new zxing.ZXing.QRCodeReader().decode(bitmap).getText();
+    const hints = new Map<number, unknown>([[zxing.ZXing.DecodeHintType.TRY_HARDER, true]]);
+
+    /*
+     * Several looks, the way the door does it.
+     *
+     * One raster at one scale through one binarizer failed about once in thirty CI runs, inside
+     * Reed–Solomon correction: the token is signed afresh each run, so each run is a different
+     * symbol, and now and then a module edge lands on a pixel boundary badly enough at scale 3 to
+     * cost a codeword. A camera at the door never has that problem because it reads many frames.
+     * So this reads a few renders — different scales move the module edges — through both
+     * binarizers, and takes the first that decodes. What is asserted is unchanged: the caller
+     * still compares the decoded text to the token, so a card that does not carry the right token
+     * still fails.
+     */
+    const failures: string[] = [];
+    for (const scale of [3, 4, 2.5]) {
+      const viewport = first.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      await first.render({ canvasContext: canvas.getContext('2d')!, viewport, canvas }).promise;
+
+      const source = new zxing.ZXing.HTMLCanvasElementLuminanceSource(canvas);
+      for (const Binarizer of [zxing.ZXing.HybridBinarizer, zxing.ZXing.GlobalHistogramBinarizer]) {
+        try {
+          const bitmap = new zxing.ZXing.BinaryBitmap(new Binarizer(source));
+          return new zxing.ZXing.QRCodeReader().decode(bitmap, hints).getText();
+        } catch (error) {
+          failures.push(`scale ${scale}: ${String(error)}`);
+        }
+      }
+    }
+    throw new Error(`No QR decoded from the PDF:\n${failures.join('\n')}`);
   }, Array.from(pdf));
 }

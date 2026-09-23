@@ -2643,6 +2643,27 @@ cannot be read aloud), so it is not guessed at here. The other raw `--tp-colour-
 `styles.css` are fills and text, which have their own derived tokens and mechanisms; they were not
 audited in this PR.
 
+## The admission QR decode reads the card the way the door does · done
+
+`simulated-user.spec.ts` failed once on #122's CI inside zxing's Reed–Solomon correction while
+reading the admission card, then passed on retry. The card was fine; the reading was thin. The
+token is signed afresh each run, so every run decodes a different symbol, and `decodeQrFromPdf`
+took **one** raster at scale 3 through **one** binarizer — now and then a module edge lands on a
+pixel boundary badly enough to cost a codeword. A camera at the door never meets this because it
+reads many frames.
+
+`e2e/support.ts` now reads up to three renders (scale 3, 4, 2.5) through both binarizers with
+`TRY_HARDER`, and takes the first that decodes. **The assertion is unchanged**: callers still
+compare the decoded text to the token, so a wrong card still fails. It reports every attempt when
+all fail, so a real break is not hidden behind a generic message.
+
+**Honest about the evidence.** A roughly one-in-thirty failure cannot be reproduced on demand, so
+there is no before/after pair. Measured instead: the test passed 5 of 5 locally with
+`--repeat-each=5`, each a fresh token. (Locally that needed a temporary, uncommitted polyfill
+for `Map.prototype.getOrInsertComputed`: this cloud container's Chromium 1194 is older than the
+build the pinned Playwright expects.) CI over the next runs is the real verdict; a recurrence
+means the cause is not the raster and the next step is to capture the failing PDF.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
