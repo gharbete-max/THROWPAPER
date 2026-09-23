@@ -93,6 +93,15 @@ function copyForm(form: FormRecord): FormRecord {
 
 export function createMemoryRepositories(
   seed: Partial<MemoryState> = {},
+  /**
+   * Where every timestamp this double writes comes from.
+   *
+   * `jobs.claim(now)` has always taken the time as an argument while everything else here read the
+   * wall clock, so a test could give the worker a fake clock and silently leave the repository on
+   * the real one. That asymmetry is what let two lease tests pass only before 10:00 UTC on the day
+   * they were written. Optional, so none of the callers that do not care about time change.
+   */
+  clock: () => Date = () => new Date(),
 ): Repositories & { state: MemoryState } {
   const state: MemoryState = {
     organisations: seed.organisations ?? [],
@@ -205,7 +214,7 @@ export function createMemoryRepositories(
         const updated: UserRecord = {
           ...person,
           role,
-          disabledAt: disabled ? (person.disabledAt ?? new Date()) : null,
+          disabledAt: disabled ? (person.disabledAt ?? clock()) : null,
         };
         state.users[state.users.indexOf(person)] = updated;
         return { ok: true as const, user: updated };
@@ -273,7 +282,7 @@ export function createMemoryRepositories(
         return event ? copyEvent(event) : null;
       },
       create: async (input: EventCreate) => {
-        const now = new Date();
+        const now = clock();
         const record: EventRecord = { ...input, id: randomUUID(), createdAt: now, updatedAt: now };
         state.events.push(record);
         return copyEvent(record);
@@ -284,7 +293,7 @@ export function createMemoryRepositories(
         );
         const existing = state.events[index];
         if (!existing) return null;
-        const updated: EventRecord = { ...existing, ...patch, updatedAt: new Date() };
+        const updated: EventRecord = { ...existing, ...patch, updatedAt: clock() };
         state.events[index] = updated;
         return copyEvent(updated);
       },
@@ -341,7 +350,7 @@ export function createMemoryRepositories(
         return form ? copyForm(form) : null;
       },
       create: async (input: FormCreate) => {
-        const now = new Date();
+        const now = clock();
         const record: FormRecord = {
           ...input,
           status: input.status ?? 'draft',
@@ -362,7 +371,7 @@ export function createMemoryRepositories(
         );
         const existing = state.forms[index];
         if (!existing) return null;
-        const updated: FormRecord = { ...existing, ...patch, updatedAt: new Date() };
+        const updated: FormRecord = { ...existing, ...patch, updatedAt: clock() };
         state.forms[index] = updated;
         return copyForm(updated);
       },
@@ -393,7 +402,7 @@ export function createMemoryRepositories(
           existing.role = input.role;
           return { ...existing };
         }
-        const record: FormShareRecord = { ...input, id: randomUUID(), createdAt: new Date() };
+        const record: FormShareRecord = { ...input, id: randomUUID(), createdAt: clock() };
         state.formShares.push(record);
         return { ...record };
       },
@@ -442,9 +451,9 @@ export function createMemoryRepositories(
           formId: input.formId,
           version: highest + 1,
           definition: input.definition,
-          publishedAt: new Date(),
+          publishedAt: clock(),
           translationOverride: input.translationOverride,
-          createdAt: new Date(),
+          createdAt: clock(),
         };
         state.formVersions.push(record);
         return { ...record };
@@ -511,7 +520,7 @@ export function createMemoryRepositories(
         );
         const existing = state.submissions[index];
         if (!existing) return null;
-        const updated: SubmissionRecord = { ...existing, revokedAt: at, updatedAt: new Date() };
+        const updated: SubmissionRecord = { ...existing, revokedAt: at, updatedAt: clock() };
         state.submissions[index] = updated;
         return copySubmission(updated);
       },
@@ -519,7 +528,7 @@ export function createMemoryRepositories(
       saveDraft: async (input: SubmissionDraftInput) => {
         const existingIndex = input.id ? state.submissions.findIndex((s) => s.id === input.id) : -1;
         const existing = state.submissions[existingIndex];
-        const now = new Date();
+        const now = clock();
 
         if (existing) {
           const updated: SubmissionRecord = {
@@ -582,7 +591,7 @@ export function createMemoryRepositories(
           if (taken >= input.capacity) return { ok: false as const, reason: 'full' as const };
         }
 
-        const now = new Date();
+        const now = clock();
         const existingIndex = input.id ? state.submissions.findIndex((s) => s.id === input.id) : -1;
         const existing = state.submissions[existingIndex];
 
@@ -619,7 +628,7 @@ export function createMemoryRepositories(
           id: randomUUID(),
           ...input,
           submissionId: null,
-          createdAt: new Date(),
+          createdAt: clock(),
         };
         state.uploads.push(record);
         return { ...record };
@@ -705,7 +714,7 @@ export function createMemoryRepositories(
           organisationId: input.organisationId,
           submissionId: input.submissionId,
           eventId: input.eventId,
-          checkedInAt: new Date(),
+          checkedInAt: clock(),
           checkedInByUserId: input.checkedInByUserId,
           method: input.method,
           entryIndex,
@@ -735,7 +744,7 @@ export function createMemoryRepositories(
         );
         if (existing) return { ...existing };
 
-        const now = new Date();
+        const now = clock();
         const record: JobRecord = {
           id: randomUUID(),
           organisationId: input.organisationId,
@@ -790,7 +799,7 @@ export function createMemoryRepositories(
         const index = state.jobs.findIndex((j) => j.id === id);
         const job = state.jobs[index];
         if (job) {
-          state.jobs[index] = { ...job, status: 'done', result, finishedAt: new Date() };
+          state.jobs[index] = { ...job, status: 'done', result, finishedAt: clock() };
         }
       },
 
@@ -800,7 +809,7 @@ export function createMemoryRepositories(
         if (!job) return;
         state.jobs[index] = retryAt
           ? { ...job, status: 'queued', error, runAfter: retryAt }
-          : { ...job, status: 'failed', error, finishedAt: new Date() };
+          : { ...job, status: 'failed', error, finishedAt: clock() };
       },
 
       requeueStale: async (before) => {
@@ -810,7 +819,7 @@ export function createMemoryRepositories(
           touched += 1;
           const error = 'worker lost before the job finished';
           return job.attempts >= job.maxAttempts
-            ? { ...job, status: 'failed', error, startedAt: null, finishedAt: new Date() }
+            ? { ...job, status: 'failed', error, startedAt: null, finishedAt: clock() }
             : { ...job, status: 'queued', error, startedAt: null };
         });
         return touched;
@@ -830,7 +839,7 @@ export function createMemoryRepositories(
             progressDone: 0,
             startedAt: null,
             finishedAt: null,
-            runAfter: new Date(),
+            runAfter: clock(),
           };
         }
         return { ...state.jobs[index]! };
@@ -848,7 +857,7 @@ export function createMemoryRepositories(
         const record: BrandKitRecord = {
           organisationId,
           tokens: structuredClone(tokens),
-          updatedAt: new Date(),
+          updatedAt: clock(),
           updatedBy,
         };
         const index = state.brandKits.findIndex((k) => k.organisationId === organisationId);
@@ -889,7 +898,7 @@ export function createMemoryRepositories(
           verified: false,
           checks: [],
           lastCheckedAt: null,
-          createdAt: new Date(),
+          createdAt: clock(),
         };
         state.sendingDomains.push(record);
         return { ...record };
@@ -908,7 +917,7 @@ export function createMemoryRepositories(
       list: async (organisationId) =>
         state.messages.filter((m) => m.organisationId === organisationId).map((m) => ({ ...m })),
       record: async (input) => {
-        const record: MessageRecord = { ...input, id: randomUUID(), createdAt: new Date() };
+        const record: MessageRecord = { ...input, id: randomUUID(), createdAt: clock() };
         state.messages.push(record);
         return { ...record };
       },
@@ -941,7 +950,7 @@ export function createMemoryRepositories(
         ) ?? null,
 
       createBatch: async (input) => {
-        const now = new Date();
+        const now = clock();
         const batch: InvoiceBatchRecord = {
           id: randomUUID(),
           organisationId: input.organisationId,
@@ -1077,7 +1086,7 @@ export function createMemoryRepositories(
           ...input,
           id: randomUUID(),
           archivedAt: null,
-          createdAt: new Date(),
+          createdAt: clock(),
         };
         state.ledgerAccounts.push(record);
         return { ...record, name: { ...record.name } };
@@ -1118,7 +1127,7 @@ export function createMemoryRepositories(
           reference: input.reference,
           description: input.description,
           occurredOn: input.occurredOn,
-          postedAt: new Date(),
+          postedAt: clock(),
           postedByUserId: input.postedByUserId,
           reversesEntryId: input.reversesEntryId ?? null,
           reversedByEntryId: null,
@@ -1139,7 +1148,7 @@ export function createMemoryRepositories(
       },
 
       nextReference: async (organisationId) => {
-        const year = new Date().getUTCFullYear();
+        const year = clock().getUTCFullYear();
         const prefix = `V${year}-`;
         const highest = state.journalEntries
           .filter((e) => e.organisationId === organisationId && e.reference.startsWith(prefix))
@@ -1157,7 +1166,7 @@ export function createMemoryRepositories(
 
     audit: {
       record: async (entry: AuditEntryInput) => {
-        state.audit.push({ ...entry, id: randomUUID(), at: new Date() });
+        state.audit.push({ ...entry, id: randomUUID(), at: clock() });
       },
       list: async (organisationId) =>
         state.audit.filter((entry) => entry.organisationId === organisationId),

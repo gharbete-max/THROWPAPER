@@ -163,34 +163,41 @@ test('a wrong event id is not a door', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Evenemang' })).toBeVisible();
 });
 
-test('the verdict panel keeps its height at phone width', async ({ page }) => {
-  const reference = await register();
-  await signInAs(page, sql, 'operator@example.com');
-  await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto(`/events/${eventId}/check-in`);
+/*
+ * At both widths, because they have different floors. Below 600px the panel is 14rem and held; above
+ * it the floor was 11rem, "already" measured 194.78px, and the panel jumped between the admit and
+ * the repeat scan. This test ran only at 375, which is the one width where it could not see that.
+ */
+for (const width of [375, 1280]) {
+  test(`the verdict panel keeps its height at ${width}`, async ({ page }) => {
+    const reference = await register();
+    await signInAs(page, sql, 'operator@example.com');
+    await page.setViewportSize({ width, height: 812 });
+    await page.goto(`/events/${eventId}/check-in`);
 
-  // The fixed height exists so the layout does not move at the moment of judgement. The idle
-  // prompt is the one text long enough to wrap, and at 375 it once pushed the panel taller than
-  // the verdict that replaced it — the exact jump the fixed height was meant to remove.
-  const verdict = page.locator('.verdict');
-  await expect(verdict).toContainText('Skanna ett kort');
-  const idle = (await verdict.boundingBox())?.height;
+    // The fixed height exists so the layout does not move at the moment of judgement. The idle
+    // prompt is the one text long enough to wrap, and at 375 it once pushed the panel taller than
+    // the verdict that replaced it — the exact jump the fixed height was meant to remove.
+    const verdict = page.locator('.verdict');
+    await expect(verdict).toContainText('Skanna ett kort');
+    const idle = (await verdict.boundingBox())?.height;
 
-  await page.getByLabel(/Referens/).fill(reference);
-  await page.getByRole('button', { name: 'Checka in' }).click();
-  await expect(verdict).toContainText('Välkommen');
-  const admitted = (await verdict.boundingBox())?.height;
+    await page.getByLabel(/Referens/).fill(reference);
+    await page.getByRole('button', { name: 'Checka in' }).click();
+    await expect(verdict).toContainText('Välkommen');
+    const admitted = (await verdict.boundingBox())?.height;
 
-  // "Already checked in" carries one line more (when they arrived) and must fit the same panel.
-  await page.getByLabel(/Referens/).fill(reference);
-  await page.getByRole('button', { name: 'Checka in' }).click();
-  await expect(verdict).toContainText('Redan incheckad');
-  const already = (await verdict.boundingBox())?.height;
+    // "Already checked in" carries one line more (when they arrived) and must fit the same panel.
+    await page.getByLabel(/Referens/).fill(reference);
+    await page.getByRole('button', { name: 'Checka in' }).click();
+    await expect(verdict).toContainText('Redan incheckad');
+    const already = (await verdict.boundingBox())?.height;
 
-  expect(idle).toBeGreaterThan(0);
-  expect(admitted).toBe(idle);
-  expect(already).toBe(idle);
-});
+    expect(idle).toBeGreaterThan(0);
+    expect(admitted, `admitted is ${admitted}px against idle ${idle}px`).toBe(idle);
+    expect(already, `already is ${already}px against idle ${idle}px`).toBe(idle);
+  });
+}
 
 test('each undo is named after its arrival', async ({ page }) => {
   const reference = await register();
@@ -324,6 +331,31 @@ test('a Responses row on a phone gives the name its own line', async ({ page }) 
   expect(form.y).toBeGreaterThanOrEqual(who.y + who.height - 1);
   // No badge on a finished response: the mark is for the exception.
   await expect(page.locator('.inbox__status .badge').first()).toHaveCount(0);
+});
+
+test('a Responses row on a phone never cuts the reference', async ({ page }) => {
+  /*
+   * The reference used to sit inside the same ellipsised span as the form's title, so on a phone it
+   * was the first thing cut — and it is the field that matches a person to their card. Measured by
+   * bounding box, because it was clipped by its *parent's* overflow: its own scrollWidth reported
+   * nothing wrong the whole time.
+   */
+  await signInAs(page, sql, 'admin@example.com');
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/responses');
+
+  const row = page
+    .locator('.inbox__link')
+    .filter({ has: page.locator('.inbox__reference') })
+    .first();
+  await expect(row).toBeVisible();
+  const form = (await row.locator('.inbox__form').boundingBox())!;
+  const reference = (await row.locator('.inbox__reference').boundingBox())!;
+
+  expect(
+    reference.x + reference.width,
+    `the reference ends at ${reference.x + reference.width}px, its container at ${form.x + form.width}px`,
+  ).toBeLessThanOrEqual(form.x + form.width + 0.5);
 });
 
 test('the recent-arrival row gives the name the room, at 375', async ({ page }) => {

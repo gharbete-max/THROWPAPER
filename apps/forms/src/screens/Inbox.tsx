@@ -118,8 +118,15 @@ export function Inbox() {
                     collected none.
                   */}
                   <span className="inbox__who">{entry.who || entry.reference}</span>
+                  {/*
+                    The title truncates; the reference never does. It used to sit inside the same
+                    ellipsised span, so on a phone the one field that matches a person to their card
+                    was the first thing cut.
+                  */}
                   <span className="inbox__form small muted">
-                    {pickText(locales, entry.formTitle, locale).value || entry.formSlug}
+                    <span className="inbox__title">
+                      {pickText(locales, entry.formTitle, locale).value || entry.formSlug}
+                    </span>
                     {entry.who && <span className="inbox__reference"> · {entry.reference}</span>}
                   </span>
                   <span className="inbox__status">

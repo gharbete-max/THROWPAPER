@@ -363,7 +363,16 @@ export default function CheckIn() {
         {cameraError && <p className="small muted">{t('checkin.cameraUnavailable')}</p>}
       </form>
 
-      <video ref={videoRef} className={scanning ? 'checkin__video' : 'checkin__video--off'} />
+      {/*
+        Hidden from assistive tech on purpose. A viewfinder carries nothing a screen-reader user can
+        act on, and a named but meaningless <video> is a stop on every pass through the page. What a
+        scan produced is announced by the verdict, which is `role="status"`.
+      */}
+      <video
+        ref={videoRef}
+        aria-hidden="true"
+        className={scanning ? 'checkin__video' : 'checkin__video--off'}
+      />
 
       {recent.length > 0 && (
         <section className="door__recent" aria-label={t('checkin.recent')}>

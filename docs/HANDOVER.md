@@ -6,73 +6,46 @@ For a fresh session picking this up. Read `CLAUDE.md` first, then `LAUNCH-CHECKL
 ## Paste-ready prompt for the next session
 
 ```
-You are continuing work on THROWPAPER (product name: Loppa) — a pnpm monorepo with two
-independent products (apps/forms + apps/api-forms; apps/mailer + apps/api-mailer) and shared
-packages. Read CLAUDE.md, then docs/HANDOVER.md, then LAUNCH-CHECKLIST.md, then
-docs/adr/0001-theming-layers.md, then docs/PROGRESS.md from § L0 to the end before touching
-anything. Do not re-derive anything HANDOVER marks as established.
+You are continuing work on THROWPAPER (product name: Loppa) — a pnpm monorepo. Read CLAUDE.md
+first (its "Never mistake a proxy for the thing" section before anything else), then
+docs/MODULE-STATUS.md, then LAUNCH-CHECKLIST.md, then docs/PROGRESS.md from § Phase 0 to the
+end. Do not re-derive anything HANDOVER marks as established.
 
-State (measured 2026-09-22, midday): origin/main at the merge of S2 (claude/l8b-door); the
-palette series (P0, branch claude/palette-loppa) is done and in review. Done and merged: the
-local track L0–L7 and the site design pass (#87–#95); the app-shell pass (#103); the restart
-proof (#104); dependabot batch two (#105); S2 the door readiness (#107). P0 THE PALETTE moved
-packages/tokens to the Loppa identity — gold #cea85c fills, bronze #8f6b3a where the brand is
-read, paper #fafaf8, platinum #e9ebee, ink #0e0e10, graphite, pewter, every value from
-docs/brand/tokens-loppa.css and held there by packages/tokens/src/loppa.test.ts — and fixed the
-two mechanism faults gold exposed: toDarkColours walked a near-black ink past the floor (page
-#050505, card 1.01:1, border 2.96) and now floors the page at the ink with the surface stepping
-toward the paper (#0e0e10 / #1c1c1e / 3.46:1 / gold 8.61:1), and compile-pdf.ts still painted
-headings and the button with the raw primary instead of headingInk/buttonSurface. The site's
-hero and header rasters were the seafoam round's renders and are now the brand bundle's own,
-through scripts/brand/blacken-shadow.py. `pnpm verify` green (141 test files, 1793 tests),
-`pnpm contract:check` passed, `pnpm test:e2e` 19/19 against the portable Postgres 16 — start
-command in docs/PROGRESS.md § L0; no Docker on this machine. It must say "19 passed", not
-SKIPPED, before anything else is trusted. Site critique 18 → 22 → 23 → 25 → 23 / 32 (the drop is
-two hover states measured for the first time, neither new with gold); app shell
-21 → 23 → 23 → 26 → 26 / 40 (flat: CheckIn.tsx is byte-identical).
+State: fetch and read it rather than trusting this paragraph — `git fetch` and `gh pr list`
+first, because local main is routinely behind. Phases 0–2 and S3–S8 are merged: main is green,
+the magic link lands, the wizard is facets (ADR 0006), the demo brand kit is seeded and passes
+the contrast guard, and every engineering-ready row in LAUNCH-CHECKLIST.md is closed. The current
+test and e2e counts are in the latest PROGRESS entry; this prompt deliberately does not repeat
+them, because a number written here goes stale by the next phase and a fresh session then reads a
+correct result as a failure.
 
-Rules that bite: one task per branch, plan mode first, `pnpm verify` and `pnpm contract:check`
-before "done"; every fix gets a discriminating test committed red first; never mass-rename
-internal identifiers (throwpaper stays throwpaper in paths/tables/routes); no new dependencies
-without asking (majors: see ADR 0005); no legal/clinical/tax/safety wording (rule 8); a brand
-colour never paints text unchecked — reach for the derived tokens (--tp-colour-heading,
---tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus, --tp-button-*). The palette is
-Loppa's gold/bronze/paper/platinum/ink and nothing else may be added to it: gold is a FILL (2.14:1
-on the page, by design), bronze is the brand where it is read, and every value comes from
-docs/brand — never invent a hex. The owner dislikes dark teal and the flat mark. Design first,
-then one ponytail pass; never both in one.
+The gate: `pnpm verify` and `pnpm contract:check` exit 0, and `pnpm test:e2e` genuinely runs —
+it exits 2 on a skip, and a green verify is not a green e2e. Start the portable Postgres first
+(PROGRESS § L0 has the command). Kill the preview servers on 4173 and 4001 between a red run and
+a green one: `vite preview` serves a build and a reused server will pass a reverted fix. Use a
+single-token `--grep`; `run-e2e.ts` runs with `shell: true` and splits a multi-word pattern into
+nothing. Capture a run's output to a file before re-running it, or a flake cannot be named.
 
-Pick up in this order, one task per session (the owner's order of 2026-09-22 late; the owner
-cannot test by hand — Playwright driving real browsers is the acceptance channel). P0 the palette
-is done; S5 is now trivial because the values it seeds exist:
-1. S3 — the simulated user, one loop end to end (branch claude/sim-v01-loop): sign in via the
-   console-logged magic link → create the event → build the form in the builder UI → publish →
-   fill it as an attendee with save-and-resume → find the confirmation in the console log,
-   assert language and attachment → bulk-generate admission PDFs → download the ZIP → decode a
-   QR (pdfjs + zxing) → check in typed, scan again, assert the idempotent refusal. Known before
-   it starts: bulk generation has NO UI (only POST /v1/forms/:id/admission-documents); the
-   public submit is limited to 10/min per address; S3 logs every dead end in PROGRESS.md
-   § Simulation findings and fixes only v0.1-loop bugs with red-first tests.
-2. S4 — the onboarding wizard (branch claude/wizard): docs/adr/0006-onboarding-wizard.md FIRST
-   (owner decision 2026-09-22: Akinator-style onboarding before every feature's deep UI, the
-   scanner excepted; composition not retrieval; replace WizardOption.next with a sector-selected
-   question set and everyPath() with three invariants as property tests; trades and law blocked
-   until a human authors their wording — rule 8), then the form-builder entry only.
-3. S5 — the seed's brand kit (branch claude/l10-seed-brandkit): unblocked by P0 and small —
-   seed.ts and demo/dataset.ts write the migrated packages/tokens values (no hard-coded hex), the
-   1.28:1 border becomes a derived token, CLAUDE.md §Demo data still passes. Delete the §2.2 row.
-   Until it lands, `pnpm demo` renders the signed-in shell in the seeded Demo AB navy, so a
-   critique of the shell must judge the palette on /login before sign-in.
-4. The §2.3 and §2.4 rows (three P1 carried: not-found remedy — the sentence is the owner's; the
-   recent row's name at 375; two primaries on the public form's last page, whose root cause is
-   that `button--secondary` is asked for in RepeatingGroup.tsx:177 and defined in no stylesheet.
-   Plus §2.4: a filled button has no hover or pressed state anywhere in the product because
-   styles.css:149 is out-specified by :3517, and the quiet button's hover edge is gold at 2.14:1).
-5. Everything in LAUNCH-CHECKLIST.md §1 and §3 is the owner's to answer, not yours to invent.
+Rules that bite: one task per branch, plan mode first; every fix gets a discriminating test shown
+failing first; never mass-rename internal identifiers (CLAUDE.md rule 9); no new dependencies
+without asking (majors: ADR 0005, re-review 2026-12-22); no legal/clinical/tax/safety wording
+(rule 8); a brand colour never paints text or a boundary unchecked — reach for the derived tokens
+(--tp-colour-heading, --tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus,
+--tp-button-*). Gold is a FILL, bronze is the brand where it is read, every value comes from
+docs/brand. Measure contrast on the surface the finding was made on: a public form wears the demo
+kit (navy, primary == text), the marketing site wears the shipped gold. Design first, then one
+ponytail pass; never both in one.
 
-The wizard's paper decision exists (owner, 2026-09-22): S4 writes it down as ADR 0006 before any
-wizard code. Trades and law stay blocked until a human authors their wording (rule 8).
-Do not take a dependency major without reading docs/adr/0005-dependency-majors.md.
+What is left, and whose it is:
+1. The owner's, not yours to invent — LAUNCH-CHECKLIST.md §1 (legal entity, hosting and region,
+   retention), §3, the door's not-found remedy sentence, whether a name lookup lives inside the
+   door, and whether site and app headings should agree on the ink or on --tp-colour-heading.
+2. One feature: the door's five most recent arrivals vanish on reload.
+3. The four-module plan: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5 has the nine
+   importers it must be written against), ADR 0007 (handwriting only, a delta on ADR 0004, after
+   ADR 0004's open questions are answered), Mailer from B2 contacts.
+4. The wizard's verticals (content, per ADR 0006). Trades and law stay blocked until a human
+   authors their wording.
 ```
 
 ## State
@@ -159,20 +132,11 @@ marketing email.
 - The owner dislikes dark teal and the flat mark; a pastel that cannot carry text becomes the ink
   (`headingInk`), never a darkened pastel.
 
-## Next unblocked work — in this order
+## Next unblocked work
 
-1. **S3 — the simulated user, one loop end to end**, in the browser, against the portable
-   Postgres; findings to `docs/PROGRESS.md` § Simulation findings.
-2. **S4 — the onboarding wizard**, ADR 0006 first; the form-builder entry only.
-3. ~~**S5 — the seed's brand kit**~~ — **done 2026-09-22.** Note the line below was wrong: it said
-   the seed should write "the migrated `packages/tokens` values". It should not, and does not.
-   Those are the neutral defaults a *new customer* starts from; the demo keeps a customer's own
-   palette, which is the whole point of a brand kit. What was actually wrong was that the palette
-   had never been through the contrast guard (border at 1.28:1) and the seed wrote no kit at all.
-4. **The §2.3 and §2.4 rows** (three P1s carried, the not-found sentence the owner's; plus the
-   two hover states and `button--secondary`, which is requested in `RepeatingGroup.tsx:177` and
-   defined in no stylesheet — that one class is the "two filled buttons" row's root cause).
-5. **Phase 4** — polish and SEO. **Backups** stay deferred until there is a host.
+In the paste-ready prompt above, under "What is left, and whose it is". It used to be restated here
+as a numbered list and the two drifted — this list still said S3–S5 were upcoming after all three
+had merged.
 
 ---
 

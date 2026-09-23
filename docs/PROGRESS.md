@@ -2494,6 +2494,66 @@ Three test bugs of my own, each caught by the test failing rather than by review
 **Not done here.** The verdict panel's height at 1280, `/responses` clipping at 375, §2.4's two
 site P2s, and the owner's two rows.
 
+## S8 — the last engineering rows, and a handover that no longer lies · done
+
+After this, `LAUNCH-CHECKLIST.md` holds owner decisions and one feature, nothing else. Measured at
+`verify` 144 files / 1807 tests, `contract:check` exit 0, **e2e 29 passed**.
+
+**The clock that allowed the time bomb is gone, and the proof is the bomb itself.**
+`createMemoryRepositories` takes an optional `clock`, and all 26 wall-clock reads in the double go
+through it. `worker.test.ts` passes one clock to the worker and the repository both — and the two
+lease tests are back on `2026-09-22T10:00:00Z`, the literal that used to expire at 10:00 UTC that
+day, which is now in the past and passes. The cause is removed, not stepped around.
+
+I sized this in Phase 1 as touching "a test double used across ~100 test files" and deferred it on
+that basis. **That estimate was wrong**: there are 8 callers, and an optional parameter changes
+none of them. The deferral cost a row, a PR note and a paragraph for a ten-minute change.
+
+The new clock test also hit the original bug in miniature: its first fixed instant was in the
+*future*, so the claim succeeded against the wall clock by accident and the test passed without
+the fix. It uses a past instant now, which is the shape the real failure had.
+
+**The verdict panel at 1280 no longer jumps, and I did not change it.** The row said "already"
+measured 194.78px against a 176px floor. Measured today, the "already" verdict renders all four
+lines — `"Redan incheckad | Göran Häggkvist | E2E… | Anlände 23 sep. 2026 08:36"` — with a content
+height of **174px** in the 176px floor, all three states at 176. The finding predates the palette
+and demo-kit changes. Raising the floor for a problem that is not there would be speculative; the
+existing height test, which ran only at 375 — the one width where it could not see this — now runs
+at 1280 too, so a regression is caught. **The margin is 2px**, which is worth knowing.
+
+**`/responses` cut the reference first on a phone.** It sat inside the same ellipsised span as the
+form's title. Measured before: *"the reference ends at 243px, its container at 196px"* — 47px of
+the one field that matches a person to a card, gone. The title now truncates and the reference
+never does. The test measures by bounding box, because the reference was clipped by its *parent's*
+overflow and its own `scrollWidth` reported nothing wrong.
+
+**Two of the door's P3 items were wrong on inspection, and declined.** `aria-pressed` on "Start
+camera": the label already swaps to "Stop camera", and doing both is the ARIA anti-pattern that
+reads "Stop camera, pressed". Time-only in the verdict: unlike the recent rows, a verdict can
+describe a *previous day* at a multi-day event, so the full date is right there. The `<video>` is
+`aria-hidden` — a viewfinder carries nothing a screen reader can use, and the result is announced
+by the `role="status"` verdict. The row is narrowed to the one real item left: the five recent
+arrivals vanish on reload, which is a feature.
+
+**The feature chips — a design change, flagged as one.** A 12% gold wash measured 1.07:1 as a
+shape; a gold fill measures 1.87:1 on platinum and 2.14:1 on paper. **That does not reach 3:1**, and
+the glyph, which carries the meaning, read either way (15.05:1 before, 8.61:1 after). Under WCAG
+1.4.11 the chip is decorative, so there was no violation to fix. The change applies DESIGN.md's
+"gold is a fill", and there is **no test**, because any threshold that separates 1.07 from 1.87 is
+one I would have invented to make the row look closed. Its hover, which would have faded the fill
+back to a 24% wash, is deleted — the card already lifts.
+
+**The paste-ready prompt in HANDOVER was instructing the next session to redo finished work.** It
+listed S3, S4, S5 and the P1s as upcoming after all of them had merged, cited
+`0006-onboarding-wizard.md` for a file that is `0006-catalogue-direction.md`, repeated S5's
+instruction that turned out wrong, and told the reader e2e "must say 19 passed" — so a fresh
+session would have read today's correct 29 as a failure. Rewritten: it keeps the durable rules,
+adds the operational ones this series paid for, points at PROGRESS for every number, and says what
+is left and whose it is. The duplicate numbered list below it is gone.
+
+**Left for the owner:** whether site and app headings should agree on the ink or on
+`--tp-colour-heading` — both are tokens, and choosing is design, which this pass was not.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

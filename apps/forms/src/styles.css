@@ -2324,16 +2324,23 @@ input[type='file']:disabled::file-selector-button {
   white-space: nowrap;
 }
 
+/* A row, so the title can give way and the reference cannot. */
 .inbox__form {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  min-inline-size: 0;
   white-space: nowrap;
 }
 
-.inbox__reference {
-  font-variant-numeric: tabular-nums;
+.inbox__title {
+  min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Never truncated: it is the field that matches a human to a card. */
+.inbox__reference {
+  flex: none;
+  font-variant-numeric: tabular-nums;
 }
 
 .inbox__when {
@@ -4617,15 +4624,15 @@ body:has(.app) > #root {
   block-size: 44px;
   /* A folded corner rather than a circle: the same language as the mark, at the size of a chip. */
   border-radius: var(--tp-radius-lg) var(--tp-radius-sm) var(--tp-radius-lg) var(--tp-radius-lg);
-  background: color-mix(in srgb, var(--tp-colour-primary) 12%, transparent);
-  /* The glyph is the ink; seafoam on a seafoam tint measured 1.79:1 and the chips were the cards' only colour. */
+  /*
+   * Gold as a fill, not a wash. At 12% over platinum the chip measured 1.08:1 light and 1.24:1
+   * dark — a shape nobody could see as a shape. DESIGN.md's rule is that gold belongs in a fill;
+   * the glyph is the ink, and ink on gold is 8.61:1.
+   */
+  background: var(--tp-colour-primary);
   color: var(--tp-colour-text);
   font-size: 20px;
   transition: background-color var(--tp-motion) var(--tp-ease);
-}
-
-.feature-card:hover .feature-card__mark {
-  background: color-mix(in srgb, var(--tp-colour-accent) 24%, transparent);
 }
 
 .feature-card__more {
