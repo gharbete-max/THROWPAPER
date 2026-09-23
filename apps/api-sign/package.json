@@ -1,0 +1,27 @@
+{
+  "name": "@tp/api-sign",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contract-registry": "./src/contract-registry.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "build": "tsup src/main.ts --format esm --target node20 --clean",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tp/shared": "workspace:*",
+    "@tp/signing": "workspace:*",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.12.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5"
+  }
+}

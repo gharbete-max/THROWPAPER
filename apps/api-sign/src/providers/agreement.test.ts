@@ -3,7 +3,7 @@ import {
   createConsoleSigningProvider,
   createUnconfiguredSigningProvider,
   type SigningRequest,
-} from './provider.js';
+} from './agreement.js';
 
 function request(): SigningRequest {
   return {

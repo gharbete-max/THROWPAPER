@@ -11,9 +11,10 @@
 
 ---
 
-Loppa is two products that integrate, built in one monorepo. Either one can be sold, deployed
-and demoed without the other; they talk only through a versioned HTTP contract, never a shared
-database.
+Loppa is a set of products that integrate, built in one monorepo. Each can be sold, deployed and demoed
+without the others; they talk only through a versioned HTTP contract, never a shared database.
+A third, **Sign** (`apps/sign` + `apps/api-sign`, `docs/adr/0009-where-signing-lives.md`), is a
+scaffold today.
 
 |                  | **Forms**                                                           | **Mailer**                                      |
 | ---------------- | ------------------------------------------------------------------- | ----------------------------------------------- |
@@ -54,11 +55,14 @@ apps/forms        Forms — React, SSR, Vite
 apps/api-forms    Forms backend
 apps/mailer       Mailer
 apps/api-mailer   Mailer backend
+apps/sign         Sign — scaffold
+apps/api-sign     Sign backend — scaffold
 packages/tokens   Design tokens → CSS vars, inline email styles, print CSS. Contrast guard lives here
 packages/i18n     Translation catalogues and ICU collation
-packages/ui       Headless + styled primitives, including the data grid
-packages/calc     Formula AST, statistics, chart definitions
+packages/ui       One `cn()` helper; the data grid is deliberately not in v0.1
+packages/calc     Calculation errors, exact money, the ledger
 packages/shared   Types and Zod schemas, including the contract schemas
+packages/signing  The signing model: levels, envelopes, the audit-trail state machine
 docs/brand        The Loppa brand bundle: tokens, motion CSS, marks, lockups, animations (rasters in Git LFS)
 ```
 
@@ -68,14 +72,14 @@ docs/brand        The Loppa brand bundle: tokens, motion CSS, marks, lockups, an
 1. `docs/START-HERE.md` — the plan. The specs are a destination; this is what gets built.
 2. `docs/HANDOVER.md` — current state and where to pick up.
 3. `LAUNCH-CHECKLIST.md` — everything still temporary, unconfigured or waiting on a decision.
-4. `docs/CONTRACT.md` — the API between the two products. Frozen before either side writes code.
+4. `docs/CONTRACT.md` — the API between the products. Frozen before either side writes code.
 5. `docs/adr/` — the decisions with long-term consequences, one file each.
 6. `docs/SPEC-shared.md`, `docs/SPEC-forms.md`, `docs/SPEC-mailer.md`, `docs/ROADMAP.md` —
    reference, consulted when a choice is hard to reverse.
 
 ## Rules that apply to every change
 
-- The two products never import each other. If you want to, the contract is missing something.
+- The products never import each other (`eslint.config.js` enforces it). If you want to, the contract is missing something.
 - API-first, bearer + refresh token auth. Every screen calls a documented endpoint.
 - No hard-coded colours, fonts, spacing or user-facing strings — tokens and i18n only.
 - Exact arithmetic: decimal or bigint for money, quantities and measurements. Never floats.

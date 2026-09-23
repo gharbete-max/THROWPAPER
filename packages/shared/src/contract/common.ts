@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
 /** Bumped only by joint decision — docs/CONTRACT.md. Sent as `X-Contract-Version`. */
-export const CONTRACT_VERSION = 1;
+/**
+ * 2 since 2026-09-23: §5 (the Sign product) was added. Additive — every v1 request is still valid —
+ * so a v1 caller keeps working; the number records that the surface grew by joint decision.
+ */
+export const CONTRACT_VERSION = 2;
 export const CONTRACT_VERSION_HEADER = 'x-contract-version';
 
 export const OrganisationId = z.string().uuid();

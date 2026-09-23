@@ -4,3 +4,4 @@ export * from './contacts.js';
 export * from './audiences.js';
 export * from './templates.js';
 export * from './manifest.js';
+export * from './signing.js';

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Monorepo containing **two independent products** plus the packages they share. Read
+Monorepo containing **three independent products** plus the packages they share. Read
 `docs/CONTRACT.md` first, then the spec for whichever product you are working on. Do not paste
 specs into this file.
 
@@ -9,6 +9,8 @@ apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend
 apps/api-mailer Product B backend
+apps/sign       Product C — signing. A scaffold: health check and a two-language screen
+apps/api-sign   Product C backend. A scaffold: health check, contract registry, the signing seam
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
                 / native tokens. Owns the contrast guard
 packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
@@ -16,6 +18,7 @@ packages/ui     One `cn()` class-name helper. The shared data grid is deliberate
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
 packages/shared Types and Zod schemas, including the CONTRACT schemas
+packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
 Descriptions above are of what a package **contains**, not what it is planned to contain, and a
@@ -25,9 +28,10 @@ entry at all.
 
 ## Rules that apply to every session
 
-1. **The two products never import each other.** `apps/forms` may not import from `apps/mailer`
-   or its database. They talk only through the HTTP contract in `docs/CONTRACT.md`. If you find
-   yourself wanting a direct import, the contract is missing something — change the contract.
+1. **The products never import each other.** Forms, Mailer and Sign (`docs/adr/0009`) may not
+   import from one another or each other's databases; `eslint.config.js` enforces it. They talk
+   only through the HTTP contract in `docs/CONTRACT.md`. If you find yourself wanting a direct
+   import, the contract is missing something — change the contract.
 2. **Each product must run standalone.** `apps/forms` with the mailer switched off falls back to
    direct SMTP. `apps/mailer` works with audiences uploaded by CSV and no forms app at all.
 3. **API-first, token auth.** Every screen calls a documented endpoint. Bearer + refresh, not
@@ -48,10 +52,11 @@ entry at all.
 ## Commands
 
 ```
-pnpm dev:forms      pnpm dev:mailer
+pnpm dev:forms      pnpm dev:mailer      pnpm dev:sign
 pnpm verify         # format + typecheck + lint + test + build across the workspace — must pass before a phase is done
 pnpm db:migrate     pnpm db:seed
-pnpm contract:check # validates both apps against docs/CONTRACT.md schemas
+pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
+pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
 pnpm test:e2e
 ```
 

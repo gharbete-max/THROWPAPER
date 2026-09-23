@@ -3,8 +3,16 @@ import { SendMessageRequest, SendMessageResponse, DeliveryEvent } from './messag
 import { UpsertContactsRequest, UpsertContactsResponse } from './contacts.js';
 import { PushAudienceRequest, PushAudienceResponse, PullAudienceResponse } from './audiences.js';
 import { ListTemplatesResponse } from './templates.js';
+import {
+  CreateEnvelopeRequest,
+  CreateEnvelopeResponse,
+  EnvelopeStatusResponse,
+  SealedDocumentResponse,
+  SigningHookEvent,
+} from './signing.js';
 
-export type ContractSide = 'sendwork' | 'formwork';
+/** Which product serves an endpoint. `signwork` is the Sign product (ADR 0009). */
+export type ContractSide = 'sendwork' | 'formwork' | 'signwork';
 
 export interface ContractEndpoint {
   /** Stable id used by each app's registry. Never renamed without a version bump. */
@@ -77,6 +85,42 @@ export const CONTRACT_ENDPOINTS = [
     section: '2.2',
     request: DeliveryEvent,
     response: DeliveryEvent.pick({ messageId: true }),
+  },
+  {
+    id: 'envelopes.create',
+    method: 'POST',
+    path: '/v1/envelopes',
+    servedBy: 'signwork',
+    section: '5.1',
+    request: CreateEnvelopeRequest,
+    response: CreateEnvelopeResponse,
+  },
+  {
+    id: 'envelopes.get',
+    method: 'GET',
+    path: '/v1/envelopes/:id',
+    servedBy: 'signwork',
+    section: '5.2',
+    request: null,
+    response: EnvelopeStatusResponse,
+  },
+  {
+    id: 'envelopes.sealed',
+    method: 'GET',
+    path: '/v1/envelopes/:id/sealed',
+    servedBy: 'signwork',
+    section: '5.3',
+    request: null,
+    response: SealedDocumentResponse,
+  },
+  {
+    id: 'signing.webhook',
+    method: 'POST',
+    path: '/hooks/signing',
+    servedBy: 'formwork',
+    section: '5.4',
+    request: SigningHookEvent,
+    response: SigningHookEvent.pick({ envelopeId: true }),
   },
 ] as const satisfies readonly ContractEndpoint[];
 

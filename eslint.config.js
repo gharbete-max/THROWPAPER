@@ -38,8 +38,50 @@ export default tseslint.config(
     },
   },
   {
-    files: ['apps/forms/**/*.tsx', 'apps/mailer/**/*.tsx'],
+    files: ['apps/forms/**/*.tsx', 'apps/mailer/**/*.tsx', 'apps/sign/**/*.tsx'],
     plugins: { 'react-hooks': reactHooks },
     rules: reactHooks.configs.recommended.rules,
   },
+  // CLAUDE.md rule 1, as a rule rather than a convention: the three products never import each
+  // other. They talk through docs/CONTRACT.md. Only `scripts/contract-check.ts` reads all three
+  // registries, and it lives outside `apps/`.
+  ...productBoundaries(),
 );
+
+/**
+ * One block per product: its frontend and backend may import each other's *packages* (`@tp/*` in
+ * `packages/`), never another product's app — by package name or by relative path.
+ */
+function productBoundaries() {
+  const products = {
+    forms: ['forms', 'api-forms'],
+    mailer: ['mailer', 'api-mailer'],
+    sign: ['sign', 'api-sign'],
+  };
+  return Object.entries(products).map(([name, apps]) => {
+    const others = Object.entries(products)
+      .filter(([other]) => other !== name)
+      .flatMap(([, otherApps]) => otherApps);
+    return {
+      files: apps.map((app) => `apps/${app}/**/*.{ts,tsx}`),
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: [
+              {
+                group: others.flatMap((app) => [
+                  `@tp/${app}`,
+                  `@tp/${app}/*`,
+                  `**/apps/${app}/**`,
+                  `../../${app}/**`,
+                ]),
+                message: `The ${name} product may not import another product (CLAUDE.md rule 1). Use docs/CONTRACT.md.`,
+              },
+            ],
+          },
+        ],
+      },
+    };
+  });
+}

@@ -10,6 +10,7 @@
   "scripts": {
     "dev:forms": "pnpm --parallel --filter @tp/api-forms --filter @tp/forms run dev",
     "dev:mailer": "pnpm --parallel --filter @tp/api-mailer --filter @tp/mailer run dev",
+    "dev:sign": "pnpm --parallel --filter @tp/api-sign --filter @tp/sign run dev",
     "demo": "pnpm --parallel --filter @tp/api-forms --filter @tp/forms run demo",
     "icons": "tsx scripts/generate-icons.ts",
     "typecheck": "tsc -p tsconfig.json && pnpm -r --no-bail run typecheck",
@@ -21,6 +22,7 @@
     "build": "pnpm -r run build",
     "verify": "pnpm run format:check && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
     "contract:check": "tsx scripts/contract-check.ts",
+    "licence:check": "tsx scripts/licence-check.ts",
     "bundle:budget": "tsx scripts/bundle-budget.ts",
     "tokens:proof": "tsx scripts/proof/index.ts",
     "test:e2e": "tsx scripts/run-e2e.ts",
@@ -37,6 +39,7 @@
     "@react-email/render": "^2.1.0",
     "@tp/api-forms": "workspace:*",
     "@tp/api-mailer": "workspace:*",
+    "@tp/api-sign": "workspace:*",
     "@tp/shared": "workspace:*",
     "@tp/tokens": "workspace:^",
     "@types/node": "^26.6.2",
