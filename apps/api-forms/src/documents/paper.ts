@@ -8,6 +8,7 @@ import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { imageSize } from '../uploads/image-size.js';
 import { contentTypeFor } from '../uploads/attachment.js';
 import type { UploadExtension } from '@tp/shared/forms';
+import { readSignatureVector, signatureVectorSvg } from '@tp/shared/forms';
 import type { PdfRenderer } from './render.js';
 
 /**
@@ -212,6 +213,7 @@ section:last-child { break-after: auto; }
 .a.tick { justify-content: center; align-items: center; padding: 0; }
 .a.mark { align-items: flex-end; }
 .a img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.a svg { width: 100%; height: 100%; }
 </style>
 </head>
 <body>
@@ -234,6 +236,11 @@ async function answerHtml(
     case 'signature': {
       const bytes = typeof raw === 'string' ? await deps.uploadStore.get(raw) : null;
       if (!bytes) return null;
+      // Drawn strokes as vector, so the mark stays sharp at whatever size the box gives it; the
+      // picture otherwise, which is every typed signature and every one made before strokes were kept.
+      const read = readSignatureVector(bytes);
+      const svg = read.ok && read.vector ? signatureVectorSvg(read.vector) : null;
+      if (svg) return svg;
       return `<img src="data:image/png;base64,${bytes.toString('base64')}" alt="" />`;
     }
     case 'yes_no': {

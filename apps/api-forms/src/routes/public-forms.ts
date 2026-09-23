@@ -335,6 +335,21 @@ export function registerPublicFormRoutes(
           .send({ error: { code: checked.code, message: uploadRejection(checked.code) } });
       }
 
+      /**
+       * The strokes a signature carries inside its PNG (`signature-vector.ts`) are read back into
+       * sealed documents as SVG, so they are held to the pad's grammar here, at the door, rather
+       * than trusted later. A PNG with no strokes is still a signature — a typed one before this
+       * existed, or a client that never sent them.
+       */
+      if (field.type === 'signature' && checked.extension === 'png') {
+        const vector = formSchemas.readSignatureVector(content);
+        if (!vector.ok) {
+          return reply
+            .code(400)
+            .send({ error: { code: 'bad-signature', message: uploadRejection('bad-signature') } });
+        }
+      }
+
       const stored = await deps.uploadStore.put(content, checked.extension);
       const record = await deps.repos.uploads.create({
         organisationId: loaded.organisation.id,
@@ -528,6 +543,8 @@ function uploadRejection(code: string): string {
       return 'SVG files are not accepted. Send a PNG or a JPEG.';
     case 'not-accepted-here':
       return 'That question does not take this kind of file';
+    case 'bad-signature':
+      return 'The signature could not be read. Clear it and sign again.';
     default:
       return 'That file type is not accepted';
   }

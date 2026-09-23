@@ -172,6 +172,62 @@ describe('filling paper', () => {
     expect(html).not.toContain('never drawn');
   });
 
+  it('draws a signature from its strokes, so it stays sharp at any size', async () => {
+    const uploadStore = createMemoryUploadStore();
+    const pdf = await uploadStore.put(await sourcePdf(), 'pdf');
+    const strokes = {
+      v: 1 as const,
+      kind: 'drawn' as const,
+      width: 600,
+      height: 200,
+      paths: ['M 10 20 Q 11 22 13 24 L 30 40'],
+    };
+    const mark = await uploadStore.put(
+      // A whole PNG: the 2×3 one above is only complete enough for `imageSize`.
+      Buffer.from(
+        formSchemas.embedSignatureVector(
+          Buffer.from(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+            'base64',
+          ),
+          strokes,
+        ),
+      ),
+      'png',
+    );
+
+    const definition = formSchemas.FormDefinition.parse({
+      schemaVersion: 1,
+      paper: { sources: [{ key: pdf.key, pages: 1 }] },
+      fields: [
+        {
+          id: 's',
+          key: 'mark',
+          type: 'signature',
+          label: { 'sv-SE': 'Underskrift' },
+          paper: { page: 0, x: 0.5, y: 0.8, w: 0.4, h: 0.1 },
+        },
+      ],
+    });
+
+    const renderer = pageRenderer();
+    await fillPaper(
+      { uploadStore, renderer },
+      {
+        reference: 'SIG1',
+        locale: 'sv-SE',
+        data: { mark: mark.key },
+      } as unknown as SubmissionRecord,
+      definition,
+      locales,
+    );
+
+    const html = renderer.rendered[0]!;
+    expect(html).toContain('<path d="M 10 20 Q 11 22 13 24 L 30 40"/>');
+    // The vector replaces the bitmap rather than sitting on top of it.
+    expect(html).not.toContain('class="a mark"><img');
+  });
+
   it('is nothing for a form without paper', async () => {
     const filled = await fillPaper(
       { uploadStore: createMemoryUploadStore(), renderer: pageRenderer() },

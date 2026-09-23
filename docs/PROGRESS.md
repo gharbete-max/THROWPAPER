@@ -2554,6 +2554,52 @@ is left and whose it is. The duplicate numbered list below it is gone.
 **Left for the owner:** whether site and app headings should agree on the ink or on
 `--tp-colour-heading` — both are tokens, and choosing is design, which this pass was not.
 
+## P1a (part 1) — the signature keeps its strokes · done
+
+The first expansion phase (`docs/ROADMAP.md` § Expansion, ADR 0009). Measured at `verify` steps
+run one by one: format, typecheck, lint (0 errors, the 2 known warnings), **test 145 files / 1814
+passed**, build; `contract:check` exit 0; **e2e 30 passed, 1 failed** locally — the failure is
+explained below and is not this change's.
+
+**The strokes travel inside the PNG.** `packages/shared/src/forms/signature-vector.ts` writes the
+drawn paths (or the typed name) into an `iTXt` chunk of the signature's own PNG and reads them back
+with every chunk length bounded and the CRC checked. The answer is still one storage key, so
+nothing about storage, access control, export or the schema changed — and the content hash that
+names the file now covers the vector too. No migration, no new dependency: `pathFrom` in
+`DrawingPad.tsx` already smoothed strokes, so `perfect-freehand` was not needed after all.
+
+**No biometrics, by construction.** The schema is strict: positions only, rounded, no timing,
+pressure or pointer type. A test tries each of those and each is refused.
+
+**The server holds the strokes to the pad's grammar.** The signing upload reads the chunk and
+answers `400 bad-signature` for anything outside `M`/`Q`/`L`/`l` and numbers, even with a correct
+CRC — because paper output inlines the paths as SVG. A PNG with no strokes is still accepted, since
+every signature made before this is one.
+
+**Paper output draws the vector.** `documents/paper.ts` renders a drawn signature as inline SVG,
+so it is sharp at any box size; typed and older signatures keep the picture.
+
+**Evidence that discriminates.** The three new server tests fail with the server change reverted;
+both new e2e tests (`e2e/signature.spec.ts`, which reads the stored file back from the upload
+store) fail with the pad change reverted. A cross-check test holds `pathFrom` and the server's
+grammar together, so they cannot drift.
+
+**Two things found on the way.** The paper test's 2×3 PNG fixture is truncated (its IDAT length is
+off by one); `imageSize` never noticed because it reads only IHDR. And the signing route now
+refuses a PNG whose chunks do not add up, where the old fixture — the magic number and zeros —
+used to pass; the "accepts the PNG the pad produces" test now uses a whole PNG, which is what the
+pad produces.
+
+**The local e2e failure.** `simulated-user.spec.ts` fails decoding the admission QR:
+`getOrInsertComputed is not a function` in pdf.js. That is a recent JavaScript method, and this
+cloud container ships Chromium build 1194 where the pinned Playwright expects 1243; the run used
+the older binary through a local path shim. Nothing in this change touches admission cards or
+pdf.js. CI runs the matching browser and is the verdict.
+
+**Not in this part.** Choice controls (shape, icon, size, per-field colour) are P1a part 2, its
+own PR, because they are design work against the locked accessibility floor and deserve their own
+review.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

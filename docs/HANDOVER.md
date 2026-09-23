@@ -48,8 +48,9 @@ What is left, and whose it is:
    authors their wording.
 5. The expansion (signing, eID, Mailer documents, app, AI, enterprise) — approved 2026-09-23 and
    starting now. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
-   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). Next: ROADMAP § Expansion P1a,
-   P1b, P1c, one branch each. Decisions in docs/EXPANSION.md § 5.
+   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a's vector signature is
+   done (PROGRESS § P1a part 1); next is P1a part 2 (choice controls), then P1b, P1c, one branch
+   each. Decisions in docs/EXPANSION.md § 5.
 ```
 
 ## State
