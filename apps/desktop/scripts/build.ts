@@ -1,6 +1,6 @@
 /**
- * Builds the desktop edition into `.stage/`, and with `--package win|linux` turns that into an
- * installer under `release/` (ADR 0016).
+ * Builds the desktop edition into `.stage/`, and with `--package win|mac|linux` turns that into
+ * an installer under `release/` (ADR 0016).
  *
  * Why a staging folder rather than pointing electron-builder at the workspace: pnpm's symlinked
  * `node_modules` is exactly what electron-builder packs worst, and the app needs almost none of it.
@@ -27,7 +27,8 @@ const target = process.argv.includes('--package')
  * Left out of the bundle, installed into the stage as real packages:
  *
  * - `@electric-sql/pglite` loads its WebAssembly and data files from beside its own module.
- * - `playwright-core` drives Edge or Chrome for PDFs and resolves its own files at runtime.
+ * - `playwright-core` drives a browser for PDFs when Settings names one (the window's own Chromium
+ *   renders them otherwise, `src/main/pdf.ts`), and resolves its own files at runtime.
  *   (`playwright` is aliased to it: the full package would download browsers on install.)
  * - `@fontsource/inter` is read with `require.resolve` by `@tp/tokens/pdf` to embed the font in
  *   every PDF — missing, å ä ö would silently fall back to a system face.
@@ -156,8 +157,9 @@ async function main(): Promise<void> {
   console.log(`desktop: staged in ${stage}`);
 
   if (target) {
-    const platformFlag = target === 'win' ? '--win' : target === 'linux' ? '--linux' : null;
-    if (!platformFlag) throw new Error(`--package takes win or linux, not ${target}`);
+    const flags: Record<string, string> = { win: '--win', mac: '--mac', linux: '--linux' };
+    const platformFlag = target ? flags[target] : undefined;
+    if (!platformFlag) throw new Error(`--package takes win, mac or linux, not ${target}`);
     const args = [
       'exec',
       'electron-builder',
@@ -180,6 +182,12 @@ async function main(): Promise<void> {
      */
     if (target === 'win' && process.platform !== 'win32') {
       args.push('--x64', '-c.win.target=zip', '-c.win.signAndEditExecutable=false');
+    }
+    // Likewise a .dmg needs macOS's own disk-image tool, and signing needs its codesign. Off a
+    // Mac, the macOS output is an unsigned zip — which an Apple Silicon Mac will refuse to run.
+    // It proves the packaging; the release comes from macos-latest.
+    if (target === 'mac' && process.platform !== 'darwin') {
+      args.push('-c.mac.target=zip', '-c.mac.identity=null');
     }
     args.push('--publish', 'never');
     execFileSync('pnpm', args, {

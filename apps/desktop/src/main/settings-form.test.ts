@@ -75,3 +75,46 @@ describe('applying the settings form', () => {
     expect(result).toEqual({ ok: false, error: 'signing.endpoint' });
   });
 });
+
+describe('switching between senders', () => {
+  it('needs the confirmation again for Outlook, even coming from SMTP', () => {
+    const onSmtp = applySettingsForm(defaultSettings(), smtpForm(), protect);
+    if (!onSmtp.ok) throw new Error('setup failed');
+    const toOutlook: SettingsForm = {
+      settings: {
+        ...toPanelSettings(onSmtp.settings),
+        mail: { mode: 'outlook', from: 'a@example.com' },
+      },
+      smtpPassword: '',
+      confirmRealSending: false,
+    };
+    expect(applySettingsForm(onSmtp.settings, toOutlook, protect)).toEqual({
+      ok: false,
+      error: 'confirm-real-sending',
+    });
+    const confirmed = applySettingsForm(
+      onSmtp.settings,
+      { ...toOutlook, confirmRealSending: true },
+      protect,
+    );
+    expect(confirmed.ok && confirmed.settings.mail.mode).toBe('outlook');
+  });
+
+  it('goes back to test mode without asking', () => {
+    const onSmtp = applySettingsForm(defaultSettings(), smtpForm(), protect);
+    if (!onSmtp.ok) throw new Error('setup failed');
+    const back = applySettingsForm(
+      onSmtp.settings,
+      {
+        settings: {
+          ...toPanelSettings(onSmtp.settings),
+          mail: { mode: 'outbox', from: 'a@example.com' },
+        },
+        smtpPassword: '',
+        confirmRealSending: false,
+      },
+      protect,
+    );
+    expect(back.ok && back.settings.mail.mode).toBe('outbox');
+  });
+});

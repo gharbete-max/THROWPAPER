@@ -18,8 +18,12 @@ export const AiMode = z.enum(['off', 'online', 'cloud']);
  * field, stored with its vector path. `online` points at a Sign server; `cloud` is the placeholder.
  */
 export const SigningMode = z.enum(['local', 'online', 'cloud']);
-/** Mail. `outbox` is test mode (rule 7): `.eml` files in a folder, nothing sent. */
-export const MailMode = z.enum(['outbox', 'smtp']);
+/**
+ * Mail. `outbox` is test mode (rule 7): `.eml` files in a folder, nothing sent. `smtp` is a mail
+ * server the user names; `outlook` and `apple-mail` hand each message to the mail program already
+ * on this computer, which sends it from the user's own account (`mail/outlook.ts`).
+ */
+export const MailMode = z.enum(['outbox', 'smtp', 'outlook', 'apple-mail']);
 
 export const SmtpSettings = z.object({
   host: z.string().trim().min(1),

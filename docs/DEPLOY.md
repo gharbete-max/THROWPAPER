@@ -151,9 +151,10 @@ of one without the other is not a backup.
 
 ## On one PC instead
 
-Loppa for Windows (`apps/desktop`, ADR 0016) is the same server with local parts: an embedded
-Postgres (PGlite) in `%APPDATA%\Loppa\workspace`, mail to an outbox folder or the user's SMTP
-server, PDFs through Microsoft Edge. Nothing on this page is needed for it; the `Desktop` workflow
+Loppa desktop for Windows and macOS (`apps/desktop`, ADR 0016) is the same server with local
+parts: an embedded Postgres (PGlite) in the user's application-data folder, mail to an outbox
+folder, the user's SMTP server or the Outlook already on the computer, PDFs from the app's own
+Chromium. Nothing on this page is needed for it; the `Desktop` workflow
 builds the installer. The same thing without a window, on any OS:
 `LOPPA_DATA_DIR=./local pnpm --filter @tp/api-forms desktop --demo`.
 

@@ -1,12 +1,14 @@
-# Loppa for Windows — packaging (docs/adr/0016-desktop-edition.md).
+# Loppa for Windows and macOS — packaging (docs/adr/0016-desktop-edition.md).
 #
 # Packs the staging folder `scripts/build.ts` produces, never the workspace: the script runs
 # electron-builder with `--projectDir .stage`, so every path below is relative to the stage. Run
-# through `pnpm --filter @tp/desktop package:win`; the release workflow does the same on
-# windows-latest.
+# through `pnpm --filter @tp/desktop package:win` / `package:mac`; the Desktop workflow does the
+# same on windows-latest and macos-latest.
 appId: com.throwpaper.loppa
 productName: Loppa
 copyright: Copyright © Loppa. All rights reserved.
+# No auto-update feed yet (ADR 0016, D2): releases are published by the workflow, not by this tool.
+publish: null
 directories:
   app: .
   output: ../release
@@ -55,3 +57,24 @@ linux:
       arch: [x64]
   category: Office
   artifactName: Loppa-${version}.${ext}
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  category: public.app-category.business
+  icon: build/icon.png
+  # Ad-hoc signed until there is an Apple Developer ID (LAUNCH-CHECKLIST §6). An Apple Silicon Mac
+  # will not run an unsigned binary at all; ad-hoc makes it run, and Gatekeeper still asks on first
+  # open because it is not notarised. With a Developer ID: drop `identity`, turn the hardened
+  # runtime on with camera and Apple-events entitlements, and notarise.
+  identity: '-'
+  hardenedRuntime: false
+  # macOS asks before letting an app use the camera or drive another app, and shows these lines.
+  # Without them it refuses silently — no QR scanning at the door, no sending through Outlook.
+  extendInfo:
+    NSCameraUsageDescription: Loppa uses the camera to scan admission QR codes and photograph paper forms.
+    NSAppleEventsUsageDescription: Loppa sends email through Outlook or Mail when you choose that in Settings.
+dmg:
+  artifactName: Loppa-${version}-${arch}.${ext}

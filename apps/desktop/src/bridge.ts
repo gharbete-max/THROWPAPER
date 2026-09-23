@@ -20,6 +20,8 @@ export type PanelSettings = Omit<DesktopSettings, 'mail'> & {
 
 export interface PanelState {
   view: PanelView;
+  /** Which mail programs to offer: Outlook on Windows and macOS, Apple Mail on macOS only. */
+  platform: NodeJS.Platform;
   lang: string;
   dataDir: string;
   settings: PanelSettings;

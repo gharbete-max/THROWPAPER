@@ -41,8 +41,9 @@ pnpm db:up && pnpm db:migrate && pnpm db:seed && pnpm dev:forms   # against a re
 ~200 registrations and the form that collected them. `pnpm db:seed` writes the same dataset to
 Postgres. `pnpm dev:forms` / `pnpm dev:mailer` / `pnpm dev:sign` run each product on its own.
 
-**On one PC, offline:** `apps/desktop` is Loppa for Windows — the Forms product in a window, on an
-embedded Postgres, with mail to an outbox folder or your own SMTP server. Installers come from the
+**On one computer, offline:** `apps/desktop` is Loppa for Windows and macOS — the Forms product in a
+window, on an embedded Postgres, with mail to an outbox folder, your own SMTP server, or the
+Outlook (or Apple Mail) already on the computer. Installers come from the
 `Desktop` workflow; `docs/adr/0016-desktop-edition.md` has what works offline and what does not.
 
 ```bash
@@ -60,7 +61,7 @@ apps/mailer       Mailer
 apps/api-mailer   Mailer backend
 apps/sign         Sign — scaffold
 apps/api-sign     Sign backend — scaffold
-apps/desktop      Loppa for Windows — Forms in an Electron window, offline first
+apps/desktop      Loppa desktop (Windows, macOS) — Forms in an Electron window, offline first
 packages/tokens   Design tokens → CSS vars, inline email styles, print CSS. Contrast guard lives here
 packages/i18n     Translation catalogues and ICU collation
 packages/ui       One `cn()` helper; the data grid is deliberately not in v0.1

@@ -51,9 +51,10 @@ What is left, and whose it is:
    proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
    (PROGRESS § P1a, § P1b); next is P1c (Sign's database, standalone mode, sealing).
    Decisions in docs/EXPANSION.md § 5.
-6. Loppa for Windows (apps/desktop, ADR 0016) — D1 is built: Forms offline on PGlite, SMTP or an
-   .eml outbox, installers from the Desktop workflow. D2–D6 and the owner's questions are in the
-   ADR; the certificate and distribution rows are in LAUNCH-CHECKLIST.md §6.
+6. Loppa desktop, Windows and macOS (apps/desktop, ADR 0016) — D1 is built: Forms offline on
+   PGlite; mail to an .eml outbox, SMTP, Outlook or Apple Mail; PDFs from Electron's own
+   Chromium; installers from the Desktop workflow. Owner's direction: offline first, then
+   hostable (D4 next). Certificates and distribution are in LAUNCH-CHECKLIST.md §6.
 ```
 
 ## State

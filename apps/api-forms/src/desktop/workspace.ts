@@ -23,6 +23,8 @@ export interface WorkspacePaths {
   assets: string;
   /** Test-mode mail: every message written here as an `.eml` file instead of being sent. */
   outbox: string;
+  /** Short-lived files — a page being printed, a message being handed to Outlook — removed after use. */
+  tmp: string;
   settings: string;
   secrets: string;
 }
@@ -35,13 +37,21 @@ export function workspacePaths(root: string): WorkspacePaths {
     uploads: join(root, 'documents', 'uploads'),
     assets: join(root, 'documents', 'assets'),
     outbox: join(root, 'outbox'),
+    tmp: join(root, 'tmp'),
     settings: join(root, 'settings.json'),
     secrets: join(root, 'secrets.json'),
   };
 }
 
 export async function ensureWorkspace(paths: WorkspacePaths): Promise<void> {
-  for (const dir of [paths.root, paths.documents, paths.uploads, paths.assets, paths.outbox]) {
+  for (const dir of [
+    paths.root,
+    paths.documents,
+    paths.uploads,
+    paths.assets,
+    paths.outbox,
+    paths.tmp,
+  ]) {
     await mkdir(dir, { recursive: true });
   }
 }

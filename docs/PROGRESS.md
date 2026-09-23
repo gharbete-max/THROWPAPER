@@ -2795,6 +2795,44 @@ is where that is settled.
 **Not verified here:** the NSIS installer and portable `.exe` themselves (need windows-latest —
 `desktop.yml` is their first run), Edge as the PDF browser, DPAPI, and a real SMTP send.
 
+
+## D1b — the owner's direction, Outlook, and the Mac · done
+
+The owner answered ADR 0016's first question: **offline product first, then hostable** from the
+same code; everything but eID signing works offline; mail through Outlook where it can; and a Mac
+build. The ADR is now accepted with a "Decided" section; LAUNCH-CHECKLIST §6 lost the answered row
+and gained the Apple Developer ID.
+
+**PDFs from the app's own Chromium** (`apps/desktop/src/main/pdf.ts`). A Mac usually has neither
+Edge nor Chrome, so D1's Edge default could not stand. The shell prints in a hidden window with
+`printToPDF`, with `render.ts`'s A4, margins and header/footer templates; the page is written to
+`workspace/tmp` and deleted once printed. Measured in Electron under Xvfb with no browser
+configured: demo → registration → an admission card produced by "Skia/PDF m152" whose text reads
+"Björn Ödlund … Näringslivets Hus, Göteborg", and `tmp` left empty. A browser path in Settings
+still switches to Playwright.
+
+**Mail through the mail program** (`api-forms/src/mail/outlook.ts`). Classic Outlook on Windows
+through COM from PowerShell; Microsoft Outlook or Apple Mail on macOS through AppleScript. The
+scripts are constants: on Windows the message is a JSON file named in an environment variable; on
+macOS it is a folder of files whose path is the script's only argument — the first draft passed
+fields as `osascript` arguments, and an address beginning `-e` would have been parsed as another
+script, so it was rewritten before it ever ran. `outlook.test.ts` sends one message with hostile
+text in every field and asserts none of it reaches a command line; a newline in an attachment's
+name cannot split the path list. Exempt from the sending-domain check, like the outbox: the sender
+is the user's own account. Any change to a mode that really sends needs the confirmation, including
+SMTP → Outlook. A mode this machine cannot drive falls back to test mode instead of stopping the
+app. **Not run against a real Outlook or Apple Mail** — that needs the machines.
+
+**macOS.** `electron-builder.yml` gains `.dmg` + `.zip` for arm64 and x64, ad-hoc signed (an Apple
+Silicon Mac will not run an unsigned binary), hardened runtime off until a Developer ID exists,
+and the camera and Apple-events usage lines macOS shows — without them it refuses silently. The
+menu gains macOS's app menu and, everywhere, an Edit menu: without one ⌘C and ⌘V do nothing in any
+text field. `desktop.yml` builds on macos-latest, verifies the signature, launches the arm64 app
+and waits for `/health`, and releases the `.dmg`s beside the Windows files. Cross-built here (zip,
+x64, unsigned) the bundle carries `Info.plist` with both usage lines, `app.asar.unpacked` PGlite,
+and `web`, `drizzle`, `panel` beside it; `publish: null` was needed, or electron-builder fails
+writing update metadata for a feed that does not exist.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

@@ -8,6 +8,7 @@ import { createLocalUploadStore } from '../uploads/private-store.js';
 import { createPdfRenderer, type BrowserChoice, type PdfRenderer } from '../documents/render.js';
 import type { MailProvider } from '../mail/provider.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from '../mail/smtp.js';
+import { createMailProgramProvider } from '../mail/outlook.js';
 import { readSettings, type DesktopSettings } from './settings.js';
 import {
   bootstrapWorkspace,
@@ -41,8 +42,14 @@ export interface StartDesktopOptions {
   port?: number;
   /** Turns an encrypted SMTP password back into text. Supplied by the Electron shell. */
   unprotect?: (protectedValue: string) => string;
-  /** Injected by tests; otherwise the system Edge/Chrome through Playwright. */
+  /** Injected by tests, and used whatever the settings say. */
   renderer?: PdfRenderer;
+  /**
+   * The renderer to use unless Settings names a browser. The Electron shell passes one that
+   * prints with its own Chromium; without it (headless, any OS) the fallback is Edge → Chrome →
+   * Playwright's own, through Playwright.
+   */
+  defaultRenderer?: PdfRenderer;
 }
 
 export interface DesktopServer {
@@ -63,6 +70,7 @@ export function mailProviderFor(
   settings: DesktopSettings,
   paths: WorkspacePaths,
   unprotect?: (value: string) => string,
+  platform: NodeJS.Platform = process.platform,
 ): MailProvider {
   const { mail } = settings;
   if (mail.mode === 'smtp' && mail.smtp) {
@@ -77,6 +85,17 @@ export function mailProviderFor(
         : {}),
       from: mail.from,
     });
+  }
+  if (mail.mode === 'outlook' || mail.mode === 'apple-mail') {
+    try {
+      return createMailProgramProvider({ program: mail.mode, platform, scratchDir: paths.tmp });
+    } catch {
+      /*
+       * A mail program this machine cannot drive — Apple Mail in a backup restored onto Windows,
+       * say. Refusing to start would lock the user out of their own data over a mail setting;
+       * test mode sends nothing, which is the one safe way to be wrong.
+       */
+    }
   }
   // Test mode is the default and the fallback: `smtp` chosen but never filled in sends nothing.
   return createOutboxMailProvider({ directory: paths.outbox, from: mail.from });
@@ -158,7 +177,10 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       }),
       assets: createLocalAssetStore({ directory: paths.assets }),
       uploadStore: createLocalUploadStore(paths.uploads),
-      renderer: options.renderer ?? fallbackRenderer(browserChoices(settings)),
+      renderer:
+        options.renderer ??
+        (settings.pdfBrowserPath ? undefined : options.defaultRenderer) ??
+        fallbackRenderer(browserChoices(settings)),
       jwtSecret: secrets.jwtSecret,
       documentSigningSecret: secrets.documentSigningSecret,
       appUrl: url,

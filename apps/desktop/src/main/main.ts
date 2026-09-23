@@ -31,6 +31,7 @@ import {
 } from '@tp/api-forms/desktop';
 import { CHANNELS, type PanelView, type Result, type SettingsForm } from '../bridge.js';
 import { fill, messagesFor } from '../messages.js';
+import { createElectronPdfRenderer } from './pdf.js';
 import { applySettingsForm, toPanelSettings } from './settings-form.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -69,6 +70,12 @@ async function startServer(): Promise<DesktopServer> {
     webDir: join(resources, 'web'),
     migrationsFolder: join(resources, 'drizzle'),
     unprotect,
+    // PDFs from Electron's own Chromium: no Edge or Chrome needed, which on a Mac there usually
+    // is not. A browser path in Settings still wins.
+    defaultRenderer: createElectronPdfRenderer({
+      BrowserWindow,
+      scratchDir: join(dataDir, 'tmp'),
+    }),
   });
 }
 
@@ -174,6 +181,8 @@ async function backUp(): Promise<void> {
 function buildMenu(): void {
   const paths = workspacePaths(dataDir);
   const template: MenuItemConstructorOptions[] = [
+    // macOS puts the application's own menu first (About, Hide, Quit); Electron localises it.
+    ...(process.platform === 'darwin' ? [{ role: 'appMenu' } as MenuItemConstructorOptions] : []),
     {
       label: t.menuFile,
       submenu: [
@@ -186,10 +195,16 @@ function buildMenu(): void {
         { label: t.menuOpenData, click: () => void shell.openPath(paths.root) },
         { label: t.menuOpenOutbox, click: () => void shell.openPath(paths.outbox) },
         { label: t.menuBackup, click: () => void backUp() },
-        { type: 'separator' },
-        { label: t.menuQuit, role: 'quit' },
+        ...(process.platform === 'darwin'
+          ? []
+          : [{ type: 'separator' } as const, { label: t.menuQuit, role: 'quit' } as const]),
       ],
     },
+    /*
+     * Cut, copy, paste and undo. On a Mac these shortcuts live in the Edit menu, and without one
+     * ⌘C and ⌘V do nothing in any text field — the whole form builder included.
+     */
+    { role: 'editMenu' },
     {
       label: t.menuView,
       submenu: [
@@ -230,7 +245,13 @@ function registerIpc(): void {
     const view =
       new URL(event.sender.getURL()).searchParams.get('view') === 'setup' ? 'setup' : 'settings';
     const settings = await readSettings(workspacePaths(dataDir).settings);
-    return { view, lang, dataDir, settings: toPanelSettings(settings) };
+    return {
+      view,
+      platform: process.platform,
+      lang,
+      dataDir,
+      settings: toPanelSettings(settings),
+    };
   });
 
   ipcMain.handle(CHANNELS.bootstrap, async (_event, owner: unknown): Promise<Result> => {

@@ -75,7 +75,7 @@ describe('the desktop server', { timeout: 60_000 }, () => {
 
       // Everything the user owns is under one folder.
       expect((await readdir(dataDir)).sort()).toEqual(
-        ['database', 'documents', 'outbox', 'secrets.json'].sort(),
+        ['database', 'documents', 'outbox', 'secrets.json', 'tmp'].sort(),
       );
     } finally {
       await server.close();
@@ -123,6 +123,19 @@ describe('desktop settings', () => {
 
     settings.mail.smtp = { host: 'smtp.example.com', port: 587, secure: false };
     expect(mailProviderFor(settings, paths).name).toBe('smtp');
+  });
+
+  it('hands mail to Outlook when that is chosen, on the platforms that have it', () => {
+    const paths = workspacePaths(scratch);
+    const settings = defaultSettings();
+    settings.mail.mode = 'outlook';
+    expect(mailProviderFor(settings, paths, undefined, 'win32').name).toBe('outlook');
+    expect(mailProviderFor(settings, paths, undefined, 'darwin').name).toBe('outlook');
+
+    settings.mail.mode = 'apple-mail';
+    expect(mailProviderFor(settings, paths, undefined, 'darwin').name).toBe('apple-mail');
+    // A Mac setting restored onto Windows: test mode, not a program that will not start.
+    expect(mailProviderFor(settings, paths, undefined, 'win32').name).toBe('outbox');
   });
 
   it('asks for Edge first, and an explicit browser path beats every channel', () => {

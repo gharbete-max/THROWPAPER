@@ -12,7 +12,7 @@ export function Panel({ t, initial, bridge }: Props) {
   return initial.view === 'setup' ? (
     <Setup t={t} bridge={bridge} />
   ) : (
-    <Settings t={t} bridge={bridge} initial={initial.settings} />
+    <Settings t={t} bridge={bridge} initial={initial.settings} platform={initial.platform} />
   );
 }
 
@@ -113,10 +113,12 @@ function Settings({
   t,
   bridge,
   initial,
+  platform,
 }: {
   t: Messages;
   bridge: LoppaBridge;
   initial: PanelSettings;
+  platform: PanelState['platform'];
 }) {
   const [settings, setSettings] = useState<PanelSettings>(initial);
   const [password, setPassword] = useState('');
@@ -125,7 +127,10 @@ function Settings({
   const [busy, setBusy] = useState(false);
 
   const smtp = settings.mail.smtp ?? { host: '', port: 587, secure: false, hasPassword: false };
-  const startsSending = initial.mail.mode !== 'smtp' && settings.mail.mode === 'smtp';
+  // The same rule `settings-form.ts` enforces in the main process; this only decides what to show.
+  const startsSending = settings.mail.mode !== 'outbox' && settings.mail.mode !== initial.mail.mode;
+  const offersOutlook = platform === 'win32' || platform === 'darwin';
+  const offersAppleMail = platform === 'darwin';
 
   function patch(next: Partial<PanelSettings>) {
     setSettings((current) => ({ ...current, ...next }));
@@ -176,6 +181,31 @@ function Settings({
           >
             {t.mailSmtp}
           </Choice>
+          {offersOutlook ? (
+            <Choice
+              name="mail"
+              value="outlook"
+              checked={settings.mail.mode === 'outlook'}
+              onChange={() => patch({ mail: { ...settings.mail, mode: 'outlook' } })}
+            >
+              {platform === 'win32' ? t.mailOutlookWindows : t.mailOutlookMac}
+            </Choice>
+          ) : null}
+          {offersAppleMail ? (
+            <Choice
+              name="mail"
+              value="apple-mail"
+              checked={settings.mail.mode === 'apple-mail'}
+              onChange={() => patch({ mail: { ...settings.mail, mode: 'apple-mail' } })}
+            >
+              {t.mailAppleMail}
+            </Choice>
+          ) : null}
+          {settings.mail.mode === 'outlook' || settings.mail.mode === 'apple-mail' ? (
+            <p className="note">
+              {platform === 'win32' ? t.mailProgramNoteWindows : t.mailProgramNoteMac}
+            </p>
+          ) : null}
           <label>
             {t.mailFrom}
             <input
@@ -229,17 +259,17 @@ function Settings({
                 />
               </label>
               {smtp.hasPassword ? <p className="note">{t.smtpPasswordKept}</p> : null}
-              {startsSending ? (
-                <label className="choice">
-                  <input
-                    type="checkbox"
-                    checked={confirm}
-                    onChange={(event) => setConfirm(event.target.checked)}
-                  />
-                  <span>{t.mailConfirm}</span>
-                </label>
-              ) : null}
             </>
+          ) : null}
+          {startsSending ? (
+            <label className="choice">
+              <input
+                type="checkbox"
+                checked={confirm}
+                onChange={(event) => setConfirm(event.target.checked)}
+              />
+              <span>{t.mailConfirm}</span>
+            </label>
           ) : null}
         </fieldset>
 

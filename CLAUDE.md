@@ -11,8 +11,8 @@ apps/api-forms  Product A backend
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. A scaffold: health check and a two-language screen
 apps/api-sign   Product C backend. A scaffold: health check, contract registry, the signing seam
-apps/desktop    Loppa for Windows: Forms in an Electron window on an embedded Postgres (PGlite),
-                offline first. Part of the Forms product, not a fourth one (docs/adr/0016)
+apps/desktop    Loppa desktop (Windows, macOS): Forms in an Electron window on an embedded
+                Postgres (PGlite), offline first. Part of Forms, not a fourth product (docs/adr/0016)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
                 / native tokens. Owns the contrast guard
 packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
@@ -57,6 +57,7 @@ entry at all.
 pnpm dev:forms      pnpm dev:mailer      pnpm dev:sign
 pnpm --filter @tp/desktop start        # the desktop app, unpackaged
 pnpm --filter @tp/desktop package:win  # installer + portable .exe (a zip when not on Windows)
+pnpm --filter @tp/desktop package:mac  # .dmg for Apple Silicon and Intel (a zip when not on a Mac)
 pnpm verify         # format + typecheck + lint + test + build across the workspace — must pass before a phase is done
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas

@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Loppa for Windows \u2014 the Forms product on one machine, offline first (docs/adr/0016-desktop-edition.md)",
+  "description": "Loppa for Windows and macOS \u2014 the Forms product on one machine, offline first (docs/adr/0016-desktop-edition.md)",
   "scripts": {
     "build": "tsx scripts/build.ts",
     "start": "tsx scripts/build.ts && electron .stage/main.js",
     "package:win": "tsx scripts/build.ts --package win",
     "package:linux": "tsx scripts/build.ts --package linux",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "package:mac": "tsx scripts/build.ts --package mac"
   },
   "dependencies": {
     "@tp/api-forms": "workspace:*",

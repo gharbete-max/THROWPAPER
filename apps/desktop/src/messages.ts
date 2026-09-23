@@ -38,6 +38,13 @@ const EN = {
   mailHeading: 'Email',
   mailOutbox: 'Test mode — write every email to the outbox folder, send nothing',
   mailSmtp: 'Send through my mail server (SMTP)',
+  mailOutlookWindows: 'Send through Outlook on this computer (classic Outlook)',
+  mailOutlookMac: 'Send through Microsoft Outlook on this Mac',
+  mailAppleMail: 'Send through Apple Mail on this Mac',
+  mailProgramNoteWindows:
+    'Messages leave from the account Outlook is signed in to, and appear in its Sent folder. The new Outlook for Windows cannot be used this way; switch back to classic Outlook, or use a mail server.',
+  mailProgramNoteMac:
+    'Messages leave from the account the program is signed in to. The first time, macOS asks whether Loppa may control it — answer Allow.',
   mailFrom: 'From address',
   smtpHost: 'Server',
   smtpPort: 'Port',
@@ -45,7 +52,8 @@ const EN = {
   smtpUser: 'User name',
   smtpPassword: 'Password',
   smtpPasswordKept: 'A password is saved. Leave empty to keep it.',
-  mailConfirm: 'I understand that confirmations will be sent to real addresses from this computer.',
+  mailConfirm:
+    'I understand that confirmations will be sent to real people from this computer, from the account chosen above.',
 
   aiHeading: 'AI assistance',
   aiLead: 'Off unless you turn it on. Nothing is sent anywhere while it is off.',
@@ -68,7 +76,7 @@ const EN = {
     'A placeholder for a hosted Loppa account that this computer would sync with. Nothing connects today.',
 
   pdfHeading: 'Documents',
-  pdfBrowser: 'Browser used to make PDFs (leave empty to use Microsoft Edge)',
+  pdfBrowser: 'A browser to make PDFs with (leave empty — Loppa makes them itself)',
 
   backupDone: 'Backup written to {path}',
   backupFailed: 'The backup could not be written: {message}',
@@ -108,6 +116,13 @@ const SV: typeof EN = {
   mailHeading: 'E-post',
   mailOutbox: 'Testläge — skriv all e-post till utkorgsmappen, skicka ingenting',
   mailSmtp: 'Skicka via min e-postserver (SMTP)',
+  mailOutlookWindows: 'Skicka via Outlook på den här datorn (klassiska Outlook)',
+  mailOutlookMac: 'Skicka via Microsoft Outlook på den här Macen',
+  mailAppleMail: 'Skicka via Apple Mail på den här Macen',
+  mailProgramNoteWindows:
+    'Meddelandena skickas från kontot som Outlook är inloggat på och hamnar i dess mapp Skickat. Nya Outlook för Windows går inte att använda så; byt tillbaka till klassiska Outlook, eller använd en e-postserver.',
+  mailProgramNoteMac:
+    'Meddelandena skickas från kontot som programmet är inloggat på. Första gången frågar macOS om Loppa får styra det — svara Tillåt.',
   mailFrom: 'Avsändaradress',
   smtpHost: 'Server',
   smtpPort: 'Port',
@@ -115,7 +130,8 @@ const SV: typeof EN = {
   smtpUser: 'Användarnamn',
   smtpPassword: 'Lösenord',
   smtpPasswordKept: 'Ett lösenord är sparat. Lämna tomt för att behålla det.',
-  mailConfirm: 'Jag förstår att bekräftelser skickas till riktiga adresser från den här datorn.',
+  mailConfirm:
+    'Jag förstår att bekräftelser skickas till riktiga mottagare från den här datorn, från kontot som valts ovan.',
 
   aiHeading: 'AI-stöd',
   aiLead: 'Avstängt tills du slår på det. Ingenting skickas någonstans medan det är avstängt.',
@@ -138,7 +154,7 @@ const SV: typeof EN = {
     'En platshållare för ett Loppa-konto på nätet som den här datorn skulle synkronisera med. Ingenting ansluter i dag.',
 
   pdfHeading: 'Dokument',
-  pdfBrowser: 'Webbläsare som gör PDF:er (lämna tomt för Microsoft Edge)',
+  pdfBrowser: 'En webbläsare som gör PDF:er (lämna tomt — Loppa gör dem själv)',
 
   backupDone: 'Säkerhetskopian skrevs till {path}',
   backupFailed: 'Säkerhetskopian kunde inte skrivas: {message}',

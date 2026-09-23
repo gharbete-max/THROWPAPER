@@ -15,4 +15,5 @@ export {
   writeSettings,
   type DesktopSettingsInput,
 } from './settings.js';
+export type { PdfRenderer } from '../documents/render.js';
 export { workspacePaths, WorkspaceOwner, type WorkspacePaths } from './workspace.js';

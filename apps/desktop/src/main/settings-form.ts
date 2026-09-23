@@ -19,9 +19,9 @@ export type Applied = { ok: true; settings: DesktopSettings } | { ok: false; err
  *
  * Pure, so the two rules that matter are tested without Electron:
  *
- * - **Rule 7.** Leaving test mode for real sending is refused unless the confirmation was ticked.
- *   Staying on SMTP, or going back to the outbox, needs nothing — only the step that starts
- *   sending to real people does.
+ * - **Rule 7.** Choosing a mode that really sends — SMTP, Outlook, Apple Mail — is refused unless
+ *   the confirmation was ticked, whether it replaces test mode or another sender. Staying where
+ *   you are, or going back to the outbox, needs nothing.
  * - **No plain password on disk.** A new password is passed through `protect` (the OS store); an
  *   empty field keeps the one already stored; a password is never taken back from the panel,
  *   which never had it.
@@ -32,7 +32,8 @@ export function applySettingsForm(
   protect: (plain: string) => string,
 ): Applied {
   const next = form.settings;
-  const startsSending = current.mail.mode !== 'smtp' && next.mail.mode === 'smtp';
+  // Any change to a mode that really sends — from test mode, or from one sender to another.
+  const startsSending = next.mail.mode !== 'outbox' && next.mail.mode !== current.mail.mode;
   if (startsSending && !form.confirmRealSending) {
     return { ok: false, error: 'confirm-real-sending' };
   }

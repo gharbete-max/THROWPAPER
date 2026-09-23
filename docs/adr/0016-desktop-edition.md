@@ -1,12 +1,29 @@
-# ADR 0016 — Loppa for Windows: the whole Forms product on one PC, offline first
+# ADR 0016 — Loppa desktop (Windows and macOS): the whole Forms product on one computer, offline first
 
-**Status:** proposed — D1 built on `claude/local-exe-offline-mode-u0ap32`; the open questions at the
-end are the owner's
+**Status:** accepted 2026-09-23 — direction decided by the owner (see "Decided"); D1 built on
+`claude/local-exe-offline-mode-u0ap32`; the remaining questions at the end are the owner's
 **Date:** 2026-09-23
+
+## Decided (2026-09-23)
+
+The owner's answers to this ADR's first open questions:
+
+- **Offline product first, then hostable.** The desktop is the product being built now; the hosted
+  service grows out of it, from the same code — which is already true of the architecture: the
+  desktop *is* `buildServer` with local parts, and the container is `buildServer` with hosted ones.
+  D4 is therefore "make a desktop workspace hostable", not "build a second product".
+- **Everything offline except eID signing.** Forms, events, documents, scanning, check-in and mail
+  work with no hosting. eID signing needs a broker and an identity provider online (ADR 0010) and
+  stays the one thing that does.
+- **Mail through Outlook where it can.** Services that genuinely need hosting (a Mailer that sends
+  campaigns at volume, public form links) come with the hosted step; anything that can go through
+  the mail program already on the computer should. Built: "send through Outlook" (Windows, macOS)
+  and Apple Mail (macOS).
+- **macOS too.** Built: `.dmg` for Apple Silicon and Intel, from the same code.
 
 ## Context
 
-The owner asked for a downloadable `.exe` that runs Loppa **fully locally** — build forms, fill
+The owner asked for a downloadable `.exe` — then a Mac build — that runs Loppa **fully locally** — build forms, fill
 them in, scan paper, produce documents, send email — with AI and signing each offering **"connect
 online"** or **"work in cloud (placeholder)"**, and for the local version to be planned out far
 enough to know whether it is viable.
@@ -37,14 +54,14 @@ What it did not have:
 ### Shape: Electron around the existing app, one process
 
 ```
-Loppa.exe (Electron)
+Loppa.exe / Loppa.app (Electron)
 ├── main process (Node 24 inside Electron)
 │   ├── api-forms buildServer(...) on 127.0.0.1:47017   ← the same server the container runs
-│   │   ├── repositories  → Drizzle → PGlite (Postgres 18 in WebAssembly), %APPDATA%\Loppa\workspace\database
-│   │   ├── documents, uploads, assets → workspace\documents\
-│   │   ├── mail → outbox (.eml files, test mode) | the user's SMTP server
-│   │   └── PDFs → Playwright driving the Edge every Windows has
-│   └── shell: first run, settings, backup, menu, OS password store (DPAPI)
+│   │   ├── repositories  → Drizzle → PGlite (Postgres 18 in WebAssembly), <userData>/workspace/database
+│   │   ├── documents, uploads, assets → workspace/documents/
+│   │   ├── mail → outbox (.eml, test mode) | SMTP | Outlook | Apple Mail (macOS)
+│   │   └── PDFs → a hidden window of Electron's own Chromium (printToPDF)
+│   └── shell: first run, settings, backup, menu, OS password store (DPAPI / Keychain)
 ├── main window  → http://127.0.0.1:47017  (apps/forms, unchanged, no preload, no bridge)
 └── panel window → first run / settings (apps/desktop/src/panel, the only window with a bridge)
 ```
@@ -59,10 +76,13 @@ Loppa.exe (Electron)
   prove persistence. SQLite would have meant a second schema, a second set of queries and a second
   place for the products to disagree. The only code change the repositories needed was widening
   `Db` from "postgres.js" to "Drizzle's Postgres dialect" (`db/types.ts`).
-- **Edge for PDFs.** The Docker image carries Playwright's Chromium; the desktop does not ship a
-  second browser. `createPdfRenderer` now takes a browser choice, and the desktop tries
-  `msedge` → `chrome` → Playwright's own → fails with a message naming the fix. An explicit
-  browser path in Settings beats all three.
+- **PDFs from the app's own Chromium.** The Docker image carries Playwright's Chromium; the desktop
+  does not ship a second browser, and a Mac usually has neither Edge nor Chrome. So the shell
+  renders in a hidden window with `printToPDF` — same A4, margins, header and footer templates as
+  `documents/render.ts` (`apps/desktop/src/main/pdf.ts`). A browser path in Settings switches to
+  Playwright driving that browser; headless (`pnpm --filter @tp/api-forms desktop`), the fallback
+  is Edge → Chrome → Playwright's own. (D1 first shipped with Edge as the default; the Mac made
+  that untenable, and it was one less thing a Windows PC could lack.)
 - **Bound to 127.0.0.1, fixed port 47017.** Loopback only: nothing on the LAN can reach it. Fixed,
   because the browser keys storage and the signed-in session on the origin; a random port would
   sign the user out at every launch.
@@ -72,11 +92,12 @@ Loppa.exe (Electron)
 | Area | How | Evidence |
 | --- | --- | --- |
 | Forms: build, publish, fill in, validate, save-and-resume, submissions, CSV/XLSX export | The unchanged app and API | Playwright drove first run → signed in → public form → registration, against the packaged Linux build of the same bundle |
-| Events, admission PDFs with QR, invoices, check-in | Unchanged; PDFs through Edge/Chrome | The packaged app rendered an admission card; its text reads "Björn Ödlund … Näringslivets Hus, Göteborg" |
+| Events, admission PDFs with QR, invoices, check-in | Unchanged; PDFs through the app's own Chromium | Electron rendered an admission card with no browser installed or configured ("Skia/PDF m152"); its text reads "Björn Ödlund … Näringslivets Hus, Göteborg" |
 | Scanning paper | `pdfjs` + warp + `tesseract.js` in the window, models self-hosted | Already offline by design (ADR 0004); the web bundle ships inside the app |
 | Camera (QR at the door, photographing a page) | Electron grants `media` to our origin only | `limitPermissions()` in `main.ts` |
 | Email, test mode | Every message becomes an `.eml` in `workspace\outbox`, attachment included — double-click opens it in Outlook | `mail/smtp.test.ts`; the packaged app wrote the confirmation with the PDF attached |
-| Email, real | The user's own SMTP server (STARTTLS required, or implicit TLS on 465), password kept by DPAPI | `mail/smtp.test.ts`, `settings-form.test.ts` |
+| Email, real — SMTP | The user's own SMTP server (STARTTLS required, or implicit TLS on 465), password kept by the OS store | `mail/smtp.test.ts`, `settings-form.test.ts` |
+| Email, real — Outlook / Apple Mail | Handed to the mail program already signed in: classic Outlook through COM from PowerShell (Windows), Outlook or Apple Mail through AppleScript (macOS). Leaves from the user's own account, lands in their Sent folder | `mail/outlook.test.ts` holds the injection defence (constant scripts; the message only as files). **Not run against a real Outlook yet** |
 | Drawn signatures on forms | The existing signature field (vector path + PNG) | Unchanged |
 | Sign-in | The shell mints an ordinary magic link — hashed, single use, 15 minutes — and opens it itself | `desktop/start.test.ts` exchanges it through `/v1/auth/token`, and a replay fails |
 | Backup | Stop the server, copy the workspace folder, restart | File menu → Back up… |
@@ -101,7 +122,7 @@ constructed from the desktop's settings instead of the environment.
 
 ### Viability — the honest version
 
-**Viable for:** one organisation on one PC — an association's secretary, a small workshop, an event
+**Viable for:** one organisation on one computer — an association's secretary, a small workshop, an event
 organiser on a laptop at the door — who wants their data on their own machine, works offline, and
 sends from their own mailbox.
 
@@ -114,19 +135,27 @@ sends from their own mailbox.
    *on this machine*. (A "share on my network" switch that binds the LAN is possible, but a LAN
    exposure without HTTPS and with magic-link auth needs its own threat model — not in D1.)
 2. **Email from a PC lands in spam** unless the SMTP account's domain has SPF, DKIM and DMARC. The
-   existing sending-domain check still applies to SMTP (it is exempt only for the outbox), so the
-   product refuses rather than burns the user's domain. With Gmail or Microsoft 365 this means an
-   app password or an SMTP-AUTH-enabled account — support documentation, not code.
+   existing sending-domain check still applies to SMTP, so the product refuses rather than burns
+   the user's domain. **Outlook and Apple Mail sidestep most of this:** the message leaves from the
+   user's own account on their provider's servers, as if written by hand, so the check is exempt
+   there (as for the outbox). Their limits instead: the **new Outlook for Windows has no automation**
+   — only classic Outlook works, and the error says so; classic Outlook may show a "a program is
+   trying to send email" prompt on a PC without up-to-date antivirus; macOS asks once whether Loppa
+   may control Outlook or Mail; and a program sending 200 confirmations one by one is slow (about a
+   second each) and fills the user's Sent folder. Microsoft Graph (Microsoft 365 without Outlook
+   installed) is the next step and needs an app registration — D2.
 3. **One seat.** One PGlite directory, one process (Electron's single-instance lock enforces it).
    Two people on two PCs are two separate Loppas. Collaboration is the cloud's.
-4. **Unsigned installers warn.** SmartScreen says "Windows protected your PC" until the owner buys
-   an OV/EV code-signing certificate. The release workflow is ready to sign; it has nothing to
-   sign with.
+4. **Unsigned installers warn.** SmartScreen says "Windows protected your PC" until the owner has a
+   code-signing certificate. On a Mac the app is **ad-hoc signed** (an Apple Silicon Mac will not
+   run an unsigned binary at all) but not notarised, so Gatekeeper asks the first time: right-click
+   → Open. Notarising needs an Apple Developer ID; the config says what changes when it exists.
 5. **Updates.** D1 has none: a new version is a new installer, which keeps the data (uninstall
-   leaves `%APPDATA%\Loppa`) and migrates it on first start (migrations run at every boot — safe
-   here because one process owns the directory, unlike the server, see `DEPLOY.md`).
-6. **Size.** ~206 MB zipped: ~150 MB Electron, ~45 MB OCR models, the rest the app. Normal for an
-   Electron app; the OCR models are the obvious diet if it matters.
+   leaves `%APPDATA%\Loppa`, or `~/Library/Application Support/Loppa`) and migrates it on first
+   start (migrations run at every boot — safe here because one process owns the directory, unlike
+   the server, see `DEPLOY.md`).
+6. **Size.** ~206 MB zipped on Windows: ~150 MB Electron, ~45 MB OCR models, the rest the app.
+   Normal for an Electron app; the OCR models are the obvious diet if it matters.
 7. **PGlite is younger than Postgres.** It is Postgres' own code, but its WebAssembly packaging is
    0.x. Mitigations: backups are a folder copy; the desktop database is the same schema as the
    server's, so a `pg_dump`-compatible export to a hosted Loppa is a straight path (D4).
@@ -140,27 +169,35 @@ sends from their own mailbox.
 - Navigation away from our origin opens the user's browser instead; new windows are allowed only
   for our own pages. Device permissions: camera for our origin, nothing else.
 - Secrets (`JWT_SECRET`, `DOCUMENT_SIGNING_SECRET`) are generated per install, stored `0600`
-  beside the data, never constants. The SMTP password is DPAPI-encrypted; the panel never receives
-  it back.
+  beside the data, never constants. The SMTP password is encrypted by the OS store (DPAPI on
+  Windows, Keychain on macOS); the panel never receives it back.
+- Mail programs are driven by **constant scripts**: nothing a message carries is ever written into
+  PowerShell or AppleScript text. On Windows the message is a JSON file named in an environment
+  variable; on macOS it is a folder of files whose path — ours — is the only argument, because
+  `osascript` parses options among its arguments.
 - No first-run endpoint (ADR 0002 stands): the first organisation is created in-process by the
   person who launched the program, the same position as whoever runs `pnpm db:seed`.
-- Rule 7: mail starts in test mode; leaving it for real sending needs a confirmation tick, enforced
-  in the main process, not only the form (`settings-form.ts`).
+- Rule 7: mail starts in test mode; choosing any mode that really sends — from test mode, or from
+  one sender to another — needs a confirmation tick, enforced in the main process, not only the
+  form (`settings-form.ts`). A mail program this machine cannot drive (a Mac setting in a backup
+  restored on Windows) falls back to test mode rather than stopping the app.
 
 ## Phases
 
-**D1 — Local core. Built on this branch.**
+**D1 — Local core, Windows and macOS. Built on this branch.**
 PGlite driver and tests; SMTP and outbox providers (rule 2 made true, for the server too:
 `MAIL_PROVIDER=smtp|outbox`); `api-forms` desktop entry (`startDesktopServer`, and a headless
 `pnpm --filter @tp/api-forms desktop` for any OS); `apps/desktop` Electron shell with first run,
-demo data, settings (mail, AI, signing, PDF browser), backup, menu; packaging via a staging folder
-and electron-builder; `desktop.yml` builds the NSIS installer and portable `.exe` on
-windows-latest, launches `Loppa.exe` and waits for `/health`, and publishes both on a `desktop-v*`
-tag.
+demo data, settings (mail, AI, signing, PDF browser), backup, menu; PDFs from Electron's own
+Chromium; mail through Outlook or Apple Mail; packaging via a staging folder and electron-builder;
+`desktop.yml` builds the NSIS installer and portable `.exe` on windows-latest and the arm64 and x64
+`.dmg` on macos-latest, launches each app and waits for `/health`, and publishes all of them on a
+`desktop-v*` tag.
 
 **D2 — Everyday polish.** Restore from backup; auto-update (electron-updater against GitHub
-releases — needs the signing certificate first, or updates are unsigned too); a "send a test
-email" button and SMTP presets for Microsoft 365 / Gmail / one.com; `.eml` → "open outbox" shown in
+releases — needs the signing certificates first, or updates are unsigned too); a "send a test
+email" button and SMTP presets for Microsoft 365 / Gmail / one.com; Microsoft Graph as a mail mode
+for the new Outlook and Microsoft 365 without Outlook installed (needs an app registration); `.eml` → "open outbox" shown in
 the app after each send in test mode; tray icon; the shell's strings moved into `@tp/i18n` with the
 product's other ten locales.
 
@@ -168,10 +205,12 @@ product's other ten locales.
 speak WIA/TWAIN; a small native bridge (WIA via PowerShell/COM, no native Node module) exposes
 "Scan from scanner…" to the paper importer. Measured against ADR 0004's miss-rate question first.
 
-**D4 — Connect online / cloud.** Contract-first: the desktop as a Forms deployment talking to a
+**D4 — Hostable (the owner's next step).** Contract-first: the desktop as a Forms deployment talking to a
 hosted Sign over §5, and to a hosted Loppa via a sync contract that does not exist yet (publish a
 form; pull its submissions; idempotent on submission id, the same property that made offline
-check-in cheap). Export/import of a whole workspace as the first, dumbest sync.
+check-in cheap). Export/import of a whole workspace as the first, dumbest sync — the same schema
+on both sides makes it a copy, not a conversion. Public form links and campaign-volume mail arrive
+here, because they are the parts that genuinely need a server.
 
 **D5 — AI online.** ADR 0013's `AiProvider`, built from desktop settings; the placeholder in
 Settings becomes a real switch only after counsel's privacy page and the org-level opt-in exist.
@@ -196,8 +235,7 @@ only thing that knows both are there.
 
 ## Open — the owner's
 
-1. **Is local-only a product, or the offline half of the hosted one?** It decides whether D4 is
-   the next phase or a someday. Everything in D1 is needed either way.
+1. ~~Local product or offline half of the hosted one?~~ Decided: offline first, then hostable.
 2. **A code-signing certificate**, or Microsoft's Trusted/Artifact Signing service, and whose name
    is on it — the same legal entity question as `LAUNCH-CHECKLIST.md` §1.1. Current SmartScreen
    reputation rules and prices change; verify them when buying rather than trusting this line.
@@ -206,5 +244,5 @@ only thing that knows both are there.
 4. **Pricing and licensing of a local copy.** A one-off purchase, a subscription with the cloud as
    the value, or free as the on-ramp to hosted. This decides whether the app needs a licence key,
    which D1 deliberately does not have.
-5. **macOS.** Electron builds it from the same code; it needs a Mac or a hosted macOS runner and an
-   Apple Developer ID to notarise (the same account question as ADR 0014's iOS builds).
+5. ~~macOS?~~ Decided and built. What is left is an **Apple Developer ID** to notarise (the same
+   account as ADR 0014's iOS builds), so Gatekeeper stops asking.
