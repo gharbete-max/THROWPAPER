@@ -46,6 +46,9 @@ What is left, and whose it is:
    ADR 0004's open questions are answered), Mailer from B2 contacts.
 4. The wizard's verticals (content, per ADR 0006). Trades and law stay blocked until a human
    authors their wording.
+5. The expansion (signing, eID, Mailer documents, app, AI, enterprise) — proposed, not approved.
+   docs/EXPANSION.md, ADRs 0009–0015, ROADMAP § Expansion. Nothing starts until the owner
+   answers EXPANSION §5.
 ```
 
 ## State
