@@ -41,16 +41,17 @@ What is left, and whose it is:
    retention), §3, the door's not-found remedy sentence, whether a name lookup lives inside the
    door, and whether site and app headings should agree on the ink or on --tp-colour-heading.
 2. One feature: the door's five most recent arrivals vanish on reload.
-3. The four-module plan: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5 has the nine
-   importers it must be written against), ADR 0007 (handwriting only, a delta on ADR 0004, after
-   ADR 0004's open questions are answered), Mailer from B2 contacts.
+3. The plan is docs/ROADMAP.md, and the owner's latest decision in it wins: **signing first**,
+   approved 2026-09-23. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
+   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
+   (PROGRESS § P1a, § P1b); next is P1c (Sign's database, standalone mode, sealing). Mailer B2
+   now lives inside P3. Decisions in docs/EXPANSION.md § 5.
+   Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5
+   has the nine importers, if it is ever picked up) and handwriting OCR (ADR 0007, which the
+   roadmap names as out of every approved phase). An earlier version of this list put both of
+   them first, from a brief the 2026-09-23 decision overtook.
 4. The wizard's verticals (content, per ADR 0006). Trades and law stay blocked until a human
    authors their wording.
-5. The expansion (signing, eID, Mailer documents, app, AI, enterprise) — approved 2026-09-23 and
-   starting now. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
-   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
-   (PROGRESS § P1a, § P1b); next is P1c (Sign's database, standalone mode, sealing).
-   Decisions in docs/EXPANSION.md § 5.
 ```
 
 ## State
