@@ -2702,6 +2702,54 @@ anything outside the ADR 0015 allowlist, evaluating SPDX `OR`/`AND` properly (a 
 
 **Moved to P1c**, because nothing is stored yet: Sign's own database, and its standalone mode.
 
+## P1c-1 — Sign stores envelopes, and the record cannot be edited · done
+
+P1c is four slices, one PR each: **P1c-1** storage and the audit trail (this), **P1c-2** sealing,
+**P1c-3** Forms → Sign with the webhook, **P1c-4** the standalone page and invitations by SMTP.
+
+**Its own database.** `throwpaper_sign`, created by `pnpm db:migrate` when missing (root
+`db:migrate`/`db:seed` now run Sign's too). Drizzle, as api-forms. Documents are content-addressed
+by SHA-256; declarations are versioned per key with a text per locale; envelopes store their exact
+definition text; the trail is `envelope_events`.
+
+**Append-only, in the database.** A trigger refuses UPDATE, DELETE and TRUNCATE on documents,
+declarations, envelopes and events — whoever asks. And because a table owner can disable a
+trigger, each event is hash-chained to the one before it and the first to the envelope's
+definition: every read verifies the chain and replays it through `@tp/signing`, and a record edited
+behind the trigger's back answers 500 and is acted on by nothing. State is never stored; it is
+what the trail replays to. Expiry is appended as an event the first time anyone looks.
+
+**CONTRACT §5.1–5.2 implemented.** Service tokens per organisation, stored hashed, checked in
+`onRequest` (a stranger gets 401 before the body is read — the smoke run caught it answering 400
+with the schema's field list). The organisation is the token's; a body naming another is 403, and
+another organisation's envelope is 404. **SSRF:** each token lists the origins Sign may fetch
+`documentUrl` from and post `hookUrl` to — exact origins, http(s), no credentials, no redirects,
+25 MB, must be a PDF, must hash to `documentSha256`. Idempotent: a retry returns the same envelope
+*and the same links*, which is why links are HMAC-derived (`SIGN_LINK_SECRET`) rather than stored.
+
+**Signing by link.** View (records `viewed` once, on their turn), document download, typed
+signature, decline. Only *typed* for now: evidence saying "drawn" without the strokes would claim
+more than it holds, so drawn arrives with the page (P1c-4). The evidence carries the declaration
+text byte for byte in the signer's language, pinned at the version current when it was sent.
+
+**The declaration, without writing one (rule 8).** Unknown key, or a party whose language it lacks,
+is refused at creation. The seed writes one bracketed placeholder marked `test_only`; a production
+envelope against it is refused. Nothing real can be signed against text nobody wrote.
+
+**Evidence.** 20 DB-backed tests on a throwaway database per run (created, migrated, dropped —
+the tables refuse cleanup by design). They skip only when no database is configured; with
+`DATABASE_URL` set (CI's verify job) an unreachable server fails. **Each guarantee was mutated
+out and its test went red:** trigger, event chain, definition hash, origin allow-list,
+organisation scoping, row lock. The first mutation run found the chain check untested — the tamper
+test edited the definition only — and a second test now rewrites a signed event's name.
+`server.test.ts` holds the registry's "implemented" to real routes, which `contract:check` alone
+cannot see. Gate in the worktree: format, typecheck, lint (0 errors, the 2 known warnings), test
+151 files / 1886, build, contract:check `2/10 implemented`, licence:check — each exit 0.
+
+**Not in this slice:** sealing and `GET /sealed` (P1c-2), the webhook and a token-issuing command
+(P1c-3), the page, drawn signatures and SMTP invitations (P1c-4), identity encryption (P2, when eID
+brings identity data), Sign in the desktop edition (after #125 lands).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

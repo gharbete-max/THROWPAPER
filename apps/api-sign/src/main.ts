@@ -1,5 +1,11 @@
 import { buildServer } from './server.js';
-import { env } from './env.js';
+import { env, signLinkSecret } from './env.js';
+import { connect } from './db/client.js';
 
-const app = await buildServer();
+const { db } = connect(env.SIGN_DATABASE_URL);
+const app = await buildServer({
+  db,
+  linkSecret: signLinkSecret(),
+  publicUrl: env.SIGN_PUBLIC_URL,
+});
 await app.listen({ port: env.API_SIGN_PORT, host: '0.0.0.0' });

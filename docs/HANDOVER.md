@@ -44,7 +44,8 @@ What is left, and whose it is:
 3. The plan is docs/ROADMAP.md, and the owner's latest decision in it wins: **signing first**,
    approved 2026-09-23. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
    proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
-   (PROGRESS § P1a, § P1b); next is P1c (Sign's database, standalone mode, sealing). Mailer B2
+   (PROGRESS § P1a, § P1b); P1c-1 is done (Sign's database, the append-only hash-chained trail, §5.1–5.2); next is P1c-2
+   (sealing), then P1c-3 (Forms → Sign + webhook) and P1c-4 (standalone page, SMTP). Mailer B2
    now lives inside P3. Decisions in docs/EXPANSION.md § 5.
    Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5
    has the nine importers, if it is ever picked up) and handwriting OCR (ADR 0007, which the
