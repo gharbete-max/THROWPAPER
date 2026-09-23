@@ -11,6 +11,19 @@ export interface BrandKitResponse {
   warnings: ContrastFinding[];
 }
 
+/** One card on the attendance list: a registrant, or a guest they brought. */
+export interface AttendeeRow {
+  submissionId: string;
+  reference: string;
+  name: string;
+  email: string | null;
+  locale: string;
+  revoked: boolean;
+  checkedInAt: string | null;
+  entryIndex: number;
+  broughtBy: string | null;
+}
+
 /**
  * Typed client for the Loppa API.
  *
@@ -370,15 +383,9 @@ export const client = {
       noShow: number;
       revoked: number;
       byHour: Array<{ hour: string; count: number }>;
-      attendees: Array<{
-        submissionId: string;
-        reference: string;
-        name: string;
-        email: string | null;
-        locale: string;
-        revoked: boolean;
-        checkedInAt: string | null;
-      }>;
+      attendees: AttendeeRow[];
+      /** The caller's own latest arrivals, newest first: the door's undo list. */
+      recent: AttendeeRow[];
     }>(`/v1/events/${eventId}/attendance`),
 
   revokeSubmission: (submissionId: string) =>

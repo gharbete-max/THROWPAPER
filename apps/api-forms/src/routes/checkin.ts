@@ -79,7 +79,17 @@ const AttendanceResponse = z.object({
   revoked: z.number().int(),
   byHour: z.array(z.object({ hour: z.string(), count: z.number().int() })),
   attendees: z.array(AttendeeSummary),
+  /**
+   * The caller's own latest arrivals, newest first — the door's undo list.
+   *
+   * Server-side so a reload, a dropped tab or a swapped phone keeps it. Only the caller's: an
+   * arrival made at the other door is not this operator's mis-scan to take back.
+   */
+  recent: z.array(AttendeeSummary),
 });
+
+/** How many arrivals the door keeps within reach of an undo. */
+const RECENT_ARRIVALS = 5;
 
 export function registerCheckInRoutes(
   app: FastifyInstance,
@@ -219,25 +229,35 @@ export function registerCheckInRoutes(
 
       const complete = submissions.filter((submission) => submission.status === 'complete');
 
+      /**
+       * One row per person, guests immediately after whoever brought them.
+       *
+       * Grouped rather than sorted by name, because the door screen is read by somebody with a
+       * queue in front of them: "this is the member, these two are theirs" is the question being
+       * asked, and a flat alphabetical list separates a party across the page.
+       */
+      const attendees = complete.flatMap((submission) => [
+        toAttendee(submission, arrivals.get(`${submission.id}:${REGISTRANT_ENTRY}`) ?? null),
+        ...(parties.get(submission.id) ?? []).map((guest) =>
+          toAttendee(
+            submission,
+            arrivals.get(`${submission.id}:${guest.entryIndex}`) ?? null,
+            guest,
+          ),
+        ),
+      ]);
+      const byCard = new Map(
+        attendees.map((row) => [`${row.submissionId}:${row.entryIndex}`, row]),
+      );
+
       return reply.send({
         ...attendance,
-        /**
-         * One row per person, guests immediately after whoever brought them.
-         *
-         * Grouped rather than sorted by name, because the door screen is read by somebody with a
-         * queue in front of them: "this is the member, these two are theirs" is the question being
-         * asked, and a flat alphabetical list separates a party across the page.
-         */
-        attendees: complete.flatMap((submission) => [
-          toAttendee(submission, arrivals.get(`${submission.id}:${REGISTRANT_ENTRY}`) ?? null),
-          ...(parties.get(submission.id) ?? []).map((guest) =>
-            toAttendee(
-              submission,
-              arrivals.get(`${submission.id}:${guest.entryIndex}`) ?? null,
-              guest,
-            ),
-          ),
-        ]),
+        attendees,
+        recent: checkIns
+          .filter((entry) => entry.checkedInByUserId === auth.user.id)
+          .sort((a, b) => b.checkedInAt.getTime() - a.checkedInAt.getTime())
+          .flatMap((entry) => byCard.get(`${entry.submissionId}:${entry.entryIndex}`) ?? [])
+          .slice(0, RECENT_ARRIVALS),
       });
     },
   });

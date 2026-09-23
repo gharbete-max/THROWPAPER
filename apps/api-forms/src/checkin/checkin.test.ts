@@ -341,6 +341,38 @@ describe('attendance', () => {
     expect(attendees.find((a) => a.reference === arriving.reference)?.checkedInAt).toBeTruthy();
     expect(attendees.filter((a) => a.checkedInAt === null)).toHaveLength(1);
   });
+
+  /** The door's undo list, which used to live only in the tab and vanished on reload. */
+  it("returns the caller's own latest arrivals, newest first, so a reload keeps the undo list", async () => {
+    const { eventId } = await setupEvent(4);
+    const [a, b, c, d] = harness.state.submissions;
+    await scan(eventId, a!.reference);
+    await scan(eventId, b!.reference);
+    await scan(eventId, c!.reference, adminToken);
+    await scan(eventId, d!.reference);
+    // Distinct times, so the order is the assertion and not the insertion order.
+    harness.state.checkIns.forEach((row, index) => {
+      row.checkedInAt = new Date(Date.UTC(2027, 4, 14, 9, index));
+    });
+    await harness.app.inject({
+      method: 'DELETE',
+      url: `/v1/events/${eventId}/check-ins/${d!.id}`,
+      headers: bearer(operatorToken),
+    });
+
+    const recent = (who: string) =>
+      harness.app
+        .inject({
+          method: 'GET',
+          url: `/v1/events/${eventId}/attendance`,
+          headers: bearer(who),
+        })
+        .then((r) => (r.json().recent as Array<{ reference: string }>).map((x) => x.reference));
+
+    // Another door's arrivals are not this operator's to take back; an undone one is gone.
+    expect(await recent(operatorToken)).toEqual([b!.reference, a!.reference]);
+    expect(await recent(adminToken)).toEqual([c!.reference]);
+  });
 });
 
 describe('attendanceOf', () => {

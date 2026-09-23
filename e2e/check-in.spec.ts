@@ -208,16 +208,23 @@ test('each undo is named after its arrival', async ({ page }) => {
   await expect(page.getByText('Välkommen')).toBeVisible();
 
   // The accessible name carries the person, so five undo buttons are five different buttons.
-  const undo = page.getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
+  // Newest first, and this suite is serial: the top row is the arrival just made.
+  const doorRows = page.locator('.door__row');
+  const undo = doorRows.first().getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
   await expect(undo).toBeVisible();
   // And the count is one sentence, not a number with a label a paragraph cannot carry.
   await expect(page.getByText(/^\d+ av \d+ incheckade$/)).toBeAttached();
+
+  // The server keeps the list: a reload does not take the undo away from the door.
+  await page.reload();
+  await expect(undo).toBeVisible();
+  const before = await doorRows.count();
 
   // And pressing it takes the arrival back — from a browser, with the headers a browser sends.
   await undo.click();
   await page.getByRole('dialog').getByRole('button', { name: 'Ångra' }).click();
   await expect(page.getByText('Incheckning ångrad')).toBeVisible();
-  await expect(undo).toHaveCount(0);
+  await expect(doorRows).toHaveCount(before - 1);
   const rows = await sql`
     select 1 from check_ins c
     join submissions s on s.id = c.submission_id
@@ -309,7 +316,10 @@ test('an undo that fails says so, and the arrival stands', async ({ page }) => {
   await page.route(/\/check-ins\//, (route) =>
     route.request().method() === 'DELETE' ? route.fulfill({ status: 500 }) : route.continue(),
   );
-  const undo = page.getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
+  const undo = page
+    .locator('.door__row')
+    .first()
+    .getByRole('button', { name: /Ångra.*Göran Häggkvist/ });
   await undo.click();
   await page.getByRole('dialog').getByRole('button', { name: 'Ångra' }).click();
 

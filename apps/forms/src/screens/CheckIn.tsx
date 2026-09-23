@@ -52,7 +52,7 @@ interface CheckInResult {
   code?: string;
 }
 
-/** An arrival this operator made, kept so it can be taken back. */
+/** An arrival this operator made, kept so it can be taken back. The server holds the list. */
 interface Arrival {
   attendee: Attendee;
   at: string;
@@ -120,7 +120,15 @@ export default function CheckIn() {
     if (!eventId) return;
     client
       .attendance(eventId)
-      .then((a) => setCounts({ checkedIn: a.checkedIn, registered: a.registered }))
+      .then((a) => {
+        setCounts({ checkedIn: a.checkedIn, registered: a.registered });
+        // The server keeps the undo list, so a reload or a swapped phone does not lose it.
+        setRecent(
+          a.recent.flatMap((attendee) =>
+            attendee.checkedInAt ? [{ attendee, at: attendee.checkedInAt }] : [],
+          ),
+        );
+      })
       .catch(() => undefined);
   }, [eventId]);
 
