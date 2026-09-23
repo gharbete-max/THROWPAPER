@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
+import { embedSignatureVector, type SignatureVector } from '@tp/shared/forms';
 import { useT } from '../lib/i18n.js';
+import { pathFrom } from './DrawingPad.js';
 import { Icon } from './Icon.js';
 
 /**
@@ -11,14 +13,23 @@ import { Icon } from './Icon.js';
  * signature field they cannot complete is a form they cannot submit — and a required one turns
  * the whole thing into a wall. So typing a name is offered as an equal way to sign, in the same
  * control, and it produces the same artefact: a PNG in the private store, addressed by the same
- * key. Nothing downstream knows or cares which way it was made.
+ * key. Nothing downstream needs to know which way it was made.
  *
- * ## Why it uploads rather than storing the strokes
+ * ## Why it uploads rather than storing the strokes in the answer
  *
  * Stroke coordinates in the submission would need their own renderer everywhere a signature is
  * ever shown — the grid, the export, a PDF — and would be unreadable in a CSV. Producing a PNG
  * and putting it through the upload route that already exists means private storage, access
  * control scoped to the submission, a download button and a filename all come for free.
+ *
+ * ## But the strokes travel inside the PNG
+ *
+ * A sealed document wants the mark as vector (`docs/adr/0009-where-signing-lives.md`), so the
+ * outlines are written into the PNG itself as a text chunk — see `signature-vector.ts` in
+ * `@tp/shared/forms` for why there and not beside it. Points only, rounded: **no timing and no
+ * pressure are ever recorded**, because those would make a signature biometric data. A typed
+ * signature carries its text instead. A name typed and then drawn over is sent as the picture
+ * alone, rather than as a vector that describes only half of what the person saw.
  */
 const WIDTH = 600;
 const HEIGHT = 200;
@@ -37,6 +48,8 @@ export function SignaturePad({
   const t = useT();
   const canvas = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
+  /** Each stroke's points in canvas pixels, for the vector. Positions only — never when. */
+  const strokes = useRef<{ x: number; y: number }[][]>([]);
   const [dirty, setDirty] = useState(false);
   const [typed, setTyped] = useState('');
   const [state, setState] = useState<'idle' | 'saving' | 'saved' | 'failed'>(
@@ -76,6 +89,7 @@ export function SignaturePad({
     const { x, y } = pointAt(event);
     ctx.beginPath();
     ctx.moveTo(x, y);
+    strokes.current.push([{ x, y }]);
     setDirty(true);
   }
 
@@ -86,6 +100,7 @@ export function SignaturePad({
     const { x, y } = pointAt(event);
     ctx.lineTo(x, y);
     ctx.stroke();
+    strokes.current[strokes.current.length - 1]?.push({ x, y });
   }
 
   function end() {
@@ -96,6 +111,7 @@ export function SignaturePad({
     const ctx = context();
     const element = canvas.current;
     if (ctx && element) ctx.clearRect(0, 0, element.width, element.height);
+    strokes.current = [];
     setDirty(false);
     setTyped('');
     onChange('');
@@ -108,6 +124,8 @@ export function SignaturePad({
     const element = canvas.current;
     if (!ctx || !element) return;
     ctx.clearRect(0, 0, element.width, element.height);
+    // Typing replaces the canvas, and with it anything drawn.
+    strokes.current = [];
     if (!name.trim()) {
       setDirty(false);
       return;
@@ -117,6 +135,19 @@ export function SignaturePad({
     ctx.textBaseline = 'middle';
     ctx.fillText(name, 40, HEIGHT / 2, WIDTH - 80);
     setDirty(true);
+  }
+
+  /** What the canvas shows, as vector — or nothing when it is a mixture of both routes. */
+  function vector(): SignatureVector | null {
+    const drawn = strokes.current.filter((stroke) => stroke.length > 0);
+    const name = typed.trim();
+    if (drawn.length > 0 && !name) {
+      return { v: 1, kind: 'drawn', width: WIDTH, height: HEIGHT, paths: drawn.map(pathFrom) };
+    }
+    if (name && drawn.length === 0) {
+      return { v: 1, kind: 'typed', width: WIDTH, height: HEIGHT, text: name };
+    }
+    return null;
   }
 
   async function save() {
@@ -132,8 +163,9 @@ export function SignaturePad({
       return;
     }
 
+    const bytes = withVector(new Uint8Array(await blob.arrayBuffer()), vector());
     const body = new FormData();
-    body.append('file', new File([blob], 'signature.png', { type: 'image/png' }));
+    body.append('file', new File([bytes], 'signature.png', { type: 'image/png' }));
 
     try {
       const response = await fetch(
@@ -202,4 +234,23 @@ export function SignaturePad({
       </label>
     </div>
   );
+}
+
+/**
+ * The PNG with its strokes, or the PNG alone if they cannot be written.
+ *
+ * Never fails the signature: the picture is what the respondent saw and approved, and a vector
+ * that could not be attached (an unusually long scribble past the size cap, say) is a lesser
+ * document, not a reason to make somebody sign again.
+ */
+function withVector(
+  png: Uint8Array<ArrayBuffer>,
+  vector: SignatureVector | null,
+): Uint8Array<ArrayBuffer> {
+  if (!vector) return png;
+  try {
+    return embedSignatureVector(png, vector);
+  } catch {
+    return png;
+  }
 }

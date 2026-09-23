@@ -164,7 +164,8 @@ end, and done only when `pnpm verify`, `pnpm contract:check` and the relevant `p
 
 P1 is three branches, because it touches two products and a new one:
 
-**P1a — Forms: choice controls and the vector signature.**
+**P1a — Forms: choice controls and the vector signature.** *Vector signature done
+(`docs/PROGRESS.md` § P1a part 1); choice controls next.*
 - Choice controls: author-chosen shape, icon, size and per-field colour through derived tokens;
   every option added to `locked.test.ts`'s hostile kits in both schemes.
 - Signature field stores the vector path beside the PNG; no timing or pressure (ADR 0009).
@@ -190,8 +191,8 @@ P1 is three branches, because it touches two products and a new one:
 - Forms → Sign: "send this submission for signing" through the contract; the webhook marks the
   submission signed.
 - e2e: upload or submit → sign → download sealed PDF → hash verifies; a tampered byte fails.
-- New dependencies approved with this plan: `@signpdf/signpdf`, `pkijs` + `asn1js`,
-  `perfect-freehand` (P1a) — all permissive.
+- New dependencies approved with this plan: `@signpdf/signpdf`, `pkijs` + `asn1js` — both
+  permissive. (`perfect-freehand` was approved for P1a and turned out to be unnecessary.)
 
 **P2 — Nordic eID signing via a broker, multi-party flows.**
 - `IdentityProvider` + console adapter, then the chosen broker's **sandbox** (ADR 0010).

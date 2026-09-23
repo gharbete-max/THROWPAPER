@@ -295,18 +295,76 @@ describe('signing', () => {
     return form;
   }
 
-  const signWith = (content: Buffer) =>
+  const signWith = (content: Buffer | Uint8Array) =>
     harness.app.inject({
       method: 'POST',
       url: '/public/forms/contract/uploads?field=signed_by',
-      ...multipart(content, 'signature.png'),
+      ...multipart(Buffer.from(content), 'signature.png'),
     });
+
+  /** A whole PNG, as a canvas writes one — the signing route reads its chunks, not only its magic. */
+  const canvasPng = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+    'base64',
+  );
+  const strokes = {
+    v: 1 as const,
+    kind: 'drawn' as const,
+    width: 600,
+    height: 200,
+    paths: ['M 10 20 Q 11 22 13 24 L 30 40'],
+  };
 
   it('accepts the PNG the pad produces', async () => {
     await seedSignatureForm();
-    const response = await signWith(png);
+    const response = await signWith(canvasPng);
     expect(response.statusCode).toBe(201);
     expect((response.json() as { key: string }).key).toMatch(/^[0-9a-f]{64}.png$/);
+  });
+
+  it('accepts a PNG carrying its strokes, and stores them byte for byte', async () => {
+    await seedSignatureForm();
+    const signed = formSchemas.embedSignatureVector(canvasPng, strokes);
+    const response = await signWith(signed);
+    expect(response.statusCode).toBe(201);
+
+    const { key } = response.json() as { key: string };
+    const stored = await harness.uploadStore.get(key);
+    expect(formSchemas.readSignatureVector(stored!)).toEqual({ ok: true, vector: strokes });
+  });
+
+  it('refuses strokes outside the grammar the pad writes, even with a correct checksum', async () => {
+    await seedSignatureForm();
+    // Built by hand, because embedSignatureVector would refuse to write it.
+    const json = JSON.stringify({ ...strokes, paths: ['M 1 2" onload="alert(1)'] });
+    const data = Buffer.concat([
+      Buffer.from(formSchemas.SIGNATURE_VECTOR_KEYWORD, 'latin1'),
+      Buffer.from([0, 0, 0, 0, 0]),
+      Buffer.from(json, 'utf8'),
+    ]);
+    const head = Buffer.alloc(8);
+    head.writeUInt32BE(data.byteLength, 0);
+    head.write('iTXt', 4, 'latin1');
+    const crc = Buffer.alloc(4);
+    crc.writeUInt32BE(formSchemas.crc32(Buffer.concat([head.subarray(4), data])), 0);
+    const iend = canvasPng.length - 12;
+    const hostile = Buffer.concat([
+      canvasPng.subarray(0, iend),
+      head,
+      data,
+      crc,
+      canvasPng.subarray(iend),
+    ]);
+
+    const response = await signWith(hostile);
+    expect(response.statusCode).toBe(400);
+    expect((response.json() as { error: { code: string } }).error.code).toBe('bad-signature');
+  });
+
+  it('refuses a PNG whose chunks do not add up', async () => {
+    await seedSignatureForm();
+    // The magic number alone is enough for a file answer; a signature is read chunk by chunk.
+    expect((await signWith(png)).statusCode).toBe(400);
   });
 
   it('refuses a PDF, because a signature is an image this app drew', async () => {
@@ -316,7 +374,7 @@ describe('signing', () => {
 
   it('claims the signature when the form is submitted', async () => {
     await seedSignatureForm();
-    const { key } = (await signWith(png)).json() as { key: string };
+    const { key } = (await signWith(canvasPng)).json() as { key: string };
 
     const submitted = await harness.app.inject({
       method: 'POST',
