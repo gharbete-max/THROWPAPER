@@ -31,8 +31,8 @@ failing first; never mass-rename internal identifiers (CLAUDE.md rule 9); no new
 without asking (majors: ADR 0005, re-review 2026-12-22); no legal/clinical/tax/safety wording
 (rule 8); a brand colour never paints text or a boundary unchecked — reach for the derived tokens
 (--tp-colour-heading, --tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus,
---tp-button-*, and --tp-colour-{primary,secondary,accent}-edge for a chosen state's border). Gold is a FILL, bronze is the brand where it is read, every value comes from
-docs/brand. Measure contrast on the surface the finding was made on: a public form wears the demo
+--tp-button-*, and --tp-colour-{primary,secondary,accent}-edge for a chosen state's border).
+Gold is a FILL, bronze is the brand where it is read, every value comes from docs/brand. Measure contrast on the surface the finding was made on: a public form wears the demo
 kit (navy, primary == text), the marketing site wears the shipped gold. Design first, then one
 ponytail pass; never both in one.
 
@@ -48,8 +48,8 @@ What is left, and whose it is:
    authors their wording.
 5. The expansion (signing, eID, Mailer documents, app, AI, enterprise) — approved 2026-09-23 and
    starting now. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
-   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a is done (PROGRESS §
-   P1a parts 1 and 2); next is P1b (the Sign product's skeleton), then P1c, one branch each.
+   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
+   (PROGRESS § P1a, § P1b); next is P1c (Sign's database, standalone mode, sealing).
    Decisions in docs/EXPANSION.md § 5.
 ```
 

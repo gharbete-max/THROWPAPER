@@ -171,7 +171,9 @@ parts 1 and 2. Option icons deferred (part 2 says why).*
 - Signature field stores the vector path beside the PNG; no timing or pressure (ADR 0009).
 - Labels per ADR 0012 "Decided": "Signature"/"Sign", method and time, never a level.
 
-**P1b — The Sign product's skeleton.** (packages) (contract)
+**P1b — The Sign product's skeleton.** (packages) (contract) *Done — `docs/PROGRESS.md` § P1b.
+Its own database and the standalone mode moved to P1c, which is the first phase that stores
+anything.*
 - `packages/signing`: envelope and signer model, `SignatureLevel`, SHA-256 document hash, audit
   event shape, single-signer state machine. Pure, no I/O.
 - `apps/api-sign` (Fastify, own Postgres database and migrations, bearer + refresh like the others)
@@ -184,6 +186,9 @@ parts 1 and 2. Option icons deferred (part 2 says why).*
 - CI licence allowlist check (ADR 0015).
 
 **P1c — Sealing and the audit trail.**
+- From P1b: Sign's own Postgres database and migrations (envelopes, the event trail, evidence;
+  identity data encrypted with its own key), and the standalone mode (upload a PDF, type the
+  parties, invitations by direct SMTP). Contract §5 endpoints implemented.
 - Sealed PDF: PAdES with a **development** certificate, audit-trail page, immutable signed versions;
   test mode watermarks. Validated in tests against an independent validator (ADR 0015).
 - Wording: `WordingTemplate` with versions; signing is **blocked** without a human-authored

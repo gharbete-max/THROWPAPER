@@ -2664,6 +2664,44 @@ for `Map.prototype.getOrInsertComputed`: this cloud container's Chromium 1194 is
 build the pinned Playwright expects.) CI over the next runs is the real verdict; a recurrence
 means the cause is not the raster and the next step is to capture the failing PDF.
 
+## P1b — Sign exists as a product: the model, the skeleton, the boundary · done
+
+The owner decided signing is a third product (ADR 0009). This phase gives it a shape every later
+phase builds on, and makes the boundary between products a rule rather than a habit.
+
+**`packages/signing`** — pure, no I/O, 16 tests. Signature levels with `maxLevelFor`: a drawn or
+typed mark is simple, an eID at most advanced, nothing reaches qualified — and `Evidence` refuses
+a record claiming more than its method achieves. The console provider can only ever sign in test
+mode. The envelope is a reducer over its audit trail (`apply`, `replay`, `whoMaySign`): sequential
+and parallel routing, parties sharing a step, one decline ends the round, nothing after the
+deadline but `expired`, nothing at all after a final status, and a signature over the wrong
+document hash or in the wrong environment is refused. No clock — every event carries its time —
+so tests drive whole rounds, expiry included. `documentSha256` is Web Crypto, identical in the
+browser, Node and a future WebView.
+
+**`apps/api-sign` + `apps/sign`** — scaffolds, as Mailer's are, and they say so. The backend
+serves `/health` and *no* envelope route: a test asserts `POST /v1/envelopes` is a 404 until P1c
+brings the storage that makes one safe. The signing seam moved here from
+`apps/api-forms/src/signing/` with its tests; Forms keeps no signing provider. The scaffold screen
+reads its strings from a two-language table rather than inline English, and its heading uses
+`--tp-colour-heading` (Mailer's scaffold paints its `h1` in raw primary — gold text at 2.14:1 on
+paper; noted, not widened into this PR).
+
+**Contract v2.** §5 (Forms ⇄ Sign): create, status and sealed-link endpoints served by Sign, and a
+webhook served by the caller — schemas in `packages/shared/src/contract/signing.ts` built from
+`@tp/signing`'s shapes, every one deferred with its phase. `contract:check` now reads three
+registries. `CONTRACT_VERSION` is 2; the change is additive.
+
+**Rule 1 is now lint.** `eslint.config.js` forbids each product's apps from importing another
+product's, by package name or relative path. Probed both ways before trusting it.
+
+**Licences are checked, not trusted.** `pnpm licence:check` reads what is installed and fails on
+anything outside the ADR 0015 allowlist, evaluating SPDX `OR`/`AND` properly (a copyleft half of an
+`AND` fails). Run in CI after `contract:check`. 729 packages pass today; shrinking the allowlist by
+`ISC` makes it fail, so it is not vacuous.
+
+**Moved to P1c**, because nothing is stored yet: Sign's own database, and its standalone mode.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

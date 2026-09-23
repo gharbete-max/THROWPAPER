@@ -112,6 +112,8 @@ jobs:
       - run: pnpm run db:seed
       - run: pnpm run verify
       - run: pnpm run contract:check
+      # Loppa is proprietary (docs/adr/0015-reusing-open-source.md): nothing copyleft ships.
+      - run: pnpm run licence:check
       # The build `verify` just produced, measured against a budget. Bundles grow one
       # reasonable import at a time; a number that fails here is the only version of this
       # check that works, because a number in a document is a number nobody reads.

@@ -1,11 +1,14 @@
-# Integration contract — Forms ⇄ Mailer
+# Integration contract — Forms ⇄ Mailer ⇄ Sign
 
 **Freeze this before either track writes code.** Both tracks build against it with a mock of the
 other side, so neither blocks the other. Changes to this file are a joint decision and require
 a version bump.
 
-Schemas live in `packages/shared/contract/`. `pnpm contract:check` validates both
-implementations against them. Version header on every request: `X-Contract-Version: 1`.
+Schemas live in `packages/shared/src/contract/`. `pnpm contract:check` validates all three
+backends against them. Version header on every request: `X-Contract-Version: 2`.
+
+**Version 2 (2026-09-23)** added §5, the Sign product (`docs/adr/0009-where-signing-lives.md`),
+by the owner's decision. It is additive: every v1 request is still valid.
 
 Auth between the products is a service token issued per organisation, scoped to the endpoints
 below. A customer running only one product never sees any of this.
@@ -75,3 +78,28 @@ Forms uses this to show "confirmation delivered" on a registration and to flag b
   preference pages.
 
 Neither fallback may be allowed to rot. CI runs the standalone configuration of each product.
+
+---
+
+## 5. Forms ⇄ Sign
+
+Sign is the third product: envelopes, eID, multi-party signing and sealed PDFs. Identity data and
+evidence live only in its own database. Shapes come from `@tp/signing`. **All deferred to P1c.**
+
+### `POST /v1/envelopes` — ask for a document to be signed (§5.1)
+```
+{ organisationId, documentName, documentUrl, documentSha256, parties: [{ id, name, email?, locale, order }],
+  routing: "sequential" | "parallel", expiresAt, declarationKey, environment: "test" | "production",
+  hookUrl?, idempotencyKey }
+→ 201 { envelopeId, status, signUrls: { [partyId]: url } }
+```
+`environment` defaults to `test`. Sign fetches the document once from `documentUrl`, hashes it,
+and refuses a mismatch with `documentSha256`. `declarationKey` names a human-authored declaration
+(ADR 0012) — never the text.
+
+### `GET /v1/envelopes/{id}` — where it stands (§5.2)
+### `GET /v1/envelopes/{id}/sealed` — the sealed PDF as a short-lived link, once complete (§5.3)
+
+### Webhook `POST {caller}/hooks/signing` — envelope events (§5.4)
+`{ envelopeId, partyId?, event: sent|viewed|signed|declined|expired|cancelled|completed, at }`.
+Invitations and reminders go through `POST /v1/messages` like any other sender.

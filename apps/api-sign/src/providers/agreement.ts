@@ -1,6 +1,9 @@
 /**
  * The signing seam.
  *
+ * Moved here from `apps/api-forms/src/signing/` when signing became its own product
+ * (`docs/adr/0009-where-signing-lives.md`, decided 2026-09-23). Forms keeps no signing provider.
+ *
  * Two families of service are coming, and they are not the same shape:
  *
  * - **Agreement services** — Scrive, DocuSign, Dropbox Sign. You hand them a document and a list
