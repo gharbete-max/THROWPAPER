@@ -162,27 +162,27 @@ non-square logo); `outline`/`soft` email buttons on a pastel; `.rise` stagger pa
 
 ## 6. Expansion decisions — signing, eID, documents, AI, app (added 2026-09-23)
 
-From `docs/EXPANSION.md` and ADRs 0009–0015. Nothing here is a placeholder in code: each row is a
-decision, a contract, a certificate or a sign-off, and the phase that needs it waits for it.
+From `docs/EXPANSION.md` and ADRs 0009–0015. Answered on 2026-09-23 and removed: start now; signing
+is a third product; Loppa is proprietary; the field is called a signature. Nothing here is a
+placeholder in code: each row is a decision, a contract, a certificate or a sign-off, and the phase
+that needs it waits for it.
 
-| What                                                                                                                             | Needed by     | Who             |
-| -------------------------------------------------------------------------------------------------------------------------------- | ------------- | --------------- |
-| Whether the expansion starts before the first real event (`START-HERE.md` says after)                                            | P1            | you             |
-| Where signing lives: ADR 0009's package + own schema, or a third product now                                                     | P1            | you             |
-| **The repository's licence** — decides whether AGPL signing code can be reused (ADR 0015)                                        | P1            | you (+ counsel) |
-| Whether the drawn field is called a "signature" in the UI, against `SPEC-forms.md` §8                                            | P1            | you + counsel   |
-| Wording of every signature declaration, consent text and level label ("advanced" etc.), per locale                               | P1–P2         | you + counsel   |
-| **Sealing certificate**: self-issued (tamper-evidence only) or an eIDAS qualified electronic seal                                | P1 production | you             |
-| **Timestamp authority**: a qualified TSA contract for RFC 3161 timestamps                                                        | P1 production | you             |
-| Retention period for signed documents and signing evidence                                                                       | P1 production | you + counsel   |
-| **eID broker** chosen and contracted (Idura / Signicat / other — ADR 0010); test tenant first                                    | P2            | you             |
-| Whether identity data may live in the Forms database with column encryption, or needs its own service (ADR 0009)                 | P2            | counsel         |
-| The broker added to the sub-processor list (`legal.ts:202`)                                                                      | P2 production | you             |
-| **The ledger**: keep bounded, move the line to "light accounting", or retire it (ADR 0011) — and the site copy that goes with it | P3            | you             |
-| Which payment references beyond Swedish OCR (KID, RF) are wanted                                                                 | P3            | you             |
-| **App-store accounts** (Apple Developer, Google Play) and who owns them                                                          | P4            | you             |
-| iOS build route: hosted macOS CI or a cloud build service (cost)                                                                 | P4            | you             |
-| **AI provider and region** (ADR 0013), with a no-training term in the contract                                                   | P5            | you             |
-| Privacy page change when an AI provider becomes a sub-processor; the "no transfers" answer changes                               | P5            | counsel         |
-| Which enterprise connectors first (Microsoft 365, Google Workspace, Zapier/Make)                                                 | P6            | you             |
-| US and Asian identity offerings, one country at a time                                                                           | P6            | you + counsel   |
+| What                                                                                                                             | Needed by     | Who           |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- |
+| **Copyright holder** for `LICENSE` (the company, once registered — §1.1 — or you personally until then)                          | now           | you           |
+| **Proprietary licence terms** to replace the placeholder in `LICENSE`, and terms for customers                                   | before launch | counsel       |
+| Hosting and region for the **Sign product's own database** (identity data lives there — ADR 0009)                                | P1b deploy    | you           |
+| Wording of every signature declaration, consent text and level label ("advanced" etc.), per locale                               | P1–P2         | you + counsel |
+| **Sealing certificate**: self-issued (tamper-evidence only) or an eIDAS qualified electronic seal                                | P1 production | you           |
+| **Timestamp authority**: a qualified TSA contract for RFC 3161 timestamps                                                        | P1 production | you           |
+| Retention period for signed documents and signing evidence                                                                       | P1 production | you + counsel |
+| **eID broker** chosen and contracted (Idura / Signicat / other — ADR 0010); test tenant first                                    | P2            | you           |
+| The broker added to the sub-processor list (`legal.ts:202`)                                                                      | P2 production | you           |
+| **The ledger**: keep bounded, move the line to "light accounting", or retire it (ADR 0011) — and the site copy that goes with it | P3            | you           |
+| Which payment references beyond Swedish OCR (KID, RF) are wanted                                                                 | P3            | you           |
+| **App-store accounts** (Apple Developer, Google Play) and who owns them                                                          | P4            | you           |
+| iOS build route: hosted macOS CI or a cloud build service (cost)                                                                 | P4            | you           |
+| **AI provider and region** (ADR 0013), with a no-training term in the contract                                                   | P5            | you           |
+| Privacy page change when an AI provider becomes a sub-processor; the "no transfers" answer changes                               | P5            | counsel       |
+| Which enterprise connectors first (Microsoft 365, Google Workspace, Zapier/Make)                                                 | P6            | you           |
+| US and Asian identity offerings, one country at a time                                                                           | P6            | you + counsel |

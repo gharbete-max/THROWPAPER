@@ -1,6 +1,6 @@
 # Expansion — Phase 0: gap analysis, contract proposal, open questions
 
-**Status:** proposed, awaiting the owner's approval. No feature code has been written.
+**Status:** approved 2026-09-23 — the owner's answers are in §5. No feature code has been written.
 **Measured at:** `63963ea` (`main`, 2026-09-23). Any `git switch` invalidates the file references
 below (`CLAUDE.md` § Never mistake a proxy for the thing).
 **Touches `packages/` or `docs/CONTRACT.md`?** Not yet. This phase *proposes* a new
@@ -126,10 +126,12 @@ applied.** It is additive — every v1 request stays valid — so v2 can be serv
 -`{ messageId, contactRef, event: delivered|bounced|complained|opened|clicked, at }`
 +`{ messageId, contactRef, event: delivered|bounced|complained|opened|clicked, at, batchId? }`
 
-+## 5. Signing — reserved, deferred
-+Signing runs inside api-forms in its own schema (ADR 0009). If it is extracted to `api-sign`, its
-+endpoints (create envelope, party status, fetch sealed document, evidence) are specified here and
-+versioned with this file. Reminders and invitations already go through `POST /v1/messages` with
++## 5. Forms ⇄ Sign (the Sign product, ADR 0009)
++`POST /v1/envelopes` (Forms → Sign: document bytes or URL, sha256, parties, order, expiry,
++declaration template key, mode) → `{ envelopeId, signUrls }`; `GET /v1/envelopes/{id}`;
++`GET /v1/envelopes/{id}/sealed` (the sealed PDF); webhook `POST {caller}/hooks/signing`
++`{ envelopeId, partyId?, event: viewed|signed|declined|expired|completed, at }`. Schemas land in
++P1b, marked deferred until implemented. Reminders and invitations already go through `POST /v1/messages` with
 +`segment: "signing"`.
 ```
 
@@ -159,20 +161,20 @@ and Reports.
 
 ---
 
-## 5. Open questions — only the ones that block P1
+## 5. Decided by the owner, 2026-09-23
 
-1. **Sequence.** Does the expansion start now, beside the v0.1 launch blockers, or after the first
-   real event? START-HERE says after; the brief implies now. *Blocks: whether P1 starts.*
-2. **Where signing lives.** Approve ADR 0009's recommendation (package + own schema inside
-   api-forms, extract later), or go straight to a third product? *Blocks: P1's file layout.*
-3. **The repository's licence.** Permissive, AGPL, or source-available/proprietary? *Blocks: whether
-   any AGPL signing code (Documenso, DocuSeal, OpenSign) can be reused, and which licence header
-   copied files carry.*
-4. **The shipped word "signature".** Keep calling the drawn field a signature (and let counsel
-   word the level labels), or follow `SPEC-forms.md` §8 and rename it in the UI until a provider is
-   contracted? *Blocks: P1's UI copy.*
-5. **New dependencies for P1:** `@signpdf/signpdf`, `pkijs`/`asn1js`, `perfect-freehand` (all
-   permissive). Approve? *Blocks: P1's sealing half.*
+| # | Question | Answer | Recorded in |
+| --- | --- | --- | --- |
+| 1 | Start before the first real event? | **Yes, now**, beside the v0.1 launch blockers | `docs/ROADMAP.md` § Expansion |
+| 2 | Where signing lives | **A third product**, `apps/sign` + `apps/api-sign` — creating/filling forms and signing are different services | ADR 0009 "Decided" (accepted) |
+| 3 | The repository's licence | **Proprietary / closed** once complete. Learn from open source and take parts of permissive code only; nothing from GPL/AGPL | ADR 0015 "Decided" (accepted), `LICENSE`, `THIRD-PARTY-NOTICES.md` |
+| 4 | Is the drawn field called a signature? | Whatever is most usual: **yes, "Signature"**, as DocuSign, Adobe, Scrive do; never a level claim | ADR 0012 "Decided", `SPEC-forms.md` §8 amended |
+| 5 | P1 dependencies | Left to engineering: **`@signpdf/signpdf`, `pkijs` + `asn1js`, `perfect-freehand`** approved with the P1 plan | `docs/ROADMAP.md` P1c |
 
-Not blocking P1, but needed before their phases: the broker (P2), the ledger option in ADR 0011
-(P3), the AI provider (P5), app-store accounts (P4), and everything else in `LAUNCH-CHECKLIST.md` §6.
+Still open, each blocking only its own phase: the broker (P2), the ledger option in ADR 0011 (P3),
+the AI provider (P5), app-store accounts (P4), the copyright holder's name and the proprietary
+terms for `LICENSE`, and the rest of `LAUNCH-CHECKLIST.md` §6.
+
+**The consequence of question 2 worth stating once.** Signing as a third product means the contract
+§5 below stops being "reserved" and becomes real in P1b; the §3 proposal's `segment: "signing"` on
+`POST /v1/messages` is how Sign asks Mailer to send its invitations.

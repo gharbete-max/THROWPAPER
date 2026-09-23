@@ -147,38 +147,58 @@ one-click unsubscribe headers, delivery webhook back to Forms.
 **B14.** Hardening: throttling, domain warm-up, load test of a full-size send, GDPR export and
 erasure.
 
-## Expansion — signing first (proposed 2026-09-23, not approved)
+## Expansion — signing first (approved 2026-09-23)
 
 From the owner's expansion brief. Gap analysis, conflicts and the contract proposal are in
-`docs/EXPANSION.md`; the decisions are ADRs 0009–0015. **`START-HERE.md` still wins over this
-section** until the owner answers `docs/EXPANSION.md` §5 Q1 (does this start before the first real
-event?).
+`docs/EXPANSION.md`; the decisions are ADRs 0009–0015. **The owner decided on 2026-09-23 that the
+expansion starts now, beside the v0.1 launch blockers** — `START-HERE.md`'s "after the first real
+event" is overridden for this track only. The v0.1 rows in `LAUNCH-CHECKLIST.md` §1 still block
+*launch*; they no longer block *building*.
+
+Signing is a **third product**, `apps/sign` + `apps/api-sign` (ADR 0009, decided).
 
 Each phase is one branch and one PR, tests first where practical, `docs/HANDOVER.md` updated at the
 end, and done only when `pnpm verify`, `pnpm contract:check` and the relevant `pnpm test:e2e` pass
 — run as `CLAUDE.md` requires, each step read on its own. A phase marked **(packages)** or
 **(contract)** is a cross-track event and says so in its PR title.
 
-**P1 — Choice controls, hand signature, sealed PDF, audit trail.** (packages)
-- `packages/signing`: envelope and signer model, `SignatureLevel`, SHA-256 document hash, audit
-  event shape, single-signer state machine. Pure, no I/O (ADR 0009).
-- Signing runtime in `api-forms`, own `signing` schema, eslint import boundary, console provider.
-- Signature field stores the vector path beside the PNG; no timing or pressure (ADR 0009).
-- Sealed PDF: PAdES with a **development** certificate, audit-trail page, immutable signed versions;
-  test mode watermarks. Validated in tests against an independent validator (ADR 0015).
+P1 is three branches, because it touches two products and a new one:
+
+**P1a — Forms: choice controls and the vector signature.**
 - Choice controls: author-chosen shape, icon, size and per-field colour through derived tokens;
   every option added to `locked.test.ts`'s hostile kits in both schemes.
-- Wording: `WordingTemplate` with versions; sign is **blocked** without a human-authored
+- Signature field stores the vector path beside the PNG; no timing or pressure (ADR 0009).
+- Labels per ADR 0012 "Decided": "Signature"/"Sign", method and time, never a level.
+
+**P1b — The Sign product's skeleton.** (packages) (contract)
+- `packages/signing`: envelope and signer model, `SignatureLevel`, SHA-256 document hash, audit
+  event shape, single-signer state machine. Pure, no I/O.
+- `apps/api-sign` (Fastify, own Postgres database and migrations, bearer + refresh like the others)
+  and `apps/sign` (the signer's page and a small admin), both on the shared tokens and i18n.
+- `SigningProvider` moves here from `api-forms`; a console provider; test mode everywhere.
+- Contract §5 schemas in `packages/shared/src/contract/`, entries in `manifest.ts` marked deferred,
+  `contract:check` green; the check learns a third side.
+- Standalone mode (rule 2): upload a PDF, type the parties, invitations by direct SMTP.
+- `CLAUDE.md` and README gain the third product; eslint forbids imports between all three apps.
+- CI licence allowlist check (ADR 0015).
+
+**P1c — Sealing and the audit trail.**
+- Sealed PDF: PAdES with a **development** certificate, audit-trail page, immutable signed versions;
+  test mode watermarks. Validated in tests against an independent validator (ADR 0015).
+- Wording: `WordingTemplate` with versions; signing is **blocked** without a human-authored
   declaration (ADR 0012).
-- e2e: fill → draw → sign → download sealed PDF → hash verifies; a tampered byte fails.
-- *Needs from the owner:* §5 Q2–Q5 in `docs/EXPANSION.md`.
+- Forms → Sign: "send this submission for signing" through the contract; the webhook marks the
+  submission signed.
+- e2e: upload or submit → sign → download sealed PDF → hash verifies; a tampered byte fails.
+- New dependencies approved with this plan: `@signpdf/signpdf`, `pkijs` + `asn1js`,
+  `perfect-freehand` (P1a) — all permissive.
 
 **P2 — Nordic eID signing via a broker, multi-party flows.**
 - `IdentityProvider` + console adapter, then the chosen broker's **sandbox** (ADR 0010).
 - Same-device and other-device flows; app-switch return; evidence keeps the raw assertion.
 - Multi-party: order, parallel/sequential, expiry, decline, reminders (through the thin mail path
   until Mailer exists).
-- Identity data column-encrypted with its own key.
+- Identity data encrypted at rest in Sign's own database, with its own key.
 - *Needs:* broker chosen and a test tenant; counsel's wording for method/level labels.
 
 **P3 — Mailer document sends: rent, invoices, admission cards + QR check-in.** (contract)

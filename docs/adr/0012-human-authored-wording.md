@@ -42,3 +42,19 @@ The expansion multiplies the places operative wording appears:
    back to one a human authored, never to a translation Loppa made.
 5. **Loppa's own defaults, if any are ever wanted, go through counsel** and are listed in
    `LEGAL-REVIEW.md`, not written in code.
+
+## Decided (2026-09-23) — what the drawn field is called
+
+The owner asked for whatever is most usual for these services. The e-signature products people
+already know (DocuSign, Adobe Acrobat Sign, Scrive, Dropbox Sign) all call a drawn or typed mark a
+**signature**, and eIDAS itself treats such a mark as the lowest level of electronic signature.
+So:
+
+- The field, the button and the pad say **"Signature" / "Sign"** in every locale. That is a
+  control label, not a claim.
+- The **level is never claimed** by default wording. Loppa's UI names the *method and time*:
+  "Signed by drawing, 23 Sep 2026 14:02" or "Signed with BankID, 23 Sep 2026 14:02". The words
+  "advanced", "qualified", "legally binding" or their translations appear only in text that counsel
+  approved (a `WordingTemplate` with `reviewedBy` set), and only on evidence that carries that
+  level.
+- `SPEC-forms.md` §8 was amended the same day to match.

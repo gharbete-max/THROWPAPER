@@ -286,10 +286,13 @@ bulk PDFs and exports. Server-side HTML-to-PDF with embedded fonts.
 Not built now. Each is a gated module for later, and each needs specialist input before it is
 worth starting.
 
-- **Legally binding e-signature** (BankID, MitID, FTN, Freja, itsme, iDIN). The architecture keeps
-  the door open: a `SigningProvider` interface with a mock implementation, sealed immutable
-  submissions and hashed evidence records. Until a real provider is contracted, approvals are
-  **recorded consent with an audit trail**, and the UI must never call them signatures.
+- **Legally binding e-signature** (BankID, MitID, FTN, Freja, itsme, iDIN). **Moved out of Forms
+  (2026-09-23):** envelopes, eID, multi-party flows and sealing are the Sign product
+  (`docs/adr/0009-where-signing-lives.md`), reached through `docs/CONTRACT.md` §5. Forms keeps its
+  drawn or typed **signature field**, which the UI calls a signature, as the industry does. What
+  the UI must never do is claim a **level** — "advanced", "qualified", "legally binding" — that the
+  evidence does not carry; it names the method instead (ADR 0012). Tokenised approvals (§6.2)
+  remain recorded consent with an audit trail.
 - **AGM postal voting and proxy/power of attorney.** Vote tabulation across share classes, weighted
   voting, majority thresholds and country-specific POA wording. Highest-value module in the
   corporate market and the most exacting; do it deliberately, with counsel, not as a side effect.

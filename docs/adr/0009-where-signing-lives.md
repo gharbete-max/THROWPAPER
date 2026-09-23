@@ -1,9 +1,10 @@
 # ADR 0009 — Where signing lives, and what a signature is allowed to call itself
 
-**Status:** proposed
+**Status:** accepted 2026-09-23 — **option (c), a third product**, by the owner's decision. See
+"Decided" at the end; the recommendation below is kept as the argument that was weighed.
 **Date:** 2026-09-23
-**Touches:** `packages/` (a new `packages/signing`), `docs/CONTRACT.md` (a reserved, deferred
-section). Both are cross-track events.
+**Touches:** `packages/` (a new `packages/signing`), `apps/` (new `apps/sign`, `apps/api-sign`),
+`docs/CONTRACT.md` (a new §5). All are cross-track events.
 
 ## Context
 
@@ -127,6 +128,35 @@ type SignatureLevel =
 - The audit trail (who, when, method, level, document SHA-256, IP, user agent, each state change)
   is rendered as the last page of the sealed PDF **and** stored as rows, so it survives the PDF
   being lost and the database being lost, independently.
+
+## Decided (2026-09-23)
+
+The owner chose **(c): signing is a separate product**, on the reasoning that creating and filling
+forms and getting a document signed are different services. The recommendation above lost on
+that, and its costs are accepted knowingly: a third deployment, a third database, a contract
+section to keep, and more work before the first eID signature than (b) would have taken.
+
+What that makes of the pieces above:
+
+- **`apps/sign` + `apps/api-sign`**, with their **own database**. Identity data, evidence, sealed
+  documents and the sealing key live only there. Rule 1 extends to three: Forms, Mailer and Sign
+  never import each other, and talk only through `docs/CONTRACT.md`.
+- **`packages/signing`** stays as proposed — the pure model (envelope, parties, `SignatureLevel`,
+  hashing, audit-event shape, state machine), shared so the Sign product and its callers agree on
+  shapes. It holds no adapters and no secrets.
+- **`apps/api-forms/src/signing/provider.ts` moves to `api-sign`** in the phase that scaffolds it;
+  Forms keeps no signing provider of its own.
+- **Forms keeps its signature *field*** — drawn or typed, part of filling a form, stored in Forms
+  (as vector beside the PNG, per "Signature levels" above). Anything with an envelope, an eID, more
+  than one party, or a seal is Sign's. A form that must be signed after submission sends the
+  rendered PDF to Sign through the contract and gets a webhook back.
+- **Mailer** sends Sign's invitations and reminders through `POST /v1/messages`, like any other
+  caller.
+- **Standalone** (rule 2): Sign must run with neither Forms nor Mailer — a document uploaded as a
+  PDF, parties typed in, invitations through direct SMTP. CI runs that configuration, like the
+  other two.
+- **CLAUDE.md and the README** gain the third product in the PR that creates `apps/sign`, not
+  before — `CLAUDE.md` describes what a package contains, not what it will.
 
 ## What this does not decide
 

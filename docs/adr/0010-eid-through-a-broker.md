@@ -23,7 +23,7 @@ document) from *identity* services (they assert who someone is). A broker usuall
 ### One interface, two operations
 
 `IdentityProvider` is defined in `packages/signing` (ADR 0009) — types and Zod only, because that
-package ships to the browser. **Adapters live server-side** in the signing runtime, because they
+package ships to the browser. **Adapters live server-side** in `apps/api-sign` (ADR 0009, decided), because they
 hold client secrets and certificates. (The brief puts adapters in `@tp/shared`; that would ship
 credentials-adjacent code to every browser, so this ADR deliberately departs from it.)
 
