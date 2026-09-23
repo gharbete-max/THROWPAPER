@@ -616,6 +616,7 @@ export const enGB = {
   'checkin.outcome.already': 'Already checked in',
   'checkin.outcome.revoked': 'Registration withdrawn',
   'checkin.outcome.wrong-event': 'Wrong event',
+  'checkin.outcome.failed': 'Could not be checked',
   'checkin.outcome.not-found': 'Not found',
   'checkin.outcome.bad-signature': 'Invalid card',
   'checkin.outcome.undone': 'Check-in undone',

@@ -624,6 +624,7 @@ export const deDE: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Bereits eingecheckt',
   'checkin.outcome.revoked': 'Anmeldung zurückgezogen',
   'checkin.outcome.wrong-event': 'Falsche Veranstaltung',
+  'checkin.outcome.failed': 'Konnte nicht geprüft werden',
   'checkin.outcome.not-found': 'Nicht gefunden',
   'checkin.outcome.bad-signature': 'Ungültige Karte',
   'checkin.outcome.undone': 'Check-in rückgängig gemacht',

@@ -20,7 +20,12 @@ type Outcome =
   | 'bad-signature'
   | 'undone'
   /** The undo request itself failed; the arrival stands. Client-side only. */
-  | 'undo-failed';
+  | 'undo-failed'
+  /**
+   * The request did not come back. Client-side only — the API answers 200 with a verdict for
+   * every outcome it has, so anything thrown is a fault and not an answer about this card.
+   */
+  | 'failed';
 
 interface Attendee {
   submissionId: string;
@@ -133,11 +138,23 @@ export default function CheckIn() {
         }
         refreshCounts();
       } catch {
-        // A dropped connection must not read as "not found", which sends somebody away. The
-        // offline banner says what happened and the verdict stays as it was.
+        /*
+         * A fault is not a verdict.
+         *
+         * `POST /v1/events/:id/check-ins` answers 200 with a verdict for every outcome it has,
+         * not-found included — so nothing that lands here is an answer about this card. It is a
+         * 500, a 403, a timeout, a parse error. Rendering any of them as "not found" told the
+         * person on the door to turn away somebody who is on the list.
+         *
+         * A dropped connection is still its own case: the offline banner says what happened and
+         * the verdict stays as it was, because the scan was never sent.
+         *
+         * The typed value is kept either way — `setCode('')` runs only on success — so whoever is
+         * at the door can press the button again rather than ask for the card back.
+         */
         if (navigator.onLine) {
           setResult({
-            outcome: 'not-found',
+            outcome: 'failed',
             attendee: null,
             checkedInAt: null,
             code: value.trim(),

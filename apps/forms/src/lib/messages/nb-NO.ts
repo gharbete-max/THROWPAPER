@@ -607,6 +607,7 @@ export const nbNO: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Allerede sjekket inn',
   'checkin.outcome.revoked': 'Påmelding trukket tilbake',
   'checkin.outcome.wrong-event': 'Feil arrangement',
+  'checkin.outcome.failed': 'Kunne ikke kontrolleres',
   'checkin.outcome.not-found': 'Ikke funnet',
   'checkin.outcome.bad-signature': 'Ugyldig kort',
   'checkin.outcome.undone': 'Innsjekking angret',

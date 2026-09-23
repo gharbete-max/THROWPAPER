@@ -610,6 +610,7 @@ export const fiFI: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Jo kirjattu sisään',
   'checkin.outcome.revoked': 'Ilmoittautuminen peruttu',
   'checkin.outcome.wrong-event': 'Väärä tapahtuma',
+  'checkin.outcome.failed': 'Tarkistus epäonnistui',
   'checkin.outcome.not-found': 'Ei löytynyt',
   'checkin.outcome.bad-signature': 'Virheellinen kortti',
   'checkin.outcome.undone': 'Sisäänkirjaus kumottu',

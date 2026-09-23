@@ -609,6 +609,7 @@ export const isIS: Record<MessageKey, string> = {
   'checkin.outcome.already': 'Þegar innritaður',
   'checkin.outcome.revoked': 'Skráning afturkölluð',
   'checkin.outcome.wrong-event': 'Rangur viðburður',
+  'checkin.outcome.failed': 'Ekki tókst að athuga',
   'checkin.outcome.not-found': 'Fannst ekki',
   'checkin.outcome.bad-signature': 'Ógilt kort',
   'checkin.outcome.undone': 'Innritun afturkölluð',

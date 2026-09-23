@@ -190,3 +190,38 @@ test('save and resume brings the answers back', async ({ page }) => {
   `;
   if (row) created.push(String(row['reference']));
 });
+
+test('the reference is the biggest thing on the confirmation, not the smallest', async ({
+  page,
+}) => {
+  /*
+   * It was a muted 16px paragraph — smaller than the body around it — and it is the credential the
+   * door asks for and the thing a visitor screenshots.
+   */
+  const email = uniqueEmail('ref-size');
+  await open(page, 'sv-SE');
+  await page.getByLabel(/Namn/).fill('Referens Storlek');
+  await page.getByLabel(/E-post/).fill(email);
+  await page.getByRole('button', { name: 'Nästa' }).click();
+
+  // The meal is a required card on page two, and the submit carries the label the builder wrote.
+  await page.getByText('Vegetariskt', { exact: true }).click();
+  await page.getByRole('button', { name: 'Anmäl mig' }).click();
+  await expect(page.getByText(/Din referens:/)).toBeVisible();
+
+  // Located by what it says, not by the class that styles it — so removing the class fails this
+  // on the size it is actually about, rather than on a selector finding nothing.
+  const reference = page.getByText(/Din referens:/);
+  await expect(reference).toBeVisible();
+
+  const [size, body] = await reference.evaluate((node) => [
+    Number.parseFloat(getComputedStyle(node).fontSize),
+    Number.parseFloat(getComputedStyle(document.body).fontSize),
+  ]);
+  expect(size, `the reference is ${size}px against body ${body}px`).toBeGreaterThan(body);
+
+  const found = (await page.textContent('.public__reference'))?.match(
+    /[0-9A-Z]{4}-[0-9A-Z]{4}/,
+  )?.[0];
+  if (found) created.push(found);
+});
