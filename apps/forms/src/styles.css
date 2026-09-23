@@ -816,6 +816,10 @@ textarea {
  * question: a customised form still has to look like the organisation that sent it.
  */
 .choice {
+  /* What an author's choice style sets, and nothing else can. The edge is the derived one, never
+   * the raw brand colour: gold is 2.14:1 on white, and a chosen answer needs 3:1 (WCAG 1.4.11). */
+  --choice-edge: var(--tp-colour-primary-edge);
+  --choice-radius: var(--tp-radius);
   display: flex;
   flex-direction: column;
   gap: calc(var(--tp-spacing-unit) * 0.5);
@@ -852,7 +856,7 @@ textarea {
   width: 20px;
   height: 20px;
   flex: none;
-  accent-color: var(--tp-colour-primary);
+  accent-color: var(--choice-edge);
 }
 
 /* Buttons: a horizontal strip that wraps. The input itself is hidden from sight but not from the
@@ -865,7 +869,7 @@ textarea {
 .choice--buttons .choice__option,
 .choice--cards .choice__option {
   border: var(--tp-border-width) solid var(--tp-colour-border);
-  border-radius: var(--tp-radius);
+  border-radius: var(--choice-radius);
   padding: calc(var(--tp-spacing-unit) * 0.75) var(--tp-spacing-unit);
   background: var(--tp-colour-surface);
 }
@@ -889,9 +893,9 @@ textarea {
 
 .choice--buttons .choice__option:has(input:checked),
 .choice--cards .choice__option:has(input:checked) {
-  border-color: var(--tp-colour-primary);
+  border-color: var(--choice-edge);
   /* A second, inset border rather than a thicker one, so nothing shifts when a choice is made. */
-  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--choice-edge);
   font-weight: var(--tp-type-weight-bold);
 }
 
@@ -910,6 +914,73 @@ textarea {
 @media (min-width: 601px) {
   .choice--cards .choice__options {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/*
+ * An author's choice style (`ChoiceStyle` in `@tp/shared/forms`).
+ *
+ * Every value here is one the theme already defines, so a styled question still looks like the
+ * organisation that sent it — and none of them can reach under the floor: the size only grows the
+ * 44px target, the accent only picks between derived edges, and the focus ring is untouched.
+ */
+.choice--accent-secondary {
+  --choice-edge: var(--tp-colour-secondary-edge);
+}
+
+.choice--accent-accent {
+  --choice-edge: var(--tp-colour-accent-edge);
+}
+
+.choice--shape-square {
+  --choice-radius: 0;
+}
+
+.choice--shape-rounded {
+  --choice-radius: var(--tp-radius-lg);
+}
+
+.choice--shape-pill {
+  --choice-radius: var(--tp-radius-pill);
+}
+
+.choice--size-large .choice__option {
+  min-height: 56px;
+  font-size: var(--tp-text-lg);
+}
+
+.choice--size-large.choice--radio .choice__option input,
+.choice--size-large.choice--checkboxes .choice__option input {
+  width: 24px;
+  height: 24px;
+}
+
+/* Columns: on a phone at most two buttons side by side, and cards one per row, whatever was
+ * chosen — a four-column grid at 375px is four targets too narrow to read. */
+.choice--buttons:is(.choice--columns-2, .choice--columns-3, .choice--columns-4) .choice__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choice--columns-1 .choice__options {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 601px) {
+  .choice--columns-2 .choice__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .choice--columns-3 .choice__options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .choice--columns-4 .choice__options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1093,7 +1164,7 @@ textarea {
   inline-size: 20px;
   block-size: 20px;
   flex: none;
-  accent-color: var(--tp-colour-primary);
+  accent-color: var(--tp-colour-primary-edge);
 }
 
 .template__body {
@@ -1103,8 +1174,9 @@ textarea {
 }
 
 .template:has(input:checked) {
-  border-color: var(--tp-colour-primary);
-  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary);
+  /* The derived edge, not the raw brand: a chosen state needs 3:1, and gold is 2.14:1. */
+  border-color: var(--tp-colour-primary-edge);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary-edge);
 }
 
 .template:has(input:focus-visible) {
@@ -1729,8 +1801,9 @@ input[type='range'] {
 }
 
 .rating__point--on .rating__number {
-  border-color: var(--tp-colour-primary);
-  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary);
+  /* The derived edge, not the raw brand: a chosen state needs 3:1, and gold is 2.14:1. */
+  border-color: var(--tp-colour-primary-edge);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary-edge);
   font-weight: var(--tp-type-weight-bold);
 }
 
@@ -3476,7 +3549,7 @@ p {
   /* A ring outside the swatch, so the chosen colour is not tinted by its own selection state. */
   box-shadow:
     0 0 0 2px var(--tp-colour-background),
-    0 0 0 4px var(--tp-colour-primary);
+    0 0 0 4px var(--tp-colour-primary-edge);
 }
 
 .swatch:focus-visible {

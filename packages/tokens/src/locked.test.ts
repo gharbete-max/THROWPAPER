@@ -138,6 +138,31 @@ describe('the locked list, against a hostile theme', () => {
   });
 
   /**
+   * The mark that says which choice is chosen.
+   *
+   * A selected button or card is told apart from its neighbours by its edge alone — that is WCAG
+   * 1.4.11, 3:1 for a boundary. The edge used to be the raw primary, which under Loppa's own gold
+   * is 2.14:1 on the page: the product's default theme failed its own floor. An author can now
+   * pick which brand colour marks a question's choices, so all three have an edge token, and each
+   * has to clear both surfaces a choice sits on, in both schemes, whatever was saved.
+   */
+  it.each(THEMES)('keeps a chosen answer distinguishable: %s', (_name, tokens) => {
+    for (const theme of [tokens, toDark(tokens)]) {
+      const vars = toCssVariables(theme);
+      for (const role of ['primary', 'secondary', 'accent']) {
+        const edge = vars[`--tp-colour-${role}-edge`];
+        expect(edge, `--tp-colour-${role}-edge is emitted`).toBeDefined();
+        for (const ground of ['background', 'surface'] as const) {
+          expect(
+            contrastRatio(edge!, theme.colour[ground]) ?? 0,
+            `${role} edge on ${ground}`,
+          ).toBeGreaterThanOrEqual(BOUNDARY_CONTRAST);
+        }
+      }
+    }
+  });
+
+  /**
    * The sizes, which are the ones a customer breaks by picking a number that looks tidy.
    *
    * Clamped on the way in rather than rejected, so an organisation that sets a 30px control keeps

@@ -36,6 +36,9 @@ const PANEL_CONTROLS = [
   'width',
   'required',
   'appearance',
+  // A choice question's shape, size, chosen-answer colour and columns: `ChoiceStyleControls`,
+  // shown once the appearance draws its own options (a dropdown has nothing to style).
+  'style',
   'maxWidth',
   'fromParameter',
   'statement',

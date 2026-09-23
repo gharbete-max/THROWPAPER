@@ -1,5 +1,6 @@
 import {
   accentInk,
+  edgeInk,
   buttonSurface,
   focusRing,
   glassSurface,
@@ -39,6 +40,10 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
     text: tokens.colour.background,
     background: tokens.colour.text,
   });
+  // Each brand colour as the edge that marks a chosen answer. See `edgeInk`.
+  for (const role of ['primary', 'secondary', 'accent'] as const) {
+    vars[`--tp-colour-${role}-edge`] = edgeInk(tokens.colour, role);
+  }
   // The brand where it reads as a heading, the ink where it does not. See `headingInk`.
   vars['--tp-colour-heading'] = headingInk(tokens.colour);
   vars['--tp-spacing-unit'] = tokens.spacingUnit;

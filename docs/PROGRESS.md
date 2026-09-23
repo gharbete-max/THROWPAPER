@@ -2600,6 +2600,49 @@ pdf.js. CI runs the matching browser and is the verdict.
 own PR, because they are design work against the locked accessibility floor and deserve their own
 review.
 
+## P1a (part 2) — authors style their choices, and the chosen answer clears 3:1 · done
+
+Measured with each gate step run on its own: format, typecheck, lint (0 errors, the 2 known
+warnings), **test 146 files / 1833 passed**, build; `contract:check` exit 0; **e2e 31 passed, 1
+failed** locally — the same `simulated-user` pdf.js failure as P1a part 1, which is this
+container's older Chromium (`getOrInsertComputed`), and which passed in CI on #121.
+
+**A defect in `main`, found by building this.** A chosen button- or card-style answer was marked
+by a border in the raw `--tp-colour-primary`. Loppa's gold is 2.14:1 on white, so under the
+product's own default theme the only thing telling a chosen answer from its neighbours failed WCAG
+1.4.11 (3:1). The rating scale's chosen number, the builder's template picker and its colour
+swatches did the same. `HANDOVER.md` already says a brand colour never paints a boundary
+unchecked; these four did.
+
+**The mechanism, not the rows.** `edgeInk` in `packages/tokens/src/derive.ts` derives an edge for
+each brand role — the colour itself where it clears 3:1 on both background and surface, walked
+away from the page where it does not, the palette's pole as the floor — the same shape as
+`focusRing`. The web compiler emits `--tp-colour-{primary,secondary,accent}-edge`.
+`locked.test.ts` holds all three against the seven hostile themes in both schemes (it failed for
+every theme before the derivation existed), `loppa.test.ts` pins that the shipped gold is walked,
+and `components/choice-style.test.ts` fails if any `:checked` or `--on` rule paints a border,
+shadow, outline or accent colour with a raw brand colour — which is how the swatch was found.
+
+**What an author can now set** (`ChoiceStyle` in `@tp/shared/forms`, on single choice, multiple
+choice and yes/no): shape (as the theme, square, rounded, pill), size (regular, large), which brand
+role marks the chosen answer, and columns for buttons and cards. **What they cannot**: a size under
+44px (there is no `small` — the floor is a missing option, not a warning), a colour (only a role,
+whose edge is derived), or the focus ring. The style is optional rather than defaulted, so every
+stored definition parses to exactly what it was. Presentation only; a test proves a styled question
+accepts and refuses the same submissions.
+
+**Evidence that discriminates.** The locked-floor test failed for all seven themes before
+`edgeInk`; the stylesheet guard fails against the old stylesheet; `e2e/choice-style.spec.ts` —
+which measures the rendered target (≥ 56px for `large`), the pill radius, and the chosen edge's
+contrast on the real page — fails with the stylesheet and renderer reverted. The builder's own
+"every property has a control" test failed until `style` had one, as it should.
+
+**Deferred, on purpose.** Author-picked *icons* on options: pictures per option already exist
+(A15b), and an icon set is design work with its own accessibility questions (an icon-only choice
+cannot be read aloud), so it is not guessed at here. The other raw `--tp-colour-primary` uses in
+`styles.css` are fills and text, which have their own derived tokens and mechanisms; they were not
+audited in this PR.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
