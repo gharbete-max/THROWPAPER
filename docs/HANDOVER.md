@@ -46,6 +46,10 @@ What is left, and whose it is:
    ADR 0004's open questions are answered), Mailer from B2 contacts.
 4. The wizard's verticals (content, per ADR 0006). Trades and law stay blocked until a human
    authors their wording.
+5. The expansion (signing, eID, Mailer documents, app, AI, enterprise) — approved 2026-09-23 and
+   starting now. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
+   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). Next: ROADMAP § Expansion P1a,
+   P1b, P1c, one branch each. Decisions in docs/EXPANSION.md § 5.
 ```
 
 ## State

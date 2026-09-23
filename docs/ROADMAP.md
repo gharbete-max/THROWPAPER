@@ -147,6 +147,91 @@ one-click unsubscribe headers, delivery webhook back to Forms.
 **B14.** Hardening: throttling, domain warm-up, load test of a full-size send, GDPR export and
 erasure.
 
+## Expansion — signing first (approved 2026-09-23)
+
+From the owner's expansion brief. Gap analysis, conflicts and the contract proposal are in
+`docs/EXPANSION.md`; the decisions are ADRs 0009–0015. **The owner decided on 2026-09-23 that the
+expansion starts now, beside the v0.1 launch blockers** — `START-HERE.md`'s "after the first real
+event" is overridden for this track only. The v0.1 rows in `LAUNCH-CHECKLIST.md` §1 still block
+*launch*; they no longer block *building*.
+
+Signing is a **third product**, `apps/sign` + `apps/api-sign` (ADR 0009, decided).
+
+Each phase is one branch and one PR, tests first where practical, `docs/HANDOVER.md` updated at the
+end, and done only when `pnpm verify`, `pnpm contract:check` and the relevant `pnpm test:e2e` pass
+— run as `CLAUDE.md` requires, each step read on its own. A phase marked **(packages)** or
+**(contract)** is a cross-track event and says so in its PR title.
+
+P1 is three branches, because it touches two products and a new one:
+
+**P1a — Forms: choice controls and the vector signature.**
+- Choice controls: author-chosen shape, icon, size and per-field colour through derived tokens;
+  every option added to `locked.test.ts`'s hostile kits in both schemes.
+- Signature field stores the vector path beside the PNG; no timing or pressure (ADR 0009).
+- Labels per ADR 0012 "Decided": "Signature"/"Sign", method and time, never a level.
+
+**P1b — The Sign product's skeleton.** (packages) (contract)
+- `packages/signing`: envelope and signer model, `SignatureLevel`, SHA-256 document hash, audit
+  event shape, single-signer state machine. Pure, no I/O.
+- `apps/api-sign` (Fastify, own Postgres database and migrations, bearer + refresh like the others)
+  and `apps/sign` (the signer's page and a small admin), both on the shared tokens and i18n.
+- `SigningProvider` moves here from `api-forms`; a console provider; test mode everywhere.
+- Contract §5 schemas in `packages/shared/src/contract/`, entries in `manifest.ts` marked deferred,
+  `contract:check` green; the check learns a third side.
+- Standalone mode (rule 2): upload a PDF, type the parties, invitations by direct SMTP.
+- `CLAUDE.md` and README gain the third product; eslint forbids imports between all three apps.
+- CI licence allowlist check (ADR 0015).
+
+**P1c — Sealing and the audit trail.**
+- Sealed PDF: PAdES with a **development** certificate, audit-trail page, immutable signed versions;
+  test mode watermarks. Validated in tests against an independent validator (ADR 0015).
+- Wording: `WordingTemplate` with versions; signing is **blocked** without a human-authored
+  declaration (ADR 0012).
+- Forms → Sign: "send this submission for signing" through the contract; the webhook marks the
+  submission signed.
+- e2e: upload or submit → sign → download sealed PDF → hash verifies; a tampered byte fails.
+- New dependencies approved with this plan: `@signpdf/signpdf`, `pkijs` + `asn1js`,
+  `perfect-freehand` (P1a) — all permissive.
+
+**P2 — Nordic eID signing via a broker, multi-party flows.**
+- `IdentityProvider` + console adapter, then the chosen broker's **sandbox** (ADR 0010).
+- Same-device and other-device flows; app-switch return; evidence keeps the raw assertion.
+- Multi-party: order, parallel/sequential, expiry, decline, reminders (through the thin mail path
+  until Mailer exists).
+- Identity data encrypted at rest in Sign's own database, with its own key.
+- *Needs:* broker chosen and a test tenant; counsel's wording for method/level labels.
+
+**P3 — Mailer document sends: rent, invoices, admission cards + QR check-in.** (contract)
+- Contract v2 (`docs/EXPANSION.md` §3) — schemas and `manifest.ts` first, then `contract:check`.
+- Mailer B2 (contacts), B3 (provider), B6 (transactional + `POST /v1/messages`), B9 (scoped
+  suppression — rent is never stopped by a marketing unsubscribe), B10 (recurring + approval).
+- Invoice/rent runs push document audiences; admission cards sent through Mailer.
+- Offline-tolerant check-in with a local queue synced through the existing idempotent endpoint.
+- *Needs:* the ledger decision (ADR 0011); `api-mailer` hosting and whether it sends marketing.
+- *Realism:* this is most of Track B. It is the largest phase here by a distance.
+
+**P4 — App shell and scanner.**
+- `apps/mobile` (Capacitor around `apps/forms`), native document scanner plugin, SQLite for the
+  door's offline queue, deep links for eID return (ADR 0014).
+- Web fallback keeps the manual warp; automatic edge detection lazy-loaded within the bundle budget.
+- e2e for capture (none exists today).
+- *Needs:* app-store accounts, an iOS build route (no macOS on the dev machine).
+
+**P5 — AI assistance.**
+- `AiProvider` + console provider; form from description; form from a scanned page (opt-in,
+  drafts only); validation suggestions; response summaries labelled as generated (ADR 0013).
+- Refusal of operative wording classes before any provider call (ADR 0012).
+- *Needs:* provider and region chosen; privacy page updated by counsel before it ships.
+
+**P6 — Enterprise and wider eID.**
+- SSO (OIDC, then SAML), SCIM, per-org API keys with scopes, webhooks (signed, retried), the
+  public API documented from the Zod schemas via the existing `/openapi.json`, connectors, an MCP
+  server exposing read and draft actions (send/sign require a human confirmation).
+- EUDI Wallet adapter; US simple-signature + ID verification; Asian adapters one country at a time.
+
+Explicitly **not** in these phases: qualified signatures, AGM voting and power of attorney
+(`SPEC-forms.md` §8), tax calculation or VAT tables (ADR 0011), handwriting OCR (ADR 0007, unwritten).
+
 ## Running this with Claude Code
 
 - Two repos-worth of work in one monorepo. Run the tracks in **separate sessions**, and say which
