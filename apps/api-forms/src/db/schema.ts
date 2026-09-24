@@ -1005,3 +1005,48 @@ export const recipientCharges = pgTable(
     uniqueIndex('recipient_charges_unique_idx').on(table.recipientId, table.chargeTypeId),
   ],
 );
+
+/**
+ * A document this organisation sent to Sign for signing (CONTRACT §5, P1c-3).
+ *
+ * Forms keeps only what it needs to show and follow the request: the envelope's id at Sign, the
+ * parties with their signing links, and the last status Sign reported. The evidence, the trail and
+ * the sealed file live in Sign's own database and nowhere here (ADR 0009); the sealed PDF is
+ * fetched from Sign through §5.3 each time somebody downloads it.
+ */
+export const signingRequests = pgTable(
+  'signing_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    envelopeId: text('envelope_id').notNull(),
+    documentName: text('document_name').notNull(),
+    /** Where the PDF Sign fetched came from: an upload, or a submission written onto its paper. */
+    source: text('source').$type<'upload' | 'paper'>().notNull(),
+    submissionId: uuid('submission_id'),
+    environment: text('environment').$type<'test' | 'production'>().notNull(),
+    /** Sign's envelope status, as last reported by §5.2 or hinted by a §5.4 hook. */
+    status: text('status').notNull(),
+    /** `[{ id, name, email?, locale, order, status, signUrl }]`. */
+    parties: jsonb('parties').$type<SigningRequestParty[]>().notNull(),
+    createdBy: uuid('created_by'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('signing_requests_org_idx').on(table.organisationId, table.createdAt),
+    uniqueIndex('signing_requests_envelope_idx').on(table.envelopeId),
+  ],
+);
+
+export interface SigningRequestParty {
+  id: string;
+  name: string;
+  email?: string;
+  locale: string;
+  order: number;
+  status: string;
+  signUrl: string;
+}

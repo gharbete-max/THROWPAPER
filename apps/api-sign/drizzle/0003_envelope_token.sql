@@ -1,0 +1,2 @@
+ALTER TABLE "envelopes" ADD COLUMN "service_token_id" uuid;--> statement-breakpoint
+ALTER TABLE "envelopes" ADD CONSTRAINT "envelopes_service_token_id_service_tokens_id_fk" FOREIGN KEY ("service_token_id") REFERENCES "public"."service_tokens"("id") ON DELETE no action ON UPDATE no action;

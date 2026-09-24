@@ -5979,3 +5979,39 @@ body:has(> #root .shell--narrow) {
 .crop__handle:active {
   cursor: grabbing;
 }
+
+/* --- Signing (P1c-3) ------------------------------------------------------
+ * Documents sent to Loppa Sign. The finished states get the colours the rest of the app already
+ * uses for a good or a stopped ending; everything in between reads as rest, like a sent invoice.
+ */
+.signing__parties {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signing__party {
+  align-items: flex-end;
+}
+
+.badge--completed,
+.badge--signed {
+  color: var(--tp-colour-success);
+  border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
+}
+
+.badge--declined,
+.badge--expired {
+  color: var(--tp-colour-danger);
+  border-color: color-mix(in srgb, var(--tp-colour-danger) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-danger) 10%, transparent);
+}
+
+.badge--invited,
+.badge--viewed,
+.badge--waiting {
+  color: var(--tp-colour-muted);
+  border-color: var(--tp-colour-border);
+  background: none;
+}

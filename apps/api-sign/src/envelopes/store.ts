@@ -9,14 +9,24 @@ import {
   type Refusal,
 } from '@tp/signing';
 import type { Db } from '../db/client.js';
-import { documents, envelopeEvents, envelopes, sealedDocuments } from '../db/schema.js';
+import {
+  documents,
+  envelopeEvents,
+  envelopes,
+  sealedDocuments,
+  serviceTokens,
+} from '../db/schema.js';
 import type { Sealer } from '../sealing/certificate.js';
 import { sealEnvelope } from '../sealing/seal.js';
+import type { HookDelivery } from './hooks.js';
+import type { SigningHookEvent } from '@tp/shared/contract';
 
 /** What reading and appending to an envelope needs: the database, and the key a completion seals with. */
 export interface Store {
   db: Db;
   sealer: Sealer;
+  /** §5.4. Absent, nothing is posted — the tests that do not ask about hooks. */
+  hooks?: HookDelivery;
 }
 
 export function sha256(input: string | Uint8Array): string {
@@ -53,7 +63,14 @@ export class TrailBroken extends Error {
  */
 export async function createEnvelope(
   db: Db,
-  input: { definition: Definition; idempotencyKey: string; document: Uint8Array; at: Date },
+  input: {
+    definition: Definition;
+    idempotencyKey: string;
+    document: Uint8Array;
+    at: Date;
+    /** The token that asked; §5.4 events are signed for it. */
+    serviceTokenId?: string;
+  },
 ): Promise<{ id: string; created: boolean }> {
   const { definition } = input;
   const text = JSON.stringify(definition);
@@ -73,6 +90,7 @@ export async function createEnvelope(
         documentSha256: definition.envelope.documentSha256,
         definition: text,
         definitionSha256: sha256(text),
+        serviceTokenId: input.serviceTokenId ?? null,
       })
       .onConflictDoNothing({ target: [envelopes.organisationId, envelopes.idempotencyKey] })
       .returning({ id: envelopes.id });
@@ -140,7 +158,11 @@ export async function withEnvelope<T>(
   now: Date,
   act: (loaded: Loaded, append: Append) => Promise<T>,
 ): Promise<T | null> {
-  return store.db.transaction(async (tx) => {
+  // Filled inside the transaction, posted only after it commits: a hook about an event that then
+  // rolled back would tell the caller something that never happened.
+  let outbox: { hookUrl: string; tokenSha256: string; events: SigningHookEvent[] } | null = null;
+
+  const result = await store.db.transaction(async (tx) => {
     const [row] = await tx
       .select()
       .from(envelopes)
@@ -246,8 +268,32 @@ export async function withEnvelope<T>(
       });
     }
 
+    const appended = trail.slice(events.length);
+    if (definition.hookUrl && row.serviceTokenId && appended.length) {
+      const [token] = await tx
+        .select({ sha256: serviceTokens.tokenSha256 })
+        .from(serviceTokens)
+        .where(eq(serviceTokens.id, row.serviceTokenId));
+      if (token) {
+        const hookEvents: SigningHookEvent[] = appended.map((event) => ({
+          envelopeId,
+          ...('partyId' in event ? { partyId: event.partyId } : {}),
+          event: event.type,
+          at: event.at,
+        }));
+        // Completion is a state the trail arrives at, not an event in it; the caller still wants to hear it.
+        if (!wasCompleted && envelope.status === 'completed') {
+          hookEvents.push({ envelopeId, event: 'completed', at: now.toISOString() });
+        }
+        outbox = { hookUrl: definition.hookUrl, tokenSha256: token.sha256, events: hookEvents };
+      }
+    }
+
     return answer;
   });
+
+  if (outbox) store.hooks?.deliver(outbox);
+  return result;
 }
 
 /**

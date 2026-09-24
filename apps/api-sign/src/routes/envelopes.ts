@@ -26,6 +26,8 @@ import type { Deps } from '../server.js';
 const errors = { 401: api.ErrorResponse, 403: api.ErrorResponse, 404: api.ErrorResponse } as const;
 
 interface Caller {
+  tokenId: string;
+  tokenSha256: string;
   organisationId: string;
   allowedOrigins: string[];
 }
@@ -57,6 +59,8 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
         .where(and(eq(serviceTokens.tokenSha256, sha256(token)), isNull(serviceTokens.revokedAt)));
       if (row) {
         callers.set(request, {
+          tokenId: row.id,
+          tokenSha256: row.tokenSha256,
           organisationId: row.organisationId,
           allowedOrigins: row.allowedOrigins,
         });
@@ -157,7 +161,16 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
         idempotencyKey: body.idempotencyKey,
         document: fetched.bytes,
         at: now,
+        serviceTokenId: who.tokenId,
       });
+      // The one event not appended through `withEnvelope`, so its hook is posted here.
+      if (created && definition.hookUrl) {
+        deps.hooks?.deliver({
+          hookUrl: definition.hookUrl,
+          tokenSha256: who.tokenSha256,
+          events: [{ envelopeId: id, event: 'sent', at: now.toISOString() }],
+        });
+      }
 
       const answer = await withEnvelope(deps, id, now, async ({ definition, envelope }) => {
         // A key reused for a different document is a caller bug, not a retry.

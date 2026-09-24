@@ -12,6 +12,7 @@ import { redactSigningLinks } from './log-redaction.js';
 import { registerSealedRoutes } from './routes/sealed.js';
 import { registerSignerRoutes } from './routes/signer.js';
 import type { Sealer } from './sealing/certificate.js';
+import { createHookDelivery, type HookDelivery } from './envelopes/hooks.js';
 
 export interface ServerOptions {
   db: Db;
@@ -33,6 +34,8 @@ export interface ServerOptions {
    * server strips `/api` itself, the same rule api-forms uses.
    */
   serveAppFrom?: string;
+  /** §5.4 delivery. Defaults to posting with `fetch`; tests inject a recorder. */
+  hooks?: HookDelivery;
 }
 
 /**
@@ -115,6 +118,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     publicUrl: options.publicUrl.replace(/\/$/, ''),
     apiUrl: options.apiUrl.replace(/\/$/, ''),
     sealer: options.sealer,
+    hooks:
+      options.hooks ??
+      createHookDelivery({
+        fetch: options.fetch ?? fetch,
+        log: (message, detail) => app.log.warn(detail ?? {}, message),
+      }),
     fetch: options.fetch ?? fetch,
     now: options.now ?? (() => new Date()),
   };
@@ -149,6 +158,7 @@ export type Deps = {
   publicUrl: string;
   apiUrl: string;
   sealer: Sealer;
+  hooks: HookDelivery;
   fetch: typeof fetch;
   now: () => Date;
 };

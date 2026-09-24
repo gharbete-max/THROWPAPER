@@ -23,6 +23,7 @@ import {
   messages,
   organisations,
   sendingDomains,
+  signingRequests,
   submissions,
   refreshTokens,
   users,
@@ -46,6 +47,7 @@ import type {
   MessageRecord,
   Repositories,
   SendingDomainRecord,
+  SigningRequestRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
@@ -1072,6 +1074,46 @@ export function createDrizzleRepositories(db: Db): Repositories {
       clear: async (organisationId) => {
         await db.delete(brandKits).where(eq(brandKits.organisationId, organisationId));
       },
+    },
+
+    signingRequests: {
+      create: async (input) => {
+        const [row] = await db.insert(signingRequests).values(input).returning();
+        if (!row) throw new Error('signing request insert returned no row');
+        return row as SigningRequestRecord;
+      },
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(signingRequests)
+          .where(eq(signingRequests.organisationId, organisationId))
+          .orderBy(desc(signingRequests.createdAt))) as SigningRequestRecord[],
+      findById: async (organisationId, id) =>
+        first(
+          await db
+            .select()
+            .from(signingRequests)
+            .where(
+              and(eq(signingRequests.organisationId, organisationId), eq(signingRequests.id, id)),
+            )
+            .limit(1),
+        ) as SigningRequestRecord | null,
+      findByEnvelope: async (envelopeId) =>
+        first(
+          await db
+            .select()
+            .from(signingRequests)
+            .where(eq(signingRequests.envelopeId, envelopeId))
+            .limit(1),
+        ) as SigningRequestRecord | null,
+      saveStatus: async (id, input) =>
+        first(
+          await db
+            .update(signingRequests)
+            .set({ ...input, updatedAt: new Date() })
+            .where(eq(signingRequests.id, id))
+            .returning(),
+        ) as SigningRequestRecord | null,
     },
 
     sendingDomains: {

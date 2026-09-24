@@ -46,6 +46,7 @@ const FormResponses = lazy(() =>
 const Inbox = lazy(() => import('./screens/Inbox.js').then((m) => ({ default: m.Inbox })));
 const Users = lazy(() => import('./screens/Users.js').then((m) => ({ default: m.Users })));
 const Invoices = lazy(() => import('./screens/Invoices.js').then((m) => ({ default: m.Invoices })));
+const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
 const UserWorkspace = lazy(() =>
   import('./screens/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
@@ -222,6 +223,7 @@ function Shell() {
               <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
               <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
               <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
+              <NavSection to="/signing" icon="signature" label={t('nav.signing')} />
               {/* Support work, so it only appears for the people who do it. */}
               {user.role === 'admin' && (
                 <NavSection to="/users" icon="people" label={t('nav.users')} />
@@ -298,6 +300,7 @@ function Shell() {
               <Route path="/forms" element={<Forms />} />
               <Route path="/responses" element={<Inbox />} />
               <Route path="/invoices" element={<Invoices />} />
+              <Route path="/signing" element={<Signing />} />
               <Route path="/users" element={<Users />} />
               <Route path="/users/:id" element={<UserWorkspace />} />
               <Route path="/brand" element={<BrandKit />} />

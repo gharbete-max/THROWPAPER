@@ -25,6 +25,7 @@ import type {
   LoginTokenRecord,
   MessageRecord,
   SendingDomainRecord,
+  SigningRequestRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
   SubmissionRecord,
@@ -56,6 +57,7 @@ export interface MemoryState {
   jobs: JobRecord[];
   brandKits: BrandKitRecord[];
   sendingDomains: SendingDomainRecord[];
+  signingRequests: SigningRequestRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
   invoiceBatches: InvoiceBatchRecord[];
@@ -118,6 +120,7 @@ export function createMemoryRepositories(
     jobs: seed.jobs ?? [],
     brandKits: seed.brandKits ?? [],
     sendingDomains: seed.sendingDomains ?? [],
+    signingRequests: seed.signingRequests ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
     invoiceBatches: seed.invoiceBatches ?? [],
@@ -868,6 +871,35 @@ export function createMemoryRepositories(
       clear: async (organisationId) => {
         const index = state.brandKits.findIndex((k) => k.organisationId === organisationId);
         if (index !== -1) state.brandKits.splice(index, 1);
+      },
+    },
+
+    signingRequests: {
+      create: async (input) => {
+        const record: SigningRequestRecord = { ...input, createdAt: clock(), updatedAt: clock() };
+        state.signingRequests.push(record);
+        return structuredClone(record);
+      },
+      list: async (organisationId) =>
+        state.signingRequests
+          .filter((r) => r.organisationId === organisationId)
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .map((r) => structuredClone(r)),
+      findById: async (organisationId, id) => {
+        const found = state.signingRequests.find(
+          (r) => r.organisationId === organisationId && r.id === id,
+        );
+        return found ? structuredClone(found) : null;
+      },
+      findByEnvelope: async (envelopeId) => {
+        const found = state.signingRequests.find((r) => r.envelopeId === envelopeId);
+        return found ? structuredClone(found) : null;
+      },
+      saveStatus: async (id, input) => {
+        const found = state.signingRequests.find((r) => r.id === id);
+        if (!found) return null;
+        Object.assign(found, input, { updatedAt: clock() });
+        return structuredClone(found);
       },
     },
 

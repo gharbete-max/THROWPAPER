@@ -84,7 +84,7 @@ Neither fallback may be allowed to rot. CI runs the standalone configuration of 
 ## 5. Forms ⇄ Sign
 
 Sign is the third product: envelopes, eID, multi-party signing and sealed PDFs. Identity data and
-evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1), §5.3 in P1c-2; §5.4 is deferred to P1c-3.
+evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1), §5.3 in P1c-2, §5.4 in P1c-3.
 
 ### `POST /v1/envelopes` — ask for a document to be signed (§5.1)
 ```
@@ -109,4 +109,12 @@ the document's original SHA-256 on the audit page.
 
 ### Webhook `POST {caller}/hooks/signing` — envelope events (§5.4)
 `{ envelopeId, partyId?, event: sent|viewed|signed|declined|expired|cancelled|completed, at }`.
+
+One POST per event, in order, after it is committed, to the `hookUrl` the envelope was created
+with (its origin must be on the token's allow-list). Signed:
+`x-loppa-signature: sha256=<hex HMAC-SHA256(key = hex SHA-256 of the service token, raw body)>`
+— Sign keeps only the token's hash, so the hash is the key; the caller computes it from the token
+it holds and refuses a mismatch. `completed` is sent when the last signature completes the
+envelope. **A hook is a hint, not the record:** delivery is retried a few times and may be lost,
+so on a hook the caller reads §5.2 rather than trusting the body. No redirects are followed.
 Invitations and reminders go through `POST /v1/messages` like any other sender.

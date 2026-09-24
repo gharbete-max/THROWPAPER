@@ -10,6 +10,7 @@ import type { Db } from '../db/client.js';
 import { generateDevCertificate, loadSealer, type Sealer } from '../sealing/certificate.js';
 import { extractSeal, opensslVerify } from '../sealing/openssl-validator.js';
 import { sha256 } from './store.js';
+import { createHookDelivery, hookSignature } from './hooks.js';
 
 /**
  * CONTRACT §5.1–5.2 and the signer's link, against a real, throwaway Postgres.
@@ -658,6 +659,119 @@ describe.skipIf(!database)('the sealed document (§5.3)', () => {
       );
     }
     expect((await sealedOf(token, id)).statusCode).toBe(500);
+  });
+});
+
+describe.skipIf(!database)('telling the caller (§5.4)', () => {
+  it('posts each event in order after it commits, signed so only the token holder can check it', async () => {
+    const posted: { url: string; signature: string; body: string }[] = [];
+    let failFirst = true;
+    const hooks = createHookDelivery({
+      backoff: [0, 0],
+      log: () => {},
+      fetch: (async (url: string, init: RequestInit) => {
+        // The caller is briefly down: the first attempt fails and is retried.
+        if (failFirst) {
+          failFirst = false;
+          return new Response('', { status: 503 });
+        }
+        posted.push({
+          url,
+          signature: String((init.headers as Record<string, string>)['x-loppa-signature']),
+          body: String(init.body),
+        });
+        return new Response(null, { status: 204 });
+      }) as unknown as typeof fetch,
+    });
+    const server = await buildServer({
+      db,
+      linkSecret: SECRET,
+      publicUrl: 'https://sign.example.test',
+      apiUrl: API,
+      sealer,
+      hooks,
+      now: () => clock,
+      fetch: (async () => new Response(PDF)) as unknown as typeof fetch,
+    });
+    try {
+      const org = randomUUID();
+      const token = await tokenFor(org);
+      const hookUrl = `${ORIGIN}/hooks/signing`;
+      const created = (
+        await server.inject({
+          method: 'POST',
+          url: '/v1/envelopes',
+          headers: { authorization: `Bearer ${token}` },
+          payload: envelopeRequest(org, { routing: 'parallel', hookUrl }),
+        })
+      ).json();
+      for (const [party, name] of [
+        ['landlord', 'Åsa Öberg'],
+        ['tenant', 'Jon Smith'],
+      ] as const) {
+        await server.inject({
+          method: 'POST',
+          url: `/v1/sign/${linkOf(created.signUrls[party])}`,
+          payload: { typedName: name },
+        });
+      }
+      await hooks.idle();
+
+      expect(posted.map((hook) => JSON.parse(hook.body).event)).toEqual([
+        'sent',
+        'signed',
+        'signed',
+        'completed',
+      ]);
+      expect(posted.every((hook) => hook.url === hookUrl)).toBe(true);
+      // What a caller does: HMAC the raw body with the SHA-256 of the token it holds.
+      for (const hook of posted) {
+        expect(hook.signature).toBe(hookSignature(sha256(token), hook.body));
+        expect(hook.signature).not.toBe(hookSignature(sha256('svc_somebody_else'), hook.body));
+      }
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('never lets an unreachable caller stop a signature', async () => {
+    const hooks = createHookDelivery({
+      backoff: [],
+      log: () => {},
+      fetch: (async () => {
+        throw new Error('ECONNREFUSED');
+      }) as unknown as typeof fetch,
+    });
+    const server = await buildServer({
+      db,
+      linkSecret: SECRET,
+      publicUrl: 'https://sign.example.test',
+      apiUrl: API,
+      sealer,
+      hooks,
+      now: () => clock,
+      fetch: (async () => new Response(PDF)) as unknown as typeof fetch,
+    });
+    try {
+      const org = randomUUID();
+      const created = (
+        await server.inject({
+          method: 'POST',
+          url: '/v1/envelopes',
+          headers: { authorization: `Bearer ${await tokenFor(org)}` },
+          payload: envelopeRequest(org, { hookUrl: `${ORIGIN}/hooks/signing` }),
+        })
+      ).json();
+      const signed = await server.inject({
+        method: 'POST',
+        url: `/v1/sign/${linkOf(created.signUrls.landlord)}`,
+        payload: { typedName: 'Åsa' },
+      });
+      expect(signed.statusCode).toBe(200);
+      await hooks.idle();
+    } finally {
+      await server.close();
+    }
   });
 });
 

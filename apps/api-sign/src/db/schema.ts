@@ -86,6 +86,11 @@ export const envelopes = pgTable(
       .references(() => documents.sha256),
     definition: text('definition').notNull(),
     definitionSha256: text('definition_sha256').notNull(),
+    /**
+     * The token that asked for it. §5.4 events are signed with that token's hash, which only Sign
+     * and the holder of the token can compute. Null on envelopes created before P1c-3.
+     */
+    serviceTokenId: uuid('service_token_id').references(() => serviceTokens.id),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [

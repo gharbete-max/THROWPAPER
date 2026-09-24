@@ -82,7 +82,13 @@ export interface TestHarness {
 
 export async function createTestHarness(
   seed: Partial<MemoryState> = {},
-  options: { renderer?: PdfRenderer & { rendered: string[] }; contactAddress?: string | null } = {},
+  options: {
+    renderer?: PdfRenderer & { rendered: string[] };
+    contactAddress?: string | null;
+    /** A Sign to send documents to (CONTRACT §5), reached through `signFetch`. */
+    signing?: { apiUrl: string; serviceToken: string };
+    signFetch?: typeof fetch;
+  } = {},
 ): Promise<TestHarness> {
   const repos = createMemoryRepositories({
     organisations: [testOrganisation],
@@ -110,6 +116,8 @@ export async function createTestHarness(
     startWorker: false,
     contactAddress:
       options.contactAddress === undefined ? 'hello@loppa.test' : options.contactAddress,
+    signing: options.signing ?? null,
+    ...(options.signFetch ? { signFetch: options.signFetch } : {}),
   });
   await app.ready();
 

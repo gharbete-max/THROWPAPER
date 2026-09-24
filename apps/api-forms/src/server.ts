@@ -49,6 +49,8 @@ import { registerPublicContactRoutes } from './routes/public-contact.js';
 import { registerInvoiceRoutes } from './routes/invoices.js';
 import { registerPublicInvoiceRoutes } from './routes/public-invoices.js';
 import { registerDocumentRoutes } from './routes/documents.js';
+import { registerSigningRoutes } from './routes/signing.js';
+import { createSignClient, type SignConnection } from './signing/client.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
@@ -104,6 +106,13 @@ export interface ServerOptions {
    * Unset in development, where Vite serves the app and proxies here.
    */
   serveAppFrom?: string;
+  /**
+   * The Sign product this deployment sends documents to (CONTRACT §5, P1c-3), or null for none.
+   * Defaults to `SIGN_API_URL` + `SIGN_SERVICE_TOKEN`; the desktop passes its local Sign.
+   */
+  signing?: SignConnection | null;
+  /** Injected by tests so no real Sign is called. */
+  signFetch?: typeof fetch;
 
   /** Uploaded images. Injected by the tests and by demo mode; local disk otherwise. */
   assets?: AssetStore;
@@ -519,6 +528,22 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     },
   });
   registerDocumentRoutes(app, { repos, guard, admission, store, uploadStore });
+  const signing =
+    options.signing !== undefined
+      ? options.signing
+      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
+        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
+        : null;
+  registerSigningRoutes(app, {
+    repos,
+    guard,
+    store,
+    uploadStore,
+    renderer,
+    sign: signing ? createSignClient(signing, options.signFetch) : null,
+    // The app's origin with the `/api` prefix: served by this process, or proxied to it by Vite.
+    publicApiUrl: `${appUrl.replace(/\/$/, '')}/api`,
+  });
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
   registerCheckInRoutes(app, { repos, guard, jwtSecret });
   registerBrandKitRoutes(app, { repos, guard });
