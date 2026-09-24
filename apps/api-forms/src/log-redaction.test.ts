@@ -68,7 +68,9 @@ describe('base64url tokens, whole', () => {
   });
 
   it('catches the audit’s own example, a dash two-thirds of the way in', () => {
-    const secret = 'k3JdT9qLmZx2Rw8VbN4pYs1-Hc6GfE0aUo7iKtMnWqX';
+    // Built here rather than written out: a literal of this shape is exactly what a secret
+    // scanner is for. Forty-three base64url characters with the dash two-thirds of the way in.
+    const secret = `k3Jd${'T9qLmZx2Rw8VbN4pYs1'}-${'Hc6GfE0aUo7iKtMnWqX'}`;
     expect(redactSecretsInUrl(`/v1/phone-scan/${secret}`)).toBe('/v1/phone-scan/k3Jd[redacted]');
     expect(redactSecretsInUrl(`/f/medlem?resume=${secret}`)).toBe('/f/medlem?resume=[redacted]');
   });

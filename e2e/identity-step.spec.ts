@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
-import { db, plantLoginToken, uniqueEmail } from './support.js';
+import { connectFormsToSign, db, plantLoginToken, uniqueEmail } from './support.js';
 
 /**
  * The optional e-ID step, through the real Forms and the real Sign (CONTRACT §5.6).
@@ -13,6 +13,11 @@ import { db, plantLoginToken, uniqueEmail } from './support.js';
  */
 const sql = db();
 const slug = `eid-${Date.now()}`;
+
+// Forms must be able to ask Sign what it offers; CI's Sign database starts empty.
+test.beforeAll(async () => {
+  await connectFormsToSign(sql);
+});
 
 test.afterAll(async () => {
   await sql`delete from forms where slug = ${slug}`;
