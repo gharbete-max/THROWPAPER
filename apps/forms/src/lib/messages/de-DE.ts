@@ -881,4 +881,30 @@ export const deDE: Record<MessageKey, string> = {
   'signing.cancel': 'Abbrechen',
   'submissions.sendForSigning': 'Zur Unterschrift senden',
   'signing.fromSubmission': 'Ausgefülltes Papierformular {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Kamera verwenden',
+  'camera.scanDocument': 'Mit der Kamera scannen',
+  'camera.preview': 'Kameravorschau',
+  'camera.starting': 'Kamera wird gestartet…',
+  'camera.capture': 'Foto aufnehmen',
+  'camera.capturePage': 'Seite aufnehmen',
+  'camera.choose': 'Kamera',
+  'camera.default': 'Standardkamera',
+  'camera.numbered': 'Kamera {number}',
+  'camera.pages': 'Gescannte Seiten ({count})',
+  'camera.page': 'Seite {number}',
+  'camera.remove': 'Entfernen',
+  'camera.done': 'Fertig ({count})',
+  'camera.cancel': 'Abbrechen',
+  'camera.systemCamera': 'Kamera öffnen',
+  'camera.unavailable.insecure':
+    'Die Live-Kamera braucht hier eine sichere Verbindung. Verwenden Sie stattdessen die Kamera des Geräts.',
+  'camera.unavailable.denied':
+    'Die Kamera wurde nicht erlaubt. Erlauben Sie sie in den Browser- oder Systemeinstellungen, oder verwenden Sie die Kamera des Geräts.',
+  'camera.unavailable.none':
+    'Keine Kamera gefunden. Schließen Sie eine an, oder verwenden Sie die Kamera des Geräts.',
+  'camera.unavailable.failed':
+    'Die Kamera konnte nicht gestartet werden. Versuchen Sie es erneut, oder verwenden Sie die Kamera des Geräts.',
+  'signing.source.file': 'PDF-Datei',
+  'signing.source.camera': 'Kamera',
 };

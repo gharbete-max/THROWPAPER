@@ -18,6 +18,7 @@ import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { resolveFormAccess } from '../forms/access.js';
 import { SignRefused, SignUnavailable, type SignClient } from '../signing/client.js';
 import { createHash } from 'node:crypto';
+import { pagesToPdf } from '../signing/scan.js';
 
 const IdParam = z.object({ id: z.string().uuid() });
 const errors = {
@@ -107,6 +108,15 @@ export function registerSigningRoutes(
       let submissionId: string | null = null;
       if (body.source === 'upload') {
         pdf = Buffer.from(body.pdfBase64, 'base64');
+        documentName = body.documentName;
+      } else if (body.source === 'scan') {
+        try {
+          pdf = await pagesToPdf(body.pages);
+        } catch {
+          return reply.code(422).send({
+            error: { code: 'unreadable-scan', message: 'A scanned page is not an image' },
+          });
+        }
         documentName = body.documentName;
       } else {
         const submission = await deps.repos.submissions.findById(

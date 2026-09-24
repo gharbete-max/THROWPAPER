@@ -3116,6 +3116,55 @@ by typing or drawing, and get back a sealed PDF. None of it touches the network.
 - The stage builds. The packaged app's boot is the Desktop workflow's to prove on Windows and
   macOS; this container cannot download Electron.
 
+## Scanning with a camera — phone and PC · done
+
+The owner asked for the scanner to work with a camera on a phone and on a PC. It now does,
+everywhere paper comes in.
+
+- **`CameraScan`** (`apps/forms/src/components/CameraScan.tsx`) is the live camera in the page. A
+  phone uses its back camera (`facingMode: environment`); a PC uses its webcam, with a chooser when
+  there are several. The desktop app works too: the shell already grants the camera to its own
+  origin, and macOS has the usage string. You take several pages in a row, with thumbnails and
+  "Remove". Each page is a JPEG `File` drawn from the video frame on this device, so everything
+  downstream is the existing photograph path: the four-corner straightening (`warp.ts`) and OCR.
+  Nothing leaves the device while scanning.
+- **When there is no live camera**, it says why: not a secure context (a phone on a plain-HTTP
+  address), permission refused, no device, or failed to start. It then offers the **device's own
+  camera app** through `<input type="file" capture="environment">`, which needs neither a
+  permission nor HTTPS.
+- **Form from paper**: "Use camera" beside the file picker.
+- **Signing**: a document can be a PDF file **or the camera**. Pages are straightened on the corner
+  handles and sent as `source: 'scan'`; a second scan adds pages rather than replacing them.
+  api-forms makes the images into a PDF: one A4 page per image, in the image's orientation, fitted
+  and centred (`signing/scan.ts`, pdf-lib). Sign then fetches, hashes and seals it like any other.
+  **(packages)**: `CreateSigningRequest` gained the `scan` variant.
+- **A real bug found by the unit test.** `Buffer.from(base64)` is a slice of Node's shared pool, and
+  pdf-lib's JPEG reader reads the underlying `ArrayBuffer` from offset 0, so it saw another
+  buffer's bytes ("SOI not found"). With real camera pages this would have failed unpredictably. The
+  bytes are now copied into their own array first.
+
+**Evidence:**
+- `e2e/scan-to-sign.spec.ts`, with Chromium's fake camera:
+  1. The live preview starts.
+  2. Take two pages; "Done (2)".
+  3. The corner handles appear per page.
+  4. Send, sign in a second tab, "Signed by everyone".
+  5. The sealed PDF verifies with OpenSSL and holds at least three pages (two scans and the audit
+     page).
+- `e2e/camera-fallback.spec.ts`: with no camera permission, the scanner explains and offers the
+  `capture` input.
+- `signing/scan.test.ts`: page sizes and orientation per image, and a non-image page refused.
+- Screenshots of the live view, the thumbnails and the straightening were looked at. That removed a
+  duplicated hint.
+
+**Not in this slice:**
+- **A phone scanning *into the desktop app*.** The desktop listens on loopback only, and a phone's
+  browser allows the live camera only on HTTPS. A "share on my network" mode needs its own threat
+  model and a certificate story (ADR 0016, D4).
+- **Automatic edge detection.** The corners are placed by hand (ADR 0004).
+- **Scanner hardware** (WIA/TWAIN, ADR 0016 D3): a flatbed still works by saving a file and
+  importing it.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

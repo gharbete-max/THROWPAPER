@@ -864,4 +864,29 @@ export const isIS: Record<MessageKey, string> = {
   'signing.cancel': 'Hætta við',
   'submissions.sendForSigning': 'Senda til undirritunar',
   'signing.fromSubmission': 'Útfyllt pappírseyðublað {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Nota myndavél',
+  'camera.scanDocument': 'Skanna með myndavél',
+  'camera.preview': 'Forskoðun myndavélar',
+  'camera.starting': 'Ræsir myndavélina…',
+  'camera.capture': 'Taka mynd',
+  'camera.capturePage': 'Taka síðu',
+  'camera.choose': 'Myndavél',
+  'camera.default': 'Sjálfgefin myndavél',
+  'camera.numbered': 'Myndavél {number}',
+  'camera.pages': 'Skannaðar síður ({count})',
+  'camera.page': 'Síða {number}',
+  'camera.remove': 'Fjarlægja',
+  'camera.done': 'Lokið ({count})',
+  'camera.cancel': 'Hætta við',
+  'camera.systemCamera': 'Opna myndavélina',
+  'camera.unavailable.insecure':
+    'Myndavélin þarf örugga tengingu hér. Notaðu myndavél tækisins í staðinn.',
+  'camera.unavailable.denied':
+    'Myndavélin var ekki leyfð. Leyfðu hana í stillingum vafrans eða kerfisins, eða notaðu myndavél tækisins.',
+  'camera.unavailable.none': 'Engin myndavél fannst. Tengdu myndavél eða notaðu myndavél tækisins.',
+  'camera.unavailable.failed':
+    'Ekki tókst að ræsa myndavélina. Reyndu aftur eða notaðu myndavél tækisins.',
+  'signing.source.file': 'PDF-skrá',
+  'signing.source.camera': 'Myndavél',
 };

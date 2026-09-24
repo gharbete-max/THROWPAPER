@@ -878,6 +878,31 @@ export const enGB = {
   'signing.cancel': 'Cancel',
   'submissions.sendForSigning': 'Send for signing',
   'signing.fromSubmission': 'Filled-in paper form {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Use camera',
+  'camera.scanDocument': 'Scan with camera',
+  'camera.preview': 'Camera preview',
+  'camera.starting': 'Starting the camera…',
+  'camera.capture': 'Take photo',
+  'camera.capturePage': 'Take page',
+  'camera.choose': 'Camera',
+  'camera.default': 'Default camera',
+  'camera.numbered': 'Camera {number}',
+  'camera.pages': 'Scanned pages ({count})',
+  'camera.page': 'Page {number}',
+  'camera.remove': 'Remove',
+  'camera.done': 'Done ({count})',
+  'camera.cancel': 'Cancel',
+  'camera.systemCamera': 'Open the camera',
+  'camera.unavailable.insecure':
+    "The live camera needs a secure connection here. Use the device's own camera instead.",
+  'camera.unavailable.denied':
+    "The camera was not allowed. Allow it in the browser or system settings, or use the device's own camera.",
+  'camera.unavailable.none': "No camera was found. Connect one, or use the device's own camera.",
+  'camera.unavailable.failed':
+    "The camera could not be started. Try again, or use the device's own camera.",
+  'signing.source.file': 'PDF file',
+  'signing.source.camera': 'Camera',
 } as const;
 
 /**

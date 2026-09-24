@@ -36,6 +36,25 @@ export const CreateSigningRequest = z.discriminatedUnion('source', [
     submissionId: z.string().uuid(),
     ...Common,
   }),
+  /**
+   * Paper scanned with a camera (phone or PC), already straightened in the browser: one image per
+   * page, in order. The server makes them into a PDF — one page per image, A4 in the image's own
+   * orientation — so what Sign seals is a PDF like any other.
+   */
+  z.object({
+    source: z.literal('scan'),
+    documentName: z.string().trim().min(1).max(200),
+    pages: z
+      .array(
+        z.object({
+          contentType: z.enum(['image/jpeg', 'image/png']),
+          base64: z.string().min(1).max(8_000_000),
+        }),
+      )
+      .min(1)
+      .max(20),
+    ...Common,
+  }),
 ]);
 export type CreateSigningRequest = z.input<typeof CreateSigningRequest>;
 
@@ -43,7 +62,7 @@ export const SigningRequestView = z.object({
   id: z.string().uuid(),
   envelopeId: z.string(),
   documentName: z.string(),
-  source: z.enum(['upload', 'paper']),
+  source: z.enum(['upload', 'paper', 'scan']),
   submissionId: z.string().uuid().nullable(),
   environment: z.enum(['test', 'production']),
   status: z.string(),

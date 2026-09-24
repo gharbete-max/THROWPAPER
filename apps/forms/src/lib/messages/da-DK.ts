@@ -859,4 +859,29 @@ export const daDK: Record<MessageKey, string> = {
   'signing.cancel': 'Annuller',
   'submissions.sendForSigning': 'Send til underskrift',
   'signing.fromSubmission': 'Udfyldt papirformular {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Brug kameraet',
+  'camera.scanDocument': 'Scan med kameraet',
+  'camera.preview': 'Kameravisning',
+  'camera.starting': 'Starter kameraet…',
+  'camera.capture': 'Tag foto',
+  'camera.capturePage': 'Tag side',
+  'camera.choose': 'Kamera',
+  'camera.default': 'Standardkamera',
+  'camera.numbered': 'Kamera {number}',
+  'camera.pages': 'Scannede sider ({count})',
+  'camera.page': 'Side {number}',
+  'camera.remove': 'Fjern',
+  'camera.done': 'Færdig ({count})',
+  'camera.cancel': 'Annuller',
+  'camera.systemCamera': 'Åbn kameraet',
+  'camera.unavailable.insecure':
+    'Kameraet kræver en sikker forbindelse her. Brug enhedens eget kamera i stedet.',
+  'camera.unavailable.denied':
+    'Kameraet blev ikke tilladt. Tillad det i browserens eller systemets indstillinger, eller brug enhedens eget kamera.',
+  'camera.unavailable.none': 'Intet kamera fundet. Tilslut et, eller brug enhedens eget kamera.',
+  'camera.unavailable.failed':
+    'Kameraet kunne ikke startes. Prøv igen, eller brug enhedens eget kamera.',
+  'signing.source.file': 'PDF-fil',
+  'signing.source.camera': 'Kamera',
 };

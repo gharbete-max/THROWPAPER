@@ -9,6 +9,9 @@ import { Loading } from '../components/Loading.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { CopyLink } from '../components/CopyLink.js';
 import { Icon } from '../components/Icon.js';
+import { CameraScan, MAX_SCAN_PAGES } from '../components/CameraScan.js';
+import { CropPhoto, WHOLE_PICTURE } from './builder/paper/CropPhoto.js';
+import { isUsable, straightenFile, type Corners } from './builder/paper/warp.js';
 
 type Party = { name: string; email: string; locale: string };
 
@@ -237,6 +240,11 @@ function Compose({
   const { locale, locales } = useSession();
   const languages = locales.supported.length ? locales.supported : [locale];
   const [file, setFile] = useState<File | null>(null);
+  // A document can also be paper, scanned here with the camera: one photo per page, each
+  // straightened on the corners the person places (the same handles as a form from paper).
+  const [via, setVia] = useState<'file' | 'camera'>('file');
+  const [scanning, setScanning] = useState(false);
+  const [scanned, setScanned] = useState<{ file: File; corners: Corners }[]>([]);
   const [documentName, setDocumentName] = useState('');
   const [parties, setParties] = useState<Party[]>([{ name: '', email: '', locale }]);
   const [routing, setRouting] = useState<'sequential' | 'parallel'>('sequential');
@@ -244,8 +252,12 @@ function Compose({
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
 
+  const hasDocument =
+    via === 'file'
+      ? file !== null
+      : scanned.length > 0 && scanned.every((p) => isUsable(p.corners));
   const ready =
-    (paper !== null || (file !== null && documentName.trim() !== '')) &&
+    (paper !== null || (hasDocument && documentName.trim() !== '')) &&
     declarationKey.trim() !== '' &&
     parties.every((party) => party.name.trim() !== '');
 
@@ -270,14 +282,28 @@ function Compose({
         // Test mode until a person has written the declaration (ADR 0012, rule 7).
         environment: 'test' as const,
       };
-      const body: formSchemas.CreateSigningRequest = paper
-        ? { source: 'paper', submissionId: paper.submissionId, ...common }
-        : {
-            source: 'upload',
-            documentName: documentName.trim(),
-            pdfBase64: await base64(file!),
-            ...common,
-          };
+      let body: formSchemas.CreateSigningRequest;
+      if (paper) {
+        body = { source: 'paper', submissionId: paper.submissionId, ...common };
+      } else if (via === 'camera') {
+        const pages = [];
+        for (const page of scanned) {
+          const straight = await straightenFile(page.file, page.corners);
+          pages.push({
+            contentType:
+              straight.type === 'image/png' ? ('image/png' as const) : ('image/jpeg' as const),
+            base64: await base64(straight),
+          });
+        }
+        body = { source: 'scan', documentName: documentName.trim(), pages, ...common };
+      } else {
+        body = {
+          source: 'upload',
+          documentName: documentName.trim(),
+          pdfBase64: await base64(file!),
+          ...common,
+        };
+      }
       onSent(await client.createSigningRequest(body));
     } catch {
       setFailed(true);
@@ -296,18 +322,77 @@ function Compose({
         </p>
       ) : (
         <>
-          <label className="stack stack--tight">
-            <span>{t('signing.file')}</span>
-            <input
-              type="file"
-              accept="application/pdf,.pdf"
-              onChange={(event) => {
-                const chosen = event.target.files?.[0] ?? null;
-                setFile(chosen);
-                if (chosen && !documentName) setDocumentName(chosen.name.replace(/\.pdf$/i, ''));
+          <div className="row" role="radiogroup" aria-label={t('signing.document')}>
+            {(['file', 'camera'] as const).map((choice) => (
+              <button
+                key={choice}
+                type="button"
+                role="radio"
+                aria-checked={via === choice}
+                className={via === choice ? 'button' : 'button button--quiet'}
+                onClick={() => {
+                  setVia(choice);
+                  if (choice === 'camera' && scanned.length === 0) setScanning(true);
+                }}
+              >
+                <Icon name={choice === 'file' ? 'file' : 'image'} />
+                {t(`signing.source.${choice}`)}
+              </button>
+            ))}
+          </div>
+          {via === 'file' ? (
+            <label className="stack stack--tight">
+              <span>{t('signing.file')}</span>
+              <input
+                type="file"
+                accept="application/pdf,.pdf"
+                onChange={(event) => {
+                  const chosen = event.target.files?.[0] ?? null;
+                  setFile(chosen);
+                  if (chosen && !documentName) setDocumentName(chosen.name.replace(/\.pdf$/i, ''));
+                }}
+              />
+            </label>
+          ) : scanning ? (
+            <CameraScan
+              onCancel={() => setScanning(false)}
+              onDone={(pages) => {
+                setScanning(false);
+                // More pages are added to the end: a second scan continues the document.
+                setScanned((current) =>
+                  [
+                    ...current,
+                    ...pages.map((page) => ({ file: page, corners: WHOLE_PICTURE })),
+                  ].slice(0, MAX_SCAN_PAGES),
+                );
               }}
             />
-          </label>
+          ) : (
+            <div className="stack">
+              {scanned.map((page, index) => (
+                <CropPhoto
+                  key={index}
+                  file={page.file}
+                  corners={page.corners}
+                  onChange={(corners) =>
+                    setScanned((current) =>
+                      current.map((p, i) => (i === index ? { ...p, corners } : p)),
+                    )
+                  }
+                />
+              ))}
+              <div>
+                <button
+                  type="button"
+                  className="button button--quiet small"
+                  onClick={() => setScanning(true)}
+                >
+                  <Icon name="image" />
+                  {t('camera.scanDocument')}
+                </button>
+              </div>
+            </div>
+          )}
           <label className="stack stack--tight">
             <span>{t('signing.documentName')}</span>
             <input

@@ -859,4 +859,29 @@ export const svSE: Record<MessageKey, string> = {
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Skicka för signering',
   'signing.fromSubmission': 'Ifyllt pappersformulär {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Använd kameran',
+  'camera.scanDocument': 'Skanna med kameran',
+  'camera.preview': 'Kameravy',
+  'camera.starting': 'Startar kameran…',
+  'camera.capture': 'Ta foto',
+  'camera.capturePage': 'Ta sida',
+  'camera.choose': 'Kamera',
+  'camera.default': 'Standardkamera',
+  'camera.numbered': 'Kamera {number}',
+  'camera.pages': 'Skannade sidor ({count})',
+  'camera.page': 'Sida {number}',
+  'camera.remove': 'Ta bort',
+  'camera.done': 'Klar ({count})',
+  'camera.cancel': 'Avbryt',
+  'camera.systemCamera': 'Öppna kameran',
+  'camera.unavailable.insecure':
+    'Kameran kräver en säker anslutning här. Använd enhetens egen kamera i stället.',
+  'camera.unavailable.denied':
+    'Kameran tilläts inte. Tillåt den i webbläsarens eller systemets inställningar, eller använd enhetens egen kamera.',
+  'camera.unavailable.none': 'Ingen kamera hittades. Anslut en, eller använd enhetens egen kamera.',
+  'camera.unavailable.failed':
+    'Kameran kunde inte startas. Försök igen, eller använd enhetens egen kamera.',
+  'signing.source.file': 'PDF-fil',
+  'signing.source.camera': 'Kamera',
 };
