@@ -891,6 +891,31 @@ export const jaJP: Record<MessageKey, string> = {
   'submissions.sendForSigning': '署名に送る',
   'signing.fromSubmission': '記入済みの紙の書式 {reference}',
   // Scanning with a camera (phone or PC).
+  'phone.use': 'スマートフォンを使う',
+  'phone.heading': 'スマートフォンでスキャン',
+  'phone.opening': 'スマートフォン用のコードを取得しています…',
+  'phone.noNetwork':
+    'このコンピューターはスマートフォンから接続できるネットワークにありません。Wi-Fi に接続してもう一度お試しください。',
+  'phone.failed': 'スマートフォンでのスキャンを開始できませんでした。もう一度お試しください。',
+  'phone.expired': 'コードの有効期限が切れました。',
+  'phone.hint':
+    'スマートフォンのカメラをコードに向けてリンクを開いてください。スマートフォンはこのコンピューターと同じ Wi-Fi に接続している必要があります。',
+  'phone.qrAlt': 'スマートフォン用リンクの QR コード',
+  'phone.received': '受信したページ: {count}',
+  'phone.useReceived': 'ページを使う ({count})',
+  'phone.newCode': '新しいコード',
+  'phone.back': 'このコンピューターのカメラを使う',
+  'phone.page.heading': 'コンピューターへスキャン',
+  'phone.page.gone':
+    'このリンクは期限切れか、閉じられています。コンピューターで新しいコードを表示してください。',
+  'phone.page.sending': '{count} ページ中 {number} ページ目を送信中…',
+  'phone.page.intro':
+    '各ページを撮影してください。ページはコードを表示したコンピューターに直接送られます。',
+  'phone.page.full': '1 回のスキャンで扱える最大ページ数に達しています。',
+  'phone.page.failed': 'ページを送信できませんでした。もう一度お試しください。',
+  'phone.page.sent':
+    '送信しました。コンピューターに {count} ページあります。スマートフォンはしまって構いません。',
+  'phone.page.more': 'さらにページをスキャン',
   'camera.open': 'カメラを使う',
   'camera.scanDocument': 'カメラでスキャン',
   'camera.preview': 'カメラのプレビュー',

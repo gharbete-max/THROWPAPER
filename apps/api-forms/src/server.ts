@@ -50,6 +50,8 @@ import { registerInvoiceRoutes } from './routes/invoices.js';
 import { registerPublicInvoiceRoutes } from './routes/public-invoices.js';
 import { registerDocumentRoutes } from './routes/documents.js';
 import { registerSigningRoutes } from './routes/signing.js';
+import { registerPhoneScanRoutes } from './routes/phone-scan.js';
+import { createPhoneScanStore, type PhoneScanStore } from './phone-scan/store.js';
 import { createSignClient, type SignConnection } from './signing/client.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
@@ -78,6 +80,10 @@ export interface ServerOptions {
   /** Signs download links. Required, and must differ from `jwtSecret`. See env.ts. */
   documentSigningSecret?: string;
   appUrl?: string;
+  /** Scanning with a phone: the sessions (shared with the desktop's relay), and where a phone
+   *  reaches this app. Default: a store of its own, and `appUrl`. */
+  phoneScans?: PhoneScanStore;
+  phoneOrigin?: () => Promise<string | null>;
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
   probeDatabase?: boolean;
   /** Injected by tests. Defaults to Playwright Chromium and a local directory. */
@@ -543,6 +549,12 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     sign: signing ? createSignClient(signing, options.signFetch) : null,
     // The app's origin with the `/api` prefix: served by this process, or proxied to it by Vite.
     publicApiUrl: `${appUrl.replace(/\/$/, '')}/api`,
+  });
+  registerPhoneScanRoutes(app, {
+    guard,
+    store: options.phoneScans ?? createPhoneScanStore(),
+    // On a server the phone opens the app's own public address; the desktop passes its LAN relay.
+    phoneOrigin: options.phoneOrigin ?? (async () => appUrl),
   });
   registerSendingDomainRoutes(app, { repos, guard, resolver: options.resolver });
   registerCheckInRoutes(app, { repos, guard, jwtSecret });

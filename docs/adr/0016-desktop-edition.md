@@ -41,6 +41,37 @@ products side by side** — the move D6 describes for Mailer, made for Sign firs
 What that seal is worth offline is what ADR 0009 says of any self-issued seal: tamper-evidence,
 not identity. A qualified seal and timestamp are a purchase and need the network.
 
+## Amended (2026-09-24): a phone may scan for the desktop, through one narrow door
+
+A PC's webcam is poor at paper and a phone's camera is good at it, so the owner asked for the phone
+to scan *into* the desktop app. The phone cannot reach `127.0.0.1`, so while — and only while — a
+phone scan is open, the Forms server starts a **LAN relay** (`api-forms/src/desktop/phone-relay.ts`).
+
+**What it exposes.** It listens on the machine's private LAN address only (not `0.0.0.0`: a VPN or
+public adapter gets nothing) and passes exactly three routes plus the static app bundle:
+`GET /phone-scan/<token>` (the page), `GET /api/v1/phone-scan/<token>` (how many pages have
+arrived) and `POST /api/v1/phone-scan/<token>/pages` (one JPEG or PNG, judged by its bytes, at most
+twenty, ~6 MB each). Everything else answers 404 **before reaching the app** — sign-in, forms,
+documents, signed download links — even from a request carrying a valid session. Tests hold both
+lists (`phone-relay.test.ts`, `start.test.ts`).
+
+**What protects it.** The token is 256 random bits, in the link the QR code carries and nowhere else
+(the server keeps its hash). A session lives fifteen minutes, belongs to the person who opened it,
+holds pages in memory only, and is closed — pages and all — when the person uses the pages or
+leaves the screen. When no session is open the relay stops listening.
+
+**What it does not protect.** It is plain HTTP on the local network: someone on the same Wi-Fi who
+can capture traffic could read the photographed pages in transit, or, having seen the link, add a
+page to that one scan until it closes. It cannot read anything back. The person sees every page on
+the computer before using it, and nothing is used without that. On a network they do not trust,
+the webcam or a PDF is the answer, and the screen says the phone must be on the same Wi-Fi. HTTPS
+on the LAN would need a certificate a phone trusts for a private address, which is a purchase and
+a setup step for an office, not a laptop; the hosted edition already serves the same page over
+HTTPS from its public address.
+
+**Windows** asks, the first time, whether Loppa may use private networks; declining keeps the
+relay unreachable and nothing else changes.
+
 ## Context
 
 The owner asked for a downloadable `.exe` — then a Mac build — that runs Loppa **fully locally** — build forms, fill
@@ -182,7 +213,7 @@ sends from their own mailbox.
 
 ### Security posture
 
-- API on loopback only; CORS scoped to its own origin; the existing rate limits, CSP and helmet
+- API on loopback only (the one exception, a phone scan's relay, is the amendment above); CORS scoped to its own origin; the existing rate limits, CSP and helmet
   headers unchanged.
 - The main window has **no preload and no Node** (`contextIsolation`, `sandbox`); it is a web client
   like any other (rule 3). Only the panel window has a bridge, and it exposes five calls.

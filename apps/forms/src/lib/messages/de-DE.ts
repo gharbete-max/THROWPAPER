@@ -911,6 +911,32 @@ export const deDE: Record<MessageKey, string> = {
   'submissions.sendForSigning': 'Zur Unterschrift senden',
   'signing.fromSubmission': 'Ausgefülltes Papierformular {reference}',
   // Scanning with a camera (phone or PC).
+  'phone.use': 'Smartphone verwenden',
+  'phone.heading': 'Mit dem Smartphone scannen',
+  'phone.opening': 'Code für das Smartphone wird geholt…',
+  'phone.noNetwork':
+    'Dieser Computer ist in keinem Netzwerk, das ein Smartphone erreicht. Verbinden Sie ihn mit dem WLAN und versuchen Sie es erneut.',
+  'phone.failed':
+    'Scannen mit dem Smartphone konnte nicht gestartet werden. Bitte erneut versuchen.',
+  'phone.expired': 'Der Code ist abgelaufen.',
+  'phone.hint':
+    'Richten Sie die Kamera des Smartphones auf den Code und öffnen Sie den Link. Das Smartphone muss im selben WLAN sein wie dieser Computer.',
+  'phone.qrAlt': 'QR-Code mit dem Link für das Smartphone',
+  'phone.received': 'Empfangene Seiten: {count}',
+  'phone.useReceived': 'Seiten verwenden ({count})',
+  'phone.newCode': 'Neuer Code',
+  'phone.back': 'Kamera dieses Computers verwenden',
+  'phone.page.heading': 'Für den Computer scannen',
+  'phone.page.gone':
+    'Dieser Link ist abgelaufen oder wurde geschlossen. Zeigen Sie am Computer einen neuen Code an.',
+  'phone.page.sending': 'Seite {number} von {count} wird gesendet…',
+  'phone.page.intro':
+    'Fotografieren Sie jede Seite. Die Seiten gehen direkt an den Computer, der den Code gezeigt hat.',
+  'phone.page.full': 'Der Computer hat bereits so viele Seiten, wie ein Scan aufnehmen kann.',
+  'phone.page.failed': 'Eine Seite konnte nicht gesendet werden. Bitte erneut versuchen.',
+  'phone.page.sent':
+    'Gesendet. Der Computer hat {count} Seiten. Sie können das Smartphone weglegen.',
+  'phone.page.more': 'Weitere Seiten scannen',
   'camera.open': 'Kamera verwenden',
   'camera.scanDocument': 'Mit der Kamera scannen',
   'camera.preview': 'Kameravorschau',
