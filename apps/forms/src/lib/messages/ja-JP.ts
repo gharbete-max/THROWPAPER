@@ -826,6 +826,7 @@ export const jaJP: Record<MessageKey, string> = {
   'import.reason.needs-asset': '画像がウェブ上の別の場所にあります',
   'import.reason.nested-group': '繰り返しブロックの入れ子',
   'import.reason.needs-limit': '何件まで許可するかが書かれていません',
+  'submissions.document': '書類',
   'submissions.paper': '紙',
   'submissions.noPaper': 'この回答はフォームに紙が付く前のものです',
 

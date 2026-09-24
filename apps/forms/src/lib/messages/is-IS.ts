@@ -826,6 +826,7 @@ export const isIS: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'myndin er annars staðar á vefnum',
   'import.reason.nested-group': 'endurtekin eining inni í annarri',
   'import.reason.needs-limit': 'hún tilgreinir aldrei hversu margar færslur eru leyfðar',
+  'submissions.document': 'Skjal',
   'submissions.paper': 'Pappír',
   'submissions.noPaper': 'Fyllt út áður en eyðublaðið fékk pappír',
 

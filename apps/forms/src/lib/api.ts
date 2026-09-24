@@ -224,6 +224,10 @@ export const client = {
   submissionPaper: (submissionId: string) =>
     requestBlob(`/v1/submissions/${submissionId}/paper.pdf`),
 
+  /** The finished document — the same PDF the person who sent it downloaded. */
+  submissionDocument: (submissionId: string) =>
+    requestBlob(`/v1/submissions/${submissionId}/document.pdf`),
+
   logout: async () => {
     const refreshToken = storedRefreshToken();
     if (refreshToken) {

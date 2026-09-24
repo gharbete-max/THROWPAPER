@@ -829,6 +829,7 @@ export const fiFI: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'sen kuva sijaitsee muualla verkossa',
   'import.reason.nested-group': 'toistuva lohko toisen sisällä',
   'import.reason.needs-limit': 'se ei kerro, montako kohtaa sallitaan',
+  'submissions.document': 'Asiakirja',
   'submissions.paper': 'Paperi',
   'submissions.noPaper': 'Täytetty ennen kuin lomakkeella oli paperi',
 

@@ -20,12 +20,15 @@ import { Icon, type IconName } from './Icon.js';
 export function AttachmentLink({
   submissionId,
   storageKey,
+  document = false,
   filename,
   icon = 'paperclip',
 }: {
   submissionId: string;
   /** A stored upload's key — or, absent, the submission written back onto its paper. */
   storageKey?: string;
+  /** The finished document (`/document.pdf`) rather than a file or the paper. */
+  document?: boolean;
   filename: string;
   icon?: IconName;
 }) {
@@ -37,9 +40,11 @@ export function AttachmentLink({
     try {
       const blob = storageKey
         ? await client.submissionFile(submissionId, storageKey)
-        : await client.submissionPaper(submissionId);
+        : document
+          ? await client.submissionDocument(submissionId)
+          : await client.submissionPaper(submissionId);
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = window.document.createElement('a');
       link.href = url;
       link.download = filename;
       link.click();

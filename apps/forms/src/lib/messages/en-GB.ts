@@ -841,6 +841,7 @@ export const enGB = {
    * author draws the rest.
    */
   /** The filled-in sheet, per row — a form made from paper only. */
+  'submissions.document': 'Document',
   'submissions.paper': 'Paper',
   'submissions.noPaper': 'Filled in before this form had paper',
 

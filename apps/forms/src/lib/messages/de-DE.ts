@@ -844,6 +844,7 @@ export const deDE: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'sein Bild liegt anderswo im Netz',
   'import.reason.nested-group': 'ein wiederholter Block in einem anderen',
   'import.reason.needs-limit': 'er nennt nie, wie viele Einträge erlaubt sind',
+  'submissions.document': 'Dokument',
   'submissions.paper': 'Papier',
   'submissions.noPaper': 'Ausgefüllt, bevor das Formular Papier hatte',
 

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
-import { db, deleteSubmission, seededForm, uniqueEmail } from './support.js';
+import { db, deleteSubmission, seededForm, signInAs, uniqueEmail } from './support.js';
 
 /**
  * The journey the product exists for: fill in a form, get the finished document, keep it, send it.
@@ -12,10 +12,13 @@ import { db, deleteSubmission, seededForm, uniqueEmail } from './support.js';
  */
 const sql = db();
 let slug: string;
+let formId: string;
 const created: string[] = [];
 
 test.beforeAll(async () => {
-  slug = (await seededForm(sql)).slug;
+  const seeded = await seededForm(sql);
+  slug = seeded.slug;
+  formId = seeded.formId;
 });
 
 test.afterAll(async () => {
@@ -169,4 +172,24 @@ test('on a phone the finished screen fits, and its actions take the whole width'
   const download = await page.getByRole('button', { name: 'Ladda ner PDF' }).boundingBox();
   expect(download!.width).toBeGreaterThan(panel!.width * 0.8);
   expect(download!.height).toBeGreaterThanOrEqual(44);
+});
+
+test('the organisation downloads the same document from the response’s row', async ({
+  browser,
+}) => {
+  const visitor = await browser.newPage();
+  const reference = await fillAndSend(visitor, 'Östen Radar');
+  await visitor.close();
+
+  const staff = await browser.newPage();
+  await signInAs(staff, sql, 'admin@example.com');
+  await staff.goto(`/forms/${formId}/submissions`);
+  const downloading = staff.waitForEvent('download');
+  await staff.getByRole('button', { name: `${reference}.pdf` }).click();
+  const bytes = await readFile((await (await downloading).path())!);
+  expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
+  const text = await pdfText(bytes);
+  expect(text).toContain('ÖstenRadar');
+  expect(text).toContain(reference);
+  await staff.close();
 });
