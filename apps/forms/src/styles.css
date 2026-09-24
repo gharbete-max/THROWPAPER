@@ -152,7 +152,7 @@ legend {
  * so this swap never reached the page and no filled button in the product had a hover state at
  * all. Only the shadow moved. Matching that selector's exclusions makes this (0,5,0), which is
  * also the truthful scope: quiet and danger have their own hovers below. */
-.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
   background: var(--tp-colour-text);
   border-color: var(--tp-colour-text);
 }
@@ -554,6 +554,12 @@ a:focus-visible {
   .finished__email .row > .button {
     flex: 1 1 100%;
   }
+}
+
+/* A quiet button that has opened something ("Email it") shows that it is open. */
+.finished .button--quiet[aria-expanded='true'] {
+  background: var(--tp-colour-background);
+  border-color: var(--tp-colour-accent-ink);
 }
 
 /* The optional e-ID step: the same panel as the document, so the two read as one moment. */
@@ -2997,11 +3003,11 @@ p {
 /* The one exception to "no shadows": a filled primary lifts by a hair so that the single most
  * important control on a screen is findable without reading it. Tied to the primary colour rather
  * than to black, so it stays honest against a dark palette. */
-.button:not(.button--quiet):not(.button--danger) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
   box-shadow: 0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
 }
 
-.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
   box-shadow: 0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
 }
 
@@ -3735,7 +3741,7 @@ p {
  * Scoped to the filled tier only. Quiet and danger are their own tiers and are not what
  * buttonStyle is describing.
  */
-.button:not(.button--quiet):not(.button--danger) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
   background: var(--tp-button-background);
   color: var(--tp-button-text);
   border-color: var(--tp-button-border);
@@ -5291,13 +5297,13 @@ body:has(.app) > #root {
  * on are lit from the same direction. This is the whole trick of the material: it is not the blur,
  * it is agreeing about where the light is.
  */
-.button:not(.button--quiet):not(.button--danger) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
   box-shadow:
     inset 0 1px 0 var(--tp-glass-hairline),
     0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
 }
 
-.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
   box-shadow:
     inset 0 1px 0 var(--tp-glass-hairline),
     0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
