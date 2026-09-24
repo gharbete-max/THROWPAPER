@@ -3025,6 +3025,57 @@ known warnings), build, contract:check, licence:check and bundle:budget all exit
 - The page imports `@tp/shared/forms` for `pathFrom`, which takes its bundle to ~191 KB gzipped.
   A narrower subpath export would trim it; it is not budgeted yet.
 
+## P1c-3 — Forms sends a PDF to Sign, and hears back · done
+
+**This touches `packages/shared` and `docs/CONTRACT.md` (§5.4 is now implemented on both sides).**
+
+**The Signing screen** (`/signing` in the Forms app, all twelve languages):
+1. An operator uploads a PDF, names the signers (name, optional email, language) and picks the
+   order.
+2. The document goes to Loppa Sign in **test mode**. Test mode is the only choice the screen offers
+   until a person has written a declaration (ADR 0012, rule 7).
+3. Each signer's link is shown to open on this machine or to copy. Email invitations are P1c-4b.
+4. The status follows along, and "Download signed PDF" hands over the sealed file.
+
+The API also sends a **paper form's filled-in submission** (`source: 'paper'`); that is the
+"fill in a PDF, then sign it" path, and the button for it on a submission is a follow-up.
+
+**How the PDF gets there is the contract's way.** api-forms stores it and gives Sign a signed
+link that dies in ten minutes. Sign fetches it once, refuses it unless it hashes to what Forms
+said, and never receives it inline. The signed download route now says `application/pdf` for a
+PDF; it answered `application/zip` for everything.
+
+**§5.4, both sides.** Sign posts every event after it commits, in order per hook URL, retried a
+few times, with no redirects followed. `completed` is sent when the last signature lands. Sign
+keeps service tokens only as hashes, so it signs each hook with an **HMAC keyed by the token's
+SHA-256**, which only Sign and the token's holder can compute (written into CONTRACT §5.4).
+Envelopes now record which token created them (`drizzle/0003`). Forms verifies the signature over
+the raw body, then **reads §5.2 rather than believing the hook**: a hook is a hint that can be
+lost, and §5.2 is the record.
+
+**Forms keeps a row per request** (`signing_requests`, migration 0016): the envelope's id, the
+parties and their links, and the last status. Nothing of the evidence is kept here (ADR 0009).
+`SIGN_API_URL` + `SIGN_SERVICE_TOKEN` switch it on. Without them, the screen says signing is not
+set up and the API answers 503, rather than failing.
+
+**Evidence:**
+- `scripts/contract/signing.test.ts` runs **both real servers in one process**, joined only by an
+  `inject`-backed `fetch`: Forms' calls go to Sign; Sign's document fetch and hooks come back to
+  Forms. The flow is create → both sign → the hook makes Forms' list say `completed` with nobody
+  refreshing → the sealed file OpenSSL accepts. A forged hook gets 401. Forms without a Sign says
+  so.
+  - Mutating "a hook refreshes" out turns the first test red.
+  - Mutating "a hook's signature is checked" out turns the second red.
+- In api-sign, hook delivery is tested for order, retry after a 503, the HMAC a caller verifies,
+  and an unreachable caller never stopping a signature. It runs on Postgres and PGlite: 78 tests.
+- `e2e/signing-from-forms.spec.ts`, in a real browser with the two real servers:
+  1. Sign in and upload a PDF on the Signing screen.
+  2. Open the signer's link in a second tab and sign.
+  3. Refresh shows "Signed by everyone".
+  4. "Download signed PDF" gives a file whose seal OpenSSL accepts.
+
+  The screen was screenshotted and looked at; the badge spacing was fixed.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

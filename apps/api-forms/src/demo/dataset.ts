@@ -683,6 +683,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     refreshTokens: [],
     jobs: [],
     sendingDomains: [],
+    signingRequests: [],
     messages: [],
     brandKits: [
       {

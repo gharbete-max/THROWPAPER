@@ -14,6 +14,6 @@ export const registry: ContractRegistry = {
   entries: [
     { id: 'audiences.pull', status: 'deferred', plannedPhase: 'B7 — dynamic audiences' },
     { id: 'delivery.webhook', status: 'deferred', plannedPhase: 'B11 — delivery events' },
-    { id: 'signing.webhook', status: 'deferred', plannedPhase: 'P1c — Forms sends for signing' },
+    { id: 'signing.webhook', status: 'implemented' },
   ],
 };

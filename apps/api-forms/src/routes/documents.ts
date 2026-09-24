@@ -277,8 +277,9 @@ export function registerDocumentRoutes(
       if (!content) return notFound(reply);
 
       const filename = query.key.split('/').pop() ?? 'download.zip';
+      // Bulk exports are zips; a document handed to Sign for signing (P1c-3) is a PDF.
       return reply
-        .header('content-type', 'application/zip')
+        .header('content-type', filename.endsWith('.pdf') ? 'application/pdf' : 'application/zip')
         .header('content-disposition', `attachment; filename="${filename}"`)
         .send(content);
     },

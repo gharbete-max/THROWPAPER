@@ -1,4 +1,4 @@
-import { createHash, webcrypto } from 'node:crypto';
+import { createHash } from 'node:crypto';
 import * as asn1js from 'asn1js';
 import * as pkijs from 'pkijs';
 
@@ -12,8 +12,9 @@ import * as pkijs from 'pkijs';
  * whichever PEM pair it is given; the dev script and the tests hand it a self-issued one.
  */
 
-// Node's Web Crypto, which pkijs also finds on `globalThis` by itself: one engine for both.
-const crypto = webcrypto;
+// The global Web Crypto (Node's own), which pkijs also finds by itself: one engine for both, and
+// one `CryptoKey` type whichever TypeScript program compiles this file.
+const crypto = globalThis.crypto;
 
 const ALGORITHM = { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' } as const;
 
@@ -42,7 +43,7 @@ export async function generateDevCertificate(now = new Date()): Promise<PemPair>
     { ...ALGORITHM, modulusLength: 3072, publicExponent: new Uint8Array([1, 0, 1]) },
     true,
     ['sign', 'verify'],
-  )) as webcrypto.CryptoKeyPair;
+  )) as { publicKey: CryptoKey; privateKey: CryptoKey };
 
   const certificate = new pkijs.Certificate();
   certificate.version = 2;

@@ -7,13 +7,13 @@ specs into this file.
 ```
 apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
-apps/api-forms  Product A backend
+apps/api-forms  Product A backend. Sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
 apps/api-sign   Product C backend. Own database (append-only, hash-chained trail) on Postgres or
-                PGlite, CONTRACT §5.1–5.3, typed and drawn signing by link, PAdES seal + audit
-                page on completion (development certificate); serves the page. No webhook (P1c-3)
+                PGlite, CONTRACT §5.1–5.4, typed and drawn signing by link, PAdES seal + audit
+                page on completion (development certificate); serves the page
 apps/desktop    Loppa desktop (Windows, macOS): Forms in an Electron window on an embedded
                 Postgres (PGlite), offline first. Part of Forms, not a fourth product (docs/adr/0016)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS

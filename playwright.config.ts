@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
-import { SIGN_PORT, signDatabaseUrl } from './e2e/ports.js';
+import { E2E_SIGN_SERVICE_TOKEN, SIGN_PORT, signDatabaseUrl } from './e2e/ports.js';
 
 /**
  * End-to-end: a real browser against a real server against a real Postgres.
@@ -79,6 +79,10 @@ export default defineConfig({
             APP_URL,
             // Console, so nothing is ever sent from a test run.
             MAIL_PROVIDER: 'console',
+            // Forms sends documents to the Sign server below (P1c-3); the token is registered
+            // with Sign by the spec that uses it.
+            SIGN_API_URL: SIGN_URL,
+            SIGN_SERVICE_TOKEN: E2E_SIGN_SERVICE_TOKEN,
             NODE_ENV: 'development',
           },
         },

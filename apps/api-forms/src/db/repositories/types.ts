@@ -695,6 +695,39 @@ export interface Repositories {
   audit: AuditRepository;
   ledger: LedgerRepository;
   invoices: InvoiceRepository;
+  signingRequests: SigningRequestRepository;
+}
+
+export type { SigningRequestParty } from '../schema.js';
+
+/** A document sent to Sign (CONTRACT §5). The evidence stays at Sign; see `schema.ts`. */
+export interface SigningRequestRecord {
+  id: string;
+  organisationId: string;
+  envelopeId: string;
+  documentName: string;
+  source: 'upload' | 'paper';
+  submissionId: string | null;
+  environment: 'test' | 'production';
+  status: string;
+  parties: import('../schema.js').SigningRequestParty[];
+  createdBy: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SigningRequestRepository {
+  create(
+    input: Omit<SigningRequestRecord, 'createdAt' | 'updatedAt'>,
+  ): Promise<SigningRequestRecord>;
+  list(organisationId: string): Promise<SigningRequestRecord[]>;
+  findById(organisationId: string, id: string): Promise<SigningRequestRecord | null>;
+  /** For §5.4: the hook names an envelope, not an organisation. */
+  findByEnvelope(envelopeId: string): Promise<SigningRequestRecord | null>;
+  saveStatus(
+    id: string,
+    input: { status: string; parties: import('../schema.js').SigningRequestParty[] },
+  ): Promise<SigningRequestRecord | null>;
 }
 
 /** A file a respondent attached. The bytes live in the private upload store, keyed by `storageKey`. */
