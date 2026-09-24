@@ -885,6 +885,13 @@ export const svSE: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Skarp signering kräver en försäkran som er organisation har skrivit själv. Skriv en under Försäkringar.',
   'signing.fileHint': 'En PDF, eller sidor från en skanner som JPEG- eller PNG-bilder.',
+  'signing.inviteByEmail': 'Mejla varje undertecknare sin länk när det är deras tur',
+  'signing.inviteConfirm':
+    'Skicka ett mejl med signeringslänk till {count} undertecknare när det blir deras tur? Den som saknar adress får inget – kopiera deras länk i stället.',
+  'signing.inviteConfirmYes': 'Skicka och mejla',
+  'signing.remind': 'Skicka påminnelse',
+  'signing.remindConfirm': 'Mejla {name} ({email}) signeringslänken igen?',
+  'signing.emailed': 'Mejlad',
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Skicka för signering',
   'signing.fromSubmission': 'Ifyllt pappersformulär {reference}',

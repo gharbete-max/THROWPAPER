@@ -904,6 +904,13 @@ export const enGB = {
   'signing.realNeedsOwnDeclaration':
     'Real signing needs a declaration your organisation wrote itself. Write one under Declarations.',
   'signing.fileHint': 'A PDF, or pages from a scanner as JPEG or PNG images.',
+  'signing.inviteByEmail': 'Email each signer their link when it is their turn',
+  'signing.inviteConfirm':
+    'Send an email with a signing link to {count} signers as their turn comes? Signers without an address get nothing; copy their links instead.',
+  'signing.inviteConfirmYes': 'Send and email',
+  'signing.remind': 'Send reminder',
+  'signing.remindConfirm': 'Email {name} ({email}) their signing link again?',
+  'signing.emailed': 'Emailed',
   'signing.cancel': 'Cancel',
   'submissions.sendForSigning': 'Send for signing',
   'signing.fromSubmission': 'Filled-in paper form {reference}',

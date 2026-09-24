@@ -892,6 +892,15 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Todellinen allekirjoitus vaatii vakuutuksen, jonka organisaationne on kirjoittanut itse. Kirjoita se kohdassa Vakuutukset.',
   'signing.fileHint': 'PDF tai skannerin sivut JPEG- tai PNG-kuvina.',
+  'signing.inviteByEmail':
+    'Lähetä jokaiselle allekirjoittajalle linkki sähköpostilla, kun on hänen vuoronsa',
+  'signing.inviteConfirm':
+    'Lähetetäänkö allekirjoituslinkki sähköpostilla {count} allekirjoittajalle heidän vuorollaan? Ilman osoitetta olevat eivät saa mitään – kopioi heidän linkkinsä.',
+  'signing.inviteConfirmYes': 'Lähetä ja lähetä sähköposti',
+  'signing.remind': 'Lähetä muistutus',
+  'signing.remindConfirm':
+    'Lähetetäänkö allekirjoituslinkki uudelleen henkilölle {name} ({email})?',
+  'signing.emailed': 'Lähetetty sähköpostilla',
   'signing.cancel': 'Peruuta',
   'submissions.sendForSigning': 'Lähetä allekirjoitettavaksi',
   'signing.fromSubmission': 'Täytetty paperilomake {reference}',

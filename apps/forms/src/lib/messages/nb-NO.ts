@@ -886,6 +886,13 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Ekte signering krever en erklæring organisasjonen deres har skrevet selv. Skriv en under Erklæringer.',
   'signing.fileHint': 'En PDF, eller sider fra en skanner som JPEG- eller PNG-bilder.',
+  'signing.inviteByEmail': 'Send hver signatar lenken sin på e-post når det er deres tur',
+  'signing.inviteConfirm':
+    'Sende en e-post med signeringslenke til {count} signatarer når det blir deres tur? De uten adresse får ingenting – kopier lenken deres i stedet.',
+  'signing.inviteConfirmYes': 'Send og send e-post',
+  'signing.remind': 'Send påminnelse',
+  'signing.remindConfirm': 'Sende {name} ({email}) signeringslenken på nytt?',
+  'signing.emailed': 'Sendt på e-post',
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Send til signering',
   'signing.fromSubmission': 'Utfylt papirskjema {reference}',

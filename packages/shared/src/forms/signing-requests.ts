@@ -21,6 +21,8 @@ const Common = {
   declarationKey: z.string().trim().min(1).max(128),
   /** Test mode unless somebody says otherwise (rule 7). */
   environment: z.enum(['test', 'production']).default('test'),
+  /** Email each signer with an address their link when it is their turn (P1c-4b). */
+  inviteByEmail: z.boolean().default(false),
 };
 
 /** Send a PDF somebody uploaded, or a submission written onto the paper its form was made from. */
@@ -76,8 +78,10 @@ export const SigningRequestView = z.object({
       order: z.number().int(),
       status: z.string(),
       signUrl: z.string(),
+      invitedByEmailAt: z.string().optional(),
     }),
   ),
+  inviteByEmail: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

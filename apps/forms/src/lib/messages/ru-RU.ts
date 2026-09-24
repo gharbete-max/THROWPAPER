@@ -904,6 +904,14 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Для настоящего подписания нужно заявление, написанное вашей организацией. Напишите его в разделе «Заявления».',
   'signing.fileHint': 'PDF или страницы со сканера в виде изображений JPEG или PNG.',
+  'signing.inviteByEmail':
+    'Отправлять каждому подписанту ссылку по почте, когда наступит его очередь',
+  'signing.inviteConfirm':
+    'Отправить письмо со ссылкой для подписи {count} подписантам, когда наступит их очередь? Те, у кого нет адреса, ничего не получат — скопируйте их ссылки.',
+  'signing.inviteConfirmYes': 'Отправить и написать',
+  'signing.remind': 'Отправить напоминание',
+  'signing.remindConfirm': 'Снова отправить ссылку для подписи {name} ({email})?',
+  'signing.emailed': 'Отправлено по почте',
   'signing.cancel': 'Отмена',
   'submissions.sendForSigning': 'Отправить на подпись',
   'signing.fromSubmission': 'Заполненная бумажная форма {reference}',

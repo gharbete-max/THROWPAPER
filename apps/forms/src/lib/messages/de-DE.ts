@@ -908,6 +908,14 @@ export const deDE: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Echtes Unterzeichnen erfordert eine Erklärung, die Ihre Organisation selbst verfasst hat. Verfassen Sie eine unter Erklärungen.',
   'signing.fileHint': 'Ein PDF oder Seiten aus einem Scanner als JPEG- oder PNG-Bilder.',
+  'signing.inviteByEmail':
+    'Jeder unterzeichnenden Person ihren Link per E-Mail senden, wenn sie an der Reihe ist',
+  'signing.inviteConfirm':
+    'Eine E-Mail mit Unterschriftslink an {count} Unterzeichnende senden, sobald sie an der Reihe sind? Wer keine Adresse hat, bekommt nichts – kopieren Sie deren Link stattdessen.',
+  'signing.inviteConfirmYes': 'Senden und mailen',
+  'signing.remind': 'Erinnerung senden',
+  'signing.remindConfirm': '{name} ({email}) den Unterschriftslink erneut mailen?',
+  'signing.emailed': 'Per E-Mail gesendet',
   'signing.cancel': 'Abbrechen',
   'submissions.sendForSigning': 'Zur Unterschrift senden',
   'signing.fromSubmission': 'Ausgefülltes Papierformular {reference}',

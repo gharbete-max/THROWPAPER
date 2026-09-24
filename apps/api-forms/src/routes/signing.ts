@@ -19,6 +19,7 @@ import { resolveFormAccess } from '../forms/access.js';
 import { SignRefused, SignUnavailable, type SignClient } from '../signing/client.js';
 import { createHash } from 'node:crypto';
 import { pagesToPdf } from '../signing/scan.js';
+import { queueInvitations } from '../signing/invitations.js';
 
 const IdParam = z.object({ id: z.string().uuid() });
 const errors = {
@@ -205,18 +206,25 @@ export function registerSigningRoutes(
         status: created.status,
         parties: parties.map((party) => ({
           ...party,
-          status: 'invited',
+          // Sign invites the first step; the rest wait their turn (`@tp/signing` envelope.ts).
+          status: party.order === 1 ? 'invited' : 'waiting',
           signUrl: created.signUrls[party.id] ?? '',
         })),
+        inviteByEmail: body.inviteByEmail,
         createdBy: auth.user.id,
       });
+      const invited = await queueInvitations(deps.repos, record);
       await recordAudit(deps.repos, request, {
         action: 'signing.requested',
         entityType: 'signing_request',
         entityId: record.id,
-        after: { envelopeId: record.envelopeId, parties: record.parties.length },
+        after: {
+          envelopeId: record.envelopeId,
+          parties: record.parties.length,
+          emailed: invited.parties.filter((p) => p.invitedByEmailAt).length,
+        },
       });
-      return reply.code(201).send(view(record));
+      return reply.code(201).send(view(invited));
     },
   });
 
@@ -301,6 +309,48 @@ export function registerSigningRoutes(
       } catch (error) {
         return failed(reply, error);
       }
+    },
+  });
+
+  /**
+   * Email one signer their link again (P1c-4b). A deliberate press, confirmed in the screen, and
+   * only for a party whose turn it is — a reminder to somebody who cannot sign yet is noise.
+   */
+  app.post('/v1/signing/requests/:id/parties/:partyId/remind', {
+    preHandler: authenticated,
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['signing'],
+      params: IdParam.extend({ partyId: z.string().min(1).max(16) }),
+      response: { 200: formSchemas.SigningRequestView, ...errors },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth!;
+      const params = IdParam.extend({ partyId: z.string().min(1).max(16) }).parse(request.params);
+      let record = await deps.repos.signingRequests.findById(auth.organisation.id, params.id);
+      if (!record)
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      if (deps.sign) {
+        try {
+          record = await refresh(deps.sign, deps.repos, record);
+        } catch (error) {
+          return failed(reply, error);
+        }
+      }
+      const party = record.parties.find((p) => p.id === params.partyId);
+      if (!party?.email || (party.status !== 'invited' && party.status !== 'viewed')) {
+        return reply.code(409).send({
+          error: { code: 'not-their-turn', message: 'This signer cannot be reminded now' },
+        });
+      }
+      const reminded = await queueInvitations(deps.repos, record, party.id);
+      await recordAudit(deps.repos, request, {
+        action: 'signing.reminded',
+        entityType: 'signing_request',
+        entityId: record.id,
+        after: { partyId: party.id },
+      });
+      return reply.send(view(reminded));
     },
   });
 
@@ -389,10 +439,11 @@ async function refresh(
     ...party,
     status: status.parties.find((candidate) => candidate.id === party.id)?.status ?? party.status,
   }));
-  return (
+  const saved =
     (await repos.signingRequests.saveStatus(record.id, { status: status.status, parties })) ??
-    record
-  );
+    record;
+  // A step has moved on: the next signers' invitations, if the sender asked for them.
+  return queueInvitations(repos, saved);
 }
 
 function view(record: SigningRequestRecord): formSchemas.SigningRequestView {
@@ -405,6 +456,7 @@ function view(record: SigningRequestRecord): formSchemas.SigningRequestView {
     environment: record.environment,
     status: record.status,
     parties: record.parties,
+    inviteByEmail: record.inviteByEmail,
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),
   };

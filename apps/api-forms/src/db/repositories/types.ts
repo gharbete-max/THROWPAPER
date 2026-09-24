@@ -711,6 +711,7 @@ export interface SigningRequestRecord {
   environment: 'test' | 'production';
   status: string;
   parties: import('../schema.js').SigningRequestParty[];
+  inviteByEmail: boolean;
   createdBy: string | null;
   createdAt: Date;
   updatedAt: Date;
