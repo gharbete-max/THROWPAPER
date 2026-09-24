@@ -369,6 +369,8 @@ export const esES: Record<MessageKey, string> = {
   'settings.identity': 'Ofrecer confirmación con e-ID tras el envío (opcional para la persona)',
   'settings.identityHint':
     'Las respuestas se guardan primero; la confirmación es un paso que se puede hacer u omitir. Si no hay un proveedor de e-ID conectado, el formulario lo indica y se termina igualmente.',
+  'settings.identityPaper':
+    'No en un formulario hecho a partir de papel: su documento es el propio papel, que no tiene dónde mostrar una confirmación.',
 
   'public.progress': 'Paso {n} de {total}',
 
@@ -704,6 +706,7 @@ export const esES: Record<MessageKey, string> = {
   'public.finished.sent': 'Tus respuestas se han enviado a {organisation}.',
   'public.document.preparing': 'Preparando tu documento…',
   'public.document.ready': 'Tu documento está listo',
+  'public.document.unavailable': 'Tu documento no está disponible en este momento',
   'public.document.download': 'Descargar PDF',
   'public.document.open': 'Abrir',
   'public.document.email': 'Enviarlo por correo',
@@ -726,7 +729,7 @@ export const esES: Record<MessageKey, string> = {
   'public.email.copy': 'Copiar el mensaje',
   'public.email.copied': 'Copiado',
   'public.email.subject': '{title} — {reference}',
-  'public.email.body': 'Adjunto: {filename}\nReferencia: {reference}',
+  'public.email.body': 'Documento: {filename}\nReferencia: {reference}',
   'public.again': 'Rellenar de nuevo',
   'public.eid.title': 'Confirma quién eres (opcional)',
   'public.eid.unavailable':

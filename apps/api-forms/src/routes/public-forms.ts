@@ -564,8 +564,10 @@ export function registerPublicFormRoutes(
               draftProgram: deps.mailDraft?.label ?? null,
             }
           : null,
+        // Not on a form made from paper: its document *is* the paper, which has nowhere to say
+        // that anybody was confirmed — and the page must not say the document shows it.
         identity:
-          loaded.definition.settings.identity === 'optional'
+          loaded.definition.settings.identity === 'optional' && !loaded.definition.paper
             ? identityOffer(await identityMethods())
             : null,
       });
@@ -712,7 +714,7 @@ export function registerPublicFormRoutes(
       const held = await holderOf(slug, token);
       if (!held || !deps.finished) return notFound(reply);
       const definition = await definitionOf(held.submission);
-      if (definition?.settings.identity !== 'optional') return notFound(reply);
+      if (definition?.settings.identity !== 'optional' || definition.paper) return notFound(reply);
       if (held.submission.identity) {
         return reply.code(409).send({
           error: { code: 'already-confirmed', message: 'This form is already confirmed' },

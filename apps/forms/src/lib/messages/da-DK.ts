@@ -359,6 +359,8 @@ export const daDK: Record<MessageKey, string> = {
   'settings.identity': 'Tilbyd bekræftelse med e-ID efter afsendelse (valgfrit for personen)',
   'settings.identityHint':
     'Svarene gemmes først; bekræftelsen er et trin, man kan tage eller springe over. Hvor ingen e-ID-udbyder er tilsluttet, siger formularen det og er færdig alligevel.',
+  'settings.identityPaper':
+    'Ikke på en formular lavet af papir: dens dokument er selve papiret, som ikke har plads til en bekræftelse.',
 
   'public.progress': 'Trin {n} af {total}',
 
@@ -690,6 +692,7 @@ export const daDK: Record<MessageKey, string> = {
   'public.finished.sent': 'Dine svar er sendt til {organisation}.',
   'public.document.preparing': 'Dokumentet klargøres…',
   'public.document.ready': 'Dit dokument er klar',
+  'public.document.unavailable': 'Dit dokument er ikke tilgængeligt lige nu',
   'public.document.download': 'Download PDF',
   'public.document.open': 'Åbn',
   'public.document.email': 'Send det på mail',
@@ -711,7 +714,7 @@ export const daDK: Record<MessageKey, string> = {
   'public.email.copy': 'Kopiér beskeden',
   'public.email.copied': 'Kopieret',
   'public.email.subject': '{title} – {reference}',
-  'public.email.body': 'Vedhæftet: {filename}\nReference: {reference}',
+  'public.email.body': 'Dokument: {filename}\nReference: {reference}',
   'public.again': 'Udfyld igen',
   'public.eid.title': 'Bekræft, hvem du er (valgfrit)',
   'public.eid.unavailable':

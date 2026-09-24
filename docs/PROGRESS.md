@@ -3282,7 +3282,9 @@ what happened → do it again. Measured in this container on Postgres 16 and Chr
 - **Security** (two audits run as agents): signing requests visible only to their sender and admins
   (any operator could read and sign another's); base64url tokens redacted whole in logs (26% leaked);
   scanned pages over 40 MP refused before decoding; header values forced onto one line for every
-  mail sender; the PDF renderer runs with no JavaScript and no network; a memory cap on phone scans;
+  mail sender; the server's PDF renderer runs with no JavaScript and no network, and the desktop's
+  print window (which needs JavaScript to wait for fonts) may load nothing but its own page file;
+  a memory cap on phone scans;
   paper keys must have been uploaded to that form. Desktop: loopback APIs answer only to their own
   Host (DNS rebinding), navigation/window/IPC/permission rules on every window, `openExternal`
   limited to http/https/mailto, Electron fuses, quit waits for PGlite, PowerShell by absolute path.

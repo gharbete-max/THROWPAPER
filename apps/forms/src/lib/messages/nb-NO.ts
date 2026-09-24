@@ -360,6 +360,8 @@ export const nbNO: Record<MessageKey, string> = {
   'settings.identity': 'Tilby bekreftelse med e-ID etter innsending (valgfritt for personen)',
   'settings.identityHint':
     'Svarene lagres først; bekreftelsen er et steg man kan ta eller hoppe over. Der ingen e-ID-leverandør er tilkoblet, sier skjemaet det og blir ferdig likevel.',
+  'settings.identityPaper':
+    'Ikke på et skjema laget fra papir: dokumentet er selve papiret, som ikke har plass til en bekreftelse.',
 
   'public.progress': 'Steg {n} av {total}',
 
@@ -691,6 +693,7 @@ export const nbNO: Record<MessageKey, string> = {
   'public.finished.sent': 'Svarene dine er sendt til {organisation}.',
   'public.document.preparing': 'Dokumentet klargjøres…',
   'public.document.ready': 'Dokumentet ditt er klart',
+  'public.document.unavailable': 'Dokumentet ditt er ikke tilgjengelig akkurat nå',
   'public.document.download': 'Last ned PDF',
   'public.document.open': 'Åpne',
   'public.document.email': 'Send det på e-post',
@@ -712,7 +715,7 @@ export const nbNO: Record<MessageKey, string> = {
   'public.email.copy': 'Kopier meldingen',
   'public.email.copied': 'Kopiert',
   'public.email.subject': '{title} – {reference}',
-  'public.email.body': 'Vedlagt: {filename}\nReferanse: {reference}',
+  'public.email.body': 'Dokument: {filename}\nReferanse: {reference}',
   'public.again': 'Fyll ut igjen',
   'public.eid.title': 'Bekreft hvem du er (valgfritt)',
   'public.eid.unavailable':

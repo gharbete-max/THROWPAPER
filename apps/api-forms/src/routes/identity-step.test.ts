@@ -193,3 +193,66 @@ describe('the optional e-ID step', () => {
     expect(row?.identity ?? null).toBeNull();
   });
 });
+
+describe('a form made from paper', () => {
+  it('is not offered the step: its document is the paper, with nowhere to say it', async () => {
+    await setUp({
+      sign: fakeSign([{ method: 'console', provider: 'console', environment: 'test' }]),
+      identity: 'optional',
+    });
+    const [form] = [...harness.state.forms.values()];
+    // A PDF uploaded to this form, then made its paper.
+    const { PDFDocument } = await import('pdf-lib');
+    const doc = await PDFDocument.create();
+    doc.addPage([595, 842]);
+    const body = new FormData();
+    body.set(
+      'file',
+      new File([new Uint8Array(await doc.save())], 'blankett.pdf', { type: 'application/pdf' }),
+    );
+    const encoded = new Response(body as never);
+    const boundary = /boundary=(.+)$/.exec(encoded.headers.get('content-type') ?? '')?.[1];
+    const uploaded = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/forms/${form!.id}/paper`,
+      headers: {
+        ...bearer(adminToken),
+        'content-type': `multipart/form-data; boundary=${boundary}`,
+      },
+      payload: Buffer.from(await encoded.arrayBuffer()),
+    });
+    const draft = await harness.app.inject({
+      method: 'PUT',
+      url: `/v1/forms/${form!.id}/draft`,
+      headers: bearer(adminToken),
+      payload: {
+        definition: {
+          ...formSchemas.emptyDefinition,
+          paper: { sources: [{ key: uploaded.json().key, pages: 1 }] },
+          fields: [
+            {
+              id: 'f1',
+              key: 'full_name',
+              type: 'short_text',
+              label: { 'sv-SE': 'Namn', 'en-GB': 'Name' },
+              required: true,
+            },
+          ],
+          settings: { ...formSchemas.emptyDefinition.settings, identity: 'optional' },
+        },
+      },
+    });
+    expect(draft.statusCode).toBe(200);
+    await harness.app.inject({
+      method: 'POST',
+      url: `/v1/forms/${form!.id}/publish`,
+      headers: bearer(adminToken),
+      payload: { overrideIncompleteTranslations: true },
+    });
+
+    const sent = await send('Ann');
+    expect(sent.identity).toBeNull();
+    const started = await post('/public/forms/anmalan/identity', { token: sent.document!.token });
+    expect(started.statusCode).toBe(404);
+  });
+});

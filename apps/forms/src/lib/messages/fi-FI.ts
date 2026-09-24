@@ -363,6 +363,8 @@ export const fiFI: Record<MessageKey, string> = {
     'Tarjoa vahvistusta sähköisellä tunnistuksella lähettämisen jälkeen (vapaaehtoinen)',
   'settings.identityHint':
     'Vastaukset tallennetaan ensin; vahvistus on vaihe, jonka voi tehdä tai ohittaa. Jos tunnistuspalvelua ei ole liitetty, lomake kertoo sen ja valmistuu silti.',
+  'settings.identityPaper':
+    'Ei paperista tehdyssä lomakkeessa: sen asiakirja on itse paperi, jossa ei ole paikkaa vahvistukselle.',
 
   'public.progress': 'Vaihe {n} / {total}',
 
@@ -697,6 +699,7 @@ export const fiFI: Record<MessageKey, string> = {
   'public.finished.sent': 'Vastauksesi on lähetetty: {organisation}.',
   'public.document.preparing': 'Asiakirjaa valmistellaan…',
   'public.document.ready': 'Asiakirjasi on valmis',
+  'public.document.unavailable': 'Asiakirjasi ei ole juuri nyt saatavilla',
   'public.document.download': 'Lataa PDF',
   'public.document.open': 'Avaa',
   'public.document.email': 'Lähetä sähköpostilla',
@@ -718,7 +721,7 @@ export const fiFI: Record<MessageKey, string> = {
   'public.email.copy': 'Kopioi viesti',
   'public.email.copied': 'Kopioitu',
   'public.email.subject': '{title} – {reference}',
-  'public.email.body': 'Liitteenä: {filename}\nViite: {reference}',
+  'public.email.body': 'Asiakirja: {filename}\nViite: {reference}',
   'public.again': 'Täytä uudelleen',
   'public.eid.title': 'Vahvista henkilöllisyytesi (valinnainen)',
   'public.eid.unavailable':

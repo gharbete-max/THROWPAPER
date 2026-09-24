@@ -367,6 +367,8 @@ export const enGB = {
   'settings.identity': 'Offer to confirm with e-ID after sending (optional for the person)',
   'settings.identityHint':
     'Their answers are saved first; confirming is a step they may take or skip. Where no e-ID provider is connected, the form says so and is finished without it.',
+  'settings.identityPaper':
+    'Not on a form made from paper: its document is the paper itself, which has nowhere to show a confirmation.',
 
   'public.progress': 'Step {n} of {total}',
 
@@ -702,6 +704,7 @@ export const enGB = {
   'public.finished.sent': 'Your answers have been sent to {organisation}.',
   'public.document.preparing': 'Preparing your document…',
   'public.document.ready': 'Your document is ready',
+  'public.document.unavailable': "Your document isn't available right now",
   'public.document.download': 'Download PDF',
   'public.document.open': 'Open',
   'public.document.email': 'Email it',
@@ -723,7 +726,7 @@ export const enGB = {
   'public.email.copy': 'Copy message text',
   'public.email.copied': 'Copied',
   'public.email.subject': '{title} — {reference}',
-  'public.email.body': 'Attached: {filename}\nReference: {reference}',
+  'public.email.body': 'Document: {filename}\nReference: {reference}',
   'public.again': 'Fill in again',
   'public.eid.title': 'Confirm who you are (optional)',
   'public.eid.unavailable':

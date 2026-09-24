@@ -5,7 +5,6 @@ import {
   MAC_FIELD_FILES,
   NOT_AVAILABLE,
   defaultRun,
-  describeProgram,
   powershellPath,
   type MailProgram,
   type ScriptRunner,
@@ -111,7 +110,8 @@ export function createMailDrafter(options: MailDrafterOptions): MailDrafter | nu
   const run = options.run ?? defaultRun;
   const now = options.now ?? (() => new Date());
   const root = join(options.scratchDir, 'drafts');
-  const label = describeProgram(program, platform);
+  // A product name, shown inside every language's sentence — so no English adjective with it.
+  const label = program === 'outlook' ? 'Outlook' : 'Apple Mail';
 
   return {
     label,

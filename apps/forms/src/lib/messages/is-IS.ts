@@ -361,6 +361,8 @@ export const isIS: Record<MessageKey, string> = {
   'settings.identity': 'Bjóða staðfestingu með rafrænum skilríkjum eftir sendingu (valfrjálst)',
   'settings.identityHint':
     'Svörin eru vistuð fyrst; staðfestingin er skref sem má taka eða sleppa. Þar sem engin skilríkjaþjónusta er tengd segir eyðublaðið það og klárast samt.',
+  'settings.identityPaper':
+    'Ekki á eyðublaði gerðu úr pappír: skjalið er pappírinn sjálfur, sem hefur engan stað fyrir staðfestingu.',
 
   'public.progress': 'Skref {n} af {total}',
 
@@ -694,6 +696,7 @@ export const isIS: Record<MessageKey, string> = {
   'public.finished.sent': 'Svörin þín hafa verið send til {organisation}.',
   'public.document.preparing': 'Verið er að útbúa skjalið…',
   'public.document.ready': 'Skjalið þitt er tilbúið',
+  'public.document.unavailable': 'Skjalið þitt er ekki aðgengilegt núna',
   'public.document.download': 'Sækja PDF',
   'public.document.open': 'Opna',
   'public.document.email': 'Senda í tölvupósti',
@@ -715,7 +718,7 @@ export const isIS: Record<MessageKey, string> = {
   'public.email.copy': 'Afrita skilaboðin',
   'public.email.copied': 'Afritað',
   'public.email.subject': '{title} – {reference}',
-  'public.email.body': 'Viðhengi: {filename}\nTilvísun: {reference}',
+  'public.email.body': 'Skjal: {filename}\nTilvísun: {reference}',
   'public.again': 'Fylla út aftur',
   'public.eid.title': 'Staðfestu hver þú ert (valfrjálst)',
   'public.eid.unavailable':

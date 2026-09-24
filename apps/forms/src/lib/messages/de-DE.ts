@@ -370,6 +370,8 @@ export const deDE: Record<MessageKey, string> = {
     'Nach dem Senden eine Bestätigung per e-ID anbieten (freiwillig für die Person)',
   'settings.identityHint':
     'Die Antworten werden zuerst gespeichert; die Bestätigung ist ein Schritt, den man machen oder auslassen kann. Ist kein e-ID-Anbieter verbunden, sagt das Formular das und ist trotzdem fertig.',
+  'settings.identityPaper':
+    'Nicht bei einem Formular aus Papier: Sein Dokument ist das Papier selbst, das keinen Platz für eine Bestätigung hat.',
 
   'public.progress': 'Schritt {n} von {total}',
 
@@ -711,6 +713,7 @@ export const deDE: Record<MessageKey, string> = {
   'public.finished.sent': 'Ihre Antworten wurden an {organisation} gesendet.',
   'public.document.preparing': 'Ihr Dokument wird vorbereitet…',
   'public.document.ready': 'Ihr Dokument ist fertig',
+  'public.document.unavailable': 'Ihr Dokument ist gerade nicht verfügbar',
   'public.document.download': 'PDF herunterladen',
   'public.document.open': 'Öffnen',
   'public.document.email': 'Per E-Mail senden',
@@ -733,7 +736,7 @@ export const deDE: Record<MessageKey, string> = {
   'public.email.copy': 'Nachricht kopieren',
   'public.email.copied': 'Kopiert',
   'public.email.subject': '{title} – {reference}',
-  'public.email.body': 'Anhang: {filename}\nReferenz: {reference}',
+  'public.email.body': 'Dokument: {filename}\nReferenz: {reference}',
   'public.again': 'Erneut ausfüllen',
   'public.eid.title': 'Bestätigen, wer Sie sind (optional)',
   'public.eid.unavailable':

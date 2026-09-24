@@ -44,13 +44,20 @@ export function IdentityStep({
 }) {
   const [state, setState] = useState<State>({ kind: 'idle' });
   const polling = useRef<number | null>(null);
+  /**
+   * False once the panel is gone ("Fill in again"). A check already in flight when that happens
+   * must neither set state nor schedule the next one — clearing the pending timer alone left that
+   * request free to start three more minutes of polling on the next person's screen.
+   */
+  const mounted = useRef(true);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
       if (polling.current) window.clearTimeout(polling.current);
-    },
-    [],
-  );
+    };
+  }, []);
 
   async function check(reference: string, until: number): Promise<void> {
     try {
@@ -59,8 +66,10 @@ export function IdentityStep({
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ token, reference }),
       });
+      if (!mounted.current) return;
       if (!response.ok) return setState({ kind: 'failed' });
       const body = (await response.json()) as IdentityCheckResponse;
+      if (!mounted.current) return;
       if (body.status === 'complete' && body.confirmed) {
         setState({ kind: 'confirmed', name: body.confirmed.name, test: body.confirmed.test });
         onConfirmed();
@@ -69,7 +78,7 @@ export function IdentityStep({
       if (body.status !== 'pending' || Date.now() > until) return setState({ kind: 'failed' });
       polling.current = window.setTimeout(() => void check(reference, until), POLL_MS);
     } catch {
-      setState({ kind: 'failed' });
+      if (mounted.current) setState({ kind: 'failed' });
     }
   }
 
@@ -81,6 +90,7 @@ export function IdentityStep({
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ token }),
       });
+      if (!mounted.current) return;
       if (response.status === 409) return setState({ kind: 'already' });
       if (!response.ok) return setState({ kind: 'failed' });
       const started = (await response.json()) as { reference: string; launchUrl?: string };

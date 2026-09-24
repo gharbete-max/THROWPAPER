@@ -121,7 +121,8 @@ export const SubmitResponse = z.object({
 export const StartIdentityCheck = z.object({ token: z.string().min(1).max(200) });
 
 export const IdentityCheckStarted = z.object({
-  reference: z.string().min(1).max(128),
+  /** Sign's reference (≤ 128) and a 43-character binding: never cut off by this limit. */
+  reference: z.string().min(1).max(200),
   status: z.enum(['pending', 'complete', 'failed', 'cancelled']),
   /** Same device: open this. Absent when the provider gives none. */
   launchUrl: z.string().url().optional(),
@@ -129,7 +130,7 @@ export const IdentityCheckStarted = z.object({
 
 export const IdentityCheckRequest = z.object({
   token: z.string().min(1).max(200),
-  reference: z.string().min(1).max(128),
+  reference: z.string().min(1).max(200),
 });
 
 /** Where the person's confirmation stands. `confirmed` only once the provider has answered. */

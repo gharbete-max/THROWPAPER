@@ -356,6 +356,7 @@ export const zhCN: Record<MessageKey, string> = {
   'settings.identity': '发送后提供电子身份确认（对填写人可选）',
   'settings.identityHint':
     '答复会先保存；确认是可做可跳过的一步。若未连接电子身份提供方，表单会说明这一点并照常完成。',
+  'settings.identityPaper': '不适用于由纸质表单制作的表单：其文档就是纸张本身，无处显示确认信息。',
 
   'public.progress': '第 {n} 步，共 {total} 步',
 
@@ -678,6 +679,7 @@ export const zhCN: Record<MessageKey, string> = {
   'public.finished.sent': '你的答复已发送给 {organisation}。',
   'public.document.preparing': '正在准备文档…',
   'public.document.ready': '你的文档已准备好',
+  'public.document.unavailable': '你的文档暂时无法获取',
   'public.document.download': '下载 PDF',
   'public.document.open': '打开',
   'public.document.email': '通过电子邮件发送',
@@ -696,7 +698,7 @@ export const zhCN: Record<MessageKey, string> = {
   'public.email.copy': '复制邮件内容',
   'public.email.copied': '已复制',
   'public.email.subject': '{title} — {reference}',
-  'public.email.body': '附件：{filename}\n参考编号：{reference}',
+  'public.email.body': '文档：{filename}\n参考编号：{reference}',
   'public.again': '再次填写',
   'public.eid.title': '确认你的身份（可选）',
   'public.eid.unavailable': '此表单暂不支持电子身份确认。无需其他操作——你的表单已完成。',

@@ -370,6 +370,8 @@ export const frFR: Record<MessageKey, string> = {
     'Proposer une confirmation par e-ID après l’envoi (facultative pour la personne)',
   'settings.identityHint':
     'Les réponses sont enregistrées d’abord ; la confirmation est une étape que l’on peut faire ou passer. Si aucun fournisseur e-ID n’est connecté, le formulaire l’indique et se termine quand même.',
+  'settings.identityPaper':
+    'Pas sur un formulaire fait à partir de papier : son document est le papier lui-même, qui n’a pas de place pour une confirmation.',
 
   'public.progress': 'Étape {n} sur {total}',
 
@@ -710,6 +712,7 @@ export const frFR: Record<MessageKey, string> = {
   'public.finished.sent': 'Vos réponses ont été envoyées à {organisation}.',
   'public.document.preparing': 'Préparation de votre document…',
   'public.document.ready': 'Votre document est prêt',
+  'public.document.unavailable': 'Votre document n’est pas disponible pour le moment',
   'public.document.download': 'Télécharger le PDF',
   'public.document.open': 'Ouvrir',
   'public.document.email': 'L’envoyer par e-mail',
@@ -732,7 +735,7 @@ export const frFR: Record<MessageKey, string> = {
   'public.email.copy': 'Copier le message',
   'public.email.copied': 'Copié',
   'public.email.subject': '{title} — {reference}',
-  'public.email.body': 'Pièce jointe : {filename}\nRéférence : {reference}',
+  'public.email.body': 'Document : {filename}\nRéférence : {reference}',
   'public.again': 'Remplir à nouveau',
   'public.eid.title': 'Confirmer votre identité (facultatif)',
   'public.eid.unavailable':

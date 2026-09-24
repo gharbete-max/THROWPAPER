@@ -139,7 +139,9 @@ jobs:
         run: |
           profile="$RUNNER_TEMP/loppa-profile"
           app="apps/desktop/release/mac-arm64/Loppa.app/Contents/MacOS/Loppa"
-          codesign --verify --verbose "apps/desktop/release/mac-arm64/Loppa.app"
+          # Deep and strict: the fuses are flipped after the ad-hoc signature, and a shallow
+          # check passed a bundle whose inner binary no longer matched it.
+          codesign --verify --deep --strict --verbose=2 "apps/desktop/release/mac-arm64/Loppa.app"
           "$app" --user-data-dir="$profile" > "$RUNNER_TEMP/loppa.log" 2>&1 &
           pid=$!
           ok=0

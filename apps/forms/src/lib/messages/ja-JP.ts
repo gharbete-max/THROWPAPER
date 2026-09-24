@@ -366,6 +366,8 @@ export const jaJP: Record<MessageKey, string> = {
   'settings.identity': '送信後に電子本人確認を提案する（回答者にとって任意）',
   'settings.identityHint':
     '回答は先に保存されます。確認は行っても省略してもよい手順です。本人確認プロバイダーが接続されていない場合、フォームはその旨を表示し、そのまま完了します。',
+  'settings.identityPaper':
+    '紙から作成したフォームでは利用できません。書類は紙そのもので、確認を表示する場所がありません。',
 
   'public.progress': '{total} ステップ中 {n} ステップ目',
 
@@ -697,6 +699,7 @@ export const jaJP: Record<MessageKey, string> = {
   'public.finished.sent': '回答を {organisation} に送信しました。',
   'public.document.preparing': '書類を準備しています…',
   'public.document.ready': '書類の準備ができました',
+  'public.document.unavailable': '書類は現在ご利用いただけません',
   'public.document.download': 'PDF をダウンロード',
   'public.document.open': '開く',
   'public.document.email': 'メールで送る',
@@ -718,7 +721,7 @@ export const jaJP: Record<MessageKey, string> = {
   'public.email.copy': 'メッセージをコピー',
   'public.email.copied': 'コピーしました',
   'public.email.subject': '{title} — {reference}',
-  'public.email.body': '添付：{filename}\n受付番号：{reference}',
+  'public.email.body': '書類：{filename}\n受付番号：{reference}',
   'public.again': 'もう一度入力する',
   'public.eid.title': '本人確認（任意）',
   'public.eid.unavailable':

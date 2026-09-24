@@ -372,6 +372,8 @@ export const ruRU: Record<MessageKey, string> = {
     'Предлагать подтверждение электронной идентификацией после отправки (по желанию)',
   'settings.identityHint':
     'Ответы сохраняются сначала; подтверждение — шаг, который можно сделать или пропустить. Если поставщик идентификации не подключён, форма сообщит об этом и всё равно будет заполнена.',
+  'settings.identityPaper':
+    'Не для формы, сделанной из бумаги: её документ — сама бумага, и на ней нет места для подтверждения.',
 
   'public.progress': 'Шаг {n} из {total}',
 
@@ -705,6 +707,7 @@ export const ruRU: Record<MessageKey, string> = {
   'public.finished.sent': 'Ваши ответы отправлены в {organisation}.',
   'public.document.preparing': 'Готовим документ…',
   'public.document.ready': 'Ваш документ готов',
+  'public.document.unavailable': 'Ваш документ сейчас недоступен',
   'public.document.download': 'Скачать PDF',
   'public.document.open': 'Открыть',
   'public.document.email': 'Отправить по почте',
@@ -726,7 +729,7 @@ export const ruRU: Record<MessageKey, string> = {
   'public.email.copy': 'Скопировать текст письма',
   'public.email.copied': 'Скопировано',
   'public.email.subject': '{title} — {reference}',
-  'public.email.body': 'Вложение: {filename}\nНомер: {reference}',
+  'public.email.body': 'Документ: {filename}\nНомер: {reference}',
   'public.again': 'Заполнить снова',
   'public.eid.title': 'Подтвердите личность (необязательно)',
   'public.eid.unavailable':

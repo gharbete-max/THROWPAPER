@@ -124,7 +124,11 @@ export function FinishedDocument({
         </span>
         <div className="stack stack--tight finished__name">
           <h3 id="finished-heading">
-            {load === 'loading' ? t('public.document.preparing') : t('public.document.ready')}
+            {load === 'loading'
+              ? t('public.document.preparing')
+              : load === 'ready'
+                ? t('public.document.ready')
+                : t('public.document.unavailable')}
           </h3>
           <p className="small muted finished__filename">{handle.filename}</p>
         </div>

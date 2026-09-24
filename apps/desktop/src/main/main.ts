@@ -91,6 +91,8 @@ async function startServer(): Promise<DesktopServer> {
     defaultRenderer: createElectronPdfRenderer({
       BrowserWindow,
       scratchDir: join(dataDir, 'tmp'),
+      // Its own session, where nothing but the page being printed may load (`pdf.ts`).
+      session: session.fromPartition('loppa-pdf-render'),
     }),
   });
 }

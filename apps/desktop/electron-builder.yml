@@ -49,6 +49,9 @@ electronFuses:
   enableNodeCliInspectArguments: false
   enableEmbeddedAsarIntegrityValidation: true
   onlyLoadAppFromAsar: true
+  # Flipping a fuse edits the binary after scripts/after-pack.cjs has ad-hoc signed it; re-sign
+  # so the Mac app's signature still covers what ships (`codesign --deep --strict` in CI checks it).
+  resetAdHocDarwinSignature: true
   # Left at its default on purpose: the settings panel is a Vite build loaded from file://, and its
   # <script type="module"> is exactly what Chromium refuses to a file:// page without these
   # privileges. The panel never navigates (main/navigation.ts), which is the risk this fuse guards.

@@ -362,6 +362,8 @@ export const svSE: Record<MessageKey, string> = {
     'Erbjud bekräftelse med e-legitimation efter inskick (frivilligt för personen)',
   'settings.identityHint':
     'Svaren sparas först; bekräftelsen är ett steg man kan ta eller hoppa över. Där ingen leverantör av e-legitimation är ansluten säger formuläret det och blir klart ändå.',
+  'settings.identityPaper':
+    'Inte på ett formulär gjort från papper: dess dokument är själva pappret, som inte har någon plats för en bekräftelse.',
 
   'public.progress': 'Steg {n} av {total}',
 
@@ -693,6 +695,7 @@ export const svSE: Record<MessageKey, string> = {
   'public.finished.sent': 'Dina svar har skickats till {organisation}.',
   'public.document.preparing': 'Dokumentet förbereds…',
   'public.document.ready': 'Ditt dokument är klart',
+  'public.document.unavailable': 'Ditt dokument är inte tillgängligt just nu',
   'public.document.download': 'Ladda ner PDF',
   'public.document.open': 'Öppna',
   'public.document.email': 'Mejla det',
@@ -714,7 +717,7 @@ export const svSE: Record<MessageKey, string> = {
   'public.email.copy': 'Kopiera meddelandet',
   'public.email.copied': 'Kopierat',
   'public.email.subject': '{title} – {reference}',
-  'public.email.body': 'Bifogat: {filename}\nReferens: {reference}',
+  'public.email.body': 'Dokument: {filename}\nReferens: {reference}',
   'public.again': 'Fyll i igen',
   'public.eid.title': 'Bekräfta vem du är (valfritt)',
   'public.eid.unavailable':
