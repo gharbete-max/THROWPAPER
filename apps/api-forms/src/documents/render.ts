@@ -19,11 +19,26 @@ export interface PdfRenderer {
   close(): Promise<void>;
 }
 
-export function createPdfRenderer(tokens: TokenSet = defaultTokens): PdfRenderer {
+/**
+ * Which Chromium to render with. Omitted, Playwright's own download — what the Docker image ships.
+ *
+ * The desktop edition (ADR 0016) cannot assume that download: it would be a second 150 MB browser
+ * inside an installer that already carries one. Every supported Windows has Microsoft Edge, which
+ * is Chromium, so the desktop asks for the `msedge` channel first and an explicit path after that.
+ */
+export interface BrowserChoice {
+  executablePath?: string;
+  channel?: 'msedge' | 'chrome';
+}
+
+export function createPdfRenderer(
+  tokens: TokenSet = defaultTokens,
+  choice: BrowserChoice = {},
+): PdfRenderer {
   let browser: Browser | null = null;
 
   async function ensureBrowser(): Promise<Browser> {
-    if (!browser || !browser.isConnected()) browser = await chromium.launch();
+    if (!browser || !browser.isConnected()) browser = await chromium.launch(choice);
     return browser;
   }
 

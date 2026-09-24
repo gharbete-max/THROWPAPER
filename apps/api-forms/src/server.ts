@@ -64,6 +64,7 @@ import { MAX_IMAGE_BYTES, checkImage } from './uploads/image.js';
 import { imageSize, isNearSquare } from './uploads/image-size.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
+import { createOutboxMailProvider, createSmtpMailProvider } from './mail/smtp.js';
 import { createSesMailProvider } from './mail/ses.js';
 import type { TxtResolver } from './mail/domain-verification.js';
 
@@ -1015,6 +1016,7 @@ function looksLikeAsset(path: string): boolean {
  */
 function configuredMailProvider(log: (message: string) => void): MailProvider {
   const provider = process.env['MAIL_PROVIDER'] ?? 'console';
+  if (provider === 'smtp' || provider === 'outbox') return configuredLocalMailProvider(provider);
   if (provider !== 'ses') return createConsoleMailProvider(log);
 
   const from = process.env['MAIL_FROM'];
@@ -1028,6 +1030,35 @@ function configuredMailProvider(log: (message: string) => void): MailProvider {
     ...(process.env['MAIL_CONFIGURATION_SET']
       ? { configurationSet: process.env['MAIL_CONFIGURATION_SET'] }
       : {}),
+  });
+}
+
+/**
+ * Direct SMTP (`CLAUDE.md` rule 2) or the `.eml` outbox, from the environment.
+ *
+ * The desktop edition builds these from its own settings file instead; this is the same pair for
+ * a server that runs without Mailer and without SES.
+ */
+function configuredLocalMailProvider(provider: 'smtp' | 'outbox'): MailProvider {
+  const from = process.env['MAIL_FROM'];
+  if (!from) throw new Error(`MAIL_PROVIDER=${provider} requires MAIL_FROM to be set.`);
+  if (provider === 'outbox') {
+    return createOutboxMailProvider({
+      directory:
+        process.env['MAIL_OUTBOX_DIR'] ??
+        join(process.env['DOCUMENT_DIR'] ?? '.documents', 'outbox'),
+      from,
+    });
+  }
+  const host = process.env['SMTP_HOST'];
+  if (!host) throw new Error('MAIL_PROVIDER=smtp requires SMTP_HOST.');
+  return createSmtpMailProvider({
+    host,
+    port: Number(process.env['SMTP_PORT'] ?? 587),
+    secure: process.env['SMTP_SECURE'] === 'true',
+    ...(process.env['SMTP_USER'] ? { user: process.env['SMTP_USER'] } : {}),
+    ...(process.env['SMTP_PASSWORD'] ? { password: process.env['SMTP_PASSWORD'] } : {}),
+    from,
   });
 }
 

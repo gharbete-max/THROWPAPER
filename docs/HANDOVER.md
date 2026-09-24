@@ -54,6 +54,10 @@ What is left, and whose it is:
    them first, from a brief the 2026-09-23 decision overtook.
 4. The wizard's verticals (content, per ADR 0006). Trades and law stay blocked until a human
    authors their wording.
+5. Loppa desktop, Windows and macOS (apps/desktop, ADR 0016) — D1 is built: Forms offline on
+   PGlite; mail to an .eml outbox, SMTP, Outlook or Apple Mail; PDFs from Electron's own
+   Chromium; installers from the Desktop workflow. Owner's direction: offline first, then
+   hostable (D4 next). Certificates and distribution are in LAUNCH-CHECKLIST.md §6.
 ```
 
 ## State

@@ -6,7 +6,8 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./contract-registry": "./src/contract-registry.ts"
+    "./contract-registry": "./src/contract-registry.ts",
+    "./desktop": "./src/desktop/index.ts"
   },
   "scripts": {
     "dev": "tsx watch src/main.ts",
@@ -17,10 +18,12 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts",
     "demo": "tsx src/demo/main.ts",
-    "start:demo": "node dist/demo/main.js"
+    "start:demo": "node dist/demo/main.js",
+    "desktop": "tsx src/desktop/main.ts"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1136.0",
+    "@electric-sql/pglite": "^0.5.8",
     "@fastify/compress": "^9.2.0",
     "@fastify/cors": "^11.3.0",
     "@fastify/helmet": "^13.1.1",
@@ -40,6 +43,7 @@
     "fastify": "^5.12.5",
     "fastify-type-provider-zod": "^4.0.2",
     "jose": "^6.2.12",
+    "nodemailer": "^10.0.10",
     "pdf-lib": "^1.17.1",
     "playwright": "^1.63.0",
     "postgres": "^3.4.5",
@@ -49,6 +53,7 @@
   },
   "devDependencies": {
     "@types/archiver": "^8.0.0",
+    "@types/nodemailer": "^8.0.2",
     "@types/qrcode": "^1.5.6",
     "drizzle-kit": "^0.31.10",
     "tsup": "^8.3.5"

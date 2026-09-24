@@ -49,7 +49,7 @@ const poolOptions = {
 
 export const sql = postgres(env.DATABASE_URL, poolOptions);
 export const db = drizzle(sql, { schema });
-export type Db = typeof db;
+export type { Db } from './types.js';
 
 /**
  * A separate connection for migrations and seeding, deliberately without the serving limits.

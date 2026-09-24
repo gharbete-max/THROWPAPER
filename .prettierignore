@@ -10,6 +10,10 @@ docs
 **/drizzle/
 .playwright-mcp/
 
+# The desktop edition's staging folder and installers (ADR 0016).
+apps/desktop/.stage/
+apps/desktop/release/
+
 .impeccable/hook.cache.json
 .impeccable/critique/
 
