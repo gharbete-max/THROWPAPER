@@ -12,8 +12,10 @@ import { Icon } from '../components/Icon.js';
 import { CameraScan, MAX_SCAN_PAGES } from '../components/CameraScan.js';
 import { CropPhoto, WHOLE_PICTURE } from './builder/paper/CropPhoto.js';
 import { isUsable, straightenFile, type Corners } from './builder/paper/warp.js';
+import { SigningDeclarations } from './SigningDeclarations.js';
 
 type Party = { name: string; email: string; locale: string };
+type Declaration = formSchemas.SigningDeclarationList['declarations'][number];
 
 /**
  * Documents sent for signing (P1c-3). Forms is the sender; Loppa Sign holds the evidence, the
@@ -31,12 +33,21 @@ export function Signing() {
   const paper = params.get('paper');
   const reference = params.get('reference') ?? '';
   const [composing, setComposing] = useState(paper !== null);
+  const [declarations, setDeclarations] = useState<Declaration[]>([]);
+  const [showDeclarations, setShowDeclarations] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     void client.listSigningRequests().then((response) => {
       if (!cancelled) setData(response);
     });
+    void client.listSigningDeclarations().then(
+      (response) => {
+        if (!cancelled) setDeclarations(response.declarations);
+      },
+      // Without the list, Compose offers test mode on the shared placeholder — never worse.
+      () => undefined,
+    );
     return () => {
       cancelled = true;
     };
@@ -73,17 +84,38 @@ export function Signing() {
     <section className="stack">
       <header className="row row--between">
         <h1>{t('signing.heading')}</h1>
-        {!composing && (
-          <button type="button" className="button" onClick={() => setComposing(true)}>
-            <Icon name="signature" />
-            {t('signing.new')}
+        <div className="row">
+          <button
+            type="button"
+            className="button button--quiet"
+            aria-expanded={showDeclarations}
+            onClick={() => setShowDeclarations((open) => !open)}
+          >
+            {t('signing.declarations')}
           </button>
-        )}
+          {!composing && (
+            <button type="button" className="button" onClick={() => setComposing(true)}>
+              <Icon name="signature" />
+              {t('signing.new')}
+            </button>
+          )}
+        </div>
       </header>
+
+      {showDeclarations && (
+        <SigningDeclarations
+          declarations={declarations}
+          onSaved={(saved) =>
+            // An own declaration hides a shared one of the same key, as Sign's list does.
+            setDeclarations((current) => [...current.filter((d) => d.key !== saved.key), saved])
+          }
+        />
+      )}
 
       {composing && (
         <Compose
           paper={paper ? { submissionId: paper, reference } : null}
+          declarations={declarations}
           onCancel={() => setComposing(false)}
           onSent={(created) => {
             replace(created);
@@ -228,11 +260,13 @@ async function base64(file: File): Promise<string> {
 
 function Compose({
   paper,
+  declarations,
   onCancel,
   onSent,
 }: {
   /** A paper form's submission, sent as its filled-in PDF instead of an uploaded file. */
   paper: { submissionId: string; reference: string } | null;
+  declarations: Declaration[];
   onCancel: () => void;
   onSent: (created: formSchemas.SigningRequestView) => void;
 }) {
@@ -248,7 +282,12 @@ function Compose({
   const [documentName, setDocumentName] = useState('');
   const [parties, setParties] = useState<Party[]>([{ name: '', email: '', locale }]);
   const [routing, setRouting] = useState<'sequential' | 'parallel'>('sequential');
-  const [declarationKey, setDeclarationKey] = useState('demo');
+  // An organisation's own words first; the shared placeholder only when it has none yet.
+  const [declarationKey, setDeclarationKey] = useState(
+    () => declarations.find((d) => d.authored)?.key ?? 'demo',
+  );
+  const [environment, setEnvironment] = useState<'test' | 'production'>('test');
+  const [confirmedReal, setConfirmedReal] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -256,9 +295,19 @@ function Compose({
     via === 'file'
       ? file !== null
       : scanned.length > 0 && scanned.every((p) => isUsable(p.corners));
+  const declaration = declarations.find((d) => d.key === declarationKey) ?? null;
+  // Sign refuses a signer whose language the declaration has no words in; say so before sending.
+  const missing = declaration
+    ? parties.filter((party) => !declaration.texts[party.locale]).map((party) => party.locale)
+    : [];
+  // Real signatures only on words a person in this organisation wrote (ADR 0012, rule 8).
+  const canBeReal = declaration?.authored === true;
+  const real = environment === 'production' && canBeReal;
   const ready =
     (paper !== null || (hasDocument && documentName.trim() !== '')) &&
     declarationKey.trim() !== '' &&
+    missing.length === 0 &&
+    (!real || confirmedReal) &&
     parties.every((party) => party.name.trim() !== '');
 
   function update(index: number, patch: Partial<Party>) {
@@ -279,8 +328,8 @@ function Compose({
         })),
         routing,
         declarationKey: declarationKey.trim(),
-        // Test mode until a person has written the declaration (ADR 0012, rule 7).
-        environment: 'test' as const,
+        // Test mode unless the declaration is the organisation's own and the sender confirmed.
+        environment: real ? ('production' as const) : ('test' as const),
       };
       let body: formSchemas.CreateSigningRequest;
       if (paper) {
@@ -478,18 +527,71 @@ function Compose({
         </label>
         <label className="stack stack--tight">
           <span>{t('signing.declarationKey')}</span>
-          <input
+          {declarations.length > 0 ? (
+            <select
+              className="input"
+              value={declarationKey}
+              onChange={(event) => {
+                setDeclarationKey(event.target.value);
+                setEnvironment('test');
+                setConfirmedReal(false);
+              }}
+            >
+              {declarations.map((d) => (
+                <option key={d.key} value={d.key}>
+                  {d.shared ? `${d.key} (${t('signing.declarationTestOnly')})` : d.key}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              className="input"
+              value={declarationKey}
+              maxLength={128}
+              onChange={(event) => setDeclarationKey(event.target.value)}
+            />
+          )}
+        </label>
+        <label className="stack stack--tight">
+          <span>{t('signing.environment')}</span>
+          <select
             className="input"
-            value={declarationKey}
-            maxLength={128}
-            onChange={(event) => setDeclarationKey(event.target.value)}
-          />
+            value={real ? 'production' : 'test'}
+            onChange={(event) => {
+              setEnvironment(event.target.value as 'test' | 'production');
+              setConfirmedReal(false);
+            }}
+          >
+            <option value="test">{t('signing.testMode')}</option>
+            <option value="production" disabled={!canBeReal}>
+              {t('signing.realMode')}
+            </option>
+          </select>
         </label>
       </div>
       <p className="small muted">{t('signing.declarationHint')}</p>
-      <p className="small muted">
-        <span className="badge">{t('signing.testMode')}</span> {t('signing.testModeHint')}
-      </p>
+      {missing.length > 0 && (
+        <p className="error" role="alert">
+          {t('signing.declarationMissingLanguage', {
+            languages: [...new Set(missing)].map((code) => localeLabel(code)).join(', '),
+          })}
+        </p>
+      )}
+      {real ? (
+        <label className="choice__option">
+          <input
+            type="checkbox"
+            checked={confirmedReal}
+            onChange={(event) => setConfirmedReal(event.target.checked)}
+          />
+          <span>{t('signing.realConfirm')}</span>
+        </label>
+      ) : (
+        <p className="small muted">
+          <span className="badge">{t('signing.testMode')}</span>{' '}
+          {canBeReal ? t('signing.testModeHint') : t('signing.realNeedsOwnDeclaration')}
+        </p>
+      )}
 
       {failed && (
         <p className="error" role="alert">

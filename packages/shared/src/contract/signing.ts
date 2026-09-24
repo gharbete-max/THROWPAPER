@@ -69,3 +69,41 @@ export type CreateEnvelopeResponse = z.infer<typeof CreateEnvelopeResponse>;
 export type EnvelopeStatusResponse = z.infer<typeof EnvelopeStatusResponse>;
 export type SealedDocumentResponse = z.infer<typeof SealedDocumentResponse>;
 export type SigningHookEvent = z.infer<typeof SigningHookEvent>;
+
+/**
+ * §5.5 — the declarations an organisation's signers approve (ADR 0012), written by a person in
+ * that organisation and stored at Sign, versioned and append-only. Loppa never writes them (rule
+ * 8); these endpoints only carry a person's words to where signers read them.
+ */
+export const DeclarationKey = z
+  .string()
+  .regex(/^[a-z0-9][a-z0-9._-]{0,63}$/, 'lower-case letters, digits, dot, dash or underscore');
+
+/** `{ [locale]: text }`, exactly as the signer will read it. */
+export const DeclarationTexts = z
+  .record(z.string().min(2).max(35), z.string().trim().min(1).max(5000))
+  .refine((texts) => Object.keys(texts).length > 0, { message: 'At least one language' });
+
+/** §5.5 — a new version of a declaration: a first one, or a replacement for the latest. */
+export const WriteDeclarationRequest = z.object({
+  organisationId: OrganisationId,
+  key: DeclarationKey,
+  texts: DeclarationTexts,
+});
+
+export const DeclarationView = z.object({
+  key: z.string(),
+  version: z.number().int().min(1),
+  texts: z.record(z.string()),
+  /** Written by a person in this organisation; usable for a production envelope. */
+  authored: z.boolean(),
+  /** A shared placeholder (the seed's), usable in test mode only. */
+  shared: z.boolean(),
+});
+
+/** §5.5 — the latest version of each declaration this organisation may use. */
+export const DeclarationListResponse = z.object({ declarations: z.array(DeclarationView) });
+
+export type WriteDeclarationRequest = z.infer<typeof WriteDeclarationRequest>;
+export type DeclarationView = z.infer<typeof DeclarationView>;
+export type DeclarationListResponse = z.infer<typeof DeclarationListResponse>;

@@ -852,8 +852,6 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.routing.sequential': 'По очереди',
   'signing.routing.parallel': 'Все сразу',
   'signing.declarationKey': 'Заявление',
-  'signing.declarationHint':
-    'Ключ заявления, написанного в Loppa Sign. «demo» — заглушка для тестового режима.',
   'signing.testMode': 'Тестовый режим',
   'signing.testModeHint': 'Ничто, подписанное в тестовом режиме, не отмечается как настоящее.',
   'signing.send': 'Отправить на подпись',
@@ -875,6 +873,36 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.openLink': 'Открыть страницу подписания',
   'signing.refresh': 'Обновить',
   'signing.downloadSigned': 'Скачать подписанный PDF',
+  'signing.declarationHint':
+    'Слова, которые одобряет каждый подписант. Ваша организация пишет их в разделе «Заявления».',
+  'signing.declarations': 'Заявления',
+  'signing.declarationsHint':
+    'То, что ваши подписанты одобряют при подписании, на каждом языке. Loppa никогда не пишет эти слова: их вводит администратор вашей организации. Сохранение создаёт новую версию; уже отправленные документы сохраняют слова, с которыми были отправлены.',
+  'signing.declarationVersion': 'Версия {version}',
+  'signing.declarationTestOnly': 'Только тест',
+  'signing.declarationWriteOwn': 'Написать своё',
+  'signing.declarationNewVersion': 'Новая версия',
+  'signing.declarationNew': 'Новое заявление',
+  'signing.declarationAdminOnly': 'Только администратор может написать заявление.',
+  'signing.declarationEditor': 'Написать заявление',
+  'signing.declarationKeyLabel': 'Краткое имя',
+  'signing.declarationKeyHint':
+    'Строчные буквы, цифры, точки, дефисы и подчёркивания, например arenda-2026.',
+  'signing.declarationOwnWords':
+    'Подписанты увидят ровно то, что вы введёте здесь, слово в слово. Оставьте язык пустым, если не используете его.',
+  'signing.declarationConfirm':
+    'Подписанты одобрят ровно эти слова. Нажмите ещё раз, чтобы сохранить их как новую версию.',
+  'signing.declarationFailed': 'Не удалось сохранить заявление. Попробуйте ещё раз.',
+  'signing.declarationSave': 'Сохранить',
+  'signing.declarationSaveConfirm': 'Да, сохранить эту версию',
+  'signing.environment': 'Режим',
+  'signing.realMode': 'Настоящий',
+  'signing.declarationMissingLanguage':
+    'В заявлении нет текста на языке: {languages}. Добавьте его в разделе «Заявления» или выберите для этого подписанта другой язык.',
+  'signing.realConfirm':
+    'Я проверил(а) заявление на языке каждого подписанта, и это настоящее подписание, а не тест.',
+  'signing.realNeedsOwnDeclaration':
+    'Для настоящего подписания нужно заявление, написанное вашей организацией. Напишите его в разделе «Заявления».',
   'signing.cancel': 'Отмена',
   'submissions.sendForSigning': 'Отправить на подпись',
   'signing.fromSubmission': 'Заполненная бумажная форма {reference}',

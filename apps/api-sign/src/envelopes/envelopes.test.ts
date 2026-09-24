@@ -775,6 +775,110 @@ describe.skipIf(!database)('telling the caller (§5.4)', () => {
   });
 });
 
+describe.skipIf(!database)('declarations a person writes (§5.5)', () => {
+  function write(
+    token: string,
+    organisationId: string,
+    key: string,
+    texts: Record<string, string>,
+  ) {
+    return app.inject({
+      method: 'POST',
+      url: '/v1/declarations',
+      headers: { authorization: `Bearer ${token}` },
+      payload: { organisationId, key, texts },
+    });
+  }
+
+  it("stores an organisation's words, unlocks production with them, and keeps them its own", async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const written = await write(token, org, 'lease-own', {
+      'sv-SE': '[stands in for Swedish a person wrote]',
+      'en-GB': '[stands in for English a person wrote]',
+    });
+    expect(written.statusCode).toBe(201);
+    expect(written.json()).toMatchObject({
+      key: 'lease-own',
+      version: 1,
+      authored: true,
+      shared: false,
+    });
+
+    const list = await app.inject({
+      method: 'GET',
+      url: '/v1/declarations',
+      headers: { authorization: `Bearer ${token}` },
+    });
+    const keys = list.json().declarations.map((d: { key: string }) => d.key);
+    expect(keys).toContain('lease-own');
+    // The shared placeholders are there too, marked as such.
+    expect(list.json().declarations.find((d: { key: string }) => d.key === 'lease')).toMatchObject({
+      shared: true,
+      authored: false,
+    });
+
+    const production = await create(
+      token,
+      envelopeRequest(org, { declarationKey: 'lease-own', environment: 'production' }),
+    );
+    expect(production.statusCode).toBe(201);
+
+    // Another organisation cannot see it, list it, or sign against it.
+    const other = randomUUID();
+    const otherToken = await tokenFor(other);
+    const refused = await create(
+      otherToken,
+      envelopeRequest(other, { declarationKey: 'lease-own' }),
+    );
+    expect(refused.json().error.code).toBe('unknown-declaration');
+    const theirs = await app.inject({
+      method: 'GET',
+      url: '/v1/declarations',
+      headers: { authorization: `Bearer ${otherToken}` },
+    });
+    expect(theirs.json().declarations.map((d: { key: string }) => d.key)).not.toContain(
+      'lease-own',
+    );
+    expect((await write(otherToken, org, 'x', { 'sv-SE': 'x' })).statusCode).toBe(403);
+  });
+
+  it('versions a change, and an envelope keeps the words it was sent with', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    await write(token, org, 'terms', { 'sv-SE': '[first sv]', 'en-GB': '[first en]' });
+    const created = (await create(token, envelopeRequest(org, { declarationKey: 'terms' }))).json();
+    const second = await write(token, org, 'terms', {
+      'sv-SE': '[second sv]',
+      'en-GB': '[second en]',
+    });
+    expect(second.json().version).toBe(2);
+
+    const view = await app.inject({
+      method: 'GET',
+      url: `/v1/sign/${linkOf(created.signUrls.landlord)}`,
+    });
+    expect(view.json().declaration).toEqual({
+      key: 'terms',
+      version: 1,
+      text: '[first sv]',
+    });
+    const later = (await create(token, envelopeRequest(org, { declarationKey: 'terms' }))).json();
+    const laterView = await app.inject({
+      method: 'GET',
+      url: `/v1/sign/${linkOf(later.signUrls.landlord)}`,
+    });
+    expect(laterView.json().declaration.text).toBe('[second sv]');
+  });
+
+  it('refuses an empty declaration, and a key that is not a key', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    expect((await write(token, org, 'empty', {})).statusCode).toBe(400);
+    expect((await write(token, org, 'Has Spaces', { 'sv-SE': 'x' })).statusCode).toBe(400);
+  });
+});
+
 function trailOf(envelopeId: string) {
   return db
     .select()

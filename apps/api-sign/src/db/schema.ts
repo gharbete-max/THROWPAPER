@@ -57,10 +57,15 @@ export const documents = pgTable('documents', {
  *
  * `testOnly` marks the bracketed placeholder the seed writes: usable in test mode, refused for a
  * production envelope, so nothing real is ever signed against text nobody authored.
+ *
+ * `organisationId` is whose words these are. A person in that organisation writes them through
+ * CONTRACT §5.5 (never Loppa: rule 8); only that organisation's envelopes can use them. Null is a
+ * shared placeholder — the seed's, test-only — which every organisation may use in test mode.
  */
 export const declarations = pgTable(
   'declarations',
   {
+    organisationId: uuid('organisation_id'),
     key: text('key').notNull(),
     version: integer('version').notNull(),
     /** `{ [locale]: text }`, byte for byte as shown to the signer. */
@@ -68,7 +73,12 @@ export const declarations = pgTable(
     testOnly: boolean('test_only').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [primaryKey({ columns: [table.key, table.version] })],
+  (table) => [
+    // Null is one owner, not many: the shared placeholders' versions are unique too.
+    unique('declarations_owner_key_version')
+      .on(table.organisationId, table.key, table.version)
+      .nullsNotDistinct(),
+  ],
 );
 
 /**

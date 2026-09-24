@@ -46,7 +46,11 @@ export function chain(prevSha256: string, event: string): string {
 export interface Definition {
   organisationId: string;
   envelope: Omit<Envelope, 'status' | 'partyStatus' | 'evidence'>;
-  declaration: { key: string; version: number };
+  /**
+   * Which declaration, pinned. `organisationId` is whose words: absent (envelopes before §5.5) and
+   * null both mean the shared placeholder.
+   */
+  declaration: { key: string; version: number; organisationId?: string | null };
   hookUrl: string | null;
 }
 

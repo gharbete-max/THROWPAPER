@@ -833,8 +833,6 @@ export const svSE: Record<MessageKey, string> = {
   'signing.routing.sequential': 'En i taget',
   'signing.routing.parallel': 'Alla samtidigt',
   'signing.declarationKey': 'Försäkran',
-  'signing.declarationHint':
-    'Nyckeln till en försäkran som skrivits i Loppa Sign. "demo" är en platshållare för testläge.',
   'signing.testMode': 'Testläge',
   'signing.testModeHint': 'Inget som signeras i testläge markeras som skarpt.',
   'signing.send': 'Skicka för signering',
@@ -856,6 +854,36 @@ export const svSE: Record<MessageKey, string> = {
   'signing.openLink': 'Öppna signeringssidan',
   'signing.refresh': 'Uppdatera',
   'signing.downloadSigned': 'Ladda ner signerad PDF',
+  'signing.declarationHint':
+    'Orden varje undertecknare godkänner. Er organisation skriver dem under Försäkringar.',
+  'signing.declarations': 'Försäkringar',
+  'signing.declarationsHint':
+    'Det era undertecknare godkänner när de signerar, på varje språk. Loppa skriver aldrig de här orden: en administratör i er organisation skriver in dem. Att spara skapar en ny version; dokument som redan skickats behåller orden de skickades med.',
+  'signing.declarationVersion': 'Version {version}',
+  'signing.declarationTestOnly': 'Endast test',
+  'signing.declarationWriteOwn': 'Skriv en egen',
+  'signing.declarationNewVersion': 'Ny version',
+  'signing.declarationNew': 'Ny försäkran',
+  'signing.declarationAdminOnly': 'Bara en administratör kan skriva en försäkran.',
+  'signing.declarationEditor': 'Skriv en försäkran',
+  'signing.declarationKeyLabel': 'Kort namn',
+  'signing.declarationKeyHint':
+    'Små bokstäver, siffror, punkter, bindestreck och understreck, t.ex. hyresavtal-2026.',
+  'signing.declarationOwnWords':
+    'Undertecknarna ser exakt det du skriver här, ord för ord. Lämna ett språk tomt om ni inte använder det.',
+  'signing.declarationConfirm':
+    'Undertecknarna kommer att godkänna exakt de här orden. Tryck igen för att spara dem som en ny version.',
+  'signing.declarationFailed': 'Kunde inte spara försäkran. Försök igen.',
+  'signing.declarationSave': 'Spara',
+  'signing.declarationSaveConfirm': 'Ja, spara den här versionen',
+  'signing.environment': 'Läge',
+  'signing.realMode': 'Skarpt',
+  'signing.declarationMissingLanguage':
+    'Försäkran har ingen text på {languages}. Lägg till den under Försäkringar, eller välj ett annat språk för den undertecknaren.',
+  'signing.realConfirm':
+    'Jag har kontrollerat försäkran på varje undertecknares språk, och det här är en skarp signering, inte ett test.',
+  'signing.realNeedsOwnDeclaration':
+    'Skarp signering kräver en försäkran som er organisation har skrivit själv. Skriv en under Försäkringar.',
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Skicka för signering',
   'signing.fromSubmission': 'Ifyllt pappersformulär {reference}',

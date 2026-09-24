@@ -7,8 +7,11 @@ import {
   CreateEnvelopeRequest,
   CreateEnvelopeResponse,
   EnvelopeStatusResponse,
+  DeclarationListResponse,
+  DeclarationView,
   SealedDocumentResponse,
   SigningHookEvent,
+  WriteDeclarationRequest,
 } from './signing.js';
 
 /** Which product serves an endpoint. `signwork` is the Sign product (ADR 0009). */
@@ -112,6 +115,24 @@ export const CONTRACT_ENDPOINTS = [
     section: '5.3',
     request: null,
     response: SealedDocumentResponse,
+  },
+  {
+    id: 'declarations.list',
+    method: 'GET',
+    path: '/v1/declarations',
+    servedBy: 'signwork',
+    section: '5.5',
+    request: null,
+    response: DeclarationListResponse,
+  },
+  {
+    id: 'declarations.write',
+    method: 'POST',
+    path: '/v1/declarations',
+    servedBy: 'signwork',
+    section: '5.5',
+    request: WriteDeclarationRequest,
+    response: DeclarationView,
   },
   {
     id: 'signing.webhook',

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, isNull, or } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { api } from '@tp/shared';
@@ -8,6 +8,9 @@ import { PDFDocument } from 'pdf-lib';
 import {
   CreateEnvelopeRequest,
   CreateEnvelopeResponse,
+  DeclarationListResponse,
+  DeclarationView,
+  WriteDeclarationRequest,
   EnvelopeStatusResponse,
   SealedDocumentResponse,
 } from '@tp/shared/contract';
@@ -22,6 +25,7 @@ import {
   type Definition,
 } from '../envelopes/store.js';
 import type { Deps } from '../server.js';
+import type { Db } from '../db/client.js';
 
 const errors = { 401: api.ErrorResponse, 403: api.ErrorResponse, 404: api.ErrorResponse } as const;
 
@@ -104,12 +108,8 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
 
       // The latest version of the named declaration is pinned now: what a signer sees cannot
       // change after the envelope is sent, even when a person revises the text tomorrow.
-      const [declaration] = await deps.db
-        .select()
-        .from(declarations)
-        .where(eq(declarations.key, body.declarationKey))
-        .orderBy(desc(declarations.version))
-        .limit(1);
+      // The organisation's own words first; the shared placeholder only if it has none by that key.
+      const declaration = await latestDeclaration(deps.db, who.organisationId, body.declarationKey);
       if (!declaration) {
         return fail(reply, 422, 'unknown-declaration', 'No declaration has that key');
       }
@@ -153,7 +153,11 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
           environment: body.environment,
           expiresAt: body.expiresAt,
         },
-        declaration: { key: declaration.key, version: declaration.version },
+        declaration: {
+          key: declaration.key,
+          version: declaration.version,
+          organisationId: declaration.organisationId,
+        },
         hookUrl: body.hookUrl ?? null,
       };
       const { id, created } = await createEnvelope(deps.db, {
@@ -227,6 +231,81 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
     },
   });
 
+  /** §5.5 — the latest version of every declaration this organisation may use. */
+  typed.get('/v1/declarations', {
+    onRequest: authenticate,
+    schema: { tags: ['declarations'], response: { 200: DeclarationListResponse, ...errors } },
+    handler: async (request, reply) => {
+      const who = callers.get(request)!;
+      const rows = await deps.db
+        .select()
+        .from(declarations)
+        .where(
+          or(
+            eq(declarations.organisationId, who.organisationId),
+            isNull(declarations.organisationId),
+          ),
+        )
+        .orderBy(asc(declarations.key), desc(declarations.version));
+      // One per key and owner: the latest. An organisation's own key hides a shared one.
+      const latest = new Map<string, (typeof rows)[number]>();
+      for (const row of rows) {
+        const current = latest.get(row.key);
+        const own = row.organisationId !== null;
+        if (!current || (own && current.organisationId === null)) latest.set(row.key, row);
+      }
+      return reply.send({ declarations: [...latest.values()].map(declarationView) });
+    },
+  });
+
+  /**
+   * §5.5 — a person's words, as a new version. Never Loppa's (rule 8): this only stores what the
+   * caller sends, and the caller's screen is where a person writes it. A version already used by
+   * an envelope stays as it was — envelopes pin theirs — so a change can never alter what somebody
+   * already signed.
+   */
+  typed.post('/v1/declarations', {
+    onRequest: authenticate,
+    schema: {
+      tags: ['declarations'],
+      body: WriteDeclarationRequest,
+      response: { 201: DeclarationView, 422: api.ErrorResponse, ...errors },
+    },
+    handler: async (request, reply) => {
+      const who = callers.get(request)!;
+      const body = request.body;
+      if (body.organisationId !== who.organisationId) {
+        return fail(reply, 403, 'wrong-organisation', 'This token acts for another organisation');
+      }
+      const row = await deps.db.transaction(async (tx) => {
+        const [previous] = await tx
+          .select({ version: declarations.version })
+          .from(declarations)
+          .where(
+            and(
+              eq(declarations.organisationId, who.organisationId),
+              eq(declarations.key, body.key),
+            ),
+          )
+          .orderBy(desc(declarations.version))
+          .limit(1)
+          .for('update');
+        const [inserted] = await tx
+          .insert(declarations)
+          .values({
+            organisationId: who.organisationId,
+            key: body.key,
+            version: (previous?.version ?? 0) + 1,
+            texts: body.texts,
+            testOnly: false,
+          })
+          .returning();
+        return inserted!;
+      });
+      return reply.code(201).send(declarationView(row));
+    },
+  });
+
   typed.get('/v1/envelopes/:id/sealed', {
     onRequest: authenticate,
     schema: {
@@ -277,6 +356,31 @@ async function readablePdf(bytes: Uint8Array): Promise<boolean> {
     // Encrypted, damaged, or not a PDF at all: pdf-lib cannot rewrite it, so it cannot be sealed.
     return false;
   }
+}
+
+/** The declaration an envelope in `organisationId` would pin for `key`: its own, else shared. */
+async function latestDeclaration(db: Db, organisationId: string, key: string) {
+  const rows = await db
+    .select()
+    .from(declarations)
+    .where(
+      and(
+        eq(declarations.key, key),
+        or(eq(declarations.organisationId, organisationId), isNull(declarations.organisationId)),
+      ),
+    )
+    .orderBy(desc(declarations.version));
+  return rows.find((row) => row.organisationId === organisationId) ?? rows[0];
+}
+
+function declarationView(row: typeof declarations.$inferSelect): DeclarationView {
+  return {
+    key: row.key,
+    version: row.version,
+    texts: row.texts,
+    authored: !row.testOnly,
+    shared: row.organisationId === null,
+  };
 }
 
 export function fail(reply: FastifyReply, status: number, code: string, message: string) {

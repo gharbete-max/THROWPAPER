@@ -266,6 +266,13 @@ export const client = {
     }),
   refreshSigningRequest: (id: string) =>
     request<formSchemas.SigningRequestView>(`/v1/signing/requests/${id}`),
+  listSigningDeclarations: () =>
+    request<formSchemas.SigningDeclarationList>('/v1/signing/declarations'),
+  writeSigningDeclaration: (body: formSchemas.WriteSigningDeclaration) =>
+    request<formSchemas.SigningDeclarationList['declarations'][number]>(
+      '/v1/signing/declarations',
+      { method: 'POST', body: JSON.stringify(body) },
+    ),
   signedPdf: (id: string) => requestBlob(`/v1/signing/requests/${id}/sealed.pdf`),
   /** The invoice as the tenant receives it, fetched with the session rather than their link. */
   invoicePdf: (id: string) => requestBlob(`/v1/invoices/${id}/pdf`),

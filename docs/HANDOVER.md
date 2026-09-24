@@ -47,7 +47,8 @@ What is left, and whose it is:
    (PROGRESS § P1a, § P1b); P1c-1 is done (Sign's database, the append-only hash-chained trail, §5.1–5.2); P1c-2 is done
    (PAdES sealing with an audit page, §5.3); P1c-4a is done (the signer's page, typed or drawn,
    and Sign on PGlite); P1c-3 is done (Forms' Signing screen sends a PDF over §5, §5.4 hooks);
-   the desktop now hosts Sign offline (PROGRESS § D-Sign, ADR 0016 amended); next is P1c-4b
+   the desktop now hosts Sign offline (PROGRESS § D-Sign, ADR 0016 amended); an admin writes the
+   organisation's declarations in the product (CONTRACT §5.5); next is P1c-4b
    (SMTP invitations). Mailer B2
    now lives inside P3. Decisions in docs/EXPANSION.md § 5.
    Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5

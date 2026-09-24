@@ -838,8 +838,6 @@ export const isIS: Record<MessageKey, string> = {
   'signing.routing.sequential': 'Einn í einu',
   'signing.routing.parallel': 'Allir í einu',
   'signing.declarationKey': 'Yfirlýsing',
-  'signing.declarationHint':
-    'Lykill yfirlýsingar sem skrifuð er í Loppa Sign. "demo" er staðgengill fyrir prófunarham.',
   'signing.testMode': 'Prófunarhamur',
   'signing.testModeHint': 'Ekkert sem er undirritað í prófunarham er merkt sem raunverulegt.',
   'signing.send': 'Senda til undirritunar',
@@ -861,6 +859,36 @@ export const isIS: Record<MessageKey, string> = {
   'signing.openLink': 'Opna undirritunarsíðu',
   'signing.refresh': 'Uppfæra',
   'signing.downloadSigned': 'Sækja undirritað PDF',
+  'signing.declarationHint':
+    'Orðin sem hver undirritari samþykkir. Fyrirtækið ykkar skrifar þau undir Yfirlýsingar.',
+  'signing.declarations': 'Yfirlýsingar',
+  'signing.declarationsHint':
+    'Það sem undirritarar ykkar samþykkja þegar þeir undirrita, á hverju tungumáli. Loppa skrifar aldrei þessi orð: stjórnandi í fyrirtækinu ykkar slær þau inn. Vistun býr til nýja útgáfu; skjöl sem þegar hafa verið send halda orðunum sem þau voru send með.',
+  'signing.declarationVersion': 'Útgáfa {version}',
+  'signing.declarationTestOnly': 'Aðeins próf',
+  'signing.declarationWriteOwn': 'Skrifa eigin',
+  'signing.declarationNewVersion': 'Ný útgáfa',
+  'signing.declarationNew': 'Ný yfirlýsing',
+  'signing.declarationAdminOnly': 'Aðeins stjórnandi getur skrifað yfirlýsingu.',
+  'signing.declarationEditor': 'Skrifa yfirlýsingu',
+  'signing.declarationKeyLabel': 'Stutt heiti',
+  'signing.declarationKeyHint':
+    'Lágstafir, tölustafir, punktar, bandstrik og undirstrik, t.d. leigusamningur-2026.',
+  'signing.declarationOwnWords':
+    'Undirritarar sjá nákvæmlega það sem þú skrifar hér, orð fyrir orð. Skildu tungumál eftir autt ef þið notið það ekki.',
+  'signing.declarationConfirm':
+    'Undirritarar munu samþykkja nákvæmlega þessi orð. Ýttu aftur til að vista þau sem nýja útgáfu.',
+  'signing.declarationFailed': 'Ekki tókst að vista yfirlýsinguna. Reyndu aftur.',
+  'signing.declarationSave': 'Vista',
+  'signing.declarationSaveConfirm': 'Já, vista þessa útgáfu',
+  'signing.environment': 'Hamur',
+  'signing.realMode': 'Raunverulegt',
+  'signing.declarationMissingLanguage':
+    'Yfirlýsingin hefur engan texta á {languages}. Bættu honum við undir Yfirlýsingar eða veldu annað tungumál fyrir þann undirritara.',
+  'signing.realConfirm':
+    'Ég hef yfirfarið yfirlýsinguna á tungumáli hvers undirritara og þetta er raunveruleg undirritun, ekki próf.',
+  'signing.realNeedsOwnDeclaration':
+    'Raunveruleg undirritun krefst yfirlýsingar sem fyrirtækið ykkar hefur skrifað sjálft. Skrifaðu hana undir Yfirlýsingar.',
   'signing.cancel': 'Hætta við',
   'submissions.sendForSigning': 'Senda til undirritunar',
   'signing.fromSubmission': 'Útfyllt pappírseyðublað {reference}',

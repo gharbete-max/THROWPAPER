@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import postgres from 'postgres';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { db, signInAs } from './support.js';
 import { E2E_SIGN_SERVICE_TOKEN, signDatabaseUrl } from './ports.js';
 import { tinyPdf } from './pdf.js';
@@ -16,7 +16,7 @@ const APP_ORIGIN = 'http://localhost:4173';
 const DATABASE_URL =
   process.env['DATABASE_URL'] ?? 'postgres://throwpaper:throwpaper@localhost:5432/throwpaper';
 
-test('an operator sends a PDF for signing and downloads it sealed', async ({ page, context }) => {
+async function connectAndSignIn(page: Page): Promise<void> {
   const sql = db();
   try {
     // Register Forms' token with Sign, for the seeded organisation, allowed to call back to Forms.
@@ -37,6 +37,10 @@ test('an operator sends a PDF for signing and downloads it sealed', async ({ pag
   } finally {
     await sql.end();
   }
+}
+
+test('an operator sends a PDF for signing and downloads it sealed', async ({ page, context }) => {
+  await connectAndSignIn(page);
 
   await page.goto('/signing');
   await page.getByRole('button', { name: 'Send a PDF for signing' }).click();
@@ -73,4 +77,49 @@ test('an operator sends a PDF for signing and downloads it sealed', async ({ pag
   const bytes = new Uint8Array(await readFile((await download.path())!));
   const seal = extractSeal(bytes);
   expect(opensslVerify(seal.signedContent, seal.cms, 'embedded').ok).toBe(true);
+});
+
+test("an admin writes the organisation's own declaration and sends a real signing on it", async ({
+  page,
+  context,
+}) => {
+  await connectAndSignIn(page);
+  // Placeholder words typed by the test, standing in for what a person in the organisation writes.
+  const words = `[e2e words ${Date.now()}]`;
+
+  await page.goto('/signing');
+  await page.getByRole('button', { name: 'Declarations' }).click();
+  await page.getByRole('button', { name: 'New declaration' }).click();
+  const editor = page.getByRole('form', { name: 'Write a declaration' });
+  await editor.getByLabel('Short name').fill('e2e-terms');
+  for (const box of await editor.locator('textarea').all()) await box.fill(words);
+  await editor.getByRole('button', { name: 'Save' }).click();
+  // Nothing is stored before the second press (rule 7).
+  await editor.getByRole('button', { name: 'Yes, save this version' }).click();
+  await expect(editor).toBeHidden();
+  await expect(page.getByText('e2e-terms', { exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Send a PDF for signing' }).click();
+  await page.getByLabel('PDF file').setInputFiles({
+    name: 'Real e2e.pdf',
+    mimeType: 'application/pdf',
+    buffer: tinyPdf('A real one'),
+  });
+  await page.getByLabel('Name', { exact: true }).fill('Per Ärlig');
+  await page.getByRole('combobox', { name: 'Declaration', exact: true }).selectOption('e2e-terms');
+  await page.getByRole('combobox', { name: 'Mode' }).selectOption('production');
+  const send = page.getByRole('button', { name: 'Send for signing' });
+  await expect(send).toBeDisabled();
+  await page.getByRole('checkbox').check();
+  await send.click();
+
+  const row = page.getByTestId('signing-row').filter({ hasText: 'Real e2e' }).first();
+  await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');
+  await expect(row.getByText('Test mode')).toHaveCount(0);
+
+  const signer = await context.newPage();
+  await signer.goto(
+    (await row.getByRole('link', { name: 'Open signing page' }).getAttribute('href'))!,
+  );
+  await expect(signer.getByText(words)).toBeVisible();
 });

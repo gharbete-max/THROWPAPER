@@ -14,5 +14,7 @@ export const registry: ContractRegistry = {
     { id: 'envelopes.create', status: 'implemented' },
     { id: 'envelopes.get', status: 'implemented' },
     { id: 'envelopes.sealed', status: 'implemented' },
+    { id: 'declarations.list', status: 'implemented' },
+    { id: 'declarations.write', status: 'implemented' },
   ],
 };

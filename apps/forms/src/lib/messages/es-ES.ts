@@ -846,8 +846,6 @@ export const esES: Record<MessageKey, string> = {
   'signing.routing.sequential': 'Uno tras otro',
   'signing.routing.parallel': 'Todos a la vez',
   'signing.declarationKey': 'Declaración',
-  'signing.declarationHint':
-    'La clave de una declaración redactada en Loppa Sign. «demo» es un texto provisional del modo de prueba.',
   'signing.testMode': 'Modo de prueba',
   'signing.testModeHint': 'Nada de lo firmado en modo de prueba se marca como real.',
   'signing.send': 'Enviar para firmar',
@@ -869,6 +867,36 @@ export const esES: Record<MessageKey, string> = {
   'signing.openLink': 'Abrir la página de firma',
   'signing.refresh': 'Actualizar',
   'signing.downloadSigned': 'Descargar PDF firmado',
+  'signing.declarationHint':
+    'Las palabras que aprueba cada firmante. Tu organización las redacta en Declaraciones.',
+  'signing.declarations': 'Declaraciones',
+  'signing.declarationsHint':
+    'Lo que tus firmantes aprueban al firmar, en cada idioma. Loppa nunca escribe estas palabras: las escribe un administrador de tu organización. Guardar crea una versión nueva; los documentos ya enviados conservan las palabras con las que se enviaron.',
+  'signing.declarationVersion': 'Versión {version}',
+  'signing.declarationTestOnly': 'Solo prueba',
+  'signing.declarationWriteOwn': 'Redactar la vuestra',
+  'signing.declarationNewVersion': 'Nueva versión',
+  'signing.declarationNew': 'Nueva declaración',
+  'signing.declarationAdminOnly': 'Solo un administrador puede redactar una declaración.',
+  'signing.declarationEditor': 'Redactar una declaración',
+  'signing.declarationKeyLabel': 'Nombre corto',
+  'signing.declarationKeyHint':
+    'Minúsculas, cifras, puntos, guiones y guiones bajos, p. ej. alquiler-2026.',
+  'signing.declarationOwnWords':
+    'Los firmantes ven exactamente lo que escribes aquí, palabra por palabra. Deja vacío un idioma si no lo usáis.',
+  'signing.declarationConfirm':
+    'Los firmantes aprobarán exactamente estas palabras. Pulsa otra vez para guardarlas como versión nueva.',
+  'signing.declarationFailed': 'No se pudo guardar la declaración. Inténtalo de nuevo.',
+  'signing.declarationSave': 'Guardar',
+  'signing.declarationSaveConfirm': 'Sí, guardar esta versión',
+  'signing.environment': 'Modo',
+  'signing.realMode': 'Real',
+  'signing.declarationMissingLanguage':
+    'La declaración no tiene texto en {languages}. Añádelo en Declaraciones o elige otro idioma para ese firmante.',
+  'signing.realConfirm':
+    'He revisado la declaración en el idioma de cada firmante y esta es una firma real, no una prueba.',
+  'signing.realNeedsOwnDeclaration':
+    'La firma real necesita una declaración redactada por tu organización. Redacta una en Declaraciones.',
   'signing.cancel': 'Cancelar',
   'submissions.sendForSigning': 'Enviar para firmar',
   'signing.fromSubmission': 'Formulario en papel rellenado {reference}',
