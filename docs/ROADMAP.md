@@ -186,8 +186,8 @@ anything.*
 - CI licence allowlist check (ADR 0015).
 
 **P1c — Sealing and the audit trail.** Four slices. *P1c-1 (storage, trail, §5.1–5.2, typed
-signing by link) done — `docs/PROGRESS.md` § P1c-1.* Next: P1c-2 sealing, P1c-3 Forms → Sign +
-webhook, P1c-4 standalone page + SMTP.
+signing by link) and P1c-2 (sealing, §5.3) done — `docs/PROGRESS.md` § P1c-1, § P1c-2.* Next:
+P1c-3 Forms → Sign + webhook, P1c-4 standalone page + SMTP.
 - From P1b: Sign's own Postgres database and migrations (envelopes, the event trail, evidence;
   identity data encrypted with its own key), and the standalone mode (upload a PDF, type the
   parties, invitations by direct SMTP). Contract §5 endpoints implemented.

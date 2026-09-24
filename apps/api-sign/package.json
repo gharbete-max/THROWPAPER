@@ -15,15 +15,24 @@
     "typecheck": "tsc -p tsconfig.json",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate-cli.ts",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "seal:dev-cert": "tsx src/sealing/dev-cert-cli.ts"
   },
   "dependencies": {
+    "@signpdf/placeholder-pdf-lib": "^3.3.0",
+    "@signpdf/signpdf": "^3.3.0",
+    "@signpdf/utils": "^3.3.0",
+    "@tp/i18n": "workspace:^",
     "@tp/shared": "workspace:*",
     "@tp/signing": "workspace:*",
+    "@tp/tokens": "workspace:^",
+    "asn1js": "^3.0.10",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.45.2",
     "fastify": "^5.12.5",
     "fastify-type-provider-zod": "^4.0.2",
+    "pdf-lib": "^1.17.1",
+    "pkijs": "^3.4.1",
     "postgres": "^3.4.5",
     "zod": "^3.24.1"
   },

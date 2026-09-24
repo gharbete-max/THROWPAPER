@@ -10,8 +10,9 @@ apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. A scaffold: health check and a two-language screen
-apps/api-sign   Product C backend. Own database (append-only, hash-chained trail), CONTRACT §5.1–5.2,
-                typed signing by link in test mode. No sealing, no UI, no webhook yet (P1c-2..4)
+apps/api-sign   Product C backend. Own database (append-only, hash-chained trail), CONTRACT §5.1–5.3,
+                typed signing by link, PAdES seal + audit page on completion (development
+                certificate). No UI, no webhook yet (P1c-3..4)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
                 / native tokens. Owns the contrast guard
 packages/i18n   Translation catalogues and locale utilities, incl. ICU collation

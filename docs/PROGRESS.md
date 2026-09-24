@@ -2750,6 +2750,82 @@ cannot see. Gate in the worktree: format, typecheck, lint (0 errors, the 2 known
 (P1c-3), the page, drawn signatures and SMTP invitations (P1c-4), identity encryption (P2, when eID
 brings identity data), Sign in the desktop edition (after #125 lands).
 
+## P1c-2 — A completed envelope is sealed, and the seal is checked by something we did not write · done
+
+**Sealed where it completes.** `withEnvelope` seals an envelope in the same transaction as the
+signature that completed it, whatever route appended that signature. There is no moment at which an
+envelope is completed and unsealed, and a seal that fails rolls the signature back: the signer gets
+an error and can try again, instead of an envelope stuck completed with nothing to download. The
+seal lands in `sealed_documents`, which is append-only under the same trigger as the trail
+(`drizzle/0002`). Each row names the trail hash it covers and its certificate's fingerprint. A read
+that finds the bytes changed, or the trail moved on, is refused as corruption.
+
+**What the file is.** The document's pages, then one audit page per language the parties read
+(Norwegian and Danish fall back to the Swedish page, everything else to English). Each audit page
+lists the document's original SHA-256, the envelope, the declaration key and version, the
+environment, the seal time, the certificate fingerprint and the trail's last hash, then every
+event with its time, party and method. Labels only, from a catalogue (rule 4), and no sentence
+about what any of it means in law (rule 8). A test envelope says TEST MODE across every page. Over
+all of it sits a PAdES seal (`ETSI.CAdES.detached`). The signed attributes are content-type,
+message-digest and ESS signing-certificate-v2, and there is no signing-time, because a baseline
+validator refuses one and the time goes in `/M`.
+
+**§5.3 is implemented.** `GET /v1/envelopes/:id/sealed` answers 409 until the envelope is complete
+and 404 to another organisation. Otherwise it returns a ten-minute link on `API_SIGN_PUBLIC_URL`
+whose expiry is inside its MAC, domain-separated from signing links. A PDF that pdf-lib cannot
+open (encrypted, damaged, or a header with no pages) is refused **at creation**. Otherwise it
+would collect every signature and then fail to complete.
+
+**The certificate** comes from `SIGN_SEAL_KEY` / `SIGN_SEAL_CERT` (PEM), required at boot like the
+link secret. At load, the key is checked against the certificate with a sign-and-verify probe.
+`pnpm --filter @tp/api-sign seal:dev-cert` appends a self-issued pair to `.env` and names itself a
+development seal in its own subject. It proves the file was not changed after sealing and nothing
+about who sealed it. The qualified certificate and a timestamp are still `LAUNCH-CHECKLIST.md` §6.
+
+**Validated independently (ADR 0015).** The tests take the `/ByteRange`, check that it covers the
+whole file except the signature hole, and hand the bytes to `openssl cms -verify` with the seal
+certificate as the only trust anchor. A flipped bit fails, and so does a stranger's certificate. A
+missing `openssl` is an error, not a pass. The EU DSS container is the fuller check and is left
+for a later CI job, as decided with this plan.
+
+**Evidence.** api-sign has 42 tests (DB-backed 20 → 26, sealing 9, server 2, providers 5). **Each
+guarantee was mutated out and its test went red:**
+
+- no seal on completion
+- sealed bytes unchecked
+- link never expiring
+- expiry outside the MAC
+- any PDF accepted
+- digest over the wrong bytes
+- one audit page per party rather than per language
+- seal rows updatable
+
+The first mutation of the trigger (to `BEFORE INSERT`) broke every insert and proved nothing, so it
+was redone as `BEFORE DELETE`. The append-only test now completes its own envelope, because a row
+trigger on an empty table refuses nothing. **The sealing was also run outside vitest**, under
+`tsx` with the built-in ESM loader, over HTTP against a real Postgres: create, sign twice, §5.3,
+download. The download's hash matched `sealedSha256`, and the OpenSSL command line verified the file
+and refused a one-bit tamper (exit 4). That run found a bug vitest could not: `import signpdf from
+'@signpdf/signpdf'` is the CommonJS `exports` object under Node, so `sign` was undefined, and the
+first real completion would have answered 500. The code now uses the named `SignPdf` class. The
+audit page was rendered with pdf.js and looked at.
+
+**Gate, in this container, each step on its own:** format, typecheck, lint (0 errors, the 2 known
+warnings), build, contract:check `3/10 implemented`, licence:check (738 packages) all exit 0.
+`test` exits 1: 1868 passed, and 3 files fail on a Playwright launch looking for
+`chromium_headless_shell-1243` while this container ships 1194. The same three fail identically on
+clean `main`, and CI's image has the right browser.
+
+**Not in this slice, and noticed:**
+
+- `apps/api-sign`'s `build` leaves the `@tp/*` workspace packages external, so `node dist/main.js`
+  cannot boot (it can't on `main` either). api-forms fixed the same thing with `noExternal` in a
+  `tsup.config.ts`, and api-sign needs that before it is deployed.
+- pdf-lib's standard fonts are WinAnsi, so a name outside it (Cyrillic, CJK) is drawn as `[U+XXXX]`
+  code points, never dropped. The exact text is in the evidence. An embedded Unicode font needs
+  `@pdf-lib/fontkit`, which is a new dependency to ask for.
+- IP and user agent in the evidence move to P1c-4 with the page, as decided.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

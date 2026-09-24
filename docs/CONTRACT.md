@@ -84,7 +84,7 @@ Neither fallback may be allowed to rot. CI runs the standalone configuration of 
 ## 5. Forms ⇄ Sign
 
 Sign is the third product: envelopes, eID, multi-party signing and sealed PDFs. Identity data and
-evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1); §5.3 and §5.4 are deferred to P1c-2 and P1c-3.
+evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1), §5.3 in P1c-2; §5.4 is deferred to P1c-3.
 
 ### `POST /v1/envelopes` — ask for a document to be signed (§5.1)
 ```
@@ -99,6 +99,13 @@ and refuses a mismatch with `documentSha256`. `declarationKey` names a human-aut
 
 ### `GET /v1/envelopes/{id}` — where it stands (§5.2)
 ### `GET /v1/envelopes/{id}/sealed` — the sealed PDF as a short-lived link, once complete (§5.3)
+```
+→ 200 { envelopeId, url, sealedSha256, expiresAt }      409 until the envelope is completed
+```
+`url` opens the sealed file for ten minutes and needs no token; the expiry is inside its MAC.
+`sealedSha256` is the hash of the sealed file, not of the document: the audit page and the seal are
+part of it. The file carries a PAdES (`ETSI.CAdES.detached`) seal over every byte but its own, and
+the document's original SHA-256 on the audit page.
 
 ### Webhook `POST {caller}/hooks/signing` — envelope events (§5.4)
 `{ envelopeId, partyId?, event: sent|viewed|signed|declined|expired|cancelled|completed, at }`.

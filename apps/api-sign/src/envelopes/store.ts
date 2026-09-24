@@ -9,7 +9,15 @@ import {
   type Refusal,
 } from '@tp/signing';
 import type { Db } from '../db/client.js';
-import { documents, envelopeEvents, envelopes } from '../db/schema.js';
+import { documents, envelopeEvents, envelopes, sealedDocuments } from '../db/schema.js';
+import type { Sealer } from '../sealing/certificate.js';
+import { sealEnvelope } from '../sealing/seal.js';
+
+/** What reading and appending to an envelope needs: the database, and the key a completion seals with. */
+export interface Store {
+  db: Db;
+  sealer: Sealer;
+}
 
 export function sha256(input: string | Uint8Array): string {
   return createHash('sha256').update(input).digest('hex');
@@ -97,6 +105,9 @@ export interface Loaded {
   definition: Definition;
   /** Current after every successful `append`. */
   readonly envelope: Envelope;
+  /** The trail, in order, and the hash of its last event. Current after every `append`. */
+  readonly events: readonly EnvelopeEvent[];
+  readonly trailSha256: string;
 }
 
 export type Append = (event: EnvelopeEvent) => Promise<Refusal | null>;
@@ -110,14 +121,20 @@ export type Append = (event: EnvelopeEvent) => Promise<Refusal | null>;
  *
  * An envelope past its expiry is expired here, as an event, the first time anyone looks — the
  * state is always what the trail says, never a comparison each caller has to remember to make.
+ *
+ * **An envelope completed here is sealed here**, in the same transaction, before it commits. So
+ * there is no moment at which an envelope is completed and unsealed, and no second code path that
+ * has to remember to seal: whatever appended the last signature, the seal came with it. A seal that
+ * fails rolls the signature back with it — the signer sees an error and can press again, rather
+ * than leaving a completed envelope nobody can download.
  */
 export async function withEnvelope<T>(
-  db: Db,
+  store: Store,
   envelopeId: string,
   now: Date,
   act: (loaded: Loaded, append: Append) => Promise<T>,
 ): Promise<T | null> {
-  return db.transaction(async (tx) => {
+  return store.db.transaction(async (tx) => {
     const [row] = await tx
       .select()
       .from(envelopes)
@@ -158,6 +175,7 @@ export async function withEnvelope<T>(
 
     let envelope = replayed.envelope;
     let seq = rows.length;
+    const trail = [...events];
     const append: Append = async (event) => {
       const result = apply(envelope, event);
       if (!result.ok) return result.reason;
@@ -169,24 +187,80 @@ export async function withEnvelope<T>(
         .values({ envelopeId, seq, event: text, prevSha256: prev, sha256: hash });
       prev = hash;
       envelope = result.envelope;
+      trail.push(event);
       return null;
     };
+    const wasCompleted = envelope.status === 'completed';
 
     if (envelope.status === 'sent' && now.getTime() >= Date.parse(envelope.expiresAt)) {
       await append({ type: 'expired', at: now.toISOString() });
     }
 
-    return act(
+    const answer = await act(
       {
         organisationId: row.organisationId,
         definition,
         get envelope() {
           return envelope;
         },
+        get events() {
+          return trail;
+        },
+        get trailSha256() {
+          return prev;
+        },
       },
       append,
     );
+
+    if (!wasCompleted && envelope.status === 'completed') {
+      const [document] = await tx
+        .select({ bytes: documents.bytes })
+        .from(documents)
+        .where(eq(documents.sha256, row.documentSha256));
+      if (!document) throw new TrailBroken(envelopeId, 'document missing');
+      const bytes = await sealEnvelope(
+        {
+          document: document.bytes,
+          envelope,
+          events: trail,
+          declaration: definition.declaration,
+          trailSha256: prev,
+          sealedAt: now,
+        },
+        store.sealer,
+      );
+      await tx.insert(sealedDocuments).values({
+        envelopeId,
+        sha256: sha256(bytes),
+        bytes,
+        trailSha256: prev,
+        certificateSha256: store.sealer.fingerprint,
+      });
+    }
+
+    return answer;
   });
+}
+
+/**
+ * The seal of a completed envelope, checked against the trail it claims to cover. `null` when the
+ * envelope has none; a row whose bytes or trail do not match is corruption, never served.
+ */
+export async function readSeal(
+  db: Db,
+  envelopeId: string,
+  trailSha256: string,
+): Promise<{ sha256: string; bytes: Uint8Array } | null> {
+  const [row] = await db
+    .select()
+    .from(sealedDocuments)
+    .where(eq(sealedDocuments.envelopeId, envelopeId));
+  if (!row) return null;
+  if (row.trailSha256 !== trailSha256)
+    throw new TrailBroken(envelopeId, 'seal covers another trail');
+  if (sha256(row.bytes) !== row.sha256) throw new TrailBroken(envelopeId, 'sealed bytes');
+  return { sha256: row.sha256, bytes: row.bytes };
 }
 
 export async function documentBytes(db: Db, documentSha256: string): Promise<Uint8Array | null> {

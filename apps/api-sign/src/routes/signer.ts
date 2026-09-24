@@ -94,7 +94,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
       const link = parse(request.params.token);
       const result =
         link &&
-        (await withEnvelope(deps.db, link.envelopeId, deps.now(), async (loaded, append) => {
+        (await withEnvelope(deps, link.envelopeId, deps.now(), async (loaded, append) => {
           if (!loaded.envelope.partyStatus[link.partyId]) return null;
           // Opening the link is evidence too — once, the first time it happens on their turn.
           if (loaded.envelope.partyStatus[link.partyId] === 'invited') {
@@ -115,7 +115,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
       const link = parse(request.params.token);
       const sha =
         link &&
-        (await withEnvelope(deps.db, link.envelopeId, deps.now(), async ({ envelope }) =>
+        (await withEnvelope(deps, link.envelopeId, deps.now(), async ({ envelope }) =>
           envelope.partyStatus[link.partyId] ? envelope.documentSha256 : null,
         ));
       const bytes = sha ? await documentBytes(deps.db, sha) : null;
@@ -138,7 +138,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
       const link = parse(request.params.token);
       const outcome =
         link &&
-        (await withEnvelope(deps.db, link.envelopeId, deps.now(), async (loaded, append) => {
+        (await withEnvelope(deps, link.envelopeId, deps.now(), async (loaded, append) => {
           const { envelope, definition } = loaded;
           const party = envelope.parties.find((p) => p.id === link.partyId);
           if (!party) return null;
@@ -175,7 +175,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
       const link = parse(request.params.token);
       const outcome =
         link &&
-        (await withEnvelope(deps.db, link.envelopeId, deps.now(), async (loaded, append) => {
+        (await withEnvelope(deps, link.envelopeId, deps.now(), async (loaded, append) => {
           const party = loaded.envelope.parties.find((p) => p.id === link.partyId);
           if (!party) return null;
           const refused = await append({

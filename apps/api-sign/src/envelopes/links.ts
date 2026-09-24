@@ -25,6 +25,33 @@ export function readToken(
   return { envelopeId, partyId };
 }
 
+/**
+ * A §5.3 download link: `<envelopeId>.<expiry, unix seconds>.<HMAC>`. Short-lived by construction
+ * — the expiry is inside the MAC, so it cannot be extended — and domain-separated from signing
+ * links, so neither kind of token can be passed off as the other.
+ */
+export function sealedToken(secret: string, envelopeId: string, expiresAt: Date): string {
+  const expiry = Math.floor(expiresAt.getTime() / 1000).toString();
+  return `${envelopeId}.${expiry}.${sealedMac(secret, envelopeId, expiry)}`;
+}
+
+export function readSealedToken(secret: string, token: string, now: Date): string | null {
+  const [envelopeId, expiry, given, extra] = token.split('.');
+  if (!envelopeId || !expiry || !given || extra !== undefined) return null;
+  if (!/^[0-9a-f-]{36}$/.test(envelopeId) || !/^\d{1,12}$/.test(expiry)) return null;
+  const expected = Buffer.from(sealedMac(secret, envelopeId, expiry));
+  const actual = Buffer.from(given);
+  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) return null;
+  if (Number(expiry) * 1000 <= now.getTime()) return null;
+  return envelopeId;
+}
+
+function sealedMac(secret: string, envelopeId: string, expiry: string): string {
+  return createHmac('sha256', secret)
+    .update(`sealed\0${envelopeId}\0${expiry}`)
+    .digest('base64url');
+}
+
 function mac(secret: string, envelopeId: string, partyId: string): string {
   return createHmac('sha256', secret).update(`${envelopeId}\0${partyId}`).digest('base64url');
 }

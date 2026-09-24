@@ -4,15 +4,19 @@ import { CONTRACT_ENDPOINTS } from '@tp/shared/contract';
 import { buildServer } from './server.js';
 import { registry } from './contract-registry.js';
 import type { Db } from './db/client.js';
+import { generateDevCertificate, loadSealer } from './sealing/certificate.js';
 
 /** No route below reaches the database; a server that tried would throw on this. */
 const noDatabase = {} as Db;
+const sealer = await loadSealer(await generateDevCertificate());
 
 function server() {
   return buildServer({
     db: noDatabase,
     linkSecret: 'x'.repeat(32),
     publicUrl: 'https://sign.example.test',
+    apiUrl: 'https://api.sign.example.test',
+    sealer,
   });
 }
 
