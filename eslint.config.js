@@ -41,6 +41,12 @@ export default tseslint.config(
     },
   },
   {
+    // CommonJS on purpose: electron-builder `require`s its hooks (apps/desktop/scripts/after-pack.cjs).
+    files: ['**/*.cjs'],
+    languageOptions: { sourceType: 'commonjs', globals: globals.node },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
     files: ['apps/forms/**/*.tsx', 'apps/mailer/**/*.tsx', 'apps/sign/**/*.tsx'],
     plugins: { 'react-hooks': reactHooks },
     rules: reactHooks.configs.recommended.rules,
