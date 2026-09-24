@@ -1,11 +1,14 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID, webcrypto } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { sql as raw } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { buildServer } from '../server.js';
 import { testDatabase } from '../test-database.js';
+import { PDFDocument } from 'pdf-lib';
 import { declarations, serviceTokens } from '../db/schema.js';
 import type { Db } from '../db/client.js';
+import { generateDevCertificate, loadSealer, type Sealer } from '../sealing/certificate.js';
+import { extractSeal, opensslVerify } from '../sealing/openssl-validator.js';
 import { sha256 } from './store.js';
 
 /**
@@ -18,8 +21,17 @@ const database = await testDatabase();
 
 const ORIGIN = 'https://forms.example.test';
 const SECRET = 'test-link-secret-at-least-thirty-two-chars';
-const PDF = new TextEncoder().encode('%PDF-1.7\n% a document to sign\n%%EOF\n');
+const PDF = await pdfSaying('a document to sign');
 const PDF_SHA = sha256(PDF);
+const API = 'https://api.sign.example.test';
+const SEAL = await generateDevCertificate();
+const sealer = await loadSealer(SEAL);
+
+async function pdfSaying(text: string): Promise<Uint8Array> {
+  const pdf = await PDFDocument.create();
+  pdf.addPage().drawText(text, { x: 72, y: 720 });
+  return pdf.save();
+}
 
 let app: FastifyInstance;
 let db: Db;
@@ -97,10 +109,17 @@ beforeAll(async () => {
     db,
     linkSecret: SECRET,
     publicUrl: 'https://sign.example.test',
+    apiUrl: API,
+    sealer,
     now: () => clock,
     fetch: (async (url: string | URL) => {
       fetched.push(String(url));
-      return new Response(String(url).endsWith('not.pdf') ? 'hello' : PDF);
+      const body = String(url).endsWith('not.pdf')
+        ? 'hello'
+        : String(url).endsWith('broken.pdf')
+          ? '%PDF-1.7\n% says it is a PDF and is not one\n%%EOF\n'
+          : PDF;
+      return new Response(body);
     }) as typeof fetch,
   });
 });
@@ -140,7 +159,7 @@ describe.skipIf(!database)('creating an envelope (§5.1)', () => {
     const request = envelopeRequest(org);
     await create(token, request);
 
-    const other = new TextEncoder().encode('%PDF-1.7\n% another\n');
+    const other = await pdfSaying('another document');
     const response = await buildServerWith(other).then((server) =>
       server.inject({
         method: 'POST',
@@ -230,6 +249,20 @@ describe.skipIf(!database)('what Sign will fetch', () => {
     expect(wrong.json().error.code).toBe('wrong-document');
     const notPdf = await create(token, envelopeRequest(org, { documentUrl: `${ORIGIN}/not.pdf` }));
     expect(notPdf.json().error.code).toBe('not-a-pdf');
+  });
+
+  it('refuses a file that starts like a PDF but cannot be opened — it could never be sealed', async () => {
+    const org = randomUUID();
+    const broken = new TextEncoder().encode('%PDF-1.7\n% says it is a PDF and is not one\n%%EOF\n');
+    const response = await create(
+      await tokenFor(org),
+      envelopeRequest(org, {
+        documentUrl: `${ORIGIN}/broken.pdf`,
+        documentSha256: sha256(broken),
+      }),
+    );
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.code).toBe('unreadable-pdf');
   });
 });
 
@@ -357,6 +390,11 @@ describe.skipIf(!database)('the record cannot be changed', () => {
     const org = randomUUID();
     const created = (await create(await tokenFor(org), envelopeRequest(org))).json();
     const id = created.envelopeId;
+    // Completed, so there is a sealed row: a row trigger on an empty table would prove nothing.
+    await sign(linkOf(created.signUrls.landlord), 'Åsa Öberg');
+    expect((await sign(linkOf(created.signUrls.tenant), 'Jon Smith')).json().status).toBe(
+      'completed',
+    );
 
     const statements = [
       raw`update envelope_events set event = '{}' where envelope_id = ${id}`,
@@ -364,6 +402,9 @@ describe.skipIf(!database)('the record cannot be changed', () => {
       raw`delete from documents`,
       raw`truncate envelope_events cascade`,
       raw`update declarations set texts = '{}'`,
+      raw`update sealed_documents set bytes = '\\x00'`,
+      raw`delete from sealed_documents`,
+      raw`truncate sealed_documents`,
     ];
     for (const statement of statements) {
       // Drizzle wraps the driver's error; Postgres's own words are the cause.
@@ -429,6 +470,151 @@ describe.skipIf(!database)('the record cannot be changed', () => {
   });
 });
 
+describe.skipIf(!database)('the sealed document (§5.3)', () => {
+  /** An envelope both parties have signed, and the token that created it. */
+  async function completedEnvelope(org = randomUUID()) {
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org, { routing: 'parallel' }))).json();
+    await sign(linkOf(created.signUrls.landlord), 'Åsa Öberg');
+    const last = await sign(linkOf(created.signUrls.tenant), 'Jon Smith');
+    expect(last.json().status).toBe('completed');
+    return { token, id: created.envelopeId as string, created };
+  }
+
+  function sealedOf(token: string, id: string) {
+    return app.inject({
+      method: 'GET',
+      url: `/v1/envelopes/${id}/sealed`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+  }
+
+  it('gives a short-lived link to a sealed file that an independent validator accepts', async () => {
+    const { token, id } = await completedEnvelope();
+    const response = await sealedOf(token, id);
+    expect(response.statusCode).toBe(200);
+    const body = response.json();
+    expect(body.url.startsWith(`${API}/v1/sealed/`)).toBe(true);
+    expect(Date.parse(body.expiresAt) - clock.getTime()).toBe(10 * 60 * 1000);
+
+    const download = await app.inject({ method: 'GET', url: body.url.slice(API.length) });
+    expect(download.statusCode).toBe(200);
+    expect(download.headers['content-type']).toBe('application/pdf');
+    const bytes = new Uint8Array(download.rawPayload);
+    expect(sha256(bytes)).toBe(body.sealedSha256);
+    // The seal is over the document *and* the audit page, so it is not the document's hash.
+    expect(body.sealedSha256).not.toBe(PDF_SHA);
+
+    const seal = extractSeal(bytes);
+    expect(opensslVerify(seal.signedContent, seal.cms, SEAL.certPem).ok).toBe(true);
+    // One page of document, one audit page each for Swedish and English.
+    expect((await PDFDocument.load(bytes)).getPageCount()).toBe(3);
+  });
+
+  it('answers 409 until the envelope is complete, and 404 to another organisation', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org))).json();
+    const early = await sealedOf(token, created.envelopeId);
+    expect(early.statusCode).toBe(409);
+    expect(early.json().error.code).toBe('not-completed');
+
+    const { id } = await completedEnvelope();
+    expect((await sealedOf(await tokenFor(randomUUID()), id)).statusCode).toBe(404);
+  });
+
+  it('stops opening once the link expires, and cannot be forged or borrowed', async () => {
+    const { token, id, created } = await completedEnvelope();
+    const path = (await sealedOf(token, id)).json().url.slice(API.length) as string;
+
+    const saved = clock;
+    clock = new Date(clock.getTime() + 10 * 60 * 1000);
+    try {
+      expect((await app.inject({ method: 'GET', url: path })).statusCode).toBe(404);
+    } finally {
+      clock = saved;
+    }
+
+    // A later expiry under the same MAC: the expiry is inside the MAC, so this is a forgery.
+    const [envelopeId, expiry, mac] = path.split('/').at(-1)!.split('.');
+    const extended = `/v1/sealed/${envelopeId}.${Number(expiry) + 3600}.${mac}`;
+    expect((await app.inject({ method: 'GET', url: extended })).statusCode).toBe(404);
+
+    // A signing link is not a download link, even for the same envelope.
+    const signing = `/v1/sealed/${linkOf(created.signUrls.landlord)}`;
+    expect((await app.inject({ method: 'GET', url: signing })).statusCode).toBe(404);
+  });
+
+  it('seals in the same transaction as the last signature: a seal that fails signs nothing', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org, { routing: 'parallel' }))).json();
+    await sign(linkOf(created.signUrls.landlord), 'Åsa Öberg');
+
+    // A sealer whose key cannot sign: the seal throws inside the completing transaction.
+    const { publicKey } = (await crypto.subtle.generateKey(
+      {
+        name: 'RSASSA-PKCS1-v1_5',
+        hash: 'SHA-256',
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([1, 0, 1]),
+      },
+      true,
+      ['sign', 'verify'],
+    )) as webcrypto.CryptoKeyPair;
+    const broken = await buildServer({
+      db,
+      linkSecret: SECRET,
+      publicUrl: 'https://sign.example.test',
+      apiUrl: API,
+      sealer: { ...sealer, key: publicKey } as Sealer,
+      now: () => clock,
+    });
+    try {
+      const failed = await broken.inject({
+        method: 'POST',
+        url: `/v1/sign/${linkOf(created.signUrls.tenant)}`,
+        payload: { typedName: 'Jon Smith' },
+      });
+      expect(failed.statusCode).toBe(500);
+    } finally {
+      await broken.close();
+    }
+
+    const status = await app.inject({
+      method: 'GET',
+      url: `/v1/envelopes/${created.envelopeId}`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+    expect(status.json().status).toBe('sent');
+    expect(status.json().parties.map((p: { status: string }) => p.status)).toEqual([
+      'signed',
+      'invited',
+    ]);
+
+    // And with a working seal, the same signature goes through and is sealed.
+    expect((await sign(linkOf(created.signUrls.tenant), 'Jon Smith')).statusCode).toBe(200);
+    expect((await sealedOf(token, created.envelopeId)).statusCode).toBe(200);
+  });
+
+  it('refuses to serve sealed bytes edited behind the trigger', async () => {
+    const { token, id } = await completedEnvelope();
+    await db.execute(
+      raw`alter table sealed_documents disable trigger sealed_documents_append_only`,
+    );
+    try {
+      await db.execute(
+        raw`update sealed_documents set bytes = bytes || '\\x20'::bytea where envelope_id = ${id}`,
+      );
+    } finally {
+      await db.execute(
+        raw`alter table sealed_documents enable trigger sealed_documents_append_only`,
+      );
+    }
+    expect((await sealedOf(token, id)).statusCode).toBe(500);
+  });
+});
+
 function sign(link: string, typedName: string) {
   return app.inject({ method: 'POST', url: `/v1/sign/${link}`, payload: { typedName } });
 }
@@ -439,6 +625,8 @@ function buildServerWith(bytes: Uint8Array) {
     db,
     linkSecret: SECRET,
     publicUrl: 'https://sign.example.test',
+    apiUrl: API,
+    sealer,
     now: () => clock,
     fetch: (async () => new Response(bytes)) as unknown as typeof fetch,
   });

@@ -94,6 +94,25 @@ export const envelopes = pgTable(
   ],
 );
 
+/**
+ * The sealed PDF of a completed envelope — one per envelope, written in the same transaction as the
+ * signature that completed it, never replaced (append-only, `drizzle/0002_sealed_documents.sql`).
+ *
+ * `trailSha256` is the event the seal was made over: a trail that has grown since cannot have been
+ * sealed, and a read that finds a later event than this refuses the row as corrupt.
+ */
+export const sealedDocuments = pgTable('sealed_documents', {
+  envelopeId: uuid('envelope_id')
+    .primaryKey()
+    .references(() => envelopes.id),
+  sha256: text('sha256').notNull(),
+  bytes: bytea('bytes').notNull(),
+  trailSha256: text('trail_sha256').notNull(),
+  /** SHA-256 of the seal certificate's DER, so a rotated key leaves each seal attributable. */
+  certificateSha256: text('certificate_sha256').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 /** The audit trail. `sha256` = SHA-256(`prevSha256` + "\n" + `event`); seq 1 chains to the definition. */
 export const envelopeEvents = pgTable(
   'envelope_events',

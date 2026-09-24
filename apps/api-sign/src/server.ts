@@ -7,7 +7,9 @@ import {
 import { CONTRACT_VERSION } from '@tp/shared';
 import type { Db } from './db/client.js';
 import { registerEnvelopeRoutes } from './routes/envelopes.js';
+import { registerSealedRoutes } from './routes/sealed.js';
 import { registerSignerRoutes } from './routes/signer.js';
+import type { Sealer } from './sealing/certificate.js';
 
 export interface ServerOptions {
   db: Db;
@@ -15,6 +17,10 @@ export interface ServerOptions {
   linkSecret: string;
   /** Where the apps/sign page is served; signing links point there. */
   publicUrl: string;
+  /** Where this API is reachable from outside; §5.3 download links point here. */
+  apiUrl: string;
+  /** The key and certificate a completed envelope is sealed with (`sealing/certificate.ts`). */
+  sealer: Sealer;
   /** Injected so tests fetch documents without a network. */
   fetch?: typeof fetch;
   /** Injected so tests can move time, e.g. past an envelope's expiry. */
@@ -62,11 +68,14 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     db: options.db,
     linkSecret: options.linkSecret,
     publicUrl: options.publicUrl.replace(/\/$/, ''),
+    apiUrl: options.apiUrl.replace(/\/$/, ''),
+    sealer: options.sealer,
     fetch: options.fetch ?? fetch,
     now: options.now ?? (() => new Date()),
   };
   registerEnvelopeRoutes(app, deps);
   registerSignerRoutes(app, deps);
+  registerSealedRoutes(app, deps);
 
   return app;
 }
@@ -75,6 +84,8 @@ export type Deps = {
   db: Db;
   linkSecret: string;
   publicUrl: string;
+  apiUrl: string;
+  sealer: Sealer;
   fetch: typeof fetch;
   now: () => Date;
 };
