@@ -41,6 +41,7 @@ export const sealMessages: Catalogue = {
     'sv-SE': 'Loggens SHA-256 (sista händelsen)',
   },
   'seal.events': { 'en-GB': 'Events', 'sv-SE': 'Händelser' },
+  'seal.marks': { 'en-GB': 'Signatures', 'sv-SE': 'Underskrifter' },
   'seal.column.time': { 'en-GB': 'Time (UTC)', 'sv-SE': 'Tid (UTC)' },
   'seal.column.event': { 'en-GB': 'Event', 'sv-SE': 'Händelse' },
   'seal.column.party': { 'en-GB': 'Party', 'sv-SE': 'Part' },

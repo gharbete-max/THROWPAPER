@@ -211,6 +211,9 @@ importers:
       '@electric-sql/pglite':
         specifier: ^0.5.8
         version: 0.5.8
+      '@fastify/static':
+        specifier: ^10.1.4
+        version: 10.1.4
       '@signpdf/placeholder-pdf-lib':
         specifier: ^3.3.0
         version: 3.3.0(pdf-lib@1.17.1)
@@ -455,6 +458,9 @@ importers:
       '@tp/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@tp/shared':
+        specifier: workspace:^
+        version: link:../../packages/shared
       '@tp/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens

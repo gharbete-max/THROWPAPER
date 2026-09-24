@@ -40,7 +40,7 @@ export const SIGNATURE_VECTOR_MAX_BYTES = 128 * 1024;
 const NUMBER = String.raw`-?\d+(?:\.\d+)?`;
 
 /**
- * The only path shape the pad produces (`pathFrom` in `apps/forms`): a move, then quadratic
+ * The only path shape the pad produces (`pathFrom`, below): a move, then quadratic
  * curves and line segments, or the tiny relative line that makes a tap into a dot.
  *
  * Deliberately narrow. This string ends up inside an SVG in a PDF, so anything outside the grammar
@@ -259,4 +259,43 @@ function concat(parts: readonly Uint8Array[]): Uint8Array<ArrayBuffer> {
     offset += part.byteLength;
   }
   return out;
+}
+
+/** A point on the pad, in viewBox units. */
+export interface PadPoint {
+  x: number;
+  y: number;
+}
+
+/**
+ * Points to a path, smoothed through the midpoints.
+ *
+ * Joining raw samples with `L` gives visible corners wherever the pointer reported a position,
+ * which on a slow device is every few millimetres — handwriting comes out looking like a
+ * seismograph. Curving through the midpoint of each pair is the standard fix: it costs one
+ * quadratic per sample and the result reads as a hand.
+ */
+export function pathFrom(points: readonly PadPoint[]): string {
+  const first = points[0];
+  if (!first) return '';
+  // A tap is a dot. Without this it would be an empty path and the mark would simply not appear.
+  if (points.length === 1) return `M ${round(first.x)} ${round(first.y)} l 0.01 0`;
+
+  let d = `M ${round(first.x)} ${round(first.y)}`;
+  for (let index = 1; index < points.length - 1; index += 1) {
+    const point = points[index];
+    const next = points[index + 1];
+    if (!point || !next) continue;
+    const midX = (point.x + next.x) / 2;
+    const midY = (point.y + next.y) / 2;
+    d += ` Q ${round(point.x)} ${round(point.y)} ${round(midX)} ${round(midY)}`;
+  }
+  const last = points[points.length - 1];
+  if (last) d += ` L ${round(last.x)} ${round(last.y)}`;
+  return d;
+}
+
+/** Two decimals is finer than any screen resolves, and keeps a long drawing out of the megabytes. */
+function round(value: number): number {
+  return Math.round(value * 100) / 100;
 }

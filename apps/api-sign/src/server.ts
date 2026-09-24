@@ -7,6 +7,8 @@ import {
 import { CONTRACT_VERSION } from '@tp/shared';
 import type { Db } from './db/client.js';
 import { registerEnvelopeRoutes } from './routes/envelopes.js';
+import fastifyStatic from '@fastify/static';
+import { redactSigningLinks } from './log-redaction.js';
 import { registerSealedRoutes } from './routes/sealed.js';
 import { registerSignerRoutes } from './routes/signer.js';
 import type { Sealer } from './sealing/certificate.js';
@@ -25,7 +27,27 @@ export interface ServerOptions {
   fetch?: typeof fetch;
   /** Injected so tests can move time, e.g. past an envelope's expiry. */
   now?: () => Date;
+  /**
+   * The built signing page (`apps/sign/dist`), served by this same server — the desktop edition
+   * and any single-origin deployment. The page calls `/api/v1/...`; without a proxy in front, the
+   * server strips `/api` itself, the same rule api-forms uses.
+   */
+  serveAppFrom?: string;
 }
+
+/**
+ * Headers on everything this server answers. The signing link is a credential in the URL, so
+ * `no-referrer` is the one that matters most: nothing the page links to may learn it. The page
+ * injects its token stylesheet as a `<style>` element, hence `'unsafe-inline'` for styles only.
+ */
+const SECURITY_HEADERS: Record<string, string> = {
+  'referrer-policy': 'no-referrer',
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'content-security-policy':
+    "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; " +
+    "object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+};
 
 /**
  * The Sign product's backend (`docs/adr/0009-where-signing-lives.md`).
@@ -35,11 +57,34 @@ export interface ServerOptions {
  * Identity data, evidence and documents live in Sign's own database and nowhere else.
  */
 export async function buildServer(options: ServerOptions): Promise<FastifyInstance> {
+  const appDir = options.serveAppFrom;
   const app = Fastify({
-    logger: { level: process.env.NODE_ENV === 'test' ? 'silent' : 'info' },
+    logger: {
+      level: process.env.NODE_ENV === 'test' ? 'silent' : 'info',
+      // Signing and sealed links are credentials in the path; see `log-redaction.ts`.
+      serializers: {
+        req(request: { method: string; url: string; ip?: string }) {
+          return {
+            method: request.method,
+            url: redactSigningLinks(request.url),
+            remoteAddress: request.ip,
+          };
+        },
+      },
+    },
     // A PDF inline in a request is not a thing §5 does; documents arrive by URL.
     bodyLimit: 1024 * 1024,
+    rewriteUrl: appDir
+      ? (request) => {
+          const url = request.url ?? '/';
+          return url.startsWith('/api/') ? url.slice('/api'.length) : url;
+        }
+      : undefined,
   }).withTypeProvider<ZodTypeProvider>();
+
+  app.addHook('onSend', async (_request, reply) => {
+    for (const [name, value] of Object.entries(SECURITY_HEADERS)) reply.header(name, value);
+  });
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
@@ -76,6 +121,24 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   registerEnvelopeRoutes(app, deps);
   registerSignerRoutes(app, deps);
   registerSealedRoutes(app, deps);
+
+  if (appDir) {
+    // `cacheControl: false`, or the plugin writes its own header over ours on `sendFile`.
+    await app.register(fastifyStatic, {
+      root: appDir,
+      wildcard: false,
+      index: false,
+      cacheControl: false,
+    });
+    // The page is one document: `/s/<token>` and anything else that is not the API gets it, and
+    // the page asks the API what the link opens. An unknown API path stays a JSON 404.
+    app.setNotFoundHandler((request, reply) => {
+      if (request.method !== 'GET' || request.url.startsWith('/v1/')) {
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      }
+      return reply.header('cache-control', 'no-store').sendFile('index.html');
+    });
+  }
 
   return app;
 }

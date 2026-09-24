@@ -329,6 +329,58 @@ describe.skipIf(!database)('signing', () => {
     expect(signed[0].evidence.details).toEqual({ typedName: 'Åsa Öberg' });
   });
 
+  it('takes a drawn signature with its strokes, and refuses a path outside the pad grammar', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org, { routing: 'parallel' }))).json();
+    const link = linkOf(created.signUrls.landlord);
+    const drawn = {
+      v: 1,
+      kind: 'drawn',
+      width: 600,
+      height: 200,
+      paths: ['M 10 150 Q 60 20 120 140 L 200 60', 'M 250 100 l 0.01 0'],
+    };
+
+    const hostile = await app.inject({
+      method: 'POST',
+      url: `/v1/sign/${link}`,
+      payload: { drawn: { ...drawn, paths: ['M 0 0 Z <script>'] } },
+    });
+    expect(hostile.statusCode).toBe(400);
+    const typedAsDrawn = await app.inject({
+      method: 'POST',
+      url: `/v1/sign/${link}`,
+      payload: { drawn: { v: 1, kind: 'typed', width: 600, height: 200, text: 'Åsa' } },
+    });
+    expect(typedAsDrawn.statusCode).toBe(400);
+
+    const signed = await app.inject({
+      method: 'POST',
+      url: `/v1/sign/${link}`,
+      payload: { drawn },
+    });
+    expect(signed.statusCode).toBe(200);
+    const [event] = (await trailOf(created.envelopeId))
+      .map((row) => JSON.parse(row.event))
+      .filter((candidate) => candidate.type === 'signed');
+    expect(event.evidence.method).toBe('drawn');
+    expect(JSON.parse(event.evidence.details.vector)).toEqual(drawn);
+
+    // And a drawn envelope seals like any other, and the seal holds.
+    await sign(linkOf(created.signUrls.tenant), 'Jon Smith');
+    const sealed = await app.inject({
+      method: 'GET',
+      url: `/v1/envelopes/${created.envelopeId}/sealed`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+    const bytes = new Uint8Array(
+      (await app.inject({ method: 'GET', url: sealed.json().url.slice(API.length) })).rawPayload,
+    );
+    const seal = extractSeal(bytes);
+    expect(opensslVerify(seal.signedContent, seal.cms, SEAL.certPem).ok).toBe(true);
+  });
+
   it('serves the document to a link holder, and nothing to a forged link', async () => {
     const org = randomUUID();
     const created = (await create(await tokenFor(org), envelopeRequest(org))).json();

@@ -2957,6 +2957,74 @@ x64, unsigned) the bundle carries `Info.plist` with both usage lines, `app.asar.
 and `web`, `drizzle`, `panel` beside it; `publish: null` was needed, or electron-builder fails
 writing update metadata for a feed that does not exist.
 
+## P1c-4a — The signer's page, drawn signatures, and Sign on the desktop's database · done
+
+P1c-4 split in two. **4a** (this) is what a signer sees. **4b** is what a sender sees (upload a
+PDF, name the parties) plus invitations by SMTP, and follows P1c-3, which gives Forms the same
+sending path.
+
+**The page** (`apps/sign`, `/s/<token>`). It shows the document name, a link to the PDF, and the
+declaration the signer approves: a person's text in the signer's language (ADR 0012). The signer
+types their name or draws, or declines, and declining asks first (rule 7). The page opens in the
+**party's** language from the envelope, not the browser's; Norwegian and Danish fall back to
+Swedish. Strings live in an `@tp/i18n` catalogue, and a test holds every key in both languages.
+Styles use tokens only. The labels are "Signature" / "Sign", never a level.
+
+**Drawn signatures, with their strokes.** `POST /v1/sign/:token` takes `{ drawn }` as well as
+`{ typedName }`. The strokes are the pad's vector paths in the narrow grammar Forms' signature
+field already uses: geometry only, with no timing or pressure (ADR 0009). They are kept in the
+evidence, and a path outside the grammar is a 400. `pathFrom`, the function that writes that
+grammar, moved from `apps/forms` into `@tp/shared/forms` beside its validator. That lets Sign's
+pad use it without importing Forms (rule 1); Forms re-exports it unchanged. **(packages)**
+
+**The audit page shows each mark**: the typed name, or the strokes drawn into a box. Rendered and
+looked at. That found two layout bugs, both fixed: the typed name overlapped its label, and a
+64-character hash wrapped one character onto a second line.
+
+**api-sign serves the page** from its own origin, which is what the desktop and any single-host
+deployment need (`serveAppFrom` / `SIGN_SERVE_APP`, the `/api` rule api-forms uses). Every response
+gets `referrer-policy: no-referrer`, a CSP with `frame-ancestors 'none'`, `nosniff` and
+`DENY`. The signing link is the credential, so nothing it links to may learn it.
+
+**Signing links were written to the log in full**, and so were sealed links. Both are now redacted
+**by route**. api-forms' shape rule (long alphanumeric runs) can miss a Sign MAC, because its
+base64url `-` and `_` break the run.
+
+**Sign on PGlite.** `Db` is widened to Drizzle's Postgres dialect, and `db/pglite.ts` opens Sign's
+own directory and runs the same migrations, append-only triggers included.
+`envelopes-pglite.test.ts` runs the **whole** envelope suite again on PGlite. **That found a real
+bug:** routes read the declaration and the seal through the pool while their envelope's
+transaction held its row lock. Postgres quietly took a second connection. PGlite has one, and hung
+for ten minutes. `withEnvelope` now hands its transaction to the callback (`Loaded.db`), and every
+read inside it goes through that.
+
+**e2e** (`e2e/sign.spec.ts`, a third web server: api-sign serving the built page), in a real
+browser against real Postgres:
+1. A caller creates an envelope over §5.1.
+2. The landlord signs by typing, on a page in Swedish.
+3. The tenant draws with the mouse, on a page in English.
+4. The caller fetches §5.3, and the download's hash matches `sealedSha256`.
+5. OpenSSL accepts the seal, and one flipped byte makes it refuse.
+
+Mutating the server to refuse drawn signatures turned the spec red. `SIGN_SEAL_EPHEMERAL=true`
+gives the e2e server a key made at boot, and it is refused in production. The spec checks the seal
+against the certificate inside it (`openssl cms -noverify`: the bytes are still verified).
+`E2E_CHROMIUM` lets a container whose Chromium doesn't match the pinned Playwright point at the one
+it has; this container used it. CI does not.
+
+**Gate, each step on its own, in this container:** format, typecheck, lint (0 errors, the 2
+known warnings), build, contract:check, licence:check and bundle:budget all exit 0. `test` has
+1944 passed; the 3 failing files are the known Playwright/Chromium-1243 mismatch. Sign's suite is
+70 tests on Postgres and PGlite. The `sign` e2e passed.
+
+**Not in this slice:**
+- The sender's screens.
+- SMTP invitations.
+- The webhook (P1c-3).
+- Sign inside the desktop shell (next after P1c-3).
+- The page imports `@tp/shared/forms` for `pathFrom`, which takes its bundle to ~191 KB gzipped.
+  A narrower subpath export would trim it; it is not budgeted yet.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

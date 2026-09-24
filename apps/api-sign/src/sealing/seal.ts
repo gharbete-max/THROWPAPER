@@ -1,4 +1,13 @@
-import { degrees, PDFDocument, rgb, StandardFonts, type PDFFont, type PDFPage } from 'pdf-lib';
+import {
+  degrees,
+  LineCapStyle,
+  PDFDocument,
+  rgb,
+  StandardFonts,
+  type PDFFont,
+  type PDFPage,
+} from 'pdf-lib';
+import { SignatureVector } from '@tp/shared/forms';
 // The named class, not the default instance: the package is CommonJS, and Node's ESM loader
 // hands a default import the whole `exports` object (vitest's interop does not, which hid it).
 import { SignPdf } from '@signpdf/signpdf';
@@ -93,6 +102,8 @@ class CmsSigner extends Signer {
 
 const A4 = { width: 595.28, height: 841.89 };
 const MARGIN = 56;
+/** The largest a drawn mark is shown on the audit page, in points. */
+const MARK_BOX = { width: 200, height: 70 };
 const BODY = 9;
 const LINE = BODY * 1.45;
 
@@ -199,7 +210,8 @@ function drawAuditPages(
     [t('seal.certificate'), sealer.fingerprint],
     [t('seal.trail'), input.trailSha256],
   ];
-  const labelWidth = 170;
+  // Wide enough for the labels, narrow enough that a 64-character hash stays on one line.
+  const labelWidth = 150;
   for (const [label, value] of facts) {
     const labelLines = wrap(fonts.bold, safe(fonts.bold, label), BODY, labelWidth - 8);
     const valueLines = wrap(fonts.regular, safe(fonts.regular, value), BODY, width - labelWidth);
@@ -268,7 +280,62 @@ function drawAuditPages(
     );
     y = top - LINE * height - 2;
   }
+
+  // Each signer's mark as they made it: the strokes of a drawn signature, the words of a typed one.
+  const marks = input.events.filter(
+    (event): event is Extract<EnvelopeEvent, { type: 'signed' }> => event.type === 'signed',
+  );
+  if (marks.length) {
+    y -= LINE;
+    ensure(LINE * 3);
+    text(safe(fonts.bold, t('seal.marks')), MARGIN, fonts.bold, 12);
+    y -= LINE * 1.6;
+  }
+  for (const event of marks) {
+    const vector = drawnVector(event.evidence);
+    ensure(LINE + (vector ? MARK_BOX.height : LINE) + LINE);
+    text(safe(fonts.bold, partyName(event.partyId)), MARGIN, fonts.bold, BODY);
+    y -= LINE;
+    if (vector) {
+      const scale = Math.min(MARK_BOX.width / vector.width, MARK_BOX.height / vector.height);
+      page.drawRectangle({
+        x: MARGIN,
+        y: y - MARK_BOX.height,
+        width: vector.width * scale,
+        height: vector.height * scale,
+        borderColor: RULE,
+        borderWidth: 0.5,
+      });
+      // drawSvgPath's origin is the path's top-left, with y running down as in the pad.
+      for (const path of vector.paths) {
+        page.drawSvgPath(path, {
+          x: MARGIN,
+          y,
+          scale,
+          borderColor: INK,
+          borderWidth: 1.2,
+          borderLineCap: LineCapStyle.Round,
+        });
+      }
+      y -= MARK_BOX.height + LINE;
+    } else {
+      const typed = event.evidence.details['typedName'] ?? '';
+      // Drop by the larger size first: `drawText`'s y is the baseline, and 14pt rises into the label.
+      y -= 14 - BODY;
+      text(safe(fonts.regular, typed), MARGIN, fonts.regular, 14);
+      y -= LINE * 2;
+    }
+  }
   return added;
+}
+
+/** The drawn strokes kept in a signature's evidence, or null for any other method. */
+function drawnVector(
+  evidence: Extract<EnvelopeEvent, { type: 'signed' }>['evidence'],
+): Extract<SignatureVector, { kind: 'drawn' }> | null {
+  if (evidence.method !== 'drawn' || !evidence.details['vector']) return null;
+  const parsed = SignatureVector.safeParse(JSON.parse(evidence.details['vector']));
+  return parsed.success && parsed.data.kind === 'drawn' ? parsed.data : null;
 }
 
 function method(

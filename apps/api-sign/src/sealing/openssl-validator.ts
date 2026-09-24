@@ -39,16 +39,25 @@ export function coversWholeFile(pdf: Uint8Array, byteRange: Extracted['byteRange
   return a === 0 && c + d === pdf.length && /^<[0-9a-fA-F]+>$/.test(hole);
 }
 
+/**
+ * `certPem` is the only trust anchor. Pass `'embedded'` to check the signature against the
+ * certificate carried inside the seal without judging that certificate — what a test does when
+ * the server made its key at boot and never showed it (e2e). The bytes are still checked.
+ */
 export function opensslVerify(
   signedContent: Uint8Array,
   cms: Uint8Array,
-  certPem: string,
+  certPem: string | 'embedded',
 ): { ok: boolean; output: string } {
   const dir = mkdtempSync(join(tmpdir(), 'tp-seal-'));
   try {
     writeFileSync(join(dir, 'content.bin'), signedContent);
     writeFileSync(join(dir, 'seal.der'), cms);
-    writeFileSync(join(dir, 'cert.pem'), certPem);
+    if (certPem !== 'embedded') writeFileSync(join(dir, 'cert.pem'), certPem);
+    const trust =
+      certPem === 'embedded'
+        ? ['-noverify']
+        : ['-CAfile', join(dir, 'cert.pem'), '-purpose', 'any'];
     const result = spawnSync(
       'openssl',
       [
@@ -61,10 +70,7 @@ export function opensslVerify(
         join(dir, 'seal.der'),
         '-content',
         join(dir, 'content.bin'),
-        '-CAfile',
-        join(dir, 'cert.pem'),
-        '-purpose',
-        'any',
+        ...trust,
         '-out',
         join(dir, 'out.bin'),
       ],

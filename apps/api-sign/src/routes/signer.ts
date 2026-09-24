@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { api } from '@tp/shared';
+import { SignatureVector } from '@tp/shared/forms';
 import {
   DocumentHash,
   Environment,
@@ -33,10 +34,20 @@ const SignerView = z.object({
 });
 
 /**
- * What P1c-1 accepts: a typed name. A drawn mark arrives with the signing page (P1c-4), because
- * evidence that says "drawn" without keeping the strokes would claim more than it holds.
+ * A typed name, or a drawn mark with its strokes.
+ *
+ * Drawn arrived with the signing page (P1c-4a), and only with the strokes: evidence that says
+ * "drawn" without keeping them would claim more than it holds. The strokes are the pad's vector
+ * paths in the same narrow grammar Forms' signature field uses (`@tp/shared/forms`), geometry
+ * only — no timing or pressure, which would make them biometric data (ADR 0009).
  */
-const SignRequest = z.object({ typedName: z.string().trim().min(1).max(200) });
+const DrawnMark = SignatureVector.refine((vector) => vector.kind === 'drawn', {
+  message: 'A drawn signature carries paths',
+});
+const SignRequest = z.union([
+  z.object({ typedName: z.string().trim().min(1).max(200) }).strict(),
+  z.object({ drawn: DrawnMark }).strict(),
+]);
 
 const errors = { 404: api.ErrorResponse, 409: api.ErrorResponse } as const;
 
@@ -153,7 +164,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
             at,
             partyId: party.id,
             evidence: {
-              method: 'typed',
+              method: 'typedName' in request.body ? 'typed' : 'drawn',
               level: 'simple',
               environment: envelope.environment,
               signedAt: at,
@@ -161,7 +172,10 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
               // Byte for byte what the page showed them: "what did they agree to" is the first
               // question in a dispute, and a key without its text cannot answer it.
               declaration: { ...definition.declaration, text },
-              details: { typedName: request.body.typedName },
+              details:
+                'typedName' in request.body
+                  ? { typedName: request.body.typedName }
+                  : { vector: JSON.stringify(request.body.drawn) },
             },
           });
           if (refused) return refused;

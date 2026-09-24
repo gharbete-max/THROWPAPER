@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tp/i18n": "workspace:*",
+    "@tp/shared": "workspace:^",
     "@tp/tokens": "workspace:*",
     "@tp/ui": "workspace:*",
     "react": "^19.3.0",

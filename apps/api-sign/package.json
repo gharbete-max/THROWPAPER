@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
+    "@fastify/static": "^10.1.4",
     "@signpdf/placeholder-pdf-lib": "^3.3.0",
     "@signpdf/signpdf": "^3.3.0",
     "@signpdf/utils": "^3.3.0",
