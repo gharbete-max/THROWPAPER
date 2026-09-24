@@ -749,6 +749,15 @@ export const FormSettings = z.object({
    * the author's list is a filter, not a way to publish in a language nobody configured.
    */
   locales: z.array(Locale).default([]),
+  /**
+   * Whether, once the form is sent, the person is offered to confirm who they are with an e-ID.
+   *
+   * `off` by default, and only ever **optional**: the answers are saved before the step is offered,
+   * and skipping it — or there being no provider to offer (CONTRACT §5.6 answers with none until
+   * one is configured) — still finishes the form. A form that required an identity nobody can
+   * provide would be a form nobody can finish.
+   */
+  identity: z.enum(['off', 'optional']).default('off'),
 });
 
 /**

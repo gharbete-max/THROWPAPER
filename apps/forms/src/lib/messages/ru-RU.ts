@@ -368,6 +368,12 @@ export const ruRU: Record<MessageKey, string> = {
     'Может ли один и тот же адрес почты отвечать больше одного раза.',
   'settings.duplicateControl.email': 'Один ответ на адрес почты',
   'settings.duplicateControl.none': 'Любое количество ответов',
+  'settings.identity':
+    'Предлагать подтверждение электронной идентификацией после отправки (по желанию)',
+  'settings.identityHint':
+    'Ответы сохраняются сначала; подтверждение — шаг, который можно сделать или пропустить. Если поставщик идентификации не подключён, форма сообщит об этом и всё равно будет заполнена.',
+  'settings.identityPaper':
+    'Не для формы, сделанной из бумаги: её документ — сама бумага, и на ней нет места для подтверждения.',
 
   'public.progress': 'Шаг {n} из {total}',
 
@@ -698,6 +704,48 @@ export const ruRU: Record<MessageKey, string> = {
   'public.yes': 'Да',
   'public.no': 'Нет',
   'public.choose': 'Выберите…',
+  'public.finished.sent': 'Ваши ответы отправлены в {organisation}.',
+  'public.document.preparing': 'Готовим документ…',
+  'public.document.ready': 'Ваш документ готов',
+  'public.document.unavailable': 'Ваш документ сейчас недоступен',
+  'public.document.download': 'Скачать PDF',
+  'public.document.open': 'Открыть',
+  'public.document.email': 'Отправить по почте',
+  'public.document.failed': 'Сейчас не удалось создать PDF. Ваши ответы сохранены.',
+  'public.document.expired':
+    'Эта копия здесь больше недоступна. Ваши ответы сохранены под номером {reference}.',
+  'public.document.retry': 'Попробовать снова',
+  'public.email.title': 'Отправить документ по почте',
+  'public.email.draft': 'Открыть черновик в {program}',
+  'public.email.drafting': 'Открываем {program}…',
+  'public.email.draftOpened':
+    'Черновик открыт в {program}, PDF прикреплён. Укажите получателя и отправьте оттуда.',
+  'public.email.draftFailed':
+    '{program} не удалось открыть черновик. Воспользуйтесь одним из способов ниже.',
+  'public.email.share': 'Поделиться или отправить…',
+  'public.email.app': 'Открыть почтовую программу',
+  'public.email.attachNote':
+    'Почтовая программа откроется с готовым письмом. Перед отправкой прикрепите {filename} сами — веб-страница не может прикреплять файлы к письму.',
+  'public.email.copy': 'Скопировать текст письма',
+  'public.email.copied': 'Скопировано',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Документ: {filename}\nНомер: {reference}',
+  'public.again': 'Заполнить снова',
+  'public.eid.title': 'Подтвердите личность (необязательно)',
+  'public.eid.unavailable':
+    'Подтверждение электронной идентификацией для этой формы пока недоступно. Больше ничего не нужно — ваша форма заполнена.',
+  'public.eid.offer':
+    'Вы можете подтвердить личность электронной идентификацией. Это необязательно: форма уже отправлена.',
+  'public.eid.testNote':
+    'Тестовый режим: используется тестовый поставщик, и ничья личность не проверяется.',
+  'public.eid.start': 'Подтвердить электронной идентификацией',
+  'public.eid.waiting': 'Ожидаем приложение электронной идентификации…',
+  'public.eid.confirmed': 'Подтверждено: {name}. Теперь это указано в вашем документе.',
+  'public.eid.confirmedTest':
+    'Тестовое подтверждение сохранено. Это не проверка личности, и в документе это указано.',
+  'public.eid.already': 'Эта форма уже подтверждена электронной идентификацией.',
+  'public.eid.failed': 'Подтверждение не завершилось. Ваша форма по-прежнему заполнена.',
+  'public.eid.retry': 'Попробовать снова',
 
   'validation.required': 'Это поле обязательно.',
   'validation.tooShort': 'Не меньше {min} знаков.',
@@ -793,6 +841,7 @@ export const ruRU: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'его изображение находится в другом месте в сети',
   'import.reason.nested-group': 'повторяющийся блок внутри другого',
   'import.reason.needs-limit': 'в нём не указано, сколько записей допускается',
+  'submissions.document': 'Документ',
   'submissions.paper': 'Бумага',
   'submissions.noPaper': 'Заполнено до того, как у формы появилась бумага',
 

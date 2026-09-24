@@ -11,12 +11,22 @@ describe('print stylesheet', () => {
     expect(css).toContain('margin: 18mm 16mm 20mm 16mm;');
   });
 
-  it('numbers pages', () => {
-    expect(css).toContain('content: counter(page) " / " counter(pages);');
+  /**
+   * One route for the running header and the page numbers: the renderer's templates.
+   *
+   * The stylesheet used to emit `@top-center` and `@bottom-right` as well, on the belief that
+   * Chromium ignored margin boxes. From Chromium 131 it honours them, and every PDF this product
+   * made printed "1 / 1" twice, a few points apart. The footer template is tested below.
+   */
+  it('leaves the running header and page numbers to the templates, so each prints once', () => {
+    expect(css).not.toMatch(/@(top|bottom)-(left|center|right)/);
+    expect(css).not.toContain('counter(page)');
+    expect(css).not.toContain('"Demo AB"');
   });
 
-  it('puts the running header in the top margin box', () => {
-    expect(css).toContain('content: "Demo AB";');
+  it('runs the paper colour to the edge of the sheet, not just inside the margins', () => {
+    const page = /@page \{[^}]*\}/.exec(css)?.[0] ?? '';
+    expect(page).toContain(`background: ${defaultTokens.colour.background};`);
   });
 
   it('carries token colours through as literals', () => {

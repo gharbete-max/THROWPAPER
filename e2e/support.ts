@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import postgres from 'postgres';
 import type { Page } from '@playwright/test';
+import { E2E_SIGN_SERVICE_TOKEN, signDatabaseUrl } from './ports.js';
 
 /**
  * Helpers the e2e suite needs, all of them talking to the same database the server is using.
@@ -177,7 +178,8 @@ export function zipEntryCount(archive: Buffer): number {
  * dependencies of `apps/forms` — zxing is what `screens/CheckIn.tsx` drives the camera with — so
  * both are served to the page from `node_modules` off a routed URL rather than installed anew.
  *
- * pdfjs 6 ships ESM only, so it arrives by dynamic `import()`; zxing's UMD build is a classic
+ * pdfjs 6 ships ESM only, so it arrives by dynamic `import()` — the legacy build, as the app's own
+ * paper import uses, so the harness runs in any Chromium; zxing's UMD build is a classic
  * script and lands on `window`.
  */
 export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> {
@@ -185,8 +187,8 @@ export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> 
     readFileSync(new URL(`../apps/forms/node_modules/${relative}`, import.meta.url));
 
   for (const [route, file] of [
-    ['**/__e2e/pdf.mjs', 'pdfjs-dist/build/pdf.min.mjs'],
-    ['**/__e2e/pdf.worker.mjs', 'pdfjs-dist/build/pdf.worker.min.mjs'],
+    ['**/__e2e/pdf.mjs', 'pdfjs-dist/legacy/build/pdf.min.mjs'],
+    ['**/__e2e/pdf.worker.mjs', 'pdfjs-dist/legacy/build/pdf.worker.min.mjs'],
   ] as const) {
     await page.route(route, (r) =>
       r.fulfill({ body: read(file), contentType: 'text/javascript; charset=utf-8' }),
@@ -261,4 +263,25 @@ export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> 
     }
     throw new Error(`No QR decoded from the PDF:\n${failures.join('\n')}`);
   }, Array.from(pdf));
+}
+
+/**
+ * Registers Forms' service token with the e2e Sign, for the seeded organisation — what an operator
+ * does once when connecting the two. Idempotent. Any spec that makes Forms call Sign runs this
+ * first: CI starts from an empty Sign database, so relying on another spec having run is relying
+ * on alphabetical order.
+ */
+export async function connectFormsToSign(sql: ReturnType<typeof db>): Promise<void> {
+  const [organisation] = await sql`select organisation_id from users
+    where email = 'admin@example.com' limit 1`;
+  const sign = postgres(signDatabaseUrl(DATABASE_URL), { max: 1, onnotice: () => {} });
+  try {
+    await sign`insert into service_tokens (organisation_id, name, token_sha256, allowed_origins)
+      values (${String(organisation!['organisation_id'])}, 'forms-e2e',
+              ${createHash('sha256').update(E2E_SIGN_SERVICE_TOKEN).digest('hex')},
+              array['http://localhost:4173']::text[])
+      on conflict (token_sha256) do nothing`;
+  } finally {
+    await sign.end();
+  }
 }

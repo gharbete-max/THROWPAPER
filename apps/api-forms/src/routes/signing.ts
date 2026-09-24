@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import type { FastifyInstance, FastifyReply } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { api, forms as formSchemas } from '@tp/shared';
 import { DeclarationView, SigningHookEvent } from '@tp/shared/contract';
 import type { AuthGuardDeps } from '../auth/plugin.js';
@@ -18,7 +18,7 @@ import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { resolveFormAccess } from '../forms/access.js';
 import { SignRefused, SignUnavailable, type SignClient } from '../signing/client.js';
 import { createHash } from 'node:crypto';
-import { pagesToPdf } from '../signing/scan.js';
+import { PageTooLarge, pagesToPdf } from '../signing/scan.js';
 import { queueInvitations } from '../signing/invitations.js';
 
 const IdParam = z.object({ id: z.string().uuid() });
@@ -27,6 +27,7 @@ const errors = {
   403: api.ErrorResponse,
   404: api.ErrorResponse,
   409: api.ErrorResponse,
+  413: api.ErrorResponse,
   422: api.ErrorResponse,
   502: api.ErrorResponse,
   503: api.ErrorResponse,
@@ -59,6 +60,38 @@ export function registerSigningRoutes(
 ): void {
   const authenticated = requireAuth(deps.guard);
 
+  /**
+   * Who may see a signing request: an admin, or the person who sent it — and, for a filled-in
+   * paper form, only while they can still see that form.
+   *
+   * These routes checked the organisation and nothing else. A request carries every party's
+   * signing link, and a signing link *is* the signer's authority: any operator could list the
+   * organisation's requests, open another team's paper submission through the link, and sign as
+   * its recipient. The organisation is necessary; it was never sufficient.
+   */
+  async function canSee(
+    auth: NonNullable<FastifyRequest['auth']>,
+    record: SigningRequestRecord,
+  ): Promise<boolean> {
+    if (auth.user.role === 'admin') return true;
+    if (record.createdBy !== auth.user.id) return false;
+    if (record.source === 'paper' && record.submissionId) {
+      const submission = await deps.repos.submissions.findById(
+        auth.organisation.id,
+        record.submissionId,
+      );
+      if (!submission) return false;
+      return (await resolveFormAccess(deps.repos, auth, submission.formId)) !== null;
+    }
+    return true;
+  }
+
+  /** The request, if this person may see it; otherwise the same 404 as one that never existed. */
+  async function visible(auth: NonNullable<FastifyRequest['auth']>, id: string) {
+    const record = await deps.repos.signingRequests.findById(auth.organisation.id, id);
+    return record && (await canSee(auth, record)) ? record : null;
+  }
+
   function unavailable(reply: FastifyReply) {
     return reply.code(503).send({
       error: { code: 'signing-not-configured', message: 'Signing is not set up here' },
@@ -86,7 +119,9 @@ export function registerSigningRoutes(
     handler: async (request, reply) => {
       const auth = request.auth!;
       const rows = await deps.repos.signingRequests.list(auth.organisation.id);
-      return reply.send({ enabled: deps.sign !== null, requests: rows.map(view) });
+      const mine: SigningRequestRecord[] = [];
+      for (const row of rows) if (await canSee(auth, row)) mine.push(row);
+      return reply.send({ enabled: deps.sign !== null, requests: mine.map(view) });
     },
   });
 
@@ -114,7 +149,12 @@ export function registerSigningRoutes(
       } else if (body.source === 'scan') {
         try {
           pdf = await pagesToPdf(body.pages);
-        } catch {
+        } catch (error) {
+          if (error instanceof PageTooLarge) {
+            return reply.code(413).send({
+              error: { code: 'page-too-large', message: 'A scanned page is larger than any page' },
+            });
+          }
           return reply.code(422).send({
             error: { code: 'unreadable-scan', message: 'A scanned page is not an image' },
           });
@@ -297,10 +337,7 @@ export function registerSigningRoutes(
     },
     handler: async (request, reply) => {
       const auth = request.auth!;
-      const record = await deps.repos.signingRequests.findById(
-        auth.organisation.id,
-        IdParam.parse(request.params).id,
-      );
+      const record = await visible(auth, IdParam.parse(request.params).id);
       if (!record)
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       if (!deps.sign) return reply.send(view(record));
@@ -327,7 +364,7 @@ export function registerSigningRoutes(
     handler: async (request, reply) => {
       const auth = request.auth!;
       const params = IdParam.extend({ partyId: z.string().min(1).max(16) }).parse(request.params);
-      let record = await deps.repos.signingRequests.findById(auth.organisation.id, params.id);
+      let record = await visible(auth, params.id);
       if (!record)
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       if (deps.sign) {
@@ -360,10 +397,7 @@ export function registerSigningRoutes(
     schema: { tags: ['signing'], params: IdParam, response: { ...errors } },
     handler: async (request, reply) => {
       const auth = request.auth!;
-      const record = await deps.repos.signingRequests.findById(
-        auth.organisation.id,
-        IdParam.parse(request.params).id,
-      );
+      const record = await visible(auth, IdParam.parse(request.params).id);
       if (!record)
         return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
       if (!deps.sign) return unavailable(reply);

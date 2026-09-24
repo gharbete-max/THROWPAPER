@@ -364,6 +364,11 @@ export const enGB = {
   'settings.duplicateControlHint': 'Whether the same email address may answer more than once.',
   'settings.duplicateControl.email': 'One response per email address',
   'settings.duplicateControl.none': 'Any number of responses',
+  'settings.identity': 'Offer to confirm with e-ID after sending (optional for the person)',
+  'settings.identityHint':
+    'Their answers are saved first; confirming is a step they may take or skip. Where no e-ID provider is connected, the form says so and is finished without it.',
+  'settings.identityPaper':
+    'Not on a form made from paper: its document is the paper itself, which has nowhere to show a confirmation.',
 
   'public.progress': 'Step {n} of {total}',
 
@@ -696,6 +701,48 @@ export const enGB = {
   'public.yes': 'Yes',
   'public.no': 'No',
   'public.choose': 'Choose…',
+  'public.finished.sent': 'Your answers have been sent to {organisation}.',
+  'public.document.preparing': 'Preparing your document…',
+  'public.document.ready': 'Your document is ready',
+  'public.document.unavailable': "Your document isn't available right now",
+  'public.document.download': 'Download PDF',
+  'public.document.open': 'Open',
+  'public.document.email': 'Email it',
+  'public.document.failed': 'The PDF could not be made just now. Your answers are saved.',
+  'public.document.expired':
+    'This copy is no longer available here. Your answers are saved under reference {reference}.',
+  'public.document.retry': 'Try again',
+  'public.email.title': 'Email the document',
+  'public.email.draft': 'Open a draft in {program}',
+  'public.email.drafting': 'Opening {program}…',
+  'public.email.draftOpened':
+    'The draft is open in {program} with the PDF attached. Add who it is for and send it from there.',
+  'public.email.draftFailed':
+    '{program} could not open a draft. Use one of the ways below instead.',
+  'public.email.share': 'Share or email…',
+  'public.email.app': 'Open my email app',
+  'public.email.attachNote':
+    'Your email app opens with the message written. Attach {filename} yourself before sending — a web page cannot attach files to an email.',
+  'public.email.copy': 'Copy message text',
+  'public.email.copied': 'Copied',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Document: {filename}\nReference: {reference}',
+  'public.again': 'Fill in again',
+  'public.eid.title': 'Confirm who you are (optional)',
+  'public.eid.unavailable':
+    "Confirming with e-ID isn't available for this form yet. Nothing more is needed — your form is finished.",
+  'public.eid.offer':
+    'You can confirm who you are with e-ID. It is optional: your form is already sent.',
+  'public.eid.testNote':
+    "Test mode: this uses a development provider and does not check anyone's identity.",
+  'public.eid.start': 'Confirm with e-ID',
+  'public.eid.waiting': 'Waiting for the e-ID app…',
+  'public.eid.confirmed': 'Confirmed as {name}. Your document now says so.',
+  'public.eid.confirmedTest':
+    'Test confirmation recorded. It is not an identity check, and your document says so.',
+  'public.eid.already': 'This form is already confirmed with e-ID.',
+  'public.eid.failed': "The e-ID check didn't complete. Your form is still finished.",
+  'public.eid.retry': 'Try again',
 
   'validation.required': 'This field is required.',
   'validation.tooShort': 'At least {min} characters.',
@@ -797,6 +844,7 @@ export const enGB = {
    * author draws the rest.
    */
   /** The filled-in sheet, per row — a form made from paper only. */
+  'submissions.document': 'Document',
   'submissions.paper': 'Paper',
   'submissions.noPaper': 'Filled in before this form had paper',
 

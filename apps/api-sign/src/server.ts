@@ -11,6 +11,8 @@ import fastifyStatic from '@fastify/static';
 import { redactSigningLinks } from './log-redaction.js';
 import { registerSealedRoutes } from './routes/sealed.js';
 import { registerSignerRoutes } from './routes/signer.js';
+import { registerIdentityRoutes } from './routes/identity.js';
+import type { IdentityProvider } from '@tp/signing';
 import type { Sealer } from './sealing/certificate.js';
 import { createHookDelivery, type HookDelivery } from './envelopes/hooks.js';
 
@@ -36,6 +38,11 @@ export interface ServerOptions {
   serveAppFrom?: string;
   /** §5.4 delivery. Defaults to posting with `fetch`; tests inject a recorder. */
   hooks?: HookDelivery;
+  /**
+   * §5.6 identity providers (`identity/providers.ts`). Empty — the default — means no e-ID is
+   * offered, and §5.6 says so to every caller.
+   */
+  identity?: readonly IdentityProvider[];
 }
 
 /**
@@ -130,6 +137,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   registerEnvelopeRoutes(app, deps);
   registerSignerRoutes(app, deps);
   registerSealedRoutes(app, deps);
+  registerIdentityRoutes(app, { db: options.db, identity: options.identity ?? [] });
 
   if (appDir) {
     // `cacheControl: false`, or the plugin writes its own header over ours on `sendFile`.

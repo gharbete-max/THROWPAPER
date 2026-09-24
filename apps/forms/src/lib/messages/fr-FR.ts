@@ -366,6 +366,12 @@ export const frFR: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Si la même adresse e-mail peut répondre plus d’une fois.',
   'settings.duplicateControl.email': 'Une réponse par adresse e-mail',
   'settings.duplicateControl.none': 'Nombre de réponses illimité',
+  'settings.identity':
+    'Proposer une confirmation par e-ID après l’envoi (facultative pour la personne)',
+  'settings.identityHint':
+    'Les réponses sont enregistrées d’abord ; la confirmation est une étape que l’on peut faire ou passer. Si aucun fournisseur e-ID n’est connecté, le formulaire l’indique et se termine quand même.',
+  'settings.identityPaper':
+    'Pas sur un formulaire fait à partir de papier : son document est le papier lui-même, qui n’a pas de place pour une confirmation.',
 
   'public.progress': 'Étape {n} sur {total}',
 
@@ -703,6 +709,49 @@ export const frFR: Record<MessageKey, string> = {
   'public.yes': 'Oui',
   'public.no': 'Non',
   'public.choose': 'Choisir…',
+  'public.finished.sent': 'Vos réponses ont été envoyées à {organisation}.',
+  'public.document.preparing': 'Préparation de votre document…',
+  'public.document.ready': 'Votre document est prêt',
+  'public.document.unavailable': 'Votre document n’est pas disponible pour le moment',
+  'public.document.download': 'Télécharger le PDF',
+  'public.document.open': 'Ouvrir',
+  'public.document.email': 'L’envoyer par e-mail',
+  'public.document.failed':
+    'Le PDF n’a pas pu être créé pour l’instant. Vos réponses sont enregistrées.',
+  'public.document.expired':
+    'Cette copie n’est plus disponible ici. Vos réponses sont enregistrées sous la référence {reference}.',
+  'public.document.retry': 'Réessayer',
+  'public.email.title': 'Envoyer le document par e-mail',
+  'public.email.draft': 'Ouvrir un brouillon dans {program}',
+  'public.email.drafting': 'Ouverture de {program}…',
+  'public.email.draftOpened':
+    'Le brouillon est ouvert dans {program} avec le PDF en pièce jointe. Ajoutez le destinataire et envoyez-le depuis là.',
+  'public.email.draftFailed':
+    '{program} n’a pas pu ouvrir de brouillon. Utilisez plutôt l’une des options ci-dessous.',
+  'public.email.share': 'Partager ou envoyer par e-mail…',
+  'public.email.app': 'Ouvrir ma messagerie',
+  'public.email.attachNote':
+    'Votre messagerie s’ouvre avec le message rédigé. Joignez vous-même {filename} avant d’envoyer : une page web ne peut pas joindre de fichier à un e-mail.',
+  'public.email.copy': 'Copier le message',
+  'public.email.copied': 'Copié',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Document : {filename}\nRéférence : {reference}',
+  'public.again': 'Remplir à nouveau',
+  'public.eid.title': 'Confirmer votre identité (facultatif)',
+  'public.eid.unavailable':
+    'La confirmation par e-ID n’est pas encore disponible pour ce formulaire. Rien d’autre n’est nécessaire : votre formulaire est terminé.',
+  'public.eid.offer':
+    'Vous pouvez confirmer votre identité par e-ID. C’est facultatif : votre formulaire est déjà envoyé.',
+  'public.eid.testNote':
+    'Mode test : un fournisseur de développement est utilisé et l’identité de personne n’est vérifiée.',
+  'public.eid.start': 'Confirmer par e-ID',
+  'public.eid.waiting': 'En attente de l’application e-ID…',
+  'public.eid.confirmed': 'Confirmé au nom de {name}. Votre document l’indique désormais.',
+  'public.eid.confirmedTest':
+    'Confirmation de test enregistrée. Ce n’est pas une vérification d’identité, et votre document l’indique.',
+  'public.eid.already': 'Ce formulaire est déjà confirmé par e-ID.',
+  'public.eid.failed': 'La confirmation par e-ID n’a pas abouti. Votre formulaire reste terminé.',
+  'public.eid.retry': 'Réessayer',
 
   'validation.required': 'Ce champ est obligatoire.',
   'validation.tooShort': 'Au moins {min} caractères.',
@@ -797,6 +846,7 @@ export const frFR: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'son image se trouve ailleurs sur le web',
   'import.reason.nested-group': 'un bloc répété dans un autre',
   'import.reason.needs-limit': 'il ne dit jamais combien d’entrées il autorise',
+  'submissions.document': 'Document',
   'submissions.paper': 'Papier',
   'submissions.noPaper': 'Rempli avant que le formulaire ait du papier',
 

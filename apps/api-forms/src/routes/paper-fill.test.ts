@@ -62,8 +62,25 @@ async function formWithSubmission(paper: boolean) {
   if (paper) {
     const doc = await PDFDocument.create();
     doc.addPage([595, 842]);
-    const stored = await harness.uploadStore.put(Buffer.from(await doc.save()), 'pdf');
-    sources = [{ key: stored.key, pages: 1 }];
+    // Through the upload route, as the builder does: only a file uploaded to this form may join its
+    // paper list.
+    const body = new FormData();
+    body.set(
+      'file',
+      new File([new Uint8Array(await doc.save())], 'blankett.pdf', { type: 'application/pdf' }),
+    );
+    const encoded = new Response(body as never);
+    const boundary = /boundary=(.+)$/.exec(encoded.headers.get('content-type') ?? '')?.[1];
+    const uploaded = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/forms/${formId}/paper`,
+      headers: {
+        ...bearer(adminToken),
+        'content-type': `multipart/form-data; boundary=${boundary}`,
+      },
+      payload: Buffer.from(await encoded.arrayBuffer()),
+    });
+    sources = [{ key: uploaded.json().key as string, pages: 1 }];
   }
 
   await harness.app.inject({

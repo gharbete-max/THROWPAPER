@@ -358,6 +358,11 @@ export const isIS: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Hvort sama netfang megi svara oftar en einu sinni.',
   'settings.duplicateControl.email': 'Eitt svar á hvert netfang',
   'settings.duplicateControl.none': 'Hvaða fjöldi svara sem er',
+  'settings.identity': 'Bjóða staðfestingu með rafrænum skilríkjum eftir sendingu (valfrjálst)',
+  'settings.identityHint':
+    'Svörin eru vistuð fyrst; staðfestingin er skref sem má taka eða sleppa. Þar sem engin skilríkjaþjónusta er tengd segir eyðublaðið það og klárast samt.',
+  'settings.identityPaper':
+    'Ekki á eyðublaði gerðu úr pappír: skjalið er pappírinn sjálfur, sem hefur engan stað fyrir staðfestingu.',
 
   'public.progress': 'Skref {n} af {total}',
 
@@ -688,6 +693,47 @@ export const isIS: Record<MessageKey, string> = {
   'public.yes': 'Já',
   'public.no': 'Nei',
   'public.choose': 'Veldu…',
+  'public.finished.sent': 'Svörin þín hafa verið send til {organisation}.',
+  'public.document.preparing': 'Verið er að útbúa skjalið…',
+  'public.document.ready': 'Skjalið þitt er tilbúið',
+  'public.document.unavailable': 'Skjalið þitt er ekki aðgengilegt núna',
+  'public.document.download': 'Sækja PDF',
+  'public.document.open': 'Opna',
+  'public.document.email': 'Senda í tölvupósti',
+  'public.document.failed': 'Ekki tókst að búa til PDF-skjalið núna. Svörin þín eru vistuð.',
+  'public.document.expired':
+    'Þetta afrit er ekki lengur aðgengilegt hér. Svörin þín eru vistuð undir tilvísun {reference}.',
+  'public.document.retry': 'Reyna aftur',
+  'public.email.title': 'Senda skjalið í tölvupósti',
+  'public.email.draft': 'Opna drög í {program}',
+  'public.email.drafting': 'Opna {program}…',
+  'public.email.draftOpened':
+    'Drögin eru opin í {program} með PDF-skjalið í viðhengi. Bættu við viðtakanda og sendu þaðan.',
+  'public.email.draftFailed':
+    '{program} gat ekki opnað drög. Notaðu eina af leiðunum hér fyrir neðan.',
+  'public.email.share': 'Deila eða senda í tölvupósti…',
+  'public.email.app': 'Opna póstforritið mitt',
+  'public.email.attachNote':
+    'Póstforritið opnast með skilaboðunum skrifuðum. Hengdu {filename} við sjálf/ur áður en þú sendir – vefsíða getur ekki hengt skrár við tölvupóst.',
+  'public.email.copy': 'Afrita skilaboðin',
+  'public.email.copied': 'Afritað',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Skjal: {filename}\nTilvísun: {reference}',
+  'public.again': 'Fylla út aftur',
+  'public.eid.title': 'Staðfestu hver þú ert (valfrjálst)',
+  'public.eid.unavailable':
+    'Staðfesting með rafrænum skilríkjum er ekki enn í boði fyrir þetta eyðublað. Ekkert meira þarf – eyðublaðið þitt er klárt.',
+  'public.eid.offer':
+    'Þú getur staðfest hver þú ert með rafrænum skilríkjum. Það er valfrjálst: eyðublaðið er þegar sent.',
+  'public.eid.testNote': 'Prófunarhamur: hér er notuð þróunarþjónusta og enginn er auðkenndur.',
+  'public.eid.start': 'Staðfesta með rafrænum skilríkjum',
+  'public.eid.waiting': 'Beðið eftir skilríkjaappinu…',
+  'public.eid.confirmed': 'Staðfest sem {name}. Það kemur nú fram í skjalinu þínu.',
+  'public.eid.confirmedTest':
+    'Prófunarstaðfesting vistuð. Hún er ekki auðkenning og það kemur fram í skjalinu þínu.',
+  'public.eid.already': 'Þetta eyðublað er þegar staðfest með rafrænum skilríkjum.',
+  'public.eid.failed': 'Staðfestingin kláraðist ekki. Eyðublaðið þitt er samt klárt.',
+  'public.eid.retry': 'Reyna aftur',
 
   'validation.required': 'Þennan reit þarf að fylla út.',
   'validation.tooShort': 'Að minnsta kosti {min} stafir.',
@@ -783,6 +829,7 @@ export const isIS: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'myndin er annars staðar á vefnum',
   'import.reason.nested-group': 'endurtekin eining inni í annarri',
   'import.reason.needs-limit': 'hún tilgreinir aldrei hversu margar færslur eru leyfðar',
+  'submissions.document': 'Skjal',
   'submissions.paper': 'Pappír',
   'submissions.noPaper': 'Fyllt út áður en eyðublaðið fékk pappír',
 

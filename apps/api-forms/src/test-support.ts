@@ -8,6 +8,7 @@ import { createMemoryAssetStore } from './uploads/store.js';
 import { createMemoryUploadStore } from './uploads/private-store.js';
 import type { DocumentStore } from './documents/store.js';
 import type { PdfRenderer } from './documents/render.js';
+import type { MailDrafter } from './mail/draft.js';
 
 /**
  * Builds a server over in-memory repositories, so the rules that matter can be tested without a
@@ -88,6 +89,8 @@ export async function createTestHarness(
     /** A Sign to send documents to (CONTRACT §5), reached through `signFetch`. */
     signing?: { apiUrl: string; serviceToken: string };
     signFetch?: typeof fetch;
+    /** The desktop's mail program, for "Email document" as a draft. */
+    mailDraft?: MailDrafter | null;
   } = {},
 ): Promise<TestHarness> {
   const repos = createMemoryRepositories({
@@ -118,6 +121,7 @@ export async function createTestHarness(
       options.contactAddress === undefined ? 'hello@loppa.test' : options.contactAddress,
     signing: options.signing ?? null,
     ...(options.signFetch ? { signFetch: options.signFetch } : {}),
+    mailDraft: options.mailDraft ?? null,
   });
   await app.ready();
 

@@ -359,6 +359,12 @@ export const fiFI: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Saako sama sähköpostiosoite vastata useammin kuin kerran.',
   'settings.duplicateControl.email': 'Yksi vastaus sähköpostiosoitetta kohden',
   'settings.duplicateControl.none': 'Mikä tahansa määrä vastauksia',
+  'settings.identity':
+    'Tarjoa vahvistusta sähköisellä tunnistuksella lähettämisen jälkeen (vapaaehtoinen)',
+  'settings.identityHint':
+    'Vastaukset tallennetaan ensin; vahvistus on vaihe, jonka voi tehdä tai ohittaa. Jos tunnistuspalvelua ei ole liitetty, lomake kertoo sen ja valmistuu silti.',
+  'settings.identityPaper':
+    'Ei paperista tehdyssä lomakkeessa: sen asiakirja on itse paperi, jossa ei ole paikkaa vahvistukselle.',
 
   'public.progress': 'Vaihe {n} / {total}',
 
@@ -690,6 +696,48 @@ export const fiFI: Record<MessageKey, string> = {
   'public.yes': 'Kyllä',
   'public.no': 'Ei',
   'public.choose': 'Valitse…',
+  'public.finished.sent': 'Vastauksesi on lähetetty: {organisation}.',
+  'public.document.preparing': 'Asiakirjaa valmistellaan…',
+  'public.document.ready': 'Asiakirjasi on valmis',
+  'public.document.unavailable': 'Asiakirjasi ei ole juuri nyt saatavilla',
+  'public.document.download': 'Lataa PDF',
+  'public.document.open': 'Avaa',
+  'public.document.email': 'Lähetä sähköpostilla',
+  'public.document.failed': 'PDF-tiedostoa ei voitu luoda juuri nyt. Vastauksesi on tallennettu.',
+  'public.document.expired':
+    'Tämä kopio ei ole enää saatavilla täällä. Vastauksesi on tallennettu viitteellä {reference}.',
+  'public.document.retry': 'Yritä uudelleen',
+  'public.email.title': 'Lähetä asiakirja sähköpostilla',
+  'public.email.draft': 'Avaa luonnos: {program}',
+  'public.email.drafting': 'Avataan: {program}…',
+  'public.email.draftOpened':
+    'Luonnos on auki ({program}) ja PDF on liitteenä. Lisää vastaanottaja ja lähetä sieltä.',
+  'public.email.draftFailed':
+    '{program} ei voinut avata luonnosta. Käytä jotakin alla olevista tavoista.',
+  'public.email.share': 'Jaa tai lähetä sähköpostilla…',
+  'public.email.app': 'Avaa sähköpostisovellus',
+  'public.email.attachNote':
+    'Sähköpostisovellus avautuu viesti valmiina. Liitä {filename} itse ennen lähettämistä – verkkosivu ei voi liittää tiedostoja sähköpostiin.',
+  'public.email.copy': 'Kopioi viesti',
+  'public.email.copied': 'Kopioitu',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Asiakirja: {filename}\nViite: {reference}',
+  'public.again': 'Täytä uudelleen',
+  'public.eid.title': 'Vahvista henkilöllisyytesi (valinnainen)',
+  'public.eid.unavailable':
+    'Sähköinen tunnistus ei ole vielä käytössä tässä lomakkeessa. Muuta ei tarvita – lomakkeesi on valmis.',
+  'public.eid.offer':
+    'Voit vahvistaa henkilöllisyytesi sähköisellä tunnistuksella. Se on valinnaista: lomake on jo lähetetty.',
+  'public.eid.testNote':
+    'Testitila: käytössä on kehityspalvelu, eikä kenenkään henkilöllisyyttä tarkisteta.',
+  'public.eid.start': 'Vahvista sähköisellä tunnistuksella',
+  'public.eid.waiting': 'Odotetaan tunnistussovellusta…',
+  'public.eid.confirmed': 'Vahvistettu: {name}. Asiakirjassasi lukee nyt niin.',
+  'public.eid.confirmedTest':
+    'Testivahvistus tallennettu. Se ei ole henkilöllisyyden tarkistus, ja asiakirjassasi lukee niin.',
+  'public.eid.already': 'Tämä lomake on jo vahvistettu sähköisellä tunnistuksella.',
+  'public.eid.failed': 'Sähköinen tunnistus ei valmistunut. Lomakkeesi on silti valmis.',
+  'public.eid.retry': 'Yritä uudelleen',
 
   'validation.required': 'Tämä kenttä on pakollinen.',
   'validation.tooShort': 'Vähintään {min} merkkiä.',
@@ -784,6 +832,7 @@ export const fiFI: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'sen kuva sijaitsee muualla verkossa',
   'import.reason.nested-group': 'toistuva lohko toisen sisällä',
   'import.reason.needs-limit': 'se ei kerro, montako kohtaa sallitaan',
+  'submissions.document': 'Asiakirja',
   'submissions.paper': 'Paperi',
   'submissions.noPaper': 'Täytetty ennen kuin lomakkeella oli paperi',
 

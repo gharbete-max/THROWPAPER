@@ -87,7 +87,86 @@ export const SubmitResponse = z.object({
    */
   confirmationTo: z.string().nullable(),
   admissionCard: z.boolean(),
+  /**
+   * The finished document — the PDF of what was just sent — and how to fetch it.
+   *
+   * `token` is the respondent's only credential for it: bound to this submission, valid for a day,
+   * sent back to `POST /public/forms/:slug/document` in the body (never in a URL, where it would
+   * sit in history and logs). `filename` is what the file will be called, so the screen can name
+   * it before it is downloaded. `null` when there is no document to offer.
+   */
+  document: z
+    .object({
+      token: z.string().min(1).max(200),
+      filename: z.string(),
+      /**
+       * The mail program this computer can open a draft in, with the PDF attached — "classic
+       * Outlook", "Apple Mail" — on the desktop edition. `null` everywhere else, where the page
+       * offers the download, the share sheet and `mailto:` instead.
+       */
+      draftProgram: z.string().nullable(),
+    })
+    .nullable(),
+  /**
+   * The optional e-ID step, when the form offers one (`settings.identity: "optional"`).
+   *
+   * `available: false` means no identity provider is configured (CONTRACT §5.6 offered none): the
+   * page says so and the form is simply finished. `test: true` means the only provider is the
+   * development one, and anything it "confirms" is labelled a test everywhere it appears.
+   * `null` when the form does not offer the step at all.
+   */
+  identity: z.object({ available: z.boolean(), test: z.boolean() }).nullable(),
 });
+
+export const StartIdentityCheck = z.object({ token: z.string().min(1).max(200) });
+
+export const IdentityCheckStarted = z.object({
+  /** Sign's reference (≤ 128) and a 43-character binding: never cut off by this limit. */
+  reference: z.string().min(1).max(200),
+  status: z.enum(['pending', 'complete', 'failed', 'cancelled']),
+  /** Same device: open this. Absent when the provider gives none. */
+  launchUrl: z.string().url().optional(),
+});
+
+export const IdentityCheckRequest = z.object({
+  token: z.string().min(1).max(200),
+  reference: z.string().min(1).max(200),
+});
+
+/** Where the person's confirmation stands. `confirmed` only once the provider has answered. */
+export const IdentityCheckResponse = z.object({
+  status: z.enum(['pending', 'complete', 'failed', 'cancelled']),
+  confirmed: z
+    .object({
+      method: z.string(),
+      /** The name the scheme asserted. */
+      name: z.string().nullable(),
+      /** A development provider's answer: never a real identity check. */
+      test: z.boolean(),
+    })
+    .nullable(),
+});
+export type IdentityCheckResponse = z.infer<typeof IdentityCheckResponse>;
+
+export const FinishedDocumentRequest = z.object({
+  token: z.string().min(1).max(200),
+});
+export type FinishedDocumentRequest = z.infer<typeof FinishedDocumentRequest>;
+
+/**
+ * Opens a draft in this computer's mail program with the finished document attached. The words
+ * are the person's own, from the page; no recipient is set and nothing is sent.
+ */
+export const EmailDraftRequest = z.object({
+  token: z.string().min(1).max(200),
+  /** One line: a subject with a line break in it would be two headers. */
+  subject: z
+    .string()
+    .max(300)
+    .regex(/^[^\r\n]*$/),
+  text: z.string().max(4000),
+});
+export type EmailDraftRequest = z.infer<typeof EmailDraftRequest>;
 
 export const SubmitRejected = z.object({
   status: z.literal('rejected'),

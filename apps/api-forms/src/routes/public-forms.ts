@@ -15,6 +15,15 @@ import {
   generateReference,
 } from '../forms/public-service.js';
 import { UPLOAD_CLAIM_WINDOW_SECONDS } from '../uploads/lifecycle.js';
+import type { PdfRenderer } from '../documents/render.js';
+import { buildFinishedDocument } from '../documents/finished-service.js';
+import { signFinishedToken, verifyFinishedToken } from '../documents/finished-token.js';
+import { contentDisposition, documentFilename } from '../documents/filename.js';
+import { DraftUnavailable, type MailDrafter } from '../mail/draft.js';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import type { IdentityMethod } from '@tp/shared/contract';
+import type { SignClient } from '../signing/client.js';
+import type { SubmissionIdentity } from '../db/schema.js';
 
 const SlugParam = z.object({ slug: z.string().min(1).max(64) });
 
@@ -39,8 +48,41 @@ export function registerPublicFormRoutes(
     appUrl: string;
     uploadStore: PrivateUploadStore;
     onSubmitted?: (submissionId: string) => Promise<void>;
+    /**
+     * The finished document (`documents/finished.ts`). Absent in tests that do not render PDFs;
+     * then the submit response offers no document rather than a link that cannot work.
+     */
+    finished?: { renderer: PdfRenderer; key: Buffer };
+    /**
+     * The desktop edition's mail program, for "Email document" as a draft with the PDF attached
+     * (`mail/draft.ts`). Absent on a server: a server has no mail program of the visitor's to open.
+     */
+    mailDraft?: MailDrafter | null;
+    /**
+     * Sign, for the optional e-ID step (CONTRACT §5.6). Null where no Sign is connected: a form
+     * that offers the step then says it is not available, and is finished without it.
+     */
+    sign?: SignClient | null;
   },
 ): void {
+  /**
+   * What §5.6 offers, asked at most once a minute. Sign answering nothing, or not answering at
+   * all, both mean the same thing to a person finishing a form: the step is not available.
+   */
+  let methodsCache: { at: number; methods: IdentityMethod[] } | null = null;
+  async function identityMethods(): Promise<IdentityMethod[]> {
+    if (!deps.sign) return [];
+    if (methodsCache && Date.now() - methodsCache.at < 60_000) return methodsCache.methods;
+    let methods: IdentityMethod[] = [];
+    try {
+      methods = (await deps.sign.identityMethods()).methods;
+    } catch {
+      methods = [];
+    }
+    methodsCache = { at: Date.now(), methods };
+    return methods;
+  }
+
   async function loadPublished(slug: string) {
     const organisation = await deps.repos.organisations.first();
     if (!organisation) return null;
@@ -398,6 +440,8 @@ export function registerPublicFormRoutes(
           confirmationMessage: '',
           confirmationTo: null,
           admissionCard: false,
+          document: null,
+          identity: null,
         });
       }
 
@@ -503,9 +547,275 @@ export function registerPublicFormRoutes(
         // (`mail/send-job.ts`); the screen may say so because this is where it was decided.
         confirmationTo: email,
         admissionCard: loaded.event !== null,
+        document: deps.finished
+          ? {
+              token: signFinishedToken(result.submission.id, deps.finished.key),
+              filename: documentFilename(
+                pickText(
+                  {
+                    supported: loaded.organisation.supportedLocales,
+                    default: loaded.organisation.defaultLocale,
+                  },
+                  loaded.form.title,
+                  body.locale,
+                ).value,
+                result.submission.reference,
+              ),
+              draftProgram: deps.mailDraft?.label ?? null,
+            }
+          : null,
+        // Not on a form made from paper: its document *is* the paper, which has nowhere to say
+        // that anybody was confirmed — and the page must not say the document shows it.
+        identity:
+          loaded.definition.settings.identity === 'optional' && !loaded.definition.paper
+            ? identityOffer(await identityMethods())
+            : null,
       });
     },
   });
+
+  /**
+   * The finished document, for the person who just sent the form.
+   *
+   * **POST with the token in the body**, not a GET with it in the URL: a URL is kept in browser
+   * history, in proxy and server logs, and in the Referer of whatever the PDF viewer opens next —
+   * every one of them a place a credential for somebody's answers should not be.
+   *
+   * The token names the submission; the slug must agree with it, so a token cannot be replayed
+   * through another form's address. Every refusal is the same 404 — expired, forged, withdrawn and
+   * never-existed are nobody's business to tell apart. Rate limited like the invoice PDF: each one
+   * is about a second of Chromium.
+   */
+  /** The document a valid token names, through this form's address only. Null for any refusal. */
+  /** The submission a valid token names, through this form's address only. Null for any refusal. */
+  async function holderOf(slug: string, token: string) {
+    if (!deps.finished) return null;
+    const verified = verifyFinishedToken(token, deps.finished.key);
+    if (!verified.ok) return null;
+
+    const organisation = await deps.repos.organisations.first();
+    if (!organisation) return null;
+    const form = await deps.repos.forms.findBySlug(organisation.id, slug);
+    const submission = await deps.repos.submissions.findById(
+      organisation.id,
+      verified.submissionId,
+    );
+    if (!form || !submission || submission.formId !== form.id) return null;
+    if (submission.status !== 'complete' || submission.revokedAt) return null;
+    return { organisation, form, submission };
+  }
+
+  async function finishedFor(slug: string, token: string) {
+    const held = await holderOf(slug, token);
+    if (!held || !deps.finished) return null;
+    return buildFinishedDocument(
+      { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
+      held.organisation,
+      held.submission,
+    );
+  }
+
+  app.post('/public/forms/:slug/document', {
+    config: { rateLimit: { max: 12, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      body: formSchemas.FinishedDocumentRequest,
+      response: { 404: api.ErrorResponse, 503: api.ErrorResponse },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const { token } = formSchemas.FinishedDocumentRequest.parse(request.body);
+      if (!deps.finished) {
+        return reply.code(503).send({
+          error: { code: 'documents-unavailable', message: 'Documents are not available here' },
+        });
+      }
+
+      const finished = await finishedFor(slug, token);
+      if (!finished) return notFound(reply);
+
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', contentDisposition(finished.filename))
+        .header('cache-control', 'no-store, private')
+        .header('x-robots-tag', 'noindex, nofollow')
+        .send(finished.pdf);
+    },
+  });
+
+  /**
+   * "Email document" on the desktop: a draft in this computer's mail program, PDF attached.
+   *
+   * Registered only where there is such a program (`deps.mailDraft`), so a server answers 404 and
+   * the page never offers it. It opens a window on this computer and sends nothing — the person
+   * addresses and sends it themselves. Same token, same refusals, as the download.
+   */
+  if (deps.mailDraft) {
+    const drafter = deps.mailDraft;
+    app.post('/public/forms/:slug/document/email-draft', {
+      config: { rateLimit: { max: 6, timeWindow: '1 minute' } },
+      schema: {
+        tags: ['public'],
+        params: SlugParam,
+        body: formSchemas.EmailDraftRequest,
+        response: { 204: z.null(), 404: api.ErrorResponse, 503: api.ErrorResponse },
+      },
+      handler: async (request, reply) => {
+        const { slug } = SlugParam.parse(request.params);
+        const body = formSchemas.EmailDraftRequest.parse(request.body);
+        const finished = await finishedFor(slug, body.token);
+        if (!finished) return notFound(reply);
+
+        try {
+          await drafter.open({
+            subject: body.subject,
+            text: body.text,
+            attachment: { filename: finished.filename, content: finished.pdf },
+          });
+        } catch (error) {
+          request.log.warn({ err: error }, 'email draft failed');
+          return reply.code(503).send({
+            error: {
+              code: error instanceof DraftUnavailable ? 'mail-program-unavailable' : 'draft-failed',
+              message: `${drafter.label} could not open a draft`,
+            },
+          });
+        }
+        return reply.code(204).send();
+      },
+    });
+  }
+
+  /**
+   * The optional e-ID step, started (CONTRACT §5.6).
+   *
+   * The same token as the document — this is the person who just sent the form. What they confirm
+   * is the finished document as it stands now: its SHA-256 goes to the provider. The reference that
+   * comes back is bound to this submission with an HMAC, so a reference from somebody else's
+   * confirmation can never be recorded against this one.
+   */
+  app.post('/public/forms/:slug/identity', {
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      body: formSchemas.StartIdentityCheck,
+      response: {
+        200: formSchemas.IdentityCheckStarted,
+        404: api.ErrorResponse,
+        409: api.ErrorResponse,
+        503: api.ErrorResponse,
+      },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const { token } = formSchemas.StartIdentityCheck.parse(request.body);
+      const held = await holderOf(slug, token);
+      if (!held || !deps.finished) return notFound(reply);
+      const definition = await definitionOf(held.submission);
+      if (definition?.settings.identity !== 'optional' || definition.paper) return notFound(reply);
+      if (held.submission.identity) {
+        return reply.code(409).send({
+          error: { code: 'already-confirmed', message: 'This form is already confirmed' },
+        });
+      }
+      const method = (await identityMethods())[0];
+      if (!deps.sign || !method) {
+        return reply.code(503).send({
+          error: { code: 'identity-unavailable', message: 'No e-ID is available here' },
+        });
+      }
+      const finished = await buildFinishedDocument(
+        { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
+        held.organisation,
+        held.submission,
+      );
+      if (!finished) return notFound(reply);
+      try {
+        const started = await deps.sign.startIdentity({
+          organisationId: held.organisation.id,
+          method: method.method,
+          documentSha256: createHash('sha256').update(finished.pdf).digest('hex'),
+          locale: held.submission.locale,
+          idempotencyKey: `finished:${held.submission.id}:${Date.now()}`,
+        });
+        return reply.send({
+          reference: bindReference(started.reference, held.submission.id, deps.finished.key),
+          status: started.status,
+          ...(started.launchUrl ? { launchUrl: started.launchUrl } : {}),
+        });
+      } catch (error) {
+        request.log.warn({ err: error }, 'identity start failed');
+        return reply.code(503).send({
+          error: { code: 'identity-unavailable', message: 'The e-ID service did not answer' },
+        });
+      }
+    },
+  });
+
+  /** Where the e-ID step stands; recorded on the submission once the provider has answered. */
+  app.post('/public/forms/:slug/identity/check', {
+    config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      body: formSchemas.IdentityCheckRequest,
+      response: {
+        200: formSchemas.IdentityCheckResponse,
+        404: api.ErrorResponse,
+        503: api.ErrorResponse,
+      },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const body = formSchemas.IdentityCheckRequest.parse(request.body);
+      const held = await holderOf(slug, body.token);
+      if (!held || !deps.finished || !deps.sign) return notFound(reply);
+      const reference = unbindReference(body.reference, held.submission.id, deps.finished.key);
+      if (!reference) return notFound(reply);
+
+      if (held.submission.identity) {
+        return reply.send({
+          status: 'complete' as const,
+          confirmed: confirmedView(held.submission.identity),
+        });
+      }
+
+      let result;
+      try {
+        result = await deps.sign.identityResult(reference);
+      } catch (error) {
+        request.log.warn({ err: error }, 'identity result failed');
+        return reply.code(503).send({
+          error: { code: 'identity-unavailable', message: 'The e-ID service did not answer' },
+        });
+      }
+      if (result.status !== 'complete' || !result.method) {
+        return reply.send({ status: result.status, confirmed: null });
+      }
+      const provider =
+        (await identityMethods()).find((m) => m.method === result.method)?.provider ?? 'unknown';
+      const identity: SubmissionIdentity = {
+        method: result.method,
+        provider,
+        name: result.name ?? null,
+        test: result.environment === 'test',
+        documentSha256: result.documentSha256,
+        confirmedAt: new Date().toISOString(),
+      };
+      await deps.repos.submissions.saveIdentity(held.organisation.id, held.submission.id, identity);
+      return reply.send({ status: 'complete' as const, confirmed: confirmedView(identity) });
+    },
+  });
+
+  async function definitionOf(submission: { formId: string; formVersionId: string }) {
+    const version = (await deps.repos.forms.listVersions(submission.formId)).find(
+      (candidate) => candidate.id === submission.formVersionId,
+    );
+    const parsed = formSchemas.FormDefinition.safeParse(version?.definition);
+    return parsed.success ? parsed.data : null;
+  }
 }
 
 function notFound(reply: FastifyReply) {
@@ -548,4 +858,37 @@ function uploadRejection(code: string): string {
     default:
       return 'That file type is not accepted';
   }
+}
+
+/** What the page learns about a recorded confirmation: enough to say it, nothing more. */
+function confirmedView(identity: SubmissionIdentity) {
+  return { method: identity.method, name: identity.name, test: identity.test };
+}
+
+/** Whether the step is offered as working, from what §5.6 listed. */
+function identityOffer(methods: IdentityMethod[]) {
+  return {
+    available: methods.length > 0,
+    test: methods.length > 0 && methods.every((method) => method.environment === 'test'),
+  };
+}
+
+/** `<sign reference>.<HMAC over submission and reference>`: usable only with this submission. */
+function bindReference(reference: string, submissionId: string, key: Buffer): string {
+  return `${reference}.${referenceMac(reference, submissionId, key)}`;
+}
+
+function unbindReference(bound: string, submissionId: string, key: Buffer): string | null {
+  const at = bound.lastIndexOf('.');
+  if (at <= 0) return null;
+  const reference = bound.slice(0, at);
+  const given = Buffer.from(bound.slice(at + 1));
+  const expected = Buffer.from(referenceMac(reference, submissionId, key));
+  return given.length === expected.length && timingSafeEqual(given, expected) ? reference : null;
+}
+
+function referenceMac(reference: string, submissionId: string, key: Buffer): string {
+  return createHmac('sha256', key)
+    .update(`identity\n${submissionId}\n${reference}`)
+    .digest('base64url');
 }

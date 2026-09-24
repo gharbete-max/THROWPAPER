@@ -16,6 +16,12 @@ import { PHONE_SCAN_MAX_PAGES } from '@tp/shared/forms';
 export const PHONE_SCAN_TTL_MS = 15 * 60 * 1000;
 /** Per person: opening a fourth closes the oldest. */
 const MAX_OPEN_PER_USER = 3;
+/**
+ * Across everybody: the most photograph bytes held in memory at once. Per-person limits alone
+ * still let many people (or many accounts) hold hundreds of megabytes each; past this, a page is
+ * refused as if its session were full until scans are used or expire.
+ */
+export const MAX_TOTAL_BYTES = 256 * 1024 * 1024;
 
 export interface PhoneScanPage {
   contentType: 'image/jpeg' | 'image/png';
@@ -49,7 +55,10 @@ export interface PhoneScanStore {
   active(): number;
 }
 
-export function createPhoneScanStore(now: () => number = Date.now): PhoneScanStore {
+export function createPhoneScanStore(
+  now: () => number = Date.now,
+  maxTotalBytes: number = MAX_TOTAL_BYTES,
+): PhoneScanStore {
   const sessions = new Map<string, PhoneScanSessionRecord & { tokenHash: string }>();
   const byHash = new Map<string, string>();
 
@@ -108,6 +117,12 @@ export function createPhoneScanStore(now: () => number = Date.now): PhoneScanSto
     },
     add(session, page) {
       if (session.pages.length >= PHONE_SCAN_MAX_PAGES) return false;
+      sweep();
+      let held = 0;
+      for (const open of sessions.values()) {
+        for (const kept of open.pages) held += kept.bytes.byteLength;
+      }
+      if (held + page.bytes.byteLength > maxTotalBytes) return false;
       session.pages.push(page);
       return true;
     },

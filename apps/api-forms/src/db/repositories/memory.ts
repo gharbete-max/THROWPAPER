@@ -517,6 +517,17 @@ export function createMemoryRepositories(
         return found ? copySubmission(found) : null;
       },
 
+      saveIdentity: async (organisationId, id, identity) => {
+        const index = state.submissions.findIndex(
+          (s) => s.organisationId === organisationId && s.id === id && s.status === 'complete',
+        );
+        const existing = state.submissions[index];
+        if (!existing) return null;
+        const updated: SubmissionRecord = { ...existing, identity, updatedAt: clock() };
+        state.submissions[index] = updated;
+        return copySubmission(updated);
+      },
+
       revoke: async (organisationId, id, at) => {
         const index = state.submissions.findIndex(
           (s) => s.organisationId === organisationId && s.id === id,

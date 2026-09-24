@@ -54,6 +54,8 @@ import { registerPhoneScanRoutes } from './routes/phone-scan.js';
 import { createPhoneScanStore, type PhoneScanStore } from './phone-scan/store.js';
 import { createSignClient, type SignConnection } from './signing/client.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
+import { deriveFinishedKey } from './documents/finished-token.js';
+import type { MailDrafter } from './mail/draft.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
 import { createWorker } from './jobs/worker.js';
@@ -85,6 +87,11 @@ export interface ServerOptions {
    *  reaches this app. Default: a store of its own, and `appUrl`. */
   phoneScans?: PhoneScanStore;
   phoneOrigin?: () => Promise<string | null>;
+  /**
+   * The desktop edition's mail program, for "Email document" as a draft with the PDF attached
+   * (`mail/draft.ts`). A server has none; leave it out.
+   */
+  mailDraft?: MailDrafter | null;
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
   probeDatabase?: boolean;
   /** Injected by tests. Defaults to Playwright Chromium and a local directory. */
@@ -515,11 +522,22 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         ? (process.env['CONTACT_TO'] ?? null)
         : options.contactAddress,
   });
+  const signing =
+    options.signing !== undefined
+      ? options.signing
+      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
+        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
+        : null;
+  // One client for both: sending documents for signing, and the optional e-ID step (§5.6).
+  const signClient = signing ? createSignClient(signing, options.signFetch) : null;
   registerPublicFormRoutes(app, {
     repos,
     mail,
     appUrl,
     uploadStore,
+    finished: { renderer, key: deriveFinishedKey(documentSigningSecret) },
+    mailDraft: options.mailDraft ?? null,
+    sign: signClient,
     // One job per message, keyed so a retry cannot double-send.
     onSubmitted: async (submissionId) => {
       const organisation = await repos.organisations.first();
@@ -536,19 +554,13 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     },
   });
   registerDocumentRoutes(app, { repos, guard, admission, store, uploadStore });
-  const signing =
-    options.signing !== undefined
-      ? options.signing
-      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
-        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
-        : null;
   registerSigningRoutes(app, {
     repos,
     guard,
     store,
     uploadStore,
     renderer,
-    sign: signing ? createSignClient(signing, options.signFetch) : null,
+    sign: signClient,
     // The app's origin with the `/api` prefix: served by this process, or proxied to it by Vite.
     publicApiUrl: `${appUrl.replace(/\/$/, '')}/api`,
   });

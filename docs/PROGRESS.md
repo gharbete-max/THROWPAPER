@@ -3251,6 +3251,59 @@ mail provider with a test mode, sends the email.
   asked; remind only whose turn it is; copy in every language. e2e: the checkbox, the dialog, the
   "Emailed" mark and the job done.
 
+## Product-ready pass — the finished document, email handoff, e-ID step, hardening, releases · PR #141
+
+The north star made real: fill in a form → a finished document → download it → email it → know
+what happened → do it again. Measured in this container on Postgres 16 and Chromium 141.
+
+- **Baseline first** (at `43ad950`): format, typecheck, lint, build, contract and licence checks
+  exit 0; 169 files / 2001 unit tests pass once Playwright finds a browser; e2e 39 passed, 1 failed
+  — `simulated-user` threw `getOrInsertComputed is not a function` in the QR decode. Not flake:
+  pdf.js 6's default build uses a 2026 language feature, and **"From paper" threw in any browser
+  older than that**. Both the app and the harness now load the legacy build;
+  `e2e/paper-import.spec.ts` draws a PDF and fails on the old build in this Chromium.
+- **The finished document** (`documents/finished.ts`): an A4 PDF of one submission in the
+  respondent's language — only the questions they saw, no hidden fields, drawn signatures as
+  drawn; a form made from paper comes back as that paper. Respondent: a one-day token bound to the
+  submission, own HKDF key, POSTed never put in a URL. Staff: `GET /v1/submissions/:id/document.pdf`
+  and a Document column on the responses screen. Unicode filenames with an RFC 6266 fallback.
+- **Every PDF printed its page number twice**: Chromium 131+ honours `@page` margin boxes and the
+  renderer also stamps a footer. Margin boxes removed; the paper colour now reaches the sheet edge.
+- **The confirmation hands it over**: Download PDF, Open, Email it (share sheet with the file where
+  supported; `mailto:` with an explicit "attach it yourself, by name" — it cannot attach; copy the
+  text; on the desktop a draft in Outlook or Apple Mail with the PDF attached, sending nothing),
+  Fill in again. A refresh keeps it (history state, never the answers); a new visit is the form.
+- **Optional e-ID step** (CONTRACT §5.6): Sign lists identity methods — none unless configured;
+  `EID_PROVIDER=console` is a development provider, refused in production, labelled test. Forms'
+  `settings.identity: optional` offers the step after sending; unavailable says so and the form is
+  finished; the development provider works end to end and says "test" on the page, in the PDF and
+  on the record (`submissions.identity`, migration 0018). The reference is HMAC-bound to the
+  submission. Real providers' evidence storage is P2.
+- **Security** (two audits run as agents): signing requests visible only to their sender and admins
+  (any operator could read and sign another's); base64url tokens redacted whole in logs (26% leaked);
+  scanned pages over 40 MP refused before decoding; header values forced onto one line for every
+  mail sender; the server's PDF renderer runs with no JavaScript and no network, and the desktop's
+  print window (which needs JavaScript to wait for fonts) may load nothing but its own page file;
+  a memory cap on phone scans;
+  paper keys must have been uploaded to that form. Desktop: loopback APIs answer only to their own
+  Host (DNS rebinding), navigation/window/IPC/permission rules on every window, `openExternal`
+  limited to http/https/mailto, Electron fuses, quit waits for PGlite, PowerShell by absolute path.
+- **Visual**: the bare button tier was painted as a second primary everywhere (the filled-tier rules
+  never excluded it) — found by looking at the finished screen at 375/768/1280 in both schemes.
+- **Releases**: `desktop.yml` checks the tag against `apps/desktop/package.json`, fails on a
+  missing artifact, publishes stable names (`Loppa-Windows-Setup.exe`, `Loppa-Windows-Portable.exe`,
+  `Loppa-macOS-AppleSilicon.dmg`, `Loppa-macOS-Intel.dmg`) with `SHA256SUMS.txt`, draft-then-publish.
+  Unsigned until certificates exist, and the notes say so. README rewritten for a stranger.
+- **Evidence**: unit 182 files / 2122+ tests; contract:check 9/15 implemented; new e2e specs
+  (`finished-document`, `paper-import`, `identity-step`) pass here; CI's Desktop workflow built and
+  launched the fused apps on Windows and macOS. The container's `LANG` was unset, and Linux Chromium
+  then names a non-ASCII download "download" — `playwright.config.ts` now gives the browser C.UTF-8.
+
+**Not done, and why**: see `LAUNCH-CHECKLIST.md` §2.2a — PDF parsing isolation, the attendance
+route's form-level check, api-sign rate limiting, backup secrets in plain files, Mac Developer ID
+wiring. Windows/macOS email handoff was verified by scripts and tests, not by a person on those
+machines.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

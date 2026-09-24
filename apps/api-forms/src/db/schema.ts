@@ -269,6 +269,18 @@ export const submissionStatus = pgEnum('submission_status', ['partial', 'complet
  * `formVersionId` binds the answers to the definition that was on screen, so editing a form later
  * can never change what somebody actually answered.
  */
+/** What the optional e-ID step recorded on a submission. See `submissions.identity`. */
+export interface SubmissionIdentity {
+  method: string;
+  provider: string;
+  name: string | null;
+  /** A development provider: never a real identity check, and labelled so wherever shown. */
+  test: boolean;
+  /** SHA-256 of the finished document that was confirmed. */
+  documentSha256: string;
+  confirmedAt: string;
+}
+
 export const submissions = pgTable(
   'submissions',
   {
@@ -301,6 +313,12 @@ export const submissions = pgTable(
      * with a reason rather than vanishing.
      */
     revokedAt: timestamp('revoked_at', { withTimezone: true }),
+    /**
+     * The optional e-ID step, once the provider answered (CONTRACT §5.6): which method, the name
+     * the scheme asserted, whether it was the development provider, the hash of the finished
+     * document it confirmed, and when. Null for every submission without one — the usual case.
+     */
+    identity: jsonb('identity').$type<SubmissionIdentity>(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },

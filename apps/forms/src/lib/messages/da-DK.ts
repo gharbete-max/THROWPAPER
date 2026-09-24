@@ -356,6 +356,11 @@ export const daDK: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om den samme e-mailadresse må svare mere end én gang.',
   'settings.duplicateControl.email': 'Ét svar pr. e-mailadresse',
   'settings.duplicateControl.none': 'Et vilkårligt antal svar',
+  'settings.identity': 'Tilbyd bekræftelse med e-ID efter afsendelse (valgfrit for personen)',
+  'settings.identityHint':
+    'Svarene gemmes først; bekræftelsen er et trin, man kan tage eller springe over. Hvor ingen e-ID-udbyder er tilsluttet, siger formularen det og er færdig alligevel.',
+  'settings.identityPaper':
+    'Ikke på en formular lavet af papir: dens dokument er selve papiret, som ikke har plads til en bekræftelse.',
 
   'public.progress': 'Trin {n} af {total}',
 
@@ -684,6 +689,48 @@ export const daDK: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Vælg…',
+  'public.finished.sent': 'Dine svar er sendt til {organisation}.',
+  'public.document.preparing': 'Dokumentet klargøres…',
+  'public.document.ready': 'Dit dokument er klar',
+  'public.document.unavailable': 'Dit dokument er ikke tilgængeligt lige nu',
+  'public.document.download': 'Download PDF',
+  'public.document.open': 'Åbn',
+  'public.document.email': 'Send det på mail',
+  'public.document.failed': 'PDF’en kunne ikke laves lige nu. Dine svar er gemt.',
+  'public.document.expired':
+    'Denne kopi er ikke længere tilgængelig her. Dine svar er gemt under reference {reference}.',
+  'public.document.retry': 'Prøv igen',
+  'public.email.title': 'Send dokumentet på mail',
+  'public.email.draft': 'Åbn en kladde i {program}',
+  'public.email.drafting': 'Åbner {program}…',
+  'public.email.draftOpened':
+    'Kladden er åben i {program} med PDF’en vedhæftet. Tilføj modtager og send den derfra.',
+  'public.email.draftFailed':
+    '{program} kunne ikke åbne en kladde. Brug en af mulighederne nedenfor i stedet.',
+  'public.email.share': 'Del eller send på mail…',
+  'public.email.app': 'Åbn mit mailprogram',
+  'public.email.attachNote':
+    'Dit mailprogram åbner med beskeden skrevet. Vedhæft selv {filename}, før du sender – en webside kan ikke vedhæfte filer til en mail.',
+  'public.email.copy': 'Kopiér beskeden',
+  'public.email.copied': 'Kopieret',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Dokument: {filename}\nReference: {reference}',
+  'public.again': 'Udfyld igen',
+  'public.eid.title': 'Bekræft, hvem du er (valgfrit)',
+  'public.eid.unavailable':
+    'Bekræftelse med e-ID er endnu ikke tilgængelig for denne formular. Der skal ikke mere til – din formular er færdig.',
+  'public.eid.offer':
+    'Du kan bekræfte, hvem du er, med e-ID. Det er valgfrit: din formular er allerede sendt.',
+  'public.eid.testNote':
+    'Testtilstand: her bruges en udviklingsudbyder, og ingens identitet kontrolleres.',
+  'public.eid.start': 'Bekræft med e-ID',
+  'public.eid.waiting': 'Venter på e-ID-appen…',
+  'public.eid.confirmed': 'Bekræftet som {name}. Det står nu i dit dokument.',
+  'public.eid.confirmedTest':
+    'Testbekræftelse gemt. Den er ikke en identitetskontrol, og det står i dit dokument.',
+  'public.eid.already': 'Denne formular er allerede bekræftet med e-ID.',
+  'public.eid.failed': 'Bekræftelsen med e-ID blev ikke fuldført. Din formular er stadig færdig.',
+  'public.eid.retry': 'Prøv igen',
 
   'validation.required': 'Dette felt er påkrævet.',
   'validation.tooShort': 'Mindst {min} tegn.',
@@ -776,6 +823,7 @@ export const daDK: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'dets billede ligger et andet sted på nettet',
   'import.reason.nested-group': 'en gentaget blok inde i en anden',
   'import.reason.needs-limit': 'den angiver aldrig, hvor mange poster der tillades',
+  'submissions.document': 'Dokument',
   'submissions.paper': 'Papir',
   'submissions.noPaper': 'Udfyldt før formularen havde papir',
 

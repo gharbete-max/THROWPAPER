@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
 import { pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
 import { defaultTokens, toCssBlock } from '@tp/tokens';
 import {
@@ -24,6 +24,9 @@ import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
 import { PoweredBy } from '../components/Logo.js';
+import { FinishedDocument, type FinishedDocumentHandle } from '../components/FinishedDocument.js';
+import { IdentityStep } from '../components/IdentityStep.js';
+import { finishedState, readFinished } from '../lib/finished-state.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
 
@@ -38,6 +41,10 @@ type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
 export default function PublicForm() {
   const { slug } = useParams();
   const [params] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  /** The history entry's state as the page arrived — where a sent form's confirmation rides. */
+  const arrivedWith = useRef<unknown>(location.state);
 
   const [form, setForm] = useState<PublicFormResponse | null>(null);
   const [phase, setPhase] = useState<Phase>('loading');
@@ -49,6 +56,14 @@ export default function PublicForm() {
   const [confirmation, setConfirmation] = useState('');
   /** What the server queued on submit, so the screen promises only what is actually coming. */
   const [coming, setComing] = useState<{ email: string; card: boolean } | null>(null);
+  /** The finished document the server offered, and the credential to fetch it. */
+  const [finished, setFinished] = useState<FinishedDocumentHandle | null>(null);
+  /** The optional e-ID step as offered on submit; null when the form does not offer it. */
+  const [identityOffer, setIdentityOffer] = useState<{ available: boolean; test: boolean } | null>(
+    null,
+  );
+  /** Bumped when the finished document changes (an e-ID confirmation), so it is fetched again. */
+  const [documentRevision, setDocumentRevision] = useState(0);
   /**
    * Focus lands on the thank-you when the form is sent. The card is new to the page, and a live
    * region that did not exist a moment ago is not something every screen reader announces;
@@ -127,16 +142,28 @@ export default function PublicForm() {
           return;
         }
         setForm(loaded);
-        setPhase(loaded.open ? 'filling' : 'closed');
-        // Hidden fields prefill from the query string — SPEC-forms.md §3.
-        const prefilled: SubmissionValues = {};
-        for (const field of loaded.definition.fields) {
-          if (field.type === 'hidden') {
-            const fromQuery = field.fromParameter ? params.get(field.fromParameter) : null;
-            prefilled[field.key] = fromQuery ?? field.defaultValue ?? null;
-          }
+        /*
+         * Sent already, from this history entry: show the confirmation again, not an empty form.
+         *
+         * A refresh on the thank-you screen used to put a blank form under the person — who then
+         * wonders whether it went, and sends it again. What comes back is only what the screen
+         * showed (`finished-state.ts`), in the language it showed it in. A new visit to the link
+         * has no such state and gets the form. Resuming a saved draft is a deliberate return to
+         * filling in, so it wins.
+         */
+        const remembered = params.get('resume') ? null : readFinished(arrivedWith.current);
+        if (remembered) {
+          if (remembered.locale) setLocale(remembered.locale);
+          setReference(remembered.reference);
+          setConfirmation(remembered.confirmation);
+          setComing(remembered.coming);
+          setFinished(remembered.document);
+          setIdentityOffer(remembered.identity);
+          setPhase('done');
+        } else {
+          setPhase(loaded.open ? 'filling' : 'closed');
         }
-        setValues((current) => ({ ...prefilled, ...current }));
+        setValues((current) => ({ ...prefilledFrom(loaded, params), ...current }));
       })
       /*
        * A connection that dropped is not a form that does not exist. This mapped every failure to
@@ -268,6 +295,29 @@ export default function PublicForm() {
     }
   }
 
+  /**
+   * "Fill in again": a fresh copy of the same form, for the next person at the same screen — a
+   * reception desk, a family registering one by one. Clears the confirmation from this history
+   * entry; the sent submission is untouched. Hidden fields keep their values from the link, as on first load.
+   */
+  function startAgain() {
+    if (!slug || !form) return;
+    navigate(
+      { pathname: location.pathname, search: location.search },
+      { replace: true, state: null },
+    );
+    setValues(prefilledFrom(form, params));
+    setIssues([]);
+    setRejected(null);
+    setPage(0);
+    setFinished(null);
+    setIdentityOffer(null);
+    setResumeToken(null);
+    setResumeLink(null);
+    setPhase(form.open ? 'filling' : 'closed');
+    window.scrollTo({ top: 0 });
+  }
+
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!slug || !form || !validatePage()) return;
@@ -296,10 +346,25 @@ export default function PublicForm() {
       const body = await response.json().catch(() => ({}) as Record<string, unknown>);
 
       if (response.status === 201) {
-        setReference(body.reference);
-        setConfirmation(body.confirmationMessage);
-        setComing(
-          body.confirmationTo ? { email: body.confirmationTo, card: body.admissionCard } : null,
+        const sent = {
+          reference: String(body.reference),
+          confirmation: String(body.confirmationMessage ?? ''),
+          coming: body.confirmationTo
+            ? { email: String(body.confirmationTo), card: Boolean(body.admissionCard) }
+            : null,
+          document: (body.document as FinishedDocumentHandle | null | undefined) ?? null,
+          identity:
+            (body.identity as { available: boolean; test: boolean } | null | undefined) ?? null,
+        };
+        setReference(sent.reference);
+        setConfirmation(sent.confirmation);
+        setComing(sent.coming);
+        setFinished(sent.document);
+        setIdentityOffer(sent.identity);
+        // On the history entry, so a refresh or Back shows this again (`finished-state.ts`).
+        navigate(
+          { pathname: location.pathname, search: location.search },
+          { replace: true, state: finishedState({ ...sent, locale: resolved }) },
         );
         setPhase('done');
 
@@ -516,6 +581,36 @@ export default function PublicForm() {
               })}
             </p>
           )}
+          {form && (
+            <p className="muted">
+              {t('public.finished.sent', { organisation: form.organisationName })}
+            </p>
+          )}
+          {finished && slug && identityOffer && (
+            <IdentityStep
+              slug={slug}
+              token={finished.token}
+              offer={identityOffer}
+              t={t}
+              onConfirmed={() => setDocumentRevision((value) => value + 1)}
+            />
+          )}
+          {finished && slug && (
+            <FinishedDocument
+              key={documentRevision}
+              slug={slug}
+              handle={finished}
+              title={formTitle}
+              reference={reference}
+              t={t}
+            />
+          )}
+          <div className="row">
+            <button type="button" className="button button--bare" onClick={startAgain}>
+              <Icon name="undo" />
+              {t('public.again')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -685,4 +780,16 @@ export default function PublicForm() {
       {form && <PoweredBy tokens={form.brand} />}
     </main>
   );
+}
+
+/** Hidden fields prefill from the query string — SPEC-forms.md §3. */
+function prefilledFrom(form: PublicFormResponse, params: URLSearchParams): SubmissionValues {
+  const prefilled: SubmissionValues = {};
+  for (const field of form.definition.fields) {
+    if (field.type === 'hidden') {
+      const fromQuery = field.fromParameter ? params.get(field.fromParameter) : null;
+      prefilled[field.key] = fromQuery ?? field.defaultValue ?? null;
+    }
+  }
+  return prefilled;
 }

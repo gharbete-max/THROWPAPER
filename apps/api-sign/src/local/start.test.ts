@@ -44,6 +44,31 @@ describe('Sign on one computer', () => {
     expect(status.status).toBe(404);
   });
 
+  it('answers only to its own loopback name, so a rebinding web page cannot drive it', async () => {
+    const sign = await startLocalSign({
+      dataDir: workspace(),
+      migrationsFolder: MIGRATIONS,
+      port: 0,
+    });
+    running.push(sign);
+    const port = Number(new URL(sign.url).port);
+    const { request } = await import('node:http');
+    const status = (host: string) =>
+      new Promise<number>((resolve, reject) => {
+        const req = request(
+          { host: '127.0.0.1', port, path: '/health', headers: { host } },
+          (res) => {
+            res.resume();
+            resolve(res.statusCode ?? 0);
+          },
+        );
+        req.on('error', reject);
+        req.end();
+      });
+    expect(await status(`evil.example:${port}`)).toBe(421);
+    expect(await status(`127.0.0.1:${port}`)).toBe(200);
+  });
+
   it('keeps the same token and the same seal certificate across a restart', async () => {
     const dir = workspace();
     const org = '22222222-2222-4222-8222-222222222222';

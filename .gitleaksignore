@@ -1,0 +1,6 @@
+# Findings reviewed and known not to be secrets. One fingerprint per line; say why above it.
+#
+# A fabricated 43-character base64url string in a unit test of log redaction (PR #141), written as
+# a literal in that commit. It has never been a credential of any kind; the test now builds it at
+# runtime so no literal of that shape remains.
+fa2653e2d148762cdd818c0ee2f749a88420428a:apps/api-forms/src/log-redaction.test.ts:generic-api-key:71

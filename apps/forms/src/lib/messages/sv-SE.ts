@@ -358,6 +358,12 @@ export const svSE: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om samma e-postadress får svara mer än en gång.',
   'settings.duplicateControl.email': 'Ett svar per e-postadress',
   'settings.duplicateControl.none': 'Hur många som helst',
+  'settings.identity':
+    'Erbjud bekräftelse med e-legitimation efter inskick (frivilligt för personen)',
+  'settings.identityHint':
+    'Svaren sparas först; bekräftelsen är ett steg man kan ta eller hoppa över. Där ingen leverantör av e-legitimation är ansluten säger formuläret det och blir klart ändå.',
+  'settings.identityPaper':
+    'Inte på ett formulär gjort från papper: dess dokument är själva pappret, som inte har någon plats för en bekräftelse.',
 
   'public.progress': 'Steg {n} av {total}',
 
@@ -686,6 +692,49 @@ export const svSE: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Välj…',
+  'public.finished.sent': 'Dina svar har skickats till {organisation}.',
+  'public.document.preparing': 'Dokumentet förbereds…',
+  'public.document.ready': 'Ditt dokument är klart',
+  'public.document.unavailable': 'Ditt dokument är inte tillgängligt just nu',
+  'public.document.download': 'Ladda ner PDF',
+  'public.document.open': 'Öppna',
+  'public.document.email': 'Mejla det',
+  'public.document.failed': 'PDF:en kunde inte skapas just nu. Dina svar är sparade.',
+  'public.document.expired':
+    'Den här kopian finns inte längre kvar här. Dina svar är sparade under referens {reference}.',
+  'public.document.retry': 'Försök igen',
+  'public.email.title': 'Mejla dokumentet',
+  'public.email.draft': 'Öppna ett utkast i {program}',
+  'public.email.drafting': 'Öppnar {program}…',
+  'public.email.draftOpened':
+    'Utkastet är öppet i {program} med PDF:en bifogad. Fyll i mottagare och skicka därifrån.',
+  'public.email.draftFailed':
+    '{program} kunde inte öppna ett utkast. Använd något av sätten nedan i stället.',
+  'public.email.share': 'Dela eller mejla…',
+  'public.email.app': 'Öppna min e-postapp',
+  'public.email.attachNote':
+    'E-postappen öppnas med meddelandet skrivet. Bifoga {filename} själv innan du skickar – en webbsida kan inte bifoga filer i ett mejl.',
+  'public.email.copy': 'Kopiera meddelandet',
+  'public.email.copied': 'Kopierat',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Dokument: {filename}\nReferens: {reference}',
+  'public.again': 'Fyll i igen',
+  'public.eid.title': 'Bekräfta vem du är (valfritt)',
+  'public.eid.unavailable':
+    'Bekräftelse med e-legitimation finns inte för det här formuläret än. Inget mer behövs – ditt formulär är klart.',
+  'public.eid.offer':
+    'Du kan bekräfta vem du är med e-legitimation. Det är frivilligt: formuläret är redan skickat.',
+  'public.eid.testNote':
+    'Testläge: här används en utvecklingsleverantör, och ingens identitet kontrolleras.',
+  'public.eid.start': 'Bekräfta med e-legitimation',
+  'public.eid.waiting': 'Väntar på e-legitimationsappen…',
+  'public.eid.confirmed': 'Bekräftad som {name}. Det står nu i ditt dokument.',
+  'public.eid.confirmedTest':
+    'Testbekräftelse sparad. Den är ingen identitetskontroll, och det står i ditt dokument.',
+  'public.eid.already': 'Det här formuläret är redan bekräftat med e-legitimation.',
+  'public.eid.failed':
+    'Bekräftelsen med e-legitimation blev inte klar. Ditt formulär är fortfarande klart.',
+  'public.eid.retry': 'Försök igen',
 
   'validation.required': 'Fältet är obligatoriskt.',
   'validation.tooShort': 'Minst {min} tecken.',
@@ -778,6 +827,7 @@ export const svSE: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'dess bild ligger någon annanstans på webben',
   'import.reason.nested-group': 'ett upprepat block inuti ett annat',
   'import.reason.needs-limit': 'den anger aldrig hur många poster som tillåts',
+  'submissions.document': 'Dokument',
   'submissions.paper': 'Papper',
   'submissions.noPaper': 'Ifylld innan formuläret hade papper',
 

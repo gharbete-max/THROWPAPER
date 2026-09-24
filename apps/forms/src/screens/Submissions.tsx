@@ -174,6 +174,29 @@ export function Submissions({ formId }: { formId: string }) {
        * that has paper, and only once the submission is complete: a half-filled sheet is not a
        * document anybody wants returned.
        */
+      /*
+       * The finished document: the PDF the person who sent the form downloaded from their
+       * confirmation, so what the organisation keeps and what they keep are the same file. A form
+       * made from paper has the paper column below instead — for it, the paper *is* the document.
+       */
+      ...(definition && !definition.paper
+        ? [
+            {
+              id: 'document',
+              header: t('submissions.document'),
+              enableSorting: false,
+              cell: (info) =>
+                info.row.original['status'] === 'complete' ? (
+                  <AttachmentLink
+                    submissionId={String(info.row.original['__submissionId'])}
+                    document
+                    filename={`${String(info.row.original['reference'])}.pdf`}
+                    icon="download"
+                  />
+                ) : null,
+            } satisfies ColumnDef<Record<string, unknown>>,
+          ]
+        : []),
       ...(definition?.paper
         ? [
             {
@@ -205,7 +228,7 @@ export function Submissions({ formId }: { formId: string }) {
           ]
         : []),
     ],
-    [exportColumns, locale, collator, fileFields, definition?.paper, t],
+    [exportColumns, locale, collator, fileFields, definition, t],
   );
 
   const table = useReactTable({

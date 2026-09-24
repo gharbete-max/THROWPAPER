@@ -135,6 +135,44 @@ describe('the desktop server', { timeout: 60_000 }, () => {
     }
   });
 
+  /**
+   * DNS rebinding: a web page in the person's browser that has pointed its own hostname at
+   * 127.0.0.1 is "same origin" to the browser, so CORS never stops it. The Host header still names
+   * the attacker's site, and that is what the server refuses. `loopback-host.ts` has the story.
+   */
+  it('answers only to its own loopback name, so a rebinding web page cannot drive it', async () => {
+    const server = await startDesktopServer({
+      dataDir: join(scratch, 'rebinding'),
+      webDir: await webDir(),
+      migrationsFolder,
+      port: 0,
+      renderer: fakeRenderer,
+      mailDraft: null,
+    });
+    try {
+      const port = new URL(server.url).port;
+      const { request } = await import('node:http');
+      const get = (host: string) =>
+        new Promise<number>((resolve, reject) => {
+          const req = request(
+            { host: '127.0.0.1', port, path: '/public/forms/anything', headers: { host } },
+            (res) => {
+              res.resume();
+              resolve(res.statusCode ?? 0);
+            },
+          );
+          req.on('error', reject);
+          req.end();
+        });
+      expect(await get(`evil.example:${port}`)).toBe(421);
+      expect(await get('127.0.0.1')).toBe(421);
+      expect(await get(`127.0.0.1:${port}`)).toBe(404);
+      expect(await get(`localhost:${port}`)).toBe(404);
+    } finally {
+      await server.close();
+    }
+  });
+
   it('keeps its secrets across restarts, so sessions and download links survive them', async () => {
     const path = join(scratch, 'secrets.json');
     const first = await loadOrCreateSecrets(path);

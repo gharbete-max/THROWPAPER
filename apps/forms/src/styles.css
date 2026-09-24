@@ -152,7 +152,7 @@ legend {
  * so this swap never reached the page and no filled button in the product had a hover state at
  * all. Only the shadow moved. Matching that selector's exclusions makes this (0,5,0), which is
  * also the truthful scope: quiet and danger have their own hovers below. */
-.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
   background: var(--tp-colour-text);
   border-color: var(--tp-colour-text);
 }
@@ -488,6 +488,98 @@ a:focus-visible {
 
 .door__row + .door__row {
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+/*
+ * The finished document on the confirmation screen.
+ *
+ * A panel inside the card rather than another card: it is part of the same moment ("it went, and
+ * here is your copy"), not a second thing to read. The file reads as a file — an icon, its name —
+ * because "Your document is ready" next to nothing looks like a promise, not an object.
+ */
+.finished {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.finished__file {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  min-inline-size: 0;
+}
+
+.finished__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.finished__name {
+  min-inline-size: 0;
+}
+
+.finished__name h3 {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+/* A title in any language can be long; the name wraps rather than pushing the panel wide. */
+.finished__filename {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.finished__email {
+  padding-block-start: calc(var(--tp-spacing-unit) * 2);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.finished__email h4 {
+  margin: 0;
+}
+
+/* On a phone the actions stack full width: three buttons wrapping into a ragged row read as
+ * leftovers, and a thumb wants the whole width of the first one. */
+@media (max-width: 480px) {
+  .finished__actions > .button,
+  .finished__email .row > .button {
+    flex: 1 1 100%;
+  }
+}
+
+/* A quiet button that has opened something ("Email it") shows that it is open. */
+.finished .button--quiet[aria-expanded='true'] {
+  background: var(--tp-colour-background);
+  border-color: var(--tp-colour-accent-ink);
+}
+
+/* The optional e-ID step: the same panel as the document, so the two read as one moment. */
+.identity-step {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.identity-step h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+.identity-step p {
+  margin: 0;
 }
 
 /*
@@ -2911,11 +3003,11 @@ p {
 /* The one exception to "no shadows": a filled primary lifts by a hair so that the single most
  * important control on a screen is findable without reading it. Tied to the primary colour rather
  * than to black, so it stays honest against a dark palette. */
-.button:not(.button--quiet):not(.button--danger) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
   box-shadow: 0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
 }
 
-.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
   box-shadow: 0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
 }
 
@@ -3649,7 +3741,7 @@ p {
  * Scoped to the filled tier only. Quiet and danger are their own tiers and are not what
  * buttonStyle is describing.
  */
-.button:not(.button--quiet):not(.button--danger) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
   background: var(--tp-button-background);
   color: var(--tp-button-text);
   border-color: var(--tp-button-border);
@@ -5205,13 +5297,13 @@ body:has(.app) > #root {
  * on are lit from the same direction. This is the whole trick of the material: it is not the blur,
  * it is agreeing about where the light is.
  */
-.button:not(.button--quiet):not(.button--danger) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
   box-shadow:
     inset 0 1px 0 var(--tp-glass-hairline),
     0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
 }
 
-.button:not(.button--quiet):not(.button--danger):hover:not(:disabled) {
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
   box-shadow:
     inset 0 1px 0 var(--tp-glass-hairline),
     0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);

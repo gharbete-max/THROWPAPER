@@ -357,6 +357,11 @@ export const nbNO: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om samme e-postadresse kan svare mer enn én gang.',
   'settings.duplicateControl.email': 'Ett svar per e-postadresse',
   'settings.duplicateControl.none': 'Et vilkårlig antall svar',
+  'settings.identity': 'Tilby bekreftelse med e-ID etter innsending (valgfritt for personen)',
+  'settings.identityHint':
+    'Svarene lagres først; bekreftelsen er et steg man kan ta eller hoppe over. Der ingen e-ID-leverandør er tilkoblet, sier skjemaet det og blir ferdig likevel.',
+  'settings.identityPaper':
+    'Ikke på et skjema laget fra papir: dokumentet er selve papiret, som ikke har plass til en bekreftelse.',
 
   'public.progress': 'Steg {n} av {total}',
 
@@ -685,6 +690,48 @@ export const nbNO: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nei',
   'public.choose': 'Velg…',
+  'public.finished.sent': 'Svarene dine er sendt til {organisation}.',
+  'public.document.preparing': 'Dokumentet klargjøres…',
+  'public.document.ready': 'Dokumentet ditt er klart',
+  'public.document.unavailable': 'Dokumentet ditt er ikke tilgjengelig akkurat nå',
+  'public.document.download': 'Last ned PDF',
+  'public.document.open': 'Åpne',
+  'public.document.email': 'Send det på e-post',
+  'public.document.failed': 'PDF-en kunne ikke lages akkurat nå. Svarene dine er lagret.',
+  'public.document.expired':
+    'Denne kopien er ikke lenger tilgjengelig her. Svarene dine er lagret under referanse {reference}.',
+  'public.document.retry': 'Prøv igjen',
+  'public.email.title': 'Send dokumentet på e-post',
+  'public.email.draft': 'Åpne et utkast i {program}',
+  'public.email.drafting': 'Åpner {program}…',
+  'public.email.draftOpened':
+    'Utkastet er åpent i {program} med PDF-en vedlagt. Legg til mottaker og send det derfra.',
+  'public.email.draftFailed':
+    '{program} kunne ikke åpne et utkast. Bruk en av måtene nedenfor i stedet.',
+  'public.email.share': 'Del eller send på e-post…',
+  'public.email.app': 'Åpne e-postappen min',
+  'public.email.attachNote':
+    'E-postappen åpnes med meldingen skrevet. Legg ved {filename} selv før du sender – en nettside kan ikke legge ved filer i en e-post.',
+  'public.email.copy': 'Kopier meldingen',
+  'public.email.copied': 'Kopiert',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Dokument: {filename}\nReferanse: {reference}',
+  'public.again': 'Fyll ut igjen',
+  'public.eid.title': 'Bekreft hvem du er (valgfritt)',
+  'public.eid.unavailable':
+    'Bekreftelse med e-ID er ikke tilgjengelig for dette skjemaet ennå. Ingenting mer trengs – skjemaet ditt er ferdig.',
+  'public.eid.offer':
+    'Du kan bekrefte hvem du er med e-ID. Det er valgfritt: skjemaet er allerede sendt.',
+  'public.eid.testNote':
+    'Testmodus: her brukes en utviklingsleverandør, og ingens identitet kontrolleres.',
+  'public.eid.start': 'Bekreft med e-ID',
+  'public.eid.waiting': 'Venter på e-ID-appen…',
+  'public.eid.confirmed': 'Bekreftet som {name}. Det står nå i dokumentet ditt.',
+  'public.eid.confirmedTest':
+    'Testbekreftelse lagret. Den er ingen identitetskontroll, og det står i dokumentet ditt.',
+  'public.eid.already': 'Dette skjemaet er allerede bekreftet med e-ID.',
+  'public.eid.failed': 'Bekreftelsen med e-ID ble ikke fullført. Skjemaet ditt er fortsatt ferdig.',
+  'public.eid.retry': 'Prøv igjen',
 
   'validation.required': 'Dette feltet er påkrevd.',
   'validation.tooShort': 'Minst {min} tegn.',
@@ -778,6 +825,7 @@ export const nbNO: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'bildet ligger et annet sted på nettet',
   'import.reason.nested-group': 'en gjentatt blokk inne i en annen',
   'import.reason.needs-limit': 'den sier aldri hvor mange oppføringer som tillates',
+  'submissions.document': 'Dokument',
   'submissions.paper': 'Papir',
   'submissions.noPaper': 'Fylt ut før skjemaet hadde papir',
 

@@ -69,7 +69,8 @@ describe('sending through the mail program on this computer', () => {
     await provider.send(hostile);
 
     const call = calls[0]!;
-    expect(call.command).toBe('powershell.exe');
+    // By absolute path: a powershell.exe in the current folder must never be the one that runs.
+    expect(call.command).toMatch(/\\System32\\WindowsPowerShell\\v1\.0\\powershell\.exe$/);
     expect(call.args[call.args.length - 1]).toBe(WINDOWS_OUTLOOK_SCRIPT);
     // Nothing the message says appears on the command line.
     expect(call.args.join(' ')).not.toContain('Åsa');

@@ -27,6 +27,7 @@ export const SETTINGS_CONTROLS: Array<keyof FormSettings> = [
   'allowSaveAndResume',
   'duplicateControl',
   'locales',
+  'identity',
 ];
 
 export function FormSettingsPanel({
@@ -155,6 +156,20 @@ export function FormSettingsPanel({
         </select>
         <span className="small muted">{t('settings.duplicateControlHint')}</span>
       </label>
+
+      <label className="field field--inline">
+        <input
+          type="checkbox"
+          checked={settings.identity === 'optional' && !definition.paper}
+          disabled={definition.paper !== undefined}
+          onChange={(event) => patch({ identity: event.target.checked ? 'optional' : 'off' })}
+          aria-describedby="settings-identity-hint"
+        />
+        <span>{t('settings.identity')}</span>
+      </label>
+      <p className="small muted" id="settings-identity-hint">
+        {definition.paper ? t('settings.identityPaper') : t('settings.identityHint')}
+      </p>
     </section>
   );
 }

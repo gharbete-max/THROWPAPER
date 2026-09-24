@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
-import { pagesToPdf } from './scan.js';
+import { PageTooLarge, pagesToPdf } from './scan.js';
 
 /** A 1×1 PNG and the smallest valid JPEG, so the test needs no image library. */
 const PNG_1x1 =
@@ -49,6 +49,41 @@ describe('scanned pages become a PDF', () => {
   it('refuses a page that is not the image it claims to be', async () => {
     await expect(
       pagesToPdf([{ contentType: 'image/jpeg', base64: Buffer.from('hello').toString('base64') }]),
+    ).rejects.toThrow();
+  });
+});
+
+describe('a page that claims to be enormous', () => {
+  /** A PNG header saying `width × height`, with no pixel data at all: the shape of a bomb. */
+  function pngClaiming(width: number, height: number): string {
+    const bytes = Buffer.from(PNG_1x1, 'base64');
+    bytes.writeUInt32BE(width, 16);
+    bytes.writeUInt32BE(height, 20);
+    return bytes.toString('base64');
+  }
+
+  it('is refused from its header, before anything is decoded', async () => {
+    const started = Date.now();
+    await expect(
+      pagesToPdf([{ contentType: 'image/png', base64: pngClaiming(20_000, 20_000) }]),
+    ).rejects.toBeInstanceOf(PageTooLarge);
+    expect(Date.now() - started).toBeLessThan(1000);
+  });
+
+  it('is refused as a JPEG too, and a real page size is not', async () => {
+    await expect(
+      pagesToPdf([{ contentType: 'image/jpeg', base64: await jpeg(9000, 9000) }]),
+    ).rejects.toBeInstanceOf(PageTooLarge);
+    await expect(
+      pagesToPdf([{ contentType: 'image/jpeg', base64: await jpeg(3000, 4000) }]),
+    ).resolves.toBeInstanceOf(Buffer);
+  });
+
+  it('refuses a "PNG" with no PNG header', async () => {
+    await expect(
+      pagesToPdf([
+        { contentType: 'image/png', base64: Buffer.from('not a png').toString('base64') },
+      ]),
     ).rejects.toThrow();
   });
 });

@@ -148,7 +148,10 @@ test('the same address cannot register twice', async ({ page }) => {
   const email = uniqueEmail('dupe');
 
   for (const attempt of [1, 2]) {
-    await open(page, 'sv-SE');
+    // The second attempt starts again from the confirmation, as a person in the same tab would:
+    // reopening the address you are already on is a reload, and a reload keeps the confirmation.
+    if (attempt === 1) await open(page, 'sv-SE');
+    else await page.getByRole('button', { name: 'Fyll i igen' }).click();
     await page.getByLabel(/Namn/).fill(`Försök ${attempt}`);
     await page.getByLabel(/E-post/).fill(email);
     await page.getByRole('button', { name: 'Nästa' }).click();

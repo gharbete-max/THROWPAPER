@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { BrowserWindow as ElectronBrowserWindow } from 'electron';
+import { pathToFileURL } from 'node:url';
+import type { BrowserWindow as ElectronBrowserWindow, Session } from 'electron';
 import { defaultTokens, type TokenSet } from '@tp/tokens';
 import { printMargins, toPdfFooterTemplate, toPdfHeaderTemplate } from '@tp/tokens/pdf';
 import type { PdfRenderer } from '@tp/api-forms/desktop';
@@ -25,6 +26,21 @@ export interface ElectronPdfDeps {
   /** Inside the workspace, so nothing personal lands in the system temp folder. */
   scratchDir: string;
   tokens?: TokenSet;
+  /**
+   * A session of the renderer's own (`session.fromPartition`), whose every request but the page
+   * being printed is cancelled — see `renderRequestAllowed`. Absent only in tests.
+   */
+  session?: Session;
+}
+
+/**
+ * Whether the hidden print window may load this URL: the one page file being printed, and inline
+ * `data:` (fonts, signatures, QR codes are all inline). Nothing else — no network, and no other
+ * `file://`: the page carries what strangers typed, and one missed escape must not be able to read
+ * the workspace (`secrets.json` sits beside it) or send anything anywhere.
+ */
+export function renderRequestAllowed(url: string, pages: ReadonlySet<string>): boolean {
+  return url.startsWith('data:') || pages.has(url);
 }
 
 const MM_PER_INCH = 25.4;
@@ -41,6 +57,11 @@ export function toInches(css: string): number {
 
 export function createElectronPdfRenderer(deps: ElectronPdfDeps): PdfRenderer {
   const tokens = deps.tokens ?? defaultTokens;
+  /** The page files currently being printed, as URLs — the only files the window may load. */
+  const pages = new Set<string>();
+  deps.session?.webRequest.onBeforeRequest((details, callback) => {
+    callback({ cancel: !renderRequestAllowed(details.url, pages) });
+  });
 
   async function withPage<T>(
     html: string,
@@ -49,9 +70,16 @@ export function createElectronPdfRenderer(deps: ElectronPdfDeps): PdfRenderer {
     await mkdir(deps.scratchDir, { recursive: true });
     const file = join(deps.scratchDir, `render-${randomUUID()}.html`);
     await writeFile(file, html, { encoding: 'utf8', mode: 0o600 });
+    const page = pathToFileURL(file).href;
+    pages.add(page);
     const window = new deps.BrowserWindow({
       show: false,
-      webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false },
+      webPreferences: {
+        sandbox: true,
+        contextIsolation: true,
+        nodeIntegration: false,
+        ...(deps.session ? { session: deps.session } : {}),
+      },
     });
     try {
       await window.loadFile(file);
@@ -61,6 +89,7 @@ export function createElectronPdfRenderer(deps: ElectronPdfDeps): PdfRenderer {
       return await use(window);
     } finally {
       window.destroy();
+      pages.delete(page);
       await rm(file, { force: true });
     }
   }

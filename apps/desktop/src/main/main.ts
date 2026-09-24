@@ -9,7 +9,7 @@
  */
 import { cp, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   BrowserWindow,
   Menu,
@@ -34,6 +34,12 @@ import { CHANNELS, type PanelView, type Result, type SettingsForm } from '../bri
 import { fill, messagesFor } from '../messages.js';
 import { createElectronPdfRenderer } from './pdf.js';
 import { applySettingsForm, toPanelSettings } from './settings-form.js';
+import {
+  classifyNavigation,
+  classifyOpen,
+  externalAllowed,
+  permissionAllowed,
+} from './navigation.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 /**
@@ -85,6 +91,8 @@ async function startServer(): Promise<DesktopServer> {
     defaultRenderer: createElectronPdfRenderer({
       BrowserWindow,
       scratchDir: join(dataDir, 'tmp'),
+      // Its own session, where nothing but the page being printed may load (`pdf.ts`).
+      session: session.fromPartition('loppa-pdf-render'),
     }),
   });
 }
@@ -101,12 +109,56 @@ async function restartServer(): Promise<void> {
   mainWindow?.webContents.reload();
 }
 
-function isOurs(url: string): boolean {
-  return (
-    (server !== null && url.startsWith(`${server.url}/`)) ||
-    // The signing page opens in a window of ours: signing at this computer is the offline case.
-    (sign !== null && url.startsWith(`${sign.url}/`))
-  );
+/** Our two loopback origins: Forms, and Sign beside it (signing at this computer is offline). */
+function ourOrigins(): string[] {
+  return [server?.url, sign?.url].filter((url): url is string => typeof url === 'string');
+}
+
+/** The settings panel's own page. Only it may use the bridge. */
+const panelUrl = pathToFileURL(join(resources, 'panel', 'index.html')).href;
+
+function fromPanel(event: Electron.IpcMainInvokeEvent | Electron.IpcMainEvent): boolean {
+  const url = event.senderFrame?.url ?? '';
+  return url === panelUrl || url.startsWith(`${panelUrl}?`);
+}
+
+function openOutside(url: string): void {
+  if (externalAllowed(url)) void shell.openExternal(url);
+}
+
+/**
+ * The same rules for every window the app ever has — the main window, a form preview it opens, the
+ * PDF a page opens, the settings panel (`navigation.ts`). Attached here rather than to one window,
+ * because a rule on one window is no rule on the window it opens.
+ */
+function guardEveryWindow(): void {
+  app.on('web-contents-created', (_event, contents) => {
+    contents.setWindowOpenHandler(({ url }) => {
+      const opening = classifyOpen(url, ourOrigins());
+      if (opening.action === 'window') {
+        return {
+          action: 'allow',
+          overrideBrowserWindowOptions: {
+            webPreferences: {
+              contextIsolation: true,
+              sandbox: true,
+              nodeIntegration: false,
+              // Chromium's PDF viewer, for the finished document's "Open"; nothing else needs it.
+              plugins: opening.pdfViewer,
+            },
+          },
+        };
+      }
+      if (opening.action === 'external') openOutside(url);
+      return { action: 'deny' };
+    });
+    contents.on('will-navigate', (event, url) => {
+      const verdict = classifyNavigation(contents.getURL(), url, ourOrigins());
+      if (verdict === 'allow') return;
+      event.preventDefault();
+      if (verdict === 'external') openOutside(url);
+    });
+  });
 }
 
 async function openMainWindow(): Promise<void> {
@@ -132,20 +184,8 @@ async function openMainWindow(): Promise<void> {
     mainWindow = null;
   });
 
-  // Links out of the product — a help page, a sender's website — go to the user's browser. Our
-  // own pages that ask for a new window (a public form preview, a PDF) open in one of ours.
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (isOurs(url)) return { action: 'allow' };
-    void shell.openExternal(url);
-    return { action: 'deny' };
-  });
-  mainWindow.webContents.on('will-navigate', (event, url) => {
-    if (!isOurs(url)) {
-      event.preventDefault();
-      void shell.openExternal(url);
-    }
-  });
-
+  // Links out of the product go to the user's browser; our own pages that ask for a new window (a
+  // form preview, a PDF) open in one of ours. The rules are `guardEveryWindow`'s, for every window.
   await mainWindow.loadURL(link);
 }
 
@@ -235,7 +275,7 @@ function buildMenu(): void {
           label: t.menuOpenInBrowser,
           click: async () => {
             const link = await server?.signInLink();
-            if (link) void shell.openExternal(link);
+            if (link) openOutside(link);
           },
         },
         { type: 'separator' },
@@ -261,8 +301,11 @@ async function replacePanelWithMain(): Promise<void> {
 
 function registerIpc(): void {
   const fail = (error: unknown): Result => ({ ok: false, error: (error as Error).message });
+  const refused: Result = { ok: false, error: 'not-the-panel' };
 
   ipcMain.handle(CHANNELS.state, async (event) => {
+    // The bridge answers the settings panel and nothing else — not a page that got into a window.
+    if (!fromPanel(event)) throw new Error('not-the-panel');
     const view =
       new URL(event.sender.getURL()).searchParams.get('view') === 'setup' ? 'setup' : 'settings';
     const settings = await readSettings(workspacePaths(dataDir).settings);
@@ -275,7 +318,8 @@ function registerIpc(): void {
     };
   });
 
-  ipcMain.handle(CHANNELS.bootstrap, async (_event, owner: unknown): Promise<Result> => {
+  ipcMain.handle(CHANNELS.bootstrap, async (event, owner: unknown): Promise<Result> => {
+    if (!fromPanel(event)) return refused;
     try {
       const parsed = WorkspaceOwner.parse({ ...(owner as object), locale: lang });
       if (!server || !(await server.bootstrap(parsed)))
@@ -289,7 +333,8 @@ function registerIpc(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.loadDemo, async (): Promise<Result> => {
+  ipcMain.handle(CHANNELS.loadDemo, async (event): Promise<Result> => {
+    if (!fromPanel(event)) return refused;
     try {
       if (!server || !(await server.loadDemo())) return { ok: false, error: 'already-set-up' };
       await restartServer();
@@ -300,7 +345,8 @@ function registerIpc(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.saveSettings, async (_event, form: SettingsForm): Promise<Result> => {
+  ipcMain.handle(CHANNELS.saveSettings, async (event, form: SettingsForm): Promise<Result> => {
+    if (!fromPanel(event)) return refused;
     try {
       const paths = workspacePaths(dataDir);
       const applied = applySettingsForm(await readSettings(paths.settings), form, protect);
@@ -313,17 +359,25 @@ function registerIpc(): void {
     }
   });
 
-  ipcMain.on(CHANNELS.closePanel, () => panelWindow?.close());
+  ipcMain.on(CHANNELS.closePanel, (event) => {
+    if (fromPanel(event)) panelWindow?.close();
+  });
 }
 
 /**
  * The camera (QR at the door, photographing a paper form) is the one device permission the
- * product uses. Granted to our own origin, refused to anything else.
+ * product uses: video only, for the frame of ours that asked — plus writing to the clipboard
+ * (`navigation.ts`). The check handler
+ * answers the same way, so a page cannot learn a permission is granted that it could not request.
  */
 function limitPermissions(): void {
-  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
-    callback(permission === 'media' && isOurs(webContents.getURL()));
+  session.defaultSession.setPermissionRequestHandler((_contents, permission, callback, details) => {
+    const mediaTypes = 'mediaTypes' in details ? details.mediaTypes : [];
+    callback(permissionAllowed(permission, details.requestingUrl, mediaTypes ?? [], ourOrigins()));
   });
+  session.defaultSession.setPermissionCheckHandler((_contents, permission, requestingOrigin) =>
+    permissionAllowed(permission, requestingOrigin, undefined, ourOrigins()),
+  );
 }
 
 if (!app.requestSingleInstanceLock()) {
@@ -339,13 +393,21 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   app.on('window-all-closed', () => app.quit());
-  app.on('before-quit', () => {
-    void server?.close();
-    void sign?.close();
+  /*
+   * Quitting waits for both databases to close. PGlite writes its files on close, and a process
+   * that exits before that has finished can leave the last minutes of work unflushed.
+   */
+  let closing = false;
+  app.on('before-quit', (event) => {
+    if (closing) return;
+    closing = true;
+    event.preventDefault();
+    void Promise.allSettled([server?.close(), sign?.close()]).finally(() => app.quit());
   });
 
   void app.whenReady().then(async () => {
     try {
+      guardEveryWindow();
       buildMenu();
       registerIpc();
       limitPermissions();

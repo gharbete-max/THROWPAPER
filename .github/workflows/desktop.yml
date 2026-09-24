@@ -31,6 +31,17 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
+      # A `desktop-v1.2.3` tag must name the version the app is built as (apps/desktop/package.json):
+      # otherwise the release would be titled 1.2.3 and carry files that report another version.
+      - name: Tag matches the app's version
+        if: startsWith(github.ref, 'refs/tags/desktop-v')
+        shell: bash
+        run: |
+          v=$(node -p "require('./apps/desktop/package.json').version")
+          if [ "${GITHUB_REF_NAME#desktop-v}" != "$v" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match apps/desktop/package.json version $v"
+            exit 1
+          fi
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -43,6 +54,20 @@ jobs:
       - run: pnpm --filter @tp/forms build
       # Sign runs beside Forms on the desktop; its signing page ships in the app.
       - run: pnpm --filter @tp/sign build
+      # Code signing, the moment the owner adds a certificate (LAUNCH-CHECKLIST §6). electron-builder
+      # signs when CSC_LINK is set; an empty secret must not set it, or it tries and fails.
+      - name: Signing certificate, if there is one
+        shell: bash
+        env:
+          LINK: ${{ secrets.WIN_CSC_LINK }}
+          PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+        run: |
+          if [ -n "$LINK" ]; then
+            { echo "CSC_LINK=$LINK"; echo "CSC_KEY_PASSWORD=$PASSWORD"; } >> "$GITHUB_ENV"
+            echo "Signing with the configured certificate."
+          else
+            echo "No certificate configured: the build is unsigned, and the release says so."
+          fi
       - run: pnpm --filter @tp/desktop package:win
 
       # An installer that builds is not an app that starts. Launch the unpacked Loppa.exe against a
@@ -75,6 +100,8 @@ jobs:
           path: |
             apps/desktop/release/Loppa-Setup-*.exe
             apps/desktop/release/Loppa-*-portable.exe
+          # A renamed file must fail here, not publish a release with a hole in it.
+          if-no-files-found: error
           retention-days: 14
 
   macos:
@@ -82,6 +109,17 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
+      # A `desktop-v1.2.3` tag must name the version the app is built as (apps/desktop/package.json):
+      # otherwise the release would be titled 1.2.3 and carry files that report another version.
+      - name: Tag matches the app's version
+        if: startsWith(github.ref, 'refs/tags/desktop-v')
+        shell: bash
+        run: |
+          v=$(node -p "require('./apps/desktop/package.json').version")
+          if [ "${GITHUB_REF_NAME#desktop-v}" != "$v" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match apps/desktop/package.json version $v"
+            exit 1
+          fi
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -101,7 +139,9 @@ jobs:
         run: |
           profile="$RUNNER_TEMP/loppa-profile"
           app="apps/desktop/release/mac-arm64/Loppa.app/Contents/MacOS/Loppa"
-          codesign --verify --verbose "apps/desktop/release/mac-arm64/Loppa.app"
+          # Deep and strict: the fuses are flipped after the ad-hoc signature, and a shallow
+          # check passed a bundle whose inner binary no longer matched it.
+          codesign --verify --deep --strict --verbose=2 "apps/desktop/release/mac-arm64/Loppa.app"
           "$app" --user-data-dir="$profile" > "$RUNNER_TEMP/loppa.log" 2>&1 &
           pid=$!
           ok=0
@@ -119,6 +159,7 @@ jobs:
         with:
           name: loppa-macos
           path: apps/desktop/release/Loppa-*.dmg
+          if-no-files-found: error
           retention-days: 14
 
   release:
@@ -133,13 +174,50 @@ jobs:
           pattern: loppa-*
           merge-multiple: true
           path: dist
+      # Stable names, so the README's links (releases/latest/download/<name>) keep working from one
+      # release to the next; the version is the release's tag. Checksums beside them, so a download
+      # can be checked against what this workflow built.
+      - name: Stable names and checksums
+        working-directory: dist
+        run: |
+          set -euo pipefail
+          mv Loppa-Setup-*.exe Loppa-Windows-Setup.exe
+          mv Loppa-*-portable.exe Loppa-Windows-Portable.exe
+          mv Loppa-*-arm64.dmg Loppa-macOS-AppleSilicon.dmg
+          mv Loppa-*-x64.dmg Loppa-macOS-Intel.dmg
+          sha256sum Loppa-* > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          ls -la
+
       # Unsigned (Windows) and ad-hoc signed, not notarised (macOS) until the owner's certificates
-      # exist (LAUNCH-CHECKLIST §6); the release notes say so, because SmartScreen and Gatekeeper will.
+      # exist (LAUNCH-CHECKLIST §6); the notes say so, because SmartScreen and Gatekeeper will.
+      # Created as a draft with every file attached, then published — never a public release that
+      # is still missing half its files.
       - name: Publish the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/*.exe dist/*.dmg \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "Loppa desktop ${GITHUB_REF_NAME#desktop-v}" \
-            --notes "Windows: installer (Loppa-Setup) and portable build — not yet code-signed, so SmartScreen warns on first run. macOS: Loppa-*-arm64.dmg for Apple Silicon, Loppa-*-x64.dmg for Intel — not yet notarised, so the first time, right-click Loppa and choose Open. See docs/adr/0016-desktop-edition.md."
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#desktop-v}"
+          cat > notes.md <<NOTES
+          Loppa desktop ${version} for Windows and macOS — forms, finished documents and email on one computer, offline.
+
+          | Download | For |
+          | --- | --- |
+          | Loppa-Windows-Setup.exe | Windows 10 and 11 (x64), installs for your user |
+          | Loppa-Windows-Portable.exe | Windows, runs without installing |
+          | Loppa-macOS-AppleSilicon.dmg | Macs with an M-series chip |
+          | Loppa-macOS-Intel.dmg | Macs with an Intel chip |
+
+          **Not yet code-signed.** Windows SmartScreen warns on first run: choose *More info → Run anyway*. The Mac builds are ad-hoc signed and not notarised: the first time, right-click Loppa and choose *Open*. Signing waits on the publisher's certificates.
+
+          Check a download: compare \`shasum -a 256 <file>\` (macOS) or \`Get-FileHash <file>\` (Windows) with SHA256SUMS.txt.
+
+          Built from ${GITHUB_SHA} by the Desktop workflow. What works offline: docs/adr/0016-desktop-edition.md.
+          NOTES
+          gh release create "$GITHUB_REF_NAME" \
+            dist/Loppa-Windows-Setup.exe dist/Loppa-Windows-Portable.exe \
+            dist/Loppa-macOS-AppleSilicon.dmg dist/Loppa-macOS-Intel.dmg dist/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --draft \
+            --title "Loppa desktop ${version}" --notes-file notes.md
+          gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest

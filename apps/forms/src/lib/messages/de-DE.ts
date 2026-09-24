@@ -366,6 +366,12 @@ export const deDE: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Ob dieselbe E-Mail-Adresse mehr als einmal antworten darf.',
   'settings.duplicateControl.email': 'Eine Antwort pro E-Mail-Adresse',
   'settings.duplicateControl.none': 'Beliebig viele Antworten',
+  'settings.identity':
+    'Nach dem Senden eine Bestätigung per e-ID anbieten (freiwillig für die Person)',
+  'settings.identityHint':
+    'Die Antworten werden zuerst gespeichert; die Bestätigung ist ein Schritt, den man machen oder auslassen kann. Ist kein e-ID-Anbieter verbunden, sagt das Formular das und ist trotzdem fertig.',
+  'settings.identityPaper':
+    'Nicht bei einem Formular aus Papier: Sein Dokument ist das Papier selbst, das keinen Platz für eine Bestätigung hat.',
 
   'public.progress': 'Schritt {n} von {total}',
 
@@ -704,6 +710,50 @@ export const deDE: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nein',
   'public.choose': 'Wählen…',
+  'public.finished.sent': 'Ihre Antworten wurden an {organisation} gesendet.',
+  'public.document.preparing': 'Ihr Dokument wird vorbereitet…',
+  'public.document.ready': 'Ihr Dokument ist fertig',
+  'public.document.unavailable': 'Ihr Dokument ist gerade nicht verfügbar',
+  'public.document.download': 'PDF herunterladen',
+  'public.document.open': 'Öffnen',
+  'public.document.email': 'Per E-Mail senden',
+  'public.document.failed':
+    'Das PDF konnte gerade nicht erstellt werden. Ihre Antworten sind gespeichert.',
+  'public.document.expired':
+    'Diese Kopie ist hier nicht mehr verfügbar. Ihre Antworten sind unter der Referenz {reference} gespeichert.',
+  'public.document.retry': 'Erneut versuchen',
+  'public.email.title': 'Dokument per E-Mail senden',
+  'public.email.draft': 'Entwurf in {program} öffnen',
+  'public.email.drafting': '{program} wird geöffnet…',
+  'public.email.draftOpened':
+    'Der Entwurf ist in {program} geöffnet, das PDF ist angehängt. Empfänger eintragen und von dort senden.',
+  'public.email.draftFailed':
+    '{program} konnte keinen Entwurf öffnen. Nutzen Sie stattdessen einen der Wege unten.',
+  'public.email.share': 'Teilen oder per E-Mail senden…',
+  'public.email.app': 'Mein E-Mail-Programm öffnen',
+  'public.email.attachNote':
+    'Ihr E-Mail-Programm öffnet sich mit der fertigen Nachricht. Hängen Sie {filename} vor dem Senden selbst an – eine Webseite kann keine Dateien an eine E-Mail anhängen.',
+  'public.email.copy': 'Nachricht kopieren',
+  'public.email.copied': 'Kopiert',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Dokument: {filename}\nReferenz: {reference}',
+  'public.again': 'Erneut ausfüllen',
+  'public.eid.title': 'Bestätigen, wer Sie sind (optional)',
+  'public.eid.unavailable':
+    'Die Bestätigung per e-ID ist für dieses Formular noch nicht verfügbar. Mehr ist nicht nötig – Ihr Formular ist fertig.',
+  'public.eid.offer':
+    'Sie können mit e-ID bestätigen, wer Sie sind. Das ist freiwillig: Ihr Formular ist bereits gesendet.',
+  'public.eid.testNote':
+    'Testmodus: Hier wird ein Entwicklungsanbieter verwendet, und niemandes Identität wird geprüft.',
+  'public.eid.start': 'Mit e-ID bestätigen',
+  'public.eid.waiting': 'Warten auf die e-ID-App…',
+  'public.eid.confirmed': 'Bestätigt als {name}. Ihr Dokument sagt das jetzt.',
+  'public.eid.confirmedTest':
+    'Testbestätigung gespeichert. Sie ist keine Identitätsprüfung, und Ihr Dokument sagt das.',
+  'public.eid.already': 'Dieses Formular ist bereits mit e-ID bestätigt.',
+  'public.eid.failed':
+    'Die e-ID-Bestätigung wurde nicht abgeschlossen. Ihr Formular ist trotzdem fertig.',
+  'public.eid.retry': 'Erneut versuchen',
 
   'validation.required': 'Dieses Feld ist erforderlich.',
   'validation.tooShort': 'Mindestens {min} Zeichen.',
@@ -797,6 +847,7 @@ export const deDE: Record<MessageKey, string> = {
   'import.reason.needs-asset': 'sein Bild liegt anderswo im Netz',
   'import.reason.nested-group': 'ein wiederholter Block in einem anderen',
   'import.reason.needs-limit': 'er nennt nie, wie viele Einträge erlaubt sind',
+  'submissions.document': 'Dokument',
   'submissions.paper': 'Papier',
   'submissions.noPaper': 'Ausgefüllt, bevor das Formular Papier hatte',
 

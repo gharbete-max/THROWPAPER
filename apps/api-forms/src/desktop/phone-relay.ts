@@ -62,6 +62,8 @@ export interface PhoneRelay {
 
 export function createPhoneRelay(options: {
   app: () => FastifyInstance;
+  /** The `Host` to forward with: the server's own loopback name (`127.0.0.1:<port>`). */
+  host?: () => string;
   /** Open scan sessions; at zero, the relay stops. */
   active: () => number;
   address?: () => string | null;
@@ -94,6 +96,7 @@ export function createPhoneRelay(options: {
       // The app calls `/api/v1/...`; the routes are `/v1/...` (server.ts strips it the same way).
       url: url.startsWith('/api/') ? url.slice('/api'.length) : url,
       headers: {
+        ...(options.host ? { host: options.host() } : {}),
         ...(request.headers['content-type']
           ? { 'content-type': request.headers['content-type'] }
           : {}),

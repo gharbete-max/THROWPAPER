@@ -9,9 +9,11 @@ import { createPdfRenderer, type BrowserChoice, type PdfRenderer } from '../docu
 import type { MailProvider } from '../mail/provider.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from '../mail/smtp.js';
 import { createMailProgramProvider } from '../mail/outlook.js';
+import { createMailDrafter, type MailDrafter } from '../mail/draft.js';
 import { readSettings, type DesktopSettings } from './settings.js';
 import { createPhoneScanStore } from '../phone-scan/store.js';
 import { createPhoneRelay } from './phone-relay.js';
+import { guardLoopbackHost } from './loopback-host.js';
 import type { SignConnection } from '../signing/client.js';
 import {
   bootstrapWorkspace,
@@ -60,6 +62,12 @@ export interface StartDesktopOptions {
    * to. Absent, or answering null, the Signing screen says signing is not set up.
    */
   signing?: (organisationId: string, origin: string) => Promise<SignConnection | null>;
+  /**
+   * Overrides the mail program "Email document" opens a draft in. `null` offers none; the tests
+   * pass a recorder. Default: the one Settings names, else Apple Mail on a Mac, classic Outlook on
+   * Windows.
+   */
+  mailDraft?: MailDrafter | null;
   /** The address a phone reaches this machine on. Default: its private LAN address, if any. */
   phoneAddress?: () => string | null;
 }
@@ -194,6 +202,9 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
   const phoneScans = createPhoneScanStore();
   const relay = createPhoneRelay({
     app: () => app,
+    // The relay forwards in-process; it names this server's own loopback host, which is what the
+    // DNS-rebinding guard (`loopback-host.ts`) accepts. Its allow-list decides what a phone reaches.
+    host: () => new URL(url).host,
     active: () => phoneScans.active(),
     ...(options.phoneAddress ? { address: options.phoneAddress } : {}),
   });
@@ -220,7 +231,10 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       signing,
       phoneScans,
       phoneOrigin: () => relay.open(),
+      mailDraft:
+        options.mailDraft === undefined ? draftProgramFor(settings, paths) : options.mailDraft,
     });
+    guardLoopbackHost(app);
     await app.listen({ port, host: '127.0.0.1' });
   } catch (error) {
     await local.close();
@@ -253,4 +267,22 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       await local.close();
     },
   };
+}
+
+/**
+ * Which mail program "Email document" opens a draft in.
+ *
+ * The one the person chose to send through, when they chose one. Otherwise the one every Mac has,
+ * or classic Outlook on Windows — which may not be installed; the draft then fails with a sentence
+ * saying so, and the page falls back to download-and-attach. `null` off Windows and macOS.
+ */
+function draftProgramFor(settings: DesktopSettings, paths: WorkspacePaths): MailDrafter | null {
+  const mode = settings.mail.mode;
+  const program =
+    mode === 'outlook' || mode === 'apple-mail'
+      ? mode
+      : process.platform === 'darwin'
+        ? 'apple-mail'
+        : 'outlook';
+  return createMailDrafter({ program, platform: process.platform, scratchDir: paths.tmp });
 }

@@ -70,10 +70,10 @@ export function buildMimeMessage(mail: OutboundMail & { from: string }): string 
   const attachments = mail.attachments ?? [];
 
   const headers = [
-    `From: ${mail.from}`,
-    `To: ${mail.to}`,
+    `From: ${oneLine(mail.from)}`,
+    `To: ${oneLine(mail.to)}`,
     // Encoded, because a Swedish subject line is not ASCII and a raw one arrives as mojibake.
-    `Subject: ${encodeHeader(mail.subject)}`,
+    `Subject: ${encodeHeader(oneLine(mail.subject))}`,
     'MIME-Version: 1.0',
   ];
 
@@ -116,14 +116,29 @@ export function buildMimeMessage(mail: OutboundMail & { from: string }): string 
 }
 
 function attachmentPart(boundary: string, attachment: MailAttachment): string[] {
+  const filename = oneLine(attachment.filename).replace(/["\\]/g, '_');
   return [
     `--${boundary}`,
-    `Content-Type: ${attachment.contentType}; name="${attachment.filename}"`,
+    `Content-Type: ${oneLine(attachment.contentType)}; name="${filename}"`,
     'Content-Transfer-Encoding: base64',
-    `Content-Disposition: attachment; filename="${attachment.filename}"`,
+    `Content-Disposition: attachment; filename="${filename}"`,
     '',
     wrap(attachment.content.toString('base64')),
   ];
+}
+
+/**
+ * A header value on one line, whatever it was given.
+ *
+ * Subjects are built from things people type — a contact form's name field (no sign-in needed), a
+ * document's name, an event's name — and an ASCII subject went into the header as it was. A line
+ * break in it ended the header: `x\r\nContent-Type: text/html\r\n\r\n<a href=…>` became a message
+ * of the sender's choosing, from the organisation's verified domain. Every control character is a
+ * space here, before any encoding, for every sender (SES, SMTP, the outbox).
+ */
+export function oneLine(value: string): string {
+  // eslint-disable-next-line no-control-regex
+  return value.replace(/[\x00-\x1f\x7f]+/g, ' ');
 }
 
 /** RFC 2047 encoded word, so å ä ö in a subject line survive. */

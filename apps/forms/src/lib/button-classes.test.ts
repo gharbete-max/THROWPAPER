@@ -55,3 +55,17 @@ describe('button tiers', () => {
     ]);
   });
 });
+
+/**
+ * The bare tier is text. Every filled-tier rule lists the tiers it does not apply to, and the list
+ * once lacked `button--bare` — so "Fill in again" and the wizard's "Build it myself" were painted
+ * as a second primary, the one thing the three tiers exist to prevent.
+ */
+describe('the filled tier', () => {
+  it('never reaches a bare button', () => {
+    const css = readFileSync(new URL('../styles.css', import.meta.url), 'utf8');
+    const filled = css.match(/^\.button:not\(\.button--quiet\)[^{]*\{/gm) ?? [];
+    expect(filled.length).toBeGreaterThan(0);
+    for (const selector of filled) expect(selector).toContain(':not(.button--bare)');
+  });
+});

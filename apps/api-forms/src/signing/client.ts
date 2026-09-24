@@ -5,7 +5,11 @@ import {
   DeclarationView,
   EnvelopeStatusResponse,
   SealedDocumentResponse,
+  IdentityMethodsResponse,
+  IdentityResultResponse,
+  IdentitySessionResponse,
   type CreateEnvelopeRequest,
+  type StartIdentityRequest,
   type WriteDeclarationRequest,
 } from '@tp/shared/contract';
 
@@ -34,6 +38,12 @@ export interface SignClient {
   writeDeclaration(request: WriteDeclarationRequest): Promise<DeclarationView>;
   /** §5.4: does this raw body carry Sign's signature for our token? */
   verifyHook(rawBody: string, header: string | undefined): boolean;
+  /** §5.6: the identity methods Sign can offer. Empty until a provider is configured there. */
+  identityMethods(): Promise<IdentityMethodsResponse>;
+  /** §5.6: start confirming who somebody is, over a document hash. */
+  startIdentity(request: StartIdentityRequest): Promise<IdentitySessionResponse>;
+  /** §5.6: where a confirmation stands. */
+  identityResult(reference: string): Promise<IdentityResultResponse>;
 }
 
 export function createSignClient(
@@ -92,6 +102,20 @@ export function createSignClient(
       // The link's answer names the hash; a file that does not match it is not the sealed file.
       if (sha256 !== link.sealedSha256) throw new SignRefused(502, 'sealed-hash-mismatch');
       return { bytes, sha256 };
+    },
+    async identityMethods() {
+      return IdentityMethodsResponse.parse(await body(await call('/v1/identity/methods')));
+    },
+    async startIdentity(request) {
+      const response = await call('/v1/identity/sessions', {
+        method: 'POST',
+        body: JSON.stringify(request),
+      });
+      return IdentitySessionResponse.parse(await body(response));
+    },
+    async identityResult(reference) {
+      const response = await call(`/v1/identity/sessions/${encodeURIComponent(reference)}`);
+      return IdentityResultResponse.parse(await body(response));
     },
     async declarations() {
       return DeclarationListResponse.parse(await body(await call('/v1/declarations')));

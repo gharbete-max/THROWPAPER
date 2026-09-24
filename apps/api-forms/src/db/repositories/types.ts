@@ -315,6 +315,8 @@ export interface SubmissionRecord {
   resumeExpiresAt: Date | null;
   submittedAt: Date | null;
   revokedAt: Date | null;
+  /** The optional e-ID step's outcome, when there was one (`schema.ts` submissions.identity). */
+  identity?: import('../schema.js').SubmissionIdentity | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -397,6 +399,12 @@ export interface SubmissionRepository {
   findByReference(organisationId: string, reference: string): Promise<SubmissionRecord | null>;
   /** Withdraws a registration without deleting it. */
   revoke(organisationId: string, id: string, at: Date): Promise<SubmissionRecord | null>;
+  /** Records the e-ID step's outcome. Only on a complete submission; null otherwise. */
+  saveIdentity(
+    organisationId: string,
+    id: string,
+    identity: import('../schema.js').SubmissionIdentity,
+  ): Promise<SubmissionRecord | null>;
   /**
    * The only way a submission becomes complete.
    *

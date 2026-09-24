@@ -123,3 +123,23 @@ describe('reading paper back', () => {
     expect((await read('..%2F..%2Fetc%2Fpasswd')).statusCode).toBe(404);
   });
 });
+
+describe("what may join a draft's paper list", () => {
+  it('a file uploaded to this form, and not a key borrowed from anywhere else', async () => {
+    const mine = await upload(PDF);
+    expect(mine.statusCode).toBe(201);
+    const ok = await saveDraft({ sources: [{ key: mine.json().key, pages: 1 }] });
+    expect(ok.statusCode).toBe(200);
+
+    // A key that exists in the store but was never uploaded to this form — somebody else's
+    // attachment, or another form's paper — is refused, and so cannot be read back through it.
+    const elsewhere = await harness.uploadStore.put(
+      Buffer.concat([PDF, Buffer.from('\n% another')]),
+      'pdf',
+    );
+    const refused = await saveDraft({ sources: [{ key: elsewhere.key, pages: 1 }] });
+    expect(refused.statusCode).toBe(422);
+    expect(refused.json().error.code).toBe('unknown-paper');
+    expect((await read(elsewhere.key)).statusCode).toBe(404);
+  });
+});

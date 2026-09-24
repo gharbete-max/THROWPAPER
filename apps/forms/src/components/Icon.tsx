@@ -81,6 +81,7 @@ export type IconName =
   | 'theme-dark'
   | 'command'
   | 'upload'
+  | 'download'
   | 'redo';
 
 /** 24×24 paths, stroke-width 2, round caps. */
@@ -115,6 +116,7 @@ const PATHS: Record<IconName, string> = {
    * borrowed it would read as the opposite of what it does.
    */
   upload: 'M12 16V4M8 8l4-4 4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3',
+  download: 'M12 4v12M8 12l4 4 4-4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3',
   /**
    * Two stacked cards with a plus — a block that repeats, and a way to add another.
    *
