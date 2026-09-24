@@ -3215,6 +3215,20 @@ its live camera works) and on the desktop (see below).
 **One known limit:** sessions are per process. A hosted deployment with more than one API
 instance needs sticky routing, or a shared store, before this works there.
 
+## The page's corners found for you, and pages from a scanner · done
+
+- **Edge detection** (`screens/builder/paper/detect.ts`, no library): a photo is shrunk to 320 px,
+  split light from dark (Otsu), and the light region at the middle is taken as the page; its
+  corners are its extreme points. The handles start there instead of on the picture's corners —
+  camera, phone and imported photos alike — and the person still moves them. It answers "no
+  guess" whenever it is doubtful: the page fills the frame or runs off it, is small, or does not
+  fill its own outline. Tests on synthetic photos.
+- **Flatbed scanners**: no driver work. A scanner's own software saves PDF or JPEG/PNG; Signing's
+  file picker now takes several JPEG/PNG pages as well as a PDF and treats them as a scan (a form
+  from paper already took images). A flatbed page fills its frame, so detection leaves it whole.
+  TWAIN/WIA/ICA from inside the desktop app is not built; nothing a user has asked for needs it
+  yet. e2e: two scanner JPEGs sent for signing.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

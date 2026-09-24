@@ -92,3 +92,49 @@ test('a paper document scanned with the camera is sent, signed and sealed', asyn
       .match(/\/Type\s*\/Page(?!s)/g) ?? [];
   expect(pageObjects.length).toBeGreaterThanOrEqual(3);
 });
+
+test("pages from a flatbed scanner's own software are sent as a scan", async ({ page }) => {
+  const sql = db();
+  try {
+    await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  } finally {
+    await sql.end();
+  }
+  await page.goto('/signing');
+  await page.getByRole('button', { name: 'Send a PDF for signing' }).click();
+
+  // What a scanner saves: a JPEG per page. Drawn in the browser: a light page, a little
+  // tilted, on a dark lid — so the corner guess has something to find.
+  const jpeg = await page.evaluate(async () => {
+    const canvas = new OffscreenCanvas(420, 600);
+    const context = canvas.getContext('2d')!;
+    context.fillStyle = 'rgb(40,40,40)';
+    context.fillRect(0, 0, 420, 600);
+    context.fillStyle = 'rgb(240,240,235)';
+    context.beginPath();
+    context.moveTo(70, 50);
+    context.lineTo(360, 70);
+    context.lineTo(340, 550);
+    context.lineTo(50, 530);
+    context.closePath();
+    context.fill();
+    const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.9 });
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    let binary = '';
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return btoa(binary);
+  });
+  const buffer = Buffer.from(jpeg, 'base64');
+  await page.getByLabel('PDF file').setInputFiles([
+    { name: 'Lease p1.jpg', mimeType: 'image/jpeg', buffer },
+    { name: 'Lease p2.jpg', mimeType: 'image/jpeg', buffer },
+  ]);
+
+  // They become scanned pages, straightened like a camera's.
+  await expect(page.getByRole('radio', { name: 'Camera' })).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByLabel('Document name')).toHaveValue('Lease p1');
+  await page.getByLabel('Name', { exact: true }).fill('Flatbed Fredrik');
+  await page.getByRole('button', { name: 'Send for signing' }).click();
+  const row = page.getByTestId('signing-row').filter({ hasText: 'Lease p1' }).first();
+  await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');
+});

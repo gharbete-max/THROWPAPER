@@ -887,6 +887,7 @@ export const jaJP: Record<MessageKey, string> = {
     '各署名者の言語で宣誓文を確認しました。これはテストではなく本番の署名です。',
   'signing.realNeedsOwnDeclaration':
     '本番の署名には、組織が自ら作成した宣誓文が必要です。「宣誓文」で作成してください。',
+  'signing.fileHint': 'PDF、またはスキャナーで読み取ったページ(JPEG・PNG 画像)。',
   'signing.cancel': 'キャンセル',
   'submissions.sendForSigning': '署名に送る',
   'signing.fromSubmission': '記入済みの紙の書式 {reference}',

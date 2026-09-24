@@ -891,6 +891,7 @@ export const fiFI: Record<MessageKey, string> = {
     'Olen tarkistanut vakuutuksen jokaisen allekirjoittajan kielellä, ja tämä on todellinen allekirjoitus, ei testi.',
   'signing.realNeedsOwnDeclaration':
     'Todellinen allekirjoitus vaatii vakuutuksen, jonka organisaationne on kirjoittanut itse. Kirjoita se kohdassa Vakuutukset.',
+  'signing.fileHint': 'PDF tai skannerin sivut JPEG- tai PNG-kuvina.',
   'signing.cancel': 'Peruuta',
   'submissions.sendForSigning': 'Lähetä allekirjoitettavaksi',
   'signing.fromSubmission': 'Täytetty paperilomake {reference}',

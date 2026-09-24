@@ -854,6 +854,7 @@ export const zhCN: Record<MessageKey, string> = {
     '该声明没有 {languages} 的文字。请在“声明”中添加，或为该签署人选择其他语言。',
   'signing.realConfirm': '我已按每位签署人的语言核对过声明，这是正式签署，不是测试。',
   'signing.realNeedsOwnDeclaration': '正式签署需要贵组织自行撰写的声明。请在“声明”中撰写。',
+  'signing.fileHint': 'PDF，或扫描仪扫描的 JPEG、PNG 图片页面。',
   'signing.cancel': '取消',
   'submissions.sendForSigning': '发送签署',
   'signing.fromSubmission': '已填写的纸质表单 {reference}',

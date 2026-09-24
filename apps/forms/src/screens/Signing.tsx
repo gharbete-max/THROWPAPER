@@ -12,6 +12,7 @@ import { Icon } from '../components/Icon.js';
 import { CameraScan, MAX_SCAN_PAGES } from '../components/CameraScan.js';
 import { CropPhoto, WHOLE_PICTURE } from './builder/paper/CropPhoto.js';
 import { isUsable, straightenFile, type Corners } from './builder/paper/warp.js';
+import { detectPage } from './builder/paper/detect.js';
 import { SigningDeclarations } from './SigningDeclarations.js';
 
 type Party = { name: string; email: string; locale: string };
@@ -280,6 +281,18 @@ function Compose({
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState<{ file: File; corners: Corners }[]>([]);
   const [documentName, setDocumentName] = useState('');
+
+  /** Pages from a camera, a phone or a scanner, each starting on the page's own corners if found. */
+  async function addPages(pages: File[]) {
+    const found = await Promise.all(
+      pages.map(async (page) => ({
+        file: page,
+        corners: (await detectPage(page)) ?? WHOLE_PICTURE,
+      })),
+    );
+    // More pages are added to the end: a second scan continues the document.
+    setScanned((current) => [...current, ...found].slice(0, MAX_SCAN_PAGES));
+  }
   const [parties, setParties] = useState<Party[]>([{ name: '', email: '', locale }]);
   const [routing, setRouting] = useState<'sequential' | 'parallel'>('sequential');
   // An organisation's own words first; the shared placeholder only when it has none yet.
@@ -394,26 +407,35 @@ function Compose({
               <span>{t('signing.file')}</span>
               <input
                 type="file"
-                accept="application/pdf,.pdf"
+                accept="application/pdf,.pdf,image/jpeg,image/png"
+                multiple
                 onChange={(event) => {
-                  const chosen = event.target.files?.[0] ?? null;
-                  setFile(chosen);
-                  if (chosen && !documentName) setDocumentName(chosen.name.replace(/\.pdf$/i, ''));
+                  const chosen = Array.from(event.target.files ?? []);
+                  const images = chosen.filter(
+                    (f) => f.type === 'image/jpeg' || f.type === 'image/png',
+                  );
+                  const first = chosen[0];
+                  if (first && !documentName) {
+                    setDocumentName(first.name.replace(/\.(pdf|jpe?g|png)$/i, ''));
+                  }
+                  // Pages from a flatbed scanner's own software: the same path as a camera's.
+                  if (images.length > 0) {
+                    setFile(null);
+                    setVia('camera');
+                    void addPages(images);
+                    return;
+                  }
+                  setFile(first ?? null);
                 }}
               />
+              <span className="small muted">{t('signing.fileHint')}</span>
             </label>
           ) : scanning ? (
             <CameraScan
               onCancel={() => setScanning(false)}
               onDone={(pages) => {
                 setScanning(false);
-                // More pages are added to the end: a second scan continues the document.
-                setScanned((current) =>
-                  [
-                    ...current,
-                    ...pages.map((page) => ({ file: page, corners: WHOLE_PICTURE })),
-                  ].slice(0, MAX_SCAN_PAGES),
-                );
+                void addPages(pages);
               }}
             />
           ) : (

@@ -903,6 +903,7 @@ export const enGB = {
     "I have checked the declaration in every signer's language, and this is a real signing, not a test.",
   'signing.realNeedsOwnDeclaration':
     'Real signing needs a declaration your organisation wrote itself. Write one under Declarations.',
+  'signing.fileHint': 'A PDF, or pages from a scanner as JPEG or PNG images.',
   'signing.cancel': 'Cancel',
   'submissions.sendForSigning': 'Send for signing',
   'signing.fromSubmission': 'Filled-in paper form {reference}',

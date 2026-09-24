@@ -884,6 +884,7 @@ export const daDK: Record<MessageKey, string> = {
     'Jeg har kontrolleret erklæringen på hver underskrivers sprog, og dette er en rigtig underskrivning, ikke en test.',
   'signing.realNeedsOwnDeclaration':
     'Rigtig underskrivning kræver en erklæring, som jeres organisation selv har skrevet. Skriv en under Erklæringer.',
+  'signing.fileHint': 'En PDF, eller sider fra en scanner som JPEG- eller PNG-billeder.',
   'signing.cancel': 'Annuller',
   'submissions.sendForSigning': 'Send til underskrift',
   'signing.fromSubmission': 'Udfyldt papirformular {reference}',

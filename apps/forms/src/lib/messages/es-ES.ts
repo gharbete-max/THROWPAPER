@@ -897,6 +897,7 @@ export const esES: Record<MessageKey, string> = {
     'He revisado la declaración en el idioma de cada firmante y esta es una firma real, no una prueba.',
   'signing.realNeedsOwnDeclaration':
     'La firma real necesita una declaración redactada por tu organización. Redacta una en Declaraciones.',
+  'signing.fileHint': 'Un PDF, o páginas de un escáner como imágenes JPEG o PNG.',
   'signing.cancel': 'Cancelar',
   'submissions.sendForSigning': 'Enviar para firmar',
   'signing.fromSubmission': 'Formulario en papel rellenado {reference}',

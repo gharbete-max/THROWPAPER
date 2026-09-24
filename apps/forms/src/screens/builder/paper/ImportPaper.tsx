@@ -12,6 +12,7 @@ import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
 import { openPdf, TooManyPages } from './extract.js';
 import { CropPhoto, WHOLE_PICTURE } from './CropPhoto.js';
+import { detectPage } from './detect.js';
 import { CameraScan } from '../../../components/CameraScan.js';
 import { isUsable, straightenFile, type Corners } from './warp.js';
 
@@ -232,7 +233,7 @@ async function read(files: File[], locale: string): Promise<Ready> {
       pages += pdf.pageCount;
       await pdf.close();
     } else {
-      counted.push({ file, pages: 1, corners: WHOLE_PICTURE });
+      counted.push({ file, pages: 1, corners: (await detectPage(file)) ?? WHOLE_PICTURE });
       pages += 1;
     }
     if (pages > MAX_PAPER_PAGES) throw new TooManyPages(pages);
