@@ -62,6 +62,9 @@ const PublicForm = lazy(() => import('./screens/PublicForm.js'));
 /** Code-split: only the door needs a QR decoder, and it is not small. */
 const CheckIn = lazy(() => import('./screens/CheckIn.js'));
 
+/** Code-split: a phone scanning for a computer needs the camera and nothing of the shell. */
+const PhoneScanPage = lazy(() => import('./screens/PhoneScanPage.js'));
+
 export function App() {
   /*
    * One listener for every press in the app, attached once.
@@ -89,6 +92,14 @@ export function App() {
                     element={
                       <Suspense fallback={<main className="shell shell--narrow" />}>
                         <PublicForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/phone-scan/:token"
+                    element={
+                      <Suspense fallback={<main className="shell shell--narrow" />}>
+                        <PhoneScanPage />
                       </Suspense>
                     }
                   />

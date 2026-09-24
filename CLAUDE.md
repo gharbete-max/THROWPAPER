@@ -16,7 +16,8 @@ apps/api-sign   Product C backend. Own database (append-only, hash-chained trail
                 drawn signing by link, PAdES seal + audit page on completion (development
                 certificate); serves the page
 apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own
-                embedded Postgres (PGlite) and loopback port, offline first. Not a product; it
+                embedded Postgres (PGlite) and loopback port, offline first; a LAN relay for a
+                phone scan exists only while one is open (ADR 0016). Not a product; it
                 imports only @tp/api-forms/desktop and @tp/api-sign/local (docs/adr/0016)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
                 / native tokens. Owns the contrast guard

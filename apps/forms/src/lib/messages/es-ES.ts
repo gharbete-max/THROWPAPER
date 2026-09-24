@@ -901,6 +901,30 @@ export const esES: Record<MessageKey, string> = {
   'submissions.sendForSigning': 'Enviar para firmar',
   'signing.fromSubmission': 'Formulario en papel rellenado {reference}',
   // Scanning with a camera (phone or PC).
+  'phone.use': 'Usar un móvil',
+  'phone.heading': 'Escanear con el móvil',
+  'phone.opening': 'Obteniendo un código para el móvil…',
+  'phone.noNetwork':
+    'Este ordenador no está en una red a la que pueda llegar un móvil. Conéctalo a la wifi e inténtalo de nuevo.',
+  'phone.failed': 'No se pudo iniciar el escaneo con el móvil. Inténtalo de nuevo.',
+  'phone.expired': 'El código ha caducado.',
+  'phone.hint':
+    'Apunta la cámara del móvil al código y abre el enlace. El móvil debe estar en la misma wifi que este ordenador.',
+  'phone.qrAlt': 'Código QR con el enlace para el móvil',
+  'phone.received': 'Páginas recibidas: {count}',
+  'phone.useReceived': 'Usar las páginas ({count})',
+  'phone.newCode': 'Nuevo código',
+  'phone.back': 'Usar la cámara de este ordenador',
+  'phone.page.heading': 'Escanear para el ordenador',
+  'phone.page.gone':
+    'Este enlace ha caducado o se ha cerrado. Muestra un código nuevo en el ordenador.',
+  'phone.page.sending': 'Enviando la página {number} de {count}…',
+  'phone.page.intro':
+    'Haz una foto de cada página. Las páginas van directamente al ordenador que mostró el código.',
+  'phone.page.full': 'El ordenador ya tiene tantas páginas como admite un escaneo.',
+  'phone.page.failed': 'No se pudo enviar una página. Inténtalo de nuevo.',
+  'phone.page.sent': 'Enviado. El ordenador tiene {count} páginas. Ya puedes guardar el móvil.',
+  'phone.page.more': 'Escanear más páginas',
   'camera.open': 'Usar la cámara',
   'camera.scanDocument': 'Escanear con la cámara',
   'camera.preview': 'Vista previa de la cámara',

@@ -82,6 +82,59 @@ describe('the desktop server', { timeout: 60_000 }, () => {
     }
   });
 
+  it('lets a phone reach the scan page, and nothing else, only while a scan is open', async () => {
+    const server = await startDesktopServer({
+      dataDir: join(scratch, 'phone'),
+      webDir: await webDir(),
+      migrationsFolder,
+      port: 0,
+      renderer: fakeRenderer,
+      // Loopback stands in for the Wi-Fi address this container may not have.
+      phoneAddress: () => '127.0.0.1',
+    });
+    try {
+      await server.bootstrap({
+        organisationName: 'Skanna AB',
+        name: 'Siv',
+        email: 'siv@example.com',
+      });
+      const token = new URL((await server.signInLink())!).searchParams.get('token');
+      const { accessToken } = (await (
+        await fetch(`${server.url}/v1/auth/token`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ token }),
+        })
+      ).json()) as { accessToken: string };
+
+      const opened = await fetch(`${server.url}/v1/phone-scans`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${accessToken}` },
+      });
+      expect(opened.status).toBe(201);
+      const { phoneUrl } = (await opened.json()) as { phoneUrl: string };
+      const relay = new URL(phoneUrl);
+      // Not the app's own port: the relay's.
+      expect(relay.origin).not.toBe(server.url);
+
+      // The phone gets the app's page, and the scan's own endpoint…
+      expect(await (await fetch(phoneUrl)).text()).toContain('<div id="root">');
+      const status = await fetch(
+        `${relay.origin}/api/v1/phone-scan${relay.pathname.slice('/phone-scan'.length)}`,
+      );
+      expect(status.status).toBe(200);
+      // …and nothing else, even carrying a valid session.
+      for (const path of ['/', '/health', '/api/v1/forms', '/v1/forms', '/api/v1/auth/me']) {
+        const other = await fetch(`${relay.origin}${path}`, {
+          headers: { authorization: `Bearer ${accessToken}` },
+        });
+        expect(other.status, path).toBe(404);
+      }
+    } finally {
+      await server.close();
+    }
+  });
+
   it('keeps its secrets across restarts, so sessions and download links survive them', async () => {
     const path = join(scratch, 'secrets.json');
     const first = await loadOrCreateSecrets(path);

@@ -273,6 +273,20 @@ export const client = {
       '/v1/signing/declarations',
       { method: 'POST', body: JSON.stringify(body) },
     ),
+  // Scanning with a phone for this computer. The first four are the computer's; the last two
+  // are the phone's, which carries only the link.
+  openPhoneScan: () => request<formSchemas.PhoneScanSession>('/v1/phone-scans', { method: 'POST' }),
+  phoneScan: (id: string) =>
+    request<Omit<formSchemas.PhoneScanSession, 'phoneUrl' | 'qrSvg'>>(`/v1/phone-scans/${id}`),
+  phoneScanPage: (id: string, n: number) => requestBlob(`/v1/phone-scans/${id}/pages/${n}`),
+  closePhoneScan: (id: string) => request<void>(`/v1/phone-scans/${id}`, { method: 'DELETE' }),
+  phoneScanStatus: (token: string) =>
+    request<formSchemas.PhoneScanStatus>(`/v1/phone-scan/${token}`),
+  sendPhoneScanPage: (token: string, page: formSchemas.PhoneScanPage) =>
+    request<formSchemas.PhoneScanStatus>(`/v1/phone-scan/${token}/pages`, {
+      method: 'POST',
+      body: JSON.stringify(page),
+    }),
   signedPdf: (id: string) => requestBlob(`/v1/signing/requests/${id}/sealed.pdf`),
   /** The invoice as the tenant receives it, fetched with the session rather than their link. */
   invoicePdf: (id: string) => requestBlob(`/v1/invoices/${id}/pdf`),

@@ -3190,6 +3190,31 @@ only be written straight into Sign's database. Now an admin types it in the prod
 
 The words themselves are still the owner's to write. The product now has a place for them.
 
+## Scanning with a phone, into the computer · done
+
+A webcam is poor at paper. Now any camera screen on a computer (Signing's "Camera", a form from
+paper) has **Use a phone**: it shows a QR code, the phone opens the link — signed in to nothing —
+photographs pages and sends them, and the computer collects them into the same corner-straightening
+step its own camera feeds. Works the same on a server (the phone opens the public HTTPS address, so
+its live camera works) and on the desktop (see below).
+
+- **api-forms:** `POST/GET/DELETE /v1/phone-scans[/:id]` for the signed-in person,
+  `GET /v1/phone-scans/:id/pages/:n` for the images, and for the phone only
+  `GET /v1/phone-scan/:token` and `POST /v1/phone-scan/:token/pages`. Sessions are in memory:
+  fifteen minutes, twenty pages, three open per person, the token stored as a hash, images judged
+  by their bytes. Nothing touches the disk until the person uses the pages.
+- **Desktop:** a LAN relay that exists only while a scan is open and passes only those routes and
+  the static bundle; everything else is 404 before the app. Threat model in ADR 0016 (amended).
+- **apps/forms:** `PhoneScan` (QR, live count, "Use the pages"), a public `/phone-scan/:token` page
+  that reuses `CameraScan` and shrinks each photo to 2400 px before sending. Twenty strings in
+  twelve locales.
+- **Tests:** routes and store; the relay's allow-list; a desktop server serving the page through
+  the relay and refusing everything else; e2e with two browsers — a phone-sized one takes two
+  pages with Chromium's fake camera, the computer uses them and sends them for signing.
+
+**One known limit:** sessions are per process. A hosted deployment with more than one API
+instance needs sticky routing, or a shared store, before this works there.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

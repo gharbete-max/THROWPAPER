@@ -17,3 +17,4 @@ export * from './wizard.js';
 export * from './wizard-definition.js';
 export * from './signature-vector.js';
 export * from './signing-requests.js';
+export * from './phone-scan.js';

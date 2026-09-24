@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '../lib/i18n.js';
 import { Icon } from './Icon.js';
+import { PhoneScan } from './PhoneScan.js';
 
 /**
  * A document scanner in the page: the camera, live, and a shutter — on a phone its back camera, on
@@ -22,16 +23,39 @@ type Status =
   | { kind: 'live' }
   | { kind: 'unavailable'; reason: 'insecure' | 'denied' | 'none' | 'failed' };
 
-export function CameraScan({
-  onDone,
-  onCancel,
-  multiple = true,
-}: {
+interface CameraScanProps {
   onDone: (pages: File[]) => void;
   onCancel: () => void;
   /** One page (a photo for a form) or several (a document). */
   multiple?: boolean;
-}) {
+  /**
+   * Offer a phone instead, by QR code (`PhoneScan`). On by default — a PC's webcam is poor at
+   * paper; off on the phone's own scan page, which would otherwise offer itself.
+   */
+  phone?: boolean;
+}
+
+export function CameraScan({ phone = true, ...props }: CameraScanProps) {
+  const [withPhone, setWithPhone] = useState(false);
+  if (withPhone) {
+    return (
+      <PhoneScan
+        onDone={props.onDone}
+        onBack={() => setWithPhone(false)}
+        {...(props.multiple === undefined ? {} : { multiple: props.multiple })}
+      />
+    );
+  }
+  // Unmounting the live view is what stops the camera while the phone is used.
+  return <LiveScan {...props} {...(phone ? { onPhone: () => setWithPhone(true) } : {})} />;
+}
+
+function LiveScan({
+  onDone,
+  onCancel,
+  multiple = true,
+  onPhone,
+}: Omit<CameraScanProps, 'phone'> & { onPhone?: () => void }) {
   const t = useT();
   const video = useRef<HTMLVideoElement>(null);
   const stream = useRef<MediaStream | null>(null);
@@ -223,6 +247,11 @@ export function CameraScan({
             onClick={() => onDone(pages.map((page) => page.file))}
           >
             {t('camera.done', { count: pages.length })}
+          </button>
+        )}
+        {onPhone && (
+          <button type="button" className="button button--quiet" onClick={onPhone}>
+            {t('phone.use')}
           </button>
         )}
         <button type="button" className="button button--quiet" onClick={onCancel}>

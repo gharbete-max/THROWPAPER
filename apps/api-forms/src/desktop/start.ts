@@ -10,6 +10,8 @@ import type { MailProvider } from '../mail/provider.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from '../mail/smtp.js';
 import { createMailProgramProvider } from '../mail/outlook.js';
 import { readSettings, type DesktopSettings } from './settings.js';
+import { createPhoneScanStore } from '../phone-scan/store.js';
+import { createPhoneRelay } from './phone-relay.js';
 import type { SignConnection } from '../signing/client.js';
 import {
   bootstrapWorkspace,
@@ -58,6 +60,8 @@ export interface StartDesktopOptions {
    * to. Absent, or answering null, the Signing screen says signing is not set up.
    */
   signing?: (organisationId: string, origin: string) => Promise<SignConnection | null>;
+  /** The address a phone reaches this machine on. Default: its private LAN address, if any. */
+  phoneAddress?: () => string | null;
 }
 
 export interface DesktopServer {
@@ -185,6 +189,14 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     throw error;
   }
   let app: FastifyInstance;
+  // A phone scanning for this computer reaches it through a relay that exists only while a scan is
+  // open, and passes only the scan (`phone-relay.ts`). Everything else stays on 127.0.0.1.
+  const phoneScans = createPhoneScanStore();
+  const relay = createPhoneRelay({
+    app: () => app,
+    active: () => phoneScans.active(),
+    ...(options.phoneAddress ? { address: options.phoneAddress } : {}),
+  });
   try {
     app = await buildServer({
       repos: local.repos,
@@ -206,6 +218,8 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       probeDatabase: false,
       startWorker: true,
       signing,
+      phoneScans,
+      phoneOrigin: () => relay.open(),
     });
     await app.listen({ port, host: '127.0.0.1' });
   } catch (error) {
@@ -234,6 +248,7 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     signInLink: () => mintLocalSignInLink(local.repos, url),
     signingConnected: signing !== null,
     async close() {
+      await relay.close();
       await app.close();
       await local.close();
     },
