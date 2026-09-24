@@ -840,8 +840,6 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.routing.sequential': 'Yksi kerrallaan',
   'signing.routing.parallel': 'Kaikki kerralla',
   'signing.declarationKey': 'Vakuutus',
-  'signing.declarationHint':
-    'Loppa Signissa kirjoitetun vakuutuksen avain. "demo" on testitilan paikkamerkki.',
   'signing.testMode': 'Testitila',
   'signing.testModeHint': 'Mitään testitilassa allekirjoitettua ei merkitä todelliseksi.',
   'signing.send': 'Lähetä allekirjoitettavaksi',
@@ -863,6 +861,36 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.openLink': 'Avaa allekirjoitussivu',
   'signing.refresh': 'Päivitä',
   'signing.downloadSigned': 'Lataa allekirjoitettu PDF',
+  'signing.declarationHint':
+    'Sanat, jotka kukin allekirjoittaja hyväksyy. Organisaationne kirjoittaa ne kohdassa Vakuutukset.',
+  'signing.declarations': 'Vakuutukset',
+  'signing.declarationsHint':
+    'Mitä allekirjoittajanne hyväksyvät allekirjoittaessaan, kullakin kielellä. Loppa ei koskaan kirjoita näitä sanoja: organisaationne ylläpitäjä kirjoittaa ne. Tallentaminen luo uuden version; jo lähetetyt asiakirjat säilyttävät sanat, joilla ne lähetettiin.',
+  'signing.declarationVersion': 'Versio {version}',
+  'signing.declarationTestOnly': 'Vain testi',
+  'signing.declarationWriteOwn': 'Kirjoita oma',
+  'signing.declarationNewVersion': 'Uusi versio',
+  'signing.declarationNew': 'Uusi vakuutus',
+  'signing.declarationAdminOnly': 'Vain ylläpitäjä voi kirjoittaa vakuutuksen.',
+  'signing.declarationEditor': 'Kirjoita vakuutus',
+  'signing.declarationKeyLabel': 'Lyhyt nimi',
+  'signing.declarationKeyHint':
+    'Pieniä kirjaimia, numeroita, pisteitä, yhdysmerkkejä ja alaviivoja, esim. vuokrasopimus-2026.',
+  'signing.declarationOwnWords':
+    'Allekirjoittajat näkevät täsmälleen sen, mitä kirjoitat tähän, sanasta sanaan. Jätä kieli tyhjäksi, jos ette käytä sitä.',
+  'signing.declarationConfirm':
+    'Allekirjoittajat hyväksyvät täsmälleen nämä sanat. Tallenna ne uutena versiona painamalla uudelleen.',
+  'signing.declarationFailed': 'Vakuutusta ei voitu tallentaa. Yritä uudelleen.',
+  'signing.declarationSave': 'Tallenna',
+  'signing.declarationSaveConfirm': 'Kyllä, tallenna tämä versio',
+  'signing.environment': 'Tila',
+  'signing.realMode': 'Todellinen',
+  'signing.declarationMissingLanguage':
+    'Vakuutuksessa ei ole tekstiä kielellä {languages}. Lisää se kohdassa Vakuutukset tai valitse allekirjoittajalle toinen kieli.',
+  'signing.realConfirm':
+    'Olen tarkistanut vakuutuksen jokaisen allekirjoittajan kielellä, ja tämä on todellinen allekirjoitus, ei testi.',
+  'signing.realNeedsOwnDeclaration':
+    'Todellinen allekirjoitus vaatii vakuutuksen, jonka organisaationne on kirjoittanut itse. Kirjoita se kohdassa Vakuutukset.',
   'signing.cancel': 'Peruuta',
   'submissions.sendForSigning': 'Lähetä allekirjoitettavaksi',
   'signing.fromSubmission': 'Täytetty paperilomake {reference}',

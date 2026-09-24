@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { api, forms as formSchemas } from '@tp/shared';
-import { SigningHookEvent } from '@tp/shared/contract';
+import { DeclarationView, SigningHookEvent } from '@tp/shared/contract';
 import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
 import type {
@@ -23,6 +23,7 @@ import { pagesToPdf } from '../signing/scan.js';
 const IdParam = z.object({ id: z.string().uuid() });
 const errors = {
   401: api.ErrorResponse,
+  403: api.ErrorResponse,
   404: api.ErrorResponse,
   409: api.ErrorResponse,
   422: api.ErrorResponse,
@@ -216,6 +217,65 @@ export function registerSigningRoutes(
         after: { envelopeId: record.envelopeId, parties: record.parties.length },
       });
       return reply.code(201).send(view(record));
+    },
+  });
+
+  /** The declarations this organisation can use (§5.5): its own, and the shared test placeholders. */
+  app.get('/v1/signing/declarations', {
+    preHandler: authenticated,
+    schema: {
+      tags: ['signing'],
+      response: { 200: formSchemas.SigningDeclarationList, ...errors },
+    },
+    handler: async (_request, reply) => {
+      if (!deps.sign) return reply.send({ enabled: false, declarations: [] });
+      try {
+        const { declarations } = await deps.sign.declarations();
+        return reply.send({ enabled: true, declarations });
+      } catch (error) {
+        return failed(reply, error);
+      }
+    },
+  });
+
+  /**
+   * A new version of a declaration, in words an admin typed (never Loppa's — CLAUDE.md rule 8).
+   * Admin only: these are what the organisation's signers legally approve.
+   */
+  app.post('/v1/signing/declarations', {
+    preHandler: authenticated,
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['signing'],
+      body: formSchemas.WriteSigningDeclaration,
+      response: { 201: DeclarationView, ...errors },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth!;
+      if (auth.user.role !== 'admin') {
+        return reply.code(403).send({
+          error: { code: 'forbidden', message: 'Only an admin can change a declaration' },
+        });
+      }
+      if (!deps.sign) return unavailable(reply);
+      const body = formSchemas.WriteSigningDeclaration.parse(request.body);
+      let written;
+      try {
+        written = await deps.sign.writeDeclaration({
+          organisationId: auth.organisation.id,
+          key: body.key,
+          texts: body.texts,
+        });
+      } catch (error) {
+        return failed(reply, error);
+      }
+      await recordAudit(deps.repos, request, {
+        action: 'signing.declaration-written',
+        entityType: 'signing_declaration',
+        entityId: written.key,
+        after: { key: written.key, version: written.version, locales: Object.keys(written.texts) },
+      });
+      return reply.code(201).send(written);
     },
   });
 

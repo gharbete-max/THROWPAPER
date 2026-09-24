@@ -3165,6 +3165,31 @@ everywhere paper comes in.
 - **Scanner hardware** (WIA/TWAIN, ADR 0016 D3): a flatbed still works by saving a file and
   importing it.
 
+## Declarations the organisation writes (CONTRACT §5.5) · done
+
+Real signing was blocked on one thing no code may supply: the words a signer approves (rule 8).
+The seed's `demo` placeholder is bracketed and test-only, and until now a real declaration could
+only be written straight into Sign's database. Now an admin types it in the product.
+
+- **Sign (§5.5).** `declarations` gains `organisation_id` (migration 0004); the key is unique per
+  owner, `NULLS NOT DISTINCT` so the shared placeholders stay unique too. `GET /v1/declarations`
+  lists the latest version of each key the caller may use, its own hiding a shared one of the same
+  key; `POST` appends the next version of the caller's own, `testOnly: false`, under a row lock.
+  §5.1 resolves a key to the caller's own first and pins the owner in the definition, so the
+  signer's page reads the same row the envelope was sent with. Another organisation cannot see,
+  list or sign against it (tests on Postgres and PGlite).
+- **Forms.** `GET/POST /v1/signing/declarations` proxy §5.5 on the organisation's token; writing
+  is admin-only and audited (`signing.declaration-written`). The Signing screen has a
+  Declarations card: one text box per organisation language, a short name, and a second press to
+  save (rule 7). Nothing is prefilled — a shared placeholder is never offered as a starting text.
+- **Compose** picks the declaration from the list, says before sending when a signer's language
+  has no text (Sign would refuse it), and offers **Real** only on an authored declaration, behind a
+  checkbox confirming it is not a test. Strings in all twelve locales.
+- **e2e:** an admin writes a declaration in English and Swedish, sends a real envelope on it, and
+  the signer's page shows those words.
+
+The words themselves are still the owner's to write. The product now has a place for them.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

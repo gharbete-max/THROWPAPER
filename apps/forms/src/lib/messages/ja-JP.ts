@@ -837,8 +837,6 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.routing.sequential': '順番に',
   'signing.routing.parallel': '全員同時に',
   'signing.declarationKey': '宣誓文',
-  'signing.declarationHint':
-    'Loppa Sign で作成された宣誓文のキー。「demo」はテストモード用の仮の文です。',
   'signing.testMode': 'テストモード',
   'signing.testModeHint': 'テストモードで署名されたものは正式なものとして扱われません。',
   'signing.send': '署名に送る',
@@ -860,6 +858,35 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.openLink': '署名ページを開く',
   'signing.refresh': '更新',
   'signing.downloadSigned': '署名済み PDF をダウンロード',
+  'signing.declarationHint': '各署名者が同意する文言です。組織が「宣誓文」で作成します。',
+  'signing.declarations': '宣誓文',
+  'signing.declarationsHint':
+    '署名者が署名時に同意する内容を言語ごとに示します。Loppa がこの文言を書くことはありません。組織の管理者が入力します。保存すると新しいバージョンになり、送信済みの文書は送信時の文言のままです。',
+  'signing.declarationVersion': 'バージョン {version}',
+  'signing.declarationTestOnly': 'テスト専用',
+  'signing.declarationWriteOwn': '独自に作成',
+  'signing.declarationNewVersion': '新しいバージョン',
+  'signing.declarationNew': '新しい宣誓文',
+  'signing.declarationAdminOnly': '宣誓文を作成できるのは管理者だけです。',
+  'signing.declarationEditor': '宣誓文を作成',
+  'signing.declarationKeyLabel': '短い名前',
+  'signing.declarationKeyHint':
+    '小文字、数字、ピリオド、ハイフン、アンダースコア(例: lease-2026)。',
+  'signing.declarationOwnWords':
+    '署名者にはここに入力した内容がそのまま表示されます。使わない言語は空欄のままにしてください。',
+  'signing.declarationConfirm':
+    '署名者はこの文言にそのまま同意します。もう一度押すと新しいバージョンとして保存します。',
+  'signing.declarationFailed': '宣誓文を保存できませんでした。もう一度お試しください。',
+  'signing.declarationSave': '保存',
+  'signing.declarationSaveConfirm': 'はい、このバージョンを保存',
+  'signing.environment': 'モード',
+  'signing.realMode': '本番',
+  'signing.declarationMissingLanguage':
+    '宣誓文に {languages} の文言がありません。「宣誓文」で追加するか、その署名者に別の言語を選んでください。',
+  'signing.realConfirm':
+    '各署名者の言語で宣誓文を確認しました。これはテストではなく本番の署名です。',
+  'signing.realNeedsOwnDeclaration':
+    '本番の署名には、組織が自ら作成した宣誓文が必要です。「宣誓文」で作成してください。',
   'signing.cancel': 'キャンセル',
   'submissions.sendForSigning': '署名に送る',
   'signing.fromSubmission': '記入済みの紙の書式 {reference}',

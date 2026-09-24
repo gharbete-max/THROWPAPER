@@ -834,8 +834,6 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.routing.sequential': 'Én om gangen',
   'signing.routing.parallel': 'Alle samtidig',
   'signing.declarationKey': 'Erklæring',
-  'signing.declarationHint':
-    'Nøkkelen til en erklæring skrevet i Loppa Sign. "demo" er en plassholder for testmodus.',
   'signing.testMode': 'Testmodus',
   'signing.testModeHint': 'Ingenting signert i testmodus merkes som ekte.',
   'signing.send': 'Send til signering',
@@ -857,6 +855,36 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.openLink': 'Åpne signeringssiden',
   'signing.refresh': 'Oppdater',
   'signing.downloadSigned': 'Last ned signert PDF',
+  'signing.declarationHint':
+    'Ordene hver signatar godkjenner. Organisasjonen deres skriver dem under Erklæringer.',
+  'signing.declarations': 'Erklæringer',
+  'signing.declarationsHint':
+    'Det signatarene deres godkjenner når de signerer, på hvert språk. Loppa skriver aldri disse ordene: en administrator i organisasjonen deres skriver dem inn. Lagring lager en ny versjon; dokumenter som alt er sendt, beholder ordene de ble sendt med.',
+  'signing.declarationVersion': 'Versjon {version}',
+  'signing.declarationTestOnly': 'Kun test',
+  'signing.declarationWriteOwn': 'Skriv deres egen',
+  'signing.declarationNewVersion': 'Ny versjon',
+  'signing.declarationNew': 'Ny erklæring',
+  'signing.declarationAdminOnly': 'Bare en administrator kan skrive en erklæring.',
+  'signing.declarationEditor': 'Skriv en erklæring',
+  'signing.declarationKeyLabel': 'Kort navn',
+  'signing.declarationKeyHint':
+    'Små bokstaver, sifre, punktum, bindestrek og understrek, f.eks. leieavtale-2026.',
+  'signing.declarationOwnWords':
+    'Signatarene ser nøyaktig det du skriver her, ord for ord. La et språk stå tomt hvis dere ikke bruker det.',
+  'signing.declarationConfirm':
+    'Signatarene vil godkjenne nøyaktig disse ordene. Trykk igjen for å lagre dem som en ny versjon.',
+  'signing.declarationFailed': 'Kunne ikke lagre erklæringen. Prøv igjen.',
+  'signing.declarationSave': 'Lagre',
+  'signing.declarationSaveConfirm': 'Ja, lagre denne versjonen',
+  'signing.environment': 'Modus',
+  'signing.realMode': 'Ekte',
+  'signing.declarationMissingLanguage':
+    'Erklæringen har ingen tekst på {languages}. Legg den til under Erklæringer, eller velg et annet språk for den signataren.',
+  'signing.realConfirm':
+    'Jeg har kontrollert erklæringen på hver signatars språk, og dette er en ekte signering, ikke en test.',
+  'signing.realNeedsOwnDeclaration':
+    'Ekte signering krever en erklæring organisasjonen deres har skrevet selv. Skriv en under Erklæringer.',
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Send til signering',
   'signing.fromSubmission': 'Utfylt papirskjema {reference}',

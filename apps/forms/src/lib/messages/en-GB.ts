@@ -852,8 +852,6 @@ export const enGB = {
   'signing.routing.sequential': 'One after another',
   'signing.routing.parallel': 'All at once',
   'signing.declarationKey': 'Declaration',
-  'signing.declarationHint':
-    'The key of a declaration written at Loppa Sign. "demo" is a test-mode placeholder.',
   'signing.testMode': 'Test mode',
   'signing.testModeHint': 'Nothing signed in test mode is marked as real.',
   'signing.send': 'Send for signing',
@@ -875,6 +873,36 @@ export const enGB = {
   'signing.openLink': 'Open signing page',
   'signing.refresh': 'Refresh',
   'signing.downloadSigned': 'Download signed PDF',
+  'signing.declarationHint':
+    'The words each signer approves. Your organisation writes them under Declarations.',
+  'signing.declarations': 'Declarations',
+  'signing.declarationsHint':
+    'What your signers approve when they sign, in each language. Loppa never writes these words: an admin in your organisation types them. Saving makes a new version; documents already sent keep the words they were sent with.',
+  'signing.declarationVersion': 'Version {version}',
+  'signing.declarationTestOnly': 'Test only',
+  'signing.declarationWriteOwn': 'Write your own',
+  'signing.declarationNewVersion': 'New version',
+  'signing.declarationNew': 'New declaration',
+  'signing.declarationAdminOnly': 'Only an admin can write a declaration.',
+  'signing.declarationEditor': 'Write a declaration',
+  'signing.declarationKeyLabel': 'Short name',
+  'signing.declarationKeyHint':
+    'Lower-case letters, digits, dots, dashes and underscores, e.g. lease-2026.',
+  'signing.declarationOwnWords':
+    'Signers see exactly what you type here, word for word. Leave a language empty if you do not use it.',
+  'signing.declarationConfirm':
+    'Signers will approve exactly these words. Press again to save them as a new version.',
+  'signing.declarationFailed': 'Could not save the declaration. Try again.',
+  'signing.declarationSave': 'Save',
+  'signing.declarationSaveConfirm': 'Yes, save this version',
+  'signing.environment': 'Mode',
+  'signing.realMode': 'Real',
+  'signing.declarationMissingLanguage':
+    'The declaration has no words in {languages}. Add them under Declarations, or choose another language for that signer.',
+  'signing.realConfirm':
+    "I have checked the declaration in every signer's language, and this is a real signing, not a test.",
+  'signing.realNeedsOwnDeclaration':
+    'Real signing needs a declaration your organisation wrote itself. Write one under Declarations.',
   'signing.cancel': 'Cancel',
   'submissions.sendForSigning': 'Send for signing',
   'signing.fromSubmission': 'Filled-in paper form {reference}',

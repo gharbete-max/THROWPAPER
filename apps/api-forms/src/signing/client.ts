@@ -1,9 +1,12 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import {
   CreateEnvelopeResponse,
+  DeclarationListResponse,
+  DeclarationView,
   EnvelopeStatusResponse,
   SealedDocumentResponse,
   type CreateEnvelopeRequest,
+  type WriteDeclarationRequest,
 } from '@tp/shared/contract';
 
 /**
@@ -25,6 +28,10 @@ export interface SignClient {
   status(envelopeId: string): Promise<EnvelopeStatusResponse>;
   /** The sealed PDF's bytes, fetched through the §5.3 short-lived link. */
   sealed(envelopeId: string): Promise<{ bytes: Uint8Array; sha256: string } | null>;
+  /** §5.5: the declarations this organisation may ask a signer to approve. */
+  declarations(): Promise<DeclarationListResponse>;
+  /** §5.5: a new version of one of them, in words a person wrote. */
+  writeDeclaration(request: WriteDeclarationRequest): Promise<DeclarationView>;
   /** §5.4: does this raw body carry Sign's signature for our token? */
   verifyHook(rawBody: string, header: string | undefined): boolean;
 }
@@ -85,6 +92,16 @@ export function createSignClient(
       // The link's answer names the hash; a file that does not match it is not the sealed file.
       if (sha256 !== link.sealedSha256) throw new SignRefused(502, 'sealed-hash-mismatch');
       return { bytes, sha256 };
+    },
+    async declarations() {
+      return DeclarationListResponse.parse(await body(await call('/v1/declarations')));
+    },
+    async writeDeclaration(request) {
+      const response = await call('/v1/declarations', {
+        method: 'POST',
+        body: JSON.stringify(request),
+      });
+      return DeclarationView.parse(await body(response));
     },
     verifyHook(rawBody, header) {
       if (!header?.startsWith('sha256=')) return false;

@@ -853,8 +853,6 @@ export const frFR: Record<MessageKey, string> = {
   'signing.routing.sequential': "L'un après l'autre",
   'signing.routing.parallel': 'Tous en même temps',
   'signing.declarationKey': 'Déclaration',
-  'signing.declarationHint':
-    "La clé d'une déclaration rédigée dans Loppa Sign. « demo » est un texte provisoire du mode test.",
   'signing.testMode': 'Mode test',
   'signing.testModeHint': "Rien de ce qui est signé en mode test n'est marqué comme réel.",
   'signing.send': 'Envoyer à signer',
@@ -876,6 +874,36 @@ export const frFR: Record<MessageKey, string> = {
   'signing.openLink': 'Ouvrir la page de signature',
   'signing.refresh': 'Actualiser',
   'signing.downloadSigned': 'Télécharger le PDF signé',
+  'signing.declarationHint':
+    'Les mots que chaque signataire approuve. Votre organisation les rédige dans Déclarations.',
+  'signing.declarations': 'Déclarations',
+  'signing.declarationsHint':
+    "Ce que vos signataires approuvent en signant, dans chaque langue. Loppa n'écrit jamais ces mots : un administrateur de votre organisation les saisit. Enregistrer crée une nouvelle version ; les documents déjà envoyés gardent les mots avec lesquels ils ont été envoyés.",
+  'signing.declarationVersion': 'Version {version}',
+  'signing.declarationTestOnly': 'Test uniquement',
+  'signing.declarationWriteOwn': 'Rédiger la vôtre',
+  'signing.declarationNewVersion': 'Nouvelle version',
+  'signing.declarationNew': 'Nouvelle déclaration',
+  'signing.declarationAdminOnly': 'Seul un administrateur peut rédiger une déclaration.',
+  'signing.declarationEditor': 'Rédiger une déclaration',
+  'signing.declarationKeyLabel': 'Nom court',
+  'signing.declarationKeyHint':
+    'Minuscules, chiffres, points, tirets et tirets bas, p. ex. bail-2026.',
+  'signing.declarationOwnWords':
+    "Les signataires voient exactement ce que vous saisissez ici, mot pour mot. Laissez une langue vide si vous ne l'utilisez pas.",
+  'signing.declarationConfirm':
+    'Les signataires approuveront exactement ces mots. Appuyez de nouveau pour les enregistrer comme nouvelle version.',
+  'signing.declarationFailed': "Impossible d'enregistrer la déclaration. Réessayez.",
+  'signing.declarationSave': 'Enregistrer',
+  'signing.declarationSaveConfirm': 'Oui, enregistrer cette version',
+  'signing.environment': 'Mode',
+  'signing.realMode': 'Réel',
+  'signing.declarationMissingLanguage':
+    "La déclaration n'a pas de texte en {languages}. Ajoutez-le dans Déclarations ou choisissez une autre langue pour ce signataire.",
+  'signing.realConfirm':
+    "J'ai vérifié la déclaration dans la langue de chaque signataire, et il s'agit d'une signature réelle, pas d'un test.",
+  'signing.realNeedsOwnDeclaration':
+    'Une signature réelle nécessite une déclaration rédigée par votre organisation. Rédigez-en une dans Déclarations.',
   'signing.cancel': 'Annuler',
   'submissions.sendForSigning': 'Envoyer à signer',
   'signing.fromSubmission': 'Formulaire papier rempli {reference}',

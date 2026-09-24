@@ -833,8 +833,6 @@ export const daDK: Record<MessageKey, string> = {
   'signing.routing.sequential': 'Én ad gangen',
   'signing.routing.parallel': 'Alle på én gang',
   'signing.declarationKey': 'Erklæring',
-  'signing.declarationHint':
-    'Nøglen til en erklæring skrevet i Loppa Sign. "demo" er en pladsholder til testtilstand.',
   'signing.testMode': 'Testtilstand',
   'signing.testModeHint': 'Intet underskrevet i testtilstand markeres som ægte.',
   'signing.send': 'Send til underskrift',
@@ -856,6 +854,36 @@ export const daDK: Record<MessageKey, string> = {
   'signing.openLink': 'Åbn underskriftssiden',
   'signing.refresh': 'Opdater',
   'signing.downloadSigned': 'Hent underskrevet PDF',
+  'signing.declarationHint':
+    'De ord hver underskriver godkender. Jeres organisation skriver dem under Erklæringer.',
+  'signing.declarations': 'Erklæringer',
+  'signing.declarationsHint':
+    'Det jeres underskrivere godkender, når de underskriver, på hvert sprog. Loppa skriver aldrig disse ord: en administrator i jeres organisation skriver dem ind. Når du gemmer, oprettes en ny version; dokumenter, der allerede er sendt, beholder de ord, de blev sendt med.',
+  'signing.declarationVersion': 'Version {version}',
+  'signing.declarationTestOnly': 'Kun test',
+  'signing.declarationWriteOwn': 'Skriv jeres egen',
+  'signing.declarationNewVersion': 'Ny version',
+  'signing.declarationNew': 'Ny erklæring',
+  'signing.declarationAdminOnly': 'Kun en administrator kan skrive en erklæring.',
+  'signing.declarationEditor': 'Skriv en erklæring',
+  'signing.declarationKeyLabel': 'Kort navn',
+  'signing.declarationKeyHint':
+    'Små bogstaver, cifre, punktummer, bindestreger og understreger, f.eks. lejekontrakt-2026.',
+  'signing.declarationOwnWords':
+    'Underskriverne ser præcis det, du skriver her, ord for ord. Lad et sprog stå tomt, hvis I ikke bruger det.',
+  'signing.declarationConfirm':
+    'Underskriverne vil godkende præcis disse ord. Tryk igen for at gemme dem som en ny version.',
+  'signing.declarationFailed': 'Kunne ikke gemme erklæringen. Prøv igen.',
+  'signing.declarationSave': 'Gem',
+  'signing.declarationSaveConfirm': 'Ja, gem denne version',
+  'signing.environment': 'Tilstand',
+  'signing.realMode': 'Rigtig',
+  'signing.declarationMissingLanguage':
+    'Erklæringen har ingen tekst på {languages}. Tilføj den under Erklæringer, eller vælg et andet sprog til den underskriver.',
+  'signing.realConfirm':
+    'Jeg har kontrolleret erklæringen på hver underskrivers sprog, og dette er en rigtig underskrivning, ikke en test.',
+  'signing.realNeedsOwnDeclaration':
+    'Rigtig underskrivning kræver en erklæring, som jeres organisation selv har skrevet. Skriv en under Erklæringer.',
   'signing.cancel': 'Annuller',
   'submissions.sendForSigning': 'Send til underskrift',
   'signing.fromSubmission': 'Udfyldt papirformular {reference}',

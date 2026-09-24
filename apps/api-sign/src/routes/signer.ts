@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { api } from '@tp/shared';
@@ -71,6 +71,10 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
         and(
           eq(declarations.key, definition.declaration.key),
           eq(declarations.version, definition.declaration.version),
+          // Whose words were pinned: an envelope from before §5.5 has no owner, the shared ones.
+          definition.declaration.organisationId
+            ? eq(declarations.organisationId, definition.declaration.organisationId)
+            : isNull(declarations.organisationId),
         ),
       );
     const text = row?.texts[locale];

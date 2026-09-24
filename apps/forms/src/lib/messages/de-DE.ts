@@ -855,8 +855,6 @@ export const deDE: Record<MessageKey, string> = {
   'signing.routing.sequential': 'Nacheinander',
   'signing.routing.parallel': 'Alle gleichzeitig',
   'signing.declarationKey': 'Erklärung',
-  'signing.declarationHint':
-    'Der Schlüssel einer in Loppa Sign verfassten Erklärung. „demo“ ist ein Platzhalter für den Testmodus.',
   'signing.testMode': 'Testmodus',
   'signing.testModeHint': 'Nichts, was im Testmodus unterschrieben wird, gilt als echt markiert.',
   'signing.send': 'Zur Unterschrift senden',
@@ -878,6 +876,37 @@ export const deDE: Record<MessageKey, string> = {
   'signing.openLink': 'Unterschriftsseite öffnen',
   'signing.refresh': 'Aktualisieren',
   'signing.downloadSigned': 'Unterschriebenes PDF herunterladen',
+  'signing.declarationHint':
+    'Die Worte, denen jede unterzeichnende Person zustimmt. Ihre Organisation verfasst sie unter Erklärungen.',
+  'signing.declarations': 'Erklärungen',
+  'signing.declarationsHint':
+    'Dem stimmen Ihre Unterzeichnenden beim Unterschreiben zu, in jeder Sprache. Loppa verfasst diese Worte nie: eine Administratorin oder ein Administrator Ihrer Organisation gibt sie ein. Speichern legt eine neue Version an; bereits versendete Dokumente behalten die Worte, mit denen sie versendet wurden.',
+  'signing.declarationVersion': 'Version {version}',
+  'signing.declarationTestOnly': 'Nur Test',
+  'signing.declarationWriteOwn': 'Eigene verfassen',
+  'signing.declarationNewVersion': 'Neue Version',
+  'signing.declarationNew': 'Neue Erklärung',
+  'signing.declarationAdminOnly': 'Nur Administratoren können eine Erklärung verfassen.',
+  'signing.declarationEditor': 'Erklärung verfassen',
+  'signing.declarationKeyLabel': 'Kurzname',
+  'signing.declarationKeyHint':
+    'Kleinbuchstaben, Ziffern, Punkte, Bindestriche und Unterstriche, z. B. mietvertrag-2026.',
+  'signing.declarationOwnWords':
+    'Unterzeichnende sehen genau das, was Sie hier eingeben, Wort für Wort. Lassen Sie eine Sprache leer, wenn Sie sie nicht verwenden.',
+  'signing.declarationConfirm':
+    'Unterzeichnende stimmen genau diesen Worten zu. Drücken Sie erneut, um sie als neue Version zu speichern.',
+  'signing.declarationFailed':
+    'Die Erklärung konnte nicht gespeichert werden. Bitte erneut versuchen.',
+  'signing.declarationSave': 'Speichern',
+  'signing.declarationSaveConfirm': 'Ja, diese Version speichern',
+  'signing.environment': 'Modus',
+  'signing.realMode': 'Echt',
+  'signing.declarationMissingLanguage':
+    'Die Erklärung hat keinen Text auf {languages}. Ergänzen Sie ihn unter Erklärungen oder wählen Sie für diese Person eine andere Sprache.',
+  'signing.realConfirm':
+    'Ich habe die Erklärung in der Sprache jeder unterzeichnenden Person geprüft, und dies ist eine echte Unterzeichnung, kein Test.',
+  'signing.realNeedsOwnDeclaration':
+    'Echtes Unterzeichnen erfordert eine Erklärung, die Ihre Organisation selbst verfasst hat. Verfassen Sie eine unter Erklärungen.',
   'signing.cancel': 'Abbrechen',
   'submissions.sendForSigning': 'Zur Unterschrift senden',
   'signing.fromSubmission': 'Ausgefülltes Papierformular {reference}',

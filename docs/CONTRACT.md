@@ -84,7 +84,7 @@ Neither fallback may be allowed to rot. CI runs the standalone configuration of 
 ## 5. Forms ⇄ Sign
 
 Sign is the third product: envelopes, eID, multi-party signing and sealed PDFs. Identity data and
-evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1), §5.3 in P1c-2, §5.4 in P1c-3.
+evidence live only in its own database. Shapes come from `@tp/signing`. §5.1 and §5.2 are implemented (P1c-1), §5.3 in P1c-2, §5.4 in P1c-3, §5.5 with the declaration editor.
 
 ### `POST /v1/envelopes` — ask for a document to be signed (§5.1)
 ```
@@ -118,3 +118,17 @@ it holds and refuses a mismatch. `completed` is sent when the last signature com
 envelope. **A hook is a hint, not the record:** delivery is retried a few times and may be lost,
 so on a hook the caller reads §5.2 rather than trusting the body. No redirects are followed.
 Invitations and reminders go through `POST /v1/messages` like any other sender.
+
+### `GET /v1/declarations` · `POST /v1/declarations` — the words a signer approves (§5.5)
+```
+GET  → 200 { declarations: [{ key, version, texts: { [locale]: text }, authored, shared }] }
+POST { organisationId, key, texts: { [locale]: text } } → 201 { key, version, texts, authored, shared }
+```
+The latest version of each declaration the caller's organisation may use: its own, and the shared
+test-only placeholders (`shared: true, authored: false`); an own key hides a shared one. `POST`
+stores a new version of the caller's own declaration **exactly as a person typed it** — Loppa never
+writes, suggests or completes these words (CLAUDE.md rule 8). `key` is `[a-z0-9][a-z0-9._-]{0,63}`;
+each text is 1–5000 characters; at least one locale. 403 when `organisationId` is not the token's.
+Versions are append-only: an envelope pins the version it was created with and keeps those words.
+§5.1 resolves `declarationKey` to the caller's own declaration first, then a shared one; a
+production envelope needs an authored one, and every party's `locale` must have text.

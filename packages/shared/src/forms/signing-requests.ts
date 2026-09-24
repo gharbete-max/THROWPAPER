@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DeclarationKey, DeclarationTexts, DeclarationView } from '../contract/signing.js';
 
 /**
  * Forms' own API for sending a document to Sign (P1c-3). Not the contract: this is how the Forms
@@ -88,3 +89,16 @@ export const SigningRequestList = z.object({
   requests: z.array(SigningRequestView),
 });
 export type SigningRequestList = z.infer<typeof SigningRequestList>;
+
+/**
+ * The declarations a signer can be asked to approve (CONTRACT §5.5), as Forms shows them. The words
+ * are written by a person in the organisation — Loppa never writes them (CLAUDE.md rule 8).
+ */
+export const SigningDeclarationList = z.object({
+  enabled: z.boolean(),
+  declarations: z.array(DeclarationView),
+});
+export type SigningDeclarationList = z.infer<typeof SigningDeclarationList>;
+
+export const WriteSigningDeclaration = z.object({ key: DeclarationKey, texts: DeclarationTexts });
+export type WriteSigningDeclaration = z.infer<typeof WriteSigningDeclaration>;
