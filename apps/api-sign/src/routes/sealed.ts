@@ -21,7 +21,7 @@ export function registerSealedRoutes(app: FastifyInstance, deps: Deps): void {
         envelopeId &&
         (await withEnvelope(deps, envelopeId, now, (loaded) =>
           loaded.envelope.status === 'completed'
-            ? readSeal(deps.db, envelopeId, loaded.trailSha256)
+            ? readSeal(loaded.db, envelopeId, loaded.trailSha256)
             : Promise.resolve(null),
         ));
       if (!seal) return fail(reply, 404, 'not-found', 'This link does not open anything');

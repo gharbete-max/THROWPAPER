@@ -13,7 +13,7 @@ import {
 } from '@tp/signing';
 import { declarations } from '../db/schema.js';
 import { readToken } from '../envelopes/links.js';
-import { documentBytes, withEnvelope, type Definition } from '../envelopes/store.js';
+import { documentBytes, withEnvelope, type Definition, type Loaded } from '../envelopes/store.js';
 import type { Deps } from '../server.js';
 import { fail } from './envelopes.js';
 
@@ -48,8 +48,12 @@ const errors = { 404: api.ErrorResponse, 409: api.ErrorResponse } as const;
 export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
   const typed = app.withTypeProvider<ZodTypeProvider>();
 
-  async function declarationText(definition: Definition, locale: string): Promise<string> {
-    const [row] = await deps.db
+  /** Read inside the envelope's transaction (`loaded`), never the pool — see `Loaded.db`. */
+  async function declarationText(
+    { db, definition }: Pick<Loaded, 'db' | 'definition'>,
+    locale: string,
+  ): Promise<string> {
+    const [row] = await db
       .select()
       .from(declarations)
       .where(
@@ -101,7 +105,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
             await append({ type: 'viewed', at: deps.now().toISOString(), partyId: link.partyId });
           }
           const party = loaded.envelope.parties.find((p) => p.id === link.partyId)!;
-          const text = await declarationText(loaded.definition, party.locale);
+          const text = await declarationText(loaded, party.locale);
           return view(loaded.envelope, link.partyId, text, loaded.definition);
         }));
       if (!result) return fail(reply, 404, 'not-found', 'This link does not open anything');
@@ -142,7 +146,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
           const { envelope, definition } = loaded;
           const party = envelope.parties.find((p) => p.id === link.partyId);
           if (!party) return null;
-          const text = await declarationText(definition, party.locale);
+          const text = await declarationText(loaded, party.locale);
           const at = deps.now().toISOString();
           const refused = await append({
             type: 'signed',
@@ -184,7 +188,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
             partyId: party.id,
           });
           if (refused) return refused;
-          const text = await declarationText(loaded.definition, party.locale);
+          const text = await declarationText(loaded, party.locale);
           return view(loaded.envelope, party.id, text, loaded.definition);
         }));
       if (!outcome) return fail(reply, 404, 'not-found', 'This link does not open anything');

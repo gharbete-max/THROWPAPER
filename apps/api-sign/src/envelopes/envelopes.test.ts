@@ -1,11 +1,11 @@
 import { randomUUID, webcrypto } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { sql as raw } from 'drizzle-orm';
+import { asc, eq, sql as raw } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { buildServer } from '../server.js';
 import { testDatabase } from '../test-database.js';
 import { PDFDocument } from 'pdf-lib';
-import { declarations, serviceTokens } from '../db/schema.js';
+import { declarations, envelopeEvents, serviceTokens } from '../db/schema.js';
 import type { Db } from '../db/client.js';
 import { generateDevCertificate, loadSealer, type Sealer } from '../sealing/certificate.js';
 import { extractSeal, opensslVerify } from '../sealing/openssl-validator.js';
@@ -319,11 +319,8 @@ describe.skipIf(!database)('signing', () => {
     ]);
 
     // The trail holds the declaration as shown, in the signer's own language.
-    const events = await db.execute(
-      raw`select event from envelope_events where envelope_id = ${created.envelopeId} order by seq`,
-    );
-    const signed = events
-      .map((row) => JSON.parse(String(row['event'])))
+    const signed = (await trailOf(created.envelopeId))
+      .map((row) => JSON.parse(row.event))
       .filter((event) => event.type === 'signed');
     expect(signed.map((event) => event.evidence.declaration.text)).toEqual([
       '[v2 sv — placeholder]',
@@ -357,10 +354,7 @@ describe.skipIf(!database)('signing', () => {
     const results = await Promise.all([sign(link, 'Åsa'), sign(link, 'Åsa')]);
     expect(results.map((r) => r.statusCode).sort()).toEqual([200, 409]);
 
-    const seqs = await db.execute(
-      raw`select seq from envelope_events where envelope_id = ${created.envelopeId} order by seq`,
-    );
-    expect(seqs.map((row) => Number(row['seq']))).toEqual([1, 2]);
+    expect((await trailOf(created.envelopeId)).map((row) => row.seq)).toEqual([1, 2]);
   });
 
   it('expires on the deadline, and a late signature is refused', async () => {
@@ -614,6 +608,14 @@ describe.skipIf(!database)('the sealed document (§5.3)', () => {
     expect((await sealedOf(token, id)).statusCode).toBe(500);
   });
 });
+
+function trailOf(envelopeId: string) {
+  return db
+    .select()
+    .from(envelopeEvents)
+    .where(eq(envelopeEvents.envelopeId, envelopeId))
+    .orderBy(asc(envelopeEvents.seq));
+}
 
 function sign(link: string, typedName: string) {
   return app.inject({ method: 'POST', url: `/v1/sign/${link}`, payload: { typedName } });
