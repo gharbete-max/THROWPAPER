@@ -15,6 +15,8 @@ import { execFileSync } from 'node:child_process';
 /** Permissive licences, plus the two content licences the toolchain's data and fonts use. */
 const ALLOWED = new Set([
   'MIT',
+  // MIT with the attribution clause removed — strictly more permissive (nodemailer).
+  'MIT-0',
   'ISC',
   'Apache-2.0',
   'BSD-2-Clause',
@@ -30,6 +32,21 @@ const ALLOWED = new Set([
   // Data (caniuse-lite, used at build time only): attribution, no copyleft.
   'CC-BY-4.0',
 ]);
+
+/**
+ * Packages allowed by name despite their licence, each with the reason it is safe.
+ *
+ * Only for code that runs on a developer's or CI's machine and never ships inside a product. A
+ * name, not a licence: allowing WTFPL outright would let the next WTFPL package in unreviewed.
+ */
+export const BUILD_TOOL_EXCEPTIONS: Readonly<Record<string, string>> = {
+  'truncate-utf8-bytes':
+    "WTFPL — electron-builder's filename sanitiser (ADR 0016). Runs while packaging the desktop installer; not inside it.",
+};
+
+export function allowed(licence: string, name: string): boolean {
+  return satisfiable(licence) || name in BUILD_TOOL_EXCEPTIONS;
+}
 
 export function satisfiable(expression: string): boolean {
   const text = expression.trim().replace(/^\((.*)\)$/, '$1');
@@ -48,11 +65,11 @@ function main(): void {
     Array<{ name: string; versions: string[] }>
   >;
 
-  const refused = Object.entries(byLicence)
-    .filter(([licence]) => !satisfiable(licence))
-    .flatMap(([licence, packages]) =>
-      packages.map((pkg) => `${pkg.name}@${pkg.versions.join(',')} — ${licence}`),
-    );
+  const refused = Object.entries(byLicence).flatMap(([licence, packages]) =>
+    packages
+      .filter((pkg) => !allowed(licence, pkg.name))
+      .map((pkg) => `${pkg.name}@${pkg.versions.join(',')} — ${licence}`),
+  );
 
   const total = Object.values(byLicence).reduce((sum, packages) => sum + packages.length, 0);
   if (refused.length > 0) {

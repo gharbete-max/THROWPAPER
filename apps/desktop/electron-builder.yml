@@ -1,0 +1,83 @@
+# Loppa for Windows and macOS — packaging (docs/adr/0016-desktop-edition.md).
+#
+# Packs the staging folder `scripts/build.ts` produces, never the workspace: the script runs
+# electron-builder with `--projectDir .stage`, so every path below is relative to the stage. Run
+# through `pnpm --filter @tp/desktop package:win` / `package:mac`; the Desktop workflow does the
+# same on windows-latest and macos-latest.
+appId: com.throwpaper.loppa
+productName: Loppa
+copyright: Copyright © Loppa. All rights reserved.
+# No auto-update feed yet (ADR 0016, D2): releases are published by the workflow, not by this tool.
+publish: null
+directories:
+  app: .
+  output: ../release
+  buildResources: build
+files:
+  - main.js
+  - preload.cjs
+  - package.json
+  - node_modules/**
+# Plain folders beside the asar: the server streams the web bundle and the migrator reads the SQL at
+# every start, and both are simpler and faster as ordinary files.
+extraResources:
+  - from: web
+    to: web
+  - from: drizzle
+    to: drizzle
+  - from: panel
+    to: panel
+# PGlite reads its WebAssembly with fs from beside its module; out of the asar, nothing can go wrong.
+asarUnpack:
+  - node_modules/@electric-sql/pglite/**
+# No native modules anywhere in the app, so nothing to rebuild against Electron's ABI.
+npmRebuild: false
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+  icon: build/icon.png
+  # Code signing is the owner's certificate (LAUNCH-CHECKLIST §6). Until it exists, SmartScreen
+  # warns on first run — the ADR says so rather than hiding it.
+  signAndEditExecutable: true
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: Loppa-Setup-${version}.${ext}
+  # Uninstalling keeps %APPDATA%\Loppa — the user's forms and answers are not the program's to delete.
+  deleteAppDataOnUninstall: false
+portable:
+  artifactName: Loppa-${version}-portable.${ext}
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  category: Office
+  artifactName: Loppa-${version}.${ext}
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  category: public.app-category.business
+  icon: build/icon.png
+  # Ad-hoc signed until there is an Apple Developer ID (LAUNCH-CHECKLIST §6). An Apple Silicon Mac
+  # will not run an unsigned binary at all; ad-hoc makes it run, and Gatekeeper still asks on first
+  # open because it is not notarised. The ad-hoc signature is made by scripts/after-pack.cjs, on
+  # every build: electron-builder skips its own signing on pull requests, and a skipped signature
+  # left Electron's stock one over a changed bundle. With a Developer ID: set `identity`, drop the
+  # hook's signing, turn the hardened runtime on with camera and Apple-events entitlements, and
+  # notarise.
+  identity: null
+  hardenedRuntime: false
+  # macOS asks before letting an app use the camera or drive another app, and shows these lines.
+  # Without them it refuses silently — no QR scanning at the door, no sending through Outlook.
+  extendInfo:
+    NSCameraUsageDescription: Loppa uses the camera to scan admission QR codes and photograph paper forms.
+    NSAppleEventsUsageDescription: Loppa sends email through Outlook or Mail when you choose that in Settings.
+dmg:
+  artifactName: Loppa-${version}-${arch}.${ext}

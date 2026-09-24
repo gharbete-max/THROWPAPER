@@ -276,8 +276,11 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
     const from = sendingDomain?.fromAddress ?? '';
 
     // The rule with no override. A console provider is development only and is exempt, because
-    // there is no domain to burn.
-    if (deps.provider.name !== 'console' && deps.provider.name !== 'memory') {
+    // there is no domain to burn — and so is the desktop's outbox, which writes files and sends
+    // nothing (`smtp.ts`). So are Outlook and Apple Mail on the desktop (`outlook.ts`): the message
+    // leaves from the user's own account on their provider's servers, with a sender this product
+    // neither chooses nor can verify — the same position as the user writing it by hand.
+    if (!['console', 'memory', 'outbox', 'outlook', 'apple-mail'].includes(deps.provider.name)) {
       const verification = sendingDomain
         ? {
             domain: sendingDomain.domain,

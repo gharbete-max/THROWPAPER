@@ -33,18 +33,22 @@ Requires Node ≥ 20 and pnpm 9 (`corepack enable`).
 
 ```bash
 pnpm install
-pnpm db:up && pnpm db:migrate && pnpm db:seed
-pnpm demo
+pnpm demo                                    # in memory: no database, nothing saved, nothing sent
+pnpm db:up && pnpm db:migrate && pnpm db:seed && pnpm dev:forms   # against a real Postgres
 ```
 
-`pnpm demo` starts Forms with seeded data: a brand kit, ~200 contacts across three audiences, one
-event with registrations, an inspection template with completed inspections, a measurement
-dataset, and three email templates. `pnpm dev:forms` / `pnpm dev:mailer` run each product on its
-own.
+`pnpm demo` starts Forms in memory with the demo dataset: the Demo AB brand kit, one event with
+~200 registrations and the form that collected them. `pnpm db:seed` writes the same dataset to
+Postgres. `pnpm dev:forms` / `pnpm dev:mailer` / `pnpm dev:sign` run each product on its own.
+
+**On one computer, offline:** `apps/desktop` is Loppa for Windows and macOS — the Forms product in a
+window, on an embedded Postgres, with mail to an outbox folder, your own SMTP server, or the
+Outlook (or Apple Mail) already on the computer. Installers come from the
+`Desktop` workflow; `docs/adr/0016-desktop-edition.md` has what works offline and what does not.
 
 ```bash
 pnpm verify          # format + typecheck + lint + test + build — the definition of done
-pnpm contract:check  # both apps against docs/CONTRACT.md
+pnpm contract:check  # all three backends against docs/CONTRACT.md
 pnpm test:e2e        # Playwright, against pnpm demo
 ```
 
@@ -56,7 +60,8 @@ apps/api-forms    Forms backend
 apps/mailer       Mailer
 apps/api-mailer   Mailer backend
 apps/sign         Sign — scaffold
-apps/api-sign     Sign backend — envelopes, audit trail, typed signing (P1c-1); no sealing yet
+apps/api-sign     Sign backend — envelopes, audit trail, typed signing, PAdES sealing (P1c-1, P1c-2)
+apps/desktop      Loppa desktop (Windows, macOS) — Forms in an Electron window, offline first
 packages/tokens   Design tokens → CSS vars, inline email styles, print CSS. Contrast guard lives here
 packages/i18n     Translation catalogues and ICU collation
 packages/ui       One `cn()` helper; the data grid is deliberately not in v0.1

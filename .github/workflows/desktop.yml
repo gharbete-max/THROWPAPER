@@ -1,0 +1,136 @@
+name: Desktop
+
+# Loppa for Windows and macOS (docs/adr/0016-desktop-edition.md): the Windows installer and
+# portable .exe, and the Mac disk images for Apple Silicon and Intel.
+#
+# Each is built on its own platform, because each needs that platform's tools (NSIS and rcedit;
+# hdiutil and codesign); a cross-build elsewhere only produces a zip. Runs on pull requests that
+# touch what goes into the app, by hand, and on a `desktop-v*` tag — which also publishes the files
+# as a GitHub release, the "download" in "downloadable".
+
+on:
+  pull_request:
+    paths:
+      - 'apps/desktop/**'
+      - 'apps/api-forms/src/desktop/**'
+      - 'apps/api-forms/src/db/pglite.ts'
+      - 'apps/api-forms/src/mail/**'
+      - 'apps/api-forms/drizzle/**'
+      - '.github/workflows/desktop.yml'
+  workflow_dispatch:
+  push:
+    tags: ['desktop-v*']
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        env:
+          # PDFs render through the Edge every Windows has; Playwright's own browsers are not needed.
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - run: pnpm --filter @tp/forms build
+      - run: pnpm --filter @tp/desktop package:win
+
+      # An installer that builds is not an app that starts. Launch the unpacked Loppa.exe against a
+      # throwaway profile and wait for its local server to answer — the same /health the container
+      # smoke test reads — then stop it.
+      - name: Smoke-test Loppa.exe
+        shell: pwsh
+        run: |
+          $profile = Join-Path $env:RUNNER_TEMP 'loppa-profile'
+          $app = Start-Process -FilePath 'apps/desktop/release/win-unpacked/Loppa.exe' `
+            -ArgumentList "--user-data-dir=$profile" -PassThru
+          $ok = $false
+          for ($i = 0; $i -lt 60; $i++) {
+            try {
+              $health = Invoke-RestMethod -Uri 'http://127.0.0.1:47017/health' -TimeoutSec 2
+              if ($health.status -eq 'ok') { $ok = $true; break }
+            } catch { }
+            if ($app.HasExited) { break }
+            Start-Sleep -Seconds 2
+          }
+          Stop-Process -Id $app.Id -Force -ErrorAction SilentlyContinue
+          Get-ChildItem -Recurse (Join-Path $profile 'workspace') | Select-Object FullName | Format-Table -HideTableHeaders
+          if (-not $ok) { throw 'Loppa.exe did not answer on 127.0.0.1:47017' }
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: loppa-windows
+          path: |
+            apps/desktop/release/Loppa-Setup-*.exe
+            apps/desktop/release/Loppa-*-portable.exe
+          retention-days: 14
+
+  macos:
+    # Apple Silicon. The Intel image is built here too, by cross-arch packaging on the same host.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - run: pnpm --filter @tp/forms build
+      - run: pnpm --filter @tp/desktop package:mac
+
+      # Same proof as Windows: the ad-hoc-signed arm64 app starts and its local server answers.
+      # An Apple Silicon Mac refuses an unsigned binary outright, so this is also the signing check.
+      - name: Smoke-test Loppa.app
+        run: |
+          profile="$RUNNER_TEMP/loppa-profile"
+          app="apps/desktop/release/mac-arm64/Loppa.app/Contents/MacOS/Loppa"
+          codesign --verify --verbose "apps/desktop/release/mac-arm64/Loppa.app"
+          "$app" --user-data-dir="$profile" > "$RUNNER_TEMP/loppa.log" 2>&1 &
+          pid=$!
+          ok=0
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:47017/health | grep -q '"status":"ok"'; then ok=1; break; fi
+            if ! kill -0 "$pid" 2>/dev/null; then break; fi
+            sleep 2
+          done
+          kill "$pid" 2>/dev/null || true
+          ls -R "$profile/workspace" | head -20 || true
+          if [ "$ok" != 1 ]; then cat "$RUNNER_TEMP/loppa.log"; echo "Loppa.app did not answer on 127.0.0.1:47017"; exit 1; fi
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: loppa-macos
+          path: apps/desktop/release/Loppa-*.dmg
+          retention-days: 14
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/desktop-v')
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: loppa-*
+          merge-multiple: true
+          path: dist
+      # Unsigned (Windows) and ad-hoc signed, not notarised (macOS) until the owner's certificates
+      # exist (LAUNCH-CHECKLIST §6); the release notes say so, because SmartScreen and Gatekeeper will.
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.exe dist/*.dmg \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Loppa desktop ${GITHUB_REF_NAME#desktop-v}" \
+            --notes "Windows: installer (Loppa-Setup) and portable build — not yet code-signed, so SmartScreen warns on first run. macOS: Loppa-*-arm64.dmg for Apple Silicon, Loppa-*-x64.dmg for Intel — not yet notarised, so the first time, right-click Loppa and choose Open. See docs/adr/0016-desktop-edition.md."

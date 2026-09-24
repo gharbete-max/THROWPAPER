@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
-import type { Db } from '../client.js';
+import type { Db } from '../types.js';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
 import {

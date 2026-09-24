@@ -237,6 +237,17 @@ P1c-3 Forms → Sign + webhook, P1c-4 standalone page + SMTP.
   server exposing read and draft actions (send/sign require a human confirmation).
 - EUDI Wallet adapter; US simple-signature + ID verification; Asian adapters one country at a time.
 
+**D — Loppa desktop (Windows, macOS), offline first.** (packages: none; contract: none) — `docs/adr/0016-desktop-edition.md`.
+Asked for by the owner on 2026-09-23: a downloadable `.exe` that runs forms, scanning, documents
+and email fully locally, with AI and signing offering "connect online" or "work in cloud
+(placeholder)". **Owner's direction (2026-09-23): offline product first, then hostable from the
+same code; everything but eID signing works offline; mail through Outlook where it can; macOS
+too.** **D1 is built** (PROGRESS § D1, § D1b): the Forms product in an Electron window on an
+embedded Postgres (PGlite — the same migrations and repositories), mail to an `.eml` outbox, SMTP,
+Outlook or Apple Mail, PDFs from the app's own Chromium, Windows and macOS installers from
+`.github/workflows/desktop.yml`. Next is D4 — hostable — with D2 polish beside it; D3 scanner
+hardware, D5 AI online, D6 Mailer locally after. Each is described in the ADR.
+
 Explicitly **not** in these phases: qualified signatures, AGM voting and power of attorney
 (`SPEC-forms.md` §8), tax calculation or VAT tables (ADR 0011), handwriting OCR (ADR 0007, unwritten).
 
