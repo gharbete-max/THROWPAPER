@@ -1,9 +1,9 @@
 /**
  * Straightening a photographed page: four corners in, a flat upright page out.
  *
- * What a scanner app does after it has found the page's edges — except that here a person
- * found them, by dragging four handles (`CropPhoto.tsx`), which is the part a person is
- * reliably better at than an 8 MB computer-vision library on a dark table.
+ * What a scanner app does after it has found the page's edges. Here `detect.ts` makes a first
+ * guess and a person confirms or moves it, by dragging four handles (`CropPhoto.tsx`) — the part
+ * a person is reliably better at than an 8 MB computer-vision library on a dark table.
  *
  * ## The maths, briefly
  *

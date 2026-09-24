@@ -884,6 +884,7 @@ export const svSE: Record<MessageKey, string> = {
     'Jag har kontrollerat försäkran på varje undertecknares språk, och det här är en skarp signering, inte ett test.',
   'signing.realNeedsOwnDeclaration':
     'Skarp signering kräver en försäkran som er organisation har skrivit själv. Skriv en under Försäkringar.',
+  'signing.fileHint': 'En PDF, eller sidor från en skanner som JPEG- eller PNG-bilder.',
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Skicka för signering',
   'signing.fromSubmission': 'Ifyllt pappersformulär {reference}',

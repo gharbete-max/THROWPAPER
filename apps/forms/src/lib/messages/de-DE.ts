@@ -907,6 +907,7 @@ export const deDE: Record<MessageKey, string> = {
     'Ich habe die Erklärung in der Sprache jeder unterzeichnenden Person geprüft, und dies ist eine echte Unterzeichnung, kein Test.',
   'signing.realNeedsOwnDeclaration':
     'Echtes Unterzeichnen erfordert eine Erklärung, die Ihre Organisation selbst verfasst hat. Verfassen Sie eine unter Erklärungen.',
+  'signing.fileHint': 'Ein PDF oder Seiten aus einem Scanner als JPEG- oder PNG-Bilder.',
   'signing.cancel': 'Abbrechen',
   'submissions.sendForSigning': 'Zur Unterschrift senden',
   'signing.fromSubmission': 'Ausgefülltes Papierformular {reference}',

@@ -904,6 +904,7 @@ export const frFR: Record<MessageKey, string> = {
     "J'ai vérifié la déclaration dans la langue de chaque signataire, et il s'agit d'une signature réelle, pas d'un test.",
   'signing.realNeedsOwnDeclaration':
     'Une signature réelle nécessite une déclaration rédigée par votre organisation. Rédigez-en une dans Déclarations.',
+  'signing.fileHint': "Un PDF, ou des pages d'un scanner en images JPEG ou PNG.",
   'signing.cancel': 'Annuler',
   'submissions.sendForSigning': 'Envoyer à signer',
   'signing.fromSubmission': 'Formulaire papier rempli {reference}',

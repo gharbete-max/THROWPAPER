@@ -903,6 +903,7 @@ export const ruRU: Record<MessageKey, string> = {
     'Я проверил(а) заявление на языке каждого подписанта, и это настоящее подписание, а не тест.',
   'signing.realNeedsOwnDeclaration':
     'Для настоящего подписания нужно заявление, написанное вашей организацией. Напишите его в разделе «Заявления».',
+  'signing.fileHint': 'PDF или страницы со сканера в виде изображений JPEG или PNG.',
   'signing.cancel': 'Отмена',
   'submissions.sendForSigning': 'Отправить на подпись',
   'signing.fromSubmission': 'Заполненная бумажная форма {reference}',

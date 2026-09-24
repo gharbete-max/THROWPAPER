@@ -885,6 +885,7 @@ export const nbNO: Record<MessageKey, string> = {
     'Jeg har kontrollert erklæringen på hver signatars språk, og dette er en ekte signering, ikke en test.',
   'signing.realNeedsOwnDeclaration':
     'Ekte signering krever en erklæring organisasjonen deres har skrevet selv. Skriv en under Erklæringer.',
+  'signing.fileHint': 'En PDF, eller sider fra en skanner som JPEG- eller PNG-bilder.',
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Send til signering',
   'signing.fromSubmission': 'Utfylt papirskjema {reference}',

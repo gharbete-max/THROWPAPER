@@ -889,6 +889,7 @@ export const isIS: Record<MessageKey, string> = {
     'Ég hef yfirfarið yfirlýsinguna á tungumáli hvers undirritara og þetta er raunveruleg undirritun, ekki próf.',
   'signing.realNeedsOwnDeclaration':
     'Raunveruleg undirritun krefst yfirlýsingar sem fyrirtækið ykkar hefur skrifað sjálft. Skrifaðu hana undir Yfirlýsingar.',
+  'signing.fileHint': 'PDF-skjal, eða síður úr skanna sem JPEG- eða PNG-myndir.',
   'signing.cancel': 'Hætta við',
   'submissions.sendForSigning': 'Senda til undirritunar',
   'signing.fromSubmission': 'Útfyllt pappírseyðublað {reference}',
