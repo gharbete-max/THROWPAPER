@@ -121,15 +121,17 @@ describe('a draft in the mail program on this computer', () => {
 
   it('says the program is not there, rather than failing vaguely — and cleans up', async () => {
     const { run } = recorder({ code: 3, stdout: '', stderr: '' });
-    const before = await readdir(join(scratch, 'drafts')).catch(() => []);
+    // Its own folder: the sweep may clear older drafts from the shared one, and under a shifted
+    // clock (CI's clock-drift job) it clears all of them, so a count taken there proves nothing.
+    const own = join(scratch, 'unavailable');
     const drafter = createMailDrafter({
       program: 'outlook',
       platform: 'win32',
-      scratchDir: scratch,
+      scratchDir: own,
       run,
     })!;
     await expect(drafter.open(hostile)).rejects.toBeInstanceOf(DraftUnavailable);
-    expect(await readdir(join(scratch, 'drafts'))).toHaveLength(before.length);
+    expect(await readdir(join(own, 'drafts'))).toEqual([]);
   });
 
   it('offers nothing where no mail program can be driven', () => {
