@@ -172,6 +172,8 @@ async function main(): Promise<void> {
       join(root, 'electron-builder.yml'),
       // Electron is a dev dependency of this package, not of the stage, so name its version.
       `-c.electronVersion=${versionOf('electron', root)}`,
+      // Hooks resolve against the project directory, which is the stage; name ours absolutely.
+      `-c.afterPack=${join(root, 'scripts', 'after-pack.cjs')}`,
     ];
     /*
      * The NSIS installer and the portable .exe run Windows tools while they are built, and

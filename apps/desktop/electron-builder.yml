@@ -67,9 +67,12 @@ mac:
   icon: build/icon.png
   # Ad-hoc signed until there is an Apple Developer ID (LAUNCH-CHECKLIST §6). An Apple Silicon Mac
   # will not run an unsigned binary at all; ad-hoc makes it run, and Gatekeeper still asks on first
-  # open because it is not notarised. With a Developer ID: drop `identity`, turn the hardened
-  # runtime on with camera and Apple-events entitlements, and notarise.
-  identity: '-'
+  # open because it is not notarised. The ad-hoc signature is made by scripts/after-pack.cjs, on
+  # every build: electron-builder skips its own signing on pull requests, and a skipped signature
+  # left Electron's stock one over a changed bundle. With a Developer ID: set `identity`, drop the
+  # hook's signing, turn the hardened runtime on with camera and Apple-events entitlements, and
+  # notarise.
+  identity: null
   hardenedRuntime: false
   # macOS asks before letting an app use the camera or drive another app, and shows these lines.
   # Without them it refuses silently — no QR scanning at the door, no sending through Outlook.
