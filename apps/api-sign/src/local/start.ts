@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
+import { guardLoopbackHost } from './loopback-host.js';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { join } from 'node:path';
@@ -111,6 +112,7 @@ export async function startLocalSign(options: {
       sealer: await loadSealer({ keyPem: secrets.sealKeyPem, certPem: secrets.sealCertPem }),
       ...(options.webDir ? { serveAppFrom: options.webDir } : {}),
     });
+    guardLoopbackHost(app, port);
     await app.listen({ port, host: '127.0.0.1' });
   } catch (error) {
     await local.close();

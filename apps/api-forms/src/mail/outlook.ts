@@ -118,7 +118,7 @@ export const MAC_APPLE_MAIL_SCRIPT = [
   'end run',
 ].join('\n');
 
-const defaultRun: ScriptRunner = (command, args, env) =>
+export const defaultRun: ScriptRunner = (command, args, env) =>
   new Promise((resolve) => {
     execFile(
       command,
@@ -135,6 +135,18 @@ const defaultRun: ScriptRunner = (command, args, env) =>
       },
     );
   });
+
+/**
+ * PowerShell by its absolute path, never by name.
+ *
+ * `execFile('powershell.exe')` searches for the program, and on Windows the search starts in the
+ * current folder — so a `powershell.exe` dropped beside a portable Loppa in Downloads would run in
+ * its place, with the message and its attachments. The system copy is always at this path.
+ */
+export function powershellPath(env: NodeJS.ProcessEnv = process.env): string {
+  const root = env['SystemRoot'] ?? env['windir'] ?? 'C:\\Windows';
+  return `${root}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`;
+}
 
 export function describeProgram(program: MailProgram, platform: NodeJS.Platform): string {
   if (program === 'apple-mail') return 'Apple Mail';
@@ -189,7 +201,7 @@ export function createMailProgramProvider(options: MailProgramOptions): MailProv
             { encoding: 'utf8', mode: 0o600 },
           );
           result = await run(
-            'powershell.exe',
+            powershellPath(),
             [
               '-NoProfile',
               '-NonInteractive',

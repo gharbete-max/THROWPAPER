@@ -37,6 +37,21 @@ asarUnpack:
   - node_modules/@electric-sql/pglite/**
 # No native modules anywhere in the app, so nothing to rebuild against Electron's ABI.
 npmRebuild: false
+# Electron's fuses, flipped at package time. Off: running the binary as plain Node
+# (ELECTRON_RUN_AS_NODE — any local process could otherwise borrow Loppa's camera and Apple-events
+# permissions and send mail as the user), NODE_OPTIONS, and --inspect. On: the app loads only from
+# its asar, and the asar is checked against the hash stamped into the executable. Nothing in the app
+# forks a Node process, which is the one thing the first fuse would break.
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  # Left at its default on purpose: the settings panel is a Vite build loaded from file://, and its
+  # <script type="module"> is exactly what Chromium refuses to a file:// page without these
+  # privileges. The panel never navigates (main/navigation.ts), which is the risk this fuse guards.
 win:
   target:
     - target: nsis
