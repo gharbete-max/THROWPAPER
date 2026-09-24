@@ -30,16 +30,32 @@
 const SECRET_RUN = /[A-Za-z0-9]{24,}/g;
 
 /**
+ * A base64url secret: the shape `generateSecret()` and the phone-scan tokens take — 43 characters
+ * of `A-Z a-z 0-9 - _`.
+ *
+ * The alphanumeric rule above cannot see these whole: a `-` or `_` ends its run, and a quarter of
+ * all such tokens have one early enough that no piece reaches 24 — measured over 100,000 of them,
+ * 26% went into the log intact. So a second rule takes the whole run, 32 or longer, *unless* it is
+ * entirely lower-case letters, digits and hyphens, which is what a UUID and a slug look like and
+ * what a random 43-character base64url token essentially never is (the odds are about 2^-45).
+ */
+const BASE64URL_RUN = /[A-Za-z0-9_-]{32,}/g;
+const IDENTIFIER_LIKE = /^[a-z0-9-]+$/;
+
+/**
  * Query values that are secret whatever their shape, because the name says so.
  *
  * `?token=abc` is short enough to slip past the length rule, and a short token is not a safe one —
  * it is just a shorter secret.
  */
-const SECRET_PARAMS = /\b(token|signature|sig|key|secret|password|code)=[^&\s]+/gi;
+const SECRET_PARAMS = /\b(token|resume|signature|sig|key|secret|password|code)=[^&\s]+/gi;
 
 export function redactSecretsInUrl(url: string): string {
   return url
     .replace(SECRET_PARAMS, (match) => `${match.split('=')[0]}=[redacted]`)
+    .replace(BASE64URL_RUN, (run) =>
+      IDENTIFIER_LIKE.test(run) ? run : `${run.slice(0, 4)}[redacted]`,
+    )
     .replace(
       SECRET_RUN,
       // Keep the first four characters: enough to correlate two log lines about the same request

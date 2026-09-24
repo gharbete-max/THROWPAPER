@@ -350,6 +350,31 @@ export function registerFormRoutes(
       if (!found) return notFound(reply);
       if (!formSchemas.canEdit(found.access)) return forbidden(reply);
 
+      /*
+       * The draft's paper list is what authorises reading a private file back
+       * (`GET /v1/forms/:id/paper/:key`), so a key may only join it if it was uploaded *to this
+       * form*. Otherwise anybody who once saw a key — a respondent's attachment in a form shared
+       * with them, another organisation's paper — could write it into their own draft and read the
+       * file after their access ended. Keys the draft already had are checked once, when they
+       * arrived; the upload itself is recorded (`form.paper.add`), and that record is the check.
+       */
+      const had = new Set(paperKeys(found.form.draftDefinition));
+      const arriving = (body.definition.paper?.sources ?? [])
+        .map((source) => source.key)
+        .filter((key) => !had.has(key));
+      if (arriving.length > 0) {
+        const uploaded = new Set(
+          (await deps.repos.audit.list(auth.organisation.id))
+            .filter((entry) => entry.action === 'form.paper.add' && entry.entityId === id)
+            .map((entry) => (entry.after as { key?: unknown } | undefined)?.key),
+        );
+        if (arriving.some((key) => !uploaded.has(key))) {
+          return reply.code(422).send({
+            error: { code: 'unknown-paper', message: 'That paper was not uploaded to this form' },
+          });
+        }
+      }
+
       const updated = await deps.repos.forms.update(auth.organisation.id, id, {
         draftDefinition: body.definition,
       });
@@ -933,4 +958,10 @@ function forbidden(reply: FastifyReply) {
 
 function unauthenticated(reply: FastifyReply) {
   return reply.code(401).send({ error: { code: 'unauthorised', message: 'Not signed in' } });
+}
+
+/** The paper keys a stored definition lists, whatever shape an old row is in. */
+function paperKeys(definition: unknown): string[] {
+  const parsed = formSchemas.FormDefinition.safeParse(definition);
+  return parsed.success ? (parsed.data.paper?.sources ?? []).map((source) => source.key) : [];
 }

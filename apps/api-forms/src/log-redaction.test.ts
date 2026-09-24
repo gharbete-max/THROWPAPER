@@ -54,3 +54,29 @@ describe('what reaches the log', () => {
     expect(redactSecretsInUrl(url)).toBe(url);
   });
 });
+
+describe('base64url tokens, whole', () => {
+  it('redacts a resume token however its dashes fall', async () => {
+    const { randomBytes } = await import('node:crypto');
+    let leaked = 0;
+    for (let i = 0; i < 5000; i += 1) {
+      const secret = randomBytes(32).toString('base64url');
+      const logged = redactSecretsInUrl(`/public/forms/medlem/resume/${secret}`);
+      if (logged.includes(secret.slice(4))) leaked += 1;
+    }
+    expect(leaked).toBe(0);
+  });
+
+  it('catches the audit’s own example, a dash two-thirds of the way in', () => {
+    const secret = 'k3JdT9qLmZx2Rw8VbN4pYs1-Hc6GfE0aUo7iKtMnWqX';
+    expect(redactSecretsInUrl(`/v1/phone-scan/${secret}`)).toBe('/v1/phone-scan/k3Jd[redacted]');
+    expect(redactSecretsInUrl(`/f/medlem?resume=${secret}`)).toBe('/f/medlem?resume=[redacted]');
+  });
+
+  it('still leaves UUIDs and long slugs alone', () => {
+    const uuid = '3ff75281-4dbf-46ab-bebd-e982a7180530';
+    expect(redactSecretsInUrl(`/v1/forms/${uuid}/versions`)).toBe(`/v1/forms/${uuid}/versions`);
+    const slug = 'anmalan-till-varmotet-2026-sommarfesten';
+    expect(redactSecretsInUrl(`/public/forms/${slug}`)).toBe(`/public/forms/${slug}`);
+  });
+});

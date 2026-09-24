@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LOCALE_CODES } from '@tp/i18n';
-import { adminUser, bearer, createTestHarness, signIn, type TestHarness } from '../test-support.js';
+import {
+  adminUser,
+  bearer,
+  createTestHarness,
+  operatorUser,
+  signIn,
+  type TestHarness,
+} from '../test-support.js';
 import { INVITATION_COPY_LOCALES } from './invitations.js';
 
 /**
@@ -162,5 +169,59 @@ describe('inviting signers by email', () => {
 
   it('has copy in every language the product ships in', () => {
     expect(LOCALE_CODES.filter((code) => !INVITATION_COPY_LOCALES.includes(code))).toEqual([]);
+  });
+});
+
+/**
+ * A signing request carries every party's link, and a link is the signer's authority. The routes
+ * checked only the organisation, so one operator could read — and sign — another's requests.
+ */
+describe('who may see a signing request', () => {
+  const otherOperator = {
+    ...operatorUser,
+    id: '44444444-4444-4444-8444-444444444444',
+    email: 'other@example.com',
+    name: 'Olle Annan',
+  };
+
+  async function asOperators() {
+    await harness.close();
+    harness = await createTestHarness(
+      { users: [adminUser, operatorUser, otherOperator] },
+      { signing: { apiUrl: SIGN, serviceToken: 'test-token' }, signFetch: fakeSign() },
+    );
+    const sender = (await signIn(harness, operatorUser.email)).accessToken;
+    const other = (await signIn(harness, otherOperator.email)).accessToken;
+    const admin = (await signIn(harness, adminUser.email)).accessToken;
+    token = sender;
+    const created = await send(false);
+    expect(created.statusCode).toBe(201);
+    return { id: created.json().id as string, sender, other, admin };
+  }
+
+  it('is the sender and the admins, never another operator', async () => {
+    const { id, sender, other, admin } = await asOperators();
+    const get = (who: string, url: string, method: 'GET' | 'POST' = 'GET') =>
+      harness.app.inject({ method, url, headers: bearer(who) });
+
+    for (const [who, expected] of [
+      [sender, 1],
+      [admin, 1],
+      [other, 0],
+    ] as const) {
+      const list = await get(who, '/v1/signing/requests');
+      expect(list.json().requests).toHaveLength(expected);
+    }
+
+    expect((await get(sender, `/v1/signing/requests/${id}`)).statusCode).toBe(200);
+    expect((await get(admin, `/v1/signing/requests/${id}`)).statusCode).toBe(200);
+
+    const peek = await get(other, `/v1/signing/requests/${id}`);
+    expect(peek.statusCode).toBe(404);
+    expect(peek.body).not.toContain(`${SIGN}/s/`);
+    expect((await get(other, `/v1/signing/requests/${id}/sealed.pdf`)).statusCode).toBe(404);
+    expect(
+      (await get(other, `/v1/signing/requests/${id}/parties/p1/remind`, 'POST')).statusCode,
+    ).toBe(404);
   });
 });
