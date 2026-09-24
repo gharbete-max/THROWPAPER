@@ -21,6 +21,26 @@ The owner's answers to this ADR's first open questions:
   and Apple Mail (macOS).
 - **macOS too.** Built: `.dmg` for Apple Silicon and Intel, from the same code.
 
+## Amended (2026-09-24): the shell hosts Sign too
+
+The owner asked for the offline edition to sign as well as fill in. So the shell now **hosts two
+products side by side** — the move D6 describes for Mailer, made for Sign first:
+
+- **Loppa Sign on this computer** (`@tp/api-sign/local`): the same `buildServer` a hosted Sign
+  runs, on **PGlite** in `workspace/sign/` (inside what a backup copies), serving the signer's page
+  on `127.0.0.1:47018`. Its link secret, a **self-issued** seal certificate and one service token per
+  organisation are made at its first start and kept `0600` beside it.
+- **Forms reaches it only over CONTRACT §5**: the shell hands Forms Sign's address and a token for
+  its organisation (`apps/desktop/src/main/host.ts`), and from then on they are caller and Sign as
+  they would be across the internet — the document by a signed link, events by signed §5.4 hooks.
+- **`apps/desktop` left the Forms product group** in `eslint.config.js` and is now a host: it may
+  import exactly `@tp/api-forms/desktop` and `@tp/api-sign/local`, nothing else of any product.
+- Settings → Signing → "On this computer" now means this: typed or drawn, sealed here, offline.
+  eID signing still needs a broker online (ADR 0010); "connect online" is still recorded, not used.
+
+What that seal is worth offline is what ADR 0009 says of any self-issued seal: tamper-evidence,
+not identity. A qualified seal and timestamp are a purchase and need the network.
+
 ## Context
 
 The owner asked for a downloadable `.exe` — then a Mac build — that runs Loppa **fully locally** — build forms, fill

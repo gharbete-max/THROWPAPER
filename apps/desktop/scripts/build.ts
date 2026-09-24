@@ -67,6 +67,15 @@ async function main(): Promise<void> {
       'apps/forms/dist is missing. Run `pnpm --filter @tp/forms build` first — the desktop serves that bundle.',
     );
   }
+  // Sign runs beside Forms on this computer (ADR 0016): its API is in the bundle, its signing
+  // page and migrations ship as folders, like Forms' own.
+  const apiSign = join(repo, 'apps', 'api-sign');
+  const signDist = join(repo, 'apps', 'sign', 'dist');
+  if (!(await exists(join(signDist, 'index.html')))) {
+    throw new Error(
+      'apps/sign/dist is missing. Run `pnpm --filter @tp/sign build` first — the desktop serves the signing page.',
+    );
+  }
 
   await rm(stage, { recursive: true, force: true });
   await mkdir(stage, { recursive: true });
@@ -106,6 +115,8 @@ async function main(): Promise<void> {
 
   await cp(formsDist, join(stage, 'web'), { recursive: true });
   await cp(join(apiForms, 'drizzle'), join(stage, 'drizzle'), { recursive: true });
+  await cp(signDist, join(stage, 'sign-web'), { recursive: true });
+  await cp(join(apiSign, 'drizzle'), join(stage, 'sign-drizzle'), { recursive: true });
   await mkdir(join(stage, 'build'), { recursive: true });
   await cp(join(repo, 'apps', 'forms', 'public', 'icon-512.png'), join(stage, 'build', 'icon.png'));
 

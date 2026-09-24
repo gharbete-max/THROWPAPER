@@ -12,6 +12,8 @@ on:
   pull_request:
     paths:
       - 'apps/desktop/**'
+      - 'apps/api-sign/**'
+      - 'apps/sign/**'
       - 'apps/api-forms/src/desktop/**'
       - 'apps/api-forms/src/db/pglite.ts'
       - 'apps/api-forms/src/mail/**'
@@ -39,6 +41,8 @@ jobs:
           # PDFs render through the Edge every Windows has; Playwright's own browsers are not needed.
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       - run: pnpm --filter @tp/forms build
+      # Sign runs beside Forms on the desktop; its signing page ships in the app.
+      - run: pnpm --filter @tp/sign build
       - run: pnpm --filter @tp/desktop package:win
 
       # An installer that builds is not an app that starts. Launch the unpacked Loppa.exe against a
@@ -54,14 +58,16 @@ jobs:
           for ($i = 0; $i -lt 60; $i++) {
             try {
               $health = Invoke-RestMethod -Uri 'http://127.0.0.1:47017/health' -TimeoutSec 2
-              if ($health.status -eq 'ok') { $ok = $true; break }
+              # Loppa Sign starts first, beside Forms (ADR 0016); both must answer.
+              $sign = Invoke-RestMethod -Uri 'http://127.0.0.1:47018/health' -TimeoutSec 2
+              if ($health.status -eq 'ok' -and $sign.service -eq 'api-sign') { $ok = $true; break }
             } catch { }
             if ($app.HasExited) { break }
             Start-Sleep -Seconds 2
           }
           Stop-Process -Id $app.Id -Force -ErrorAction SilentlyContinue
           Get-ChildItem -Recurse (Join-Path $profile 'workspace') | Select-Object FullName | Format-Table -HideTableHeaders
-          if (-not $ok) { throw 'Loppa.exe did not answer on 127.0.0.1:47017' }
+          if (-not $ok) { throw 'Loppa.exe did not answer on 127.0.0.1:47017 and :47018' }
 
       - uses: actions/upload-artifact@v7
         with:
@@ -85,6 +91,8 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       - run: pnpm --filter @tp/forms build
+      # Sign runs beside Forms on the desktop; its signing page ships in the app.
+      - run: pnpm --filter @tp/sign build
       - run: pnpm --filter @tp/desktop package:mac
 
       # Same proof as Windows: the ad-hoc-signed arm64 app starts and its local server answers.
@@ -98,13 +106,14 @@ jobs:
           pid=$!
           ok=0
           for i in $(seq 1 60); do
-            if curl -fsS http://127.0.0.1:47017/health | grep -q '"status":"ok"'; then ok=1; break; fi
+            if curl -fsS http://127.0.0.1:47017/health | grep -q '"status":"ok"' &&
+               curl -fsS http://127.0.0.1:47018/health | grep -q '"service":"api-sign"'; then ok=1; break; fi
             if ! kill -0 "$pid" 2>/dev/null; then break; fi
             sleep 2
           done
           kill "$pid" 2>/dev/null || true
           ls -R "$profile/workspace" | head -20 || true
-          if [ "$ok" != 1 ]; then cat "$RUNNER_TEMP/loppa.log"; echo "Loppa.app did not answer on 127.0.0.1:47017"; exit 1; fi
+          if [ "$ok" != 1 ]; then cat "$RUNNER_TEMP/loppa.log"; echo "Loppa.app did not answer on 127.0.0.1:47017 and :47018"; exit 1; fi
 
       - uses: actions/upload-artifact@v7
         with:

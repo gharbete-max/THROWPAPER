@@ -64,8 +64,8 @@ const EN = {
 
   signingHeading: 'Signing',
   signingLead:
-    'Drawn signatures on forms work offline. Signing with an electronic identity needs a signing service.',
-  signingLocal: 'On this computer — drawn signatures only',
+    'Documents are signed and sealed on this computer, offline — by typing or drawing. Signing with an electronic identity needs a signing service online.',
+  signingLocal: 'On this computer — typed or drawn, sealed here',
   signingOnline: 'Connect online — to a Loppa Sign server',
   signingCloud: 'Work in cloud (placeholder)',
   signingEndpoint: 'Sign server address',
@@ -142,8 +142,8 @@ const SV: typeof EN = {
 
   signingHeading: 'Signering',
   signingLead:
-    'Ritade underskrifter i formulär fungerar utan nät. Signering med e-legitimation kräver en signeringstjänst.',
-  signingLocal: 'På den här datorn — bara ritade underskrifter',
+    'Dokument signeras och förseglas på den här datorn, utan nät — genom att skriva eller rita. Signering med e-legitimation kräver en signeringstjänst på nätet.',
+  signingLocal: 'På den här datorn — skrivet eller ritat, förseglat här',
   signingOnline: 'Anslut online — till en Loppa Sign-server',
   signingCloud: 'Arbeta i molnet (platshållare)',
   signingEndpoint: 'Sign-serverns adress',

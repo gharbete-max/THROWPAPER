@@ -10,6 +10,7 @@ import type { MailProvider } from '../mail/provider.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from '../mail/smtp.js';
 import { createMailProgramProvider } from '../mail/outlook.js';
 import { readSettings, type DesktopSettings } from './settings.js';
+import type { SignConnection } from '../signing/client.js';
 import {
   bootstrapWorkspace,
   ensureWorkspace,
@@ -50,6 +51,13 @@ export interface StartDesktopOptions {
    * Playwright's own, through Playwright.
    */
   defaultRenderer?: PdfRenderer;
+  /**
+   * Where this workspace sends documents for signing: the shell's local Sign (CONTRACT §5 over
+   * loopback). Asked once the workspace has an organisation, because a service token belongs to
+   * one; `origin` is this server's, which Sign must allow to fetch documents from and post hooks
+   * to. Absent, or answering null, the Signing screen says signing is not set up.
+   */
+  signing?: (organisationId: string, origin: string) => Promise<SignConnection | null>;
 }
 
 export interface DesktopServer {
@@ -63,6 +71,8 @@ export interface DesktopServer {
   /** The demo dataset from `pnpm db:seed`, into this workspace. Only ever on an empty one. */
   loadDemo(): Promise<boolean>;
   signInLink(): Promise<string | null>;
+  /** Whether this start found an organisation and connected it to Sign. */
+  signingConnected: boolean;
   close(): Promise<void>;
 }
 
@@ -166,6 +176,14 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
   // Port 0 is resolved only after listening, so the URL is built twice: once to configure, once
   // to report. With a fixed port — the shell's case — the two are the same string.
   let url = `http://127.0.0.1:${port}`;
+  const organisation = await local.repos.organisations.first();
+  let signing: SignConnection | null = null;
+  try {
+    signing = organisation && options.signing ? await options.signing(organisation.id, url) : null;
+  } catch (error) {
+    await local.close();
+    throw error;
+  }
   let app: FastifyInstance;
   try {
     app = await buildServer({
@@ -187,6 +205,7 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       serveAppFrom: options.webDir,
       probeDatabase: false,
       startWorker: true,
+      signing,
     });
     await app.listen({ port, host: '127.0.0.1' });
   } catch (error) {
@@ -213,6 +232,7 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       return true;
     },
     signInLink: () => mintLocalSignInLink(local.repos, url),
+    signingConnected: signing !== null,
     async close() {
       await app.close();
       await local.close();
