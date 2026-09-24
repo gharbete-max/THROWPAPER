@@ -71,6 +71,12 @@ export interface FinishedStrings {
   file: string;
   /** "{organisation}" is replaced. The last line on the page: whose record this is. */
   sentTo: string;
+  /** The heading over the e-ID step's outcome. */
+  identity: string;
+  /** "{name}" is the name the provider asserted. */
+  identityConfirmed: string;
+  /** The development provider's "confirmation", said for what it is. */
+  identityTest: string;
 }
 
 /**
@@ -87,6 +93,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Entry {n}',
     file: 'Attached file',
     sentTo: 'Answers as sent to {organisation}.',
+    identity: 'e-ID',
+    identityConfirmed: 'Confirmed with e-ID as {name}',
+    identityTest: 'Test only: made with the development provider. This is not an identity check.',
   },
   'sv-SE': {
     submitted: 'Skickad',
@@ -97,6 +106,10 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Post {n}',
     file: 'Bifogad fil',
     sentTo: 'Svaren så som de skickades till {organisation}.',
+    identity: 'e-legitimation',
+    identityConfirmed: 'Bekräftad med e-legitimation som {name}',
+    identityTest:
+      'Endast test: gjord med utvecklingsleverantören. Det här är ingen identitetskontroll.',
   },
   'da-DK': {
     submitted: 'Sendt',
@@ -107,6 +120,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Post {n}',
     file: 'Vedhæftet fil',
     sentTo: 'Svarene, som de blev sendt til {organisation}.',
+    identity: 'e-ID',
+    identityConfirmed: 'Bekræftet med e-ID som {name}',
+    identityTest: 'Kun test: lavet med udviklingsudbyderen. Dette er ikke en identitetskontrol.',
   },
   'nb-NO': {
     submitted: 'Sendt',
@@ -117,6 +133,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Oppføring {n}',
     file: 'Vedlagt fil',
     sentTo: 'Svarene slik de ble sendt til {organisation}.',
+    identity: 'e-ID',
+    identityConfirmed: 'Bekreftet med e-ID som {name}',
+    identityTest: 'Kun test: laget med utviklingsleverandøren. Dette er ingen identitetskontroll.',
   },
   'fi-FI': {
     submitted: 'Lähetetty',
@@ -127,6 +146,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Kohta {n}',
     file: 'Liitetiedosto',
     sentTo: 'Vastaukset sellaisina kuin ne lähetettiin: {organisation}.',
+    identity: 'Sähköinen tunnistus',
+    identityConfirmed: 'Vahvistettu sähköisellä tunnistuksella: {name}',
+    identityTest: 'Vain testi: tehty kehityspalvelulla. Tämä ei ole henkilöllisyyden tarkistus.',
   },
   'is-IS': {
     submitted: 'Sent',
@@ -137,6 +159,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Færsla {n}',
     file: 'Viðhengi',
     sentTo: 'Svörin eins og þau voru send til {organisation}.',
+    identity: 'Rafræn skilríki',
+    identityConfirmed: 'Staðfest með rafrænum skilríkjum sem {name}',
+    identityTest: 'Aðeins prófun: gert með þróunarþjónustunni. Þetta er ekki auðkenning.',
   },
   'fr-FR': {
     submitted: 'Envoyé le',
@@ -147,6 +172,10 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Entrée {n}',
     file: 'Fichier joint',
     sentTo: 'Réponses telles qu’envoyées à {organisation}.',
+    identity: 'e-ID',
+    identityConfirmed: 'Confirmé par e-ID au nom de {name}',
+    identityTest:
+      'Test uniquement : fait avec le fournisseur de développement. Ce n’est pas une vérification d’identité.',
   },
   'de-DE': {
     submitted: 'Gesendet',
@@ -157,6 +186,10 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Eintrag {n}',
     file: 'Angehängte Datei',
     sentTo: 'Antworten, wie sie an {organisation} gesendet wurden.',
+    identity: 'e-ID',
+    identityConfirmed: 'Mit e-ID bestätigt als {name}',
+    identityTest:
+      'Nur Test: mit dem Entwicklungsanbieter erstellt. Dies ist keine Identitätsprüfung.',
   },
   'es-ES': {
     submitted: 'Enviado',
@@ -167,6 +200,10 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Entrada {n}',
     file: 'Archivo adjunto',
     sentTo: 'Respuestas tal como se enviaron a {organisation}.',
+    identity: 'e-ID',
+    identityConfirmed: 'Confirmado con e-ID como {name}',
+    identityTest:
+      'Solo prueba: hecho con el proveedor de desarrollo. No es una comprobación de identidad.',
   },
   'zh-CN': {
     submitted: '提交时间',
@@ -177,6 +214,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: '第 {n} 项',
     file: '附件',
     sentTo: '以上为发送给 {organisation} 的答复。',
+    identity: '电子身份',
+    identityConfirmed: '已通过电子身份确认：{name}',
+    identityTest: '仅供测试：由开发用提供方生成，并非身份核验。',
   },
   'ja-JP': {
     submitted: '送信日時',
@@ -187,6 +227,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: '{n} 件目',
     file: '添付ファイル',
     sentTo: '{organisation} に送信された回答です。',
+    identity: '電子本人確認',
+    identityConfirmed: '電子本人確認で確認済み：{name}',
+    identityTest: 'テストのみ：開発用プロバイダーによるもので、本人確認ではありません。',
   },
   'ru-RU': {
     submitted: 'Отправлено',
@@ -197,6 +240,9 @@ const STRINGS: Record<string, FinishedStrings> = {
     entry: 'Запись {n}',
     file: 'Прикреплённый файл',
     sentTo: 'Ответы в том виде, в каком они отправлены в {organisation}.',
+    identity: 'Электронная идентификация',
+    identityConfirmed: 'Подтверждено электронной идентификацией: {name}',
+    identityTest: 'Только тест: выполнено через тестового поставщика. Это не проверка личности.',
   },
 };
 
@@ -319,12 +365,26 @@ section.entry h3 { font-size: 13px; margin: 8px 0 0 0; }
 <dl class="meta">
   <div><dt>${escapeHtml(words.submitted)}</dt><dd>${escapeHtml(when)}</dd></div>
   <div><dt>${escapeHtml(words.reference)}</dt><dd>${escapeHtml(submission.reference)}</dd></div>
+  ${identityHtml(submission, words)}
 </dl>
 ${rows.join('\n')}
 <p class="closing">${escapeHtml(words.sentTo.replace('{organisation}', input.organisation.name))}</p>
 </body>
 </html>
 `;
+}
+
+/**
+ * The e-ID step's outcome, when there was one. Says the name the provider asserted and nothing
+ * more; a development-provider result says it is a test, in words, where the name would be.
+ */
+function identityHtml(submission: SubmissionRecord, words: FinishedStrings): string {
+  const identity = submission.identity;
+  if (!identity) return '';
+  const line = identity.test
+    ? words.identityTest
+    : words.identityConfirmed.replace('{name}', identity.name ?? identity.method);
+  return `<div><dt>${escapeHtml(words.identity)}</dt><dd>${escapeHtml(line)}</dd></div>`;
 }
 
 function isAnswerable(field: Field): boolean {

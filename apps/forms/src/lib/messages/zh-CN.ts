@@ -353,6 +353,9 @@ export const zhCN: Record<MessageKey, string> = {
   'settings.duplicateControlHint': '同一个电子邮件地址是否可以回答多次。',
   'settings.duplicateControl.email': '每个电子邮件地址一条回复',
   'settings.duplicateControl.none': '不限回复数量',
+  'settings.identity': '发送后提供电子身份确认（对填写人可选）',
+  'settings.identityHint':
+    '答复会先保存；确认是可做可跳过的一步。若未连接电子身份提供方，表单会说明这一点并照常完成。',
 
   'public.progress': '第 {n} 步，共 {total} 步',
 
@@ -695,6 +698,17 @@ export const zhCN: Record<MessageKey, string> = {
   'public.email.subject': '{title} — {reference}',
   'public.email.body': '附件：{filename}\n参考编号：{reference}',
   'public.again': '再次填写',
+  'public.eid.title': '确认你的身份（可选）',
+  'public.eid.unavailable': '此表单暂不支持电子身份确认。无需其他操作——你的表单已完成。',
+  'public.eid.offer': '你可以使用电子身份确认身份。这是可选的：你的表单已经发送。',
+  'public.eid.testNote': '测试模式：此处使用开发用提供方，不会核验任何人的身份。',
+  'public.eid.start': '使用电子身份确认',
+  'public.eid.waiting': '正在等待电子身份应用…',
+  'public.eid.confirmed': '已确认为 {name}。你的文档中现已注明。',
+  'public.eid.confirmedTest': '已记录测试确认。这并非身份核验，你的文档中也注明了这一点。',
+  'public.eid.already': '此表单已通过电子身份确认。',
+  'public.eid.failed': '电子身份确认未完成。你的表单仍已完成。',
+  'public.eid.retry': '重试',
 
   'validation.required': '此字段为必填项。',
   'validation.tooShort': '至少 {min} 个字符。',

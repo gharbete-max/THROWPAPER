@@ -366,6 +366,9 @@ export const esES: Record<MessageKey, string> = {
     'Si la misma dirección de correo puede responder más de una vez.',
   'settings.duplicateControl.email': 'Una respuesta por dirección de correo',
   'settings.duplicateControl.none': 'Cualquier número de respuestas',
+  'settings.identity': 'Ofrecer confirmación con e-ID tras el envío (opcional para la persona)',
+  'settings.identityHint':
+    'Las respuestas se guardan primero; la confirmación es un paso que se puede hacer u omitir. Si no hay un proveedor de e-ID conectado, el formulario lo indica y se termina igualmente.',
 
   'public.progress': 'Paso {n} de {total}',
 
@@ -725,6 +728,21 @@ export const esES: Record<MessageKey, string> = {
   'public.email.subject': '{title} — {reference}',
   'public.email.body': 'Adjunto: {filename}\nReferencia: {reference}',
   'public.again': 'Rellenar de nuevo',
+  'public.eid.title': 'Confirma quién eres (opcional)',
+  'public.eid.unavailable':
+    'La confirmación con e-ID aún no está disponible para este formulario. No hace falta nada más: tu formulario está terminado.',
+  'public.eid.offer':
+    'Puedes confirmar quién eres con e-ID. Es opcional: tu formulario ya está enviado.',
+  'public.eid.testNote':
+    'Modo de prueba: se usa un proveedor de desarrollo y no se comprueba la identidad de nadie.',
+  'public.eid.start': 'Confirmar con e-ID',
+  'public.eid.waiting': 'Esperando a la aplicación de e-ID…',
+  'public.eid.confirmed': 'Confirmado como {name}. Tu documento ya lo indica.',
+  'public.eid.confirmedTest':
+    'Confirmación de prueba guardada. No es una comprobación de identidad, y tu documento lo indica.',
+  'public.eid.already': 'Este formulario ya está confirmado con e-ID.',
+  'public.eid.failed': 'La confirmación con e-ID no se completó. Tu formulario sigue terminado.',
+  'public.eid.retry': 'Reintentar',
 
   'validation.required': 'Este campo es obligatorio.',
   'validation.tooShort': 'Al menos {min} caracteres.',

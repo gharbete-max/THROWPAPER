@@ -12,6 +12,10 @@ import {
   SealedDocumentResponse,
   SigningHookEvent,
   WriteDeclarationRequest,
+  IdentityMethodsResponse,
+  StartIdentityRequest,
+  IdentitySessionResponse,
+  IdentityResultResponse,
 } from './signing.js';
 
 /** Which product serves an endpoint. `signwork` is the Sign product (ADR 0009). */
@@ -133,6 +137,33 @@ export const CONTRACT_ENDPOINTS = [
     section: '5.5',
     request: WriteDeclarationRequest,
     response: DeclarationView,
+  },
+  {
+    id: 'identity.methods',
+    method: 'GET',
+    path: '/v1/identity/methods',
+    servedBy: 'signwork',
+    section: '5.6',
+    request: null,
+    response: IdentityMethodsResponse,
+  },
+  {
+    id: 'identity.start',
+    method: 'POST',
+    path: '/v1/identity/sessions',
+    servedBy: 'signwork',
+    section: '5.6',
+    request: StartIdentityRequest,
+    response: IdentitySessionResponse,
+  },
+  {
+    id: 'identity.result',
+    method: 'GET',
+    path: '/v1/identity/sessions/:reference',
+    servedBy: 'signwork',
+    section: '5.6',
+    request: null,
+    response: IdentityResultResponse,
   },
   {
     id: 'signing.webhook',

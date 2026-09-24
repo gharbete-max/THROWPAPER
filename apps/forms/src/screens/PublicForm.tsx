@@ -25,6 +25,7 @@ import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
 import { PoweredBy } from '../components/Logo.js';
 import { FinishedDocument, type FinishedDocumentHandle } from '../components/FinishedDocument.js';
+import { IdentityStep } from '../components/IdentityStep.js';
 import { finishedState, readFinished } from '../lib/finished-state.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
@@ -57,6 +58,12 @@ export default function PublicForm() {
   const [coming, setComing] = useState<{ email: string; card: boolean } | null>(null);
   /** The finished document the server offered, and the credential to fetch it. */
   const [finished, setFinished] = useState<FinishedDocumentHandle | null>(null);
+  /** The optional e-ID step as offered on submit; null when the form does not offer it. */
+  const [identityOffer, setIdentityOffer] = useState<{ available: boolean; test: boolean } | null>(
+    null,
+  );
+  /** Bumped when the finished document changes (an e-ID confirmation), so it is fetched again. */
+  const [documentRevision, setDocumentRevision] = useState(0);
   /**
    * Focus lands on the thank-you when the form is sent. The card is new to the page, and a live
    * region that did not exist a moment ago is not something every screen reader announces;
@@ -151,6 +158,7 @@ export default function PublicForm() {
           setConfirmation(remembered.confirmation);
           setComing(remembered.coming);
           setFinished(remembered.document);
+          setIdentityOffer(remembered.identity);
           setPhase('done');
         } else {
           setPhase(loaded.open ? 'filling' : 'closed');
@@ -303,6 +311,7 @@ export default function PublicForm() {
     setRejected(null);
     setPage(0);
     setFinished(null);
+    setIdentityOffer(null);
     setResumeToken(null);
     setResumeLink(null);
     setPhase(form.open ? 'filling' : 'closed');
@@ -344,11 +353,14 @@ export default function PublicForm() {
             ? { email: String(body.confirmationTo), card: Boolean(body.admissionCard) }
             : null,
           document: (body.document as FinishedDocumentHandle | null | undefined) ?? null,
+          identity:
+            (body.identity as { available: boolean; test: boolean } | null | undefined) ?? null,
         };
         setReference(sent.reference);
         setConfirmation(sent.confirmation);
         setComing(sent.coming);
         setFinished(sent.document);
+        setIdentityOffer(sent.identity);
         // On the history entry, so a refresh or Back shows this again (`finished-state.ts`).
         navigate(
           { pathname: location.pathname, search: location.search },
@@ -574,8 +586,18 @@ export default function PublicForm() {
               {t('public.finished.sent', { organisation: form.organisationName })}
             </p>
           )}
+          {finished && slug && identityOffer && (
+            <IdentityStep
+              slug={slug}
+              token={finished.token}
+              offer={identityOffer}
+              t={t}
+              onConfirmed={() => setDocumentRevision((value) => value + 1)}
+            />
+          )}
           {finished && slug && (
             <FinishedDocument
+              key={documentRevision}
               slug={slug}
               handle={finished}
               title={formTitle}

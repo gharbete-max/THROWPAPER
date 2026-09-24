@@ -107,7 +107,45 @@ export const SubmitResponse = z.object({
       draftProgram: z.string().nullable(),
     })
     .nullable(),
+  /**
+   * The optional e-ID step, when the form offers one (`settings.identity: "optional"`).
+   *
+   * `available: false` means no identity provider is configured (CONTRACT §5.6 offered none): the
+   * page says so and the form is simply finished. `test: true` means the only provider is the
+   * development one, and anything it "confirms" is labelled a test everywhere it appears.
+   * `null` when the form does not offer the step at all.
+   */
+  identity: z.object({ available: z.boolean(), test: z.boolean() }).nullable(),
 });
+
+export const StartIdentityCheck = z.object({ token: z.string().min(1).max(200) });
+
+export const IdentityCheckStarted = z.object({
+  reference: z.string().min(1).max(128),
+  status: z.enum(['pending', 'complete', 'failed', 'cancelled']),
+  /** Same device: open this. Absent when the provider gives none. */
+  launchUrl: z.string().url().optional(),
+});
+
+export const IdentityCheckRequest = z.object({
+  token: z.string().min(1).max(200),
+  reference: z.string().min(1).max(128),
+});
+
+/** Where the person's confirmation stands. `confirmed` only once the provider has answered. */
+export const IdentityCheckResponse = z.object({
+  status: z.enum(['pending', 'complete', 'failed', 'cancelled']),
+  confirmed: z
+    .object({
+      method: z.string(),
+      /** The name the scheme asserted. */
+      name: z.string().nullable(),
+      /** A development provider's answer: never a real identity check. */
+      test: z.boolean(),
+    })
+    .nullable(),
+});
+export type IdentityCheckResponse = z.infer<typeof IdentityCheckResponse>;
 
 export const FinishedDocumentRequest = z.object({
   token: z.string().min(1).max(200),

@@ -359,6 +359,10 @@ export const fiFI: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Saako sama sähköpostiosoite vastata useammin kuin kerran.',
   'settings.duplicateControl.email': 'Yksi vastaus sähköpostiosoitetta kohden',
   'settings.duplicateControl.none': 'Mikä tahansa määrä vastauksia',
+  'settings.identity':
+    'Tarjoa vahvistusta sähköisellä tunnistuksella lähettämisen jälkeen (vapaaehtoinen)',
+  'settings.identityHint':
+    'Vastaukset tallennetaan ensin; vahvistus on vaihe, jonka voi tehdä tai ohittaa. Jos tunnistuspalvelua ei ole liitetty, lomake kertoo sen ja valmistuu silti.',
 
   'public.progress': 'Vaihe {n} / {total}',
 
@@ -716,6 +720,21 @@ export const fiFI: Record<MessageKey, string> = {
   'public.email.subject': '{title} – {reference}',
   'public.email.body': 'Liitteenä: {filename}\nViite: {reference}',
   'public.again': 'Täytä uudelleen',
+  'public.eid.title': 'Vahvista henkilöllisyytesi (valinnainen)',
+  'public.eid.unavailable':
+    'Sähköinen tunnistus ei ole vielä käytössä tässä lomakkeessa. Muuta ei tarvita – lomakkeesi on valmis.',
+  'public.eid.offer':
+    'Voit vahvistaa henkilöllisyytesi sähköisellä tunnistuksella. Se on valinnaista: lomake on jo lähetetty.',
+  'public.eid.testNote':
+    'Testitila: käytössä on kehityspalvelu, eikä kenenkään henkilöllisyyttä tarkisteta.',
+  'public.eid.start': 'Vahvista sähköisellä tunnistuksella',
+  'public.eid.waiting': 'Odotetaan tunnistussovellusta…',
+  'public.eid.confirmed': 'Vahvistettu: {name}. Asiakirjassasi lukee nyt niin.',
+  'public.eid.confirmedTest':
+    'Testivahvistus tallennettu. Se ei ole henkilöllisyyden tarkistus, ja asiakirjassasi lukee niin.',
+  'public.eid.already': 'Tämä lomake on jo vahvistettu sähköisellä tunnistuksella.',
+  'public.eid.failed': 'Sähköinen tunnistus ei valmistunut. Lomakkeesi on silti valmis.',
+  'public.eid.retry': 'Yritä uudelleen',
 
   'validation.required': 'Tämä kenttä on pakollinen.',
   'validation.tooShort': 'Vähintään {min} merkkiä.',

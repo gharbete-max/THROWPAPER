@@ -117,6 +117,9 @@ export default defineConfig({
             SIGN_PUBLIC_URL: SIGN_URL,
             API_SIGN_PUBLIC_URL: SIGN_URL,
             API_SIGN_PORT: String(SIGN_PORT),
+            // The development identity provider (§5.6), so the optional e-ID step can be driven end
+            // to end. It confirms nobody and says so; Sign refuses it in production.
+            EID_PROVIDER: 'console',
             NODE_ENV: 'development',
           },
         },

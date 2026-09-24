@@ -1,5 +1,13 @@
 import { z } from 'zod';
-import { DocumentHash, Environment, EnvelopeStatus, Party, PartyStatus } from '@tp/signing';
+import {
+  DocumentHash,
+  Environment,
+  EnvelopeStatus,
+  Party,
+  PartyStatus,
+  SignatureLevel,
+  SigningMethod,
+} from '@tp/signing';
 import { IdempotencyKey, OrganisationId } from './common.js';
 
 /**
@@ -107,3 +115,56 @@ export const DeclarationListResponse = z.object({ declarations: z.array(Declarat
 export type WriteDeclarationRequest = z.infer<typeof WriteDeclarationRequest>;
 export type DeclarationView = z.infer<typeof DeclarationView>;
 export type DeclarationListResponse = z.infer<typeof DeclarationListResponse>;
+
+/**
+ * §5.6 — identity: who somebody is, confirmed through an identity provider (ADR 0010).
+ *
+ * What Sign can offer, per method. **Empty until a provider is configured** — and in production
+ * none is yet: choosing a broker is the owner's decision. The development provider (`console`) is
+ * listed only outside production, and always as `environment: "test"`.
+ */
+export const IdentityMethod = z.object({
+  method: SigningMethod,
+  /** `console`, `idura`, … Recorded verbatim. */
+  provider: z.string().min(1).max(64),
+  environment: Environment,
+});
+export const IdentityMethodsResponse = z.object({ methods: z.array(IdentityMethod) });
+
+/** Start a confirmation over a document hash. The person approves it in the provider's app. */
+export const StartIdentityRequest = z.object({
+  organisationId: OrganisationId,
+  method: SigningMethod,
+  documentSha256: DocumentHash,
+  locale: z.string().min(2).max(35),
+  /** Where the provider's app returns the person, for a same-device flow. */
+  returnUrl: z.string().url().optional(),
+  idempotencyKey: IdempotencyKey,
+});
+
+export const IdentitySessionStatus = z.enum(['pending', 'complete', 'failed', 'cancelled']);
+
+export const IdentitySessionResponse = z.object({
+  reference: z.string().min(1).max(128),
+  status: IdentitySessionStatus,
+  environment: Environment,
+  /** Same device: open this. Never invented — absent when the provider gives none. */
+  launchUrl: z.string().url().optional(),
+});
+
+/** Where a confirmation stands. The result fields are present only when `complete`. */
+export const IdentityResultResponse = IdentitySessionResponse.omit({ launchUrl: true }).extend({
+  method: SigningMethod.optional(),
+  /** Capped by `maxLevelFor(method)` before it is ever returned. */
+  level: SignatureLevel.optional(),
+  /** The name the scheme asserted, as it asserted it. Nothing else of the person is passed on. */
+  name: z.string().max(200).optional(),
+  /** The hash that was confirmed, so the caller can check it is the one it asked about. */
+  documentSha256: DocumentHash,
+});
+
+export type IdentityMethod = z.infer<typeof IdentityMethod>;
+export type IdentityMethodsResponse = z.infer<typeof IdentityMethodsResponse>;
+export type StartIdentityRequest = z.infer<typeof StartIdentityRequest>;
+export type IdentitySessionResponse = z.infer<typeof IdentitySessionResponse>;
+export type IdentityResultResponse = z.infer<typeof IdentityResultResponse>;

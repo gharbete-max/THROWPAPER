@@ -135,3 +135,22 @@ each text is 1–5000 characters; at least one locale. 403 when `organisationId`
 Versions are append-only: an envelope pins the version it was created with and keeps those words.
 §5.1 resolves `declarationKey` to the caller's own declaration first, then a shared one; a
 production envelope needs an authored one, and every party's `locale` must have text.
+
+### `GET /v1/identity/methods` · `POST /v1/identity/sessions` · `GET /v1/identity/sessions/{reference}` — who somebody is (§5.6)
+```
+GET  → 200 { methods: [{ method, provider, environment: "test" | "production" }] }
+POST { organisationId, method, documentSha256, locale, returnUrl?, idempotencyKey }
+     → 201 { reference, status: pending|complete|failed|cancelled, environment, launchUrl? }
+GET  → 200 { reference, status, environment, documentSha256, method?, level?, name? }
+```
+Confirming a person's identity over a document hash, through whichever identity provider Sign has
+configured (ADR 0010). **`methods` is empty until a provider is configured**, and a caller treats
+that as "not available" — Forms then finishes a form without the optional step and says why. The
+development provider (`EID_PROVIDER=console`) is listed only outside production, as
+`environment: "test"`, method `console`, level `simple`; Sign refuses to start with it in
+production. `level` is capped by `maxLevelFor(method)` whatever a provider claims; `environment`
+is the provider's, never a result's. `name` is the name the scheme asserted — nothing else of the
+person is passed on. A session is readable only by the organisation that started it (404
+otherwise); 422 `method-unavailable` when no provider offers the method. Sessions are held in
+memory for now; storing a real provider's evidence (encrypted, in Sign's database) arrives with the
+first real provider (ROADMAP P2).

@@ -6,6 +6,7 @@ const finished = {
   confirmation: 'Tack!',
   coming: { email: 'asa@example.com', card: false },
   document: { token: 'id.123.mac', filename: 'Vårmötet-K7M2-QX4A.pdf', draftProgram: null },
+  identity: { available: false, test: false },
   locale: 'sv-SE',
 };
 

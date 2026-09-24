@@ -363,6 +363,9 @@ export const jaJP: Record<MessageKey, string> = {
   'settings.duplicateControlHint': '同じメールアドレスが複数回回答できるかどうか。',
   'settings.duplicateControl.email': 'メールアドレスごとに1件',
   'settings.duplicateControl.none': '回答数の制限なし',
+  'settings.identity': '送信後に電子本人確認を提案する（回答者にとって任意）',
+  'settings.identityHint':
+    '回答は先に保存されます。確認は行っても省略してもよい手順です。本人確認プロバイダーが接続されていない場合、フォームはその旨を表示し、そのまま完了します。',
 
   'public.progress': '{total} ステップ中 {n} ステップ目',
 
@@ -717,6 +720,21 @@ export const jaJP: Record<MessageKey, string> = {
   'public.email.subject': '{title} — {reference}',
   'public.email.body': '添付：{filename}\n受付番号：{reference}',
   'public.again': 'もう一度入力する',
+  'public.eid.title': '本人確認（任意）',
+  'public.eid.unavailable':
+    'このフォームでは電子本人確認をまだご利用いただけません。これ以上の操作は不要です。フォームは完了しています。',
+  'public.eid.offer':
+    '電子本人確認でご本人であることを確認できます。任意です。フォームは送信済みです。',
+  'public.eid.testNote':
+    'テストモード：開発用プロバイダーを使用しており、誰の本人確認も行いません。',
+  'public.eid.start': '電子本人確認で確認する',
+  'public.eid.waiting': '本人確認アプリを待っています…',
+  'public.eid.confirmed': '{name} として確認しました。書類にもそのように記載されます。',
+  'public.eid.confirmedTest':
+    'テスト確認を記録しました。本人確認ではなく、書類にもそのように記載されます。',
+  'public.eid.already': 'このフォームは電子本人確認で確認済みです。',
+  'public.eid.failed': '電子本人確認が完了しませんでした。フォームは完了したままです。',
+  'public.eid.retry': '再試行',
 
   'validation.required': 'この項目は必須です。',
   'validation.tooShort': '{min} 文字以上で入力してください。',

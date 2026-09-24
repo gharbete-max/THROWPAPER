@@ -105,6 +105,7 @@ describe('the finished document', () => {
       for (const value of Object.values(words)) expect(value.trim()).not.toBe('');
       expect(words.entry).toContain('{n}');
       expect(words.sentTo).toContain('{organisation}');
+      expect(words.identityConfirmed).toContain('{name}');
     }
   });
 
@@ -249,6 +250,41 @@ describe('the finished document', () => {
     expect(page).toContain('Fish');
     expect(page).toContain('No');
     expect(page).toContain('Reference');
+  });
+
+  it('shows an e-ID result as the name asserted, and a test one as a test', async () => {
+    const base = submission({ full_name: 'Ann' }, 'en-GB');
+    const render = (identity: SubmissionRecord['identity']) =>
+      finishedHtml(
+        { uploadStore: createMemoryUploadStore() },
+        {
+          organisation,
+          formTitle: { 'en-GB': 'Registration' },
+          submission: { ...base, identity },
+          definition,
+        },
+        'Registration',
+        locales,
+      );
+    const real = await render({
+      method: 'eid:bankid-se',
+      provider: 'broker',
+      name: 'Ann Andersson',
+      test: false,
+      documentSha256: 'a'.repeat(64),
+      confirmedAt: '2026-05-14T09:31:00Z',
+    });
+    expect(real).toContain('Confirmed with e-ID as Ann Andersson');
+    const test = await render({
+      method: 'console',
+      provider: 'console',
+      name: 'Test Person',
+      test: true,
+      documentSha256: 'a'.repeat(64),
+      confirmedAt: '2026-05-14T09:31:00Z',
+    });
+    expect(test).toContain('This is not an identity check.');
+    expect(test).not.toContain('Confirmed with e-ID');
   });
 
   it('claims nothing about signing, identity or validity (CLAUDE.md rule 8)', async () => {

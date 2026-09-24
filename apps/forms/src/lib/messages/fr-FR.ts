@@ -366,6 +366,10 @@ export const frFR: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Si la même adresse e-mail peut répondre plus d’une fois.',
   'settings.duplicateControl.email': 'Une réponse par adresse e-mail',
   'settings.duplicateControl.none': 'Nombre de réponses illimité',
+  'settings.identity':
+    'Proposer une confirmation par e-ID après l’envoi (facultative pour la personne)',
+  'settings.identityHint':
+    'Les réponses sont enregistrées d’abord ; la confirmation est une étape que l’on peut faire ou passer. Si aucun fournisseur e-ID n’est connecté, le formulaire l’indique et se termine quand même.',
 
   'public.progress': 'Étape {n} sur {total}',
 
@@ -730,6 +734,21 @@ export const frFR: Record<MessageKey, string> = {
   'public.email.subject': '{title} — {reference}',
   'public.email.body': 'Pièce jointe : {filename}\nRéférence : {reference}',
   'public.again': 'Remplir à nouveau',
+  'public.eid.title': 'Confirmer votre identité (facultatif)',
+  'public.eid.unavailable':
+    'La confirmation par e-ID n’est pas encore disponible pour ce formulaire. Rien d’autre n’est nécessaire : votre formulaire est terminé.',
+  'public.eid.offer':
+    'Vous pouvez confirmer votre identité par e-ID. C’est facultatif : votre formulaire est déjà envoyé.',
+  'public.eid.testNote':
+    'Mode test : un fournisseur de développement est utilisé et l’identité de personne n’est vérifiée.',
+  'public.eid.start': 'Confirmer par e-ID',
+  'public.eid.waiting': 'En attente de l’application e-ID…',
+  'public.eid.confirmed': 'Confirmé au nom de {name}. Votre document l’indique désormais.',
+  'public.eid.confirmedTest':
+    'Confirmation de test enregistrée. Ce n’est pas une vérification d’identité, et votre document l’indique.',
+  'public.eid.already': 'Ce formulaire est déjà confirmé par e-ID.',
+  'public.eid.failed': 'La confirmation par e-ID n’a pas abouti. Votre formulaire reste terminé.',
+  'public.eid.retry': 'Réessayer',
 
   'validation.required': 'Ce champ est obligatoire.',
   'validation.tooShort': 'Au moins {min} caractères.',

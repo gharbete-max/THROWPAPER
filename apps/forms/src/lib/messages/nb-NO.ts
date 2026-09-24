@@ -357,6 +357,9 @@ export const nbNO: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om samme e-postadresse kan svare mer enn én gang.',
   'settings.duplicateControl.email': 'Ett svar per e-postadresse',
   'settings.duplicateControl.none': 'Et vilkårlig antall svar',
+  'settings.identity': 'Tilby bekreftelse med e-ID etter innsending (valgfritt for personen)',
+  'settings.identityHint':
+    'Svarene lagres først; bekreftelsen er et steg man kan ta eller hoppe over. Der ingen e-ID-leverandør er tilkoblet, sier skjemaet det og blir ferdig likevel.',
 
   'public.progress': 'Steg {n} av {total}',
 
@@ -711,6 +714,21 @@ export const nbNO: Record<MessageKey, string> = {
   'public.email.subject': '{title} – {reference}',
   'public.email.body': 'Vedlagt: {filename}\nReferanse: {reference}',
   'public.again': 'Fyll ut igjen',
+  'public.eid.title': 'Bekreft hvem du er (valgfritt)',
+  'public.eid.unavailable':
+    'Bekreftelse med e-ID er ikke tilgjengelig for dette skjemaet ennå. Ingenting mer trengs – skjemaet ditt er ferdig.',
+  'public.eid.offer':
+    'Du kan bekrefte hvem du er med e-ID. Det er valgfritt: skjemaet er allerede sendt.',
+  'public.eid.testNote':
+    'Testmodus: her brukes en utviklingsleverandør, og ingens identitet kontrolleres.',
+  'public.eid.start': 'Bekreft med e-ID',
+  'public.eid.waiting': 'Venter på e-ID-appen…',
+  'public.eid.confirmed': 'Bekreftet som {name}. Det står nå i dokumentet ditt.',
+  'public.eid.confirmedTest':
+    'Testbekreftelse lagret. Den er ingen identitetskontroll, og det står i dokumentet ditt.',
+  'public.eid.already': 'Dette skjemaet er allerede bekreftet med e-ID.',
+  'public.eid.failed': 'Bekreftelsen med e-ID ble ikke fullført. Skjemaet ditt er fortsatt ferdig.',
+  'public.eid.retry': 'Prøv igjen',
 
   'validation.required': 'Dette feltet er påkrevd.',
   'validation.tooShort': 'Minst {min} tegn.',

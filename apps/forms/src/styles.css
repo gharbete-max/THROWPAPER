@@ -556,6 +556,26 @@ a:focus-visible {
   }
 }
 
+/* The optional e-ID step: the same panel as the document, so the two read as one moment. */
+.identity-step {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.identity-step h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+.identity-step p {
+  margin: 0;
+}
+
 /*
  * The reference is the credential, not a footnote.
  *

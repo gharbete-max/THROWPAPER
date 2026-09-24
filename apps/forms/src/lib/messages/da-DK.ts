@@ -356,6 +356,9 @@ export const daDK: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om den samme e-mailadresse må svare mere end én gang.',
   'settings.duplicateControl.email': 'Ét svar pr. e-mailadresse',
   'settings.duplicateControl.none': 'Et vilkårligt antal svar',
+  'settings.identity': 'Tilbyd bekræftelse med e-ID efter afsendelse (valgfrit for personen)',
+  'settings.identityHint':
+    'Svarene gemmes først; bekræftelsen er et trin, man kan tage eller springe over. Hvor ingen e-ID-udbyder er tilsluttet, siger formularen det og er færdig alligevel.',
 
   'public.progress': 'Trin {n} af {total}',
 
@@ -710,6 +713,21 @@ export const daDK: Record<MessageKey, string> = {
   'public.email.subject': '{title} – {reference}',
   'public.email.body': 'Vedhæftet: {filename}\nReference: {reference}',
   'public.again': 'Udfyld igen',
+  'public.eid.title': 'Bekræft, hvem du er (valgfrit)',
+  'public.eid.unavailable':
+    'Bekræftelse med e-ID er endnu ikke tilgængelig for denne formular. Der skal ikke mere til – din formular er færdig.',
+  'public.eid.offer':
+    'Du kan bekræfte, hvem du er, med e-ID. Det er valgfrit: din formular er allerede sendt.',
+  'public.eid.testNote':
+    'Testtilstand: her bruges en udviklingsudbyder, og ingens identitet kontrolleres.',
+  'public.eid.start': 'Bekræft med e-ID',
+  'public.eid.waiting': 'Venter på e-ID-appen…',
+  'public.eid.confirmed': 'Bekræftet som {name}. Det står nu i dit dokument.',
+  'public.eid.confirmedTest':
+    'Testbekræftelse gemt. Den er ikke en identitetskontrol, og det står i dit dokument.',
+  'public.eid.already': 'Denne formular er allerede bekræftet med e-ID.',
+  'public.eid.failed': 'Bekræftelsen med e-ID blev ikke fuldført. Din formular er stadig færdig.',
+  'public.eid.retry': 'Prøv igen',
 
   'validation.required': 'Dette felt er påkrævet.',
   'validation.tooShort': 'Mindst {min} tegn.',

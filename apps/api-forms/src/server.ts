@@ -522,6 +522,14 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         ? (process.env['CONTACT_TO'] ?? null)
         : options.contactAddress,
   });
+  const signing =
+    options.signing !== undefined
+      ? options.signing
+      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
+        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
+        : null;
+  // One client for both: sending documents for signing, and the optional e-ID step (§5.6).
+  const signClient = signing ? createSignClient(signing, options.signFetch) : null;
   registerPublicFormRoutes(app, {
     repos,
     mail,
@@ -529,6 +537,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     uploadStore,
     finished: { renderer, key: deriveFinishedKey(documentSigningSecret) },
     mailDraft: options.mailDraft ?? null,
+    sign: signClient,
     // One job per message, keyed so a retry cannot double-send.
     onSubmitted: async (submissionId) => {
       const organisation = await repos.organisations.first();
@@ -545,19 +554,13 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     },
   });
   registerDocumentRoutes(app, { repos, guard, admission, store, uploadStore });
-  const signing =
-    options.signing !== undefined
-      ? options.signing
-      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
-        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
-        : null;
   registerSigningRoutes(app, {
     repos,
     guard,
     store,
     uploadStore,
     renderer,
-    sign: signing ? createSignClient(signing, options.signFetch) : null,
+    sign: signClient,
     // The app's origin with the `/api` prefix: served by this process, or proxied to it by Vite.
     publicApiUrl: `${appUrl.replace(/\/$/, '')}/api`,
   });

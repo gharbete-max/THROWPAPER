@@ -20,6 +20,10 @@ import { buildFinishedDocument } from '../documents/finished-service.js';
 import { signFinishedToken, verifyFinishedToken } from '../documents/finished-token.js';
 import { contentDisposition, documentFilename } from '../documents/filename.js';
 import { DraftUnavailable, type MailDrafter } from '../mail/draft.js';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import type { IdentityMethod } from '@tp/shared/contract';
+import type { SignClient } from '../signing/client.js';
+import type { SubmissionIdentity } from '../db/schema.js';
 
 const SlugParam = z.object({ slug: z.string().min(1).max(64) });
 
@@ -54,8 +58,31 @@ export function registerPublicFormRoutes(
      * (`mail/draft.ts`). Absent on a server: a server has no mail program of the visitor's to open.
      */
     mailDraft?: MailDrafter | null;
+    /**
+     * Sign, for the optional e-ID step (CONTRACT §5.6). Null where no Sign is connected: a form
+     * that offers the step then says it is not available, and is finished without it.
+     */
+    sign?: SignClient | null;
   },
 ): void {
+  /**
+   * What §5.6 offers, asked at most once a minute. Sign answering nothing, or not answering at
+   * all, both mean the same thing to a person finishing a form: the step is not available.
+   */
+  let methodsCache: { at: number; methods: IdentityMethod[] } | null = null;
+  async function identityMethods(): Promise<IdentityMethod[]> {
+    if (!deps.sign) return [];
+    if (methodsCache && Date.now() - methodsCache.at < 60_000) return methodsCache.methods;
+    let methods: IdentityMethod[] = [];
+    try {
+      methods = (await deps.sign.identityMethods()).methods;
+    } catch {
+      methods = [];
+    }
+    methodsCache = { at: Date.now(), methods };
+    return methods;
+  }
+
   async function loadPublished(slug: string) {
     const organisation = await deps.repos.organisations.first();
     if (!organisation) return null;
@@ -414,6 +441,7 @@ export function registerPublicFormRoutes(
           confirmationTo: null,
           admissionCard: false,
           document: null,
+          identity: null,
         });
       }
 
@@ -536,6 +564,10 @@ export function registerPublicFormRoutes(
               draftProgram: deps.mailDraft?.label ?? null,
             }
           : null,
+        identity:
+          loaded.definition.settings.identity === 'optional'
+            ? identityOffer(await identityMethods())
+            : null,
       });
     },
   });
@@ -553,7 +585,8 @@ export function registerPublicFormRoutes(
    * is about a second of Chromium.
    */
   /** The document a valid token names, through this form's address only. Null for any refusal. */
-  async function finishedFor(slug: string, token: string) {
+  /** The submission a valid token names, through this form's address only. Null for any refusal. */
+  async function holderOf(slug: string, token: string) {
     if (!deps.finished) return null;
     const verified = verifyFinishedToken(token, deps.finished.key);
     if (!verified.ok) return null;
@@ -566,11 +599,17 @@ export function registerPublicFormRoutes(
       verified.submissionId,
     );
     if (!form || !submission || submission.formId !== form.id) return null;
+    if (submission.status !== 'complete' || submission.revokedAt) return null;
+    return { organisation, form, submission };
+  }
 
+  async function finishedFor(slug: string, token: string) {
+    const held = await holderOf(slug, token);
+    if (!held || !deps.finished) return null;
     return buildFinishedDocument(
       { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
-      organisation,
-      submission,
+      held.organisation,
+      held.submission,
     );
   }
 
@@ -645,6 +684,136 @@ export function registerPublicFormRoutes(
       },
     });
   }
+
+  /**
+   * The optional e-ID step, started (CONTRACT §5.6).
+   *
+   * The same token as the document — this is the person who just sent the form. What they confirm
+   * is the finished document as it stands now: its SHA-256 goes to the provider. The reference that
+   * comes back is bound to this submission with an HMAC, so a reference from somebody else's
+   * confirmation can never be recorded against this one.
+   */
+  app.post('/public/forms/:slug/identity', {
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      body: formSchemas.StartIdentityCheck,
+      response: {
+        200: formSchemas.IdentityCheckStarted,
+        404: api.ErrorResponse,
+        409: api.ErrorResponse,
+        503: api.ErrorResponse,
+      },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const { token } = formSchemas.StartIdentityCheck.parse(request.body);
+      const held = await holderOf(slug, token);
+      if (!held || !deps.finished) return notFound(reply);
+      const definition = await definitionOf(held.submission);
+      if (definition?.settings.identity !== 'optional') return notFound(reply);
+      if (held.submission.identity) {
+        return reply.code(409).send({
+          error: { code: 'already-confirmed', message: 'This form is already confirmed' },
+        });
+      }
+      const method = (await identityMethods())[0];
+      if (!deps.sign || !method) {
+        return reply.code(503).send({
+          error: { code: 'identity-unavailable', message: 'No e-ID is available here' },
+        });
+      }
+      const finished = await buildFinishedDocument(
+        { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
+        held.organisation,
+        held.submission,
+      );
+      if (!finished) return notFound(reply);
+      try {
+        const started = await deps.sign.startIdentity({
+          organisationId: held.organisation.id,
+          method: method.method,
+          documentSha256: createHash('sha256').update(finished.pdf).digest('hex'),
+          locale: held.submission.locale,
+          idempotencyKey: `finished:${held.submission.id}:${Date.now()}`,
+        });
+        return reply.send({
+          reference: bindReference(started.reference, held.submission.id, deps.finished.key),
+          status: started.status,
+          ...(started.launchUrl ? { launchUrl: started.launchUrl } : {}),
+        });
+      } catch (error) {
+        request.log.warn({ err: error }, 'identity start failed');
+        return reply.code(503).send({
+          error: { code: 'identity-unavailable', message: 'The e-ID service did not answer' },
+        });
+      }
+    },
+  });
+
+  /** Where the e-ID step stands; recorded on the submission once the provider has answered. */
+  app.post('/public/forms/:slug/identity/check', {
+    config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      body: formSchemas.IdentityCheckRequest,
+      response: {
+        200: formSchemas.IdentityCheckResponse,
+        404: api.ErrorResponse,
+        503: api.ErrorResponse,
+      },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const body = formSchemas.IdentityCheckRequest.parse(request.body);
+      const held = await holderOf(slug, body.token);
+      if (!held || !deps.finished || !deps.sign) return notFound(reply);
+      const reference = unbindReference(body.reference, held.submission.id, deps.finished.key);
+      if (!reference) return notFound(reply);
+
+      if (held.submission.identity) {
+        return reply.send({
+          status: 'complete' as const,
+          confirmed: confirmedView(held.submission.identity),
+        });
+      }
+
+      let result;
+      try {
+        result = await deps.sign.identityResult(reference);
+      } catch (error) {
+        request.log.warn({ err: error }, 'identity result failed');
+        return reply.code(503).send({
+          error: { code: 'identity-unavailable', message: 'The e-ID service did not answer' },
+        });
+      }
+      if (result.status !== 'complete' || !result.method) {
+        return reply.send({ status: result.status, confirmed: null });
+      }
+      const provider =
+        (await identityMethods()).find((m) => m.method === result.method)?.provider ?? 'unknown';
+      const identity: SubmissionIdentity = {
+        method: result.method,
+        provider,
+        name: result.name ?? null,
+        test: result.environment === 'test',
+        documentSha256: result.documentSha256,
+        confirmedAt: new Date().toISOString(),
+      };
+      await deps.repos.submissions.saveIdentity(held.organisation.id, held.submission.id, identity);
+      return reply.send({ status: 'complete' as const, confirmed: confirmedView(identity) });
+    },
+  });
+
+  async function definitionOf(submission: { formId: string; formVersionId: string }) {
+    const version = (await deps.repos.forms.listVersions(submission.formId)).find(
+      (candidate) => candidate.id === submission.formVersionId,
+    );
+    const parsed = formSchemas.FormDefinition.safeParse(version?.definition);
+    return parsed.success ? parsed.data : null;
+  }
 }
 
 function notFound(reply: FastifyReply) {
@@ -687,4 +856,37 @@ function uploadRejection(code: string): string {
     default:
       return 'That file type is not accepted';
   }
+}
+
+/** What the page learns about a recorded confirmation: enough to say it, nothing more. */
+function confirmedView(identity: SubmissionIdentity) {
+  return { method: identity.method, name: identity.name, test: identity.test };
+}
+
+/** Whether the step is offered as working, from what §5.6 listed. */
+function identityOffer(methods: IdentityMethod[]) {
+  return {
+    available: methods.length > 0,
+    test: methods.length > 0 && methods.every((method) => method.environment === 'test'),
+  };
+}
+
+/** `<sign reference>.<HMAC over submission and reference>`: usable only with this submission. */
+function bindReference(reference: string, submissionId: string, key: Buffer): string {
+  return `${reference}.${referenceMac(reference, submissionId, key)}`;
+}
+
+function unbindReference(bound: string, submissionId: string, key: Buffer): string | null {
+  const at = bound.lastIndexOf('.');
+  if (at <= 0) return null;
+  const reference = bound.slice(0, at);
+  const given = Buffer.from(bound.slice(at + 1));
+  const expected = Buffer.from(referenceMac(reference, submissionId, key));
+  return given.length === expected.length && timingSafeEqual(given, expected) ? reference : null;
+}
+
+function referenceMac(reference: string, submissionId: string, key: Buffer): string {
+  return createHmac('sha256', key)
+    .update(`identity\n${submissionId}\n${reference}`)
+    .digest('base64url');
 }

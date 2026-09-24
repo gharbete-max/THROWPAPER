@@ -364,6 +364,9 @@ export const enGB = {
   'settings.duplicateControlHint': 'Whether the same email address may answer more than once.',
   'settings.duplicateControl.email': 'One response per email address',
   'settings.duplicateControl.none': 'Any number of responses',
+  'settings.identity': 'Offer to confirm with e-ID after sending (optional for the person)',
+  'settings.identityHint':
+    'Their answers are saved first; confirming is a step they may take or skip. Where no e-ID provider is connected, the form says so and is finished without it.',
 
   'public.progress': 'Step {n} of {total}',
 
@@ -722,6 +725,21 @@ export const enGB = {
   'public.email.subject': '{title} — {reference}',
   'public.email.body': 'Attached: {filename}\nReference: {reference}',
   'public.again': 'Fill in again',
+  'public.eid.title': 'Confirm who you are (optional)',
+  'public.eid.unavailable':
+    "Confirming with e-ID isn't available for this form yet. Nothing more is needed — your form is finished.",
+  'public.eid.offer':
+    'You can confirm who you are with e-ID. It is optional: your form is already sent.',
+  'public.eid.testNote':
+    "Test mode: this uses a development provider and does not check anyone's identity.",
+  'public.eid.start': 'Confirm with e-ID',
+  'public.eid.waiting': 'Waiting for the e-ID app…',
+  'public.eid.confirmed': 'Confirmed as {name}. Your document now says so.',
+  'public.eid.confirmedTest':
+    'Test confirmation recorded. It is not an identity check, and your document says so.',
+  'public.eid.already': 'This form is already confirmed with e-ID.',
+  'public.eid.failed': "The e-ID check didn't complete. Your form is still finished.",
+  'public.eid.retry': 'Try again',
 
   'validation.required': 'This field is required.',
   'validation.tooShort': 'At least {min} characters.',

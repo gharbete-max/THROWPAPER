@@ -572,6 +572,21 @@ export function createDrizzleRepositories(db: Db): Repositories {
             .limit(1),
         ) as SubmissionRecord | null,
 
+      saveIdentity: async (organisationId, id, identity) => {
+        const [row] = await db
+          .update(submissions)
+          .set({ identity, updatedAt: new Date() })
+          .where(
+            and(
+              eq(submissions.organisationId, organisationId),
+              eq(submissions.id, id),
+              eq(submissions.status, 'complete'),
+            ),
+          )
+          .returning();
+        return (row as SubmissionRecord | undefined) ?? null;
+      },
+
       revoke: async (organisationId, id, at) => {
         const [row] = await db
           .update(submissions)

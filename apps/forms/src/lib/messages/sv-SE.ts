@@ -358,6 +358,10 @@ export const svSE: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om samma e-postadress får svara mer än en gång.',
   'settings.duplicateControl.email': 'Ett svar per e-postadress',
   'settings.duplicateControl.none': 'Hur många som helst',
+  'settings.identity':
+    'Erbjud bekräftelse med e-legitimation efter inskick (frivilligt för personen)',
+  'settings.identityHint':
+    'Svaren sparas först; bekräftelsen är ett steg man kan ta eller hoppa över. Där ingen leverantör av e-legitimation är ansluten säger formuläret det och blir klart ändå.',
 
   'public.progress': 'Steg {n} av {total}',
 
@@ -712,6 +716,22 @@ export const svSE: Record<MessageKey, string> = {
   'public.email.subject': '{title} – {reference}',
   'public.email.body': 'Bifogat: {filename}\nReferens: {reference}',
   'public.again': 'Fyll i igen',
+  'public.eid.title': 'Bekräfta vem du är (valfritt)',
+  'public.eid.unavailable':
+    'Bekräftelse med e-legitimation finns inte för det här formuläret än. Inget mer behövs – ditt formulär är klart.',
+  'public.eid.offer':
+    'Du kan bekräfta vem du är med e-legitimation. Det är frivilligt: formuläret är redan skickat.',
+  'public.eid.testNote':
+    'Testläge: här används en utvecklingsleverantör, och ingens identitet kontrolleras.',
+  'public.eid.start': 'Bekräfta med e-legitimation',
+  'public.eid.waiting': 'Väntar på e-legitimationsappen…',
+  'public.eid.confirmed': 'Bekräftad som {name}. Det står nu i ditt dokument.',
+  'public.eid.confirmedTest':
+    'Testbekräftelse sparad. Den är ingen identitetskontroll, och det står i ditt dokument.',
+  'public.eid.already': 'Det här formuläret är redan bekräftat med e-legitimation.',
+  'public.eid.failed':
+    'Bekräftelsen med e-legitimation blev inte klar. Ditt formulär är fortfarande klart.',
+  'public.eid.retry': 'Försök igen',
 
   'validation.required': 'Fältet är obligatoriskt.',
   'validation.tooShort': 'Minst {min} tecken.',

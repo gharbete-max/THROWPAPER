@@ -358,6 +358,9 @@ export const isIS: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Hvort sama netfang megi svara oftar en einu sinni.',
   'settings.duplicateControl.email': 'Eitt svar á hvert netfang',
   'settings.duplicateControl.none': 'Hvaða fjöldi svara sem er',
+  'settings.identity': 'Bjóða staðfestingu með rafrænum skilríkjum eftir sendingu (valfrjálst)',
+  'settings.identityHint':
+    'Svörin eru vistuð fyrst; staðfestingin er skref sem má taka eða sleppa. Þar sem engin skilríkjaþjónusta er tengd segir eyðublaðið það og klárast samt.',
 
   'public.progress': 'Skref {n} af {total}',
 
@@ -714,6 +717,20 @@ export const isIS: Record<MessageKey, string> = {
   'public.email.subject': '{title} – {reference}',
   'public.email.body': 'Viðhengi: {filename}\nTilvísun: {reference}',
   'public.again': 'Fylla út aftur',
+  'public.eid.title': 'Staðfestu hver þú ert (valfrjálst)',
+  'public.eid.unavailable':
+    'Staðfesting með rafrænum skilríkjum er ekki enn í boði fyrir þetta eyðublað. Ekkert meira þarf – eyðublaðið þitt er klárt.',
+  'public.eid.offer':
+    'Þú getur staðfest hver þú ert með rafrænum skilríkjum. Það er valfrjálst: eyðublaðið er þegar sent.',
+  'public.eid.testNote': 'Prófunarhamur: hér er notuð þróunarþjónusta og enginn er auðkenndur.',
+  'public.eid.start': 'Staðfesta með rafrænum skilríkjum',
+  'public.eid.waiting': 'Beðið eftir skilríkjaappinu…',
+  'public.eid.confirmed': 'Staðfest sem {name}. Það kemur nú fram í skjalinu þínu.',
+  'public.eid.confirmedTest':
+    'Prófunarstaðfesting vistuð. Hún er ekki auðkenning og það kemur fram í skjalinu þínu.',
+  'public.eid.already': 'Þetta eyðublað er þegar staðfest með rafrænum skilríkjum.',
+  'public.eid.failed': 'Staðfestingin kláraðist ekki. Eyðublaðið þitt er samt klárt.',
+  'public.eid.retry': 'Reyna aftur',
 
   'validation.required': 'Þennan reit þarf að fylla út.',
   'validation.tooShort': 'Að minnsta kosti {min} stafir.',

@@ -366,6 +366,10 @@ export const deDE: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Ob dieselbe E-Mail-Adresse mehr als einmal antworten darf.',
   'settings.duplicateControl.email': 'Eine Antwort pro E-Mail-Adresse',
   'settings.duplicateControl.none': 'Beliebig viele Antworten',
+  'settings.identity':
+    'Nach dem Senden eine Bestätigung per e-ID anbieten (freiwillig für die Person)',
+  'settings.identityHint':
+    'Die Antworten werden zuerst gespeichert; die Bestätigung ist ein Schritt, den man machen oder auslassen kann. Ist kein e-ID-Anbieter verbunden, sagt das Formular das und ist trotzdem fertig.',
 
   'public.progress': 'Schritt {n} von {total}',
 
@@ -731,6 +735,22 @@ export const deDE: Record<MessageKey, string> = {
   'public.email.subject': '{title} – {reference}',
   'public.email.body': 'Anhang: {filename}\nReferenz: {reference}',
   'public.again': 'Erneut ausfüllen',
+  'public.eid.title': 'Bestätigen, wer Sie sind (optional)',
+  'public.eid.unavailable':
+    'Die Bestätigung per e-ID ist für dieses Formular noch nicht verfügbar. Mehr ist nicht nötig – Ihr Formular ist fertig.',
+  'public.eid.offer':
+    'Sie können mit e-ID bestätigen, wer Sie sind. Das ist freiwillig: Ihr Formular ist bereits gesendet.',
+  'public.eid.testNote':
+    'Testmodus: Hier wird ein Entwicklungsanbieter verwendet, und niemandes Identität wird geprüft.',
+  'public.eid.start': 'Mit e-ID bestätigen',
+  'public.eid.waiting': 'Warten auf die e-ID-App…',
+  'public.eid.confirmed': 'Bestätigt als {name}. Ihr Dokument sagt das jetzt.',
+  'public.eid.confirmedTest':
+    'Testbestätigung gespeichert. Sie ist keine Identitätsprüfung, und Ihr Dokument sagt das.',
+  'public.eid.already': 'Dieses Formular ist bereits mit e-ID bestätigt.',
+  'public.eid.failed':
+    'Die e-ID-Bestätigung wurde nicht abgeschlossen. Ihr Formular ist trotzdem fertig.',
+  'public.eid.retry': 'Erneut versuchen',
 
   'validation.required': 'Dieses Feld ist erforderlich.',
   'validation.tooShort': 'Mindestens {min} Zeichen.',

@@ -26,6 +26,8 @@ export interface RememberedFinish {
   confirmation: string;
   coming: { email: string; card: boolean } | null;
   document: { token: string; filename: string; draftProgram: string | null } | null;
+  /** The optional e-ID step as the server offered it, or null when the form does not offer it. */
+  identity: { available: boolean; test: boolean } | null;
   locale: string;
 }
 
@@ -43,6 +45,7 @@ export function finishedState(
       confirmation: finished.confirmation,
       coming: finished.coming,
       document: finished.document,
+      identity: finished.identity,
       locale: finished.locale,
       at: now.getTime(),
     },
@@ -78,6 +81,10 @@ export function readFinished(state: unknown, now: Date = new Date()): Remembered
             filename: document.filename,
             draftProgram: typeof document.draftProgram === 'string' ? document.draftProgram : null,
           }
+        : null,
+    identity:
+      parsed.identity && typeof parsed.identity.available === 'boolean'
+        ? { available: parsed.identity.available, test: parsed.identity.test === true }
         : null,
     locale: typeof parsed.locale === 'string' ? parsed.locale : '',
   };
