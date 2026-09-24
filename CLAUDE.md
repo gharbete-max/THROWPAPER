@@ -12,8 +12,9 @@ apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
 apps/api-sign   Product C backend. Own database (append-only, hash-chained trail) on Postgres or
-                PGlite, CONTRACT §5.1–5.5 (per-organisation declarations), typed and drawn signing by link, PAdES seal + audit
-                page on completion (development certificate); serves the page
+                PGlite, CONTRACT §5.1–5.5 (declarations each organisation writes), typed and
+                drawn signing by link, PAdES seal + audit page on completion (development
+                certificate); serves the page
 apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own
                 embedded Postgres (PGlite) and loopback port, offline first. Not a product; it
                 imports only @tp/api-forms/desktop and @tp/api-sign/local (docs/adr/0016)
