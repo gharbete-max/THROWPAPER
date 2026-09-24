@@ -7,12 +7,14 @@ specs into this file.
 ```
 apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
-apps/api-forms  Product A backend. Sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set
+apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
+                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
 apps/api-sign   Product C backend. Own database (append-only, hash-chained trail) on Postgres or
-                PGlite, CONTRACT §5.1–5.5 (declarations each organisation writes), typed and
+                PGlite, CONTRACT §5.1–5.6 (declarations each organisation writes; identity
+                methods — none unless EID_PROVIDER is set, `console` is test-only), typed and
                 drawn signing by link, PAdES seal + audit page on completion (development
                 certificate); serves the page
 apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own

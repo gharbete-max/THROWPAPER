@@ -85,9 +85,17 @@ safe default; the server refuses or degrades loudly when they are missing.
 
 ### 2.2a Deferred engineering, tracked so it cannot expire quietly
 
-Empty. The one row it held — `memory.ts` stamping from the wall clock while `claim` took `now` —
-closed in S8: the double takes one clock, and the two lease tests run on the literal that used to
-expire.
+From the product-ready pass (PR #141); each was found, measured and left with a reason.
+
+| What                                                                                                                                                                                           | Why not yet                                                                                                      | Severity |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------- |
+| Parsing an uploaded PDF (`pdf-lib` load in api-sign's `readablePdf`/sealing and Forms' paper) inflates every object stream: a 1.5 MB file took 9.7 s and 1.6 GB                                | needs a worker thread with resource limits and a timeout around every load; an authenticated user's upload only  | medium   |
+| `GET /v1/events/:id/attendance` checks the organisation, not form access (pre-launch audit #10)                                                                                                | operators work the door for any event by design; whether they may see every registrant's email is a product call | medium   |
+| api-sign has no rate limiting                                                                                                                                                                  | its routes need a service token or an HMAC'd link; add `@fastify/rate-limit` as Forms has                        | low      |
+| Desktop _File → Back up_ copies `secrets.json` (Forms and Sign keys) in plain files, often into a synced Documents folder                                                                      | encrypt the backup, or warn — a wording decision                                                                 | low      |
+| macOS Developer ID: `electron-builder.yml` pins `identity: null`; notarising needs `build.ts` to switch on hardened runtime, entitlements and `notarize` when `CSC_LINK`/`APPLE_API_KEY` exist | waits on the certificate (§6)                                                                                    | —        |
+| e-ID evidence is held in memory by Sign; a real provider's raw assertion must be stored encrypted in Sign's database                                                                           | arrives with the first real provider (ROADMAP P2)                                                                | —        |
+| Email handoff on Windows (Outlook COM `Display()`) and macOS (Mail/Outlook AppleScript) verified by tests of the scripts, not by a person on those machines                                    | no Windows/Mac here                                                                                              | —        |
 
 ### 2.2 Temporary and literal strings in the app
 
