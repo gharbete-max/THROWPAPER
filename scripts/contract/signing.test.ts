@@ -184,6 +184,21 @@ describe('Forms sends a PDF to Sign, and gets a sealed one back (CONTRACT §5)',
     expect(opensslVerify(seal.signedContent, seal.cms, 'embedded').ok).toBe(true);
   });
 
+  it('sends a paper form only for a submission this organisation can see', async () => {
+    const unknown = await forms.app.inject({
+      method: 'POST',
+      url: '/v1/signing/requests',
+      headers: bearer(admin),
+      payload: {
+        source: 'paper',
+        submissionId: '99999999-9999-4999-8999-999999999999',
+        parties: [{ name: 'Åsa', locale: 'sv-SE' }],
+        declarationKey: 'demo',
+      },
+    });
+    expect(unknown.statusCode).toBe(404);
+  });
+
   it('refuses a hook it cannot verify, and a request from somebody not signed in', async () => {
     const forged = await forms.app.inject({
       method: 'POST',

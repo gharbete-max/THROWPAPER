@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { useSearchParams } from 'react-router';
 import { localeLabel } from '@tp/i18n';
 import type { forms as formSchemas } from '@tp/shared';
 import { client } from '../lib/api.js';
@@ -22,7 +23,11 @@ type Party = { name: string; email: string; locale: string };
 export function Signing() {
   const t = useT();
   const [data, setData] = useState<formSchemas.SigningRequestList | null>(null);
-  const [composing, setComposing] = useState(false);
+  // Arriving from a submission's "Send for signing": its filled-in paper is the document.
+  const [params] = useSearchParams();
+  const paper = params.get('paper');
+  const reference = params.get('reference') ?? '';
+  const [composing, setComposing] = useState(paper !== null);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,6 +80,7 @@ export function Signing() {
 
       {composing && (
         <Compose
+          paper={paper ? { submissionId: paper, reference } : null}
           onCancel={() => setComposing(false)}
           onSent={(created) => {
             replace(created);
@@ -207,10 +213,23 @@ function Row({
   );
 }
 
+/** A file as base64, in chunks: spreading a whole PDF into one call overflows the stack. */
+async function base64(file: File): Promise<string> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let binary = '';
+  for (let at = 0; at < bytes.length; at += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(at, at + 0x8000));
+  }
+  return btoa(binary);
+}
+
 function Compose({
+  paper,
   onCancel,
   onSent,
 }: {
+  /** A paper form's submission, sent as its filled-in PDF instead of an uploaded file. */
+  paper: { submissionId: string; reference: string } | null;
   onCancel: () => void;
   onSent: (created: formSchemas.SigningRequestView) => void;
 }) {
@@ -226,8 +245,7 @@ function Compose({
   const [failed, setFailed] = useState(false);
 
   const ready =
-    file !== null &&
-    documentName.trim() !== '' &&
+    (paper !== null || (file !== null && documentName.trim() !== '')) &&
     declarationKey.trim() !== '' &&
     parties.every((party) => party.name.trim() !== '');
 
@@ -237,31 +255,30 @@ function Compose({
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!file || !ready) return;
+    if (!ready) return;
     setSending(true);
     setFailed(false);
     try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      let binary = '';
-      for (let at = 0; at < bytes.length; at += 0x8000) {
-        binary += String.fromCharCode(...bytes.subarray(at, at + 0x8000));
-      }
-      onSent(
-        await client.createSigningRequest({
-          source: 'upload',
-          documentName: documentName.trim(),
-          pdfBase64: btoa(binary),
-          parties: parties.map((party) => ({
-            name: party.name.trim(),
-            ...(party.email.trim() ? { email: party.email.trim() } : {}),
-            locale: party.locale,
-          })),
-          routing,
-          declarationKey: declarationKey.trim(),
-          // Test mode until a person has written the declaration (ADR 0012, rule 7).
-          environment: 'test',
-        }),
-      );
+      const common = {
+        parties: parties.map((party) => ({
+          name: party.name.trim(),
+          ...(party.email.trim() ? { email: party.email.trim() } : {}),
+          locale: party.locale,
+        })),
+        routing,
+        declarationKey: declarationKey.trim(),
+        // Test mode until a person has written the declaration (ADR 0012, rule 7).
+        environment: 'test' as const,
+      };
+      const body: formSchemas.CreateSigningRequest = paper
+        ? { source: 'paper', submissionId: paper.submissionId, ...common }
+        : {
+            source: 'upload',
+            documentName: documentName.trim(),
+            pdfBase64: await base64(file!),
+            ...common,
+          };
+      onSent(await client.createSigningRequest(body));
     } catch {
       setFailed(true);
     } finally {
@@ -272,27 +289,36 @@ function Compose({
   return (
     <form className="card stack" onSubmit={submit} aria-label={t('signing.new')}>
       <h2>{t('signing.new')}</h2>
-      <label className="stack stack--tight">
-        <span>{t('signing.file')}</span>
-        <input
-          type="file"
-          accept="application/pdf,.pdf"
-          onChange={(event) => {
-            const chosen = event.target.files?.[0] ?? null;
-            setFile(chosen);
-            if (chosen && !documentName) setDocumentName(chosen.name.replace(/\.pdf$/i, ''));
-          }}
-        />
-      </label>
-      <label className="stack stack--tight">
-        <span>{t('signing.documentName')}</span>
-        <input
-          className="input"
-          value={documentName}
-          maxLength={200}
-          onChange={(event) => setDocumentName(event.target.value)}
-        />
-      </label>
+      {paper ? (
+        <p>
+          <strong>{t('signing.document')}:</strong>{' '}
+          {t('signing.fromSubmission', { reference: paper.reference })}
+        </p>
+      ) : (
+        <>
+          <label className="stack stack--tight">
+            <span>{t('signing.file')}</span>
+            <input
+              type="file"
+              accept="application/pdf,.pdf"
+              onChange={(event) => {
+                const chosen = event.target.files?.[0] ?? null;
+                setFile(chosen);
+                if (chosen && !documentName) setDocumentName(chosen.name.replace(/\.pdf$/i, ''));
+              }}
+            />
+          </label>
+          <label className="stack stack--tight">
+            <span>{t('signing.documentName')}</span>
+            <input
+              className="input"
+              value={documentName}
+              maxLength={200}
+              onChange={(event) => setDocumentName(event.target.value)}
+            />
+          </label>
+        </>
+      )}
 
       <fieldset className="stack stack--tight">
         <legend>{t('signing.parties')}</legend>

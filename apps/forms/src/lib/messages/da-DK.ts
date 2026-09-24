@@ -857,4 +857,6 @@ export const daDK: Record<MessageKey, string> = {
   'signing.refresh': 'Opdater',
   'signing.downloadSigned': 'Hent underskrevet PDF',
   'signing.cancel': 'Annuller',
+  'submissions.sendForSigning': 'Send til underskrift',
+  'signing.fromSubmission': 'Udfyldt papirformular {reference}',
 };

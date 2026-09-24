@@ -857,4 +857,6 @@ export const svSE: Record<MessageKey, string> = {
   'signing.refresh': 'Uppdatera',
   'signing.downloadSigned': 'Ladda ner signerad PDF',
   'signing.cancel': 'Avbryt',
+  'submissions.sendForSigning': 'Skicka för signering',
+  'signing.fromSubmission': 'Ifyllt pappersformulär {reference}',
 };

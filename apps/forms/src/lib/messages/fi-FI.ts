@@ -864,4 +864,6 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.refresh': 'Päivitä',
   'signing.downloadSigned': 'Lataa allekirjoitettu PDF',
   'signing.cancel': 'Peruuta',
+  'submissions.sendForSigning': 'Lähetä allekirjoitettavaksi',
+  'signing.fromSubmission': 'Täytetty paperilomake {reference}',
 };
