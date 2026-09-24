@@ -1,15 +1,16 @@
 import { fileURLToPath } from 'node:url';
-import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
 import * as schema from './schema.js';
+import type { Db } from './types.js';
 
-export type Db = PostgresJsDatabase<typeof schema>;
+export type { Db } from './types.js';
 
 export const DEFAULT_SIGN_DATABASE_URL =
   'postgres://throwpaper:throwpaper@localhost:5432/throwpaper_sign';
 
-const MIGRATIONS = fileURLToPath(new URL('../../drizzle', import.meta.url));
+export const MIGRATIONS = fileURLToPath(new URL('../../drizzle', import.meta.url));
 
 export function connect(url: string, max = 10): { db: Db; sql: postgres.Sql } {
   const sql = postgres(url, {

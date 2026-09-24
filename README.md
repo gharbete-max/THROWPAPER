@@ -13,8 +13,8 @@
 
 Loppa is a set of products that integrate, built in one monorepo. Each can be sold, deployed and demoed
 without the others; they talk only through a versioned HTTP contract, never a shared database.
-A third, **Sign** (`apps/sign` + `apps/api-sign`, `docs/adr/0009-where-signing-lives.md`), is a
-scaffold today.
+A third, **Sign** (`apps/sign` + `apps/api-sign`, `docs/adr/0009-where-signing-lives.md`), has its
+signing page and sealing; sending from Forms is next (P1c-3).
 
 |                  | **Forms**                                                           | **Mailer**                                      |
 | ---------------- | ------------------------------------------------------------------- | ----------------------------------------------- |
@@ -59,8 +59,8 @@ apps/forms        Forms — React, SSR, Vite
 apps/api-forms    Forms backend
 apps/mailer       Mailer
 apps/api-mailer   Mailer backend
-apps/sign         Sign — scaffold
-apps/api-sign     Sign backend — envelopes, audit trail, typed signing, PAdES sealing (P1c-1, P1c-2)
+apps/sign         Sign — the signer's page (typed or drawn signature, decline)
+apps/api-sign     Sign backend — envelopes, audit trail, signing by link, PAdES sealing (P1c-1..4a)
 apps/desktop      Loppa desktop (Windows, macOS) — Forms in an Electron window, offline first
 packages/tokens   Design tokens → CSS vars, inline email styles, print CSS. Contrast guard lives here
 packages/i18n     Translation catalogues and ICU collation

@@ -1,11 +1,11 @@
 import { randomUUID, webcrypto } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { sql as raw } from 'drizzle-orm';
+import { asc, eq, sql as raw } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { buildServer } from '../server.js';
 import { testDatabase } from '../test-database.js';
 import { PDFDocument } from 'pdf-lib';
-import { declarations, serviceTokens } from '../db/schema.js';
+import { declarations, envelopeEvents, serviceTokens } from '../db/schema.js';
 import type { Db } from '../db/client.js';
 import { generateDevCertificate, loadSealer, type Sealer } from '../sealing/certificate.js';
 import { extractSeal, opensslVerify } from '../sealing/openssl-validator.js';
@@ -319,17 +319,66 @@ describe.skipIf(!database)('signing', () => {
     ]);
 
     // The trail holds the declaration as shown, in the signer's own language.
-    const events = await db.execute(
-      raw`select event from envelope_events where envelope_id = ${created.envelopeId} order by seq`,
-    );
-    const signed = events
-      .map((row) => JSON.parse(String(row['event'])))
+    const signed = (await trailOf(created.envelopeId))
+      .map((row) => JSON.parse(row.event))
       .filter((event) => event.type === 'signed');
     expect(signed.map((event) => event.evidence.declaration.text)).toEqual([
       '[v2 sv — placeholder]',
       '[v2 en — placeholder]',
     ]);
     expect(signed[0].evidence.details).toEqual({ typedName: 'Åsa Öberg' });
+  });
+
+  it('takes a drawn signature with its strokes, and refuses a path outside the pad grammar', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org, { routing: 'parallel' }))).json();
+    const link = linkOf(created.signUrls.landlord);
+    const drawn = {
+      v: 1,
+      kind: 'drawn',
+      width: 600,
+      height: 200,
+      paths: ['M 10 150 Q 60 20 120 140 L 200 60', 'M 250 100 l 0.01 0'],
+    };
+
+    const hostile = await app.inject({
+      method: 'POST',
+      url: `/v1/sign/${link}`,
+      payload: { drawn: { ...drawn, paths: ['M 0 0 Z <script>'] } },
+    });
+    expect(hostile.statusCode).toBe(400);
+    const typedAsDrawn = await app.inject({
+      method: 'POST',
+      url: `/v1/sign/${link}`,
+      payload: { drawn: { v: 1, kind: 'typed', width: 600, height: 200, text: 'Åsa' } },
+    });
+    expect(typedAsDrawn.statusCode).toBe(400);
+
+    const signed = await app.inject({
+      method: 'POST',
+      url: `/v1/sign/${link}`,
+      payload: { drawn },
+    });
+    expect(signed.statusCode).toBe(200);
+    const [event] = (await trailOf(created.envelopeId))
+      .map((row) => JSON.parse(row.event))
+      .filter((candidate) => candidate.type === 'signed');
+    expect(event.evidence.method).toBe('drawn');
+    expect(JSON.parse(event.evidence.details.vector)).toEqual(drawn);
+
+    // And a drawn envelope seals like any other, and the seal holds.
+    await sign(linkOf(created.signUrls.tenant), 'Jon Smith');
+    const sealed = await app.inject({
+      method: 'GET',
+      url: `/v1/envelopes/${created.envelopeId}/sealed`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+    const bytes = new Uint8Array(
+      (await app.inject({ method: 'GET', url: sealed.json().url.slice(API.length) })).rawPayload,
+    );
+    const seal = extractSeal(bytes);
+    expect(opensslVerify(seal.signedContent, seal.cms, SEAL.certPem).ok).toBe(true);
   });
 
   it('serves the document to a link holder, and nothing to a forged link', async () => {
@@ -357,10 +406,7 @@ describe.skipIf(!database)('signing', () => {
     const results = await Promise.all([sign(link, 'Åsa'), sign(link, 'Åsa')]);
     expect(results.map((r) => r.statusCode).sort()).toEqual([200, 409]);
 
-    const seqs = await db.execute(
-      raw`select seq from envelope_events where envelope_id = ${created.envelopeId} order by seq`,
-    );
-    expect(seqs.map((row) => Number(row['seq']))).toEqual([1, 2]);
+    expect((await trailOf(created.envelopeId)).map((row) => row.seq)).toEqual([1, 2]);
   });
 
   it('expires on the deadline, and a late signature is refused', async () => {
@@ -614,6 +660,14 @@ describe.skipIf(!database)('the sealed document (§5.3)', () => {
     expect((await sealedOf(token, id)).statusCode).toBe(500);
   });
 });
+
+function trailOf(envelopeId: string) {
+  return db
+    .select()
+    .from(envelopeEvents)
+    .where(eq(envelopeEvents.envelopeId, envelopeId))
+    .orderBy(asc(envelopeEvents.seq));
+}
 
 function sign(link: string, typedName: string) {
   return app.inject({ method: 'POST', url: `/v1/sign/${link}`, payload: { typedName } });

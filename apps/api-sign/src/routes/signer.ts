@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { api } from '@tp/shared';
+import { SignatureVector } from '@tp/shared/forms';
 import {
   DocumentHash,
   Environment,
@@ -13,7 +14,7 @@ import {
 } from '@tp/signing';
 import { declarations } from '../db/schema.js';
 import { readToken } from '../envelopes/links.js';
-import { documentBytes, withEnvelope, type Definition } from '../envelopes/store.js';
+import { documentBytes, withEnvelope, type Definition, type Loaded } from '../envelopes/store.js';
 import type { Deps } from '../server.js';
 import { fail } from './envelopes.js';
 
@@ -33,10 +34,20 @@ const SignerView = z.object({
 });
 
 /**
- * What P1c-1 accepts: a typed name. A drawn mark arrives with the signing page (P1c-4), because
- * evidence that says "drawn" without keeping the strokes would claim more than it holds.
+ * A typed name, or a drawn mark with its strokes.
+ *
+ * Drawn arrived with the signing page (P1c-4a), and only with the strokes: evidence that says
+ * "drawn" without keeping them would claim more than it holds. The strokes are the pad's vector
+ * paths in the same narrow grammar Forms' signature field uses (`@tp/shared/forms`), geometry
+ * only — no timing or pressure, which would make them biometric data (ADR 0009).
  */
-const SignRequest = z.object({ typedName: z.string().trim().min(1).max(200) });
+const DrawnMark = SignatureVector.refine((vector) => vector.kind === 'drawn', {
+  message: 'A drawn signature carries paths',
+});
+const SignRequest = z.union([
+  z.object({ typedName: z.string().trim().min(1).max(200) }).strict(),
+  z.object({ drawn: DrawnMark }).strict(),
+]);
 
 const errors = { 404: api.ErrorResponse, 409: api.ErrorResponse } as const;
 
@@ -48,8 +59,12 @@ const errors = { 404: api.ErrorResponse, 409: api.ErrorResponse } as const;
 export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
   const typed = app.withTypeProvider<ZodTypeProvider>();
 
-  async function declarationText(definition: Definition, locale: string): Promise<string> {
-    const [row] = await deps.db
+  /** Read inside the envelope's transaction (`loaded`), never the pool — see `Loaded.db`. */
+  async function declarationText(
+    { db, definition }: Pick<Loaded, 'db' | 'definition'>,
+    locale: string,
+  ): Promise<string> {
+    const [row] = await db
       .select()
       .from(declarations)
       .where(
@@ -101,7 +116,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
             await append({ type: 'viewed', at: deps.now().toISOString(), partyId: link.partyId });
           }
           const party = loaded.envelope.parties.find((p) => p.id === link.partyId)!;
-          const text = await declarationText(loaded.definition, party.locale);
+          const text = await declarationText(loaded, party.locale);
           return view(loaded.envelope, link.partyId, text, loaded.definition);
         }));
       if (!result) return fail(reply, 404, 'not-found', 'This link does not open anything');
@@ -142,14 +157,14 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
           const { envelope, definition } = loaded;
           const party = envelope.parties.find((p) => p.id === link.partyId);
           if (!party) return null;
-          const text = await declarationText(definition, party.locale);
+          const text = await declarationText(loaded, party.locale);
           const at = deps.now().toISOString();
           const refused = await append({
             type: 'signed',
             at,
             partyId: party.id,
             evidence: {
-              method: 'typed',
+              method: 'typedName' in request.body ? 'typed' : 'drawn',
               level: 'simple',
               environment: envelope.environment,
               signedAt: at,
@@ -157,7 +172,10 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
               // Byte for byte what the page showed them: "what did they agree to" is the first
               // question in a dispute, and a key without its text cannot answer it.
               declaration: { ...definition.declaration, text },
-              details: { typedName: request.body.typedName },
+              details:
+                'typedName' in request.body
+                  ? { typedName: request.body.typedName }
+                  : { vector: JSON.stringify(request.body.drawn) },
             },
           });
           if (refused) return refused;
@@ -184,7 +202,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
             partyId: party.id,
           });
           if (refused) return refused;
-          const text = await declarationText(loaded.definition, party.locale);
+          const text = await declarationText(loaded, party.locale);
           return view(loaded.envelope, party.id, text, loaded.definition);
         }));
       if (!outcome) return fail(reply, 404, 'not-found', 'This link does not open anything');

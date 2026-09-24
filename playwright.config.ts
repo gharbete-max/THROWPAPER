@@ -1,4 +1,6 @@
+import { resolve } from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
+import { SIGN_PORT, signDatabaseUrl } from './e2e/ports.js';
 
 /**
  * End-to-end: a real browser against a real server against a real Postgres.
@@ -16,6 +18,7 @@ import { defineConfig, devices } from '@playwright/test';
  * silently passes on a machine without Docker.
  */
 const API_PORT = 4001;
+const SIGN_URL = `http://localhost:${SIGN_PORT}`;
 const APP_PORT = 4173;
 const APP_URL = `http://localhost:${APP_PORT}`;
 
@@ -52,6 +55,11 @@ export default defineConfig({
     // Chromium only: it is what the PDF pipeline already installs, and adding two more browser
     // downloads to CI buys little for an internal admin tool.
     ...devices['Desktop Chrome'],
+    // A container whose Chromium is not the build this Playwright pins (PROGRESS notes one) can
+    // point at the one it has. Unset everywhere else, CI included.
+    ...(process.env['E2E_CHROMIUM'] && {
+      launchOptions: { executablePath: process.env['E2E_CHROMIUM'] },
+    }),
   },
 
   webServer: EXTERNAL_URL
@@ -81,6 +89,26 @@ export default defineConfig({
           stdout: 'pipe',
           stderr: 'pipe',
           timeout: 120_000,
+        },
+        {
+          command:
+            'pnpm --filter @tp/sign build && pnpm --filter @tp/api-sign exec tsx src/main.ts',
+          port: SIGN_PORT,
+          reuseExistingServer: !process.env['CI'],
+          stdout: 'pipe',
+          stderr: 'pipe',
+          timeout: 120_000,
+          env: {
+            SIGN_DATABASE_URL: signDatabaseUrl(DATABASE_URL),
+            SIGN_LINK_SECRET: 'e2e-only-sign-link-secret-at-least-thirty-two',
+            // A seal key made at boot: the spec checks the seal against the certificate inside it.
+            SIGN_SEAL_EPHEMERAL: 'true',
+            SIGN_SERVE_APP: resolve('apps/sign/dist'),
+            SIGN_PUBLIC_URL: SIGN_URL,
+            API_SIGN_PUBLIC_URL: SIGN_URL,
+            API_SIGN_PORT: String(SIGN_PORT),
+            NODE_ENV: 'development',
+          },
         },
       ],
 });

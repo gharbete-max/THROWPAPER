@@ -108,6 +108,12 @@ export interface Loaded {
   /** The trail, in order, and the hash of its last event. Current after every `append`. */
   readonly events: readonly EnvelopeEvent[];
   readonly trailSha256: string;
+  /**
+   * The transaction this envelope is locked in. Anything read while acting on it goes through
+   * this, never the pool: on PGlite (the desktop edition) there is one connection, and a read
+   * outside the transaction that holds it waits forever.
+   */
+  db: Db;
 }
 
 export type Append = (event: EnvelopeEvent) => Promise<Refusal | null>;
@@ -200,6 +206,7 @@ export async function withEnvelope<T>(
       {
         organisationId: row.organisationId,
         definition,
+        db: tx as unknown as Db,
         get envelope() {
           return envelope;
         },

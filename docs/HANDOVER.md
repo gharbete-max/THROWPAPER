@@ -45,8 +45,9 @@ What is left, and whose it is:
    approved 2026-09-23. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
    proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
    (PROGRESS § P1a, § P1b); P1c-1 is done (Sign's database, the append-only hash-chained trail, §5.1–5.2); P1c-2 is done
-   (PAdES sealing with an audit page, §5.3); next is P1c-3 (Forms → Sign + webhook), then P1c-4
-   (standalone page, SMTP). Mailer B2
+   (PAdES sealing with an audit page, §5.3); P1c-4a is done (the signer's page, typed or drawn,
+   and Sign on PGlite); next is P1c-3 (Forms → Sign + webhook), then Sign in the desktop, then
+   P1c-4b (sender screens, SMTP invitations). Mailer B2
    now lives inside P3. Decisions in docs/EXPANSION.md § 5.
    Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5
    has the nine importers, if it is ever picked up) and handwriting OCR (ADR 0007, which the

@@ -228,7 +228,7 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
       const found = await withEnvelope(deps, request.params.id, now, async (loaded) => {
         if (loaded.organisationId !== who.organisationId) return null;
         if (loaded.envelope.status !== 'completed') return { status: loaded.envelope.status };
-        const seal = await readSeal(deps.db, loaded.envelope.id, loaded.trailSha256);
+        const seal = await readSeal(loaded.db, loaded.envelope.id, loaded.trailSha256);
         // Completed and sealed are one transaction (`withEnvelope`), so a missing seal is damage.
         if (!seal) throw new Error(`envelope ${loaded.envelope.id} is completed without a seal`);
         return { sha256: seal.sha256 };
