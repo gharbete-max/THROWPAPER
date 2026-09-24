@@ -686,6 +686,32 @@ export const svSE: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Välj…',
+  'public.finished.sent': 'Dina svar har skickats till {organisation}.',
+  'public.document.preparing': 'Dokumentet förbereds…',
+  'public.document.ready': 'Ditt dokument är klart',
+  'public.document.download': 'Ladda ner PDF',
+  'public.document.open': 'Öppna',
+  'public.document.email': 'Mejla det',
+  'public.document.failed': 'PDF:en kunde inte skapas just nu. Dina svar är sparade.',
+  'public.document.expired':
+    'Den här kopian finns inte längre kvar här. Dina svar är sparade under referens {reference}.',
+  'public.document.retry': 'Försök igen',
+  'public.email.title': 'Mejla dokumentet',
+  'public.email.draft': 'Öppna ett utkast i {program}',
+  'public.email.drafting': 'Öppnar {program}…',
+  'public.email.draftOpened':
+    'Utkastet är öppet i {program} med PDF:en bifogad. Fyll i mottagare och skicka därifrån.',
+  'public.email.draftFailed':
+    '{program} kunde inte öppna ett utkast. Använd något av sätten nedan i stället.',
+  'public.email.share': 'Dela eller mejla…',
+  'public.email.app': 'Öppna min e-postapp',
+  'public.email.attachNote':
+    'E-postappen öppnas med meddelandet skrivet. Bifoga {filename} själv innan du skickar – en webbsida kan inte bifoga filer i ett mejl.',
+  'public.email.copy': 'Kopiera meddelandet',
+  'public.email.copied': 'Kopierat',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Bifogat: {filename}\nReferens: {reference}',
+  'public.again': 'Fyll i igen',
 
   'validation.required': 'Fältet är obligatoriskt.',
   'validation.tooShort': 'Minst {min} tecken.',

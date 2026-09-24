@@ -703,6 +703,33 @@ export const frFR: Record<MessageKey, string> = {
   'public.yes': 'Oui',
   'public.no': 'Non',
   'public.choose': 'Choisir…',
+  'public.finished.sent': 'Vos réponses ont été envoyées à {organisation}.',
+  'public.document.preparing': 'Préparation de votre document…',
+  'public.document.ready': 'Votre document est prêt',
+  'public.document.download': 'Télécharger le PDF',
+  'public.document.open': 'Ouvrir',
+  'public.document.email': 'L’envoyer par e-mail',
+  'public.document.failed':
+    'Le PDF n’a pas pu être créé pour l’instant. Vos réponses sont enregistrées.',
+  'public.document.expired':
+    'Cette copie n’est plus disponible ici. Vos réponses sont enregistrées sous la référence {reference}.',
+  'public.document.retry': 'Réessayer',
+  'public.email.title': 'Envoyer le document par e-mail',
+  'public.email.draft': 'Ouvrir un brouillon dans {program}',
+  'public.email.drafting': 'Ouverture de {program}…',
+  'public.email.draftOpened':
+    'Le brouillon est ouvert dans {program} avec le PDF en pièce jointe. Ajoutez le destinataire et envoyez-le depuis là.',
+  'public.email.draftFailed':
+    '{program} n’a pas pu ouvrir de brouillon. Utilisez plutôt l’une des options ci-dessous.',
+  'public.email.share': 'Partager ou envoyer par e-mail…',
+  'public.email.app': 'Ouvrir ma messagerie',
+  'public.email.attachNote':
+    'Votre messagerie s’ouvre avec le message rédigé. Joignez vous-même {filename} avant d’envoyer : une page web ne peut pas joindre de fichier à un e-mail.',
+  'public.email.copy': 'Copier le message',
+  'public.email.copied': 'Copié',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Pièce jointe : {filename}\nRéférence : {reference}',
+  'public.again': 'Remplir à nouveau',
 
   'validation.required': 'Ce champ est obligatoire.',
   'validation.tooShort': 'Au moins {min} caractères.',

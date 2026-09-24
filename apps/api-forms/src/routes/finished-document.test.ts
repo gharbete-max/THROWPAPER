@@ -9,6 +9,7 @@ import {
   type TestHarness,
 } from '../test-support.js';
 import { signFinishedToken, deriveFinishedKey } from '../documents/finished-token.js';
+import { DraftUnavailable, type MailDraft, type MailDrafter } from '../mail/draft.js';
 
 /**
  * The finished document, end to end through the routes: the person who sends a form can download
@@ -247,5 +248,82 @@ describe('staff download of a finished document', () => {
     const operator = (await signIn(harness, operatorUser.email)).accessToken;
     const response = await harness.app.inject({ method: 'GET', url, headers: bearer(operator) });
     expect(response.statusCode).toBe(404);
+  });
+});
+
+describe('email the document as a draft (desktop)', () => {
+  function drafter(fail?: Error): MailDrafter & { opened: MailDraft[] } {
+    const opened: MailDraft[] = [];
+    return {
+      label: 'classic Outlook',
+      opened,
+      async open(draft) {
+        if (fail) throw fail;
+        opened.push(draft);
+      },
+    };
+  }
+
+  async function withDrafter(program: MailDrafter | null) {
+    await harness.close();
+    harness = await createTestHarness({}, { mailDraft: program });
+    adminToken = (await signIn(harness, adminUser.email)).accessToken;
+    await publish('anmalan', { 'sv-SE': 'Vårmötet 2026' });
+  }
+
+  function draft(token: string, subject = 'Vårmötet 2026 — ref', text = 'Bifogat.') {
+    return harness.app.inject({
+      method: 'POST',
+      url: '/public/forms/anmalan/document/email-draft',
+      payload: { token, subject, text },
+    });
+  }
+
+  it('is not offered, and does not exist, on a server', async () => {
+    await publish('anmalan', { 'sv-SE': 'Anmälan' });
+    const sent = await send('anmalan', 'Åsa', 'asa@example.com');
+    expect(sent.document!.draftProgram).toBeNull();
+    expect((await draft(sent.document!.token)).statusCode).toBe(404);
+  });
+
+  it('opens a draft with the finished PDF attached under its own name, and sends nothing', async () => {
+    const program = drafter();
+    await withDrafter(program);
+    const sent = await send('anmalan', 'Åsa Öberg', 'asa@example.com');
+    expect(sent.document!.draftProgram).toBe('classic Outlook');
+
+    const response = await draft(sent.document!.token);
+    expect(response.statusCode).toBe(204);
+    expect(program.opened).toHaveLength(1);
+    const [opened] = program.opened;
+    expect(opened!.attachment.filename).toBe(`Vårmötet-2026-${sent.reference}.pdf`);
+    expect(opened!.attachment.content.subarray(0, 5).toString()).toBe('%PDF-');
+    expect(opened!.subject).toBe('Vårmötet 2026 — ref');
+    // Nothing went out through the organisation's own mail.
+    expect(harness.mail.sent.filter((m) => m.to === 'asa@example.com')).toHaveLength(0);
+  });
+
+  it('refuses a bad token without opening anything', async () => {
+    const program = drafter();
+    await withDrafter(program);
+    expect((await draft('not-a-token')).statusCode).toBe(404);
+    expect(program.opened).toHaveLength(0);
+  });
+
+  it('refuses a subject that would be two headers', async () => {
+    const program = drafter();
+    await withDrafter(program);
+    const sent = await send('anmalan', 'Åsa', 'asa@example.com');
+    const response = await draft(sent.document!.token, 'Hej\r\nBcc: everyone@example.com');
+    expect(response.statusCode).toBe(400);
+    expect(program.opened).toHaveLength(0);
+  });
+
+  it('says the mail program is not there, so the page can offer download-and-attach', async () => {
+    await withDrafter(drafter(new DraftUnavailable('classic Outlook')));
+    const sent = await send('anmalan', 'Åsa', 'asa@example.com');
+    const response = await draft(sent.document!.token);
+    expect(response.statusCode).toBe(503);
+    expect(response.json().error.code).toBe('mail-program-unavailable');
   });
 });

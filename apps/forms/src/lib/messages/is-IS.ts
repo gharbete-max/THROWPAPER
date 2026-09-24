@@ -688,6 +688,32 @@ export const isIS: Record<MessageKey, string> = {
   'public.yes': 'Já',
   'public.no': 'Nei',
   'public.choose': 'Veldu…',
+  'public.finished.sent': 'Svörin þín hafa verið send til {organisation}.',
+  'public.document.preparing': 'Verið er að útbúa skjalið…',
+  'public.document.ready': 'Skjalið þitt er tilbúið',
+  'public.document.download': 'Sækja PDF',
+  'public.document.open': 'Opna',
+  'public.document.email': 'Senda í tölvupósti',
+  'public.document.failed': 'Ekki tókst að búa til PDF-skjalið núna. Svörin þín eru vistuð.',
+  'public.document.expired':
+    'Þetta afrit er ekki lengur aðgengilegt hér. Svörin þín eru vistuð undir tilvísun {reference}.',
+  'public.document.retry': 'Reyna aftur',
+  'public.email.title': 'Senda skjalið í tölvupósti',
+  'public.email.draft': 'Opna drög í {program}',
+  'public.email.drafting': 'Opna {program}…',
+  'public.email.draftOpened':
+    'Drögin eru opin í {program} með PDF-skjalið í viðhengi. Bættu við viðtakanda og sendu þaðan.',
+  'public.email.draftFailed':
+    '{program} gat ekki opnað drög. Notaðu eina af leiðunum hér fyrir neðan.',
+  'public.email.share': 'Deila eða senda í tölvupósti…',
+  'public.email.app': 'Opna póstforritið mitt',
+  'public.email.attachNote':
+    'Póstforritið opnast með skilaboðunum skrifuðum. Hengdu {filename} við sjálf/ur áður en þú sendir – vefsíða getur ekki hengt skrár við tölvupóst.',
+  'public.email.copy': 'Afrita skilaboðin',
+  'public.email.copied': 'Afritað',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Viðhengi: {filename}\nTilvísun: {reference}',
+  'public.again': 'Fylla út aftur',
 
   'validation.required': 'Þennan reit þarf að fylla út.',
   'validation.tooShort': 'Að minnsta kosti {min} stafir.',

@@ -57,9 +57,15 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
     // A container whose Chromium is not the build this Playwright pins (PROGRESS notes one) can
     // point at the one it has. Unset everywhere else, CI included.
-    ...(process.env['E2E_CHROMIUM'] && {
-      launchOptions: { executablePath: process.env['E2E_CHROMIUM'] },
-    }),
+    launchOptions: {
+      ...(process.env['E2E_CHROMIUM'] && { executablePath: process.env['E2E_CHROMIUM'] }),
+      /*
+       * A UTF-8 locale for the browser, whatever the host has. On Linux, Chromium names a download
+       * in the filesystem's charset, and under `LANG=C` a file called "Anmälan-till-Vårmötet.pdf"
+       * is saved as "download". CI's runners already have C.UTF-8; a bare container does not.
+       */
+      env: { ...process.env, LANG: process.env['LANG'] || 'C.UTF-8' },
+    },
   },
 
   webServer: EXTERNAL_URL

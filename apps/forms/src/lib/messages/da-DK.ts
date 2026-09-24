@@ -684,6 +684,32 @@ export const daDK: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nej',
   'public.choose': 'Vælg…',
+  'public.finished.sent': 'Dine svar er sendt til {organisation}.',
+  'public.document.preparing': 'Dokumentet klargøres…',
+  'public.document.ready': 'Dit dokument er klar',
+  'public.document.download': 'Download PDF',
+  'public.document.open': 'Åbn',
+  'public.document.email': 'Send det på mail',
+  'public.document.failed': 'PDF’en kunne ikke laves lige nu. Dine svar er gemt.',
+  'public.document.expired':
+    'Denne kopi er ikke længere tilgængelig her. Dine svar er gemt under reference {reference}.',
+  'public.document.retry': 'Prøv igen',
+  'public.email.title': 'Send dokumentet på mail',
+  'public.email.draft': 'Åbn en kladde i {program}',
+  'public.email.drafting': 'Åbner {program}…',
+  'public.email.draftOpened':
+    'Kladden er åben i {program} med PDF’en vedhæftet. Tilføj modtager og send den derfra.',
+  'public.email.draftFailed':
+    '{program} kunne ikke åbne en kladde. Brug en af mulighederne nedenfor i stedet.',
+  'public.email.share': 'Del eller send på mail…',
+  'public.email.app': 'Åbn mit mailprogram',
+  'public.email.attachNote':
+    'Dit mailprogram åbner med beskeden skrevet. Vedhæft selv {filename}, før du sender – en webside kan ikke vedhæfte filer til en mail.',
+  'public.email.copy': 'Kopiér beskeden',
+  'public.email.copied': 'Kopieret',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Vedhæftet: {filename}\nReference: {reference}',
+  'public.again': 'Udfyld igen',
 
   'validation.required': 'Dette felt er påkrævet.',
   'validation.tooShort': 'Mindst {min} tegn.',

@@ -691,6 +691,32 @@ export const jaJP: Record<MessageKey, string> = {
   'public.yes': 'はい',
   'public.no': 'いいえ',
   'public.choose': '選択してください…',
+  'public.finished.sent': '回答を {organisation} に送信しました。',
+  'public.document.preparing': '書類を準備しています…',
+  'public.document.ready': '書類の準備ができました',
+  'public.document.download': 'PDF をダウンロード',
+  'public.document.open': '開く',
+  'public.document.email': 'メールで送る',
+  'public.document.failed': '現在 PDF を作成できません。回答は保存されています。',
+  'public.document.expired':
+    'このコピーはここでは利用できなくなりました。回答は受付番号 {reference} で保存されています。',
+  'public.document.retry': '再試行',
+  'public.email.title': '書類をメールで送る',
+  'public.email.draft': '{program} で下書きを開く',
+  'public.email.drafting': '{program} を開いています…',
+  'public.email.draftOpened':
+    '{program} で下書きが開き、PDF が添付されています。宛先を入力してそこから送信してください。',
+  'public.email.draftFailed':
+    '{program} で下書きを開けませんでした。下のいずれかの方法をお使いください。',
+  'public.email.share': '共有またはメールで送る…',
+  'public.email.app': 'メールアプリを開く',
+  'public.email.attachNote':
+    'メールアプリが本文入りで開きます。送信前に {filename} をご自身で添付してください。ウェブページからメールにファイルを添付することはできません。',
+  'public.email.copy': 'メッセージをコピー',
+  'public.email.copied': 'コピーしました',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': '添付：{filename}\n受付番号：{reference}',
+  'public.again': 'もう一度入力する',
 
   'validation.required': 'この項目は必須です。',
   'validation.tooShort': '{min} 文字以上で入力してください。',

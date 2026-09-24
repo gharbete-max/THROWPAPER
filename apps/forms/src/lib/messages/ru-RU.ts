@@ -698,6 +698,32 @@ export const ruRU: Record<MessageKey, string> = {
   'public.yes': 'Да',
   'public.no': 'Нет',
   'public.choose': 'Выберите…',
+  'public.finished.sent': 'Ваши ответы отправлены в {organisation}.',
+  'public.document.preparing': 'Готовим документ…',
+  'public.document.ready': 'Ваш документ готов',
+  'public.document.download': 'Скачать PDF',
+  'public.document.open': 'Открыть',
+  'public.document.email': 'Отправить по почте',
+  'public.document.failed': 'Сейчас не удалось создать PDF. Ваши ответы сохранены.',
+  'public.document.expired':
+    'Эта копия здесь больше недоступна. Ваши ответы сохранены под номером {reference}.',
+  'public.document.retry': 'Попробовать снова',
+  'public.email.title': 'Отправить документ по почте',
+  'public.email.draft': 'Открыть черновик в {program}',
+  'public.email.drafting': 'Открываем {program}…',
+  'public.email.draftOpened':
+    'Черновик открыт в {program}, PDF прикреплён. Укажите получателя и отправьте оттуда.',
+  'public.email.draftFailed':
+    '{program} не удалось открыть черновик. Воспользуйтесь одним из способов ниже.',
+  'public.email.share': 'Поделиться или отправить…',
+  'public.email.app': 'Открыть почтовую программу',
+  'public.email.attachNote':
+    'Почтовая программа откроется с готовым письмом. Перед отправкой прикрепите {filename} сами — веб-страница не может прикреплять файлы к письму.',
+  'public.email.copy': 'Скопировать текст письма',
+  'public.email.copied': 'Скопировано',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Вложение: {filename}\nНомер: {reference}',
+  'public.again': 'Заполнить снова',
 
   'validation.required': 'Это поле обязательно.',
   'validation.tooShort': 'Не меньше {min} знаков.',

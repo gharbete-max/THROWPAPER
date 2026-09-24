@@ -685,6 +685,32 @@ export const nbNO: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nei',
   'public.choose': 'Velg…',
+  'public.finished.sent': 'Svarene dine er sendt til {organisation}.',
+  'public.document.preparing': 'Dokumentet klargjøres…',
+  'public.document.ready': 'Dokumentet ditt er klart',
+  'public.document.download': 'Last ned PDF',
+  'public.document.open': 'Åpne',
+  'public.document.email': 'Send det på e-post',
+  'public.document.failed': 'PDF-en kunne ikke lages akkurat nå. Svarene dine er lagret.',
+  'public.document.expired':
+    'Denne kopien er ikke lenger tilgjengelig her. Svarene dine er lagret under referanse {reference}.',
+  'public.document.retry': 'Prøv igjen',
+  'public.email.title': 'Send dokumentet på e-post',
+  'public.email.draft': 'Åpne et utkast i {program}',
+  'public.email.drafting': 'Åpner {program}…',
+  'public.email.draftOpened':
+    'Utkastet er åpent i {program} med PDF-en vedlagt. Legg til mottaker og send det derfra.',
+  'public.email.draftFailed':
+    '{program} kunne ikke åpne et utkast. Bruk en av måtene nedenfor i stedet.',
+  'public.email.share': 'Del eller send på e-post…',
+  'public.email.app': 'Åpne e-postappen min',
+  'public.email.attachNote':
+    'E-postappen åpnes med meldingen skrevet. Legg ved {filename} selv før du sender – en nettside kan ikke legge ved filer i en e-post.',
+  'public.email.copy': 'Kopier meldingen',
+  'public.email.copied': 'Kopiert',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Vedlagt: {filename}\nReferanse: {reference}',
+  'public.again': 'Fyll ut igjen',
 
   'validation.required': 'Dette feltet er påkrevd.',
   'validation.tooShort': 'Minst {min} tegn.',

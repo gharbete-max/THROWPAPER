@@ -95,13 +95,39 @@ export const SubmitResponse = z.object({
    * sit in history and logs). `filename` is what the file will be called, so the screen can name
    * it before it is downloaded. `null` when there is no document to offer.
    */
-  document: z.object({ token: z.string().min(1).max(200), filename: z.string() }).nullable(),
+  document: z
+    .object({
+      token: z.string().min(1).max(200),
+      filename: z.string(),
+      /**
+       * The mail program this computer can open a draft in, with the PDF attached — "classic
+       * Outlook", "Apple Mail" — on the desktop edition. `null` everywhere else, where the page
+       * offers the download, the share sheet and `mailto:` instead.
+       */
+      draftProgram: z.string().nullable(),
+    })
+    .nullable(),
 });
 
 export const FinishedDocumentRequest = z.object({
   token: z.string().min(1).max(200),
 });
 export type FinishedDocumentRequest = z.infer<typeof FinishedDocumentRequest>;
+
+/**
+ * Opens a draft in this computer's mail program with the finished document attached. The words
+ * are the person's own, from the page; no recipient is set and nothing is sent.
+ */
+export const EmailDraftRequest = z.object({
+  token: z.string().min(1).max(200),
+  /** One line: a subject with a line break in it would be two headers. */
+  subject: z
+    .string()
+    .max(300)
+    .regex(/^[^\r\n]*$/),
+  text: z.string().max(4000),
+});
+export type EmailDraftRequest = z.infer<typeof EmailDraftRequest>;
 
 export const SubmitRejected = z.object({
   status: z.literal('rejected'),

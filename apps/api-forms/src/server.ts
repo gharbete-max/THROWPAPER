@@ -55,6 +55,7 @@ import { createPhoneScanStore, type PhoneScanStore } from './phone-scan/store.js
 import { createSignClient, type SignConnection } from './signing/client.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { deriveFinishedKey } from './documents/finished-token.js';
+import type { MailDrafter } from './mail/draft.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
 import { createWorker } from './jobs/worker.js';
@@ -86,6 +87,11 @@ export interface ServerOptions {
    *  reaches this app. Default: a store of its own, and `appUrl`. */
   phoneScans?: PhoneScanStore;
   phoneOrigin?: () => Promise<string | null>;
+  /**
+   * The desktop edition's mail program, for "Email document" as a draft with the PDF attached
+   * (`mail/draft.ts`). A server has none; leave it out.
+   */
+  mailDraft?: MailDrafter | null;
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
   probeDatabase?: boolean;
   /** Injected by tests. Defaults to Playwright Chromium and a local directory. */
@@ -522,6 +528,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     appUrl,
     uploadStore,
     finished: { renderer, key: deriveFinishedKey(documentSigningSecret) },
+    mailDraft: options.mailDraft ?? null,
     // One job per message, keyed so a retry cannot double-send.
     onSubmitted: async (submissionId) => {
       const organisation = await repos.organisations.first();

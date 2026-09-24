@@ -704,6 +704,33 @@ export const deDE: Record<MessageKey, string> = {
   'public.yes': 'Ja',
   'public.no': 'Nein',
   'public.choose': 'Wählen…',
+  'public.finished.sent': 'Ihre Antworten wurden an {organisation} gesendet.',
+  'public.document.preparing': 'Ihr Dokument wird vorbereitet…',
+  'public.document.ready': 'Ihr Dokument ist fertig',
+  'public.document.download': 'PDF herunterladen',
+  'public.document.open': 'Öffnen',
+  'public.document.email': 'Per E-Mail senden',
+  'public.document.failed':
+    'Das PDF konnte gerade nicht erstellt werden. Ihre Antworten sind gespeichert.',
+  'public.document.expired':
+    'Diese Kopie ist hier nicht mehr verfügbar. Ihre Antworten sind unter der Referenz {reference} gespeichert.',
+  'public.document.retry': 'Erneut versuchen',
+  'public.email.title': 'Dokument per E-Mail senden',
+  'public.email.draft': 'Entwurf in {program} öffnen',
+  'public.email.drafting': '{program} wird geöffnet…',
+  'public.email.draftOpened':
+    'Der Entwurf ist in {program} geöffnet, das PDF ist angehängt. Empfänger eintragen und von dort senden.',
+  'public.email.draftFailed':
+    '{program} konnte keinen Entwurf öffnen. Nutzen Sie stattdessen einen der Wege unten.',
+  'public.email.share': 'Teilen oder per E-Mail senden…',
+  'public.email.app': 'Mein E-Mail-Programm öffnen',
+  'public.email.attachNote':
+    'Ihr E-Mail-Programm öffnet sich mit der fertigen Nachricht. Hängen Sie {filename} vor dem Senden selbst an – eine Webseite kann keine Dateien an eine E-Mail anhängen.',
+  'public.email.copy': 'Nachricht kopieren',
+  'public.email.copied': 'Kopiert',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Anhang: {filename}\nReferenz: {reference}',
+  'public.again': 'Erneut ausfüllen',
 
   'validation.required': 'Dieses Feld ist erforderlich.',
   'validation.tooShort': 'Mindestens {min} Zeichen.',

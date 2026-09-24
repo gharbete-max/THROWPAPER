@@ -696,6 +696,32 @@ export const enGB = {
   'public.yes': 'Yes',
   'public.no': 'No',
   'public.choose': 'Choose…',
+  'public.finished.sent': 'Your answers have been sent to {organisation}.',
+  'public.document.preparing': 'Preparing your document…',
+  'public.document.ready': 'Your document is ready',
+  'public.document.download': 'Download PDF',
+  'public.document.open': 'Open',
+  'public.document.email': 'Email it',
+  'public.document.failed': 'The PDF could not be made just now. Your answers are saved.',
+  'public.document.expired':
+    'This copy is no longer available here. Your answers are saved under reference {reference}.',
+  'public.document.retry': 'Try again',
+  'public.email.title': 'Email the document',
+  'public.email.draft': 'Open a draft in {program}',
+  'public.email.drafting': 'Opening {program}…',
+  'public.email.draftOpened':
+    'The draft is open in {program} with the PDF attached. Add who it is for and send it from there.',
+  'public.email.draftFailed':
+    '{program} could not open a draft. Use one of the ways below instead.',
+  'public.email.share': 'Share or email…',
+  'public.email.app': 'Open my email app',
+  'public.email.attachNote':
+    'Your email app opens with the message written. Attach {filename} yourself before sending — a web page cannot attach files to an email.',
+  'public.email.copy': 'Copy message text',
+  'public.email.copied': 'Copied',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Attached: {filename}\nReference: {reference}',
+  'public.again': 'Fill in again',
 
   'validation.required': 'This field is required.',
   'validation.tooShort': 'At least {min} characters.',

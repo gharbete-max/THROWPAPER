@@ -690,6 +690,32 @@ export const fiFI: Record<MessageKey, string> = {
   'public.yes': 'Kyllä',
   'public.no': 'Ei',
   'public.choose': 'Valitse…',
+  'public.finished.sent': 'Vastauksesi on lähetetty: {organisation}.',
+  'public.document.preparing': 'Asiakirjaa valmistellaan…',
+  'public.document.ready': 'Asiakirjasi on valmis',
+  'public.document.download': 'Lataa PDF',
+  'public.document.open': 'Avaa',
+  'public.document.email': 'Lähetä sähköpostilla',
+  'public.document.failed': 'PDF-tiedostoa ei voitu luoda juuri nyt. Vastauksesi on tallennettu.',
+  'public.document.expired':
+    'Tämä kopio ei ole enää saatavilla täällä. Vastauksesi on tallennettu viitteellä {reference}.',
+  'public.document.retry': 'Yritä uudelleen',
+  'public.email.title': 'Lähetä asiakirja sähköpostilla',
+  'public.email.draft': 'Avaa luonnos: {program}',
+  'public.email.drafting': 'Avataan: {program}…',
+  'public.email.draftOpened':
+    'Luonnos on auki ({program}) ja PDF on liitteenä. Lisää vastaanottaja ja lähetä sieltä.',
+  'public.email.draftFailed':
+    '{program} ei voinut avata luonnosta. Käytä jotakin alla olevista tavoista.',
+  'public.email.share': 'Jaa tai lähetä sähköpostilla…',
+  'public.email.app': 'Avaa sähköpostisovellus',
+  'public.email.attachNote':
+    'Sähköpostisovellus avautuu viesti valmiina. Liitä {filename} itse ennen lähettämistä – verkkosivu ei voi liittää tiedostoja sähköpostiin.',
+  'public.email.copy': 'Kopioi viesti',
+  'public.email.copied': 'Kopioitu',
+  'public.email.subject': '{title} – {reference}',
+  'public.email.body': 'Liitteenä: {filename}\nViite: {reference}',
+  'public.again': 'Täytä uudelleen',
 
   'validation.required': 'Tämä kenttä on pakollinen.',
   'validation.tooShort': 'Vähintään {min} merkkiä.',

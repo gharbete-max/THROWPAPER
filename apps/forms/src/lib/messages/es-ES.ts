@@ -698,6 +698,33 @@ export const esES: Record<MessageKey, string> = {
   'public.yes': 'Sí',
   'public.no': 'No',
   'public.choose': 'Elegir…',
+  'public.finished.sent': 'Tus respuestas se han enviado a {organisation}.',
+  'public.document.preparing': 'Preparando tu documento…',
+  'public.document.ready': 'Tu documento está listo',
+  'public.document.download': 'Descargar PDF',
+  'public.document.open': 'Abrir',
+  'public.document.email': 'Enviarlo por correo',
+  'public.document.failed':
+    'No se ha podido crear el PDF en este momento. Tus respuestas están guardadas.',
+  'public.document.expired':
+    'Esta copia ya no está disponible aquí. Tus respuestas están guardadas con la referencia {reference}.',
+  'public.document.retry': 'Reintentar',
+  'public.email.title': 'Enviar el documento por correo',
+  'public.email.draft': 'Abrir un borrador en {program}',
+  'public.email.drafting': 'Abriendo {program}…',
+  'public.email.draftOpened':
+    'El borrador está abierto en {program} con el PDF adjunto. Añade el destinatario y envíalo desde allí.',
+  'public.email.draftFailed':
+    '{program} no ha podido abrir un borrador. Usa una de las opciones de abajo.',
+  'public.email.share': 'Compartir o enviar por correo…',
+  'public.email.app': 'Abrir mi aplicación de correo',
+  'public.email.attachNote':
+    'Tu aplicación de correo se abre con el mensaje escrito. Adjunta tú {filename} antes de enviarlo: una página web no puede adjuntar archivos a un correo.',
+  'public.email.copy': 'Copiar el mensaje',
+  'public.email.copied': 'Copiado',
+  'public.email.subject': '{title} — {reference}',
+  'public.email.body': 'Adjunto: {filename}\nReferencia: {reference}',
+  'public.again': 'Rellenar de nuevo',
 
   'validation.required': 'Este campo es obligatorio.',
   'validation.tooShort': 'Al menos {min} caracteres.',

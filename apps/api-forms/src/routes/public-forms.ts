@@ -19,6 +19,7 @@ import type { PdfRenderer } from '../documents/render.js';
 import { buildFinishedDocument } from '../documents/finished-service.js';
 import { signFinishedToken, verifyFinishedToken } from '../documents/finished-token.js';
 import { contentDisposition, documentFilename } from '../documents/filename.js';
+import { DraftUnavailable, type MailDrafter } from '../mail/draft.js';
 
 const SlugParam = z.object({ slug: z.string().min(1).max(64) });
 
@@ -48,6 +49,11 @@ export function registerPublicFormRoutes(
      * then the submit response offers no document rather than a link that cannot work.
      */
     finished?: { renderer: PdfRenderer; key: Buffer };
+    /**
+     * The desktop edition's mail program, for "Email document" as a draft with the PDF attached
+     * (`mail/draft.ts`). Absent on a server: a server has no mail program of the visitor's to open.
+     */
+    mailDraft?: MailDrafter | null;
   },
 ): void {
   async function loadPublished(slug: string) {
@@ -527,6 +533,7 @@ export function registerPublicFormRoutes(
                 ).value,
                 result.submission.reference,
               ),
+              draftProgram: deps.mailDraft?.label ?? null,
             }
           : null,
       });
@@ -545,6 +552,28 @@ export function registerPublicFormRoutes(
    * never-existed are nobody's business to tell apart. Rate limited like the invoice PDF: each one
    * is about a second of Chromium.
    */
+  /** The document a valid token names, through this form's address only. Null for any refusal. */
+  async function finishedFor(slug: string, token: string) {
+    if (!deps.finished) return null;
+    const verified = verifyFinishedToken(token, deps.finished.key);
+    if (!verified.ok) return null;
+
+    const organisation = await deps.repos.organisations.first();
+    if (!organisation) return null;
+    const form = await deps.repos.forms.findBySlug(organisation.id, slug);
+    const submission = await deps.repos.submissions.findById(
+      organisation.id,
+      verified.submissionId,
+    );
+    if (!form || !submission || submission.formId !== form.id) return null;
+
+    return buildFinishedDocument(
+      { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
+      organisation,
+      submission,
+    );
+  }
+
   app.post('/public/forms/:slug/document', {
     config: { rateLimit: { max: 12, timeWindow: '1 minute' } },
     schema: {
@@ -562,23 +591,7 @@ export function registerPublicFormRoutes(
         });
       }
 
-      const verified = verifyFinishedToken(token, deps.finished.key);
-      if (!verified.ok) return notFound(reply);
-
-      const organisation = await deps.repos.organisations.first();
-      if (!organisation) return notFound(reply);
-      const form = await deps.repos.forms.findBySlug(organisation.id, slug);
-      const submission = await deps.repos.submissions.findById(
-        organisation.id,
-        verified.submissionId,
-      );
-      if (!form || !submission || submission.formId !== form.id) return notFound(reply);
-
-      const finished = await buildFinishedDocument(
-        { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
-        organisation,
-        submission,
-      );
+      const finished = await finishedFor(slug, token);
       if (!finished) return notFound(reply);
 
       return reply
@@ -589,6 +602,49 @@ export function registerPublicFormRoutes(
         .send(finished.pdf);
     },
   });
+
+  /**
+   * "Email document" on the desktop: a draft in this computer's mail program, PDF attached.
+   *
+   * Registered only where there is such a program (`deps.mailDraft`), so a server answers 404 and
+   * the page never offers it. It opens a window on this computer and sends nothing — the person
+   * addresses and sends it themselves. Same token, same refusals, as the download.
+   */
+  if (deps.mailDraft) {
+    const drafter = deps.mailDraft;
+    app.post('/public/forms/:slug/document/email-draft', {
+      config: { rateLimit: { max: 6, timeWindow: '1 minute' } },
+      schema: {
+        tags: ['public'],
+        params: SlugParam,
+        body: formSchemas.EmailDraftRequest,
+        response: { 204: z.null(), 404: api.ErrorResponse, 503: api.ErrorResponse },
+      },
+      handler: async (request, reply) => {
+        const { slug } = SlugParam.parse(request.params);
+        const body = formSchemas.EmailDraftRequest.parse(request.body);
+        const finished = await finishedFor(slug, body.token);
+        if (!finished) return notFound(reply);
+
+        try {
+          await drafter.open({
+            subject: body.subject,
+            text: body.text,
+            attachment: { filename: finished.filename, content: finished.pdf },
+          });
+        } catch (error) {
+          request.log.warn({ err: error }, 'email draft failed');
+          return reply.code(503).send({
+            error: {
+              code: error instanceof DraftUnavailable ? 'mail-program-unavailable' : 'draft-failed',
+              message: `${drafter.label} could not open a draft`,
+            },
+          });
+        }
+        return reply.code(204).send();
+      },
+    });
+  }
 }
 
 function notFound(reply: FastifyReply) {
