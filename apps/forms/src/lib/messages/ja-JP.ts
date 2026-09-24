@@ -863,4 +863,29 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.cancel': 'キャンセル',
   'submissions.sendForSigning': '署名に送る',
   'signing.fromSubmission': '記入済みの紙の書式 {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'カメラを使う',
+  'camera.scanDocument': 'カメラでスキャン',
+  'camera.preview': 'カメラのプレビュー',
+  'camera.starting': 'カメラを起動しています…',
+  'camera.capture': '写真を撮る',
+  'camera.capturePage': 'ページを撮る',
+  'camera.choose': 'カメラ',
+  'camera.default': '既定のカメラ',
+  'camera.numbered': 'カメラ {number}',
+  'camera.pages': 'スキャンしたページ（{count}）',
+  'camera.page': '{number} ページ',
+  'camera.remove': '削除',
+  'camera.done': '完了（{count}）',
+  'camera.cancel': 'キャンセル',
+  'camera.systemCamera': 'カメラを開く',
+  'camera.unavailable.insecure':
+    'ここではライブカメラに安全な接続が必要です。端末のカメラを使ってください。',
+  'camera.unavailable.denied':
+    'カメラが許可されませんでした。ブラウザーまたはシステムの設定で許可するか、端末のカメラを使ってください。',
+  'camera.unavailable.none': 'カメラが見つかりません。接続するか、端末のカメラを使ってください。',
+  'camera.unavailable.failed':
+    'カメラを起動できませんでした。もう一度試すか、端末のカメラを使ってください。',
+  'signing.source.file': 'PDF ファイル',
+  'signing.source.camera': 'カメラ',
 };

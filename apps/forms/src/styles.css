@@ -6015,3 +6015,59 @@ body:has(> #root .shell--narrow) {
   border-color: var(--tp-colour-border);
   background: none;
 }
+
+/* --- Camera scanning -------------------------------------------------------
+ * The live camera for scanning paper, on a phone or a PC. The preview keeps the camera's own shape;
+ * a brief dimming answers the shutter, because a capture with no feedback gets pressed twice.
+ */
+.scan__view {
+  position: relative;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+  background: var(--tp-colour-text);
+  transition: opacity var(--tp-motion-fast) var(--tp-ease);
+}
+
+.scan__view--flash {
+  opacity: 0.4;
+}
+
+.scan__video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.scan__hint {
+  position: absolute;
+  inset: auto 0 0 0;
+  margin: 0;
+  padding: var(--tp-spacing-unit);
+  background: var(--tp-colour-background);
+}
+
+.scan__pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.scan__page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) / 2);
+}
+
+.scan__page img {
+  width: 96px;
+  height: 128px;
+  object-fit: cover;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-sm);
+}

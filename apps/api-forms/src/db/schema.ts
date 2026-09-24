@@ -1023,8 +1023,8 @@ export const signingRequests = pgTable(
       .references(() => organisations.id, { onDelete: 'cascade' }),
     envelopeId: text('envelope_id').notNull(),
     documentName: text('document_name').notNull(),
-    /** Where the PDF Sign fetched came from: an upload, or a submission written onto its paper. */
-    source: text('source').$type<'upload' | 'paper'>().notNull(),
+    /** Where the PDF came from: an upload, a submission written onto its paper, or a camera scan. */
+    source: text('source').$type<'upload' | 'paper' | 'scan'>().notNull(),
     submissionId: uuid('submission_id'),
     environment: text('environment').$type<'test' | 'production'>().notNull(),
     /** Sign's envelope status, as last reported by §5.2 or hinted by a §5.4 hook. */

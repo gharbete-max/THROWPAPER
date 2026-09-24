@@ -866,4 +866,29 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.cancel': 'Peruuta',
   'submissions.sendForSigning': 'Lähetä allekirjoitettavaksi',
   'signing.fromSubmission': 'Täytetty paperilomake {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Käytä kameraa',
+  'camera.scanDocument': 'Skannaa kameralla',
+  'camera.preview': 'Kameran esikatselu',
+  'camera.starting': 'Käynnistetään kameraa…',
+  'camera.capture': 'Ota kuva',
+  'camera.capturePage': 'Ota sivu',
+  'camera.choose': 'Kamera',
+  'camera.default': 'Oletuskamera',
+  'camera.numbered': 'Kamera {number}',
+  'camera.pages': 'Skannatut sivut ({count})',
+  'camera.page': 'Sivu {number}',
+  'camera.remove': 'Poista',
+  'camera.done': 'Valmis ({count})',
+  'camera.cancel': 'Peruuta',
+  'camera.systemCamera': 'Avaa kamera',
+  'camera.unavailable.insecure':
+    'Kamera vaatii tässä suojatun yhteyden. Käytä laitteen omaa kameraa.',
+  'camera.unavailable.denied':
+    'Kameraa ei sallittu. Salli se selaimen tai järjestelmän asetuksista tai käytä laitteen omaa kameraa.',
+  'camera.unavailable.none': 'Kameraa ei löytynyt. Liitä kamera tai käytä laitteen omaa kameraa.',
+  'camera.unavailable.failed':
+    'Kameraa ei voitu käynnistää. Yritä uudelleen tai käytä laitteen omaa kameraa.',
+  'signing.source.file': 'PDF-tiedosto',
+  'signing.source.camera': 'Kamera',
 };

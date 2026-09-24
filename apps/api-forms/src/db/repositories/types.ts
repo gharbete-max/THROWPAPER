@@ -706,7 +706,7 @@ export interface SigningRequestRecord {
   organisationId: string;
   envelopeId: string;
   documentName: string;
-  source: 'upload' | 'paper';
+  source: 'upload' | 'paper' | 'scan';
   submissionId: string | null;
   environment: 'test' | 'production';
   status: string;

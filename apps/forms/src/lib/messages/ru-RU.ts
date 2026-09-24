@@ -878,4 +878,30 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.cancel': 'Отмена',
   'submissions.sendForSigning': 'Отправить на подпись',
   'signing.fromSubmission': 'Заполненная бумажная форма {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Использовать камеру',
+  'camera.scanDocument': 'Сканировать камерой',
+  'camera.preview': 'Изображение с камеры',
+  'camera.starting': 'Запуск камеры…',
+  'camera.capture': 'Сделать снимок',
+  'camera.capturePage': 'Снять страницу',
+  'camera.choose': 'Камера',
+  'camera.default': 'Камера по умолчанию',
+  'camera.numbered': 'Камера {number}',
+  'camera.pages': 'Отсканированные страницы ({count})',
+  'camera.page': 'Страница {number}',
+  'camera.remove': 'Удалить',
+  'camera.done': 'Готово ({count})',
+  'camera.cancel': 'Отмена',
+  'camera.systemCamera': 'Открыть камеру',
+  'camera.unavailable.insecure':
+    'Для камеры здесь нужно защищённое соединение. Используйте камеру устройства.',
+  'camera.unavailable.denied':
+    'Доступ к камере не разрешён. Разрешите его в настройках браузера или системы либо используйте камеру устройства.',
+  'camera.unavailable.none':
+    'Камера не найдена. Подключите камеру или используйте камеру устройства.',
+  'camera.unavailable.failed':
+    'Не удалось запустить камеру. Попробуйте снова или используйте камеру устройства.',
+  'signing.source.file': 'PDF-файл',
+  'signing.source.camera': 'Камера',
 };

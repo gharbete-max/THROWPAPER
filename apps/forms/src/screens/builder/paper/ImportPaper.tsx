@@ -12,6 +12,7 @@ import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
 import { openPdf, TooManyPages } from './extract.js';
 import { CropPhoto, WHOLE_PICTURE } from './CropPhoto.js';
+import { CameraScan } from '../../../components/CameraScan.js';
 import { isUsable, straightenFile, type Corners } from './warp.js';
 
 /**
@@ -41,7 +42,9 @@ export function ImportPaper({
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<State>({ kind: 'empty' });
 
-  async function choose(files: FileList | null) {
+  const [scanning, setScanning] = useState(false);
+
+  async function choose(files: FileList | File[] | null) {
     if (!files || files.length === 0) return;
     setState({ kind: 'reading' });
     try {
@@ -106,15 +109,32 @@ export function ImportPaper({
         One picker for both. A phone's file picker already offers the camera beside the library,
         so `capture` — which on iOS *removes* the library — would take a choice away, not add one.
       */}
-      <label className="field">
-        <span>{t('paper.choose')}</span>
-        <input
-          type="file"
-          accept="application/pdf,image/png,image/jpeg,image/webp"
-          multiple
-          onChange={(event) => void choose(event.target.files)}
+      {scanning ? (
+        // Pages from the live camera come in exactly as photographs picked from disk would.
+        <CameraScan
+          onCancel={() => setScanning(false)}
+          onDone={(pages) => {
+            setScanning(false);
+            void choose(pages);
+          }}
         />
-      </label>
+      ) : (
+        <div className="row">
+          <label className="field">
+            <span>{t('paper.choose')}</span>
+            <input
+              type="file"
+              accept="application/pdf,image/png,image/jpeg,image/webp"
+              multiple
+              onChange={(event) => void choose(event.target.files)}
+            />
+          </label>
+          <button type="button" className="button button--quiet" onClick={() => setScanning(true)}>
+            <Icon name="image" />
+            {t('camera.open')}
+          </button>
+        </div>
+      )}
 
       <div className="stack small" role="status">
         {state.kind === 'reading' && <span className="muted">{t('paper.reading')}</span>}

@@ -860,4 +860,29 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.cancel': 'Avbryt',
   'submissions.sendForSigning': 'Send til signering',
   'signing.fromSubmission': 'Utfylt papirskjema {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Bruk kameraet',
+  'camera.scanDocument': 'Skann med kameraet',
+  'camera.preview': 'Kameravisning',
+  'camera.starting': 'Starter kameraet…',
+  'camera.capture': 'Ta bilde',
+  'camera.capturePage': 'Ta side',
+  'camera.choose': 'Kamera',
+  'camera.default': 'Standardkamera',
+  'camera.numbered': 'Kamera {number}',
+  'camera.pages': 'Skannede sider ({count})',
+  'camera.page': 'Side {number}',
+  'camera.remove': 'Fjern',
+  'camera.done': 'Ferdig ({count})',
+  'camera.cancel': 'Avbryt',
+  'camera.systemCamera': 'Åpne kameraet',
+  'camera.unavailable.insecure':
+    'Kameraet krever en sikker tilkobling her. Bruk enhetens eget kamera i stedet.',
+  'camera.unavailable.denied':
+    'Kameraet ble ikke tillatt. Tillat det i nettleserens eller systemets innstillinger, eller bruk enhetens eget kamera.',
+  'camera.unavailable.none': 'Fant ikke noe kamera. Koble til et, eller bruk enhetens eget kamera.',
+  'camera.unavailable.failed':
+    'Kameraet kunne ikke startes. Prøv igjen, eller bruk enhetens eget kamera.',
+  'signing.source.file': 'PDF-fil',
+  'signing.source.camera': 'Kamera',
 };

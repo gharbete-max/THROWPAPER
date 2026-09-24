@@ -879,4 +879,30 @@ export const frFR: Record<MessageKey, string> = {
   'signing.cancel': 'Annuler',
   'submissions.sendForSigning': 'Envoyer à signer',
   'signing.fromSubmission': 'Formulaire papier rempli {reference}',
+  // Scanning with a camera (phone or PC).
+  'camera.open': 'Utiliser la caméra',
+  'camera.scanDocument': 'Numériser avec la caméra',
+  'camera.preview': 'Aperçu de la caméra',
+  'camera.starting': 'Démarrage de la caméra…',
+  'camera.capture': 'Prendre une photo',
+  'camera.capturePage': 'Prendre une page',
+  'camera.choose': 'Caméra',
+  'camera.default': 'Caméra par défaut',
+  'camera.numbered': 'Caméra {number}',
+  'camera.pages': 'Pages numérisées ({count})',
+  'camera.page': 'Page {number}',
+  'camera.remove': 'Retirer',
+  'camera.done': 'Terminé ({count})',
+  'camera.cancel': 'Annuler',
+  'camera.systemCamera': "Ouvrir l'appareil photo",
+  'camera.unavailable.insecure':
+    "La caméra en direct exige ici une connexion sécurisée. Utilisez plutôt l'appareil photo de l'appareil.",
+  'camera.unavailable.denied':
+    "La caméra n'a pas été autorisée. Autorisez-la dans les réglages du navigateur ou du système, ou utilisez l'appareil photo de l'appareil.",
+  'camera.unavailable.none':
+    "Aucune caméra trouvée. Branchez-en une, ou utilisez l'appareil photo de l'appareil.",
+  'camera.unavailable.failed':
+    "Impossible de démarrer la caméra. Réessayez, ou utilisez l'appareil photo de l'appareil.",
+  'signing.source.file': 'Fichier PDF',
+  'signing.source.camera': 'Caméra',
 };
