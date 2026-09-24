@@ -87,7 +87,21 @@ export const SubmitResponse = z.object({
    */
   confirmationTo: z.string().nullable(),
   admissionCard: z.boolean(),
+  /**
+   * The finished document — the PDF of what was just sent — and how to fetch it.
+   *
+   * `token` is the respondent's only credential for it: bound to this submission, valid for a day,
+   * sent back to `POST /public/forms/:slug/document` in the body (never in a URL, where it would
+   * sit in history and logs). `filename` is what the file will be called, so the screen can name
+   * it before it is downloaded. `null` when there is no document to offer.
+   */
+  document: z.object({ token: z.string().min(1).max(200), filename: z.string() }).nullable(),
 });
+
+export const FinishedDocumentRequest = z.object({
+  token: z.string().min(1).max(200),
+});
+export type FinishedDocumentRequest = z.infer<typeof FinishedDocumentRequest>;
 
 export const SubmitRejected = z.object({
   status: z.literal('rejected'),

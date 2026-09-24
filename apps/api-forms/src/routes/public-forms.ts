@@ -15,6 +15,10 @@ import {
   generateReference,
 } from '../forms/public-service.js';
 import { UPLOAD_CLAIM_WINDOW_SECONDS } from '../uploads/lifecycle.js';
+import type { PdfRenderer } from '../documents/render.js';
+import { buildFinishedDocument } from '../documents/finished-service.js';
+import { signFinishedToken, verifyFinishedToken } from '../documents/finished-token.js';
+import { contentDisposition, documentFilename } from '../documents/filename.js';
 
 const SlugParam = z.object({ slug: z.string().min(1).max(64) });
 
@@ -39,6 +43,11 @@ export function registerPublicFormRoutes(
     appUrl: string;
     uploadStore: PrivateUploadStore;
     onSubmitted?: (submissionId: string) => Promise<void>;
+    /**
+     * The finished document (`documents/finished.ts`). Absent in tests that do not render PDFs;
+     * then the submit response offers no document rather than a link that cannot work.
+     */
+    finished?: { renderer: PdfRenderer; key: Buffer };
   },
 ): void {
   async function loadPublished(slug: string) {
@@ -398,6 +407,7 @@ export function registerPublicFormRoutes(
           confirmationMessage: '',
           confirmationTo: null,
           admissionCard: false,
+          document: null,
         });
       }
 
@@ -503,7 +513,80 @@ export function registerPublicFormRoutes(
         // (`mail/send-job.ts`); the screen may say so because this is where it was decided.
         confirmationTo: email,
         admissionCard: loaded.event !== null,
+        document: deps.finished
+          ? {
+              token: signFinishedToken(result.submission.id, deps.finished.key),
+              filename: documentFilename(
+                pickText(
+                  {
+                    supported: loaded.organisation.supportedLocales,
+                    default: loaded.organisation.defaultLocale,
+                  },
+                  loaded.form.title,
+                  body.locale,
+                ).value,
+                result.submission.reference,
+              ),
+            }
+          : null,
       });
+    },
+  });
+
+  /**
+   * The finished document, for the person who just sent the form.
+   *
+   * **POST with the token in the body**, not a GET with it in the URL: a URL is kept in browser
+   * history, in proxy and server logs, and in the Referer of whatever the PDF viewer opens next —
+   * every one of them a place a credential for somebody's answers should not be.
+   *
+   * The token names the submission; the slug must agree with it, so a token cannot be replayed
+   * through another form's address. Every refusal is the same 404 — expired, forged, withdrawn and
+   * never-existed are nobody's business to tell apart. Rate limited like the invoice PDF: each one
+   * is about a second of Chromium.
+   */
+  app.post('/public/forms/:slug/document', {
+    config: { rateLimit: { max: 12, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['public'],
+      params: SlugParam,
+      body: formSchemas.FinishedDocumentRequest,
+      response: { 404: api.ErrorResponse, 503: api.ErrorResponse },
+    },
+    handler: async (request, reply) => {
+      const { slug } = SlugParam.parse(request.params);
+      const { token } = formSchemas.FinishedDocumentRequest.parse(request.body);
+      if (!deps.finished) {
+        return reply.code(503).send({
+          error: { code: 'documents-unavailable', message: 'Documents are not available here' },
+        });
+      }
+
+      const verified = verifyFinishedToken(token, deps.finished.key);
+      if (!verified.ok) return notFound(reply);
+
+      const organisation = await deps.repos.organisations.first();
+      if (!organisation) return notFound(reply);
+      const form = await deps.repos.forms.findBySlug(organisation.id, slug);
+      const submission = await deps.repos.submissions.findById(
+        organisation.id,
+        verified.submissionId,
+      );
+      if (!form || !submission || submission.formId !== form.id) return notFound(reply);
+
+      const finished = await buildFinishedDocument(
+        { repos: deps.repos, renderer: deps.finished.renderer, uploadStore: deps.uploadStore },
+        organisation,
+        submission,
+      );
+      if (!finished) return notFound(reply);
+
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', contentDisposition(finished.filename))
+        .header('cache-control', 'no-store, private')
+        .header('x-robots-tag', 'noindex, nofollow')
+        .send(finished.pdf);
     },
   });
 }

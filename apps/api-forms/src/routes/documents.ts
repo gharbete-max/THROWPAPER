@@ -11,6 +11,8 @@ import type { AdmissionDeps } from '../documents/admission-service.js';
 import { ADMISSION_BULK_JOB, renderAdmissionPdf } from '../documents/admission-service.js';
 import type { DocumentStore } from '../documents/store.js';
 import { fillPaper } from '../documents/paper.js';
+import { buildFinishedDocument } from '../documents/finished-service.js';
+import { contentDisposition } from '../documents/filename.js';
 import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { forms as formSchemas } from '@tp/shared';
 
@@ -98,6 +100,44 @@ export function registerDocumentRoutes(
         .header('content-type', 'application/pdf')
         .header('content-disposition', `attachment; filename="${filled.filename}"`)
         .send(filled.pdf);
+    },
+  });
+
+  /**
+   * The finished document — `documents/finished.ts`. The same PDF the person who filled the form
+   * in downloaded from their confirmation screen, so what the organisation keeps and what the
+   * respondent keeps cannot disagree. Access is the paper's and the admission card's.
+   */
+  app.get('/v1/submissions/:id/document.pdf', {
+    preHandler: authenticated,
+    schema: { tags: ['documents'], params: IdParam, response: { ...errorResponses } },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id } = IdParam.parse(request.params);
+
+      const submission = await findSubmission(deps.repos, auth.organisation.id, id);
+      if (!submission) return notFound(reply);
+      if (!(await resolveFormAccess(deps.repos, auth, submission.formId))) return notFound(reply);
+
+      const finished = await buildFinishedDocument(
+        { repos: deps.repos, renderer: deps.admission.renderer, uploadStore: deps.uploadStore },
+        auth.organisation,
+        submission,
+      );
+      if (!finished) return notFound(reply);
+
+      await recordAudit(deps.repos, request, {
+        action: 'document.generated',
+        entityType: 'submission',
+        entityId: submission.id,
+      });
+
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', contentDisposition(finished.filename))
+        .header('cache-control', 'no-store, private')
+        .send(finished.pdf);
     },
   });
 

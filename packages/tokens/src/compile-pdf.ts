@@ -53,20 +53,18 @@ export function toPrintCss(tokens: TokenSet, options: PrintOptions = {}): string
 @page {
   size: ${pageSize};
   margin: ${margin.top} ${margin.right} ${margin.bottom} ${margin.left};
-
-  @top-center {
-    content: ${cssString(options.header ?? '')};
-    font-family: ${typography.bodyFont};
-    font-size: ${px(pxValue(typography.baseSize) * 0.75)};
-    color: ${colour.muted};
-  }
-
-  @bottom-right {
-    content: counter(page) " / " counter(pages);
-    font-family: ${typography.bodyFont};
-    font-size: ${px(pxValue(typography.baseSize) * 0.75)};
-    color: ${colour.muted};
-  }
+  /*
+   * The paper colour runs to the edge of the sheet. Painted on the body alone, it stopped at the
+   * margins and every page came out as a tinted box inside a white frame.
+   */
+  background: ${colour.background};
+  /*
+   * No margin boxes (top-center, bottom-right). The running header and "page / total" come from
+   * the renderer's header and footer templates (toPdfHeaderTemplate, toPdfFooterTemplate). This
+   * stylesheet once emitted both on the understanding that Chromium ignored margin boxes; Chromium
+   * 131 started honouring them, and every document printed its page number twice, one over the
+   * other. One route, so there is one of each.
+   */
 }
 
 html {
@@ -159,11 +157,6 @@ function templateChrome(tokens: TokenSet, inner: string): string {
     `font-family:${tokens.typography.bodyFont};font-size:${size};` +
     `color:${tokens.colour.muted};">${inner}</div>`
   );
-}
-
-function cssString(value: string): string {
-  const escaped = value.replace(/["\\]/g, (match) => `\\${match}`);
-  return `"${escaped}"`;
 }
 
 function escapeHtml(value: string): string {

@@ -177,7 +177,8 @@ export function zipEntryCount(archive: Buffer): number {
  * dependencies of `apps/forms` — zxing is what `screens/CheckIn.tsx` drives the camera with — so
  * both are served to the page from `node_modules` off a routed URL rather than installed anew.
  *
- * pdfjs 6 ships ESM only, so it arrives by dynamic `import()`; zxing's UMD build is a classic
+ * pdfjs 6 ships ESM only, so it arrives by dynamic `import()` — the legacy build, as the app's own
+ * paper import uses, so the harness runs in any Chromium; zxing's UMD build is a classic
  * script and lands on `window`.
  */
 export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> {
@@ -185,8 +186,8 @@ export async function decodeQrFromPdf(page: Page, pdf: Buffer): Promise<string> 
     readFileSync(new URL(`../apps/forms/node_modules/${relative}`, import.meta.url));
 
   for (const [route, file] of [
-    ['**/__e2e/pdf.mjs', 'pdfjs-dist/build/pdf.min.mjs'],
-    ['**/__e2e/pdf.worker.mjs', 'pdfjs-dist/build/pdf.worker.min.mjs'],
+    ['**/__e2e/pdf.mjs', 'pdfjs-dist/legacy/build/pdf.min.mjs'],
+    ['**/__e2e/pdf.worker.mjs', 'pdfjs-dist/legacy/build/pdf.worker.min.mjs'],
   ] as const) {
     await page.route(route, (r) =>
       r.fulfill({ body: read(file), contentType: 'text/javascript; charset=utf-8' }),

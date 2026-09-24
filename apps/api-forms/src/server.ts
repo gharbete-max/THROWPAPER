@@ -54,6 +54,7 @@ import { registerPhoneScanRoutes } from './routes/phone-scan.js';
 import { createPhoneScanStore, type PhoneScanStore } from './phone-scan/store.js';
 import { createSignClient, type SignConnection } from './signing/client.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
+import { deriveFinishedKey } from './documents/finished-token.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
 import { createWorker } from './jobs/worker.js';
@@ -520,6 +521,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     mail,
     appUrl,
     uploadStore,
+    finished: { renderer, key: deriveFinishedKey(documentSigningSecret) },
     // One job per message, keyed so a retry cannot double-send.
     onSubmitted: async (submissionId) => {
       const organisation = await repos.organisations.first();
