@@ -855,6 +855,13 @@ export const zhCN: Record<MessageKey, string> = {
   'signing.realConfirm': '我已按每位签署人的语言核对过声明，这是正式签署，不是测试。',
   'signing.realNeedsOwnDeclaration': '正式签署需要贵组织自行撰写的声明。请在“声明”中撰写。',
   'signing.fileHint': 'PDF，或扫描仪扫描的 JPEG、PNG 图片页面。',
+  'signing.inviteByEmail': '轮到每位签署人时，通过邮件发送其签署链接',
+  'signing.inviteConfirm':
+    '在轮到时向 {count} 位签署人发送含签署链接的邮件？没有邮箱的签署人不会收到，请改为复制其链接。',
+  'signing.inviteConfirmYes': '发送并邮件通知',
+  'signing.remind': '发送提醒',
+  'signing.remindConfirm': '再次向 {name}（{email}）发送签署链接？',
+  'signing.emailed': '已发邮件',
   'signing.cancel': '取消',
   'submissions.sendForSigning': '发送签署',
   'signing.fromSubmission': '已填写的纸质表单 {reference}',

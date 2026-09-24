@@ -905,6 +905,13 @@ export const frFR: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Une signature réelle nécessite une déclaration rédigée par votre organisation. Rédigez-en une dans Déclarations.',
   'signing.fileHint': "Un PDF, ou des pages d'un scanner en images JPEG ou PNG.",
+  'signing.inviteByEmail': 'Envoyer à chaque signataire son lien par e-mail quand vient son tour',
+  'signing.inviteConfirm':
+    'Envoyer un e-mail avec un lien de signature à {count} signataires quand vient leur tour ? Ceux sans adresse ne reçoivent rien : copiez plutôt leur lien.',
+  'signing.inviteConfirmYes': 'Envoyer et e-mailer',
+  'signing.remind': 'Envoyer un rappel',
+  'signing.remindConfirm': 'Renvoyer le lien de signature à {name} ({email}) par e-mail ?',
+  'signing.emailed': 'Envoyé par e-mail',
   'signing.cancel': 'Annuler',
   'submissions.sendForSigning': 'Envoyer à signer',
   'signing.fromSubmission': 'Formulaire papier rempli {reference}',

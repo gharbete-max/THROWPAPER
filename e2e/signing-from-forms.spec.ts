@@ -51,10 +51,33 @@ test('an operator sends a PDF for signing and downloads it sealed', async ({ pag
   });
   await expect(page.getByLabel('Document name')).toHaveValue('Lease e2e');
   await page.getByLabel('Name', { exact: true }).fill('Åsa Öberg');
+  await page.getByLabel('Email (optional)').fill('asa@example.com');
+  // P1c-4b: the invitation goes by email too — after a second, worded confirmation (rule 7).
+  await page.getByRole('checkbox', { name: /Email each signer their link/ }).check();
   await page.getByRole('button', { name: 'Send for signing' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('1 signers');
+  await dialog.getByRole('button', { name: 'Send and email' }).click();
 
   const row = page.getByTestId('signing-row').filter({ hasText: 'Lease e2e' }).first();
   await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');
+  await expect(row.getByTestId('signing-emailed')).toHaveText('Emailed');
+  // The worker sent it through the configured provider (the console, here).
+  const mail = db();
+  try {
+    await expect
+      .poll(
+        async () =>
+          (
+            await mail`select status from jobs where kind = 'signing.invite'
+              order by created_at desc limit 1`
+          )[0]?.['status'],
+        { timeout: 20_000 },
+      )
+      .toBe('done');
+  } finally {
+    await mail.end();
+  }
   const signUrl = await row.getByRole('link', { name: 'Open signing page' }).getAttribute('href');
   expect(signUrl).toMatch(/\/s\//);
 
@@ -110,7 +133,7 @@ test("an admin writes the organisation's own declaration and sends a real signin
   await page.getByRole('combobox', { name: 'Mode' }).selectOption('production');
   const send = page.getByRole('button', { name: 'Send for signing' });
   await expect(send).toBeDisabled();
-  await page.getByRole('checkbox').check();
+  await page.getByRole('checkbox', { name: /this is a real signing/ }).check();
   await send.click();
 
   const row = page.getByTestId('signing-row').filter({ hasText: 'Real e2e' }).first();

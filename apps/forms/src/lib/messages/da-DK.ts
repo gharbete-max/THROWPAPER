@@ -885,6 +885,13 @@ export const daDK: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Rigtig underskrivning kræver en erklæring, som jeres organisation selv har skrevet. Skriv en under Erklæringer.',
   'signing.fileHint': 'En PDF, eller sider fra en scanner som JPEG- eller PNG-billeder.',
+  'signing.inviteByEmail': 'Send hver underskriver deres link på e-mail, når det er deres tur',
+  'signing.inviteConfirm':
+    'Send en e-mail med underskriftslink til {count} underskrivere, når det bliver deres tur? Dem uden adresse får intet – kopiér deres link i stedet.',
+  'signing.inviteConfirmYes': 'Send og e-mail',
+  'signing.remind': 'Send påmindelse',
+  'signing.remindConfirm': 'Send {name} ({email}) underskriftslinket igen?',
+  'signing.emailed': 'Sendt på e-mail',
   'signing.cancel': 'Annuller',
   'submissions.sendForSigning': 'Send til underskrift',
   'signing.fromSubmission': 'Udfyldt papirformular {reference}',

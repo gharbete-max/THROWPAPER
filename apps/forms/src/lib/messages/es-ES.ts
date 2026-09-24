@@ -898,6 +898,13 @@ export const esES: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'La firma real necesita una declaración redactada por tu organización. Redacta una en Declaraciones.',
   'signing.fileHint': 'Un PDF, o páginas de un escáner como imágenes JPEG o PNG.',
+  'signing.inviteByEmail': 'Enviar a cada firmante su enlace por correo cuando le toque',
+  'signing.inviteConfirm':
+    '¿Enviar un correo con el enlace de firma a {count} firmantes cuando les toque? Quien no tenga dirección no recibe nada: copia su enlace.',
+  'signing.inviteConfirmYes': 'Enviar y mandar correo',
+  'signing.remind': 'Enviar recordatorio',
+  'signing.remindConfirm': '¿Volver a enviar el enlace de firma a {name} ({email})?',
+  'signing.emailed': 'Enviado por correo',
   'signing.cancel': 'Cancelar',
   'submissions.sendForSigning': 'Enviar para firmar',
   'signing.fromSubmission': 'Formulario en papel rellenado {reference}',

@@ -68,6 +68,7 @@ import { MAX_IMAGE_BYTES, checkImage } from './uploads/image.js';
 import { imageSize, isNearSquare } from './uploads/image-size.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
+import { SIGNING_INVITE_JOB, createSigningInviteHandler } from './signing/invitations.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from './mail/smtp.js';
 import { createSesMailProvider } from './mail/ses.js';
 import type { TxtResolver } from './mail/domain-verification.js';
@@ -448,6 +449,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     handlers: {
       [ADMISSION_BULK_JOB]: createAdmissionBulkHandler(admission),
       [MAIL_SEND_JOB]: createMailSendHandler(mailDeps),
+      [SIGNING_INVITE_JOB]: createSigningInviteHandler({ repos, provider: mail }),
     },
     onError: (error, job) => app.log.error({ error, jobId: job.id }, 'job failed'),
   });

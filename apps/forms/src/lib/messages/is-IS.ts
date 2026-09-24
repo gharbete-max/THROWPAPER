@@ -890,6 +890,14 @@ export const isIS: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     'Raunveruleg undirritun krefst yfirlýsingar sem fyrirtækið ykkar hefur skrifað sjálft. Skrifaðu hana undir Yfirlýsingar.',
   'signing.fileHint': 'PDF-skjal, eða síður úr skanna sem JPEG- eða PNG-myndir.',
+  'signing.inviteByEmail':
+    'Senda hverjum undirritara tengilinn sinn í tölvupósti þegar röðin kemur að honum',
+  'signing.inviteConfirm':
+    'Senda tölvupóst með undirritunartengli til {count} undirritara þegar röðin kemur að þeim? Þeir sem hafa ekkert netfang fá ekkert – afritaðu tengilinn þeirra í staðinn.',
+  'signing.inviteConfirmYes': 'Senda og senda tölvupóst',
+  'signing.remind': 'Senda áminningu',
+  'signing.remindConfirm': 'Senda {name} ({email}) undirritunartengilinn aftur?',
+  'signing.emailed': 'Sent í tölvupósti',
   'signing.cancel': 'Hætta við',
   'submissions.sendForSigning': 'Senda til undirritunar',
   'signing.fromSubmission': 'Útfyllt pappírseyðublað {reference}',

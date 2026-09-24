@@ -120,6 +120,13 @@
       "when": 1790234337739,
       "tag": "0016_signing_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1790264899286,
+      "tag": "0017_signing_invitations",
+      "breakpoints": true
     }
   ]
 }

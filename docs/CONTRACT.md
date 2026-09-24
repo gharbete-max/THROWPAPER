@@ -117,7 +117,10 @@ with (its origin must be on the token's allow-list). Signed:
 it holds and refuses a mismatch. `completed` is sent when the last signature completes the
 envelope. **A hook is a hint, not the record:** delivery is retried a few times and may be lost,
 so on a hook the caller reads §5.2 rather than trusting the body. No redirects are followed.
-Invitations and reminders go through `POST /v1/messages` like any other sender.
+Invitations and reminders are the caller's to send, never Sign's: when a party's status becomes
+`invited` the caller emails that party its `signUrls` link. Forms does this through its own mail
+provider (direct SMTP, or the desktop's outbox in test mode — rule 2) until Mailer is connected,
+when they go through `POST /v1/messages` like any other sender.
 
 ### `GET /v1/declarations` · `POST /v1/declarations` — the words a signer approves (§5.5)
 ```

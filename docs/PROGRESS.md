@@ -3229,6 +3229,28 @@ instance needs sticky routing, or a shared store, before this works there.
   TWAIN/WIA/ICA from inside the desktop app is not built; nothing a user has asked for needs it
   yet. e2e: two scanner JPEGs sent for signing.
 
+## P1c-4b — signers invited by email · done
+
+Sign decides whose turn it is; Forms, which holds each signer's address and link and already has a
+mail provider with a test mode, sends the email.
+
+- **Asked for, then confirmed** (rule 7): a checkbox on Send ("Email each signer their link when it
+  is their turn"), then a dialog naming how many will be emailed. Off by default.
+- **Once per turn:** when a party becomes `invited` — at creation for the first step, or when a
+  §5.4 hook or a refresh shows the step moved on — a `signing.invite` job is queued and the party
+  marked (`invitedByEmailAt`), so a second hook for the same step queues nothing. Sending runs in
+  the worker, never the request, under the same sending-domain rule as every other email.
+- **Remind** a signer whose turn it is, from the row, behind its own confirmation; refused (409)
+  for a party who cannot sign yet or has no address.
+- **The email** is operational only — who asks, which document, the link, and in test mode a line
+  saying so — in the signer's language (twelve), styled by the Brand Kit. The declaration is not
+  in it: the signer reads that on Sign's page, in words a person wrote (rule 8).
+- Migration 0017 (`signing_requests.invite_by_email`). Parties now start `waiting` after the first
+  step, as Sign has them, instead of all `invited`.
+- Tests: sequential invitations step by step, once each, in the right language; no email unless
+  asked; remind only whose turn it is; copy in every language. e2e: the checkbox, the dialog, the
+  "Emailed" mark and the job done.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

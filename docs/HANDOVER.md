@@ -49,8 +49,7 @@ What is left, and whose it is:
    and Sign on PGlite); P1c-3 is done (Forms' Signing screen sends a PDF over §5, §5.4 hooks);
    the desktop now hosts Sign offline (PROGRESS § D-Sign, ADR 0016 amended); an admin writes the
    organisation's declarations in the product (CONTRACT §5.5); a phone scans into the desktop by
-   QR code (PROGRESS § Scanning with a phone); next is P1c-4b
-   (SMTP invitations). Mailer B2
+   QR code (PROGRESS § Scanning with a phone); P1c-4b is done (signers invited by email). Mailer B2
    now lives inside P3. Decisions in docs/EXPANSION.md § 5.
    Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5
    has the nine importers, if it is ever picked up) and handwriting OCR (ADR 0007, which the

@@ -888,6 +888,13 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.realNeedsOwnDeclaration':
     '本番の署名には、組織が自ら作成した宣誓文が必要です。「宣誓文」で作成してください。',
   'signing.fileHint': 'PDF、またはスキャナーで読み取ったページ(JPEG・PNG 画像)。',
+  'signing.inviteByEmail': '順番が来たら各署名者に署名リンクをメールで送る',
+  'signing.inviteConfirm':
+    '順番が来た {count} 人の署名者に署名リンクをメールで送りますか？アドレスのない署名者には送られないので、リンクをコピーして渡してください。',
+  'signing.inviteConfirmYes': '送信してメールする',
+  'signing.remind': 'リマインダーを送る',
+  'signing.remindConfirm': '{name} ({email}) に署名リンクをもう一度メールしますか？',
+  'signing.emailed': 'メール送信済み',
   'signing.cancel': 'キャンセル',
   'submissions.sendForSigning': '署名に送る',
   'signing.fromSubmission': '記入済みの紙の書式 {reference}',

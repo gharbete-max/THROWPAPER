@@ -9,6 +9,7 @@ import { Loading } from '../components/Loading.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { CopyLink } from '../components/CopyLink.js';
 import { Icon } from '../components/Icon.js';
+import { useConfirm } from '../components/Confirm.js';
 import { CameraScan, MAX_SCAN_PAGES } from '../components/CameraScan.js';
 import { CropPhoto, WHOLE_PICTURE } from './builder/paper/CropPhoto.js';
 import { isUsable, straightenFile, type Corners } from './builder/paper/warp.js';
@@ -160,6 +161,7 @@ function Row({
   onChange: (updated: formSchemas.SigningRequestView) => void;
 }) {
   const t = useT();
+  const confirm = useConfirm();
   const [busy, setBusy] = useState(false);
   const known = ['draft', 'sent', 'completed', 'declined', 'expired', 'cancelled'];
   const statusKey = known.includes(request.status) ? request.status : 'sent';
@@ -168,6 +170,24 @@ function Row({
     setBusy(true);
     try {
       onChange(await client.refreshSigningRequest(request.id));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Email one signer their link again — never without a second, deliberate press (rule 7). */
+  async function remind(party: formSchemas.SigningRequestView['parties'][number]) {
+    const ok = await confirm(
+      t('signing.remindConfirm', { name: party.name, email: party.email ?? '' }),
+      {
+        danger: false,
+        confirmLabel: t('signing.remind'),
+      },
+    );
+    if (!ok) return;
+    setBusy(true);
+    try {
+      onChange(await client.remindSigner(request.id, party.id));
     } finally {
       setBusy(false);
     }
@@ -216,8 +236,23 @@ function Row({
                       {t('signing.openLink')}
                     </a>
                     <CopyLink path={party.signUrl} />
+                    {party.email && (
+                      <button
+                        type="button"
+                        className="button button--quiet small"
+                        disabled={busy}
+                        onClick={() => void remind(party)}
+                      >
+                        {t('signing.remind')}
+                      </button>
+                    )}
                   </>
                 )}
+              {party.invitedByEmailAt && (
+                <span className="small muted" data-testid="signing-emailed">
+                  {t('signing.emailed')}
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -301,6 +336,8 @@ function Compose({
   );
   const [environment, setEnvironment] = useState<'test' | 'production'>('test');
   const [confirmedReal, setConfirmedReal] = useState(false);
+  const [inviteByEmail, setInviteByEmail] = useState(false);
+  const confirm = useConfirm();
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -330,6 +367,15 @@ function Compose({
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!ready) return;
+    const emailed = parties.filter((party) => party.email.trim() !== '').length;
+    // Email leaves this product for real people: asked once more, in words (rule 7).
+    if (inviteByEmail && emailed > 0) {
+      const ok = await confirm(t('signing.inviteConfirm', { count: emailed }), {
+        danger: false,
+        confirmLabel: t('signing.inviteConfirmYes'),
+      });
+      if (!ok) return;
+    }
     setSending(true);
     setFailed(false);
     try {
@@ -343,6 +389,7 @@ function Compose({
         declarationKey: declarationKey.trim(),
         // Test mode unless the declaration is the organisation's own and the sender confirmed.
         environment: real ? ('production' as const) : ('test' as const),
+        inviteByEmail: inviteByEmail && parties.some((party) => party.email.trim() !== ''),
       };
       let body: formSchemas.CreateSigningRequest;
       if (paper) {
@@ -599,6 +646,14 @@ function Compose({
           })}
         </p>
       )}
+      <label className="choice__option">
+        <input
+          type="checkbox"
+          checked={inviteByEmail}
+          onChange={(event) => setInviteByEmail(event.target.checked)}
+        />
+        <span>{t('signing.inviteByEmail')}</span>
+      </label>
       {real ? (
         <label className="choice__option">
           <input

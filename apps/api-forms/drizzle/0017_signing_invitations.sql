@@ -1,0 +1,1 @@
+ALTER TABLE "signing_requests" ADD COLUMN "invite_by_email" boolean DEFAULT false NOT NULL;

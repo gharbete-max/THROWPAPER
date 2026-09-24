@@ -1031,6 +1031,8 @@ export const signingRequests = pgTable(
     status: text('status').notNull(),
     /** `[{ id, name, email?, locale, order, status, signUrl }]`. */
     parties: jsonb('parties').$type<SigningRequestParty[]>().notNull(),
+    /** Email each signer their link when it is their turn (P1c-4b). Asked for, and confirmed. */
+    inviteByEmail: boolean('invite_by_email').notNull().default(false),
     createdBy: uuid('created_by'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
@@ -1049,4 +1051,6 @@ export interface SigningRequestParty {
   order: number;
   status: string;
   signUrl: string;
+  /** When an invitation email for this party was last queued. Absent: never emailed. */
+  invitedByEmailAt?: string;
 }
