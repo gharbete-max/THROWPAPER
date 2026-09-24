@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Loppa for Windows and macOS \u2014 the Forms product on one machine, offline first (docs/adr/0016-desktop-edition.md)",
+  "description": "Loppa for Windows and macOS — the Forms product on one machine, offline first (docs/adr/0016-desktop-edition.md)",
   "scripts": {
     "build": "tsx scripts/build.ts",
     "start": "tsx scripts/build.ts && electron .stage/main.js",
@@ -18,7 +18,8 @@
     "@tp/tokens": "workspace:*",
     "@tp/ui": "workspace:*",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "@tp/api-sign": "workspace:*"
   },
   "devDependencies": {
     "@tp/forms": "workspace:*",
@@ -28,6 +29,7 @@
     "electron": "^44.4.5",
     "electron-builder": "^26",
     "esbuild": "^0.28.2",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "@tp/sign": "workspace:*"
   }
 }

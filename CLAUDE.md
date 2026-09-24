@@ -14,8 +14,9 @@ apps/sign       Product C — signing. The signer's page: open a link, read the 
 apps/api-sign   Product C backend. Own database (append-only, hash-chained trail) on Postgres or
                 PGlite, CONTRACT §5.1–5.4, typed and drawn signing by link, PAdES seal + audit
                 page on completion (development certificate); serves the page
-apps/desktop    Loppa desktop (Windows, macOS): Forms in an Electron window on an embedded
-                Postgres (PGlite), offline first. Part of Forms, not a fourth product (docs/adr/0016)
+apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own
+                embedded Postgres (PGlite) and loopback port, offline first. Not a product; it
+                imports only @tp/api-forms/desktop and @tp/api-sign/local (docs/adr/0016)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
                 / native tokens. Owns the contrast guard
 packages/i18n   Translation catalogues and locale utilities, incl. ICU collation

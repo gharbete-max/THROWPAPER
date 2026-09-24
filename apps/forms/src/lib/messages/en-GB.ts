@@ -876,6 +876,8 @@ export const enGB = {
   'signing.refresh': 'Refresh',
   'signing.downloadSigned': 'Download signed PDF',
   'signing.cancel': 'Cancel',
+  'submissions.sendForSigning': 'Send for signing',
+  'signing.fromSubmission': 'Filled-in paper form {reference}',
 } as const;
 
 /**

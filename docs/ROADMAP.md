@@ -188,7 +188,7 @@ anything.*
 **P1c — Sealing and the audit trail.** Four slices. *P1c-1 (storage, trail, §5.1–5.2, typed
 signing by link), P1c-2 (sealing, §5.3) and P1c-4a (the signer's page, drawn signatures, Sign on
 PGlite) and P1c-3 (Forms sends PDFs to Sign, §5.4) done — `docs/PROGRESS.md` § P1c-1, § P1c-2,
-§ P1c-4a, § P1c-3.* Next: Sign inside the desktop, then P1c-4b (SMTP invitations).
+§ P1c-4a, § P1c-3; the desktop hosts Sign offline — § D-Sign.* Next: P1c-4b (SMTP invitations).
 - From P1b: Sign's own Postgres database and migrations (envelopes, the event trail, evidence;
   identity data encrypted with its own key), and the standalone mode (upload a PDF, type the
   parties, invitations by direct SMTP). Contract §5 endpoints implemented.

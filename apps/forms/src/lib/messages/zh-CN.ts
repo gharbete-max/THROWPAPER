@@ -832,4 +832,6 @@ export const zhCN: Record<MessageKey, string> = {
   'signing.refresh': '刷新',
   'signing.downloadSigned': '下载已签署的 PDF',
   'signing.cancel': '取消',
+  'submissions.sendForSigning': '发送签署',
+  'signing.fromSubmission': '已填写的纸质表单 {reference}',
 };

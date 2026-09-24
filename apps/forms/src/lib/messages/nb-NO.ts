@@ -858,4 +858,6 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.refresh': 'Oppdater',
   'signing.downloadSigned': 'Last ned signert PDF',
   'signing.cancel': 'Avbryt',
+  'submissions.sendForSigning': 'Send til signering',
+  'signing.fromSubmission': 'Utfylt papirskjema {reference}',
 };

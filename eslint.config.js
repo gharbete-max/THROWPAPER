@@ -55,7 +55,46 @@ export default tseslint.config(
   // other. They talk through docs/CONTRACT.md. Only `scripts/contract-check.ts` reads all three
   // registries, and it lives outside `apps/`.
   ...productBoundaries(),
+  desktopHost(),
 );
+
+/**
+ * `apps/desktop` is not a product: it is the shell that **hosts** products on one computer (ADR
+ * 0016 — Forms, and since P1c Sign, each on its own loopback port). It may start each one through
+ * its one public entry point, and reach into none of them: the products still talk only over
+ * docs/CONTRACT.md, and the shell hands Forms the address and token of its Sign, nothing more.
+ */
+function desktopHost() {
+  return {
+    files: ['apps/desktop/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              // A regex, not a gitignore-style group: a group cannot re-include a subpath of a
+              // package it has excluded, so `!@tp/api-forms/desktop` never took effect.
+              regex:
+                '^@tp/(?:api-forms(?!/desktop$)|api-sign(?!/local$)|forms|sign|mailer|api-mailer)(?:/.*)?$',
+              message:
+                'The desktop shell starts products through their entry points only (@tp/api-forms/desktop, @tp/api-sign/local). ADR 0016.',
+            },
+            {
+              group: [
+                '**/apps/*/src/**',
+                ...['forms', 'api-forms', 'sign', 'api-sign', 'mailer', 'api-mailer'].flatMap(
+                  (app) => [`../../${app}/**`, `../../../${app}/**`],
+                ),
+              ],
+              message: 'The desktop shell does not reach into another app by path. ADR 0016.',
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
 
 /**
  * One block per product: its frontend and backend may import each other's *packages* (`@tp/*` in
@@ -63,8 +102,8 @@ export default tseslint.config(
  */
 function productBoundaries() {
   const products = {
-    // `desktop` is Forms in a window (ADR 0016): it may run api-forms, never Mailer or Sign.
-    forms: ['forms', 'api-forms', 'desktop'],
+    // `desktop` hosts products rather than being one; its own rule is `desktopHost` above.
+    forms: ['forms', 'api-forms'],
     mailer: ['mailer', 'api-mailer'],
     sign: ['sign', 'api-sign'],
   };

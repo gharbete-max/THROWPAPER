@@ -862,4 +862,6 @@ export const isIS: Record<MessageKey, string> = {
   'signing.refresh': 'Uppfæra',
   'signing.downloadSigned': 'Sækja undirritað PDF',
   'signing.cancel': 'Hætta við',
+  'submissions.sendForSigning': 'Senda til undirritunar',
+  'signing.fromSubmission': 'Útfyllt pappírseyðublað {reference}',
 };

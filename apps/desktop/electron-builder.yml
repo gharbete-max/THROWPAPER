@@ -27,6 +27,11 @@ extraResources:
     to: drizzle
   - from: panel
     to: panel
+  # Loppa Sign on this computer: the signer's page and Sign's own migrations.
+  - from: sign-web
+    to: sign-web
+  - from: sign-drizzle
+    to: sign-drizzle
 # PGlite reads its WebAssembly with fs from beside its module; out of the asar, nothing can go wrong.
 asarUnpack:
   - node_modules/@electric-sql/pglite/**

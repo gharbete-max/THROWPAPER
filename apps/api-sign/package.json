@@ -6,7 +6,8 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./contract-registry": "./src/contract-registry.ts"
+    "./contract-registry": "./src/contract-registry.ts",
+    "./local": "./src/local/start.ts"
   },
   "scripts": {
     "dev": "tsx watch src/main.ts",

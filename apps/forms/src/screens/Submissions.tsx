@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router';
 import {
   flexRender,
   getCoreRowModel,
@@ -181,11 +182,24 @@ export function Submissions({ formId }: { formId: string }) {
               enableSorting: false,
               cell: (info) =>
                 info.row.original['status'] === 'complete' ? (
-                  <AttachmentLink
-                    submissionId={String(info.row.original['__submissionId'])}
-                    filename={`${String(info.row.original['reference'])}-paper.pdf`}
-                    icon="file"
-                  />
+                  <span className="row">
+                    <AttachmentLink
+                      submissionId={String(info.row.original['__submissionId'])}
+                      filename={`${String(info.row.original['reference'])}-paper.pdf`}
+                      icon="file"
+                    />
+                    {/* The filled-in paper, to Loppa Sign: fill in a PDF, then have it signed. */}
+                    <Link
+                      className="button button--quiet small"
+                      to={`/signing?${new URLSearchParams({
+                        paper: String(info.row.original['__submissionId']),
+                        reference: String(info.row.original['reference']),
+                      }).toString()}`}
+                    >
+                      <Icon name="signature" />
+                      {t('submissions.sendForSigning')}
+                    </Link>
+                  </span>
                 ) : null,
             } satisfies ColumnDef<Record<string, unknown>>,
           ]

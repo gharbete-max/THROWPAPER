@@ -870,4 +870,6 @@ export const esES: Record<MessageKey, string> = {
   'signing.refresh': 'Actualizar',
   'signing.downloadSigned': 'Descargar PDF firmado',
   'signing.cancel': 'Cancelar',
+  'submissions.sendForSigning': 'Enviar para firmar',
+  'signing.fromSubmission': 'Formulario en papel rellenado {reference}',
 };

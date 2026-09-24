@@ -861,4 +861,6 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.refresh': '更新',
   'signing.downloadSigned': '署名済み PDF をダウンロード',
   'signing.cancel': 'キャンセル',
+  'submissions.sendForSigning': '署名に送る',
+  'signing.fromSubmission': '記入済みの紙の書式 {reference}',
 };

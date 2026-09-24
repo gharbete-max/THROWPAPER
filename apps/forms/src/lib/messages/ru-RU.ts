@@ -876,4 +876,6 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.refresh': 'Обновить',
   'signing.downloadSigned': 'Скачать подписанный PDF',
   'signing.cancel': 'Отмена',
+  'submissions.sendForSigning': 'Отправить на подпись',
+  'signing.fromSubmission': 'Заполненная бумажная форма {reference}',
 };

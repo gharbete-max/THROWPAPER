@@ -877,4 +877,6 @@ export const frFR: Record<MessageKey, string> = {
   'signing.refresh': 'Actualiser',
   'signing.downloadSigned': 'Télécharger le PDF signé',
   'signing.cancel': 'Annuler',
+  'submissions.sendForSigning': 'Envoyer à signer',
+  'signing.fromSubmission': 'Formulaire papier rempli {reference}',
 };

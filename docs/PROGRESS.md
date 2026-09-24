@@ -3076,6 +3076,46 @@ set up and the API answers 503, rather than failing.
 
   The screen was screenshotted and looked at; the badge spacing was fixed.
 
+## D-Sign — the desktop signs and seals offline · done
+
+The offline edition now hosts **Loppa Sign beside Forms** (ADR 0016, amended 2026-09-24). A person
+can fill in or build a form, upload any PDF, send it for signing and sign it on the same computer,
+by typing or drawing, and get back a sealed PDF. None of it touches the network.
+
+- **`@tp/api-sign/local`**: Sign's own server on PGlite in `workspace/sign/`, serving the signing
+  page on `127.0.0.1:47018`. Per install, made at first start, kept `0600`: the link secret, a
+  self-issued seal pair, and one service token per organisation. Its first start writes the
+  test-only placeholder declaration, the same one `pnpm db:seed` writes (`demo-declaration.ts`).
+- **The shell** (`apps/desktop/src/main/host.ts`) starts Sign first, then gives Forms its address
+  and a token once an organisation exists. It restarts Forms after first-run set-up, so a new
+  workspace is connected at once. Backup stops both, because PGlite is only consistent at rest.
+  The signing page opens in a window of ours, and Settings' "On this computer" now says what it
+  does.
+- **Rule 1 holds.** `apps/desktop` left the Forms group in `eslint.config.js` and is a host, with
+  its own rule allowing exactly two entry points: `@tp/api-forms/desktop` and `@tp/api-sign/local`.
+  The first attempt was gitignore-style negation, and it could not re-include a subpath of an
+  excluded package, so it blocked the allowed imports too. It is a regex now. Probed with four
+  forbidden imports (deep, bare, internal subpath, relative) and all four are refused.
+- **Packaging** stages `sign-web` and `sign-drizzle` beside `web` and `drizzle`. The Desktop
+  workflow builds `@tp/sign` and its smoke test now waits for **both** `:47017` and `:47018` on the
+  packaged Windows and macOS apps.
+
+**Evidence:**
+- `apps/desktop/src/main/host.test.ts` runs the shell's own wiring with both products on PGlite
+  over real loopback sockets:
+  1. First run has no organisation, so there is no Sign connection yet.
+  2. After set-up and a restart, the workspace is connected.
+  3. Sign in through the real magic-link exchange.
+  4. Send a PDF; the signing page is served by the local Sign; sign over loopback.
+  5. The sealed PDF comes back through Forms.
+
+  Its first run failed usefully: a server started on port 0 tells Sign to fetch from
+  `127.0.0.1:0`. The shell's fixed port never does that, so the test now gives Forms a real port.
+- `apps/api-sign/src/local/start.test.ts`: loopback only, secrets file `0600`, one token per
+  organisation, and the same token and seal certificate after a restart.
+- The stage builds. The packaged app's boot is the Desktop workflow's to prove on Windows and
+  macOS; this container cannot download Electron.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

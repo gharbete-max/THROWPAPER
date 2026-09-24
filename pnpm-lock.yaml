@@ -275,6 +275,9 @@ importers:
       '@tp/api-forms':
         specifier: workspace:*
         version: link:../api-forms
+      '@tp/api-sign':
+        specifier: workspace:*
+        version: link:../api-sign
       '@tp/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -294,6 +297,9 @@ importers:
       '@tp/forms':
         specifier: workspace:*
         version: link:../forms
+      '@tp/sign':
+        specifier: workspace:*
+        version: link:../sign
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0

@@ -24,11 +24,12 @@ import {
 import {
   WorkspaceOwner,
   readSettings,
-  startDesktopServer,
   workspacePaths,
   writeSettings,
   type DesktopServer,
 } from '@tp/api-forms/desktop';
+import type { LocalSign } from '@tp/api-sign/local';
+import { startForms, startSign } from './host.js';
 import { CHANNELS, type PanelView, type Result, type SettingsForm } from '../bridge.js';
 import { fill, messagesFor } from '../messages.js';
 import { createElectronPdfRenderer } from './pdf.js';
@@ -50,6 +51,13 @@ const dataDir = join(app.getPath('userData'), 'workspace');
 const { lang, t } = messagesFor([app.getLocale(), ...app.getPreferredSystemLanguages()]);
 
 let server: DesktopServer | null = null;
+/**
+ * Loppa Sign, on this machine (ADR 0016, "the shell hosts products side by side"). Its own
+ * PGlite directory inside the workspace — so a backup carries it — and its own loopback port.
+ * Forms reaches it only over CONTRACT §5 with a service token, as it would a Sign online; this
+ * shell is the one place that knows both are here.
+ */
+let sign: LocalSign | null = null;
 let mainWindow: BrowserWindow | null = null;
 let panelWindow: BrowserWindow | null = null;
 
@@ -65,7 +73,9 @@ function unprotect(value: string): string {
 }
 
 async function startServer(): Promise<DesktopServer> {
-  return startDesktopServer({
+  const settings = await readSettings(workspacePaths(dataDir).settings);
+  if (settings.signing.mode === 'local') sign ??= await startSign(dataDir, { root: resources });
+  return startForms(sign, {
     dataDir,
     webDir: join(resources, 'web'),
     migrationsFolder: join(resources, 'drizzle'),
@@ -81,13 +91,22 @@ async function startServer(): Promise<DesktopServer> {
 
 async function restartServer(): Promise<void> {
   await server?.close();
+  const settings = await readSettings(workspacePaths(dataDir).settings);
+  if (settings.signing.mode !== 'local') {
+    await sign?.close();
+    sign = null;
+  }
   server = await startServer();
   // Secrets persist, so the session in the window is still valid: a reload is enough.
   mainWindow?.webContents.reload();
 }
 
 function isOurs(url: string): boolean {
-  return server !== null && url.startsWith(`${server.url}/`);
+  return (
+    (server !== null && url.startsWith(`${server.url}/`)) ||
+    // The signing page opens in a window of ours: signing at this computer is the offline case.
+    (sign !== null && url.startsWith(`${sign.url}/`))
+  );
 }
 
 async function openMainWindow(): Promise<void> {
@@ -168,6 +187,8 @@ async function backUp(): Promise<void> {
     // a backup that restores to a corrupt database.
     await server?.close();
     server = null;
+    await sign?.close();
+    sign = null;
     await mkdir(filePath, { recursive: true });
     await cp(dataDir, filePath, { recursive: true });
     await dialog.showMessageBox({ message: fill(t.backupDone, { path: filePath }) });
@@ -259,6 +280,8 @@ function registerIpc(): void {
       const parsed = WorkspaceOwner.parse({ ...(owner as object), locale: lang });
       if (!server || !(await server.bootstrap(parsed)))
         return { ok: false, error: 'already-set-up' };
+      // Now there is an organisation, Forms can be given its Sign token.
+      await restartServer();
       await replacePanelWithMain();
       return { ok: true };
     } catch (error) {
@@ -269,6 +292,7 @@ function registerIpc(): void {
   ipcMain.handle(CHANNELS.loadDemo, async (): Promise<Result> => {
     try {
       if (!server || !(await server.loadDemo())) return { ok: false, error: 'already-set-up' };
+      await restartServer();
       await replacePanelWithMain();
       return { ok: true };
     } catch (error) {
@@ -317,6 +341,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('window-all-closed', () => app.quit());
   app.on('before-quit', () => {
     void server?.close();
+    void sign?.close();
   });
 
   void app.whenReady().then(async () => {

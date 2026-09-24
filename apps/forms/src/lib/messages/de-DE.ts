@@ -879,4 +879,6 @@ export const deDE: Record<MessageKey, string> = {
   'signing.refresh': 'Aktualisieren',
   'signing.downloadSigned': 'Unterschriebenes PDF herunterladen',
   'signing.cancel': 'Abbrechen',
+  'submissions.sendForSigning': 'Zur Unterschrift senden',
+  'signing.fromSubmission': 'Ausgefülltes Papierformular {reference}',
 };

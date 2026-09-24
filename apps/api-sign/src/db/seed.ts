@@ -1,6 +1,7 @@
 import { env } from '../env.js';
 import { connect, migrateDatabase } from './client.js';
 import { declarations } from './schema.js';
+import { DEMO_DECLARATION } from './demo-declaration.js';
 
 /**
  * Sign's demo data: one declaration, and it is a placeholder.
@@ -14,18 +15,7 @@ import { declarations } from './schema.js';
 await migrateDatabase(env.SIGN_DATABASE_URL);
 const { db, sql } = connect(env.SIGN_DATABASE_URL, 1);
 
-await db
-  .insert(declarations)
-  .values({
-    key: 'demo',
-    version: 1,
-    testOnly: true,
-    texts: {
-      'sv-SE': '[Försäkran skrivs av en människa — endast testläge]',
-      'en-GB': '[Declaration to be written by a person — test mode only]',
-    },
-  })
-  .onConflictDoNothing();
+await db.insert(declarations).values(DEMO_DECLARATION).onConflictDoNothing();
 
 console.log('sign: seed complete — declaration "demo" (test-mode placeholder)');
 await sql.end();
