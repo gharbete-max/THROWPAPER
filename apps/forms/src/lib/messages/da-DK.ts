@@ -8,6 +8,9 @@ export const daDK: Record<MessageKey, string> = {
   'app.signOut': 'Log ud',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',
+  'app.loadFailed': 'Det kunne ikke indlæses. Tjek forbindelsen, og prøv igen.',
+  'login.failed': 'Login-linket kunne ikke sendes. Prøv igen om lidt.',
+  'login.rateLimited': 'Der er bedt om for mange login-links. Vent 15 minutter, og prøv så igen.',
 
   'login.title': 'Log ind',
   'login.email': 'E-mailadresse',
@@ -811,9 +814,10 @@ export const daDK: Record<MessageKey, string> = {
     'Indsæt undersøgelsens JSON. Spørgsmål uden en tilsvarende her bliver vist i stedet for gættet.',
   'import.paste': 'Undersøgelsens JSON',
   'import.notASurvey': 'Det er ikke en undersøgelse, der kan læses.',
-  'import.willImport': 'one {{n} spørgsmål importeres} other {{n} spørgsmål importeres}',
+  'import.willImport':
+    'plural:one {count} spørgsmål importeres | other {count} spørgsmål importeres',
   'import.willSkip':
-    'one {{n} spørgsmål har ingen tilsvarende her} other {{n} spørgsmål har ingen tilsvarende her}',
+    'plural:one {count} spørgsmål har ingen tilsvarende her | other {count} spørgsmål har ingen tilsvarende her',
   'import.replaces': 'Importen erstatter alt, der er i formularen nu.',
   'import.confirm': 'Erstat formularen',
   'import.cancel': 'Annullér',

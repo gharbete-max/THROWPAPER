@@ -140,6 +140,12 @@ export function EventForm() {
           <input
             type="datetime-local"
             required
+            /*
+             * The API refuses an end before the start (and a registration closing after it), and
+             * the screen could only say "That did not work". Bounded here, the browser stops the
+             * save at the field that is wrong, and says why, in the person's language.
+             */
+            min={draft.startsAt || undefined}
             value={draft.endsAt}
             onChange={(event) => setDraft({ ...draft, endsAt: event.target.value })}
           />
@@ -148,6 +154,7 @@ export function EventForm() {
           <span>{t('event.registrationClosesAt')}</span>
           <input
             type="datetime-local"
+            max={draft.startsAt || undefined}
             value={draft.registrationClosesAt}
             onChange={(event) => setDraft({ ...draft, registrationClosesAt: event.target.value })}
           />

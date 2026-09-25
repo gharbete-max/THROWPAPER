@@ -30,6 +30,7 @@ import { Icon } from '../components/Icon.js';
 import { Stat, Stats } from '../components/Stat.js';
 import { AttachmentLink } from '../components/AttachmentLink.js';
 import { Loading } from '../components/Loading.js';
+import { LoadFailed } from '../components/LoadFailed.js';
 
 /**
  * The submissions table.
@@ -50,15 +51,20 @@ export function Submissions({ formId }: { formId: string }) {
   const [visibility, setVisibility] = useState<VisibilityState>({});
   const [separator, setSeparator] = useState<';' | ',' | '\t'>(';');
 
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
+    setFailed(false);
     client
       .listSubmissions(formId)
       .then((result) => {
         setRows(result.submissions);
         setDefinition(result.definition);
       })
-      .catch(() => setRows([]));
-  }, [formId]);
+      // Not `[]`: "0 responses" from a request that failed is a claim about somebody's data.
+      .catch(() => setFailed(true));
+  }, [formId, attempt]);
 
   /** Header text per column, in the operator's language. */
   const exportColumns: ExportColumn[] = useMemo(() => {
@@ -329,6 +335,7 @@ export function Submissions({ formId }: { formId: string }) {
     await writeXlsxFile(data, { stickyRowsCount: 1 }).toFile('submissions.xlsx');
   }
 
+  if (failed) return <LoadFailed onRetry={() => setAttempt((value) => value + 1)} />;
   if (rows === null) return <Loading />;
 
   return (

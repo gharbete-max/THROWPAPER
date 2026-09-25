@@ -12,6 +12,7 @@ import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
 import { FormCard } from '../components/FormCard.js';
 import { EmptyState } from '../components/EmptyState.js';
+import { LoadFailed } from '../components/LoadFailed.js';
 import { ScopeTabs } from '../components/ScopeTabs.js';
 import { ShareDialog } from '../components/ShareDialog.js';
 
@@ -53,12 +54,16 @@ export function Forms() {
       ? ['mine', 'shared', 'trash', 'all']
       : ['mine', 'shared', 'active', 'trash'];
 
+  const [failed, setFailed] = useState(false);
+
   const load = useCallback(() => {
     setForms(null);
+    setFailed(false);
     client
       .listForms(scope)
       .then((result) => setForms(result.forms))
-      .catch(() => setForms([]));
+      // Not `[]`: "no forms yet" after a failed request invites making one twice.
+      .catch(() => setFailed(true));
   }, [scope]);
 
   useEffect(load, [load]);
@@ -255,7 +260,8 @@ export function Forms() {
         </form>
       )}
 
-      {forms === null && <Loading />}
+      {failed && <LoadFailed onRetry={load} />}
+      {!failed && forms === null && <Loading />}
       {forms?.length === 0 && (
         <EmptyState
           icon={scope === 'trash' ? 'trash' : 'forms'}

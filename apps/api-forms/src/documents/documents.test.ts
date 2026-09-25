@@ -114,6 +114,25 @@ describe('a single admission document', () => {
     expect(response.headers['content-disposition']).toContain('.pdf');
   });
 
+  it('downloads under the attendee’s name in any script', async () => {
+    await setupRegistrations(1);
+    const submission = harness.state.submissions[0]!;
+    // A Russian registrant: the card is named after her, and her name is not Latin-1.
+    submission.data = { ...submission.data, full_name: 'Юлия Андреева' };
+
+    const response = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/submissions/${submission.id}/admission.pdf`,
+      headers: bearer(adminToken),
+    });
+
+    expect(response.statusCode).toBe(200);
+    const disposition = String(response.headers['content-disposition']);
+    expect(disposition).toMatch(/^[\x20-\x7e]*$/);
+    const encoded = /filename\*=UTF-8''([^;]+)/.exec(disposition)?.[1];
+    expect(decodeURIComponent(encoded ?? '')).toContain('Юлия');
+  });
+
   it('encodes a token the check-in screen can verify offline', async () => {
     const { eventId } = await setupRegistrations(1);
     const submission = harness.state.submissions[0]!;

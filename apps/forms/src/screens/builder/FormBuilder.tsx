@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
+import { pickText } from '@tp/i18n';
 import { translatableTexts } from '@tp/shared/forms';
 import type {
   Field,
@@ -334,7 +335,9 @@ export function FormBuilder() {
     <section className="stack">
       <header className="row row--between">
         <div>
-          <h1>{form.title['sv-SE'] ?? form.slug}</h1>
+          {/* In the organisation's language: this read `title['sv-SE']`, so an English or
+              Finnish organisation saw the link address as the heading of every form it built. */}
+          <h1>{pickText(locales, form.title, locale).value || form.slug}</h1>
           <p className="small muted">
             /f/{form.slug} ·{' '}
             {form.publishedVersion

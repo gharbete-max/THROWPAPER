@@ -8,6 +8,11 @@ export const deDE: Record<MessageKey, string> = {
   'app.signOut': 'Abmelden',
   'app.language': 'Sprache',
   'app.loading': 'Wird geladen…',
+  'app.loadFailed':
+    'Konnte nicht geladen werden. Bitte die Verbindung prüfen und erneut versuchen.',
+  'login.failed': 'Der Anmeldelink konnte nicht gesendet werden. Bitte gleich erneut versuchen.',
+  'login.rateLimited':
+    'Zu viele Anmeldelinks angefordert. Bitte 15 Minuten warten und dann erneut versuchen.',
 
   'login.title': 'Anmelden',
   'login.email': 'E-Mail-Adresse',
@@ -835,9 +840,10 @@ export const deDE: Record<MessageKey, string> = {
     'Fügen Sie das JSON der Umfrage ein. Fragen ohne Entsprechung werden aufgeführt statt geraten.',
   'import.paste': 'JSON der Umfrage',
   'import.notASurvey': 'Das ist keine Umfrage, die hier gelesen werden kann.',
-  'import.willImport': 'one {{n} Frage wird importiert} other {{n} Fragen werden importiert}',
+  'import.willImport':
+    'plural:one {count} Frage wird importiert | other {count} Fragen werden importiert',
   'import.willSkip':
-    'one {{n} Frage hat hier keine Entsprechung} other {{n} Fragen haben hier keine Entsprechung}',
+    'plural:one {count} Frage hat hier keine Entsprechung | other {count} Fragen haben hier keine Entsprechung',
   'import.replaces': 'Der Import ersetzt alles, was derzeit in diesem Formular steht.',
   'import.confirm': 'Dieses Formular ersetzen',
   'import.cancel': 'Abbrechen',

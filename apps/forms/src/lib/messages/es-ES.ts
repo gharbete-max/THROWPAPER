@@ -8,6 +8,10 @@ export const esES: Record<MessageKey, string> = {
   'app.signOut': 'Cerrar sesión',
   'app.language': 'Idioma',
   'app.loading': 'Cargando…',
+  'app.loadFailed': 'No se pudo cargar. Comprueba la conexión e inténtalo de nuevo.',
+  'login.failed': 'No se pudo enviar el enlace de acceso. Inténtalo de nuevo en un momento.',
+  'login.rateLimited':
+    'Se han pedido demasiados enlaces de acceso. Espera 15 minutos y vuelve a intentarlo.',
 
   'login.title': 'Iniciar sesión',
   'login.email': 'Dirección de correo',
@@ -827,9 +831,10 @@ export const esES: Record<MessageKey, string> = {
     'Pega el JSON de la encuesta. Las preguntas sin equivalente aquí se enumeran en vez de adivinarse.',
   'import.paste': 'JSON de la encuesta',
   'import.notASurvey': 'Esto no es una encuesta que se pueda leer aquí.',
-  'import.willImport': 'one {se importará {n} pregunta} other {se importarán {n} preguntas}',
+  'import.willImport':
+    'plural:one se importará {count} pregunta | other se importarán {count} preguntas',
   'import.willSkip':
-    'one {{n} pregunta no tiene equivalente aquí} other {{n} preguntas no tienen equivalente aquí}',
+    'plural:one {count} pregunta no tiene equivalente aquí | other {count} preguntas no tienen equivalente aquí',
   'import.replaces': 'La importación sustituye todo lo que hay ahora en este formulario.',
   'import.confirm': 'Sustituir este formulario',
   'import.cancel': 'Cancelar',

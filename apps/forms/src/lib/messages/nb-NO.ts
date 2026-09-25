@@ -8,6 +8,10 @@ export const nbNO: Record<MessageKey, string> = {
   'app.signOut': 'Logg ut',
   'app.language': 'Språk',
   'app.loading': 'Laster…',
+  'app.loadFailed': 'Dette kunne ikke lastes. Sjekk tilkoblingen og prøv igjen.',
+  'login.failed': 'Innloggingslenken kunne ikke sendes. Prøv igjen om litt.',
+  'login.rateLimited':
+    'Det er bedt om for mange innloggingslenker. Vent 15 minutter, og prøv igjen.',
 
   'login.title': 'Logg inn',
   'login.email': 'E-postadresse',
@@ -813,9 +817,9 @@ export const nbNO: Record<MessageKey, string> = {
     'Lim inn undersøkelsens JSON. Spørsmål uten en tilsvarende her listes opp i stedet for å gjettes.',
   'import.paste': 'Undersøkelsens JSON',
   'import.notASurvey': 'Dette er ikke en undersøkelse som kan leses.',
-  'import.willImport': 'one {{n} spørsmål importeres} other {{n} spørsmål importeres}',
+  'import.willImport': 'plural:one {count} spørsmål importeres | other {count} spørsmål importeres',
   'import.willSkip':
-    'one {{n} spørsmål har ingen tilsvarende her} other {{n} spørsmål har ingen tilsvarende her}',
+    'plural:one {count} spørsmål har ingen tilsvarende her | other {count} spørsmål har ingen tilsvarende her',
   'import.replaces': 'Importen erstatter alt som er i skjemaet nå.',
   'import.confirm': 'Erstatt skjemaet',
   'import.cancel': 'Avbryt',

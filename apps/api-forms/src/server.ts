@@ -458,7 +458,9 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       [MAIL_SEND_JOB]: createMailSendHandler(mailDeps),
       [SIGNING_INVITE_JOB]: createSigningInviteHandler({ repos, provider: mail }),
     },
-    onError: (error, job) => app.log.error({ error, jobId: job.id }, 'job failed'),
+    // `err`, the key pino serializes an Error under. Under any other key an Error is `{}` in the
+    // log: every failed job read "job failed" with no reason (`job-failure-log.test.ts`).
+    onError: (error, job) => app.log.error({ err: error, jobId: job.id }, 'job failed'),
   });
   app.decorate('worker', worker);
 
@@ -511,7 +513,11 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
-  registerAdminRoutes(app, { repos, guard });
+  registerAdminRoutes(app, {
+    repos,
+    guard,
+    sendSignInLink: (email, ip) => auth.requestMagicLink({ email, ip }),
+  });
   registerLedgerRoutes(app, { repos, guard });
   registerInvoiceRoutes(app, { repos, guard, renderer });
   registerPublicInvoiceRoutes(app, { repos, renderer });
@@ -590,7 +596,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         await database.ping();
         state = 'up';
       } catch (error) {
-        app.log.error({ error }, 'health check could not reach the database');
+        app.log.error({ err: error }, 'health check could not reach the database');
         state = 'down';
       }
     }

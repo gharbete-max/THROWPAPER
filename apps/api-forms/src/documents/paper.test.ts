@@ -149,6 +149,16 @@ describe('filling paper', () => {
 
     const out = await PDFDocument.load(filled!.pdf);
     expect(out.getPageCount()).toBe(2);
+    // Named in its own metadata, so a viewer's window and its Save use a name, not a blob's id.
+    expect(out.getTitle()).toBe('ABC123');
+    const titled = await fillPaper(
+      { uploadStore, renderer: pageRenderer() },
+      submission,
+      definition,
+      locales,
+      'Medlemsansökan',
+    );
+    expect((await PDFDocument.load(titled!.pdf)).getTitle()).toBe('Medlemsansökan — ABC123');
     // The photograph's page is A4 wide and keeps the photograph's 2:3 shape.
     expect(out.getPage(1).getSize().height / out.getPage(1).getSize().width).toBeCloseTo(1.5);
 

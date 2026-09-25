@@ -14,6 +14,9 @@ export const enGB = {
   'app.signOut': 'Sign out',
   'app.language': 'Language',
   'app.loading': 'Loading…',
+  'app.loadFailed': 'This could not be loaded. Check the connection and try again.',
+  'login.failed': 'The sign-in link could not be sent. Try again in a moment.',
+  'login.rateLimited': 'Too many sign-in links were asked for. Wait 15 minutes, then try again.',
 
   'login.title': 'Sign in',
   'login.email': 'Email address',
@@ -86,7 +89,7 @@ export const enGB = {
   'scope.active': 'All',
   'scope.mine': 'My forms',
   'scope.shared': 'Shared with me',
-  'scope.trash': 'Trash',
+  'scope.trash': 'Bin',
   'scope.all': 'Whole organisation',
   'scope.emptyMine': 'You have not made any forms yet.',
   'scope.emptyShared': 'Nobody has shared a form with you.',
@@ -824,9 +827,10 @@ export const enGB = {
     'Paste the survey’s JSON. Questions that have no equivalent here are listed rather than guessed at.',
   'import.paste': 'Survey JSON',
   'import.notASurvey': 'That is not a survey this can read.',
-  'import.willImport': 'one {{n} question will be imported} other {{n} questions will be imported}',
+  'import.willImport':
+    'plural:one {count} question will be imported | other {count} questions will be imported',
   'import.willSkip':
-    'one {{n} question has no equivalent here} other {{n} questions have no equivalent here}',
+    'plural:one {count} question has no equivalent here | other {count} questions have no equivalent here',
   'import.replaces': 'Importing replaces everything currently in this form.',
   'import.confirm': 'Replace this form',
   'import.cancel': 'Cancel',

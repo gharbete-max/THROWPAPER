@@ -46,7 +46,7 @@ const fields = [
   },
 ];
 
-async function registerSomeone(locale: 'sv-SE' | 'en-GB' = 'sv-SE') {
+async function registerSomeone(locale: 'sv-SE' | 'en-GB' = 'sv-SE', withEmail = true) {
   const event = await harness.app.inject({
     method: 'POST',
     url: '/v1/events',
@@ -78,7 +78,12 @@ async function registerSomeone(locale: 'sv-SE' | 'en-GB' = 'sv-SE') {
     method: 'PUT',
     url: `/v1/forms/${formId}/draft`,
     headers: bearer(adminToken),
-    payload: { definition: { ...formSchemas.emptyDefinition, fields } },
+    payload: {
+      definition: {
+        ...formSchemas.emptyDefinition,
+        fields: withEmail ? fields : fields.filter((field) => field.type !== 'email'),
+      },
+    },
   });
   await harness.app.inject({
     method: 'POST',
@@ -90,7 +95,12 @@ async function registerSomeone(locale: 'sv-SE' | 'en-GB' = 'sv-SE') {
   await harness.app.inject({
     method: 'POST',
     url: '/public/forms/anmalan',
-    payload: { locale, values: { full_name: 'Björn Öberg', email: 'bjorn@example.com' } },
+    payload: {
+      locale,
+      values: withEmail
+        ? { full_name: 'Björn Öberg', email: 'bjorn@example.com' }
+        : { full_name: 'Björn Öberg' },
+    },
   });
 
   return { formId };
@@ -154,6 +164,19 @@ describe('sending on submission', () => {
 
     const confirmations = harness.mail.sent.filter((mail) => mail.to === 'bjorn@example.com');
     expect(confirmations).toHaveLength(1);
+  });
+
+  it('skips the confirmation of a form that asks for no address, rather than failing it', async () => {
+    await registerSomeone('sv-SE', false);
+    await harness.app.worker.drain();
+
+    const confirmation = harness.state.jobs.find((job) =>
+      job.idempotencyKey.includes('registration.confirmation'),
+    );
+    // Done at the first attempt: not failed, and not waiting to be retried.
+    expect(confirmation?.status).toBe('done');
+    expect(confirmation?.attempts).toBe(1);
+    expect(confirmation?.result).toMatchObject({ skipped: expect.any(String) });
   });
 
   it('skips the operator notification when no address is configured', async () => {
@@ -228,6 +251,41 @@ describe('the SES MIME envelope', () => {
     const mime = buildMimeMessage(base);
     expect(mime).toContain('Subject: =?UTF-8?B?');
     expect(mime).not.toContain('Subject: Din anmälan');
+  });
+
+  it('names an attachment in any language, and every header line stays ASCII', () => {
+    const filename = 'Björn-Ödlund-Ærø-Юлия-山田-K7M2-QX4A.pdf';
+    const mime = buildMimeMessage({
+      ...base,
+      subject: 'Registration confirmed',
+      attachments: [{ filename, contentType: 'application/pdf', content: Buffer.from('%PDF-') }],
+    });
+    const head = mime.split('\r\n\r\nJVBERi0')[0]!;
+    // No raw 8-bit byte in any header: that is what arrived as mojibake.
+    // eslint-disable-next-line no-control-regex
+    expect(head).toMatch(/^[\x00-\x7f]*$/);
+    for (const line of head.split('\r\n')) expect(line.length).toBeLessThanOrEqual(78);
+
+    // RFC 2231 continuations, read back the way a mail program does.
+    const pieces = [...head.matchAll(/filename\*(\d+)\*=(?:UTF-8'')?([^;\r\n]*)/g)]
+      .sort((a, b) => Number(a[1]) - Number(b[1]))
+      .map((match) => match[2])
+      .join('');
+    expect(decodeURIComponent(pieces)).toBe(filename);
+    // No plain `filename` competing with it, and a plain `name` for a program that knows no better.
+    expect(head).not.toContain(' filename="');
+    expect(head).toContain(' name="Bjorn-Odlund-');
+  });
+
+  it('keeps an ASCII attachment name as it is', () => {
+    const mime = buildMimeMessage({
+      ...base,
+      attachments: [
+        { filename: 'card-K7M2.pdf', contentType: 'application/pdf', content: Buffer.from('x') },
+      ],
+    });
+    expect(mime).toContain('Content-Disposition: attachment; filename="card-K7M2.pdf"');
+    expect(mime).toContain('name="card-K7M2.pdf"');
   });
 
   it('leaves an ASCII subject readable', () => {

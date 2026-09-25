@@ -102,6 +102,28 @@ describe('translations for schema-driven strings', () => {
   });
 
   /**
+   * Plural forms are written `plural:one … | other …`, and nothing else is read as plural. The
+   * SurveyJS import's two counts were written in ICU's `one {…} other {…}` instead, which the
+   * translator does not know, so the author read the raw syntax: "one {2 question will be
+   * imported} other {2 questions will be imported}".
+   */
+  it('writes plural forms only in the syntax the translator reads', () => {
+    const foreign: string[] = [];
+    for (const [key, value] of Object.entries(messages)) {
+      for (const locale of LOCALE_CODES) {
+        const text = value[locale] ?? '';
+        if (
+          /(^|\s)(zero|one|two|few|many|other)\s*\{[^}]*\{/.test(text) ||
+          /\{\w+,\s*plural/.test(text)
+        ) {
+          foreign.push(`${key} (${locale})`);
+        }
+      }
+    }
+    expect(foreign).toEqual([]);
+  });
+
+  /**
    * A plural message must declare a form for every category its language actually uses, or a
    * Russian reader meeting 5 of something sees the form meant for 2.
    */

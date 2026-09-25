@@ -3354,6 +3354,68 @@ and no Mac in this container. The unit tests pin the arguments; the first releas
 set is the real test, and the macOS job's smoke test (which launches the app, so a missing
 entitlement crashes it) and signature step are what will catch a fault.
 
+## Release-readiness audit — the flows run for real, on the desktop too
+
+Every user flow the checklist and ADRs promise, driven in a browser against the real servers and in
+the **packaged** desktop app (Linux build of the same bundle, under Xvfb, driven over Chromium's
+remote-debugging port; a stub `xdg-open`/`xdg-email` recorded what the app handed the OS). Eleven
+defects found and fixed, each with a test that fails without its fix:
+
+| # | Defect | Found by | Test |
+| - | ------ | -------- | ---- |
+| 1 | Answers written onto a **rotated or trimmed** PDF page landed in the wrong place, on their side: the overlay used the media box unrotated, the builder measures the crop box as pdf.js shows it | reading `paper.ts` beside `extract.ts` | `paper-render.test.ts` (real Chromium, read back with pdf.js) |
+| 2 | On a landscape page the "What kind of answer?" picker was taller than the page and clipped: its first answer types could not be chosen | e2e on a rotated scan | `e2e/paper-roundtrip.spec.ts` |
+| 3 | Desktop **Open** showed a blank window forever: a new window's first navigation came from an empty URL, which failed to parse and was refused | packaged app | `navigation.test.ts`; the rebuilt app opens the PDF viewer |
+| 4 | The builder's heading was `title['sv-SE'] ?? slug`: an English (desktop first-run) organisation saw the link address | packaged app | e2e |
+| 5 | A form with no email field queued a confirmation that **failed three times** with an error each — every paper-form submission | desktop log | `email.test.ts` |
+| 6 | Mail attachments named in raw UTF-8: an admission card for "Björn Ödlund" arrived as `BjÃ¶rn-…` (SES, SMTP and the outbox share the MIME) | outbox `.eml`, read with Python's `email` | `email.test.ts`; both Python policies now decode the exact name |
+| 7 | `GET /v1/submissions/:id/admission.pdf` answered **500** for a Cyrillic or CJK name (raw in `content-disposition`) | following #6 | `documents.test.ts` |
+| 8 | The paper PDF had no title: the desktop viewer named (and would save) it by a blob's UUID | packaged app | `paper.test.ts` |
+| 9 | Sign-in said "a link is on its way" when the request failed or was rate limited | reading the catches | `e2e/failure-states.spec.ts` |
+| 10 | Signing and Invoices spun forever on a failed load; Forms, Events and Responses showed "nothing yet" instead | reading the catches | `e2e/failure-states.spec.ts` |
+| 11 | A failed job was logged as `"error":{}` — pino serializes an Error only under `err` | e2e server log | `job-failure-log.test.ts` |
+
+A second pass, on the release candidate (0.1.1) in the packaged app, found four more:
+
+| # | Defect | Test |
+| - | ------ | ---- |
+| 12 | Adding somebody sent nothing, though the screen and ADR 0002 §3 say they receive a sign-in link at their address | `admin.test.ts`; in test mode it lands in the outbox |
+| 13 | The SurveyJS import's counts showed raw ICU syntax ("one {2 question will be imported} other {…}") in all 12 languages; the catalogue's plural format is `plural:one … \| other …` | `messages.test.ts` now refuses any other plural syntax |
+| 14 | An event ending before it starts got "That did not work. Try again." — the API's refusal, which retrying cannot fix; the date fields are now bounded, so the browser names the field | `e2e/failure-states.spec.ts` |
+| 15 | The bin's tab said "Trash" beside "Move to bin" | — (wording) |
+
+Also driven in that pass, all working: every screen crawled with no console error or failed request;
+responses CSV/Excel, attendance CSV and the admission card (Cyrillic-safe name) downloaded; the door
+by typed reference and by **camera, reading a real admission card's QR** (Chromium fed a frame of
+the card), "Welcome", then "Already", and "Wrong event" at another event's door; brand kit saved
+and reloaded; Sign declined (asked first, "Signing has ended", no signed PDF offered); users added
+and a duplicate refused; a form shared, binned, restored and deleted for ever, each with its
+confirmation; a phone scan on a machine with no network says so.
+
+**Verified working, in the packaged desktop app:** first run through the panel's bridge (`state`,
+`bootstrap`, `saveSettings` — rule 7 refused without the tick, a mail program this platform cannot
+drive saves and the server stays up — `loadDemo`); the main window has no bridge; secrets `0600`;
+a paper form built from an imported PDF, boxes kept across a reload, published, filled with a drawn
+signature, the PDF (Electron's own Chromium) downloaded and opened in the PDF viewer with the name on
+its line and the signature in its box; `mailto:` reaching the OS as
+`mailto:?subject=…%E2%80%94…&body=…%0D%0A…`, correctly encoded, no recipient by design; Copy (a user
+gesture writes, reading is refused); a camera scan through Electron's permission handler (fake
+device) sent to the local Sign; a drawn signature in the local Sign window; the sealed PDF verified
+by OpenSSL, one flipped byte refused, the strokes on the audit page; test-mode email in the outbox
+with the admission card attached; data surviving a restart. The Windows and macOS builds were packed
+here (zips, as off-platform) and inspected: fuses set, pdf-lib unpacked, migrations and bundles
+present, and the app bundle **byte-identical** across Windows and macOS (the Linux bundle differs
+only by the fixes made after it was built).
+
+**Not verified, and why:** Windows `.exe` and macOS `.app` were not run — no Windows or Mac here;
+the Desktop workflow launches both on every PR. Outlook/Apple Mail drafting and sending need those
+machines (two risks are on the checklist, §2.2a). Settings and Back up are reached only from the
+native menu, which synthetic key events do not reach: Settings' calls were driven through the
+bridge, Back up not at all.
+
+**Gates:** format, typecheck, lint (the 2 known warnings), test 187 files / 2159, build,
+contract:check 9/15, licence:check — each run on its own; `pnpm test:e2e` 52 passed (6.0 m).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

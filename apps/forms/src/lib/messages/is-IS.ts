@@ -8,6 +8,10 @@ export const isIS: Record<MessageKey, string> = {
   'app.signOut': 'Skrá út',
   'app.language': 'Tungumál',
   'app.loading': 'Hleð…',
+  'app.loadFailed': 'Ekki tókst að hlaða þessu. Athugaðu tenginguna og reyndu aftur.',
+  'login.failed': 'Ekki tókst að senda innskráningartengilinn. Reyndu aftur eftir smástund.',
+  'login.rateLimited':
+    'Beðið hefur verið um of marga innskráningartengla. Bíddu í 15 mínútur og reyndu svo aftur.',
 
   'login.title': 'Skrá inn',
   'login.email': 'Netfang',
@@ -817,9 +821,9 @@ export const isIS: Record<MessageKey, string> = {
   'import.paste': 'JSON könnunarinnar',
   'import.notASurvey': 'Þetta er ekki könnun sem hægt er að lesa.',
   'import.willImport':
-    'one {{n} spurning verður flutt inn} other {{n} spurningar verða fluttar inn}',
+    'plural:one {count} spurning verður flutt inn | other {count} spurningar verða fluttar inn',
   'import.willSkip':
-    'one {{n} spurning á sér enga hliðstæðu hér} other {{n} spurningar eiga sér enga hliðstæðu hér}',
+    'plural:one {count} spurning á sér enga hliðstæðu hér | other {count} spurningar eiga sér enga hliðstæðu hér',
   'import.replaces': 'Innflutningurinn kemur í stað alls sem nú er á eyðublaðinu.',
   'import.confirm': 'Skipta út eyðublaðinu',
   'import.cancel': 'Hætta við',
