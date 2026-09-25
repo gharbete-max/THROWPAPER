@@ -35,6 +35,11 @@ extraResources:
 # PGlite reads its WebAssembly with fs from beside its module; out of the asar, nothing can go wrong.
 asarUnpack:
   - node_modules/@electric-sql/pglite/**
+  # A worker thread requires pdf-lib by path (pdf-guard.ts); plain files, as PGlite's are.
+  - node_modules/pdf-lib/**
+  - node_modules/@pdf-lib/**
+  - node_modules/pako/**
+  - node_modules/tslib/**
 # No native modules anywhere in the app, so nothing to rebuild against Electron's ABI.
 npmRebuild: false
 # Electron's fuses, flipped at package time. Off: running the binary as plain Node

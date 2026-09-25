@@ -41,17 +41,32 @@ PDFDocument.load(workerData.bytes, { updateMetadata: false, throwOnInvalidObject
   .catch(() => parentPort.postMessage({ ok: false }));
 `;
 
-const pdfLibPath = createRequire(import.meta.url).resolve('pdf-lib');
+/**
+ * Where pdf-lib is on disk, found when first needed — never at import, so a packaging that cannot
+ * find it (the desktop bundle once inlined it) fails the check, not the whole server's start.
+ */
+let pdfLibPath: string | undefined;
+function resolvePdfLib(): string {
+  pdfLibPath ??= createRequire(import.meta.url).resolve('pdf-lib');
+  return pdfLibPath;
+}
 
 export function checkPdf(
   bytes: Uint8Array,
   budget: PdfBudget = DEFAULT_PDF_BUDGET,
 ): Promise<PdfCheck> {
+  let pdfLib: string;
+  try {
+    pdfLib = resolvePdfLib();
+  } catch {
+    // Without pdf-lib nothing downstream could open it either.
+    return Promise.resolve({ ok: false, reason: 'unreadable' });
+  }
   return new Promise((resolve) => {
     let settled = false;
     const worker = new Worker(WORKER_SOURCE, {
       eval: true,
-      workerData: { bytes, pdfLib: pdfLibPath },
+      workerData: { bytes, pdfLib },
       resourceLimits: { maxOldGenerationSizeMb: budget.heapMb, maxYoungGenerationSizeMb: 32 },
     });
     const finish = (result: PdfCheck) => {
