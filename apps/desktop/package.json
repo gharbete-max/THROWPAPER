@@ -1,6 +1,6 @@
 {
   "name": "@tp/desktop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Loppa for Windows and macOS — the Forms product on one machine, offline first (docs/adr/0016-desktop-edition.md)",
