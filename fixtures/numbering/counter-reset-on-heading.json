@@ -2,7 +2,7 @@
   "fixture": "counter-reset-on-heading",
   "caveats": ["counter-reset-on-heading"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "A heading (R6a), an outdented prose line (R6b) or an outdented marker (R3) ends a list, so the next \"1.\" starts a new one, unflagged. A second \"1.\" with no boundary is a new list flagged restart-without-boundary (R7).",
   "input": {

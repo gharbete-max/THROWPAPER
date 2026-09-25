@@ -334,7 +334,7 @@ A specification the code proves wrong is fixed in the same change as the code �
 > **Order note:** the detector runs as **S1b**, immediately after S1 — it is the highest-risk module, it is blocked only on the frozen IR, and its failure would change the roadmap (the cheap fallback is the paper-twin path: keep the original page as an image and place fields on it, which exists today). If the owner makes the click-through builder the headline (§14 Q7), S1b moves back to S8 and nothing else moves.
 
 - **S1 — Graph as data. ✅ Done** (`48adfba`): schema, paths, guards, validator G0–G13, 15 nodes + menu + end, 77 `guided.*` keys in twelve catalogues, `pnpm builder:validate`, the purity lint block.
-- **S1b — Enumerate (pulled forward). Next.** The IR types and validator; the marker grammar; the indent-band rule; sequence/scheme/counter-reset logic; the verdicts — exactly `NUMBERING-RULES.md`. Input: the turn-1 fixtures, synthetic IR only, no PDF parsing. **Done when the 20 enumerate fixtures (every §8.1 caveat, S4, S5 and its two harder forms) are green, including `dotted-subnumber-mid-sentence`, and the debug JSON per document is snapshot-tested.** The §8.2 fixtures belong to stages 2, 4 and 7; each names the slice that turns it green (S7, S9).
+- **S1b — Enumerate (pulled forward). ✅ Done:** the IR types and validator; the marker grammar; the indent-band rule; sequence/scheme/counter-reset logic; the verdicts — exactly `NUMBERING-RULES.md`, which the implementation corrected in five places (its opening section lists them). Input: the turn-1 fixtures, synthetic IR only, no PDF parsing. **The enumerate fixtures (every §8.1 caveat, S4, S5 and its two harder forms — the 20 from turn 1, and `letter-vs-word--nested`, which S1b added for a gap it found) are green, including `dotted-subnumber-mid-sentence`, and the debug JSON per document is snapshot-tested** in `fixtures/numbering/debug/`. The §8.2 fixtures belong to stages 2, 4 and 7; each names the slice that turns it green (S7, S9).
 - **S2 — Machine.** Pure reducer, patch ops and inverses, log, replay, breadcrumbs, stable ids, sidecar, session autosave (`builder_sessions`). Tests: replay determinism, undo of every op, publishable at every node, on Postgres and PGlite.
 - **S3 — Ladder T0–T4.** Normalization, gazetteers, generated fuzzy index, thresholds, explainability. Tests: phrase tables per language, must-not-resolve table.
 - **S4 — Builder shell.** The two doors, full-screen conversation UI, keyboard, trail, motion token, the buttons chain end to end.
@@ -397,7 +397,7 @@ Forms are not rocket science, and nothing here needs a model to think for it. Wh
 
 Each change is one the first turns found the repository needed; `docs/plan/PREDICTIVE-BUILDER.md` ("Where the brief was fitted to the repository") has the reasoning.
 
-1. **S1b's done-condition** is the 20 enumerate fixtures; the §8.2 fixtures belong to stages 2, 4 and 7 and name the slice that turns them green.
+1. **S1b's done-condition** is the enumerate fixtures (20 at the time); the §8.2 fixtures belong to stages 2, 4 and 7 and name the slice that turns them green.
 2. **Caveat #40**: `docs/CONTRACT.md` is the contract *between* products; the builder's endpoints are Forms' own.
 3. **Commits (§13)**: cloud sessions commit each slice to their branch with one draft PR open.
 4. **Keyboard (#44)**: browsers keep ⌘/Ctrl+1–9 for tabs, so the browser uses 1–9 and Alt+1–9.

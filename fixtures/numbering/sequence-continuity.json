@@ -2,7 +2,7 @@
   "fixture": "sequence-continuity",
   "caveats": ["sequence-continuity"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Consistent runs are accepted (1,2,3 / 1,1.1,1.2,2 / i,ii,iii / a,b,c). A jump from 2 to 12.1 at the same indent demotes the whole run to accept-flagged.",
   "input": {

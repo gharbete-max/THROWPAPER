@@ -2,7 +2,7 @@
   "fixture": "single-item-list",
   "caveats": ["single-item-list"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "A lone marker is accepted only with band evidence (a tab after the marker) and field evidence (a blank). Without either it is a candidate, off by default.",
   "input": {

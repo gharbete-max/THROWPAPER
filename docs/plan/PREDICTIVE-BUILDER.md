@@ -333,7 +333,7 @@ permission of 2026-09-25, so the brief and this plan now agree.
 11. **"S1b is done when every §8.1/§8.2 fixture is green."** §8.1 is the detector's; most of §8.2
     (columns, running headers, hyphenation, tables, checkbox grids, OCR noise) belongs to stages 2,
     4 and 7, which S1b does not build. → every fixture names the slice that turns it green
-    (`turnsGreenIn`); S1b turns the 20 enumerate fixtures green, S7 the reassemble ones, S9 the
+    (`turnsGreenIn`); S1b turns the enumerate fixtures green, S7 the reassemble ones, S9 the
     segment and classify ones.
 12. **`fixtures/` at the repository root is not formatted by Prettier.** Prettier would put every
     word object of the layout IR on twenty lines; the fixtures are written one word per line so a

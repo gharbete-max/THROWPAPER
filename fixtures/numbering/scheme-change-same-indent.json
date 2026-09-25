@@ -2,7 +2,7 @@
   "fixture": "scheme-change-same-indent",
   "caveats": ["scheme-change-same-indent"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Arabic then roman at the same indent: a restart (i, ii after 3) is a nested list and the arabic list resumes at 4 (R5a). A roman numeral that does not restart (iii after 2) is one list with inconsistent formatting, flagged (R5b).",
   "input": {

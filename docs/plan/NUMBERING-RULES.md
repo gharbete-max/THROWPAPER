@@ -9,12 +9,21 @@ the fixture that would have caught it.
 **Input:** a `LayoutDocument` (`LAYOUT-IR.md`). **Output:** an `EnumerateResult` (below). No other
 input exists: no locale setting, no options, no clock, no randomness.
 
-**Checked against its fixtures before it was merged.** When this document was written, it was also
-implemented once, literally and from this text alone, as a throwaway script outside the repository;
-that implementation reproduced every expected output in `fixtures/numbering/` for the enumerate
-stage (20 fixtures). The one disagreement it found — a fixture expecting `2026.` to be vetoed,
-when the grammar never matches a four-digit number at all — was a mistake in the fixture, and was
-fixed there. S1b's implementation must pass the same fixtures; that is the test of this document.
+**Checked against its fixtures, twice.** When this document was written, it was also implemented
+once, literally and from this text alone, as a throwaway script outside the repository; that
+implementation reproduced every expected output in `fixtures/numbering/` for the enumerate stage.
+The one disagreement it found — a fixture expecting `2026.` to be vetoed, when the grammar never
+matches a four-digit number at all — was a mistake in the fixture, and was fixed there.
+
+Slice S1b then implemented it for real (`packages/shared/src/import/enumerate/`), and writing it as
+production code found five places where this text could be read two ways or was wrong. Each is
+fixed below, and each fix is locked: the roman numerals stopped one letter short of xxxviii (§4,
+`grammar.test.ts`); R7 did not say which parent `isFirst` asks about (§6); APPEND and D3 did not
+say the parent must be arabic (§6, §8); D4 moved a lifted list's children up but not their children,
+and left the items of that list pointing at the removed item (§8, fixture `letter-vs-word--nested`,
+which the literal reading fails); and "whole word" was undefined for the continuation notices (§9,
+`gazetteers.test.ts`). The fixtures are the test of this document; `pnpm test` runs every one whose
+`status` is `green`, and snapshots each one's debug artifact in `fixtures/numbering/debug/`.
 
 ## 1. What it produces
 
@@ -66,6 +75,7 @@ export interface Item {
 /** A line that looked like it started with a marker and was ruled out, and the rule that did it. */
 export interface Rejected {
   lineId: string;
+  /** The marker's `raw` (§4). */
   raw: string;
   rule: 'V1' | 'V2' | 'V3' | 'V4' | 'V5' | 'P4' | 'D4';
 }
@@ -182,8 +192,8 @@ productions are tried **in this order**; the first match wins:
 | M1 | `W1` matches `^\d{1,3}\.$` | arabic | dot | `[n]` | 1 |
 | M2 | `W1` matches `^\d{1,3}\)$` | arabic | paren | `[n]` | 1 |
 | M3 | `W1` matches `^\d{1,3}:$` | arabic | colon | `[n]` | 1 |
-| M5 | `W1` matches `^\((\d{1,3}\|[a-z]\|[A-Z]\|[ivx]{2,6}\|[IVX]{2,6})\)$` | by content | enclosed | by content | 1 |
-| M7 | `W1` matches `^([ivx]{2,6}\|[IVX]{2,6})[.)]$` and is a canonical roman numeral 1–39 | roman-lower / roman-upper | dot / paren | `[value]` | 1 |
+| M5 | `W1` matches `^\((\d{1,3}\|[a-z]\|[A-Z]\|[ivx]{2,7}\|[IVX]{2,7})\)$` | by content | enclosed | by content | 1 |
+| M7 | `W1` matches `^([ivx]{2,7}\|[IVX]{2,7})[.)]$` and is a canonical roman numeral 1–39 | roman-lower / roman-upper | dot / paren | `[value]` | 1 |
 | M6 | `W1` matches `^[a-zA-Z][.)]$` | alpha (and roman, see R10) | dot / paren | `[letter index]` | 1 |
 
 - A match additionally requires that nothing in `W1` is left over: the whole first word is the
@@ -191,6 +201,7 @@ productions are tried **in this order**; the first match wins:
 - "By content" for M5: digits → arabic `[n]`; one letter → as M6 (with R10's two readings for i, v,
   x); two or more roman letters → as M7, and no match if not canonical or above 39.
 - A canonical roman numeral is one produced by the standard subtractive form (`iv`, not `iiii`).
+  The longest from 1 to 39 is `xxxviii` (38), seven letters — hence `{2,7}`.
 - The letter index is a=1 … z=26, case-insensitive; the family's case is the letter's case.
 - **Single letters i, v, x (and I, V, X) have two readings**: roman [1], [5], [10] and alpha [9],
   [22], [24]. Every other single letter has only its alpha reading. R10 chooses.
@@ -259,9 +270,10 @@ unambiguous marker has only one reading. **Fixtures:** `sequence-continuity` (`c
    - **R5b — a different scheme that does not restart joins, flagged.** Family differs and not
      first: APPEND to `r` and add `scheme-inconsistent` to `r.flags`. **Fixture:**
      `scheme-change-same-indent` (1, 2, iii, 4).
-   - **R7 — the same scheme restarting without a boundary.** Same family and `isFirst`: close
-     `r`, push a new run at `r.level` with `r`'s parent and the flag `restart-without-boundary`,
-     APPEND. **Fixture:** `counter-reset-on-heading` (part three).
+   - **R7 — the same scheme restarting without a boundary.** Same family and
+     `isFirst(reading, r.parent)`: close `r`, push a new run at `r.level` with `r`'s parent and
+     the flag `restart-without-boundary`, APPEND. **Fixture:** `counter-reset-on-heading` (part
+     three).
    - **R4 — a jump.** Same family, not first, not expected: APPEND to `r` and add
      `sequence-jump` to `r.flags`. The whole run is demoted (D2). **Fixture:**
      `sequence-continuity` (1, 2, 12.1, 3).
@@ -288,8 +300,8 @@ same, add `style-inconsistent` to `r.flags`; set `r.lastPath = reading.path`.
 
 - **Level.** Arabic: `r.level + max(0, len(path) − len(r.firstPath))`. Every other family:
   `r.level`.
-- **Parent.** Arabic with `len(path) ≥ 2`: the latest item in `r` whose path equals `path` without
-  its last component, if there is one; otherwise `r.parent`. Every other case: `r.parent`.
+- **Parent.** Arabic with `len(path) ≥ 2`: the latest arabic item in `r` whose path equals `path`
+  without its last component, if there is one; otherwise `r.parent`. Every other case: `r.parent`.
 - **Label.** `L.text` from the first label word to the end (P4: the label line's whole text).
 
 **R8 — pages and columns do not end a list.** Nothing in this section looks at `pageNo` or
@@ -321,14 +333,18 @@ For each run, in the order runs were created:
 
 1. **D4 — a lone letter with nothing to fill in is a word.** The run's family is alpha, it has
    exactly one item, and that item has no field evidence: the item is removed, its marker line
-   goes to `rejected` with rule `D4`, and all its lines become prose. Any run whose parent was
-   that item takes the removed item's parent, and its level and its items' levels drop by one.
-   **Fixture:** `letter-vs-word` (`A. Andersson har skrivit under.`).
+   goes to `rejected` with rule `D4`, and all its lines become prose. Every run and item whose
+   parent was that item takes the removed item's parent; every run below it — its child runs,
+   their child runs, and so on — and every item in those runs drops one level. (A run's parent
+   is always an item of an earlier run, so one pass over the later runs in creation order finds
+   them all.) **Fixtures:** `letter-vs-word` (`A. Andersson har skrivit under.`),
+   `letter-vs-word--nested` (a list under the lone letter, and letters under that list).
 2. **D1 / D2 — a list of two or more.** Every item: flags = the item's own flags ∪ the run's flags.
    No flags → `accept`, `D1`. Any flag → `accept-flagged`, `D2`. **Fixtures:** D1 everywhere;
    D2 `sequence-continuity`, `scheme-change-same-indent`, `counter-reset-on-heading`.
 3. **D3 — a list of one.** Exactly one item:
-   - its path extends its parent's path (`dotted-subnumber-line-start`), or it has the flag
+   - it is arabic, its parent is an arabic item, and its path is its parent's path with one more
+     component (`dotted-subnumber-line-start`), or it has the flag
      `orphan-subnumber`: as D1/D2 (a sub-item of a real item is not a lone list; an orphan is
      accepted and flagged, `CAVEATS.md` #2);
    - otherwise, band evidence **and** field evidence → `accept` if it has no flags, else
@@ -345,7 +361,11 @@ de-duplicated; ids as in §1. Nothing else is sorted: every other list is alread
 
 ## 9. Gazetteers
 
-Matched against `f` (lower-cased probe, trailing `. , ; : ! ? )` removed) as whole words.
+`UNIT_WORDS` and `MONTHS` are matched against `f` (lower-cased probe, trailing `. , ; : ! ? )`
+removed): `f` is one whole word, and it matches when it equals an entry. So every entry is written
+in that form — an entry ending in `.` could never match, and `gazetteers.test.ts` rejects one. The
+lists are data, `packages/shared/src/import/enumerate/gazetteers.json`, and the same test holds
+the file and this section to each other.
 
 **`UNIT_WORDS`** — magnitudes, currencies, percent and SI units. Deliberately **no time words**
 (år, dagar, days, weeks): "4. Dagar du deltar" is a real label.
@@ -353,7 +373,7 @@ Matched against `f` (lower-cased probe, trailing `. , ; : ! ? )` removed) as who
 ```
 million millions millioner miljon miljoner milj mn mnkr mdkr miljard miljarder mrd billion
 billions thousand thousands tusen tuhat miljoona miljoonaa milljón milljónir millón millones
-millionen milliarden mio mrd. миллион миллиона миллионов тысяч тыс 万 亿
+millionen milliarden mio миллион миллиона миллионов тысяч тыс 万 亿
 kr kronor krona kroner krónur öre øre sek nok dkk isk eur euro euros € $ usd gbp £ chf rub ₽
 cny ¥ 元 jpy 円
 % procent prosent prosentti prósent prozent percent pour por 百分之
@@ -374,7 +394,10 @@ janúar febrúar apríl maí júní júlí ágúst október nóvember
 jan feb mar apr jun jul aug sep sept okt nov dec des dez
 ```
 
-**`CONTINUATION`** — phrases, matched as whole words on the lower-cased probe (CJK: as substrings):
+**`CONTINUATION`** — phrases, matched on the lower-cased probe of the whole line. A whole-word
+match is an occurrence with no letter, digit or combining mark (`\p{L}`, `\p{N}`, `\p{M}`)
+touching it on either side; any occurrence counts, not only the first. Chinese and Japanese are
+matched as substrings, since they do not separate words:
 
 ```
 en  continued on page · continued on next page · continued overleaf · continued · please turn over · turn over · p.t.o · pto
@@ -430,7 +453,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | D1 | run of ≥ 2, no flags | accept | every accepted list |
 | D2 | run of ≥ 2 (or sub-item/orphan), any flag | accept-flagged | `sequence-continuity` |
 | D3 | run of 1: band evidence and field evidence | accept; else candidate + `single-item` | `single-item-list` |
-| D4 | alpha run of 1 with no field evidence | rejected, prose | `letter-vs-word` |
+| D4 | alpha run of 1 with no field evidence | rejected, prose; everything below it up one level | `letter-vs-word`, `letter-vs-word--nested` |
 
 ## 11. What this does not decide
 
@@ -443,4 +466,6 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 - **DOCX numbering.** When a line carries `hints.docxNumbering`, Word has already said what the
   marker is: stage 3 uses `docxNumbering.rendered` as the marker, `ilvl + 1` as the level, and the
   `numId` as the run, and none of the rules above apply to that line. The rules exist for text
-  that has lost its structure, and a DOCX paragraph with numbering has not.
+  that has lost its structure, and a DOCX paragraph with numbering has not. **Not built in S1b:**
+  no extractor sets the hint until the DOCX adapter lands (S7), and S7 builds this path with its
+  first DOCX fixture. Until then the detector reads such a line like any other.

@@ -248,8 +248,11 @@ export interface RawDocument {
 
 ## Invariants
 
-A layout document that breaks one of these is rejected by the IR validator (built in S1b, and
-already checked over every fixture by `scripts/caveat-fixtures.test.ts`):
+A layout document that breaks one of these is rejected by the IR validator — `layoutProblems`
+and `parseLayoutDocument` in `@tp/shared/import` (`packages/shared/src/import/ir/`), with one
+broken document per invariant in its test; `rawProblems` checks the raw layer. It runs over every
+fixture and sample in `scripts/caveat-fixtures.test.ts`, and the structure (types, ranges, no
+unknown keys) is a Zod schema typed against the interfaces above:
 
 1. Every `Iu` is an integer in `[0, 10000]`; every box has `x0 ≤ x1` and `y0 ≤ y1`.
 2. Ids are unique across the document and match their pattern; `line.blockId` is its block's id;
@@ -259,7 +262,18 @@ already checked over every fixture by `scripts/caveat-fixtures.test.ts`):
 4. `line.indentBand < columns[line.columnIndex].bands.length`, and the line's `box.x0` lies in
    that band (see below).
 5. `ocrConfidence` is `null` unless the source is `ocr`, in which case it is an integer 0–100.
-6. `source` is the same on every word of a line, and equals the line's.
+6. `source` is the same on every word of a line, and equals the line's. (A layout word carries
+   no `source` of its own, so in a layout document this holds by construction; it binds stage 2,
+   which must not join raw words of different sources into one line.)
+7. A line's derived fields are what their definitions say: `box` is the union of its words'
+   boxes, `baseline` and `fontSize` the lower medians of its words', `fontWeight` 700 exactly
+   when every word is, `ocrConfidence` the least of its words'. Ids are numbered 1, 2, 3… in the
+   page's reading order, and a block's lines never go up the page. (The detector reads `box.x0`
+   and `fontSize` of the line, not of its words, so a hand-written line that disagrees with its
+   words would test a document no extractor can produce.)
+8. Facts only one source can know stay with it: `ruleBelow` only on `text-layer` lines,
+   `docxNumbering` and `cell` only on `docx` lines, and in the raw layer `paragraph` only on
+   `docx` and `paste` words.
 
 ## Reading order
 

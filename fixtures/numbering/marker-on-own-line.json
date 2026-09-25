@@ -2,7 +2,7 @@
   "fixture": "marker-on-own-line",
   "caveats": ["marker-on-own-line"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "A marker alone on its line takes the next line in its block as its label (P4). With no next line it is rejected.",
   "input": {

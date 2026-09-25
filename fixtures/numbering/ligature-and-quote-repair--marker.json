@@ -2,7 +2,7 @@
   "fixture": "ligature-and-quote-repair--marker",
   "caveats": ["ligature-and-quote-repair"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Curly quotes and full-width forms never change a marker test (probe folds them) and are never changed in the output: \"3）\" stays \"3）\", \"“Namn”\" stays curly. A quoted \"“1.”\" is not a marker.",
   "input": {

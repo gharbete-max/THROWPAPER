@@ -2,7 +2,7 @@
   "fixture": "parenthesised-number",
   "caveats": ["parenthesised-number"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "\"(1)\" and \"(a)\" are enclosed markers; \"(the form)\" and \"(3 500 kr)\" match no production and stay prose.",
   "input": {

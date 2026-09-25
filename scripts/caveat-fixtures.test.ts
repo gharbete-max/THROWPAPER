@@ -1,94 +1,59 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import {
+  enumerate,
+  layoutProblems,
+  parseLayoutDocument,
+  rawProblems,
+  type StageDebug,
+  type StageResult,
+} from '@tp/shared/import';
 
 /**
- * The caveat ledger's fixtures, held to the documents that promise them.
+ * The caveat ledger's fixtures, held to the documents that promise them and to the stages that
+ * must produce them.
  *
  * `docs/plan/CAVEATS.md` says every numbering and geometry trap has a fixture, and
  * `docs/plan/NUMBERING-RULES.md` says every rule has one. Both are sentences, and a sentence nobody
  * checks drifts: a row gets added without its fixture, a fixture gets renamed, a hand-written
  * layout document gets a word whose offset no longer points at it. This test is the check.
  *
- * It does **not** run the detector — slice S1b builds that. Each fixture's expectation is
- * registered as `todo` until its `status` says `green`, so a run reports how many are still owed
- * rather than passing silently: a skipped expectation that prints as a pass is the defect
- * `CLAUDE.md` ("Never mistake a proxy for the thing") exists to prevent.
+ * A fixture's `status` is a promise this file keeps. `green` means its stage runs here and its
+ * output is compared, whole, with the expectation — and its debug artifact with the snapshot in
+ * `fixtures/numbering/debug/`; a fixture marked green whose stage nothing runs fails. `todo` means
+ * the expectation is registered as `todo`, so a run reports how many are still owed rather than
+ * passing silently: a skipped expectation that prints as a pass is the defect `CLAUDE.md` ("Never
+ * mistake a proxy for the thing") exists to prevent.
  */
 
 const ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const NUMBERING = join(ROOT, 'fixtures', 'numbering');
+const DEBUG = join(NUMBERING, 'debug');
 const SAMPLES = join(ROOT, 'fixtures', 'ir');
 
 const STAGES = ['reassemble', 'enumerate', 'segment', 'classify'] as const;
-const EXPECT_KEYS: Record<(typeof STAGES)[number], string[]> = {
+type Stage = (typeof STAGES)[number];
+const EXPECT_KEYS: Record<Stage, string[]> = {
   reassemble: ['reassemble', 'enumerateSummary'],
   enumerate: ['enumerate'],
   segment: ['segment'],
   classify: ['classify', 'enumerateSummary'],
 };
-const ROLES = ['body', 'heading', 'page-furniture', 'footnote', 'table'];
-const SOURCES = ['text-layer', 'ocr', 'docx', 'paste'];
 
-interface Box {
-  x0: number;
-  y0: number;
-  x1: number;
-  y1: number;
-}
-interface Word {
-  text: string;
-  start?: number;
-  box: Box;
-  baseline: number;
-  fontSize: number;
-  fontWeight: number;
-  ocrConfidence: number | null;
-  source?: string;
-}
-interface Line {
-  id: string;
-  pageNo: number;
-  columnIndex: number;
-  blockId: string;
-  text: string;
-  words: Word[];
-  box: Box;
-  baseline: number;
-  indentBand: number;
-  source: string;
-  ocrConfidence: number | null;
-}
-interface Block {
-  id: string;
-  pageNo: number;
-  columnIndex: number;
-  role: string;
-  lines: Line[];
-}
-interface Column {
-  x0: number;
-  x1: number;
-  bands: number[];
-}
-interface Page {
-  pageNo: number;
-  columns?: Column[];
-  blocks?: Block[];
-  words?: Word[];
-}
-interface IrDocument {
-  irVersion: number;
-  pages: Page[];
-}
+/** The stages that exist, by the name a fixture gives them. A stage joins when its slice lands. */
+const RUNNERS: Partial<Record<Stage, (input: unknown) => StageResult<unknown>>> = {
+  enumerate: (input) => enumerate(parseLayoutDocument(input)),
+};
+
 interface Fixture {
   fixture: string;
   caveats: string[];
-  stage: (typeof STAGES)[number];
+  stage: Stage;
   status: 'todo' | 'green';
   turnsGreenIn: string;
   summary: string;
-  input: IrDocument;
+  input: unknown;
 }
 
 const read = <T>(path: string): T => JSON.parse(readFileSync(path, 'utf8')) as T;
@@ -106,89 +71,33 @@ const fixtures = fixtureNames.map((name) => ({
   ),
 }));
 
-/** Every problem with an IR document, as sentences. An empty list is a valid document. */
-function irProblems(doc: IrDocument, layout: boolean): string[] {
-  const problems: string[] = [];
-  const iu = (where: string, value: number) => {
-    if (!Number.isInteger(value) || value < 0 || value > 10000) {
-      problems.push(`${where}: ${value} is not an integer in [0, 10000]`);
-    }
-  };
-  const box = (where: string, b: Box) => {
-    for (const key of ['x0', 'y0', 'x1', 'y1'] as const) iu(`${where}.${key}`, b[key]);
-    if (b.x0 > b.x1 || b.y0 > b.y1) problems.push(`${where}: inverted box`);
-  };
-  if (doc.irVersion !== 1) problems.push(`irVersion is ${doc.irVersion}, not 1`);
-
-  const ids = new Set<string>();
-  doc.pages.forEach((page, index) => {
-    if (page.pageNo !== index + 1) problems.push(`page ${index} has pageNo ${page.pageNo}`);
-    if (!layout) {
-      for (const [i, word] of (page.words ?? []).entries()) {
-        box(`p${page.pageNo} word ${i}`, word.box);
-        if (!SOURCES.includes(word.source ?? ''))
-          problems.push(`p${page.pageNo} word ${i}: source`);
-      }
-      return;
-    }
-    const columns = page.columns ?? [];
-    for (const block of page.blocks ?? []) {
-      if (!/^p\d+-b\d+$/.test(block.id) || ids.has(block.id)) problems.push(`block id ${block.id}`);
-      ids.add(block.id);
-      if (block.pageNo !== page.pageNo) problems.push(`${block.id}: pageNo`);
-      if (!ROLES.includes(block.role)) problems.push(`${block.id}: role ${block.role}`);
-      if (block.lines.length === 0) problems.push(`${block.id}: no lines`);
-      let previousBaseline = -1;
-      for (const line of block.lines) {
-        const at = line.id;
-        if (!/^p\d+-l\d+$/.test(at) || ids.has(at)) problems.push(`line id ${at}`);
-        ids.add(at);
-        if (line.blockId !== block.id || line.pageNo !== page.pageNo)
-          problems.push(`${at}: parent`);
-        if (line.columnIndex !== block.columnIndex) problems.push(`${at}: columnIndex`);
-        if (!SOURCES.includes(line.source)) problems.push(`${at}: source ${line.source}`);
-        if (line.baseline < previousBaseline) problems.push(`${at}: out of order in its block`);
-        previousBaseline = line.baseline;
-        box(at, line.box);
-        if (line.words.length === 0) problems.push(`${at}: no words`);
-        if (line.text !== line.words.map((word) => word.text).join(' ')) {
-          problems.push(`${at}: text is not its words joined by single spaces`);
-        }
-        for (const word of line.words) {
-          box(`${at} "${word.text}"`, word.box);
-          const start = word.start ?? -1;
-          if (line.text.slice(start, start + word.text.length) !== word.text) {
-            problems.push(`${at}: "${word.text}" is not at offset ${start}`);
-          }
-          const ocr = word.ocrConfidence;
-          if (line.source === 'ocr' ? !Number.isInteger(ocr) : ocr !== null) {
-            problems.push(`${at}: ocrConfidence ${ocr} for source ${line.source}`);
-          }
-        }
-        const column = columns[line.columnIndex];
-        const band = column?.bands[line.indentBand];
-        if (!column || band === undefined) {
-          problems.push(`${at}: no column ${line.columnIndex} / band ${line.indentBand}`);
-        } else if (
-          block.role !== 'page-furniture' &&
-          block.role !== 'footnote' &&
-          (line.box.x0 < band || (line.box.x0 - band) * 50 > column.x1 - column.x0)
-        ) {
-          problems.push(`${at}: x0 ${line.box.x0} is not in band ${line.indentBand} (${band})`);
-        }
-      }
-    }
-  });
-  return problems;
-}
-
 /** Ids of every line in a layout document, for checking what an expectation refers to. */
-function lineIds(doc: IrDocument): Set<string> {
+function lineIds(doc: unknown): Set<string> {
   return new Set(
-    doc.pages.flatMap((page) =>
-      (page.blocks ?? []).flatMap((block) => block.lines.map((line) => line.id)),
+    parseLayoutDocument(doc).pages.flatMap((page) =>
+      page.blocks.flatMap((block) => block.lines.map((line) => line.id)),
     ),
   );
+}
+
+/**
+ * A debug artifact as its snapshot file: the header, then one decision per line with its id first
+ * and its evidence in key order — valid JSON a reviewer can read as a diff, decision by decision.
+ */
+function debugFile(debug: StageDebug): string {
+  const decisions = debug.decisions.map(({ id, rule, verdict, subject, evidence }) =>
+    JSON.stringify({
+      id,
+      rule,
+      verdict,
+      subject,
+      evidence: Object.fromEntries(Object.entries(evidence).sort(([a], [b]) => (a < b ? -1 : 1))),
+    }),
+  );
+  const header = (['stage', 'stageVersion', 'irVersion', 'inputSha256'] as const).map(
+    (key) => `  ${JSON.stringify(key)}: ${JSON.stringify(debug[key])},`,
+  );
+  return `{\n${header.join('\n')}\n  "decisions": [\n    ${decisions.join(',\n    ')}\n  ]\n}\n`;
 }
 
 /** `| # | \`id\` | … | test |` rows of a section of CAVEATS.md, with the fixtures their test names. */
@@ -218,7 +127,9 @@ describe('the numbering fixtures', () => {
     expect(
       Object.keys(expected.expect).every((key) => EXPECT_KEYS[fixture.stage].includes(key)),
     ).toBe(true);
-    expect(irProblems(fixture.input, fixture.stage !== 'reassemble')).toEqual([]);
+    const problems =
+      fixture.stage === 'reassemble' ? rawProblems(fixture.input) : layoutProblems(fixture.input);
+    expect(problems).toEqual([]);
   });
 
   it.each(fixtures.filter((f) => f.fixture.stage === 'enumerate'))(
@@ -230,13 +141,30 @@ describe('the numbering fixtures', () => {
     },
   );
 
-  for (const { name, fixture } of fixtures) {
+  for (const { name, fixture, expected } of fixtures) {
+    const title = `${name}: the ${fixture.stage} stage produces the expected output`;
     if (fixture.status === 'todo') {
-      it.todo(
-        `${name}: the ${fixture.stage} stage produces the expected output (${fixture.turnsGreenIn})`,
-      );
+      it.todo(`${title} (${fixture.turnsGreenIn})`);
+      continue;
     }
+    it(title, async () => {
+      const run = RUNNERS[fixture.stage];
+      expect(run, `${name} is green, but nothing runs the ${fixture.stage} stage`).toBeDefined();
+      const { output, debug } = run!(fixture.input);
+      expect(output).toStrictEqual(expected.expect[fixture.stage]);
+      await expect(debugFile(debug)).toMatchFileSnapshot(join(DEBUG, `${name}.json`));
+    });
   }
+
+  // A missing snapshot fails its fixture's test in CI; a snapshot left behind by a renamed or
+  // demoted fixture would fail nothing, so this does.
+  it('keeps no debug snapshot that no green fixture writes', () => {
+    const green = new Set(
+      fixtures.filter((f) => f.fixture.status === 'green').map((f) => `${f.name}.json`),
+    );
+    const snapshots = existsSync(DEBUG) ? readdirSync(DEBUG) : [];
+    expect(snapshots.filter((name) => !green.has(name))).toEqual([]);
+  });
 });
 
 describe('the IR samples', () => {
@@ -251,7 +179,7 @@ describe('the IR samples', () => {
   });
 
   it.each(samples)('%s is a valid layout document', (name) => {
-    expect(irProblems(read<IrDocument>(join(SAMPLES, name)), true)).toEqual([]);
+    expect(layoutProblems(read<unknown>(join(SAMPLES, name)))).toEqual([]);
   });
 });
 

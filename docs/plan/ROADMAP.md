@@ -26,8 +26,9 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 
 ### M1 — The graph and the detector · S1, S1b
 
-- **Demo:** `pnpm builder:validate` rejecting each kind of broken graph; the 20 enumerate fixtures
-  green, `dotted-subnumber-mid-sentence` first; the detector's debug JSON for S5 on screen.
+- **Demo:** `pnpm builder:validate` rejecting each kind of broken graph; the 21 enumerate fixtures
+  green, `dotted-subnumber-mid-sentence` first; the detector's debug JSON for S5 on screen
+  (`fixtures/numbering/debug/dotted-subnumber-mid-sentence.json` is that artifact, snapshot-tested).
 - **Not in this milestone:** extraction from real files, the machine, any screen.
 
 ### M2 — The engine · S2, S3
@@ -46,7 +47,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 
 - **Demo:** "three buttons, pill shape, side by side" filling three slots, each undoable alone;
   pasting **S4** and **S5**; a two-column PDF and a Word file with real numbering read in order,
-  their debug JSON shown; the 20 enumerate fixtures still green through real extraction.
+  their debug JSON shown; the enumerate fixtures still green through real extraction.
 - **Not in this milestone:** the review screen, answer types, the guess.
 
 ### M5 — Review and guess · S9, S10, S11
@@ -69,13 +70,13 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | Slice | Builds | Its tests | Touches | Status |
 | --- | --- | --- | --- | --- |
 | **S1** Graph as data | `builder/graph/` schema, `nodes.ts` (15 nodes + menu + end), validator G0–G13, `guards.ts` parser, `guided.*` keys in 12 catalogues, `pnpm builder:validate`, the purity ESLint block | one broken graph per rule; `when` grammar and totality; serialisability | `packages/shared`, `apps/forms` messages, `scripts/`, `eslint.config.js` | **done** — in review, PR #147 |
-| **S1b** Enumerate | `import/ir/` types + validator, `import/enumerate/` per `NUMBERING-RULES.md`, stage debug JSON | the 20 enumerate fixtures; determinism (twice, shuffled) | `packages/shared` | not started |
+| **S1b** Enumerate | `import/ir/` types + validator, `import/enumerate/` per `NUMBERING-RULES.md`, stage debug JSON | the 21 enumerate fixtures; determinism (twice, shuffled) | `packages/shared` | **done** — in review, PR #147 |
 | **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019) | not started |
 | **S3** Ladder T0–T4 | normalisation, gazetteers, `aliases/<language>.json`, `pnpm interpret:index`, T0–T4 | phrase and must-not-resolve tables per language; budget | `packages/shared`, `scripts/`, `fixtures/ladder/` | not started |
 | **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | not started |
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | not started |
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases` | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
-| **S7** Extract + reassemble | `paper/docx.ts`, `paper/paste.ts`, operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts` | the 5 reassemble fixtures; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
+| **S7** Extract + reassemble | `paper/docx.ts`, `paper/paste.ts`, operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | not started |
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared` | not started |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms` | not started |
@@ -108,3 +109,19 @@ when each slice ends.)*
   the same conflicts. Tests: none — documents only; `scripts/caveat-fixtures.test.ts` still holds
   the ledger and the rules to their fixtures. Next: S1b. Open: owner questions 1–4, 6 and 7, each
   with the assumption work proceeds on.
+- **S1b, the detector (2026-09-25).** What: `@tp/shared/import` — the Layout IR types, a Zod
+  schema typed against them and a validator for every invariant (two added: a line's derived
+  fields agree with its words; source-only facts stay with their source); stage 3, `enumerate`,
+  exactly `NUMBERING-RULES.md`, with its word lists as data; the debug artifact, canonical JSON
+  and a pure SHA-256. Implementing the rules as production code found five defects in their text,
+  fixed there and locked (roman numerals stopped short of xxxviii; R7's parent; APPEND's and D3's
+  arabic parent; D4 lifted one level of a nested list and left dangling parents — the new fixture
+  `letter-vs-word--nested`, which the literal reading fails; "whole word" for continuation
+  notices), and one dead gazetteer entry (`mrd.`). Why: the highest-risk module, built before
+  anything depends on it. Tests: the 21 enumerate fixtures green, each with its debug snapshot in
+  `fixtures/numbering/debug/`, run by `scripts/caveat-fixtures.test.ts` for every fixture marked
+  green; determinism over every layout document in the repository (twice, in reverse, keys
+  reversed, frozen input); the grammar production by production; the gazetteers held to §9; one
+  broken document per IR invariant; SHA-256 against NIST and `node:crypto`. Next: S2, the
+  machine. Open: owner questions 1–4, 6 and 7; Word's own numbering (§11) waits for S7's DOCX
+  extractor and its fixture.

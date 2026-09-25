@@ -2,7 +2,7 @@
   "fixture": "dotted-subnumber-line-start--orphan",
   "caveats": ["dotted-subnumber-line-start"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "A heading resets the list, then \"12.1\" starts a line and there is no item 12 anywhere: accepted and flagged \"check this\" (orphan-subnumber).",
   "input": {

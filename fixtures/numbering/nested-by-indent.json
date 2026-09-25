@@ -2,7 +2,7 @@
   "fixture": "nested-by-indent",
   "caveats": ["nested-by-indent"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Letters indented under numbers nest (R2); the next number pops back out (R1).",
   "input": {

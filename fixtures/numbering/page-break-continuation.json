@@ -2,7 +2,7 @@
   "fixture": "page-break-continuation",
   "caveats": ["page-break-continuation"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "A list split across two pages keeps its numbering (R8). The \"Fortsätter på nästa sida …\" notice sits left of the list and would close it as an outdent; V7 makes it change nothing. Running header and page numbers are page furniture and are not read (P2).",
   "input": {

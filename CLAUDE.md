@@ -30,7 +30,9 @@ packages/ui     One `cn()` class-name helper. The shared data grid is deliberate
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
 packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
-                graph, its `when` language and its validator (@tp/shared/builder)
+                graph, its `when` language and its validator (@tp/shared/builder); document import's
+                Layout IR with its validator, and stage 3, the list-marker detector, with its debug
+                artifact (@tp/shared/import)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
@@ -120,7 +122,9 @@ Until those ADRs are accepted they are proposals, and ADR 0004 still governs the
   path for anything a user can edit.
 - **The caveat ledger is test-first.** Every row of `docs/plan/CAVEATS.md` names its test; a
   §8.1/§8.2 row names a fixture in `fixtures/numbering/`, and `scripts/caveat-fixtures.test.ts`
-  fails if it is missing. Write the fixture before the code that makes it pass.
+  fails if it is missing. Write the fixture before the code that makes it pass. A fixture whose
+  `status` is `green` is run through its stage there — output compared whole, debug artifact
+  against `fixtures/numbering/debug/` — so marking one green is a claim the test checks.
 - **A behaviour change to the ladder or the import heuristics needs a fixture in the same
   commit** — a phrase-table row, a numbering fixture, a corpus document. No exceptions: a changed
   threshold with no fixture is an unreviewed guess.

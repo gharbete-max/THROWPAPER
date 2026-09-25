@@ -2,7 +2,7 @@
   "fixture": "letter-vs-word",
   "caveats": ["letter-vs-word"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "\"A. Namn, B. Adress\" and \"a) Namn, b) Telefon\" are lists. \"A. Andersson …\" alone, with nothing to fill in, is an initial and a surname (D4). A lone \"A.\" with a blank is a candidate.",
   "input": {

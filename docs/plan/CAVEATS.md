@@ -25,7 +25,7 @@ The detector's own procedure is `NUMBERING-RULES.md`; the rule ids below are its
 | 7 | `single-item-list` | a lone "1. Namn" becomes a question list of one | accepted only with band evidence and field evidence; otherwise a candidate, off by default (D3) | `fixtures/numbering/single-item-list.json` |
 | 8 | `counter-reset-on-heading` | a second "1." after a heading is read as a duplicate or a jump | a heading (R6a), an outdented line (R6b) or an outdented marker (R3) closes lists; a restart with no boundary is flagged (R7) | `fixtures/numbering/counter-reset-on-heading.json` |
 | 9 | `page-break-continuation` | a list restarts at 1 on page 2, or a "continued on page 2" notice ends it | nothing reads page or column (R8); continuation notices change nothing (V7); furniture is not read (P2) | `fixtures/numbering/page-break-continuation.json` |
-| 10 | `letter-vs-word` | "A. Andersson" becomes question A | a lone letter with nothing to fill in is a word (D4); letters in sequence are a list | `fixtures/numbering/letter-vs-word.json` |
+| 10 | `letter-vs-word` | "A. Andersson" becomes question A | a lone letter with nothing to fill in is a word (D4), and anything listed under it moves up a level; letters in sequence are a list | `fixtures/numbering/letter-vs-word.json`, `fixtures/numbering/letter-vs-word--nested.json` |
 | 11 | `parenthesised-number` | "(the form)" or "(3 500 kr)" becomes a question | only `(n)`, `(a)`, `(iv)` as a whole first word are markers (M5) | `fixtures/numbering/parenthesised-number.json` |
 | 12 | `nordic-numbering` | "1)", "1 -", "1:", "1 ." are not recognised, or "1 - 3 dagar" is | all four are productions (M2, M8, M3); a range after a spaced dash is vetoed (V5) | `fixtures/numbering/nordic-numbering.json` |
 
@@ -82,7 +82,7 @@ Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasC
 
 | # | Id | Symptom | Rule | Test |
 | --- | --- | --- | --- | --- |
-| 38 | `determinism` | the same file gives a different draft on another machine | no clock, no randomness, integer arithmetic, canonical JSON; every fixture run twice and shuffled | planned: `packages/shared/src/import/determinism.test.ts` (S1b) |
+| 38 | `determinism` | the same file gives a different draft on another machine | no clock, no randomness, integer arithmetic, canonical JSON; every fixture run twice and shuffled | `packages/shared/src/import/enumerate/enumerate.test.ts` (every layout document in the repository twice, in reverse order, with its keys written backwards, and frozen), `import/debug.test.ts` (canonical JSON, SHA-256), the purity lint block; each later stage adds its own |
 | 39 | `stable-ids` | a rename, reorder or re-import changes a question's id | fingerprint-seeded once, never recomputed, never reused (`retiredIds`) | planned: `packages/shared/src/builder/ids.test.ts` (S2) |
 | 40 | `contract-and-parity` | the desktop and the browser disagree, or `contract:check` breaks | one table on Postgres and PGlite; Forms-internal endpoints are documented by their Zod schemas (not `CONTRACT.md`, which is inter-product); `contract:check` run every slice | planned: `apps/api-forms/src/builder/sessions.test.ts` on both drivers (S2) |
 | 41 | `no-new-runtime-deps` | a parser or a model library appears in `package.json` | an ADR first; DOCX uses `DecompressionStream` and an in-house XML tokenizer | `scripts/licence-check.ts` + review; ADR 0018 |

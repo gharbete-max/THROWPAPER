@@ -313,8 +313,12 @@ interface StageDebug {
 ```
 
 - **Canonical JSON**: keys sorted by code point, no whitespace, integers only — so "byte-identical"
-  is a meaningful test and the SHA-256 of a stage's input identifies it.
-- Snapshots of these are the corpus's expected files; a diff in one needs a reviewed update.
+  is a meaningful test and the SHA-256 of a stage's input identifies it. Both are in
+  `@tp/shared/import` (`debug.ts`, `sha256.ts`): the hash is written out in integer arithmetic,
+  because `node:crypto` is not allowed in the core and `crypto.subtle` is asynchronous.
+- Snapshots of these are the corpus's expected files; a diff in one needs a reviewed update. The
+  numbering fixtures' are `fixtures/numbering/debug/<fixture>.json`, one decision per line, written
+  and compared by `scripts/caveat-fixtures.test.ts` for every fixture whose status is `green`.
 - They exist in the worker's memory and in the review screen's "Why?" panel, and are downloadable
   from it. **They are not stored on the server.** The only thing an import keeps is the source file,
   and only when the form keeps its paper twin (ADR 0004, `CAVEATS.md` #43).

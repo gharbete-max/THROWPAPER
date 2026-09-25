@@ -2,7 +2,7 @@
   "fixture": "dotted-subnumber-mid-sentence--wrapped",
   "caveats": ["dotted-subnumber-mid-sentence"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "The same trap after a soft wrap: the first item fills the column and wraps, and the wrapped line starts with \"12.1\" at the hanging text indent. It continues the label (P3a); it is not a marker.",
   "input": {

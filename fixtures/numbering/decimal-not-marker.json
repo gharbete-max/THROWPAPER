@@ -2,7 +2,7 @@
   "fixture": "decimal-not-marker",
   "caveats": ["decimal-not-marker"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Decimals, section signs, versions and years stay in prose: mid-line they are never tested (P1); at the start of a line a four-digit year matches no production, and the rest are vetoed (V1 lower-case word, V2 unit, V4 a number above 199 that ended a sentence on the line before).",
   "input": {

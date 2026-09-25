@@ -2,7 +2,7 @@
   "fixture": "bullet-list",
   "caveats": ["bullet-list"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Bullets form a run with no counter. A lone \"*\" legend is a candidate, not a question.",
   "input": {

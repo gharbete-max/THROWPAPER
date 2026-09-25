@@ -2,7 +2,7 @@
   "fixture": "ordinal-not-marker",
   "caveats": ["ordinal-not-marker"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Ordinals are not markers: \"1st\" and \"3:e\" match no production; \"1. mai\" and \"1. Mai\" (Nordic and German ordinal dates) are vetoed by V3.",
   "input": {

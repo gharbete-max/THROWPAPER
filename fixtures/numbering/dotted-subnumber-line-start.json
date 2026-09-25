@@ -2,7 +2,7 @@
   "fixture": "dotted-subnumber-line-start",
   "caveats": ["dotted-subnumber-line-start"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "\"12.1\" and \"12.2\" start their lines under item 12: nested sub-items (level 2, parent 12), not new top-level questions. The date format under item 7 is a detail line (J1).",
   "input": {

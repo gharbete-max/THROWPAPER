@@ -2,7 +2,7 @@
   "fixture": "dotted-subnumber-mid-sentence--flush",
   "caveats": ["dotted-subnumber-mid-sentence"],
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "No hanging indent: the wrapped line goes back to the marker's x and starts with \"12.1\". It is not an expected next value of the open list (2 or 1.1), so it continues the label (P3b).",
   "input": {

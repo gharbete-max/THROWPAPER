@@ -3,7 +3,7 @@
   "caveats": [],
   "scenario": "S4",
   "stage": "enumerate",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S1b",
   "summary": "Two pasted numbered questions are two items, numbered 1 and 2, labels verbatim.",
   "input": {
