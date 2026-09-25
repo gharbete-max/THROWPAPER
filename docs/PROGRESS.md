@@ -3416,6 +3416,34 @@ bridge, Back up not at all.
 **Gates:** format, typecheck, lint (the 2 known warnings), test 187 files / 2159, build,
 contract:check 9/15, licence:check — each run on its own; `pnpm test:e2e` 52 passed (6.0 m).
 
+## Offline first — the desktop sends nothing by itself
+
+E-signing online, links others can open, admission cards by email and outbound mail in general are
+not in production yet, so the desktop now works fully offline, tied to the person's own email:
+
+- **To send.** Every message the app would have sent — the confirmation with its admission card,
+  the organiser's notice, a signer's invitation — is kept in `workspace/to-send` (one folder per
+  message, `0600`, written by rename; `mail/queue.ts`) and listed on a new desktop-only screen,
+  with a count beside it in the sidebar. **Open in Outlook / Apple Mail** makes a draft there,
+  addressed and with the attachment; **Open in email app** is a `mailto:` addressed to the
+  recipient, with the attachment offered to save because a link cannot carry a file; **Remove**
+  asks first and is audited. The screen says a message was *opened*, never *sent*: only the mail
+  program knows that. API: `GET /v1/outgoing`, `POST …/:id/open`, `POST …/:id/opened`,
+  `GET …/:id/attachments/:n`, `DELETE …/:id` — registered only where there is a queue, so a server
+  answers 404. `/health` now says `edition: desktop | server`.
+- **Settings.** "Open each message in my email program" is the new default mail mode (`program`,
+  with auto / Outlook / Apple Mail / default email app). Test mode stays. SMTP, Outlook-send and
+  Apple-Mail-send moved under **Advanced**, still behind the rule 7 tick; choosing `program` needs
+  no tick because it sends nothing.
+- **Links say where they work.** On the desktop, a form's address, signers' links and the
+  save-and-continue link carry "Links open only on this computer."
+- **Adding people is hidden** on the desktop — a sign-in link to another address opens nowhere.
+- Unchanged, by the owner's choice: the phone scan over the LAN, the e-ID step, and the
+  online/cloud options in Settings.
+
+`packages/` and `docs/CONTRACT.md` are **not** touched. `mail/draft.ts` gained a recipient and
+several attachments (constant scripts still; the address is one line of data in a file).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

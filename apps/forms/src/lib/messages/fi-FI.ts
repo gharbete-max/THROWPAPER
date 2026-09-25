@@ -1007,4 +1007,25 @@ export const fiFI: Record<MessageKey, string> = {
     'Kameraa ei voitu käynnistää. Yritä uudelleen tai käytä laitteen omaa kameraa.',
   'signing.source.file': 'PDF-tiedosto',
   'signing.source.camera': 'Kamera',
+  'nav.outgoing': 'Lähetettävät',
+  'outgoing.heading': 'Lähetettävät',
+  'outgoing.intro':
+    'Mitään ei lähetetä automaattisesti. Jokainen viesti odottaa täällä, kunnes avaat sen sähköpostiohjelmassasi ja painat siellä Lähetä.',
+  'outgoing.empty': 'Mikään ei odota lähetystä',
+  'outgoing.emptyHint':
+    'Vahvistukset, pääsykortit ja allekirjoituskutsut näkyvät täällä, kun lähetettävää on.',
+  'outgoing.to': 'Vastaanottaja',
+  'outgoing.waitingOne': 'Odottaa',
+  'outgoing.opened': 'Avattu {when}',
+  'outgoing.showText': 'Viesti',
+  'outgoing.attachNote':
+    'Sähköpostilinkki ei voi liittää tiedostoja. Tallenna liite ja liitä se viestiin.',
+  'outgoing.openIn': 'Avaa ohjelmassa {program}',
+  'outgoing.openEmailApp': 'Avaa sähköpostisovelluksessa',
+  'outgoing.openFailed':
+    '{program} ei voinut avata viestiä. Käytä sen sijaan sähköpostisovellusta.',
+  'outgoing.remove': 'Poista',
+  'outgoing.removeConfirm': 'Poistetaanko viesti vastaanottajalle {to}? Sitä ei lähetetä.',
+  'links.localOnly': 'Linkit avautuvat vain tällä tietokoneella. Kukaan muu ei voi avata niitä.',
+  'links.copiedLocal': 'Kopioitu (vain tällä tietokoneella)',
 };

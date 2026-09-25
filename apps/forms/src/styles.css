@@ -6182,3 +6182,24 @@ body:has(> #root .shell--narrow) {
   border: var(--tp-border-width) solid var(--tp-colour-border);
   border-radius: var(--tp-radius-sm);
 }
+
+/* --- To send (desktop) ------------------------------------------------------
+ *
+ * The desktop's mail, waiting for somebody to send it. A list of cards: each one is read — who,
+ * what, and the attachment — before anything is done with it.
+ */
+.outgoing {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The message as it will be written, line breaks and all. */
+.outgoing__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.nav-link__count {
+  margin-inline-start: auto;
+}

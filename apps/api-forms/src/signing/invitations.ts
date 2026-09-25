@@ -231,7 +231,11 @@ export function createSigningInviteHandler(deps: {
     const sendingDomain = (await deps.repos.sendingDomains.list(job.organisationId))[0] ?? null;
     const from = sendingDomain?.fromAddress ?? '';
     // The same rule every email from this product keeps (`send-job.ts`).
-    if (!['console', 'memory', 'outbox', 'outlook', 'apple-mail'].includes(deps.provider.name)) {
+    if (
+      !['console', 'memory', 'outbox', 'queue', 'outlook', 'apple-mail'].includes(
+        deps.provider.name,
+      )
+    ) {
       assertSendable(
         sendingDomain
           ? {

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import type { UserSummary } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
+import { useEdition } from '../lib/edition.js';
 import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
@@ -29,6 +30,11 @@ import { useConfirm } from '../components/Confirm.js';
  */
 export function Users() {
   const t = useT();
+  /*
+   * The desktop is one person's app on one computer: somebody added here would get a sign-in link
+   * to an address that only this computer can open. So there is nobody to add.
+   */
+  const desktop = useEdition() === 'desktop';
   const confirm = useConfirm();
   const [users, setUsers] = useState<UserSummary[] | null>(null);
   const [adding, setAdding] = useState(false);
@@ -121,14 +127,16 @@ export function Users() {
         <p className="muted small">{t('users.intro')}</p>
       </header>
 
-      <div className="row card__actions">
-        <button type="button" className="button" onClick={() => setAdding((open) => !open)}>
-          <Icon name="plus" className="icon--lead" />
-          {t('users.add')}
-        </button>
-      </div>
+      {!desktop && (
+        <div className="row card__actions">
+          <button type="button" className="button" onClick={() => setAdding((open) => !open)}>
+            <Icon name="plus" className="icon--lead" />
+            {t('users.add')}
+          </button>
+        </div>
+      )}
 
-      {adding && (
+      {adding && !desktop && (
         <form className="card stack" onSubmit={(event) => void add(event)}>
           <label className="field">
             <span>{t('users.addName')}</span>

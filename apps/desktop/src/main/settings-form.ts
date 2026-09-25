@@ -12,6 +12,11 @@ export function toPanelSettings(settings: DesktopSettings): PanelSettings {
   };
 }
 
+/** The modes that send mail without a person pressing Send. The panel asks the same question. */
+export function sendsByItself(mode: DesktopSettings['mail']['mode']): boolean {
+  return mode !== 'outbox' && mode !== 'program';
+}
+
 export type Applied = { ok: true; settings: DesktopSettings } | { ok: false; error: string };
 
 /**
@@ -21,7 +26,8 @@ export type Applied = { ok: true; settings: DesktopSettings } | { ok: false; err
  *
  * - **Rule 7.** Choosing a mode that really sends — SMTP, Outlook, Apple Mail — is refused unless
  *   the confirmation was ticked, whether it replaces test mode or another sender. Staying where
- *   you are, or going back to the outbox, needs nothing.
+ *   you are, going back to the outbox, or to "open in my email program" (which sends nothing;
+ *   the person presses Send there) needs nothing.
  * - **No plain password on disk.** A new password is passed through `protect` (the OS store); an
  *   empty field keeps the one already stored; a password is never taken back from the panel,
  *   which never had it.
@@ -33,7 +39,7 @@ export function applySettingsForm(
 ): Applied {
   const next = form.settings;
   // Any change to a mode that really sends — from test mode, or from one sender to another.
-  const startsSending = next.mail.mode !== 'outbox' && next.mail.mode !== current.mail.mode;
+  const startsSending = sendsByItself(next.mail.mode) && next.mail.mode !== current.mail.mode;
   if (startsSending && !form.confirmRealSending) {
     return { ok: false, error: 'confirm-real-sending' };
   }
@@ -49,7 +55,12 @@ export function applySettingsForm(
 
   const parsed = DesktopSettings.safeParse({
     ...next,
-    mail: { mode: next.mail.mode, from: next.mail.from, ...(smtp ? { smtp } : {}) },
+    mail: {
+      mode: next.mail.mode,
+      program: next.mail.program,
+      from: next.mail.from,
+      ...(smtp ? { smtp } : {}),
+    },
   });
   if (!parsed.success) {
     return {

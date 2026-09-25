@@ -8,6 +8,7 @@ import { createMemoryAssetStore } from './uploads/store.js';
 import { createMemoryUploadStore } from './uploads/private-store.js';
 import type { DocumentStore } from './documents/store.js';
 import type { PdfRenderer } from './documents/render.js';
+import type { OutgoingStore } from './mail/queue.js';
 import type { MailDrafter } from './mail/draft.js';
 
 /**
@@ -91,6 +92,8 @@ export async function createTestHarness(
     signFetch?: typeof fetch;
     /** The desktop's mail program, for "Email document" as a draft. */
     mailDraft?: MailDrafter | null;
+    /** The desktop's To send list. */
+    outgoing?: OutgoingStore;
   } = {},
 ): Promise<TestHarness> {
   const repos = createMemoryRepositories({
@@ -122,6 +125,7 @@ export async function createTestHarness(
     signing: options.signing ?? null,
     ...(options.signFetch ? { signFetch: options.signFetch } : {}),
     mailDraft: options.mailDraft ?? null,
+    ...(options.outgoing ? { outgoing: options.outgoing, edition: 'desktop' as const } : {}),
   });
   await app.ready();
 

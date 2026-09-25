@@ -1001,4 +1001,24 @@ export const jaJP: Record<MessageKey, string> = {
     'カメラを起動できませんでした。もう一度試すか、端末のカメラを使ってください。',
   'signing.source.file': 'PDF ファイル',
   'signing.source.camera': 'カメラ',
+  'nav.outgoing': '送信待ち',
+  'outgoing.heading': '送信待ち',
+  'outgoing.intro':
+    '自動では何も送信されません。各メッセージは、メールプログラムで開いてそこで送信を押すまで、ここで待機します。',
+  'outgoing.empty': '送信待ちのメッセージはありません',
+  'outgoing.emptyHint': '送るものがあると、確認、入場カード、署名の依頼がここに表示されます。',
+  'outgoing.to': '宛先',
+  'outgoing.waitingOne': '待機中',
+  'outgoing.opened': '{when} に開きました',
+  'outgoing.showText': 'メッセージ',
+  'outgoing.attachNote':
+    'メールリンクではファイルを添付できません。添付ファイルを保存して、メッセージに添付してください。',
+  'outgoing.openIn': '{program} で開く',
+  'outgoing.openEmailApp': 'メールアプリで開く',
+  'outgoing.openFailed':
+    '{program} でメッセージを開けませんでした。代わりにメールアプリを使ってください。',
+  'outgoing.remove': '削除',
+  'outgoing.removeConfirm': '{to} 宛てのメッセージを削除しますか？送信されません。',
+  'links.localOnly': 'リンクはこのコンピューターでのみ開けます。ほかの人は開けません。',
+  'links.copiedLocal': 'コピーしました（このコンピューターのみ）',
 };

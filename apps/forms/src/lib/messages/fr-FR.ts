@@ -1021,4 +1021,25 @@ export const frFR: Record<MessageKey, string> = {
     "Impossible de démarrer la caméra. Réessayez, ou utilisez l'appareil photo de l'appareil.",
   'signing.source.file': 'Fichier PDF',
   'signing.source.camera': 'Caméra',
+  'nav.outgoing': 'À envoyer',
+  'outgoing.heading': 'À envoyer',
+  'outgoing.intro':
+    'Rien n’est envoyé automatiquement. Chaque message attend ici que vous l’ouvriez dans votre messagerie et appuyiez sur Envoyer.',
+  'outgoing.empty': 'Rien n’attend d’être envoyé',
+  'outgoing.emptyHint':
+    'Les confirmations, cartes d’accès et invitations à signer apparaissent ici lorsqu’il y a quelque chose à envoyer.',
+  'outgoing.to': 'À',
+  'outgoing.waitingOne': 'En attente',
+  'outgoing.opened': 'Ouvert {when}',
+  'outgoing.showText': 'Message',
+  'outgoing.attachNote':
+    'Un lien e-mail ne peut pas joindre de fichiers. Enregistrez la pièce jointe et joignez-la au message.',
+  'outgoing.openIn': 'Ouvrir dans {program}',
+  'outgoing.openEmailApp': 'Ouvrir dans l’app e-mail',
+  'outgoing.openFailed': '{program} n’a pas pu ouvrir le message. Utilisez plutôt l’app e-mail.',
+  'outgoing.remove': 'Retirer',
+  'outgoing.removeConfirm': 'Retirer le message à {to} ? Il ne sera pas envoyé.',
+  'links.localOnly':
+    'Les liens ne s’ouvrent que sur cet ordinateur. Personne d’autre ne peut les ouvrir.',
+  'links.copiedLocal': 'Copié (sur cet ordinateur seulement)',
 };

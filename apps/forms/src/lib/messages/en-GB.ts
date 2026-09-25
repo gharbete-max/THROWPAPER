@@ -1016,6 +1016,26 @@ export const enGB = {
     "The camera could not be started. Try again, or use the device's own camera.",
   'signing.source.file': 'PDF file',
   'signing.source.camera': 'Camera',
+  'nav.outgoing': 'To send',
+  'outgoing.heading': 'To send',
+  'outgoing.intro':
+    'Nothing is sent automatically. Each message waits here until you open it in your email program and press Send there.',
+  'outgoing.empty': 'Nothing is waiting to be sent',
+  'outgoing.emptyHint':
+    'Confirmations, admission cards and signing invitations appear here when there is something to send.',
+  'outgoing.to': 'To',
+  'outgoing.waitingOne': 'Waiting',
+  'outgoing.opened': 'Opened {when}',
+  'outgoing.showText': 'Message',
+  'outgoing.attachNote':
+    'An email link cannot attach files. Save the attachment and attach it to the message.',
+  'outgoing.openIn': 'Open in {program}',
+  'outgoing.openEmailApp': 'Open in email app',
+  'outgoing.openFailed': '{program} could not open the message. Use the email app instead.',
+  'outgoing.remove': 'Remove',
+  'outgoing.removeConfirm': 'Remove the message to {to}? It will not be sent.',
+  'links.localOnly': 'Links open only on this computer. Nobody else can open them.',
+  'links.copiedLocal': 'Copied (only on this computer)',
 } as const;
 
 /**

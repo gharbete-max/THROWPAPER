@@ -997,4 +997,24 @@ export const daDK: Record<MessageKey, string> = {
     'Kameraet kunne ikke startes. Prøv igen, eller brug enhedens eget kamera.',
   'signing.source.file': 'PDF-fil',
   'signing.source.camera': 'Kamera',
+  'nav.outgoing': 'Til afsendelse',
+  'outgoing.heading': 'Til afsendelse',
+  'outgoing.intro':
+    'Intet sendes automatisk. Hver besked venter her, indtil du åbner den i dit e-mailprogram og trykker Send der.',
+  'outgoing.empty': 'Intet venter på at blive sendt',
+  'outgoing.emptyHint':
+    'Bekræftelser, adgangskort og invitationer til at underskrive vises her, når der er noget at sende.',
+  'outgoing.to': 'Til',
+  'outgoing.waitingOne': 'Venter',
+  'outgoing.opened': 'Åbnet {when}',
+  'outgoing.showText': 'Besked',
+  'outgoing.attachNote':
+    'Et e-maillink kan ikke vedhæfte filer. Gem vedhæftningen, og vedhæft den til beskeden.',
+  'outgoing.openIn': 'Åbn i {program}',
+  'outgoing.openEmailApp': 'Åbn i e-mailappen',
+  'outgoing.openFailed': '{program} kunne ikke åbne beskeden. Brug e-mailappen i stedet.',
+  'outgoing.remove': 'Fjern',
+  'outgoing.removeConfirm': 'Fjern beskeden til {to}? Den bliver ikke sendt.',
+  'links.localOnly': 'Links åbner kun på denne computer. Ingen andre kan åbne dem.',
+  'links.copiedLocal': 'Kopieret (kun på denne computer)',
 };

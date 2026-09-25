@@ -1,3 +1,6 @@
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { forms as formSchemas } from '@tp/shared';
 import { defaultTokens } from '@tp/tokens';
@@ -25,6 +28,7 @@ const CONTENT = {
 };
 import { createMemoryMailProvider } from './provider.js';
 import { createMailSendHandler } from './send-job.js';
+import { createOutgoingStore, createQueueMailProvider } from './queue.js';
 
 let harness: TestHarness;
 let adminToken: string;
@@ -350,6 +354,41 @@ describe('the no-override rule reaches the send path', () => {
         progress: async () => {},
       }),
     ).rejects.toThrow(/not verified/);
+  });
+
+  it('keeps the confirmation and its admission card in To send on the desktop, sending nothing', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'loppa-to-send-'));
+    try {
+      const queue = createOutgoingStore(directory);
+      const handler = createMailSendHandler({
+        repos: harness.repos,
+        provider: createQueueMailProvider(queue),
+        admission: {
+          repos: harness.repos,
+          renderer: harness.renderer,
+          store: harness.store,
+          jwtSecret: 'test-secret-at-least-thirty-two-characters-long',
+        },
+        appUrl: 'http://localhost:5173',
+        operatorAddress: null,
+      });
+
+      await registerSomeone();
+      const submissionId = harness.state.submissions[0]!.id;
+      const job = harness.state.jobs.find((candidate) => candidate.kind === 'mail.send')!;
+      // No verified sending domain: the person sends from their own account, so none is needed.
+      await handler({
+        job: { ...job, payload: { templateKey: 'registration.confirmation', submissionId } },
+        progress: async () => {},
+      });
+
+      const [message] = await queue.list();
+      expect(message).toMatchObject({ to: 'bjorn@example.com', openedAt: null });
+      expect(message!.attachments).toHaveLength(1);
+      expect(message!.attachments[0]!.contentType).toBe('application/pdf');
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
   });
 });
 

@@ -998,4 +998,24 @@ export const svSE: Record<MessageKey, string> = {
     'Kameran kunde inte startas. Försök igen, eller använd enhetens egen kamera.',
   'signing.source.file': 'PDF-fil',
   'signing.source.camera': 'Kamera',
+  'nav.outgoing': 'Att skicka',
+  'outgoing.heading': 'Att skicka',
+  'outgoing.intro':
+    'Inget skickas automatiskt. Varje meddelande väntar här tills du öppnar det i ditt e-postprogram och trycker på Skicka där.',
+  'outgoing.empty': 'Inget väntar på att skickas',
+  'outgoing.emptyHint':
+    'Bekräftelser, entrékort och inbjudningar att signera visas här när det finns något att skicka.',
+  'outgoing.to': 'Till',
+  'outgoing.waitingOne': 'Väntar',
+  'outgoing.opened': 'Öppnat {when}',
+  'outgoing.showText': 'Meddelande',
+  'outgoing.attachNote':
+    'En e-postlänk kan inte bifoga filer. Spara bilagan och bifoga den i meddelandet.',
+  'outgoing.openIn': 'Öppna i {program}',
+  'outgoing.openEmailApp': 'Öppna i e-postappen',
+  'outgoing.openFailed': '{program} kunde inte öppna meddelandet. Använd e-postappen i stället.',
+  'outgoing.remove': 'Ta bort',
+  'outgoing.removeConfirm': 'Ta bort meddelandet till {to}? Det skickas inte.',
+  'links.localOnly': 'Länkar öppnas bara på den här datorn. Ingen annan kan öppna dem.',
+  'links.copiedLocal': 'Kopierad (bara på den här datorn)',
 };

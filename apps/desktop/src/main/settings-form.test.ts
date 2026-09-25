@@ -14,6 +14,7 @@ function smtpForm(
       ...panel,
       mail: {
         mode: 'smtp',
+        program: 'auto',
         from: 'anmalan@example.com',
         smtp: { host: 'smtp.example.com', port: 587, secure: false, user: 'u', hasPassword: false },
       },
@@ -83,7 +84,7 @@ describe('switching between senders', () => {
     const toOutlook: SettingsForm = {
       settings: {
         ...toPanelSettings(onSmtp.settings),
-        mail: { mode: 'outlook', from: 'a@example.com' },
+        mail: { mode: 'outlook', program: 'auto', from: 'a@example.com' },
       },
       smtpPassword: '',
       confirmRealSending: false,
@@ -108,7 +109,7 @@ describe('switching between senders', () => {
       {
         settings: {
           ...toPanelSettings(onSmtp.settings),
-          mail: { mode: 'outbox', from: 'a@example.com' },
+          mail: { mode: 'outbox', program: 'auto', from: 'a@example.com' },
         },
         smtpPassword: '',
         confirmRealSending: false,
@@ -116,5 +117,24 @@ describe('switching between senders', () => {
       protect,
     );
     expect(back.ok && back.settings.mail.mode).toBe('outbox');
+  });
+
+  it('opens in the email program by default, and going back there sends nothing, so asks nothing', () => {
+    expect(defaultSettings().mail).toMatchObject({ mode: 'program', program: 'auto' });
+    const onSmtp = applySettingsForm(defaultSettings(), smtpForm(), protect);
+    if (!onSmtp.ok) throw new Error('setup failed');
+    const back = applySettingsForm(
+      onSmtp.settings,
+      {
+        settings: {
+          ...toPanelSettings(onSmtp.settings),
+          mail: { mode: 'program', program: 'mailto', from: 'a@example.com' },
+        },
+        smtpPassword: '',
+        confirmRealSending: false,
+      },
+      protect,
+    );
+    expect(back.ok && back.settings.mail).toMatchObject({ mode: 'program', program: 'mailto' });
   });
 });

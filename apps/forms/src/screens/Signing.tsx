@@ -9,6 +9,7 @@ import { Loading } from '../components/Loading.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { LoadFailed } from '../components/LoadFailed.js';
 import { CopyLink } from '../components/CopyLink.js';
+import { isLocalOnly, useEdition } from '../lib/edition.js';
 import { Icon } from '../components/Icon.js';
 import { useConfirm } from '../components/Confirm.js';
 import { CameraScan, MAX_SCAN_PAGES } from '../components/CameraScan.js';
@@ -30,6 +31,7 @@ type Declaration = formSchemas.SigningDeclarationList['declarations'][number];
  */
 export function Signing() {
   const t = useT();
+  const local = isLocalOnly(useEdition());
   const [data, setData] = useState<formSchemas.SigningRequestList | null>(null);
   // Arriving from a submission's "Send for signing": its filled-in paper is the document.
   const [params] = useSearchParams();
@@ -114,6 +116,8 @@ export function Signing() {
           )}
         </div>
       </header>
+      {/* Each signer's link is this computer's own address: they sign here, at this screen. */}
+      {local && <p className="small muted">{t('links.localOnly')}</p>}
 
       {showDeclarations && (
         <SigningDeclarations

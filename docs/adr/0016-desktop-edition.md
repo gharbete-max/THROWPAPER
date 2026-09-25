@@ -110,7 +110,8 @@ Loppa.exe / Loppa.app (Electron)
 │   ├── api-forms buildServer(...) on 127.0.0.1:47017   ← the same server the container runs
 │   │   ├── repositories  → Drizzle → PGlite (Postgres 18 in WebAssembly), <userData>/workspace/database
 │   │   ├── documents, uploads, assets → workspace/documents/
-│   │   ├── mail → outbox (.eml, test mode) | SMTP | Outlook | Apple Mail (macOS)
+│   │   ├── mail → To send (default: waits for the person) | outbox (.eml, test mode)
+│   │   │          | advanced: SMTP | Outlook | Apple Mail (macOS)
 │   │   └── PDFs → a hidden window of Electron's own Chromium (printToPDF)
 │   └── shell: first run, settings, backup, menu, OS password store (DPAPI / Keychain)
 ├── main window  → http://127.0.0.1:47017  (apps/forms, unchanged, no preload, no bridge)
@@ -146,6 +147,7 @@ Loppa.exe / Loppa.app (Electron)
 | Events, admission PDFs with QR, invoices, check-in | Unchanged; PDFs through the app's own Chromium | Electron rendered an admission card with no browser installed or configured ("Skia/PDF m152"); its text reads "Björn Ödlund … Näringslivets Hus, Göteborg" |
 | Scanning paper | `pdfjs` + warp + `tesseract.js` in the window, models self-hosted | Already offline by design (ADR 0004); the web bundle ships inside the app |
 | Camera (QR at the door, photographing a page) | Electron grants `media` to our origin only | `limitPermissions()` in `main.ts` |
+| Email, **To send (the default)** | Nothing is sent by the app. Every message — a confirmation with its admission card, the organiser's notice, a signer's invitation — is kept in `workspace\to-send` and listed on the **To send** screen. **Open in Outlook / Apple Mail** puts it in front of the person as a draft, addressed, the attachment attached, and they press Send from their own account; **Open in email app** (`mailto:`) for any other program, with the attachment offered to save, because a link cannot carry a file. Remove asks first | `mail/queue.test.ts`, `routes/outgoing.test.ts`, `email.test.ts` (the confirmation and its card queued with no sending domain); the packaged Linux app queued a registration's mail and handed `mailto:` to the OS |
 | Email, test mode | Every message becomes an `.eml` in `workspace\outbox`, attachment included — double-click opens it in Outlook | `mail/smtp.test.ts`; the packaged app wrote the confirmation with the PDF attached |
 | Email, real — SMTP | The user's own SMTP server (STARTTLS required, or implicit TLS on 465), password kept by the OS store | `mail/smtp.test.ts`, `settings-form.test.ts` |
 | Email, real — Outlook / Apple Mail | Handed to the mail program already signed in: classic Outlook through COM from PowerShell (Windows), Outlook or Apple Mail through AppleScript (macOS). Leaves from the user's own account, lands in their Sent folder | `mail/outlook.test.ts` holds the injection defence (constant scripts; the message only as files). **Not run against a real Outlook yet** |
@@ -229,9 +231,13 @@ sends from their own mailbox.
   `osascript` parses options among its arguments.
 - No first-run endpoint (ADR 0002 stands): the first organisation is created in-process by the
   person who launched the program, the same position as whoever runs `pnpm db:seed`.
-- Rule 7: mail starts in test mode; choosing any mode that really sends — from test mode, or from
-  one sender to another — needs a confirmation tick, enforced in the main process, not only the
-  form (`settings-form.ts`). A mail program this machine cannot drive (a Mac setting in a backup
+- Rule 7: mail starts in **To send**, which sends nothing — the person presses Send in their own
+  program, message by message. Test mode (the outbox) sends nothing either. Choosing any mode that
+  sends by itself — SMTP, Outlook, Apple Mail, now under **Advanced** in Settings — from any other,
+  needs a confirmation tick, enforced in the main process, not only the form (`settings-form.ts`).
+- Offline first, said where it matters: on the desktop, links (a form's address, a signer's link,
+  save-and-continue) point at this computer's loopback address, and the app says they open only
+  here. Adding people is hidden — a sign-in link to somebody else's address would open nowhere. A mail program this machine cannot drive (a Mac setting in a backup
   restored on Windows) falls back to test mode rather than stopping the app.
 
 ## Phases

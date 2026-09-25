@@ -61,7 +61,8 @@ input[type='text'],
 input[type='email'],
 input[type='url'],
 input[type='number'],
-input[type='password'] {
+input[type='password'],
+select {
   display: block;
   width: 100%;
   margin-top: calc(var(--tp-spacing-unit) / 2);
@@ -74,6 +75,8 @@ input[type='password'] {
 }
 
 input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--tp-focus);
   outline-offset: 2px;
@@ -119,4 +122,14 @@ button:disabled {
 
 .ok {
   color: var(--tp-colour-success);
+}
+
+/* The senders that send by themselves: kept, one click away from the choices most people want. */
+details {
+  margin-top: var(--tp-spacing-unit);
+}
+
+summary {
+  cursor: pointer;
+  color: var(--tp-colour-muted);
 }

@@ -1030,4 +1030,25 @@ export const deDE: Record<MessageKey, string> = {
     'Die Kamera konnte nicht gestartet werden. Versuchen Sie es erneut, oder verwenden Sie die Kamera des Geräts.',
   'signing.source.file': 'PDF-Datei',
   'signing.source.camera': 'Kamera',
+  'nav.outgoing': 'Zu senden',
+  'outgoing.heading': 'Zu senden',
+  'outgoing.intro':
+    'Nichts wird automatisch gesendet. Jede Nachricht wartet hier, bis Sie sie in Ihrem E-Mail-Programm öffnen und dort auf Senden drücken.',
+  'outgoing.empty': 'Nichts wartet auf den Versand',
+  'outgoing.emptyHint':
+    'Bestätigungen, Einlasskarten und Einladungen zum Unterschreiben erscheinen hier, sobald etwas zu senden ist.',
+  'outgoing.to': 'An',
+  'outgoing.waitingOne': 'Wartet',
+  'outgoing.opened': 'Geöffnet {when}',
+  'outgoing.showText': 'Nachricht',
+  'outgoing.attachNote':
+    'Ein E-Mail-Link kann keine Dateien anhängen. Speichern Sie den Anhang und hängen Sie ihn an die Nachricht an.',
+  'outgoing.openIn': 'In {program} öffnen',
+  'outgoing.openEmailApp': 'In der E-Mail-App öffnen',
+  'outgoing.openFailed':
+    '{program} konnte die Nachricht nicht öffnen. Verwenden Sie stattdessen die E-Mail-App.',
+  'outgoing.remove': 'Entfernen',
+  'outgoing.removeConfirm': 'Die Nachricht an {to} entfernen? Sie wird nicht gesendet.',
+  'links.localOnly': 'Links öffnen sich nur auf diesem Computer. Niemand sonst kann sie öffnen.',
+  'links.copiedLocal': 'Kopiert (nur auf diesem Computer)',
 };

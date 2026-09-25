@@ -296,8 +296,8 @@ describe('email the document as a draft (desktop)', () => {
     expect(response.statusCode).toBe(204);
     expect(program.opened).toHaveLength(1);
     const [opened] = program.opened;
-    expect(opened!.attachment.filename).toBe(`Vårmötet-2026-${sent.reference}.pdf`);
-    expect(opened!.attachment.content.subarray(0, 5).toString()).toBe('%PDF-');
+    expect(opened!.attachments[0]!.filename).toBe(`Vårmötet-2026-${sent.reference}.pdf`);
+    expect(opened!.attachments[0]!.content.subarray(0, 5).toString()).toBe('%PDF-');
     expect(opened!.subject).toBe('Vårmötet 2026 — ref');
     // Nothing went out through the organisation's own mail.
     expect(harness.mail.sent.filter((m) => m.to === 'asa@example.com')).toHaveLength(0);

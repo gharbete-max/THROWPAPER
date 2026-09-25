@@ -1014,4 +1014,24 @@ export const esES: Record<MessageKey, string> = {
     'No se pudo iniciar la cámara. Inténtalo de nuevo o usa la cámara del dispositivo.',
   'signing.source.file': 'Archivo PDF',
   'signing.source.camera': 'Cámara',
+  'nav.outgoing': 'Por enviar',
+  'outgoing.heading': 'Por enviar',
+  'outgoing.intro':
+    'No se envía nada automáticamente. Cada mensaje espera aquí hasta que lo abras en tu programa de correo y pulses Enviar allí.',
+  'outgoing.empty': 'No hay nada pendiente de enviar',
+  'outgoing.emptyHint':
+    'Las confirmaciones, tarjetas de acceso e invitaciones a firmar aparecen aquí cuando hay algo que enviar.',
+  'outgoing.to': 'Para',
+  'outgoing.waitingOne': 'Pendiente',
+  'outgoing.opened': 'Abierto {when}',
+  'outgoing.showText': 'Mensaje',
+  'outgoing.attachNote':
+    'Un enlace de correo no puede adjuntar archivos. Guarda el adjunto y adjúntalo al mensaje.',
+  'outgoing.openIn': 'Abrir en {program}',
+  'outgoing.openEmailApp': 'Abrir en la app de correo',
+  'outgoing.openFailed': '{program} no pudo abrir el mensaje. Usa la app de correo en su lugar.',
+  'outgoing.remove': 'Quitar',
+  'outgoing.removeConfirm': '¿Quitar el mensaje para {to}? No se enviará.',
+  'links.localOnly': 'Los enlaces solo se abren en este ordenador. Nadie más puede abrirlos.',
+  'links.copiedLocal': 'Copiado (solo en este ordenador)',
 };

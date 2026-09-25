@@ -56,6 +56,8 @@ import { createSignClient, type SignConnection } from './signing/client.js';
 import { createPdfRenderer, type PdfRenderer } from './documents/render.js';
 import { deriveFinishedKey } from './documents/finished-token.js';
 import type { MailDrafter } from './mail/draft.js';
+import type { OutgoingStore } from './mail/queue.js';
+import { registerOutgoingRoutes } from './routes/outgoing.js';
 import { createLocalDocumentStore, type DocumentStore } from './documents/store.js';
 import { ADMISSION_BULK_JOB, createAdmissionBulkHandler } from './documents/admission-service.js';
 import { createWorker } from './jobs/worker.js';
@@ -92,6 +94,13 @@ export interface ServerOptions {
    * (`mail/draft.ts`). A server has none; leave it out.
    */
   mailDraft?: MailDrafter | null;
+  /**
+   * The desktop's To send list (`mail/queue.ts`): mail waiting for its person to press Send.
+   * Its presence registers `/v1/outgoing`. A server has none.
+   */
+  outgoing?: OutgoingStore;
+  /** Which edition this is, for /health: the app shows desktop-only screens by it. */
+  edition?: 'desktop' | 'server';
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
   probeDatabase?: boolean;
   /** Injected by tests. Defaults to Playwright Chromium and a local directory. */
@@ -587,6 +596,14 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         process.env['ASSET_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'assets'),
     });
   registerUploadRoutes(app, { repos, guard, assets, uploadStore });
+  if (options.outgoing) {
+    registerOutgoingRoutes(app, {
+      repos,
+      guard,
+      store: options.outgoing,
+      drafter: options.mailDraft ?? null,
+    });
+  }
   if (options.demo) registerDemoRoutes(app, { repos, demo: options.demo, jwtSecret });
 
   app.get('/health', async (_request, reply) => {
@@ -607,6 +624,8 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       database: state,
       // The app reads this to decide whether to show the demo banner.
       mode: options.demo ? 'demo' : 'live',
+      // The desktop edition: To send, local-only links, no inviting people.
+      edition: options.edition ?? 'server',
     });
   });
 
