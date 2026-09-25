@@ -19,7 +19,15 @@ on:
       - 'apps/api-forms/src/mail/**'
       - 'apps/api-forms/drizzle/**'
       - '.github/workflows/desktop.yml'
+  # By hand. With `release` ticked, on main only: builds, then tags this commit
+  # `desktop-v<apps/desktop version>` and publishes — the same release a pushed tag makes, for
+  # whoever cannot push a tag. Refused if that tag already exists.
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Publish a release, tagged desktop-v<apps/desktop/package.json version>'
+        type: boolean
+        default: false
   push:
     tags: ['desktop-v*']
 
@@ -163,12 +171,38 @@ jobs:
           retention-days: 14
 
   release:
-    if: startsWith(github.ref, 'refs/tags/desktop-v')
+    if: >-
+      startsWith(github.ref, 'refs/tags/desktop-v') ||
+      (github.event_name == 'workflow_dispatch' && inputs.release && github.ref == 'refs/heads/main')
     needs: [windows, macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: apps/desktop/package.json
+          sparse-checkout-cone-mode: false
+      # The tag this release is published under: the pushed one, or — run by hand — the one named
+      # by the app's own version, created on this commit by `gh release create --target`.
+      - name: Which tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            echo "name=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+            echo "verify=--verify-tag" >> "$GITHUB_OUTPUT"
+          else
+            tag="desktop-v$(node -p "require('./apps/desktop/package.json').version")"
+            if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" > /dev/null 2>&1; then
+              echo "::error::$tag already exists; raise apps/desktop/package.json's version first"
+              exit 1
+            fi
+            echo "name=$tag" >> "$GITHUB_OUTPUT"
+            echo "verify=--target=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/download-artifact@v7
         with:
           pattern: loppa-*
@@ -196,9 +230,11 @@ jobs:
       - name: Publish the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.name }}
+          VERIFY: ${{ steps.tag.outputs.verify }}
         run: |
           set -euo pipefail
-          version="${GITHUB_REF_NAME#desktop-v}"
+          version="${TAG#desktop-v}"
           cat > notes.md <<NOTES
           Loppa desktop ${version} for Windows and macOS — forms, finished documents and email on one computer, offline.
 
@@ -215,9 +251,9 @@ jobs:
 
           Built from ${GITHUB_SHA} by the Desktop workflow. What works offline: docs/adr/0016-desktop-edition.md.
           NOTES
-          gh release create "$GITHUB_REF_NAME" \
+          gh release create "$TAG" \
             dist/Loppa-Windows-Setup.exe dist/Loppa-Windows-Portable.exe \
             dist/Loppa-macOS-AppleSilicon.dmg dist/Loppa-macOS-Intel.dmg dist/SHA256SUMS.txt \
-            --repo "$GITHUB_REPOSITORY" --verify-tag --draft \
+            --repo "$GITHUB_REPOSITORY" "$VERIFY" --draft \
             --title "Loppa desktop ${version}" --notes-file notes.md
-          gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest
