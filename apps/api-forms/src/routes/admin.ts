@@ -30,7 +30,12 @@ import { toFormResponse } from '../forms/service.js';
  */
 export function registerAdminRoutes(
   app: FastifyInstance,
-  deps: { repos: Repositories; guard: AuthGuardDeps },
+  deps: {
+    repos: Repositories;
+    guard: AuthGuardDeps;
+    /** The ordinary magic link, sent to a person the moment they are added (ADR 0002 §3). */
+    sendSignInLink: (email: string, ip: string) => Promise<void>;
+  },
 ): void {
   const adminOnly = requireAuth(deps.guard, ['admin']);
 
@@ -151,6 +156,14 @@ export function registerAdminRoutes(
         entityType: 'user',
         entityId: person.id,
         after: { email: person.email, name: person.name, role: person.role },
+      });
+
+      // Their way in: the same single-use, fifteen-minute link the sign-in page sends. Through
+      // the configured provider, so the desktop's test mode writes it to the outbox (rule 7).
+      // A mail provider that fails does not undo the account: it exists, and a retry would only
+      // be told it is "already here". The person can still ask for a link at the sign-in page.
+      await deps.sendSignInLink(person.email, request.ip).catch((err: unknown) => {
+        request.log.error({ err }, 'the new person’s sign-in link was not sent');
       });
 
       return reply.code(201).send(summarise(person));

@@ -819,9 +819,9 @@ export const svSE: Record<MessageKey, string> = {
     'Klistra in enkätens JSON. Frågor som saknar motsvarighet här listas i stället för att gissas.',
   'import.paste': 'Enkätens JSON',
   'import.notASurvey': 'Det här är inte en enkät som kan läsas.',
-  'import.willImport': 'one {{n} fråga importeras} other {{n} frågor importeras}',
+  'import.willImport': 'plural:one {count} fråga importeras | other {count} frågor importeras',
   'import.willSkip':
-    'one {{n} fråga saknar motsvarighet här} other {{n} frågor saknar motsvarighet här}',
+    'plural:one {count} fråga saknar motsvarighet här | other {count} frågor saknar motsvarighet här',
   'import.replaces': 'Importen ersätter allt som finns i formuläret nu.',
   'import.confirm': 'Ersätt formuläret',
   'import.cancel': 'Avbryt',

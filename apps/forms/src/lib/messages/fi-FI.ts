@@ -824,9 +824,9 @@ export const fiFI: Record<MessageKey, string> = {
     'Liitä kyselyn JSON. Kysymykset, joille ei ole vastinetta, luetellaan eikä arvata.',
   'import.paste': 'Kyselyn JSON',
   'import.notASurvey': 'Tätä kyselyä ei voi lukea.',
-  'import.willImport': 'one {{n} kysymys tuodaan} other {{n} kysymystä tuodaan}',
+  'import.willImport': 'plural:one {count} kysymys tuodaan | other {count} kysymystä tuodaan',
   'import.willSkip':
-    'one {{n} kysymykselle ei ole vastinetta} other {{n} kysymykselle ei ole vastinetta}',
+    'plural:one {count} kysymykselle ei ole vastinetta | other {count} kysymykselle ei ole vastinetta',
   'import.replaces': 'Tuonti korvaa kaiken, mitä lomakkeessa nyt on.',
   'import.confirm': 'Korvaa lomake',
   'import.cancel': 'Peruuta',

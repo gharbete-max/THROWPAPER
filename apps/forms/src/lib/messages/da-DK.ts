@@ -814,9 +814,10 @@ export const daDK: Record<MessageKey, string> = {
     'Indsæt undersøgelsens JSON. Spørgsmål uden en tilsvarende her bliver vist i stedet for gættet.',
   'import.paste': 'Undersøgelsens JSON',
   'import.notASurvey': 'Det er ikke en undersøgelse, der kan læses.',
-  'import.willImport': 'one {{n} spørgsmål importeres} other {{n} spørgsmål importeres}',
+  'import.willImport':
+    'plural:one {count} spørgsmål importeres | other {count} spørgsmål importeres',
   'import.willSkip':
-    'one {{n} spørgsmål har ingen tilsvarende her} other {{n} spørgsmål har ingen tilsvarende her}',
+    'plural:one {count} spørgsmål har ingen tilsvarende her | other {count} spørgsmål har ingen tilsvarende her',
   'import.replaces': 'Importen erstatter alt, der er i formularen nu.',
   'import.confirm': 'Erstat formularen',
   'import.cancel': 'Annullér',

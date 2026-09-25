@@ -3375,6 +3375,23 @@ defects found and fixed, each with a test that fails without its fix:
 | 10 | Signing and Invoices spun forever on a failed load; Forms, Events and Responses showed "nothing yet" instead | reading the catches | `e2e/failure-states.spec.ts` |
 | 11 | A failed job was logged as `"error":{}` — pino serializes an Error only under `err` | e2e server log | `job-failure-log.test.ts` |
 
+A second pass, on the release candidate (0.1.1) in the packaged app, found four more:
+
+| # | Defect | Test |
+| - | ------ | ---- |
+| 12 | Adding somebody sent nothing, though the screen and ADR 0002 §3 say they receive a sign-in link at their address | `admin.test.ts`; in test mode it lands in the outbox |
+| 13 | The SurveyJS import's counts showed raw ICU syntax ("one {2 question will be imported} other {…}") in all 12 languages; the catalogue's plural format is `plural:one … \| other …` | `messages.test.ts` now refuses any other plural syntax |
+| 14 | An event ending before it starts got "That did not work. Try again." — the API's refusal, which retrying cannot fix; the date fields are now bounded, so the browser names the field | `e2e/failure-states.spec.ts` |
+| 15 | The bin's tab said "Trash" beside "Move to bin" | — (wording) |
+
+Also driven in that pass, all working: every screen crawled with no console error or failed request;
+responses CSV/Excel, attendance CSV and the admission card (Cyrillic-safe name) downloaded; the door
+by typed reference and by **camera, reading a real admission card's QR** (Chromium fed a frame of
+the card), "Welcome", then "Already", and "Wrong event" at another event's door; brand kit saved
+and reloaded; Sign declined (asked first, "Signing has ended", no signed PDF offered); users added
+and a duplicate refused; a form shared, binned, restored and deleted for ever, each with its
+confirmation; a phone scan on a machine with no network says so.
+
 **Verified working, in the packaged desktop app:** first run through the panel's bridge (`state`,
 `bootstrap`, `saveSettings` — rule 7 refused without the tick, a mail program this platform cannot
 drive saves and the server stays up — `loadDemo`); the main window has no bridge; secrets `0600`;

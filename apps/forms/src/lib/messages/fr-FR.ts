@@ -838,9 +838,10 @@ export const frFR: Record<MessageKey, string> = {
     'Collez le JSON du questionnaire. Les questions sans équivalent ici sont listées plutôt que devinées.',
   'import.paste': 'JSON du questionnaire',
   'import.notASurvey': 'Ce n’est pas un questionnaire lisible ici.',
-  'import.willImport': 'one {{n} question sera importée} other {{n} questions seront importées}',
+  'import.willImport':
+    'plural:one {count} question sera importée | other {count} questions seront importées',
   'import.willSkip':
-    'one {{n} question n’a pas d’équivalent ici} other {{n} questions n’ont pas d’équivalent ici}',
+    'plural:one {count} question n’a pas d’équivalent ici | other {count} questions n’ont pas d’équivalent ici',
   'import.replaces': 'L’import remplace tout ce que contient actuellement ce formulaire.',
   'import.confirm': 'Remplacer ce formulaire',
   'import.cancel': 'Annuler',

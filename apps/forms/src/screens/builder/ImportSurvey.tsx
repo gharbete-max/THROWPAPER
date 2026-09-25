@@ -88,12 +88,12 @@ export function ImportSurvey({ onImport }: { onImport: (definition: FormDefiniti
         ) : (
           <>
             <span className={preview.count > 0 ? 'status-up' : 'status-warning'}>
-              {t('import.willImport', { n: preview.count })}
+              {t('import.willImport', { count: preview.count })}
             </span>
             {preview.skipped.length > 0 && (
               <>
                 <span className="status-warning">
-                  {t('import.willSkip', { n: preview.skipped.length })}
+                  {t('import.willSkip', { count: preview.skipped.length })}
                 </span>
                 {/*
                   Named one by one, not counted.

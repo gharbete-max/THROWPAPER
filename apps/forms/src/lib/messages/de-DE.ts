@@ -840,9 +840,10 @@ export const deDE: Record<MessageKey, string> = {
     'Fügen Sie das JSON der Umfrage ein. Fragen ohne Entsprechung werden aufgeführt statt geraten.',
   'import.paste': 'JSON der Umfrage',
   'import.notASurvey': 'Das ist keine Umfrage, die hier gelesen werden kann.',
-  'import.willImport': 'one {{n} Frage wird importiert} other {{n} Fragen werden importiert}',
+  'import.willImport':
+    'plural:one {count} Frage wird importiert | other {count} Fragen werden importiert',
   'import.willSkip':
-    'one {{n} Frage hat hier keine Entsprechung} other {{n} Fragen haben hier keine Entsprechung}',
+    'plural:one {count} Frage hat hier keine Entsprechung | other {count} Fragen haben hier keine Entsprechung',
   'import.replaces': 'Der Import ersetzt alles, was derzeit in diesem Formular steht.',
   'import.confirm': 'Dieses Formular ersetzen',
   'import.cancel': 'Abbrechen',

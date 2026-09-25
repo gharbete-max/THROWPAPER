@@ -94,3 +94,36 @@ test('a list that fails to load says so, and "Try again" loads it', async ({ pag
     await expect(loaded, url).toBeVisible();
   }
 });
+
+test('an event that would end before it starts is stopped at the field that is wrong', async ({
+  page,
+}) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  await page.goto('/events/new');
+  await page.getByRole('group', { name: 'Name' }).locator('input').first().fill('Door test');
+  await page.getByLabel('Starts').fill('2026-10-20T18:00');
+  await page.getByLabel('Ends').fill('2026-10-20T16:00');
+  await page.getByLabel('Registration closes').fill('2026-10-21T09:00');
+
+  let posted = false;
+  page.on('request', (request) => {
+    if (request.method() === 'POST' && request.url().includes('/api/v1/events')) posted = true;
+  });
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  // The browser holds the save and names the field; nothing reaches the server, and there is no
+  // "That did not work. Try again." for something trying again cannot fix.
+  expect(
+    await page
+      .getByLabel('Ends')
+      .evaluate((input: HTMLInputElement) => input.validity.rangeUnderflow),
+  ).toBe(true);
+  expect(
+    await page
+      .getByLabel('Registration closes')
+      .evaluate((input: HTMLInputElement) => input.validity.rangeOverflow),
+  ).toBe(true);
+  expect(posted).toBe(false);
+  await expect(page.getByText('That did not work')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/events\/new$/);
+});

@@ -513,7 +513,11 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
-  registerAdminRoutes(app, { repos, guard });
+  registerAdminRoutes(app, {
+    repos,
+    guard,
+    sendSignInLink: (email, ip) => auth.requestMagicLink({ email, ip }),
+  });
   registerLedgerRoutes(app, { repos, guard });
   registerInvoiceRoutes(app, { repos, guard, renderer });
   registerPublicInvoiceRoutes(app, { repos, renderer });

@@ -187,6 +187,35 @@ describe('adding somebody to the organisation', () => {
     expect(session.accessToken).toBeTruthy();
   });
 
+  /*
+   * ADR 0002 §3: "an administrator creates the person; the person receives an ordinary sign-in
+   * link at their address". The screen says so too ("They receive a sign-in link at this
+   * address"). Nothing was sent: the person had to know to go and ask for one.
+   */
+  it('sends the new person their sign-in link, and nothing for a duplicate', async () => {
+    const before = harness.mail.sent.length;
+    await add({ email: 'Kim@Example.com', name: 'Kim' });
+    const sent = harness.mail.sent.slice(before);
+    expect(sent.map((mail) => mail.to)).toEqual(['kim@example.com']);
+    expect(sent[0]!.text).toMatch(/\/auth\/callback\?token=/);
+
+    await add({ email: 'kim@example.com', name: 'Kim again' });
+    expect(harness.mail.sent.length).toBe(before + 1);
+  });
+
+  it('still adds the person when the link cannot be sent', async () => {
+    const send = harness.mail.send.bind(harness.mail);
+    harness.mail.send = async () => {
+      throw new Error('provider down');
+    };
+    try {
+      const response = await add({ email: 'lee@example.com', name: 'Lee' });
+      expect(response.statusCode).toBe(201);
+    } finally {
+      harness.mail.send = send;
+    }
+  });
+
   it('creates an administrator when asked to', async () => {
     const response = await add({ email: 'ada@example.com', name: 'Ada', role: 'admin' });
     expect(response.json().role).toBe('admin');
