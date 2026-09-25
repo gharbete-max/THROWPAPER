@@ -1,0 +1,170 @@
+{
+  "fixture": "marker-on-own-line",
+  "caveats": ["marker-on-own-line"],
+  "stage": "enumerate",
+  "status": "todo",
+  "turnsGreenIn": "S1b",
+  "summary": "A marker alone on its line takes the next line in its block as its label (P4). With no next line it is rejected.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "paste",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [{ "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1926, "bands": [1000] }],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 1552, "y1": 1566 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1.",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Namn",
+                "words": [
+                  { "text": "Namn", "start": 0, "box": { "x0": 1000, "y0": 1075, "x1": 1368, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1075, "x1": 1368, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "2.",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 1255, "x1": 1184, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1255, "x1": 1184, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Adress",
+                "words": [
+                  { "text": "Adress", "start": 0, "box": { "x0": 1000, "y0": 1435, "x1": 1552, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1435, "x1": 1552, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 1795, "x1": 1184, "y1": 1926 },
+            "lines": [
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "3.",
+                "words": [
+                  { "text": "3.", "start": 0, "box": { "x0": 1000, "y0": 1795, "x1": 1184, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1795, "x1": 1184, "y1": 1926 },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

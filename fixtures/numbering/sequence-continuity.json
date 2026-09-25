@@ -1,0 +1,695 @@
+{
+  "fixture": "sequence-continuity",
+  "caveats": ["sequence-continuity"],
+  "stage": "enumerate",
+  "status": "todo",
+  "turnsGreenIn": "S1b",
+  "summary": "Consistent runs are accepted (1,2,3 / 1,1.1,1.2,2 / i,ii,iii / a,b,c). A jump from 2 to 12.1 at the same indent demotes the whole run to accept-flagged.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "paste",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [{ "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 6426, "bands": [1000] }],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": { "x0": 1000, "y0": 895, "x1": 1644, "y1": 1026 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "LISTA A",
+                "words": [
+                  { "text": "LISTA", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1460, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "A", "start": 6, "box": { "x0": 1552, "y0": 895, "x1": 1644, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 1644, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 1255, "x1": 1552, "y1": 1746 },
+            "lines": [
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "1. Ett",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 1255, "x1": 1184, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Ett", "start": 3, "box": { "x0": 1276, "y0": 1255, "x1": 1552, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1255, "x1": 1552, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "2. Två",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 1435, "x1": 1184, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Två", "start": 3, "box": { "x0": 1276, "y0": 1435, "x1": 1552, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1435, "x1": 1552, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "3. Tre",
+                "words": [
+                  { "text": "3.", "start": 0, "box": { "x0": 1000, "y0": 1615, "x1": 1184, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Tre", "start": 3, "box": { "x0": 1276, "y0": 1615, "x1": 1552, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1615, "x1": 1552, "y1": 1746 },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b3",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": { "x0": 1000, "y0": 1975, "x1": 1644, "y1": 2106 },
+            "lines": [
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b3",
+                "text": "LISTA B",
+                "words": [
+                  { "text": "LISTA", "start": 0, "box": { "x0": 1000, "y0": 1975, "x1": 1460, "y1": 2106 }, "baseline": 2080, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "B", "start": 6, "box": { "x0": 1552, "y0": 1975, "x1": 1644, "y1": 2106 }, "baseline": 2080, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1975, "x1": 1644, "y1": 2106 },
+                "baseline": 2080,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b4",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 2335, "x1": 2380, "y1": 3006 },
+            "lines": [
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "1. Ett",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 2335, "x1": 1184, "y1": 2466 }, "baseline": 2440, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Ett", "start": 3, "box": { "x0": 1276, "y0": 2335, "x1": 1552, "y1": 2466 }, "baseline": 2440, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2335, "x1": 1552, "y1": 2466 },
+                "baseline": 2440,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "1.1 Ett och ett",
+                "words": [
+                  { "text": "1.1", "start": 0, "box": { "x0": 1000, "y0": 2515, "x1": 1276, "y1": 2646 }, "baseline": 2620, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Ett", "start": 4, "box": { "x0": 1368, "y0": 2515, "x1": 1644, "y1": 2646 }, "baseline": 2620, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "och", "start": 8, "box": { "x0": 1736, "y0": 2515, "x1": 2012, "y1": 2646 }, "baseline": 2620, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "ett", "start": 12, "box": { "x0": 2104, "y0": 2515, "x1": 2380, "y1": 2646 }, "baseline": 2620, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2515, "x1": 2380, "y1": 2646 },
+                "baseline": 2620,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "1.2 Ett och två",
+                "words": [
+                  { "text": "1.2", "start": 0, "box": { "x0": 1000, "y0": 2695, "x1": 1276, "y1": 2826 }, "baseline": 2800, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Ett", "start": 4, "box": { "x0": 1368, "y0": 2695, "x1": 1644, "y1": 2826 }, "baseline": 2800, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "och", "start": 8, "box": { "x0": 1736, "y0": 2695, "x1": 2012, "y1": 2826 }, "baseline": 2800, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "två", "start": 12, "box": { "x0": 2104, "y0": 2695, "x1": 2380, "y1": 2826 }, "baseline": 2800, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2695, "x1": 2380, "y1": 2826 },
+                "baseline": 2800,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "2. Två",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 2875, "x1": 1184, "y1": 3006 }, "baseline": 2980, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Två", "start": 3, "box": { "x0": 1276, "y0": 2875, "x1": 1552, "y1": 3006 }, "baseline": 2980, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2875, "x1": 1552, "y1": 3006 },
+                "baseline": 2980,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b5",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": { "x0": 1000, "y0": 3235, "x1": 1644, "y1": 3366 },
+            "lines": [
+              {
+                "id": "p1-l10",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b5",
+                "text": "LISTA C",
+                "words": [
+                  { "text": "LISTA", "start": 0, "box": { "x0": 1000, "y0": 3235, "x1": 1460, "y1": 3366 }, "baseline": 3340, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "C", "start": 6, "box": { "x0": 1552, "y0": 3235, "x1": 1644, "y1": 3366 }, "baseline": 3340, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 3235, "x1": 1644, "y1": 3366 },
+                "baseline": 3340,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b6",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 3595, "x1": 2012, "y1": 4086 },
+            "lines": [
+              {
+                "id": "p1-l11",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b6",
+                "text": "i. Första",
+                "words": [
+                  { "text": "i.", "start": 0, "box": { "x0": 1000, "y0": 3595, "x1": 1184, "y1": 3726 }, "baseline": 3700, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Första", "start": 3, "box": { "x0": 1276, "y0": 3595, "x1": 1828, "y1": 3726 }, "baseline": 3700, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 3595, "x1": 1828, "y1": 3726 },
+                "baseline": 3700,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l12",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b6",
+                "text": "ii. Andra",
+                "words": [
+                  { "text": "ii.", "start": 0, "box": { "x0": 1000, "y0": 3775, "x1": 1276, "y1": 3906 }, "baseline": 3880, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Andra", "start": 4, "box": { "x0": 1368, "y0": 3775, "x1": 1828, "y1": 3906 }, "baseline": 3880, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 3775, "x1": 1828, "y1": 3906 },
+                "baseline": 3880,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l13",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b6",
+                "text": "iii. Tredje",
+                "words": [
+                  { "text": "iii.", "start": 0, "box": { "x0": 1000, "y0": 3955, "x1": 1368, "y1": 4086 }, "baseline": 4060, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Tredje", "start": 5, "box": { "x0": 1460, "y0": 3955, "x1": 2012, "y1": 4086 }, "baseline": 4060, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 3955, "x1": 2012, "y1": 4086 },
+                "baseline": 4060,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b7",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": { "x0": 1000, "y0": 4315, "x1": 1644, "y1": 4446 },
+            "lines": [
+              {
+                "id": "p1-l14",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b7",
+                "text": "LISTA D",
+                "words": [
+                  { "text": "LISTA", "start": 0, "box": { "x0": 1000, "y0": 4315, "x1": 1460, "y1": 4446 }, "baseline": 4420, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "D", "start": 6, "box": { "x0": 1552, "y0": 4315, "x1": 1644, "y1": 4446 }, "baseline": 4420, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 4315, "x1": 1644, "y1": 4446 },
+                "baseline": 4420,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b8",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 4675, "x1": 1828, "y1": 5166 },
+            "lines": [
+              {
+                "id": "p1-l15",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "a) Första",
+                "words": [
+                  { "text": "a)", "start": 0, "box": { "x0": 1000, "y0": 4675, "x1": 1184, "y1": 4806 }, "baseline": 4780, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Första", "start": 3, "box": { "x0": 1276, "y0": 4675, "x1": 1828, "y1": 4806 }, "baseline": 4780, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 4675, "x1": 1828, "y1": 4806 },
+                "baseline": 4780,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l16",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "b) Andra",
+                "words": [
+                  { "text": "b)", "start": 0, "box": { "x0": 1000, "y0": 4855, "x1": 1184, "y1": 4986 }, "baseline": 4960, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Andra", "start": 3, "box": { "x0": 1276, "y0": 4855, "x1": 1736, "y1": 4986 }, "baseline": 4960, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 4855, "x1": 1736, "y1": 4986 },
+                "baseline": 4960,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l17",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "c) Tredje",
+                "words": [
+                  { "text": "c)", "start": 0, "box": { "x0": 1000, "y0": 5035, "x1": 1184, "y1": 5166 }, "baseline": 5140, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Tredje", "start": 3, "box": { "x0": 1276, "y0": 5035, "x1": 1828, "y1": 5166 }, "baseline": 5140, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 5035, "x1": 1828, "y1": 5166 },
+                "baseline": 5140,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b9",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": { "x0": 1000, "y0": 5395, "x1": 1644, "y1": 5526 },
+            "lines": [
+              {
+                "id": "p1-l18",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b9",
+                "text": "LISTA E",
+                "words": [
+                  { "text": "LISTA", "start": 0, "box": { "x0": 1000, "y0": 5395, "x1": 1460, "y1": 5526 }, "baseline": 5500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "E", "start": 6, "box": { "x0": 1552, "y0": 5395, "x1": 1644, "y1": 5526 }, "baseline": 5500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 5395, "x1": 1644, "y1": 5526 },
+                "baseline": 5500,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b10",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 5755, "x1": 2564, "y1": 6426 },
+            "lines": [
+              {
+                "id": "p1-l19",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b10",
+                "text": "1. Ett",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 5755, "x1": 1184, "y1": 5886 }, "baseline": 5860, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Ett", "start": 3, "box": { "x0": 1276, "y0": 5755, "x1": 1552, "y1": 5886 }, "baseline": 5860, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 5755, "x1": 1552, "y1": 5886 },
+                "baseline": 5860,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l20",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b10",
+                "text": "2. Två",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 5935, "x1": 1184, "y1": 6066 }, "baseline": 6040, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Två", "start": 3, "box": { "x0": 1276, "y0": 5935, "x1": 1552, "y1": 6066 }, "baseline": 6040, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 5935, "x1": 1552, "y1": 6066 },
+                "baseline": 6040,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l21",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b10",
+                "text": "12.1 Tolv och ett",
+                "words": [
+                  { "text": "12.1", "start": 0, "box": { "x0": 1000, "y0": 6115, "x1": 1368, "y1": 6246 }, "baseline": 6220, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Tolv", "start": 5, "box": { "x0": 1460, "y0": 6115, "x1": 1828, "y1": 6246 }, "baseline": 6220, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "och", "start": 10, "box": { "x0": 1920, "y0": 6115, "x1": 2196, "y1": 6246 }, "baseline": 6220, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "ett", "start": 14, "box": { "x0": 2288, "y0": 6115, "x1": 2564, "y1": 6246 }, "baseline": 6220, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 6115, "x1": 2564, "y1": 6246 },
+                "baseline": 6220,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l22",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b10",
+                "text": "3. Tre",
+                "words": [
+                  { "text": "3.", "start": 0, "box": { "x0": 1000, "y0": 6295, "x1": 1184, "y1": 6426 }, "baseline": 6400, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Tre", "start": 3, "box": { "x0": 1276, "y0": 6295, "x1": 1552, "y1": 6426 }, "baseline": 6400, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 6295, "x1": 1552, "y1": 6426 },
+                "baseline": 6400,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

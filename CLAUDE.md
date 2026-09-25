@@ -93,6 +93,34 @@ demos — keep it current with the schema.
 - If a change touches `packages/` or `docs/CONTRACT.md`, say so explicitly — the other track
   depends on it.
 
+## Guided Builder & Import
+
+The plan is `docs/plan/` (start at `PREDICTIVE-BUILDER.md`); the decisions are ADRs 0017–0021.
+Until those ADRs are accepted they are proposals, and ADR 0004 still governs the paper importer.
+
+- **Six non-negotiables.** (1) No AI, no LLM, no ML service, no network call at runtime: rules,
+  weights and thresholds a person can read and a test can freeze; same bytes in, same JSON out, on
+  every machine. (2) The guided path is primary: a form can be built and published by clicking
+  alone; free text is optional. (3) Never a dead end, never a silent guess: below threshold, ask.
+  (4) Never destroy user text or edits: imported wording is verbatim, hand edits are overrides the
+  guided flow never overwrites. (5) The core is pure and headless. (6) The plan lands before the
+  code at scale.
+- **The purity boundary.** `packages/shared/src/{builder,interpret,import}/` import no React, no
+  DOM, no `node:*`, and call no `Date.now`, `Math.random`, `Math.exp`, `Math.log` or `Math.pow` in a
+  decision: integers, per mille, millinats, committed tables. Bytes are touched only in
+  `apps/forms/src/screens/builder/paper/`.
+- **i18n.** Every graph string is a `guided.*` key in all twelve catalogues in
+  `apps/forms/src/lib/messages/` — never a literal. `pnpm builder:validate` fails on a missing one.
+- **Data formats: JSON or typed TS, never YAML** (ADR 0021). No YAML parser as a dependency, ever.
+  Provenance in fields, not comments; stable key order; schema-validated on load; a reset-to-defaults
+  path for anything a user can edit.
+- **The caveat ledger is test-first.** Every row of `docs/plan/CAVEATS.md` names its test; a
+  §8.1/§8.2 row names a fixture in `fixtures/numbering/`, and `scripts/caveat-fixtures.test.ts`
+  fails if it is missing. Write the fixture before the code that makes it pass.
+- **A behaviour change to the ladder or the import heuristics needs a fixture in the same
+  commit** — a phrase-table row, a numbering fixture, a corpus document. No exceptions: a changed
+  threshold with no fixture is an unreviewed guess.
+
 ## Never mistake a proxy for the thing
 
 This project's recurring defect is not a kind of bug, it is a kind of **reading**: something cheap

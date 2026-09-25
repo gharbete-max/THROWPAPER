@@ -1,0 +1,143 @@
+{
+  "fixture": "blank-line-leaders",
+  "caveats": ["blank-line-leaders"],
+  "stage": "segment",
+  "status": "todo",
+  "turnsGreenIn": "S9",
+  "summary": "Leader dots and underscores are blanks to write on: each line is a question with a blank answer, label without the leaders or a trailing colon. Three dots are an ellipsis, not a blank.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "paste",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [{ "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1566, "bands": [1000] }],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 3576, "y1": 1566 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Namn ..............",
+                "words": [
+                  { "text": "Namn", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1368, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "..............", "start": 5, "box": { "x0": 1460, "y0": 895, "x1": 2748, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 2748, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Adress _________________",
+                "words": [
+                  { "text": "Adress", "start": 0, "box": { "x0": 1000, "y0": 1075, "x1": 1552, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "_________________", "start": 7, "box": { "x0": 1644, "y0": 1075, "x1": 3208, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1075, "x1": 3208, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Telefon: …………",
+                "words": [
+                  { "text": "Telefon:", "start": 0, "box": { "x0": 1000, "y0": 1255, "x1": 1736, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "…………", "start": 9, "box": { "x0": 1828, "y0": 1255, "x1": 2196, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1255, "x1": 2196, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": true,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Vänta lite... vi ringer upp.",
+                "words": [
+                  { "text": "Vänta", "start": 0, "box": { "x0": 1000, "y0": 1435, "x1": 1460, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "lite...", "start": 6, "box": { "x0": 1552, "y0": 1435, "x1": 2196, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "vi", "start": 14, "box": { "x0": 2288, "y0": 1435, "x1": 2472, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "ringer", "start": 17, "box": { "x0": 2564, "y0": 1435, "x1": 3116, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "upp.", "start": 24, "box": { "x0": 3208, "y0": 1435, "x1": 3576, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1435, "x1": 3576, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

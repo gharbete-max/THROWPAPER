@@ -1,0 +1,38 @@
+{
+  "fixture": "dotted-subnumber-mid-sentence--flush",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1", "p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "A thing that is long enough to reach the right-hand edge of the column, and the 12.1 mentions blabla",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Something else",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": [],
+      "skippedLineIds": []
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "fixture": "repeated-header-footer",
+  "caveats": ["repeated-header-footer"],
+  "stage": "reassemble",
+  "status": "todo",
+  "turnsGreenIn": "S7",
+  "summary": "A running header and \"Sida N av 3\" on three pages are stripped as page furniture (margin band + cross-page repetition with digits folded), not read as questions.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "words": [
+          { "text": "Föreningen", "box": { "x0": 1000, "y0": 395, "x1": 1920, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Exempel", "box": { "x0": 2012, "y0": 395, "x1": 2656, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "·", "box": { "x0": 2748, "y0": 395, "x1": 2840, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Anmälan", "box": { "x0": 2932, "y0": 395, "x1": 3576, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "2026", "box": { "x0": 3668, "y0": 395, "x1": 4036, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "1.", "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Namn", "box": { "x0": 1276, "y0": 895, "x1": 1644, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "2.", "box": { "x0": 1000, "y0": 1075, "x1": 1184, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Adress", "box": { "x0": 1276, "y0": 1075, "x1": 1828, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Sida", "box": { "x0": 1000, "y0": 9395, "x1": 1368, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "1", "box": { "x0": 1460, "y0": 9395, "x1": 1552, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "av", "box": { "x0": 1644, "y0": 9395, "x1": 1828, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "3", "box": { "x0": 1920, "y0": 9395, "x1": 2012, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null }
+        ],
+        "rules": []
+      },
+      {
+        "pageNo": 2,
+        "widthPt": 595,
+        "heightPt": 842,
+        "words": [
+          { "text": "Föreningen", "box": { "x0": 1000, "y0": 395, "x1": 1920, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Exempel", "box": { "x0": 2012, "y0": 395, "x1": 2656, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "·", "box": { "x0": 2748, "y0": 395, "x1": 2840, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Anmälan", "box": { "x0": 2932, "y0": 395, "x1": 3576, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "2026", "box": { "x0": 3668, "y0": 395, "x1": 4036, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "3.", "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Telefon", "box": { "x0": 1276, "y0": 895, "x1": 1920, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "4.", "box": { "x0": 1000, "y0": 1075, "x1": 1184, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "E-post", "box": { "x0": 1276, "y0": 1075, "x1": 1828, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Sida", "box": { "x0": 1000, "y0": 9395, "x1": 1368, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "2", "box": { "x0": 1460, "y0": 9395, "x1": 1552, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "av", "box": { "x0": 1644, "y0": 9395, "x1": 1828, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "3", "box": { "x0": 1920, "y0": 9395, "x1": 2012, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null }
+        ],
+        "rules": []
+      },
+      {
+        "pageNo": 3,
+        "widthPt": 595,
+        "heightPt": 842,
+        "words": [
+          { "text": "Föreningen", "box": { "x0": 1000, "y0": 395, "x1": 1920, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Exempel", "box": { "x0": 2012, "y0": 395, "x1": 2656, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "·", "box": { "x0": 2748, "y0": 395, "x1": 2840, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Anmälan", "box": { "x0": 2932, "y0": 395, "x1": 3576, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "2026", "box": { "x0": 3668, "y0": 395, "x1": 4036, "y1": 526 }, "baseline": 500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "5.", "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Allergier", "box": { "x0": 1276, "y0": 895, "x1": 2104, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "6.", "box": { "x0": 1000, "y0": 1075, "x1": 1184, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Övrigt", "box": { "x0": 1276, "y0": 1075, "x1": 1828, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Sida", "box": { "x0": 1000, "y0": 9395, "x1": 1368, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "3", "box": { "x0": 1460, "y0": 9395, "x1": 1552, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "av", "box": { "x0": 1644, "y0": 9395, "x1": 1828, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "3", "box": { "x0": 1920, "y0": 9395, "x1": 2012, "y1": 9526 }, "baseline": 9500, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null }
+        ],
+        "rules": []
+      }
+    ]
+  }
+}

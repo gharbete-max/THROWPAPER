@@ -3,6 +3,11 @@
 **Status:** proposed — the provider is the owner's choice (`LAUNCH-CHECKLIST.md` §6)
 **Date:** 2026-09-23
 
+> **Proposed narrowing (2026-09-25):** the owner's brief for the guided builder and document import
+> rules out AI for both. ADR 0019 (proposed) does `form-from-description`, `form-from-page`,
+> `suggest-validation` and `map-scanned-fields` with deterministic rules instead. What remains here
+> (`summarise-responses`) is still the owner's decision; nothing in ADRs 0017–0021 depends on it.
+
 ## Context
 
 The brief wants AI to build a form from a description or a scanned page, suggest field types and
