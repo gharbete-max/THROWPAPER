@@ -842,6 +842,8 @@ export const nbNO: Record<MessageKey, string> = {
   'paper.skipped': 'plural:one {count} felt ble hoppet over | other {count} felt ble hoppet over',
   'paper.tooManyPages': 'Det er {count} sider; høyst {max} kan tas.',
   'paper.notReadable': 'Filen kunne ikke leses.',
+  'paper.tooCostly':
+    'Den PDF-en er for kompleks til å åpnes her. Lagre den på nytt fra programmet som laget den, eller skriv den ut til en ny PDF, og prøv med den.',
   'paper.reason.no-answer': 'en knapp, som ikke samler inn noe',
   'paper.reason.not-a-question': 'fylles ut av dokumentet, ikke av leseren',
   'paper.reason.unreadable': 'et valg uten lesbare alternativer',

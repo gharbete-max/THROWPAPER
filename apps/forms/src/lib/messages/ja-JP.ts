@@ -846,6 +846,8 @@ export const jaJP: Record<MessageKey, string> = {
   'paper.skipped': 'plural:other {count} 件のフィールドをスキップしました',
   'paper.tooManyPages': '{count} ページあります。上限は {max} ページです。',
   'paper.notReadable': 'このファイルは読み取れませんでした。',
+  'paper.tooCostly':
+    'この PDF は複雑すぎてここでは開けません。作成したアプリで保存し直すか、新しい PDF に印刷してからお試しください。',
   'paper.reason.no-answer': 'ボタンのため、何も収集しません',
   'paper.reason.not-a-question': '読み手ではなく文書が記入するもの',
   'paper.reason.unreadable': '読み取れる選択肢のない選択',

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { RATE_LIMITS } from '../rate-limit.js';
 import { and, eq, isNull } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
@@ -147,6 +148,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
   });
 
   typed.post('/v1/sign/:token', {
+    config: { rateLimit: RATE_LIMITS.signerAction },
     schema: {
       tags: ['signer'],
       params: TokenParam,
@@ -192,6 +194,7 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
   });
 
   typed.post('/v1/sign/:token/decline', {
+    config: { rateLimit: RATE_LIMITS.signerAction },
     schema: { tags: ['signer'], params: TokenParam, response: { 200: SignerView, ...errors } },
     handler: async (request, reply) => {
       const link = parse(request.params.token);

@@ -856,6 +856,8 @@ export const esES: Record<MessageKey, string> = {
   'paper.skipped': 'plural:one {count} campo se omitió | other {count} campos se omitieron',
   'paper.tooManyPages': 'Son {count} páginas; el máximo es {max}.',
   'paper.notReadable': 'No se pudo leer el archivo.',
+  'paper.tooCostly':
+    'Ese PDF es demasiado complejo para abrirlo aquí. Guárdalo de nuevo desde el programa que lo creó, o imprímelo a un PDF nuevo, e inténtalo con ese.',
   'paper.reason.no-answer': 'un botón, que no recoge nada',
   'paper.reason.not-a-question': 'lo rellena el documento, no el lector',
   'paper.reason.unreadable': 'una elección sin opciones legibles',

@@ -3304,6 +3304,31 @@ route's form-level check, api-sign rate limiting, backup secrets in plain files,
 wiring. Windows/macOS email handoff was verified by scripts and tests, not by a person on those
 machines.
 
+## Launch checklist, engineering rows · first desktop release
+
+**The first desktop release is published:** [Loppa desktop 0.1.0](https://github.com/gharbete-max/THROWPAPER/releases/tag/desktop-v0.1.0),
+built from `e2893e8` by the Desktop workflow run by hand on main (#142 added that path; this
+session could not push a tag). Five assets with stable names; every README
+`releases/latest/download/…` link answers with the file; the Intel dmg, downloaded whole
+(187 MB), matches its line in `SHA256SUMS.txt`. Unsigned, as the notes say.
+
+The two LAUNCH-CHECKLIST §2.2a rows engineering could close, and one stale row:
+
+- **An uploaded PDF is opened on a budget.** pdf-lib inflates every object stream on load;
+  measured, a 2.9 MB object-stream bomb held the event loop 7.2 s and a 10.8 MB one 25.7 s. Sign's
+  envelope intake and Forms' paper upload now parse once in a worker thread with a 5 s deadline
+  (`pdf-guard.ts`, one copy per product — rule 1) and refuse with `pdf-too-costly`; the main thread
+  only ever loads bytes that parsed within budget. The deadline is what stops it: inflated streams
+  live outside the JS heap, so the heap cap does not (measured, and the test that claimed it was
+  removed). Route tests in both products: the bomb is refused and `/health` answers within a second
+  meanwhile. The builder shows its own sentence for both refusals (12 languages).
+- **api-sign is rate limited**, keyed by the credential a request carries — the signing or sealed
+  link, else the caller's token — not by address, so a TLS terminator does not make every signer
+  one client. 600/min per credential; signing and declining 20/min per link; `/health` unlimited.
+- The door's "recent arrivals vanish on reload" row was closed by #128 and is removed.
+
+Gates: see the PR.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

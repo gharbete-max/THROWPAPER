@@ -861,6 +861,8 @@ export const enGB = {
   'paper.skipped': 'plural:one {count} field was skipped | other {count} fields were skipped',
   'paper.tooManyPages': 'That is {count} pages; the most this can take is {max}.',
   'paper.notReadable': 'That file could not be read.',
+  'paper.tooCostly':
+    'That PDF is too complex to open here. Save it again from the program that made it, or print it to a new PDF, and try that.',
   'paper.reason.no-answer': 'a button, which collects nothing',
   'paper.reason.not-a-question': 'filled in by the document, not the reader',
   'paper.reason.unreadable': 'a choice with no readable options',

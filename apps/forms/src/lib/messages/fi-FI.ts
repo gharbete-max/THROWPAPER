@@ -849,6 +849,8 @@ export const fiFI: Record<MessageKey, string> = {
   'paper.skipped': 'plural:one {count} kenttä ohitettiin | other {count} kenttää ohitettiin',
   'paper.tooManyPages': 'Sivuja on {count}; enintään {max} mahtuu.',
   'paper.notReadable': 'Tiedostoa ei voitu lukea.',
+  'paper.tooCostly':
+    'PDF on liian monimutkainen avattavaksi täällä. Tallenna se uudelleen ohjelmasta, jolla se tehtiin, tai tulosta se uudeksi PDF:ksi ja kokeile sitä.',
   'paper.reason.no-answer': 'painike, joka ei kerää mitään',
   'paper.reason.not-a-question': 'asiakirja täyttää sen itse, ei lukija',
   'paper.reason.unreadable': 'valinta ilman luettavia vaihtoehtoja',

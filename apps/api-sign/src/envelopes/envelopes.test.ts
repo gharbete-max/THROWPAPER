@@ -11,6 +11,10 @@ import { generateDevCertificate, loadSealer, type Sealer } from '../sealing/cert
 import { extractSeal, opensslVerify } from '../sealing/openssl-validator.js';
 import { sha256 } from './store.js';
 import { createHookDelivery, hookSignature } from './hooks.js';
+import { objectStreamBomb } from '../test-pdf-bomb.js';
+
+/** 2.9 MB that held the event loop 7.2 s unguarded (`sealing/pdf-guard.ts`). */
+const BOMB = objectStreamBomb(400_000);
 
 /**
  * CONTRACT §5.1–5.2 and the signer's link, against a real, throwaway Postgres.
@@ -119,7 +123,9 @@ beforeAll(async () => {
         ? 'hello'
         : String(url).endsWith('broken.pdf')
           ? '%PDF-1.7\n% says it is a PDF and is not one\n%%EOF\n'
-          : PDF;
+          : String(url).endsWith('bomb.pdf')
+            ? BOMB
+            : PDF;
       return new Response(body);
     }) as typeof fetch,
   });
@@ -265,6 +271,24 @@ describe.skipIf(!database)('what Sign will fetch', () => {
     expect(response.statusCode).toBe(422);
     expect(response.json().error.code).toBe('unreadable-pdf');
   });
+
+  it('refuses a document too costly to open, and answers other callers meanwhile', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const pending = create(
+      token,
+      envelopeRequest(org, { documentUrl: `${ORIGIN}/bomb.pdf`, documentSha256: sha256(BOMB) }),
+    );
+    // While the bomb is being tried, the server still serves: the parse is off the main thread.
+    const started = Date.now();
+    const health = await app.inject({ method: 'GET', url: '/health' });
+    expect(health.statusCode).toBe(200);
+    expect(Date.now() - started).toBeLessThan(1_000);
+
+    const response = await pending;
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.code).toBe('pdf-too-costly');
+  }, 20_000);
 });
 
 describe.skipIf(!database)('the declaration (ADR 0012)', () => {
@@ -428,6 +452,25 @@ describe.skipIf(!database)('signing', () => {
       expect(status.json().status).toBe('expired');
     } finally {
       clock = saved;
+    }
+  });
+});
+
+describe.skipIf(!database)('rate limits', () => {
+  it('limits signing attempts per link, and one link cannot use up another', async () => {
+    const hammered = `rl-${randomUUID()}`;
+    const statuses: number[] = [];
+    for (let i = 0; i < 21; i += 1) statuses.push((await sign(hammered, 'Åsa')).statusCode);
+    expect(statuses.slice(0, 20)).not.toContain(429);
+    expect(statuses[20]).toBe(429);
+    const refused = await sign(hammered, 'Åsa');
+    expect(refused.json().error.code).toBe('rate-limited');
+
+    // Another signer's link is untouched: the key is the link, not the address.
+    expect((await sign(`rl-${randomUUID()}`, 'Bo')).statusCode).not.toBe(429);
+    // And /health is never limited.
+    for (let i = 0; i < 5; i += 1) {
+      expect((await app.inject({ method: 'GET', url: '/health' })).statusCode).toBe(200);
     }
   });
 });

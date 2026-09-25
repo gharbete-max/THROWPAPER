@@ -841,6 +841,8 @@ export const daDK: Record<MessageKey, string> = {
     'plural:one {count} felt blev sprunget over | other {count} felter blev sprunget over',
   'paper.tooManyPages': 'Det er {count} sider; højst {max} kan tages.',
   'paper.notReadable': 'Filen kunne ikke læses.',
+  'paper.tooCostly':
+    'Den PDF er for kompleks til at blive åbnet her. Gem den igen fra programmet, der lavede den, eller udskriv den til en ny PDF, og prøv med den.',
   'paper.reason.no-answer': 'en knap, som ikke indsamler noget',
   'paper.reason.not-a-question': 'udfyldes af dokumentet, ikke af læseren',
   'paper.reason.unreadable': 'et valg uden læsbare muligheder',

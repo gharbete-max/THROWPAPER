@@ -861,6 +861,8 @@ export const ruRU: Record<MessageKey, string> = {
     'plural:one {count} поле пропущено | few {count} поля пропущено | many {count} полей пропущено | other {count} поля пропущено',
   'paper.tooManyPages': 'Это {count} страниц; максимум — {max}.',
   'paper.notReadable': 'Не удалось прочитать файл.',
+  'paper.tooCostly':
+    'Этот PDF слишком сложный, чтобы открыть его здесь. Сохраните его заново в программе, которая его создала, или распечатайте в новый PDF и попробуйте с ним.',
   'paper.reason.no-answer': 'кнопка, которая ничего не собирает',
   'paper.reason.not-a-question': 'заполняется документом, а не читателем',
   'paper.reason.unreadable': 'выбор без читаемых вариантов',

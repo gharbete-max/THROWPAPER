@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { checkPdf } from '../uploads/pdf-guard.js';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { api } from '@tp/shared';
 import type { AuthGuardDeps } from '../auth/plugin.js';
@@ -230,6 +231,7 @@ export function registerUploadRoutes(
         403: api.ErrorResponse,
         404: api.ErrorResponse,
         413: api.ErrorResponse,
+        422: api.ErrorResponse,
       },
     },
     handler: async (request, reply) => {
@@ -263,6 +265,21 @@ export function registerUploadRoutes(
         return reply
           .code(status)
           .send({ error: { code: checked.code, message: attachmentMessage(checked.code) } });
+      }
+
+      // A PDF is opened once here, off the main thread and on a budget (`pdf-guard.ts`): every
+      // filled-in copy of this form loads it again, so a paper that costs seconds to open would
+      // cost them on every submission.
+      if (checked.extension === 'pdf') {
+        const opened = await checkPdf(content);
+        if (!opened.ok) {
+          return reply.code(422).send({
+            error:
+              opened.reason === 'too-costly'
+                ? { code: 'pdf-too-costly', message: 'That PDF is too complex to open.' }
+                : { code: 'unreadable-pdf', message: 'That PDF could not be opened.' },
+          });
+        }
       }
 
       const stored = await deps.uploadStore.put(content, checked.extension);

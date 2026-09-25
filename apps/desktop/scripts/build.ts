@@ -32,8 +32,15 @@ const target = process.argv.includes('--package')
  *   (`playwright` is aliased to it: the full package would download browsers on install.)
  * - `@fontsource/inter` is read with `require.resolve` by `@tp/tokens/pdf` to embed the font in
  *   every PDF — missing, å ä ö would silently fall back to a system face.
+ * - `pdf-lib` is loaded by file path in a worker thread, to open an uploaded PDF on a budget
+ *   (`pdf-guard.ts` in both APIs). Bundled inline it has no path, and the app did not start.
  */
-const RUNTIME_PACKAGES = ['@electric-sql/pglite', 'playwright-core', '@fontsource/inter'] as const;
+const RUNTIME_PACKAGES = [
+  '@electric-sql/pglite',
+  'playwright-core',
+  '@fontsource/inter',
+  'pdf-lib',
+] as const;
 
 function versionOf(name: string, from: string): string {
   const require = createRequire(join(from, 'package.json'));
@@ -129,6 +136,7 @@ async function main(): Promise<void> {
     '@electric-sql/pglite': versionOf('@electric-sql/pglite', apiForms),
     'playwright-core': versionOf('playwright-core', join(repo, 'node_modules', 'playwright')),
     '@fontsource/inter': versionOf('@fontsource/inter', tokens),
+    'pdf-lib': versionOf('pdf-lib', apiForms),
   };
   await writeFile(
     join(stage, 'package.json'),

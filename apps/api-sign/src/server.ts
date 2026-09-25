@@ -1,4 +1,6 @@
 import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
+import rateLimit from '@fastify/rate-limit';
+import { RATE_LIMITS, rateLimitKey } from './rate-limit.js';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -111,6 +113,21 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return reply
       .code(status)
       .send({ error: { code: error.code ?? 'bad-request', message: error.message } });
+  });
+
+  // Every route, keyed by the credential it carries (`rate-limit.ts`). /health stays unlimited:
+  // the desktop shell and CI poll it while starting.
+  await app.register(rateLimit, {
+    global: true,
+    ...RATE_LIMITS.global,
+    keyGenerator: rateLimitKey,
+    allowList: (request) => request.url === '/health',
+    // Thrown, then shaped by the error handler below like every other refusal.
+    errorResponseBuilder: (_request, context) => ({
+      statusCode: context.statusCode,
+      code: 'rate-limited',
+      message: 'Too many requests. Try again in a minute.',
+    }),
   });
 
   app.get('/health', async () => ({
