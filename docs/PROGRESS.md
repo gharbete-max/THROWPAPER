@@ -3444,6 +3444,23 @@ not in production yet, so the desktop now works fully offline, tied to the perso
 `packages/` and `docs/CONTRACT.md` are **not** touched. `mail/draft.ts` gained a recipient and
 several attachments (constant scripts still; the address is one line of data in a file).
 
+**Verified in the packaged Linux app** (fresh profile, demo data, Xvfb over CDP, stub `xdg-open`):
+the default is `program`/`auto` and `/health` says `desktop`; Users has no "Add somebody"; the form
+card says its link opens only here; a registration on `/f/varmotet` put one message in
+`to-send` — to the registrant, the admission card `Åsa-Öberg-HD4Q-DRFS.pdf` (23 kB) attached —
+and nothing in the outbox; the sidebar shows **To send**; with no mail program to drive (Linux) the
+card offers **Open in email app** and the save note; the attachment saved as a PDF; the link reached
+the OS as `mailto:asa@example.com?subject=…%E2%80%94…&body=…%0D%0A…`, and the card turned
+**Opened**; **Remove** asked "Remove the message to asa@example.com? It will not be sent.", then the
+folder was gone and the empty state showed. A saved file with a non-ASCII name came out as
+`download` only while the container had no UTF-8 locale; with `LANG=C.UTF-8` the name is kept.
+
+**Not verified:** Open in Outlook / Apple Mail with the recipient set — no Windows or Mac here
+(`LAUNCH-CHECKLIST.md` §2.2a).
+
+**Gates:** format, typecheck, lint (the 2 known warnings), test 189 files / 2183, build,
+contract:check 9/15, licence:check — each run on its own; `pnpm test:e2e` 53 passed (4.6 m).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
