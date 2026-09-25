@@ -99,6 +99,12 @@ export interface ServerOptions {
    * Its presence registers `/v1/outgoing`. A server has none.
    */
   outgoing?: OutgoingStore;
+  /**
+   * Where sign-in links go, when not with the rest of the mail. The desktop's To send cannot be
+   * opened by somebody signed out, so there a link would wait where nobody can reach it; the
+   * desktop signs in from its own menu instead.
+   */
+  signInMail?: MailProvider;
   /** Which edition this is, for /health: the app shows desktop-only screens by it. */
   edition?: 'desktop' | 'server';
   /** When false, /health does not touch the database. Used by tests with no Postgres. */
@@ -441,7 +447,11 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   });
 
   const guard = { repos, jwtSecret };
-  const auth = createAuthService({ repos, mail, config: { jwtSecret, appUrl } });
+  const auth = createAuthService({
+    repos,
+    mail: options.signInMail ?? mail,
+    config: { jwtSecret, appUrl },
+  });
 
   const renderer = options.renderer ?? createPdfRenderer();
   const store =
@@ -626,6 +636,8 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       mode: options.demo ? 'demo' : 'live',
       // The desktop edition: To send, local-only links, no inviting people.
       edition: options.edition ?? 'server',
+      // Whether signers' links point at this computer: then they cannot be emailed to anybody.
+      signing: signing ? (isLoopbackUrl(signing.apiUrl) ? 'this-computer' : 'online') : 'off',
     });
   });
 
@@ -1149,4 +1161,14 @@ function requireSecret(name: 'JWT_SECRET' | 'DOCUMENT_SIGNING_SECRET'): string {
     throw new Error(`${name} must be set to at least 32 characters. See .env.example.`);
   }
   return secret;
+}
+
+/** An address only this computer can open: loopback, by name or number. */
+export function isLoopbackUrl(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.replace(/^\[|\]$/g, '');
+    return host === 'localhost' || host === '::1' || /^127(\.\d{1,3}){3}$/.test(host);
+  } catch {
+    return false;
+  }
 }

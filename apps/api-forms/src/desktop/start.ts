@@ -89,6 +89,18 @@ export interface DesktopServer {
   close(): Promise<void>;
 }
 
+/**
+ * Sign-in links while mail waits in To send: kept nowhere. To send is for somebody signed in, so a
+ * link put there could never be reached; the desktop signs in from its own menu (View → Sign in
+ * again), which mints a link and opens it itself. The login page says so on the desktop.
+ */
+export const signInFromTheMenu: MailProvider = {
+  name: 'desktop-menu',
+  async send() {
+    return { messageId: 'desktop-menu' };
+  },
+};
+
 export function mailProviderFor(
   settings: DesktopSettings,
   paths: WorkspacePaths,
@@ -215,6 +227,7 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     app = await buildServer({
       repos: local.repos,
       mail: mailProviderFor(settings, paths, options.unprotect),
+      ...(settings.mail.mode === 'program' ? { signInMail: signInFromTheMenu } : {}),
       store: createLocalDocumentStore({
         directory: paths.documents,
         signingSecret: secrets.documentSigningSecret,

@@ -58,6 +58,19 @@ describe('the desktop server', { timeout: 60_000 }, () => {
       ).toBe(true);
       expect(await server.loadDemo()).toBe(false);
 
+      // A sign-in link asked for on the login page is kept nowhere: To send is for somebody
+      // already signed in, so it would wait where nobody could reach it. The menu signs in.
+      const asked = await fetch(`${server.url}/v1/auth/magic-link`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email: 'ake@example.com' }),
+      });
+      expect(asked.status).toBe(202);
+      expect(await readdir(join(dataDir, 'to-send'))).toEqual([]);
+      expect(
+        ((await (await fetch(`${server.url}/health`)).json()) as { edition: string }).edition,
+      ).toBe('desktop');
+
       const link = await server.signInLink();
       const token = new URL(link!).searchParams.get('token');
       const exchanged = await fetch(`${server.url}/v1/auth/token`, {

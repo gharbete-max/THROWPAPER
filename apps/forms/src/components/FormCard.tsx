@@ -4,7 +4,7 @@ import { canDelete, canEdit, canShare, type FormResponse } from '@tp/shared/form
 import { useT } from '../lib/i18n.js';
 import { Icon } from './Icon.js';
 import { CopyLink } from './CopyLink.js';
-import { isLocalOnly, useEdition } from '../lib/edition.js';
+import { opensOnlyHere, useEdition } from '../lib/edition.js';
 
 /**
  * One form in a list.
@@ -38,7 +38,7 @@ export function FormCard({
   onShare?: () => void;
 }) {
   const t = useT();
-  const local = isLocalOnly(useEdition());
+  const edition = useEdition();
   const name = pickText(locales, form.title, locale).value;
   const incomplete = form.completeness.filter((entry) => !entry.complete);
   const publicPath = `/f/${form.slug}`;
@@ -130,7 +130,9 @@ export function FormCard({
           <CopyLink path={publicPath} />
         </p>
       )}
-      {!binned && local && <p className="small muted">{t('links.localOnly')}</p>}
+      {!binned && opensOnlyHere(publicPath, edition) && (
+        <p className="small muted">{t('links.localOnly')}</p>
+      )}
 
       {!binned && incomplete.length > 0 && (
         <p className="small status-warning">

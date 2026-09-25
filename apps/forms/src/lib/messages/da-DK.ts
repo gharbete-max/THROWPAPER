@@ -11,6 +11,7 @@ export const daDK: Record<MessageKey, string> = {
   'app.loadFailed': 'Det kunne ikke indlæses. Tjek forbindelsen, og prøv igen.',
   'login.failed': 'Login-linket kunne ikke sendes. Prøv igen om lidt.',
   'login.rateLimited': 'Der er bedt om for mange login-links. Vent 15 minutter, og prøv så igen.',
+  'login.desktop': 'På denne computer logger du ind fra Loppas menu: View → Sign in again.',
 
   'login.title': 'Log ind',
   'login.email': 'E-mailadresse',

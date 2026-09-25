@@ -237,7 +237,12 @@ sends from their own mailbox.
   needs a confirmation tick, enforced in the main process, not only the form (`settings-form.ts`).
 - Offline first, said where it matters: on the desktop, links (a form's address, a signer's link,
   save-and-continue) point at this computer's loopback address, and the app says they open only
-  here. Adding people is hidden — a sign-in link to somebody else's address would open nowhere. A mail program this machine cannot drive (a Mac setting in a backup
+  here. Adding people is hidden — a sign-in link to somebody else's address would open nowhere.
+  With the desktop's own Sign, "Email each signer" and "Remind" are hidden for the same reason; a
+  desktop connected to an online Sign keeps them, and its links carry no such note.
+- Sign-in on the desktop is the menu (View → Sign in again). While mail waits in To send, a link
+  asked for on the login page is kept nowhere — To send cannot be opened signed out — and the
+  login page says to use the menu instead of offering a form that could not work. A mail program this machine cannot drive (a Mac setting in a backup
   restored on Windows) falls back to test mode rather than stopping the app.
 
 ## Phases

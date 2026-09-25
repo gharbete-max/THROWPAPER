@@ -12,7 +12,7 @@ import { CommandPalette } from './components/CommandPalette.js';
 import { ToastProvider } from './lib/toast.js';
 import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
-import { useEdition } from './lib/edition.js';
+import { OUTGOING_CHANGED, useEdition } from './lib/edition.js';
 import { client } from './lib/api.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
@@ -161,6 +161,12 @@ function NavSection({
  */
 function useWaitingCount(enabled: boolean, path: string): number {
   const [count, setCount] = useState(0);
+  const [changed, setChanged] = useState(0);
+  useEffect(() => {
+    const bump = () => setChanged((value) => value + 1);
+    window.addEventListener(OUTGOING_CHANGED, bump);
+    return () => window.removeEventListener(OUTGOING_CHANGED, bump);
+  }, []);
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
@@ -173,7 +179,7 @@ function useWaitingCount(enabled: boolean, path: string): number {
     return () => {
       cancelled = true;
     };
-  }, [enabled, path]);
+  }, [enabled, path, changed]);
   return count;
 }
 

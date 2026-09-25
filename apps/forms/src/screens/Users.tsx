@@ -34,7 +34,8 @@ export function Users() {
    * The desktop is one person's app on one computer: somebody added here would get a sign-in link
    * to an address that only this computer can open. So there is nobody to add.
    */
-  const desktop = useEdition() === 'desktop';
+  // Shown once the server has said it is not the desktop, so it never flashes up there first.
+  const desktop = useEdition() !== 'server';
   const confirm = useConfirm();
   const [users, setUsers] = useState<UserSummary[] | null>(null);
   const [adding, setAdding] = useState(false);

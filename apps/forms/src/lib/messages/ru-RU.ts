@@ -19,6 +19,7 @@ export const ruRU: Record<MessageKey, string> = {
   'login.failed': 'Не удалось отправить ссылку для входа. Попробуйте ещё раз чуть позже.',
   'login.rateLimited':
     'Запрошено слишком много ссылок для входа. Подождите 15 минут и попробуйте снова.',
+  'login.desktop': 'На этом компьютере вход выполняется из меню Loppa: View → Sign in again.',
 
   'login.title': 'Вход',
   'login.email': 'Адрес электронной почты',

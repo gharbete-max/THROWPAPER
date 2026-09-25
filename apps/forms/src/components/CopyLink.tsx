@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useT } from '../lib/i18n.js';
-import { isLocalOnly, useEdition } from '../lib/edition.js';
+import { opensOnlyHere, useEdition } from '../lib/edition.js';
 import { Icon } from './Icon.js';
 
 /**
@@ -17,7 +17,7 @@ import { Icon } from './Icon.js';
 export function CopyLink({ path }: { path: string }) {
   const t = useT();
   // On the desktop the address is this computer's own: it opens nowhere else, and says so.
-  const local = isLocalOnly(useEdition());
+  const local = opensOnlyHere(path, useEdition());
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   // The confirmation is a moment, not a mode.

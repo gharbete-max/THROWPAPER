@@ -13,6 +13,8 @@ export const deDE: Record<MessageKey, string> = {
   'login.failed': 'Der Anmeldelink konnte nicht gesendet werden. Bitte gleich erneut versuchen.',
   'login.rateLimited':
     'Zu viele Anmeldelinks angefordert. Bitte 15 Minuten warten und dann erneut versuchen.',
+  'login.desktop':
+    'Auf diesem Computer melden Sie sich über das Loppa-Menü an: View → Sign in again.',
 
   'login.title': 'Anmelden',
   'login.email': 'E-Mail-Adresse',

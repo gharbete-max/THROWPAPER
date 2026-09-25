@@ -12,6 +12,7 @@ export const fiFI: Record<MessageKey, string> = {
   'login.failed': 'Kirjautumislinkkiä ei voitu lähettää. Yritä hetken kuluttua uudelleen.',
   'login.rateLimited':
     'Kirjautumislinkkejä on pyydetty liian monta. Odota 15 minuuttia ja yritä sitten uudelleen.',
+  'login.desktop': 'Tällä tietokoneella kirjaudut sisään Loppan valikosta: View → Sign in again.',
 
   'login.title': 'Kirjaudu sisään',
   'login.email': 'Sähköpostiosoite',

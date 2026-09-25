@@ -9,6 +9,7 @@ import { EmptyState } from '../components/EmptyState.js';
 import { LoadFailed } from '../components/LoadFailed.js';
 import { Loading } from '../components/Loading.js';
 import { Icon } from '../components/Icon.js';
+import { OUTGOING_CHANGED } from '../lib/edition.js';
 
 /**
  * To send — the desktop's mail, waiting for its person (`api-forms/src/mail/queue.ts`).
@@ -51,7 +52,11 @@ export function Outgoing() {
   if (failed) return <LoadFailed onRetry={() => setAttempt((value) => value + 1)} />;
   if (!data) return <Loading />;
 
-  const reload = () => setAttempt((value) => value + 1);
+  const reload = () => {
+    setAttempt((value) => value + 1);
+    // The count beside To send in the sidebar follows without waiting for a navigation.
+    window.dispatchEvent(new Event(OUTGOING_CHANGED));
+  };
 
   return (
     <section className="stack">

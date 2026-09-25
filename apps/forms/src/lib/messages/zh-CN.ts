@@ -16,6 +16,7 @@ export const zhCN: Record<MessageKey, string> = {
   'app.loadFailed': '无法加载。请检查网络连接后重试。',
   'login.failed': '无法发送登录链接。请稍后重试。',
   'login.rateLimited': '请求登录链接的次数过多。请等待 15 分钟后重试。',
+  'login.desktop': '在这台电脑上，请从 Loppa 的菜单登录：View → Sign in again。',
 
   'login.title': '登录',
   'login.email': '电子邮件地址',

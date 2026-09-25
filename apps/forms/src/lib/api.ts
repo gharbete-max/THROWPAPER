@@ -186,6 +186,8 @@ export const client = {
       database: string;
       /** The desktop edition shows To send and says which links work only on this computer. */
       edition?: 'desktop' | 'server';
+      /** Where signers' links point; `this-computer` means they cannot be emailed to anybody. */
+      signing?: 'this-computer' | 'online' | 'off';
     }>('/health'),
 
   demoInfo: () =>

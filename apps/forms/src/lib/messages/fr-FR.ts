@@ -12,6 +12,8 @@ export const frFR: Record<MessageKey, string> = {
   'login.failed': 'Le lien de connexion n’a pas pu être envoyé. Réessayez dans un instant.',
   'login.rateLimited':
     'Trop de liens de connexion ont été demandés. Attendez 15 minutes, puis réessayez.',
+  'login.desktop':
+    'Sur cet ordinateur, connectez-vous depuis le menu de Loppa : View → Sign in again.',
 
   'login.title': 'Se connecter',
   'login.email': 'Adresse e-mail',

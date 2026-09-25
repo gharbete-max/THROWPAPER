@@ -2,6 +2,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { isLoopbackUrl } from '../server.js';
 import { adminUser, bearer, createTestHarness, signIn, type TestHarness } from '../test-support.js';
 import { DraftUnavailable, type MailDraft, type MailDrafter } from '../mail/draft.js';
 import { createOutgoingStore, type OutgoingQueue } from '../mail/queue.js';
@@ -224,5 +225,57 @@ describe('a server', () => {
     expect((await harness.app.inject({ method: 'GET', url: '/health' })).json().edition).toBe(
       'server',
     );
+  });
+});
+
+describe('whether signers’ links can be emailed', () => {
+  it('says Sign is on this computer when its address is loopback, and online otherwise', async () => {
+    const fetchNothing = (async () => new Response('{}')) as typeof fetch;
+    harness = await createTestHarness(
+      {},
+      {
+        signing: { apiUrl: 'http://127.0.0.1:47018', serviceToken: 't' },
+        signFetch: fetchNothing,
+      },
+    );
+    expect((await harness.app.inject({ method: 'GET', url: '/health' })).json().signing).toBe(
+      'this-computer',
+    );
+    await harness.close();
+
+    harness = await createTestHarness(
+      {},
+      {
+        signing: { apiUrl: 'https://sign.example.com', serviceToken: 't' },
+        signFetch: fetchNothing,
+      },
+    );
+    expect((await harness.app.inject({ method: 'GET', url: '/health' })).json().signing).toBe(
+      'online',
+    );
+  });
+
+  it('says so with no Sign at all', async () => {
+    harness = await createTestHarness();
+    expect((await harness.app.inject({ method: 'GET', url: '/health' })).json().signing).toBe(
+      'off',
+    );
+  });
+
+  it('knows loopback by name and by number, and nothing else', () => {
+    for (const url of [
+      'http://127.0.0.1:1',
+      'http://localhost/x',
+      'http://[::1]:5/',
+      'http://127.8.0.1',
+    ])
+      expect(isLoopbackUrl(url), url).toBe(true);
+    for (const url of [
+      'https://sign.example.com',
+      'http://10.0.0.2',
+      'http://127.0.0.1.example.com',
+      'nonsense',
+    ])
+      expect(isLoopbackUrl(url), url).toBe(false);
   });
 });

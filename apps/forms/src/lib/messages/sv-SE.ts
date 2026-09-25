@@ -12,6 +12,7 @@ export const svSE: Record<MessageKey, string> = {
   'login.failed': 'Inloggningslänken kunde inte skickas. Försök igen om en stund.',
   'login.rateLimited':
     'För många inloggningslänkar har begärts. Vänta 15 minuter och försök sedan igen.',
+  'login.desktop': 'På den här datorn loggar du in från Loppas meny: Visa → Logga in igen.',
 
   'login.title': 'Logga in',
   'login.email': 'E-postadress',

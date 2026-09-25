@@ -12,6 +12,7 @@ export const esES: Record<MessageKey, string> = {
   'login.failed': 'No se pudo enviar el enlace de acceso. Inténtalo de nuevo en un momento.',
   'login.rateLimited':
     'Se han pedido demasiados enlaces de acceso. Espera 15 minutos y vuelve a intentarlo.',
+  'login.desktop': 'En este ordenador, inicia sesión desde el menú de Loppa: View → Sign in again.',
 
   'login.title': 'Iniciar sesión',
   'login.email': 'Dirección de correo',

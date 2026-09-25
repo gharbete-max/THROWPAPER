@@ -12,6 +12,7 @@ export const nbNO: Record<MessageKey, string> = {
   'login.failed': 'Innloggingslenken kunne ikke sendes. Prøv igjen om litt.',
   'login.rateLimited':
     'Det er bedt om for mange innloggingslenker. Vent 15 minutter, og prøv igjen.',
+  'login.desktop': 'På denne datamaskinen logger du inn fra Loppas meny: View → Sign in again.',
 
   'login.title': 'Logg inn',
   'login.email': 'E-postadresse',
