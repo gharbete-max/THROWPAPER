@@ -51,8 +51,9 @@ What is left, and whose it is:
    organisation's declarations in the product (CONTRACT §5.5); a phone scans into the desktop by
    QR code (PROGRESS § Scanning with a phone); P1c-4b is done (signers invited by email); every
    form now ends in a finished PDF with download/email handoff and an optional e-ID step (§5.6,
-   no provider until one is chosen), and desktop releases publish from a `desktop-v*` tag
-   (PROGRESS § Product-ready pass). Mailer B2
+   no provider until one is chosen), and desktop releases publish from a `desktop-v*` tag, or
+   by running the Desktop workflow by hand on main with "release" ticked, which tags the commit
+   from apps/desktop's version (PROGRESS § Product-ready pass). Mailer B2
    now lives inside P3. Decisions in docs/EXPANSION.md § 5.
    Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5
    has the nine importers, if it is ever picked up) and handwriting OCR (ADR 0007, which the
