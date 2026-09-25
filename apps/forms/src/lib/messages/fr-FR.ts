@@ -863,6 +863,8 @@ export const frFR: Record<MessageKey, string> = {
   'paper.skipped': 'plural:one {count} champ a été ignoré | other {count} champs ont été ignorés',
   'paper.tooManyPages': 'Cela fait {count} pages ; le maximum est {max}.',
   'paper.notReadable': 'Ce fichier n’a pas pu être lu.',
+  'paper.tooCostly':
+    'Ce PDF est trop complexe pour être ouvert ici. Enregistrez-le à nouveau depuis le logiciel qui l’a créé, ou imprimez-le en un nouveau PDF, puis réessayez.',
   'paper.reason.no-answer': 'un bouton, qui ne recueille rien',
   'paper.reason.not-a-question': 'rempli par le document, pas par le lecteur',
   'paper.reason.unreadable': 'un choix sans options lisibles',

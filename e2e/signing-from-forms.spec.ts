@@ -123,8 +123,11 @@ test("an admin writes the organisation's own declaration and sends a real signin
   await expect(page.getByText('e2e-terms', { exact: true })).toBeVisible();
 
   await page.getByRole('button', { name: 'Send a PDF for signing' }).click();
+  // Named for this run: an earlier run's "Real e2e" row (a retry, or a local database that is not
+  // fresh) also matches a fixed name, waits for signatures, and carries an older declaration.
+  const documentName = `Real e2e ${Date.now()}`;
   await page.getByLabel('PDF file').setInputFiles({
-    name: 'Real e2e.pdf',
+    name: `${documentName}.pdf`,
     mimeType: 'application/pdf',
     buffer: tinyPdf('A real one'),
   });
@@ -136,7 +139,7 @@ test("an admin writes the organisation's own declaration and sends a real signin
   await page.getByRole('checkbox', { name: /this is a real signing/ }).check();
   await send.click();
 
-  const row = page.getByTestId('signing-row').filter({ hasText: 'Real e2e' }).first();
+  const row = page.getByTestId('signing-row').filter({ hasText: documentName });
   await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');
   await expect(row.getByText('Test mode')).toHaveCount(0);
 

@@ -865,6 +865,8 @@ export const deDE: Record<MessageKey, string> = {
     'plural:one {count} Feld wurde übersprungen | other {count} Felder wurden übersprungen',
   'paper.tooManyPages': 'Das sind {count} Seiten; höchstens {max} sind möglich.',
   'paper.notReadable': 'Die Datei konnte nicht gelesen werden.',
+  'paper.tooCostly':
+    'Dieses PDF ist zu komplex, um es hier zu öffnen. Speichern Sie es erneut aus dem Programm, das es erstellt hat, oder drucken Sie es in ein neues PDF, und versuchen Sie es damit.',
   'paper.reason.no-answer': 'eine Schaltfläche, die nichts erfasst',
   'paper.reason.not-a-question': 'wird vom Dokument ausgefüllt, nicht vom Leser',
   'paper.reason.unreadable': 'eine Auswahl ohne lesbare Optionen',

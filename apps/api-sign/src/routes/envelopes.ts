@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
+import { checkPdf } from '../sealing/pdf-guard.js';
 import { z } from 'zod';
 import { and, asc, desc, eq, isNull, or } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { api } from '@tp/shared';
-import { PDFDocument } from 'pdf-lib';
 import {
   CreateEnvelopeRequest,
   CreateEnvelopeResponse,
@@ -138,8 +138,13 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
       }
       // Refused now, not when the last party signs: a PDF the sealer cannot open would otherwise
       // take every signature on it and then fail to complete.
-      if (!(await readablePdf(fetched.bytes))) {
-        return fail(reply, 422, 'unreadable-pdf', 'The document is not a PDF Sign can seal');
+      // Parsed first in a worker on a budget (`pdf-guard.ts`): a document that would hold the event
+      // loop for seconds is refused without this server ever loading it.
+      const checked = await checkPdf(fetched.bytes);
+      if (!checked.ok) {
+        return checked.reason === 'too-costly'
+          ? fail(reply, 422, 'pdf-too-costly', 'The document is too costly to open')
+          : fail(reply, 422, 'unreadable-pdf', 'The document is not a PDF Sign can seal');
       }
 
       const definition: Definition = {
@@ -343,20 +348,6 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
 
 /** How long a §5.3 link lives. Long enough to download, short enough that a leaked one dies. */
 export const SEALED_LINK_SECONDS = 10 * 60;
-
-async function readablePdf(bytes: Uint8Array): Promise<boolean> {
-  try {
-    // pdf-lib is lenient: a header and a trailer "load" as a document of no pages.
-    const pdf = await PDFDocument.load(bytes, {
-      updateMetadata: false,
-      throwOnInvalidObject: true,
-    });
-    return pdf.getPageCount() > 0;
-  } catch {
-    // Encrypted, damaged, or not a PDF at all: pdf-lib cannot rewrite it, so it cannot be sealed.
-    return false;
-  }
-}
 
 /** The declaration an envelope in `organisationId` would pin for `key`: its own, else shared. */
 async function latestDeclaration(db: Db, organisationId: string, key: string) {

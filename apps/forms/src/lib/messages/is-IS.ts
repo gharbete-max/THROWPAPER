@@ -846,6 +846,8 @@ export const isIS: Record<MessageKey, string> = {
   'paper.skipped': 'plural:one {count} reit var sleppt | other {count} reitum var sleppt',
   'paper.tooManyPages': 'Þetta eru {count} síður; hámarkið er {max}.',
   'paper.notReadable': 'Ekki tókst að lesa skrána.',
+  'paper.tooCostly':
+    'Þetta PDF-skjal er of flókið til að opna hér. Vistaðu það aftur úr forritinu sem bjó það til, eða prentaðu það í nýtt PDF, og reyndu með það.',
   'paper.reason.no-answer': 'hnappur, sem safnar engu',
   'paper.reason.not-a-question': 'skjalið fyllir hann út, ekki lesandinn',
   'paper.reason.unreadable': 'val án læsilegra valkosta',

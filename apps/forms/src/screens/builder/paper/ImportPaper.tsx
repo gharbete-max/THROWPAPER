@@ -6,7 +6,7 @@ import {
   type FormDefinition,
   type SkippedAcroField,
 } from '@tp/shared/forms';
-import { client } from '../../../lib/api.js';
+import { ApiError, client } from '../../../lib/api.js';
 import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
@@ -77,7 +77,20 @@ export function ImportPaper({
       setOpen(false);
       setState({ kind: 'empty' });
     } catch (error) {
-      setState({ kind: 'error', message: error instanceof Error ? error.message : String(error) });
+      // The two refusals the server gives a PDF have their own words; anything else says what
+      // the server said.
+      const code = error instanceof ApiError ? error.code : '';
+      setState({
+        kind: 'error',
+        message:
+          code === 'pdf-too-costly'
+            ? t('paper.tooCostly')
+            : code === 'unreadable-pdf'
+              ? t('paper.notReadable')
+              : error instanceof Error
+                ? error.message
+                : String(error),
+      });
     }
   }
 

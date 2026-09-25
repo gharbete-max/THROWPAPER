@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import { PDFDocument } from 'pdf-lib';
+import { objectStreamBomb } from '../test-pdf-bomb.js';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { forms as formSchemas } from '@tp/shared';
 import {
@@ -19,7 +21,12 @@ let adminToken: string;
 let operatorToken: string;
 let formId: string;
 
-const PDF = Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.alloc(16)]);
+/** A real one-page PDF: the upload is opened on a budget now, and a header alone has no pages. */
+const PDF = await (async () => {
+  const doc = await PDFDocument.create();
+  doc.addPage([595, 842]);
+  return Buffer.from(await doc.save());
+})();
 const HTML = Buffer.from('<!doctype html><script>alert(1)</script>');
 const PDF_KEY = `${createHash('sha256').update(PDF).digest('hex')}.pdf`;
 
@@ -78,7 +85,11 @@ describe('adding paper to a form', () => {
   it('stores a PDF under its content hash', async () => {
     const response = await upload(PDF);
     expect(response.statusCode).toBe(201);
-    expect(response.json()).toEqual({ key: PDF_KEY, contentType: 'application/pdf', bytes: 25 });
+    expect(response.json()).toEqual({
+      key: PDF_KEY,
+      contentType: 'application/pdf',
+      bytes: PDF.length,
+    });
   });
 
   it('judges the bytes, not the filename', async () => {
@@ -141,5 +152,27 @@ describe("what may join a draft's paper list", () => {
     expect(refused.statusCode).toBe(422);
     expect(refused.json().error.code).toBe('unknown-paper');
     expect((await read(elsewhere.key)).statusCode).toBe(404);
+  });
+});
+
+describe('a PDF that costs too much to open', () => {
+  it('is refused on upload, and the server answers others meanwhile', async () => {
+    const bomb = objectStreamBomb(400_000);
+    const pending = upload(bomb);
+    const started = Date.now();
+    const health = await harness.app.inject({ method: 'GET', url: '/health' });
+    expect(health.statusCode).toBe(200);
+    expect(Date.now() - started).toBeLessThan(1_000);
+
+    const response = await pending;
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.code).toBe('pdf-too-costly');
+    expect(harness.uploadStore.files?.size ?? 0).toBe(0);
+  }, 20_000);
+
+  it('refuses a file that says it is a PDF and has no pages', async () => {
+    const response = await upload(Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.alloc(16)]));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.code).toBe('unreadable-pdf');
   });
 });

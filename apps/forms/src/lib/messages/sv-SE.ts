@@ -844,6 +844,8 @@ export const svSE: Record<MessageKey, string> = {
   'paper.skipped': 'plural:one {count} fält hoppades över | other {count} fält hoppades över',
   'paper.tooManyPages': 'Det är {count} sidor; som mest går {max}.',
   'paper.notReadable': 'Filen gick inte att läsa.',
+  'paper.tooCostly':
+    'Den PDF:en är för komplex för att öppnas här. Spara den på nytt från programmet som skapade den, eller skriv ut den till en ny PDF, och försök med den.',
   'paper.reason.no-answer': 'en knapp, som inte samlar in något',
   'paper.reason.not-a-question': 'fylls i av dokumentet, inte av läsaren',
   'paper.reason.unreadable': 'ett val utan läsbara alternativ',

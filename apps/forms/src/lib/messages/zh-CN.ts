@@ -812,6 +812,8 @@ export const zhCN: Record<MessageKey, string> = {
   'paper.skipped': 'plural:other 跳过了 {count} 个字段',
   'paper.tooManyPages': '共有 {count} 页；最多支持 {max} 页。',
   'paper.notReadable': '无法读取该文件。',
+  'paper.tooCostly':
+    '该 PDF 过于复杂，无法在此打开。请从创建它的程序中重新保存，或将其打印为新的 PDF 后再试。',
   'paper.reason.no-answer': '按钮，不收集任何内容',
   'paper.reason.not-a-question': '由文档自动填写，而非读者',
   'paper.reason.unreadable': '没有可读选项的选择题',
