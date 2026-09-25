@@ -200,7 +200,8 @@ sends from their own mailbox.
 4. **Unsigned installers warn.** SmartScreen says "Windows protected your PC" until the owner has a
    code-signing certificate. On a Mac the app is **ad-hoc signed** (an Apple Silicon Mac will not
    run an unsigned binary at all) but not notarised, so Gatekeeper asks the first time: right-click
-   → Open. Notarising needs an Apple Developer ID; the config says what changes when it exists.
+   → Open. Notarising needs an Apple Developer ID; the build signs, hardens and notarises as soon
+   as its secrets are set (`apps/desktop/src/packaging/signing.ts`).
 5. **Updates.** D1 has none: a new version is a new installer, which keeps the data (uninstall
    leaves `%APPDATA%\Loppa`, or `~/Library/Application Support/Loppa`) and migrates it on first
    start (migrations run at every boot — safe here because one process owns the directory, unlike

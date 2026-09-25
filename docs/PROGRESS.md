@@ -3329,6 +3329,31 @@ The two LAUNCH-CHECKLIST §2.2a rows engineering could close, and one stale row:
 
 Gates: see the PR.
 
+## Desktop signing, ready for the certificates
+
+The last §2.2a row engineering could take. Adding the owner's secrets is now the whole switch — no
+file changes the day the certificates arrive:
+
+- **macOS**: `MAC_CSC_LINK` / `MAC_CSC_KEY_PASSWORD` (Developer ID .p12) and `APPLE_API_KEY` (the
+  .p8's text) / `APPLE_API_KEY_ID` / `APPLE_API_ISSUER`. `src/packaging/signing.ts` turns them into
+  a Developer ID signature with the hardened runtime and `packaging/entitlements.mac.plist` (JIT,
+  camera, Apple events — nothing else), notarised and stapled. A half-set credential group is
+  refused by name; a Developer ID without notarisation builds, with a warning. Without them, the
+  ad-hoc build is unchanged. **Windows**: `WIN_CSC_LINK` / `WIN_CSC_KEY_PASSWORD`, as before.
+- Both only on a release run: electron-builder skips signing on pull requests, which would leave a
+  Developer ID build with Electron's stock signature over a changed bundle.
+- The release notes' signing sentence is now **read off the built files** — `Get-AuthenticodeSignature`
+  on all three Windows executables; `codesign`, `spctl --assess` and `stapler validate` on the Mac
+  app — not off whether a secret was set. A certificate configured but not achieved fails the job.
+- Found on the way, pre-existing since the fuses (#141): `package:mac` off a Mac crashed in
+  `@electron/fuses`, which re-signs with a `codesign` Linux does not have. Off a Mac that re-sign is
+  now off (the zip was unsigned by design); `package:mac` on Linux builds the zip again, measured.
+
+**Not proven here**: the Developer ID and notarised paths have never run — there is no certificate
+and no Mac in this container. The unit tests pin the arguments; the first release with the secrets
+set is the real test, and the macOS job's smoke test (which launches the app, so a missing
+entitlement crashes it) and signature step are what will catch a fault.
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

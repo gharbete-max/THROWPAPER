@@ -37,6 +37,10 @@ permissions:
 jobs:
   windows:
     runs-on: windows-latest
+    # Read off the built Loppa.exe, not off whether a secret was set — the release notes say what
+    # this is.
+    outputs:
+      signed: ${{ steps.signature.outputs.signed }}
     steps:
       - uses: actions/checkout@v7
       # A `desktop-v1.2.3` tag must name the version the app is built as (apps/desktop/package.json):
@@ -63,8 +67,10 @@ jobs:
       # Sign runs beside Forms on the desktop; its signing page ships in the app.
       - run: pnpm --filter @tp/sign build
       # Code signing, the moment the owner adds a certificate (LAUNCH-CHECKLIST §6). electron-builder
-      # signs when CSC_LINK is set; an empty secret must not set it, or it tries and fails.
+      # signs when CSC_LINK is set; an empty secret must not set it, or it tries and fails. Not on a
+      # pull request, where electron-builder skips signing anyway — as on the Mac below.
       - name: Signing certificate, if there is one
+        if: github.event_name != 'pull_request'
         shell: bash
         env:
           LINK: ${{ secrets.WIN_CSC_LINK }}
@@ -102,6 +108,24 @@ jobs:
           Get-ChildItem -Recurse (Join-Path $profile 'workspace') | Select-Object FullName | Format-Table -HideTableHeaders
           if (-not $ok) { throw 'Loppa.exe did not answer on 127.0.0.1:47017 and :47018' }
 
+      # With a certificate configured, every file shipped must carry a valid signature; without
+      # one, none claims to. A certificate that was set and did not sign fails the build.
+      - name: Signature
+        id: signature
+        shell: pwsh
+        run: |
+          $files = @('apps/desktop/release/win-unpacked/Loppa.exe') +
+            (Get-ChildItem 'apps/desktop/release/Loppa-Setup-*.exe', 'apps/desktop/release/Loppa-*-portable.exe').FullName
+          $valid = 0
+          foreach ($file in $files) {
+            $signature = Get-AuthenticodeSignature -FilePath $file
+            "{0}: {1} {2}" -f (Split-Path $file -Leaf), $signature.Status, $signature.SignerCertificate.Subject
+            if ($signature.Status -eq 'Valid') { $valid++ }
+          }
+          $expected = -not [string]::IsNullOrEmpty($env:CSC_LINK)
+          if ($expected -and $valid -ne $files.Count) { throw 'A certificate is configured, but not every file is validly signed' }
+          "signed=$(if ($valid -eq $files.Count) { 'true' } else { 'false' })" >> $env:GITHUB_OUTPUT
+
       - uses: actions/upload-artifact@v7
         with:
           name: loppa-windows
@@ -115,6 +139,8 @@ jobs:
   macos:
     # Apple Silicon. The Intel image is built here too, by cross-arch packaging on the same host.
     runs-on: macos-latest
+    outputs:
+      signing: ${{ steps.signature.outputs.signing }}
     steps:
       - uses: actions/checkout@v7
       # A `desktop-v1.2.3` tag must name the version the app is built as (apps/desktop/package.json):
@@ -139,10 +165,68 @@ jobs:
       - run: pnpm --filter @tp/forms build
       # Sign runs beside Forms on the desktop; its signing page ships in the app.
       - run: pnpm --filter @tp/sign build
+      # The owner's Developer ID and Apple's notarisation key (LAUNCH-CHECKLIST §6), when they
+      # exist — src/packaging/signing.ts turns them into a signed, hardened, notarised app. Only on
+      # a release: electron-builder skips signing on a pull request, and a skipped Developer ID
+      # would leave the bundle unsigned, so pull requests keep proving the ad-hoc build instead.
+      - name: Developer ID, if there is one
+        if: github.event_name != 'pull_request'
+        env:
+          LINK: ${{ secrets.MAC_CSC_LINK }}
+          PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          API_KEY: ${{ secrets.APPLE_API_KEY }}
+          API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: |
+          set -euo pipefail
+          if [ -z "$LINK" ]; then
+            echo "No Developer ID configured: the Mac build is ad-hoc signed, and the release says so."
+            exit 0
+          fi
+          { echo "CSC_LINK=$LINK"; echo "CSC_KEY_PASSWORD=$PASSWORD"; } >> "$GITHUB_ENV"
+          if [ -n "$API_KEY" ]; then
+            # notarytool reads the App Store Connect key from a .p8 file; the secret is its text.
+            key="$RUNNER_TEMP/AuthKey.p8"
+            printf '%s' "$API_KEY" > "$key"
+            chmod 600 "$key"
+            { echo "APPLE_API_KEY=$key"; echo "APPLE_API_KEY_ID=$API_KEY_ID"; echo "APPLE_API_ISSUER=$API_ISSUER"; } >> "$GITHUB_ENV"
+          fi
+          echo "Signing with the configured Developer ID."
       - run: pnpm --filter @tp/desktop package:mac
 
-      # Same proof as Windows: the ad-hoc-signed arm64 app starts and its local server answers.
-      # An Apple Silicon Mac refuses an unsigned binary outright, so this is also the signing check.
+      # What the app actually is, read off it: Developer ID and accepted by Gatekeeper (notarised),
+      # Developer ID only, or ad-hoc. Configured and not achieved fails the build.
+      - name: Signature
+        id: signature
+        run: |
+          set -uo pipefail
+          # Both architectures: mac-arm64/ and the Intel one beside it.
+          for app in apps/desktop/release/mac*/Loppa.app; do
+            codesign --verify --deep --strict --verbose=2 "$app" || exit 1
+            codesign -dv "$app" 2>&1 | grep -E '^(Authority|TeamIdentifier|Runtime|Signature)' || true
+          done
+          app=apps/desktop/release/mac-arm64/Loppa.app
+          if codesign -dv "$app" 2>&1 | grep -q '^Authority=Developer ID Application'; then
+            if spctl --assess --type execute -vv "$app" && xcrun stapler validate "$app"; then
+              signing=notarised
+            else
+              signing=developer-id
+            fi
+          else
+            signing=ad-hoc
+          fi
+          echo "macOS signing: $signing"
+          if [ -n "${CSC_LINK:-}" ] && [ "$signing" = ad-hoc ]; then
+            echo "::error::a Developer ID is configured, but the app is ad-hoc signed"; exit 1
+          fi
+          if [ -n "${APPLE_API_KEY:-}" ] && [ "$signing" != notarised ]; then
+            echo "::error::notarisation is configured, but Gatekeeper does not accept the app"; exit 1
+          fi
+          echo "signing=$signing" >> "$GITHUB_OUTPUT"
+
+      # Same proof as Windows: the arm64 app starts and its local server answers. An Apple Silicon
+      # Mac refuses an unsigned binary outright, and a hardened runtime missing an entitlement the
+      # app needs crashes it, so this is also the signing check.
       - name: Smoke-test Loppa.app
         run: |
           profile="$RUNNER_TEMP/loppa-profile"
@@ -223,8 +307,9 @@ jobs:
           cat SHA256SUMS.txt
           ls -la
 
-      # Unsigned (Windows) and ad-hoc signed, not notarised (macOS) until the owner's certificates
-      # exist (LAUNCH-CHECKLIST §6); the notes say so, because SmartScreen and Gatekeeper will.
+      # The signing paragraph is what the build jobs read off the files they made: unsigned
+      # (Windows) and ad-hoc, not notarised (macOS) until the owner's certificates exist
+      # (LAUNCH-CHECKLIST §6) — the notes say so, because SmartScreen and Gatekeeper will.
       # Created as a draft with every file attached, then published — never a public release that
       # is still missing half its files.
       - name: Publish the release
@@ -232,9 +317,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.tag.outputs.name }}
           VERIFY: ${{ steps.tag.outputs.verify }}
+          WINDOWS_SIGNED: ${{ needs.windows.outputs.signed }}
+          MAC_SIGNING: ${{ needs.macos.outputs.signing }}
         run: |
           set -euo pipefail
           version="${TAG#desktop-v}"
+          if [ "$WINDOWS_SIGNED" = true ]; then
+            windows="The Windows files are code-signed."
+          else
+            windows="**The Windows files are not yet code-signed.** SmartScreen warns on first run: choose *More info → Run anyway*."
+          fi
+          case "$MAC_SIGNING" in
+            notarised) mac="The Mac builds are signed with a Developer ID and notarised by Apple." ;;
+            developer-id) mac="**The Mac builds are signed with a Developer ID but not notarised.** The first time, right-click Loppa and choose *Open*." ;;
+            *) mac="**The Mac builds are ad-hoc signed and not notarised.** The first time, right-click Loppa and choose *Open*." ;;
+          esac
           cat > notes.md <<NOTES
           Loppa desktop ${version} for Windows and macOS — forms, finished documents and email on one computer, offline.
 
@@ -245,7 +342,7 @@ jobs:
           | Loppa-macOS-AppleSilicon.dmg | Macs with an M-series chip |
           | Loppa-macOS-Intel.dmg | Macs with an Intel chip |
 
-          **Not yet code-signed.** Windows SmartScreen warns on first run: choose *More info → Run anyway*. The Mac builds are ad-hoc signed and not notarised: the first time, right-click Loppa and choose *Open*. Signing waits on the publisher's certificates.
+          ${windows} ${mac}
 
           Check a download: compare \`shasum -a 256 <file>\` (macOS) or \`Get-FileHash <file>\` (Windows) with SHA256SUMS.txt.
 
