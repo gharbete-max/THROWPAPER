@@ -3461,6 +3461,26 @@ folder was gone and the empty state showed. A saved file with a non-ASCII name c
 **Gates:** format, typecheck, lint (the 2 known warnings), test 189 files / 2183, build,
 contract:check 9/15, licence:check — each run on its own; `pnpm test:e2e` 53 passed (4.6 m).
 
+A second pass, before release as desktop 0.1.2, found and fixed five more:
+
+| # | Defect | Test |
+| - | ------ | ---- |
+| 1 | Signed out on the desktop, "Send sign-in link" put the link in To send — which cannot be opened signed out — and said "on its way". Now the link is kept nowhere in that mode, and the login page says to sign in from the menu (View → Sign in again) | `desktop/start.test.ts` (202, To send stays empty); packaged app |
+| 2 | With the desktop's own Sign, "Email each signer" and "Remind" could only send a link that opens on this computer; hidden there, kept for an online Sign. `/health` says where signers' links point | `routes/outgoing.test.ts`; packaged app |
+| 3 | "Opens only on this computer" followed the edition, so a desktop connected to an online Sign would have said it of links that open anywhere; now per link | `lib/edition.test.ts` |
+| 4 | The loopback check took `127.0.0.1.example.com` for this computer | `routes/outgoing.test.ts` |
+| 5 | The To send count stayed until the next navigation after opening or removing a message; "Add somebody" flashed up on the desktop before `/health` answered | packaged app |
+
+Driven again in the rebuilt packaged app: the count read "To send 1", then "To send" right after the
+email link was opened; Signing showed the local note and no email option; signed out, the login page
+showed the menu sentence and no email field, and a sign-in request left To send as it was.
+
+**Gates (second pass):** format, typecheck, lint (the 2 known warnings), test 190 files / 2189 with
+Postgres up (a first run without it skipped 47 and was not counted), build, contract:check 9/15,
+licence:check. `pnpm test:e2e`: one run failed `restart.spec.ts` (a job over 60 s after the restart)
+while the desktop was being packaged on the same machine; alone it passed in 1.2 m, and the whole
+suite then passed alone, 53/53 (4.4 m).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is
