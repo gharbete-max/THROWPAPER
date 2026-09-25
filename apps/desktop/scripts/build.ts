@@ -15,6 +15,7 @@ import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { build } from 'esbuild';
+import { macSigningPlan } from '../src/packaging/signing.js';
 
 const root = resolve(import.meta.dirname, '..');
 const repo = resolve(root, '..', '..');
@@ -206,15 +207,33 @@ async function main(): Promise<void> {
     }
     // Likewise a .dmg needs macOS's own disk-image tool, and signing needs its codesign. Off a
     // Mac, the macOS output is an unsigned zip — which an Apple Silicon Mac will refuse to run.
-    // It proves the packaging; the release comes from macos-latest.
+    // It proves the packaging; the release comes from macos-latest. Nor is there a codesign to
+    // re-sign the binary after its fuses are flipped: asked to, @electron/fuses crashes.
+    let macSigning = 'ad-hoc';
     if (target === 'mac' && process.platform !== 'darwin') {
-      args.push('-c.mac.target=zip', '-c.mac.identity=null');
+      args.push(
+        '-c.mac.target=zip',
+        '-c.mac.identity=null',
+        '-c.mac.hardenedRuntime=false',
+        '-c.electronFuses.resetAdHocDarwinSignature=false',
+      );
+    } else if (target === 'mac') {
+      // Ad-hoc, or the owner's Developer ID and notarisation when their secrets are set.
+      const plan = macSigningPlan(process.env, join(root, 'packaging', 'entitlements.mac.plist'));
+      for (const warning of plan.warnings) console.warn(`desktop: ${warning}`);
+      console.log(
+        `desktop: macOS signing ${plan.signing}${plan.notarise ? ', notarised' : ', not notarised'}`,
+      );
+      args.push(...plan.args);
+      macSigning = plan.signing;
     }
     args.push('--publish', 'never');
     execFileSync('pnpm', args, {
       cwd: root,
       stdio: 'inherit',
       shell: process.platform === 'win32',
+      // scripts/after-pack.cjs ad-hoc signs only when nothing better will sign after it.
+      env: { ...process.env, LOPPA_MAC_SIGNING: macSigning },
     });
   }
 }

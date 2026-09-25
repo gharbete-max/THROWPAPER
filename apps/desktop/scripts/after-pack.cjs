@@ -11,9 +11,14 @@ const { join } = require('node:path');
 
 exports.default = async function afterPack(context) {
   if (context.electronPlatformName !== 'darwin' || process.platform !== 'darwin') return;
+  // With the owner's Developer ID, electron-builder signs right after this hook, properly, with
+  // the hardened runtime (src/packaging/signing.ts). An ad-hoc signature here would only be
+  // replaced.
+  if (process.env.LOPPA_MAC_SIGNING === 'developer-id') return;
   const app = join(context.appOutDir, `${context.packager.appInfo.productFilename}.app`);
   // --deep signs the Electron frameworks and helpers inside; --force replaces their stock
-  // signatures. The hardened runtime stays off until there is a Developer ID to notarise with.
+  // signatures. No hardened runtime: ad-hoc is not notarised, and the runtime would only add
+  // library validation to a signature that proves nothing about who made it.
   execFileSync('codesign', ['--force', '--deep', '--sign', '-', app], { stdio: 'inherit' });
   execFileSync('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app], {
     stdio: 'inherit',

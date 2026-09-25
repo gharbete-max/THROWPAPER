@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  What the hardened runtime lets Loppa do once it is signed with a Developer ID
+  (src/packaging/signing.ts). Used for the app and, inherited, for Electron's helpers.
+
+  allow-jit: V8 compiles JavaScript, and PGlite's WebAssembly, at run time.
+  device.camera: scanning admission QR codes and photographing paper forms (NSCameraUsageDescription).
+  automation.apple-events: opening a draft in, or sending through, Outlook or Mail
+  (NSAppleEventsUsageDescription; apps/api-forms/src/mail/outlook.ts and draft.ts).
+
+  Nothing else: no unsigned executable memory, no disabled library validation, no microphone.
+-->
+<plist version="1.0">
+<dict>
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+  <key>com.apple.security.device.camera</key>
+  <true/>
+  <key>com.apple.security.automation.apple-events</key>
+  <true/>
+</dict>
+</plist>
