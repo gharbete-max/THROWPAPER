@@ -3,7 +3,7 @@
 > Building a form in Loppa is a conversation, not a canvas. The user is walked through a short, warm sequence of questions — "Do you want buttons? Yes → multiple choice? → How many? → Which shape? → Here's how it looks. Not quite? Click it to change it." Every answer is a patch applied to a working draft, so nothing is ever a dead state: the form exists and is publishable from the first answer. At any point the user can leave the conversation by dropping a PDF, Word file, or phone scan into the window and Loppa reads it, decides what is a question and what is prose, shows what it read with its unsure parts clearly flagged, and hands over a draft. From there the conversation resumes — but only about what is still undecided. No AI is involved anywhere: forms are not rocket science, and every decision here can be predetermined, written down as a rule, and tested.
 
 **Status:** plan, proposed 2026-09-25, from the owner's brief ("Loppa: Guided (Akinator-style) Form
-Builder + Document-To-Form Import"). Nothing here is built yet. The decisions it depends on are
+Builder + Document-To-Form Import"), now kept in the repository as `BRIEF.md` (revision 3). Nothing here is built yet. The decisions it depends on are
 ADRs 0017–0021; the open questions for the owner are at the end. Slices and milestones are in
 `ROADMAP.md` beside this file.
 
@@ -11,6 +11,7 @@ ADRs 0017–0021; the open questions for the owner are at the end. Slices and mi
 
 | File | What it fixes |
 | --- | --- |
+| `BRIEF.md` | the owner's brief, revision 3, reconciled with everything below — the mission; these files are the specification |
 | `PREDICTIVE-BUILDER.md` (this) | the product: two doors, the conversation, the preview contract, reconciliation, acceptance |
 | `BUILDER-GRAPH.md` | the conversation as data: node schema, `when` / `patch` / `score`, validation |
 | `INTENT-LADDER.md` | free text → an answer, T0–T8, and the alias file |
@@ -285,9 +286,11 @@ sidecar records which decisions the import made and at what bucket; the graph's 
 read `sidecar.fields[id].decided`, so a decided slot's node is skipped with an explanation
 ("Already read from your document").*
 
-## Conflicts between the brief and the repository, and how they are resolved
+## Where the brief was fitted to the repository
 
-Each is either resolved here with a reason, or is one of the questions below.
+Each item was a conflict between revision 2 of the brief and the repository. Revision 3
+(`BRIEF.md`, "What changed from revision 2") adopts every resolution below, with the owner's
+permission of 2026-09-25, so the brief and this plan now agree.
 
 1. **ADR 0004 says OCR never creates a field** and flat PDFs get "not OCR, not inference". The
    brief's import creates questions from text by rule. → ADR 0018 supersedes that sentence, and
@@ -312,7 +315,7 @@ Each is either resolved here with a reason, or is one of the questions below.
    ms, and the brand handoff makes `--tp-ease-unfurl` and `--tp-ease-chomp` "the only curves the
    interface is allowed to use" (`packages/tokens/src/compile-web.ts`). → a new duration token
    `--tp-motion-preview: 220ms` (duration is not restricted), on `--tp-ease-unfurl` (curve is). The
-   owner may overrule; `DESIGN-LANGUAGE.md` says where.
+   brief's revision 3 adopts this.
 8. **⌘1–9 to pick an option.** Every desktop browser takes ⌘/Ctrl+1–9 for switching tabs, and a
    page cannot reliably have them. → in the browser, **1–9** when the text entry is not focused
    and **Alt+1–9** anywhere; in the desktop app, ⌘/Ctrl+1–9 as well.
@@ -336,44 +339,42 @@ Each is either resolved here with a reason, or is one of the questions below.
     word object of the layout IR on twenty lines; the fixtures are written one word per line so a
     diff of a fixture reads like a diff of the document. `scripts/caveat-fixtures.test.ts`
     validates their structure instead.
-13. **"Don't commit, push, tag, or open a PR unless explicitly asked"** (brief §13) against this
-    cloud session's standing instruction to commit to its branch and open a draft PR. → the plan
-    set was committed to `claude/loppa-guided-builder-import-3lowra` when the session was told to
-    commit and push, and opened as a **draft** pull request: a draft is a place to review the plan,
-    not a request to merge it. Feature slices still wait for approval.
+13. **"Don't commit, push, tag, or open a PR unless explicitly asked"** (revision 2, §13) against
+    a cloud session's standing instruction to commit to its branch. → revision 3: a cloud session
+    commits each finished slice to its branch and keeps one **draft** pull request open — a place
+    to review, not a request to merge. A local session commits only when asked.
 
 ## Questions for the owner
 
-The brief's §14, each with what this plan assumes until answered:
+`BRIEF.md` §14, each with the assumption work proceeds on until it is answered:
 
-1. **Which package owns `builder/`, `import/`, `interpret/`, and which app hosts the UI?** *Assumed:*
-   `@tp/shared` (subpath exports), and `apps/forms` (the desktop hosts the same bundle).
+1. **Which package owns `builder/`, `import/`, `interpret/`, and which app hosts the UI?** *Proceeding
+   on:* `@tp/shared` (subpath exports), and `apps/forms` (the desktop hosts the same bundle). S1
+   built `@tp/shared/builder` on it.
 2. **Is the paper twin a first-class response PDF beside the standard one, or the default when the
-   form came from paper?** *Assumed:* both are offered, and the paper twin is the default for an
-   imported form that kept its source (the README already promises "a form made from paper comes
-   back as that paper").
-3. **Consent/GDPR text: may Loppa ever reformat it, or is it preserved byte for byte?** *Assumed:*
-   byte for byte, rendered as-is; only its container (the checkbox, the box it sits in) follows
-   the brand.
-4. **Are learned aliases per install, or a shared team file?** *Assumed:* per organisation
+   form came from paper?** *Proceeding on:* both are offered, and the paper twin is the default for
+   an imported form that kept its source (the README already promises "a form made from paper
+   comes back as that paper").
+3. **Consent/GDPR text: may Loppa ever reformat it, or is it preserved byte for byte?** *Proceeding
+   on:* byte for byte, rendered as-is; only its container (the checkbox, the box it sits in)
+   follows the brand.
+4. **Are learned aliases per install, or a shared team file?** *Proceeding on:* per organisation
    (`builder_aliases`), exportable and importable as `aliases.json`; on the desktop that is the
    install.
-5. **Is there an i18n workflow the graph strings must follow?** *Found:* a TypeScript catalogue per
-   locale (`apps/forms/src/lib/messages/`), no translation platform; a missing key is a compile
-   error. *Assumed:* graph strings go there, under `guided.*`.
-6. **Which brand-kit print/design constraints beat the layout shelf?** *Assumed:* the logo's aspect
-   ratio, the contrast floor (`packages/tokens` contrast guard) and the 44 px tap target are hard;
-   everything else in the shelf is a preference.
-7. **Which door is the headline?** *Assumed until answered:* the document import — so the detector
-   runs as **S1b**, immediately after S1, because it is the highest-risk module, it is blocked
-   only on the IR, and its failure would change the roadmap (the fallback is the paper-twin path:
-   keep the page as an image and place fields on it, which exists today).
+5. ~~Is there an i18n workflow the graph strings must follow?~~ *Answered by the repository:* a
+   TypeScript catalogue per locale (`apps/forms/src/lib/messages/`), no translation platform; a
+   missing key is a compile error. The graph's strings are there, under `guided.*` (S1).
+6. **Which brand-kit print/design constraints beat the layout shelf?** *Proceeding on:* the logo's
+   aspect ratio, the contrast floor (`packages/tokens` contrast guard) and the 44 px tap target are
+   hard; everything else in the shelf is a preference.
+7. **Which door is the headline?** *Proceeding on:* the document import — so the detector runs as
+   **S1b**, immediately after S1, because it is the highest-risk module, it is blocked only on the
+   IR, and its failure would change the roadmap (the fallback is the paper-twin path: keep the page
+   as an image and place fields on it, which exists today).
 
-And three this inventory raised:
+Three questions this plan raised are settled by revision 3 of the brief:
 
-8. **Motion** (conflict 7): accept `--tp-motion-preview` at 220 ms on the brand's `unfurl` curve,
-   or amend the brand handoff to admit the brief's curve?
-9. **Grid questions:** approve a grid field type (its own ADR, CSV shape first) for S9, or keep
-   the one-select-per-row fallback longer?
-10. **Reviewing:** the plan set is on `claude/loppa-guided-builder-import-3lowra` as a draft pull
-    request. Approve it there (or say what to change) before S1 starts.
+- **Motion** (item 7 above): 220 ms (`--tp-motion-preview`) on the brand's `unfurl` curve.
+- **Grid questions**: the one-select-per-row fallback stands until S9, which either writes the
+  grid field type's ADR (CSV shape first) or keeps the fallback.
+- **Commits**: each slice on the session branch, one draft pull request (item 13 above).

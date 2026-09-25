@@ -97,7 +97,9 @@ demos — keep it current with the schema.
 
 ## Guided Builder & Import
 
-The plan is `docs/plan/` (start at `PREDICTIVE-BUILDER.md`); the decisions are ADRs 0017–0021.
+The owner's brief is `docs/plan/BRIEF.md`; the plan is the rest of `docs/plan/` (start at
+`PREDICTIVE-BUILDER.md`), and where the two disagree the plan wins and the brief is fixed. The
+decisions are ADRs 0017–0021.
 Until those ADRs are accepted they are proposals, and ADR 0004 still governs the paper importer.
 
 - **Six non-negotiables.** (1) No AI, no LLM, no ML service, no network call at runtime: rules,

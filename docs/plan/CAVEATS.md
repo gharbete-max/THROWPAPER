@@ -120,7 +120,8 @@ Not yet decided, and not to be decided by an implementation quietly choosing:
   production today. Accepting it risks `3.5million`-style prose. Decide with corpus evidence, then
   add a production and a fixture together.
 - **Grid as a field type** — an imported grid is one `single_select` per row until a grid field
-  type exists (its own ADR, CSV shape first). Owner question 9 in `PREDICTIVE-BUILDER.md`.
+  type exists (its own ADR, CSV shape first). S9 writes that ADR or keeps the fallback
+  (`BRIEF.md` §12).
 - **Right-to-left** — none of the twelve locales is RTL; #36 tests a pseudo-RTL run so the day one
   is added is not the day RTL is discovered. `IrLine.words` is left to right by contract; an RTL
   locale would need an `irVersion` bump.
@@ -128,6 +129,4 @@ Not yet decided, and not to be decided by an implementation quietly choosing:
   `fixtures/documents/SOURCES.json` records each one's origin and licence.
 - **Handwriting** — a photographed form filled in by hand is out of scope: OCR reads print. A page
   that is mostly handwriting lands in `review` because its confidence is low; nothing more.
-- **Motion values** — 220 ms on the brand's `unfurl` curve is proposed against the brief's curve
-  (owner question 8).
 - **Consent reformatting** — byte for byte is assumed until the owner answers question 3.

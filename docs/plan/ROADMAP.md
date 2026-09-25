@@ -1,6 +1,6 @@
 # Roadmap — the predictive builder and document import
 
-**Status:** proposed 2026-09-25. This is the plan's own roadmap; the product's is
+**Status:** proposed 2026-09-25; the mission is `BRIEF.md` (revision 3). This is the plan's own roadmap; the product's is
 `docs/ROADMAP.md` (Track A / Track B), which points here. Updated at the end of every slice: the
 status column, new caveats in `CAVEATS.md`, and the slice's five-line summary under "Log".
 
@@ -61,7 +61,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 - **Demo:** **S1–S6** as Playwright journeys with keyboard-only twins; an imported form walked by
   the conversation asking only what is undecided (S6); a filled response coming back as its paper;
   a re-import asking before it removes anything.
-- **Not in this milestone:** a grid field type (unless owner question 9 approves its ADR),
+- **Not in this milestone:** a grid field type (unless S9 wrote its ADR),
   handwriting, community sharing of forms (ADR 0006: an owner decision with DSA obligations).
 
 ## Slices
@@ -92,7 +92,7 @@ when each slice ends.)*
   and 3 IR samples. Why: the brief's §11 — the plan lands before the code. Tests:
   `scripts/caveat-fixtures.test.ts` (fixtures well-formed, every §8.1/§8.2 row has one, every
   rule in `NUMBERING-RULES.md` names a fixture that exists; expectations `todo`). Next: S1, then
-  S1b. Open: the ten questions at the end of `PREDICTIVE-BUILDER.md`.
+  S1b. Open: the owner questions at the end of `PREDICTIVE-BUILDER.md`.
 - **S1, graph as data (2026-09-25).** What: `@tp/shared/builder` — the node schema (types and
   Zod), the path grammar and the table of writable paths, the `when` language (hand-written
   parser, total, bounded), the validator G0–G13, and the 17-node graph; 77 `guided.*` keys in all
@@ -102,3 +102,9 @@ when each slice ends.)*
   rule, guard grammar and totality, paths) and 4 in `apps/forms` (the real catalogues, both
   directions of key usage, icons). Next: S1b, the detector. Open: the owner questions still
   stand; S1 ran on the assumptions Q1 (`@tp/shared`) and Q7 (import is the headline).
+- **Brief revision 3 (2026-09-25).** What: the owner's brief is now `docs/plan/BRIEF.md`, with the
+  changes the first two turns found necessary applied (its closing section lists them), by the
+  owner's permission. Why: a brief that disagrees with the plan sends every later session back to
+  the same conflicts. Tests: none — documents only; `scripts/caveat-fixtures.test.ts` still holds
+  the ledger and the rules to their fixtures. Next: S1b. Open: owner questions 1–4, 6 and 7, each
+  with the assumption work proceeds on.

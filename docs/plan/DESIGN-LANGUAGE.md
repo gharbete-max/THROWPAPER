@@ -52,7 +52,8 @@ Motion explains where something went; it never decorates.
 - **The brief asks for 220 ms on `cubic-bezier(0.22, 1, 0.36, 1)`.** The brand handoff makes
   `unfurl` and `chomp` the only movement curves the interface may use (`packages/tokens`,
   `compile-web.ts`), and `unfurl` (`0.22, 0.75, 0.05, 1`) is the nearest. So: a new duration token,
-  the brand's curve. Changing the curve is a brand decision (owner question 8).
+  the brand's curve, as revision 3 of the brief settles (`BRIEF.md` §4.5). Changing the curve
+  would be a change to the brand handoff, not to this guide.
 - **`prefers-reduced-motion`**: nothing moves. Nodes and previews swap in place. This goes through
   the existing `useReducedMotion()` (`apps/forms/src/lib/motion.ts`), which also assumes *reduced*
   when it cannot ask.
