@@ -19,12 +19,15 @@
 export interface EmailText {
   subject: string;
   body: string;
+  /** Who it goes to, when the message already knows (the desktop's To send). */
+  to?: string;
 }
 
 /**
- * A `mailto:` link with no recipient — the person chooses who it goes to — and the subject and
- * body percent-encoded as RFC 6068 asks: spaces as `%20` (not `+`, which some clients print), and
- * line breaks as `%0D%0A`.
+ * A `mailto:` link, with the subject and body percent-encoded as RFC 6068 asks: spaces as `%20`
+ * (not `+`, which some clients print), and line breaks as `%0D%0A`. With no `to` the person
+ * chooses who it goes to; with one, it is the address and nothing else — encoded, so an address
+ * cannot add headers of its own.
  */
 export function mailtoHref(text: EmailText): string {
   const encode = (value: string) =>
@@ -32,7 +35,8 @@ export function mailtoHref(text: EmailText): string {
       /[!'()*]/g,
       (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`,
     );
-  return `mailto:?subject=${encode(text.subject)}&body=${encode(text.body)}`;
+  const to = text.to ? encode(text.to.trim()).replace(/%40/g, '@') : '';
+  return `mailto:${to}?subject=${encode(text.subject)}&body=${encode(text.body)}`;
 }
 
 /** Everything a clipboard paste into a webmail compose window needs. */

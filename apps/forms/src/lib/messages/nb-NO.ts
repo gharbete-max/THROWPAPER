@@ -12,6 +12,7 @@ export const nbNO: Record<MessageKey, string> = {
   'login.failed': 'Innloggingslenken kunne ikke sendes. Prøv igjen om litt.',
   'login.rateLimited':
     'Det er bedt om for mange innloggingslenker. Vent 15 minutter, og prøv igjen.',
+  'login.desktop': 'På denne datamaskinen logger du inn fra Loppas meny: View → Sign in again.',
 
   'login.title': 'Logg inn',
   'login.email': 'E-postadresse',
@@ -997,4 +998,24 @@ export const nbNO: Record<MessageKey, string> = {
     'Kameraet kunne ikke startes. Prøv igjen, eller bruk enhetens eget kamera.',
   'signing.source.file': 'PDF-fil',
   'signing.source.camera': 'Kamera',
+  'nav.outgoing': 'Til sending',
+  'outgoing.heading': 'Til sending',
+  'outgoing.intro':
+    'Ingenting sendes automatisk. Hver melding venter her til du åpner den i e-postprogrammet ditt og trykker Send der.',
+  'outgoing.empty': 'Ingenting venter på å bli sendt',
+  'outgoing.emptyHint':
+    'Bekreftelser, adgangskort og invitasjoner til å signere vises her når det er noe å sende.',
+  'outgoing.to': 'Til',
+  'outgoing.waitingOne': 'Venter',
+  'outgoing.opened': 'Åpnet {when}',
+  'outgoing.showText': 'Melding',
+  'outgoing.attachNote':
+    'En e-postlenke kan ikke legge ved filer. Lagre vedlegget og legg det ved meldingen.',
+  'outgoing.openIn': 'Åpne i {program}',
+  'outgoing.openEmailApp': 'Åpne i e-postappen',
+  'outgoing.openFailed': '{program} kunne ikke åpne meldingen. Bruk e-postappen i stedet.',
+  'outgoing.remove': 'Fjern',
+  'outgoing.removeConfirm': 'Fjerne meldingen til {to}? Den blir ikke sendt.',
+  'links.localOnly': 'Lenker åpnes bare på denne datamaskinen. Ingen andre kan åpne dem.',
+  'links.copiedLocal': 'Kopiert (bare på denne datamaskinen)',
 };

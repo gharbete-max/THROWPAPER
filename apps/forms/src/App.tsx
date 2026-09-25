@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
@@ -12,6 +12,8 @@ import { CommandPalette } from './components/CommandPalette.js';
 import { ToastProvider } from './lib/toast.js';
 import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
+import { OUTGOING_CHANGED, useEdition } from './lib/edition.js';
+import { client } from './lib/api.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
 
@@ -47,6 +49,7 @@ const Inbox = lazy(() => import('./screens/Inbox.js').then((m) => ({ default: m.
 const Users = lazy(() => import('./screens/Users.js').then((m) => ({ default: m.Users })));
 const Invoices = lazy(() => import('./screens/Invoices.js').then((m) => ({ default: m.Invoices })));
 const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
+const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
 const UserWorkspace = lazy(() =>
   import('./screens/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
@@ -124,7 +127,18 @@ export function App() {
  * `end` is deliberately **not** set: `/forms/:id` and `/forms/:id/submissions` are still Forms,
  * and a section that unhighlights the moment you open something inside it is worse than none.
  */
-function NavSection({ to, icon, label }: { to: string; icon: IconName; label: string }) {
+function NavSection({
+  to,
+  icon,
+  label,
+  count,
+}: {
+  to: string;
+  icon: IconName;
+  label: string;
+  /** How many are waiting there, when that is the point of the section. */
+  count?: number;
+}) {
   return (
     <NavLink
       className={({ isActive }) =>
@@ -136,8 +150,37 @@ function NavSection({ to, icon, label }: { to: string; icon: IconName; label: st
     >
       <Icon name={icon} className="icon--lead" />
       {label}
+      {count ? <span className="badge nav-link__count">{count}</span> : null}
     </NavLink>
   );
+}
+
+/**
+ * How many messages wait in To send, for the badge beside it. Asked again on every navigation,
+ * which is when a registration or a signing request has had the chance to add one.
+ */
+function useWaitingCount(enabled: boolean, path: string): number {
+  const [count, setCount] = useState(0);
+  const [changed, setChanged] = useState(0);
+  useEffect(() => {
+    const bump = () => setChanged((value) => value + 1);
+    window.addEventListener(OUTGOING_CHANGED, bump);
+    return () => window.removeEventListener(OUTGOING_CHANGED, bump);
+  }, []);
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    client.listOutgoing().then(
+      (list) => {
+        if (!cancelled) setCount(list.messages.filter((message) => !message.openedAt).length);
+      },
+      () => undefined,
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, path, changed]);
+  return count;
 }
 
 /** Everything behind the bearer token. */
@@ -147,6 +190,8 @@ function Shell() {
     useSession();
   const { tokens: brand } = useBrand();
   const location = useLocation();
+  const edition = useEdition();
+  const waiting = useWaitingCount(edition === 'desktop' && user !== null, location.pathname);
 
   if (loading) {
     return (
@@ -235,6 +280,10 @@ function Shell() {
               <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
               <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
               <NavSection to="/signing" icon="signature" label={t('nav.signing')} />
+              {/* The desktop sends nothing by itself: its mail waits here for somebody to send it. */}
+              {edition === 'desktop' && (
+                <NavSection to="/outgoing" icon="email" label={t('nav.outgoing')} count={waiting} />
+              )}
               {/* Support work, so it only appears for the people who do it. */}
               {user.role === 'admin' && (
                 <NavSection to="/users" icon="people" label={t('nav.users')} />
@@ -312,6 +361,7 @@ function Shell() {
               <Route path="/responses" element={<Inbox />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/signing" element={<Signing />} />
+              <Route path="/outgoing" element={<Outgoing />} />
               <Route path="/users" element={<Users />} />
               <Route path="/users/:id" element={<UserWorkspace />} />
               <Route path="/brand" element={<BrandKit />} />

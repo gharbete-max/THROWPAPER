@@ -12,6 +12,7 @@ export const isIS: Record<MessageKey, string> = {
   'login.failed': 'Ekki tókst að senda innskráningartengilinn. Reyndu aftur eftir smástund.',
   'login.rateLimited':
     'Beðið hefur verið um of marga innskráningartengla. Bíddu í 15 mínútur og reyndu svo aftur.',
+  'login.desktop': 'Í þessari tölvu skráir þú þig inn úr valmynd Loppa: View → Sign in again.',
 
   'login.title': 'Skrá inn',
   'login.email': 'Netfang',
@@ -1001,4 +1002,24 @@ export const isIS: Record<MessageKey, string> = {
     'Ekki tókst að ræsa myndavélina. Reyndu aftur eða notaðu myndavél tækisins.',
   'signing.source.file': 'PDF-skrá',
   'signing.source.camera': 'Myndavél',
+  'nav.outgoing': 'Til sendingar',
+  'outgoing.heading': 'Til sendingar',
+  'outgoing.intro':
+    'Ekkert er sent sjálfkrafa. Hver skilaboð bíða hér þar til þú opnar þau í tölvupóstforritinu þínu og ýtir þar á Senda.',
+  'outgoing.empty': 'Ekkert bíður sendingar',
+  'outgoing.emptyHint':
+    'Staðfestingar, aðgangskort og boð um undirritun birtast hér þegar eitthvað er til að senda.',
+  'outgoing.to': 'Til',
+  'outgoing.waitingOne': 'Bíður',
+  'outgoing.opened': 'Opnað {when}',
+  'outgoing.showText': 'Skilaboð',
+  'outgoing.attachNote':
+    'Tölvupósttengill getur ekki hengt skrár við. Vistaðu viðhengið og hengdu það við skilaboðin.',
+  'outgoing.openIn': 'Opna í {program}',
+  'outgoing.openEmailApp': 'Opna í tölvupóstforriti',
+  'outgoing.openFailed': '{program} gat ekki opnað skilaboðin. Notaðu tölvupóstforritið í staðinn.',
+  'outgoing.remove': 'Fjarlægja',
+  'outgoing.removeConfirm': 'Fjarlægja skilaboðin til {to}? Þau verða ekki send.',
+  'links.localOnly': 'Tenglar opnast aðeins í þessari tölvu. Enginn annar getur opnað þá.',
+  'links.copiedLocal': 'Afritað (aðeins í þessari tölvu)',
 };

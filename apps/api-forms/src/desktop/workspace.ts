@@ -23,6 +23,8 @@ export interface WorkspacePaths {
   assets: string;
   /** Test-mode mail: every message written here as an `.eml` file instead of being sent. */
   outbox: string;
+  /** Mail waiting for the person to press Send in their own mail program (`mail/queue.ts`). */
+  toSend: string;
   /** Short-lived files — a page being printed, a message being handed to Outlook — removed after use. */
   tmp: string;
   settings: string;
@@ -37,6 +39,7 @@ export function workspacePaths(root: string): WorkspacePaths {
     uploads: join(root, 'documents', 'uploads'),
     assets: join(root, 'documents', 'assets'),
     outbox: join(root, 'outbox'),
+    toSend: join(root, 'to-send'),
     tmp: join(root, 'tmp'),
     settings: join(root, 'settings.json'),
     secrets: join(root, 'secrets.json'),
@@ -50,6 +53,7 @@ export async function ensureWorkspace(paths: WorkspacePaths): Promise<void> {
     paths.uploads,
     paths.assets,
     paths.outbox,
+    paths.toSend,
     paths.tmp,
   ]) {
     await mkdir(dir, { recursive: true });

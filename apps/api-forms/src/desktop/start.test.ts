@@ -2,7 +2,7 @@ import { mkdtemp, readdir, readFile, rm, writeFile, mkdir } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { browserChoices, mailProviderFor, startDesktopServer } from './start.js';
+import { browserChoices, draftProgramFor, mailProviderFor, startDesktopServer } from './start.js';
 import { defaultSettings, readSettings, writeSettings } from './settings.js';
 import { loadOrCreateSecrets, workspacePaths } from './workspace.js';
 import type { PdfRenderer } from '../documents/render.js';
@@ -58,6 +58,19 @@ describe('the desktop server', { timeout: 60_000 }, () => {
       ).toBe(true);
       expect(await server.loadDemo()).toBe(false);
 
+      // A sign-in link asked for on the login page is kept nowhere: To send is for somebody
+      // already signed in, so it would wait where nobody could reach it. The menu signs in.
+      const asked = await fetch(`${server.url}/v1/auth/magic-link`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email: 'ake@example.com' }),
+      });
+      expect(asked.status).toBe(202);
+      expect(await readdir(join(dataDir, 'to-send'))).toEqual([]);
+      expect(
+        ((await (await fetch(`${server.url}/health`)).json()) as { edition: string }).edition,
+      ).toBe('desktop');
+
       const link = await server.signInLink();
       const token = new URL(link!).searchParams.get('token');
       const exchanged = await fetch(`${server.url}/v1/auth/token`, {
@@ -75,7 +88,7 @@ describe('the desktop server', { timeout: 60_000 }, () => {
 
       // Everything the user owns is under one folder.
       expect((await readdir(dataDir)).sort()).toEqual(
-        ['database', 'documents', 'outbox', 'secrets.json', 'tmp'].sort(),
+        ['database', 'documents', 'outbox', 'secrets.json', 'tmp', 'to-send'].sort(),
       );
     } finally {
       await server.close();
@@ -184,9 +197,10 @@ describe('the desktop server', { timeout: 60_000 }, () => {
 });
 
 describe('desktop settings', () => {
-  it('defaults to test-mode mail, AI off and local signing', () => {
+  it('defaults to mail the person sends themselves, AI off and local signing', () => {
     const settings = defaultSettings();
-    expect(settings.mail.mode).toBe('outbox');
+    expect(settings.mail.mode).toBe('program');
+    expect(settings.mail.program).toBe('auto');
     expect(settings.ai.mode).toBe('off');
     expect(settings.signing.mode).toBe('local');
   });
@@ -214,6 +228,26 @@ describe('desktop settings', () => {
 
     settings.mail.smtp = { host: 'smtp.example.com', port: 587, secure: false };
     expect(mailProviderFor(settings, paths).name).toBe('smtp');
+  });
+
+  it('sends nothing by default: every message waits in To send', async () => {
+    const paths = workspacePaths(join(scratch, 'queued'));
+    const provider = mailProviderFor(defaultSettings(), paths);
+    expect(provider.name).toBe('queue');
+    await provider.send({ to: 'a@example.com', subject: 'Hej', text: 'Tack.' });
+    expect(await readdir(paths.toSend)).toHaveLength(1);
+  });
+
+  it('opens drafts in the program chosen, or in none for "my default email app"', () => {
+    const paths = workspacePaths(scratch);
+    const settings = defaultSettings();
+    expect(draftProgramFor(settings, paths, 'darwin')?.label).toBe('Apple Mail');
+    expect(draftProgramFor(settings, paths, 'win32')?.label).toBe('Outlook');
+    settings.mail.program = 'outlook';
+    expect(draftProgramFor(settings, paths, 'darwin')?.label).toBe('Outlook');
+    settings.mail.program = 'mailto';
+    expect(draftProgramFor(settings, paths, 'darwin')).toBeNull();
+    expect(draftProgramFor(settings, paths, 'linux')).toBeNull();
   });
 
   it('hands mail to Outlook when that is chosen, on the platforms that have it', () => {

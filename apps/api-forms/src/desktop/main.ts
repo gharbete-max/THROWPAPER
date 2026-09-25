@@ -24,7 +24,13 @@ const link = await server.signInLink();
 console.log(
   `\n  Loppa is running on this machine only: ${server.url}\n` +
     `  Data folder:  ${dataDir}\n` +
-    `  Mail:         ${server.settings.mail.mode === 'outbox' ? `test mode — written to ${server.paths.outbox}` : 'SMTP'}\n` +
+    `  Mail:         ${
+      server.settings.mail.mode === 'program'
+        ? `waits to be sent from your own mail program — ${server.paths.toSend}`
+        : server.settings.mail.mode === 'outbox'
+          ? `test mode — written to ${server.paths.outbox}`
+          : server.settings.mail.mode
+    }\n` +
     (link
       ? `  Sign in:      ${link}\n                (single use, 15 minutes; restart for another)\n`
       : '  Not set up yet. Run again with --demo for the demo data, or use the desktop app.\n'),

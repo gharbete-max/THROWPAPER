@@ -20,18 +20,22 @@ import {
  * already attached, types who it is for, and presses Send themselves. Nothing leaves the computer
  * until they do (rule 7) — this opens a window, it sends nothing.
  *
- * The same defence as `outlook.ts`: every script below is a constant. The subject, the body and the
- * attachment's name reach the script as files in a folder whose path is the only argument (macOS),
- * or as a JSON file named by an environment variable (Windows). No recipient is ever set.
+ * The same defence as `outlook.ts`: every script below is a constant. The recipient, the subject,
+ * the body and the attachments' names reach the script as files in a folder whose path is the only
+ * argument (macOS), or as a JSON file named by an environment variable (Windows). The recipient is
+ * set only when there is one — a queued confirmation has its respondent's address; "Email
+ * document" has none, and the person types it.
  *
  * The attachment stays on disk after the draft opens: Apple Mail reads the file when the message is
  * sent, not when it is attached, so deleting it at once would send an empty attachment. Drafts live
  * under `scratchDir/drafts` and anything older than a day is swept on the next draft.
  */
 export interface MailDraft {
+  /** Omitted when the person chooses who it is for, in their mail program. */
+  to?: string;
   subject: string;
   text: string;
-  attachment: { filename: string; content: Buffer };
+  attachments: Array<{ filename: string; content: Buffer }>;
 }
 
 export interface MailDrafter {
@@ -45,6 +49,7 @@ export const WINDOWS_OUTLOOK_DRAFT_SCRIPT = [
   '$job = Get-Content -Raw -Encoding UTF8 -LiteralPath $env:LOPPA_MAIL_JOB | ConvertFrom-Json',
   'try { $outlook = New-Object -ComObject Outlook.Application } catch { exit 3 }',
   '$mail = $outlook.CreateItem(0)',
+  'if ($job.to) { [void]$mail.Recipients.Add($job.to) }',
   '$mail.Subject = $job.subject',
   '$mail.Body = $job.text',
   'foreach ($path in $job.attachments) { [void]$mail.Attachments.Add($path) }',
@@ -54,6 +59,7 @@ export const WINDOWS_OUTLOOK_DRAFT_SCRIPT = [
 const MAC_READ_DRAFT_FIELDS = [
   'on run argv',
   '  set jobFolder to item 1 of argv',
+  '  set toAddress to read (POSIX file (jobFolder & "/to.txt")) as «class utf8»',
   '  set subjectLine to read (POSIX file (jobFolder & "/subject.txt")) as «class utf8»',
   '  set bodyText to read (POSIX file (jobFolder & "/body.txt")) as «class utf8»',
   '  set attachmentPaths to paragraphs of (read (POSIX file (jobFolder & "/attachments.txt")) as «class utf8»)',
@@ -68,6 +74,7 @@ export const MAC_OUTLOOK_DRAFT_SCRIPT = [
   '  end try',
   '  tell application "Microsoft Outlook"',
   '    set newMessage to make new outgoing message with properties {subject:subjectLine, content:bodyText}',
+  '    if length of toAddress > 0 then make new to recipient at newMessage with properties {email address:{address:toAddress}}',
   '    repeat with attachmentPath in attachmentPaths',
   '      if length of attachmentPath > 0 then make new attachment at newMessage with properties {file:(POSIX file (attachmentPath as text))}',
   '    end repeat',
@@ -82,6 +89,7 @@ export const MAC_APPLE_MAIL_DRAFT_SCRIPT = [
   '  tell application "Mail"',
   '    set newMessage to make new outgoing message with properties {subject:subjectLine, content:bodyText, visible:true}',
   '    tell newMessage',
+  '      if length of toAddress > 0 then make new to recipient at end of to recipients with properties {address:toAddress}',
   '      repeat with attachmentPath in attachmentPaths',
   '        if length of attachmentPath > 0 then make new attachment with properties {file name:(POSIX file (attachmentPath as text))} at after the last paragraph',
   '      end repeat',
@@ -120,22 +128,30 @@ export function createMailDrafter(options: MailDrafterOptions): MailDrafter | nu
       await sweep(root, now());
 
       const dir = join(root, randomUUID());
-      const folder = join(dir, 'a0');
-      await mkdir(folder, { recursive: true });
-      // Its own name, minus anything that is not a name: no separators, no control characters.
-      const name =
-        [...basename(draft.attachment.filename.replace(/[\\/]/g, '_'))]
-          .map((char) => (char.charCodeAt(0) < 0x20 ? '_' : char))
-          .join('') || 'document.pdf';
-      const path = join(folder, name);
-      await writeFile(path, draft.attachment.content, { mode: 0o600 });
+      await mkdir(dir, { recursive: true });
+      // One folder per attachment, so two with the same name are still two files.
+      const paths: string[] = [];
+      for (const [index, attachment] of draft.attachments.entries()) {
+        const folder = join(dir, `a${index}`);
+        await mkdir(folder, { recursive: true });
+        // Its own name, minus anything that is not a name: no separators, no control characters.
+        const name =
+          [...basename(attachment.filename.replace(/[\\/]/g, '_'))]
+            .map((char) => (char.charCodeAt(0) < 0x20 ? '_' : char))
+            .join('') || 'document.pdf';
+        const path = join(folder, name);
+        await writeFile(path, attachment.content, { mode: 0o600 });
+        paths.push(path);
+      }
+      // An address is one line: anything after a line break would be a second recipient.
+      const to = (draft.to ?? '').split(/[\r\n]/)[0]!.trim();
 
       let result;
       if (platform === 'win32') {
         const job = join(dir, 'job.json');
         await writeFile(
           job,
-          JSON.stringify({ subject: draft.subject, text: draft.text, attachments: [path] }),
+          JSON.stringify({ to, subject: draft.subject, text: draft.text, attachments: paths }),
           { encoding: 'utf8', mode: 0o600 },
         );
         result = await run(
@@ -151,7 +167,12 @@ export function createMailDrafter(options: MailDrafterOptions): MailDrafter | nu
           { LOPPA_MAIL_JOB: job },
         );
       } else {
-        const fields = { subject: draft.subject, body: draft.text, attachments: path };
+        const fields = {
+          to,
+          subject: draft.subject,
+          body: draft.text,
+          attachments: paths.join('\n'),
+        };
         for (const [field, value] of Object.entries(fields)) {
           const file = MAC_FIELD_FILES[field as keyof typeof fields];
           await writeFile(join(dir, file), value, { encoding: 'utf8', mode: 0o600 });

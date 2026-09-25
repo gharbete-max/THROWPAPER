@@ -28,6 +28,20 @@ describe('mailto', () => {
     expect(params.get('subject')).toBe('x&attach=C:\\secret.txt&bcc=all@example.com');
   });
 
+  it('addresses it when the message knows who it is for, and only to them', () => {
+    expect(
+      mailtoHref({ ...text, to: 'bjorn@example.com' }).startsWith('mailto:bjorn@example.com?'),
+    ).toBe(true);
+    const hostile = mailtoHref({
+      subject: 's',
+      body: 'b',
+      to: 'a@example.com?bcc=all@example.com&x=',
+    });
+    expect(hostile.startsWith('mailto:a@example.com%3Fbcc%3Dall@example.com%26x%3D?')).toBe(true);
+    const params = new URLSearchParams(hostile.slice(hostile.indexOf('?') + 1));
+    expect([...params.keys()].sort()).toEqual(['body', 'subject']);
+  });
+
   it('escapes the characters encodeURIComponent leaves alone', () => {
     expect(mailtoHref({ subject: "it's (1)!", body: '*' })).toBe(
       'mailto:?subject=it%27s%20%281%29%21&body=%2A',

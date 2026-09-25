@@ -3416,6 +3416,71 @@ bridge, Back up not at all.
 **Gates:** format, typecheck, lint (the 2 known warnings), test 187 files / 2159, build,
 contract:check 9/15, licence:check — each run on its own; `pnpm test:e2e` 52 passed (6.0 m).
 
+## Offline first — the desktop sends nothing by itself
+
+E-signing online, links others can open, admission cards by email and outbound mail in general are
+not in production yet, so the desktop now works fully offline, tied to the person's own email:
+
+- **To send.** Every message the app would have sent — the confirmation with its admission card,
+  the organiser's notice, a signer's invitation — is kept in `workspace/to-send` (one folder per
+  message, `0600`, written by rename; `mail/queue.ts`) and listed on a new desktop-only screen,
+  with a count beside it in the sidebar. **Open in Outlook / Apple Mail** makes a draft there,
+  addressed and with the attachment; **Open in email app** is a `mailto:` addressed to the
+  recipient, with the attachment offered to save because a link cannot carry a file; **Remove**
+  asks first and is audited. The screen says a message was *opened*, never *sent*: only the mail
+  program knows that. API: `GET /v1/outgoing`, `POST …/:id/open`, `POST …/:id/opened`,
+  `GET …/:id/attachments/:n`, `DELETE …/:id` — registered only where there is a queue, so a server
+  answers 404. `/health` now says `edition: desktop | server`.
+- **Settings.** "Open each message in my email program" is the new default mail mode (`program`,
+  with auto / Outlook / Apple Mail / default email app). Test mode stays. SMTP, Outlook-send and
+  Apple-Mail-send moved under **Advanced**, still behind the rule 7 tick; choosing `program` needs
+  no tick because it sends nothing.
+- **Links say where they work.** On the desktop, a form's address, signers' links and the
+  save-and-continue link carry "Links open only on this computer."
+- **Adding people is hidden** on the desktop — a sign-in link to another address opens nowhere.
+- Unchanged, by the owner's choice: the phone scan over the LAN, the e-ID step, and the
+  online/cloud options in Settings.
+
+`packages/` and `docs/CONTRACT.md` are **not** touched. `mail/draft.ts` gained a recipient and
+several attachments (constant scripts still; the address is one line of data in a file).
+
+**Verified in the packaged Linux app** (fresh profile, demo data, Xvfb over CDP, stub `xdg-open`):
+the default is `program`/`auto` and `/health` says `desktop`; Users has no "Add somebody"; the form
+card says its link opens only here; a registration on `/f/varmotet` put one message in
+`to-send` — to the registrant, the admission card `Åsa-Öberg-HD4Q-DRFS.pdf` (23 kB) attached —
+and nothing in the outbox; the sidebar shows **To send**; with no mail program to drive (Linux) the
+card offers **Open in email app** and the save note; the attachment saved as a PDF; the link reached
+the OS as `mailto:asa@example.com?subject=…%E2%80%94…&body=…%0D%0A…`, and the card turned
+**Opened**; **Remove** asked "Remove the message to asa@example.com? It will not be sent.", then the
+folder was gone and the empty state showed. A saved file with a non-ASCII name came out as
+`download` only while the container had no UTF-8 locale; with `LANG=C.UTF-8` the name is kept.
+
+**Not verified:** Open in Outlook / Apple Mail with the recipient set — no Windows or Mac here
+(`LAUNCH-CHECKLIST.md` §2.2a).
+
+**Gates:** format, typecheck, lint (the 2 known warnings), test 189 files / 2183, build,
+contract:check 9/15, licence:check — each run on its own; `pnpm test:e2e` 53 passed (4.6 m).
+
+A second pass, before release as desktop 0.1.2, found and fixed five more:
+
+| # | Defect | Test |
+| - | ------ | ---- |
+| 1 | Signed out on the desktop, "Send sign-in link" put the link in To send — which cannot be opened signed out — and said "on its way". Now the link is kept nowhere in that mode, and the login page says to sign in from the menu (View → Sign in again) | `desktop/start.test.ts` (202, To send stays empty); packaged app |
+| 2 | With the desktop's own Sign, "Email each signer" and "Remind" could only send a link that opens on this computer; hidden there, kept for an online Sign. `/health` says where signers' links point | `routes/outgoing.test.ts`; packaged app |
+| 3 | "Opens only on this computer" followed the edition, so a desktop connected to an online Sign would have said it of links that open anywhere; now per link | `lib/edition.test.ts` |
+| 4 | The loopback check took `127.0.0.1.example.com` for this computer | `routes/outgoing.test.ts` |
+| 5 | The To send count stayed until the next navigation after opening or removing a message; "Add somebody" flashed up on the desktop before `/health` answered | packaged app |
+
+Driven again in the rebuilt packaged app: the count read "To send 1", then "To send" right after the
+email link was opened; Signing showed the local note and no email option; signed out, the login page
+showed the menu sentence and no email field, and a sign-in request left To send as it was.
+
+**Gates (second pass):** format, typecheck, lint (the 2 known warnings), test 190 files / 2189 with
+Postgres up (a first run without it skipped 47 and was not counted), build, contract:check 9/15,
+licence:check. `pnpm test:e2e`: one run failed `restart.spec.ts` (a job over 60 s after the restart)
+while the desktop was being packaged on the same machine; alone it passed in 1.2 m, and the whole
+suite then passed alone, 53/53 (4.4 m).
+
 ## Next
 
 **v0.1 is code-complete.** Phases 0–5 are merged and `main` is green. The loop closes: a form is

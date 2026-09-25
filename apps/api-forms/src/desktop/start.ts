@@ -8,8 +8,9 @@ import { createLocalUploadStore } from '../uploads/private-store.js';
 import { createPdfRenderer, type BrowserChoice, type PdfRenderer } from '../documents/render.js';
 import type { MailProvider } from '../mail/provider.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from '../mail/smtp.js';
-import { createMailProgramProvider } from '../mail/outlook.js';
+import { createMailProgramProvider, type MailProgram } from '../mail/outlook.js';
 import { createMailDrafter, type MailDrafter } from '../mail/draft.js';
+import { createOutgoingStore, createQueueMailProvider } from '../mail/queue.js';
 import { readSettings, type DesktopSettings } from './settings.js';
 import { createPhoneScanStore } from '../phone-scan/store.js';
 import { createPhoneRelay } from './phone-relay.js';
@@ -88,6 +89,18 @@ export interface DesktopServer {
   close(): Promise<void>;
 }
 
+/**
+ * Sign-in links while mail waits in To send: kept nowhere. To send is for somebody signed in, so a
+ * link put there could never be reached; the desktop signs in from its own menu (View → Sign in
+ * again), which mints a link and opens it itself. The login page says so on the desktop.
+ */
+export const signInFromTheMenu: MailProvider = {
+  name: 'desktop-menu',
+  async send() {
+    return { messageId: 'desktop-menu' };
+  },
+};
+
 export function mailProviderFor(
   settings: DesktopSettings,
   paths: WorkspacePaths,
@@ -95,6 +108,8 @@ export function mailProviderFor(
   platform: NodeJS.Platform = process.platform,
 ): MailProvider {
   const { mail } = settings;
+  // The default: the app sends nothing; each message waits for the person to press Send.
+  if (mail.mode === 'program') return createQueueMailProvider(createOutgoingStore(paths.toSend));
   if (mail.mode === 'smtp' && mail.smtp) {
     const { smtp } = mail;
     return createSmtpMailProvider({
@@ -212,6 +227,7 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     app = await buildServer({
       repos: local.repos,
       mail: mailProviderFor(settings, paths, options.unprotect),
+      ...(settings.mail.mode === 'program' ? { signInMail: signInFromTheMenu } : {}),
       store: createLocalDocumentStore({
         directory: paths.documents,
         signingSecret: secrets.documentSigningSecret,
@@ -233,6 +249,10 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       phoneOrigin: () => relay.open(),
       mailDraft:
         options.mailDraft === undefined ? draftProgramFor(settings, paths) : options.mailDraft,
+      // The To send screen: always there on the desktop, so mail queued while "open in my email
+      // program" was chosen stays reachable after switching to another mode.
+      outgoing: createOutgoingStore(paths.toSend),
+      edition: 'desktop',
     });
     guardLoopbackHost(app);
     await app.listen({ port, host: '127.0.0.1' });
@@ -276,13 +296,21 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
  * or classic Outlook on Windows — which may not be installed; the draft then fails with a sentence
  * saying so, and the page falls back to download-and-attach. `null` off Windows and macOS.
  */
-function draftProgramFor(settings: DesktopSettings, paths: WorkspacePaths): MailDrafter | null {
-  const mode = settings.mail.mode;
-  const program =
+export function draftProgramFor(
+  settings: DesktopSettings,
+  paths: WorkspacePaths,
+  platform: NodeJS.Platform = process.platform,
+): MailDrafter | null {
+  const { mode, program: chosen } = settings.mail;
+  // "Whatever the system opens for an email link": no program to drive, so the page uses mailto.
+  if (mode === 'program' && chosen === 'mailto') return null;
+  const program: MailProgram =
     mode === 'outlook' || mode === 'apple-mail'
       ? mode
-      : process.platform === 'darwin'
-        ? 'apple-mail'
-        : 'outlook';
-  return createMailDrafter({ program, platform: process.platform, scratchDir: paths.tmp });
+      : mode === 'program' && (chosen === 'outlook' || chosen === 'apple-mail')
+        ? chosen
+        : platform === 'darwin'
+          ? 'apple-mail'
+          : 'outlook';
+  return createMailDrafter({ program, platform, scratchDir: paths.tmp });
 }

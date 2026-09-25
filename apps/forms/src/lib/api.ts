@@ -11,6 +11,23 @@ export interface BrandKitResponse {
   warnings: ContrastFinding[];
 }
 
+/** One message in the desktop's To send list (`api-forms/src/mail/queue.ts`). */
+export interface OutgoingMessage {
+  id: string;
+  to: string;
+  subject: string;
+  text: string;
+  attachments: Array<{ filename: string; contentType: string; bytes: number }>;
+  createdAt: string;
+  openedAt: string | null;
+}
+
+export interface OutgoingList {
+  /** The mail program Send opens a draft in; `null` means the email link instead. */
+  program: string | null;
+  messages: OutgoingMessage[];
+}
+
 /** One card on the attendance list: a registrant, or a guest they brought. */
 export interface AttendeeRow {
   submissionId: string;
@@ -162,7 +179,16 @@ async function requestBlob(path: string, retry = true): Promise<Blob> {
 
 export const client = {
   /** Whether this server is a demo. Drives the banner and the sign-in shortcut. */
-  health: () => request<{ status: string; mode: 'demo' | 'live'; database: string }>('/health'),
+  health: () =>
+    request<{
+      status: string;
+      mode: 'demo' | 'live';
+      database: string;
+      /** The desktop edition shows To send and says which links work only on this computer. */
+      edition?: 'desktop' | 'server';
+      /** Where signers' links point; `this-computer` means they cannot be emailed to anybody. */
+      signing?: 'this-computer' | 'online' | 'off';
+    }>('/health'),
 
   demoInfo: () =>
     request<{ demo: true; formSlug: string; users: Array<{ email: string; role: string }> }>(
@@ -282,6 +308,16 @@ export const client = {
   openPhoneScan: () => request<formSchemas.PhoneScanSession>('/v1/phone-scans', { method: 'POST' }),
   phoneScan: (id: string) =>
     request<Omit<formSchemas.PhoneScanSession, 'phoneUrl' | 'qrSvg'>>(`/v1/phone-scans/${id}`),
+  /** The desktop's To send list: mail waiting for its person to press Send. */
+  listOutgoing: () => request<OutgoingList>('/v1/outgoing'),
+  openOutgoing: (id: string) =>
+    request<OutgoingMessage>(`/v1/outgoing/${id}/open`, { method: 'POST' }),
+  markOutgoingOpened: (id: string) =>
+    request<OutgoingMessage>(`/v1/outgoing/${id}/opened`, { method: 'POST' }),
+  outgoingAttachment: (id: string, index: number) =>
+    requestBlob(`/v1/outgoing/${id}/attachments/${index}`),
+  removeOutgoing: (id: string) => request<null>(`/v1/outgoing/${id}`, { method: 'DELETE' }),
+
   phoneScanPage: (id: string, n: number) => requestBlob(`/v1/phone-scans/${id}/pages/${n}`),
   closePhoneScan: (id: string) => request<void>(`/v1/phone-scans/${id}`, { method: 'DELETE' }),
   phoneScanStatus: (token: string) =>

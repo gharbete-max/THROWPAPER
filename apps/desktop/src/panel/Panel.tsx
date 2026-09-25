@@ -128,7 +128,10 @@ function Settings({
 
   const smtp = settings.mail.smtp ?? { host: '', port: 587, secure: false, hasPassword: false };
   // The same rule `settings-form.ts` enforces in the main process; this only decides what to show.
-  const startsSending = settings.mail.mode !== 'outbox' && settings.mail.mode !== initial.mail.mode;
+  const sendsByItself = (mode: PanelSettings['mail']['mode']) =>
+    mode !== 'outbox' && mode !== 'program';
+  const startsSending =
+    sendsByItself(settings.mail.mode) && settings.mail.mode !== initial.mail.mode;
   const offersOutlook = platform === 'win32' || platform === 'darwin';
   const offersAppleMail = platform === 'darwin';
 
@@ -167,53 +170,104 @@ function Settings({
           <legend>{t.mailHeading}</legend>
           <Choice
             name="mail"
+            value="program"
+            checked={settings.mail.mode === 'program'}
+            onChange={() => patch({ mail: { ...settings.mail, mode: 'program' } })}
+          >
+            {t.mailProgram}
+          </Choice>
+          {settings.mail.mode === 'program' ? (
+            <>
+              <p className="note">{t.mailProgramLead}</p>
+              <label>
+                {t.mailProgramChoice}
+                <select
+                  // Only the programs this computer can have; anything else opens the email link.
+                  value={
+                    (settings.mail.program === 'auto' || settings.mail.program === 'outlook') &&
+                    !offersOutlook
+                      ? 'mailto'
+                      : settings.mail.program === 'apple-mail' && !offersAppleMail
+                        ? 'mailto'
+                        : settings.mail.program
+                  }
+                  onChange={(event) =>
+                    patch({
+                      mail: {
+                        ...settings.mail,
+                        program: event.target.value as PanelSettings['mail']['program'],
+                      },
+                    })
+                  }
+                >
+                  {offersOutlook ? <option value="auto">{t.mailProgramAuto}</option> : null}
+                  {offersOutlook ? <option value="outlook">{t.mailProgramOutlook}</option> : null}
+                  {offersAppleMail ? (
+                    <option value="apple-mail">{t.mailProgramAppleMail}</option>
+                  ) : null}
+                  <option value="mailto">{t.mailProgramMailto}</option>
+                </select>
+              </label>
+            </>
+          ) : null}
+          <Choice
+            name="mail"
             value="outbox"
             checked={settings.mail.mode === 'outbox'}
             onChange={() => patch({ mail: { ...settings.mail, mode: 'outbox' } })}
           >
             {t.mailOutbox}
           </Choice>
-          <Choice
-            name="mail"
-            value="smtp"
-            checked={settings.mail.mode === 'smtp'}
-            onChange={() => patch({ mail: { ...settings.mail, mode: 'smtp', smtp } })}
-          >
-            {t.mailSmtp}
-          </Choice>
-          {offersOutlook ? (
+          {/* Sending without a person pressing Send: kept, but out of the way (rule 7 still asks). */}
+          <details open={sendsByItself(initial.mail.mode)}>
+            <summary>{t.mailAdvanced}</summary>
             <Choice
               name="mail"
-              value="outlook"
-              checked={settings.mail.mode === 'outlook'}
-              onChange={() => patch({ mail: { ...settings.mail, mode: 'outlook' } })}
+              value="smtp"
+              checked={settings.mail.mode === 'smtp'}
+              onChange={() => patch({ mail: { ...settings.mail, mode: 'smtp', smtp } })}
             >
-              {platform === 'win32' ? t.mailOutlookWindows : t.mailOutlookMac}
+              {t.mailSmtp}
             </Choice>
-          ) : null}
-          {offersAppleMail ? (
-            <Choice
-              name="mail"
-              value="apple-mail"
-              checked={settings.mail.mode === 'apple-mail'}
-              onChange={() => patch({ mail: { ...settings.mail, mode: 'apple-mail' } })}
-            >
-              {t.mailAppleMail}
-            </Choice>
-          ) : null}
+            {offersOutlook ? (
+              <Choice
+                name="mail"
+                value="outlook"
+                checked={settings.mail.mode === 'outlook'}
+                onChange={() => patch({ mail: { ...settings.mail, mode: 'outlook' } })}
+              >
+                {platform === 'win32' ? t.mailOutlookWindows : t.mailOutlookMac}
+              </Choice>
+            ) : null}
+            {offersAppleMail ? (
+              <Choice
+                name="mail"
+                value="apple-mail"
+                checked={settings.mail.mode === 'apple-mail'}
+                onChange={() => patch({ mail: { ...settings.mail, mode: 'apple-mail' } })}
+              >
+                {t.mailAppleMail}
+              </Choice>
+            ) : null}
+          </details>
           {settings.mail.mode === 'outlook' || settings.mail.mode === 'apple-mail' ? (
             <p className="note">
               {platform === 'win32' ? t.mailProgramNoteWindows : t.mailProgramNoteMac}
             </p>
           ) : null}
-          <label>
-            {t.mailFrom}
-            <input
-              type="email"
-              value={settings.mail.from}
-              onChange={(event) => patch({ mail: { ...settings.mail, from: event.target.value } })}
-            />
-          </label>
+          {/* The person's own account says who it is from when they press Send themselves. */}
+          {settings.mail.mode !== 'program' ? (
+            <label>
+              {t.mailFrom}
+              <input
+                type="email"
+                value={settings.mail.from}
+                onChange={(event) =>
+                  patch({ mail: { ...settings.mail, from: event.target.value } })
+                }
+              />
+            </label>
+          ) : null}
           {settings.mail.mode === 'smtp' ? (
             <>
               <label>

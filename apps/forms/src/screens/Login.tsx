@@ -2,12 +2,15 @@ import { useState, type FormEvent } from 'react';
 import { ApiError, client, setSession } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useDemo } from '../lib/demo.js';
+import { useEdition } from '../lib/edition.js';
 import { PoweredBy, Wordmark } from '../components/Logo.js';
 import { useBrand } from '../lib/brand.js';
 
 export function Login() {
   const t = useT();
   const { isDemo, users } = useDemo();
+  // The desktop signs in from its own menu: a link asked for here would have nowhere to go.
+  const desktop = useEdition() === 'desktop';
   const { tokens } = useBrand();
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'failed' | 'rate-limited'>(
@@ -85,7 +88,11 @@ export function Login() {
         </div>
       )}
 
-      {state === 'sent' ? (
+      {desktop ? (
+        <div className="card">
+          <p>{t('login.desktop')}</p>
+        </div>
+      ) : state === 'sent' ? (
         <div className="card">
           <p>{t('login.sent')}</p>
           {/* A note about the api-forms console has no business on a production screen. */}

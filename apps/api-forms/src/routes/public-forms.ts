@@ -671,7 +671,7 @@ export function registerPublicFormRoutes(
           await drafter.open({
             subject: body.subject,
             text: body.text,
-            attachment: { filename: finished.filename, content: finished.pdf },
+            attachments: [{ filename: finished.filename, content: finished.pdf }],
           });
         } catch (error) {
           request.log.warn({ err: error }, 'email draft failed');

@@ -21,7 +21,7 @@ const EN = {
 
   setupTitle: 'Welcome to Loppa',
   setupLead:
-    'Everything stays on this computer: your forms, the answers, the documents and the email outbox live in one folder you can back up by copying it.',
+    'Everything stays on this computer: your forms, the answers, the documents and the messages waiting to be sent live in one folder you can back up by copying it. Nothing is emailed until you press Send in your own email program.',
   setupOrganisation: 'Organisation name',
   setupName: 'Your name',
   setupEmail: 'Your email address',
@@ -36,6 +36,15 @@ const EN = {
   settingsCancel: 'Close',
 
   mailHeading: 'Email',
+  mailProgram: 'Open each message in my email program — I press Send (recommended)',
+  mailProgramLead:
+    'Nothing is sent automatically. Confirmations, admission cards and invitations wait under To send until you open them.',
+  mailProgramChoice: 'Email program',
+  mailProgramAuto: 'The usual one (Outlook on Windows, Apple Mail on a Mac)',
+  mailProgramOutlook: 'Outlook (classic)',
+  mailProgramAppleMail: 'Apple Mail',
+  mailProgramMailto: 'My default email app — attachments are saved for me to attach',
+  mailAdvanced: 'Advanced: send automatically',
   mailOutbox: 'Test mode — write every email to the outbox folder, send nothing',
   mailSmtp: 'Send through my mail server (SMTP)',
   mailOutlookWindows: 'Send through Outlook on this computer (classic Outlook)',
@@ -99,7 +108,7 @@ const SV: typeof EN = {
 
   setupTitle: 'Välkommen till Loppa',
   setupLead:
-    'Allt stannar på den här datorn: formulären, svaren, dokumenten och utkorgen ligger i en mapp som du säkerhetskopierar genom att kopiera den.',
+    'Allt stannar på den här datorn: formulären, svaren, dokumenten och meddelandena som väntar på att skickas ligger i en mapp som du säkerhetskopierar genom att kopiera den. Ingenting mejlas förrän du trycker på Skicka i ditt eget e-postprogram.',
   setupOrganisation: 'Organisationens namn',
   setupName: 'Ditt namn',
   setupEmail: 'Din e-postadress',
@@ -114,6 +123,16 @@ const SV: typeof EN = {
   settingsCancel: 'Stäng',
 
   mailHeading: 'E-post',
+  mailProgram:
+    'Öppna varje meddelande i mitt e-postprogram — jag trycker på Skicka (rekommenderas)',
+  mailProgramLead:
+    'Inget skickas automatiskt. Bekräftelser, entrékort och inbjudningar väntar under Att skicka tills du öppnar dem.',
+  mailProgramChoice: 'E-postprogram',
+  mailProgramAuto: 'Det vanliga (Outlook på Windows, Apple Mail på en Mac)',
+  mailProgramOutlook: 'Outlook (klassiska)',
+  mailProgramAppleMail: 'Apple Mail',
+  mailProgramMailto: 'Min vanliga e-postapp — bilagor sparas så att jag bifogar dem',
+  mailAdvanced: 'Avancerat: skicka automatiskt',
   mailOutbox: 'Testläge — skriv all e-post till utkorgsmappen, skicka ingenting',
   mailSmtp: 'Skicka via min e-postserver (SMTP)',
   mailOutlookWindows: 'Skicka via Outlook på den här datorn (klassiska Outlook)',

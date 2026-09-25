@@ -280,7 +280,13 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
     // nothing (`smtp.ts`). So are Outlook and Apple Mail on the desktop (`outlook.ts`): the message
     // leaves from the user's own account on their provider's servers, with a sender this product
     // neither chooses nor can verify — the same position as the user writing it by hand.
-    if (!['console', 'memory', 'outbox', 'outlook', 'apple-mail'].includes(deps.provider.name)) {
+    // The same for the desktop's queue: it sends nothing, and the person sends each message from
+    // their own account themselves (`mail/queue.ts`).
+    if (
+      !['console', 'memory', 'outbox', 'queue', 'outlook', 'apple-mail'].includes(
+        deps.provider.name,
+      )
+    ) {
       const verification = sendingDomain
         ? {
             domain: sendingDomain.domain,

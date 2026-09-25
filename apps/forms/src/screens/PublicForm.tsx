@@ -27,6 +27,7 @@ import { PoweredBy } from '../components/Logo.js';
 import { FinishedDocument, type FinishedDocumentHandle } from '../components/FinishedDocument.js';
 import { IdentityStep } from '../components/IdentityStep.js';
 import { finishedState, readFinished } from '../lib/finished-state.js';
+import { opensOnlyHere, useEdition } from '../lib/edition.js';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
 
@@ -95,6 +96,8 @@ export default function PublicForm() {
   );
   const resolved = resolveLocale(locales, locale);
   const t = useTranslator(locales, resolved);
+  // Filled in on the desktop: the link opens only on this computer.
+  const edition = useEdition();
 
   // The banner lives above the router and would otherwise stay in the session's language.
   useAnnounceLocale(resolved);
@@ -692,6 +695,9 @@ export default function PublicForm() {
             <div className="card stack">
               <strong>{t('public.savedTitle')}</strong>
               <p className="small muted">{t('public.savedBody')}</p>
+              {opensOnlyHere(resumeLink, edition) && (
+                <p className="small muted">{t('links.localOnly')}</p>
+              )}
               <input readOnly value={resumeLink} onFocus={(event) => event.target.select()} />
               <button
                 type="button"

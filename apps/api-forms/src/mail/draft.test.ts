@@ -20,7 +20,7 @@ afterAll(async () => {
 const hostile = {
   subject: `Vårmötet "2026" '; $(Remove-Item C:\\) \`whoami\` end tell`,
   text: 'Bifogat: Vårmötet.pdf\nReferens: K7M2QX',
-  attachment: { filename: '../../Åsa\n$(evil).pdf', content: Buffer.from('%PDF-1.7 hej') },
+  attachments: [{ filename: '../../Åsa\n$(evil).pdf', content: Buffer.from('%PDF-1.7 hej') }],
 };
 
 function recorder(result = { code: 0, stdout: '', stderr: '' }) {
@@ -60,12 +60,11 @@ describe('a draft in the mail program on this computer', () => {
     expect(call!.args.at(-1)).toBe(WINDOWS_OUTLOOK_DRAFT_SCRIPT);
     expect(WINDOWS_OUTLOOK_DRAFT_SCRIPT).toContain('$mail.Display()');
     expect(WINDOWS_OUTLOOK_DRAFT_SCRIPT).not.toContain('Send()');
-    // No recipient: the person chooses who it goes to, in their own mail program.
-    expect(WINDOWS_OUTLOOK_DRAFT_SCRIPT).not.toContain('.To');
     for (const arg of call!.args) expect(arg).not.toContain('Remove-Item');
     const job = JSON.parse(call!.files['job.json']!);
     expect(job.subject).toBe(hostile.subject);
-    expect(job).not.toHaveProperty('to');
+    // No recipient given: the person chooses who it goes to, in their own mail program.
+    expect(job.to).toBe('');
   });
 
   it('macOS: the only argument is our folder; Outlook opens the message, Mail shows it', async () => {
@@ -80,10 +79,57 @@ describe('a draft in the mail program on this computer', () => {
         program === 'outlook' ? MAC_OUTLOOK_DRAFT_SCRIPT : MAC_APPLE_MAIL_DRAFT_SCRIPT,
       );
       expect(call!.args[1]).not.toMatch(/\bsend\b/);
-      expect(call!.args[1]).not.toContain('recipient');
       expect(call!.files['subject.txt']).toBe(hostile.subject);
-      expect(call!.files['to.txt']).toBeUndefined();
+      expect(call!.files['to.txt']).toBe('');
     }
+  });
+
+  /*
+   * A queued confirmation is addressed: the draft opens with its respondent in To, and the
+   * address still reaches the script only as data. One line of it, so a respondent's typed address
+   * cannot add a second recipient.
+   */
+  it('addresses the draft when there is a recipient, as data and one line only', async () => {
+    const to = 'asa@example.com\nevil@example.com';
+    for (const [platform, program] of [
+      ['win32', 'outlook'],
+      ['darwin', 'outlook'],
+      ['darwin', 'apple-mail'],
+    ] as const) {
+      const { calls, run } = recorder();
+      await createMailDrafter({ program, platform, scratchDir: scratch, run })!.open({
+        ...hostile,
+        to,
+      });
+      const [call] = calls;
+      const address =
+        platform === 'win32' ? JSON.parse(call!.files['job.json']!).to : call!.files['to.txt'];
+      expect(address).toBe('asa@example.com');
+      for (const arg of call!.args) expect(arg).not.toContain('example.com');
+    }
+    expect(WINDOWS_OUTLOOK_DRAFT_SCRIPT).toContain('$mail.Recipients.Add($job.to)');
+    expect(WINDOWS_OUTLOOK_DRAFT_SCRIPT).not.toContain('Send()');
+  });
+
+  it('attaches every file it is given, each under its own name', async () => {
+    const { calls, run } = recorder();
+    await createMailDrafter({
+      program: 'apple-mail',
+      platform: 'darwin',
+      scratchDir: scratch,
+      run,
+    })!.open({
+      subject: 'Two',
+      text: '',
+      attachments: [
+        { filename: 'card.pdf', content: Buffer.from('%PDF-1') },
+        { filename: 'card.pdf', content: Buffer.from('%PDF-2') },
+      ],
+    });
+    const paths = calls[0]!.files['attachments.txt']!.split('\n');
+    expect(paths).toHaveLength(2);
+    expect(new Set(paths).size).toBe(2);
+    expect((await readFile(paths[1]!)).toString()).toBe('%PDF-2');
   });
 
   it('keeps the attachment a name and never a path, and keeps it on disk for the draft', async () => {

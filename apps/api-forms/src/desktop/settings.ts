@@ -19,11 +19,24 @@ export const AiMode = z.enum(['off', 'online', 'cloud']);
  */
 export const SigningMode = z.enum(['local', 'online', 'cloud']);
 /**
- * Mail. `outbox` is test mode (rule 7): `.eml` files in a folder, nothing sent. `smtp` is a mail
- * server the user names; `outlook` and `apple-mail` hand each message to the mail program already
- * on this computer, which sends it from the user's own account (`mail/outlook.ts`).
+ * Mail.
+ *
+ * - `program` — the default: **nothing is sent by the app**. Every message waits on the To send
+ *   screen until the person opens it as a draft in their own mail program and presses Send there
+ *   (`mail/queue.ts`). Offline first means the app never mails anybody on its own.
+ * - `outbox` is test mode (rule 7): `.eml` files in a folder, nothing sent.
+ * - Advanced, and each behind rule 7's confirmation: `smtp`, a mail server the user names;
+ *   `outlook` and `apple-mail`, which hand each message to that program to send on its own
+ *   (`mail/outlook.ts`).
  */
-export const MailMode = z.enum(['outbox', 'smtp', 'outlook', 'apple-mail']);
+export const MailMode = z.enum(['program', 'outbox', 'smtp', 'outlook', 'apple-mail']);
+
+/**
+ * Which program a draft opens in. `auto` is Apple Mail on a Mac and classic Outlook on Windows;
+ * `mailto` is whatever the system opens for an email link — any program, but without the
+ * attachment, which the To send screen then offers to save.
+ */
+export const DraftProgram = z.enum(['auto', 'outlook', 'apple-mail', 'mailto']);
 
 export const SmtpSettings = z.object({
   host: z.string().trim().min(1),
@@ -46,7 +59,8 @@ export const DesktopSettings = z.object({
   port: z.number().int().min(1024).max(65535).default(47017),
   mail: z
     .object({
-      mode: MailMode.default('outbox'),
+      mode: MailMode.default('program'),
+      program: DraftProgram.default('auto'),
       from: z.string().email().default('loppa@localhost.localdomain'),
       smtp: SmtpSettings.optional(),
     })
