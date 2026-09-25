@@ -8,6 +8,9 @@ export const daDK: Record<MessageKey, string> = {
   'app.signOut': 'Log ud',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',
+  'app.loadFailed': 'Det kunne ikke indlæses. Tjek forbindelsen, og prøv igen.',
+  'login.failed': 'Login-linket kunne ikke sendes. Prøv igen om lidt.',
+  'login.rateLimited': 'Der er bedt om for mange login-links. Vent 15 minutter, og prøv så igen.',
 
   'login.title': 'Log ind',
   'login.email': 'E-mailadresse',

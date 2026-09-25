@@ -8,6 +8,10 @@ export const isIS: Record<MessageKey, string> = {
   'app.signOut': 'Skrá út',
   'app.language': 'Tungumál',
   'app.loading': 'Hleð…',
+  'app.loadFailed': 'Ekki tókst að hlaða þessu. Athugaðu tenginguna og reyndu aftur.',
+  'login.failed': 'Ekki tókst að senda innskráningartengilinn. Reyndu aftur eftir smástund.',
+  'login.rateLimited':
+    'Beðið hefur verið um of marga innskráningartengla. Bíddu í 15 mínútur og reyndu svo aftur.',
 
   'login.title': 'Skrá inn',
   'login.email': 'Netfang',

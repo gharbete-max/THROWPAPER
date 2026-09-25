@@ -1,10 +1,14 @@
-/** A one-page PDF, written out by hand so the spec needs no PDF library. */
-export function tinyPdf(text: string): Buffer {
+/**
+ * A one-page PDF, written out by hand so the spec needs no PDF library. `rotate` sets the page's
+ * `/Rotate`, as a scanner often does.
+ */
+export function tinyPdf(text: string, rotate = 0): Buffer {
+  const content = `BT /F1 18 Tf 72 760 Td (${text}) Tj ET`;
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
     '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
-    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
-    `<< /Length ${`BT /F1 18 Tf 72 760 Td (${text}) Tj ET`.length} >>\nstream\nBT /F1 18 Tf 72 760 Td (${text}) Tj ET\nendstream`,
+    `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Rotate ${rotate} /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>`,
+    `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
   ];
   let body = '%PDF-1.7\n';

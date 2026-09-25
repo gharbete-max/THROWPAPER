@@ -13,6 +13,9 @@ export const zhCN: Record<MessageKey, string> = {
   'app.signOut': '退出登录',
   'app.language': '语言',
   'app.loading': '加载中…',
+  'app.loadFailed': '无法加载。请检查网络连接后重试。',
+  'login.failed': '无法发送登录链接。请稍后重试。',
+  'login.rateLimited': '请求登录链接的次数过多。请等待 15 分钟后重试。',
 
   'login.title': '登录',
   'login.email': '电子邮件地址',

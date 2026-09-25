@@ -8,6 +8,10 @@ export const nbNO: Record<MessageKey, string> = {
   'app.signOut': 'Logg ut',
   'app.language': 'Språk',
   'app.loading': 'Laster…',
+  'app.loadFailed': 'Dette kunne ikke lastes. Sjekk tilkoblingen og prøv igjen.',
+  'login.failed': 'Innloggingslenken kunne ikke sendes. Prøv igjen om litt.',
+  'login.rateLimited':
+    'Det er bedt om for mange innloggingslenker. Vent 15 minutter, og prøv igjen.',
 
   'login.title': 'Logg inn',
   'login.email': 'E-postadresse',

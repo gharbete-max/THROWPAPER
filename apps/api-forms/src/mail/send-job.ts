@@ -299,7 +299,13 @@ export function createMailSendHandler(deps: MailDeps): JobHandler {
 
     if (templateKey === 'registration.confirmation') {
       const to = submission.email;
-      if (!to) throw new Error('submission has no email address to confirm to');
+      /*
+       * A form that asks for no address — a paper form, an inspection — has nobody to confirm to.
+       * That is the form's design, not a fault: skipped, like the notification with no operator
+       * address below. It threw, so every such submission left a job that failed three times and
+       * an error in the log for each attempt.
+       */
+      if (!to) return { skipped: 'the form asks for no email address' };
 
       const locale = submission.locale;
       const copy = copyFor(locale);

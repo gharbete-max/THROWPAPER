@@ -8,6 +8,10 @@ export const esES: Record<MessageKey, string> = {
   'app.signOut': 'Cerrar sesión',
   'app.language': 'Idioma',
   'app.loading': 'Cargando…',
+  'app.loadFailed': 'No se pudo cargar. Comprueba la conexión e inténtalo de nuevo.',
+  'login.failed': 'No se pudo enviar el enlace de acceso. Inténtalo de nuevo en un momento.',
+  'login.rateLimited':
+    'Se han pedido demasiados enlaces de acceso. Espera 15 minutos y vuelve a intentarlo.',
 
   'login.title': 'Iniciar sesión',
   'login.email': 'Dirección de correo',

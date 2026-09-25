@@ -269,6 +269,7 @@ export async function renderFinishedDocument(
       input.submission,
       input.definition,
       locales,
+      title,
     );
     // A paper whose source has gone missing still has answers worth keeping: fall through.
     if (filled) return { pdf: filled.pdf, filename };

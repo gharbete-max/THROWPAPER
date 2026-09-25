@@ -14,6 +14,9 @@ export const enGB = {
   'app.signOut': 'Sign out',
   'app.language': 'Language',
   'app.loading': 'Loading…',
+  'app.loadFailed': 'This could not be loaded. Check the connection and try again.',
+  'login.failed': 'The sign-in link could not be sent. Try again in a moment.',
+  'login.rateLimited': 'Too many sign-in links were asked for. Wait 15 minutes, then try again.',
 
   'login.title': 'Sign in',
   'login.email': 'Email address',

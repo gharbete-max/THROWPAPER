@@ -7,6 +7,7 @@ import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { Loading } from '../components/Loading.js';
 import { EmptyState } from '../components/EmptyState.js';
+import { LoadFailed } from '../components/LoadFailed.js';
 import { Icon } from '../components/Icon.js';
 
 /**
@@ -25,17 +26,27 @@ export function Invoices() {
   const t = useT();
   const { locale, locales } = useSession();
   const [data, setData] = useState<invoicingSchemas.InvoiceListResponse | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    void client.listInvoices().then((response) => {
-      if (!cancelled) setData(response);
-    });
+    setFailed(false);
+    client.listInvoices().then(
+      (response) => {
+        if (!cancelled) setData(response);
+      },
+      // Without this a failed request left the spinner up for good.
+      () => {
+        if (!cancelled) setFailed(true);
+      },
+    );
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
+  if (failed) return <LoadFailed onRetry={() => setAttempt((value) => value + 1)} />;
   if (!data) return <Loading />;
 
   /*

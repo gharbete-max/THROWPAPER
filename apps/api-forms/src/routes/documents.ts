@@ -183,10 +183,14 @@ export function registerDocumentRoutes(
         entityId: submission.id,
       });
 
-      return reply
-        .header('content-type', 'application/pdf')
-        .header('content-disposition', `attachment; filename="${rendered.filename}"`)
-        .send(rendered.pdf);
+      return (
+        reply
+          .header('content-type', 'application/pdf')
+          // Named after the attendee: a Cyrillic or CJK name raw in the header made Node refuse
+          // the response, and the card for a Russian or Japanese registrant was a 500.
+          .header('content-disposition', contentDisposition(rendered.filename))
+          .send(rendered.pdf)
+      );
     },
   });
 

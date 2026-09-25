@@ -8,6 +8,10 @@ export const frFR: Record<MessageKey, string> = {
   'app.signOut': 'Se déconnecter',
   'app.language': 'Langue',
   'app.loading': 'Chargement…',
+  'app.loadFailed': 'Le chargement a échoué. Vérifiez la connexion et réessayez.',
+  'login.failed': 'Le lien de connexion n’a pas pu être envoyé. Réessayez dans un instant.',
+  'login.rateLimited':
+    'Trop de liens de connexion ont été demandés. Attendez 15 minutes, puis réessayez.',
 
   'login.title': 'Se connecter',
   'login.email': 'Adresse e-mail',

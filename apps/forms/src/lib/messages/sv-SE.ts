@@ -8,6 +8,10 @@ export const svSE: Record<MessageKey, string> = {
   'app.signOut': 'Logga ut',
   'app.language': 'Språk',
   'app.loading': 'Laddar…',
+  'app.loadFailed': 'Det gick inte att läsa in. Kontrollera anslutningen och försök igen.',
+  'login.failed': 'Inloggningslänken kunde inte skickas. Försök igen om en stund.',
+  'login.rateLimited':
+    'För många inloggningslänkar har begärts. Vänta 15 minuter och försök sedan igen.',
 
   'login.title': 'Logga in',
   'login.email': 'E-postadress',

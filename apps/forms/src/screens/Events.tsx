@@ -8,6 +8,7 @@ import { formatDateTime, useT } from '../lib/i18n.js';
 import { Icon } from '../components/Icon.js';
 import { useConfirm } from '../components/Confirm.js';
 import { EmptyState } from '../components/EmptyState.js';
+import { LoadFailed } from '../components/LoadFailed.js';
 import { Meter } from '../components/Meter.js';
 import { Loading } from '../components/Loading.js';
 import { Reveal } from '../components/Signed.js';
@@ -19,11 +20,15 @@ export function Events() {
   const [events, setEvents] = useState<api.EventResponse[] | null>(null);
   const isAdmin = user?.role === 'admin';
 
+  const [failed, setFailed] = useState(false);
+
   const load = useCallback(() => {
+    setFailed(false);
     client
       .listEvents()
       .then((result) => setEvents(result.events))
-      .catch(() => setEvents([]));
+      // Not `[]`: a failed request knows nothing about whether there are events.
+      .catch(() => setFailed(true));
   }, []);
 
   useEffect(load, [load]);
@@ -50,7 +55,8 @@ export function Events() {
 
       {!isAdmin && <p className="muted small">{t('events.adminOnly')}</p>}
 
-      {events === null && <Loading />}
+      {failed && <LoadFailed onRetry={load} />}
+      {!failed && events === null && <Loading />}
       {events?.length === 0 && (
         <EmptyState
           icon="events"

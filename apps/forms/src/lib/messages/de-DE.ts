@@ -8,6 +8,11 @@ export const deDE: Record<MessageKey, string> = {
   'app.signOut': 'Abmelden',
   'app.language': 'Sprache',
   'app.loading': 'Wird geladen…',
+  'app.loadFailed':
+    'Konnte nicht geladen werden. Bitte die Verbindung prüfen und erneut versuchen.',
+  'login.failed': 'Der Anmeldelink konnte nicht gesendet werden. Bitte gleich erneut versuchen.',
+  'login.rateLimited':
+    'Zu viele Anmeldelinks angefordert. Bitte 15 Minuten warten und dann erneut versuchen.',
 
   'login.title': 'Anmelden',
   'login.email': 'E-Mail-Adresse',

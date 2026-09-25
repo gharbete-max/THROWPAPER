@@ -70,15 +70,28 @@ export function classifyNavigation(
   to: string,
   origins: readonly string[],
 ): Navigation {
-  let source: URL;
   let target: URL;
   try {
-    source = new URL(from);
     target = new URL(to);
   } catch {
     return 'deny';
   }
-  if (source.protocol === 'file:') return 'deny';
+  /*
+   * A window that has not loaded anything yet has no URL, or `about:blank`: the window `Open`
+   * makes for the finished document, before its first page. `classifyOpen` already let that window
+   * exist, so its first navigation is judged by where it goes. Parsing the empty URL threw, the
+   * navigation was refused, and "Open" showed a blank window forever.
+   */
+  const fresh = from === '' || from === 'about:blank';
+  if (!fresh) {
+    let source: URL;
+    try {
+      source = new URL(from);
+    } catch {
+      return 'deny';
+    }
+    if (source.protocol === 'file:') return 'deny';
+  }
   if (origins.includes(target.origin)) return 'allow';
   return externalAllowed(to) ? 'external' : 'deny';
 }

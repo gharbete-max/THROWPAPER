@@ -7,6 +7,7 @@ import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { Loading } from '../components/Loading.js';
 import { EmptyState } from '../components/EmptyState.js';
+import { LoadFailed } from '../components/LoadFailed.js';
 import { CopyLink } from '../components/CopyLink.js';
 import { Icon } from '../components/Icon.js';
 import { useConfirm } from '../components/Confirm.js';
@@ -37,12 +38,21 @@ export function Signing() {
   const [composing, setComposing] = useState(paper !== null);
   const [declarations, setDeclarations] = useState<Declaration[]>([]);
   const [showDeclarations, setShowDeclarations] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    void client.listSigningRequests().then((response) => {
-      if (!cancelled) setData(response);
-    });
+    setFailed(false);
+    client.listSigningRequests().then(
+      (response) => {
+        if (!cancelled) setData(response);
+      },
+      // Without this a failed request left the spinner up for good.
+      () => {
+        if (!cancelled) setFailed(true);
+      },
+    );
     void client.listSigningDeclarations().then(
       (response) => {
         if (!cancelled) setDeclarations(response.declarations);
@@ -53,8 +63,9 @@ export function Signing() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
+  if (failed) return <LoadFailed onRetry={() => setAttempt((value) => value + 1)} />;
   if (!data) return <Loading />;
 
   function replace(updated: formSchemas.SigningRequestView) {

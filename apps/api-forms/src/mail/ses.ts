@@ -116,15 +116,62 @@ export function buildMimeMessage(mail: OutboundMail & { from: string }): string 
 }
 
 function attachmentPart(boundary: string, attachment: MailAttachment): string[] {
-  const filename = oneLine(attachment.filename).replace(/["\\]/g, '_');
+  const filename = oneLine(attachment.filename);
   return [
     `--${boundary}`,
-    `Content-Type: ${oneLine(attachment.contentType)}; name="${filename}"`,
+    `Content-Type: ${oneLine(attachment.contentType)};\r\n name="${asciiName(filename)}"`,
     'Content-Transfer-Encoding: base64',
-    `Content-Disposition: attachment; filename="${filename}"`,
+    `Content-Disposition: attachment;${filenameParameters(filename)}`,
     '',
     wrap(attachment.content.toString('base64')),
   ];
+}
+
+/** Inside a quoted parameter a quote or backslash would end or escape it. */
+function quotable(value: string): string {
+  return value.replace(/["\\]/g, '_');
+}
+
+/** The name with its accents taken off and anything else outside printable ASCII made `_`. */
+function asciiName(filename: string): string {
+  return quotable(
+    filename
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\x20-\x7e]/g, '_'),
+  );
+}
+
+/**
+ * The attachment's name, as mail programs read it: RFC 2231 (`filename*`), split into continuations
+ * so no header line runs long. Only that form when the name is not ASCII — a plain `filename` beside
+ * it is what some readers take first (Python's own parser did) — with the plain-ASCII version left
+ * in the Content-Type's old `name` for a program that knows neither.
+ *
+ * The admission card is named after the attendee, and the name went into the header as raw UTF-8:
+ * "Björn-Ödlund-….pdf" arrived as "BjÃ¶rn-Ã–dlund-….pdf", or as an unnamed attachment, in programs
+ * that read headers as the standard says. The subject was already encoded; the filename was not.
+ */
+function filenameParameters(filename: string): string {
+  if (/^[\x20-\x7e]*$/.test(filename)) return ` filename="${quotable(filename)}"`;
+  // RFC 2231 attribute-char: everything else is %XX of its UTF-8 bytes.
+  const encoded = [...Buffer.from(filename, 'utf8')]
+    .map((byte) => {
+      const char = String.fromCharCode(byte);
+      return /[A-Za-z0-9!#$&+.^_`|~-]/.test(char)
+        ? char
+        : `%${byte.toString(16).toUpperCase().padStart(2, '0')}`;
+    })
+    .join('');
+  // At most 50 characters a piece — a line of 70 with its name — never inside a %XX escape.
+  const pieces: string[] = [''];
+  for (const token of encoded.match(/%[0-9A-F]{2}|[^%]/g) ?? []) {
+    if (pieces[pieces.length - 1]!.length + token.length > 50) pieces.push('');
+    pieces[pieces.length - 1] += token;
+  }
+  return pieces
+    .map((piece, index) => `\r\n filename*${index}*=${index === 0 ? "UTF-8''" : ''}${piece}`)
+    .join(';');
 }
 
 /**

@@ -74,6 +74,17 @@ describe('a page navigating itself', () => {
     );
   });
 
+  it('lets a new window make its first navigation to a page or PDF of ours, and nowhere odd', () => {
+    const blob = 'blob:http://127.0.0.1:47017/6d1c0b4e-1111-4111-8111-111111111111';
+    for (const fresh of ['', 'about:blank']) {
+      expect(classifyNavigation(fresh, blob, origins)).toBe('allow');
+      expect(classifyNavigation(fresh, 'http://127.0.0.1:47018/s/abc', origins)).toBe('allow');
+      expect(classifyNavigation(fresh, 'https://example.com/', origins)).toBe('external');
+      expect(classifyNavigation(fresh, 'file:///etc/passwd', origins)).toBe('deny');
+      expect(classifyNavigation(fresh, 'blob:https://evil.example/6d1c', origins)).toBe('deny');
+    }
+  });
+
   it('never lets the settings panel navigate — a dropped file would inherit its bridge', () => {
     const panel = 'file:///C:/Program%20Files/Loppa/resources/panel/index.html?view=settings';
     expect(classifyNavigation(panel, 'file:///C:/Users/x/Downloads/evil.html', origins)).toBe(

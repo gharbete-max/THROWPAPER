@@ -8,6 +8,10 @@ export const fiFI: Record<MessageKey, string> = {
   'app.signOut': 'Kirjaudu ulos',
   'app.language': 'Kieli',
   'app.loading': 'Ladataan…',
+  'app.loadFailed': 'Tätä ei voitu ladata. Tarkista yhteys ja yritä uudelleen.',
+  'login.failed': 'Kirjautumislinkkiä ei voitu lähettää. Yritä hetken kuluttua uudelleen.',
+  'login.rateLimited':
+    'Kirjautumislinkkejä on pyydetty liian monta. Odota 15 minuuttia ja yritä sitten uudelleen.',
 
   'login.title': 'Kirjaudu sisään',
   'login.email': 'Sähköpostiosoite',

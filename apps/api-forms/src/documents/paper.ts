@@ -1,4 +1,4 @@
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, degrees, type PDFPage } from 'pdf-lib';
 import { pickText, type LocaleConfig } from '@tp/i18n';
 import { defaultTokens, type TokenSet } from '@tp/tokens';
 import { fontFaceCss } from '@tp/tokens/pdf';
@@ -68,11 +68,76 @@ function isTickBox(anchor: PaperAnchor, page: { width: number; height: number })
 
 type Page = { width: number; height: number; background?: string };
 
+/**
+ * A PDF page as a person sees it — the geometry the builder's anchors are fractions of.
+ *
+ * The builder measures a page through pdf.js (`extract.ts`), which shows the **crop box** (within
+ * the media box) turned by the page's **`/Rotate`**. A scanner's PDF is often rotated, and a trimmed
+ * one crops. Taking the media box as the page, unrotated, put every answer on such a page in the
+ * wrong place and on its side (`paper-render.test.ts`).
+ */
+export interface PageView {
+  /** The visible rectangle, in the page's own unrotated coordinates. */
+  box: { x: number; y: number; width: number; height: number };
+  /** Clockwise quarter turns as shown: 0, 90, 180 or 270 — pdf.js's reading of `/Rotate`. */
+  rotation: 0 | 90 | 180 | 270;
+  /** The page as seen, in points: the box, turned. */
+  width: number;
+  height: number;
+}
+
+export function pageView(page: PDFPage): PageView {
+  const media = page.getMediaBox();
+  const crop = page.getCropBox();
+  // pdf.js shows the crop box clipped to the media box, and the media box when that is empty.
+  const x1 = Math.max(media.x, crop.x);
+  const y1 = Math.max(media.y, crop.y);
+  const x2 = Math.min(media.x + media.width, crop.x + crop.width);
+  const y2 = Math.min(media.y + media.height, crop.y + crop.height);
+  const box = x2 > x1 && y2 > y1 ? { x: x1, y: y1, width: x2 - x1, height: y2 - y1 } : { ...media };
+
+  // As pdf.js reads `/Rotate`: modulo a full turn, never negative, and 0 unless a quarter turn.
+  let angle = page.getRotation().angle % 360;
+  if (angle < 0) angle += 360;
+  const rotation = (angle % 90 === 0 ? angle : 0) as PageView['rotation'];
+  const turned = rotation === 90 || rotation === 270;
+  return {
+    box,
+    rotation,
+    width: turned ? box.height : box.width,
+    height: turned ? box.width : box.height,
+  };
+}
+
+/**
+ * Where to draw an overlay made the size of the page *as seen* so that, once a viewer applies the
+ * page's rotation, it lies upright over exactly the visible box. pdf-lib turns an embedded page
+ * counter-clockwise about the point it is drawn at; the viewer turns the page clockwise.
+ */
+export function overlayPlacement(view: PageView): {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotate: ReturnType<typeof degrees>;
+} {
+  const { box, rotation, width, height } = view;
+  const origin = {
+    0: { x: box.x, y: box.y },
+    90: { x: box.x + box.width, y: box.y },
+    180: { x: box.x + box.width, y: box.y + box.height },
+    270: { x: box.x, y: box.y + box.height },
+  }[rotation];
+  return { ...origin, width, height, rotate: degrees(rotation) };
+}
+
 export async function fillPaper(
   deps: PaperDeps,
   submission: SubmissionRecord,
   definition: FormDefinition,
   locales: LocaleConfig,
+  /** The form's title, for the file's own metadata. */
+  title?: string,
 ): Promise<FilledPaper | null> {
   if (!definition.paper) return null;
   const tokens = deps.tokens ?? defaultTokens;
@@ -87,9 +152,9 @@ export async function fillPaper(
     const extension = source.key.split('.')[1] as UploadExtension;
     if (extension === 'pdf') {
       const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      const sizes = doc.getPages().map((page) => page.getSize());
-      pages.push(...sizes);
-      sources.push({ bytes, pdf: true, pages: sizes.length });
+      const views = doc.getPages().map(pageView);
+      pages.push(...views.map(({ width, height }) => ({ width, height })));
+      sources.push({ bytes, pdf: true, pages: views.length });
     } else {
       const format = extension === 'jpg' ? 'jpeg' : extension;
       const size = imageSize(bytes, format) ?? { width: 595, height: 842 };
@@ -120,8 +185,7 @@ export async function fillPaper(
       );
       copied.forEach((page, i) => {
         out.addPage(page);
-        const { width, height } = page.getSize();
-        page.drawPage(drawn[i]!, { x: 0, y: 0, width, height });
+        page.drawPage(drawn[i]!, overlayPlacement(pageView(page)));
       });
     } else {
       // The photograph is already in the overlay page; that page is the output page.
@@ -130,6 +194,13 @@ export async function fillPaper(
     }
     at += source.pages;
   }
+
+  /*
+   * A title of its own, as the finished document has. A viewer names the window — and a PDF
+   * viewer's own Save the file — after it; without one, the desktop's "Open" showed and saved the
+   * paper under the blob's random id.
+   */
+  out.setTitle(title ? `${title} — ${submission.reference}` : submission.reference);
 
   return {
     pdf: Buffer.from(await out.save()),

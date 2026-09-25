@@ -6020,6 +6020,13 @@ body:has(> #root .shell--narrow) {
   inset-inline-start: var(--tp-spacing-unit);
   inset-block-end: var(--tp-spacing-unit);
   max-inline-size: calc(100% - var(--tp-spacing-unit) * 2);
+  /*
+   * Never taller than the page it sits on, and scrolls when it would be. The surface clips
+   * (`overflow: hidden`), and on a landscape page — a rotated scan — the list was taller than the
+   * page: its first answer types were cut off and could not be chosen at all.
+   */
+  max-block-size: calc(100% - var(--tp-spacing-unit) * 2);
+  overflow-y: auto;
   z-index: 1;
 }
 

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { client, setSession } from '../lib/api.js';
+import { ApiError, client, setSession } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useDemo } from '../lib/demo.js';
 import { PoweredBy, Wordmark } from '../components/Logo.js';
@@ -10,16 +10,26 @@ export function Login() {
   const { isDemo, users } = useDemo();
   const { tokens } = useBrand();
   const [email, setEmail] = useState('');
-  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'failed' | 'rate-limited'>(
+    'idle',
+  );
   const [demo, setDemo] = useState<'idle' | 'busy' | 'failed'>('idle');
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     setState('sending');
-    // The API answers identically for known and unknown addresses, so there is nothing to branch
-    // on here — showing "sent" regardless is the point.
-    await client.requestMagicLink(email).catch(() => undefined);
-    setState('sent');
+    /*
+     * The API answers 202 for known and unknown addresses alike, so "sent" says nothing about the
+     * address. It does say the request was taken: a refused one (too many tries, a server that is
+     * down, no network) is not "a link is on its way", and saying so left people waiting for an
+     * email that was never going to come.
+     */
+    try {
+      await client.requestMagicLink(email);
+      setState('sent');
+    } catch (error) {
+      setState(error instanceof ApiError && error.status === 429 ? 'rate-limited' : 'failed');
+    }
   }
 
   return (
@@ -93,6 +103,11 @@ export function Login() {
               onChange={(event) => setEmail(event.target.value)}
             />
           </label>
+          {(state === 'failed' || state === 'rate-limited') && (
+            <p className="status-down" role="alert">
+              {t(state === 'rate-limited' ? 'login.rateLimited' : 'login.failed')}
+            </p>
+          )}
           <button className="button" type="submit" disabled={state === 'sending'}>
             {state === 'sending' ? t('login.sending') : t('login.submit')}
           </button>

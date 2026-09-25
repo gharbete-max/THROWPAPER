@@ -13,6 +13,9 @@ export const jaJP: Record<MessageKey, string> = {
   'app.signOut': 'ログアウト',
   'app.language': '言語',
   'app.loading': '読み込み中…',
+  'app.loadFailed': '読み込めませんでした。接続を確認して、もう一度お試しください。',
+  'login.failed': 'ログインリンクを送信できませんでした。しばらくしてからもう一度お試しください。',
+  'login.rateLimited': 'ログインリンクの要求が多すぎます。15分待ってからもう一度お試しください。',
 
   'login.title': 'ログイン',
   'login.email': 'メールアドレス',
