@@ -29,7 +29,8 @@ packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
 packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
-packages/shared Types and Zod schemas, including the CONTRACT schemas
+packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
+                graph, its `when` language and its validator (@tp/shared/builder)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
@@ -72,6 +73,7 @@ pnpm verify         # format + typecheck + lint + test + build across the worksp
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
+pnpm builder:validate # the guided builder's graph against rules G0–G13, with all twelve catalogues
 pnpm test:e2e
 ```
 

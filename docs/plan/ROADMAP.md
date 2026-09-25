@@ -68,7 +68,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 
 | Slice | Builds | Its tests | Touches | Status |
 | --- | --- | --- | --- | --- |
-| **S1** Graph as data | `builder/graph/` schema, `nodes.ts` (15 nodes + menu + end), validator G1–G13, `guards.ts` parser, `guided.*` keys in 12 catalogues, `pnpm builder:validate`, the purity ESLint block | one broken graph per rule; `when` grammar and totality; serialisability | `packages/shared`, `apps/forms` messages, `scripts/`, `eslint.config.js` | not started |
+| **S1** Graph as data | `builder/graph/` schema, `nodes.ts` (15 nodes + menu + end), validator G0–G13, `guards.ts` parser, `guided.*` keys in 12 catalogues, `pnpm builder:validate`, the purity ESLint block | one broken graph per rule; `when` grammar and totality; serialisability | `packages/shared`, `apps/forms` messages, `scripts/`, `eslint.config.js` | **done** — in review, PR #147 |
 | **S1b** Enumerate | `import/ir/` types + validator, `import/enumerate/` per `NUMBERING-RULES.md`, stage debug JSON | the 20 enumerate fixtures; determinism (twice, shuffled) | `packages/shared` | not started |
 | **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019) | not started |
 | **S3** Ladder T0–T4 | normalisation, gazetteers, `aliases/<language>.json`, `pnpm interpret:index`, T0–T4 | phrase and must-not-resolve tables per language; budget | `packages/shared`, `scripts/`, `fixtures/ladder/` | not started |
@@ -93,3 +93,12 @@ when each slice ends.)*
   `scripts/caveat-fixtures.test.ts` (fixtures well-formed, every §8.1/§8.2 row has one, every
   rule in `NUMBERING-RULES.md` names a fixture that exists; expectations `todo`). Next: S1, then
   S1b. Open: the ten questions at the end of `PREDICTIVE-BUILDER.md`.
+- **S1, graph as data (2026-09-25).** What: `@tp/shared/builder` — the node schema (types and
+  Zod), the path grammar and the table of writable paths, the `when` language (hand-written
+  parser, total, bounded), the validator G0–G13, and the 17-node graph; 77 `guided.*` keys in all
+  twelve catalogues; `pnpm builder:validate`; an ESLint block that makes the core's purity a
+  rule; the regulated-word list moved to `forms/wording.ts` so templates and chips share it. Why:
+  every later slice renders or walks this graph. Tests: 88 in `packages/shared` (a broken graph per
+  rule, guard grammar and totality, paths) and 4 in `apps/forms` (the real catalogues, both
+  directions of key usage, icons). Next: S1b, the detector. Open: the owner questions still
+  stand; S1 ran on the assumptions Q1 (`@tp/shared`) and Q7 (import is the headline).

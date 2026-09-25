@@ -22,6 +22,7 @@
     "build": "pnpm -r run build",
     "verify": "pnpm run format:check && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
     "contract:check": "tsx scripts/contract-check.ts",
+    "builder:validate": "tsx scripts/builder-validate.ts",
     "licence:check": "tsx scripts/licence-check.ts",
     "bundle:budget": "tsx scripts/bundle-budget.ts",
     "tokens:proof": "tsx scripts/proof/index.ts",

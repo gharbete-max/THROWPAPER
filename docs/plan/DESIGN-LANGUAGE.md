@@ -86,13 +86,13 @@ Every string in the graph obeys these, and `graph.test.ts` (G10) enforces the ch
    a string in the graph or an example chip (ADR 0012, G13).
 
 **Banned words** (whole words, case-insensitive; the list is data, `builder/graph/voice.json`, one
-array per language, and a word added there is enforced everywhere at once):
+array per language, and a word added there is enforced everywhere at once by rule G10):
 
 | Language | Banned in graph strings |
 | --- | --- |
 | en | input, input type, field, field group, form element, widget, component, control, boolean, string, integer, parameter, schema, validation, dropdown, radio, select, toggle, configure, enable, disable, invalid |
 | sv | fält, fälttyp, fältgrupp, inmatning, komponent, kontroll, boolesk, parameter, schema, validering, rullgardinsmeny, alternativknapp, konfigurera, aktivera, inaktivera, ogiltig |
-| the other ten | the same concepts, written by the translator of that catalogue into `voice.json` in the slice that adds the language's graph strings |
+| the other ten | the same concepts, in `voice.json` since S1 added the graph's strings in all twelve languages. Words that mean *form* are deliberately absent: Norwegian *skjema* and Danish *skema* are the everyday word for the thing being built, not jargon |
 
 | Instead of | Write |
 | --- | --- |
