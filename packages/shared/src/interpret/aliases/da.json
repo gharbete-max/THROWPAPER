@@ -1,0 +1,1905 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "kortet",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "på kortet",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "toppen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Øverst på kortet",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "øverst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Lille, i hjørnet",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hjørne",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hjørnet",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "i hjørnet",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lille",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vandmærke",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "I en bjælke nederst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "bjælke nederst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bunden",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nederst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sidefod",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sidehoved",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ved titlen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "venstre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Øverst til venstre, ved titlen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "øverst til venstre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Centreret over titlen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "centreret",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "i midten",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "midten",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "over titlen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "I en spalte ved siden af formularen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "sidespalte",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spalte",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ved siden af formularen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kraftig",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "dristig",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "farverig",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stærk",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Have",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "frisk",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "grøn",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "natur",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Midnat",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "mørk",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mørk tilstand",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nat",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sort",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Minimal",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "enkel",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lys",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ren",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stilren",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Beslut senere",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ikke endnu",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ikke nu",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej tak",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "senere",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spring over",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "standard",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, brug vores farver og logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "brand",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "designprofil",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "farver",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vores brand",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vores farver",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vores logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Flere svar tilladt",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "afkrydsningsfelter",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "flere",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "flere svar",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "flervalg",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mange",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mere end et",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mere end ét svar",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vælg flere",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kun ét svar",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "enkeltvalg",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "et",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "et svar",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kun et",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kun ét",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vælg et",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ét",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nej, man skriver et svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "fritekst",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ingen knapper",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skrive",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tekst",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "uden knapper",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "åbent svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "knap",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "knapper",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "med knapper",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "muligheder",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valgmuligheder",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vælge",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vælge fra en liste",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Side om side",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "i en række",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "på række",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "række",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vandret",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ved siden af hinanden",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Under spørgsmålet, i fuld bredde",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en per linje",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fuld bredde",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lodret",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nedenunder",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stablet",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "under",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "under spørgsmålet",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Pille",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "helt afrundet",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kapsel",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pilleform",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "piller",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Afrundet",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "afrundede",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "afrundede hjørner",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "blød",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bløde hjørner",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rund",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Firkantet",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "firkant",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kantet",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rektangel",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skarpe hjørner",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kort med plads til et billede",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "billeder",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fliser",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kort",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "med billeder",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plads til et billede",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nej, det er alt",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "det er alt",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "færdig",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ikke mere",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "intet mere",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "jeg er færdig",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stop",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, spørg om noget mere",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en til",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "et spørgsmål mere",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fortsæt",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mere",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "næste spørgsmål",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tilføj",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tilføj et spørgsmål",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Indsamle oplysninger",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ansøgning",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "indsamle",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "information",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kontaktoplysninger",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "medlemsoplysninger",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "oplysninger",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Høre, hvad folk mener",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "evaluering",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "feedback",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hvad folk mener",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "meninger",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spørgeskema",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "undersøgelse",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Noget andet",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "andet",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "noget helt andet",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Tilmeldinger",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "arrangement",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "billetter",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "booking",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "deltagere",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "registrering",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tilmelde",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tilmelding",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nej, det er frivilligt",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "frivilligt",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ikke nødvendigt",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ikke obligatorisk",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ikke påkrævet",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valgfrit",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, det er nødvendigt",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nødvendigt",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "obligatorisk",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "påkrævet",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skal",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skal besvares",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}

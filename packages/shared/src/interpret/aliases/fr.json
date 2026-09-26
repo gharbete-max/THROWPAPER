@@ -1,0 +1,1905 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "En haut de la carte",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "carte",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en haut",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sur la carte",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Petit, dans le coin",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "coin",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "dans le coin",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "filigrane",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "petit",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Dans un bandeau en bas",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "bandeau en bas",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en bas",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pied de page",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "En haut à gauche, près du titre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en haut à gauche",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en-tête",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "gauche",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "près du titre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "à gauche",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Centré au-dessus du titre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "au centre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "au-dessus du titre",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "centré",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "milieu",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Dans une colonne à côté du formulaire",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "barre latérale",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "colonne",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "à côté du formulaire",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Affirmé",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "audacieux",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "coloré",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fort",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vif",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Jardin",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "frais",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nature",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vert",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Minuit",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "mode sombre",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "noir",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nuit",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sombre",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Minimal",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "clair",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "simple",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sobre",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "épuré",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Décider plus tard",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "non",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "non merci",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "par défaut",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pas encore",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pas maintenant",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "passer",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plus tard",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Oui, avec nos couleurs et notre logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "charte graphique",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "couleurs",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "marque",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nos couleurs",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "notre logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "notre marque",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "oui",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Plusieurs réponses possibles",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "beaucoup",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "cases à cocher",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "choix multiple",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en choisir plusieurs",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plus d’une",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plus d’une réponse",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plusieurs",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plusieurs réponses",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Une seule réponse",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "choix unique",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en choisir une",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "un seul",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "une",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "une réponse",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "une seule",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Non, on écrit une réponse",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "non",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pas de boutons",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "réponse libre",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sans boutons",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texte",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texte libre",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "écrire",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "avec des boutons",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bouton",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "boutons",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "choisir",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "choisir dans une liste",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "choix",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "options",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Côte à côte",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en ligne",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "horizontal",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "les uns à côté des autres",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ligne",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sur une ligne",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Sous la question, pleine largeur",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "empilés",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en dessous",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pleine largeur",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sous",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sous la question",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "un par ligne",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vertical",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Pilule",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "capsule",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "en forme de pilule",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "entièrement arrondi",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pilules",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Arrondie",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "arrondi",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "coins arrondis",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "coins doux",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "doux",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rond",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Carrée",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "anguleux",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "carré",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "coins nets",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rectangulaire",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Cartes, avec une place pour une image",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "avec des images",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "cartes",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "images",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "place pour une image",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tuiles",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Non, c’est tout",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "arrêter",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "c’est tout",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fini",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "j’ai fini",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "non",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plus rien",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rien d’autre",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "terminé",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Oui, poser une autre question",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ajouter",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ajouter une question",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "continuer",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "encore une",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "oui",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plus",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "question suivante",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "une autre question",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Recueillir des informations",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "candidature",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "coordonnées",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "données",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "informations",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "recueillir",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "renseignements",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Savoir ce que les gens pensent",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "avis",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ce que les gens pensent",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "opinions",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "questionnaire",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "retours",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sondage",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "évaluation",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Autre chose",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "autre",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "autre chose encore",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Des inscriptions",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "billets",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "enregistrement",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "inscription",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "inscriptions",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "participants",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "réservation",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "réservations",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "s’inscrire",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "événement",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Non, c’est facultatif",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "facultatif",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "non",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "optionnel",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pas nécessaire",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pas obligatoire",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Oui, c’est nécessaire",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "doit répondre",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nécessaire",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "obligatoire",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "oui",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "requis",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}

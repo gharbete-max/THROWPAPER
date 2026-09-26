@@ -35,7 +35,9 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 as undoable changes, replay, stable question ids, the saved session
                 (@tp/shared/builder); document import's
                 Layout IR with its validator, and stage 3, the list-marker detector, with its debug
-                artifact (@tp/shared/import)
+                artifact (@tp/shared/import); free text read by rules — normalisation, word lists and
+                built-in aliases in twelve languages, and the ladder's rungs T0–T4
+                (@tp/shared/interpret)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
@@ -78,7 +80,7 @@ pnpm verify         # format + typecheck + lint + test + build across the worksp
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
-pnpm builder:validate # the guided builder's graph against rules G0–G13, with all twelve catalogues
+pnpm builder:validate # the guided builder's graph against rules G0–G13, with all twelve catalogues, and its built-in aliases
 pnpm test:e2e
 ```
 

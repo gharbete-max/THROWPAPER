@@ -72,7 +72,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S1** Graph as data | `builder/graph/` schema, `nodes.ts` (15 nodes + menu + end), validator G0–G13, `guards.ts` parser, `guided.*` keys in 12 catalogues, `pnpm builder:validate`, the purity ESLint block | one broken graph per rule; `when` grammar and totality; serialisability | `packages/shared`, `apps/forms` messages, `scripts/`, `eslint.config.js` | **done** — in review, PR #147 |
 | **S1b** Enumerate | `import/ir/` types + validator, `import/enumerate/` per `NUMBERING-RULES.md`, stage debug JSON | the 21 enumerate fixtures; determinism (twice, shuffled) | `packages/shared` | **done** — in review, PR #147 |
 | **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019), `apps/forms` messages (one key) | **done** — in review, PR #147 |
-| **S3** Ladder T0–T4 | normalisation, gazetteers, `aliases/<language>.json`, `pnpm interpret:index`, T0–T4 | phrase and must-not-resolve tables per language; budget | `packages/shared`, `scripts/`, `fixtures/ladder/` | not started |
+| **S3** Ladder T0–T4 | normalisation, word lists and `aliases/<language>.json` in twelve languages, the integer logarithm, T0–T4 with negation and vagueness on every rung; `pnpm builder:validate` checks the aliases | phrase and must-not-resolve tables per language (880 rows); determinism; budget; every card's label read as its card | `packages/shared`, `scripts/`, `fixtures/ladder/`, `apps/forms` (one test) | **done** — in review, PR #147 |
 | **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | not started |
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | not started |
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases` | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
@@ -141,3 +141,22 @@ when each slice ends.)*
   lock on PGlite and on a real Postgres 16 (`database.test.ts`, which had skipped in every earlier
   run here, ran). Next: S3, the ladder T0–T4. Open: owner questions 1–4, 6 and 7; the
   reconciliation baseline (S5) and the belief (S11) join the state with their slices.
+- **S3, the ladder T0–T4 (2026-09-26).** What: `@tp/shared/interpret` — normalisation whose every
+  span points back at what was typed; word lists (numbers, stop words, negators, contrast words,
+  vague words, months, currencies) and 2 295 built-in aliases in twelve languages, every card's
+  label among them; an integer logarithm for T2's weights; T0 exact, T1 tokens, T2 weighted
+  keywords, T3 fuzzy (exact fractions, a 20 000-comparison budget), T4 values (quantity, currency,
+  date, e-mail, phone, org.nr, personnummer); every ask with its reason. Writing the tables found
+  seven places the specification would misread, ask needlessly or could not be built — negation
+  that only looked forward ("knappar behövs inte" read as yes), a negator the rules left alone
+  treated as any other word ("knapper er ikke nødvendigt" read as yes), order-free aliases making
+  "yes buttons no text" mean "no buttons", Chinese 不 inside 不错, T2 summing over all of an
+  option's aliases, two T1 matches always asked, and the generated index — each fixed in
+  `INTENT-LADDER.md` and locked by rows; `CAVEATS.md` #66–#71. Why: every text box in S4 reads
+  through this, and S6's T5–T8 build on its rungs. Tests: 880 phrase-table rows in twelve
+  languages, each run twice and with the aliases shuffled; the pieces (spans through NFKC,
+  `lnMille` against the true value for every p ≥ q ≤ 400, the fuzzy fractions against their
+  float definitions, each pattern's edges, each alias rule catching its mistake); `apps/forms`
+  types every card's label in every language and gets that card at T0. Next: S4, the builder
+  shell. Open: owner questions 1–4, 6 and 7; the plan change "no generated index" (ADR 0019,
+  amended) is the owner's to overturn.

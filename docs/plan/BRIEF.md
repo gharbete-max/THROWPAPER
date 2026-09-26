@@ -159,7 +159,7 @@ At **every** node, a text entry is present ("Or type it — e.g. 'four buttons i
 |---|---|---|
 | T0 | exact option id / keyword alias | alias tables are data, per language |
 | T1 | normalization + token match | case fold, diacritic fold (å→a kept as secondary form, never destructive), punctuation strip, digit words; CJK split into character bigrams |
-| T2 | weighted keyword scoring | inverse node-frequency weights computed at build time; accept ≥ 720 ‰ |
+| T2 | weighted keyword scoring | inverse node-frequency weights from an integer logarithm, per alias; accept ≥ 720 ‰ |
 | T3 | fuzzy string match | trigram Dice ≥ 0.62 *and* Jaro-Winkler ≥ 0.80 (exact rationals), or Levenshtein ≤ 2 for words ≥ 6 chars (typos, "buttoms") |
 | T4 | gazetteer + regex patterns | quantity (digits or number words in the twelve languages); currency; date; e-mail; phone; org.nr; personnummer (Luhn) |
 | T5 | structured parse | "three buttons, pill shape, side by side" → quantity=3, shape=pill, placement=row (all-or-nothing per slot, each slot its own undoable entry) |
@@ -174,7 +174,7 @@ Alias entries are plain JSON objects, and provenance is a field rather than a co
   "locale": "sv", "source": "user-confirmed", "createdAt": "2026-09-25", "count": 1, "notes": "" }
 ```
 
-Extra rules: numbers/quantities are never inferred from vagueness ("some" → ask). Negative forms are honoured ("no buttons", "utan knappar", "skip logos") through each node's declared `negative` option. After two consecutive T8 fallbacks, switch to **shopping-list mode**: every sibling as a categorised visual menu. Any tier result is reversible with one click and shows what tier produced it (T0–T3 = "understood", T4–T7 = "I think", T8 = "I asked"). Fuzzy work reads a trigram index generated at build time (`pnpm interpret:index`, committed, freshness-tested) and is capped by a comparison budget, not wall time, so the cut-off is the same on every machine.
+Extra rules: numbers/quantities are never inferred from vagueness ("some" → ask). Negative forms are honoured ("no buttons", "utan knappar", "skip logos") through each node's declared `negative` option. After two consecutive T8 fallbacks, switch to **shopping-list mode**: every sibling as a categorised visual menu. Any tier result is reversible with one click and shows what tier produced it (T0–T3 = "understood", T4–T7 = "I think", T8 = "I asked"). Fuzzy work compares against one node's words and is capped by a comparison budget (20 000 comparisons), not wall time, so the cut-off is the same on every machine; T2's weights come from an integer logarithm, so nothing is generated at build time (`INTENT-LADDER.md`, "No generated index"). A negator reaches only as far as its clause or a contrast word ("not text but buttons"), may follow the word it negates when it ends the clause ("knappar behövs inte"), and one no rule can place blocks a reading instead of being ignored.
 
 ---
 
@@ -285,10 +285,11 @@ The inventory is done (`docs/plan/PREDICTIVE-BUILDER.md`, "What already exists")
 packages/shared/src/                     (@tp/shared — the forms core already lives here)
   builder/            @tp/shared/builder
     graph/            schema.ts paths.ts guards.ts validate.ts nodes.ts voice.json   (built, S1)
-    machine.ts  patches.ts  log.ts  sidecar.ts  ids.ts  api.ts                        (S2)
+    state.ts changes.ts patches.ts fields.ts ids.ts machine.ts session.ts          (built, S2)
     belief/           recipes.json update.ts entropy.ts explain.ts                    (S11)
-  interpret/          @tp/shared/interpret — normalize, tokenize, fuzzy, ladder, gazetteers,
-                      aliases/<language>.json, index.generated.json, sigmoid.json     (S3, S6)
+  interpret/          @tp/shared/interpret — text.ts lexicon.ts ln.ts fuzzy.ts patterns.ts
+                      aliases.ts vocabulary.ts ladder.ts, gazetteers/<language>.json,
+                      aliases/<language>.json                                 (built, S3; S6)
   import/             @tp/shared/import
     ir/               the Layout IR types and validator                               (S1b)
     enumerate/        the detector — NUMBERING-RULES.md                               (S1b)
@@ -336,7 +337,7 @@ A specification the code proves wrong is fixed in the same change as the code �
 - **S1 — Graph as data. ✅ Done** (`48adfba`): schema, paths, guards, validator G0–G13, 15 nodes + menu + end, 77 `guided.*` keys in twelve catalogues, `pnpm builder:validate`, the purity lint block.
 - **S1b — Enumerate (pulled forward). ✅ Done:** the IR types and validator; the marker grammar; the indent-band rule; sequence/scheme/counter-reset logic; the verdicts — exactly `NUMBERING-RULES.md`, which the implementation corrected in five places (its opening section lists them). Input: the turn-1 fixtures, synthetic IR only, no PDF parsing. **The enumerate fixtures (every §8.1 caveat, S4, S5 and its two harder forms — the 20 from turn 1, and `letter-vs-word--nested`, which S1b added for a gap it found) are green, including `dotted-subnumber-mid-sentence`, and the debug JSON per document is snapshot-tested** in `fixtures/numbering/debug/`. The §8.2 fixtures belong to stages 2, 4 and 7; each names the slice that turns it green (S7, S9).
 - **S2 — Machine. ✅ Done:** pure reducer, patch ops and inverses, log, replay, breadcrumbs, stable ids, sidecar, session autosave (`builder_sessions`, `GET/PUT /v1/forms/:id/builder-session`). Tests: replay determinism, undo of every op, publishable from the first answer and for ever after (every answer from every reachable state), on Postgres and PGlite. Walking the whole graph found four places it could stop or say the wrong thing, fixed in the graph (`CAVEATS.md` #62–#65).
-- **S3 — Ladder T0–T4.** Normalization, gazetteers, generated fuzzy index, thresholds, explainability. Tests: phrase tables per language, must-not-resolve table.
+- **S3 — Ladder T0–T4. ✅ Done:** normalisation that points back at what was typed, word lists and 2 295 built-in aliases in twelve languages (every card's label among them), thresholds in integers, T0–T4 with negation and "no number from vagueness" on every rung, and a reason with every question it asks back. Tests: 880 phrase-table rows in twelve languages, must-not-resolve rows among them, determinism and the budget. Writing the tables found seven places where the ladder as first specified would misread, ask needlessly, or could not be built as written, each fixed in `INTENT-LADDER.md` (its closing section lists them) — among them, no generated index.
 - **S4 — Builder shell.** The two doors, full-screen conversation UI, keyboard, trail, motion token, the buttons chain end to end.
 - **S5 — Preview moment + inline editing.** Real preview, snapping handles, swatches, inline rename/reorder, "changed by hand" + revert, reconciliation; `ChoiceStyle` gains `tab` and `segmented`; `FormSettings.layout` holds the slots.
 - **S6 — Ladder T5–T8.** Multi-slot parse, list extraction, group ranking, disambiguation, alias capture/export (`builder_aliases`).
@@ -408,3 +409,4 @@ Each change is one the first turns found the repository needed; `docs/plan/PREDI
 9. **The ADRs this brief amends** are named: 0004, 0006 and 0013, by the new 0017–0021.
 10. **Fixtures**: 29 exist (21 caveats at minimum, plus S4, S5's harder forms and three added traps), not "fifteen or so".
 11. **Reconciled with what exists**: the real paths (§9), the graph excerpt as shipped (§4.2), `guided.*` keys, integer arithmetic throughout, the ladder's per-mille thresholds, the one-table autosave, the tile shape as the existing `cards` appearance, S1 marked done, and §15 rewritten for every session rather than the first.
+12. **The ladder (§5), after S3**: no `pnpm interpret:index` — an integer logarithm replaces the build step and one node's words need no candidate index; T2 scores per alias; a negator's reach is its clause or a contrast word, it may follow the word it negates, and one no rule can place blocks the reading. `INTENT-LADDER.md` ("What S3 changed in this document") has each, with the rows that lock it.

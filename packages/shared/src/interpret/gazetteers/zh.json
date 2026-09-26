@@ -1,0 +1,59 @@
+{
+  "language": "zh",
+  "source": "docs/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. Chinese has no spaces: these are matched as text within a clause, the single numerals 一–九, 十 and 百 compose (二十一 is 21), and stop words are the bigram tokens they stand for. 不 alone is in too many ordinary words to be a negator (按钮不错 is 'the buttons are nice'), so the negators are the words it makes. A word added here is a behaviour change: it needs a row in fixtures/ladder/zh.json in the same commit.",
+  "decimalSeparator": ".",
+  "numbers": {
+    "零": 0,
+    "〇": 0,
+    "一": 1,
+    "二": 2,
+    "两": 2,
+    "兩": 2,
+    "三": 3,
+    "四": 4,
+    "五": 5,
+    "六": 6,
+    "七": 7,
+    "八": 8,
+    "九": 9,
+    "十": 10,
+    "百": 100
+  },
+  "stopWords": [
+    "我",
+    "我们",
+    "我要",
+    "我想",
+    "想要",
+    "要用",
+    "请",
+    "请用",
+    "谢谢",
+    "的话",
+    "一下",
+    "吧",
+    "了",
+    "的",
+    "用"
+  ],
+  "vague": ["一些", "几个", "几", "若干", "许多", "很多", "多个", "一点"],
+  "negators": [
+    "不要",
+    "不用",
+    "不需要",
+    "不必",
+    "不是",
+    "不想",
+    "没有",
+    "没",
+    "无需",
+    "别",
+    "跳过"
+  ],
+  "contrast": ["但是", "而是", "不过"],
+  "months": {},
+  "currencies": {
+    "欧元": "EUR",
+    "克朗": null
+  }
+}

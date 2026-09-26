@@ -27,7 +27,12 @@ Node and the desktop's Electron — rarely, which is the worst kind of rarely.
    shows what it read.
 2. **Integers in every decision.** Confidences are per mille; ratios are compared by
    cross-multiplication; belief is integer log-odds in millinats. Logarithms needed for keyword
-   weights are computed **once, at build time**, into a committed, freshness-tested index. The
+   weights are computed **with integers** — a fixed-point series, exact far beyond the rounding
+   (`interpret/ln.ts`) — so no floating-point function is in a decision and nothing needs
+   generating at build time. (This read "once, at build time, into a committed, freshness-tested
+   index" until S3 built the ladder: the integer logarithm does the same job with no build step,
+   and learned aliases need weights computed at runtime anyway; `INTENT-LADDER.md`, "No generated
+   index".) The
    sigmoid used for display and the p ≥ 0.80 test is a **committed lookup table**
    (`packages/shared/src/interpret/sigmoid.json`, −8000 to +8000 millinats in steps of 50, shared by the ladder, the importer's scores and the belief engine), not a runtime `Math.exp`.
 3. **Learning without a model.** When the menu resolves an input, Loppa offers to remember the

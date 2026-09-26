@@ -236,8 +236,9 @@ packages/shared/src/                         (@tp/shared — the forms core alre
   builder/       graph/nodes.ts  graph/schema.ts  graph/validate.ts  graph/guards.ts  graph/paths.ts
                  state.ts  changes.ts  patches.ts  fields.ts  ids.ts  machine.ts  session.ts   (S2)
                  belief/recipes.json  belief/update.ts  belief/entropy.ts  belief/explain.ts
-  interpret/     normalize.ts  tokenize.ts  fuzzy.ts  ladder.ts  explain.ts
-                 gazetteers/  aliases/<language>.json  index.generated.json  sigmoid.json
+  interpret/     text.ts  lexicon.ts  ln.ts  fuzzy.ts  patterns.ts  aliases.ts  vocabulary.ts
+                 ladder.ts  gazetteers/<language>.json  aliases/<language>.json            (S3)
+                 sigmoid.json                                                          (S9, S11)
 apps/forms/src/screens/builder/
   paper/         extract.ts (exists)  ocr.ts (exists)  docx.ts  paste.ts  import.worker.ts
   guided/        Shell.tsx  QuestionNode.tsx  Cards.tsx  Quantity.tsx  PreviewMoment.tsx

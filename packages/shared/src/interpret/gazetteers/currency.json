@@ -1,0 +1,15 @@
+{
+  "source": "docs/plan/INTENT-LADDER.md, T4 — the currency markers that mean the same in every language. Each language's own words (kr, kronor, euro) are in its gazetteer. A marker added here is a behaviour change: it needs a phrase-table row in the same commit.",
+  "markers": {
+    "sek": "SEK",
+    "nok": "NOK",
+    "dkk": "DKK",
+    "isk": "ISK",
+    "eur": "EUR",
+    "€": "EUR",
+    "gbp": "GBP",
+    "£": "GBP",
+    "usd": "USD",
+    "$": "USD"
+  }
+}

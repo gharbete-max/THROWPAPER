@@ -1,0 +1,1605 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "カード",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "カードの上",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "カードの上部",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "上部",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "小さく",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "小さく、隅に",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "角",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "透かし",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "隅",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "フッター",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一番下",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下の帯",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下部",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下部の帯の中",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "タイトルの横",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ヘッダー",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "左",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "左上",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "左上、タイトルの横",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "タイトルの上",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "タイトルの上、中央",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "中央",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "真ん中",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "サイドバー",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "フォームの横",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "フォームの横の列に",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "横の列",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ボールド",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "力強い",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "目立つ",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "鮮やか",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ガーデン",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "グリーン",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "緑",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "自然",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ダーク",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ミッドナイト",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "夜",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "暗い",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "黒",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "すっきり",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "シンプル",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ミニマル",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "明るい",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "あとで",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "スキップ",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "デフォルト",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "今はいい",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "後で",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "後で決める",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい、自分たちの色とロゴで",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ブランド",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ロゴ",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ロゴを使う",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "自分たちのブランド",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "色",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いくつでも",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "チェックボックス",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "複数",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "複数回答",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "複数選べる",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "複数選択",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ひとつ",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一つ",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一つだけ",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "一つだけ選ぶ",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "単一選択",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ、答えを書いてもらう",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "テキスト",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ボタンなし",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "書いてもらう",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "自由記述",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "記述式",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ボタン",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ボタンで",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "リストから選ぶ",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "選ぶ",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "選択肢",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一列",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "並べる",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "横",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "横に並べる",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "横並び",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一行に一つ",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "幅いっぱい",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "縦",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "縦に並べる",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "質問の下",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "質問の下に、幅いっぱい",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "カプセル",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ピル",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ピル型",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "丸い端",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "丸",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "丸み",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "柔らかい",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "角丸",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "四角",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "四角形",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "角ばった",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "長方形",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "カード型",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "カード（画像も置ける）",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "タイル",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "画像",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "画像付き",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ、これで全部です",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "これで全部",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "もういい",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "以上",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "完了",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "終わり",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい、ほかにも質問する",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "もう一つ",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "もっと",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "次の質問",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "続ける",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "質問を追加",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "会員情報",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "応募",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "情報",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "情報を集める",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "情報収集",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "連絡先",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "アンケート",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "フィードバック",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "意見",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "意見を聞く",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "感想",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "評価",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "その他",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "それ以外",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ほか",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "他",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "イベント",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "チケット",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "予約",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "参加者",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "受付",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "申し込み",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "申し込みの受付",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "申込",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "登録",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ、任意です",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "任意",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "必須ではない",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "自由",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい、必須です",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "必ず答える",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "必要",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "必須",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}
