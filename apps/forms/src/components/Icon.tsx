@@ -53,6 +53,7 @@ export type IconName =
   | 'check'
   | 'close'
   | 'plus'
+  | 'minus'
   | 'copy'
   | 'trash'
   | 'drag'
@@ -148,6 +149,7 @@ const PATHS: Record<IconName, string> = {
   check: 'M4 13l5 5L20 6',
   close: 'M6 6l12 12M18 6 6 18',
   plus: 'M12 5v14M5 12h14',
+  minus: 'M5 12h14',
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
   trash: 'M4 7h16M10 4h4M6 7l1 13h10l1-13M10 11v5M14 11v5',
   // A laptop: "whatever this machine is set to".

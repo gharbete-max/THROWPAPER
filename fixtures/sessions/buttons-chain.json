@@ -1,0 +1,949 @@
+{
+  "session": {
+    "sessionVersion": 1,
+    "graphVersion": 1,
+    "base": {
+      "draft": {
+        "definition": {
+          "schemaVersion": 1,
+          "fields": [],
+          "settings": {
+            "submitLabel": {},
+            "confirmationMessage": {},
+            "duplicateControl": "email",
+            "allowSaveAndResume": true,
+            "showProgress": true,
+            "locales": [],
+            "identity": "off"
+          }
+        },
+        "title": {}
+      },
+      "sidecar": {
+        "provenance": "guided",
+        "fields": {},
+        "retiredIds": []
+      },
+      "pending": {
+        "brandKitExists": false
+      },
+      "focus": null,
+      "guess": null,
+      "cursor": "flow.start"
+    },
+    "log": [
+      {
+        "nodeId": "flow.start",
+        "answer": {
+          "kind": "option",
+          "optionId": "signup"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "pending",
+              "purpose"
+            ],
+            "value": "signup"
+          },
+          {
+            "op": "insert",
+            "at": [
+              "draft",
+              "definition",
+              "fields"
+            ],
+            "value": {
+              "id": "q-3665mr6chj1t3",
+              "key": "name",
+              "label": {
+                "en-GB": "Name",
+                "sv-SE": "Namn",
+                "da-DK": "Navn",
+                "nb-NO": "Navn",
+                "fi-FI": "Nimi",
+                "is-IS": "Nafn",
+                "fr-FR": "Nom",
+                "de-DE": "Name",
+                "es-ES": "Nombre",
+                "zh-CN": "姓名",
+                "ja-JP": "氏名",
+                "ru-RU": "Имя"
+              },
+              "required": true,
+              "width": "full",
+              "type": "short_text"
+            },
+            "after": null
+          },
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "fields",
+              "q-3665mr6chj1t3"
+            ],
+            "value": {
+              "source": "guided",
+              "nodeId": "flow.start"
+            }
+          },
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "retiredIds"
+            ],
+            "value": [
+              "q-3665mr6chj1t3"
+            ]
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "retiredIds"
+            ],
+            "value": []
+          },
+          {
+            "op": "unset",
+            "at": [
+              "sidecar",
+              "fields",
+              "q-3665mr6chj1t3"
+            ]
+          },
+          {
+            "op": "remove",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-3665mr6chj1t3"
+              }
+            ]
+          },
+          {
+            "op": "unset",
+            "at": [
+              "pending",
+              "purpose"
+            ]
+          }
+        ],
+        "to": "brand.start",
+        "skipped": [
+          {
+            "nodeId": "guess.confirm",
+            "reason": "guided.skip.nothingToGuess"
+          }
+        ],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "brand.start",
+        "answer": {
+          "kind": "option",
+          "optionId": "later"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "brandDecided"
+            ],
+            "value": "default"
+          }
+        ],
+        "inverse": [
+          {
+            "op": "unset",
+            "at": [
+              "sidecar",
+              "brandDecided"
+            ]
+          }
+        ],
+        "to": "text.label",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "text.label",
+        "answer": {
+          "kind": "text",
+          "value": "Vilken mat vill du ha?"
+        },
+        "patch": [
+          {
+            "op": "unset",
+            "at": [
+              "pending",
+              "buttons"
+            ]
+          },
+          {
+            "op": "insert",
+            "at": [
+              "draft",
+              "definition",
+              "fields"
+            ],
+            "value": {
+              "id": "q-4saczmmkem75x",
+              "key": "short_text",
+              "label": {},
+              "required": false,
+              "width": "full",
+              "type": "short_text"
+            },
+            "after": {
+              "id": "q-3665mr6chj1t3"
+            }
+          },
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "fields",
+              "q-4saczmmkem75x"
+            ],
+            "value": {
+              "source": "guided",
+              "nodeId": "text.label"
+            }
+          },
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "retiredIds"
+            ],
+            "value": [
+              "q-3665mr6chj1t3",
+              "q-4saczmmkem75x"
+            ]
+          },
+          {
+            "op": "set",
+            "at": [
+              "focus"
+            ],
+            "value": "q-4saczmmkem75x"
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "label"
+            ],
+            "value": {
+              "sv-SE": "Vilken mat vill du ha?"
+            }
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "label"
+            ],
+            "value": {}
+          },
+          {
+            "op": "set",
+            "at": [
+              "focus"
+            ],
+            "value": null
+          },
+          {
+            "op": "set",
+            "at": [
+              "sidecar",
+              "retiredIds"
+            ],
+            "value": [
+              "q-3665mr6chj1t3"
+            ]
+          },
+          {
+            "op": "unset",
+            "at": [
+              "sidecar",
+              "fields",
+              "q-4saczmmkem75x"
+            ]
+          },
+          {
+            "op": "remove",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              }
+            ]
+          }
+        ],
+        "to": "text.required",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "text.required",
+        "answer": {
+          "kind": "option",
+          "optionId": "yes"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "required"
+            ],
+            "value": true
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "required"
+            ],
+            "value": false
+          }
+        ],
+        "to": "choice.buttons",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "choice.buttons",
+        "answer": {
+          "kind": "option",
+          "optionId": "yes"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "pending",
+              "buttons"
+            ],
+            "value": true
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              }
+            ],
+            "value": {
+              "id": "q-4saczmmkem75x",
+              "key": "short_text",
+              "label": {
+                "sv-SE": "Vilken mat vill du ha?"
+              },
+              "required": true,
+              "width": "full",
+              "type": "single_select",
+              "options": [
+                {
+                  "value": "option_1",
+                  "label": {
+                    "en-GB": "Option 1",
+                    "sv-SE": "Alternativ 1",
+                    "da-DK": "Valgmulighed 1",
+                    "nb-NO": "Alternativ 1",
+                    "fi-FI": "Vaihtoehto 1",
+                    "is-IS": "Valkostur 1",
+                    "fr-FR": "Option 1",
+                    "de-DE": "Option 1",
+                    "es-ES": "Opción 1",
+                    "zh-CN": "选项 1",
+                    "ja-JP": "選択肢 1",
+                    "ru-RU": "Вариант 1"
+                  },
+                  "image": null
+                },
+                {
+                  "value": "option_2",
+                  "label": {
+                    "en-GB": "Option 2",
+                    "sv-SE": "Alternativ 2",
+                    "da-DK": "Valgmulighed 2",
+                    "nb-NO": "Alternativ 2",
+                    "fi-FI": "Vaihtoehto 2",
+                    "is-IS": "Valkostur 2",
+                    "fr-FR": "Option 2",
+                    "de-DE": "Option 2",
+                    "es-ES": "Opción 2",
+                    "zh-CN": "选项 2",
+                    "ja-JP": "選択肢 2",
+                    "ru-RU": "Вариант 2"
+                  },
+                  "image": null
+                }
+              ],
+              "appearance": "dropdown"
+            }
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "appearance"
+            ],
+            "value": "buttons"
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "appearance"
+            ],
+            "value": "dropdown"
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              }
+            ],
+            "value": {
+              "id": "q-4saczmmkem75x",
+              "key": "short_text",
+              "label": {
+                "sv-SE": "Vilken mat vill du ha?"
+              },
+              "required": true,
+              "width": "full",
+              "type": "short_text"
+            }
+          },
+          {
+            "op": "unset",
+            "at": [
+              "pending",
+              "buttons"
+            ]
+          }
+        ],
+        "to": "choice.answers",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "choice.answers",
+        "answer": {
+          "kind": "option",
+          "optionId": "one"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "appearance"
+            ],
+            "value": "buttons"
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "appearance"
+            ],
+            "value": "buttons"
+          }
+        ],
+        "to": "choice.count",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "choice.count",
+        "answer": {
+          "kind": "quantity",
+          "value": 4
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "options"
+            ],
+            "value": [
+              {
+                "value": "option_1",
+                "label": {
+                  "en-GB": "Option 1",
+                  "sv-SE": "Alternativ 1",
+                  "da-DK": "Valgmulighed 1",
+                  "nb-NO": "Alternativ 1",
+                  "fi-FI": "Vaihtoehto 1",
+                  "is-IS": "Valkostur 1",
+                  "fr-FR": "Option 1",
+                  "de-DE": "Option 1",
+                  "es-ES": "Opción 1",
+                  "zh-CN": "选项 1",
+                  "ja-JP": "選択肢 1",
+                  "ru-RU": "Вариант 1"
+                },
+                "image": null
+              },
+              {
+                "value": "option_2",
+                "label": {
+                  "en-GB": "Option 2",
+                  "sv-SE": "Alternativ 2",
+                  "da-DK": "Valgmulighed 2",
+                  "nb-NO": "Alternativ 2",
+                  "fi-FI": "Vaihtoehto 2",
+                  "is-IS": "Valkostur 2",
+                  "fr-FR": "Option 2",
+                  "de-DE": "Option 2",
+                  "es-ES": "Opción 2",
+                  "zh-CN": "选项 2",
+                  "ja-JP": "選択肢 2",
+                  "ru-RU": "Вариант 2"
+                },
+                "image": null
+              },
+              {
+                "value": "option_3",
+                "label": {
+                  "en-GB": "Option 3",
+                  "sv-SE": "Alternativ 3",
+                  "da-DK": "Valgmulighed 3",
+                  "nb-NO": "Alternativ 3",
+                  "fi-FI": "Vaihtoehto 3",
+                  "is-IS": "Valkostur 3",
+                  "fr-FR": "Option 3",
+                  "de-DE": "Option 3",
+                  "es-ES": "Opción 3",
+                  "zh-CN": "选项 3",
+                  "ja-JP": "選択肢 3",
+                  "ru-RU": "Вариант 3"
+                },
+                "image": null
+              },
+              {
+                "value": "option_4",
+                "label": {
+                  "en-GB": "Option 4",
+                  "sv-SE": "Alternativ 4",
+                  "da-DK": "Valgmulighed 4",
+                  "nb-NO": "Alternativ 4",
+                  "fi-FI": "Vaihtoehto 4",
+                  "is-IS": "Valkostur 4",
+                  "fr-FR": "Option 4",
+                  "de-DE": "Option 4",
+                  "es-ES": "Opción 4",
+                  "zh-CN": "选项 4",
+                  "ja-JP": "選択肢 4",
+                  "ru-RU": "Вариант 4"
+                },
+                "image": null
+              }
+            ]
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "options"
+            ],
+            "value": [
+              {
+                "value": "option_1",
+                "label": {
+                  "en-GB": "Option 1",
+                  "sv-SE": "Alternativ 1",
+                  "da-DK": "Valgmulighed 1",
+                  "nb-NO": "Alternativ 1",
+                  "fi-FI": "Vaihtoehto 1",
+                  "is-IS": "Valkostur 1",
+                  "fr-FR": "Option 1",
+                  "de-DE": "Option 1",
+                  "es-ES": "Opción 1",
+                  "zh-CN": "选项 1",
+                  "ja-JP": "選択肢 1",
+                  "ru-RU": "Вариант 1"
+                },
+                "image": null
+              },
+              {
+                "value": "option_2",
+                "label": {
+                  "en-GB": "Option 2",
+                  "sv-SE": "Alternativ 2",
+                  "da-DK": "Valgmulighed 2",
+                  "nb-NO": "Alternativ 2",
+                  "fi-FI": "Vaihtoehto 2",
+                  "is-IS": "Valkostur 2",
+                  "fr-FR": "Option 2",
+                  "de-DE": "Option 2",
+                  "es-ES": "Opción 2",
+                  "zh-CN": "选项 2",
+                  "ja-JP": "選択肢 2",
+                  "ru-RU": "Вариант 2"
+                },
+                "image": null
+              }
+            ]
+          }
+        ],
+        "to": "choice.shape",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "choice.shape",
+        "answer": {
+          "kind": "option",
+          "optionId": "pill"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "style"
+            ],
+            "value": {
+              "shape": "pill",
+              "size": "regular",
+              "accent": "primary",
+              "columns": "auto"
+            }
+          }
+        ],
+        "inverse": [
+          {
+            "op": "unset",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "style"
+            ]
+          }
+        ],
+        "to": "choice.placement",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "choice.placement",
+        "answer": {
+          "kind": "option",
+          "optionId": "under-full"
+        },
+        "patch": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "width"
+            ],
+            "value": "full"
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "style"
+            ],
+            "value": {
+              "shape": "pill",
+              "size": "regular",
+              "accent": "primary",
+              "columns": "1"
+            }
+          }
+        ],
+        "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "style"
+            ],
+            "value": {
+              "shape": "pill",
+              "size": "regular",
+              "accent": "primary",
+              "columns": "auto"
+            }
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "width"
+            ],
+            "value": "full"
+          }
+        ],
+        "to": "choice.preview",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "choice.preview",
+        "answer": {
+          "kind": "continue"
+        },
+        "patch": [],
+        "inverse": [],
+        "to": "flow.more",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      }
+    ]
+  },
+  "draft": {
+    "definition": {
+      "schemaVersion": 1,
+      "fields": [
+        {
+          "id": "q-3665mr6chj1t3",
+          "key": "name",
+          "label": {
+            "en-GB": "Name",
+            "sv-SE": "Namn",
+            "da-DK": "Navn",
+            "nb-NO": "Navn",
+            "fi-FI": "Nimi",
+            "is-IS": "Nafn",
+            "fr-FR": "Nom",
+            "de-DE": "Name",
+            "es-ES": "Nombre",
+            "zh-CN": "姓名",
+            "ja-JP": "氏名",
+            "ru-RU": "Имя"
+          },
+          "required": true,
+          "width": "full",
+          "type": "short_text"
+        },
+        {
+          "id": "q-4saczmmkem75x",
+          "key": "short_text",
+          "label": {
+            "sv-SE": "Vilken mat vill du ha?"
+          },
+          "required": true,
+          "width": "full",
+          "type": "single_select",
+          "options": [
+            {
+              "value": "option_1",
+              "label": {
+                "en-GB": "Option 1",
+                "sv-SE": "Alternativ 1",
+                "da-DK": "Valgmulighed 1",
+                "nb-NO": "Alternativ 1",
+                "fi-FI": "Vaihtoehto 1",
+                "is-IS": "Valkostur 1",
+                "fr-FR": "Option 1",
+                "de-DE": "Option 1",
+                "es-ES": "Opción 1",
+                "zh-CN": "选项 1",
+                "ja-JP": "選択肢 1",
+                "ru-RU": "Вариант 1"
+              },
+              "image": null
+            },
+            {
+              "value": "option_2",
+              "label": {
+                "en-GB": "Option 2",
+                "sv-SE": "Alternativ 2",
+                "da-DK": "Valgmulighed 2",
+                "nb-NO": "Alternativ 2",
+                "fi-FI": "Vaihtoehto 2",
+                "is-IS": "Valkostur 2",
+                "fr-FR": "Option 2",
+                "de-DE": "Option 2",
+                "es-ES": "Opción 2",
+                "zh-CN": "选项 2",
+                "ja-JP": "選択肢 2",
+                "ru-RU": "Вариант 2"
+              },
+              "image": null
+            },
+            {
+              "value": "option_3",
+              "label": {
+                "en-GB": "Option 3",
+                "sv-SE": "Alternativ 3",
+                "da-DK": "Valgmulighed 3",
+                "nb-NO": "Alternativ 3",
+                "fi-FI": "Vaihtoehto 3",
+                "is-IS": "Valkostur 3",
+                "fr-FR": "Option 3",
+                "de-DE": "Option 3",
+                "es-ES": "Opción 3",
+                "zh-CN": "选项 3",
+                "ja-JP": "選択肢 3",
+                "ru-RU": "Вариант 3"
+              },
+              "image": null
+            },
+            {
+              "value": "option_4",
+              "label": {
+                "en-GB": "Option 4",
+                "sv-SE": "Alternativ 4",
+                "da-DK": "Valgmulighed 4",
+                "nb-NO": "Alternativ 4",
+                "fi-FI": "Vaihtoehto 4",
+                "is-IS": "Valkostur 4",
+                "fr-FR": "Option 4",
+                "de-DE": "Option 4",
+                "es-ES": "Opción 4",
+                "zh-CN": "选项 4",
+                "ja-JP": "選択肢 4",
+                "ru-RU": "Вариант 4"
+              },
+              "image": null
+            }
+          ],
+          "appearance": "buttons",
+          "style": {
+            "shape": "pill",
+            "size": "regular",
+            "accent": "primary",
+            "columns": "1"
+          }
+        }
+      ],
+      "settings": {
+        "submitLabel": {},
+        "confirmationMessage": {},
+        "duplicateControl": "email",
+        "allowSaveAndResume": true,
+        "showProgress": true,
+        "locales": [],
+        "identity": "off"
+      }
+    },
+    "title": {}
+  }
+}

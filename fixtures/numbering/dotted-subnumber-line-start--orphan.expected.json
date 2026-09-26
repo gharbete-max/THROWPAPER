@@ -1,0 +1,57 @@
+{
+  "fixture": "dotted-subnumber-line-start--orphan",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "E-post",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l4",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "12.1",
+            "family": "arabic",
+            "style": "dot",
+            "path": [12, 1],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn på medföljande",
+          "verdict": "accept-flagged",
+          "flags": ["orphan-subnumber"],
+          "decidedBy": "D2"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l3"],
+      "skippedLineIds": []
+    }
+  }
+}

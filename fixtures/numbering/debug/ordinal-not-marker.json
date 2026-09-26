@@ -1,0 +1,15 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "c0976d2e76dabe786d68331b39670d7c2bbd8f9aba05001bdc9f1923f06b6d91",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6b","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l3","rule":"R6b","verdict":"prose","subject":["p1-l3"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l4","rule":"R6b","verdict":"prose","subject":["p1-l4"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l5","rule":"V3","verdict":"rejected","subject":["p1-l5"],"evidence":{"next":"mai","production":"M1","raw":"1.","then":"R6b"}},
+    {"id":"enumerate:p1-l6","rule":"V3","verdict":"rejected","subject":["p1-l6"],"evidence":{"next":"Mai","production":"M1","raw":"1.","then":"R6b"}},
+    {"id":"enumerate:p1-l7","rule":"R6b","verdict":"prose","subject":["p1-l7"],"evidence":{"closed":0,"relX":0,"width":8000}}
+  ]
+}

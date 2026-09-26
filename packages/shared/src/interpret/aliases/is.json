@@ -1,0 +1,1735 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "Efst á spjaldinu",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "efst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spjaldið",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "á spjaldinu",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Lítið, í horninu",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "horn",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lítið",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vatnsmerki",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "í horninu",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "borði neðst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "neðst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "síðufótur",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Í borða neðst",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "Efst til vinstri, við titilinn",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "efst til vinstri",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vinstri",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "við titilinn",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Fyrir miðju ofan við titilinn",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "fyrir miðju",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "miðjað",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ofan við titilinn",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "dálkur",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hliðardálkur",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "við hlið eyðublaðsins",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Í dálki við hlið eyðublaðsins",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "Djarft",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "litríkt",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sterkt",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "áberandi",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Garður",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ferskt",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "grænt",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "náttúra",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Miðnætti",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "dökkt",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nótt",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "svart",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Einfalt",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einfaldur",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hreint",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ljóst",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "látlaust",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ekki núna",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ekki strax",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei takk",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "seinna",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sjálfgefið",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sleppa",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "síðar",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ákveða síðar",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "Já, nota liti og merki okkar",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "já",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "litir",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lógó",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "merki",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "okkar litir",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "okkar merki",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vörumerki",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Fleiri svör leyfð",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "fjölval",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fleiri",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fleiri en eitt",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fleiri svör",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "gátreitir",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mörg",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mörg svör",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "velja fleiri",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Aðeins eitt svar",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aðeins eitt",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bara eitt",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eitt",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eitt svar",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eitt val",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "velja eitt",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nei, fólk skrifar svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "engir hnappar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "frjáls texti",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "opið svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skrifa",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texti",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "án hnappa",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hnappar",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hnappur",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "með hnöppum",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valkostir",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "velja",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "velja af lista",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Hlið við hlið",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "lárétt",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "röð",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "í röð",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Undir spurningunni, í fullri breidd",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "full breidd",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fyrir neðan",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lóðrétt",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "undir",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "undir spurningunni",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Hylki",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alveg ávalt",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hylkislaga",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pilla",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mjúk horn",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mjúkt",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ávöl",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ávalt",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ávöl horn",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ferköntuð",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ferningur",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kantað",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rétthyrningur",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skörp horn",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Spjöld með plássi fyrir mynd",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "með myndum",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "myndir",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pláss fyrir mynd",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "reitir",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spjald",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spjöld",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nei, þetta er allt",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "búið",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ekkert meira",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hætta",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tilbúið",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ég er búin",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ég er búinn",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "þetta er allt",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Já, spyrja um eitthvað fleira",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aðra spurningu",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bæta við",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bæta við spurningu",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eina enn",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "halda áfram",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "já",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "meira",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "næsta spurning",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Söfnun upplýsinga",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "safna upplýsingum",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tengiliðaupplýsingar",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "umsókn",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "upplýsingar",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Heyra hvað fólki finnst",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "endurgjöf",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hvað fólki finnst",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "könnun",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mat",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skoðanir",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "álit",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Eitthvað annað",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "annað",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eitthvað allt annað",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Skráningar",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "bókanir",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "bókun",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "miðar",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skrá sig",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skráning",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "viðburður",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "þátttakendur",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nei, það er valfrjálst",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ekki nauðsynlegt",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ekki skylda",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valfrjálst",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Já, það þarf",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "já",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nauðsynlegt",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skylda",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "verður að svara",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "áskilið",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}

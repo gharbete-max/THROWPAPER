@@ -1,0 +1,32 @@
+{
+  "fixture": "ligature-and-quote-repair",
+  "caveats": ["ligature-and-quote-repair"],
+  "stage": "reassemble",
+  "status": "todo",
+  "turnsGreenIn": "S7",
+  "summary": "Presentation-form ligatures are expanded (ﬁ → fi); curly quotes are the author's and are kept.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "words": [
+          { "text": "The", "box": { "x0": 1000, "y0": 895, "x1": 1276, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "ﬁrst", "box": { "x0": 1368, "y0": 895, "x1": 1736, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "“Oﬃce”", "box": { "x0": 1828, "y0": 895, "x1": 2380, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "hours", "box": { "x0": 2472, "y0": 895, "x1": 2932, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "are", "box": { "x0": 3024, "y0": 895, "x1": 3300, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "ﬂexible.", "box": { "x0": 3392, "y0": 895, "x1": 4128, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null }
+        ],
+        "rules": []
+      }
+    ]
+  }
+}

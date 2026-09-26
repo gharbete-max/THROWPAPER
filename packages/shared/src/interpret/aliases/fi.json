@@ -1,0 +1,1835 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "Kortin yläosassa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kortin yläosa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kortissa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kortti",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ylhäällä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Pienenä kulmassa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kulma",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kulmassa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pienenä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pieni",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vesileima",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Alareunan palkissa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alareuna",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "alareunassa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "alatunniste",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "alhaalla",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Vasemmalla ylhäällä, otsikon vieressä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "otsikon vieressä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vasemmalla",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vasemmalla ylhäällä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vasen",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ylätunniste",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Keskellä otsikon yläpuolella",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keskellä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "keskitetty",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "otsikon yläpuolella",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Lomakkeen vieressä olevassa palstassa",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "lomakkeen vieressä",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "palsta",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sivupalkki",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Rohkea",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "näyttävä",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vahva",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "värikäs",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Puutarha",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "luonto",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "raikas",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vihreä",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Keskiyö",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "musta",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tumma",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tumma tila",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yö",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Pelkistetty",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "minimalistinen",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "selkeä",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vaalea",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yksinkertainen",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Päätä myöhemmin",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ei",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei kiitos",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei nyt",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei vielä",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "myöhemmin",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ohita",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "oletus",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kyllä, käytä värejämme ja logoamme",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "brändi",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ilme",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kyllä",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "logo",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "logomme",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "meidän brändi",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "värimme",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "värit",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Useampi vastaus sallittu",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "enemmän kuin yksi",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "monivalinta",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "monta",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "useampi",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "useita",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "useita vastauksia",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valintaruudut",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valitse useita",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Vain yksi vastaus",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "vain yksi",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valitse yksi",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yksi",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yksi valinta",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yksi vastaus",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ei, vastaus kirjoitetaan",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "avoin vastaus",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei painikkeita",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ilman painikkeita",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kirjoittaa",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "teksti",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vapaa teksti",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kyllä",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "napit",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "painike",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "painikkeet",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "painikkeilla",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "painikkeita",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vaihtoehdot",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valita",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valita listasta",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Rinnakkain",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "rivi",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rivissä",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vaakasuunnassa",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vierekkäin",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kysymyksen alla, koko leveydeltä",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alla",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "allekkain",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "koko leveys",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kysymyksen alla",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pystysuunnassa",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kapseli",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kapselimainen",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pilleri",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "täysin pyöreä",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Pyöristetty",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "pehmeä",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pehmeät kulmat",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pyöreä",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pyöristetyt kulmat",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kulmikas",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kulmikkaat",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "neliö",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "suorakulmio",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "terävät kulmat",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kortit, joissa on tilaa kuvalle",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kortit",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kortti",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kuvat",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kuvilla",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "laatat",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tilaa kuvalle",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ei, siinä kaikki",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ei",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei enempää",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei muuta",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lopeta",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "olen valmis",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "siinä kaikki",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valmis",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kyllä, kysy jotain muuta",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "jatka",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kyllä",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lisää",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lisää kysymys",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "seuraava kysymys",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "toinen kysymys",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vielä yksi",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Tietojen keruu",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hakemus",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "jäsentiedot",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kerätä tietoja",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tiedot",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tietoja",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yhteystiedot",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Mielipiteiden kuuleminen",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "arviointi",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kysely",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mielipiteet",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "palaute",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "palautetta",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tutkimus",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Jotain muuta",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "jotain aivan muuta",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "muu",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ilmoittautumiset",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ilmoittautua",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ilmoittautuminen",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "liput",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "osallistujat",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "rekisteröinti",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tapahtuma",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "varaukset",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "varaus",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ei, se on vapaaehtoinen",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ei",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei pakollinen",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei tarvita",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valinnainen",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vapaaehtoinen",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kyllä, se tarvitaan",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kyllä",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pakollinen",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tarvitaan",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "täytyy vastata",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "vaaditaan",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "785d5c0809ba60e7fc3623d3b36f33a543eea385b744f6f80f8fa4ee19d67856",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6b","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l2","rule":"V1","verdict":"rejected","subject":["p1-l2"],"evidence":{"next":"miljoner","production":"M4","raw":"3.5","then":"R6b"}},
+    {"id":"enumerate:p1-l3","rule":"V2","verdict":"rejected","subject":["p1-l3"],"evidence":{"next":"Millionen","production":"M4","raw":"3.5","then":"R6b"}},
+    {"id":"enumerate:p1-l4","rule":"V1","verdict":"rejected","subject":["p1-l4"],"evidence":{"next":"i","production":"M4","raw":"12.1","then":"R6b"}},
+    {"id":"enumerate:p1-l5","rule":"R6b","verdict":"prose","subject":["p1-l5"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l6","rule":"R6b","verdict":"prose","subject":["p1-l6"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l7","rule":"R6b","verdict":"prose","subject":["p1-l7"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l8","rule":"R6b","verdict":"prose","subject":["p1-l8"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l9","rule":"R6b","verdict":"prose","subject":["p1-l9"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l10","rule":"R6b","verdict":"prose","subject":["p1-l10"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l11","rule":"V4","verdict":"rejected","subject":["p1-l11"],"evidence":{"next":"Anmäl","production":"M1","raw":"250.","then":"R6b"}}
+  ]
+}

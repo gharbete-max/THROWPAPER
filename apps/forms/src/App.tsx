@@ -39,6 +39,9 @@ const BrandKit = lazy(() => import('./screens/BrandKit.js').then((m) => ({ defau
 const FormBuilder = lazy(() =>
   import('./screens/builder/FormBuilder.js').then((m) => ({ default: m.FormBuilder })),
 );
+const GuidedBuilder = lazy(() =>
+  import('./screens/builder/guided/GuidedBuilder.js').then((m) => ({ default: m.GuidedBuilder })),
+);
 const EventReport = lazy(() =>
   import('./screens/EventReport.js').then((m) => ({ default: m.EventReport })),
 );
@@ -225,8 +228,12 @@ function Shell() {
    * The door is a mode, not a page. Somebody working a check-in is not navigating a product, and
    * on a phone the sidebar-turned-bottom-bar took a fifth of the screen from the one input that
    * matters. The rail and the session row go; the screen carries its own way out.
+   *
+   * The guided conversation is the same kind of screen: one decision at a time, full screen, its
+   * answers on a 360 × 640 phone without scrolling (`docs/plan/CAVEATS.md` #37) — which the rail
+   * and the session row made impossible. Its way out is "Build it myself", into the editor.
    */
-  const door = /^\/events\/[^/]+\/check-in$/.test(path);
+  const door = /^\/events\/[^/]+\/check-in$/.test(path) || /^\/forms\/[^/]+\/guided$/.test(path);
   const wide = /^\/forms\/[^/]+/.test(path);
   const roomy =
     !wide &&
@@ -367,6 +374,7 @@ function Shell() {
               <Route path="/brand" element={<BrandKit />} />
               {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
               <Route path="/forms/:id/submissions" element={<FormResponses />} />
+              <Route path="/forms/:id/guided" element={<GuidedBuilder />} />
               <Route path="/forms/:id" element={<FormBuilder />} />
               <Route path="/events/:id/attendance" element={<EventReport />} />
               <Route

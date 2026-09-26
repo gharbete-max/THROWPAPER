@@ -1,0 +1,1715 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "卡片上",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "卡片上方",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "卡片顶部",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "顶部",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "小图标",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "小图标，放在角落",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "水印",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "角落",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "底部",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "底部横条",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "放在底部横条中",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "页脚",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "左上",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "左上角，标题旁边",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "左边",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "标题旁边",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "页眉",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "中间",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "居中",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "居中，位于标题上方",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "标题上方",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "侧栏",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "侧边栏",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "放在表单旁的侧栏中",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "表单旁边",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "大胆",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "强烈",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "醒目",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "鲜艳",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "清新",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "绿色",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "自然",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "花园",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "午夜",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "夜间",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "暗色",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "深色",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "黑色",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "干净",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "极简",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "清爽",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "简单",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "简约",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不用了",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "以后",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "否",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "现在不",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "稍后",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "稍后决定",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "跳过",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "默认",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "品牌",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "好",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "徽标",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "我们的品牌",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "我们的颜色",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是，使用我们的颜色和标志",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "标志",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "标识",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "颜色",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不止一个",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "可以选多个",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "可多选",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "复选框",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "多个",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "多个答案",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "多选",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一个",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一个答案",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "单选",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "只能选一个",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "只选一个",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不用，直接写出回答",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不要按钮",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "否",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "填写",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "开放式回答",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "文本",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "没有按钮",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "自由填写",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "从列表中选择",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "按钮",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "要按钮",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "选择",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "选项",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一行",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "并排",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "并排的",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "排成一行",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "横向",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "横排",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下方",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "占满整行",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "在问题下方，占满整行",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "每行一个",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "竖排",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "纵向",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "问题下方",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "全圆角",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "胶囊",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "胶囊形",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "药丸形",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "圆形",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "圆角",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "圆角的",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "柔和",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "方形",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "方形的",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "方角",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "直角",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "矩形",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "卡片",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "卡片，可放图片",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "图块",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "图片",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "带图片",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不用了",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不用了，就这些",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "否",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "完成",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "就这些",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "没有了",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "结束",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下一个问题",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "再加一个问题",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "再来一个",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是，再问点别的",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "添加问题",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "继续",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "还有",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "会员信息",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "信息",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "收集",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "收集信息",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "申请",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "联系方式",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "资料",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "了解大家的想法",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "反馈",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "意见",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "看法",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "评价",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "调查",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "问卷",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "其他",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "其他用途",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "别的",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "参加者",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "报名",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "报名登记",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "注册",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "活动报名",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "登记",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "门票",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "预约",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "预订",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不是必须的",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不，可以不答",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "可选",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "否",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "选填",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "非必填",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "必填",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "必答",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "必须",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是，必须回答",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "需要",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}

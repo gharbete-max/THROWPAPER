@@ -1,0 +1,38 @@
+{
+  "fixture": "marker-on-own-line",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1", "p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l3", "p1-l4"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Adress",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [{ "lineId": "p1-l5", "raw": "3.", "rule": "P4" }],
+      "proseLineIds": ["p1-l5"],
+      "skippedLineIds": []
+    }
+  }
+}

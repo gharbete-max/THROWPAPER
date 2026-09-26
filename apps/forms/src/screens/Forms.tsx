@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { pickText } from '@tp/i18n';
-import { FORM_WIZARD, type WizardField } from '@tp/shared/forms';
-import { Wizard } from '../components/Wizard.js';
 import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
 import { useSession } from '../lib/session.js';
@@ -15,6 +13,7 @@ import { EmptyState } from '../components/EmptyState.js';
 import { LoadFailed } from '../components/LoadFailed.js';
 import { ScopeTabs } from '../components/ScopeTabs.js';
 import { ShareDialog } from '../components/ShareDialog.js';
+import { Doors } from './builder/guided/Doors.js';
 
 /**
  * A person's workspace.
@@ -36,12 +35,14 @@ export function Forms() {
   /**
    * How a new form is being started.
    *
-   * `null` is closed. `'wizard'` is the default — a few questions, and the form falls out of the
-   * answers. `'manual'` is the advanced route, which is the template gallery and the fields it used
-   * to open with. Both end in the same editor with the same document.
+   * `null` is closed. `'doors'` is the default — start from questions, or from paper
+   * (`docs/plan/PREDICTIVE-BUILDER.md`, "The two doors"). `'manual'` is the way out, "Build it
+   * myself": the template gallery and a link address of your own. All of them end in the same
+   * editor with the same draft.
    */
   const navigate = useNavigate();
-  const [creating, setCreating] = useState<null | 'wizard' | 'manual'>(null);
+  const [creating, setCreating] = useState<null | 'doors' | 'manual'>(null);
+  const [opening, setOpening] = useState(false);
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -77,25 +78,28 @@ export function Forms() {
   }, []);
 
   /**
-   * Make the form the answers describe, and open it.
+   * A new blank form, opened through the door that was chosen: the conversation, or the editor
+   * with the paper import open.
    *
-   * The slug is derived rather than asked for. A wizard whose last step is "now invent a URL" has
-   * given the time back it just saved, and a slug is editable afterwards like everything else.
+   * The slug is derived rather than asked for. A door whose first step is "now invent a URL" has
+   * given back the time it was meant to save, and a slug is editable afterwards like everything
+   * else.
    */
-  async function createFromWizard(answers: readonly string[]) {
+  async function openBlank(door: 'questions' | 'paper') {
     setError(null);
+    setOpening(true);
     try {
       const stamp = Date.now().toString(36);
       const created = await client.createForm({
         slug: `form-${stamp}`,
         title: { [locales.default]: t('forms.untitled') },
-        wizardAnswers: [...answers],
       });
       setCreating(null);
-      // Into the editor, which is where the wizard was always a head start for.
-      navigate(`/forms/${created.id}`);
+      navigate(door === 'questions' ? `/forms/${created.id}/guided` : `/forms/${created.id}?paper`);
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : String(cause));
+    } finally {
+      setOpening(false);
     }
   }
 
@@ -165,7 +169,7 @@ export function Forms() {
         <h1>{t('forms.title')}</h1>
         <button
           className="button"
-          onClick={() => setCreating((mode) => (mode === null ? 'wizard' : null))}
+          onClick={() => setCreating((mode) => (mode === null ? 'doors' : null))}
         >
           {t('forms.new')}
         </button>
@@ -173,20 +177,17 @@ export function Forms() {
 
       <ScopeTabs scopes={scopes} current={scope} onChange={setScope} label={t('forms.title')} />
 
-      {creating === 'wizard' && (
-        <div className="card">
-          <Wizard
-            tree={FORM_WIZARD}
-            locales={locales}
-            locale={locale}
-            skipLabel={t('wizard.advanced')}
-            onSkip={() => setCreating('manual')}
-            summarise={(field: WizardField) => pickText(locales, field.label, locale).value}
-            onFinish={(_fields, answers) => {
-              void createFromWizard(answers);
-            }}
-          />
-        </div>
+      {creating === 'doors' && (
+        <Doors
+          onQuestions={() => void openBlank('questions')}
+          onPaper={() => void openBlank('paper')}
+          onMyself={() => {
+            setError(null);
+            setCreating('manual');
+          }}
+          busy={opening}
+          error={error}
+        />
       )}
 
       {creating === 'manual' && (
@@ -272,7 +273,7 @@ export function Forms() {
            */
           action={
             scope === 'trash' ? undefined : (
-              <button className="button" onClick={() => setCreating('wizard')}>
+              <button className="button" onClick={() => setCreating('doors')}>
                 {t('forms.new')}
               </button>
             )

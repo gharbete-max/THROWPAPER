@@ -1,0 +1,35 @@
+{
+  "fixture": "hyphenated-line-break",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "Everyone who wants to join the dinner after the annual meeting must finish registering",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "is 1 May.", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        {
+          "text": "Om du vill ha kallelsen digitalt, skriv din adress i fältet nedan och ange din e-post",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "här.", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        {
+          "text": "Bussresan tur och retur mellan föreningens lokaler och konferensen i Stockholm-Göteborg",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "ingår i avgiften.", "pageNo": 1, "columnIndex": 0, "role": "body" }
+      ],
+      "repairs": [
+        { "word": "registering", "kind": "dehyphenated", "raw": "regis-\ntering" },
+        { "word": "e-post", "kind": "joined-at-break", "raw": "e-\npost" },
+        { "word": "Stockholm-Göteborg", "kind": "joined-at-break", "raw": "Stockholm-\nGöteborg" }
+      ]
+    }
+  }
+}

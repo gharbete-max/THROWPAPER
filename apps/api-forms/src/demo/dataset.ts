@@ -693,6 +693,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
         updatedBy: null,
       },
     ],
+    builderSessions: [],
     audit: [],
     // The ledger starts empty: a demo book with invented entries in it would be a book
     // somebody could mistake for an example of correct bookkeeping.

@@ -1,0 +1,1835 @@
+{
+  "aliasesVersion": 1,
+  "entries": [
+    {
+      "phrase": "В верхней части карточки",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "вверху",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "вверху карточки",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "карточка",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "на карточке",
+      "nodeId": "brand.logoSlot",
+      "optionId": "card-top",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Маленький, в углу",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "в углу",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "водяной знак",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "маленький",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "угол",
+      "nodeId": "brand.logoSlot",
+      "optionId": "corner-watermark",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "В полосе внизу",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "внизу",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "подвал",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "полоса внизу",
+      "nodeId": "brand.logoSlot",
+      "optionId": "footer-strip",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Слева вверху, рядом с заголовком",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "в шапке",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "рядом с заголовком",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "слева",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "слева вверху",
+      "nodeId": "brand.logoSlot",
+      "optionId": "header-left",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "По центру над заголовком",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "в центре",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "над заголовком",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "по центру",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "центр",
+      "nodeId": "brand.logoSlot",
+      "optionId": "masthead-centred",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "В колонке рядом с формой",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "боковая панель",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "колонка",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "рядом с формой",
+      "nodeId": "brand.logoSlot",
+      "optionId": "sidebar-rail",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Контрастная",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "контрастный",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "смелый",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "яркая",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "яркий",
+      "nodeId": "brand.quick",
+      "optionId": "bold",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Сад",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "зелёный",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "природа",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "свежий",
+      "nodeId": "brand.quick",
+      "optionId": "garden",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Полночь",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ночь",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "тёмная",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "тёмная тема",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "тёмный",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "чёрный",
+      "nodeId": "brand.quick",
+      "optionId": "midnight",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Минимализм",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "простая",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "простой",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "светлый",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "чистый",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Решить позже",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "не сейчас",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет спасибо",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "по умолчанию",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "позже",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "потом",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "пропустить",
+      "nodeId": "brand.start",
+      "optionId": "later",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Да, наши цвета и логотип",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "бренд",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "да",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "логотип",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "наш бренд",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "наш логотип",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "наши цвета",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "фирменный стиль",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "цвета",
+      "nodeId": "brand.start",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Можно несколько ответов",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "больше одного",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "выбрать несколько",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "много",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "множественный выбор",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "несколько",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "несколько ответов",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "флажки",
+      "nodeId": "choice.answers",
+      "optionId": "many",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Только один ответ",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "выбрать один",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "один",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "один ответ",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "одиночный выбор",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "только один",
+      "nodeId": "choice.answers",
+      "optionId": "one",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Нет, ответ пишут сами",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "без кнопок",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "открытый ответ",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "писать",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "свободный ответ",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "текст",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Да",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "варианты",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "выбор",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "выбрать из списка",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "кнопка",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "кнопки",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "кнопок",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "с кнопками",
+      "nodeId": "choice.buttons",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "В ряд",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "в одну строку",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "горизонтально",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ряд",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "рядом друг с другом",
+      "nodeId": "choice.placement",
+      "optionId": "row",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Под вопросом, во всю ширину",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "вертикально",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "внизу вопроса",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "во всю ширину",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "под",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "под вопросом",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "столбиком",
+      "nodeId": "choice.placement",
+      "optionId": "under-full",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Капсула",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "капсулы",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "полностью скруглённая",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "таблетка",
+      "nodeId": "choice.shape",
+      "optionId": "pill",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Скруглённая",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "круглая",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "мягкие углы",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "скруглённые",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "скруглённые углы",
+      "nodeId": "choice.shape",
+      "optionId": "rounded",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Квадратная",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "квадрат",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "квадратные",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "острые углы",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "прямоугольная",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "угловатая",
+      "nodeId": "choice.shape",
+      "optionId": "square",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Карточки с местом для картинки",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "картинки",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "карточки",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "место для картинки",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "плитки",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "с картинками",
+      "nodeId": "choice.shape",
+      "optionId": "tile",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Нет, это всё",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "больше ничего",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "всё",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "готово",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "закончить",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "хватит",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "это всё",
+      "nodeId": "flow.more",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Да, спросить что-то ещё",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "да",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "добавить",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "добавить вопрос",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ещё",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ещё вопрос",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ещё один",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "продолжить",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "следующий вопрос",
+      "nodeId": "flow.more",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Сбор сведений",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "данные",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "заявка",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "информация",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "контакты",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "сбор",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "сведения",
+      "nodeId": "flow.start",
+      "optionId": "collect",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Узнать мнение людей",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "анкета",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "мнение",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "мнения",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "опрос",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "отзыв",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "отзывы",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "оценка",
+      "nodeId": "flow.start",
+      "optionId": "feedback",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Другое",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "иное",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "что-то другое",
+      "nodeId": "flow.start",
+      "optionId": "other",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Запись участников",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "билеты",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "бронирование",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "записаться",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "запись",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "мероприятие",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "регистрация",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "участники",
+      "nodeId": "flow.start",
+      "optionId": "signup",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Нет, по желанию",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "не обязательно",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "необязательно",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "необязательный",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "по желанию",
+      "nodeId": "text.required",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Да, обязательно",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "да",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "необходимо",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нужно",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "обязательно отвечать",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "обязательный",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "требуется",
+      "nodeId": "text.required",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    }
+  ]
+}

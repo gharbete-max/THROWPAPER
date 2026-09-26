@@ -1,0 +1,19 @@
+{
+  "fixture": "ocr-noise-budget",
+  "expect": {
+    "classify": {
+      "items": [
+        { "lineIds": ["p1-l1"], "label": "Namn" },
+        { "lineIds": ["p1-l2"], "label": "Adr3ss", "bucketAtMost": "review" },
+        { "lineIds": ["p1-l3"], "label": "Telefon" },
+        { "lineIds": ["p1-l4"], "label": "Öhrqvists minnesfond", "bucketAtMost": "review" }
+      ]
+    },
+    "enumerateSummary": [
+      { "raw": "1.", "label": "Namn", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Adr3ss", "level": 1, "verdict": "accept" },
+      { "raw": "3.", "label": "Telefon", "level": 1, "verdict": "accept" },
+      { "raw": "4.", "label": "Öhrqvists minnesfond", "level": 1, "verdict": "accept" }
+    ]
+  }
+}

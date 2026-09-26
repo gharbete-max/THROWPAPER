@@ -4,6 +4,7 @@ import { FORM_TEMPLATES, FormTemplate, findTemplate } from './templates.js';
 import { FormDefinition } from './definition.js';
 import { answerableFields, pagesOf, translatableTexts } from './helpers.js';
 import { validateSubmission } from './validate.js';
+import { REGULATED_WORDS } from './wording.js';
 
 /**
  * The point of these tests is that a template is content shipped as code, and content rots
@@ -100,30 +101,8 @@ describe('the template catalogue', () => {
   it.each(FORM_TEMPLATES.map((template) => [template.id, template] as const))(
     '%s stays out of the regulated categories',
     (_id, template) => {
-      const forbidden = [
-        'samtycke',
-        'consent',
-        'gdpr',
-        'diagnos',
-        'diagnosis',
-        'symptom',
-        'medicin',
-        'medication',
-        'moms',
-        'vat number',
-        'skatt',
-        'tax',
-        'personnummer',
-        'social security',
-        'olycka',
-        'accident',
-        'incident',
-        'tillbud',
-        'avtal',
-        'contract',
-        'villkor',
-        'terms and conditions',
-      ];
+      // One list with the guided builder's example chips (ADR 0012): `wording.ts`.
+      const forbidden = REGULATED_WORDS;
 
       const haystack = JSON.stringify(template).toLowerCase();
       const found = forbidden.filter((word) => haystack.includes(word));

@@ -1,8 +1,10 @@
-import { mkdtempSync, rmSync, statSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { MIGRATIONS } from '../db/client.js';
+import { readableCertificate } from '../sealing/certificate.js';
+import { withPaddedSerial } from '../test-certificate.js';
 import { startLocalSign, type LocalSign } from './start.js';
 
 /**
@@ -42,6 +44,43 @@ describe('Sign on one computer', () => {
     });
     // Authenticated (404, not 401): the token is real at Sign.
     expect(status.status).toBe(404);
+  });
+
+  /**
+   * A workspace from before serials were kept minimal may hold a seal certificate OpenSSL cannot
+   * read (one in 256), saved for good. It is replaced on the next start — only it: the link secret
+   * and the callers' tokens are what signers and Forms already hold.
+   */
+  it('replaces a stored seal certificate OpenSSL cannot read, and keeps everything else', async () => {
+    const dir = workspace();
+    const path = join(dir, 'secrets.json');
+    const org = '11111111-1111-4111-8111-111111111111';
+    const first = await startLocalSign({ dataDir: dir, migrationsFolder: MIGRATIONS, port: 0 });
+    const token = await first.tokenFor(org, ['http://127.0.0.1:47017']);
+    await first.close();
+
+    const saved = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown> & {
+      sealCertPem: string;
+    };
+    const spoiled = { ...saved, sealCertPem: withPaddedSerial(saved.sealCertPem) };
+    expect(readableCertificate(spoiled.sealCertPem)).toBe(false);
+    writeFileSync(path, JSON.stringify(spoiled));
+
+    const second = await startLocalSign({ dataDir: dir, migrationsFolder: MIGRATIONS, port: 0 });
+    running.push(second);
+    const repaired = JSON.parse(readFileSync(path, 'utf8')) as typeof saved;
+    expect(readableCertificate(repaired.sealCertPem)).toBe(true);
+    expect(repaired.sealKeyPem).not.toBe(saved.sealKeyPem);
+    expect(repaired['linkSecret']).toBe(saved['linkSecret']);
+    expect(repaired['callers']).toEqual(saved['callers']);
+    expect(await second.tokenFor(org, ['http://127.0.0.1:47017'])).toBe(token);
+
+    // A readable certificate is left exactly as it is.
+    await second.close();
+    running.pop();
+    const third = await startLocalSign({ dataDir: dir, migrationsFolder: MIGRATIONS, port: 0 });
+    running.push(third);
+    expect(readFileSync(path, 'utf8')).toBe(JSON.stringify(repaired, null, 2));
   });
 
   it('answers only to its own loopback name, so a rebinding web page cannot drive it', async () => {

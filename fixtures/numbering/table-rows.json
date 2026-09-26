@@ -1,0 +1,174 @@
+{
+  "fixture": "table-rows",
+  "caveats": ["table-rows"],
+  "stage": "segment",
+  "status": "todo",
+  "turnsGreenIn": "S9",
+  "summary": "A table with a header row and three ruled, numbered empty rows is one repeating table (Namn, Telefon, E-post × 3), not three questions called \"1\", \"2\", \"3\".",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          { "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1926, "bands": [1000, 1400] }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 1828, "y1": 1026 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Deltagare",
+                "words": [
+                  { "text": "Deltagare", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1828, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 1828, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 1255, "x1": 7052, "y1": 1926 },
+            "lines": [
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "Namn Telefon E-post",
+                "words": [
+                  { "text": "Namn", "start": 0, "box": { "x0": 1400, "y0": 1255, "x1": 1768, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Telefon", "start": 5, "box": { "x0": 4000, "y0": 1255, "x1": 4644, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "E-post", "start": 13, "box": { "x0": 6500, "y0": 1255, "x1": 7052, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1400, "y0": 1255, "x1": 7052, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "1",
+                "words": [
+                  { "text": "1", "start": 0, "box": { "x0": 1000, "y0": 1435, "x1": 1092, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1435, "x1": 1092, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "2",
+                "words": [
+                  { "text": "2", "start": 0, "box": { "x0": 1000, "y0": 1615, "x1": 1092, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1615, "x1": 1092, "y1": 1746 },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "3",
+                "words": [
+                  { "text": "3", "start": 0, "box": { "x0": 1000, "y0": 1795, "x1": 1092, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1795, "x1": 1092, "y1": 1926 },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

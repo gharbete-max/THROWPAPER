@@ -14,6 +14,11 @@ docs
 apps/desktop/.stage/
 apps/desktop/release/
 
+# Hand-authored fixtures (docs/adr/0021): one layout-IR word per line so a diff reads like the
+# document. Prettier would spread every word object over twenty lines. Their structure is checked by
+# scripts/caveat-fixtures.test.ts instead.
+fixtures/
+
 .impeccable/hook.cache.json
 .impeccable/critique/
 

@@ -5,6 +5,7 @@ import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
 import {
   brandKits,
+  builderSessions,
   auditLog,
   checkIns,
   events,
@@ -30,6 +31,7 @@ import {
 } from '../schema.js';
 import type {
   BrandKitRecord,
+  BuilderSessionRecord,
   CheckInRecord,
   EventCreate,
   EventRecord,
@@ -1088,6 +1090,52 @@ export function createDrizzleRepositories(db: Db): Repositories {
 
       clear: async (organisationId) => {
         await db.delete(brandKits).where(eq(brandKits.organisationId, organisationId));
+      },
+    },
+
+    builderSessions: {
+      find: async (organisationId, formId, userId) =>
+        first(
+          await db
+            .select()
+            .from(builderSessions)
+            .where(
+              and(
+                eq(builderSessions.organisationId, organisationId),
+                eq(builderSessions.formId, formId),
+                eq(builderSessions.userId, userId),
+              ),
+            )
+            .limit(1),
+        ) as BuilderSessionRecord | null,
+
+      /**
+       * The version check is the statement's own condition, so two saves racing cannot both win:
+       * the first insert takes the primary key and the second does nothing; of two updates from
+       * the same version, the second finds the version already moved on.
+       */
+      save: async ({ organisationId, formId, userId, session, expected }) => {
+        if (expected === 0) {
+          const rows = await db
+            .insert(builderSessions)
+            .values({ organisationId, formId, userId, session, version: 1, updatedAt: new Date() })
+            .onConflictDoNothing()
+            .returning();
+          return first(rows) as BuilderSessionRecord | null;
+        }
+        const rows = await db
+          .update(builderSessions)
+          .set({ session, version: expected + 1, updatedAt: new Date() })
+          .where(
+            and(
+              eq(builderSessions.organisationId, organisationId),
+              eq(builderSessions.formId, formId),
+              eq(builderSessions.userId, userId),
+              eq(builderSessions.version, expected),
+            ),
+          )
+          .returning();
+        return first(rows) as BuilderSessionRecord | null;
       },
     },
 

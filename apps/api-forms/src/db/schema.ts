@@ -9,6 +9,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -237,6 +238,41 @@ export const formShares = pgTable(
     uniqueIndex('form_shares_form_user_idx').on(table.formId, table.userId),
     /** "Shared with me" reads this way round. */
     index('form_shares_user_idx').on(table.userId),
+  ],
+);
+
+/**
+ * The guided builder's conversation about a form: one per form and author
+ * (`docs/plan/PREDICTIVE-BUILDER.md`, "The conversation"). Where it started and every step since —
+ * the resolved changes and their inverses — so a refresh, or a desktop restart, returns to the same
+ * question with the same trail. The builder's own working state: never published, never exported,
+ * and the draft itself still saves through `forms.draft_definition`.
+ *
+ * One JSON document, validated by `BuilderSession` in `@tp/shared/builder` on the way in; the
+ * rows are the author's and go with the form, the person, or the organisation.
+ *
+ * `version` is an optimistic lock. A save names the version it read, and a second tab that read an
+ * older one is refused rather than quietly overwriting the first one's answers.
+ */
+export const builderSessions = pgTable(
+  'builder_sessions',
+  {
+    formId: uuid('form_id')
+      .notNull()
+      .references(() => forms.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    session: jsonb('session').$type<Record<string, unknown>>().notNull(),
+    version: integer('version').notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.formId, table.userId] }),
+    check('builder_sessions_version_positive', sql`${table.version} > 0`),
   ],
 );
 

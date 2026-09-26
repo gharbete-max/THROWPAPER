@@ -1,6 +1,11 @@
 import type { api, forms as formSchemas, invoicing as invoicingSchemas } from '@tp/shared';
 import type { TokenSet, ContrastFinding } from '@tp/tokens';
 import type { FormTemplate } from '@tp/shared/forms';
+import type {
+  BuilderSession,
+  BuilderSessionResponse,
+  BuilderSessionSaved,
+} from '@tp/shared/builder';
 
 export interface BrandKitResponse {
   tokens: TokenSet;
@@ -414,6 +419,23 @@ export const client = {
     request<formSchemas.FormResponse>(`/v1/forms/${id}/draft`, {
       method: 'PUT',
       body: JSON.stringify({ definition }),
+    }),
+
+  /**
+   * The guided conversation about a form, as the author left it: the version it was saved at and
+   * the session, or version 0 and `null` when there is none yet.
+   */
+  builderSession: (id: string) =>
+    request<BuilderSessionResponse>(`/v1/forms/${id}/builder-session`),
+
+  /**
+   * Saves the conversation over the version it was read at. A `409 session-conflict` means another
+   * tab saved first; the caller reads again rather than overwrite it.
+   */
+  saveBuilderSession: (id: string, version: number, session: BuilderSession) =>
+    request<BuilderSessionSaved>(`/v1/forms/${id}/builder-session`, {
+      method: 'PUT',
+      body: JSON.stringify({ version, session }),
     }),
 
   publishForm: (id: string, overrideIncompleteTranslations = false) =>

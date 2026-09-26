@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { pickText } from '@tp/i18n';
 import { translatableTexts } from '@tp/shared/forms';
 import type {
@@ -41,6 +41,18 @@ export function FormBuilder() {
   const confirm = useConfirm();
   const { contentLocale: locale, locales } = useSession();
   const { id } = useParams();
+  /**
+   * `?paper`: arrived through the "Start from paper" door, so the paper import opens by itself.
+   * Read once and then dropped from the address, so a reload is an ordinary visit.
+   */
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [startPaper] = useState(() => searchParams.has('paper'));
+  useEffect(() => {
+    if (!searchParams.has('paper')) return;
+    const rest = new URLSearchParams(searchParams);
+    rest.delete('paper');
+    setSearchParams(rest, { replace: true });
+  }, [searchParams, setSearchParams]);
   const [form, setForm] = useState<FormResponse | null>(null);
   const [definition, setDefinition] = useState<FormDefinition | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -382,6 +394,7 @@ export function FormBuilder() {
           {id && (
             <ImportPaper
               formId={id}
+              startOpen={startPaper}
               onImport={(definition) => {
                 edit(definition);
                 setSelectedId(null);

@@ -8,7 +8,8 @@ specs into this file.
 apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
-                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set
+                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
+                keeps each author's guided-builder conversation (builder_sessions)
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
@@ -29,7 +30,14 @@ packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
 packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
-packages/shared Types and Zod schemas, including the CONTRACT schemas
+packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
+                graph, its `when` language, its validator, and the machine that walks it — answers
+                as undoable changes, replay, stable question ids, the saved session
+                (@tp/shared/builder); document import's
+                Layout IR with its validator, and stage 3, the list-marker detector, with its debug
+                artifact (@tp/shared/import); free text read by rules — normalisation, word lists and
+                built-in aliases in twelve languages, and the ladder's rungs T0–T4
+                (@tp/shared/interpret)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
@@ -72,6 +80,7 @@ pnpm verify         # format + typecheck + lint + test + build across the worksp
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
+pnpm builder:validate # the guided builder's graph against rules G0–G13, with all twelve catalogues, and its built-in aliases
 pnpm test:e2e
 ```
 
@@ -92,6 +101,38 @@ demos — keep it current with the schema.
 - Batch your questions rather than asking one at a time.
 - If a change touches `packages/` or `docs/CONTRACT.md`, say so explicitly — the other track
   depends on it.
+
+## Guided Builder & Import
+
+The owner's brief is `docs/plan/BRIEF.md`; the plan is the rest of `docs/plan/` (start at
+`PREDICTIVE-BUILDER.md`), and where the two disagree the plan wins and the brief is fixed. The
+decisions are ADRs 0017–0021.
+Until those ADRs are accepted they are proposals, and ADR 0004 still governs the paper importer.
+
+- **Six non-negotiables.** (1) No AI, no LLM, no ML service, no network call at runtime: rules,
+  weights and thresholds a person can read and a test can freeze; same bytes in, same JSON out, on
+  every machine. (2) The guided path is primary: a form can be built and published by clicking
+  alone; free text is optional. (3) Never a dead end, never a silent guess: below threshold, ask.
+  (4) Never destroy user text or edits: imported wording is verbatim, hand edits are overrides the
+  guided flow never overwrites. (5) The core is pure and headless. (6) The plan lands before the
+  code at scale.
+- **The purity boundary.** `packages/shared/src/{builder,interpret,import}/` import no React, no
+  DOM, no `node:*`, and call no `Date.now`, `Math.random`, `Math.exp`, `Math.log` or `Math.pow` in a
+  decision: integers, per mille, millinats, committed tables. Bytes are touched only in
+  `apps/forms/src/screens/builder/paper/`.
+- **i18n.** Every graph string is a `guided.*` key in all twelve catalogues in
+  `apps/forms/src/lib/messages/` — never a literal. `pnpm builder:validate` fails on a missing one.
+- **Data formats: JSON or typed TS, never YAML** (ADR 0021). No YAML parser as a dependency, ever.
+  Provenance in fields, not comments; stable key order; schema-validated on load; a reset-to-defaults
+  path for anything a user can edit.
+- **The caveat ledger is test-first.** Every row of `docs/plan/CAVEATS.md` names its test; a
+  §8.1/§8.2 row names a fixture in `fixtures/numbering/`, and `scripts/caveat-fixtures.test.ts`
+  fails if it is missing. Write the fixture before the code that makes it pass. A fixture whose
+  `status` is `green` is run through its stage there — output compared whole, debug artifact
+  against `fixtures/numbering/debug/` — so marking one green is a claim the test checks.
+- **A behaviour change to the ladder or the import heuristics needs a fixture in the same
+  commit** — a phrase-table row, a numbering fixture, a corpus document. No exceptions: a changed
+  threshold with no fixture is an unreviewed guess.
 
 ## Never mistake a proxy for the thing
 

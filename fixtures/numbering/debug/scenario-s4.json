@@ -1,0 +1,12 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "c6a350bf9b9e97199b3924827b2840571389b76f833b154858339bb266e5a3cd",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R2","verdict":"item","subject":["p1-l1"],"evidence":{"closed":0,"family":"arabic","level":1,"path":"1","production":"M1","raw":"1.","relX":0,"run":"r-p1-l1","width":8000}},
+    {"id":"enumerate:p1-l2","rule":"R1","verdict":"item","subject":["p1-l2"],"evidence":{"family":"arabic","level":1,"path":"2","production":"M1","raw":"2.","relX":0,"run":"r-p1-l1","width":8000}},
+    {"id":"enumerate:i-p1-l1","rule":"D1","verdict":"accept","subject":["i-p1-l1"],"evidence":{"flags":"","run":"r-p1-l1","runItems":2}},
+    {"id":"enumerate:i-p1-l2","rule":"D1","verdict":"accept","subject":["i-p1-l2"],"evidence":{"flags":"","run":"r-p1-l1","runItems":2}}
+  ]
+}

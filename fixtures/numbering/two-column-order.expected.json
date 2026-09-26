@@ -1,0 +1,24 @@
+{
+  "fixture": "two-column-order",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        { "text": "1. Namn", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "2. Adress", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "3. Telefon", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "4. E-post", "pageNo": 1, "columnIndex": 1, "role": "body" },
+        { "text": "5. Allergier", "pageNo": 1, "columnIndex": 1, "role": "body" },
+        { "text": "6. Övrigt", "pageNo": 1, "columnIndex": 1, "role": "body" }
+      ],
+      "repairs": []
+    },
+    "enumerateSummary": [
+      { "raw": "1.", "label": "Namn", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Adress", "level": 1, "verdict": "accept" },
+      { "raw": "3.", "label": "Telefon", "level": 1, "verdict": "accept" },
+      { "raw": "4.", "label": "E-post", "level": 1, "verdict": "accept" },
+      { "raw": "5.", "label": "Allergier", "level": 1, "verdict": "accept" },
+      { "raw": "6.", "label": "Övrigt", "level": 1, "verdict": "accept" }
+    ]
+  }
+}

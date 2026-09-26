@@ -1,0 +1,146 @@
+# The caveat ledger
+
+**Status:** proposed with the plan set, 2026-09-25. Every row is a trap the builder or the importer
+must survive: `id | symptom | rule | test`. A row whose test is a fixture in `fixtures/numbering/`
+is checked by `scripts/caveat-fixtures.test.ts` — the fixture must exist and name the row's id in
+its `caveats`, and every fixture's caveats must be rows here. **A row without a test is an
+opinion**; rows whose test is still a planned file name the slice that writes it.
+
+Numbers 1–45 are the brief's (§8). Numbers from 46 are traps this plan found while fitting the
+brief to the repository. Nothing here is optional, and nothing here may be "simplified away":
+removing a row is a decision, recorded in the commit that does it.
+
+## 8.1 Numbering traps
+
+The detector's own procedure is `NUMBERING-RULES.md`; the rule ids below are its.
+
+| # | Id | Symptom | Rule | Test |
+| --- | --- | --- | --- | --- |
+| 1 | `dotted-subnumber-mid-sentence` | `1. A thing 12.1 mentions blabla` becomes two questions, or loses "12.1" | only a line's first word is ever tested (P1); a soft-wrapped line is never a marker line (P3a, P3b) | `fixtures/numbering/dotted-subnumber-mid-sentence.json`, `fixtures/numbering/dotted-subnumber-mid-sentence--wrapped.json`, `fixtures/numbering/dotted-subnumber-mid-sentence--flush.json` |
+| 2 | `dotted-subnumber-line-start` | `12.1` at the start of a line becomes a new top-level question | a dotted number nests under the item whose path it extends (R1, R9); with no such item it is accepted and flagged `orphan-subnumber` | `fixtures/numbering/dotted-subnumber-line-start.json`, `fixtures/numbering/dotted-subnumber-line-start--orphan.json` |
+| 3 | `decimal-not-marker` | "3.5 million", "no. 12.1", "version 2.0", "§ 4.2" become questions | they match no production (P1, §4) or are vetoed: lower-case word after (V1), a unit (V2), above 199 (V4) | `fixtures/numbering/decimal-not-marker.json` |
+| 4 | `ordinal-not-marker` | "the 1st of May", "den 3:e", "1. mai" become questions | "1st" and "3:e" match no production; a month after a Nordic/German ordinal is vetoed (V3) | `fixtures/numbering/ordinal-not-marker.json` |
+| 5 | `sequence-continuity` | 1, 2, 12.1 at one indent is read as a clean list | only expected next values continue a run (R1); a jump flags the whole run `sequence-jump` (R4, D2) | `fixtures/numbering/sequence-continuity.json` |
+| 6 | `scheme-change-same-indent` | 1, 2, 3, i, ii read as one list of five, or 1, 2, iii as two lists | a restart in another scheme nests (R5a); a non-restart joins and flags `scheme-inconsistent` (R5b) | `fixtures/numbering/scheme-change-same-indent.json` |
+| 7 | `single-item-list` | a lone "1. Namn" becomes a question list of one | accepted only with band evidence and field evidence; otherwise a candidate, off by default (D3) | `fixtures/numbering/single-item-list.json` |
+| 8 | `counter-reset-on-heading` | a second "1." after a heading is read as a duplicate or a jump | a heading (R6a), an outdented line (R6b) or an outdented marker (R3) closes lists; a restart with no boundary is flagged (R7) | `fixtures/numbering/counter-reset-on-heading.json` |
+| 9 | `page-break-continuation` | a list restarts at 1 on page 2, or a "continued on page 2" notice ends it | nothing reads page or column (R8); continuation notices change nothing (V7); furniture is not read (P2) | `fixtures/numbering/page-break-continuation.json` |
+| 10 | `letter-vs-word` | "A. Andersson" becomes question A | a lone letter with nothing to fill in is a word (D4), and anything listed under it moves up a level; letters in sequence are a list | `fixtures/numbering/letter-vs-word.json`, `fixtures/numbering/letter-vs-word--nested.json` |
+| 11 | `parenthesised-number` | "(the form)" or "(3 500 kr)" becomes a question | only `(n)`, `(a)`, `(iv)` as a whole first word are markers (M5) | `fixtures/numbering/parenthesised-number.json` |
+| 12 | `nordic-numbering` | "1)", "1 -", "1:", "1 ." are not recognised, or "1 - 3 dagar" is | all four are productions (M2, M8, M3); a range after a spaced dash is vetoed (V5) | `fixtures/numbering/nordic-numbering.json` |
+
+## 8.2 Geometry and text quality
+
+| # | Id | Symptom | Rule | Test |
+| --- | --- | --- | --- | --- |
+| 13 | `two-column-order` | two columns are read interleaved, line by line across the page | recursive XY-cut into column regions; reading order is the cut order (IMPORT-PIPELINE §2.2); lists continue across columns (R8) | `fixtures/numbering/two-column-order.json` |
+| 14 | `repeated-header-footer` | "Sida 2 av 3" and the running header become questions | margin band + key with digits folded, repeated on ≥ 2 and ≥ half the pages, or a page-number pattern → `page-furniture` (§2.6) | `fixtures/numbering/repeated-header-footer.json` |
+| 15 | `hyphenated-line-break` | "regis- / tering" stays two words; "e- / post" loses its hyphen | join at a wrapped line's trailing hyphen; drop it only for a lower-case continuation of a ≥ 3-letter fragment (§2.4) | `fixtures/numbering/hyphenated-line-break.json` |
+| 16 | `ligature-and-quote-repair` | "ﬁrst" is not "first"; a curly quote changes whether "1." is a marker | U+FB00–FB06 expanded and recorded (§2.1); probe folds quotes for marker tests only, output verbatim (§4 of the rules) | `fixtures/numbering/ligature-and-quote-repair.json`, `fixtures/numbering/ligature-and-quote-repair--marker.json` |
+| 17 | `table-rows` | a table with a header row becomes N questions with jumbled text | header of ≥ 2 widely spaced words + ≥ 2 ruled or numbered rows → one table segment (§4.3) | `fixtures/numbering/table-rows.json` |
+| 18 | `checkbox-grid` | a checkbox matrix becomes loose options; "☐ Ja ☐ Nej" becomes two questions | aligned checkbox rows under a header → grid (§4.2); a single yes/no pair → boolean (§4.4) | `fixtures/numbering/checkbox-grid.json` |
+| 19 | `blank-line-leaders` | "Namn ........." is read as prose | ≥ 3 underscores or ≥ 4 leader dots is a blank; label without it and one trailing colon (§4.6) | `fixtures/numbering/blank-line-leaders.json` |
+| 20 | `ocr-noise-budget` | a noisy OCR label is accepted silently, or "fixed" | lowest word confidence < 60 caps at `review`, < 85 at `flag`; the text is never changed (§7) | `fixtures/numbering/ocr-noise-budget.json` |
+| 21 | `layout-shift-within-document` | a full-width intro above two columns scrambles the order | XY-cut produces three regions: top, then left, then right (§2.2) | `fixtures/numbering/layout-shift-within-document.json` |
+
+## 8.3 Semantic traps
+
+| # | Id | Symptom | Rule | Test |
+| --- | --- | --- | --- | --- |
+| 22 | `instruction-vs-question` | "Please read the terms and conditions." becomes a question | prose with no blank, checkbox or trailing colon is an instruction; one tap makes it a question | planned: `packages/shared/src/import/segment/segment.test.ts` (S9) |
+| 23 | `heading-vs-question` | "PARTICIPANT DETAILS" becomes a field | a heading block or an all-caps line without a marker is a heading segment | planned: `segment.test.ts` (S9) |
+| 24 | `label-and-field-split` | "E-post:" and the blank line under it become two things | a line ending in `:` followed in its block by a line that is only a blank or a rule is one question | planned: `segment.test.ts` (S9) |
+| 25 | `same-question-repeated` | the same question in two sections is merged | never de-duplicated; a "these look the same" chip | planned: `segment.test.ts` (S9) |
+| 26 | `required-inference` | no hint is read as "optional" | `*`, "required", "obligatoriskt", "(mandatory)"… → required; no hint → **unknown**, capped at `flag` | planned: `packages/shared/src/import/classify/classify.test.ts` (S9) |
+| 27 | `locale-specific-fields` | a Swedish personnummer check runs on a Norwegian form | a locale's validator is proposed only when the document locale (§2.11) is that locale; otherwise it is a chip | planned: `classify.test.ts` (S9) |
+| 28 | `consent-language` | consent text is summarised, shortened or tidied | "samtycke", "GDPR", "I agree to…" → the consent presentation; the text verbatim, byte for byte | planned: `classify.test.ts` (S9) |
+| 29 | `number-in-question-text` | "How many guests? (max 8)" grows 8 options or a second question | numbers inside a label stay in it; `max: 8` is offered as a chip | planned: `classify.test.ts` (S9) |
+| 30 | `option-count-sanity` | a single choice with 45 options is accepted | > 30 options is flagged "this looks like a table or two questions" | planned: `segment.test.ts` (S9) |
+
+## 8.4 The classification features
+
+Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasCheckboxGlyph`,
+`selectAllPhrase`, `datePattern`, `timeSlotPattern`, `currencyHint`, the field gazetteers,
+`signatureHint`, `fileHint`, `consentHint`, `repeatableHint`, `longPromptNoBlank`,
+`labelColonThenBlank`, `booleanPair`, `gridAlignment`. Their definitions and weights are in
+`IMPORT-PIPELINE.md`, stage 5, and `classify/weights.json`; each feature gets a row in
+`classify.test.ts` (S9).
+
+## 8.5 Design
+
+| # | Id | Symptom | Rule | Test |
+| --- | --- | --- | --- | --- |
+| 31 | `preview-must-be-real` | a grey wireframe, or a preview that ignores the brand kit | the preview renders `FieldInput` on the organisation's compiled tokens; there is no wireframe component to reach for | planned: `apps/forms/src/screens/builder/guided/preview.test.tsx` (S5) |
+| 32 | `brand-before-build` | a user's preview in Loppa's own colours | no brand → presets other than `default`, or the 60-second flow; the Demo AB kit only in the demo workspace | planned: `preview.test.tsx` (S5) |
+| 33 | `placement-slots-not-pixels` | a logo placed at x/y, broken on a phone | six named slots; no coordinate is ever stored | planned: `packages/shared/src/forms/layout.test.ts` (S5) |
+| 34 | `print-faithful-mode` | an imported form prints nothing like its paper | the Print Faithful layout; preview shows screen and paper | planned: `e2e/guided-builder.spec.ts` (S12) |
+| 35 | `reduced-motion-and-contrast` | motion for someone who asked for none; a brand colour silently changed to pass contrast | `useReducedMotion` gates every animation; contrast failures are reported, never fixed by altering the brand | planned: `apps/forms/src/lib/motion.test.ts` (extend, S4) |
+| 36 | `rtl-and-long-strings` | a German label truncated; a mirrored layout broken | no fixed widths on text; a pseudo-RTL and a German-length run of the whole flow | planned: `e2e/guided-builder.spec.ts` (S13) |
+| 37 | `one-decision-per-screen` | a node asking two things; a primary action below a scrollbar | one `ask` per node; each node renders at 360×640 without scrolling to its answers, and nothing sideways | `e2e/guided-builder.spec.ts` ("on a small phone": every node of the buttons chain and the brand questions), `apps/forms/src/screens/builder/guided/Shell.test.tsx` (one question, its answers) |
+
+## 8.6 Technical and product
+
+| # | Id | Symptom | Rule | Test |
+| --- | --- | --- | --- | --- |
+| 38 | `determinism` | the same file gives a different draft on another machine | no clock, no randomness, integer arithmetic, canonical JSON; every fixture run twice and shuffled | `packages/shared/src/import/enumerate/enumerate.test.ts` (every layout document in the repository twice, in reverse order, with its keys written backwards, and frozen), `import/debug.test.ts` (canonical JSON, SHA-256), the purity lint block; each later stage adds its own |
+| 39 | `stable-ids` | a rename, reorder or re-import changes a question's id | fingerprint-seeded once, never recomputed, never reused (`retiredIds`) | `packages/shared/src/builder/ids.test.ts` (the same answers give the same ids; kept through a rename, a change of type and a reorder) |
+| 40 | `contract-and-parity` | the desktop and the browser disagree, or `contract:check` breaks | one table on Postgres and PGlite; Forms-internal endpoints are documented by their Zod schemas (not `CONTRACT.md`, which is inter-product); `contract:check` run every slice | `apps/api-forms/src/db/pglite.test.ts` and `db/database.test.ts` (`builder_sessions` and its version lock on PGlite and on Postgres), `routes/builder-session.test.ts`; `pnpm contract:check` |
+| 41 | `no-new-runtime-deps` | a parser or a model library appears in `package.json` | an ADR first; DOCX uses `DecompressionStream` and an in-house XML tokenizer | `scripts/licence-check.ts` + review; ADR 0018 |
+| 42 | `perf-budget` | a node takes a frame too long; 20 pages take a minute | node render < 16 ms, graph load < 50 ms, interpretation < 10 ms (a comparison budget), 20 pages < 4 s, no spinner under 150 ms | interpretation: `packages/shared/src/interpret/ladder.test.ts` ("the comparison budget": no English row decided by it; a pathological input spends it and asks, the same way twice); planned: `packages/shared/src/import/budget.test.ts` (S7) |
+| 43 | `privacy` | a document leaves the machine, or its traces cannot be removed | parsing is local; the source is kept only for a paper twin, in the organisation's own store, deletable; debug artifacts are never stored server-side | planned: `apps/forms/src/lib/bundle-split.test.ts` (extend, S7) + review |
+| 44 | `accessibility-of-the-conversation` | a step needs a pointer | 1–9 / Alt+1–9 pick, Enter accepts, Escape and ⌘Z go back; a live region announces each question | `apps/forms/src/screens/builder/guided/keyboard.test.ts` (every key), `e2e/guided-builder.spec.ts` (the buttons chain by keyboard alone, S4); each drag's twin with its drag (S5), the whole flow (S13) |
+| 45 | `never-lose-work` | a refresh mid-conversation starts over | the log autosaves to `builder_sessions` (the node is where the log leads); resume returns to the same node and trail | API: `apps/api-forms/src/routes/builder-session.test.ts`, `packages/shared/src/builder/session.test.ts` (and `fixtures/sessions/buttons-chain.json`, replayed into the draft recorded with it); UI: `e2e/guided-builder.spec.ts` (a reload returns to the same question and trail), `apps/forms/src/screens/builder/guided/saver.test.ts` (every step, in order, the draft first, a second tab never overwritten) |
+
+## Added by the plan
+
+| # | Id | Symptom | Rule | Test |
+| --- | --- | --- | --- | --- |
+| 46 | `marker-on-own-line` | "1." on its own line, label on the next, is lost or read as two things | the next line in the block is the label (P4); with none it is rejected | `fixtures/numbering/marker-on-own-line.json` |
+| 47 | `bullet-list` | bullets are read as prose; a lone "* Obligatoriskt" legend becomes a question | bullets form runs with no counter (M9); a lone one is a candidate | `fixtures/numbering/bullet-list.json` |
+| 48 | `nested-by-indent` | letters indented under numbers are read as one flat list | an indent to the right of an open list nests (R2); the next number pops back (R1) | `fixtures/numbering/nested-by-indent.json` |
+| 49 | `id-reuse-after-delete` | a deleted question's fingerprint id is given to a new identical one, and old answers attach to it | `retiredIds` in the sidecar; a colliding fingerprint takes the next suffix | `packages/shared/src/builder/ids.test.ts` |
+| 50 | `float-determinism` | `Math.exp` differs in the last bit between engines and flips a threshold | integers in every decision; a committed sigmoid table; logs computed at build time only (ADR 0019) | planned: `packages/shared/src/builder/belief/belief.test.ts` (S11) |
+| 51 | `browser-reserved-shortcuts` | ⌘1–9 switches browser tabs instead of picking an option | browser: 1–9 when the text box is not focused, Alt+1–9 anywhere; desktop adds ⌘/Ctrl+1–9 | `apps/forms/src/screens/builder/guided/keyboard.test.ts` |
+| 52 | `operative-wording-never-generated` | an example chip or a seeded template writes a consent or safety sentence | chips are labels only, held to the same regulated-word list as the templates (`forms/wording.ts`); consent text comes from the organisation, or publishing is blocked (ADR 0012) | `packages/shared/src/builder/graph/validate.test.ts` (G13), `apps/forms/src/lib/guided-graph.test.ts` |
+| 53 | `untrusted-docx` | a zip bomb or an XML entity expansion from an uploaded .docx | caps counted while inflating; DOCTYPE or ENTITY refused (IMPORT-PIPELINE, "Caps") | planned: `apps/forms/src/screens/builder/paper/docx.test.ts` (S7) |
+| 54 | `acroform-first` | a PDF with real form fields is guessed at from its text | AcroForm fields are mapped by `importAcroFields` at confidence 1000; text only fills what they lack | planned: `packages/shared/src/import/pipeline.test.ts` (S7) |
+| 55 | `tap-target-floor` | an inline-edit handle drags a choice below 44 px or to a free colour | handles snap to `ChoiceStyle` values; there is no smaller size and no hex | planned: `InlineEdit/inline-edit.test.ts` (S5) |
+| 56 | `legacy-wizard-answers` | an old client's `wizardAnswers` stop resolving when the new door ships | `POST /v1/forms` keeps accepting them (`wizard-definition.ts`) until a removal is decided | existing: `apps/api-forms/src/forms/forms.test.ts` (keep green) |
+| 57 | `cjk-tokenisation` | Chinese and Japanese free text never matches anything | CJK runs are split into character bigrams, not whitespace words (INTENT-LADDER, normalisation) | `fixtures/ladder/zh.json`, `ja.json` (read by `packages/shared/src/interpret/ladder.test.ts`), `interpret/text.test.ts` (bigrams) |
+| 58 | `pdfjs-runs-not-words` | word boxes are wrong because pdf.js gives runs, not words | runs split at spaces, width shared by character count (IMPORT-PIPELINE §1) | planned: `apps/forms/src/screens/builder/paper/extract.test.ts` (extend, S7) |
+| 59 | `form-word-not-jargon` | a banned-word list bans Norwegian *skjema* or Danish *skema* — the everyday word for *form* — and the builder can no longer say what it builds | banned words are per language; a word is banned only where it is jargon (`graph/voice.json`) | `apps/forms/src/lib/guided-graph.test.ts` (G10 on the real catalogues) |
+| 60 | `first-answer-adds-a-question` | the first answer leaves a draft with nothing to answer, which publishing already refuses (`no-answerable-fields`) | every answer to the start node adds a field, labelled from `forms/vocabulary.ts` in all twelve languages | `packages/shared/src/builder/graph/graph.test.ts` |
+| 61 | `icon-that-does-not-exist` | an option names an icon `Icon.tsx` cannot draw, and it renders as nothing | every icon the graph names is held to `IconName` | `apps/forms/src/lib/guided-graph.test.ts` |
+| 62 | `reachable-by-escape` | a node reached through its group's escape — past the question that sets it up — writes to a question that is not there, or not a choice, and the conversation stops | a node asks only when what it writes exists (`has(focus)`); "yes, buttons" makes the question a choice at once; a new question clears the last one's working answers | `packages/shared/src/builder/machine.test.ts` (every answer from every reachable state, escapes included) |
+| 63 | `half-typed-question` | an answer changes a question's type and leaves it something the form schema refuses — a choice with no options — so the draft cannot be published until the next answer | a new type rebuilds the whole question: kept what fits, placeholders where the new type needs them; every state is checked against the schema exactly | `packages/shared/src/builder/machine.test.ts` (publishable stays publishable) |
+| 64 | `type-change-loses-writing` | "No, people type an answer" after writing a choice's options throws the options away | what a new type cannot hold is set aside in the sidecar and comes back when the type can hold it again | `packages/shared/src/builder/machine.test.ts` ("survives a detour") |
+| 65 | `wrong-skip-reason` | the trail says "Already read from your document" for a question skipped because the person said no to buttons | a node with two reasons not to ask gives one per reason (`skip` as a guarded list, rule G8) | `packages/shared/src/builder/machine.test.ts`, `graph/validate.test.ts` (G8) |
+| 66 | `negation-after-the-word` | "knappar behövs inte", "Buttons brauche ich nicht" read as *yes, buttons*: the negator comes after the word it negates | a negator that ends its stretch (a clause, cut at contrast words) negates the word before it; in Chinese and Japanese either side (INTENT-LADDER, "Negation is honoured") | `fixtures/ladder/sv.json`, `da.json`, `nb.json`, `de.json`, `is.json`, `ja.json`, `zh.json` |
+| 67 | `stray-negator` | "knapper er ikke nødvendigt" ("buttons are not needed") read as *yes*: the negator is followed by another word, so no rule places it, and it counted as just another word | a negator in the stretch of a reading's words and not one of them blocks the reading; it is asked | `fixtures/ladder/da.json`, `nb.json`, `de.json`, `fr.json`, `is.json`, `ru.json`, `en.json` ("not later") |
+| 68 | `negated-alias-out-of-order` | "yes buttons no text" read as *no buttons*: order-free T1 matched the alias "no buttons" to "buttons no" | an alias that says a negator matches only in its own order; T1's tie-break weighs everything that points at each option | `fixtures/ladder/en.json`, `sv.json` |
+| 69 | `negator-inside-a-word` | 按钮不错 ("the buttons are nice") read as *no buttons*, because 不 is inside 不错 | a negator is a word that negates: Chinese lists 不要, 不用, 不需要, … and not 不 | `fixtures/ladder/zh.json` |
+| 70 | `many-ways-to-say-it-hurts` | T2 summed an option's weights over all its aliases, so the more ways an option could be said, the harder it was to reach | T2 scores each alias; an option's score is its best alias's; T2's confidence is capped below T1's | the T2 rows of every `fixtures/ladder/*.json` |
+| 71 | `stop-word-with-meaning` | Spanish *sobre el título* ("above the title") read as *junto al título* ("beside it"), because *sobre* was a stop word | a word that tells options apart is never a stop word; `interpret/data.test.ts` holds each list's shape | `fixtures/ladder/es.json` |
+| 72 | `chrome-eats-the-phone` | at 360×640 the app's session row and bottom bar leave the first question's fourth answer below the fold | the conversation is a full-screen mode, like the check-in door: no rail, no session row; its way out is "Build it myself" | `e2e/guided-builder.spec.ts` ("on a small phone") |
+| 73 | `wider-than-the-phone` | a long trail — one unbroken line — widened the whole conversation past the phone, cutting the answers off at the right; its crumbs' screen-reader text, positioned against the page, sat past the edge where the trail had scrolled it; and the next question's 24 px slide-in reached past the edge — each let the page pan sideways | the conversation's tracks are `minmax(0, 1fr)`; the trail scrolls inside itself and is what its hidden text is positioned against; the full-screen mode clips what moves past its edge | `e2e/guided-builder.spec.ts` (nothing sideways, every node, measured as it arrives) |
+| 74 | `focus-in-the-preview` | on a preview moment focus landed in the preview's own control, so Enter pressed a sample button instead of Continue | focus goes to the first answer, else Continue, else the text box — never into a preview | `e2e/guided-builder.spec.ts` (Continue has focus at the preview moment) |
+| 75 | `resume-over-an-edited-draft` | a saved conversation resumed after the form was edited in the editor would save its older draft over those edits | resume only when the saved draft is exactly the form's; otherwise start again from the form, and say so (S5's reconciliation will do better) | `apps/forms/src/screens/builder/guided/conversation.test.ts` ("starts again from the form, never over it") |
+
+## Known unknowns
+
+Not yet decided, and not to be decided by an implementation quietly choosing:
+
+- **`glued-marker`** — `1.Namn` (no space after the marker) is common in pasted text and matches no
+  production today. Accepting it risks `3.5million`-style prose. Decide with corpus evidence, then
+  add a production and a fixture together.
+- **Grid as a field type** — an imported grid is one `single_select` per row until a grid field
+  type exists (its own ADR, CSV shape first). S9 writes that ADR or keeps the fallback
+  (`BRIEF.md` §12).
+- **Right-to-left** — none of the twelve locales is RTL; #36 tests a pseudo-RTL run so the day one
+  is added is not the day RTL is discovered. `IrLine.words` is left to right by contract; an RTL
+  locale would need an `irVersion` bump.
+- **The corpus's sources** — sixty documents Loppa may redistribute have to be found or made;
+  `fixtures/documents/SOURCES.json` records each one's origin and licence.
+- **Handwriting** — a photographed form filled in by hand is out of scope: OCR reads print. A page
+  that is mostly handwriting lands in `review` because its confidence is low; nothing more.
+- **Consent reformatting** — byte for byte is assumed until the owner answers question 3.
