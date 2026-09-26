@@ -676,12 +676,7 @@ export const frFR: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Retiré',
 
   'public.next': 'Suivant',
-  'wizard.step': 'Question {n}',
-  'wizard.done': 'Terminé',
-  'wizard.review': 'Voici ce que cela donne',
   'wizard.open': 'Ouvrir dans l’éditeur',
-  'wizard.next': 'Suivant',
-  'wizard.back': 'Retour',
   'wizard.advanced': 'Le construire moi-même',
   'public.back': 'Précédent',
   'public.complete': 'Terminer',
@@ -1124,4 +1119,50 @@ export const frFR: Record<MessageKey, string> = {
   'guided.menu.top.help': 'Accédez à n’importe quelle partie du formulaire.',
   'guided.end.ask': 'Votre formulaire est prêt.',
   'guided.end.help': 'Publiez-le maintenant ou ajoutez des questions.',
+  'conversation.doors.title': 'Comment voulez-vous commencer ?',
+  'conversation.doors.questions': 'Commencer par des questions',
+  'conversation.doors.questionsDetail':
+    'Répondez à quelques questions et regardez le formulaire prendre forme.',
+  'conversation.doors.paper': 'Commencer à partir du papier',
+  'conversation.doors.paperDetail':
+    'Un PDF, une page photographiée ou un scan au téléphone devient le formulaire.',
+  'conversation.back': 'Retour',
+  'conversation.done': 'Terminé',
+  'conversation.wayOut': 'Afficher toutes les options',
+  'conversation.orType': 'Ou tapez-le — p. ex. « quatre boutons côte à côte »',
+  'conversation.send': 'Envoyer',
+  'conversation.readAs': 'compris comme « {option} »',
+  'conversation.change': 'modifier',
+  'conversation.ask.nothing': 'Je n’ai pas compris. Choisissez une réponse ou dites-le autrement.',
+  'conversation.ask.ambiguous':
+    'Cela correspond à plusieurs réponses. Laquelle vouliez-vous dire ?',
+  'conversation.ask.negated':
+    'Je vois ce que vous ne voulez pas, mais pas ce que vous voulez. Choisissez une réponse.',
+  'conversation.ask.vague':
+    'Ce n’est pas assez précis. Choisissez une réponse ou soyez plus précis.',
+  'conversation.ask.outOfRange': 'Ce nombre est en dehors de ce que permet la question.',
+  'conversation.ask.budget':
+    'La lecture a pris trop de temps. Tapez quelque chose de plus court ou choisissez une réponse.',
+  'conversation.ask.tooLong':
+    'C’est trop long à lire. Tapez quelque chose de plus court ou choisissez une réponse.',
+  'conversation.ask.notReadable': 'On répond à cette question en choisissant, pas en tapant.',
+  'conversation.refused': 'Cette réponse ne convient pas ici. Choisissez-en une autre.',
+  'conversation.continue': 'Continuer',
+  'conversation.help': 'Aide',
+  'conversation.trail': 'Vos réponses jusqu’ici',
+  'conversation.answers': 'plural:one {count} réponse | other {count} réponses',
+  'conversation.examples': 'Exemples',
+  'conversation.fewer': 'Moins',
+  'conversation.more': 'Plus',
+  'conversation.keepGoing': 'Continuer à construire',
+  'conversation.status.saving': 'Enregistrement…',
+  'conversation.status.saved': 'Enregistré',
+  'conversation.status.failed': 'Non enregistré',
+  'conversation.status.conflict': 'Modifié dans un autre onglet',
+  'conversation.retry': 'Réessayer',
+  'conversation.reload': 'Charger la dernière version',
+  'conversation.startedAgain':
+    'Le formulaire a changé après l’enregistrement de ces réponses : les questions reprennent donc à partir du formulaire tel qu’il est maintenant. Rien de ce que vous avez fait n’est perdu.',
+  'conversation.unreadable':
+    'Vos réponses précédentes n’ont pas pu être lues : les questions reprennent donc depuis le début. Le formulaire est tel que vous l’avez laissé.',
 };

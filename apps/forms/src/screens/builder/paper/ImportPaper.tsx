@@ -34,13 +34,16 @@ import { isUsable, straightenFile, type Corners } from './warp.js';
 export function ImportPaper({
   formId,
   onImport,
+  startOpen = false,
 }: {
   formId: string;
   onImport: (definition: FormDefinition) => void;
+  /** Open on arrival: the "Start from paper" door lands here. */
+  startOpen?: boolean;
 }) {
   const t = useT();
   const { contentLocale: locale } = useSession();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [state, setState] = useState<State>({ kind: 'empty' });
 
   const [scanning, setScanning] = useState(false);

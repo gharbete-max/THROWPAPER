@@ -44,7 +44,7 @@ Motion explains where something went; it never decorates.
 
 | What | Duration | Curve |
 | --- | --- | --- |
-| Moving to the next node (the old slides out, the new slides in, 24 px) | `--tp-motion-preview` (220 ms, new) | `--tp-ease-unfurl` |
+| Moving to the next node (the new slides in 24 px from the way it came; the old is gone at once) | `--tp-motion-preview` (220 ms, new) | `--tp-ease-unfurl` |
 | A preview changing because an answer changed | `--tp-motion-preview` (220 ms) | `--tp-ease-unfurl` |
 | Colour, opacity, a chip appearing | `--tp-motion-fast` (110 ms) | `--tp-ease` |
 | Going back | the forward motion reversed | the same |
@@ -129,14 +129,15 @@ own (the machine decides; these render):
 
 | Component | Is |
 | --- | --- |
-| `Shell` | the full-screen conversation: trail, node, text entry, Back, way out; keyboard |
-| `QuestionNode`, `Cards` | a question and its 2–4 answer cards |
-| `Quantity` | the stepper, the number at `3xl` |
-| `Chooser` | pick-one tiles (shapes, slots, layouts) with icons from `Icon.tsx` |
-| `MultiCards` | pick-many cards and "Done" |
-| `TextEntry` | one box and its example chips |
-| `GuessCard` | "This looks like …" with Right / Sort of / No and "Why this guess" |
-| `PreviewMoment` | `FieldInput` on the brand kit, the fixed sentence, "What Loppa assumed" |
+| `Shell` | the full-screen conversation: trail, node, text entry, Back, way out; keyboard (S4) |
+| `NodeView`: `Cards` | a question, a pick-one or a menu — its answer cards, icons from `Icon.tsx` (S4) |
+| `NodeView`: `Quantity` | the stepper, − and + beside the number at `3xl` (S4) |
+| `NodeView`: `MultiCards` | pick-many cards and "Done" (S4) |
+| `NodeView`: `TextEntry` | one box and its example chips (S4) |
+| `NodeView`: `LivePreview` | the real control through `FormPreview`, after the shape and at a preview moment (S4); on the brand kit, with the fixed sentence, as `PreviewMoment` (S5) |
+| `Doors` | the two doors after New form, with "Build it myself" beneath (S4) |
+| `GuessCard` | "This looks like …" with Right / Sort of / No and "Why this guess" (S11; until then, three cards) |
+| `PreviewMoment` | `FieldInput` on the brand kit, the fixed sentence, "What Loppa assumed" (S5) |
 | `InlineEdit/` | the shape handle, the size handle, the swatch row, inline text, drag grips — each snapping to schema values |
 | `ChangedByHand`, `ReconcileDialog` | the badge, and the three-way question |
 | `Trail`, `WhyChip`, `ReadingChip` | breadcrumbs; the "why"; the transparency chip |
@@ -197,5 +198,9 @@ proportion, never places text on a colour that fails contrast, and never shrinks
 
 - Each new node is announced through a polite live region: the question, then how many answers.
 - Focus moves to the first answer on every node, and back to the answer that was chosen on Back.
+  A node without answer cards focuses Continue, else its text box — never a control inside a
+  preview, which is a sample and not the answer (`CAVEATS.md` #74).
+- The conversation is full screen, like the check-in door (`CAVEATS.md` #72); its way out is
+  "Build it myself", into the editor, where the rest of the app is.
 - Every target is at least 44 × 44 px. No step requires a pointer, a drag or a hover: every drag
   has a keyboard twin (move up / move down) (#44).

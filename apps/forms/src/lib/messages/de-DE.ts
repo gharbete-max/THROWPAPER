@@ -678,12 +678,7 @@ export const deDE: Record<MessageKey, string> = {
   'attendance.status.revoked': 'Zurückgezogen',
 
   'public.next': 'Weiter',
-  'wizard.step': 'Frage {n}',
-  'wizard.done': 'Fertig',
-  'wizard.review': 'Das kommt dabei heraus',
   'wizard.open': 'Im Editor öffnen',
-  'wizard.next': 'Weiter',
-  'wizard.back': 'Zurück',
   'wizard.advanced': 'Selbst aufbauen',
   'public.back': 'Zurück',
   'public.complete': 'Abschließen',
@@ -1133,4 +1128,51 @@ export const deDE: Record<MessageKey, string> = {
   'guided.menu.top.help': 'Springen Sie zu einem beliebigen Teil des Formulars.',
   'guided.end.ask': 'Ihr Formular ist fertig.',
   'guided.end.help': 'Jetzt veröffentlichen oder weitere Fragen hinzufügen.',
+  'conversation.doors.title': 'Wie möchten Sie beginnen?',
+  'conversation.doors.questions': 'Mit Fragen beginnen',
+  'conversation.doors.questionsDetail':
+    'Beantworten Sie ein paar Fragen und sehen Sie zu, wie das Formular entsteht.',
+  'conversation.doors.paper': 'Mit Papier beginnen',
+  'conversation.doors.paperDetail':
+    'Ein PDF, eine fotografierte Seite oder ein Scan mit dem Telefon wird zum Formular.',
+  'conversation.back': 'Zurück',
+  'conversation.done': 'Fertig',
+  'conversation.wayOut': 'Alle Optionen anzeigen',
+  'conversation.orType': 'Oder tippen Sie es ein — z. B. „vier Schaltflächen nebeneinander“',
+  'conversation.send': 'Senden',
+  'conversation.readAs': 'als „{option}“ verstanden',
+  'conversation.change': 'ändern',
+  'conversation.ask.nothing':
+    'Das habe ich nicht verstanden. Wählen Sie eine Antwort oder sagen Sie es anders.',
+  'conversation.ask.ambiguous': 'Das passt zu mehr als einer Antwort. Welche meinten Sie?',
+  'conversation.ask.negated':
+    'Ich sehe, was Sie nicht möchten, aber nicht, was Sie möchten. Wählen Sie eine Antwort.',
+  'conversation.ask.vague':
+    'Das ist nicht genau genug. Wählen Sie eine Antwort oder werden Sie genauer.',
+  'conversation.ask.outOfRange': 'Diese Zahl liegt außerhalb dessen, was die Frage erlaubt.',
+  'conversation.ask.budget':
+    'Das Lesen hat zu lange gedauert. Schreiben Sie etwas Kürzeres oder wählen Sie eine Antwort.',
+  'conversation.ask.tooLong':
+    'Das ist zu lang zum Lesen. Schreiben Sie etwas Kürzeres oder wählen Sie eine Antwort.',
+  'conversation.ask.notReadable':
+    'Diese Frage wird durch Auswählen beantwortet, nicht durch Tippen.',
+  'conversation.refused': 'Diese Antwort passt hier nicht. Wählen Sie eine andere.',
+  'conversation.continue': 'Weiter',
+  'conversation.help': 'Hilfe',
+  'conversation.trail': 'Ihre bisherigen Antworten',
+  'conversation.answers': 'plural:one {count} Antwort | other {count} Antworten',
+  'conversation.examples': 'Beispiele',
+  'conversation.fewer': 'Weniger',
+  'conversation.more': 'Mehr',
+  'conversation.keepGoing': 'Weiter aufbauen',
+  'conversation.status.saving': 'Wird gespeichert…',
+  'conversation.status.saved': 'Gespeichert',
+  'conversation.status.failed': 'Nicht gespeichert',
+  'conversation.status.conflict': 'In einem anderen Tab geändert',
+  'conversation.retry': 'Erneut versuchen',
+  'conversation.reload': 'Neuesten Stand laden',
+  'conversation.startedAgain':
+    'Das Formular wurde geändert, nachdem diese Antworten gespeichert wurden. Die Fragen beginnen daher neu mit dem Formular, wie es jetzt ist. Nichts, was Sie erstellt haben, ist verloren.',
+  'conversation.unreadable':
+    'Ihre früheren Antworten konnten nicht gelesen werden, daher beginnen die Fragen neu. Das Formular ist so, wie Sie es verlassen haben.',
 };

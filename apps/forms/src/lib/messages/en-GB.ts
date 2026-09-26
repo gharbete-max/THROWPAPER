@@ -666,12 +666,7 @@ export const enGB = {
   'attendance.status.revoked': 'Withdrawn',
 
   'public.next': 'Next',
-  'wizard.step': 'Question {n}',
-  'wizard.done': 'Done',
-  'wizard.review': 'Here is what that gives you',
   'wizard.open': 'Open it in the editor',
-  'wizard.next': 'Next',
-  'wizard.back': 'Back',
   'wizard.advanced': 'Build it myself',
   'public.back': 'Back',
   'public.complete': 'Complete',
@@ -1117,6 +1112,49 @@ export const enGB = {
   'guided.menu.top.help': 'Jump to any part of your form.',
   'guided.end.ask': 'Your form is ready.',
   'guided.end.help': 'Publish it now, or keep adding questions.',
+  // The guided conversation's own screen: screens/builder/guided/.
+  'conversation.doors.title': 'How do you want to start?',
+  'conversation.doors.questions': 'Start from questions',
+  'conversation.doors.questionsDetail': 'Answer a few questions and watch the form take shape.',
+  'conversation.doors.paper': 'Start from paper',
+  'conversation.doors.paperDetail': 'A PDF, a photographed page or a phone scan becomes the form.',
+  'conversation.back': 'Back',
+  'conversation.done': 'Done',
+  'conversation.wayOut': 'Show all options',
+  'conversation.orType': 'Or type it — e.g. “four buttons in a row”',
+  'conversation.send': 'Send',
+  'conversation.readAs': 'read that as “{option}”',
+  'conversation.change': 'change',
+  'conversation.ask.nothing': 'I did not understand that. Choose an answer, or say it another way.',
+  'conversation.ask.ambiguous': 'That fits more than one answer. Which did you mean?',
+  'conversation.ask.negated':
+    'I can tell what you do not want, but not what you do. Choose an answer.',
+  'conversation.ask.vague': 'That is not exact enough. Choose an answer, or be more exact.',
+  'conversation.ask.outOfRange': 'That number is outside what this question allows.',
+  'conversation.ask.budget':
+    'That took too long to read. Type something shorter, or choose an answer.',
+  'conversation.ask.tooLong':
+    'That is too long to read. Type something shorter, or choose an answer.',
+  'conversation.ask.notReadable': 'This question is answered by choosing, not typing.',
+  'conversation.refused': 'That answer does not fit here. Choose another.',
+  'conversation.continue': 'Continue',
+  'conversation.help': 'Help',
+  'conversation.trail': 'Your answers so far',
+  'conversation.answers': 'plural:one {count} answer | other {count} answers',
+  'conversation.examples': 'Examples',
+  'conversation.fewer': 'Fewer',
+  'conversation.more': 'More',
+  'conversation.keepGoing': 'Keep going',
+  'conversation.status.saving': 'Saving…',
+  'conversation.status.saved': 'Saved',
+  'conversation.status.failed': 'Not saved',
+  'conversation.status.conflict': 'Changed in another tab',
+  'conversation.retry': 'Try again',
+  'conversation.reload': 'Load the latest',
+  'conversation.startedAgain':
+    'The form changed after these answers were saved, so the questions start again from the form as it is now. Nothing you made is lost.',
+  'conversation.unreadable':
+    'Your earlier answers could not be read, so the questions start again. The form is as you left it.',
 } as const;
 
 /**

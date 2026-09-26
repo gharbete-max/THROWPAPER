@@ -73,7 +73,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S1b** Enumerate | `import/ir/` types + validator, `import/enumerate/` per `NUMBERING-RULES.md`, stage debug JSON | the 21 enumerate fixtures; determinism (twice, shuffled) | `packages/shared` | **done** — in review, PR #147 |
 | **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019), `apps/forms` messages (one key) | **done** — in review, PR #147 |
 | **S3** Ladder T0–T4 | normalisation, word lists and `aliases/<language>.json` in twelve languages, the integer logarithm, T0–T4 with negation and vagueness on every rung; `pnpm builder:validate` checks the aliases | phrase and must-not-resolve tables per language (880 rows); determinism; budget; every card's label read as its card | `packages/shared`, `scripts/`, `fixtures/ladder/`, `apps/forms` (one test) | **done** — in review, PR #147 |
-| **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | not started |
+| **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | **done** — in review, PR #147 |
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | not started |
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases` | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
 | **S7** Extract + reassemble | `paper/docx.ts`, `paper/paste.ts`, operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
@@ -160,3 +160,26 @@ when each slice ends.)*
   types every card's label in every language and gets that card at T0. Next: S4, the builder
   shell. Open: owner questions 1–4, 6 and 7; the plan change "no generated index" (ADR 0019,
   amended) is the owner's to overturn.
+- **S4, the builder shell (2026-09-26).** What: New form opens the two doors — start from questions
+  (the conversation) or from paper (a blank form, the editor, the paper import open) — with "Build
+  it myself" beneath, and the old wizard component gone. The conversation at `/forms/:id/guided`:
+  the trail, the question, its answers (cards, several at once, the number stepper, the text answer,
+  the end), "Or type it" read by S3's ladder with "read that as … — change", its asks with the
+  answers it could not choose between, Back, "Show all options" and "Build it myself"; every key of
+  the design's table; a live region; focus to the first answer, back to the chosen one on Back; the
+  new node sliding in on `--tp-motion-preview` and `--tp-ease-unfurl`, still under reduced motion;
+  the live preview after the shape and at the preview moment. Every step saves — the draft, then the
+  session — in order, and a second tab is never saved over. The screen's rules are functions
+  (`conversation.ts`, `keyboard.ts`, `saver.ts`); the components only render. Pressing it in a
+  browser found four things, each a caveat row with its test: the app's chrome left the first
+  question's answers below the fold on a phone (#72, so the conversation is full screen like the
+  check-in door), a long trail, and the next question sliding in, widened the screen past the phone
+  (#73), focus landed in the preview's sample control (#74), and a resumed conversation would have
+  saved its draft over edits made in the editor since (#75, so it resumes only on an exact match).
+  Why: the buttons chain on screen is M3's demo, and every later slice's screen lives in this shell.
+  Tests: 49 in `guided/` (keys, saving, starting and resuming, the trail, the way out, the preview,
+  and static renders of each node kind and the doors); `e2e/guided-builder.spec.ts` — the chain by
+  pressing and typing, checked against the draft in Postgres; the same chain by keyboard alone at
+  360×640 with every node's answers on the first screen; the brand questions there too; a reload
+  mid-conversation back to the same question; the paper door, landing in the editor with the paper
+  import open. Next: S5, the preview moment and inline editing. Open: owner questions 1–4, 6 and 7.

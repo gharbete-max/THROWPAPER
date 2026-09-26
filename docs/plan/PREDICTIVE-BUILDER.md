@@ -45,7 +45,7 @@ assumes:
 
 | The brief's idea | Already in the repository | What happens to it |
 | --- | --- | --- |
-| An Akinator-style start | `packages/shared/src/wizard/tree.ts` (sector, then facets; ADR 0006) and `forms/wizard.ts` + `wizard-definition.ts` (the form questions; the server resolves `wizardAnswers` on `POST /v1/forms`) | The guided graph **replaces the form wizard's questions** as the "Start from questions" door (S4). `tree.ts` stays: the same `Wizard` component starts mailings and invoice runs. `wizardAnswers` stays accepted by the API so no client breaks. ADR 0020 records how the graph amends ADR 0006. |
+| An Akinator-style start | `packages/shared/src/wizard/tree.ts` (sector, then facets; ADR 0006) and `forms/wizard.ts` + `wizard-definition.ts` (the form questions; the server resolves `wizardAnswers` on `POST /v1/forms`) | The guided graph **replaces the form wizard's questions** as the "Start from questions" door (S4). `tree.ts` and `forms/wizard.ts` stay, because the API still resolves `wizardAnswers` for old clients (`CAVEATS.md` #56); the `Wizard` component, whose only use was New form, went with S4. (An earlier revision said the component also started mailings and invoice runs; nothing did.) ADR 0020 records how the graph amends ADR 0006. |
 | Template recipes | `forms/templates.ts`: **23 templates**, every string in twelve languages, parsed against `FormDefinition` by `templates.test.ts` | The belief engine (§6) guesses **these**. Recipes add only priors and score weights (JSON), never a second copy of the questions. Missing recipes (donation, address change, check-in, exam sheet, consent form, incident report) are new templates, and two of them are rule 8 (below). |
 | `FormDraft` | `FormDefinition` (`forms/definition.ts`), versioned, `schemaVersion: 1`, the only thing the editor, renderer, PDF and CSV read | **No second document model.** The draft is a `FormDefinition` plus a builder sidecar (below). |
 | Undo | `apps/forms/src/screens/builder/history.ts` — snapshot undo, 50 deep, coalesced | Stays for the classic editor. The conversation has its own **patch log** (replayable, forever), because snapshots cannot be replayed or explained. |
@@ -63,10 +63,17 @@ The first screen after **New form** has two large cards and nothing else:
 
 - **Start from paper.** Drop a PDF, a Word file or a photographed page, paste text, or scan with a
   phone (the existing LAN scan). Loppa reads it locally (`IMPORT-PIPELINE.md`) and opens the
-  **review screen**, which is never skipped.
+  **review screen**, which is never skipped. *Until the review screen (S10):* the door makes a
+  blank form and opens it in the editor with the paper import (ADR 0004) already open.
 - **Start from questions.** The guided conversation. Nothing is required first: the brand kit can
   be answered later, and every skipped answer is recorded as "use Loppa's default" so the draft is
-  always complete.
+  always complete. The door makes the form first — a blank draft titled "Untitled form", with a
+  link address of its own that can be changed later — because every step saves to it; a
+  conversation abandoned at once leaves that blank draft in the list, like a form made by hand and
+  never filled in.
+
+The conversation is full screen, like the check-in door: no rail and no session row, because on a
+360 × 640 phone they left the first question's answers below the fold (`CAVEATS.md` #72).
 
 "Build it myself" — the classic editor — stays one press away on the questions screen, exactly as
 `wizard.advanced` is today. It is not a third door; it is the way out that every screen has.
@@ -157,7 +164,12 @@ draft and the sidecar. Patches are the only way the conversation changes anythin
   `GET/PUT /v1/forms/:id/builder-session`, optimistic concurrency on a version number; the cursor is
   where the log leads, so it is not stored twice). A refresh or
   a desktop restart returns to the same question with the same trail. The draft itself keeps
-  saving through the existing `PUT /v1/forms/:id/draft`.
+  saving through the existing `PUT /v1/forms/:id/draft`. The screen saves after every step, in
+  order, the draft first — a failed session save then loses the trail, never the form — and stops
+  at a `409` rather than save over another tab (`guided/saver.ts`). A saved conversation resumes
+  only if its draft is exactly the form's; if the form was edited in the editor since, the
+  conversation starts again from the form as it is and says so (`CAVEATS.md` #75), until S5's
+  reconciliation can do better.
 - **Publishable from the first answer.** The first answer produces a valid `FormDefinition` with
   at least one question, and once the draft is publishable no answer makes it otherwise. Every state
   is a definition the schema accepts exactly; `machine.test.ts` walks the graph and checks
@@ -241,8 +253,9 @@ packages/shared/src/                         (@tp/shared — the forms core alre
                  sigmoid.json                                                          (S9, S11)
 apps/forms/src/screens/builder/
   paper/         extract.ts (exists)  ocr.ts (exists)  docx.ts  paste.ts  import.worker.ts
-  guided/        Shell.tsx  QuestionNode.tsx  Cards.tsx  Quantity.tsx  PreviewMoment.tsx
-                 InlineEdit/  Trail.tsx  WhyChip.tsx  use-keyboard.ts
+  guided/        Shell.tsx  NodeView.tsx (Cards, Quantity, the text answer, the live preview)
+                 Trail.tsx  Doors.tsx  GuidedBuilder.tsx  conversation.ts  keyboard.ts  saver.ts (S4)
+                 PreviewMoment.tsx  InlineEdit/  WhyChip.tsx                                  (S5)
   review/        ReviewScreen.tsx  SourcePane.tsx  DraftPane.tsx  Chips.tsx
 apps/api-forms/src/
   routes/        builder-session.ts (builder_sessions, S2); builder aliases (builder_aliases, S6)
