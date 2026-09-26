@@ -1025,6 +1025,7 @@ export const daDK: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Du fravalgte knapper',
   'guided.skip.brandDecided': 'Allerede besluttet',
   'guided.skip.nothingToGuess': 'Intet at gætte endnu',
+  'guided.skip.noQuestion': 'Intet spørgsmål at ændre endnu',
   'guided.preview.ask': 'Sådan ser det ud.',
   'guided.guess.ask': 'Det ligner {template}. Passer det?',
   'guided.guess.help': 'Loppa gættede ud fra dine svar. Du kan sige nej.',

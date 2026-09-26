@@ -21,6 +21,7 @@ import type {
   LedgerAccountRecord,
   FormVersionRecord,
   BrandKitRecord,
+  BuilderSessionRecord,
   JobRecord,
   LoginTokenRecord,
   MessageRecord,
@@ -56,6 +57,7 @@ export interface MemoryState {
   uploads: UploadRecord[];
   jobs: JobRecord[];
   brandKits: BrandKitRecord[];
+  builderSessions: BuilderSessionRecord[];
   sendingDomains: SendingDomainRecord[];
   signingRequests: SigningRequestRecord[];
   messages: MessageRecord[];
@@ -119,6 +121,7 @@ export function createMemoryRepositories(
     uploads: seed.uploads ?? [],
     jobs: seed.jobs ?? [],
     brandKits: seed.brandKits ?? [],
+    builderSessions: seed.builderSessions ?? [],
     sendingDomains: seed.sendingDomains ?? [],
     signingRequests: seed.signingRequests ?? [],
     messages: seed.messages ?? [],
@@ -882,6 +885,33 @@ export function createMemoryRepositories(
       clear: async (organisationId) => {
         const index = state.brandKits.findIndex((k) => k.organisationId === organisationId);
         if (index !== -1) state.brandKits.splice(index, 1);
+      },
+    },
+
+    builderSessions: {
+      find: async (organisationId, formId, userId) => {
+        const found = state.builderSessions.find(
+          (s) => s.organisationId === organisationId && s.formId === formId && s.userId === userId,
+        );
+        return found ? { ...found, session: structuredClone(found.session) } : null;
+      },
+      save: async ({ organisationId, formId, userId, session, expected }) => {
+        const index = state.builderSessions.findIndex(
+          (s) => s.organisationId === organisationId && s.formId === formId && s.userId === userId,
+        );
+        const current = index === -1 ? 0 : state.builderSessions[index]!.version;
+        if (current !== expected) return null;
+        const record: BuilderSessionRecord = {
+          organisationId,
+          formId,
+          userId,
+          session: structuredClone(session),
+          version: expected + 1,
+          updatedAt: clock(),
+        };
+        if (index === -1) state.builderSessions.push(record);
+        else state.builderSessions[index] = record;
+        return { ...record, session: structuredClone(record.session) };
       },
     },
 

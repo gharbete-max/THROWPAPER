@@ -1060,6 +1060,7 @@ export const deDE: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Sie haben keine Schaltflächen gewählt',
   'guided.skip.brandDecided': 'Bereits entschieden',
   'guided.skip.nothingToGuess': 'Noch nichts zu erraten',
+  'guided.skip.noQuestion': 'Noch keine Frage zum Ändern',
   'guided.preview.ask': 'So sieht es aus.',
   'guided.guess.ask': 'Das sieht nach {template} aus. Stimmt das?',
   'guided.guess.help': 'Loppa hat anhand Ihrer Antworten geraten. Sie können Nein sagen.',

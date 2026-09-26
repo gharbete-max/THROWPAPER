@@ -81,7 +81,8 @@ function edgesOf(node: Node): { to: string; conditional: boolean }[] {
 /** Every message key a node uses, including those its kind renders by itself. */
 export function messageKeysOf(node: Node): MessageKey[] {
   const keys: MessageKey[] = [node.ask, node.help, ...KIND_KEYS[node.kind]];
-  if (node.skip) keys.push(node.skip);
+  if (typeof node.skip === 'string') keys.push(node.skip);
+  else if (node.skip) keys.push(...node.skip.map((reason) => reason.skip));
   for (const option of optionsOf(node)) {
     keys.push(option.label);
     if (option.detail) keys.push(option.detail);
@@ -90,12 +91,19 @@ export function messageKeysOf(node: Node): MessageKey[] {
   return keys;
 }
 
+/** Every guarded list a node has: its `next` lists and its `skip` list. */
+function guardedListsOf(node: Node): (readonly { readonly when: string }[])[] {
+  const lists: (readonly { readonly when: string }[])[] = [];
+  const nexts = ['next' in node ? node.next : undefined, ...optionsOf(node).map((o) => o.next)];
+  for (const candidate of [...nexts, node.skip]) {
+    if (Array.isArray(candidate)) lists.push(candidate);
+  }
+  return lists;
+}
+
 function guardsOf(node: Node): string[] {
   const guards: string[] = node.when ? [node.when] : [];
-  const nexts = ['next' in node ? node.next : undefined, ...optionsOf(node).map((o) => o.next)];
-  for (const next of nexts) {
-    if (Array.isArray(next)) guards.push(...next.map((b: { when: string }) => b.when));
-  }
+  for (const list of guardedListsOf(node)) guards.push(...list.map((branch) => branch.when));
   return guards;
 }
 
@@ -252,6 +260,13 @@ export function structuralProblems(input: unknown): GraphProblem[] {
   const provided = new Set([...graph.inputs, ...pendingWritten]);
   for (const node of graph.nodes) {
     if (node.when && !node.skip) add('G8', 'has a `when` but no `skip` reason', node.id);
+    for (const list of guardedListsOf(node)) {
+      // Read top to bottom, the first that holds wins; a list whose last is not `true` can have
+      // none hold, and the conversation would have nowhere to go, or nothing to say.
+      if (list[list.length - 1]?.when.trim() !== 'true') {
+        add('G8', "a guarded list does not end with `when: 'true'`", node.id);
+      }
+    }
     for (const guard of guardsOf(node)) {
       let tree: GuardExpr;
       try {

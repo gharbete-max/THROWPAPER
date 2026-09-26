@@ -148,6 +148,31 @@ describe('each rule catches its own mistake', () => {
       (g) => (node(g, 'choice.answers').when = 'pending.buttonz == true'),
     ],
     [
+      'G8',
+      'a `next` list that can have no branch hold',
+      (g) =>
+        (node(g, 'brand.start').next = [
+          { when: 'pending.brandKitExists == true', to: 'brand.logoSlot' },
+        ]),
+    ],
+    [
+      'G8',
+      'a skip list that can have no reason hold',
+      (g) =>
+        (node(g, 'choice.count').skip = [
+          { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        ]),
+    ],
+    [
+      'G8',
+      'a skip reason whose guard does not parse',
+      (g) =>
+        (node(g, 'choice.count').skip = [
+          { when: 'pending.buttons !=', skip: 'guided.skip.noButtons' },
+          { when: 'true', skip: 'guided.skip.decided' },
+        ]),
+    ],
+    [
       'G9',
       'a score for a template that does not exist',
       (g) => (node(g, 'flow.start').options![0]!.score = { 'moon-landing': 100 }),

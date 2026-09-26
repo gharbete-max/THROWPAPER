@@ -1026,6 +1026,7 @@ export const svSE: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Du valde bort knappar',
   'guided.skip.brandDecided': 'Redan bestämt',
   'guided.skip.nothingToGuess': 'Inget att gissa ännu',
+  'guided.skip.noQuestion': 'Ingen fråga att ändra ännu',
   'guided.preview.ask': 'Så här ser det ut.',
   'guided.guess.ask': 'Det här ser ut som {template}. Stämmer det?',
   'guided.guess.help': 'Loppa gissade utifrån dina svar. Du kan säga nej.',

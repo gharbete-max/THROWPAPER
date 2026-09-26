@@ -8,7 +8,8 @@ specs into this file.
 apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
-                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set
+                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
+                keeps each author's guided-builder conversation (builder_sessions)
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
@@ -30,7 +31,9 @@ packages/ui     One `cn()` class-name helper. The shared data grid is deliberate
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
 packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
-                graph, its `when` language and its validator (@tp/shared/builder); document import's
+                graph, its `when` language, its validator, and the machine that walks it — answers
+                as undoable changes, replay, stable question ids, the saved session
+                (@tp/shared/builder); document import's
                 Layout IR with its validator, and stage 3, the list-marker detector, with its debug
                 artifact (@tp/shared/import)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing

@@ -257,6 +257,56 @@ describe.skipIf(!migrated)('drizzle repositories against a real database', () =>
     });
   });
 
+  /** Migration 0019 and the version lock, on a real Postgres — the same as `pglite.test.ts`. */
+  it('keeps a builder session per form and person, behind its version lock', async () => {
+    const organisationId = await organisation();
+    const form = await repos.forms.create({
+      organisationId,
+      eventId: null,
+      slug: 'smoke-builder-session',
+      title: { 'sv-SE': 'Samtal' },
+      draftDefinition: { schemaVersion: 1, fields: [], settings: {} },
+      opensAt: null,
+      closesAt: null,
+      ownerUserId: null,
+    });
+    const people = await Promise.all(
+      ['session-a', 'session-b'].map(async (name) => {
+        const person = await repos.users.create({
+          organisationId,
+          email: `${name}-${form.id}@example.com`,
+          name,
+          role: 'operator',
+        });
+        if (!person) throw new Error(`could not create ${name}`);
+        return person;
+      }),
+    );
+    const [first, second] = people;
+    const sessions = repos.builderSessions;
+    const key = { organisationId, formId: form.id };
+    const session = { sessionVersion: 1, note: 'Välj mat — å ä ö' };
+
+    expect(await sessions.find(organisationId, form.id, first!.id)).toBeNull();
+    expect(await sessions.save({ ...key, userId: first!.id, session, expected: 0 })).toMatchObject({
+      version: 1,
+      session,
+    });
+    expect(await sessions.save({ ...key, userId: first!.id, session, expected: 0 })).toBeNull();
+    expect(await sessions.save({ ...key, userId: first!.id, session, expected: 1 })).toMatchObject({
+      version: 2,
+    });
+    expect(await sessions.save({ ...key, userId: first!.id, session, expected: 1 })).toBeNull();
+    expect(await sessions.find(organisationId, form.id, second!.id)).toBeNull();
+
+    // Two saves from the same version at once: exactly one wins.
+    const race = await Promise.all([
+      sessions.save({ ...key, userId: first!.id, session, expected: 2 }),
+      sessions.save({ ...key, userId: first!.id, session, expected: 2 }),
+    ]);
+    expect(race.filter((result) => result !== null)).toHaveLength(1);
+  });
+
   it('writes an audit row', async () => {
     const organisationId = await organisation();
 

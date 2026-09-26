@@ -49,6 +49,14 @@ export type NodeKind = (typeof NODE_KINDS)[number];
 export type Next = string | readonly { readonly when: Guard; readonly to: string }[];
 
 /**
+ * Why a node was skipped, as the trail says it: one sentence, or — for a node with more than one
+ * reason not to be asked — the first whose guard holds, read top to bottom, ending in
+ * `when: 'true'`. One sentence for two reasons is how "Already read from your document" came to be
+ * shown for a question skipped because the person said no to buttons.
+ */
+export type Skip = MessageKey | readonly { readonly when: Guard; readonly skip: MessageKey }[];
+
+/**
  * A value in a patch. Plain JSON, or one of the references the machine resolves when the patch is
  * applied (and stores resolved in the log, so replay never re-resolves):
  *
@@ -105,7 +113,7 @@ interface Base {
   /** Absent means always asked. */
   readonly when?: Guard;
   /** Required with `when`: why the node was skipped, in plain words. */
-  readonly skip?: MessageKey;
+  readonly skip?: Skip;
   readonly next: Next;
   /** A `menu` node id, or `menu.siblings(<group>)`. */
   readonly escape: string;
@@ -189,9 +197,22 @@ export const KIND_KEYS: Readonly<Record<NodeKind, readonly MessageKey[]>> = {
 const key = z.string().regex(/^guided\.[a-zA-Z0-9.]+$/);
 const id = z.string().regex(/^[a-z][a-zA-Z0-9]*(\.[a-zA-Z][a-zA-Z0-9-]*)*$/);
 const next = z.union([id, z.array(z.object({ when: z.string().min(1), to: id }).strict()).min(1)]);
-const json: z.ZodType<Json> = z.lazy(() =>
-  z.union([z.null(), z.boolean(), z.number(), z.string(), z.array(json), z.record(json)]),
+const skip = z.union([
+  key,
+  z.array(z.object({ when: z.string().min(1), skip: key }).strict()).min(1),
+]);
+/** Plain JSON, as a schema: for patches here, and for the session the machine saves. */
+export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
+  z.union([
+    z.null(),
+    z.boolean(),
+    z.number(),
+    z.string(),
+    z.array(JsonSchema),
+    z.record(JsonSchema),
+  ]),
 );
+const json = JsonSchema;
 const op = z.discriminatedUnion('op', [
   z.object({ op: z.literal('set'), path: z.string(), value: json }).strict(),
   z.object({ op: z.literal('add'), path: z.string(), value: json }).strict(),
@@ -230,7 +251,7 @@ const base = {
   ask: key,
   help: key,
   when: z.string().optional(),
-  skip: key.optional(),
+  skip: skip.optional(),
   next,
   escape: z.string(),
   preview: z.string().optional(),

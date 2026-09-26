@@ -42,6 +42,7 @@ import { createConsoleMailProvider, type MailProvider } from './auth/mail.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerFormRoutes } from './routes/forms.js';
+import { registerBuilderSessionRoutes } from './routes/builder-session.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerLedgerRoutes } from './routes/ledger.js';
 import { registerPublicFormRoutes } from './routes/public-forms.js';
@@ -532,6 +533,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerAuthRoutes(app, { auth, guard });
   registerEventRoutes(app, { repos, guard });
   registerFormRoutes(app, { repos, guard });
+  registerBuilderSessionRoutes(app, { repos, guard });
   registerAdminRoutes(app, {
     repos,
     guard,

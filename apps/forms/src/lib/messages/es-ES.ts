@@ -1042,6 +1042,7 @@ export const esES: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Elegiste no usar botones',
   'guided.skip.brandDecided': 'Ya decidido',
   'guided.skip.nothingToGuess': 'Todavía no hay nada que adivinar',
+  'guided.skip.noQuestion': 'Aún no hay ninguna pregunta que cambiar',
   'guided.preview.ask': 'Así queda.',
   'guided.guess.ask': 'Parece {template}. ¿Correcto?',
   'guided.guess.help': 'Loppa lo ha deducido de tus respuestas. Puedes decir que no.',

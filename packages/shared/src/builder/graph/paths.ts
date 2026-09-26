@@ -4,7 +4,6 @@ import {
   CHOICE_COLUMNS,
   CHOICE_SHAPES,
   CHOICE_SIZES,
-  FIELD_TYPES,
   FieldWidth,
   MULTI_SELECT_APPEARANCES,
   RATING_APPEARANCES,
@@ -14,6 +13,7 @@ import {
 } from '../../forms/definition.js';
 import { V } from '../../forms/vocabulary.js';
 import { LocalisedText } from '../../api/common.js';
+import { QUESTION_TYPES } from '../fields.js';
 import type { Json, Op } from './schema.js';
 
 /**
@@ -118,11 +118,13 @@ const answer = z.object({ $answer: z.literal(true) }).strict();
 const unset = z.object({ $unset: z.literal(true) }).strict();
 const text = z.union([LocalisedText, answer]);
 const vocabularyWord = z.enum(Object.keys(V) as [string, ...string[]]);
+/** Only types the machine can build from a label alone (`builder/fields.ts`). */
+const questionType = z.enum(QUESTION_TYPES);
 const newField = z
   .object({
     $newField: z
       .object({
-        type: z.enum(FIELD_TYPES),
+        type: questionType,
         word: vocabularyWord.optional(),
         key: z
           .string()
@@ -148,6 +150,15 @@ const appearance = z.enum([
 
 const FIELD = 'draft.definition.fields[*]';
 
+/** One row of `WRITABLE`. */
+export interface Writable {
+  readonly pattern: string;
+  readonly ops: readonly Op['op'][];
+  readonly value?: z.ZodType<unknown>;
+  /** Text in a language: `{ $answer: true }` becomes `{ <author's locale>: answer }`. */
+  readonly localised?: true;
+}
+
 /**
  * Every path a patch may write, the operations allowed on it, and the values each accepts.
  *
@@ -157,23 +168,20 @@ const FIELD = 'draft.definition.fields[*]';
  * `pending.*` is the conversation's working memory — any key, any JSON — because it is never
  * published and never leaves the session.
  */
-export const WRITABLE: ReadonlyArray<{
-  readonly pattern: string;
-  readonly ops: readonly Op['op'][];
-  readonly value?: z.ZodType<unknown>;
-}> = [
+export const WRITABLE: readonly Writable[] = [
   { pattern: 'pending.*', ops: ['set'], value: z.unknown() },
   { pattern: 'focus', ops: ['set'], value: z.object({ $lastAddedId: z.literal(true) }).strict() },
   { pattern: 'sidecar.brandDecided', ops: ['set'], value: z.enum(['organisation', 'default']) },
-  { pattern: 'draft.title', ops: ['set'], value: text },
+  { pattern: 'draft.title', ops: ['set'], value: text, localised: true },
   { pattern: 'draft.definition.fields', ops: ['add'], value: newField },
   { pattern: 'draft.definition.fields', ops: ['reorder'] },
   { pattern: FIELD, ops: ['remove'] },
-  { pattern: `${FIELD}.label`, ops: ['set'], value: text },
-  { pattern: `${FIELD}.helpText`, ops: ['set'], value: z.union([text, unset]) },
+  { pattern: `${FIELD}.label`, ops: ['set'], value: text, localised: true },
+  { pattern: `${FIELD}.helpText`, ops: ['set'], value: z.union([text, unset]), localised: true },
   { pattern: `${FIELD}.required`, ops: ['set'], value: z.boolean() },
   { pattern: `${FIELD}.width`, ops: ['set'], value: FieldWidth },
-  { pattern: `${FIELD}.type`, ops: ['set'], value: z.enum(FIELD_TYPES) },
+  // The machine rebuilds the whole question as the new type (`builder/fields.ts`, `retype`).
+  { pattern: `${FIELD}.type`, ops: ['set'], value: questionType },
   { pattern: `${FIELD}.appearance`, ops: ['set'], value: appearance },
   { pattern: `${FIELD}.options`, ops: ['set'], value: options },
   { pattern: `${FIELD}.style.shape`, ops: ['set'], value: z.enum(CHOICE_SHAPES) },
@@ -182,17 +190,26 @@ export const WRITABLE: ReadonlyArray<{
   { pattern: `${FIELD}.style.columns`, ops: ['set'], value: z.enum(CHOICE_COLUMNS) },
 ];
 
+/** The row of `WRITABLE` that allows this operation on this path, or null. */
+export function writableRule(op: Op, parsed: ParsedPath): Writable | null {
+  const shape = pattern(parsed);
+  return (
+    WRITABLE.find(
+      (entry) =>
+        entry.ops.includes(op.op) &&
+        (entry.pattern === shape ||
+          (entry.pattern === 'pending.*' &&
+            parsed.root === 'pending' &&
+            parsed.steps.length === 1)),
+    ) ?? null
+  );
+}
+
 /** Why an operation is not allowed, or null when it is. */
 export function opProblem(op: Op): string | null {
   const parsed = parsePath(op.path);
   if (!parsed) return `"${op.path}" is not a path`;
-  const shape = pattern(parsed);
-  const rule = WRITABLE.find(
-    (entry) =>
-      entry.ops.includes(op.op) &&
-      (entry.pattern === shape ||
-        (entry.pattern === 'pending.*' && parsed.root === 'pending' && parsed.steps.length === 1)),
-  );
+  const rule = writableRule(op, parsed);
   if (!rule) return `${op.op} is not allowed on "${op.path}"`;
   if ('value' in op && rule.value && !rule.value.safeParse(op.value as Json).success) {
     return `${JSON.stringify(op.value)} is not a value "${op.path}" accepts`;

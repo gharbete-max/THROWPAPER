@@ -253,6 +253,8 @@ export const BUILDER_GRAPH = {
       ],
       required: true,
       patch: [
+        // A new question starts with no answer about buttons: the last question's must not leak.
+        { op: 'set', path: 'pending.buttons', value: { $unset: true } },
         {
           op: 'add',
           path: 'draft.definition.fields',
@@ -270,6 +272,10 @@ export const BUILDER_GRAPH = {
       kind: 'question',
       ask: 'guided.text.required.ask',
       help: 'guided.text.required.help',
+      // Reachable from its sibling before any question exists (docs/plan/BUILDER-GRAPH.md,
+      // "The machine": the walk found it).
+      when: 'has(focus)',
+      skip: 'guided.skip.noQuestion',
       next: 'choice.buttons',
       escape: 'menu.siblings(text)',
       negative: 'no',
@@ -293,7 +299,10 @@ export const BUILDER_GRAPH = {
       ask: 'guided.choice.buttons.ask',
       help: 'guided.choice.buttons.help',
       when: 'has(focus) && !decided(kind)',
-      skip: 'guided.skip.decided',
+      skip: [
+        { when: '!has(focus)', skip: 'guided.skip.noQuestion' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
       next: 'choice.answers',
       escape: 'menu.siblings(choice)',
       negative: 'no',
@@ -302,7 +311,13 @@ export const BUILDER_GRAPH = {
           id: 'yes',
           label: 'guided.common.yes',
           icon: 'check',
-          patch: [{ op: 'set', path: 'pending.buttons', value: true }],
+          // Buttons from this answer on, one answer by default; "One answer or several?" refines
+          // it. So every node after this one finds a choice to shape, however it is reached.
+          patch: [
+            { op: 'set', path: 'pending.buttons', value: true },
+            { op: 'set', path: 'draft.definition.fields[focus].type', value: 'single_select' },
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' },
+          ],
           score: { 'event-registration': 120, 'customer-feedback': 80 },
         },
         {
@@ -352,7 +367,10 @@ export const BUILDER_GRAPH = {
       ask: 'guided.choice.count.ask',
       help: 'guided.choice.count.help',
       when: 'pending.buttons == true && !decided(options)',
-      skip: 'guided.skip.decided',
+      skip: [
+        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
       min: 2,
       max: 12,
       default: 3,
@@ -373,7 +391,10 @@ export const BUILDER_GRAPH = {
       ask: 'guided.choice.shape.ask',
       help: 'guided.choice.shape.help',
       when: 'pending.buttons == true && !decided(shape)',
-      skip: 'guided.skip.decided',
+      skip: [
+        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
       next: 'choice.placement',
       escape: 'menu.siblings(choice)',
       preview: 'choice.control',
@@ -456,7 +477,7 @@ export const BUILDER_GRAPH = {
         {
           id: 'yes',
           label: 'guided.flow.more.yes',
-          patch: [{ op: 'set', path: 'pending.buttons', value: { $unset: true } }],
+          patch: [],
           next: 'text.label',
         },
         { id: 'no', label: 'guided.flow.more.no', patch: [], next: 'end' },

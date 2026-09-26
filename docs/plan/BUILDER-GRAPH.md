@@ -1,7 +1,8 @@
 # The builder graph — the conversation as data
 
-**Status:** the specification for slice S1 (`ROADMAP.md`), proposed 2026-09-25; **built in S1**
-(`packages/shared/src/builder/graph/`). Where this document and the code disagree, the code is
+**Status:** the specification for slices S1 and S2 (`ROADMAP.md`), proposed 2026-09-25; the graph
+**built in S1** (`packages/shared/src/builder/graph/`), the machine that walks it **in S2**
+(`packages/shared/src/builder/`, "The machine" below). Where this document and the code disagree, the code is
 checked by tests and this document is the bug — fix it in the same change. Decisions: ADR 0020
 (graph as data) and ADR 0021 (JSON or typed TS, never YAML).
 
@@ -50,7 +51,7 @@ interface NodeBase {
   ask: MessageKey;            // the question, ≤ 9 words (DESIGN-LANGUAGE.md)
   help: MessageKey;           // one line, for the "?" affordance
   when?: Guard;               // absent = always asked
-  skip?: MessageKey;          // required with `when`: why it was skipped, in plain words
+  skip?: Skip;                // required with `when`: why it was skipped, in plain words
   next: Next;                 // where to go after an answer
   escape: string;             // a `menu` node id, or 'menu.siblings(<group>)'
   preview?: string;           // a preview spec id: what to render after this node
@@ -59,6 +60,8 @@ interface NodeBase {
 
 export type Next = string | { when: Guard; to: string }[];   // list: first true guard wins; the
                                                              // last entry must be { when: 'true' }
+export type Skip = MessageKey | { when: Guard; skip: MessageKey }[];   // one reason, or one per
+                                                             // reason, read the same way as Next
 
 export interface Option {
   id: string;
@@ -114,10 +117,12 @@ interface BuilderState {
   pending: Record<string, Json>;     // the conversation's working memory
   focus: string | null;              // the field id being built, or null
   guess: { templateId: string; pMille: number } | null;   // the belief engine's top guess (S11)
-  belief: Record<TemplateId, Millinats>;
   cursor: string;                    // the current node id
 }
 ```
+
+(`packages/shared/src/builder/state.ts`. The belief itself, `Record<TemplateId, Millinats>`,
+joins the state with the engine that updates it, S11.)
 
 Guards read `draft`, `sidecar`, `pending`, `focus` and `guess`, and `answered()` reads the log. A
 guard that reads `pending.x` or `guess.x` must name something a patch writes or the graph lists in
@@ -143,7 +148,10 @@ Examples: `draft.definition.fields[focus].appearance`,
 each pattern, the operations allowed on it, and a Zod schema for its values, taken from the form
 schema itself (`CHOICE_SHAPES`, `FieldWidth`, `SelectOption`, …). A patch on any other path, or
 with a value the schema refuses, fails G5 — which is why S1 cannot offer the `tab` and `segmented`
-shapes before S5 adds them to `ChoiceStyle`. `pending.*` takes any JSON: it is working memory and
+shapes before S5 adds them to `ChoiceStyle`, and why a patch may set a question's `type` only to
+one the machine can build from a label alone (`QUESTION_TYPES`, "The machine" below). A text path
+(`label`, `helpText`, `title`) is marked `localised`: `{ $answer: true }` there is the answer in the
+author's language. `pending.*` takes any JSON: it is working memory and
 is never published. Reading is total (`resolvePath`): a path that does not resolve is `undefined`,
 own properties only.
 
@@ -171,6 +179,45 @@ all twelve languages); `{ $lastAddedId: true }` (the id the previous `add` creat
 **The log stores the resolved patch and its inverse**, not just the node and option that caused
 it. That is what makes replay independent of the graph: a session recorded against graph version 3
 replays identically after version 4 has changed what that option does.
+
+## The machine
+
+Slice S2, `packages/shared/src/builder/`: the pure reducer that walks the graph. A conversation is
+where it started (`base`) and every step since (`log`); its state is always exactly
+`replay(base, log)`, which the tests hold it to.
+
+- **Resolving a patch** (`patches.ts`). Each operation is resolved against the state the ones
+  before it produced, into changes (`changes.ts`) that mean one thing in any state: `[focus]`
+  becomes `[id=<the question>]`, references become values, `add` becomes an `insert` after the
+  last element. Each change has an exact inverse, computed against the state it applies to; a
+  step's inverse undoes its changes last first.
+- **A question is always one the schema accepts.** A write to part of a question is stored as that
+  whole property rebuilt by the schema (`style.shape = 'pill'` on a question with no style stores
+  the style a save and a load give back), and a property the question's type has no place for is
+  refused. A new `type` rebuilds the whole question (`fields.ts`, `retype`): what fits is kept,
+  what the new type needs is filled (two placeholder options for a choice), and what it cannot hold
+  is set aside in the sidecar and comes back when a later type can hold it. `$options` resizes,
+  keeping the options there are. A step that would leave the draft anything the schema would refuse
+  or change is refused whole, and the conversation is as it was.
+- **New questions** get a fingerprint id (`ids.ts`: FNV-1a 64 of `seed | ordinal | section`,
+  base 32, `q-`), never one in `retiredIds` or the form (a collision takes `-2`, `-3`, …), a key
+  unique the classic editor's way, and a sidecar record of where they came from. Undoing the step
+  that made one frees its id; deleting one never does.
+- **Where next.** After a step, the option's `next` or the node's; then past every node whose
+  `when` is false, recording each with its reason (`skip`: one sentence, or the first of a list
+  whose guard holds). Bounded by the size of the graph. A jump — the escape to a menu or a sibling,
+  a menu's entry, the end's way back to the menus — is a step with no changes.
+- **Back** applies the last inverse; **a breadcrumb** (`rewind`) replays the log up to it; the two
+  agree. **A hand edit** (`edit`, inline editing, S5) is a step with `source: 'manual'` on paths
+  `WRITABLE` allows, in the same log, as undoable as an answer; the trail does not show it.
+- **Saved** as `BuilderSession` (`session.ts`): the base and the log, nothing derived, at most
+  2 000 steps; `GET/PUT /v1/forms/:id/builder-session`, one per form and person, with a version
+  lock (409 on a save over a version the saver did not read). A stored session that does not
+  replay is `bad-session`, and the builder offers to start again rather than guess.
+- **Proved over the whole graph** (`machine.test.ts`): every answer the graph offers, from every
+  state reachable in seven steps — escapes included — is accepted; a publishable draft stays
+  publishable; each step replays and undoes exactly. `fixtures/sessions/buttons-chain.json` is a
+  recorded conversation that must keep replaying into the draft recorded with it.
 
 ## The `when` language
 
@@ -243,7 +290,7 @@ all of them and lists every problem at once; `pnpm verify` runs them through
 | G5 | a patch names a path not in `WRITABLE`, uses an operation that path does not allow, or writes a value the path's schema refuses |
 | G6 | a cycle in the `next` graph (menus and escapes are not `next` edges) is made only of unconditional edges — a node-level `next` string, or a `{ when: 'true' }` branch — or has no edge that leaves it. An edge is conditional when only one option takes it or a `when` selects it: a loop the person steers is fine, a loop that turns by itself is not |
 | G7 | a `question` has fewer than 2 or more than 4 options; `pick-one`/`pick-many` fewer than 2 or more than 8; a `quantity` whose `min ≤ default ≤ max` does not hold |
-| G8 | a `when` (on a node or a `next` branch) does not parse, exceeds its bounds, reads a `pending.*` or `guess.*` key that no patch writes and `inputs` does not list; or a node with `when` has no `skip` |
+| G8 | a `when` (on a node, a `next` branch or a `skip` reason) does not parse, exceeds its bounds, reads a `pending.*` or `guess.*` key that no patch writes and `inputs` does not list; a node with `when` has no `skip`; or a `next` or `skip` list does not end with `when: 'true'` (none might hold, and the conversation would have nowhere to go or nothing to say) |
 | G9 | a `score` names a template id not in `FORM_TEMPLATES`, or is not an integer |
 | G10 | in any locale, a question is over its limit (9 words in English, 12 in the other space-separated languages, 24 characters in `zh-CN` and `ja-JP`; `{placeholders}` and punctuation-only tokens do not count), or anything the node says — question, help, options, skip reason — contains a banned word from `graph/voice.json` (whole words; substrings for `zh` and `ja`) |
 | G11 | from any node, the longest simple path through nodes of its own group before a `preview-moment` or `end` exceeds **6** nodes — ADR 0006's four-press promise, restated for chains |
@@ -256,8 +303,9 @@ the graph itself only holds keys.
 
 ## Three worked examples
 
-Excerpts of `packages/shared/src/builder/graph/nodes.ts`, exactly as shipped in S1 (`…` marks an
-elided option). English values from `apps/forms/src/lib/messages/en-GB.ts` are in the comments.
+Excerpts of `packages/shared/src/builder/graph/nodes.ts`, exactly as shipped (`…` marks an
+elided option); S2 changed the buttons chain where the walk over the whole graph found it could
+stop (`CAVEATS.md` #62, #65). English values from `apps/forms/src/lib/messages/en-GB.ts` are in the comments.
 
 ### 1. The buttons chain (scenario S2)
 
@@ -267,11 +315,16 @@ elided option). English values from `apps/forms/src/lib/messages/en-GB.ts` are i
   ask: 'guided.choice.buttons.ask',               // "Do you want buttons?"
   help: 'guided.choice.buttons.help',             // "Buttons let people pick instead of typing."
   when: 'has(focus) && !decided(kind)',
-  skip: 'guided.skip.decided',                    // "Already read from your document"
+  skip: [{ when: '!has(focus)', skip: 'guided.skip.noQuestion' },   // "No question to change yet"
+         { when: 'true', skip: 'guided.skip.decided' }],           // "Already read from your document"
   next: 'choice.answers', escape: 'menu.siblings(choice)', negative: 'no',
   options: [
     { id: 'yes', label: 'guided.common.yes', icon: 'check',
-      patch: [{ op: 'set', path: 'pending.buttons', value: true }],
+      // Buttons from this answer on, one answer by default; the next node refines it. So every
+      // node after this one finds a choice to shape, however it is reached.
+      patch: [{ op: 'set', path: 'pending.buttons', value: true },
+              { op: 'set', path: 'draft.definition.fields[focus].type', value: 'single_select' },
+              { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' }],
       score: { 'event-registration': 120, 'customer-feedback': 80 } },
     { id: 'no', label: 'guided.choice.buttons.no',          // "No, people type an answer"
       patch: [{ op: 'set', path: 'pending.buttons', value: false },
@@ -299,7 +352,9 @@ elided option). English values from `apps/forms/src/lib/messages/en-GB.ts` are i
   id: 'choice.shape', group: 'choice', kind: 'pick-one',
   ask: 'guided.choice.shape.ask',                 // "What shape?"
   help: 'guided.choice.shape.help',               // "The shape of each button."
-  when: 'pending.buttons == true && !decided(shape)', skip: 'guided.skip.decided',
+  when: 'pending.buttons == true && !decided(shape)',
+  skip: [{ when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },   // "You chose no buttons"
+         { when: 'true', skip: 'guided.skip.decided' }],
   next: 'choice.placement', escape: 'menu.siblings(choice)',
   preview: 'choice.control',                      // S2: a live preview after the shape answer
   options: [
@@ -342,7 +397,9 @@ case that proves it). They join in S5, with the schema change that makes them va
   id: 'choice.count', group: 'choice', kind: 'quantity',
   ask: 'guided.choice.count.ask',                 // "How many options?"
   help: 'guided.choice.count.help',               // "You can add or remove options later."
-  when: 'pending.buttons == true && !decided(options)', skip: 'guided.skip.decided',
+  when: 'pending.buttons == true && !decided(options)',
+  skip: [{ when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+         { when: 'true', skip: 'guided.skip.decided' }],
   min: 2, max: 12, default: 3,
   patch: [{ op: 'set', path: 'draft.definition.fields[focus].options',
             value: { $options: { $answer: true } } }],
@@ -433,4 +490,11 @@ ones every graph has:
 | `end` | end | Your form is ready. |
 
 `choice.optionLabels` joins them in S4, when there is a screen to type option labels into; until
-then `$options` gives "Option 1…n" from the catalogue.
+then `$options` gives "Option 1…n" (`V.option` in `forms/vocabulary.ts`, the same words as the
+classic editor's `field.defaultOption`, in all twelve languages).
+
+S2 changed three things the walk over the whole graph found (`CAVEATS.md` #62, #65):
+`text.required` asks only when there is a question (`when: 'has(focus)'`, skip reason
+`guided.skip.noQuestion`); `text.label` clears `pending.buttons`, so the last question's answer
+about buttons does not leak into the next (it had been cleared only on `flow.more`'s "yes", which
+a menu jump goes round); and `choice.buttons`' "yes" makes the question a choice at once.

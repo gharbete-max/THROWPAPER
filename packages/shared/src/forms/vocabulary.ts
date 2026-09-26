@@ -507,6 +507,25 @@ export const V = {
     'その他',
     'Другое',
   ),
+  /**
+   * The first word of a placeholder choice, "Option 1": the guided builder numbers them after it.
+   * The same words as the classic editor's `field.defaultOption`, which puts the number last in
+   * every language too — here because the builder's core may not read the app's catalogues.
+   */
+  option: word(
+    'Option',
+    'Alternativ',
+    'Valgmulighed',
+    'Alternativ',
+    'Vaihtoehto',
+    'Valkostur',
+    'Option',
+    'Option',
+    'Opción',
+    '选项',
+    '選択肢',
+    'Вариант',
+  ),
 
   morning: word(
     'Morning',

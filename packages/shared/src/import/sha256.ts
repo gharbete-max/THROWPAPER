@@ -22,8 +22,11 @@ const INITIAL = [
   0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
 ];
 
-/** UTF-8 bytes of a string; a lone surrogate becomes U+FFFD, as `TextEncoder` would make it. */
-function utf8(text: string): number[] {
+/**
+ * UTF-8 bytes of a string; a lone surrogate becomes U+FFFD, as `TextEncoder` would make it.
+ * Shared with the builder's id fingerprints (`builder/ids.ts`), which hash the same way.
+ */
+export function utf8Bytes(text: string): number[] {
   const bytes: number[] = [];
   for (const char of text) {
     let code = char.codePointAt(0) ?? 0xfffd;
@@ -47,7 +50,7 @@ function utf8(text: string): number[] {
 const rotr = (x: number, n: number) => (x >>> n) | (x << (32 - n));
 
 export function sha256Hex(text: string): string {
-  const bytes = utf8(text);
+  const bytes = utf8Bytes(text);
   const bitLength = bytes.length * 8;
   bytes.push(0x80);
   while (bytes.length % 64 !== 56) bytes.push(0);

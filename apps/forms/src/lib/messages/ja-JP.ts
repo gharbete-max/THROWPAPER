@@ -1030,6 +1030,7 @@ export const jaJP: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'ボタンなしを選びました',
   'guided.skip.brandDecided': '決定済み',
   'guided.skip.nothingToGuess': 'まだ推測できません',
+  'guided.skip.noQuestion': '変更する質問はまだありません',
   'guided.preview.ask': 'このように表示されます。',
   'guided.guess.ask': 'これは{template}のようです。合っていますか？',
   'guided.guess.help': '回答からLoppaが推測しました。違う場合は「いいえ」を選べます。',

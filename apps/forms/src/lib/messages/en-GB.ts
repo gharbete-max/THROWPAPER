@@ -1044,6 +1044,7 @@ export const enGB = {
   'guided.skip.noButtons': 'You chose no buttons',
   'guided.skip.brandDecided': 'Already decided',
   'guided.skip.nothingToGuess': 'Nothing to guess yet',
+  'guided.skip.noQuestion': 'No question to change yet',
   'guided.preview.ask': "Here's how it looks.",
   'guided.guess.ask': 'This looks like {template}. Right?',
   'guided.guess.help': 'Loppa guessed from your answers. You can say no.',

@@ -1049,6 +1049,7 @@ export const ruRU: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Вы выбрали без кнопок',
   'guided.skip.brandDecided': 'Уже решено',
   'guided.skip.nothingToGuess': 'Пока нечего угадывать',
+  'guided.skip.noQuestion': 'Пока нет вопроса для изменения',
   'guided.preview.ask': 'Вот как это выглядит.',
   'guided.guess.ask': 'Похоже на {template}. Верно?',
   'guided.guess.help': 'Loppa угадал по вашим ответам. Можно ответить «нет».',

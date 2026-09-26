@@ -1029,6 +1029,7 @@ export const isIS: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Þú valdir enga hnappa',
   'guided.skip.brandDecided': 'Þegar ákveðið',
   'guided.skip.nothingToGuess': 'Ekkert að giska á enn',
+  'guided.skip.noQuestion': 'Engin spurning til að breyta enn',
   'guided.preview.ask': 'Svona lítur þetta út.',
   'guided.guess.ask': 'Þetta virðist vera {template}. Rétt?',
   'guided.guess.help': 'Loppa giskaði út frá svörunum þínum. Þú mátt segja nei.',

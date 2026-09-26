@@ -71,7 +71,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | --- | --- | --- | --- | --- |
 | **S1** Graph as data | `builder/graph/` schema, `nodes.ts` (15 nodes + menu + end), validator G0–G13, `guards.ts` parser, `guided.*` keys in 12 catalogues, `pnpm builder:validate`, the purity ESLint block | one broken graph per rule; `when` grammar and totality; serialisability | `packages/shared`, `apps/forms` messages, `scripts/`, `eslint.config.js` | **done** — in review, PR #147 |
 | **S1b** Enumerate | `import/ir/` types + validator, `import/enumerate/` per `NUMBERING-RULES.md`, stage debug JSON | the 21 enumerate fixtures; determinism (twice, shuffled) | `packages/shared` | **done** — in review, PR #147 |
-| **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019) | not started |
+| **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019), `apps/forms` messages (one key) | **done** — in review, PR #147 |
 | **S3** Ladder T0–T4 | normalisation, gazetteers, `aliases/<language>.json`, `pnpm interpret:index`, T0–T4 | phrase and must-not-resolve tables per language; budget | `packages/shared`, `scripts/`, `fixtures/ladder/` | not started |
 | **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | not started |
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | not started |
@@ -125,3 +125,19 @@ when each slice ends.)*
   broken document per IR invariant; SHA-256 against NIST and `node:crypto`. Next: S2, the
   machine. Open: owner questions 1–4, 6 and 7; Word's own numbering (§11) waits for S7's DOCX
   extractor and its fixture.
+- **S2, the machine (2026-09-26).** What: `@tp/shared/builder` walks the graph — changes resolved
+  against the live state and stored with exact inverses (Back, breadcrumbs and replay agree, and
+  replay needs no graph); a question's type change rebuilds the question and sets aside what it
+  cannot hold; fingerprint ids that are never reused; the sidecar's first fields; sessions saved as
+  base + log (`builder_sessions`, migration 0019, `GET/PUT /v1/forms/:id/builder-session` with a
+  version lock). Walking every answer from every reachable state found four ways the S1 graph could
+  stop or mislead — nodes reachable by escape before what they write exists, a stale answer leaking
+  into the next question, a half-typed choice, a skip sentence that was not the reason — fixed in
+  the graph, the schema (`skip` as a guarded list) and rule G8 (guarded lists must end in `true`,
+  which it had only said); `CAVEATS.md` #62–#65. Why: every later slice renders, replays or saves
+  through this. Tests: 64 new in `packages/shared/src/builder` (the whole-graph walk, eight seeded
+  walks with Back, each change kind undone, ids, sessions and a recorded session in
+  `fixtures/sessions/`) and three new G8 cases, 8 route tests, and the repository with its version
+  lock on PGlite and on a real Postgres 16 (`database.test.ts`, which had skipped in every earlier
+  run here, ran). Next: S3, the ladder T0–T4. Open: owner questions 1–4, 6 and 7; the
+  reconciliation baseline (S5) and the belief (S11) join the state with their slices.

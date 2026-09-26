@@ -87,15 +87,24 @@ BuilderSidecar = {
   provenance:  'guided' | 'import' | 'mixed',
   fields:      { [fieldId]: FieldProvenance },
   retiredIds:  string[],                                (ids ever used in this form — never reused)
-  pending:     { [key]: Json }                          (the conversation's working memory, §4.2)
+  brandDecided?: 'organisation' | 'default'             (the brand question, once answered)
 }
 FieldProvenance = {
   source: 'guided' | 'import' | 'manual',
-  nodeId?, page?, rect? (PaperAnchor), rawText?, confidence?, originFingerprint?,
-  guided?:  Json    (the value the guided flow last wrote — the reconciliation baseline)
-  proposal?: Json   (a guided value the person has not accepted over their own)
+  nodeId?,                                              (the node that made it)
+  decided?: { [slot]: true }                            (what `decided(slot)` reads; S12 writes it)
+  setAside?: { [property]: Json }                       (what a change of type took off — it
+                                                         comes back when the type can hold it)
+  page?, rect? (PaperAnchor), rawText?, confidence?, originFingerprint?          (S12, import)
+  guided?:  Json    (the value the guided flow last wrote — the reconciliation baseline, S5)
+  proposal?: Json   (a guided value the person has not accepted over their own, S5)
 }
 ```
+
+The conversation's working memory (`pending`) sits beside the sidecar in the builder's state
+(`BUILDER-GRAPH.md`, "State and paths"), not inside it. S2 built the sidecar as far as the
+first line of `FieldProvenance` (`packages/shared/src/builder/state.ts`); the rest arrives with the
+slices named.
 
 Why a sidecar rather than fields on `Field`: provenance and overrides are **the builder's**
 business. Put on the definition, they would be published into `form_versions`, exported, and
@@ -125,7 +134,10 @@ slice.
 not on re-import. It is seeded from a content fingerprint — `fnv1a64(normalise(label) + '|' +
 ordinal + '|' + sectionId)`, base32, prefixed `q-` — so the same import gives the same ids on
 every machine, and it is checked against `retiredIds` so a deleted question's id is never handed
-to a new one (a response or a paper overlay still points at the old one). Imported questions also
+to a new one (a response or a paper overlay still points at the old one). A question the
+conversation makes has no label yet when it is made, so its seed is the key, the vocabulary word
+or the type it is made from; undoing the step that made it frees the id, since nothing can point
+at a question that, as far as the draft is concerned, never existed (`builder/ids.ts`). Imported questions also
 keep `originFingerprint` (the same hash, of the *source* text), which is what re-import matches on.
 Existing forms keep the ids they have.
 
@@ -136,17 +148,23 @@ offers two to four large answers (or a stepper, a picker, a text entry), and eac
 **patch** — a declarative list of `set` / `add` / `remove` / `insert` / `reorder` operations on the
 draft and the sidecar. Patches are the only way the conversation changes anything.
 
-- **The log.** Every step appends `{ nodeId, optionId, patch, inverse, tier, source }`. Back is
-  "apply the last inverse". Jumping to a breadcrumb is "replay the log up to there". Because the
-  reducer is pure, **replaying the log reproduces the draft byte for byte** — a property test
-  proves it (S2), not a comment.
-- **Autosave.** The log and the cursor save to `builder_sessions` (one row per form and author;
-  `GET/PUT /v1/forms/:id/builder-session`, optimistic concurrency on a version number). A refresh or
+- **The log.** Every step appends `{ nodeId, answer, patch, inverse, to, skipped, tier, source }`
+  (`builder/machine.ts`). Back is "apply the last inverse". Jumping to a breadcrumb is "replay the
+  log up to there". Because the reducer is pure, **replaying the log reproduces the draft** — equal
+  as canonical JSON, which is all `jsonb` keeps anyway — and `machine.test.ts` proves it over every
+  answer from every reachable state, not a comment (`BUILDER-GRAPH.md`, "The machine").
+- **Autosave.** The log saves to `builder_sessions` (one row per form and author, migration 0019;
+  `GET/PUT /v1/forms/:id/builder-session`, optimistic concurrency on a version number; the cursor is
+  where the log leads, so it is not stored twice). A refresh or
   a desktop restart returns to the same question with the same trail. The draft itself keeps
   saving through the existing `PUT /v1/forms/:id/draft`.
 - **Publishable from the first answer.** The first answer produces a valid `FormDefinition` with
-  at least one question; every later state is valid too. An invariant test walks the graph and
-  checks `definitionProblems(definition)` (`forms/helpers.ts`, what publishing already refuses on) is empty at every node (S2).
+  at least one question, and once the draft is publishable no answer makes it otherwise. Every state
+  is a definition the schema accepts exactly; `machine.test.ts` walks the graph and checks
+  `definitionProblems(definition)` (`forms/helpers.ts`, what publishing already refuses on) after
+  every answer from every state it reaches (S2). (A person who escapes from the first question to
+  the brand kit has, for a moment, a form with nothing to answer yet — the same as a blank form in
+  the classic editor, which publishing refuses with a message.)
 - **Free text** is offered at every node ("Or type it — e.g. 'four buttons in a row'") and read by
   the deterministic ladder in `INTENT-LADDER.md`. A reading applies only above its threshold, and
   shows what it read in a chip that undoes it in one press.
@@ -215,8 +233,8 @@ Proposed, pending §14 question 1 (none of the types depend on the answer):
 packages/shared/src/                         (@tp/shared — the forms core already lives here)
   import/        ir/  layout/  enumerate/  segment/  classify/  overlay/  pipeline.ts
                  classify/weights.json
-  builder/       graph/nodes.ts  graph/schema.ts  graph/validate.ts
-                 machine.ts  patches.ts  guards.ts  log.ts  sidecar.ts  ids.ts  api.ts
+  builder/       graph/nodes.ts  graph/schema.ts  graph/validate.ts  graph/guards.ts  graph/paths.ts
+                 state.ts  changes.ts  patches.ts  fields.ts  ids.ts  machine.ts  session.ts   (S2)
                  belief/recipes.json  belief/update.ts  belief/entropy.ts  belief/explain.ts
   interpret/     normalize.ts  tokenize.ts  fuzzy.ts  ladder.ts  explain.ts
                  gazetteers/  aliases/<language>.json  index.generated.json  sigmoid.json
@@ -226,7 +244,7 @@ apps/forms/src/screens/builder/
                  InlineEdit/  Trail.tsx  WhyChip.tsx  use-keyboard.ts
   review/        ReviewScreen.tsx  SourcePane.tsx  DraftPane.tsx  Chips.tsx
 apps/api-forms/src/
-  builder/       sessions (builder_sessions), aliases (builder_aliases), routes
+  routes/        builder-session.ts (builder_sessions, S2); builder aliases (builder_aliases, S6)
 scripts/         builder-validate.ts (pnpm builder:validate)  caveat-fixtures.test.ts
 fixtures/        numbering/  ir/  documents/ (the corpus)  sessions/ (recorded conversations)
 ```

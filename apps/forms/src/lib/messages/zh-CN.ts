@@ -979,6 +979,7 @@ export const zhCN: Record<MessageKey, string> = {
   'guided.skip.noButtons': '你选择了不用按钮',
   'guided.skip.brandDecided': '已经决定',
   'guided.skip.nothingToGuess': '暂时无法猜测',
+  'guided.skip.noQuestion': '还没有可修改的问题',
   'guided.preview.ask': '效果如下。',
   'guided.guess.ask': '这看起来是{template}。对吗？',
   'guided.guess.help': 'Loppa 根据你的回答做了猜测，你可以说不。',

@@ -1036,6 +1036,7 @@ export const fiFI: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Valitsit ei painikkeita',
   'guided.skip.brandDecided': 'Päätetty jo',
   'guided.skip.nothingToGuess': 'Ei vielä arvattavaa',
+  'guided.skip.noQuestion': 'Ei vielä muutettavaa kysymystä',
   'guided.preview.ask': 'Tältä se näyttää.',
   'guided.guess.ask': 'Tämä näyttää tältä: {template}. Pitääkö paikkansa?',
   'guided.guess.help': 'Loppa arvasi vastaustesi perusteella. Voit vastata ei.',

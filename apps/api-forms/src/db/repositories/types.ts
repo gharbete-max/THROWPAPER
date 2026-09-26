@@ -584,6 +584,39 @@ export interface BrandKitRepository {
   clear(organisationId: string): Promise<void>;
 }
 
+/** The guided builder's saved conversation about one form, for one person (`builder_sessions`). */
+export interface BuilderSessionRecord {
+  organisationId: string;
+  formId: string;
+  userId: string;
+  /** A `BuilderSession` (`@tp/shared/builder`), validated before it is saved. */
+  session: Record<string, unknown>;
+  /** Starts at 1 and goes up by one with every save. */
+  version: number;
+  updatedAt: Date;
+}
+
+export interface BuilderSessionRepository {
+  /** `null`: this person has not started a conversation about this form. */
+  find(
+    organisationId: string,
+    formId: string,
+    userId: string,
+  ): Promise<BuilderSessionRecord | null>;
+  /**
+   * Saves over the version the caller read — `expected` 0 when it read none — and returns the new
+   * record. `null` when the stored version is not `expected`: something saved in between, and the
+   * caller must read again rather than overwrite it. The check and the write are one statement.
+   */
+  save(input: {
+    organisationId: string;
+    formId: string;
+    userId: string;
+    session: Record<string, unknown>;
+    expected: number;
+  }): Promise<BuilderSessionRecord | null>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -698,6 +731,7 @@ export interface Repositories {
   checkIns: CheckInRepository;
   jobs: JobRepository;
   brandKits: BrandKitRepository;
+  builderSessions: BuilderSessionRepository;
   sendingDomains: SendingDomainRepository;
   messages: MessageRepository;
   audit: AuditRepository;

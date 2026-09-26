@@ -1025,6 +1025,7 @@ export const nbNO: Record<MessageKey, string> = {
   'guided.skip.noButtons': 'Du valgte bort knapper',
   'guided.skip.brandDecided': 'Allerede bestemt',
   'guided.skip.nothingToGuess': 'Ingenting å gjette ennå',
+  'guided.skip.noQuestion': 'Ingen spørsmål å endre ennå',
   'guided.preview.ask': 'Slik ser det ut.',
   'guided.guess.ask': 'Dette ser ut som {template}. Stemmer det?',
   'guided.guess.help': 'Loppa gjettet ut fra svarene dine. Du kan si nei.',
