@@ -1,0 +1,38 @@
+{
+  "document": "arsmote-anmalan",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Namn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Medlemsnummer: ____________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Telefon: ________________________"
+    },
+    {
+      "marker": "4.",
+      "label": "E-post: __________________________"
+    },
+    {
+      "marker": "5.",
+      "label": "Deltar du i middagen efter mötet? ☐ Ja ☐ Nej"
+    },
+    {
+      "marker": "6.",
+      "label": "Allergier eller önskemål om maten: ________________"
+    },
+    {
+      "marker": "7.",
+      "label": "Lämnar du fullmakt åt en annan medlem? Skriv i så fall namnet på den som ska rösta för dig, och lämna fullmakten till ordföranden innan mötet börjar."
+    },
+    {
+      "marker": "8.",
+      "label": "Övrigt: ______________________________"
+    }
+  ]
+}

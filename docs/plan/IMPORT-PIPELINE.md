@@ -144,28 +144,40 @@ Per page, in this order:
 2. **Column regions, by recursive XY-cut** (`layout/xycut.ts`). The page's rectangle is its words'
    extent, widened on the right to mirror its left margin (`x1 ≥ 10 000 − x0`), so that a line is
    `WRAPPED` against the page's text width, not against the page's own longest line. On a region:
-   - **Vertical gutters** are x ranges at least 200 iu wide crossed by no word box of the region.
-     The widest is tried first (ties: leftmost). **A gutter is not a column (C2)** when its left
+   - **Vertical gutters** are x ranges crossed by no word box of the region, at least 200 iu wide
+     **and at least two ems** of the region's median font size. The widest is tried first (ties:
+     leftmost). (First written as 200 iu alone: pdf.js gives a run's width, not its words', and
+     shared out by character a space in a 24 pt heading comes out wider than 200 iu, so a heading
+     was cut into a column per word — `large-heading-words`.) **A gutter is not a column (C2)** when its left
      side is nothing but list markers (by the §4 grammar) or checkbox glyphs — the tab after "1."
      — or its right side is nothing but answer space: every row of it starts with a checkbox or is
      only blank runs, or its checkboxes are at least half its words (a grid under its header row).
      Those are kept together, and the next gutter is tried. The first gutter that is a column cuts
      the region in two (C1): the left keeps the region's left edge and ends at the gutter's
      middle; the right starts at its own first word.
-   - Failing a vertical cut, **every horizontal gap** of at least one em of empty page (the
-     region's median font size, crossed by no word box) cuts the region into bands, top to bottom
-     (C3). (First written as 1.5 × "the median line pitch" — which before lines exist is not
-     defined, and as any pitch of the fixtures is 360, a threshold that never cut the full-width
-     introduction off the columns below it in `layout-shift-within-document`.)
-   - Recurse until nothing cuts, at most 64 deep. Leaves, in the order the cuts produced them (top
-     before bottom, left before right), are the reading order. **Consecutive pieces of one
-     horizontal cut that did not cut any further are one region again** — horizontal cuts exist
-     to expose columns inside a band of the page, so a page of paragraphs, or a running header over
-     its body, is one region. (First written as "consecutive leaves whose x extents agree within 2%
-     of the page width merge", which kept a heading apart from the text under it and a short list
-     apart from its header, since ragged lines never agree.)
+   - Failing a vertical cut, the region is cut into its rows at **every horizontal gap** of empty
+     page between them, crossed by no word box, top to bottom (C3), and each row is tried again.
+     (First written as 1.5 × "the median line pitch" — which before lines exist is not defined,
+     and as any pitch of the fixtures is 360, a threshold that never cut the full-width
+     introduction off the columns below it in `layout-shift-within-document`. Then written as one
+     em, which a word processor's ordinary paragraph spacing never reaches: a two-column list with
+     text above and below it at that spacing was one region, read across — "1. Namn 4. E-post" as
+     one line — `columns-without-margin`.)
+   - Recurse until nothing cuts, at most 64 deep. The cut order is the reading order (top before
+     bottom, left before right). Then the rows are put back together:
+     - **Consecutive rows that did not cut any further are one region** — the cuts exist to expose
+       columns inside a band of the page, so a page of paragraphs, or a running header over its
+       body, is one region. (First written as "consecutive leaves whose x extents agree within 2%
+       of the page width merge", which kept a heading apart from the text under it and a short
+       list apart from its header, since ragged lines never agree.)
+     - **Consecutive rows that cut into the same columns are those columns (C4)**, each read top
+       to bottom, left column first: as many columns, gutters that overlap, and each column's words
+       where that column's words already are. An indented line still overlaps its column; a label
+       that merely has a gap after it on one row does not. That finds a two-column list inside the
+       flow of a page, which no gutter crosses from top to bottom.
    *Fixtures:* `two-column-order`, `layout-shift-within-document`, `hanging-marker-gutter`,
-   `answer-column-gutter`.
+   `answer-column-gutter`, `large-heading-words`, `columns-without-margin`; the corpus's
+   `anmalan-tva-spalter`.
 3. **Lines.** Within a region, words sorted by baseline join the current line when
    `|baseline − the line's first baseline| × 2 ≤ the region's median font size` (half an em) and
    they come from the same source; within a line, sorted by x0. Synthetic words: one paragraph, one
@@ -225,9 +237,10 @@ Per page, in this order:
 | Rule | Step | Decides | Fixture or test |
 | --- | --- | --- | --- |
 | L1 | 1 | a ligature expanded | `ligature-and-quote-repair` |
-| C1 | 2 | a vertical gutter is a column: cut | `two-column-order`, `layout-shift-within-document` |
+| C1 | 2 | a vertical gutter is a column: cut | `two-column-order`, `layout-shift-within-document`, `large-heading-words` |
 | C2 | 2 | a vertical gutter is not a column: kept together | `hanging-marker-gutter`, `answer-column-gutter` |
-| C3 | 2 | horizontal gaps: cut into bands | `layout-shift-within-document` |
+| C3 | 2 | horizontal gaps: cut into rows | `layout-shift-within-document` |
+| C4 | 2 | rows that cut into the same columns: those columns | `columns-without-margin`, `layout/reassemble.test.ts` |
 | F1 | 4 | furniture: repeats in a margin | `repeated-header-footer` |
 | F2 | 4 | furniture: a page number | `repeated-header-footer`, `hyphen-not-across-boundary` |
 | Y1 | 6 | a hyphen removed at a join | `hyphenated-line-break` |
@@ -432,5 +445,32 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-Until the corpus exists, `fixtures/numbering/` (hand-authored IR, no PDF at all) is what the
-stages are held to.
+**What it holds today (S8): ten documents, each a PDF and a Word file** — seven Swedish, one each in
+English, Danish, Norwegian, Finnish and German; one and two pages; running headers and page-number
+footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
+and a table of text cells; Word's own numbering at three levels, and numbers typed into the text
+("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
+wrapped line of prose. Scanned and photographed documents, and the exact §8.1.1 case, are still
+owed (S9 onward).
+
+- **Made for Loppa, by a real word processor.** Each document is a few readable lines in
+  `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;
+  `pnpm corpus:build` has LibreOffice read it and write the corpus PDF, and re-save it as the
+  corpus Word file. So the files the tests read are a third party's — its fonts, kerning, list
+  numbering, fields and section breaks — and never Loppa's own writer's. They are CC0.
+- **`SOURCES.json`** lists each document: its language, what it is there to test, its features,
+  its spec, and each file's SHA-256, with the tool that wrote them. A file that differs from its
+  hash fails the test; a rebuild is a reviewed change (LibreOffice stamps the time into a PDF, so
+  rebuild only when a spec changes).
+- **`expected/<document>.json`, written by hand before the document was first run**: the numbered
+  items a person reading it would list, in reading order, nested as they are nested, verbatim, with
+  the lines under an item that belong to it (J1), and the document's language. The PDF and the
+  Word file of a document are held to the same expectation, so they agree.
+- **`debug/<document>.<format>.<stage>.json`**: each stage's debug artifact, one decision per line,
+  so a change to any decision is a diff to review, not only a change to the items.
+- `apps/forms/src/screens/builder/paper/corpus.test.ts` reads each file with exactly the paper
+  door's code — `openPdf` with Node's pdf.js, or `readDocx` — and runs stages 2 and 3 as the
+  worker does.
+
+`fixtures/numbering/` (hand-authored IR, no PDF at all) stays what each rule is held to; the corpus
+is what the rules together are held to.

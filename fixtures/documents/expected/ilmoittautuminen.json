@@ -1,0 +1,28 @@
+{
+  "document": "ilmoittautuminen",
+  "locale": "fi",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Nimi: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Yhteystiedot",
+      "items": [
+        {
+          "marker": "a)",
+          "label": "Puhelin: ______________________"
+        },
+        {
+          "marker": "b)",
+          "label": "Sähköposti: ___________________"
+        }
+      ]
+    },
+    {
+      "marker": "3.",
+      "label": "Ruokavalio: ________________________"
+    }
+  ]
+}

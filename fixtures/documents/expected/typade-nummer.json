@@ -1,0 +1,40 @@
+{
+  "document": "typade-nummer",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1)",
+      "label": "Namn: __________________________"
+    },
+    {
+      "marker": "2)",
+      "label": "Adress: ________________________"
+    },
+    {
+      "marker": "3)",
+      "label": "Telefon: _______________________"
+    },
+    {
+      "marker": "1 -",
+      "label": "Har du gått kursen förut? ☐ Ja ☐ Nej"
+    },
+    {
+      "marker": "2 -",
+      "label": "Vilken nivå har du?",
+      "items": [
+        {
+          "marker": "A.",
+          "label": "Nybörjare"
+        },
+        {
+          "marker": "B.",
+          "label": "Van"
+        },
+        {
+          "marker": "C.",
+          "label": "Mycket van"
+        }
+      ]
+    }
+  ]
+}

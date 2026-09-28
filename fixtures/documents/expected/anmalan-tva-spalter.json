@@ -1,0 +1,46 @@
+{
+  "document": "anmalan-tva-spalter",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Namn"
+    },
+    {
+      "marker": "2.",
+      "label": "Födelsedatum"
+    },
+    {
+      "marker": "3.",
+      "label": "Adress"
+    },
+    {
+      "marker": "4.",
+      "label": "Postnummer och ort"
+    },
+    {
+      "marker": "5.",
+      "label": "Telefon"
+    },
+    {
+      "marker": "6.",
+      "label": "Förälders namn"
+    },
+    {
+      "marker": "7.",
+      "label": "Förälders telefon"
+    },
+    {
+      "marker": "8.",
+      "label": "Allergier"
+    },
+    {
+      "marker": "9.",
+      "label": "Mediciner"
+    },
+    {
+      "marker": "10.",
+      "label": "Simkunnig"
+    }
+  ]
+}

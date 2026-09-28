@@ -35,7 +35,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 2;
+export const ENUMERATE_STAGE_VERSION = 3;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -62,7 +62,8 @@ interface Run {
   readonly id: string;
   readonly family: Family;
   readonly style: Style;
-  readonly relX: number;
+  /** Its indent; moved by R8b when the list continues in another column or on another page. */
+  relX: number;
   level: number;
   parent: WorkItem | null;
   readonly firstPath: readonly number[];
@@ -272,6 +273,28 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   };
 
   // ------------------------------------------------------------------ §6 runs
+  /**
+   * R8b: the first read line of another column or page, when its marker continues an open run by
+   * family and number whatever its indent. Indents are measured from each column's own edge, and a
+   * column's edge is not the page's — the list sat 368 iu in on the left and starts at the edge on
+   * the right — so every open run moves by the same amount, keeping their nesting, until that run
+   * is at this line's indent. Returns the amount, 0 when nothing moved.
+   */
+  const reanchor = (match: MarkerMatch, line: Line): number => {
+    for (let i = stack.length - 1; i >= 0; i -= 1) {
+      const run = stack[i]!;
+      const expected = expectedNext(run);
+      const continues = match.readings.some(
+        (r) => r.family === run.family && expected.some((path) => samePath(path, r.path)),
+      );
+      if (!continues) continue;
+      const shift = line.relX - run.relX;
+      if (shift !== 0) for (const open of stack) open.relX += shift;
+      return shift;
+    }
+    return 0;
+  };
+
   /** R1: the innermost open run at this band that one of the readings continues. */
   const continuing = (match: MarkerMatch, line: Line): { run: Run; reading: Reading } | null => {
     for (let i = stack.length - 1; i >= 0; i -= 1) {
@@ -575,6 +598,8 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   };
 
   // ------------------------------------------------------------------ §3 the pass
+  /** The last line read, for R8b: a line in another column or on another page starts one. */
+  let previous: Line | null = null;
   for (const line of lines) {
     const id = line.ir.id;
     if (UNREAD.has(line.block.role)) {
@@ -583,6 +608,10 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
       continue;
     }
     if (consumed.has(id)) continue;
+    const startsColumn =
+      previous !== null &&
+      (previous.ir.pageNo !== line.ir.pageNo || previous.ir.columnIndex !== line.ir.columnIndex);
+    previous = line;
     const numbering = line.ir.source === 'docx' ? line.ir.hints.docxNumbering : null;
     if (numbering) {
       const item = placeWord(line, numbering);
@@ -623,7 +652,9 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
       continue;
     }
 
+    const shift = startsColumn ? reanchor(match, line) : 0;
     const { item, rule: placedBy, evidence } = place(line, match, labelLine);
+    if (shift !== 0) evidence.reanchored = shift; // R8b
     openItem = item;
     decide(
       id,

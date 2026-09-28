@@ -85,6 +85,7 @@ pnpm contract:check # validates all three backends against docs/CONTRACT.md sche
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
 pnpm bundle:budget  # after a build: Forms' entry, stylesheet and total, gzipped. CI runs it; verify does not
 pnpm builder:validate # the guided builder's graph against rules G0–G14, with all twelve catalogues, and its built-in aliases
+pnpm corpus:build   # the import corpus's PDF and Word files from scripts/corpus/documents.ts, by LibreOffice (soffice)
 pnpm test:e2e
 ```
 

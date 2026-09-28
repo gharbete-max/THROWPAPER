@@ -77,7 +77,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases`; answers ahead of their turn (`answerAt`, `fill`, graph version 3's slots) | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` (migration 0020) | **done** — in review, PR #147 |
 | **S7** Extract + reassemble | `paper/docx.ts`, the clipboard around `import/paste.ts` (built in S6), operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
-| **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | not started |
+| **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | **done** — in review, PR #147 |
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared` | not started |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms` | not started |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | not started |
@@ -260,3 +260,23 @@ when each slice ends.)*
   order through the worker, its download, a paste and an HTML paste, an unsafe file refused). Next:
   S8, enumerate on real input — the corpus. Open: owner questions 1–4, 6, 7 and 8; "table or
   columns" joins the known unknowns.
+- **S8, enumerate on real input (2026-09-28).** What: the golden corpus's first ten documents
+  (`fixtures/documents/`), each a PDF and a Word file — seven Swedish, one each in English,
+  Danish, Norwegian, Finnish and German — written as readable specs (`scripts/corpus/documents.ts`,
+  `word.ts`) and turned by LibreOffice into the files the tests read (`pnpm corpus:build`), so they
+  are a real word processor's: fonts, kerning, list numbering, headers, fields, section columns.
+  `SOURCES.json` holds each file's hash; each document's expectation was written by hand before it
+  ran; `corpus.test.ts` reads each file with exactly the paper door's code and stages 2 and 3, and
+  holds the PDF and the Word file to the same expectation. Running real documents found three
+  misreadings, each fixed in `IMPORT-PIPELINE.md` §2.2 or `NUMBERING-RULES.md` with its fixture
+  written first: a heading in large type cut into a column per word (a gutter is now at least two
+  ems too, #96, `large-heading-words`); a two-column list inside the flow read across its columns
+  (rows are cut at every gap and rows that share a gutter are columns, C4, #97,
+  `columns-without-margin`); and a list continued in a column whose left edge is not the page's
+  flagged or mis-nested (R8b, #98, `column-break-indent`). Reassemble to version 2, enumerate to
+  version 3. Why: M4's demo — real PDFs and Word files read in order. Tests: the corpus (10
+  documents × 2 formats, items, details and language, and 40 debug snapshots; against S7's
+  stage code the two-column document fails); 3 new fixtures green with their snapshots;
+  `layout/reassemble.test.ts` (a gutter of two ems, rows that share a gutter). Next: S9, segment,
+  classify and score. Open: owner questions 1–4, 6, 7 and 8; "table or columns" has its first
+  evidence (checkbox tables keep their rows) and waits for a table of text alone.

@@ -1,0 +1,56 @@
+{
+  "document": "event-registration",
+  "locale": "en",
+  "items": [
+    {
+      "marker": "I.",
+      "label": "About you",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Full name: ______________________________"
+        },
+        {
+          "marker": "2.",
+          "label": "Email address: __________________________"
+        },
+        {
+          "marker": "3.",
+          "label": "Voice part",
+          "items": [
+            {
+              "marker": "(a)",
+              "label": "Soprano"
+            },
+            {
+              "marker": "(b)",
+              "label": "Alto"
+            },
+            {
+              "marker": "(c)",
+              "label": "Tenor"
+            },
+            {
+              "marker": "(d)",
+              "label": "Bass"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "marker": "II.",
+      "label": "Workshops",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Which sessions will you attend? Tick them in the table below."
+        },
+        {
+          "marker": "2.",
+          "label": "Dietary requirements: ____________________"
+        }
+      ]
+    }
+  ]
+}

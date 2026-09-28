@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+  debugSnapshot,
   enumerate,
   layoutProblems,
   parseLayoutDocument,
@@ -9,7 +10,6 @@ import {
   rawProblems,
   reassemble,
   type LayoutDocument,
-  type StageDebug,
   type StageResult,
 } from '@tp/shared/import';
 
@@ -138,26 +138,6 @@ function lineIds(doc: unknown): Set<string> {
   );
 }
 
-/**
- * A debug artifact as its snapshot file: the header, then one decision per line with its id first
- * and its evidence in key order — valid JSON a reviewer can read as a diff, decision by decision.
- */
-function debugFile(debug: StageDebug): string {
-  const decisions = debug.decisions.map(({ id, rule, verdict, subject, evidence }) =>
-    JSON.stringify({
-      id,
-      rule,
-      verdict,
-      subject,
-      evidence: Object.fromEntries(Object.entries(evidence).sort(([a], [b]) => (a < b ? -1 : 1))),
-    }),
-  );
-  const header = (['stage', 'stageVersion', 'irVersion', 'inputSha256'] as const).map(
-    (key) => `  ${JSON.stringify(key)}: ${JSON.stringify(debug[key])},`,
-  );
-  return `{\n${header.join('\n')}\n  "decisions": [\n    ${decisions.join(',\n    ')}\n  ]\n}\n`;
-}
-
 /** `| # | \`id\` | … | test |` rows of a section of CAVEATS.md, with the fixtures their test names. */
 function ledgerRows(markdown: string) {
   return [...markdown.matchAll(/^\| (\d+) \| `([a-z0-9-]+)` \|.*\|([^|]*)\|\s*$/gm)].map((m) => ({
@@ -214,7 +194,7 @@ describe('the numbering fixtures', () => {
       for (const [key, value] of Object.entries(expected.expect)) {
         if (key !== fixture.stage) expect(also[key], key).toStrictEqual(value);
       }
-      await expect(debugFile(debug)).toMatchFileSnapshot(join(DEBUG, `${name}.json`));
+      await expect(debugSnapshot(debug)).toMatchFileSnapshot(join(DEBUG, `${name}.json`));
     });
   }
 

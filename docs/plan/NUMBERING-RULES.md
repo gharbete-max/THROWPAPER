@@ -311,10 +311,21 @@ same, add `style-inconsistent` to `r.flags`; set `r.lastPath = reading.path`.
   without its last component, if there is one; otherwise `r.parent`. Every other case: `r.parent`.
 - **Label.** `L.text` from the first label word to the end (P4: the label line's whole text).
 
-**R8 — pages and columns do not end a list.** Nothing in this section looks at `pageNo` or
-`columnIndex`; `relX` is measured from each line's own column. A list that runs from the foot of
+**R8 — pages and columns do not end a list.** Nothing in this section ends a run at a page or
+column; `relX` is measured from each line's own column. A list that runs from the foot of
 page 1 (or of the left column) to the head of page 2 (or of the right column) continues through
 R1. **Fixtures:** `page-break-continuation`, `two-column-order`.
+
+**R8b — across a break, a list is found by its numbers, and its indent moves with it.** A
+column's left edge is not the page's: a list may sit 368 iu into the left column, under an
+introduction that starts at the edge, and start at the right column's very edge. So when the first
+line read in a new column or on a new page is a marker, and it continues an open run by family and
+number (R1's test, with the band ignored), **every open run's `relX` moves by the same amount**, so
+that run sits at this line's indent and the runs above and below it keep their distance from it.
+Then the line is placed as any other: "4." continues "3.", and "b)" continues "a)" under the same
+parent. The shift is the decision's evidence (`reanchored`). Without it, the continuation lands on
+no open band — flagged `starts-mid-sequence`, or its sub-list joined to the wrong run (#98).
+**Fixture:** `column-break-indent`.
 
 ## 7. Lines that are not markers
 
@@ -454,6 +465,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | R6b | prose line; close runs with `(r.relX − relX(L)) × 50 > w` | closed | `counter-reset-on-heading` |
 | R7 | same band, same family, first value, not expected | new run flagged `restart-without-boundary` | `counter-reset-on-heading` |
 | R8 | no rule reads pageNo or columnIndex | lists continue across pages and columns | `page-break-continuation`, `two-column-order` |
+| R8b | first read line of a new column or page is a marker that continues an open run by family and number, ignoring indent | every open run's relX moves by the same amount, so that run sits at this line's indent | `column-break-indent` |
 | R9 | dotted, not first: parent = latest item with the prefix path | nested; else flagged `orphan-subnumber` | `dotted-subnumber-line-start`, `dotted-subnumber-line-start--orphan` |
 | R10 | i/v/x: readings roman then alpha; preferred roman for i only | the reading that continues | `sequence-continuity`, `scheme-change-same-indent` |
 | J1 | non-marker, same block as `openItem`, `SAME_BAND(relX(L), textX)` | detail line | `dotted-subnumber-line-start` |

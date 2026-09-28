@@ -145,6 +145,9 @@ Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasC
 | 93 | `docx-list-instances` | two lists of one Word definition numbered 1, 2 and 1, 2 where Word shows 1, 2, 3, 4; a list Word restarts left counting on; a level that restarts only under a higher one restarted under every item | counters per abstract list, as Word keeps them; `w:startOverride` restarts a list on its first use; `w:lvlRestart` 0 never restarts, n restarts only under level n (IMPORT-PIPELINE §1, DOCX) | `apps/forms/src/screens/builder/paper/docx.test.ts` ("continues across lists of one definition", "restarts a level only after the level its lvlRestart names") |
 | 94 | `docx-what-word-shows` | a Word document's field codes, hidden text or deleted text read as words; a Wingdings box read as a private-use character nobody can see | only what Word shows is read — a field's result, not its code; no `w:vanish`, no deletions — and symbol-font boxes and bullets become their Unicode selves | `apps/forms/src/screens/builder/paper/docx.test.ts` ("reads what Word shows", "gives Wingdings boxes and Symbol bullets their Unicode selves") |
 | 95 | `scandinavian-locale` | Swedish, Danish and Norwegian share their commonest words, so a Norwegian document is called Swedish, or every Scandinavian one a tie and no language | 20 stop words for enough prose, shared ones included; at least 5 words only that language lists, and twice the runner-up's, to tell it apart (IMPORT-PIPELINE §2.11) | `packages/shared/src/import/layout/reassemble.test.ts` ("§2.11 the document language": a paragraph in each of the twelve, Swedish with Norwegian and Danish with Norwegian as none) |
+| 96 | `large-type-gutter` | a heading in large type split into a column per word: pdf.js gives a run, its width is shared by character, and at 24 pt a space comes out wider than a gutter | a vertical gutter is at least 200 iu **and** two ems of its region's type (IMPORT-PIPELINE §2.2) | `fixtures/numbering/large-heading-words.json` |
+| 97 | `columns-inside-flow` | a two-column list with full-width text above and below and only line spacing between read across the columns, "1. Namn 4. E-post" as one line | cut at every gap between rows; rows that share a gutter are columns, read top to bottom, left then right (§2.2, C4) | `fixtures/numbering/columns-without-margin.json` |
+| 98 | `column-break-indent` | a list continued in the next column flagged `starts-mid-sequence`, or its sub-list joined to the wrong run, because the column's left edge is not the page's | across a column or page break, the first marker that continues an open list by its numbers moves every open list to its indent (NUMBERING-RULES R8b) | `fixtures/numbering/column-break-indent.json` |
 
 ## Known unknowns
 
@@ -160,12 +163,20 @@ Not yet decided, and not to be decided by an implementation quietly choosing:
   is added is not the day RTL is discovered. `IrLine.words` is left to right by contract; an RTL
   locale would need an `irVersion` bump.
 - **The corpus's sources** — sixty documents Loppa may redistribute have to be found or made;
-  `fixtures/documents/SOURCES.json` records each one's origin and licence.
+  `fixtures/documents/SOURCES.json` records each one's origin and licence. S8 made the first ten
+  (`scripts/corpus/`, written by LibreOffice, CC0). Still owed: scanned and photographed pages,
+  which a word processor cannot make, and documents made by other writers (Word itself, Google
+  Docs, InDesign), whose PDFs differ in ways LibreOffice's do not.
 - **Table or columns** — a PDF table of text cells (not a Word table: that one says so) is cut into
   column regions by stage 2 exactly as two columns of text are, because the geometry of the two is
   the same: aligned baselines, a wide gap. Stage 2 keeps a gutter together only when one side is
   markers or answer space (#88). Whether a stripe of text cells is a table is stage 4's to find
   (#17); decide with corpus evidence (S8) whether stage 2 should keep row-aligned text together.
+  *S8's evidence:* in the corpus's two checkbox tables (`enkat-rutnat`, `event-registration`) every
+  row of cells stays one line, kept by its answer column (#88); only the header row, which has no
+  checkbox, is cut into a region per cell, whose words still read left to right. So far nothing
+  reads out of order. A multi-row table of text alone, which C4 would read column by column, is
+  not in the corpus yet — the question stays open until one is.
 - **Handwriting** — a photographed form filled in by hand is out of scope: OCR reads print. A page
   that is mostly handwriting lands in `review` because its confidence is low; nothing more.
 - **Consent reformatting** — byte for byte is assumed until the owner answers question 3.

@@ -1,0 +1,28 @@
+{
+  "document": "enkat-rutnat",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Hur länge har du varit medlem? ______________"
+    },
+    {
+      "marker": "2.",
+      "label": "Hur ofta deltar du i föreningens aktiviteter?",
+      "items": [
+        {
+          "marker": "a)",
+          "label": "Varje vecka"
+        },
+        {
+          "marker": "b)",
+          "label": "Varje månad"
+        },
+        {
+          "marker": "c)",
+          "label": "Mer sällan"
+        }
+      ]
+    }
+  ]
+}

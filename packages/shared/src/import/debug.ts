@@ -81,3 +81,24 @@ export function canonicalJson(value: unknown): string {
 export function inputSha256(input: unknown): string {
   return sha256Hex(canonicalJson(input));
 }
+
+/**
+ * A debug artifact as a snapshot file (`fixtures/numbering/debug/`, `fixtures/documents/debug/`):
+ * the header, then one decision per line with its id first and its evidence in key order — valid
+ * JSON a reviewer can read as a diff, decision by decision.
+ */
+export function debugSnapshot(debug: StageDebug): string {
+  const decisions = debug.decisions.map(({ id, rule, verdict, subject, evidence }) =>
+    JSON.stringify({
+      id,
+      rule,
+      verdict,
+      subject,
+      evidence: Object.fromEntries(Object.entries(evidence).sort(([a], [b]) => byCodePoint(a, b))),
+    }),
+  );
+  const header = (['stage', 'stageVersion', 'irVersion', 'inputSha256'] as const).map(
+    (key) => `  ${JSON.stringify(key)}: ${JSON.stringify(debug[key])},`,
+  );
+  return `{\n${header.join('\n')}\n  "decisions": [\n    ${decisions.join(',\n    ')}\n  ]\n}\n`;
+}

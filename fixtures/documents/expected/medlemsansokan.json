@@ -1,0 +1,43 @@
+{
+  "document": "medlemsansokan",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Namn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Personnummer: ______________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Adress: ____________________________",
+      "details": [
+        "Skriv den adress dit vi ska skicka medlemskortet."
+      ]
+    },
+    {
+      "marker": "4.",
+      "label": "Kontaktuppgifter",
+      "items": [
+        {
+          "marker": "a)",
+          "label": "Telefon: ____________________"
+        },
+        {
+          "marker": "b)",
+          "label": "E-post: ____________________"
+        }
+      ]
+    },
+    {
+      "marker": "5.",
+      "label": "Vill du ha föreningens nyhetsbrev? ☐ Ja ☐ Nej"
+    },
+    {
+      "marker": "6.",
+      "label": "Underskrift: ________________________"
+    }
+  ]
+}

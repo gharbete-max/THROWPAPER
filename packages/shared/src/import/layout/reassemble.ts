@@ -37,7 +37,7 @@ import { columnRegions, type CutDecision, type Region } from './xycut.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const REASSEMBLE_STAGE_VERSION = 1;
+export const REASSEMBLE_STAGE_VERSION = 2;
 
 /** §2.1: the presentation-form ligatures, and what each is. */
 const LIGATURES: Readonly<Record<string, string>> = {

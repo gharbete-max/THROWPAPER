@@ -48,22 +48,38 @@ export class TooManyPages extends Error {
   }
 }
 
-export async function openPdf(bytes: ArrayBuffer, firstPage = 0): Promise<PaperPdf> {
-  /*
-   * The **legacy** build, not the default one.
-   *
-   * pdf.js 6's default build calls `Map.prototype.getOrInsertComputed`, a 2026 addition to the
-   * language, while drawing a page. Any browser older than that — Safari before it shipped, a
-   * Chrome a few versions behind, the Chromium this repository's own e2e container carries —
-   * threw `getOrInsertComputed is not a function` the moment "From paper" drew its first page.
-   * The legacy build is the same code with that method (and its kin) polyfilled; it is what
-   * pdf.js itself recommends for anything that must run in browsers people actually have.
-   */
-  // Hashed first: pdf.js may hand the buffer to its worker, and a transferred buffer is empty.
-  const digest = await sha256(bytes);
+/** The pdf.js module, as `openPdf` uses it. */
+export type Pdfjs = typeof import('pdfjs-dist/legacy/build/pdf.mjs');
+
+/**
+ * pdf.js in the browser — the **legacy** build, not the default one.
+ *
+ * pdf.js 6's default build calls `Map.prototype.getOrInsertComputed`, a 2026 addition to the
+ * language, while drawing a page. Any browser older than that — Safari before it shipped, a
+ * Chrome a few versions behind, the Chromium this repository's own e2e container carries —
+ * threw `getOrInsertComputed is not a function` the moment "From paper" drew its first page.
+ * The legacy build is the same code with that method (and its kin) polyfilled; it is what
+ * pdf.js itself recommends for anything that must run in browsers people actually have.
+ */
+async function browserPdfjs(): Promise<Pdfjs> {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   const workerUrl = (await import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url')).default;
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+  return pdfjs;
+}
+
+/**
+ * Opens a PDF. `load` is how pdf.js is reached: the browser's lazy chunk by default; the corpus
+ * test (`corpus.test.ts`) passes Node's, so a real document is read by exactly this code.
+ */
+export async function openPdf(
+  bytes: ArrayBuffer,
+  firstPage = 0,
+  load: () => Promise<Pdfjs> = browserPdfjs,
+): Promise<PaperPdf> {
+  // Hashed first: pdf.js may hand the buffer to its worker, and a transferred buffer is empty.
+  const digest = await sha256(bytes);
+  const pdfjs = await load();
 
   const document = await pdfjs.getDocument({ data: bytes }).promise;
   if (document.numPages > MAX_PAPER_PAGES) {

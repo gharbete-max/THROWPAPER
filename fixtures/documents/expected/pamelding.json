@@ -1,0 +1,18 @@
+{
+  "document": "pamelding",
+  "locale": "nb",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Navn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Adresse: ___________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Telefon: ___________________________"
+    }
+  ]
+}

@@ -193,14 +193,45 @@ describe('§2.2 column regions', () => {
   });
 
   it('peels a row of gutters one cut at a time, and stops at its depth bound with every word', () => {
-    // Thirty words on one line, each 200 iu from the next: every gutter is a cut, leftmost first.
-    const words = Array.from({ length: 30 }, (_, i) => word('x', 1000 + i * 292, 1000));
+    // Twenty words on one line, each 300 iu from the next — more than two ems of 131: every gap
+    // is a gutter, and the leftmost of equals is cut first.
+    const words = Array.from({ length: 20 }, (_, i) => word('x', 1000 + i * 392, 1000));
     expect(columnRegions(words, () => {}).map((r) => r.words.length)).toEqual(
-      Array.from({ length: 30 }, () => 1),
+      Array.from({ length: 20 }, () => 1),
     );
     const bounded = columnRegions(words, () => {}, 5);
-    expect(bounded.map((r) => r.words.length)).toEqual([1, 1, 1, 1, 1, 25]);
+    expect(bounded.map((r) => r.words.length)).toEqual([1, 1, 1, 1, 1, 15]);
     expect(MAX_CUT_DEPTH).toBeGreaterThan(words.length);
+  });
+
+  it('never takes a gap of less than two ems for a gutter, however wide', () => {
+    // 250 iu between the words: over 200, under two ems of 131.
+    const words = Array.from({ length: 6 }, (_, i) => word('ord', 1000 + i * 526, 1000));
+    expect(columnRegions(words, () => {})).toHaveLength(1);
+  });
+
+  it('reads rows that share a gutter as columns, and a row that does not as its own', () => {
+    const rows = [1000, 1180, 1360].flatMap((baseline, i) => [
+      ...line(`${i + 1}. Vänster`, 1000, baseline),
+      ...line(`${i + 4}. Höger`, 5400, baseline),
+    ]);
+    const odd = [...line('Datum:', 1000, 1540), ...line('Ort:', 3000, 1540)];
+    // A line across the whole page under them, so no gutter runs from top to bottom.
+    const across = line(
+      'En rad över hela sidan som korsar varje mellanrum och inget annat.',
+      1000,
+      1720,
+    );
+    const decisions: string[] = [];
+    const regions = columnRegions([...rows, ...odd, ...across], (d) => decisions.push(d.rule));
+    expect(regions.map((r) => r.words.map((w) => w.text).join(' '))).toEqual([
+      '1. Vänster 2. Vänster 3. Vänster',
+      '4. Höger 5. Höger 6. Höger',
+      'Datum:',
+      'Ort:',
+      'En rad över hela sidan som korsar varje mellanrum och inget annat.',
+    ]);
+    expect(decisions).toContain('C4');
   });
 });
 

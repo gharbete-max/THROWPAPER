@@ -1,0 +1,28 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 3,
+  "irVersion": 1,
+  "inputSha256": "9db28b17e95c833036a6e4bc1e8d109e7fbc7caca8f5df9592a3647554a5580d",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l3","rule":"W1","verdict":"item","subject":["p1-l3"],"evidence":{"format":"decimal","ilvl":0,"level":1,"numId":1,"rendered":"1.","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l4","rule":"W1","verdict":"item","subject":["p1-l4"],"evidence":{"format":"decimal","ilvl":0,"level":1,"numId":1,"rendered":"2.","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l5","rule":"W1","verdict":"item","subject":["p1-l5"],"evidence":{"format":"decimal","ilvl":0,"level":1,"numId":1,"rendered":"3.","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l6","rule":"J1","verdict":"detail","subject":["p1-l6"],"evidence":{"item":"i-p1-l5","relX":476,"textX":476,"width":9000}},
+    {"id":"enumerate:p1-l7","rule":"W1","verdict":"item","subject":["p1-l7"],"evidence":{"format":"decimal","ilvl":0,"level":1,"numId":1,"rendered":"4.","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l8","rule":"W1","verdict":"item","subject":["p1-l8"],"evidence":{"format":"lowerLetter","ilvl":1,"level":2,"numId":1,"rendered":"a)","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l9","rule":"W1","verdict":"item","subject":["p1-l9"],"evidence":{"format":"lowerLetter","ilvl":1,"level":2,"numId":1,"rendered":"b)","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l10","rule":"W1","verdict":"item","subject":["p1-l10"],"evidence":{"format":"decimal","ilvl":0,"level":1,"numId":1,"rendered":"5.","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l11","rule":"W1","verdict":"item","subject":["p1-l11"],"evidence":{"format":"decimal","ilvl":0,"level":1,"numId":1,"rendered":"6.","run":"r-p1-l3"}},
+    {"id":"enumerate:p1-l12","rule":"R6b","verdict":"prose","subject":["p1-l12"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:i-p1-l3","rule":"W1","verdict":"accept","subject":["i-p1-l3"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l4","rule":"W1","verdict":"accept","subject":["i-p1-l4"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l5","rule":"W1","verdict":"accept","subject":["i-p1-l5"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l7","rule":"W1","verdict":"accept","subject":["i-p1-l7"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l8","rule":"W1","verdict":"accept","subject":["i-p1-l8"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l9","rule":"W1","verdict":"accept","subject":["i-p1-l9"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l10","rule":"W1","verdict":"accept","subject":["i-p1-l10"],"evidence":{"run":"r-p1-l3"}},
+    {"id":"enumerate:i-p1-l11","rule":"W1","verdict":"accept","subject":["i-p1-l11"],"evidence":{"run":"r-p1-l3"}}
+  ]
+}
