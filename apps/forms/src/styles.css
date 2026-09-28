@@ -1035,6 +1035,64 @@ textarea {
   --choice-radius: var(--tp-radius-pill);
 }
 
+/*
+ * Tabs and a segmented bar: the choices joined up rather than floating apart. Joining is all they
+ * do — the chosen one is still marked by the same derived edge as every other shape, the 44px
+ * floor is the same, and on a phone they wrap like any other buttons rather than shrink.
+ */
+.choice--shape-tab {
+  --choice-radius: var(--tp-radius-lg) var(--tp-radius-lg) 0 0;
+}
+
+.choice--shape-segmented {
+  --choice-radius: 0;
+}
+
+.choice--buttons:is(.choice--shape-tab, .choice--shape-segmented) .choice__options {
+  gap: 0;
+}
+
+.choice--buttons.choice--shape-tab .choice__options {
+  border-block-end: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.choice--buttons:is(.choice--shape-tab, .choice--shape-segmented)
+  .choice__option
+  + .choice__option {
+  margin-inline-start: calc(var(--tp-border-width) * -1);
+}
+
+.choice--buttons.choice--shape-segmented .choice__option:first-child {
+  border-start-start-radius: var(--tp-radius-pill);
+  border-end-start-radius: var(--tp-radius-pill);
+}
+
+.choice--buttons.choice--shape-segmented .choice__option:last-child {
+  border-start-end-radius: var(--tp-radius-pill);
+  border-end-end-radius: var(--tp-radius-pill);
+}
+
+/* Stacked in one column, the bar runs downwards: its ends are the top and the bottom. */
+.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option + .choice__option {
+  margin-inline-start: 0;
+  margin-block-start: calc(var(--tp-border-width) * -1);
+}
+
+.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option:first-child {
+  border-radius: var(--tp-radius-lg) var(--tp-radius-lg) 0 0;
+}
+
+.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option:last-child {
+  border-radius: 0 0 var(--tp-radius-lg) var(--tp-radius-lg);
+}
+
+/* The chosen part's edge sits over its neighbours' shared border rather than under it. */
+.choice--buttons:is(.choice--shape-tab, .choice--shape-segmented)
+  .choice__option:has(input:checked) {
+  position: relative;
+  z-index: 1;
+}
+
 .choice--size-large .choice__option {
   min-height: 56px;
   font-size: var(--tp-text-lg);
@@ -4473,6 +4531,108 @@ body:has(.app) > #root {
   line-height: 1.2;
 }
 
+/*
+ * The logo's place on a form (`FormSettings.layout.logoSlot`, `components/Masthead.tsx`). Six
+ * named places, each laid out here — a phone and a wide screen each get what suits them, which a
+ * stored position never could (`docs/plan/CAVEATS.md` #33). A form with no slot gets none of this.
+ */
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+/* The logo at the start of a header bar, the title beside it, the corner control at the end. */
+.masthead--header-left .public__title {
+  flex: 1;
+}
+
+/* The logo centred above the title; the corner control keeps its corner. */
+.masthead--masthead-centred {
+  flex-direction: column;
+  text-align: center;
+}
+
+.masthead__corner {
+  align-self: flex-end;
+}
+
+.masthead--masthead-centred .brand-mark {
+  max-height: 64px;
+}
+
+/* Small and faint in the top corner: there, not competing with the title. */
+.masthead--corner-watermark {
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+
+.masthead__watermark {
+  opacity: 0.6;
+}
+
+.masthead__watermark .brand-mark {
+  max-height: 24px;
+}
+
+/* No logo in the header: it is at the foot, or at the top of the card. */
+.masthead--bare {
+  justify-content: flex-end;
+}
+
+.masthead--bare:empty {
+  display: none;
+}
+
+.masthead__card-top .brand-mark {
+  max-height: 48px;
+}
+
+/* A strip at the foot: the logo and the organisation's name. */
+.masthead-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding-block-start: calc(var(--tp-spacing-unit) * 2);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+}
+
+/* The page as a card, the logo at its top. */
+.masthead-page--card-top {
+  margin-block: calc(var(--tp-spacing-unit) * 3);
+  padding: calc(var(--tp-spacing-unit) * 3);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+/* A narrow rail beside the form on a wide screen; on a phone, the header like any other. */
+@media (min-width: 64rem) {
+  .masthead-page--sidebar-rail {
+    position: relative;
+  }
+
+  .masthead__rail {
+    position: absolute;
+    inset-block-start: calc(var(--tp-spacing-unit) * 3);
+    inset-inline-end: calc(100% + var(--tp-spacing-unit) * 3);
+    display: flex;
+    justify-content: flex-end;
+    inline-size: 8rem;
+  }
+
+  .masthead__rail .brand-mark {
+    max-height: none;
+    max-inline-size: 100%;
+  }
+
+  .masthead--sidebar-rail {
+    justify-content: flex-end;
+  }
+}
+
 /* ==========================================================================
  * The public site.
  *
@@ -6168,6 +6328,269 @@ body:has(> #root .shell--narrow) {
   .conversation__reading {
     font-size: var(--tp-text-ui);
   }
+}
+
+/* --- The preview moment and inline editing ----------------------------------
+ *
+ * The real control, the one sentence under it, and — once it is clicked — the handles, each of
+ * which can only land on a value the form schema has (`InlineEdit/inline-edit.ts`). No handle
+ * offers a pixel, a radius or a colour; the samples below show named shapes and brand roles.
+ * ------------------------------------------------------------------------ */
+
+.preview-moment {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.preview-moment__frame {
+  cursor: pointer;
+}
+
+.preview-moment__page {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.preview-moment__badge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+}
+
+.preview-moment__by-hand {
+  padding: 2px var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  color: var(--tp-colour-accent-ink);
+  font-size: var(--tp-text-sm);
+}
+
+/* The sentence is the way in by keyboard and by touch: a real button, 44px tall. */
+.preview-moment__sentence {
+  justify-self: start;
+  min-block-size: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  text-align: start;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.preview-moment__sentence:focus-visible,
+.preview-moment__assumed summary:focus-visible,
+.inline-edit__shape:focus-visible,
+.inline-edit__swatch:focus-visible,
+.inline-edit__step:focus-visible,
+.inline-edit__grip:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+.preview-moment__assumed summary {
+  display: flex;
+  align-items: center;
+  min-block-size: 44px;
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+  cursor: pointer;
+}
+
+.preview-moment__assumed ul {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inline-edit {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+.inline-edit__group {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inline-edit__group legend {
+  margin-block-end: calc(var(--tp-spacing-unit) * 0.5);
+  padding: 0;
+  font-size: var(--tp-text-ui);
+  font-weight: var(--tp-type-label-weight);
+}
+
+.inline-edit__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.inline-edit__shape,
+.inline-edit__swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  min-block-size: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.25);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  cursor: pointer;
+}
+
+/* The chosen one, marked with the primary role's derived edge — held to 3:1 like every choice. */
+.inline-edit__shape[aria-pressed='true'],
+.inline-edit__swatch[aria-pressed='true'] {
+  border-color: var(--tp-colour-primary-edge);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary-edge);
+}
+
+/* A small drawing of each named shape: the shape, not a number. */
+.inline-edit__sample {
+  inline-size: 1.75rem;
+  block-size: 1rem;
+  border: 2px solid currentColor;
+}
+
+.inline-edit__sample--pill {
+  border-radius: var(--tp-radius-pill);
+}
+
+.inline-edit__sample--rounded {
+  border-radius: var(--tp-radius);
+}
+
+.inline-edit__sample--square {
+  border-radius: 0;
+}
+
+.inline-edit__sample--tab {
+  border-block-end-width: 0;
+  border-start-start-radius: var(--tp-radius);
+  border-start-end-radius: var(--tp-radius);
+}
+
+.inline-edit__sample--segmented {
+  border-radius: var(--tp-radius-pill);
+  background: linear-gradient(90deg, transparent 49%, currentColor 49% 51%, transparent 51%);
+}
+
+.inline-edit__sample--tile {
+  block-size: 1.25rem;
+  border-radius: var(--tp-radius);
+}
+
+/* A swatch shows the role's colour; it is the role that is stored, never the colour. */
+.inline-edit__chip {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+}
+
+.inline-edit__chip--primary {
+  background: var(--tp-colour-primary);
+}
+
+.inline-edit__chip--secondary {
+  background: var(--tp-colour-secondary);
+}
+
+.inline-edit__chip--accent {
+  background: var(--tp-colour-accent);
+}
+
+.inline-edit__stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.inline-edit__step,
+.inline-edit__grip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  cursor: pointer;
+}
+
+.inline-edit__step:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.inline-edit__grip {
+  border-color: transparent;
+  cursor: grab;
+  touch-action: none;
+}
+
+.inline-edit__answers {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inline-edit__answer {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.inline-edit__answer .inline-edit__words {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.inline-edit__done {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Reconciling: the person's version, and — on "Show both" — the conversation's beside it. */
+.reconcile {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.reconcile--both {
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+}
+
+.reconcile__side {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
 }
 
 /* The two doors: two large cards and nothing else, with the way out beneath them. */

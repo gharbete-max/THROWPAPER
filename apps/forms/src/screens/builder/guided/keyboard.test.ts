@@ -76,6 +76,13 @@ describe('moving and help', () => {
     expect(keyAction(press('?'), browser)).toEqual({ kind: 'help' });
   });
 
+  it('opens the preview for editing with E — never while typing, never with a modifier', () => {
+    expect(keyAction(press('e'), browser)).toEqual({ kind: 'edit' });
+    expect(keyAction(press('E', { shiftKey: true }), browser)).toEqual({ kind: 'edit' });
+    expect(keyAction(press('e'), typing)).toBeNull();
+    expect(keyAction(press('e', { metaKey: true }), browser)).toBeNull();
+  });
+
   it('leaves the arrows, ? and Enter to a text box and to the browser', () => {
     expect(keyAction(press('ArrowDown'), typing)).toBeNull();
     expect(keyAction(press('?'), typing)).toBeNull();

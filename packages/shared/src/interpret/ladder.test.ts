@@ -188,7 +188,7 @@ describe('a reading', () => {
     expect(result.reading.alternatives.map((a) => a.optionId)).toEqual([
       'rounded',
       'square',
-      'tile',
+      'tab',
     ]);
   });
 
@@ -200,6 +200,8 @@ describe('a reading', () => {
       ['pill', 'T8'],
       ['rounded', 'T8'],
       ['square', 'T8'],
+      ['tab', 'T8'],
+      ['segmented', 'T8'],
       ['tile', 'T8'],
     ]);
   });

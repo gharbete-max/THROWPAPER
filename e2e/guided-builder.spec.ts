@@ -145,6 +145,107 @@ test('the paper door opens a new form in the editor, its paper import already op
   await expect(page.getByLabel('PDF or photographs')).toBeAttached();
 });
 
+test('not happy with the preview: edited in place, reverted, reconciled, and never written over', async ({
+  page,
+}) => {
+  // Acceptance S3, `docs/plan/PREDICTIVE-BUILDER.md`.
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromQuestions(page);
+  for (const [ask, pick] of [
+    ['What is this form for?', /Signing people up/],
+    ['Should this look like your organisation?', /Decide later/],
+  ] as const) {
+    await question(page, ask);
+    await page.getByRole('button', { name: pick }).click();
+  }
+  await question(page, 'What do you want to ask?');
+  await page.getByRole('button', { name: 'Which day suits you?' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: /Yes, it's needed/ }).click();
+  await page.getByRole('button', { name: 'Yes', exact: true }).click();
+  await page.getByRole('button', { name: /One answer only/ }).click();
+  await page.getByPlaceholder(/Or type it/).fill('3');
+  await page.getByPlaceholder(/Or type it/).press('Enter');
+  await page.getByRole('button', { name: 'Pill', exact: true }).click();
+  await question(page, 'Where should they sit?');
+
+  const control = page.locator('.preview-moment__frame fieldset.choice');
+  await expect(control).toHaveClass(/choice--shape-pill/);
+
+  // The one sentence under the preview opens inline editing.
+  await page
+    .getByRole('button', { name: 'Not completely happy with the preview? Click it to edit.' })
+    .click();
+  const panel = page.getByRole('group', { name: 'Change it here' });
+  await panel.getByRole('button', { name: 'Joined in one bar' }).click();
+  await expect(control).toHaveClass(/choice--shape-segmented/);
+  await panel.getByRole('button', { name: 'Larger' }).click();
+  await expect(control).toHaveClass(/choice--size-large/);
+  // The handle snaps: there is no size past the largest.
+  await expect(panel.getByRole('button', { name: 'Larger' })).toBeDisabled();
+  await panel.getByRole('button', { name: 'Accent' }).click();
+  await expect(control).toHaveClass(/choice--accent-accent/);
+
+  // An answer renamed in place, then moved — by its keyboard twin, then by drag.
+  await panel.getByLabel('Answer 1').fill('Saturday');
+  await panel.getByLabel('Answer 1').press('Enter');
+  await expect(control).toContainText('Saturday');
+  await panel.getByRole('button', { name: 'Move down' }).first().click();
+  await expect(control.locator('.choice__option').nth(1)).toContainText('Saturday');
+  const grips = panel.getByRole('button', { name: 'Drag to move' });
+  const from = (await grips.nth(2).boundingBox())!;
+  const to = (await grips.nth(0).boundingBox())!;
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2, from.y - 10, { steps: 5 });
+  await page.mouse.move(to.x + to.width / 2, to.y + to.height / 4, { steps: 10 });
+  await page.mouse.up();
+  await expect(control.locator('.choice__option').nth(2)).toContainText('Saturday');
+
+  // Changed by hand, with its way back — and the way back is itself undone by Back.
+  await expect(page.getByText('changed by hand', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Revert to guided' }).click();
+  await expect(control).toHaveClass(/choice--shape-pill/);
+  await expect(page.getByText('changed by hand', { exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Back' }).click();
+  await expect(control).toHaveClass(/choice--shape-segmented/);
+  await expect(page.getByText('changed by hand', { exact: true })).toBeVisible();
+
+  // The next answer would change the question: the conversation asks instead of writing over it.
+  await question(page, 'Where should they sit?');
+  await page.getByRole('button', { name: /Under the question, full width/ }).click();
+  await question(page, 'You changed this by hand. Keep your version, or use the guided one?');
+  await page.getByRole('button', { name: 'Show both' }).click();
+  await expect(page.getByText('Yours', { exact: true })).toBeVisible();
+  await expect(page.getByText('Guided', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Keep mine' }).click();
+  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+
+  const [field] = (await draftOf(formId)).fields.slice(1);
+  expect(field).toMatchObject({ style: { shape: 'segmented', size: 'large', accent: 'accent' } });
+  expect(field!.options).toHaveLength(3);
+
+  // Leaving for the classic editor, renaming the question there, and coming back.
+  await page.getByRole('button', { name: 'Build it myself' }).click();
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await page
+    .getByRole('button', { name: /Which day suits you\?/ })
+    .first()
+    .click();
+  await page.getByLabel('Label').first().fill('Which day suits you best?');
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+  await page.goto(`/forms/${formId}/guided`);
+  await expect(
+    page.getByText('This form was changed in the editor.', { exact: false }),
+  ).toBeVisible();
+  await expect(page.locator('.preview-moment__frame')).toContainText('Which day suits you best?');
+  await expect(page.getByText('changed by hand', { exact: true })).toBeVisible();
+  expect(Object.values((await draftOf(formId)).fields[1]!.label)).toContain(
+    'Which day suits you best?',
+  );
+});
+
 test.describe('on a small phone, by keyboard alone', () => {
   test.use({ viewport: { width: 360, height: 640 } });
 

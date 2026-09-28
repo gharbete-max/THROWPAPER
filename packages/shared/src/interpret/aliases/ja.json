@@ -1022,6 +1022,46 @@
       "notes": "the card's label"
     },
     {
+      "phrase": "1本のバーにまとめる",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "つなげる",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "セグメント",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一本のバー",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "四角",
       "nodeId": "choice.shape",
       "optionId": "square",
@@ -1055,6 +1095,36 @@
       "phrase": "長方形",
       "nodeId": "choice.shape",
       "optionId": "square",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "タブ",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "タブ型",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "タブ形式",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
       "locale": "ja",
       "source": "built-in",
       "createdAt": "2026-09-26",

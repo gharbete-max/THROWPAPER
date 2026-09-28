@@ -82,6 +82,8 @@
     { "phrase": "les boutons ne sont pas nécessaires", "nodeId": "choice.buttons", "expect": { "ask": "negated" } },
     { "phrase": "une ou plusieurs", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "coin en haut", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "30 février 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30 février 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "en onglets", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "je les veux réunis en une barre", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

@@ -6,6 +6,15 @@ import { opProblem } from './graph/paths.js';
 import type { BuilderGraph, Json, MessageKey, Next, Node, Op } from './graph/schema.js';
 import { runPatch } from './patches.js';
 import {
+  applyTracked,
+  fieldOf,
+  fieldPointer,
+  guidedView,
+  provenancePointer,
+  settleQuestions,
+  type Tracked,
+} from './reconcile.js';
+import {
   MachineError,
   type BuilderDraft,
   type BuilderSidecar,
@@ -314,29 +323,37 @@ export function answer(
   const { state, log } = conversation;
   const node = nodeOf(graph, state.cursor);
   const plan = planFor(graph, node, given);
-  const applied = runPatch(state, plan.ops, {
+
+  // Reconciliation (`reconcile.ts`): the step runs on the conversation's own versions of the
+  // questions, and never changes one a person has changed by hand — it proposes instead.
+  const tracked: Tracked = { changes: [], inverse: [] };
+  const view = guidedView(state, tracked);
+  const applied = runPatch(view, plan.ops, {
     nodeId: node.id,
     source: 'guided',
     locale: context.locale,
     ...(plan.value === undefined ? {} : { answer: plan.value }),
   });
-  checkDraft(applied.state.draft);
+  tracked.changes.push(...applied.changes);
+  tracked.inverse = [...applied.inverse, ...tracked.inverse];
+  const settled = applyTracked(applied.state, settleQuestions(state, view, applied.state), tracked);
+  checkDraft(settled.draft);
 
   const answered = given.kind === 'jump' ? answeredIds(log) : [...answeredIds(log), node.id];
-  const target = pickNext(plan.next, guardState(applied.state, answered));
-  const { to, skipped } = settle(graph, applied.state, answered, target);
+  const target = pickNext(plan.next, guardState(settled, answered));
+  const { to, skipped } = settle(graph, settled, answered, target);
 
   const entry: LogEntry = {
     nodeId: node.id,
     answer: given,
-    patch: applied.changes,
-    inverse: applied.inverse,
+    patch: tracked.changes,
+    inverse: tracked.inverse,
     to,
     skipped,
     tier: context.tier ?? null,
     source: 'guided',
   };
-  return { base: conversation.base, log: [...log, entry], state: { ...applied.state, cursor: to } };
+  return { base: conversation.base, log: [...log, entry], state: { ...settled, cursor: to } };
 }
 
 /**
@@ -371,6 +388,88 @@ export function edit(
     source: 'manual',
   };
   return { base: conversation.base, log: [...log, entry], state: applied.state };
+}
+
+// --- Reconciling ------------------------------------------------------------------------------
+
+/** A step the person took about a question, not an answer: in the log, out of the trail. */
+function personStep(conversation: Conversation, changes: readonly Change[]): Conversation {
+  const { state, log } = conversation;
+  const tracked: Tracked = { changes: [], inverse: [] };
+  const next = applyTracked(state, changes, tracked);
+  checkDraft(next.draft);
+  const entry: LogEntry = {
+    nodeId: state.cursor,
+    answer: { kind: 'edit' },
+    patch: tracked.changes,
+    inverse: tracked.inverse,
+    to: state.cursor,
+    skipped: [],
+    tier: null,
+    source: 'manual',
+  };
+  return { base: conversation.base, log: [...log, entry], state: next };
+}
+
+/**
+ * "Keep mine": the person's version stays, and the conversation's proposal for it is dropped. The
+ * question is still changed by hand, so the next step that would change it asks again.
+ */
+export function keepMine(conversation: Conversation, fieldId: string): Conversation {
+  if (conversation.state.sidecar.fields[fieldId]?.proposal === undefined) {
+    throw new MachineError('nothing-to-do', `${fieldId} has nothing waiting`);
+  }
+  return personStep(conversation, [{ op: 'unset', at: provenancePointer(fieldId, 'proposal') }]);
+}
+
+/**
+ * "Use guided", and the badge's "Revert to guided": the question becomes the conversation's
+ * version — what it proposed, or else what it last made — and is no longer changed by hand. A
+ * step like any other: Back puts the person's version back.
+ */
+export function takeGuided(conversation: Conversation, fieldId: string): Conversation {
+  const { state } = conversation;
+  const provenance = state.sidecar.fields[fieldId];
+  const target = provenance?.proposal ?? provenance?.guided;
+  if (target === undefined || !fieldOf(state, fieldId)) {
+    throw new MachineError('nothing-to-do', `${fieldId} has no guided version`);
+  }
+  const changes: Change[] = [
+    { op: 'set', at: fieldPointer(fieldId), value: target },
+    { op: 'set', at: provenancePointer(fieldId, 'guided'), value: target },
+  ];
+  if (provenance?.proposal !== undefined) {
+    changes.push({ op: 'unset', at: provenancePointer(fieldId, 'proposal') });
+  }
+  return personStep(conversation, changes);
+}
+
+/**
+ * The conversation carried on over a draft changed outside it — in the classic editor. The draft
+ * is taken as it now is, whole; the sidecar keeps every baseline, so what was changed there shows
+ * as changed by hand, and the conversation proposes rather than writes over it.
+ *
+ * The log starts again: going back past this point would mean undoing the editor's changes from
+ * here, which is exactly what must never happen. The conversation stays at its node, unless the
+ * question it was building was deleted there: then it goes to the menu.
+ */
+export function rebase(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  draft: BuilderDraft,
+): Conversation {
+  checkDraft(draft);
+  const { state } = conversation;
+  const kept =
+    state.focus === null || draft.definition.fields.some((field) => field.id === state.focus);
+  const moved: BuilderState = { ...state, draft, focus: kept ? state.focus : null };
+  // The question being built is gone: its node has nothing to write to, so the conversation goes
+  // to the menu — "What do you want to change?" — rather than to a question it cannot take.
+  const from = kept
+    ? state.cursor
+    : (graph.nodes.find((n) => n.kind === 'menu')?.id ?? graph.start);
+  const base = { ...moved, cursor: settle(graph, moved, [], from).to };
+  return { base, log: [], state: base };
 }
 
 // --- Going back -------------------------------------------------------------------------------

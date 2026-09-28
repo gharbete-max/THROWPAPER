@@ -24,7 +24,7 @@ export type Slot = 'kind' | 'required' | 'options' | 'shape' | 'placement' | 'va
  *
  * Keyed by field id in the sidecar, never stored on the field: put on the definition, it would be
  * published into every version and every respondent's copy to answer a question only the author's
- * screen asks. Slice S5 adds the reconciliation baseline (`guided`, `proposal`) and S12 the import's
+ * screen asks. S5 added the reconciliation baseline (`guided`, `proposal`); S12 adds the import's
  * evidence (page, box, raw text, confidence, origin fingerprint).
  */
 export interface FieldProvenance {
@@ -39,6 +39,17 @@ export interface FieldProvenance {
    * what a person wrote (`CLAUDE.md`, non-negotiable 4).
    */
   readonly setAside?: { readonly [property: string]: Json };
+  /**
+   * The question as the conversation last left it — the reconciliation baseline. A question that
+   * differs from it has been changed by hand, on the preview or in the classic editor
+   * (`reconcile.ts`). Absent: the conversation has never made or changed it.
+   */
+  readonly guided?: Json;
+  /**
+   * What the conversation would have made of a question changed by hand, waiting for Keep mine or
+   * Use guided. The draft keeps the person's version until then.
+   */
+  readonly proposal?: Json;
 }
 
 export interface BuilderSidecar {

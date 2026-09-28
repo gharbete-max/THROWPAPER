@@ -95,6 +95,8 @@ const StateSchema = z
               nodeId: z.string().optional(),
               decided: slots.optional(),
               setAside: z.record(JsonSchema).optional(),
+              guided: JsonSchema.optional(),
+              proposal: JsonSchema.optional(),
             })
             .strict(),
         ),

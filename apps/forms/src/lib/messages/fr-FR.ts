@@ -241,6 +241,8 @@ export const frFR: Record<MessageKey, string> = {
   'field.shape.square': 'Carrée',
   'field.shape.rounded': 'Arrondie',
   'field.shape.pill': 'Pilule',
+  'field.shape.tab': 'Onglets',
+  'field.shape.segmented': 'Réunis en une barre',
   'field.size': 'Taille',
   'field.size.regular': 'Normale',
   'field.size.large': 'Grande',
@@ -372,6 +374,8 @@ export const frFR: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Si la même adresse e-mail peut répondre plus d’une fois.',
   'settings.duplicateControl.email': 'Une réponse par adresse e-mail',
   'settings.duplicateControl.none': 'Nombre de réponses illimité',
+  'settings.logoSlot': 'Où placer le logo',
+  'settings.logoSlot.none': 'En haut, comme d’habitude',
   'settings.identity':
     'Proposer une confirmation par e-ID après l’envoi (facultative pour la personne)',
   'settings.identityHint':
@@ -1109,6 +1113,8 @@ export const frFR: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Pilule',
   'guided.choice.shape.rounded': 'Arrondie',
   'guided.choice.shape.square': 'Carrée',
+  'guided.choice.shape.tab': 'Onglets',
+  'guided.choice.shape.segmented': 'Réunis en une barre',
   'guided.choice.shape.tile': 'Cartes, avec une place pour une image',
   'guided.choice.placement.ask': 'Où les placer ?',
   'guided.choice.placement.help': 'La disposition des boutons.',
@@ -1161,8 +1167,37 @@ export const frFR: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Modifié dans un autre onglet',
   'conversation.retry': 'Réessayer',
   'conversation.reload': 'Charger la dernière version',
-  'conversation.startedAgain':
-    'Le formulaire a changé après l’enregistrement de ces réponses : les questions reprennent donc à partir du formulaire tel qu’il est maintenant. Rien de ce que vous avez fait n’est perdu.',
   'conversation.unreadable':
     'Vos réponses précédentes n’ont pas pu être lues : les questions reprennent donc depuis le début. Le formulaire est tel que vous l’avez laissé.',
+  'conversation.preview.label': 'Aperçu',
+  'conversation.preview.edit':
+    'L’aperçu ne vous convient pas tout à fait ? Cliquez dessus pour le modifier.',
+  'conversation.preview.editTouch':
+    'L’aperçu ne vous convient pas tout à fait ? Touchez-le pour le modifier.',
+  'conversation.preview.assumed': 'Ce que Loppa a supposé',
+  'conversation.preview.noBrand':
+    'Votre organisation n’a pas encore d’identité visuelle, le formulaire ressemblera donc à ceci. Un administrateur peut la définir dans Identité.',
+  'conversation.byHand': 'modifié à la main',
+  'conversation.revert': 'Revenir à la version guidée',
+  'conversation.reconcile.ask':
+    'Vous avez modifié ceci à la main. Garder votre version ou utiliser la version guidée ?',
+  'conversation.reconcile.help':
+    'Rien ne change tant que vous n’avez pas choisi, et vous pourrez toujours revenir en arrière.',
+  'conversation.reconcile.mine': 'Garder la mienne',
+  'conversation.reconcile.guided': 'Utiliser la guidée',
+  'conversation.reconcile.both': 'Voir les deux',
+  'conversation.reconcile.yours': 'La vôtre',
+  'conversation.reconcile.theirs': 'Guidée',
+  'conversation.edit.title': 'Modifier ici',
+  'conversation.edit.question': 'La question',
+  'conversation.edit.options': 'Les réponses',
+  'conversation.edit.answer': 'Réponse {n}',
+  'conversation.edit.smaller': 'Plus petit',
+  'conversation.edit.larger': 'Plus grand',
+  'conversation.edit.drag': 'Faire glisser pour déplacer',
+  'conversation.edit.moveUp': 'Monter',
+  'conversation.edit.moveDown': 'Descendre',
+  'conversation.showMe': 'Montrez-moi',
+  'conversation.rebased':
+    'Ce formulaire a été modifié dans l’éditeur. Vos modifications sont conservées, et les questions reprennent là où vous en étiez.',
 };

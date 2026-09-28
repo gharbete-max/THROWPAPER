@@ -67,11 +67,18 @@ describe('the S1 graph', () => {
     }
   });
 
-  /** Offering the `tab` or `segmented` shape now would write a value the schema refuses (S5). */
-  it('offers only shapes the form schema already has', () => {
+  /** Every shape offered is one the form schema has — `tab` and `segmented` since S5. */
+  it('offers only shapes the form schema has', () => {
     const shapes = optionsOf(nodes.find((n) => n.id === 'choice.shape')!);
     for (const option of shapes) for (const op of option.patch) expect(opProblem(op)).toBeNull();
-    expect(shapes.map((o) => o.id)).toEqual(['pill', 'rounded', 'square', 'tile']);
+    expect(shapes.map((o) => o.id)).toEqual([
+      'pill',
+      'rounded',
+      'square',
+      'tab',
+      'segmented',
+      'tile',
+    ]);
   });
 });
 

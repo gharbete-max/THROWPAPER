@@ -32,8 +32,8 @@ packages/ui     One `cn()` class-name helper. The shared data grid is deliberate
 packages/calc   Calculation errors and propagation, exact money, the ledger
 packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
                 graph, its `when` language, its validator, and the machine that walks it — answers
-                as undoable changes, replay, stable question ids, the saved session
-                (@tp/shared/builder); document import's
+                as undoable changes, replay, stable question ids, the saved session, and
+                reconciliation that never writes over a hand edit (@tp/shared/builder); document import's
                 Layout IR with its validator, and stage 3, the list-marker detector, with its debug
                 artifact (@tp/shared/import); free text read by rules — normalisation, word lists and
                 built-in aliases in twelve languages, and the ladder's rungs T0–T4

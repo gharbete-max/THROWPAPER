@@ -237,6 +237,8 @@ export const fiFI: Record<MessageKey, string> = {
   'field.shape.square': 'Kulmikas',
   'field.shape.rounded': 'Pyöristetty',
   'field.shape.pill': 'Kapseli',
+  'field.shape.tab': 'Välilehdet',
+  'field.shape.segmented': 'Yhdistettynä yhdeksi palkiksi',
   'field.size': 'Koko',
   'field.size.regular': 'Tavallinen',
   'field.size.large': 'Suuri',
@@ -364,6 +366,8 @@ export const fiFI: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Saako sama sähköpostiosoite vastata useammin kuin kerran.',
   'settings.duplicateControl.email': 'Yksi vastaus sähköpostiosoitetta kohden',
   'settings.duplicateControl.none': 'Mikä tahansa määrä vastauksia',
+  'settings.logoSlot': 'Logon paikka',
+  'settings.logoSlot.none': 'Ylhäällä, kuten tavallisesti',
   'settings.identity':
     'Tarjoa vahvistusta sähköisellä tunnistuksella lähettämisen jälkeen (vapaaehtoinen)',
   'settings.identityHint':
@@ -1094,6 +1098,8 @@ export const fiFI: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Kapseli',
   'guided.choice.shape.rounded': 'Pyöristetty',
   'guided.choice.shape.square': 'Kulmikas',
+  'guided.choice.shape.tab': 'Välilehdet',
+  'guided.choice.shape.segmented': 'Yhdistettynä yhdeksi palkiksi',
   'guided.choice.shape.tile': 'Kortit, joissa on tilaa kuvalle',
   'guided.choice.placement.ask': 'Mihin ne sijoitetaan?',
   'guided.choice.placement.help': 'Miten painikkeet asetellaan.',
@@ -1143,8 +1149,36 @@ export const fiFI: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Muutettu toisessa välilehdessä',
   'conversation.retry': 'Yritä uudelleen',
   'conversation.reload': 'Hae uusin',
-  'conversation.startedAgain':
-    'Lomaketta muutettiin vastausten tallentamisen jälkeen, joten kysymykset alkavat alusta lomakkeesta sellaisena kuin se nyt on. Mitään tekemääsi ei ole menetetty.',
   'conversation.unreadable':
     'Aiempia vastauksiasi ei voitu lukea, joten kysymykset alkavat alusta. Lomake on sellainen kuin jätit sen.',
+  'conversation.preview.label': 'Esikatselu',
+  'conversation.preview.edit':
+    'Etkö ole täysin tyytyväinen esikatseluun? Muokkaa sitä napsauttamalla.',
+  'conversation.preview.editTouch':
+    'Etkö ole täysin tyytyväinen esikatseluun? Muokkaa sitä napauttamalla.',
+  'conversation.preview.assumed': 'Mitä Loppa oletti',
+  'conversation.preview.noBrand':
+    'Organisaatiollanne ei ole vielä ilmettä, joten lomake näyttää tältä. Ylläpitäjä voi määrittää sen kohdassa Ilme.',
+  'conversation.byHand': 'muutettu käsin',
+  'conversation.revert': 'Palauta ohjattu',
+  'conversation.reconcile.ask': 'Muutit tätä käsin. Pidätkö oman versiosi vai käytätkö ohjattua?',
+  'conversation.reconcile.help':
+    'Mikään ei muutu ennen kuin valitset, ja voit aina muuttaa sen takaisin.',
+  'conversation.reconcile.mine': 'Pidä omani',
+  'conversation.reconcile.guided': 'Käytä ohjattua',
+  'conversation.reconcile.both': 'Näytä molemmat',
+  'conversation.reconcile.yours': 'Sinun',
+  'conversation.reconcile.theirs': 'Ohjattu',
+  'conversation.edit.title': 'Muuta tässä',
+  'conversation.edit.question': 'Kysymys',
+  'conversation.edit.options': 'Vastaukset',
+  'conversation.edit.answer': 'Vastaus {n}',
+  'conversation.edit.smaller': 'Pienempi',
+  'conversation.edit.larger': 'Suurempi',
+  'conversation.edit.drag': 'Siirrä vetämällä',
+  'conversation.edit.moveUp': 'Siirrä ylös',
+  'conversation.edit.moveDown': 'Siirrä alas',
+  'conversation.showMe': 'Näytä',
+  'conversation.rebased':
+    'Lomaketta muutettiin muokkaimessa. Muutoksesi säilyvät, ja kysymykset jatkuvat siitä, mihin jäit.',
 };

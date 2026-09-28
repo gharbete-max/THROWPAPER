@@ -8,11 +8,8 @@ import {
   type MessageKey,
   type Node,
 } from '@tp/shared/builder';
-import type { FormDefinition } from '@tp/shared/forms';
 import { Icon, type IconName } from '../../../components/Icon.js';
 import { useT } from '../../../lib/i18n.js';
-import { FormPreview } from '../FormPreview.js';
-import { focusedField } from './conversation.js';
 
 /**
  * One node's answers — `DESIGN-LANGUAGE.md`, "One decision per screen". Each kind renders its
@@ -30,6 +27,8 @@ export interface NodeViewProps {
   readonly onAnswer: (answer: Answer) => void;
   /** The end's "Open it in the editor". */
   readonly onOpenEditor: () => void;
+  /** A preview moment's preview (`PreviewMoment`), drawn above its Continue. */
+  readonly preview?: React.ReactNode;
 }
 
 export function NodeView(props: NodeViewProps) {
@@ -85,11 +84,7 @@ export function NodeView(props: NodeViewProps) {
     case 'preview-moment':
       return (
         <>
-          <LivePreview
-            conversation={props.conversation}
-            locales={props.locales}
-            contentLocale={props.contentLocale}
-          />
+          {props.preview}
           <Continue onContinue={() => onAnswer({ kind: 'continue' })} />
         </>
       );
@@ -112,7 +107,8 @@ export function NodeView(props: NodeViewProps) {
 
 interface CardItem {
   readonly id: string;
-  readonly label: MessageKey;
+  /** A message key: the graph's, or the screen's own (the reconcile question's answers). */
+  readonly label: string;
   readonly detail?: MessageKey;
   readonly icon?: IconName;
 }
@@ -315,30 +311,6 @@ function Continue({ onContinue }: { onContinue: () => void }) {
       <button type="button" className="button" data-continue onClick={onContinue}>
         {t('conversation.continue')}
       </button>
-    </div>
-  );
-}
-
-/**
- * The real control, drawn by the same `FieldInput` the public form uses (through
- * `FormPreview`): the question in focus when there is one, else the whole form. S5 adds the brand
- * kit, "Not completely happy with the preview? Click it to edit." and editing in place.
- */
-export function LivePreview({
-  conversation,
-  locales,
-  contentLocale,
-}: {
-  conversation: Conversation;
-  locales: LocaleConfig;
-  contentLocale: string;
-}) {
-  const field = focusedField(conversation);
-  const { definition } = conversation.state.draft;
-  const shown: FormDefinition = field ? { ...definition, fields: [field] } : definition;
-  return (
-    <div className="conversation__preview">
-      <FormPreview definition={shown} locale={contentLocale} locales={locales} selectedId={null} />
     </div>
   );
 }

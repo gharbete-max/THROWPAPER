@@ -81,6 +81,8 @@
     { "phrase": "один или несколько", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "угол вверху", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
     { "phrase": "обязательнй", "nodeId": "text.required", "expect": { "ask": "ambiguous" }, "note": "close to 'обязательный' and to 'необязательный' alike" },
-    { "phrase": "30 февраля 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30 февраля 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "как вкладки", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "хочу одной сплошной полосой", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

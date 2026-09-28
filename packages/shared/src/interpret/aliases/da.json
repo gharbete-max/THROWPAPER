@@ -1232,6 +1232,56 @@
       "notes": ""
     },
     {
+      "phrase": "Samlet i én bjælke",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "samlet",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sat sammen",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "segmenteret",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "én bjælke",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Firkantet",
       "nodeId": "choice.shape",
       "optionId": "square",
@@ -1275,6 +1325,46 @@
       "phrase": "skarpe hjørner",
       "nodeId": "choice.shape",
       "optionId": "square",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Faner",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "fane",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fanestil",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "som faner",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
       "locale": "da",
       "source": "built-in",
       "createdAt": "2026-09-26",

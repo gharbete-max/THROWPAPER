@@ -236,6 +236,8 @@ export const isIS: Record<MessageKey, string> = {
   'field.shape.square': 'Ferköntuð',
   'field.shape.rounded': 'Ávöl',
   'field.shape.pill': 'Hylki',
+  'field.shape.tab': 'Flipar',
+  'field.shape.segmented': 'Samtengt í eina stiku',
   'field.size': 'Stærð',
   'field.size.regular': 'Venjuleg',
   'field.size.large': 'Stór',
@@ -363,6 +365,8 @@ export const isIS: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Hvort sama netfang megi svara oftar en einu sinni.',
   'settings.duplicateControl.email': 'Eitt svar á hvert netfang',
   'settings.duplicateControl.none': 'Hvaða fjöldi svara sem er',
+  'settings.logoSlot': 'Hvar merkið er',
+  'settings.logoSlot.none': 'Efst, eins og venjulega',
   'settings.identity': 'Bjóða staðfestingu með rafrænum skilríkjum eftir sendingu (valfrjálst)',
   'settings.identityHint':
     'Svörin eru vistuð fyrst; staðfestingin er skref sem má taka eða sleppa. Þar sem engin skilríkjaþjónusta er tengd segir eyðublaðið það og klárast samt.',
@@ -1087,6 +1091,8 @@ export const isIS: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Hylki',
   'guided.choice.shape.rounded': 'Ávöl',
   'guided.choice.shape.square': 'Ferköntuð',
+  'guided.choice.shape.tab': 'Flipar',
+  'guided.choice.shape.segmented': 'Samtengt í eina stiku',
   'guided.choice.shape.tile': 'Spjöld með plássi fyrir mynd',
   'guided.choice.placement.ask': 'Hvar eiga þeir að vera?',
   'guided.choice.placement.help': 'Hvernig hnapparnir raðast.',
@@ -1135,8 +1141,37 @@ export const isIS: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Breytt í öðrum flipa',
   'conversation.retry': 'Reyna aftur',
   'conversation.reload': 'Sækja það nýjasta',
-  'conversation.startedAgain':
-    'Eyðublaðinu var breytt eftir að svörin voru vistuð, svo spurningarnar byrja aftur út frá eyðublaðinu eins og það er núna. Ekkert sem þú gerðir hefur glatast.',
   'conversation.unreadable':
     'Ekki tókst að lesa fyrri svörin þín, svo spurningarnar byrja aftur. Eyðublaðið er eins og þú skildir við það.',
+  'conversation.preview.label': 'Forskoðun',
+  'conversation.preview.edit':
+    'Er forskoðunin ekki alveg eins og þú vildir? Smelltu á hana til að breyta.',
+  'conversation.preview.editTouch':
+    'Er forskoðunin ekki alveg eins og þú vildir? Ýttu á hana til að breyta.',
+  'conversation.preview.assumed': 'Það sem Loppa gerði ráð fyrir',
+  'conversation.preview.noBrand':
+    'Stofnunin ykkar er ekki með útlit enn, svo svona mun eyðublaðið líta út. Stjórnandi getur sett það upp undir Útlit.',
+  'conversation.byHand': 'breytt handvirkt',
+  'conversation.revert': 'Aftur í leiðsögn',
+  'conversation.reconcile.ask':
+    'Þú breyttir þessu handvirkt. Halda þinni útgáfu eða nota þá með leiðsögn?',
+  'conversation.reconcile.help':
+    'Ekkert breytist fyrr en þú velur, og þú getur alltaf breytt til baka.',
+  'conversation.reconcile.mine': 'Halda minni',
+  'conversation.reconcile.guided': 'Nota leiðsögn',
+  'conversation.reconcile.both': 'Sýna bæði',
+  'conversation.reconcile.yours': 'Þín',
+  'conversation.reconcile.theirs': 'Með leiðsögn',
+  'conversation.edit.title': 'Breyttu hér',
+  'conversation.edit.question': 'Spurningin',
+  'conversation.edit.options': 'Svörin',
+  'conversation.edit.answer': 'Svar {n}',
+  'conversation.edit.smaller': 'Minna',
+  'conversation.edit.larger': 'Stærra',
+  'conversation.edit.drag': 'Dragðu til að færa',
+  'conversation.edit.moveUp': 'Færa upp',
+  'conversation.edit.moveDown': 'Færa niður',
+  'conversation.showMe': 'Sýndu mér',
+  'conversation.rebased':
+    'Eyðublaðinu var breytt í ritlinum. Breytingarnar þínar haldast, og spurningarnar halda áfram þar sem þú varst.',
 };

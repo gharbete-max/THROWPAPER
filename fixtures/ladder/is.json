@@ -79,6 +79,8 @@
     { "phrase": "hnappar eru ekki nauðsynlegir", "nodeId": "choice.buttons", "expect": { "ask": "negated" } },
     { "phrase": "eitt eða fleiri", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "horn efst", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "30. febrúar 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30. febrúar 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "eins og flipar", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "samtengt takk", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

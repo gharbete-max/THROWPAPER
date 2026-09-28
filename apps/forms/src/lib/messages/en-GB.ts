@@ -240,6 +240,8 @@ export const enGB = {
   'field.shape.square': 'Square',
   'field.shape.rounded': 'Rounded',
   'field.shape.pill': 'Pill',
+  'field.shape.tab': 'Tabs',
+  'field.shape.segmented': 'Joined in one bar',
   'field.size': 'Size',
   'field.size.regular': 'Regular',
   'field.size.large': 'Large',
@@ -368,6 +370,8 @@ export const enGB = {
   'settings.duplicateControlHint': 'Whether the same email address may answer more than once.',
   'settings.duplicateControl.email': 'One response per email address',
   'settings.duplicateControl.none': 'Any number of responses',
+  'settings.logoSlot': 'Where the logo goes',
+  'settings.logoSlot.none': 'At the top, as usual',
   'settings.identity': 'Offer to confirm with e-ID after sending (optional for the person)',
   'settings.identityHint':
     'Their answers are saved first; confirming is a step they may take or skip. Where no e-ID provider is connected, the form says so and is finished without it.',
@@ -1102,6 +1106,8 @@ export const enGB = {
   'guided.choice.shape.pill': 'Pill',
   'guided.choice.shape.rounded': 'Rounded',
   'guided.choice.shape.square': 'Square',
+  'guided.choice.shape.tab': 'Tabs',
+  'guided.choice.shape.segmented': 'Joined in one bar',
   'guided.choice.shape.tile': 'Cards, with room for a picture',
   'guided.choice.placement.ask': 'Where should they sit?',
   'guided.choice.placement.help': 'How the buttons are laid out.',
@@ -1151,10 +1157,37 @@ export const enGB = {
   'conversation.status.conflict': 'Changed in another tab',
   'conversation.retry': 'Try again',
   'conversation.reload': 'Load the latest',
-  'conversation.startedAgain':
-    'The form changed after these answers were saved, so the questions start again from the form as it is now. Nothing you made is lost.',
   'conversation.unreadable':
     'Your earlier answers could not be read, so the questions start again. The form is as you left it.',
+  'conversation.preview.label': 'Preview',
+  'conversation.preview.edit': 'Not completely happy with the preview? Click it to edit.',
+  'conversation.preview.editTouch': 'Not completely happy with the preview? Tap it to edit.',
+  'conversation.preview.assumed': 'What Loppa assumed',
+  'conversation.preview.noBrand':
+    'Your organisation has no brand kit yet, so this is how the form will look. An administrator can set one up under Brand.',
+  'conversation.byHand': 'changed by hand',
+  'conversation.revert': 'Revert to guided',
+  'conversation.reconcile.ask':
+    'You changed this by hand. Keep your version, or use the guided one?',
+  'conversation.reconcile.help':
+    'Nothing changes until you choose, and you can always change it back.',
+  'conversation.reconcile.mine': 'Keep mine',
+  'conversation.reconcile.guided': 'Use guided',
+  'conversation.reconcile.both': 'Show both',
+  'conversation.reconcile.yours': 'Yours',
+  'conversation.reconcile.theirs': 'Guided',
+  'conversation.edit.title': 'Change it here',
+  'conversation.edit.question': 'The question',
+  'conversation.edit.options': 'The answers',
+  'conversation.edit.answer': 'Answer {n}',
+  'conversation.edit.smaller': 'Smaller',
+  'conversation.edit.larger': 'Larger',
+  'conversation.edit.drag': 'Drag to move',
+  'conversation.edit.moveUp': 'Move up',
+  'conversation.edit.moveDown': 'Move down',
+  'conversation.showMe': 'Show me',
+  'conversation.rebased':
+    'This form was changed in the editor. Your changes are kept, and the questions carry on from where you were.',
 } as const;
 
 /**

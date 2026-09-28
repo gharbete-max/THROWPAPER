@@ -23,9 +23,14 @@ export function GuidedBuilder() {
   const t = useT();
   const navigate = useNavigate();
   const edition = useEdition();
-  const { locale, locales, contentLocale } = useSession();
+  const { locale, locales, contentLocale, organisation } = useSession();
 
   const [started, setStarted] = useState<Started | null>(null);
+  /** The organisation's logo, and whether it has a brand kit of its own — for the preview. */
+  const [kit, setKit] = useState<{ customised: boolean; logo: string | null }>({
+    customised: false,
+    logo: null,
+  });
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [failed, setFailed] = useState(false);
   const [status, setStatus] = useState<SaveStatus>('saved');
@@ -57,6 +62,7 @@ export function GuidedBuilder() {
           setStatus,
         );
         setStatus('saved');
+        setKit({ customised: brand?.customised ?? false, logo: brand?.tokens.logoLight ?? null });
         setStarted(begun);
         setConversation(begun.conversation);
       })
@@ -85,17 +91,16 @@ export function GuidedBuilder() {
   if (failed) return <LoadFailed onRetry={load} />;
   if (!started || !conversation) return <Loading />;
 
-  const discarded = started.kind === 'fresh' ? started.discarded : null;
+  const notice =
+    started.kind === 'resumed'
+      ? started.rebased && 'conversation.rebased'
+      : started.discarded === 'unreadable' && 'conversation.unreadable';
 
   return (
     <section className="stack">
-      {discarded && (
+      {notice && (
         <p className="conversation__started-again" role="status">
-          {t(
-            discarded === 'changed-elsewhere'
-              ? 'conversation.startedAgain'
-              : 'conversation.unreadable',
-          )}
+          {t(notice)}
         </p>
       )}
       <Shell
@@ -105,6 +110,7 @@ export function GuidedBuilder() {
         locales={{ interfaceLocale: locale, contentLocale }}
         contentLocales={locales}
         desktop={edition === 'desktop'}
+        brand={{ ...kit, organisationName: organisation?.name ?? '' }}
         onOpenEditor={() => void openEditor()}
         status={
           <SaveState status={status} onRetry={() => void saver.current?.retry()} onReload={load} />

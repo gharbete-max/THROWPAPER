@@ -3,6 +3,7 @@ import {
   CHOICE_ACCENTS,
   CHOICE_COLUMNS,
   CHOICE_SHAPES,
+  LOGO_SLOTS,
   CHOICE_SIZES,
   FieldWidth,
   MULTI_SELECT_APPEARANCES,
@@ -172,6 +173,8 @@ export const WRITABLE: readonly Writable[] = [
   { pattern: 'pending.*', ops: ['set'], value: z.unknown() },
   { pattern: 'focus', ops: ['set'], value: z.object({ $lastAddedId: z.literal(true) }).strict() },
   { pattern: 'sidecar.brandDecided', ops: ['set'], value: z.enum(['organisation', 'default']) },
+  // Where the logo sits: one of six named slots, never a position (CAVEATS #33).
+  { pattern: 'draft.definition.settings.layout.logoSlot', ops: ['set'], value: z.enum(LOGO_SLOTS) },
   { pattern: 'draft.title', ops: ['set'], value: text, localised: true },
   { pattern: 'draft.definition.fields', ops: ['add'], value: newField },
   { pattern: 'draft.definition.fields', ops: ['reorder'] },

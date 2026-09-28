@@ -167,9 +167,10 @@ draft and the sidecar. Patches are the only way the conversation changes anythin
   saving through the existing `PUT /v1/forms/:id/draft`. The screen saves after every step, in
   order, the draft first — a failed session save then loses the trail, never the form — and stops
   at a `409` rather than save over another tab (`guided/saver.ts`). A saved conversation resumes
-  only if its draft is exactly the form's; if the form was edited in the editor since, the
-  conversation starts again from the form as it is and says so (`CAVEATS.md` #75), until S5's
-  reconciliation can do better.
+  as it was when its draft is exactly the form's. If the form was changed in the editor since, it
+  carries on over the form as it is (`rebase`): the editor's changes are kept and show as changed
+  by hand, and the log starts afresh so Back can never undo them (`CAVEATS.md` #75; S4 started
+  again instead, until reconciliation existed).
 - **Publishable from the first answer.** The first answer produces a valid `FormDefinition` with
   at least one question, and once the draft is publishable no answer makes it otherwise. Every state
   is a definition the schema accepts exactly; `machine.test.ts` walks the graph and checks
@@ -220,6 +221,14 @@ guided value waits in `proposal` until then. "Show both" renders the two side by
 previews. Nothing is ever clobbered, and re-entering the conversation after a session in the
 classic editor asks the same question for every hand-changed field it reaches — not all at once.
 
+As built (S5, `packages/shared/src/builder/reconcile.ts`): the baseline is the whole question as
+the conversation last left it. The proposal is the person's version with the conversation's change
+on top, so Keep mine loses the conversation's change and Use guided loses nothing the person wrote;
+and later steps keep building it. Keep mine leaves the question changed by hand, so the next step
+that would change it asks again; when the conversation comes round to the person's version on its
+own, there is nothing left to ask. A property test walks the graph with hand edits among the
+answers and holds every step to never changing a question changed by hand (`CAVEATS.md` #76).
+
 ## Wording Loppa does not write
 
 `CLAUDE.md` rule 8 and ADR 0012 hold here with force, because a conversation that offers
@@ -255,7 +264,7 @@ apps/forms/src/screens/builder/
   paper/         extract.ts (exists)  ocr.ts (exists)  docx.ts  paste.ts  import.worker.ts
   guided/        Shell.tsx  NodeView.tsx (Cards, Quantity, the text answer, the live preview)
                  Trail.tsx  Doors.tsx  GuidedBuilder.tsx  conversation.ts  keyboard.ts  saver.ts (S4)
-                 PreviewMoment.tsx  InlineEdit/  WhyChip.tsx                                  (S5)
+                 PreviewMoment.tsx  InlineEdit/  Reconcile.tsx                                 (S5)
   review/        ReviewScreen.tsx  SourcePane.tsx  DraftPane.tsx  Chips.tsx
 apps/api-forms/src/
   routes/        builder-session.ts (builder_sessions, S2); builder aliases (builder_aliases, S6)
@@ -403,6 +412,14 @@ permission of 2026-09-25, so the brief and this plan now agree.
    **S1b**, immediately after S1, because it is the highest-risk module, it is blocked only on the
    IR, and its failure would change the roadmap (the fallback is the paper-twin path: keep the page
    as an image and place fields on it, which exists today).
+8. **May a colour preset chosen in one form's conversation change the brand kit?** (raised by S5)
+   "Which colours should your form use?" can only take effect through the brand kit, which is the
+   whole organisation's — every form and every mail — and only an administrator may change it. So
+   answering it from one form would restyle all of them, and an operator could not answer it at all.
+   *Proceeding on:* the preset is recorded in the conversation and not applied; the preview wears
+   the organisation's kit, what will actually publish, and says so when there is none. The
+   alternatives are a per-form theme (a presentation-only `settings.layout.theme`, rendered only
+   where no kit exists) or applying the preset to the kit with a confirmation, for administrators.
 
 Three questions this plan raised are settled by revision 3 of the brief:
 

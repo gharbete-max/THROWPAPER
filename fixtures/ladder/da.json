@@ -80,6 +80,8 @@
     { "phrase": "knapper er ikke nødvendigt", "nodeId": "choice.buttons", "expect": { "ask": "negated" }, "note": "a negator beside 'knapper' that the negation rule cannot place: asked, never read as yes" },
     { "phrase": "et eller flere", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "hjørnet øverst", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "30. februar 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30. februar 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "som faner", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "de skal være samlet i én bjælke", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

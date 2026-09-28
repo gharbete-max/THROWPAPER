@@ -245,6 +245,8 @@ export const ruRU: Record<MessageKey, string> = {
   'field.shape.square': 'Квадратная',
   'field.shape.rounded': 'Скруглённая',
   'field.shape.pill': 'Капсула',
+  'field.shape.tab': 'Вкладки',
+  'field.shape.segmented': 'Одной сплошной полосой',
   'field.size': 'Размер',
   'field.size.regular': 'Обычный',
   'field.size.large': 'Крупный',
@@ -373,6 +375,8 @@ export const ruRU: Record<MessageKey, string> = {
     'Может ли один и тот же адрес почты отвечать больше одного раза.',
   'settings.duplicateControl.email': 'Один ответ на адрес почты',
   'settings.duplicateControl.none': 'Любое количество ответов',
+  'settings.logoSlot': 'Где разместить логотип',
+  'settings.logoSlot.none': 'Вверху, как обычно',
   'settings.identity':
     'Предлагать подтверждение электронной идентификацией после отправки (по желанию)',
   'settings.identityHint':
@@ -1107,6 +1111,8 @@ export const ruRU: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Капсула',
   'guided.choice.shape.rounded': 'Скруглённая',
   'guided.choice.shape.square': 'Квадратная',
+  'guided.choice.shape.tab': 'Вкладки',
+  'guided.choice.shape.segmented': 'Одной сплошной полосой',
   'guided.choice.shape.tile': 'Карточки с местом для картинки',
   'guided.choice.placement.ask': 'Где их разместить?',
   'guided.choice.placement.help': 'Как расположены кнопки.',
@@ -1156,8 +1162,37 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Изменено в другой вкладке',
   'conversation.retry': 'Попробовать ещё раз',
   'conversation.reload': 'Загрузить последнюю версию',
-  'conversation.startedAgain':
-    'Форма изменилась после сохранения этих ответов, поэтому вопросы начинаются заново с формы в её нынешнем виде. Ничего из сделанного вами не потеряно.',
   'conversation.unreadable':
     'Ваши прежние ответы не удалось прочитать, поэтому вопросы начинаются заново. Форма осталась такой, какой вы её оставили.',
+  'conversation.preview.label': 'Предпросмотр',
+  'conversation.preview.edit':
+    'Предпросмотр не совсем устраивает? Нажмите на него, чтобы изменить.',
+  'conversation.preview.editTouch':
+    'Предпросмотр не совсем устраивает? Коснитесь его, чтобы изменить.',
+  'conversation.preview.assumed': 'Что предположила Loppa',
+  'conversation.preview.noBrand':
+    'У вашей организации пока нет оформления, поэтому форма будет выглядеть так. Администратор может настроить его в разделе «Оформление».',
+  'conversation.byHand': 'изменено вручную',
+  'conversation.revert': 'Вернуть вариант мастера',
+  'conversation.reconcile.ask':
+    'Вы изменили это вручную. Оставить вашу версию или использовать вариант мастера?',
+  'conversation.reconcile.help':
+    'Ничего не изменится, пока вы не выберете, и вы всегда сможете вернуть как было.',
+  'conversation.reconcile.mine': 'Оставить мою',
+  'conversation.reconcile.guided': 'Использовать мастер',
+  'conversation.reconcile.both': 'Показать обе',
+  'conversation.reconcile.yours': 'Ваша',
+  'conversation.reconcile.theirs': 'Мастер',
+  'conversation.edit.title': 'Изменить здесь',
+  'conversation.edit.question': 'Вопрос',
+  'conversation.edit.options': 'Ответы',
+  'conversation.edit.answer': 'Ответ {n}',
+  'conversation.edit.smaller': 'Меньше',
+  'conversation.edit.larger': 'Больше',
+  'conversation.edit.drag': 'Перетащите, чтобы переместить',
+  'conversation.edit.moveUp': 'Выше',
+  'conversation.edit.moveDown': 'Ниже',
+  'conversation.showMe': 'Показать',
+  'conversation.rebased':
+    'Форма была изменена в редакторе. Ваши изменения сохранены, и вопросы продолжаются с того места, где вы остановились.',
 };

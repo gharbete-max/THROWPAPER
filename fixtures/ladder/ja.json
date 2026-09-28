@@ -67,6 +67,8 @@
     { "phrase": "一つか複数", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "左上か中央", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
     { "phrase": "ようこそ", "nodeId": "text.label", "expect": { "ask": "not-readable" } },
-    { "phrase": "2026年2月30日", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "2026年2月30日", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "タブ形式", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "一本のバーにしてください", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T2" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

@@ -138,8 +138,8 @@ own (the machine decides; these render):
 | `Doors` | the two doors after New form, with "Build it myself" beneath (S4) |
 | `GuessCard` | "This looks like …" with Right / Sort of / No and "Why this guess" (S11; until then, three cards) |
 | `PreviewMoment` | `FieldInput` on the brand kit, the fixed sentence, "What Loppa assumed" (S5) |
-| `InlineEdit/` | the shape handle, the size handle, the swatch row, inline text, drag grips — each snapping to schema values |
-| `ChangedByHand`, `ReconcileDialog` | the badge, and the three-way question |
+| `InlineEdit/` | shape samples, the size step, the swatch row, the question's and answers' words in place, answers moved by drag grip or Move up / Move down — each snapping to schema values (S5; moving questions stays with the classic editor) |
+| `PreviewMoment`: the badge; `Reconcile` | "changed by hand" with Revert to guided; the three-way question, a screen of its own rather than a dialog — one decision per screen (S5) |
 | `Trail`, `WhyChip`, `ReadingChip` | breadcrumbs; the "why"; the transparency chip |
 | `SiblingMenu`, `ShoppingList` | the way-out grid; the categorised menu after two misses |
 | `review/ReviewScreen` (+ `SourcePane`, `DraftPane`, `Chips`) | the import review (`IMPORT-PIPELINE.md` §8) |
@@ -161,8 +161,10 @@ public renderer, the PDF and the email each lay out their own way:
 | `sidebar-rail` | a narrow rail beside the form on wide screens; the header on phones |
 | `card-top` | the logo at the top of the card the form sits in |
 
-A new, optional, presentation-only `FormSettings.layout: { shelf, logoSlot, footer }` holds the
-choice (a `packages/shared` change, S5). A form without it renders exactly as today.
+A new, optional, presentation-only `FormSettings.layout` holds the choice — `{ logoSlot }` since S5
+(a `packages/shared` change); `shelf` and `footer` join it with the layout shelf below. A form
+without it renders exactly as today. One component, `components/Masthead.tsx`, lays the slot out on
+the public page and in the preview, so the two cannot differ.
 
 ## The layout shelf
 

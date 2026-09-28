@@ -235,6 +235,8 @@ export const nbNO: Record<MessageKey, string> = {
   'field.shape.square': 'Firkantet',
   'field.shape.rounded': 'Avrundet',
   'field.shape.pill': 'Pille',
+  'field.shape.tab': 'Faner',
+  'field.shape.segmented': 'Samlet i én stripe',
   'field.size': 'Størrelse',
   'field.size.regular': 'Normal',
   'field.size.large': 'Stor',
@@ -362,6 +364,8 @@ export const nbNO: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om samme e-postadresse kan svare mer enn én gang.',
   'settings.duplicateControl.email': 'Ett svar per e-postadresse',
   'settings.duplicateControl.none': 'Et vilkårlig antall svar',
+  'settings.logoSlot': 'Hvor logoen plasseres',
+  'settings.logoSlot.none': 'Øverst, som vanlig',
   'settings.identity': 'Tilby bekreftelse med e-ID etter innsending (valgfritt for personen)',
   'settings.identityHint':
     'Svarene lagres først; bekreftelsen er et steg man kan ta eller hoppe over. Der ingen e-ID-leverandør er tilkoblet, sier skjemaet det og blir ferdig likevel.',
@@ -1083,6 +1087,8 @@ export const nbNO: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Pille',
   'guided.choice.shape.rounded': 'Avrundet',
   'guided.choice.shape.square': 'Firkantet',
+  'guided.choice.shape.tab': 'Faner',
+  'guided.choice.shape.segmented': 'Samlet i én stripe',
   'guided.choice.shape.tile': 'Kort med plass til et bilde',
   'guided.choice.placement.ask': 'Hvor skal de plasseres?',
   'guided.choice.placement.help': 'Hvordan knappene plasseres.',
@@ -1129,8 +1135,36 @@ export const nbNO: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Endret i en annen fane',
   'conversation.retry': 'Prøv igjen',
   'conversation.reload': 'Hent det siste',
-  'conversation.startedAgain':
-    'Skjemaet ble endret etter at svarene ble lagret, så spørsmålene begynner på nytt fra skjemaet slik det er nå. Ingenting du har laget, er tapt.',
   'conversation.unreadable':
     'De tidligere svarene dine kunne ikke leses, så spørsmålene begynner på nytt. Skjemaet er slik du forlot det.',
+  'conversation.preview.label': 'Forhåndsvisning',
+  'conversation.preview.edit': 'Ikke helt fornøyd med forhåndsvisningen? Klikk på den for å endre.',
+  'conversation.preview.editTouch':
+    'Ikke helt fornøyd med forhåndsvisningen? Trykk på den for å endre.',
+  'conversation.preview.assumed': 'Hva Loppa antok',
+  'conversation.preview.noBrand':
+    'Organisasjonen deres har ingen merkevare ennå, så slik kommer skjemaet til å se ut. En administrator kan sette den opp under Merkevare.',
+  'conversation.byHand': 'endret for hånd',
+  'conversation.revert': 'Tilbake til den veiledede',
+  'conversation.reconcile.ask':
+    'Du endret dette for hånd. Beholde din versjon, eller bruke den veiledede?',
+  'conversation.reconcile.help':
+    'Ingenting endres før du velger, og du kan alltid endre det tilbake.',
+  'conversation.reconcile.mine': 'Behold min',
+  'conversation.reconcile.guided': 'Bruk den veiledede',
+  'conversation.reconcile.both': 'Vis begge',
+  'conversation.reconcile.yours': 'Din',
+  'conversation.reconcile.theirs': 'Veiledet',
+  'conversation.edit.title': 'Endre her',
+  'conversation.edit.question': 'Spørsmålet',
+  'conversation.edit.options': 'Svarene',
+  'conversation.edit.answer': 'Svar {n}',
+  'conversation.edit.smaller': 'Mindre',
+  'conversation.edit.larger': 'Større',
+  'conversation.edit.drag': 'Dra for å flytte',
+  'conversation.edit.moveUp': 'Flytt opp',
+  'conversation.edit.moveDown': 'Flytt ned',
+  'conversation.showMe': 'Vis meg',
+  'conversation.rebased':
+    'Skjemaet er endret i editoren. Endringene dine beholdes, og spørsmålene fortsetter der du var.',
 };

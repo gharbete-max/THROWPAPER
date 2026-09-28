@@ -1582,6 +1582,56 @@
       "notes": ""
     },
     {
+      "phrase": "Joined in one bar",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "joined up",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "one bar",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "segmented",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "segments",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Square",
       "nodeId": "choice.shape",
       "optionId": "square",
@@ -1645,6 +1695,56 @@
       "phrase": "squared",
       "nodeId": "choice.shape",
       "optionId": "square",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Tabs",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "folder tabs",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "like tabs",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tab",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tabbed",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
       "locale": "en",
       "source": "built-in",
       "createdAt": "2026-09-26",

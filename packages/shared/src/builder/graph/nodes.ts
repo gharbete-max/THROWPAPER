@@ -16,13 +16,13 @@ import type { BuilderGraph } from './schema.js';
  * are guesses about evidence, set by a person and reviewed like any other number here: "signing
  * people up" is strong evidence for an event registration and weak evidence for an RSVP.
  *
- * **Two things wait for slice S5**, when the form schema gains the values they write: the `tab` and
- * `segmented` shapes (`ChoiceStyle` has no such shape yet, so offering them would write a value
- * the schema rejects — rule G5 refuses it), and the logo slot, which is kept in `pending` until
- * `FormSettings.layout` exists to hold it.
+ * **Version 2 (S5)** offers the `tab` and `segmented` shapes, which `ChoiceStyle` gained in that
+ * slice, and writes the logo slot into the form (`settings.layout.logoSlot`) rather than keeping
+ * it in `pending`. A session recorded against version 1 still replays: the log holds resolved
+ * changes, not the options that caused them.
  */
 export const BUILDER_GRAPH = {
-  graphVersion: 1,
+  graphVersion: 2,
   start: 'flow.start',
   inputs: ['pending.brandKitExists', 'guess.pMille'],
   nodes: [
@@ -201,32 +201,52 @@ export const BUILDER_GRAPH = {
         {
           id: 'header-left',
           label: 'guided.brand.logoSlot.headerLeft',
-          patch: [{ op: 'set', path: 'pending.logoSlot', value: 'header-left' }],
+          patch: [
+            { op: 'set', path: 'draft.definition.settings.layout.logoSlot', value: 'header-left' },
+          ],
         },
         {
           id: 'masthead-centred',
           label: 'guided.brand.logoSlot.mastheadCentred',
-          patch: [{ op: 'set', path: 'pending.logoSlot', value: 'masthead-centred' }],
+          patch: [
+            {
+              op: 'set',
+              path: 'draft.definition.settings.layout.logoSlot',
+              value: 'masthead-centred',
+            },
+          ],
         },
         {
           id: 'corner-watermark',
           label: 'guided.brand.logoSlot.cornerWatermark',
-          patch: [{ op: 'set', path: 'pending.logoSlot', value: 'corner-watermark' }],
+          patch: [
+            {
+              op: 'set',
+              path: 'draft.definition.settings.layout.logoSlot',
+              value: 'corner-watermark',
+            },
+          ],
         },
         {
           id: 'footer-strip',
           label: 'guided.brand.logoSlot.footerStrip',
-          patch: [{ op: 'set', path: 'pending.logoSlot', value: 'footer-strip' }],
+          patch: [
+            { op: 'set', path: 'draft.definition.settings.layout.logoSlot', value: 'footer-strip' },
+          ],
         },
         {
           id: 'sidebar-rail',
           label: 'guided.brand.logoSlot.sidebarRail',
-          patch: [{ op: 'set', path: 'pending.logoSlot', value: 'sidebar-rail' }],
+          patch: [
+            { op: 'set', path: 'draft.definition.settings.layout.logoSlot', value: 'sidebar-rail' },
+          ],
         },
         {
           id: 'card-top',
           label: 'guided.brand.logoSlot.cardTop',
-          patch: [{ op: 'set', path: 'pending.logoSlot', value: 'card-top' }],
+          patch: [
+            { op: 'set', path: 'draft.definition.settings.layout.logoSlot', value: 'card-top' },
+          ],
         },
       ],
     },
@@ -416,6 +436,23 @@ export const BUILDER_GRAPH = {
           label: 'guided.choice.shape.square',
           patch: [
             { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'square' },
+          ],
+        },
+        // Tabs and one joined bar are ways of drawing buttons, so choosing one makes them buttons.
+        {
+          id: 'tab',
+          label: 'guided.choice.shape.tab',
+          patch: [
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' },
+            { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'tab' },
+          ],
+        },
+        {
+          id: 'segmented',
+          label: 'guided.choice.shape.segmented',
+          patch: [
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' },
+            { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'segmented' },
           ],
         },
         {

@@ -155,6 +155,8 @@ describe('every answer, from every state a person can reach', () => {
       c.state.focus,
       c.state.pending,
       c.state.sidecar.brandDecided ?? null,
+      // Where the logo sits lives in the form since S5, not in `pending`.
+      c.state.draft.definition.settings.layout ?? null,
       c.state.draft.definition.fields.map((field) => [
         field.type,
         'options' in field ? field.options.length : 0,
@@ -274,18 +276,8 @@ describe('what a person writes', () => {
       c = answer(G, c, given, { locale });
     }
     const id = c.state.focus!;
-    c = edit(
-      c,
-      [
-        {
-          op: 'set',
-          path: `draft.definition.fields[id=${id}].label`,
-          value: { 'sv-SE': 'Maträtt' },
-        },
-      ],
-      { locale },
-    );
-    // Out through the escape, "No, people type an answer", then back in with "Yes".
+    // Out through the escape, "No, people type an answer", then back in with "Yes". (A hand edit
+    // on the way would make these proposals instead — `reconcile.test.ts`.)
     c = answer(G, c, { kind: 'jump', to: 'choice.buttons' }, { locale });
     c = answer(G, c, { kind: 'option', optionId: 'no' }, { locale });
     expect(c.state.draft.definition.fields[1]).not.toHaveProperty('options');

@@ -8,6 +8,7 @@ import {
   jsonEqual,
   jumpTargets,
   optionsOf,
+  rebase,
   rewind,
   trail,
   type Answer,
@@ -29,24 +30,28 @@ import { interpret, toAnswer, type AskReason, type Reading } from '@tp/shared/in
  */
 
 export type Started =
-  | { readonly kind: 'resumed'; readonly conversation: Conversation }
+  | {
+      readonly kind: 'resumed';
+      readonly conversation: Conversation;
+      /**
+       * The form was changed outside the conversation since it was saved — in the classic editor,
+       * or by a save that failed half way. The conversation carries on over the form as it now is
+       * (`rebase`): what was changed there shows as changed by hand and is never written over.
+       */
+      readonly rebased: boolean;
+    }
   | {
       readonly kind: 'fresh';
       readonly conversation: Conversation;
-      /**
-       * Why a saved conversation was not resumed: it no longer describes the form (the form was
-       * edited in the editor since, or the session's save failed after the draft's), or it could
-       * not be read. Either way the form as it is wins, and nothing the person made is
-       * overwritten.
-       */
-      readonly discarded: 'changed-elsewhere' | 'unreadable' | null;
+      /** A saved conversation this build could not read: the form as it is starts a new one. */
+      readonly discarded: 'unreadable' | null;
     };
 
 /**
- * Where to begin: the saved conversation, if it still describes the draft exactly — otherwise a
- * new one over the draft as it stands. Never the other way round: resuming a conversation whose
- * draft differs would save that draft over edits made in the classic editor (`CLAUDE.md`,
- * "Never destroy user text or edits"). S5's reconciliation will do better than starting again.
+ * Where to begin: the saved conversation, carried on over the form as it is now; or a new one when
+ * there is none or it cannot be read. The form always wins over the saved draft — resuming never
+ * saves an older draft over edits made since (`CLAUDE.md`, "Never destroy user text or edits";
+ * `CAVEATS.md` #75), and those edits are reconciled rather than discarded.
  */
 export function startConversation(input: {
   readonly graph: BuilderGraph;
@@ -64,16 +69,18 @@ export function startConversation(input: {
   if (input.stored === null || input.stored === undefined) {
     return { kind: 'fresh', conversation: fresh(), discarded: null };
   }
+  let saved: Conversation;
   try {
-    const conversation = fromSession(input.stored);
-    if (jsonEqual(conversation.state.draft.definition, input.definition)) {
-      return { kind: 'resumed', conversation };
-    }
-    return { kind: 'fresh', conversation: fresh(), discarded: 'changed-elsewhere' };
+    saved = fromSession(input.stored);
   } catch (error) {
     if (!(error instanceof MachineError)) throw error;
     return { kind: 'fresh', conversation: fresh(), discarded: 'unreadable' };
   }
+  const draft = { definition: input.definition, title: input.title };
+  if (jsonEqual(saved.state.draft, draft)) {
+    return { kind: 'resumed', conversation: saved, rebased: false };
+  }
+  return { kind: 'resumed', conversation: rebase(input.graph, saved, draft), rebased: true };
 }
 
 export interface Locales {
@@ -173,17 +180,38 @@ export function lastChoice(conversation: Conversation): string | null {
   return choiceAt(conversation, conversation.log.length - 1);
 }
 
+/** Which preview a screen shows, named as the graph names it: a control, or the masthead. */
+export type PreviewSpec = 'choice.control' | 'brand.masthead';
+
 /**
- * Whether the screen shows the live preview: on a preview moment, and on the screen right after a
+ * The preview a screen shows, or null: on a preview moment, its own; on the screen right after a
  * node whose `preview` names what to render after it — so the control appears once its shape has
- * been answered, and again at the end (`PREDICTIVE-BUILDER.md`, acceptance S2).
+ * been answered, and again at the end (`PREDICTIVE-BUILDER.md`, acceptance S2). "Show me" asks for
+ * one anywhere a question is in focus.
  */
+export function previewOf(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  showMe = false,
+): PreviewSpec | null {
+  const node = currentNode(graph, conversation);
+  const named = (spec: string | undefined): PreviewSpec | null =>
+    spec === 'choice.control' || spec === 'brand.masthead' ? spec : null;
+  if (node.kind === 'preview-moment') return named(node.preview);
+  const last = conversation.log.filter((entry) => entry.answer.kind !== 'edit').at(-1);
+  if (last && last.answer.kind !== 'jump' && last.to === node.id) {
+    const answered = graph.nodes.find((n) => n.id === last.nodeId);
+    if (answered?.kind !== 'preview-moment') {
+      const spec = named(answered?.preview);
+      if (spec) return spec;
+    }
+  }
+  return showMe && conversation.state.focus !== null ? 'choice.control' : null;
+}
+
+/** Whether the screen shows a preview at all (see `previewOf`). */
 export function showsPreview(graph: BuilderGraph, conversation: Conversation): boolean {
-  if (currentNode(graph, conversation).kind === 'preview-moment') return true;
-  const last = conversation.log.at(-1);
-  if (!last || last.answer.kind === 'jump') return false;
-  const answered = graph.nodes.find((n) => n.id === last.nodeId);
-  return answered?.preview !== undefined && answered.kind !== 'preview-moment';
+  return previewOf(graph, conversation) !== null;
 }
 
 /** An answer, as the trail says it: a message key, or the words the person gave. */
@@ -239,6 +267,18 @@ export function crumbs(graph: BuilderGraph, conversation: Conversation): Crumb[]
       skipped: crumb.skipped.map((s) => ({ question: askOf(s.nodeId), reason: s.reason })),
     };
   });
+}
+
+/**
+ * "What Loppa assumed": the last few decisions, newest first, each a way back to its question
+ * (`PREDICTIVE-BUILDER.md`, "The preview contract"). Jumps say where, not what, so they are left
+ * out.
+ */
+export function assumed(graph: BuilderGraph, conversation: Conversation, count = 3): Crumb[] {
+  return crumbs(graph, conversation)
+    .filter((crumb) => conversation.log[crumb.step]?.answer.kind !== 'jump')
+    .slice(-count)
+    .reverse();
 }
 
 /** Back to a crumb's question, to answer it again. */

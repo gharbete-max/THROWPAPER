@@ -147,8 +147,9 @@ Examples: `draft.definition.fields[focus].appearance`,
 `pending.buttons`. **The paths a patch may write are one table** (`WRITABLE` in `graph/paths.ts`):
 each pattern, the operations allowed on it, and a Zod schema for its values, taken from the form
 schema itself (`CHOICE_SHAPES`, `FieldWidth`, `SelectOption`, …). A patch on any other path, or
-with a value the schema refuses, fails G5 — which is why S1 cannot offer the `tab` and `segmented`
-shapes before S5 adds them to `ChoiceStyle`, and why a patch may set a question's `type` only to
+with a value the schema refuses, fails G5 — which is why S1 could not offer the `tab` and
+`segmented` shapes until S5 added them to `ChoiceStyle` (graph version 2 offers them), and why a
+patch may set a question's `type` only to
 one the machine can build from a label alone (`QUESTION_TYPES`, "The machine" below). A text path
 (`label`, `helpText`, `title`) is marked `localised`: `{ $answer: true }` there is the answer in the
 author's language. `pending.*` takes any JSON: it is working memory and
@@ -208,8 +209,17 @@ where it started (`base`) and every step since (`log`); its state is always exac
   whose guard holds). Bounded by the size of the graph. A jump — the escape to a menu or a sibling,
   a menu's entry, the end's way back to the menus — is a step with no changes.
 - **Back** applies the last inverse; **a breadcrumb** (`rewind`) replays the log up to it; the two
-  agree. **A hand edit** (`edit`, inline editing, S5) is a step with `source: 'manual'` on paths
-  `WRITABLE` allows, in the same log, as undoable as an answer; the trail does not show it.
+  agree. **A hand edit** (`edit`, inline editing on the preview) is a step with `source: 'manual'`
+  on paths `WRITABLE` allows, in the same log, as undoable as an answer; the trail does not show it.
+- **Reconciliation** (`reconcile.ts`, S5). Every guided step records each question it made or
+  changed as it left it (`guided`); a question that differs from that has been changed by hand.
+  A guided step runs on the conversation's own versions and never changes a question changed by
+  hand: what it would have made of it becomes the question's `proposal` — the person's version with
+  the step's change on top — and later steps go on building that. `keepMine` drops the proposal;
+  `takeGuided` (also "Revert to guided") makes the question the conversation's version again; both
+  are steps. When a proposal comes round to the person's version, there is nothing left to ask.
+  `rebase` carries a conversation on over a draft changed outside it, with a new log, so Back can
+  never undo the editor's changes; losing the question in focus sends it to the menu.
 - **Saved** as `BuilderSession` (`session.ts`): the base and the log, nothing derived, at most
   2 000 steps; `GET/PUT /v1/forms/:id/builder-session`, one per form and person, with a version
   lock (409 on a save over a version the saver did not read). A stored session that does not
@@ -458,10 +468,12 @@ to the list's length, preserved. Until then `$options` gives placeholder options
 
 `pending.brandKitExists` is set by the shell before the conversation starts, from `GET
 /v1/brand-kit` — one of the graph's two `inputs`, and it arrives as data in state, not as a call
-from inside a guard. The preset and the logo slot are kept in `pending` until the draft has a
-place for them: S5 adds `FormSettings.layout` and moves the slot there; S4 applies the preset
-through the existing brand-kit endpoint, and adds the logo upload with colours from the logo
-(`dominant-colour.ts`). No node here ever renders in Loppa's own colours (`CAVEATS.md` #32).
+from inside a guard. Since graph version 2 (S5) the logo slot is written into the form,
+`settings.layout.logoSlot`. The preset stays in `pending`: applying it means changing the brand kit,
+which is organisation-wide and an administrator's to change — owner question 8
+(`PREDICTIVE-BUILDER.md`). Until it is answered the preview wears the organisation's kit, and says
+so when there is none (`CAVEATS.md` #32). The logo upload with colours from the logo
+(`dominant-colour.ts`) waits with it.
 
 ## The nodes of slice S1
 

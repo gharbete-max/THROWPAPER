@@ -82,6 +82,8 @@
     { "phrase": "esquina arriba", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
     { "phrase": "sobre el título", "nodeId": "brand.logoSlot", "expect": { "optionId": "masthead-centred", "tier": "T0" }, "note": "'sobre' is not a stop word: above the title is not beside it" },
     { "phrase": "el título", "nodeId": "brand.logoSlot", "expect": { "ask": "nothing" }, "note": "above it or beside it: half of either, which reads as neither" },
-    { "phrase": "30 de febrero de 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30 de febrero de 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "en pestañas", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "los quiero unidos en una barra", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

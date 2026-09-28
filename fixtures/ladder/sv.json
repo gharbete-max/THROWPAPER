@@ -85,6 +85,8 @@
     { "phrase": "ett eller flera", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "hörnet överst", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
     { "phrase": "30 februari 2026", "pattern": "date", "expect": { "none": true } },
-    { "phrase": "811218-9875", "pattern": "personnummer", "expect": { "none": true } }
+    { "phrase": "811218-9875", "pattern": "personnummer", "expect": { "none": true } },
+    { "phrase": "som flikar", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "jag vill ha dem sammanfogade i en list", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

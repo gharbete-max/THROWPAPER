@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LocaleConfig } from '@tp/i18n';
 import {
+  MachineError,
   currentNode,
+  edit,
+  keepMine,
   optionsOf,
+  proposals,
+  takeGuided,
   type Answer,
   type BuilderGraph,
   type Conversation,
+  type Op,
 } from '@tp/shared/builder';
 import { toAnswer, type AskReason, type Reading } from '@tp/shared/interpret';
 import { Icon } from '../../../components/Icon.js';
@@ -16,15 +22,17 @@ import {
   choiceAt,
   choose,
   lastChoice,
+  previewOf,
   readsFreeText,
-  showsPreview,
   stepBack,
   typed,
   wayOut,
   type Locales,
 } from './conversation.js';
 import { digitOfCode, keyAction } from './keyboard.js';
-import { LivePreview, NodeView } from './NodeView.js';
+import { NodeView } from './NodeView.js';
+import { PreviewMoment, type PreviewBrand } from './PreviewMoment.js';
+import { Reconcile } from './Reconcile.js';
 import { Trail } from './Trail.js';
 
 /**
@@ -49,6 +57,8 @@ export interface ShellProps {
   readonly onOpenEditor: () => void;
   /** Whether the latest step is saved — shown beside the way out. */
   readonly status?: React.ReactNode;
+  /** Whose the form is, for the preview: the organisation's logo, name, and whether it has a kit. */
+  readonly brand: PreviewBrand;
 }
 
 const ASK: Record<AskReason, string> = {
@@ -86,16 +96,29 @@ export function Shell({
   desktop,
   onOpenEditor,
   status,
+  brand,
 }: ShellProps) {
   const t = useT();
   const reduced = useReducedMotion();
   const node = currentNode(graph, conversation);
   const step = conversation.log.length;
+  /**
+   * Where the conversation is, counting answers only. A hand edit or a reconciliation is a step in
+   * the log too, but not a move: the screen must not slide, refocus or forget what is open when an
+   * option is renamed on the preview.
+   */
+  const position = conversation.log.filter((entry) => entry.answer.kind !== 'edit').length;
+  /** A question the conversation would have changed but a person had: asked before anything else. */
+  const waiting = proposals(conversation.state)[0] ?? null;
 
   const [help, setHelp] = useState(false);
   const [wayOutOpen, setWayOutOpen] = useState(false);
   const [text, setText] = useState('');
   const [said, setSaid] = useState<Said | null>(null);
+  /** Inline editing open on the preview. */
+  const [editing, setEditing] = useState(false);
+  /** "Show me": the preview of the question in focus, on any screen. */
+  const [showMe, setShowMe] = useState(false);
   /** Which way the last move went, for the slide; and what to focus when it lands. */
   const [moved, setMoved] = useState<{ back: boolean; focus: string | null }>({
     back: false,
@@ -118,6 +141,7 @@ export function Shell({
   function go(next: Conversation, back: boolean, focus: string | null = null) {
     setHelp(false);
     setWayOutOpen(false);
+    setEditing(false);
     setMoved({ back, focus });
     onChange(next);
   }
@@ -168,6 +192,16 @@ export function Shell({
     setText(words);
   }
 
+  /** A gesture on the preview: a step in the log, but not a move — nothing slides or refocuses. */
+  function editWith(ops: Op[]) {
+    try {
+      onChange(edit(conversation, ops, { locale: locales.contentLocale }));
+    } catch (error) {
+      if (!(error instanceof MachineError)) throw error;
+      setSaid({ kind: 'refused' });
+    }
+  }
+
   /** One of the answers the ladder could not choose between, pressed. */
   function pickReading(reading: Reading) {
     const result = choose(graph, conversation, toAnswer(graph, reading), locales);
@@ -187,6 +221,7 @@ export function Shell({
     const body = bodyRef.current;
     if (!body) return;
     const answers = body.querySelectorAll<HTMLElement>('[data-answer]');
+    const asked = waiting ? t('conversation.reconcile.ask') : t(node.ask);
     const wanted =
       moved.focus === THE_BOX
         ? boxRef.current
@@ -204,11 +239,11 @@ export function Shell({
     setSaid((current) => (current?.kind === 'read' && current.atStep === step ? current : null));
     setAnnouncement(
       answers.length > 0
-        ? `${t(node.ask)} ${t('conversation.answers', { count: answers.length })}`
-        : t(node.ask),
+        ? `${asked} ${t('conversation.answers', { count: answers.length })}`
+        : asked,
     );
-    // Only on arriving somewhere: `moved` is set with every move.
-  }, [node.id, step]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Only on arriving somewhere: a move, or a question to reconcile coming or going.
+  }, [node.id, position, waiting]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // The keys, on the whole window, so they work wherever focus is.
   useEffect(() => {
@@ -239,7 +274,9 @@ export function Shell({
       if (action.kind === 'pick') answers[action.index]?.click();
       else if (action.kind === 'back') goBack();
       else if (action.kind === 'help') setHelp((open) => !open);
-      else {
+      else if (action.kind === 'edit') {
+        if (spec) setEditing((open) => !open);
+      } else {
         const at = answers.indexOf(document.activeElement as HTMLElement);
         const next = at === -1 ? 0 : (at + action.by + answers.length) % answers.length;
         answers[next]?.focus();
@@ -250,6 +287,25 @@ export function Shell({
   });
 
   const out = wayOut(graph, conversation);
+  const spec = waiting ? null : previewOf(graph, conversation, showMe);
+  const preview = spec ? (
+    <PreviewMoment
+      spec={spec}
+      graph={graph}
+      conversation={conversation}
+      contentLocales={contentLocales}
+      contentLocale={locales.contentLocale}
+      brand={brand}
+      editing={editing}
+      onEditing={setEditing}
+      onEdit={editWith}
+      onUseGuided={(fieldId) => onChange(takeGuided(conversation, fieldId))}
+      onBackTo={(to) => {
+        setSaid(null);
+        go(backTo(conversation, to), true, choiceAt(conversation, to));
+      }}
+    />
+  ) : null;
   const slide = reduced ? '' : moved.back ? ' conversation__node--back' : ' conversation__node--on';
 
   return (
@@ -263,10 +319,10 @@ export function Shell({
         }}
       />
 
-      <div key={`${step}:${node.id}`} className={`conversation__node${slide}`}>
+      <div key={`${position}:${node.id}`} className={`conversation__node${slide}`}>
         <div className="conversation__ask">
           <h1 id="conversation-question" className="conversation__question">
-            {t(node.ask)}
+            {waiting ? t('conversation.reconcile.ask') : t(node.ask)}
           </h1>
           <button
             type="button"
@@ -281,29 +337,35 @@ export function Shell({
         </div>
         {help && (
           <p id="conversation-help" className="conversation__help">
-            {t(node.help)}
+            {waiting ? t('conversation.reconcile.help') : t(node.help)}
           </p>
         )}
 
         <div ref={bodyRef} className="conversation__body">
-          <NodeView
-            graph={graph}
-            node={node}
-            conversation={conversation}
-            locales={contentLocales}
-            contentLocale={locales.contentLocale}
-            onAnswer={answer}
-            onOpenEditor={onOpenEditor}
-          />
+          {waiting ? (
+            <Reconcile
+              conversation={conversation}
+              fieldId={waiting}
+              contentLocales={contentLocales}
+              contentLocale={locales.contentLocale}
+              onKeepMine={() => onChange(keepMine(conversation, waiting))}
+              onUseGuided={() => onChange(takeGuided(conversation, waiting))}
+            />
+          ) : (
+            <NodeView
+              graph={graph}
+              node={node}
+              conversation={conversation}
+              locales={contentLocales}
+              contentLocale={locales.contentLocale}
+              onAnswer={answer}
+              onOpenEditor={onOpenEditor}
+              preview={node.kind === 'preview-moment' ? preview : undefined}
+            />
+          )}
         </div>
 
-        {showsPreview(graph, conversation) && node.kind !== 'preview-moment' && (
-          <LivePreview
-            conversation={conversation}
-            locales={contentLocales}
-            contentLocale={locales.contentLocale}
-          />
-        )}
+        {node.kind !== 'preview-moment' && preview}
 
         {said?.kind === 'read' && said.atStep === step && (
           <p className="conversation__reading">
@@ -314,7 +376,7 @@ export function Shell({
           </p>
         )}
 
-        {readsFreeText(node) && (
+        {!waiting && readsFreeText(node) && (
           <form
             className="conversation__type"
             onSubmit={(event) => {
@@ -387,6 +449,19 @@ export function Shell({
             {t('conversation.wayOut')}
           </button>
         )}
+        {/* "Show me" where the graph shows nothing: a preview is already on a preview's screen. */}
+        {conversation.state.focus !== null &&
+          !waiting &&
+          previewOf(graph, conversation) === null && (
+            <button
+              type="button"
+              className="button button--bare"
+              aria-pressed={showMe}
+              onClick={() => setShowMe((on) => !on)}
+            >
+              {t('conversation.showMe')}
+            </button>
+          )}
         <button type="button" className="button button--bare" onClick={onOpenEditor}>
           {t('wizard.advanced')}
         </button>

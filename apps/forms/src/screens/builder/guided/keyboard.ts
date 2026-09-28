@@ -12,6 +12,7 @@
  * | Backspace | back one step, only when the text box it would edit is empty |
  * | ↑ ↓ ← → | move between answers, when no text box has focus |
  * | ? | the help line, when no text box has focus |
+ * | E | edit the preview, on a screen that shows one, when no text box has focus |
  *
  * Enter is not here: every answer is a real button, and a focused button already answers to it.
  */
@@ -20,7 +21,8 @@ export type KeyAction =
   | { readonly kind: 'pick'; readonly index: number }
   | { readonly kind: 'back' }
   | { readonly kind: 'move'; readonly by: -1 | 1 }
-  | { readonly kind: 'help' };
+  | { readonly kind: 'help' }
+  | { readonly kind: 'edit' };
 
 export interface KeyPress {
   readonly key: string;
@@ -74,6 +76,7 @@ export function keyAction(press: KeyPress, context: KeyContext): KeyAction | nul
   if (key === 'ArrowDown' || key === 'ArrowRight') return { kind: 'move', by: 1 };
   if (key === 'ArrowUp' || key === 'ArrowLeft') return { kind: 'move', by: -1 };
   if (key === '?') return { kind: 'help' };
+  if (key === 'e' || key === 'E') return { kind: 'edit' };
   return null;
 }
 

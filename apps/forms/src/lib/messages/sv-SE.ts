@@ -236,6 +236,8 @@ export const svSE: Record<MessageKey, string> = {
   'field.shape.square': 'Fyrkantig',
   'field.shape.rounded': 'Rundad',
   'field.shape.pill': 'Kapsel',
+  'field.shape.tab': 'Flikar',
+  'field.shape.segmented': 'Sammanfogade i en list',
   'field.size': 'Storlek',
   'field.size.regular': 'Normal',
   'field.size.large': 'Stor',
@@ -363,6 +365,8 @@ export const svSE: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om samma e-postadress får svara mer än en gång.',
   'settings.duplicateControl.email': 'Ett svar per e-postadress',
   'settings.duplicateControl.none': 'Hur många som helst',
+  'settings.logoSlot': 'Var logotypen hamnar',
+  'settings.logoSlot.none': 'Överst, som vanligt',
   'settings.identity':
     'Erbjud bekräftelse med e-legitimation efter inskick (frivilligt för personen)',
   'settings.identityHint':
@@ -1084,6 +1088,8 @@ export const svSE: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Kapsel',
   'guided.choice.shape.rounded': 'Rundad',
   'guided.choice.shape.square': 'Fyrkantig',
+  'guided.choice.shape.tab': 'Flikar',
+  'guided.choice.shape.segmented': 'Sammanfogade i en list',
   'guided.choice.shape.tile': 'Kort, med plats för en bild',
   'guided.choice.placement.ask': 'Var ska de sitta?',
   'guided.choice.placement.help': 'Hur knapparna placeras.',
@@ -1134,8 +1140,35 @@ export const svSE: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Ändrat i en annan flik',
   'conversation.retry': 'Försök igen',
   'conversation.reload': 'Hämta det senaste',
-  'conversation.startedAgain':
-    'Formuläret ändrades efter att svaren sparades, så frågorna börjar om från formuläret som det ser ut nu. Inget du gjort har gått förlorat.',
   'conversation.unreadable':
     'Dina tidigare svar gick inte att läsa, så frågorna börjar om. Formuläret är som du lämnade det.',
+  'conversation.preview.label': 'Förhandsvisning',
+  'conversation.preview.edit': 'Inte helt nöjd med förhandsvisningen? Klicka på den för att ändra.',
+  'conversation.preview.editTouch':
+    'Inte helt nöjd med förhandsvisningen? Tryck på den för att ändra.',
+  'conversation.preview.assumed': 'Vad Loppa antog',
+  'conversation.preview.noBrand':
+    'Er organisation har inget utseende inställt ännu, så här kommer formuläret att se ut. En administratör kan ställa in det under Utseende.',
+  'conversation.byHand': 'ändrad för hand',
+  'conversation.revert': 'Återgå till guidad',
+  'conversation.reconcile.ask':
+    'Du ändrade det här för hand. Behålla din version eller använda den guidade?',
+  'conversation.reconcile.help': 'Inget ändras förrän du väljer, och du kan alltid ändra tillbaka.',
+  'conversation.reconcile.mine': 'Behåll min',
+  'conversation.reconcile.guided': 'Använd guidad',
+  'conversation.reconcile.both': 'Visa båda',
+  'conversation.reconcile.yours': 'Din',
+  'conversation.reconcile.theirs': 'Guidad',
+  'conversation.edit.title': 'Ändra här',
+  'conversation.edit.question': 'Frågan',
+  'conversation.edit.options': 'Svaren',
+  'conversation.edit.answer': 'Svar {n}',
+  'conversation.edit.smaller': 'Mindre',
+  'conversation.edit.larger': 'Större',
+  'conversation.edit.drag': 'Dra för att flytta',
+  'conversation.edit.moveUp': 'Flytta upp',
+  'conversation.edit.moveDown': 'Flytta ned',
+  'conversation.showMe': 'Visa mig',
+  'conversation.rebased':
+    'Formuläret har ändrats i redigeraren. Dina ändringar behålls, och frågorna fortsätter där du var.',
 };

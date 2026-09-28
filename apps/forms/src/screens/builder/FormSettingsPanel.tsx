@@ -1,4 +1,9 @@
-import type { FormDefinition, FormSettings } from '@tp/shared/forms';
+import {
+  LOGO_SLOTS,
+  type FormDefinition,
+  type FormSettings,
+  type LogoSlot,
+} from '@tp/shared/forms';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { Icon } from '../../components/Icon.js';
@@ -28,7 +33,21 @@ export const SETTINGS_CONTROLS: Array<keyof FormSettings> = [
   'duplicateControl',
   'locales',
   'identity',
+  'layout',
 ];
+
+/**
+ * The slots' names: the same words the guided conversation offers them with ("Top left, beside the
+ * title"), so the two ways of setting it describe it identically.
+ */
+const SLOT_LABELS: Record<LogoSlot, string> = {
+  'header-left': 'guided.brand.logoSlot.headerLeft',
+  'masthead-centred': 'guided.brand.logoSlot.mastheadCentred',
+  'corner-watermark': 'guided.brand.logoSlot.cornerWatermark',
+  'footer-strip': 'guided.brand.logoSlot.footerStrip',
+  'sidebar-rail': 'guided.brand.logoSlot.sidebarRail',
+  'card-top': 'guided.brand.logoSlot.cardTop',
+};
 
 export function FormSettingsPanel({
   definition,
@@ -155,6 +174,28 @@ export function FormSettingsPanel({
           <option value="none">{t('settings.duplicateControl.none')}</option>
         </select>
         <span className="small muted">{t('settings.duplicateControlHint')}</span>
+      </label>
+
+      <label className="field">
+        <span>{t('settings.logoSlot')}</span>
+        <select
+          value={settings.layout?.logoSlot ?? ''}
+          onChange={(event) => {
+            const slot = event.target.value as LogoSlot | '';
+            // No slot is no layout at all: the form renders exactly as forms always have.
+            if (slot === '') {
+              const { layout: _layout, ...rest } = settings;
+              onChange({ ...definition, settings: rest });
+            } else patch({ layout: { ...settings.layout, logoSlot: slot } });
+          }}
+        >
+          <option value="">{t('settings.logoSlot.none')}</option>
+          {LOGO_SLOTS.map((slot) => (
+            <option key={slot} value={slot}>
+              {t(SLOT_LABELS[slot])}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label className="field field--inline">

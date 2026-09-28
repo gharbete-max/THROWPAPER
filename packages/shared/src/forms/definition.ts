@@ -221,7 +221,11 @@ export type RatingAppearance = z.infer<typeof RatingAppearance>;
  * byte for byte, and renders exactly as it did. Presentation only, like `appearance` — restyling
  * a question never touches a submission.
  */
-export const CHOICE_SHAPES = ['theme', 'square', 'rounded', 'pill'] as const;
+/**
+ * `tab` and `segmented` join the choices up: a row of tabs with the chosen one lifted, and one bar
+ * divided into parts. Both are presentation only — the same options, the same answer stored.
+ */
+export const CHOICE_SHAPES = ['theme', 'square', 'rounded', 'pill', 'tab', 'segmented'] as const;
 export const CHOICE_SIZES = ['regular', 'large'] as const;
 export const CHOICE_ACCENTS = ['primary', 'secondary', 'accent'] as const;
 /** `auto` fits as many as the width allows; a number is the most per row on a wide screen. */
@@ -704,6 +708,34 @@ export function fieldSupports(type: FieldType, property: string): boolean {
   return PROPERTY_SETS.get(type)?.has(property) ?? false;
 }
 
+/**
+ * Where the organisation's logo sits on the form — a named place, never a position
+ * (`docs/plan/DESIGN-LANGUAGE.md`, "Placement slots"; `docs/plan/CAVEATS.md` #33). A slot is a name
+ * each renderer lays out its own way, so a phone, a wide screen and a printed page can each do the
+ * right thing with it; a coordinate would be right on one of them at most.
+ */
+export const LOGO_SLOTS = [
+  'header-left',
+  'masthead-centred',
+  'corner-watermark',
+  'footer-strip',
+  'sidebar-rail',
+  'card-top',
+] as const;
+export type LogoSlot = (typeof LOGO_SLOTS)[number];
+
+/**
+ * How the whole form is laid out. Optional, and presentation only: a form without it renders
+ * exactly as every form did before it existed. `strict`, so nothing can be stored beside the slot
+ * — least of all an `x` or a `y`.
+ */
+export const FormLayout = z
+  .object({
+    logoSlot: z.enum(LOGO_SLOTS).optional(),
+  })
+  .strict();
+export type FormLayout = z.infer<typeof FormLayout>;
+
 export const FormSettings = z.object({
   submitLabel: LocalisedText.default({}),
   confirmationMessage: LocalisedText.default({}),
@@ -758,6 +790,8 @@ export const FormSettings = z.object({
    * provide would be a form nobody can finish.
    */
   identity: z.enum(['off', 'optional']).default('off'),
+  /** Where the logo sits. Absent: the header every form has always had. */
+  layout: FormLayout.optional(),
 });
 
 /**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BUILDER_GRAPH, toSession, type Conversation } from '@tp/shared/builder';
+import { BUILDER_GRAPH, changedByHand, toSession, type Conversation } from '@tp/shared/builder';
 import { emptyDefinition, type FormDefinition } from '@tp/shared/forms';
 import {
   backTo,
@@ -49,12 +49,12 @@ describe('starting', () => {
     c = press(c, 'signup');
     const stored = JSON.parse(JSON.stringify(toSession(G, c))) as unknown;
     const again = start(c.state.draft.definition, stored);
-    expect(again.kind).toBe('resumed');
+    expect(again).toMatchObject({ kind: 'resumed', rebased: false });
     expect(again.conversation.state.cursor).toBe(c.state.cursor);
     expect(again.conversation.log).toHaveLength(1);
   });
 
-  it('starts again from the form, never over it, when the form was changed elsewhere', () => {
+  it('carries on over the form as it is, never over it, when the form was changed elsewhere', () => {
     let c = start().conversation;
     c = press(c, 'signup');
     const stored = JSON.parse(JSON.stringify(toSession(G, c))) as unknown;
@@ -62,8 +62,12 @@ describe('starting', () => {
     const edited = structuredClone(c.state.draft.definition);
     Object.assign(edited.fields[0]!, { label: { 'sv-SE': 'Ditt namn' } });
     const again = start(edited, stored);
-    expect(again).toMatchObject({ kind: 'fresh', discarded: 'changed-elsewhere' });
+    expect(again).toMatchObject({ kind: 'resumed', rebased: true });
+    // The editor's version is the draft; the conversation is where it was; the rename shows as
+    // changed by hand, so nothing the conversation does next will write over it.
     expect(again.conversation.state.draft.definition).toEqual(edited);
+    expect(again.conversation.state.cursor).toBe(c.state.cursor);
+    expect(changedByHand(again.conversation.state, edited.fields[0]!.id)).toBe(true);
   });
 
   it('starts again when the saved one cannot be read', () => {

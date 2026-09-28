@@ -65,6 +65,7 @@ const render = (conversation: Conversation) =>
       contentLocales={organisation}
       desktop={false}
       onOpenEditor={() => {}}
+      brand={{ customised: true, logo: null, organisationName: 'Demo AB' }}
     />,
   );
 

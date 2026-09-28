@@ -90,10 +90,10 @@ describe('each rule catches its own mistake', () => {
     ],
     [
       'G5',
-      'a value the schema refuses (a shape that does not exist yet)',
+      'a value the schema refuses (a shape that does not exist)',
       (g) =>
         (node(g, 'choice.shape').options![0]!.patch = [
-          { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'segmented' },
+          { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'star' },
         ]),
     ],
     [

@@ -1382,6 +1382,56 @@
       "notes": ""
     },
     {
+      "phrase": "Sammanfogade i en list",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en list",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ihopsatta",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sammanfogade",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "segmenterad",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Fyrkantig",
       "nodeId": "choice.shape",
       "optionId": "square",
@@ -1445,6 +1495,46 @@
       "phrase": "vassa hörn",
       "nodeId": "choice.shape",
       "optionId": "square",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Flikar",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "flik",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "flikformade",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "som flikar",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
       "locale": "sv",
       "source": "built-in",
       "createdAt": "2026-09-26",

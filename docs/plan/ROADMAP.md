@@ -74,7 +74,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S2** Machine | reducer, patch ops + inverses, log, replay, breadcrumbs, `ids.ts`, sidecar; `builder_sessions` + `GET/PUT /v1/forms/:id/builder-session` | replay property test; undo of each op; publishable at every node; ids stable and never reused; sessions on Postgres and PGlite | `packages/shared`, `apps/api-forms` (migration 0019), `apps/forms` messages (one key) | **done** — in review, PR #147 |
 | **S3** Ladder T0–T4 | normalisation, word lists and `aliases/<language>.json` in twelve languages, the integer logarithm, T0–T4 with negation and vagueness on every rung; `pnpm builder:validate` checks the aliases | phrase and must-not-resolve tables per language (880 rows); determinism; budget; every card's label read as its card | `packages/shared`, `scripts/`, `fixtures/ladder/`, `apps/forms` (one test) | **done** — in review, PR #147 |
 | **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | **done** — in review, PR #147 |
-| **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | not started |
+| **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases` | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
 | **S7** Extract + reassemble | `paper/docx.ts`, `paper/paste.ts`, operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | not started |
@@ -183,3 +183,32 @@ when each slice ends.)*
   360×640 with every node's answers on the first screen; the brand questions there too; a reload
   mid-conversation back to the same question; the paper door, landing in the editor with the paper
   import open. Next: S5, the preview moment and inline editing. Open: owner questions 1–4, 6 and 7.
+- **S5, the preview moment and inline editing (2026-09-26).** What: the preview moment — the real
+  control through `FormPreview`, on the organisation's own kit (the signed-in app wears it), the
+  whole form under the logo in its slot for a brand preview, the fixed sentence "Not completely
+  happy with the preview? Click it to edit." ("Tap" on a touch screen), "What Loppa assumed" with
+  its ways back, and a "Show me" chip. Inline editing on the same reducer (`edit()`, `source:
+  'manual'`): named shape samples, a size step that stops at both ends, three brand-role swatches,
+  the question's and answers' words in place, answers moved by drag or by Move up / Move down, and E
+  to open it; every gesture a step Back undoes. "changed by hand" with Revert to guided.
+  Reconciliation in the machine (`reconcile.ts`): each guided step records the question it left; a
+  question changed by hand is never changed by a later step, which proposes instead — the person's
+  version with its change on top — and the screen asks "You changed this by hand. Keep your version,
+  or use the guided one?" (Keep mine / Use guided / Show both). Coming back from the classic editor
+  carries on over its draft with a fresh log (`rebase`) instead of starting again. The form schema
+  gained `tab` and `segmented` shapes and `FormSettings.layout.logoSlot` (six named slots, never a
+  position), laid out by one `Masthead` on the public page and in the preview; the editor offers
+  both; the graph (version 2) offers the two shapes and writes the slot into the form. Why:
+  acceptance S3, and non-negotiable 4 made a property of the machine rather than a promise. It
+  found: a hand edit written over by the next answer (#76), a resume after the editor deleted the
+  question in focus stuck at a node it could not answer (#77), and a stacked "one bar" drawn as
+  rounded pieces (#78); #75 now carries on rather than starting again. It raised owner question 8:
+  the colour preset would restyle the whole organisation and only an administrator may, so it is
+  recorded, not applied. Tests: a property test that 40 seeded walks with hand edits among the
+  answers never change a question changed by hand, and 12 more on reconciliation; the layout schema;
+  every inline gesture through the real machine, with snapping at both ends; static renders of the
+  preview, the editing panel and the reconcile question; the recorded session reviewed (one baseline
+  per step, draft unchanged); `e2e/guided-builder.spec.ts` presses acceptance S3 — shape, size,
+  colour, a rename, a move by button and one by drag, Revert and Back, Show both and Keep mine, then
+  a rename in the classic editor and back. Next: S6, the ladder T5–T8. Open: owner questions 1–4, 6,
+  7 and 8.

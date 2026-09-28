@@ -1082,6 +1082,46 @@
       "notes": ""
     },
     {
+      "phrase": "一条",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "分段",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "合并为一条",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "连在一起",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "方形",
       "nodeId": "choice.shape",
       "optionId": "square",
@@ -1125,6 +1165,46 @@
       "phrase": "矩形",
       "nodeId": "choice.shape",
       "optionId": "square",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "标签",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "标签式",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "标签页",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "选项卡",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
       "locale": "zh",
       "source": "built-in",
       "createdAt": "2026-09-26",

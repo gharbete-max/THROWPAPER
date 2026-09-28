@@ -81,6 +81,8 @@
     { "phrase": "Buttons sind nicht nötig", "nodeId": "choice.buttons", "expect": { "ask": "negated" } },
     { "phrase": "eine oder mehrere", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "Ecke oben", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "30. Februar 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30. Februar 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "wie Reiter", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "bitte zu einer Leiste verbunden", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

@@ -79,6 +79,8 @@
     { "phrase": "painikkeita ei tarvita", "nodeId": "choice.buttons", "expect": { "ask": "ambiguous" }, "note": "'ei' is also the answer no: it points both ways" },
     { "phrase": "yksi tai useampi", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
     { "phrase": "kulma ylhäällä", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "30. helmikuuta 2026", "pattern": "date", "expect": { "none": true } }
+    { "phrase": "30. helmikuuta 2026", "pattern": "date", "expect": { "none": true } },
+    { "phrase": "välilehtinä", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
+    { "phrase": "haluan ne yhdistettynä yhdeksi palkiksi", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" }
   ]
 }

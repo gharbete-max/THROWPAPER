@@ -234,6 +234,8 @@ export const daDK: Record<MessageKey, string> = {
   'field.shape.square': 'Firkantet',
   'field.shape.rounded': 'Afrundet',
   'field.shape.pill': 'Pille',
+  'field.shape.tab': 'Faner',
+  'field.shape.segmented': 'Samlet i én bjælke',
   'field.size': 'Størrelse',
   'field.size.regular': 'Normal',
   'field.size.large': 'Stor',
@@ -360,6 +362,8 @@ export const daDK: Record<MessageKey, string> = {
   'settings.duplicateControlHint': 'Om den samme e-mailadresse må svare mere end én gang.',
   'settings.duplicateControl.email': 'Ét svar pr. e-mailadresse',
   'settings.duplicateControl.none': 'Et vilkårligt antal svar',
+  'settings.logoSlot': 'Hvor logoet placeres',
+  'settings.logoSlot.none': 'Øverst, som normalt',
   'settings.identity': 'Tilbyd bekræftelse med e-ID efter afsendelse (valgfrit for personen)',
   'settings.identityHint':
     'Svarene gemmes først; bekræftelsen er et trin, man kan tage eller springe over. Hvor ingen e-ID-udbyder er tilsluttet, siger formularen det og er færdig alligevel.',
@@ -1083,6 +1087,8 @@ export const daDK: Record<MessageKey, string> = {
   'guided.choice.shape.pill': 'Pille',
   'guided.choice.shape.rounded': 'Afrundet',
   'guided.choice.shape.square': 'Firkantet',
+  'guided.choice.shape.tab': 'Faner',
+  'guided.choice.shape.segmented': 'Samlet i én bjælke',
   'guided.choice.shape.tile': 'Kort med plads til et billede',
   'guided.choice.placement.ask': 'Hvor skal de placeres?',
   'guided.choice.placement.help': 'Hvordan knapperne placeres.',
@@ -1131,8 +1137,36 @@ export const daDK: Record<MessageKey, string> = {
   'conversation.status.conflict': 'Ændret i en anden fane',
   'conversation.retry': 'Prøv igen',
   'conversation.reload': 'Hent det seneste',
-  'conversation.startedAgain':
-    'Formularen blev ændret, efter svarene blev gemt, så spørgsmålene begynder forfra ud fra formularen, som den er nu. Intet af det, du har lavet, er gået tabt.',
   'conversation.unreadable':
     'Dine tidligere svar kunne ikke læses, så spørgsmålene begynder forfra. Formularen er, som du forlod den.',
+  'conversation.preview.label': 'Forhåndsvisning',
+  'conversation.preview.edit':
+    'Ikke helt tilfreds med forhåndsvisningen? Klik på den for at redigere.',
+  'conversation.preview.editTouch':
+    'Ikke helt tilfreds med forhåndsvisningen? Tryk på den for at redigere.',
+  'conversation.preview.assumed': 'Hvad Loppa gik ud fra',
+  'conversation.preview.noBrand':
+    'Jeres organisation har intet brand endnu, så sådan kommer formularen til at se ud. En administrator kan oprette det under Brand.',
+  'conversation.byHand': 'ændret i hånden',
+  'conversation.revert': 'Tilbage til den guidede',
+  'conversation.reconcile.ask':
+    'Du ændrede dette i hånden. Behold din version, eller brug den guidede?',
+  'conversation.reconcile.help': 'Intet ændres, før du vælger, og du kan altid ændre det tilbage.',
+  'conversation.reconcile.mine': 'Behold min',
+  'conversation.reconcile.guided': 'Brug den guidede',
+  'conversation.reconcile.both': 'Vis begge',
+  'conversation.reconcile.yours': 'Din',
+  'conversation.reconcile.theirs': 'Guidet',
+  'conversation.edit.title': 'Ret det her',
+  'conversation.edit.question': 'Spørgsmålet',
+  'conversation.edit.options': 'Svarene',
+  'conversation.edit.answer': 'Svar {n}',
+  'conversation.edit.smaller': 'Mindre',
+  'conversation.edit.larger': 'Større',
+  'conversation.edit.drag': 'Træk for at flytte',
+  'conversation.edit.moveUp': 'Flyt op',
+  'conversation.edit.moveDown': 'Flyt ned',
+  'conversation.showMe': 'Vis mig',
+  'conversation.rebased':
+    'Formularen er ændret i editoren. Dine ændringer bevares, og spørgsmålene fortsætter, hvor du var.',
 };

@@ -1092,6 +1092,46 @@
       "notes": ""
     },
     {
+      "phrase": "Samtengt í eina stiku",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ein stika",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "samtengt",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skipt stika",
+      "nodeId": "choice.shape",
+      "optionId": "segmented",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Ferköntuð",
       "nodeId": "choice.shape",
       "optionId": "square",
@@ -1135,6 +1175,36 @@
       "phrase": "skörp horn",
       "nodeId": "choice.shape",
       "optionId": "square",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Flipar",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eins og flipar",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "flipi",
+      "nodeId": "choice.shape",
+      "optionId": "tab",
       "locale": "is",
       "source": "built-in",
       "createdAt": "2026-09-26",
