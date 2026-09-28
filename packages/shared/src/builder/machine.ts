@@ -3,7 +3,15 @@ import { FormDefinition } from '../forms/definition.js';
 import { applyAll, jsonEqual, type Change } from './changes.js';
 import { evaluateGuard, parseGuard, type GuardState } from './graph/guards.js';
 import { opProblem } from './graph/paths.js';
-import type { BuilderGraph, Json, MessageKey, Next, Node, Op } from './graph/schema.js';
+import {
+  takesList,
+  type BuilderGraph,
+  type Json,
+  type MessageKey,
+  type Next,
+  type Node,
+  type Op,
+} from './graph/schema.js';
 import { runPatch } from './patches.js';
 import {
   applyTracked,
@@ -17,6 +25,7 @@ import {
 import {
   MachineError,
   type BuilderDraft,
+  type MachineErrorCode,
   type BuilderSidecar,
   type BuilderState,
   type FieldProvenance,
@@ -50,6 +59,11 @@ export type Answer =
   /** The options picked on a `pick-many`, applied in the order the node declares them. */
   | { readonly kind: 'options'; readonly optionIds: readonly string[] }
   | { readonly kind: 'quantity'; readonly value: number }
+  /**
+   * A list for a `quantity` whose patch makes options (`$options`): the options themselves, their
+   * labels verbatim, their number the count — T6, "Red, Green, Blue" (`INTENT-LADDER.md`).
+   */
+  | { readonly kind: 'list'; readonly labels: readonly string[] }
   | { readonly kind: 'text'; readonly value: string }
   /** Right / Sort of / No on a `confirm-guess`. What each seeds is S11's; here it moves on. */
   | { readonly kind: 'guess'; readonly verdict: 'right' | 'sort-of' | 'no' }
@@ -67,7 +81,11 @@ export interface Skipped {
 }
 
 export interface LogEntry {
-  /** The node answered — or the cursor, for a jump or a hand edit. */
+  /**
+   * The node answered — or the cursor, for a jump or a hand edit. An answer given ahead of its
+   * turn (`answerAt`) names the node it answered, which is not where the conversation was: Back
+   * returns to where it was, the `to` of the step before.
+   */
   readonly nodeId: string;
   readonly answer: Answer;
   readonly patch: readonly Change[];
@@ -122,6 +140,14 @@ function guardState(state: BuilderState, answered: readonly string[]): GuardStat
 
 const holds = (guard: string, state: GuardState) => evaluateGuard(parseGuard(guard), state);
 
+/**
+ * The conversation as guards read it — what the ladder checks another question against before it
+ * offers it (T6, T7): a node whose `when` is false here is not one the conversation could ask.
+ */
+export function guardStateOf(conversation: Conversation): GuardState {
+  return guardState(conversation.state, answeredIds(conversation.log));
+}
+
 /** The first branch of `next` whose guard holds. */
 function pickNext(next: Next, state: GuardState): string {
   if (typeof next === 'string') return next;
@@ -141,21 +167,36 @@ function reasonFor(node: Node, state: GuardState): MessageKey {
 }
 
 /**
+ * The guard state as if nothing were decided for the question in focus. A jump is the person asking
+ * for that node by name: what an import or an earlier sentence decided does not hide it from them.
+ */
+function undecided(guards: GuardState, state: BuilderState): GuardState {
+  const record = state.focus === null ? undefined : state.sidecar.fields[state.focus];
+  if (state.focus === null || record?.decided === undefined) return guards;
+  const { decided: _decided, ...rest } = record;
+  const fields = { ...state.sidecar.fields, [state.focus]: rest };
+  return { ...guards, sidecar: { ...state.sidecar, fields } };
+}
+
+/**
  * From `target`, past every node whose `when` is false, to the node to ask. Bounded by the size of
  * the graph: rule G6 refuses a cycle of unconditional edges, and this refuses to go round anyway.
+ * `asked`: the target was asked for by name (a jump), so it is not passed over for being decided.
  */
 function settle(
   graph: BuilderGraph,
   state: BuilderState,
   answered: readonly string[],
   target: string,
+  asked = false,
 ): { to: string; skipped: Skipped[] } {
   const guards = guardState(state, answered);
   const skipped: Skipped[] = [];
   let id = target;
   for (let hops = 0; hops <= graph.nodes.length; hops += 1) {
     const node = nodeOf(graph, id);
-    if (node.when === undefined || holds(node.when, guards)) return { to: id, skipped };
+    const here = asked && hops === 0 ? undecided(guards, state) : guards;
+    if (node.when === undefined || holds(node.when, here)) return { to: id, skipped };
     if (node.kind === 'end') break;
     skipped.push({ nodeId: id, reason: reasonFor(node, guards) });
     id = pickNext(node.next, guards);
@@ -248,7 +289,7 @@ function planFor(
   graph: BuilderGraph,
   node: Node,
   answer: Answer,
-): { ops: readonly Op[]; next: Next; value?: number | string } {
+): { ops: readonly Op[]; next: Next; value?: number | string | readonly string[] } {
   const wrong = (why: string) => new MachineError('wrong-answer', `${node.id}: ${why}`);
 
   if (answer.kind === 'jump') {
@@ -275,6 +316,21 @@ function planFor(
       return { ops, next: node.next };
     }
     case 'quantity': {
+      if (answer.kind === 'list') {
+        // Only where the answer is the options themselves: `$options` is what reads a list.
+        if (!takesList(node)) throw wrong('a number was expected');
+        const labels = answer.labels.map((label) => label.trim());
+        if (labels.some((label) => label === '')) {
+          throw new MachineError('empty-answer', `${node.id}: an option has no words`);
+        }
+        if (labels.length < node.min || labels.length > node.max) {
+          throw new MachineError(
+            'out-of-range',
+            `${node.id}: ${labels.length} options is not ${node.min}–${node.max}`,
+          );
+        }
+        return { ops: node.patch, next: node.next, value: labels };
+      }
       if (answer.kind !== 'quantity') throw wrong('a number was expected');
       const { value } = answer;
       if (!Number.isSafeInteger(value) || value < node.min || value > node.max) {
@@ -310,22 +366,17 @@ function planFor(
   }
 }
 
-/** The conversation after answering the node it is at. */
-export function answer(
-  graph: BuilderGraph,
-  conversation: Conversation,
-  given: Answer,
+/**
+ * A guided step's patch applied to the state. Reconciliation (`reconcile.ts`): the step runs on the
+ * conversation's own versions of the questions, and never changes one a person has changed by hand
+ * — it proposes instead.
+ */
+function guidedStep(
+  state: BuilderState,
+  node: Node,
+  plan: ReturnType<typeof planFor>,
   context: AnswerContext,
-): Conversation {
-  if (!Locale.safeParse(context.locale).success) {
-    throw new MachineError('wrong-answer', `"${context.locale}" is not a locale`);
-  }
-  const { state, log } = conversation;
-  const node = nodeOf(graph, state.cursor);
-  const plan = planFor(graph, node, given);
-
-  // Reconciliation (`reconcile.ts`): the step runs on the conversation's own versions of the
-  // questions, and never changes one a person has changed by hand — it proposes instead.
+): { settled: BuilderState; tracked: Tracked } {
   const tracked: Tracked = { changes: [], inverse: [] };
   const view = guidedView(state, tracked);
   const applied = runPatch(view, plan.ops, {
@@ -338,10 +389,32 @@ export function answer(
   tracked.inverse = [...applied.inverse, ...tracked.inverse];
   const settled = applyTracked(applied.state, settleQuestions(state, view, applied.state), tracked);
   checkDraft(settled.draft);
+  return { settled, tracked };
+}
 
-  const answered = given.kind === 'jump' ? answeredIds(log) : [...answeredIds(log), node.id];
+function checkLocale(context: AnswerContext): void {
+  if (!Locale.safeParse(context.locale).success) {
+    throw new MachineError('wrong-answer', `"${context.locale}" is not a locale`);
+  }
+}
+
+/** The conversation after answering the node it is at. */
+export function answer(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  given: Answer,
+  context: AnswerContext,
+): Conversation {
+  checkLocale(context);
+  const { state, log } = conversation;
+  const node = nodeOf(graph, state.cursor);
+  const plan = planFor(graph, node, given);
+  const { settled, tracked } = guidedStep(state, node, plan, context);
+
+  const jump = given.kind === 'jump';
+  const answered = jump ? answeredIds(log) : [...answeredIds(log), node.id];
   const target = pickNext(plan.next, guardState(settled, answered));
-  const { to, skipped } = settle(graph, settled, answered, target);
+  const { to, skipped } = settle(graph, settled, answered, target, jump);
 
   const entry: LogEntry = {
     nodeId: node.id,
@@ -354,6 +427,118 @@ export function answer(
     source: 'guided',
   };
   return { base: conversation.base, log: [...log, entry], state: { ...settled, cursor: to } };
+}
+
+/**
+ * An answer to a node ahead of the conversation's turn: "three buttons, pill shape, side by side"
+ * answers the shape and the placement while the conversation is still asking about buttons (T5,
+ * `INTENT-LADDER.md`). A step like any other — in the log, in the trail, undone by Back — and the
+ * conversation stays where it is. For the node the conversation is at, this is `answer`.
+ *
+ * Only a node the conversation could ask now (its `when` holds), and only one that settles a slot:
+ * the step marks the slot decided for the question in focus, so the conversation passes the node
+ * by when it gets there instead of asking again (rule G14). A node with no slot has nothing to
+ * mark, and is answered only in its turn.
+ */
+export function answerAt(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  nodeId: string,
+  given: Answer,
+  context: AnswerContext,
+): Conversation {
+  const { state, log } = conversation;
+  if (nodeId === state.cursor) return answer(graph, conversation, given, context);
+  checkLocale(context);
+  const node = nodeOf(graph, nodeId);
+  const slot = node.slot;
+  if (!slot) throw new MachineError('not-now', `${node.id} is answered only in its turn`);
+  if (given.kind === 'jump' || given.kind === 'edit') {
+    throw new MachineError('wrong-answer', `${node.id}: a ${given.kind} is not an answer`);
+  }
+  if (node.when !== undefined && !holds(node.when, guardState(state, answeredIds(log)))) {
+    throw new MachineError('not-now', `${node.id} is not asked now`);
+  }
+  if (state.focus === null) throw new MachineError('no-focus', 'No question is in focus');
+  const plan = planFor(graph, node, given);
+  const { settled, tracked } = guidedStep(state, node, plan, context);
+
+  const focus = settled.focus;
+  const record = focus === null ? undefined : settled.sidecar.fields[focus];
+  const marked =
+    focus === null || record?.decided?.[slot] === true
+      ? settled
+      : applyTracked(
+          settled,
+          [
+            record
+              ? { op: 'set', at: provenancePointer(focus, 'decided', slot), value: true }
+              : {
+                  op: 'set',
+                  at: provenancePointer(focus),
+                  value: { source: 'manual', decided: { [slot]: true } },
+                },
+          ],
+          tracked,
+        );
+
+  const answered = [...answeredIds(log), node.id];
+  const { to, skipped } = settle(graph, marked, answered, state.cursor);
+  const entry: LogEntry = {
+    nodeId: node.id,
+    answer: given,
+    patch: tracked.changes,
+    inverse: tracked.inverse,
+    to,
+    skipped,
+    tier: context.tier ?? null,
+    source: 'guided',
+  };
+  return { base: conversation.base, log: [...log, entry], state: { ...marked, cursor: to } };
+}
+
+/** One of several answers given at once, to the node it answers. */
+export interface Given {
+  readonly nodeId: string;
+  readonly answer: Answer;
+  readonly tier: Tier | null;
+}
+
+export interface Filled {
+  readonly conversation: Conversation;
+  /** For each answer given, in order: null when it became a step, or why the machine refused it. */
+  readonly refused: readonly (MachineErrorCode | null)[];
+}
+
+/**
+ * Several answers at once — a sentence that said several things (T5), or a guess confirmed (T7) —
+ * each its own step, so each is undone by Back on its own. Given in the graph's order: an answer to
+ * the node the conversation is at is answered in its turn and the conversation moves on, so the
+ * next may be answered in its turn too; the others are answered ahead of theirs (`answerAt`). One
+ * the machine refuses — not askable now, or breaking the form — is left out and said so; the rest
+ * still stand.
+ */
+export function fill(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  answers: readonly Given[],
+  context: { readonly locale: string },
+): Filled {
+  let here = conversation;
+  const refused: (MachineErrorCode | null)[] = [];
+  for (const one of answers) {
+    try {
+      here = answerAt(graph, here, one.nodeId, one.answer, {
+        locale: context.locale,
+        tier: one.tier,
+      });
+      refused.push(null);
+    } catch (error) {
+      if (!(error instanceof MachineError)) throw error;
+      refused.push(error.code);
+    }
+  }
+  return { conversation: here, refused };
 }
 
 /**
@@ -474,16 +659,17 @@ export function rebase(
 
 // --- Going back -------------------------------------------------------------------------------
 
-/** One step back: the last step's inverse, and the node it answered. */
+/**
+ * One step back: the last step's inverse, and back where the conversation was when it was taken —
+ * the node it answered, or, for an answer given ahead of its turn, the node that was being asked.
+ */
 export function back(conversation: Conversation): Conversation {
-  const last = conversation.log[conversation.log.length - 1];
+  const { log } = conversation;
+  const last = log[log.length - 1];
   if (!last) throw new MachineError('nothing-to-do', 'There is nothing to go back to');
   const state = applyAll(conversation.state, last.inverse);
-  return {
-    base: conversation.base,
-    log: conversation.log.slice(0, -1),
-    state: { ...state, cursor: last.nodeId },
-  };
+  const cursor = log[log.length - 2]?.to ?? conversation.base.cursor;
+  return { base: conversation.base, log: log.slice(0, -1), state: { ...state, cursor } };
 }
 
 /** The state a log leads to from `base`. Needs no graph: the log holds resolved changes. */

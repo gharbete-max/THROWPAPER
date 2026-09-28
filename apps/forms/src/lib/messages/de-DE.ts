@@ -1055,7 +1055,7 @@ export const deDE: Record<MessageKey, string> = {
   // The guided builder's conversation: packages/shared/src/builder/graph/nodes.ts. Its rules
   // (at most nine words a question, no jargon) are checked by guided-graph.test.ts.
   'guided.common.yes': 'Ja',
-  'guided.skip.decided': 'Bereits aus Ihrem Dokument gelesen',
+  'guided.skip.decided': 'Bereits entschieden',
   'guided.skip.noButtons': 'Sie haben keine Schaltflächen gewählt',
   'guided.skip.brandDecided': 'Bereits entschieden',
   'guided.skip.nothingToGuess': 'Noch nichts zu erraten',
@@ -1207,6 +1207,56 @@ export const deDE: Record<MessageKey, string> = {
   'conversation.edit.drag': 'Zum Verschieben ziehen',
   'conversation.edit.moveUp': 'Nach oben',
   'conversation.edit.moveDown': 'Nach unten',
+  'conversation.unused': 'Nicht verwendet:',
+  'conversation.guess.ask': 'Meinten Sie „{question}“ – {answer}?',
+  'conversation.guess.yes': 'Ja',
+  'conversation.guess.no': 'Nein',
+  'conversation.elsewhere': 'Oder geht es um eine dieser Fragen?',
+  'conversation.shoppingList':
+    'Alles, was sich hier einstellen lässt, steht in der Liste unten – wählen Sie dort.',
+  'conversation.remember.ask': '„{phrase}“ als eine Art merken, „{option}“ zu sagen?',
+  'conversation.remember.yes': 'Merken',
+  'conversation.remember.no': 'Nicht jetzt',
+  'conversation.remember.done': 'Gemerkt. „{phrase}“ bedeutet jetzt „{option}“.',
+  'conversation.remember.means': '„{phrase}“ bedeutet schon „{option}“.',
+  'conversation.remember.known': 'Loppa versteht das schon so.',
+  'conversation.remember.failed':
+    'Das ließ sich nicht merken. Versuchen Sie es später noch einmal.',
+  'phrases.title': 'Gelernte Wendungen',
+  'phrases.intro':
+    'Wie Ihre Organisation Loppa beigebracht hat, eine Antwort zu sagen. Jede wurde nur gemerkt, weil jemand „Merken“ gewählt hat.',
+  'phrases.empty':
+    'Noch nichts gelernt. Versteht Loppa etwas Eingegebenes nicht, kann die Person, die es eingegeben hat, es Loppa beibringen.',
+  'phrases.means': '„{question}“: {answer}',
+  'phrases.inert': 'Nicht mehr verwendet: Die Frage hat sich geändert',
+  'phrases.count': 'plural:one einmal gemerkt | other {count}-mal gemerkt',
+  'phrases.delete': 'Löschen',
+  'phrases.deleteNamed': '„{phrase}“ löschen',
+  'phrases.confirmDelete': '„{phrase}“ löschen? Loppa versteht es dann nicht mehr.',
+  'phrases.export': 'Exportieren',
+  'phrases.import': 'Importieren…',
+  'phrases.clear': 'Alle entfernen',
+  'phrases.confirmClear':
+    'plural:one Die gelernte Wendung entfernen? Loppa kehrt zu den Wendungen zurück, mit denen es kam. | other Alle {count} gelernten Wendungen entfernen? Loppa kehrt zu den Wendungen zurück, mit denen es kam.',
+  'phrases.cleared': 'Entfernt. Loppa ist zurück bei den Wendungen, mit denen es kam.',
+  'phrases.failed': 'Das hat nicht geklappt. Versuchen Sie es noch einmal.',
+  'phrases.invalid': 'Das ist keine Wendungsdatei ({problem}).',
+  'phrases.imported':
+    'plural:one {count} Wendung hinzugefügt. | other {count} Wendungen hinzugefügt.',
+  'phrases.preview.title': 'Was diese Datei tun würde',
+  'phrases.preview.added': 'plural:one {count} hinzuzufügen | other {count} hinzuzufügen',
+  'phrases.preview.present': 'plural:one {count} schon bekannt | other {count} schon bekannt',
+  'phrases.preview.refused':
+    'plural:one {count} nicht hinzugefügt | other {count} nicht hinzugefügt',
+  'phrases.preview.confirm':
+    'plural:one {count} Wendung hinzufügen | other {count} Wendungen hinzufügen',
+  'phrases.preview.cancel': 'Abbrechen',
+  'phrases.refused.present': 'ist schon bekannt',
+  'phrases.refused.collision': 'bedeutet schon „{option}“',
+  'phrases.refused.shadowsId': 'ist der Name einer anderen Antwort',
+  'phrases.refused.empty': 'enthält keine Wörter',
+  'phrases.refused.tooLong': 'ist länger als 80 Zeichen',
+  'phrases.refused.unknown': 'betrifft eine Frage, die Loppa nicht mehr stellt',
   'conversation.showMe': 'Zeig es mir',
   'conversation.rebased':
     'Dieses Formular wurde im Editor geändert. Ihre Änderungen bleiben erhalten, und die Fragen gehen dort weiter, wo Sie waren.',

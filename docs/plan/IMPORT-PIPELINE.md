@@ -87,8 +87,12 @@ existing `tessLangs(locale)`.
   takes it as fact (`NUMBERING-RULES.md` §11).
 - **Geometry is synthetic** (`LAYOUT-IR.md`): paragraph order, `w:ind`, and one paragraph per line.
 
-**Paste** (`paper/paste.ts`, new): one pasted line is one line, synthetic geometry, blank lines
-separate blocks. S4 and S5 enter here.
+**Paste** (`pasteDocument`, `packages/shared/src/import/paste.ts`, built in S6): one pasted line is
+one line, synthetic geometry, blank lines separate blocks. A string is not a file's bytes, so it
+lives in the core — the ladder's T6 reads a pasted list through it, exactly as the importer reads a
+pasted document — and with synthetic geometry there is nothing for stage 2 to do, so it builds the
+layout document directly. S7 adds only the clipboard (plain text over HTML) around it. S4 and S5
+enter here.
 
 ## Stage 2 — reassemble
 

@@ -1,7 +1,7 @@
 import type { LocalisedText } from '../api/common.js';
 import type { z } from 'zod';
 import type { FormDefinition } from '../forms/definition.js';
-import type { Json } from './graph/schema.js';
+import type { Json, Slot } from './graph/schema.js';
 
 /**
  * What the guided builder holds while a conversation runs — `docs/plan/BUILDER-GRAPH.md`, "State
@@ -15,9 +15,6 @@ export interface BuilderDraft {
   readonly definition: FormDefinition;
   readonly title: z.infer<typeof LocalisedText>;
 }
-
-/** The slots an import (S12) or an earlier answer can settle, which the conversation then skips. */
-export type Slot = 'kind' | 'required' | 'options' | 'shape' | 'placement' | 'validation';
 
 /**
  * Where one question came from, and what the builder knows about it that the form does not.
@@ -99,6 +96,11 @@ export type MachineErrorCode =
   | 'not-writable'
   /** Skipping nodes whose `when` is false went round without settling. */
   | 'no-node'
+  /**
+   * An answer ahead of its turn to a node the conversation could not ask now (its `when` is
+   * false), or to one that is answered only in its turn (it settles no slot).
+   */
+  | 'not-now'
   /** A stored session this build cannot read. */
   | 'bad-session';
 

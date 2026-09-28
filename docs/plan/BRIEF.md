@@ -117,7 +117,7 @@ The conversation is a directed graph declared as **typed TS data** — `packages
 }
 ```
 
-Requirements, all met by S1 and kept by every slice after it: `ask` and every label are `guided.*` keys in all twelve catalogues (`builder.*` belongs to the classic editor). `when` guards are a tiny, total, bounded expression language, parsed by hand (no `eval`, no arbitrary JS), with an "explain why this was skipped" message. `patch` is a declarative op list (`set`, `add`, `remove`, `insert`, `reorder`) over paths that address fields by id, never by index — the *only* way the conversation mutates the draft — and only the paths in one table may be written, with the values the form schema accepts. `score` feeds the guess engine (§6). **`pnpm builder:validate`** (rules G0–G13, `docs/plan/BUILDER-GRAPH.md`) fails on: a wrong shape, unknown node reference, unreachable node, node with no way out, missing or empty translation, patch on an unknown path or with a refused value, a cycle that turns without the user steering it, wrong option counts, a guard that does not parse or reads what nothing provides, a score for an unknown template, a question over its word limit or with a banned word, a graph that is not plain data, or operative wording in an example chip.
+Requirements, all met by S1 and kept by every slice after it: `ask` and every label are `guided.*` keys in all twelve catalogues (`builder.*` belongs to the classic editor). `when` guards are a tiny, total, bounded expression language, parsed by hand (no `eval`, no arbitrary JS), with an "explain why this was skipped" message. `patch` is a declarative op list (`set`, `add`, `remove`, `insert`, `reorder`) over paths that address fields by id, never by index — the *only* way the conversation mutates the draft — and only the paths in one table may be written, with the values the form schema accepts. `score` feeds the guess engine (§6). **`pnpm builder:validate`** (rules G0–G14, `docs/plan/BUILDER-GRAPH.md`) fails on: a wrong shape, unknown node reference, unreachable node, node with no way out, missing or empty translation, patch on an unknown path or with a refused value, a cycle that turns without the user steering it, wrong option counts, a guard that does not parse or reads what nothing provides, a score for an unknown template, a question over its word limit or with a banned word, a graph that is not plain data, operative wording in an example chip, or a node that settles a slot its guard does not read (S6).
 
 ### 4.3 Node kinds (start small, extend deliberately)
 
@@ -286,22 +286,27 @@ packages/shared/src/                     (@tp/shared — the forms core already 
   builder/            @tp/shared/builder
     graph/            schema.ts paths.ts guards.ts validate.ts nodes.ts voice.json   (built, S1)
     state.ts changes.ts patches.ts fields.ts ids.ts machine.ts session.ts          (built, S2)
+    reconcile.ts                                                                   (built, S5)
     belief/           recipes.json update.ts entropy.ts explain.ts                    (S11)
   interpret/          @tp/shared/interpret — text.ts lexicon.ts ln.ts fuzzy.ts patterns.ts
-                      aliases.ts vocabulary.ts ladder.ts, gazetteers/<language>.json,
-                      aliases/<language>.json                                 (built, S3; S6)
+                      aliases.ts vocabulary.ts rungs.ts reading.ts, gazetteers/<language>.json,
+                      aliases/<language>.json                                        (built, S3)
+                      ladder.ts clauses.ts list.ts, learned aliases in aliases.ts    (built, S6)
   import/             @tp/shared/import
     ir/               the Layout IR types and validator                               (S1b)
     enumerate/        the detector — NUMBERING-RULES.md                               (S1b)
+    paste.ts          pasted text as a layout document — a string, not bytes          (built, S6)
     layout/ segment/ classify/ overlay/  pipeline.ts                                  (S7, S9, S12)
   forms/wording.ts    the regulated-word list shared by templates and example chips   (built, S1)
 apps/forms/src/screens/builder/
-  paper/              extract.ts, ocr.ts (exist) + docx.ts paste.ts import.worker.ts   (S7)
+  paper/              extract.ts, ocr.ts (exist) + docx.ts import.worker.ts            (S7)
   guided/             Shell, NodeView (Cards, Quantity, MultiCards, TextEntry),
                       Trail, Doors, conversation, keyboard, saver                      (built, S4)
                       PreviewMoment, InlineEdit/, Reconcile                            (built, S5)
+                      LearnedPhrases; the shell's T5–T8                                (built, S6)
   review/             ReviewScreen, SourcePane, DraftPane, Chips                       (S10)
-apps/api-forms/src/builder/   builder_sessions, builder_aliases, their routes          (S2, S6)
+apps/api-forms/src/  routes/builder-session.ts, routes/builder-aliases.ts; the tables
+                      builder_sessions (migration 0019) and builder_aliases (0020)     (built, S2, S6)
 scripts/              builder-validate.ts (built), caveat-fixtures.test.ts (built)
 fixtures/             numbering/ (29, built)  ir/ (3 samples, built)
                       documents/ (the corpus)  sessions/ (recorded conversations)  ladder/
@@ -341,7 +346,7 @@ A specification the code proves wrong is fixed in the same change as the code �
 - **S3 — Ladder T0–T4. ✅ Done:** normalisation that points back at what was typed, word lists and 2 295 built-in aliases in twelve languages (every card's label among them), thresholds in integers, T0–T4 with negation and "no number from vagueness" on every rung, and a reason with every question it asks back. Tests: 880 phrase-table rows in twelve languages, must-not-resolve rows among them, determinism and the budget. Writing the tables found seven places where the ladder as first specified would misread, ask needlessly, or could not be built as written, each fixed in `INTENT-LADDER.md` (its closing section lists them) — among them, no generated index.
 - **S4 — Builder shell. ✅ Done:** the two doors, the full-screen conversation (trail, question, answers, "Or type it" through the ladder, Back, the way out, "Build it myself"), every key in the table, the live region, focus and motion, the live preview, autosave in order that never overwrites another tab; the buttons chain end to end in the browser, by pointer and by keyboard alone at 360×640. Pressing it found four traps, each a caveat row with its test (`CAVEATS.md` #72–#75) — among them that the app's own chrome left the first question's answers below the fold on a phone, so the conversation is full screen like the check-in door.
 - **S5 — Preview moment + inline editing. ✅ Done:** the real preview on the organisation's kit with the fixed sentence and "What Loppa assumed"; inline editing on the same reducer — named shapes, a size step, brand-role swatches, words renamed in place, answers moved by drag or its Move up / Move down twin, all snapping to the schema; "changed by hand" + Revert to guided; reconciliation (a guided step never changes a question changed by hand, it proposes: Keep mine / Use guided / Show both), and carrying on after the classic editor instead of starting again; `ChoiceStyle` gained `tab` and `segmented`, `FormSettings.layout` the logo slot, rendered by one `Masthead` on the public page and the preview. It found four traps (`CAVEATS.md` #75–#78) and one question for the owner (§14, 8).
-- **S6 — Ladder T5–T8.** Multi-slot parse, list extraction, group ranking, disambiguation, alias capture/export (`builder_aliases`).
+- **S6 — Ladder T5–T8. ✅ Done:** one sentence answering several questions, each answer its own step and those ahead of their turn not asked again (the machine's `answerAt`/`fill`, graph version 3's slots, rule G14); a list — typed or pasted, through the paste layout and the list-number detector — as the options, labels verbatim; "Did you mean …?" for another question of the group, confirmed first; after a miss, the offer to remember the words, stored only on the press; the organisation's learned aliases (`builder_aliases`) with an administrator's page to list, delete, export and import them, an import showing its diff first. Tests: 427 phrase-table rows (T5–T7 in twelve languages), answers ahead of their turn with seeded walks, the alias routes on PGlite and Postgres, three e2e journeys. It found nine traps (`CAVEATS.md` #79–#87), among them numerals inside words read as numbers, an S3 defect.
 - **S7 — Import extract + reassemble.** PDF text layer and rules, DOCX with real numbering definitions, paste, layout/columns/headers/de-hyphenation, stage debug JSON, worker wiring, IR emission. The 5 reassemble fixtures turn green.
 - **S8 — Enumerate, wired to real extraction.** Connect S1b to the extract stage and run the corpus so far.
 - **S9 — Segment + classify + confidence.** Question/option/prose/heading/grid/table, the feature model with `weights.json`, buckets, top-feature explanations. The segment and classify fixtures turn green. A grid field type gets its ADR here, or the one-select-per-row fallback stays.
@@ -372,7 +377,7 @@ A specification the code proves wrong is fixed in the same change as the code �
 1. Which package owns `builder/`, `import/`, `interpret/`, and which app hosts the UI? *Proceeding on:* `@tp/shared` (subpath exports) and `apps/forms`.
 2. Is the imported **paper twin** PDF a first-class option alongside the standard response PDF, or the default when the form came from paper? *Proceeding on:* both offered; the paper twin is the default when the source was kept.
 3. Consent/GDPR text: may Loppa ever reformat it, or must it be preserved byte-for-byte and rendered as-is? *Proceeding on:* byte for byte.
-4. Are learned aliases per install, or a shared team file? *Proceeding on:* per organisation, exportable/importable as `aliases.json` (on the desktop, that is the install).
+4. Are learned aliases per install, or a shared team file? *Proceeding on — built so in S6:* per organisation, exportable/importable as `aliases.json` (on the desktop, that is the install).
 5. ~~Is there an existing i18n workflow?~~ *Answered by the repo:* one TypeScript catalogue per locale (`apps/forms/src/lib/messages/`), no translation platform; a missing key is a compile error.
 6. Which brand-kit constraints must win over the layout shelf? *Proceeding on:* the logo's aspect ratio, the contrast floor and the 44 px tap target.
 7. **Priority:** which door is the headline — the document import or the click-through builder? *Proceeding on:* the document import, so the detector runs as S1b.
@@ -413,3 +418,4 @@ Each change is one the first turns found the repository needed; `docs/plan/PREDI
 11. **Reconciled with what exists**: the real paths (§9), the graph excerpt as shipped (§4.2), `guided.*` keys, integer arithmetic throughout, the ladder's per-mille thresholds, the one-table autosave, the tile shape as the existing `cards` appearance, S1 marked done, and §15 rewritten for every session rather than the first.
 12. **The ladder (§5), after S3**: no `pnpm interpret:index` — an integer logarithm replaces the build step and one node's words need no candidate index; T2 scores per alias; a negator's reach is its clause or a contrast word, it may follow the word it negates, and one no rule can place blocks the reading. `INTENT-LADDER.md` ("What S3 changed in this document") has each, with the rows that lock it.
 13. **The preview and reconciliation (§4.5, §4.6), after S5**: a guided step never changes a question changed by hand; what it would have made of it — the person's version with its change on top — waits as a proposal, and later steps keep building it. Coming back from the classic editor carries on over the editor's draft with a fresh log, so Back cannot undo the editor. The colour preset is not applied to the brand kit (§14, 8). `FormSettings.layout` holds the logo slot only; the shelf's `shelf` and `footer` join it with the shelf.
+14. **The ladder's T5–T8 (§5), after S6**: T5 reads the group from here on, never behind, needs two answers, reads misspellings only for the question asked, and lets one word back one answer; an answer ahead of its turn is its own step and marks its slot decided; a list of answers ("pill, square") is not a list of options; numerals inside words count nothing; T7 guesses only questions the conversation could ask now, and a guess is confirmed first; a learned alias's `count` is how often it was remembered; pasted text becomes a layout document in the core. `INTENT-LADDER.md` ("What S6 changed in this document") has each.

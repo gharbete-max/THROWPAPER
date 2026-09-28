@@ -339,3 +339,144 @@ test.describe('on a small phone, by keyboard alone', () => {
     await expect(page.getByRole('button', { name: 'Continue' })).toBeFocused();
   });
 });
+
+/** S6 — to "Do you want buttons?" about a new question, "Which day suits you?". */
+async function toButtons(page: Page) {
+  await page.getByRole('button', { name: /Signing people up/ }).click();
+  await page.getByRole('button', { name: /Decide later/ }).click();
+  await page.getByRole('button', { name: 'Which day suits you?' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: /Yes, it's needed/ }).click();
+  await question(page, 'Do you want buttons?');
+}
+
+const type = async (page: Page, text: string) => {
+  const box = page.getByPlaceholder(/Or type it/);
+  await box.fill(text);
+  await box.press('Enter');
+};
+
+const trailOf = (page: Page) => page.getByRole('navigation', { name: 'Your answers so far' });
+
+test('one sentence answers several questions, each undone on its own (S6, T5)', async ({
+  page,
+}) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromQuestions(page);
+  await toButtons(page);
+
+  // The demo sentence: buttons, how many, what shape and where — "one answer or several?" was not
+  // said, so that is where the conversation is.
+  await type(page, 'three buttons, pill shape, side by side');
+  await question(page, 'One answer or several?');
+  await expect(page.getByText('read that as “Yes · 3 · Pill · Side by side”')).toBeVisible();
+  await expect(trailOf(page)).toContainText('Side by side');
+  await page.screenshot({ path: 'test-results/s6-several.png', fullPage: true });
+
+  // Back undoes one answer — the last — and the conversation is still where it was.
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await question(page, 'One answer or several?');
+  await expect(trailOf(page)).not.toContainText('Side by side');
+  await expect(trailOf(page)).toContainText('Pill');
+
+  // How many and what shape were said: not asked again. Where they sit was taken back: asked.
+  await page.getByRole('button', { name: /Several answers allowed/ }).click();
+  await question(page, 'Where should they sit?');
+  await page.getByRole('button', { name: /Side by side/ }).click();
+  await expect(page.locator('.conversation__preview')).toBeVisible();
+
+  await expect
+    .poll(async () => (await draftOf(formId)).fields[1])
+    .toMatchObject({
+      type: 'multi_select',
+      appearance: 'buttons',
+      style: { shape: 'pill', columns: 'auto' },
+      options: [{}, {}, {}],
+    });
+});
+
+test('a pasted list is the options, and a guess waits to be confirmed (S6, T6 and T7)', async ({
+  page,
+}) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromQuestions(page);
+  await toButtons(page);
+  await page.getByRole('button', { name: 'Yes', exact: true }).click();
+  await question(page, 'One answer or several?');
+
+  // About the shape, not about how many answers: asked before anything happens.
+  await type(page, 'pills');
+  await expect(page.getByText('Did you mean “What shape?” — Pill?')).toBeVisible();
+  await page.screenshot({ path: 'test-results/s6-guess.png', fullPage: true });
+  await page
+    .locator('.conversation__notice')
+    .getByRole('button', { name: 'Yes', exact: true })
+    .click();
+  await question(page, 'One answer or several?');
+  await expect(page.getByText('read that as “Pill”')).toBeVisible();
+  // Answered ahead of its turn, the shape shows at once.
+  await expect(page.locator('.conversation__preview')).toBeVisible();
+  await page.getByRole('button', { name: /One answer only/ }).click();
+
+  // A numbered list, pasted: its lines are the options, the markers are not their labels.
+  await question(page, 'How many options?');
+  await type(page, '1. Red\n2. Green\n3. Blue');
+  // The shape was answered already: on to where they sit, and then the preview, with the list.
+  await question(page, 'Where should they sit?');
+  await page.getByRole('button', { name: /Side by side/ }).click();
+  await expect(page.locator('.conversation__preview')).toContainText('Green');
+
+  await expect.poll(async () => (await draftOf(formId)).fields[1]?.options?.length).toBe(3);
+  const { fields } = await draftOf(formId);
+  expect(fields[1]).toMatchObject({ style: { shape: 'pill' } });
+  expect(JSON.stringify(fields[1]!.options)).toContain('"Red"');
+});
+
+test('a phrase it did not understand can be taught — with consent — and removed (S6, T8)', async ({
+  page,
+}) => {
+  await sql`delete from builder_aliases where phrase = 'blobby'`;
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  await startFromQuestions(page);
+  await toButtons(page);
+  await page.getByRole('button', { name: 'Yes', exact: true }).click();
+  await page.getByRole('button', { name: /One answer only/ }).click();
+  await type(page, '3');
+  await question(page, 'What shape?');
+
+  // Two misses in a row: no third open question — every question of the group, to pick from.
+  await type(page, 'qwrtz');
+  await expect(page.getByText('I did not understand that.')).toBeVisible();
+  await type(page, 'blobby');
+  await expect(page.getByText(/Everything you can set here is listed below/)).toBeVisible();
+  await expect(page.locator('#conversation-way-out')).toBeVisible();
+
+  // Picked from the menu; then — and only then — the offer to remember the words.
+  await page
+    .locator('.conversation__notice')
+    .getByRole('button', { name: 'Pill', exact: true })
+    .click();
+  await question(page, 'Where should they sit?');
+  await expect(page.getByText('Remember “blobby” as a way to say “Pill”?')).toBeVisible();
+  await page.screenshot({ path: 'test-results/s6-remember.png', fullPage: true });
+  await page.getByRole('button', { name: 'Remember', exact: true }).click();
+  await expect(page.getByText('Remembered. “blobby” now means “Pill”.')).toBeVisible();
+
+  // Now it is read, exactly, like any other way of saying it.
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await question(page, 'What shape?');
+  await type(page, 'blobby');
+  await question(page, 'Where should they sit?');
+  await expect(page.getByText('read that as “Pill”')).toBeVisible();
+
+  // An administrator sees it, and removes it — after saying yes.
+  await page.goto('/forms/phrases');
+  await expect(page.getByRole('heading', { name: 'Learned phrases' })).toBeVisible();
+  await expect(page.locator('.phrases__row')).toContainText('“What shape?”: Pill');
+  await page.screenshot({ path: 'test-results/s6-phrases.png', fullPage: true });
+  await page.getByRole('button', { name: 'Delete “blobby”' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Yes, continue' }).click();
+  await expect(page.getByText(/Nothing learned yet/)).toBeVisible();
+  const [row] = await sql`select count(*)::int as n from builder_aliases where phrase = 'blobby'`;
+  expect(row!['n']).toBe(0);
+});

@@ -30,7 +30,7 @@ for (const problem of aliases) {
 
 if (problems.length + aliases.length === 0) {
   console.log(
-    `builder:validate passed — ${nodes} nodes, ${locales} catalogues, rules G0–G13; ` +
+    `builder:validate passed — ${nodes} nodes, ${locales} catalogues, rules G0–G14; ` +
       `${BUILTIN_ALIASES.length} aliases in 12 languages`,
   );
 } else {

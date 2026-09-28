@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { pickText } from '@tp/i18n';
 import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
@@ -167,12 +167,20 @@ export function Forms() {
     <section className="stack">
       <header className="row row--between">
         <h1>{t('forms.title')}</h1>
-        <button
-          className="button"
-          onClick={() => setCreating((mode) => (mode === null ? 'doors' : null))}
-        >
-          {t('forms.new')}
-        </button>
+        <span className="row">
+          {/* What the guided builder has been taught here: an administrator's to look after. */}
+          {user?.role === 'admin' && (
+            <Link className="button button--bare small" to="/forms/phrases">
+              {t('phrases.title')}
+            </Link>
+          )}
+          <button
+            className="button"
+            onClick={() => setCreating((mode) => (mode === null ? 'doors' : null))}
+          >
+            {t('forms.new')}
+          </button>
+        </span>
       </header>
 
       <ScopeTabs scopes={scopes} current={scope} onChange={setScope} label={t('forms.title')} />

@@ -3,8 +3,10 @@ import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from
 import type { Db } from '../types.js';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
+import { compareAliases } from '@tp/shared/interpret';
 import {
   brandKits,
+  builderAliases,
   builderSessions,
   auditLog,
   checkIns,
@@ -31,6 +33,7 @@ import {
 } from '../schema.js';
 import type {
   BrandKitRecord,
+  BuilderAliasRecord,
   BuilderSessionRecord,
   CheckInRecord,
   EventCreate,
@@ -1139,6 +1142,62 @@ export function createDrizzleRepositories(db: Db): Repositories {
       },
     },
 
+    builderAliases: {
+      list: async (organisationId) =>
+        (
+          await db
+            .select()
+            .from(builderAliases)
+            .where(eq(builderAliases.organisationId, organisationId))
+        )
+          .map(aliasRecord)
+          .sort(compareAliases),
+
+      /** The unique index is the lock: a phrase remembered twice at once is stored once. */
+      add: async (organisationId, entries) => {
+        if (entries.length === 0) return [];
+        const rows = await db
+          .insert(builderAliases)
+          .values(
+            entries.map(({ createdAt, ...entry }) => ({
+              ...entry,
+              createdOn: createdAt,
+              organisationId,
+            })),
+          )
+          .onConflictDoNothing()
+          .returning();
+        return rows.map(aliasRecord).sort(compareAliases);
+      },
+
+      bump: async (organisationId, id) => {
+        const rows = await db
+          .update(builderAliases)
+          .set({ count: sql`${builderAliases.count} + 1` })
+          .where(and(eq(builderAliases.organisationId, organisationId), eq(builderAliases.id, id)))
+          .returning();
+        const row = first(rows);
+        return row ? aliasRecord(row) : null;
+      },
+
+      remove: async (organisationId, id) => {
+        const rows = await db
+          .delete(builderAliases)
+          .where(and(eq(builderAliases.organisationId, organisationId), eq(builderAliases.id, id)))
+          .returning();
+        const row = first(rows);
+        return row ? aliasRecord(row) : null;
+      },
+
+      clear: async (organisationId) =>
+        (
+          await db
+            .delete(builderAliases)
+            .where(eq(builderAliases.organisationId, organisationId))
+            .returning({ id: builderAliases.id })
+        ).length,
+    },
+
     signingRequests: {
       create: async (input) => {
         const [row] = await db.insert(signingRequests).values(input).returning();
@@ -1652,4 +1711,10 @@ async function withLines(db: Db, rows: Array<typeof invoices.$inferSelect>) {
   }
 
   return rows.map((row) => ({ ...row, lines: byInvoice.get(row.id) ?? [] }));
+}
+
+/** A `builder_aliases` row as the repository returns it: the date is `createdAt`, the key stays. */
+function aliasRecord(row: typeof builderAliases.$inferSelect): BuilderAliasRecord {
+  const { key: _key, createdOn, source, ...rest } = row;
+  return { ...rest, createdAt: createdOn, source: source as BuilderAliasRecord['source'] };
 }

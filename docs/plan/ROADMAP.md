@@ -75,8 +75,8 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S3** Ladder T0–T4 | normalisation, word lists and `aliases/<language>.json` in twelve languages, the integer logarithm, T0–T4 with negation and vagueness on every rung; `pnpm builder:validate` checks the aliases | phrase and must-not-resolve tables per language (880 rows); determinism; budget; every card's label read as its card | `packages/shared`, `scripts/`, `fixtures/ladder/`, `apps/forms` (one test) | **done** — in review, PR #147 |
 | **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | **done** — in review, PR #147 |
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
-| **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases` | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
-| **S7** Extract + reassemble | `paper/docx.ts`, `paper/paste.ts`, operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
+| **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases`; answers ahead of their turn (`answerAt`, `fill`, graph version 3's slots) | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` (migration 0020) | **done** — in review, PR #147 |
+| **S7** Extract + reassemble | `paper/docx.ts`, the clipboard around `import/paste.ts` (built in S6), operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | not started |
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared` | not started |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms` | not started |
@@ -212,3 +212,21 @@ when each slice ends.)*
   colour, a rename, a move by button and one by drag, Revert and Back, Show both and Keep mine, then
   a rename in the classic editor and back. Next: S6, the ladder T5–T8. Open: owner questions 1–4, 6,
   7 and 8.
+- **S6, the ladder T5–T8 (2026-09-28).** What: one sentence answering several questions —
+  "three buttons, pill shape, side by side" — each answer its own step, those ahead of their turn
+  marked decided so they are not asked again (the machine's `answerAt` and `fill`; graph version 3
+  gives each such node a `slot`, and rule G14 holds its guard to it); a list — typed, or pasted and
+  read through the paste layout and the list-number detector — as the options, labels verbatim;
+  "Did you mean …?" for another question of the group, confirmed before anything happens; after a
+  miss, the offer to remember the words, only on the press; two misses in a row list the group; the
+  organisation's learned aliases (`builder_aliases`, migration 0020, `/v1/builder/aliases`) with
+  an administrator's page to list, delete, export and import them, an import showing its diff and
+  storing nothing until confirmed. Why: M4's demo, and T8's "ask, then learn". It found nine traps
+  (#79–#87), among them one word read as two answers, misspellings read for questions not asked,
+  numerals inside words read as numbers (四角 made four options — an S3 defect), and a list of
+  answers read as a list of options; `INTENT-LADDER.md` closes with what changed. Tests: 427
+  phrase-table rows (at least ten per tier per language for T5, T6 and T7), `ahead.test.ts` (answers
+  ahead of their turn, with seeded walks), `group.test.ts`, `paste.test.ts`, the alias routes on
+  the memory store, PGlite and Postgres (with the race), the screen's logic and renders, and three
+  journeys in `e2e/guided-builder.spec.ts`. Next: S7, extract and reassemble. Open: owner questions
+  1–4, 6, 7 and 8; question 4 (learned aliases per organisation) is now built as proposed.

@@ -198,6 +198,20 @@ describe('each rule catches its own mistake', () => {
       },
     ],
     ['G12', 'something that does not survive JSON', (g) => (node(g, 'end').help = undefined)],
+    [
+      'G14',
+      'a slot its own guard does not read, so an answer ahead of its turn would be asked again',
+      (g) => {
+        const placement = node(g, 'choice.placement');
+        placement.when = 'pending.buttons == true';
+        placement.skip = 'guided.skip.noButtons';
+      },
+    ],
+    [
+      'G14',
+      'a slot on a node with no answer to give ahead of its turn',
+      (g) => (node(g, 'choice.preview').slot = 'shape'),
+    ],
   ];
 
   it.each(cases)('%s: %s', (rule, _what, breakIt) => {

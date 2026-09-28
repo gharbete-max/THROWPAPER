@@ -1,13 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { BUILDER_GRAPH, type Conversation } from '@tp/shared/builder';
+import {
+  BUILTIN_ALIASES,
+  type AliasRefusalReason,
+  type LearnedAlias,
+  type RememberAlias,
+} from '@tp/shared/interpret';
 import { LoadFailed } from '../../../components/LoadFailed.js';
 import { Loading } from '../../../components/Loading.js';
-import { client } from '../../../lib/api.js';
+import { ApiError, client } from '../../../lib/api.js';
 import { useEdition } from '../../../lib/edition.js';
 import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
-import { startConversation, type Started } from './conversation.js';
+import { startConversation, type Remembered, type Started } from './conversation.js';
 import { Saver, type SaveStatus } from './saver.js';
 import { Shell } from './Shell.js';
 
@@ -35,6 +41,10 @@ export function GuidedBuilder() {
   const [failed, setFailed] = useState(false);
   const [status, setStatus] = useState<SaveStatus>('saved');
   const saver = useRef<Saver | null>(null);
+  /** The organisation's learned aliases: the ladder reads them with the built-in ones. */
+  const [learned, setLearned] = useState<readonly LearnedAlias[]>([]);
+  // One array for as long as nothing is learned: the ladder keeps its vocabulary per array.
+  const aliases = useMemo(() => [...BUILTIN_ALIASES, ...learned], [learned]);
 
   const load = useCallback(() => {
     if (!id) return;
@@ -45,8 +55,11 @@ export function GuidedBuilder() {
       client.getForm(id),
       client.builderSession(id),
       client.brandKit().catch(() => null),
+      // Without them the built-in aliases still read everything they did: never a reason to fail.
+      client.learnedAliases().catch(() => ({ aliases: [] })),
     ])
-      .then(([form, stored, brand]) => {
+      .then(([form, stored, brand, known]) => {
+        setLearned(known.aliases);
         const begun = startConversation({
           graph: BUILDER_GRAPH,
           definition: form.draftDefinition,
@@ -70,6 +83,25 @@ export function GuidedBuilder() {
   }, [id]);
 
   useEffect(load, [load]);
+
+  /** "Remember", pressed: stored, and read from the next thing typed on. */
+  async function remember(offer: RememberAlias): Promise<Remembered> {
+    try {
+      const { alias } = await client.rememberAlias(offer);
+      setLearned((known) => [...known.filter((a) => a.id !== alias.id), alias]);
+      return { kind: 'remembered' };
+    } catch (error) {
+      if (error instanceof ApiError && error.code === 'alias-refused') {
+        const { reason, means } = error.detail as { reason?: AliasRefusalReason; means?: string };
+        return {
+          kind: 'refused',
+          reason: reason ?? 'present',
+          ...(typeof means === 'string' ? { means } : {}),
+        };
+      }
+      return { kind: 'failed' };
+    }
+  }
 
   function onChange(next: Conversation) {
     setConversation(next);
@@ -111,6 +143,7 @@ export function GuidedBuilder() {
         contentLocales={locales}
         desktop={edition === 'desktop'}
         brand={{ ...kit, organisationName: organisation?.name ?? '' }}
+        learning={{ aliases, remember }}
         onOpenEditor={() => void openEditor()}
         status={
           <SaveState status={status} onRetry={() => void saver.current?.retry()} onReload={load} />

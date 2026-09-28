@@ -33,6 +33,7 @@
     "ninety": 90,
     "hundred": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "i",
     "me",
@@ -129,6 +130,7 @@
     "nothing"
   ],
   "contrast": ["but", "instead"],
+  "conjunctions": ["and"],
   "months": {
     "january": 1,
     "jan": 1,

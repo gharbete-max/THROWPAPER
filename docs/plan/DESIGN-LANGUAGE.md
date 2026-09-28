@@ -121,6 +121,9 @@ nine-word rule, which is for questions):
 | The text entry | Or type it — e.g. "four buttons in a row" |
 | Transparency chip | read that as "{option}" — change |
 | The guess | This looks like {template}. Right? — Right / Sort of / No |
+| Another question's answer (T7) | Did you mean "{question}" — {answer}? — Yes / No |
+| The offer to learn (T8) | Remember "{phrase}" as a way to say "{option}"? — Remember / Not now |
+| Words a sentence did not use (T5) | Not used: "…" "…" |
 
 ## Components
 
@@ -129,7 +132,8 @@ own (the machine decides; these render):
 
 | Component | Is |
 | --- | --- |
-| `Shell` | the full-screen conversation: trail, node, text entry, Back, way out; keyboard (S4) |
+| `Shell` | the full-screen conversation: trail, node, text entry, Back, way out; keyboard (S4); what the ladder read, guessed or could not use, and the offer to remember (S6) |
+| `LearnedPhrases` | an administrator's list of the learned phrases: delete, export, import with its diff, remove all (S6) |
 | `NodeView`: `Cards` | a question, a pick-one or a menu — its answer cards, icons from `Icon.tsx` (S4) |
 | `NodeView`: `Quantity` | the stepper, − and + beside the number at `3xl` (S4) |
 | `NodeView`: `MultiCards` | pick-many cards and "Done" (S4) |

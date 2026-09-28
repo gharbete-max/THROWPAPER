@@ -41,6 +41,7 @@
     "níutíu": 90,
     "hundrað": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "ég",
     "við",
@@ -106,6 +107,7 @@
     "aldrei"
   ],
   "contrast": ["heldur", "frekar"],
+  "conjunctions": ["og"],
   "months": {
     "janúar": 1,
     "jan": 1,

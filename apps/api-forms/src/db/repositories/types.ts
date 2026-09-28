@@ -617,6 +617,42 @@ export interface BuilderSessionRepository {
   }): Promise<BuilderSessionRecord | null>;
 }
 
+/** One of the organisation's learned aliases (`builder_aliases`). */
+export interface BuilderAliasRecord {
+  id: string;
+  organisationId: string;
+  /** Verbatim, as it was typed. */
+  phrase: string;
+  nodeId: string;
+  optionId: string;
+  /** A primary language subtag: `sv`. */
+  locale: string;
+  source: 'user-confirmed' | 'imported';
+  /** `YYYY-MM-DD`: a date and nothing more. */
+  createdAt: string;
+  count: number;
+  notes: string;
+}
+
+/** A learned alias to store, with its `key`: the phrase as the ladder compares it (`keyOf`). */
+export type NewBuilderAlias = Omit<BuilderAliasRecord, 'id' | 'organisationId'> & { key: string };
+
+export interface BuilderAliasRepository {
+  /** In the alias file's order: language, question, answer, phrase. */
+  list(organisationId: string): Promise<BuilderAliasRecord[]>;
+  /**
+   * Stores the ones not already said: an entry whose language, question and key another row
+   * already has is skipped, so two people remembering the same phrase at once store it once. The
+   * caller checks what an alias may mean first (`aliasRefusal`); this is the lock behind it.
+   */
+  add(organisationId: string, entries: readonly NewBuilderAlias[]): Promise<BuilderAliasRecord[]>;
+  /** Remembered again: one more on its count. */
+  bump(organisationId: string, id: string): Promise<BuilderAliasRecord | null>;
+  remove(organisationId: string, id: string): Promise<BuilderAliasRecord | null>;
+  /** Every learned alias gone — back to the built-in ones. How many there were. */
+  clear(organisationId: string): Promise<number>;
+}
+
 export interface AuditRepository {
   record(entry: AuditEntryInput): Promise<void>;
   list(organisationId: string): Promise<AuditEntryRecord[]>;
@@ -732,6 +768,7 @@ export interface Repositories {
   jobs: JobRepository;
   brandKits: BrandKitRepository;
   builderSessions: BuilderSessionRepository;
+  builderAliases: BuilderAliasRepository;
   sendingDomains: SendingDomainRepository;
   messages: MessageRepository;
   audit: AuditRepository;

@@ -4,7 +4,9 @@ import {
   back as backOne,
   begin,
   currentNode,
+  fill,
   fromSession,
+  guardStateOf,
   jsonEqual,
   jumpTargets,
   optionsOf,
@@ -19,7 +21,17 @@ import {
   type Tier,
 } from '@tp/shared/builder';
 import type { FormDefinition } from '@tp/shared/forms';
-import { interpret, toAnswer, type AskReason, type Reading } from '@tp/shared/interpret';
+import {
+  aliasRefusal,
+  interpret,
+  languageOf,
+  toAnswer,
+  type AliasEntry,
+  type AliasRefusalReason,
+  type AskReason,
+  type Reading,
+  type RememberAlias,
+} from '@tp/shared/interpret';
 
 /**
  * The guided builder's screen logic, with nothing on screen — so every rule here is a function a
@@ -117,33 +129,194 @@ export function choose(
   }
 }
 
+/** What the conversation learns with: the aliases it reads, and the "Remember" press. */
+export interface Learning {
+  /** The built-in aliases and the organisation's learned ones. */
+  readonly aliases: readonly AliasEntry[];
+  readonly remember: (offer: RememberAlias) => Promise<Remembered>;
+}
+
+export type Remembered =
+  | { readonly kind: 'remembered' }
+  /** It already means something — `means`, for a collision — or cannot be remembered at all. */
+  | { readonly kind: 'refused'; readonly reason: AliasRefusalReason; readonly means?: string }
+  | { readonly kind: 'failed' };
+
+/** A part of what was typed that answered nothing, and why. */
+export interface Unused {
+  readonly text: string;
+  /**
+   * `nothing` — read as no answer; `conflict` — contradicted by another part ("pill, square");
+   * `not-now` — an answer to a question the conversation cannot ask yet, or any more.
+   */
+  readonly why: 'nothing' | 'conflict' | 'not-now';
+}
+
+/** Another question of the group the words may have been about, named by its question. */
+export interface Elsewhere {
+  readonly nodeId: string;
+  readonly question: MessageKey;
+}
+
 export type Typed =
-  | { readonly kind: 'stepped'; readonly conversation: Conversation; readonly reading: Reading }
-  | { readonly kind: 'ask'; readonly reason: AskReason; readonly options: readonly Reading[] }
+  /**
+   * Read, and done: one step, or — a sentence that said several things (T5) — one step each, in
+   * the graph's order. What was read, and what was not used.
+   */
+  | {
+      readonly kind: 'stepped';
+      readonly conversation: Conversation;
+      readonly readings: readonly Reading[];
+      readonly unused: readonly Unused[];
+    }
+  /** T7: about another question, clearly — but asked before anything happens. */
+  | { readonly kind: 'guess'; readonly reading: Reading }
+  | {
+      readonly kind: 'ask';
+      readonly reason: AskReason;
+      readonly options: readonly Reading[];
+      readonly elsewhere: readonly Elsewhere[];
+    }
   | { readonly kind: 'refused'; readonly code: MachineError['code'] };
 
+/** Readings, as the machine takes them: each to the node it answers, with its tier. */
+function given(graph: BuilderGraph, readings: readonly Reading[]) {
+  return readings.map((reading) => ({
+    nodeId: reading.nodeId,
+    answer: toAnswer(graph, reading),
+    tier: reading.tier,
+  }));
+}
+
 /**
- * Free text at the current node, read by the ladder (`INTENT-LADDER.md`). Applied only when a
- * rung clears its threshold, and then as an ordinary step with its tier — undone by Back like any
- * other. Below every threshold it asks, and the conversation stays where it is.
+ * Readings applied — each its own step (`fill`). Ones the machine refuses are left out and said
+ * so; if it refuses all of them, nothing happened.
+ */
+function applied(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  text: string,
+  readings: readonly Reading[],
+  unused: readonly Unused[],
+  locales: Locales,
+): Typed {
+  const filled = fill(graph, conversation, given(graph, readings), {
+    locale: locales.contentLocale,
+  });
+  const first = filled.refused.find((code) => code !== null);
+  if (filled.refused.every((code) => code !== null)) {
+    return { kind: 'refused', code: first ?? 'wrong-answer' };
+  }
+  const notNow: Unused[] = readings.flatMap((reading, i) =>
+    filled.refused[i] === null
+      ? []
+      : [{ text: text.slice(...reading.evidenceSpan), why: 'not-now' as const }],
+  );
+  return {
+    kind: 'stepped',
+    conversation: filled.conversation,
+    readings: readings.filter((_, i) => filled.refused[i] === null),
+    unused: [...unused, ...notNow],
+  };
+}
+
+/**
+ * Free text at the current node, read by the ladder (`INTENT-LADDER.md`) with the organisation's
+ * learned aliases, against the conversation as it stands: a question it could not ask now is
+ * never offered. Applied only when a rung clears its threshold, each answer as an ordinary step
+ * with its tier — undone by Back like any other. A guess waits to be confirmed; below every
+ * threshold the ladder asks, and the conversation stays where it is.
  */
 export function typed(
   graph: BuilderGraph,
   conversation: Conversation,
   text: string,
   locales: Locales,
+  aliases?: readonly AliasEntry[],
 ): Typed {
   const node = currentNode(graph, conversation);
-  const read = interpret(text, { graph, nodeId: node.id, locale: locales.interfaceLocale });
-  if (read.outcome === 'ask') return { kind: 'ask', reason: read.reason, options: read.options };
-  const stepped = choose(
+  const read = interpret(text, {
     graph,
-    conversation,
-    toAnswer(graph, read.reading),
-    locales,
-    read.reading.tier,
-  );
-  return stepped.kind === 'stepped' ? { ...stepped, reading: read.reading } : stepped;
+    nodeId: node.id,
+    locale: locales.interfaceLocale,
+    ...(aliases ? { aliases } : {}),
+    state: guardStateOf(conversation),
+  });
+  switch (read.outcome) {
+    case 'ask':
+      return {
+        kind: 'ask',
+        reason: read.reason,
+        options: read.options,
+        elsewhere: read.elsewhere.flatMap((other) => {
+          const target = graph.nodes.find((n) => n.id === other.nodeId);
+          return target ? [{ nodeId: target.id, question: target.ask }] : [];
+        }),
+      };
+    case 'guess':
+      return { kind: 'guess', reading: read.reading };
+    case 'fill':
+      return applied(
+        graph,
+        conversation,
+        text,
+        read.readings,
+        read.unused.map((u) => ({ text: text.slice(...u.span), why: u.why })),
+        locales,
+      );
+    case 'apply':
+      return applied(graph, conversation, text, [read.reading], [], locales);
+  }
+}
+
+/** A guess (T7), confirmed: the answer it guessed, as a step. */
+export function confirmGuess(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  text: string,
+  reading: Reading,
+  locales: Locales,
+): Typed {
+  return applied(graph, conversation, text, [{ ...reading, tier: 'T7' }], [], locales);
+}
+
+/** The node's own options, as the menu a question that could not be read offers (T8). */
+export function askMenu(graph: BuilderGraph, nodeId: string): Reading[] {
+  const node = graph.nodes.find((n) => n.id === nodeId);
+  return (node ? optionsOf(node) : []).map((option) => ({
+    nodeId,
+    optionId: option.id,
+    value: null,
+    confidence: 0,
+    tier: 'T8' as const,
+    evidenceSpan: [0, 0] as const,
+    alternatives: [],
+  }));
+}
+
+/**
+ * "Remember '…' as a way to say this?" — offered after a person picks an answer from the menu of
+ * something the ladder could not read (T8), and only when remembering it could work: a phrase of
+ * 1–80 characters, for one of the node's options, that does not already mean something
+ * (`aliasRefusal`). Nothing is stored until the person presses Remember.
+ */
+export function rememberOffer(
+  graph: BuilderGraph,
+  text: string,
+  picked: Reading,
+  locales: Locales,
+  known: readonly AliasEntry[],
+): RememberAlias | null {
+  const phrase = text.trim();
+  const language = languageOf(locales.interfaceLocale);
+  if (!language || picked.optionId === null || phrase === '') return null;
+  const wanted: RememberAlias = {
+    phrase,
+    nodeId: picked.nodeId,
+    optionId: picked.optionId,
+    locale: language,
+  };
+  return aliasRefusal(graph, wanted, known) ? null : wanted;
 }
 
 /** Whether the "Or type it" box is offered: only where free text chooses an answer. */

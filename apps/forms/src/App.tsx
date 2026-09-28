@@ -42,6 +42,11 @@ const FormBuilder = lazy(() =>
 const GuidedBuilder = lazy(() =>
   import('./screens/builder/guided/GuidedBuilder.js').then((m) => ({ default: m.GuidedBuilder })),
 );
+const LearnedPhrases = lazy(() =>
+  import('./screens/builder/guided/LearnedPhrases.js').then((m) => ({
+    default: m.LearnedPhrases,
+  })),
+);
 const EventReport = lazy(() =>
   import('./screens/EventReport.js').then((m) => ({ default: m.EventReport })),
 );
@@ -375,6 +380,7 @@ function Shell() {
               {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
               <Route path="/forms/:id/submissions" element={<FormResponses />} />
               <Route path="/forms/:id/guided" element={<GuidedBuilder />} />
+              <Route path="/forms/phrases" element={<LearnedPhrases />} />
               <Route path="/forms/:id" element={<FormBuilder />} />
               <Route path="/events/:id/attendance" element={<EventReport />} />
               <Route

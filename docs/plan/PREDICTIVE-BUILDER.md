@@ -253,21 +253,25 @@ Proposed, pending §14 question 1 (none of the types depend on the answer):
 ```
 packages/shared/src/                         (@tp/shared — the forms core already lives here)
   import/        ir/  layout/  enumerate/  segment/  classify/  overlay/  pipeline.ts
+                 paste.ts — pasted text as a layout document                              (S6)
                  classify/weights.json
   builder/       graph/nodes.ts  graph/schema.ts  graph/validate.ts  graph/guards.ts  graph/paths.ts
                  state.ts  changes.ts  patches.ts  fields.ts  ids.ts  machine.ts  session.ts   (S2)
+                 reconcile.ts                                                            (S5)
                  belief/recipes.json  belief/update.ts  belief/entropy.ts  belief/explain.ts
   interpret/     text.ts  lexicon.ts  ln.ts  fuzzy.ts  patterns.ts  aliases.ts  vocabulary.ts
-                 ladder.ts  gazetteers/<language>.json  aliases/<language>.json            (S3)
+                 rungs.ts  reading.ts  gazetteers/<language>.json  aliases/<language>.json   (S3)
+                 ladder.ts (T0–T8 in order)  clauses.ts  list.ts; learned aliases           (S6)
                  sigmoid.json                                                          (S9, S11)
 apps/forms/src/screens/builder/
-  paper/         extract.ts (exists)  ocr.ts (exists)  docx.ts  paste.ts  import.worker.ts
+  paper/         extract.ts (exists)  ocr.ts (exists)  docx.ts  import.worker.ts
   guided/        Shell.tsx  NodeView.tsx (Cards, Quantity, the text answer, the live preview)
                  Trail.tsx  Doors.tsx  GuidedBuilder.tsx  conversation.ts  keyboard.ts  saver.ts (S4)
                  PreviewMoment.tsx  InlineEdit/  Reconcile.tsx                                 (S5)
+                 LearnedPhrases.tsx                                                            (S6)
   review/        ReviewScreen.tsx  SourcePane.tsx  DraftPane.tsx  Chips.tsx
 apps/api-forms/src/
-  routes/        builder-session.ts (builder_sessions, S2); builder aliases (builder_aliases, S6)
+  routes/        builder-session.ts (builder_sessions, S2); builder-aliases.ts (builder_aliases, S6)
 scripts/         builder-validate.ts (pnpm builder:validate)  caveat-fixtures.test.ts
 fixtures/        numbering/  ir/  documents/ (the corpus)  sessions/ (recorded conversations)
 ```
@@ -399,9 +403,9 @@ permission of 2026-09-25, so the brief and this plan now agree.
 3. **Consent/GDPR text: may Loppa ever reformat it, or is it preserved byte for byte?** *Proceeding
    on:* byte for byte, rendered as-is; only its container (the checkbox, the box it sits in)
    follows the brand.
-4. **Are learned aliases per install, or a shared team file?** *Proceeding on:* per organisation
-   (`builder_aliases`), exportable and importable as `aliases.json`; on the desktop that is the
-   install.
+4. **Are learned aliases per install, or a shared team file?** *Proceeding on — and built so in
+   S6:* per organisation (`builder_aliases`), exportable and importable as `aliases.json`; on the
+   desktop that is the install.
 5. ~~Is there an i18n workflow the graph strings must follow?~~ *Answered by the repository:* a
    TypeScript catalogue per locale (`apps/forms/src/lib/messages/`), no translation platform; a
    missing key is a compile error. The graph's strings are there, under `guided.*` (S1).

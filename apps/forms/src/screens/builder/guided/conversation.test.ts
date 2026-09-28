@@ -1,14 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { BUILDER_GRAPH, changedByHand, toSession, type Conversation } from '@tp/shared/builder';
 import { emptyDefinition, type FormDefinition } from '@tp/shared/forms';
+import { BUILTIN_ALIASES } from '@tp/shared/interpret';
 import {
+  askMenu,
   backTo,
   choiceAt,
   choose,
+  confirmGuess,
   crumbs,
   focusedField,
   lastChoice,
   readsFreeText,
+  rememberOffer,
   showsPreview,
   startConversation,
   stepBack,
@@ -126,7 +130,7 @@ describe('typing an answer', () => {
 
   it('is read in the screen’s language, and the step keeps its tier', () => {
     const result = typed(G, atCount(), 'four please', locales);
-    expect(result).toMatchObject({ kind: 'stepped', reading: { value: 4, tier: 'T4' } });
+    expect(result).toMatchObject({ kind: 'stepped', readings: [{ value: 4, tier: 'T4' }] });
     const c = stepped(result);
     expect(c.log.at(-1)).toMatchObject({ answer: { kind: 'quantity', value: 4 }, tier: 'T4' });
     expect(focusedField(c)).toMatchObject({ options: { length: 4 } });
@@ -136,6 +140,99 @@ describe('typing an answer', () => {
     const c = atCount();
     expect(typed(G, c, 'some', locales)).toMatchObject({ kind: 'ask', reason: 'vague' });
     expect(typed(G, c, 'banana', locales)).toMatchObject({ kind: 'ask', reason: 'nothing' });
+  });
+
+  /** At "Do you want buttons?", about "Vilken dag?". */
+  const atButtons = () => {
+    let c = press(start().conversation, 'signup');
+    c = press(c, 'later');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Vilken dag?' }, locales));
+    return press(c, 'yes');
+  };
+
+  it('that says several things answers each, a step apiece, and stays where it was not answered', () => {
+    const before = atButtons();
+    const result = typed(G, before, 'three buttons, pill shape, side by side', locales);
+    expect(result).toMatchObject({ kind: 'stepped', unused: [] });
+    const c = stepped(result);
+    expect(c.log.slice(before.log.length).map((e) => [e.nodeId, e.tier])).toEqual([
+      ['choice.buttons', 'T5'],
+      ['choice.count', 'T5'],
+      ['choice.shape', 'T5'],
+      ['choice.placement', 'T5'],
+    ]);
+    expect(c.state.cursor).toBe('choice.answers');
+    expect(focusedField(c)).toMatchObject({
+      options: { length: 3 },
+      style: { shape: 'pill', columns: 'auto' },
+    });
+  });
+
+  it('says what it could not use: words it did not read, and answers the conversation cannot take', () => {
+    const result = typed(G, atButtons(), 'no buttons, pills', locales);
+    // "No buttons" moves on; there is no shape to give buttons nobody wants.
+    expect(result).toMatchObject({
+      kind: 'stepped',
+      readings: [{ nodeId: 'choice.buttons', optionId: 'no' }],
+      unused: [{ text: 'pills', why: 'not-now' }],
+    });
+    expect(stepped(result).state.cursor).toBe('flow.more');
+  });
+
+  it('that is a list is the options, labels verbatim, in one step', () => {
+    const c = stepped(typed(G, atCount(), 'Röd, Grön, Blå', locales));
+    expect(c.log.at(-1)).toMatchObject({
+      answer: { kind: 'list', labels: ['Röd', 'Grön', 'Blå'] },
+      tier: 'T6',
+    });
+    expect(focusedField(c)).toMatchObject({
+      options: [
+        { label: { 'sv-SE': 'Röd' } },
+        { label: { 'sv-SE': 'Grön' } },
+        { label: { 'sv-SE': 'Blå' } },
+      ],
+    });
+  });
+
+  it('about another question is a guess, and nothing happens until it is confirmed', () => {
+    let c = press(atButtons(), 'yes');
+    expect(c.state.cursor).toBe('choice.answers');
+    const guess = typed(G, c, 'pills', locales);
+    expect(guess).toMatchObject({
+      kind: 'guess',
+      reading: { nodeId: 'choice.shape', optionId: 'pill', tier: 'T7' },
+    });
+    if (guess.kind !== 'guess') return;
+    c = stepped(confirmGuess(G, c, 'pills', guess.reading, locales));
+    // Answered ahead of its turn: the conversation still asks "One answer or several?".
+    expect(c.state.cursor).toBe('choice.answers');
+    expect(c.log.at(-1)).toMatchObject({ nodeId: 'choice.shape', tier: 'T7' });
+  });
+
+  it('that could be about another question offers that question beside the menu', () => {
+    const result = typed(G, atCount(), 'pill, square', locales);
+    expect(result).toMatchObject({
+      kind: 'ask',
+      reason: 'nothing',
+      elsewhere: [{ nodeId: 'choice.shape', question: 'guided.choice.shape.ask' }],
+    });
+  });
+
+  it('that was not read, then picked from the menu, may be remembered — when that could work', () => {
+    const [pill] = askMenu(G, 'choice.shape');
+    expect(pill).toMatchObject({ nodeId: 'choice.shape', optionId: 'pill', tier: 'T8' });
+    expect(rememberOffer(G, '  blobby ', pill!, locales, BUILTIN_ALIASES)).toEqual({
+      phrase: 'blobby',
+      nodeId: 'choice.shape',
+      optionId: 'pill',
+      locale: 'en',
+    });
+    // Already a way of saying something else: offering would only end in a refusal.
+    expect(rememberOffer(G, 'square', pill!, locales, BUILTIN_ALIASES)).toBeNull();
+    expect(rememberOffer(G, '   ', pill!, locales, BUILTIN_ALIASES)).toBeNull();
+    expect(
+      rememberOffer(G, 'lots', { ...pill!, optionId: null, value: 4 }, locales, BUILTIN_ALIASES),
+    ).toBeNull();
   });
 
   it('is offered only where free text chooses an answer', () => {

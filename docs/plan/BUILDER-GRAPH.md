@@ -2,7 +2,8 @@
 
 **Status:** the specification for slices S1 and S2 (`ROADMAP.md`), proposed 2026-09-25; the graph
 **built in S1** (`packages/shared/src/builder/graph/`), the machine that walks it **in S2**
-(`packages/shared/src/builder/`, "The machine" below). Where this document and the code disagree, the code is
+(`packages/shared/src/builder/`, "The machine" below); answers ahead of their turn and graph
+version 3's slots **in S6**. Where this document and the code disagree, the code is
 checked by tests and this document is the bug — fix it in the same change. Decisions: ADR 0020
 (graph as data) and ADR 0021 (JSON or typed TS, never YAML).
 
@@ -56,7 +57,12 @@ interface NodeBase {
   escape: string;             // a `menu` node id, or 'menu.siblings(<group>)'
   preview?: string;           // a preview spec id: what to render after this node
   negative?: string;          // the option a negated phrase selects ("no buttons") — INTENT-LADDER.md
+  slot?: Slot;                // what answering it settles for the question in focus (S6): an answer
+                              // ahead of its turn marks it decided, and `when` must read
+                              // decided(<slot>) so the node is passed by (G14)
 }
+
+type Slot = 'kind' | 'required' | 'options' | 'shape' | 'placement' | 'validation';
 
 export type Next = string | { when: Guard; to: string }[];   // list: first true guard wins; the
                                                              // last entry must be { when: 'true' }
@@ -208,8 +214,20 @@ where it started (`base`) and every step since (`log`); its state is always exac
   `when` is false, recording each with its reason (`skip`: one sentence, or the first of a list
   whose guard holds). Bounded by the size of the graph. A jump — the escape to a menu or a sibling,
   a menu's entry, the end's way back to the menus — is a step with no changes.
-- **Back** applies the last inverse; **a breadcrumb** (`rewind`) replays the log up to it; the two
-  agree. **A hand edit** (`edit`, inline editing on the preview) is a step with `source: 'manual'`
+- **Back** applies the last inverse and returns to where the conversation was (the step before's
+  `to`); **a breadcrumb** (`rewind`) replays the log up to it; the two agree.
+- **Ahead of its turn** (`answerAt`, S6). A sentence that says several things (the ladder's T5), or
+  a guess confirmed (T7), answers a node the conversation has not reached: a step like any other,
+  in the log and the trail, and the conversation stays where it is. Only a node the conversation
+  could ask now (its `when` holds) and one that settles a `slot`, which the step marks decided for
+  the question in focus — so the node's own guard passes it by when the conversation gets there
+  (G14). `fill` gives several answers at once, each its own step in the graph's order: one for the
+  node the conversation is at is answered in its turn and moves it on, so the next may be too; one
+  the machine refuses (`not-now`, or breaking the form) is left out and the rest still stand. **A
+  jump** asks the node it names even when it was decided — the person asked for it by name.
+- **A list** (`{ kind: 'list', labels }`) answers a quantity whose patch makes options: `$options`
+  makes one option per label, verbatim, in the author's language, keeping the values and pictures
+  of the options there are (T6). **A hand edit** (`edit`, inline editing on the preview) is a step with `source: 'manual'`
   on paths `WRITABLE` allows, in the same log, as undoable as an answer; the trail does not show it.
 - **Reconciliation** (`reconcile.ts`, S5). Every guided step records each question it made or
   changed as it left it (`guided`); a question that differs from that has been changed by hand.
@@ -261,9 +279,10 @@ call     = 'answered(' nodeId ')'     -- the node has an answer in the log
 - **Explain:** every node with a `when` has a `skip` message key. When a node is skipped, the trail
   shows it greyed with that sentence ("Skipped — you said you don't want buttons"), and
   `explain(guard, state)` returns which sub-expression was false, for the debug panel.
-- **Slots** for `decided()` are the things S6 must not re-ask: `kind`, `required`, `options`,
-  `shape`, `placement`, `validation`, each per field (`decided(kind)` reads
-  `sidecar.fields[focus].decided.kind`).
+- **Slots** for `decided()` are the things the conversation must not re-ask: `kind`, `required`,
+  `options`, `shape`, `placement`, `validation`, each per field (`decided(kind)` reads
+  `sidecar.fields[focus].decided.kind`). An answer given ahead of its turn marks its node's slot
+  (S6); an import will mark what it read (S12). A skipped node says "Already decided" either way.
 
 ## `score`
 
@@ -306,6 +325,7 @@ all of them and lists every problem at once; `pnpm verify` runs them through
 | G11 | from any node, the longest simple path through nodes of its own group before a `preview-moment` or `end` exceeds **6** nodes — ADR 0006's four-press promise, restated for chains |
 | G12 | the graph does not survive a JSON round trip exactly (a function, a class, a key holding `undefined`) |
 | G13 | a `text-entry` example, in any locale, contains a regulated word (`forms/wording.ts`, the same list `templates.test.ts` holds the templates to) |
+| G14 | a node declares a `slot` but its `when` does not read `decided(<slot>)` — an answer ahead of its turn would be asked again — or declares one on a kind with no answer to give ahead of its turn (only `question`, `pick-one`, `pick-many`, `quantity`) |
 
 G4, G10 and G13 read the catalogues in `apps/forms`, which `packages/shared` must not import; that
 is why they take the catalogues as an argument, run in the app's test and the root script, and why
@@ -326,8 +346,8 @@ stop (`CAVEATS.md` #62, #65). English values from `apps/forms/src/lib/messages/e
   help: 'guided.choice.buttons.help',             // "Buttons let people pick instead of typing."
   when: 'has(focus) && !decided(kind)',
   skip: [{ when: '!has(focus)', skip: 'guided.skip.noQuestion' },   // "No question to change yet"
-         { when: 'true', skip: 'guided.skip.decided' }],           // "Already read from your document"
-  next: 'choice.answers', escape: 'menu.siblings(choice)', negative: 'no',
+         { when: 'true', skip: 'guided.skip.decided' }],           // "Already decided"
+  next: 'choice.answers', escape: 'menu.siblings(choice)', negative: 'no', slot: 'kind',
   options: [
     { id: 'yes', label: 'guided.common.yes', icon: 'check',
       // Buttons from this answer on, one answer by default; the next node refines it. So every
@@ -346,8 +366,10 @@ stop (`CAVEATS.md` #62, #65). English values from `apps/forms/src/lib/messages/e
   id: 'choice.answers', group: 'choice', kind: 'question',
   ask: 'guided.choice.answers.ask',               // "One answer or several?"
   help: 'guided.choice.answers.help',             // "Can people pick more than one?"
-  when: 'pending.buttons == true', skip: 'guided.skip.noButtons',
-  next: 'choice.count', escape: 'menu.siblings(choice)',
+  when: 'pending.buttons == true && !decided(kind)',       // S6: graph version 3
+  skip: [{ when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+         { when: 'true', skip: 'guided.skip.decided' }],
+  next: 'choice.count', escape: 'menu.siblings(choice)', slot: 'kind',
   options: [
     { id: 'one', label: 'guided.choice.answers.one',        // "One answer only"
       patch: [{ op: 'set', path: 'draft.definition.fields[focus].type', value: 'single_select' },
@@ -365,7 +387,7 @@ stop (`CAVEATS.md` #62, #65). English values from `apps/forms/src/lib/messages/e
   when: 'pending.buttons == true && !decided(shape)',
   skip: [{ when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },   // "You chose no buttons"
          { when: 'true', skip: 'guided.skip.decided' }],
-  next: 'choice.placement', escape: 'menu.siblings(choice)',
+  next: 'choice.placement', escape: 'menu.siblings(choice)', slot: 'shape',
   preview: 'choice.control',                      // S2: a live preview after the shape answer
   options: [
     { id: 'pill', label: 'guided.choice.shape.pill',
@@ -379,8 +401,10 @@ stop (`CAVEATS.md` #62, #65). English values from `apps/forms/src/lib/messages/e
   id: 'choice.placement', group: 'choice', kind: 'pick-one',
   ask: 'guided.choice.placement.ask',             // "Where should they sit?"
   help: 'guided.choice.placement.help',
-  when: 'pending.buttons == true', skip: 'guided.skip.noButtons',
-  next: 'choice.preview', escape: 'menu.siblings(choice)',
+  when: 'pending.buttons == true && !decided(placement)',  // S6: graph version 3
+  skip: [{ when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+         { when: 'true', skip: 'guided.skip.decided' }],
+  next: 'choice.preview', escape: 'menu.siblings(choice)', slot: 'placement',
   options: [
     { id: 'under-full', label: 'guided.choice.placement.underFull',   // "Under the question, full width"
       patch: [{ op: 'set', path: 'draft.definition.fields[focus].width', value: 'full' },
@@ -410,7 +434,7 @@ case that proves it). They join in S5, with the schema change that makes them va
   when: 'pending.buttons == true && !decided(options)',
   skip: [{ when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
          { when: 'true', skip: 'guided.skip.decided' }],
-  min: 2, max: 12, default: 3,
+  min: 2, max: 12, default: 3, slot: 'options',
   patch: [{ op: 'set', path: 'draft.definition.fields[focus].options',
             value: { $options: { $answer: true } } }],
   next: 'choice.shape', escape: 'menu.siblings(choice)',
@@ -418,10 +442,10 @@ case that proves it). They join in S5, with the schema change that makes them va
 ```
 
 Typing "4", "four", "fyra" or "vier" in the text entry reaches the same answer through the ladder's
-T4 (`INTENT-LADDER.md`). "Some" does not: quantities are never inferred from vagueness. S4 adds
-`choice.optionLabels` after it — a `text-entry` per option whose value lands verbatim in that
-option's label; a pasted list ("Red, Green, Blue") fills them all at once (T6) and sets the count
-to the list's length, preserved. Until then `$options` gives placeholder options.
+T4 (`INTENT-LADDER.md`). "Some" does not: quantities are never inferred from vagueness. A list —
+"Red, Green, Blue", or a pasted numbered one — is the options themselves (T6, S6): one per label,
+verbatim, the count the list's. Otherwise `$options` gives placeholder options, which inline
+editing on the preview renames (S5).
 
 ### 3. The brand kit
 
@@ -501,9 +525,14 @@ ones every graph has:
 | `menu.top` | menu | the escape of last resort: every group as a card |
 | `end` | end | Your form is ready. |
 
-`choice.optionLabels` joins them in S4, when there is a screen to type option labels into; until
-then `$options` gives "Option 1…n" (`V.option` in `forms/vocabulary.ts`, the same words as the
-classic editor's `field.defaultOption`, in all twelve languages).
+There is no `choice.optionLabels`: option labels are typed as a list at "How many options?" (T6)
+or renamed on the preview (S5); otherwise `$options` gives "Option 1…n" (`V.option` in
+`forms/vocabulary.ts`, the same words as the classic editor's `field.defaultOption`, in all twelve
+languages).
+
+Graph version 3 (S6) gave `choice.buttons` and `choice.answers` the slot `kind`, `choice.count`
+`options`, `choice.shape` `shape`, `choice.placement` `placement` and `text.required` `required`,
+each with the `decided()` guard G14 asks for.
 
 S2 changed three things the walk over the whole graph found (`CAVEATS.md` #62, #65):
 `text.required` asks only when there is a question (`when: 'has(focus)'`, skip reason

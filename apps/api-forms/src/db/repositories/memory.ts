@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
+import { compareAliases } from '@tp/shared/interpret';
 import type {
   AuditEntryInput,
   CheckInRecord,
@@ -21,6 +22,7 @@ import type {
   LedgerAccountRecord,
   FormVersionRecord,
   BrandKitRecord,
+  BuilderAliasRecord,
   BuilderSessionRecord,
   JobRecord,
   LoginTokenRecord,
@@ -58,6 +60,7 @@ export interface MemoryState {
   jobs: JobRecord[];
   brandKits: BrandKitRecord[];
   builderSessions: BuilderSessionRecord[];
+  builderAliases: (BuilderAliasRecord & { key: string })[];
   sendingDomains: SendingDomainRecord[];
   signingRequests: SigningRequestRecord[];
   messages: MessageRecord[];
@@ -122,6 +125,7 @@ export function createMemoryRepositories(
     jobs: seed.jobs ?? [],
     brandKits: seed.brandKits ?? [],
     builderSessions: seed.builderSessions ?? [],
+    builderAliases: seed.builderAliases ?? [],
     sendingDomains: seed.sendingDomains ?? [],
     signingRequests: seed.signingRequests ?? [],
     messages: seed.messages ?? [],
@@ -912,6 +916,57 @@ export function createMemoryRepositories(
         if (index === -1) state.builderSessions.push(record);
         else state.builderSessions[index] = record;
         return { ...record, session: structuredClone(record.session) };
+      },
+    },
+
+    builderAliases: {
+      list: async (organisationId) =>
+        state.builderAliases
+          .filter((a) => a.organisationId === organisationId)
+          .sort(compareAliases)
+          .map(({ key: _key, ...record }) => ({ ...record })),
+      add: async (organisationId, entries) => {
+        const added: BuilderAliasRecord[] = [];
+        for (const entry of entries) {
+          const said = state.builderAliases.some(
+            (a) =>
+              a.organisationId === organisationId &&
+              a.locale === entry.locale &&
+              a.nodeId === entry.nodeId &&
+              a.key === entry.key,
+          );
+          if (said) continue;
+          const record = { ...entry, id: randomUUID(), organisationId };
+          state.builderAliases.push(record);
+          const { key: _key, ...stored } = record;
+          added.push(stored);
+        }
+        return added;
+      },
+      bump: async (organisationId, id) => {
+        const found = state.builderAliases.find(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        if (!found) return null;
+        found.count += 1;
+        const { key: _key, ...record } = found;
+        return { ...record };
+      },
+      remove: async (organisationId, id) => {
+        const index = state.builderAliases.findIndex(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        if (index === -1) return null;
+        const [removed] = state.builderAliases.splice(index, 1);
+        const { key: _key, ...record } = removed!;
+        return record;
+      },
+      clear: async (organisationId) => {
+        const before = state.builderAliases.length;
+        state.builderAliases = state.builderAliases.filter(
+          (a) => a.organisationId !== organisationId,
+        );
+        return before - state.builderAliases.length;
       },
     },
 

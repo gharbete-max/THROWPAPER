@@ -277,6 +277,48 @@ export const builderSessions = pgTable(
 );
 
 /**
+ * The organisation's learned aliases — ways its people say an answer that Loppa did not know,
+ * each remembered only because someone pressed "Remember" on that exact phrase
+ * (`docs/plan/INTENT-LADDER.md`, "Aliases"; S6). Built-in aliases ship with the code and are never
+ * stored here.
+ *
+ * `key` is the phrase as the ladder compares it (`keyOf`): one row per way of saying something, per
+ * language and question, so a phrase can never mean two answers of one question. `created_on` is a
+ * date and nothing more, and no column says who remembered it: a phrase can contain a name, and the
+ * row is the organisation's, not the person's. An administrator lists, deletes and exports them.
+ */
+export const builderAliases = pgTable(
+  'builder_aliases',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    phrase: text('phrase').notNull(),
+    key: text('key').notNull(),
+    nodeId: text('node_id').notNull(),
+    optionId: text('option_id').notNull(),
+    /** A primary language subtag: `sv`, `en`, `zh`. */
+    locale: text('locale').notNull(),
+    source: text('source').notNull(),
+    createdOn: date('created_on', { mode: 'string' }).notNull(),
+    /** How many times it was remembered: orders the administrator's list, nothing else. */
+    count: integer('count').notNull().default(1),
+    notes: text('notes').notNull().default(''),
+  },
+  (table) => [
+    uniqueIndex('builder_aliases_said_idx').on(
+      table.organisationId,
+      table.locale,
+      table.nodeId,
+      table.key,
+    ),
+    check('builder_aliases_source', sql`${table.source} in ('user-confirmed', 'imported')`),
+    check('builder_aliases_count_positive', sql`${table.count} > 0`),
+  ],
+);
+
+/**
  * An immutable published snapshot. Submissions reference the version they were filled against,
  * so editing a form can never retroactively change what somebody answered.
  */

@@ -45,6 +45,14 @@ export const NODE_KINDS = [
 ] as const;
 export type NodeKind = (typeof NODE_KINDS)[number];
 
+/**
+ * What a question can have settled, per question: by an import (S12), or by an answer given ahead
+ * of its turn — "three buttons, pill shape, side by side" answers the shape before the shape's node
+ * is reached (T5, `INTENT-LADDER.md`). The `decided(slot)` guard reads them.
+ */
+export const SLOTS = ['kind', 'required', 'options', 'shape', 'placement', 'validation'] as const;
+export type Slot = (typeof SLOTS)[number];
+
 /** Where to go next: one node, or guarded branches read top to bottom ending in `when: 'true'`. */
 export type Next = string | readonly { readonly when: Guard; readonly to: string }[];
 
@@ -121,6 +129,13 @@ interface Base {
   readonly preview?: string;
   /** The option a negated phrase selects ("no buttons") — `docs/plan/INTENT-LADDER.md`. */
   readonly negative?: string;
+  /**
+   * What answering this node settles for the question in focus. An answer given ahead of its turn
+   * marks it decided, so the conversation does not ask again when it gets here — which is why the
+   * node's `when` must read `decided(<slot>)` (rule G14). Without a slot, a node is answered only
+   * in its turn.
+   */
+  readonly slot?: Slot;
 }
 
 export type QuestionNode = Base & {
@@ -256,6 +271,7 @@ const base = {
   escape: z.string(),
   preview: z.string().optional(),
   negative: z.string().optional(),
+  slot: z.enum(SLOTS).optional(),
 };
 const withOptions = { ...base, options: z.array(option) };
 
@@ -313,6 +329,24 @@ export const BuilderGraphSchema = z
 /** The options a node offers, or none for kinds without them. */
 export function optionsOf(node: Node): readonly Option[] {
   return 'options' in node ? node.options : [];
+}
+
+/**
+ * Whether a node's answer can be a list: a quantity whose patch makes the question's options from
+ * it (`$options`). "Red, Green, Blue" there is the options themselves (T6, `INTENT-LADDER.md`).
+ */
+export function takesList(node: Node): boolean {
+  return (
+    node.kind === 'quantity' &&
+    node.patch.some(
+      (op) =>
+        'value' in op &&
+        typeof op.value === 'object' &&
+        op.value !== null &&
+        !Array.isArray(op.value) &&
+        '$options' in op.value,
+    )
+  );
 }
 
 /** Every patch a node can apply: its own and each option's. */

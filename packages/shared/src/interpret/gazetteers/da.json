@@ -34,6 +34,7 @@
     "halvfems": 90,
     "hundrede": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "jeg",
     "vi",
@@ -89,6 +90,7 @@
   ],
   "negators": ["nej", "ikke", "ingen", "intet", "uden", "spring over", "aldrig"],
   "contrast": ["men", "i stedet", "snarere"],
+  "conjunctions": ["og"],
   "months": {
     "januar": 1,
     "jan": 1,

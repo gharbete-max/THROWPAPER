@@ -69,6 +69,31 @@ export function resizeOptions(current: readonly Option[] | undefined, count: num
   return options;
 }
 
+/**
+ * The options as a list names them (T6, "Red, Green, Blue"): one per label, in order, each label
+ * verbatim in the language it was written in. The options there are keep their values and
+ * pictures, so a list typed over placeholders renames them rather than replacing them; the rest get
+ * values no other option has. Only the written language is set: a placeholder's "Option 1" in
+ * another language would be a worse answer there than the author's own words.
+ */
+export function labelledOptions(
+  current: readonly Option[] | undefined,
+  labels: readonly string[],
+  locale: string,
+): Option[] {
+  const kept = (current ?? []).slice(0, labels.length);
+  const used = new Set(kept.map((option) => option.value));
+  let serial = 1;
+  return labels.map((label, i) => {
+    const old = kept[i];
+    if (old) return { ...old, label: { [locale]: label } };
+    while (used.has(`option_${serial}`)) serial += 1;
+    const value = `option_${serial}`;
+    used.add(value);
+    return { value, label: { [locale]: label }, image: null };
+  });
+}
+
 /** The schema of one field type, the variant of the `Field` union with that `type`. */
 export function variantOf(type: FieldType) {
   const variant = Field.options.find((option) => option.shape.type.value === type);

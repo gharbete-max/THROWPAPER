@@ -52,8 +52,9 @@ the document and the draft side by side before anything enters the form.
 
 - ADR 0004 gains a note pointing here. Its AcroForm importer becomes stage 1's first choice
   (confidence 1000), and manual placement stays as the way to fix what the rules got wrong.
-- `packages/shared` gains `@tp/shared/import`; `apps/forms` gains `paper/docx.ts`, `paper/paste.ts`
-  and a worker. `bundle-split.test.ts` keeps all of it out of the public form's chunk.
+- `packages/shared` gains `@tp/shared/import` — with the paste layout (`import/paste.ts`, S6: a
+  string is not a file's bytes, and the ladder's T6 reads a pasted list through it); `apps/forms`
+  gains `paper/docx.ts`, the clipboard, and a worker. `bundle-split.test.ts` keeps all of it out of the public form's chunk.
 - The review screen is a new, substantial screen (S10); without it nothing ships, by design.
 - The corpus of real documents must be sourced with redistribution rights recorded
   (`fixtures/documents/SOURCES.json`), because the repository may be public (ADR 0015).

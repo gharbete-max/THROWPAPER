@@ -1,8 +1,9 @@
 # The intent ladder — free text, read by rules
 
-**Status:** the specification for slices S3 (T0–T4, built — `packages/shared/src/interpret/`) and
-S6 (T5–T8), proposed 2026-09-25, brought up to date with S3 on 2026-09-26 (the changes are listed
-at the end). Decisions: ADR 0019 (deterministic ladder), ADR 0021 (JSON data, never YAML).
+**Status:** the specification for slices S3 (T0–T4) and S6 (T5–T8), both built —
+`packages/shared/src/interpret/`. Proposed 2026-09-25; brought up to date with S3 on 2026-09-26
+and with S6 on 2026-09-28 (the changes are listed at the end). Decisions: ADR 0019 (deterministic
+ladder), ADR 0021 (JSON data, never YAML).
 
 Every node in the conversation has a text entry under its cards: "Or type it — e.g. 'four buttons
 in a row'". What is typed there is read by a **ladder** of deterministic methods, cheapest and
@@ -16,14 +17,15 @@ interface InterpretContext {
   graph: BuilderGraph;
   nodeId: string;
   locale: string;                 // the author's interface language, e.g. 'sv-SE'
-  aliases?: AliasEntry[];         // the built-in aliases by default; S6 adds the organisation's
-  // S6 adds `state`, for T7's path prior and T5's slot vocabulary.
+  aliases?: AliasEntry[];         // the built-in aliases by default; the shell adds the organisation's
+  state?: GuardState;             // the conversation as guards read it: T6 and T7 offer only
+                                  // questions the conversation could ask now
 }
 
 interface Reading {
-  nodeId: string;
-  optionId: string | null;        // null for a quantity
-  value: Json | null;             // the quantity; S6: the list, the slot values
+  nodeId: string;                 // the node asked — or, for T5, T6 and T7, another of its group
+  optionId: string | null;        // null for a quantity or a list
+  value: Json | null;             // the quantity, or the list's labels (T6)
   confidence: number;             // integer per mille, 0–1000
   tier: 'T0' | 'T1' | 'T2' | 'T3' | 'T4' | 'T5' | 'T6' | 'T7' | 'T8';
   evidenceSpan: [number, number]; // UTF-16 offsets into the input as typed
@@ -35,23 +37,32 @@ type AskReason =
   | 'budget' | 'too-long' | 'not-readable';
 
 type Interpretation =
-  | { outcome: 'apply'; reading: Reading }                        // ≥ threshold: a patch in the log
-  | { outcome: 'ask'; reason: AskReason; options: Reading[] };    // T8: a visual menu
-  // S6 adds { outcome: 'guess'; reading } — T7, shown as a confirm-guess node.
+  | { outcome: 'apply'; reading: Reading }                        // T0–T4, T6: a step
+  | { outcome: 'fill'; readings: Reading[];                      // T5: a step per answer, in the
+      unused: { span: [number, number]; why: 'nothing' | 'conflict' }[] }   // graph's order
+  | { outcome: 'guess'; reading: Reading }                        // T7: confirmed before anything
+  | { outcome: 'ask'; reason: AskReason; options: Reading[];      // T8: a visual menu, and
+      elsewhere: Alternative[] };                                 // T7's other questions beside it
 
 function interpret(input: string, ctx: InterpretContext): Interpretation;   // pure
-function toAnswer(graph: BuilderGraph, reading: Reading): Answer;           // for machine.answer
+function toAnswer(graph: BuilderGraph, reading: Reading): Answer;           // for the machine
 ```
 
 `ask` says why, so the shell can say it: "I didn't understand", "Which one?", "Between 2 and
-12", "How many exactly?". In S3 its `options` are the node's own options, most likely first
-(tier T8); S6 widens them to the group. `not-readable` is for a node whose free text is not read:
-a text entry's text *is* its answer, and previews and menus are answered by pressing.
+12", "How many exactly?". Its `options` are the node's own options, most likely first (tier T8);
+`elsewhere` names up to three other questions of the group the words may have been about (T7).
+`not-readable` is for a node whose free text is not read: a text entry's text *is* its answer, and
+previews and menus are answered by pressing.
 
 Every applied reading becomes an ordinary entry in the patch log with its `tier` (`toAnswer`, then
-`answer(…, { tier })`), so it is undone like any answer, and the UI shows a transparency chip under
-the node: *"read that as 'several answers allowed' — change"*. Pressing **change** undoes that one
-entry and shows the alternatives.
+the machine's `fill`, which answers the node it names — in its turn, or ahead of it), so it is
+undone like any answer, and the UI shows a transparency chip under the node: *"read that as
+'several answers allowed' — change"*. Pressing **change** undoes what the words did — every step
+of a T5 sentence — and puts them back in the box.
+
+**The order** (`ladder.ts`): T0 on the node asked; then T5; then T6; then T1–T4 on the node asked;
+then T7; then T8. A sentence that says two things is read as two before T2 can read it as one, and
+a list before T4 counts the numbers in it.
 
 | Tier | Chip says (`chipOf`) |
 | --- | --- |
@@ -158,28 +169,61 @@ question. A quantity is only read into a `quantity` node (or, in S6, a T5 quanti
 number outside the node's range is asked (`out-of-range`), never clamped. The other patterns are
 for S6's slots and S9's classifier; in S3 they are read by the phrase tables.
 
-**T5 — structured parse.** For multi-slot phrases: "three buttons, pill shape, side by side". The
-input is split into clauses at `,`, `;` and the locale's conjunctions (`and`, `och`, `og`, `und`,
-`et`, `y`, `ja`, `og`, `和`, `と`, `и`). Each clause is read by T0–T4 against the **slot
-vocabularies** of the current group (for `choice`: quantity, answers, shape, placement). A slot is
-filled only if exactly one clause resolves it at ≥ 720 and no other clause resolves it
-differently — **all or nothing per slot**. Each filled slot becomes its **own** log entry, so each
-can be undone alone. Clauses that resolve nothing are shown back ("I didn't understand 'fast'").
+**T5 — several answers in one sentence** (`ladder.ts`, `clauses.ts`). "three buttons, pill
+shape, side by side". The input is cut into clauses at `, ; : . ! ?`, their CJK forms, line breaks
+and the language's conjunctions (`conjunctions` in each word list: `and`, `och`, `og`, `und`, `et`,
+`y`/`e`, `ja`, `和`, `と`, `и`); a conjunction written without spaces cuts only where it cannot be
+part of a word — Japanese `と` after hiragana is inside one (`ひとつ`). Each clause is read by
+T0–T4 against every question of **the group from here on** (`aheadOf`: the node asked and every
+node of its group the conversation can go on to from it — never one behind it, which answering
+again would change unseen). A question is answered only when every clause that answers it at ≥ 720
+says the same — **all or nothing per question** — and T5 applies when **two or more** are; one
+answer for another question is T7's. A clause may answer several ("three buttons": how many, and
+buttons at all). Two rules keep T5 from reading more than was said: **a misspelling is read only
+for the question asked** (another is answered by T0–T2 or T4, never T3), and **one word backs one
+answer** (readings whose evidence overlaps keep the surest; the graph's order between equals).
+Clauses that answer nothing are shown back, with why: read as nothing, or contradicted ("pill,
+square" names two shapes).
 
-**T6 — a list from an example.** An input of two or more items separated by `,`, `;` or line
-breaks, or a pasted numbered or bulleted list, becomes an option set: **the labels verbatim, the
-count preserved**. A pasted list goes through the same paste → layout IR → enumerate path as a
-pasted document (`NUMBERING-RULES.md`), so `1. Röd 2. Grön` and `• Red • Green` read the same way
-the importer reads them.
+Each answer is **its own step**, in the graph's order (the machine's `fill`): one for the node the
+conversation is at is answered in its turn, and moves it on; the rest are answered **ahead of their
+turn** (`answerAt`) and **mark their slot decided** for the question in focus, so the conversation
+passes them by when it gets there (rule G14, `BUILDER-GRAPH.md`). The conversation stays at the
+first question the sentence did not answer. Back undoes one answer at a time, last first; the
+chip's **change** undoes the sentence. An answer the machine refuses — a question it cannot ask
+now, like a shape for buttons nobody wants — is left out and shown back as unused.
 
-**T7 — ranking the group.** When nothing above applies to the current node, every node in the
-current group is scored: a path prior (+200 per mille for the node `next` would reach, +100 for
-its siblings) plus the best T2 or T3 score of its options. **If the top is ≥ 600 and the runner-up
-is ≥ 150 below it**, the top is offered as a guess in a `confirm-guess` node ("Did you mean the
-shape?"); otherwise the top three are offered as cards.
+**T6 — a list is the options** (`list.ts`). Two or more items become the options of the question
+that takes them (`takesList`: a quantity whose patch makes options, "How many options?") — the
+node asked, or the one ahead of it in the group when the conversation could ask it now. **The
+labels verbatim, the count preserved**; a count the question does not allow is asked, never cut.
+Several lines — typed, or pasted into the box, which keeps them — are read the way the importer
+reads a paste: through the paste layout (`@tp/shared/import`'s `pasteDocument`) and the list-number
+detector, so `1. Röd` and `• Red` lose their markers exactly as in a pasted document, and a line
+without one is an item as it stands; a nested list is not a set of options. One line is cut at
+`;` when it has one — so "3,50 kr; 4,50 kr" keeps its commas — and otherwise at `,`, `，` and `、`.
+Whitespace inside an item is layout: runs of it are one space. **A list with an item that answers a
+question of the group is not a list of options** ("pill, square"): the ladder does not choose
+between the two readings — though a number inside an item ("Group 2", `星期二`) is part of its
+words. A list may be 2 000 characters (`MAX_LIST`); anything else longer than 500 is asked.
 
-**T8 — ask, then learn.** Always safe: a visual menu of 3–6 sibling options. When the person picks
-one, Loppa offers **"Remember 'blabla' as a way to say this?"** — and only then writes an alias.
+**T7 — another question of the group** (`ladder.ts`). When nothing fits the question asked (its
+reading asks `nothing`), every question of the group from here on that the conversation could ask
+now, and could answer ahead of its turn (it settles a slot), is scored: the best T1, T2 or T3 score
+of its options — T4's for a number (850 whole, 750 in a phrase) — plus a path prior (**+200** for
+the node `next` leads to, **+100** for the others). **If the top is ≥ 600 and the runner-up ≥ 150
+below it**, and no two of its options tie, it is a **guess** — "Did you mean “What shape?” —
+Pill?" — and nothing happens until it is answered: **Yes** answers that question ahead of its turn,
+**No** shows this question's own options. Otherwise up to three are offered beside the menu, as
+questions to go to. A sentence with a negator in it is not guessed about at all: what it negates
+is the question asked.
+
+**T8 — ask, then learn.** Always safe: the node's own options as a menu (3–6), with T7's questions
+beside it. When the person picks one, Loppa offers **"Remember “blabla” as a way to say “Pill”?"**
+— only when storing it could work (1–80 characters, an option, not already meaning anything:
+`aliasRefusal`) — and only the press stores it, exactly as shown. **Two misses in a row** — two
+asks without an answer between — and the conversation opens the group's full list instead of a
+third open question.
 
 ## Rules that hold on every rung
 
@@ -208,18 +252,23 @@ one, Loppa offers **"Remember 'blabla' as a way to say this?"** — and only the
 - **A negator is a word that negates, not a character inside one.** Chinese `不` alone is in too
   many ordinary words (`按钮不错` is "the buttons are nice"), so the Chinese list holds the words
   it makes — `不要`, `不用`, `不需要`, `不是`, `不必`, `不想` — rather than `不` itself.
-- **Two misses in a row → shopping-list mode.** After two consecutive T8 outcomes, the next node
-  is not another open question: every sibling in the group is shown as a categorised visual menu.
+- **Two misses in a row → shopping-list mode.** After two consecutive T8 outcomes, the screen stops
+  asking an open question: every question of the group is listed to pick from (the node's way out,
+  opened).
 - **One press undoes any reading**, whatever its tier.
-- **Input longer than 500 characters** is not a phrase: it is asked (`too-long`). A pasted list is
-  S6's T6.
+- **Input longer than 500 characters** is not a phrase: it is asked (`too-long`) — unless it is a
+  list (T6), up to 2 000.
+- **A numeral inside a word that counts nothing is not a number.** `四角` is "square", `十分`
+  "very", `星期二` "Tuesday": each language's `notNumbers` list names such words (Chinese and
+  Japanese; elsewhere a number word is a word of its own), and the quantity reader skips them.
 
 ## Aliases: `aliases.json`
 
 Built-in aliases ship as `packages/shared/src/interpret/aliases/<language>.json` — every card's
-own label and the other ways people say it, 2 295 in all. Learned aliases are the organisation's
-(`builder_aliases`, one row each; the desktop's is its own install), and are exported and imported
-as a file of exactly the same shape:
+own label and the other ways people say it, 2 400 in all. Learned aliases are the organisation's
+(`builder_aliases`, migration 0020, one row each; the desktop's is its own install, in its embedded
+database), read by the ladder with the built-in ones, and exported and imported as a file of
+exactly the same shape (`/v1/builder/aliases`, `…/export`, `…/import`):
 
 ```json
 {
@@ -238,7 +287,7 @@ as a file of exactly the same shape:
 | `locale` | a primary language subtag of a shipped locale (`sv`, `en`, `zh`, …) |
 | `source` | `built-in` (shipped), `user-confirmed` (the "Remember" press), `imported` (from a file) |
 | `createdAt` | a date, `YYYY-MM-DD` — no time, nothing more identifying |
-| `count` | how often it has matched, an integer; used only to order the admin list |
+| `count` | how many times it was remembered — 1, and one more each time "Remember" is pressed on it again; used only to order the admin list |
 | `notes` | free text, for the person maintaining the file; a built-in label's says so |
 
 - **Provenance is a field, never a comment.** The file is JSON: no comments, keys in the order
@@ -246,22 +295,26 @@ as a file of exactly the same shape:
   indentation — so a diff of an exported file is readable and the same aliases always produce the
   same bytes (`formatAliasFile`; every shipped file is exactly its own bytes, tested).
 - **Schema-validated on load** (Zod). A malformed file never bricks the builder: on import it is
-  refused with the first error shown; on the desktop, a hand-edited file that no longer parses is
-  moved aside as `aliases.invalid-<date>.json`, the built-ins are used, and a notice offers
-  **Reset to defaults**.
+  refused with its first problem shown, and nothing is stored. Learned aliases live in the
+  database, on the desktop too — there is no hand-edited file to go bad — and **Remove all** (an
+  administrator's, after a confirmation) is the way back to the built-in ones.
 - **Checked against the graph** (`aliasProblems`, run by `pnpm builder:validate` and by
   `interpret/data.test.ts`): every entry names a node and an option that exist; within a node no
   two options share a way of being said and no alias is another option's id (either would make T0
   ambiguous); and **every option can be typed in every language**. `apps/forms` holds the files to
   the catalogues: each card's label, typed, reads as that card at T0, in all twelve.
 - **Consent, always.** Nothing is captured without the "Remember" press, which shows the exact
-  phrase it will store. A phrase can contain a name; storing it is the person's choice, and an
-  administrator can list, delete and export every learned alias.
+  phrase it will store. A phrase can contain a name; storing it is the person's choice, the row
+  records no person and no time — a date only — and an administrator can list, delete and export
+  every learned alias ("Learned phrases", from the forms list).
 - **Learned never overrides built-in.** An alias that already means a different option (built-in
-  or learned) is refused, and the dialog says which option it already means. A learned alias never
-  shadows an option id (T0).
-- **Import shows a diff** — added, already present, refused and why — and adds nothing until
-  confirmed (`CLAUDE.md` rule 7).
+  or learned) is refused, and the screen says which option it already means (`aliasRefusal`). A
+  learned alias never shadows an option id (T0). One row per way of saying something, per language
+  and question, is the database's unique index, so two people remembering one phrase at once store
+  it once.
+- **Import shows a diff** — added, already present, refused and why (`aliasImportDiff`) — and adds
+  nothing until confirmed (`CLAUDE.md` rule 7). A file that says one phrase two ways adds the first
+  and refuses the second.
 
 ## No generated index
 
@@ -288,10 +341,12 @@ them, aliases by phrase. The same aliases in any order give the same vocabulary.
 
 - **Phrase tables** per language, as data: `fixtures/ladder/<language>.json`, each row
   `{ "phrase", "nodeId" | "pattern", "expect", "note"? }` where `expect` is
-  `{ "optionId", "tier" }`, `{ "value", "tier": "T4" }`, `{ "ask": <reason> }`, or, for a pattern
-  that must find nothing, `{ "none": true }`. At least ten rows per tier per shipped language for
-  T0–T4 in S3 (T3 is not a tier Chinese and Japanese can reach), and for T5–T7 in S6
-  (`interpret/ladder.test.ts` counts them).
+  `{ "optionId", "tier" }`, `{ "value", "tier": "T4" }`, `{ "fill": [answers…], "unused"?,
+  "tier": "T5" }`, `{ "list": [labels…], "at"?, "tier": "T6" }`, `{ "guess": answer, "tier": "T7" }`,
+  `{ "ask": <reason>, "elsewhere"?: [questions…] }`, or, for a pattern that must find nothing,
+  `{ "none": true }`. At least ten rows per tier per shipped language for T0–T7 (T3 is not a tier
+  Chinese and Japanese can reach; `interpret/ladder.test.ts` counts them) — 1 332 rows in all
+  since S6.
 - **Must-not-resolve rows**, same files, with the reason they ask: vague quantities, negations of
   nodes without a `negative` option, stray negators, nonsense, two numbers, a number out of range,
   and phrases one edit away from two different options ("heater", `nebereinander`, `carrees`).
@@ -302,7 +357,9 @@ them, aliases by phrase. The same aliases in any order give the same vocabulary.
 - **The pieces**: normalisation's spans through NFKC (`text.test.ts`), `lnMille` against the true
   value for every `p ≥ q ≤ 400` (`ln.test.ts`), the fuzzy fractions against their floating-point
   definitions (`fuzzy.test.ts`), each pattern's edges (`patterns.test.ts`), each alias rule
-  catching its mistake and each word list's shape (`data.test.ts`).
+  catching its mistake and each word list's shape (`data.test.ts`); where a sentence is cut, how a
+  list is read, what the conversation's state hides, and what may be learned (`group.test.ts`); the
+  paste layout against the IR validator (`import/paste.test.ts`).
 
 Changing an alias, a word list or a threshold is a behaviour change: it needs a row in these tables
 in the same commit (`CLAUDE.md`, "Guided Builder & Import").
@@ -329,3 +386,34 @@ or could not be built as written. Each is fixed here and locked by rows:
 8. **Smaller**: punctuation is anything but a letter, digit or mark; digits split from letters;
    number words are per-language files, not one `numbers.json`; the contract gained `ask`'s reason
    and lost what only S6 needs; T4's patterns say exactly what they accept.
+
+## What S6 changed in this document
+
+Building T5–T8, and writing 427 phrase-table rows against them, found where the text above, as
+first written, would have read more than was said — or could not be built as written:
+
+1. **T5 read the whole group**, so "buttons" typed at "What shape?" would have answered "Do you want
+   buttons?" again — and reset "several answers" to one. It reads the group **from here on**.
+2. **One word answered two questions**: "keine Knöpfe" was no buttons and, read as "eine", one
+   answer. One word backs one answer (`CAVEATS.md` #79).
+3. **A misspelling was read for every question**: "tumma tausta" chose a logo place. Only the
+   question asked is read fuzzily (#80).
+4. **T5 on one answer** would have answered another question ahead of its turn without asking.
+   T5 needs two; one is T7's guess.
+5. **Answering ahead needed somewhere to be remembered**, or the conversation would ask again: the
+   slot is marked decided, the node's own guard passes it by, and graph version 3 gives every node
+   that can be answered ahead a `slot` its guard reads (G14, #83). A jump to it still asks it (#84),
+   and Back returns to where the conversation was (#85).
+6. **T6 blocked on T5's clauses**, which cut "3,50 kr" at its comma: it checks its own items, and
+   an item blocks only when it *is* an answer, not when a number is inside it (#82).
+7. **Numerals inside words were numbers** — 四角 made four options — an S3 defect the new rows
+   found: `notNumbers` (#81).
+8. **T7 guessed questions the conversation could not ask**, or answer: its candidates are live and
+   settle a slot, a number is one (T4), a negator stops it, and a guess is confirmed before anything
+   happens.
+9. **Learned aliases**: `count` is how often a phrase was remembered, not matched — counting
+   matches would write on every typed answer for a number that only orders a list; the desktop
+   keeps them in its database, so "a hand-edited file" and its recovery became **Remove all**.
+10. **The paste layout** is built in the core, not in `apps/forms/src/screens/builder/paper/`: a
+    string is not a file's bytes, and T6 must read a pasted list the way the importer does
+    (`IMPORT-PIPELINE.md`, stage 1).

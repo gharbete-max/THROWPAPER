@@ -20,9 +20,14 @@ import type { BuilderGraph } from './schema.js';
  * slice, and writes the logo slot into the form (`settings.layout.logoSlot`) rather than keeping
  * it in `pending`. A session recorded against version 1 still replays: the log holds resolved
  * changes, not the options that caused them.
+ *
+ * **Version 3 (S6)** says which slot each node of a question settles (`slot`), so a sentence that
+ * answers several at once — "three buttons, pill shape, side by side" — can answer them ahead of
+ * their turn, and the conversation passes them by when it gets there instead of asking again.
+ * "One answer or several?" and "Where should they sit?" gained the `decided()` guard that does it.
  */
 export const BUILDER_GRAPH = {
-  graphVersion: 2,
+  graphVersion: 3,
   start: 'flow.start',
   inputs: ['pending.brandKitExists', 'guess.pMille'],
   nodes: [
@@ -294,11 +299,15 @@ export const BUILDER_GRAPH = {
       help: 'guided.text.required.help',
       // Reachable from its sibling before any question exists (docs/plan/BUILDER-GRAPH.md,
       // "The machine": the walk found it).
-      when: 'has(focus)',
-      skip: 'guided.skip.noQuestion',
+      when: 'has(focus) && !decided(required)',
+      skip: [
+        { when: '!has(focus)', skip: 'guided.skip.noQuestion' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
       next: 'choice.buttons',
       escape: 'menu.siblings(text)',
       negative: 'no',
+      slot: 'required',
       options: [
         {
           id: 'yes',
@@ -326,6 +335,7 @@ export const BUILDER_GRAPH = {
       next: 'choice.answers',
       escape: 'menu.siblings(choice)',
       negative: 'no',
+      slot: 'kind',
       options: [
         {
           id: 'yes',
@@ -357,10 +367,14 @@ export const BUILDER_GRAPH = {
       kind: 'question',
       ask: 'guided.choice.answers.ask',
       help: 'guided.choice.answers.help',
-      when: 'pending.buttons == true',
-      skip: 'guided.skip.noButtons',
+      when: 'pending.buttons == true && !decided(kind)',
+      skip: [
+        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
       next: 'choice.count',
       escape: 'menu.siblings(choice)',
+      slot: 'kind',
       options: [
         {
           id: 'one',
@@ -394,6 +408,7 @@ export const BUILDER_GRAPH = {
       min: 2,
       max: 12,
       default: 3,
+      slot: 'options',
       patch: [
         {
           op: 'set',
@@ -418,6 +433,7 @@ export const BUILDER_GRAPH = {
       next: 'choice.placement',
       escape: 'menu.siblings(choice)',
       preview: 'choice.control',
+      slot: 'shape',
       options: [
         {
           id: 'pill',
@@ -469,10 +485,14 @@ export const BUILDER_GRAPH = {
       kind: 'pick-one',
       ask: 'guided.choice.placement.ask',
       help: 'guided.choice.placement.help',
-      when: 'pending.buttons == true',
-      skip: 'guided.skip.noButtons',
+      when: 'pending.buttons == true && !decided(placement)',
+      skip: [
+        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
       next: 'choice.preview',
       escape: 'menu.siblings(choice)',
+      slot: 'placement',
       options: [
         {
           id: 'under-full',

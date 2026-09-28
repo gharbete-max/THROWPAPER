@@ -130,18 +130,25 @@ export function readQuantity(input: string, lexicon: Lexicon): QuantityRead {
       });
     }
   });
-  // Chinese and Japanese numerals, as runs of the probed text.
+  // Chinese and Japanese numerals, as runs of the probed text — but not inside a word whose
+  // numeral counts nothing (四角 is "square", not four).
+  const countless = occurrences(lexicon.notNumbers, p, tokens);
+  const counts = (at: number, character: string) => {
+    if (!lexicon.numerals.has(character)) return false;
+    const [start, end] = spanOf(p, at, at + character.length);
+    return !countless.some((w) => start >= w.start && end <= w.end);
+  };
   const characters = [...p.text];
   const numeralSpans: [number, number][] = [];
   for (let i = 0, at = 0; i < characters.length;) {
-    if (!lexicon.numerals.has(characters[i]!)) {
+    if (!counts(at, characters[i]!)) {
       at += characters[i]!.length;
       i += 1;
       continue;
     }
     const begin = at;
     const run: string[] = [];
-    while (i < characters.length && lexicon.numerals.has(characters[i]!)) {
+    while (i < characters.length && counts(at, characters[i]!)) {
       run.push(characters[i]!);
       at += characters[i]!.length;
       i += 1;

@@ -307,6 +307,56 @@ describe.skipIf(!migrated)('drizzle repositories against a real database', () =>
     expect(race.filter((result) => result !== null)).toHaveLength(1);
   });
 
+  /** Migration 0020 on a real Postgres — the same as `pglite.test.ts` — and the race. */
+  it('keeps learned aliases: one per way of saying it, counted, in the alias file’s order', async () => {
+    const organisationId = await organisation();
+
+    const aliases = repos.builderAliases;
+    const alias = (phrase: string, key: string, optionId: string) => ({
+      phrase,
+      key,
+      nodeId: 'choice.shape',
+      optionId,
+      locale: 'sv',
+      source: 'user-confirmed' as const,
+      createdAt: '2026-09-28',
+      count: 1,
+      notes: '',
+    });
+    await aliases.clear(organisationId);
+    const [stored] = await aliases.add(organisationId, [
+      alias('Blobbig å ä ö', 'blobbig å ä ö', 'pill'),
+    ]);
+    expect(stored).toMatchObject({ phrase: 'Blobbig å ä ö', createdAt: '2026-09-28', count: 1 });
+    // One way of saying something per language and question: the second is not stored.
+    expect(
+      await aliases.add(organisationId, [alias('BLOBBIG å ä ö', 'blobbig å ä ö', 'square')]),
+    ).toEqual([]);
+    expect((await aliases.bump(organisationId, stored!.id))?.count).toBe(2);
+    await aliases.add(organisationId, [
+      alias('Äpple', 'äpple', 'square'),
+      alias('Zebra', 'zebra', 'square'),
+    ]);
+    // The alias file's order: code points, so Ä comes after Z, whatever the database's collation.
+    expect((await aliases.list(organisationId)).map((a) => a.phrase)).toEqual([
+      'Blobbig å ä ö',
+      'Zebra',
+      'Äpple',
+    ]);
+    expect((await aliases.remove(organisationId, stored!.id))?.phrase).toBe('Blobbig å ä ö');
+    expect(await aliases.remove(organisationId, stored!.id)).toBeNull();
+    expect(await aliases.clear(organisationId)).toBe(2);
+    expect(await aliases.list(organisationId)).toEqual([]);
+
+    // Two people remembering the same phrase at once: it is stored once.
+    const race = await Promise.all([
+      aliases.add(organisationId, [alias('Kapselaktig', 'kapselaktig', 'pill')]),
+      aliases.add(organisationId, [alias('kapselaktig', 'kapselaktig', 'pill')]),
+    ]);
+    expect(race.flat()).toHaveLength(1);
+    await aliases.clear(organisationId);
+  });
+
   it('writes an audit row', async () => {
     const organisationId = await organisation();
 

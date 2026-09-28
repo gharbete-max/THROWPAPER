@@ -6222,6 +6222,17 @@ body:has(> #root .shell--narrow) {
   flex: 1;
   min-inline-size: 0;
   font-size: var(--tp-text-ui);
+  /* A text area, for a pasted list's lines: one line to start, growing with what is in it where
+     the browser can, never past a few lines before it scrolls. */
+  resize: none;
+  field-sizing: content;
+  max-block-size: calc(var(--tp-text-ui) * 8);
+  line-height: var(--tp-type-line-height);
+}
+
+/* What a sentence said that answered nothing: each phrase in the language's own quotes. */
+.conversation__left-over {
+  margin: 0;
 }
 
 .conversation__send {
@@ -6268,6 +6279,31 @@ body:has(> #root .shell--narrow) {
 
 .conversation__notice p {
   margin: 0;
+}
+
+/* Learned phrases (S6): one row per phrase, its meaning under it, and Delete at the end. */
+.phrases {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phrases__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.phrases__phrase {
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .conversation__preview {

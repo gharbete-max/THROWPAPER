@@ -9,7 +9,8 @@ apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
                 token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
-                keeps each author's guided-builder conversation (builder_sessions)
+                keeps each author's guided-builder conversation (builder_sessions) and the
+                organisation's learned phrases (builder_aliases)
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
@@ -32,11 +33,12 @@ packages/ui     One `cn()` class-name helper. The shared data grid is deliberate
 packages/calc   Calculation errors and propagation, exact money, the ledger
 packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
                 graph, its `when` language, its validator, and the machine that walks it — answers
-                as undoable changes, replay, stable question ids, the saved session, and
-                reconciliation that never writes over a hand edit (@tp/shared/builder); document import's
-                Layout IR with its validator, and stage 3, the list-marker detector, with its debug
-                artifact (@tp/shared/import); free text read by rules — normalisation, word lists and
-                built-in aliases in twelve languages, and the ladder's rungs T0–T4
+                as undoable changes, answers ahead of their turn, replay, stable question ids, the
+                saved session, and reconciliation that never writes over a hand edit
+                (@tp/shared/builder); document import's Layout IR with its validator, pasted text as
+                a layout document, and stage 3, the list-marker detector, with its debug artifact
+                (@tp/shared/import); free text read by rules — normalisation, word lists and built-in
+                aliases in twelve languages, the rules for learned ones, and the ladder T0–T8
                 (@tp/shared/interpret)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
@@ -81,7 +83,7 @@ pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
 pnpm bundle:budget  # after a build: Forms' entry, stylesheet and total, gzipped. CI runs it; verify does not
-pnpm builder:validate # the guided builder's graph against rules G0–G13, with all twelve catalogues, and its built-in aliases
+pnpm builder:validate # the guided builder's graph against rules G0–G14, with all twelve catalogues, and its built-in aliases
 pnpm test:e2e
 ```
 

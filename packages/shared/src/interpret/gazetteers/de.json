@@ -37,6 +37,7 @@
     "neunzig": 90,
     "hundert": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "ich",
     "wir",
@@ -119,6 +120,7 @@
     "niemals"
   ],
   "contrast": ["aber", "sondern", "stattdessen"],
+  "conjunctions": ["und"],
   "months": {
     "januar": 1,
     "jänner": 1,

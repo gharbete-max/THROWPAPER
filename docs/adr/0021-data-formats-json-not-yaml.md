@@ -29,6 +29,9 @@ Nothing in application code parses YAML.
    - **Schema-validated on load** (Zod), with the first error reported by path.
    - **A recovery path for every user-editable file**: "Reset to defaults" and, on the desktop, the
      malformed file moved aside rather than deleted — a bad hand edit never bricks the builder.
+     (S6: an organisation's learned aliases live in the database, on the desktop too, so there is no
+     file to hand-edit; an imported file is validated and refused whole, with its first problem,
+     before anything is stored, and "Remove all" is their reset to defaults.)
 4. **`fixtures/`** are JSON too. They are hand-authored with one layout-IR word per line for
    reviewable diffs, excluded from Prettier (which would spread each word over twenty lines), and
    validated for structure by `scripts/caveat-fixtures.test.ts` instead.

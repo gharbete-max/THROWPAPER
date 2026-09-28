@@ -1,7 +1,7 @@
 {
   "session": {
     "sessionVersion": 1,
-    "graphVersion": 2,
+    "graphVersion": 3,
     "base": {
       "draft": {
         "definition": {

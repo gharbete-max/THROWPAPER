@@ -34,6 +34,7 @@
     "nittio": 90,
     "hundra": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "jag",
     "vi",
@@ -93,6 +94,7 @@
   ],
   "negators": ["nej", "inte", "ingen", "inga", "inget", "utan", "hoppa över", "skippa", "aldrig"],
   "contrast": ["men", "istället", "snarare"],
+  "conjunctions": ["och"],
   "months": {
     "januari": 1,
     "jan": 1,

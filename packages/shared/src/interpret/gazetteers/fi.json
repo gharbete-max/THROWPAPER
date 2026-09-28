@@ -33,6 +33,7 @@
     "yhdeksänkymmentä": 90,
     "sata": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "minä",
     "mä",
@@ -77,6 +78,7 @@
   ],
   "negators": ["ei", "en", "emme", "eivät", "älä", "ilman", "ohita"],
   "contrast": ["mutta", "vaan", "sen sijaan"],
+  "conjunctions": ["ja"],
   "months": {
     "tammikuu": 1,
     "tammikuuta": 1,

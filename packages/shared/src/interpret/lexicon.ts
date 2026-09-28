@@ -60,6 +60,12 @@ const LexiconFile = z
      * are read as numerals (二十一 is 21), and longer entries (ひとつ) as words.
      */
     numbers: z.record(word, z.number().int().min(0).max(100)),
+    /**
+     * Words written with a numeral that count nothing — 四角 "square", 十分 "very", 星期二
+     * "Tuesday": inside them a numeral is not a number. Chinese and Japanese only; elsewhere a
+     * number word is a word of its own.
+     */
+    notNumbers: z.array(word),
     /** T1: words that do not count against "at most two other tokens"; never keywords. */
     stopWords: z.array(word),
     /** "No number from vagueness": never a quantity; the quantity node is asked. */
@@ -68,6 +74,8 @@ const LexiconFile = z
     negators: z.array(word),
     /** "but", "men", "aber": a negator's reach ends here, as it does at a comma. */
     contrast: z.array(word),
+    /** "and", "och", "und", 和: T5 cuts a sentence into clauses here, as at a comma. */
+    conjunctions: z.array(word),
     /** The date pattern's month names, to their number. */
     months: z.record(word, z.number().int().min(1).max(12)),
     /** Currency words in this language, to their code — or null when they do not say which. */
@@ -95,10 +103,13 @@ export interface Lexicon {
   readonly numbers: readonly (Phrase & { readonly value: number })[];
   /** Single CJK characters that are numerals: digits, 十 (10) and 百 (100). */
   readonly numerals: ReadonlyMap<string, number>;
+  /** Words whose numerals count nothing (四角): a numeral inside one is not read as a number. */
+  readonly notNumbers: readonly Phrase[];
   readonly stopWords: ReadonlySet<string>;
   readonly vague: readonly Phrase[];
   readonly negators: readonly Phrase[];
   readonly contrast: readonly Phrase[];
+  readonly conjunctions: readonly Phrase[];
   readonly months: ReadonlyMap<string, number>;
   /** Every currency marker, this language's and the universal ones, lower-cased. */
   readonly currencies: ReadonlyMap<string, string | null>;
@@ -131,10 +142,12 @@ function load(language: Language): Lexicon {
       .filter((n) => !numeral(n))
       .map(([text, value]) => ({ ...phraseOf(text), value })),
     numerals: new Map(numbers.filter(numeral)),
+    notNumbers: file.notNumbers.map(phraseOf),
     stopWords: new Set(file.stopWords.map((w) => w.normalize('NFKC').toLowerCase())),
     vague: file.vague.map(phraseOf),
     negators: file.negators.map(phraseOf),
     contrast: file.contrast.map(phraseOf),
+    conjunctions: file.conjunctions.map(phraseOf),
     months: new Map(Object.entries(file.months).map(([m, n]) => [m.toLowerCase(), n])),
     currencies: new Map([
       ...Object.entries(MARKERS).map(([m, c]) => [m.toLowerCase(), c] as const),

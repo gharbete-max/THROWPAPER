@@ -6,6 +6,13 @@ import type {
   BuilderSessionResponse,
   BuilderSessionSaved,
 } from '@tp/shared/builder';
+import type {
+  AliasImportResult,
+  AliasesRemoved,
+  LearnedAliasList,
+  RememberAlias,
+  RememberedAlias,
+} from '@tp/shared/interpret';
 
 export interface BrandKitResponse {
   tokens: TokenSet;
@@ -90,6 +97,8 @@ export class ApiError extends Error {
     readonly status: number,
     readonly code: string,
     message: string,
+    /** Whatever else the error said — `reason` and `means` for a phrase that cannot be learned. */
+    readonly detail: Readonly<Record<string, unknown>> = {},
   ) {
     super(message);
     this.name = 'ApiError';
@@ -147,6 +156,7 @@ async function request<T>(path: string, init: RequestInit = {}, retry = true): P
       response.status,
       error?.code ?? 'unknown',
       error?.message ?? `Request failed with ${response.status}`,
+      error ?? {},
     );
   }
   return body as T;
@@ -436,6 +446,34 @@ export const client = {
     request<BuilderSessionSaved>(`/v1/forms/${id}/builder-session`, {
       method: 'PUT',
       body: JSON.stringify({ version, session }),
+    }),
+
+  /** The organisation's learned aliases, which the ladder reads with the built-in ones. */
+  learnedAliases: () => request<LearnedAliasList>('/v1/builder/aliases'),
+
+  /**
+   * "Remember" — pressed, and only then. A phrase that already means something else is a `409
+   * alias-refused` whose detail has the `reason` and, for a collision, what it `means`.
+   */
+  rememberAlias: (input: RememberAlias) =>
+    request<RememberedAlias>('/v1/builder/aliases', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }),
+
+  forgetAlias: (id: string) =>
+    request<AliasesRemoved>(`/v1/builder/aliases/${id}`, { method: 'DELETE' }),
+
+  /** Every learned alias, gone: back to the built-in ones. */
+  forgetAllAliases: () => request<AliasesRemoved>('/v1/builder/aliases', { method: 'DELETE' }),
+
+  exportAliases: () => requestBlob('/v1/builder/aliases/export'),
+
+  /** What importing the file would do; with `confirm`, done. */
+  importAliases: (file: unknown, confirm: boolean) =>
+    request<AliasImportResult>('/v1/builder/aliases/import', {
+      method: 'POST',
+      body: JSON.stringify({ file, confirm }),
     }),
 
   publishForm: (id: string, overrideIncompleteTranslations = false) =>

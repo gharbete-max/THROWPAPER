@@ -19,7 +19,7 @@ import voice from './voice.json';
  * Each rule has an id, a broken-graph test in `validate.test.ts`, and a line in
  * `docs/plan/BUILDER-GRAPH.md` ("Validation"). The rules split in two:
  *
- * - **Structural** (G0–G3, G5–G9, G11, G12) need only the graph, and run here and in
+ * - **Structural** (G0–G3, G5–G9, G11, G12, G14) need only the graph, and run here and in
  *   `graph.test.ts`.
  * - **Catalogue** (G4, G10, G13) need the twelve message catalogues, which live in `apps/forms`
  *   and which `packages/shared` must not import. So they take the catalogues as an argument, and
@@ -43,7 +43,8 @@ export type GraphRule =
   | 'G10'
   | 'G11'
   | 'G12'
-  | 'G13';
+  | 'G13'
+  | 'G14';
 
 export interface GraphProblem {
   readonly rule: GraphRule;
@@ -141,7 +142,26 @@ function sameData(a: unknown, b: unknown): boolean {
   );
 }
 
-/** G0–G3, G5–G9, G11, G12. Needs nothing but the graph. */
+/** The slots a guard asks `decided()` about. */
+function decidedIn(expr: GuardExpr): string[] {
+  switch (expr.t) {
+    case 'call':
+      return expr.fn === 'decided' ? [expr.arg] : [];
+    case 'not':
+      return decidedIn(expr.e);
+    case 'and':
+    case 'or':
+    case 'cmp':
+      return [...decidedIn(expr.l), ...decidedIn(expr.r)];
+    default:
+      return [];
+  }
+}
+
+/** The kinds that have an answer to give ahead of their turn (G14). */
+const ANSWERABLE = new Set<Node['kind']>(['question', 'pick-one', 'pick-many', 'quantity']);
+
+/** G0–G3, G5–G9, G11, G12, G14. Needs nothing but the graph. */
 export function structuralProblems(input: unknown): GraphProblem[] {
   const problems: GraphProblem[] = [];
   const add = (rule: GraphRule, message: string, nodeId?: string) =>
@@ -283,6 +303,28 @@ export function structuralProblems(input: unknown): GraphProblem[] {
           add('G8', `"${guard}" reads ${name}, which nothing writes or provides`, node.id);
         }
       }
+    }
+  }
+
+  // G14 — a node that settles a slot can be answered ahead of its turn (T5), and must then not be
+  // asked again when the conversation gets to it: its own guard is what skips it.
+  for (const node of graph.nodes) {
+    if (!node.slot) continue;
+    if (!ANSWERABLE.has(node.kind)) {
+      add('G14', `a ${node.kind} has no answer to give ahead of its turn`, node.id);
+    }
+    let reads: string[] = [];
+    try {
+      reads = node.when ? decidedIn(parseGuard(node.when)) : [];
+    } catch {
+      // A guard that does not parse is G8's.
+    }
+    if (!reads.includes(node.slot)) {
+      add(
+        'G14',
+        `settles ${node.slot}, but its \`when\` does not read decided(${node.slot})`,
+        node.id,
+      );
     }
   }
 

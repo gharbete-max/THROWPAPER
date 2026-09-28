@@ -141,6 +141,13 @@
       "when": 1790372277158,
       "tag": "0019_builder_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1790600966859,
+      "tag": "0020_builder_aliases",
+      "breakpoints": true
     }
   ]
 }

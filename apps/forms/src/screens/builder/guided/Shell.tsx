@@ -7,27 +7,40 @@ import {
   keepMine,
   optionsOf,
   proposals,
+  rewind,
   takeGuided,
   type Answer,
   type BuilderGraph,
   type Conversation,
   type Op,
 } from '@tp/shared/builder';
-import { toAnswer, type AskReason, type Reading } from '@tp/shared/interpret';
+import {
+  MAX_LIST,
+  toAnswer,
+  type AskReason,
+  type Reading,
+  type RememberAlias,
+} from '@tp/shared/interpret';
 import { Icon } from '../../../components/Icon.js';
 import { useT } from '../../../lib/i18n.js';
 import { useReducedMotion } from '../../../lib/motion.js';
 import {
+  askMenu,
   backTo,
   choiceAt,
   choose,
+  confirmGuess,
   lastChoice,
   previewOf,
   readsFreeText,
+  rememberOffer,
   stepBack,
   typed,
   wayOut,
+  type Elsewhere,
+  type Learning,
   type Locales,
+  type Unused,
 } from './conversation.js';
 import { digitOfCode, keyAction } from './keyboard.js';
 import { NodeView } from './NodeView.js';
@@ -59,7 +72,12 @@ export interface ShellProps {
   readonly status?: React.ReactNode;
   /** Whose the form is, for the preview: the organisation's logo, name, and whether it has a kit. */
   readonly brand: PreviewBrand;
+  /** The aliases the ladder reads with, and "Remember". Built-in aliases only when absent. */
+  readonly learning?: Learning;
 }
+
+/** Misses in a row before the conversation stops asking and shows every question of the group. */
+const MISSES_BEFORE_LIST = 2;
 
 const ASK: Record<AskReason, string> = {
   nothing: 'conversation.ask.nothing',
@@ -72,17 +90,41 @@ const ASK: Record<AskReason, string> = {
   'not-readable': 'conversation.ask.notReadable',
 };
 
-/** What the ladder said about the last thing typed. */
+/** What the ladder said about the last thing typed, and what came of it. */
 type Said =
-  | { readonly kind: 'ask'; readonly reason: AskReason; readonly options: readonly Reading[] }
+  | {
+      readonly kind: 'ask';
+      readonly reason: AskReason;
+      readonly options: readonly Reading[];
+      /** Other questions of the group it may have been about (T7). */
+      readonly elsewhere: readonly Elsewhere[];
+      /** What was typed: remembered as a way to say the answer picked, if the person wants. */
+      readonly text: string;
+      /** The second miss in a row: every question of the group is shown instead. */
+      readonly listed: boolean;
+    }
   | { readonly kind: 'refused' }
+  /** T7: "Did you mean …?" — nothing happens until it is answered. */
+  | { readonly kind: 'guess'; readonly text: string; readonly reading: Reading }
   /** Applied: the transparency chip, until the next step. */
   | {
       readonly kind: 'read';
       readonly text: string;
-      readonly option: string;
+      readonly answers: readonly string[];
+      readonly unused: readonly Unused[];
+      /** The log's length before: "change" goes back there, however many steps it took. */
+      readonly from: number;
       readonly atStep: number;
-    };
+    }
+  /** "Remember '…' as a way to say this?", after an answer was picked from the menu. */
+  | {
+      readonly kind: 'remember';
+      readonly offer: RememberAlias;
+      readonly label: string;
+      readonly atStep: number;
+    }
+  /** What came of "Remember". */
+  | { readonly kind: 'learned'; readonly note: string; readonly atStep: number };
 
 /** Where focus goes after "change": back into the box, to edit the words. */
 const THE_BOX = '\u0000box';
@@ -97,6 +139,7 @@ export function Shell({
   onOpenEditor,
   status,
   brand,
+  learning,
 }: ShellProps) {
   const t = useT();
   const reduced = useReducedMotion();
@@ -115,6 +158,8 @@ export function Shell({
   const [wayOutOpen, setWayOutOpen] = useState(false);
   const [text, setText] = useState('');
   const [said, setSaid] = useState<Said | null>(null);
+  /** Free text the ladder asked about, in a row: the second shows the whole group instead. */
+  const [misses, setMisses] = useState(0);
   /** Inline editing open on the preview. */
   const [editing, setEditing] = useState(false);
   /** "Show me": the preview of the question in focus, on any screen. */
@@ -130,18 +175,34 @@ export function Shell({
 
   /** The node's own answers, without the question's "?" or the preview's controls. */
   const bodyRef = useRef<HTMLDivElement>(null);
-  const boxRef = useRef<HTMLInputElement>(null);
+  const boxRef = useRef<HTMLTextAreaElement>(null);
 
   /** The label an option id reads as, in the interface language. */
   const labelOf = (optionId: string | null, value: unknown): string => {
     const option = optionsOf(node).find((o) => o.id === optionId);
     return option ? t(option.label) : String(value ?? '');
   };
+  /** An option of any question, in words; null when there is no such option. */
+  const optionIn = (nodeId: string, optionId: string | null): string | null => {
+    const target = graph.nodes.find((n) => n.id === nodeId);
+    const option = target ? optionsOf(target).find((o) => o.id === optionId) : undefined;
+    return option ? t(option.label) : null;
+  };
+  /** A reading's answer in words, whichever question it is for: a list is its labels. */
+  const answerOf = (reading: Reading): string =>
+    optionIn(reading.nodeId, reading.optionId) ??
+    (Array.isArray(reading.value) ? reading.value.join(', ') : String(reading.value ?? ''));
+  const questionOf = (nodeId: string) => {
+    const target = graph.nodes.find((n) => n.id === nodeId);
+    return target ? t(target.ask) : '';
+  };
 
   function go(next: Conversation, back: boolean, focus: string | null = null) {
     setHelp(false);
     setWayOutOpen(false);
     setEditing(false);
+    // Any move — an answer however given, Back, a jump — ends a run of misses.
+    setMisses(0);
     setMoved({ back, focus });
     onChange(next);
   }
@@ -166,9 +227,24 @@ export function Shell({
 
   function readTyped() {
     if (text.trim() === '') return;
-    const result = typed(graph, conversation, text, locales);
+    const result = typed(graph, conversation, text, locales, learning?.aliases);
     if (result.kind === 'ask') {
-      setSaid({ kind: 'ask', reason: result.reason, options: result.options });
+      const listed = misses + 1 >= MISSES_BEFORE_LIST && wayOut(graph, conversation).length > 0;
+      setMisses((count) => count + 1);
+      // "Two misses in a row": no third open question — every question of the group, to pick.
+      if (listed) setWayOutOpen(true);
+      setSaid({
+        kind: 'ask',
+        reason: result.reason,
+        options: result.options,
+        elsewhere: result.elsewhere,
+        text,
+        listed,
+      });
+      return;
+    }
+    if (result.kind === 'guess') {
+      setSaid({ kind: 'guess', text, reading: result.reading });
       return;
     }
     if (result.kind === 'refused') {
@@ -178,18 +254,70 @@ export function Shell({
     setSaid({
       kind: 'read',
       text,
-      option: labelOf(result.reading.optionId, result.reading.value),
-      atStep: step + 1,
+      answers: result.readings.map(answerOf),
+      unused: result.unused,
+      from: step,
+      atStep: result.conversation.log.length,
     });
     setText('');
     go(result.conversation, false);
   }
 
-  /** "change": the reading was wrong — undo it, and put the words back to edit. */
-  function change(words: string) {
+  /** "Did you mean …?" — yes: the guessed answer, as a step, with its chip. */
+  function acceptGuess(guessed: Extract<Said, { kind: 'guess' }>) {
+    const result = confirmGuess(graph, conversation, guessed.text, guessed.reading, locales);
+    if (result.kind !== 'stepped') {
+      setSaid({ kind: 'refused' });
+      return;
+    }
+    setSaid({
+      kind: 'read',
+      text: guessed.text,
+      answers: result.readings.map(answerOf),
+      unused: [],
+      from: step,
+      atStep: result.conversation.log.length,
+    });
+    setText('');
+    go(result.conversation, false);
+  }
+
+  /** "Did you mean …?" — no: this question's own answers, to pick from, as for any miss. */
+  function rejectGuess(guessed: Extract<Said, { kind: 'guess' }>) {
+    setSaid({
+      kind: 'ask',
+      reason: 'nothing',
+      options: askMenu(graph, node.id),
+      elsewhere: [],
+      text: guessed.text,
+      listed: false,
+    });
+  }
+
+  /** "change": the reading was wrong — undo it, however many steps, and put the words back. */
+  function change(read: Extract<Said, { kind: 'read' }>) {
     setSaid(null);
-    go(stepBack(conversation), true, THE_BOX);
-    setText(words);
+    go(rewind(conversation, read.from), true, THE_BOX);
+    setText(read.text);
+  }
+
+  /** "Remember", pressed: stored as shown, and what came of it said. */
+  async function remember(offer: RememberAlias, label: string) {
+    if (!learning) return;
+    const at = step;
+    const outcome = await learning.remember(offer);
+    const note =
+      outcome.kind === 'remembered'
+        ? t('conversation.remember.done', { phrase: offer.phrase, option: label })
+        : outcome.kind === 'failed'
+          ? t('conversation.remember.failed')
+          : outcome.reason === 'collision' && outcome.means
+            ? t('conversation.remember.means', {
+                phrase: offer.phrase,
+                option: optionIn(offer.nodeId, outcome.means) ?? outcome.means,
+              })
+            : t('conversation.remember.known');
+    setSaid({ kind: 'learned', note, atStep: at });
   }
 
   /** A gesture on the preview: a step in the log, but not a move — nothing slides or refocuses. */
@@ -202,14 +330,28 @@ export function Shell({
     }
   }
 
-  /** One of the answers the ladder could not choose between, pressed. */
-  function pickReading(reading: Reading) {
-    const result = choose(graph, conversation, toAnswer(graph, reading), locales);
+  /**
+   * One of the answers offered for words the ladder could not read, pressed — and then, if it
+   * could work, the offer to remember those words as a way to say it (T8). Nothing is stored
+   * until "Remember" is pressed.
+   */
+  function pickReading(reading: Reading, words: string) {
+    const result = choose(graph, conversation, toAnswer(graph, reading), locales, 'T8');
     if (result.kind === 'refused') {
       setSaid({ kind: 'refused' });
       return;
     }
-    setSaid(null);
+    const offer = learning ? rememberOffer(graph, words, reading, locales, learning.aliases) : null;
+    setSaid(
+      offer
+        ? {
+            kind: 'remember',
+            offer,
+            label: answerOf(reading),
+            atStep: result.conversation.log.length,
+          }
+        : null,
+    );
     setText('');
     go(result.conversation, false);
   }
@@ -233,10 +375,17 @@ export function Shell({
       answers[0] ??
       // Before any box: a preview moment's preview is a real control, and not the answer.
       body.querySelector<HTMLElement>('[data-continue]') ??
-      body.querySelector<HTMLElement>('input') ??
+      body.querySelector<HTMLElement>('input, textarea') ??
       body.querySelector<HTMLElement>('button');
     first?.focus();
-    setSaid((current) => (current?.kind === 'read' && current.atStep === step ? current : null));
+    // What the last step said stays with the screen it led to, and no longer.
+    setSaid((current) =>
+      current &&
+      (current.kind === 'read' || current.kind === 'remember' || current.kind === 'learned') &&
+      current.atStep === step
+        ? current
+        : null,
+    );
     setAnnouncement(
       answers.length > 0
         ? `${asked} ${t('conversation.answers', { count: answers.length })}`
@@ -369,10 +518,48 @@ export function Shell({
 
         {said?.kind === 'read' && said.atStep === step && (
           <p className="conversation__reading">
-            {t('conversation.readAs', { option: said.option })}
-            <button type="button" className="button button--bare" onClick={() => change(said.text)}>
+            {t('conversation.readAs', { option: said.answers.join(' · ') })}
+            <button type="button" className="button button--bare" onClick={() => change(said)}>
               {t('conversation.change')}
             </button>
+          </p>
+        )}
+        {said?.kind === 'read' && said.atStep === step && said.unused.length > 0 && (
+          <p className="small muted conversation__left-over">
+            {t('conversation.unused')}{' '}
+            {said.unused.map((unused, i) => (
+              // Each in the language's own quotation marks, which `<q>` draws.
+              <span key={i}>
+                {i > 0 && ' '}
+                <q>{unused.text}</q>
+              </span>
+            ))}
+          </p>
+        )}
+
+        {said?.kind === 'remember' && said.atStep === step && (
+          <div className="conversation__notice" role="status">
+            <p>
+              {t('conversation.remember.ask', { phrase: said.offer.phrase, option: said.label })}
+            </p>
+            <div className="conversation__maybe">
+              <button
+                type="button"
+                className="button"
+                onClick={() => void remember(said.offer, said.label)}
+              >
+                {t('conversation.remember.yes')}
+              </button>
+              <button type="button" className="button button--quiet" onClick={() => setSaid(null)}>
+                {t('conversation.remember.no')}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {said?.kind === 'learned' && said.atStep === step && (
+          <p className="conversation__reading" role="status">
+            {said.note}
           </p>
         )}
 
@@ -384,16 +571,27 @@ export function Shell({
               readTyped();
             }}
           >
-            <input
+            {/* A text area, so a pasted list keeps its lines (T6); Enter sends, Shift+Enter is a
+                new line, as in a chat. */}
+            <textarea
               ref={boxRef}
               className="conversation__input"
+              rows={1}
               value={text}
               placeholder={t('conversation.orType')}
               aria-label={t('conversation.orType')}
-              maxLength={500}
+              maxLength={MAX_LIST}
               onChange={(event) => {
                 setText(event.target.value);
-                if (said?.kind === 'ask' || said?.kind === 'refused') setSaid(null);
+                if (said?.kind === 'ask' || said?.kind === 'refused' || said?.kind === 'guess') {
+                  setSaid(null);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                  event.preventDefault();
+                  readTyped();
+                }
               }}
             />
             <button
@@ -407,6 +605,29 @@ export function Shell({
           </form>
         )}
 
+        {said?.kind === 'guess' && (
+          <div className="conversation__notice" role="status">
+            <p>
+              {t('conversation.guess.ask', {
+                question: questionOf(said.reading.nodeId),
+                answer: answerOf(said.reading),
+              })}
+            </p>
+            <div className="conversation__maybe">
+              <button type="button" className="button" onClick={() => acceptGuess(said)}>
+                {t('conversation.guess.yes')}
+              </button>
+              <button
+                type="button"
+                className="button button--quiet"
+                onClick={() => rejectGuess(said)}
+              >
+                {t('conversation.guess.no')}
+              </button>
+            </div>
+          </div>
+        )}
+
         {(said?.kind === 'ask' || said?.kind === 'refused') && (
           <div className="conversation__notice" role="status">
             <p>{t(said.kind === 'ask' ? ASK[said.reason] : 'conversation.refused')}</p>
@@ -417,12 +638,32 @@ export function Shell({
                     key={`${option.optionId}:${String(option.value)}`}
                     type="button"
                     className="button button--quiet"
-                    onClick={() => pickReading(option)}
+                    onClick={() => pickReading(option, said.text)}
                   >
                     {labelOf(option.optionId, option.value)}
                   </button>
                 ))}
               </div>
+            )}
+            {said.kind === 'ask' && said.elsewhere.length > 0 && (
+              <>
+                <p className="small">{t('conversation.elsewhere')}</p>
+                <div className="conversation__maybe">
+                  {said.elsewhere.map((other) => (
+                    <button
+                      key={other.nodeId}
+                      type="button"
+                      className="button button--quiet"
+                      onClick={() => answer({ kind: 'jump', to: other.nodeId })}
+                    >
+                      {t(other.question)}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {said.kind === 'ask' && said.listed && (
+              <p className="small">{t('conversation.shoppingList')}</p>
             )}
           </div>
         )}

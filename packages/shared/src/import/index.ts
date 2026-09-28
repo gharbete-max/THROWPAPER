@@ -10,6 +10,7 @@ export * from './ir/schema.js';
 export * from './ir/validate.js';
 export * from './debug.js';
 export { sha256Hex } from './sha256.js';
+export { MAX_PASTE, PASTE_EXTRACTOR, pasteDocument } from './paste.js';
 export * from './enumerate/types.js';
 export { grammar, probe, romanValue, ROMAN_MAX } from './enumerate/grammar.js';
 export type { MarkerMatch, Production, Reading } from './enumerate/grammar.js';

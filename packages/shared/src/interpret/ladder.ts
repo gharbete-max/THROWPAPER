@@ -1,86 +1,88 @@
-import type { BuilderGraph, Json, Node } from '../builder/graph/schema.js';
+import { jsonEqual } from '../builder/changes.js';
+import { evaluateGuard, parseGuard, type GuardState } from '../builder/graph/guards.js';
+import { optionsOf, takesList, type BuilderGraph, type Node } from '../builder/graph/schema.js';
 import type { Answer, Tier } from '../builder/machine.js';
 import type { AliasEntry } from './aliases.js';
-import { fuzzyMatch } from './fuzzy.js';
-import { languageOf, occurrences, type Lexicon, type Occurrence } from './lexicon.js';
+import { clausesOf } from './clauses.js';
+import { languageOf } from './lexicon.js';
+import { listOf } from './list.js';
 import { readQuantity } from './patterns.js';
-import { probed, tokenise, type Probed, type Token } from './text.js';
-import { vocabularyFor, type NodeWords, type Vocabulary, type Word } from './vocabulary.js';
+import {
+  Budget,
+  BudgetSpent,
+  MAX_INPUT,
+  NUMBER_IN_PHRASE,
+  THRESHOLD,
+  WHOLE_NUMBER,
+  aliasMatches,
+  inputOf,
+  ranked,
+  readNode,
+  t2,
+} from './rungs.js';
+import {
+  ask,
+  type Alternative,
+  type Interpretation,
+  type Reading,
+  type Unused,
+} from './reading.js';
+import { vocabularyFor, type Vocabulary } from './vocabulary.js';
+
+export {
+  COMPARISON_BUDGET,
+  MARGIN,
+  MAX_INPUT,
+  NUMBER_IN_PHRASE,
+  T2_CEILING,
+  THRESHOLD,
+  WHOLE_NUMBER,
+} from './rungs.js';
+export type { Alternative, AskReason, Interpretation, Reading, Unused } from './reading.js';
 
 /**
  * The ladder — free text read by rules, cheapest and surest first (`docs/plan/INTENT-LADDER.md`,
- * ADR 0019). This is S3's part of it: T0 exact, T1 tokens, T2 weighted keywords, T3 fuzzy, T4
- * values, with negation and "no number from vagueness" on every rung. The first rung that clears
- * its threshold wins; below every threshold the answer is to ask, and nothing is applied.
+ * ADR 0019). `rungs.ts` reads one node (T0–T4, S3); this file decides the order, and reads the
+ * group the node belongs to (S6):
  *
- * Pure, and integers throughout: the same input and the same aliases give the same reading on
- * every machine. Fuzzy work is capped by counting comparisons, not by a clock, so the cut-off is
- * the same on a slow machine as on a fast one.
+ * 1. **T0** — the whole input is one of the node's own answers, exactly.
+ * 2. **T5** — a sentence that answers several questions of the group at once: "three buttons,
+ *    pill shape, side by side". Each question gets its own reading, so each becomes its own step.
+ * 3. **T6** — a list, typed or pasted: the options themselves, labels verbatim.
+ * 4. **T1–T4** — the node's own answer, as S3 reads it.
+ * 5. **T7** — nothing fits this question, but one of the group's clearly does: a guess, to be
+ *    confirmed; less clearly, up to three of those questions offered beside the menu.
+ * 6. **T8** — the node's own options, as a menu. What the person then picks, Loppa offers to
+ *    remember (`aliases.ts`, learned aliases), and only then.
+ *
+ * Nothing below threshold is ever applied. Pure and total: every input gets an interpretation,
+ * and the same input, aliases and state give the same one on every machine.
  */
 
-/** T2 and T3 accept at this many per mille. */
-export const THRESHOLD = 720;
-/** T2: the runner-up must be at least this far below. */
-export const MARGIN = 150;
-/** T2's confidence is capped here: a weighted partial read is never surer than T1's tight one. */
-export const T2_CEILING = 850;
-/** Fuzzy comparisons one reading may make (CAVEATS #42: interpretation within 10 ms). */
-export const COMPARISON_BUDGET = 20_000;
-/** Longer input is not a phrase; a pasted list is S6's (T6). */
-export const MAX_INPUT = 500;
-/** T1 and T3: words besides the alias's that are not stop words. */
-const OTHER_TOKENS = 2;
-
-export interface Alternative {
-  readonly nodeId: string;
-  readonly optionId: string | null;
-  readonly confidence: number;
-}
-
-export interface Reading {
-  readonly nodeId: string;
-  /** Null for a quantity. */
-  readonly optionId: string | null;
-  /** The quantity; null for an option. */
-  readonly value: Json | null;
-  /** Per mille, 0–1000. */
-  readonly confidence: number;
-  readonly tier: Tier;
-  /** UTF-16 offsets into the input: what decided it. */
-  readonly evidenceSpan: readonly [number, number];
-  /** At most three: what "change" offers first. */
-  readonly alternatives: readonly Alternative[];
-}
-
-/**
- * Why the ladder asked. `nothing` — nothing matched; `ambiguous` — two options (or two numbers)
- * matched equally; `negated` — a negated keyword on a node with no `negative` option, or on a
- * quantity; `vague` — "some", "några"; `out-of-range` — a number the node does not allow;
- * `budget` — the comparison budget ran out; `too-long` — more than `MAX_INPUT`; `not-readable` —
- * a node free text does not answer in S3 (text entry, preview, menu).
- */
-export type AskReason =
-  | 'nothing'
-  | 'ambiguous'
-  | 'negated'
-  | 'vague'
-  | 'out-of-range'
-  | 'budget'
-  | 'too-long'
-  | 'not-readable';
-
-export type Interpretation =
-  | { readonly outcome: 'apply'; readonly reading: Reading }
-  /** The node's own options, most likely first (tier T8); S6 widens this to the group. */
-  | { readonly outcome: 'ask'; readonly reason: AskReason; readonly options: readonly Reading[] };
+/** T6: a pasted list may be longer than a phrase. */
+export const MAX_LIST = 2_000;
+/** T6's confidence: a list is read by structure, and shown as "I think". */
+export const LIST_CONFIDENCE = 850;
+/** T7: a guess is offered at this many per mille — its evidence and its place in the path. */
+export const GUESS = 600;
+/** T7: the runner-up must be at least this far below the guess. */
+export const GUESS_MARGIN = 150;
+/** T7's path prior: the question `next` would reach, and the others of the group ahead. */
+export const PRIOR_NEXT = 200;
+export const PRIOR_GROUP = 100;
 
 export interface InterpretContext {
   readonly graph: BuilderGraph;
   readonly nodeId: string;
   /** The author's interface language, e.g. `sv-SE`. */
   readonly locale: string;
-  /** The built-in aliases by default; S6 adds the organisation's learned ones. */
+  /** The built-in aliases by default; the conversation passes the organisation's learned ones too. */
   readonly aliases?: readonly AliasEntry[];
+  /**
+   * The conversation's state as guards read it (`guardStateOf`): T6 and T7 offer another question
+   * of the group only when the conversation could ask it now. Absent, every one is offered.
+   */
+  readonly state?: GuardState;
 }
 
 /** How a chip under the node words the reading (`INTENT-LADDER.md`, "The contract"). */
@@ -89,408 +91,376 @@ export function chipOf(tier: Tier): 'understood' | 'think' | 'asked' {
   return tier === 'T8' ? 'asked' : 'think';
 }
 
-/** The answer a reading gives the machine; pass `reading.tier` as the answer's tier. */
+/** The answer a reading gives the machine, for the node it names; pass `reading.tier` as its tier. */
 export function toAnswer(graph: BuilderGraph, reading: Reading): Answer {
   const node = graph.nodes.find((n) => n.id === reading.nodeId);
-  if (node?.kind === 'quantity') return { kind: 'quantity', value: reading.value as number };
+  if (node?.kind === 'quantity') {
+    return Array.isArray(reading.value)
+      ? { kind: 'list', labels: reading.value as string[] }
+      : { kind: 'quantity', value: reading.value as number };
+  }
   if (node?.kind === 'pick-many') return { kind: 'options', optionIds: [reading.optionId!] };
   return { kind: 'option', optionId: reading.optionId! };
 }
 
-class BudgetSpent extends Error {}
+// --- The group --------------------------------------------------------------------------------
 
-/** Counts fuzzy comparisons; throws when the budget is spent. */
-class Budget {
-  private left = COMPARISON_BUDGET;
-  match(a: string, b: string): boolean {
-    if (this.left <= 0) throw new BudgetSpent();
-    this.left -= 1;
-    return fuzzyMatch(a, b);
-  }
+/** A node free text can answer: one with options, or a number. */
+const readable = (node: Node) =>
+  node.kind === 'question' ||
+  node.kind === 'pick-one' ||
+  node.kind === 'pick-many' ||
+  node.kind === 'quantity';
+
+/** The nodes `next` leads to from this one: its own, every branch, every option's. */
+function nextOf(node: Node): string[] {
+  const targets = (next: unknown): string[] =>
+    typeof next === 'string'
+      ? [next]
+      : Array.isArray(next)
+        ? next.map((branch: { to: string }) => branch.to)
+        : [];
+  return [
+    ...('next' in node ? targets(node.next) : []),
+    ...optionsOf(node).flatMap((o) => targets(o.next)),
+  ];
 }
+
+const AHEAD = new WeakMap<BuilderGraph, Map<string, readonly Node[]>>();
+
+/**
+ * The node and every node of its group the conversation can go on to from it by answering, in the
+ * graph's order: what a sentence typed here may answer (T5) or be guessed to mean (T7). Never a
+ * node behind it — answering one again from here would change an answer the person gave, unseen.
+ */
+export function aheadOf(graph: BuilderGraph, nodeId: string): readonly Node[] {
+  let byNode = AHEAD.get(graph);
+  if (!byNode) AHEAD.set(graph, (byNode = new Map()));
+  const known = byNode.get(nodeId);
+  if (known) return known;
+  const start = graph.nodes.find((n) => n.id === nodeId);
+  const reached = new Set<string>();
+  const queue = start ? [start] : [];
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    if (reached.has(node.id)) continue;
+    reached.add(node.id);
+    for (const id of nextOf(node)) {
+      const next = graph.nodes.find((n) => n.id === id);
+      if (next && next.group === start!.group && !reached.has(id)) queue.push(next);
+    }
+  }
+  const ahead = graph.nodes.filter((n) => reached.has(n.id));
+  byNode.set(nodeId, ahead);
+  return ahead;
+}
+
+/** Whether the conversation could ask the node now; with no state given, it could. */
+function live(node: Node, state: GuardState | undefined): boolean {
+  return (
+    state === undefined || node.when === undefined || evaluateGuard(parseGuard(node.when), state)
+  );
+}
+
+// --- The order --------------------------------------------------------------------------------
 
 /** Free text at a node, read. Pure and total: every input gets an interpretation. */
 export function interpret(input: string, context: InterpretContext): Interpretation {
   const node = context.graph.nodes.find((n) => n.id === context.nodeId);
   const language = languageOf(context.locale);
-  if (!node || !language) return ask('not-readable', []);
-  if (input.length > MAX_INPUT) return ask('too-long', []);
+  if (!node || !language || !readable(node)) return ask('not-readable', []);
+  if (input.length > MAX_LIST) return ask('too-long', []);
   const vocabulary = vocabularyFor(context.graph, language, context.aliases);
-  if (node.kind === 'quantity') return readAmount(input, node, vocabulary.lexicon);
-  const words = vocabulary.nodes.get(node.id);
-  if (!words || !('options' in node)) return ask('not-readable', []);
+  const budget = new Budget();
   try {
-    return readOption(input, node, words, vocabulary);
+    return read(input, node, context, vocabulary, budget);
   } catch (error) {
     if (!(error instanceof BudgetSpent)) throw error;
-    return ask('budget', ranked(node.id, words, new Map()).slice(0, 6));
+    const words = vocabulary.nodes.get(node.id);
+    return ask('budget', words ? ranked(node.id, words, new Map()).slice(0, 6) : []);
   }
 }
 
-function ask(reason: AskReason, options: readonly Reading[]): Interpretation {
-  return { outcome: 'ask', reason, options };
-}
-
-// --- T4: a quantity ----------------------------------------------------------------------------
-
-function readAmount(
+function read(
   input: string,
-  node: Extract<Node, { kind: 'quantity' }>,
-  lexicon: Lexicon,
-): Interpretation {
-  const read = readQuantity(input, lexicon);
-  if ('refused' in read) return ask(read.refused, []);
-  if (read.value < node.min || read.value > node.max) return ask('out-of-range', []);
-  return {
-    outcome: 'apply',
-    reading: {
-      nodeId: node.id,
-      optionId: null,
-      value: read.value,
-      confidence: read.whole ? 850 : 750,
-      tier: 'T4',
-      evidenceSpan: [read.start, read.end],
-      alternatives: [],
-    },
-  };
-}
-
-// --- T0–T3: an option --------------------------------------------------------------------------
-
-interface Scored extends Evidence {
-  readonly score: number;
-}
-
-interface Input {
-  readonly p: Probed;
-  readonly tokens: readonly Token[];
-  /** A word's first token, by primary and by folded form. */
-  readonly primary: ReadonlyMap<string, number>;
-  readonly folded: ReadonlyMap<string, number>;
-  readonly stop: (i: number) => boolean;
-  readonly negators: readonly Occurrence[];
-  /**
-   * The stretch of the sentence each token is in: its clause, cut again at every contrast word
-   * ("not text but buttons"). A negator reaches only as far as its stretch.
-   */
-  readonly stretch: readonly string[];
-  readonly stretchAt: (clause: number, at: number) => string;
-}
-
-function inputOf(text: string, lexicon: Lexicon): Input {
-  const p = probed(text);
-  const tokens = tokenise(p);
-  const primary = new Map<string, number>();
-  const folded = new Map<string, number>();
-  tokens.forEach((token, i) => {
-    if (!primary.has(token.text)) primary.set(token.text, i);
-    if (!folded.has(token.folded)) folded.set(token.folded, i);
-  });
-  const contrast = occurrences(lexicon.contrast, p, tokens);
-  const stretchAt = (clause: number, at: number) =>
-    `${clause}:${contrast.filter((c) => c.clause === clause && c.end <= at).length}`;
-  return {
-    p,
-    tokens,
-    primary,
-    folded,
-    stop: (i) => lexicon.stopWords.has(tokens[i]!.text),
-    negators: occurrences(lexicon.negators, p, tokens),
-    stretch: tokens.map((t) => stretchAt(t.clause, t.start)),
-    stretchAt,
-  };
-}
-
-/** A negator in the stretch of a reading's words that is not itself one of them. */
-function strayNegator(input: Input, matched: readonly number[]): boolean {
-  const reach = new Set(matched.map((i) => input.stretch[i]));
-  const span = spanOver(input.tokens, matched);
-  return input.negators.some((negator) => {
-    if (!reach.has(input.stretchAt(negator.clause, negator.start))) return false;
-    const inside =
-      negator.tokens.length > 0
-        ? negator.tokens.every((i) => matched.includes(i))
-        : negator.start >= span[0] && negator.end <= span[1];
-    return !inside;
-  });
-}
-
-function spanOver(tokens: readonly Token[], indices: readonly number[]): [number, number] {
-  let start = Infinity;
-  let end = -Infinity;
-  for (const i of indices) {
-    start = Math.min(start, tokens[i]!.start);
-    end = Math.max(end, tokens[i]!.end);
-  }
-  return [start, end];
-}
-
-/** Tokens outside `matched` that are not stop words. */
-function othersBesides(input: Input, matched: readonly number[]): number {
-  const used = new Set(matched);
-  let others = 0;
-  input.tokens.forEach((_, i) => {
-    if (!used.has(i) && !input.stop(i)) others += 1;
-  });
-  return others;
-}
-
-/** The node's options, most likely first by T2's score, then in the graph's order. */
-function ranked(nodeId: string, words: NodeWords, scores: ReadonlyMap<string, Scored>): Reading[] {
-  return words.options
-    .map((option, order) => ({ option, order, scored: scores.get(option.optionId) }))
-    .sort((a, b) => (b.scored?.score ?? 0) - (a.scored?.score ?? 0) || a.order - b.order)
-    .map(({ option, scored }) => ({
-      nodeId,
-      optionId: option.optionId,
-      value: null,
-      confidence: scored?.score ?? 0,
-      tier: 'T8' as const,
-      evidenceSpan: scored?.span ?? ([0, 0] as const),
-      alternatives: [],
-    }));
-}
-
-function readOption(
-  text: string,
   node: Node,
-  words: NodeWords,
+  context: InterpretContext,
   vocabulary: Vocabulary,
+  budget: Budget,
 ): Interpretation {
-  const { lexicon } = vocabulary;
-  const input = inputOf(text, lexicon);
-  const { tokens } = input;
-  const budget = new Budget();
-  const scores = t2(input, words, vocabulary.weights);
-  const menu = () => ranked(node.id, words, scores).slice(0, 6);
-  const apply = (
-    optionId: string,
-    confidence: number,
-    tier: Tier,
-    span: readonly [number, number],
-  ): Interpretation => ({
-    outcome: 'apply',
-    reading: {
-      nodeId: node.id,
-      optionId,
-      value: null,
-      confidence,
-      tier,
-      evidenceSpan: span,
-      alternatives: ranked(node.id, words, scores)
-        .filter((r) => r.optionId !== optionId)
-        .slice(0, 3)
-        .map((r) => ({ nodeId: r.nodeId, optionId: r.optionId, confidence: r.confidence })),
-    },
+  const phrase = input.length <= MAX_INPUT;
+  const own = phrase ? readNode(input, node, vocabulary, budget) : ask('too-long', []);
+  if (own.outcome === 'apply' && own.reading.tier === 'T0') return own;
+
+  const several = phrase ? severalAnswers(input, node, context, vocabulary, budget) : null;
+  if (several) return several;
+  const list = aList(input, node, context, vocabulary, budget);
+  if (list) return list;
+
+  if (own.outcome !== 'ask' || own.reason !== 'nothing') return own;
+  return elsewhere(input, node, context, vocabulary, budget);
+}
+
+// --- T5: several answers in one sentence ------------------------------------------------------
+
+/** A reading of part of the input, placed back in the whole input. */
+const shifted = (reading: Reading, by: number): Reading => ({
+  ...reading,
+  evidenceSpan: [reading.evidenceSpan[0] + by, reading.evidenceSpan[1] + by],
+});
+
+/**
+ * T5 (`INTENT-LADDER.md`): the input cut into clauses, each read by T0–T4 against every question
+ * of the group from here on. A question is answered only when every clause that answers it says
+ * the same — all or nothing per question — and T5 applies when two or more are. A clause may
+ * answer more than one ("three buttons": how many, and buttons at all), but never with the same
+ * words twice.
+ *
+ * Two rules keep it from reading more than was said, each found by a phrase-table row:
+ * - **A misspelling is read only for the question asked.** Another question is answered by T0–T2
+ *   or T4, never T3: "keine Knöpfe" is no buttons, not also "eine" (one answer).
+ * - **One word, one answer.** Readings whose evidence overlaps keep the surest (the graph's order
+ *   between equals); "samlet i én bjælke" is the joined bar, not also where it sits.
+ */
+function severalAnswers(
+  input: string,
+  node: Node,
+  context: InterpretContext,
+  vocabulary: Vocabulary,
+  budget: Budget,
+): Interpretation | null {
+  const questions = aheadOf(context.graph, node.id).filter(readable);
+  const clauses = clausesOf(input, vocabulary.lexicon);
+  const found = new Map<string, { reading: Reading; clause: number }[]>();
+  clauses.forEach((clause, index) => {
+    const text = input.slice(clause.start, clause.end);
+    for (const question of questions) {
+      const read = readNode(text, question, vocabulary, budget);
+      if (read.outcome !== 'apply' || read.reading.confidence < THRESHOLD) continue;
+      if (question !== node && read.reading.tier === 'T3') continue;
+      const list = found.get(question.id) ?? [];
+      list.push({ reading: shifted(read.reading, clause.start), clause: index });
+      found.set(question.id, list);
+    }
   });
 
-  if (tokens.length === 0) return ask('nothing', menu());
-  const whole = spanOver(
-    tokens,
-    tokens.map((_, i) => i),
+  // All or nothing per question: every clause that answers it must say the same.
+  const agreed: { question: Node; all: { reading: Reading; clause: number }[] }[] = [];
+  const contradicted = new Set<number>();
+  for (const question of questions) {
+    const all = found.get(question.id);
+    if (!all) continue;
+    const first = all[0]!.reading;
+    const agree = all.every(
+      ({ reading }) => reading.optionId === first.optionId && jsonEqual(reading.value, first.value),
+    );
+    if (agree) agreed.push({ question, all });
+    else for (const { clause } of all) contradicted.add(clause);
+  }
+
+  // One word, one answer: the surest first, then the graph's order.
+  const order = context.graph.nodes;
+  const surest = [...agreed].sort(
+    (a, b) =>
+      b.all[0]!.reading.confidence - a.all[0]!.reading.confidence ||
+      order.indexOf(a.question) - order.indexOf(b.question),
   );
-
-  // T0 — the whole input is an option's id, or one option's alias.
-  const key = tokens.map((t) => t.text).join(' ');
-  const byId = words.ids.get(key);
-  if (byId) return apply(byId, 1000, 'T0', whole);
-  const exact = words.options.filter((o) => o.aliases.some((a) => a.key === key));
-  if (exact.length === 1) return apply(exact[0]!.optionId, 1000, 'T0', whole);
-
-  // Negation, before anything could read the negated word as the option it names.
-  const negated = negation(input, words, budget);
-  if (negated) {
-    return node.negative
-      ? apply(node.negative, negated.confidence, negated.tier, negated.span)
-      : ask('negated', menu());
+  const taken: (readonly [number, number])[] = [];
+  const overlaps = (span: readonly [number, number]) =>
+    taken.some(([start, end]) => span[0] < end && start < span[1]);
+  const kept = new Set<Node>();
+  for (const { question, all } of surest) {
+    const spans = all.map(({ reading }) => reading.evidenceSpan);
+    if (spans.some(overlaps)) continue;
+    taken.push(...spans);
+    kept.add(question);
   }
-  // A negator the rule above left alone, beside a reading's words and not one of them, may still
-  // be meant for them — "knapper er ikke nødvendigt" — so such a reading is asked, not applied.
-  const read = (optionId: string, score: number, tier: Tier, match: Evidence) =>
-    strayNegator(input, match.matched)
-      ? ask('negated', menu())
-      : apply(optionId, score, tier, match.span!);
 
-  // T1 — every word of one option's alias, and little else. When two options match, the one whose
-  // words include all of every other's explains more of what was typed: "det krävs inte" is "not
-  // required" rather than "required"; "yes buttons no text" points both ways, and is asked.
-  const t1Found = aliasMatches(input, words, budget, false);
-  const widest = t1Found.find((m) =>
-    t1Found.every(
-      (o) =>
-        o === m ||
-        (o.matched.every((i) => m.matched.includes(i)) && o.matched.length < m.matched.length),
-    ),
+  const readings: Reading[] = [];
+  const used = new Set<number>();
+  for (const { question, all } of agreed) {
+    if (!kept.has(question)) continue;
+    for (const { clause } of all) used.add(clause);
+    readings.push({ ...all[0]!.reading, tier: 'T5', alternatives: [] });
+  }
+  if (readings.length < 2) return null;
+  const unused: Unused[] = clauses.flatMap((clause, index) =>
+    used.has(index)
+      ? []
+      : [
+          {
+            span: [clause.start, clause.end] as const,
+            why: contradicted.has(index) ? ('conflict' as const) : ('nothing' as const),
+          },
+        ],
   );
-  if (widest) return read(widest.optionId, widest.score, 'T1', widest);
-
-  // T2 — the rare words of one option's alias, well ahead of any other option.
-  const t2Order = [...scores.entries()].sort((a, b) => b[1].score - a[1].score);
-  const [best, second] = t2Order;
-  if (best && best[1].score >= THRESHOLD && (second?.[1].score ?? 0) <= best[1].score - MARGIN) {
-    return read(best[0], Math.min(best[1].score, T2_CEILING), 'T2', best[1]);
-  }
-
-  // T3 — the same as T1, allowing a misspelt word or one.
-  const t3Found = aliasMatches(input, words, budget, true).filter((m) => m.score >= THRESHOLD);
-  if (t3Found.length === 1) {
-    const [only] = t3Found;
-    return read(only!.optionId, only!.score, 'T3', only!);
-  }
-
-  const ambiguous =
-    t1Found.length > 1 || t3Found.length > 1 || (best !== undefined && best[1].score >= THRESHOLD);
-  return ask(ambiguous ? 'ambiguous' : 'nothing', menu());
+  return { outcome: 'fill', readings, unused };
 }
 
-/** The input tokens a reading rests on, and their span. */
-interface Evidence {
-  readonly span: readonly [number, number] | null;
-  readonly matched: readonly number[];
-}
-
-interface Match extends Evidence {
-  readonly optionId: string;
-  readonly score: number;
-  readonly span: readonly [number, number];
-  /** Every input token a matching alias of the option matched: all that points at it. */
-  readonly matched: readonly number[];
-}
+// --- T6: a list is the options ----------------------------------------------------------------
 
 /**
- * T1 (`fuzzy` false) or T3 (`fuzzy` true): options with an alias whose every word is in the
- * input — exactly (900), on the folded form (850), or, for T3, fuzzily (100 less for each) —
- * with at most two other words that are not stop words. The best alias per option.
- */
-function aliasMatches(input: Input, words: NodeWords, budget: Budget, fuzzy: boolean): Match[] {
-  const found: Match[] = [];
-  for (const option of words.options) {
-    let best: Omit<Match, 'matched'> | null = null;
-    const all = new Set<number>();
-    for (const alias of option.aliases) {
-      const matched: number[] = [];
-      let folded = false;
-      let misspelt = 0;
-      for (const word of alias.content) {
-        let at = input.primary.get(word.text);
-        if (at === undefined) {
-          at = input.folded.get(word.folded);
-          if (at !== undefined) folded = true;
-        }
-        if (at === undefined && fuzzy && !word.cjk) {
-          at = input.tokens.findIndex(
-            (t, i) =>
-              !t.cjk &&
-              !/^\d+$/.test(t.text) &&
-              !input.stop(i) &&
-              budget.match(t.folded, word.folded),
-          );
-          if (at < 0) at = undefined;
-          else misspelt += 1;
-        }
-        if (at === undefined) break;
-        matched.push(at);
-      }
-      if (matched.length < alias.content.length) continue;
-      if (alias.ordered && !increasing(matched)) continue;
-      if (othersBesides(input, matched) > OTHER_TOKENS) continue;
-      const score = 900 - (folded ? 50 : 0) - 100 * misspelt;
-      matched.forEach((i) => all.add(i));
-      if (!best || score > best.score) {
-        best = { optionId: option.optionId, score, span: spanOver(input.tokens, matched) };
-      }
-    }
-    if (best) found.push({ ...best, matched: [...all].sort((a, b) => a - b) });
-  }
-  return found;
-}
-
-/**
- * T2: each option's best alias by the weighted share of its words in the input — `1000 × Σ
- * matched weights ÷ Σ all weights`, integer division, 50 less if a word matched only folded.
- */
-function t2(input: Input, words: NodeWords, weights: ReadonlyMap<string, number>) {
-  const scores = new Map<string, Scored>();
-  for (const option of words.options) {
-    let best: Scored = { score: 0, span: null, matched: [] };
-    for (const alias of option.aliases) {
-      let total = 0;
-      let got = 0;
-      let folded = false;
-      const matched: number[] = [];
-      for (const word of alias.content) {
-        const weight = weights.get(word.text) ?? 0;
-        total += weight;
-        let at = input.primary.get(word.text);
-        if (at === undefined) {
-          at = input.folded.get(word.folded);
-          if (at !== undefined) folded = true;
-        }
-        if (at !== undefined) {
-          got += weight;
-          matched.push(at);
-        }
-      }
-      if (total === 0 || matched.length === 0) continue;
-      if (alias.ordered && !increasing(matched)) continue;
-      const share = (1000 * got - ((1000 * got) % total)) / total;
-      const score = Math.max(0, share - (folded ? 50 : 0));
-      if (score > best.score) best = { score, span: spanOver(input.tokens, matched), matched };
-    }
-    scores.set(option.optionId, best);
-  }
-  return scores;
-}
-
-/**
- * "Negation is honoured": a negator and, in the same stretch of the sentence, a word of one of the
- * node's options other than its `negative` one — exactly (T1), folded (T1, 850) or misspelt (T3,
- * 800). A stretch ends at a clause's end or at a contrast word ("not text but buttons").
+ * T6: a list read as the options of the question that takes them — this one ("How many
+ * options?"), or the one ahead of it in the group, when the conversation could ask it now. The
+ * count is the list's length, and a length the question does not allow is asked, never cut.
  *
- * The word comes after the negator ("no buttons", "utan knappar"), or before it when the negator
- * ends the stretch — Swedish and German say "knappar behövs inte", "Buttons brauche ich nicht".
- * Otherwise a negator between two words negates neither: "yes buttons no text" is asked, not read.
- * In Chinese and Japanese the negator may stand on either side (`不要按钮`, `ボタンなし`).
+ * A list with an item that answers one of the group's questions is not a list of options: "pill,
+ * square" names two shapes, and the ladder does not choose between the two readings.
  */
-function negation(
-  input: Input,
-  words: NodeWords,
+function aList(
+  input: string,
+  node: Node,
+  context: InterpretContext,
+  vocabulary: Vocabulary,
   budget: Budget,
-): { tier: Tier; confidence: number; span: [number, number] } | null {
-  const primary = new Set(words.keywords.map((w) => w.text));
-  const folded = new Set(words.keywords.map((w) => w.folded));
-  const latin = words.keywords.filter((w) => !w.cjk);
-  const { tokens, stretch } = input;
-  for (const negator of input.negators) {
-    const here = input.stretchAt(negator.clause, negator.start);
-    const last = negator.tokens.length > 0 ? Math.max(...negator.tokens) : -1;
-    const first = negator.tokens.length > 0 ? Math.min(...negator.tokens) : -1;
-    const final = tokens.every((_, i) => i <= last || stretch[i] !== here || input.stop(i));
-    for (let i = 0; i < tokens.length; i += 1) {
-      const token = tokens[i]!;
-      if (stretch[i] !== here || input.stop(i)) continue;
-      if (negator.tokens.length === 0) {
-        if (overlaps(token, negator)) continue;
-      } else if (!(i > last || (final && i < first))) continue;
-      let hit: { tier: Tier; confidence: number } | null = null;
-      if (primary.has(token.text)) hit = { tier: 'T1', confidence: 900 };
-      else if (folded.has(token.folded)) hit = { tier: 'T1', confidence: 850 };
-      else if (!token.cjk && latin.some((w: Word) => budget.match(token.folded, w.folded))) {
-        hit = { tier: 'T3', confidence: 800 };
-      }
-      if (hit) {
-        return {
-          ...hit,
-          span: [Math.min(negator.start, token.start), Math.max(negator.end, token.end)],
-        };
-      }
-    }
+): Interpretation | null {
+  const target = takesList(node)
+    ? node
+    : aheadOf(context.graph, node.id).find(
+        (n) => n !== node && takesList(n) && n.slot !== undefined && live(n, context.state),
+      );
+  if (target?.kind !== 'quantity') return null;
+  const list = listOf(input);
+  if (!list) return null;
+  const questions = aheadOf(context.graph, node.id).filter(readable);
+  const answers = (item: string) =>
+    item.length <= MAX_INPUT &&
+    questions.some((question) => {
+      const read = readNode(item, question, vocabulary, budget);
+      return (
+        read.outcome === 'apply' &&
+        read.reading.confidence >= THRESHOLD &&
+        (question === node || read.reading.tier !== 'T3') &&
+        // A number inside an item ("Group 2", 星期二) is part of its words; only an item that is
+        // a number is a count.
+        (read.reading.tier !== 'T4' || read.reading.confidence === WHOLE_NUMBER)
+      );
+    });
+  if (list.labels.some(answers)) return null;
+  if (list.labels.length < target.min || list.labels.length > target.max) {
+    return target === node ? ask('out-of-range', []) : null;
   }
-  return null;
+  return {
+    outcome: 'apply',
+    reading: {
+      nodeId: target.id,
+      optionId: null,
+      value: list.labels,
+      confidence: LIST_CONFIDENCE,
+      tier: 'T6',
+      evidenceSpan: list.span,
+      alternatives: [],
+    },
+  };
 }
 
-const overlaps = (token: Token, span: { start: number; end: number }) =>
-  token.start < span.end && span.start < token.end;
+// --- T7: another question of the group --------------------------------------------------------
 
-const increasing = (indices: readonly number[]) =>
-  indices.every((v, i) => i === 0 || v > indices[i - 1]!);
+interface Candidate {
+  readonly node: Node;
+  readonly optionId: string | null;
+  readonly value: number | null;
+  /** Evidence plus the path prior. */
+  readonly total: number;
+  readonly span: readonly [number, number];
+  /** Two of its options fit equally well: it can be offered, never guessed. */
+  readonly split: boolean;
+}
+
+/**
+ * T7 (`INTENT-LADDER.md`): nothing fits the question asked, so every question of the group from
+ * here on that the conversation could ask now, and could answer ahead of its turn (it settles a
+ * slot), is scored: the best T1, T2 or T3 score of its options — or T4's, for a number — plus a
+ * path prior. Clearly ahead of the rest, it is guessed ("Did you mean …?"); otherwise the best
+ * three are offered beside the menu. A sentence with a negator in it is not guessed about at all:
+ * what it negates is a question for the node asked.
+ */
+function elsewhere(
+  input: string,
+  node: Node,
+  context: InterpretContext,
+  vocabulary: Vocabulary,
+  budget: Budget,
+): Interpretation {
+  const words = vocabulary.nodes.get(node.id);
+  const menu = words ? ranked(node.id, words, new Map()).slice(0, 6) : [];
+  const typed = inputOf(input, vocabulary.lexicon);
+  if (typed.tokens.length === 0 || typed.negators.length > 0) return ask('nothing', menu);
+
+  const next = new Set(nextOf(node));
+  const candidates: Candidate[] = [];
+  for (const other of aheadOf(context.graph, node.id)) {
+    if (other === node || !readable(other) || other.slot === undefined) continue;
+    if (!live(other, context.state)) continue;
+    const prior = next.has(other.id) ? PRIOR_NEXT : PRIOR_GROUP;
+    if (other.kind === 'quantity') {
+      const amount = readQuantity(input, vocabulary.lexicon);
+      if ('refused' in amount || amount.value < other.min || amount.value > other.max) continue;
+      candidates.push({
+        node: other,
+        optionId: null,
+        value: amount.value,
+        total: (amount.whole ? WHOLE_NUMBER : NUMBER_IN_PHRASE) + prior,
+        span: [amount.start, amount.end],
+        split: false,
+      });
+      continue;
+    }
+    const otherWords = vocabulary.nodes.get(other.id);
+    if (!otherWords) continue;
+    const scores = t2(typed, otherWords, vocabulary.weights);
+    const matched = [
+      ...aliasMatches(typed, otherWords, budget, false),
+      ...aliasMatches(typed, otherWords, budget, true),
+    ];
+    const best = otherWords.options
+      .map((option) => {
+        const t2Score = scores.get(option.optionId);
+        const hits = matched.filter((m) => m.optionId === option.optionId);
+        const top = Math.max(t2Score?.score ?? 0, ...hits.map((m) => m.score));
+        const span = hits.find((m) => m.score === top)?.span ?? t2Score?.span ?? null;
+        return { optionId: option.optionId, score: top, span };
+      })
+      .filter((o) => o.score > 0)
+      .sort((a, b) => b.score - a.score);
+    const [first, second] = best;
+    if (!first) continue;
+    candidates.push({
+      node: other,
+      optionId: first.optionId,
+      value: null,
+      total: first.score + prior,
+      span: first.span ?? [0, input.length],
+      split: second !== undefined && second.score === first.score,
+    });
+  }
+  // Best first; the graph's order between equals, so the ranking is the same on every machine.
+  const order = context.graph.nodes;
+  candidates.sort((a, b) => b.total - a.total || order.indexOf(a.node) - order.indexOf(b.node));
+
+  const confidence = (c: Candidate) => Math.min(c.total, 1000);
+  const offered: Alternative[] = candidates
+    .slice(0, 3)
+    .map((c) => ({ nodeId: c.node.id, optionId: c.optionId, confidence: confidence(c) }));
+  const [top, runnerUp] = candidates;
+  if (
+    top &&
+    !top.split &&
+    top.total >= GUESS &&
+    (runnerUp?.total ?? 0) <= top.total - GUESS_MARGIN
+  ) {
+    return {
+      outcome: 'guess',
+      reading: {
+        nodeId: top.node.id,
+        optionId: top.optionId,
+        value: top.value,
+        confidence: confidence(top),
+        tier: 'T7',
+        evidenceSpan: top.span,
+        alternatives: offered.slice(1),
+      },
+    };
+  }
+  return ask('nothing', menu, offered);
+}

@@ -38,6 +38,7 @@
     "nitti": 90,
     "hundre": 100
   },
+  "notNumbers": [],
   "stopWords": [
     "jeg",
     "vi",
@@ -96,6 +97,7 @@
   ],
   "negators": ["nei", "ikke", "ingen", "intet", "uten", "hopp over", "dropp", "aldri"],
   "contrast": ["men", "i stedet", "heller"],
+  "conjunctions": ["og"],
   "months": {
     "januar": 1,
     "jan": 1,

@@ -10,7 +10,14 @@ import {
   type Change,
   type Pointer,
 } from './changes.js';
-import { newQuestion, resizeOptions, retype, variantOf, type QuestionType } from './fields.js';
+import {
+  labelledOptions,
+  newQuestion,
+  resizeOptions,
+  retype,
+  variantOf,
+  type QuestionType,
+} from './fields.js';
 import { parsePath, writableRule, type ParsedPath, type Writable } from './graph/paths.js';
 import type { Json, Op } from './graph/schema.js';
 import { fingerprint, stableFieldId, uniqueKey } from './ids.js';
@@ -28,7 +35,8 @@ import { MachineError, type BuilderState, type FieldProvenance } from './state.j
  *   in the author's language, `{ 'sv-SE': 'Namn' }`.
  * - `{ $newField }` becomes a whole question, with a fingerprint id and a unique key; the sidecar
  *   records where it came from and retires its id (`ids.ts`).
- * - `{ $options: n }` resizes the question's options, keeping the ones it has (`fields.ts`).
+ * - `{ $options: n }` resizes the question's options, keeping the ones it has (`fields.ts`); given a
+ *   list as its answer (T6), it makes one option per label, verbatim.
  * - `{ $unset: true }` becomes an `unset`.
  * - A new `type` becomes the whole question rebuilt as that type (`fields.ts`, `retype`).
  */
@@ -37,8 +45,8 @@ export interface PatchContext {
   /** The node answered, or the cursor for a hand edit: recorded as a new question's origin. */
   readonly nodeId: string;
   readonly source: FieldProvenance['source'];
-  /** The quantity or text just given, for `$answer`. */
-  readonly answer?: number | string;
+  /** The quantity, text or list just given, for `$answer`. */
+  readonly answer?: number | string | readonly string[];
   /** The author's language, which a typed answer is written in. */
   readonly locale: string;
 }
@@ -107,8 +115,12 @@ function resolveValue(
     const wanted = value['$options'];
     const count =
       wanted !== undefined && isRef(wanted, '$answer') ? answerOf(context, rule) : wanted;
+    const current = get(state, at) as Option[] | undefined;
+    if (Array.isArray(count) && count.every((label) => typeof label === 'string')) {
+      return asJson(labelledOptions(current, count as string[], context.locale));
+    }
     if (typeof count !== 'number') throw new MachineError('wrong-answer', 'A count was expected');
-    return asJson(resizeOptions(get(state, at) as Option[] | undefined, count));
+    return asJson(resizeOptions(current, count));
   }
   return value;
 }

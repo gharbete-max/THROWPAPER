@@ -10,6 +10,7 @@ import {
   toAnswer,
   type AskReason,
   type Interpretation,
+  type Reading,
 } from './ladder.js';
 import { LANGUAGES, type Language } from './lexicon.js';
 import { PATTERN_KINDS, readPattern } from './patterns.js';
@@ -22,7 +23,7 @@ import { PATTERN_KINDS, readPattern } from './patterns.js';
  */
 
 const DIR = new URL('../../../../fixtures/ladder/', import.meta.url);
-const TIERS = ['T0', 'T1', 'T2', 'T3', 'T4'] as const;
+const TIERS = ['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'] as const;
 /** At least this many rows per tier and language, and as many that must ask. */
 const PER_TIER = 10;
 /** Chinese and Japanese are read as character bigrams, which T3 never compares fuzzily. */
@@ -39,10 +40,30 @@ const ASK_REASONS = [
   'not-readable',
 ] as const satisfies readonly AskReason[];
 
+/** An answer to a node, in a row about several (T5) or about another node (T7). */
+const Said = z.union([
+  z.object({ nodeId: z.string(), optionId: z.string() }).strict(),
+  z.object({ nodeId: z.string(), value: z.unknown() }).strict(),
+]);
 const Expect = z.union([
-  z.object({ optionId: z.string(), tier: z.enum(TIERS) }).strict(),
+  z.object({ optionId: z.string(), tier: z.enum(['T0', 'T1', 'T2', 'T3']) }).strict(),
   z.object({ value: z.unknown(), tier: z.literal('T4') }).strict(),
-  z.object({ ask: z.enum(ASK_REASONS) }).strict(),
+  /** T5: the questions answered, in the graph's order; what went unused, as typed. */
+  z
+    .object({
+      fill: z.array(Said).min(2),
+      unused: z.array(z.string()).min(1).optional(),
+      tier: z.literal('T5'),
+    })
+    .strict(),
+  /** T6: the options' labels, and the node they answer when it is not the row's. */
+  z
+    .object({ list: z.array(z.string()).min(2), at: z.string().optional(), tier: z.literal('T6') })
+    .strict(),
+  /** T7: the guess, for another question of the group. */
+  z.object({ guess: Said, tier: z.literal('T7') }).strict(),
+  /** T8, with the group's questions offered beside the menu when T7 found some. */
+  z.object({ ask: z.enum(ASK_REASONS), elsewhere: z.array(z.string()).min(1).optional() }).strict(),
   z.object({ none: z.literal(true) }).strict(),
 ]);
 const Row = z
@@ -86,11 +107,39 @@ function outcome(table: Table, row: Row, aliases = BUILTIN_ALIASES): unknown {
     locale: table.locale,
     aliases,
   });
-  if (result.outcome === 'ask') return { ask: result.reason };
-  const { reading } = result;
-  return reading.optionId === null
-    ? { value: reading.value, tier: reading.tier }
-    : { optionId: reading.optionId, tier: reading.tier };
+  const said = (reading: Reading) =>
+    reading.optionId === null
+      ? { nodeId: reading.nodeId, value: reading.value }
+      : { nodeId: reading.nodeId, optionId: reading.optionId };
+  switch (result.outcome) {
+    case 'ask':
+      return result.elsewhere.length > 0
+        ? { ask: result.reason, elsewhere: result.elsewhere.map((e) => e.nodeId) }
+        : { ask: result.reason };
+    case 'fill': {
+      const unused = result.unused.map((u) => row.phrase.slice(u.span[0], u.span[1]));
+      return {
+        fill: result.readings.map(said),
+        ...(unused.length > 0 ? { unused } : {}),
+        tier: 'T5',
+      };
+    }
+    case 'guess':
+      return { guess: said(result.reading), tier: 'T7' };
+    case 'apply': {
+      const { reading } = result;
+      if (reading.tier === 'T6') {
+        return {
+          list: reading.value,
+          ...(reading.nodeId === row.nodeId ? {} : { at: reading.nodeId }),
+          tier: 'T6',
+        };
+      }
+      return reading.optionId === null
+        ? { value: reading.value, tier: reading.tier }
+        : { optionId: reading.optionId, tier: reading.tier };
+    }
+  }
 }
 
 describe('the phrase tables', () => {

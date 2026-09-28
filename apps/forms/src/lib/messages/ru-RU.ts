@@ -1044,7 +1044,7 @@ export const ruRU: Record<MessageKey, string> = {
   // The guided builder's conversation: packages/shared/src/builder/graph/nodes.ts. Its rules
   // (at most nine words a question, no jargon) are checked by guided-graph.test.ts.
   'guided.common.yes': 'Да',
-  'guided.skip.decided': 'Уже прочитано из вашего документа',
+  'guided.skip.decided': 'Уже решено',
   'guided.skip.noButtons': 'Вы выбрали без кнопок',
   'guided.skip.brandDecided': 'Уже решено',
   'guided.skip.nothingToGuess': 'Пока нечего угадывать',
@@ -1192,6 +1192,58 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.edit.drag': 'Перетащите, чтобы переместить',
   'conversation.edit.moveUp': 'Выше',
   'conversation.edit.moveDown': 'Ниже',
+  'conversation.unused': 'Не использовано:',
+  'conversation.guess.ask': 'Вы имели в виду «{question}» — {answer}?',
+  'conversation.guess.yes': 'Да',
+  'conversation.guess.no': 'Нет',
+  'conversation.elsewhere': 'Или это об одном из этих вопросов?',
+  'conversation.shoppingList':
+    'Всё, что здесь можно настроить, перечислено ниже — выберите оттуда.',
+  'conversation.remember.ask': 'Запомнить «{phrase}» как способ сказать «{option}»?',
+  'conversation.remember.yes': 'Запомнить',
+  'conversation.remember.no': 'Не сейчас',
+  'conversation.remember.done': 'Запомнено. «{phrase}» теперь значит «{option}».',
+  'conversation.remember.means': '«{phrase}» уже значит «{option}».',
+  'conversation.remember.known': 'Loppa уже понимает это так.',
+  'conversation.remember.failed': 'Не удалось запомнить. Попробуйте позже.',
+  'phrases.title': 'Выученные фразы',
+  'phrases.intro':
+    'Способы сказать ответ, которым ваша организация научила Loppa. Каждый запомнен только потому, что кто-то выбрал «Запомнить».',
+  'phrases.empty':
+    'Пока ничего не выучено. Когда Loppa не понимает написанное, автор может научить её.',
+  'phrases.means': '«{question}»: {answer}',
+  'phrases.inert': 'Больше не используется: вопрос изменился',
+  'phrases.count':
+    'plural:one запомнено {count} раз | few запомнено {count} раза | many запомнено {count} раз',
+  'phrases.delete': 'Удалить',
+  'phrases.deleteNamed': 'Удалить «{phrase}»',
+  'phrases.confirmDelete': 'Удалить «{phrase}»? Loppa перестанет это понимать.',
+  'phrases.export': 'Экспорт',
+  'phrases.import': 'Импорт…',
+  'phrases.clear': 'Удалить все',
+  'phrases.confirmClear':
+    'plural:one Удалить {count} выученную фразу? Loppa вернётся к фразам, с которыми пришла. | few Удалить {count} выученные фразы? Loppa вернётся к фразам, с которыми пришла. | many Удалить {count} выученных фраз? Loppa вернётся к фразам, с которыми пришла.',
+  'phrases.cleared': 'Удалено. Loppa вернулась к фразам, с которыми пришла.',
+  'phrases.failed': 'Не получилось. Попробуйте ещё раз.',
+  'phrases.invalid': 'Это не файл фраз ({problem}).',
+  'phrases.imported':
+    'plural:one Добавлена {count} фраза. | few Добавлено {count} фразы. | many Добавлено {count} фраз.',
+  'phrases.preview.title': 'Что сделает этот файл',
+  'phrases.preview.added':
+    'plural:one {count} добавить | few {count} добавить | many {count} добавить',
+  'phrases.preview.present':
+    'plural:one {count} уже известна | few {count} уже известны | many {count} уже известны',
+  'phrases.preview.refused':
+    'plural:one {count} не добавлена | few {count} не добавлены | many {count} не добавлены',
+  'phrases.preview.confirm':
+    'plural:one Добавить {count} фразу | few Добавить {count} фразы | many Добавить {count} фраз',
+  'phrases.preview.cancel': 'Отмена',
+  'phrases.refused.present': 'уже известна',
+  'phrases.refused.collision': 'уже значит «{option}»',
+  'phrases.refused.shadowsId': '— это название другого ответа',
+  'phrases.refused.empty': 'не содержит слов',
+  'phrases.refused.tooLong': 'длиннее 80 символов',
+  'phrases.refused.unknown': 'относится к вопросу, который Loppa больше не задаёт',
   'conversation.showMe': 'Показать',
   'conversation.rebased':
     'Форма была изменена в редакторе. Ваши изменения сохранены, и вопросы продолжаются с того места, где вы остановились.',
