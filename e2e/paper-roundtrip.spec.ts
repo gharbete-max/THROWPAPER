@@ -179,7 +179,7 @@ for (const [shape, rotate] of [
     forms.push(formId);
 
     await page.getByRole('button', { name: 'From paper' }).click();
-    await page.getByLabel('PDF or photographs').setInputFiles({
+    await page.getByLabel('PDF, Word document or photographs').setInputFiles({
       name: 'membership.pdf',
       mimeType: 'application/pdf',
       buffer: source,

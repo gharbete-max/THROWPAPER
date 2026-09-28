@@ -36,8 +36,9 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 as undoable changes, answers ahead of their turn, replay, stable question ids, the
                 saved session, and reconciliation that never writes over a hand edit
                 (@tp/shared/builder); document import's Layout IR with its validator, pasted text as
-                a layout document, and stage 3, the list-marker detector, with its debug artifact
-                (@tp/shared/import); free text read by rules — normalisation, word lists and built-in
+                a layout document, stage 2 (columns, lines, hyphenation, blocks, page furniture,
+                headings, the document's language) and stage 3, the list-marker detector with Word's
+                own numbering, each with its debug artifact (@tp/shared/import); free text read by rules — normalisation, word lists and built-in
                 aliases in twelve languages, the rules for learned ones, and the ladder T0–T8
                 (@tp/shared/interpret)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing

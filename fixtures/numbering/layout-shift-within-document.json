@@ -2,7 +2,7 @@
   "fixture": "layout-shift-within-document",
   "caveats": ["layout-shift-within-document"],
   "stage": "reassemble",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S7",
   "summary": "A full-width heading and introduction over two columns of questions: three column regions, read top region first, then left, then right.",
   "input": {

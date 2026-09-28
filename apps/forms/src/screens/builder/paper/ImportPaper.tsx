@@ -10,11 +10,18 @@ import { ApiError, client } from '../../../lib/api.js';
 import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
+import { MAX_PASTE } from '@tp/shared/import';
 import { openPdf, TooManyPages } from './extract.js';
 import { CropPhoto, WHOLE_PICTURE } from './CropPhoto.js';
 import { detectPage } from './detect.js';
 import { CameraScan } from '../../../components/CameraScan.js';
 import { isUsable, straightenFile, type Corners } from './warp.js';
+import { clipboardText } from './clipboard.js';
+import { isDocx, readDocx } from './docx.js';
+import type { Reading } from './reading.js';
+import { ReadingTooSlow, readInWorker } from './read-in-worker.js';
+import { ReadingView } from './ReadingView.js';
+import { DocxRefused } from './refusal.js';
 
 /**
  * A form from the paper somebody already has.
@@ -30,6 +37,14 @@ import { isUsable, straightenFile, type Corners } from './warp.js';
  * what was skipped and why — before anything is uploaded. Rule 7 as `ImportSurvey` does it:
  * importing replaces the draft, so the description comes first and the button is the
  * confirmation. Nothing reaches the server until it is pressed, so a wrong file costs nothing.
+ *
+ * ## What was read (S7)
+ *
+ * A PDF's printed text, a Word document and pasted text are also read by the import's stages
+ * (`docs/plan/IMPORT-PIPELINE.md`, in a worker), and what they read is shown: the numbered items
+ * in reading order, and the whole reading as a download. Reading changes nothing — a Word
+ * document or a paste has no page to import, so for those the confirmation stays shut — until
+ * the review screen (S10) turns what was read into questions.
  */
 export function ImportPaper({
   formId,
@@ -47,6 +62,22 @@ export function ImportPaper({
   const [state, setState] = useState<State>({ kind: 'empty' });
 
   const [scanning, setScanning] = useState(false);
+  const [pasting, setPasting] = useState(false);
+  const [pasted, setPasted] = useState('');
+
+  function failed(error: unknown) {
+    setState({
+      kind: 'error',
+      message:
+        error instanceof TooManyPages
+          ? t('paper.tooManyPages', { count: error.pages, max: MAX_PAPER_PAGES })
+          : error instanceof DocxRefused
+            ? t(`paper.docx.${error.reason}`)
+            : error instanceof ReadingTooSlow
+              ? t('paper.tooSlow')
+              : t('paper.notReadable'),
+    });
+  }
 
   async function choose(files: FileList | File[] | null) {
     if (!files || files.length === 0) return;
@@ -54,14 +85,24 @@ export function ImportPaper({
     try {
       setState(await read(Array.from(files), locale));
     } catch (error) {
-      setState(
-        error instanceof TooManyPages
-          ? {
-              kind: 'error',
-              message: t('paper.tooManyPages', { count: error.pages, max: MAX_PAPER_PAGES }),
-            }
-          : { kind: 'error', message: t('paper.notReadable') },
-      );
+      failed(error);
+    }
+  }
+
+  async function readPasted() {
+    setState({ kind: 'reading' });
+    try {
+      const reading = await readInWorker({ kind: 'paste', text: pasted });
+      setState({
+        kind: 'ready',
+        files: [],
+        pages: 0,
+        definition: importAcroFields([], { locale }).definition,
+        skipped: [],
+        readings: [{ name: t('paper.read.pasted'), reading }],
+      });
+    } catch (error) {
+      failed(error);
     }
   }
 
@@ -141,7 +182,7 @@ export function ImportPaper({
             <span>{t('paper.choose')}</span>
             <input
               type="file"
-              accept="application/pdf,image/png,image/jpeg,image/webp"
+              accept={`application/pdf,image/png,image/jpeg,image/webp,${DOCX_TYPE},.docx`}
               multiple
               onChange={(event) => void choose(event.target.files)}
             />
@@ -150,13 +191,56 @@ export function ImportPaper({
             <Icon name="image" />
             {t('camera.open')}
           </button>
+          <button
+            type="button"
+            className="button button--quiet"
+            aria-expanded={pasting}
+            onClick={() => setPasting((open) => !open)}
+          >
+            <Icon name="long_text" />
+            {t('paper.paste.open')}
+          </button>
+        </div>
+      )}
+
+      {pasting && !scanning && (
+        <div className="stack">
+          <label className="field">
+            <span>{t('paper.paste.label')}</span>
+            <textarea
+              rows={8}
+              maxLength={MAX_PASTE}
+              value={pasted}
+              onChange={(event) => setPasted(event.target.value)}
+              onPaste={(event) => {
+                // Plain text is pasted by the browser as it is; only HTML alone is read here.
+                if (event.clipboardData.getData('text/plain').trim() !== '') return;
+                const text = clipboardText(event.clipboardData);
+                if (text === '') return;
+                event.preventDefault();
+                const area = event.currentTarget;
+                area.setRangeText(text, area.selectionStart, area.selectionEnd, 'end');
+                setPasted(area.value);
+              }}
+            />
+          </label>
+          <div className="row">
+            <button
+              type="button"
+              className="button button--quiet"
+              disabled={pasted.trim() === '' || state.kind === 'reading'}
+              onClick={() => void readPasted()}
+            >
+              {t('paper.paste.read')}
+            </button>
+          </div>
         </div>
       )}
 
       <div className="stack small" role="status">
         {state.kind === 'reading' && <span className="muted">{t('paper.reading')}</span>}
         {state.kind === 'error' && <span className="status-down">{state.message}</span>}
-        {(state.kind === 'ready' || state.kind === 'storing') && (
+        {(state.kind === 'ready' || state.kind === 'storing') && state.files.length > 0 && (
           <>
             <span className="status-up">{t('paper.pages', { count: state.pages })}</span>
             <span className={state.definition.fields.length > 0 ? 'status-up' : 'muted'}>
@@ -203,7 +287,14 @@ export function ImportPaper({
           ) : null,
         )}
 
-      <p className="small status-warning">{t('import.replaces')}</p>
+      {(state.kind === 'ready' || state.kind === 'storing') &&
+        state.readings.map(({ name, reading }, index) => (
+          <ReadingView key={index} name={name} reading={reading} />
+        ))}
+
+      {!((state.kind === 'ready' || state.kind === 'storing') && state.files.length === 0) && (
+        <p className="small status-warning">{t('import.replaces')}</p>
+      )}
 
       <div className="row">
         <button
@@ -211,7 +302,9 @@ export function ImportPaper({
           className="button"
           onClick={() => void apply()}
           disabled={
-            state.kind !== 'ready' || state.files.some((f) => f.corners && !isUsable(f.corners))
+            state.kind !== 'ready' ||
+            state.files.length === 0 ||
+            state.files.some((f) => f.corners && !isUsable(f.corners))
           }
         >
           {state.kind === 'storing' ? t('paper.storing') : t('import.confirm')}
@@ -226,28 +319,45 @@ export function ImportPaper({
 
 type Ready = {
   kind: 'ready' | 'storing';
-  /** `corners` only on a photograph: where the author says the page is, as fractions. */
+  /**
+   * The files that become the form's paper: PDFs and photographs. `corners` only on a
+   * photograph: where the author says the page is, as fractions. A Word document or a paste has
+   * no page, so it is read and shown but is not one of these.
+   */
   files: Array<{ file: File; pages: number; corners?: Corners }>;
   pages: number;
   definition: FormDefinition;
   skipped: SkippedAcroField[];
+  /** What the import's stages read from each document with text, by its name. */
+  readings: Array<{ name: string; reading: Reading }>;
 };
+
+const DOCX_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
 type State = { kind: 'empty' } | { kind: 'reading' } | { kind: 'error'; message: string } | Ready;
 
-/** What these files would become. Throws `TooManyPages`, or whatever pdfjs throws at a non-PDF. */
+/**
+ * What these files would become, and what their text reads as. Throws `TooManyPages`,
+ * `DocxRefused`, `ReadingTooSlow`, or whatever pdfjs throws at a non-PDF.
+ */
 async function read(files: File[], locale: string): Promise<Ready> {
   const fields: AcroField[] = [];
   const counted: Ready['files'] = [];
+  const readings: Ready['readings'] = [];
   let pages = 0;
 
   for (const file of files) {
-    if (file.type === 'application/pdf') {
+    if (isDocx(file)) {
+      const raw = await readDocx(await file.arrayBuffer());
+      readings.push({ name: file.name, reading: await readInWorker({ kind: 'raw', raw }) });
+    } else if (file.type === 'application/pdf') {
       const pdf = await openPdf(await file.arrayBuffer(), pages);
       fields.push(...pdf.fields);
       counted.push({ file, pages: pdf.pageCount });
       pages += pdf.pageCount;
+      const raw = await pdf.raw();
       await pdf.close();
+      readings.push({ name: file.name, reading: await readInWorker({ kind: 'raw', raw }) });
     } else {
       counted.push({ file, pages: 1, corners: (await detectPage(file)) ?? WHOLE_PICTURE });
       pages += 1;
@@ -262,5 +372,6 @@ async function read(files: File[], locale: string): Promise<Ready> {
     pages,
     definition: imported.definition,
     skipped: imported.skipped,
+    readings,
   };
 }

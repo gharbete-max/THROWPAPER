@@ -856,7 +856,7 @@ export const enGB = {
   'paper.heading': 'Make a form from paper',
   'paper.explain':
     'Upload the PDF you already have, or photograph each page. Fields the PDF declares are read as they are; on a photograph you draw the boxes yourself.',
-  'paper.choose': 'PDF or photographs',
+  'paper.choose': 'PDF, Word document or photographs',
   'paper.reading': 'Reading…',
   'paper.storing': 'Saving…',
   'paper.pages': 'plural:one {count} page | other {count} pages',
@@ -886,6 +886,24 @@ export const enGB = {
   'paper.corner.1': 'Top-right corner',
   'paper.corner.2': 'Bottom-right corner',
   'paper.corner.3': 'Bottom-left corner',
+  'paper.docx.too-large': 'That file is larger than 10 MB, the most this can read.',
+  'paper.docx.unreadable': 'That Word document could not be read.',
+  'paper.docx.too-complex': 'That Word document is too large inside to read safely.',
+  'paper.docx.unsafe':
+    'That Word document contains a part that could be unsafe, so it was not read.',
+  'paper.docx.protected':
+    'That Word document is protected by a password. Save a copy without one and try again.',
+  'paper.tooSlow': 'Reading took too long and was stopped. Try a shorter document.',
+  'paper.paste.open': 'Paste text instead',
+  'paper.paste.label': 'Text from your document',
+  'paper.paste.read': 'Read the text',
+  'paper.read.heading': 'What Loppa read',
+  'paper.read.pasted': 'Pasted text',
+  'paper.read.lines': 'plural:one {count} line | other {count} lines',
+  'paper.read.items': 'plural:one {count} numbered item | other {count} numbered items',
+  'paper.read.noText': 'No printed text was found in this file.',
+  'paper.read.unchanged': 'This is what was read, in order. It does not change your form.',
+  'paper.read.download': 'Download what was read',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signing',
   'signing.heading': 'Signing',

@@ -852,7 +852,7 @@ export const esES: Record<MessageKey, string> = {
   'paper.heading': 'Crear un formulario a partir de papel',
   'paper.explain':
     'Suba el PDF que ya tiene, o fotografíe cada página. Los campos que declara el PDF se leen tal cual; en una fotografía usted dibuja las casillas.',
-  'paper.choose': 'PDF o fotografías',
+  'paper.choose': 'PDF, documento de Word o fotografías',
   'paper.reading': 'Leyendo…',
   'paper.storing': 'Guardando…',
   'paper.pages': 'plural:one {count} página | other {count} páginas',
@@ -882,6 +882,25 @@ export const esES: Record<MessageKey, string> = {
   'paper.corner.1': 'Esquina superior derecha',
   'paper.corner.2': 'Esquina inferior derecha',
   'paper.corner.3': 'Esquina inferior izquierda',
+  'paper.docx.too-large': 'El archivo supera los 10 MB, el máximo que se puede leer.',
+  'paper.docx.unreadable': 'No se pudo leer el documento de Word.',
+  'paper.docx.too-complex':
+    'El documento de Word es demasiado grande por dentro para leerlo con seguridad.',
+  'paper.docx.unsafe':
+    'El documento de Word contiene una parte que podría ser insegura, así que no se ha leído.',
+  'paper.docx.protected':
+    'El documento de Word está protegido con contraseña. Guarde una copia sin contraseña e inténtelo de nuevo.',
+  'paper.tooSlow': 'La lectura tardó demasiado y se detuvo. Pruebe con un documento más corto.',
+  'paper.paste.open': 'Pegar texto en su lugar',
+  'paper.paste.label': 'Texto de su documento',
+  'paper.paste.read': 'Leer el texto',
+  'paper.read.heading': 'Lo que Loppa leyó',
+  'paper.read.pasted': 'Texto pegado',
+  'paper.read.lines': 'plural:one {count} línea | other {count} líneas',
+  'paper.read.items': 'plural:one {count} elemento numerado | other {count} elementos numerados',
+  'paper.read.noText': 'No se encontró texto impreso en el archivo.',
+  'paper.read.unchanged': 'Esto es lo que se leyó, en orden. Su formulario no cambia.',
+  'paper.read.download': 'Descargar lo leído',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Firma',
   'signing.heading': 'Firma',

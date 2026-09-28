@@ -76,7 +76,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S4** Builder shell | the two doors, `Shell`, cards, quantity, trail, keyboard, motion token; the buttons chain end to end | component tests; e2e for S2 without editing | `apps/forms`, `packages/tokens` (`--tp-motion-preview`) | **done** — in review, PR #147 |
 | **S5** Preview + inline editing | `PreviewMoment`, `InlineEdit/`, "changed by hand", reconciliation; `ChoiceStyle` gains `tab`, `segmented`; `FormSettings.layout` | e2e for S3; snapping; reconciliation never clobbers | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases`; answers ahead of their turn (`answerAt`, `fill`, graph version 3's slots) | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` (migration 0020) | **done** — in review, PR #147 |
-| **S7** Extract + reassemble | `paper/docx.ts`, the clipboard around `import/paste.ts` (built in S6), operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | not started |
+| **S7** Extract + reassemble | `paper/docx.ts`, the clipboard around `import/paste.ts` (built in S6), operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | not started |
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared` | not started |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms` | not started |
@@ -230,3 +230,33 @@ when each slice ends.)*
   the memory store, PGlite and Postgres (with the race), the screen's logic and renders, and three
   journeys in `e2e/guided-builder.spec.ts`. Next: S7, extract and reassemble. Open: owner questions
   1–4, 6, 7 and 8; question 4 (learned aliases per organisation) is now built as proposed.
+- **S7, extract and reassemble (2026-09-28).** What: stage 2, `reassemble`, in `@tp/shared/import`
+  (`layout/`) — ligatures, column regions by XY-cut, lines, page furniture, blocks, hyphenation,
+  footnotes, tables, headings, bands and hints, and the document's language, every decision in its
+  debug artifact under a rule id; Word's own numbering in stage 3 (NUMBERING-RULES §11, W1: Word's
+  marker, level and list as fact, the whole text the label; stage version 2); the DOCX reader in
+  `apps/forms` (`paper/docx.ts`, `zip.ts`, `xml.ts`: no dependency, caps counted while reading, a
+  DTD or entity refused before parsing, counters kept as Word keeps them); the PDF text layer as a
+  raw document (runs split into words, bold from the font, printed rules from the drawing
+  operations); the clipboard, plain text over HTML; stages 2–3 in a worker with a 30-second stop;
+  and the paper door reading a PDF, a Word file or a paste and showing the numbered items in order,
+  with the whole reading as a download — changing nothing. Writing the fixtures found six places
+  the specification would misread: a horizontal cut at 1.5 × a pitch that does not exist yet (the
+  introduction over two columns never cut off), leaves merged by "x extents that agree" (a heading
+  kept apart from its text), a tab after "1." or blanks at a tab stop taken for a column gutter
+  (#88), "för-" joined to "och" (#89), a median pitch that is a paragraph gap on a form of short
+  sections (#91), and Scandinavian stop words that made every Nordic document a tie (#95); and
+  Word's counters, specified per `numId`, restart lists Word continues (#93). Each is fixed in
+  `IMPORT-PIPELINE.md` §1–§2 and locked by a fixture or test. Why: M4's demo — a two-column PDF and a
+  Word file with real numbering read in order, their debug JSON shown. Tests: the 5 reassemble
+  fixtures green and 4 new ones (`hanging-marker-gutter`, `answer-column-gutter`,
+  `hyphen-not-across-boundary`, `headings-and-footnote`), `docx-numbering` (enumerate), each with its
+  debug snapshot; `layout/reassemble.test.ts` (60 seeded pages always valid, the same bytes whatever
+  order the words arrive in, each step's edges, a paragraph in each of the twelve languages);
+  `budget.test.ts` (twenty dense pages in 0.85 s of a 4 s budget); `docx.test.ts` (Word's counting,
+  fields and hidden text, tables, every cap, a mutation of the restart rule caught);
+  `extract.test.ts` (words from runs, rules from operators); `clipboard.test.ts`;
+  `pipeline.test.ts`; `bundle-split.test.ts` (#43); and `e2e/paper-import.spec.ts` (a Word file in
+  order through the worker, its download, a paste and an HTML paste, an unsafe file refused). Next:
+  S8, enumerate on real input — the corpus. Open: owner questions 1–4, 6, 7 and 8; "table or
+  columns" joins the known unknowns.

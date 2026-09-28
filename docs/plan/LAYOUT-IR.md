@@ -306,17 +306,21 @@ with its parent.
 | word boxes | from pdf.js runs, split at spaces; a run's width is shared out by character count | from Tesseract's word boxes | synthetic (below) | synthetic (below) |
 | fontSize, weight | pdf.js font metrics | box height; weight 400 | the run's `w:sz`, `w:b` | 131, 400 |
 | ocrConfidence | `null` | Tesseract word confidence, rounded | `null` | `null` |
-| ruleBelow | vector ops | `false` | `false` | `false` |
+| ruleBelow | vector ops: level segments of stroked or filled paths | `false` | `false` | `false` |
 | docxNumbering | `null` | `null` | from `numbering.xml` | `null` |
 | soft line wraps | yes | yes | **no**: one paragraph is one line | **no**: one pasted line is one line |
 
 **Synthetic geometry** (DOCX and paste) puts each paragraph or pasted line on a virtual A4 page:
 the text area is x 1000–9000, the first baseline is at y 1000 and each next line is 180 iu lower,
 a new page starts after y 9000, the font size is 131, and each character advances 92 iu. A
-paragraph's x0 is `1000 + indent`, where the indent is the paragraph's own `w:ind` (left minus
-hanging, twips → iu of an A4 width) for DOCX, and 92 iu per leading space (a tab is four spaces)
-for paste. A tab inside a pasted line advances to the next multiple of 368 iu from x0. Blank
-pasted lines separate blocks.
+paragraph's x0 is `1000 + indent`: for paste, 92 iu per leading space (a tab is four spaces); for
+DOCX, from the paragraph's `w:ind` (its own, else its numbering level's, else its style's; twips →
+iu of an A4 width) — for a paragraph Word numbers, `left`, where its words start (Word draws the
+marker in the hanging space before them, and the marker is not a word); for any other paragraph,
+`left + firstLine − hanging`, where its first line starts. A tab advances to the next multiple of
+368 iu from x0. DOCX takes its font size from `w:sz` (11 pt is 131) and its weight from `w:b`, and
+an empty paragraph still takes its line, so that it separates blocks as a blank pasted line does;
+a page break (`w:pageBreakBefore`, `w:br w:type="page"`) starts a new page.
 
 Synthetic geometry is honest about being synthetic: it carries exactly what the source said
 (indentation, order, paragraph breaks), and the rules that depend on real geometry — soft wraps,

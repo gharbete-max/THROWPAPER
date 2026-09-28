@@ -22,8 +22,11 @@ export interface Marker {
   style: Style;
   /** "12.1" → [12, 1]; "iv." → [4]; "c)" → [3]; a bullet → []. */
   path: number[];
-  /** How many words at the start of the line the marker occupies: 2 for spaced styles, else 1. */
-  wordCount: 1 | 2;
+  /**
+   * How many words at the start of the line the marker occupies: 2 for spaced styles, 1 for the
+   * rest — and 0 for Word's own numbering (§11), which Word draws and the text does not contain.
+   */
+  wordCount: 0 | 1 | 2;
 }
 
 export interface Item {
@@ -44,7 +47,8 @@ export interface Item {
   verdict: Exclude<Verdict, 'inline-text'>;
   /** Sorted ascending (code-point order), no duplicates. */
   flags: Flag[];
-  decidedBy: 'D1' | 'D2' | 'D3';
+  /** The verdict's rule: D1–D3 (§8), or W1 for a line Word numbers (§11). */
+  decidedBy: 'D1' | 'D2' | 'D3' | 'W1';
 }
 
 export type RejectRule = 'V1' | 'V2' | 'V3' | 'V4' | 'V5' | 'P4' | 'D4';

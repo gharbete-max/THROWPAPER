@@ -1,8 +1,15 @@
 import { inputSha256, type Decision, type Evidence, type StageResult } from '../debug.js';
 import { IrError } from '../ir/validate.js';
-import type { BlockRole, IrBlock, IrColumn, IrLine, LayoutDocument } from '../ir/types.js';
+import type {
+  BlockRole,
+  DocxNumbering,
+  IrBlock,
+  IrColumn,
+  IrLine,
+  LayoutDocument,
+} from '../ir/types.js';
 import { gazetteerForm, isContinuationNotice, isMonth, isUnitWord } from './gazetteers.js';
-import { grammar, type MarkerMatch, type Reading } from './grammar.js';
+import { grammar, romanValue, type MarkerMatch, type Reading } from './grammar.js';
 import type {
   EnumerateResult,
   Family,
@@ -23,13 +30,12 @@ import type {
  * locale, no options, no clock. The pass keeps its state in one closure per call, so two calls
  * share nothing and the same document always gives the same bytes.
  *
- * Not here yet: a line carrying `hints.docxNumbering` is read like any other line. §11 makes
- * Word's numbering a fact that bypasses these rules; that lands with the DOCX extractor (S7), with
- * its fixture, because no producer sets the hint before then.
+ * A line carrying `hints.docxNumbering` is Word's own list item (§11, W1): Word has said what its
+ * marker, level and list are, so none of the rules for text that has lost its structure read it.
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 1;
+export const ENUMERATE_STAGE_VERSION = 2;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -104,6 +110,54 @@ const samePath = (a: readonly number[], b: readonly number[]) =>
 
 const pathText = (path: readonly number[]) => path.join('.');
 
+// ------------------------------------------------------------------ §11 Word's own numbering
+/** `w:numFmt` → family. Word's other counting formats (full width, CJK, ordinal words) count. */
+function wordFamily(format: string): Family {
+  if (format === 'bullet') return 'bullet';
+  if (format === 'lowerRoman') return 'roman-lower';
+  if (format === 'upperRoman') return 'roman-upper';
+  if (format === 'lowerLetter' || format === 'russianLower') return 'alpha-lower';
+  if (format === 'upperLetter' || format === 'russianUpper') return 'alpha-upper';
+  return 'arabic';
+}
+
+/** The style of the marker Word draws, from its punctuation. */
+function wordStyle(rendered: string, family: Family): Style {
+  if (family === 'bullet') return 'glyph';
+  const text = rendered.trim();
+  if (text.startsWith('(') && text.endsWith(')')) return 'enclosed';
+  if (text.endsWith(')')) return 'paren';
+  if (text.endsWith(':')) return 'colon';
+  return 'dot';
+}
+
+/**
+ * The numbers in the marker Word draws: "12.1." → [12, 1], "iv." → [4], "b)" → [2], "aa." → [27]
+ * (Word repeats the letter past z). A piece that is not a number of the family ("Article") is
+ * passed over.
+ */
+function wordPath(rendered: string, family: Family): number[] {
+  if (family === 'bullet') return [];
+  const pieces = rendered.normalize('NFKC').match(/[\p{L}\p{Nd}]+/gu) ?? [];
+  const path: number[] = [];
+  for (const piece of pieces) {
+    if (/^\p{Nd}+$/u.test(piece)) {
+      path.push(Number(piece));
+      continue;
+    }
+    const roman = family.startsWith('roman') ? romanValue(piece) : null;
+    if (roman !== null) {
+      path.push(roman);
+      continue;
+    }
+    const letter = piece.toLowerCase();
+    if (/^([a-z])\1*$/u.test(letter)) {
+      path.push(26 * (letter.length - 1) + (letter.charCodeAt(0) - 96));
+    }
+  }
+  return path;
+}
+
 /** §6 `isFirst(reading, parent)`. */
 function isFirst(reading: Reading, parent: WorkItem | null): boolean {
   if (reading.family === 'bullet' || samePath(reading.path, [1])) return true;
@@ -164,6 +218,10 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   const consumed = new Set<string>();
   const decisions: Decision[] = [];
   let openItem: WorkItem | null = null;
+  /** §11: Word's lists by `numId`, and the latest item at each of their levels. */
+  const wordRuns = new Map<number, Run>();
+  const wordLevels = new Map<number, WorkItem[]>();
+  const wordItems = new Set<WorkItem>();
 
   const decide = (
     subject: string,
@@ -467,6 +525,55 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     };
   };
 
+  // ------------------------------------------------------------------ §11 W1
+  /** A paragraph Word numbers: Word's marker, level and list, as fact. */
+  const placeWord = (line: Line, numbering: DocxNumbering): WorkItem => {
+    const family = wordFamily(numbering.format);
+    const style = wordStyle(numbering.rendered, family);
+    const path = wordPath(numbering.rendered, family);
+    let run = wordRuns.get(numbering.numId);
+    if (!run) {
+      run = {
+        id: `r-${line.ir.id}`,
+        family,
+        style,
+        relX: line.relX,
+        level: 1,
+        parent: null,
+        firstPath: path,
+        lastPath: path,
+        items: [],
+        flags: new Set(),
+      };
+      wordRuns.set(numbering.numId, run);
+    }
+    run.lastPath = path;
+    // Its parent is the latest item of the same list at the nearest level above it.
+    const levels = wordLevels.get(numbering.numId) ?? [];
+    const parent = levels.slice(0, numbering.ilvl).findLast((item) => item !== undefined) ?? null;
+    const item: WorkItem = {
+      id: `i-${line.ir.id}`,
+      line,
+      run,
+      marker: { raw: numbering.rendered, family, style, path, wordCount: 0 },
+      lineIds: [line.ir.id],
+      detailLineIds: [],
+      level: numbering.ilvl + 1,
+      parent,
+      label: line.ir.text,
+      textX: line.relX,
+      flags: new Set(),
+    };
+    levels[numbering.ilvl] = item;
+    levels.length = numbering.ilvl + 1;
+    wordLevels.set(numbering.numId, levels);
+    run.items.push(item);
+    placed.push(item);
+    wordItems.add(item);
+    owners.set(line.ir.id, { kind: 'label', item });
+    return item;
+  };
+
   // ------------------------------------------------------------------ §3 the pass
   for (const line of lines) {
     const id = line.ir.id;
@@ -476,6 +583,20 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
       continue;
     }
     if (consumed.has(id)) continue;
+    const numbering = line.ir.source === 'docx' ? line.ir.hints.docxNumbering : null;
+    if (numbering) {
+      const item = placeWord(line, numbering);
+      openItem = item;
+      decide(id, 'W1', 'item', {
+        numId: numbering.numId,
+        ilvl: numbering.ilvl,
+        rendered: numbering.rendered,
+        format: numbering.format,
+        run: item.run.id,
+        level: item.level,
+      });
+      continue;
+    }
     if (continuation(line)) continue;
 
     const match = grammar(line.ir.words);
@@ -545,6 +666,11 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
 
   const removed = new Set<WorkItem>();
   const verdicts = new Map<WorkItem, Pick<Item, 'verdict' | 'flags' | 'decidedBy'>>();
+  // W1 — Word said so: every item of Word's own lists is accepted, alone or not.
+  for (const item of wordItems) {
+    verdicts.set(item, { verdict: 'accept', flags: [], decidedBy: 'W1' });
+    decide(item.id, 'W1', 'accept', { run: item.run.id });
+  }
   runs.forEach((run, runIndex) => {
     const only = run.items.length === 1 ? run.items[0] : undefined;
 

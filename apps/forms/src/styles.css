@@ -1395,6 +1395,24 @@ textarea {
   color: var(--tp-colour-muted);
 }
 
+/* What the import read (S7): a document's numbered items in reading order, each at its level,
+ * set apart from the controls by a rule — it is a reading to check, not something to press. */
+.import__reading {
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+  padding-block-start: var(--tp-spacing-unit);
+}
+
+.import__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.import__marker {
+  color: var(--tp-colour-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* A repeating block's questions, in the properties panel. Indented against a rule, so the nesting
  * is visible without a second panel: these belong to the block above them. */
 .builder__nested {

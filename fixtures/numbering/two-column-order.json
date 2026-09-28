@@ -2,7 +2,7 @@
   "fixture": "two-column-order",
   "caveats": ["two-column-order"],
   "stage": "reassemble",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S7",
   "summary": "Two columns whose words arrive interleaved row by row (as pdf.js gives them). Read column by column, the list runs 1–6 without interleaving.",
   "input": {

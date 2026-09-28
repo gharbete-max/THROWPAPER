@@ -841,7 +841,7 @@ export const jaJP: Record<MessageKey, string> = {
   'paper.heading': '紙からフォームを作る',
   'paper.explain':
     'お手元のPDFをアップロードするか、各ページを撮影してください。PDFが宣言しているフィールドはそのまま読み取られます。写真の場合は枠を自分で描きます。',
-  'paper.choose': 'PDFまたは写真',
+  'paper.choose': 'PDF、Word文書または写真',
   'paper.reading': '読み込み中…',
   'paper.storing': '保存中…',
   'paper.pages': 'plural:other {count} ページ',
@@ -871,6 +871,24 @@ export const jaJP: Record<MessageKey, string> = {
   'paper.corner.1': '右上の角',
   'paper.corner.2': '右下の角',
   'paper.corner.3': '左下の角',
+  'paper.docx.too-large': 'ファイルが10 MBを超えています。読み取れるのは10 MBまでです。',
+  'paper.docx.unreadable': 'このWord文書は読み取れませんでした。',
+  'paper.docx.too-complex': 'このWord文書は内部が大きすぎるため、安全に読み取れません。',
+  'paper.docx.unsafe':
+    'このWord文書には安全でない可能性のある部分が含まれているため、読み取りませんでした。',
+  'paper.docx.protected':
+    'このWord文書はパスワードで保護されています。パスワードなしのコピーを保存して、もう一度お試しください。',
+  'paper.tooSlow': '読み取りに時間がかかりすぎたため中止しました。もっと短い文書でお試しください。',
+  'paper.paste.open': '代わりにテキストを貼り付ける',
+  'paper.paste.label': '文書のテキスト',
+  'paper.paste.read': 'テキストを読み取る',
+  'paper.read.heading': 'Loppaが読み取った内容',
+  'paper.read.pasted': '貼り付けたテキスト',
+  'paper.read.lines': 'plural:other {count} 行',
+  'paper.read.items': 'plural:other 番号付きの項目 {count} 件',
+  'paper.read.noText': 'このファイルには印刷されたテキストが見つかりませんでした。',
+  'paper.read.unchanged': '読み取った内容を順番に表示しています。フォームは変更されません。',
+  'paper.read.download': '読み取った内容をダウンロード',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': '署名',
   'signing.heading': '署名',

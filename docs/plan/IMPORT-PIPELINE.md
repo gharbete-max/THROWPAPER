@@ -50,14 +50,19 @@ that says which limit and what to do:
 Each adapter produces a `RawDocument` (`LAYOUT-IR.md`), converting geometry to integer iu exactly
 once.
 
-**PDF, text layer** (`paper/extract.ts`, which exists). pdf.js text runs are split into words at
-spaces; a run's width is shared out among its characters in proportion to their count (pdf.js does
-not give per-glyph advances without a much slower path; the proportional split is exact for
-monospace and within a character for proportional fonts, which is below every tolerance used
-downstream). Font weight is 700 when the font name contains `Bold`, `Black`, `Heavy` or
-`Semibold` (case-insensitive) or the font descriptor's weight is ≥ 600. Horizontal rules come from
-the page's operator list: straight horizontal path segments at least 20% of the page width, as
-`rules`. **A PDF with AcroForm fields** is also mapped by `importAcroFields` (exists): its fields
+**PDF, text layer** (`paper/extract.ts`: `runWords`, `horizontalRules`, `PaperPdf.raw`). pdf.js
+text runs are split into words at whitespace; a run's width is shared out among its characters in
+proportion to their count (pdf.js does not give per-glyph advances without a much slower path; the
+proportional split is exact for monospace and within a character for proportional fonts, which is
+below every tolerance used downstream). A run that is not horizontal is left out. Font weight is
+700 when the font says bold or black, or its name contains `Bold`, `Black`, `Heavy` or `Semibold`
+(case-insensitive); the operator list is fetched first, because that is what loads the fonts.
+Horizontal rules come from the page's operator list: the straight, level segments of every path
+that is stroked or filled, through the transformation matrix, at least **5%** of the page wide, as
+`rules` — an answer line, or the edge of a box around a field. (First written as 20% of the page
+width; whether a rule is a line's answer line is `ruleBelow`'s question, which asks for 20% of the
+*column* past the last word, so the extractor keeps shorter rules for it to judge.) The file's
+SHA-256 is taken before pdf.js opens it, because pdf.js may hand the buffer to its worker. **A PDF with AcroForm fields** is also mapped by `importAcroFields` (exists): its fields
 become questions with confidence 1000 and their widget rectangles are their paper anchors; the text
 layer still goes through the pipeline for headings, instructions and labels the fields lack.
 
@@ -67,81 +72,172 @@ as a photograph is after the existing four-corner straightening (`warp.ts`, `det
 carry Tesseract's box and confidence (rounded to an integer 0–100). Language packs are the
 existing `tessLangs(locale)`.
 
-**DOCX** (`paper/docx.ts`, new). No new dependency (ADR 0018):
+**DOCX** (`paper/docx.ts`, with `paper/zip.ts` and `paper/xml.ts`). No new dependency (ADR 0018):
 
-- **Unzip** with a ~120-line central-directory reader and the platform's
-  `DecompressionStream('deflate-raw')` — present in every browser this product supports, in
-  Electron and in Node ≥ 18. Stored (method 0) and deflated (method 8) entries only; anything else
-  is refused. Sizes are counted while inflating against the caps.
+- **Unzip** with a central-directory reader and the platform's `DecompressionStream('deflate-raw')`
+  — present in every browser this product supports, in Electron and in Node ≥ 18. Stored (method
+  0) and deflated (method 8) entries only; zip64, a split archive, an encrypted entry or another
+  method is refused. Entries are counted as the directory is walked, whatever the end record
+  claims; only the parts read are inflated, and their bytes are counted as they arrive against one
+  budget for the document, so a zip bomb costs at most the budget. An OLE compound file (an
+  encrypted `.docx`, or an old `.doc`) is refused as protected.
 - **XML** with a minimal non-validating tokenizer written for WordprocessingML: elements,
-  attributes, text, the five predefined entities and numeric character references. A `<!DOCTYPE`
-  or `<!ENTITY` anywhere is a refusal, not a warning.
-- **Read**: `word/document.xml` (paragraphs `w:p`, runs `w:r`, text `w:t`, `w:tab`, `w:br`, tables
-  `w:tbl`/`w:tr`/`w:tc`), `word/styles.xml` (paragraph styles: their `w:numPr`, `w:outlineLvl`,
-  run properties `w:b` and `w:sz`), and `word/numbering.xml`.
-- **Numbering is Word's own**: `w:num` → `w:abstractNumId` (+ `w:lvlOverride`/`w:startOverride`),
-  `w:abstractNum`/`w:lvl` → `w:start`, `w:numFmt`, `w:lvlText`, `w:lvlRestart`, `w:ind`. Counters
-  are kept per `numId` and level; incrementing a level resets every deeper level unless its
-  `w:lvlRestart` says otherwise; the rendered marker is `w:lvlText` with `%1`–`%9` replaced by the
-  formatted counters. This is attached to the paragraph's first word as `docxNumbering`, and stage 3
-  takes it as fact (`NUMBERING-RULES.md` §11).
-- **Geometry is synthetic** (`LAYOUT-IR.md`): paragraph order, `w:ind`, and one paragraph per line.
+  attributes, text, CDATA, the five predefined entities and numeric character references; any other
+  entity is an error. A `<!DOCTYPE` or `<!ENTITY` anywhere (any case) is a refusal, before any
+  parsing. Namespaces are resolved, so the main namespace (transitional or strict) is `w:` whatever
+  prefix the file chose.
+- **Read**: the main part where `_rels/.rels` says it is (usually `word/document.xml`), and the
+  styles and numbering parts its own relationships name. Paragraphs `w:p` (inside tables,
+  content controls and custom XML too), runs `w:r` inside hyperlinks, insertions and simple
+  fields; text `w:t`, `w:tab`, `w:br`, `w:noBreakHyphen`, `w:sym`. What Word does not show is not
+  read: hidden text (`w:vanish`), deletions, and a complex field's instructions (its result is).
+  Symbol-font characters (Wingdings' boxes, Symbol's bullet — private-use code points) become the
+  Unicode boxes and bullets `LineHints` counts. Paragraph styles give `w:numPr`, `w:ind`, and run
+  properties `w:b`, `w:i` and `w:sz`, through `w:basedOn`, over `w:docDefaults`. Headers, footers,
+  footnotes, comments and text boxes are other parts, and are not read.
+- **Numbering is Word's own**: `w:num` → `w:abstractNumId` (+ `w:lvlOverride`: `w:startOverride`
+  and a whole `w:lvl`), `w:abstractNum`/`w:lvl` → `w:start`, `w:numFmt`, `w:lvlText`,
+  `w:lvlRestart`, `w:isLgl`, `w:ind`, and a list style's `w:numStyleLink`. **Counters are kept per
+  abstract list and level, as Word keeps them**: two lists of one definition continue each other's
+  numbering, and a list with a `w:startOverride` restarts at it the first time it is used. (First
+  written as "per `numId`", which restarts a list Word continues.) Counting a level resets every
+  deeper level, unless that level's `w:lvlRestart` is 0 (never) or names a level above the one
+  counted. An empty numbered paragraph counts, as Word counts it. The rendered marker is
+  `w:lvlText` with `%1`–`%9` replaced by the counters in their levels' formats (decimal throughout
+  under `w:isLgl`); a level Word draws nothing for gives no marker. This is attached to the
+  paragraph's first word as `docxNumbering`, and stage 3 takes it as fact (`NUMBERING-RULES.md`
+  §11, W1).
+- **Geometry is synthetic** (`LAYOUT-IR.md`): paragraph order, `w:ind`, page breaks, and one
+  paragraph per line. More than 20 synthetic pages is refused, as a PDF of more is.
 
 **Paste** (`pasteDocument`, `packages/shared/src/import/paste.ts`, built in S6): one pasted line is
 one line, synthetic geometry, blank lines separate blocks. A string is not a file's bytes, so it
 lives in the core — the ladder's T6 reads a pasted list through it, exactly as the importer reads a
 pasted document — and with synthetic geometry there is nothing for stage 2 to do, so it builds the
-layout document directly. S7 adds only the clipboard (plain text over HTML) around it. S4 and S5
-enter here.
+layout document directly. Around it, the clipboard (`paper/clipboard.ts`): plain text over HTML —
+every program that copies puts plain text beside its HTML, with the numbers and line breaks the
+reader saw — and only a paste with no plain text is read from its HTML (blocks as lines, a list item
+with the number or bullet its list shows, a table cell a tab). S4 and S5 enter here.
+
+**Where it runs.** Stages 2 and 3 run in a Web Worker (`paper/import.worker.ts`, started by
+`paper/read-in-worker.ts`), so a long document never freezes the page; after 30 seconds the worker
+is ended and the author is told. Where there is no `Worker`, the same function runs on the page.
 
 ## Stage 2 — reassemble
 
-Raw words in, a `LayoutDocument` out. Per page, in this order:
+`reassemble` in `@tp/shared/import` (`packages/shared/src/import/layout/`). Raw words in, a
+`LayoutDocument` out. Every decision in the debug artifact names its rule from the table at the end
+of this section.
+
+**Measured and synthetic sources.** `text-layer` and `ocr` words go through every step.
+`docx` and `paste` words carry only what their source said (`LAYOUT-IR.md`, "Synthetic
+geometry"), so the steps that read real geometry are switched off for them by the source, never by
+a guess: no column cut (one region per page, the synthetic text area x 1000–9000), no
+hyphenation, no page furniture and no footnotes (a synthetic page has no margins and no foot). One
+paragraph is one line, in the source's order. A page may not mix the two kinds.
+
+Per page, in this order:
 
 1. **Ligatures.** Characters U+FB00–U+FB06 are expanded (ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ). Nothing else is
    normalised in the text; the word records `repair: { kind: 'ligature', raw }`. Curly quotes are
    the author's and stay. *Fixture:* `ligature-and-quote-repair`.
-2. **Column regions, by recursive XY-cut.** On a region (initially the words' bounding box):
-   find vertical gutters — x ranges at least 200 iu wide crossed by no word box over the region's
-   whole height — and split at the widest (ties: leftmost) into left and right. If there is none,
-   find horizontal gaps — y ranges at least 1.5 × the median line pitch crossed by no word box
-   over the region's whole width — and split at every one of them into bands top to bottom. Recurse
-   until nothing splits. Leaves, in the order the cuts produced them (top before bottom, left
-   before right), are the reading order. Consecutive leaves stacked vertically whose x extents
-   agree within 2% of the page width merge into one region. *Fixtures:* `two-column-order`,
-   `layout-shift-within-document`.
+2. **Column regions, by recursive XY-cut** (`layout/xycut.ts`). The page's rectangle is its words'
+   extent, widened on the right to mirror its left margin (`x1 ≥ 10 000 − x0`), so that a line is
+   `WRAPPED` against the page's text width, not against the page's own longest line. On a region:
+   - **Vertical gutters** are x ranges at least 200 iu wide crossed by no word box of the region.
+     The widest is tried first (ties: leftmost). **A gutter is not a column (C2)** when its left
+     side is nothing but list markers (by the §4 grammar) or checkbox glyphs — the tab after "1."
+     — or its right side is nothing but answer space: every row of it starts with a checkbox or is
+     only blank runs, or its checkboxes are at least half its words (a grid under its header row).
+     Those are kept together, and the next gutter is tried. The first gutter that is a column cuts
+     the region in two (C1): the left keeps the region's left edge and ends at the gutter's
+     middle; the right starts at its own first word.
+   - Failing a vertical cut, **every horizontal gap** of at least one em of empty page (the
+     region's median font size, crossed by no word box) cuts the region into bands, top to bottom
+     (C3). (First written as 1.5 × "the median line pitch" — which before lines exist is not
+     defined, and as any pitch of the fixtures is 360, a threshold that never cut the full-width
+     introduction off the columns below it in `layout-shift-within-document`.)
+   - Recurse until nothing cuts, at most 64 deep. Leaves, in the order the cuts produced them (top
+     before bottom, left before right), are the reading order. **Consecutive pieces of one
+     horizontal cut that did not cut any further are one region again** — horizontal cuts exist
+     to expose columns inside a band of the page, so a page of paragraphs, or a running header over
+     its body, is one region. (First written as "consecutive leaves whose x extents agree within 2%
+     of the page width merge", which kept a heading apart from the text under it and a short list
+     apart from its header, since ragged lines never agree.)
+   *Fixtures:* `two-column-order`, `layout-shift-within-document`, `hanging-marker-gutter`,
+   `answer-column-gutter`.
 3. **Lines.** Within a region, words sorted by baseline join the current line when
-   `|baseline − line baseline| × 2 ≤ median font size` (half an em); within a line, sorted by x0.
-4. **Hyphenation.** A line whose last word ends in `-` after a letter, that is `WRAPPED`
-   (`NUMBERING-RULES.md` §2), followed in the same region by a line that starts with a letter:
-   join the next line's first word onto it. The hyphen is **removed** (`dehyphenated`) when the
-   next word starts lower-case and the fragment before the hyphen has at least 3 letters
-   ("regis-" + "tering"); otherwise it is **kept** (`joined-at-break`: "e-" + "post",
-   "Stockholm-" + "Göteborg"). The joined word keeps the first part's box; the raw text is on the
-   word. No dictionary is consulted, so the rule cannot "fix" a word it does not know. *Fixture:*
-   `hyphenated-line-break`.
+   `|baseline − the line's first baseline| × 2 ≤ the region's median font size` (half an em) and
+   they come from the same source; within a line, sorted by x0. Synthetic words: one paragraph, one
+   line.
+4. **Page furniture** (measured only), decided before blocks so that furniture never shares a
+   block with text and nothing is joined into it. A line in the top 8% (`y1 ≤ 800`) or bottom 8%
+   (`y0 ≥ 9200`) of the page is furniture when its **key** — NFKC, lower-cased, every digit run
+   replaced by `#`, whitespace collapsed — occurs in the same margin on at least 2 pages and at
+   least half of the pages (F1), or when the key is a page number (F2: `#`, `# / #`, `page #`,
+   `sida # av #`, `side # af #`, `seite # von #`, `sivu #`, `página # de #`, `стр. #`, `第#页`,
+   `#ページ`, and the same forms in the other shipped languages, `layout/lexicon.json`).
+   *Fixture:* `repeated-header-footer`.
 5. **Blocks.** Consecutive lines in a region stay in one block when the baseline gap is at most
-   1.5 × the region's median line pitch and their font sizes agree within 10%.
-6. **Page furniture.** A line in the top 8% (`y1 ≤ 800`) or bottom 8% (`y0 ≥ 9200`) of the page is
-   furniture when its **key** — NFKC, lower-cased, every digit run replaced by `#`, whitespace
-   collapsed — occurs in the same margin on at least 2 pages and at least half of the pages, or
-   when the key is a page number (`#`, `# / #`, `page #`, `sida # av #`, `side # af #`, `seite # von
-   #`, `sivu #`, `página # de #`, `стр. #`, `第#页`, and the same forms in the other shipped
-   languages). Its block's role is `page-furniture`. *Fixture:* `repeated-header-footer`.
-7. **Footnotes.** A block in the bottom quarter of the page's last region whose font size is at most
-   85% of the page's body median and whose first word is a digit or a superscript-sized glyph.
-8. **Headings.** A block is `heading` when (H1) it has at most 2 lines and its median font size is
+   1.5 × the region's **line pitch** and their font sizes agree within 10%, and they are the same
+   kind of thing: furniture never shares a block with text, nor a table cell with a paragraph
+   outside it, nor one source with another. The pitch is the **lower quartile** of the gaps between
+   consecutive baselines. (First written as the median, which on a form of short sections — a
+   heading, two items, a heading — is a paragraph gap, and then every heading joined the list under
+   it.) *Fixture:* `headings-and-footnote`.
+6. **Hyphenation** (measured only), inside a block. A line whose last word ends in `-` after a
+   letter, that is `WRAPPED` (`NUMBERING-RULES.md` §2), followed by a line that starts with a
+   letter: join the next line's first word onto it. The hyphen is **removed** (Y1, `dehyphenated`)
+   when the next word starts lower-case and the fragment before the hyphen has at least 3 letters
+   ("regis-" + "tering"); otherwise it is **kept** (Y2, `joined-at-break`: "e-" + "post",
+   "Stockholm-" + "Göteborg"). **Before a conjunction nothing is joined** (Y3): "för-" / "och
+   efternamn" is a suspended compound, "för- och efternamn", and joining it wrote "föroch" (the
+   conjunctions of the twelve languages are in `layout/lexicon.json`). Nothing is joined across a
+   block, into furniture, or across a page. The joined word keeps the first part's box; the raw
+   text is on the word. No dictionary is consulted, so the rule cannot "fix" a word it does not
+   know. *Fixtures:* `hyphenated-line-break`, `hyphen-not-across-boundary`.
+7. **Footnotes** (measured only). A block in the page's last region, starting in the bottom
+   quarter of the page (`y0 ≥ 7500`), whose font size is at most 85% of the page's body median,
+   and whose first word starts with a digit, a superscript digit, `*`, `†` or `‡`, or is set at
+   most 70% of its line's size (N1). An asterisk footnote is otherwise a bullet item.
+   *Fixture:* `headings-and-footnote`.
+8. **Tables** are `table` only when the source says so (`w:tbl`: a line has a `cell`, T1); a table
+   on a PDF page is found by stage 4 from geometry.
+9. **Headings.** A block is `heading` when (H1) it has at most 2 lines and its median font size is
    at least 1.2 × the page's body median (`size × 5 ≥ median × 6`), or (H2) it is one line, every
-   word bold, at most 80 characters and not ending in `. , : ; ? !`, or (H3) it is one line of at
-   least 3 letters, all upper-case, at most 60 characters, not ending in punctuation, with no blank
-   run and no checkbox.
-9. **Tables** are `table` only when the source says so (`w:tbl`); a table on a PDF page is found by
-   stage 4 from geometry.
-10. **Bands** exactly as `LAYOUT-IR.md` defines them; **hints** from the text and `rules`.
-11. **Document locale**: the twelve locales' stop-word lists (`import/layout/stopwords.json`) are
-    counted over the body text; the winner is the locale when it has at least 20 hits and at least
-    twice the runner-up's, otherwise `null`. Used to keep a Swedish validator off a Norwegian
-    document (`CAVEATS.md` #27).
+   word bold, at most 80 characters and not ending in `. , : ; ? !`, or (H3) it is one line with at
+   least 3 letters, every letter upper-case (so no Chinese or Japanese line qualifies), at most 60
+   characters, not ending in punctuation, with no blank run and no checkbox. Otherwise `body` (B1).
+   *Fixtures:* `layout-shift-within-document`, `headings-and-footnote`.
+10. **Bands** exactly as `LAYOUT-IR.md` defines them (a column with no body, heading or table line
+    takes its bands from its other lines, so that every line has one); **hints** from the text
+    (`layout/hints.ts`, shared with the paste layout) and `rules`.
+11. **Document locale** (G1): the twelve languages' stop words (`layout/lexicon.json`) are counted
+    over the text a reader reads (not furniture, not footnotes). A language is the document's when
+    it has at least **20 stop words** in it, shared ones included — enough prose — and at least
+    **5 of its own**, words no other language lists, and at least twice the runner-up's own —
+    enough to tell it from its neighbours. Otherwise `null`. Chinese and Japanese are counted a
+    character at a time. (First written as "20 hits and twice the runner-up's", counting every
+    word for every language that lists it: Swedish, Danish and Norwegian share most of their
+    commonest words, so every Scandinavian document came out a near tie and `null`.) Used to keep
+    a Swedish validator off a Norwegian document (`CAVEATS.md` #27).
+
+| Rule | Step | Decides | Fixture or test |
+| --- | --- | --- | --- |
+| L1 | 1 | a ligature expanded | `ligature-and-quote-repair` |
+| C1 | 2 | a vertical gutter is a column: cut | `two-column-order`, `layout-shift-within-document` |
+| C2 | 2 | a vertical gutter is not a column: kept together | `hanging-marker-gutter`, `answer-column-gutter` |
+| C3 | 2 | horizontal gaps: cut into bands | `layout-shift-within-document` |
+| F1 | 4 | furniture: repeats in a margin | `repeated-header-footer` |
+| F2 | 4 | furniture: a page number | `repeated-header-footer`, `hyphen-not-across-boundary` |
+| Y1 | 6 | a hyphen removed at a join | `hyphenated-line-break` |
+| Y2 | 6 | a hyphen kept at a join | `hyphenated-line-break` |
+| Y3 | 6 | a suspended compound: nothing joined | `hyphen-not-across-boundary` |
+| N1 | 7 | a footnote | `headings-and-footnote` |
+| T1 | 8 | a table (DOCX) | `layout/reassemble.test.ts` |
+| H1–H3 | 9 | a heading | `layout-shift-within-document`, `headings-and-footnote` |
+| B1 | 9 | body | every fixture |
+| G1 | 11 | the document's language | `layout/reassemble.test.ts` (a paragraph in each language) |
 
 ## Stage 3 — enumerate
 

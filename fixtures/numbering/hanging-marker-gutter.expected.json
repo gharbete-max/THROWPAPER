@@ -1,0 +1,20 @@
+{
+  "fixture": "hanging-marker-gutter",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        { "text": "Fyll i formuläret.", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "1. Namn", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "2. Adress", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "3. Telefonnummer", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "☐ Jag vill ha nyhetsbrevet", "pageNo": 1, "columnIndex": 0, "role": "body" }
+      ],
+      "repairs": []
+    },
+    "enumerateSummary": [
+      { "raw": "1.", "label": "Namn", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Adress", "level": 1, "verdict": "accept" },
+      { "raw": "3.", "label": "Telefonnummer", "level": 1, "verdict": "accept" }
+    ]
+  }
+}

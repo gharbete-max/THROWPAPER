@@ -1,0 +1,17 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "6c998f464819a2343f5138aee4a4003f707d089ae52328925460ad4d7f2a3e66",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"em":131,"gaps":2,"y0":895,"y1":9526}},
+    {"id":"reassemble:p2-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"em":131,"gaps":1,"y0":895,"y1":9526}},
+    {"id":"reassemble:p1-l1-hyphen1","rule":"Y3","verdict":"suspended-compound","subject":["p1-l1"],"evidence":{"word":"för-"}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2","p1-l3"],"evidence":{}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l4","p1-l5"],"evidence":{}},
+    {"id":"reassemble:p1-b3","rule":"F2","verdict":"page-furniture","subject":["p1-l6"],"evidence":{"margin":"bottom","pages":2}},
+    {"id":"reassemble:p2-b1","rule":"B1","verdict":"body","subject":["p2-l1"],"evidence":{}},
+    {"id":"reassemble:p2-b2","rule":"F2","verdict":"page-furniture","subject":["p2-l2"],"evidence":{"margin":"bottom","pages":2}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"sv","subject":[],"evidence":{"best":"sv","hits":21,"own":8,"runnerUp":0}}
+  ]
+}

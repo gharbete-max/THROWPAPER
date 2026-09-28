@@ -2,7 +2,7 @@
   "fixture": "hyphenated-line-break",
   "caveats": ["hyphenated-line-break"],
   "stage": "reassemble",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S7",
   "summary": "\"regis-\" + \"tering\" is joined without the hyphen. \"e-\" + \"post\" keeps it (a fragment of two letters or fewer), and so does \"Stockholm-\" + \"Göteborg\" (the next line starts upper-case). The original is kept on the word as a repair.",
   "input": {

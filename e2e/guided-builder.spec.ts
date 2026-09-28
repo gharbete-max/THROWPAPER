@@ -142,7 +142,7 @@ test('the paper door opens a new form in the editor, its paper import already op
   // The address is the form's own: the door's `?paper` is read once and dropped.
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
   created.push(page.url().split('/').pop()!);
-  await expect(page.getByLabel('PDF or photographs')).toBeAttached();
+  await expect(page.getByLabel('PDF, Word document or photographs')).toBeAttached();
 });
 
 test('not happy with the preview: edited in place, reverted, reconciled, and never written over', async ({

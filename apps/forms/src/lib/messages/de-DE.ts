@@ -862,7 +862,7 @@ export const deDE: Record<MessageKey, string> = {
   'paper.heading': 'Ein Formular aus Papier machen',
   'paper.explain':
     'Laden Sie das PDF hoch, das Sie schon haben, oder fotografieren Sie jede Seite. Felder, die das PDF deklariert, werden so gelesen, wie sie sind; auf einem Foto zeichnen Sie die Kästchen selbst.',
-  'paper.choose': 'PDF oder Fotos',
+  'paper.choose': 'PDF, Word-Dokument oder Fotos',
   'paper.reading': 'Wird gelesen…',
   'paper.storing': 'Wird gespeichert…',
   'paper.pages': 'plural:one {count} Seite | other {count} Seiten',
@@ -893,6 +893,26 @@ export const deDE: Record<MessageKey, string> = {
   'paper.corner.1': 'Ecke oben rechts',
   'paper.corner.2': 'Ecke unten rechts',
   'paper.corner.3': 'Ecke unten links',
+  'paper.docx.too-large': 'Die Datei ist größer als 10 MB, das Höchste, was gelesen werden kann.',
+  'paper.docx.unreadable': 'Das Word-Dokument konnte nicht gelesen werden.',
+  'paper.docx.too-complex': 'Das Word-Dokument ist innen zu groß, um es sicher zu lesen.',
+  'paper.docx.unsafe':
+    'Das Word-Dokument enthält einen Teil, der unsicher sein könnte, deshalb wurde es nicht gelesen.',
+  'paper.docx.protected':
+    'Das Word-Dokument ist mit einem Passwort geschützt. Speichern Sie eine Kopie ohne Passwort und versuchen Sie es erneut.',
+  'paper.tooSlow':
+    'Das Lesen hat zu lange gedauert und wurde abgebrochen. Versuchen Sie ein kürzeres Dokument.',
+  'paper.paste.open': 'Stattdessen Text einfügen',
+  'paper.paste.label': 'Text aus Ihrem Dokument',
+  'paper.paste.read': 'Text lesen',
+  'paper.read.heading': 'Das hat Loppa gelesen',
+  'paper.read.pasted': 'Eingefügter Text',
+  'paper.read.lines': 'plural:one {count} Zeile | other {count} Zeilen',
+  'paper.read.items': 'plural:one {count} nummerierter Punkt | other {count} nummerierte Punkte',
+  'paper.read.noText': 'In der Datei wurde kein gedruckter Text gefunden.',
+  'paper.read.unchanged':
+    'So wurde es gelesen, in dieser Reihenfolge. Ihr Formular ändert sich nicht.',
+  'paper.read.download': 'Gelesenes herunterladen',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Unterschrift',
   'signing.heading': 'Unterschrift',

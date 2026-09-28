@@ -5,7 +5,10 @@ import {
   enumerate,
   layoutProblems,
   parseLayoutDocument,
+  parseRawDocument,
   rawProblems,
+  reassemble,
+  type LayoutDocument,
   type StageDebug,
   type StageResult,
 } from '@tp/shared/import';
@@ -41,9 +44,64 @@ const EXPECT_KEYS: Record<Stage, string[]> = {
   classify: ['classify', 'enumerateSummary'],
 };
 
-/** The stages that exist, by the name a fixture gives them. A stage joins when its slice lands. */
-const RUNNERS: Partial<Record<Stage, (input: unknown) => StageResult<unknown>>> = {
+/**
+ * What a reassemble fixture expects of a layout document: its lines in reading order with their
+ * column and role, and every repair (`fixtures/numbering/*.expected.json`, `reassemble`).
+ */
+function reassembleSummary(doc: LayoutDocument) {
+  const blocks = doc.pages.flatMap((page) => page.blocks);
+  return {
+    lines: blocks.flatMap((block) =>
+      block.lines.map((line) => ({
+        text: line.text,
+        pageNo: line.pageNo,
+        columnIndex: line.columnIndex,
+        role: block.role,
+      })),
+    ),
+    repairs: blocks.flatMap((block) =>
+      block.lines.flatMap((line) =>
+        line.words.flatMap((word) =>
+          word.repair ? [{ word: word.text, kind: word.repair.kind, raw: word.repair.raw }] : [],
+        ),
+      ),
+    ),
+  };
+}
+
+/** What the fixtures' `enumerateSummary` holds of each item. */
+function enumerateSummary(doc: LayoutDocument) {
+  return enumerate(doc).output.items.map((item) => ({
+    raw: item.marker.raw,
+    label: item.label,
+    level: item.level,
+    verdict: item.verdict,
+  }));
+}
+
+/**
+ * The stages that exist, by the name a fixture gives them. A stage joins when its slice lands.
+ * A stage's output must itself be valid: the reassembled document passes the IR validator, and
+ * its expectation is the summary above; `also` is what the fixture expects of later stages.
+ */
+const RUNNERS: Partial<
+  Record<
+    Stage,
+    (
+      input: unknown,
+    ) => StageResult<unknown> & { also?: Record<string, unknown>; problems?: string[] }
+  >
+> = {
   enumerate: (input) => enumerate(parseLayoutDocument(input)),
+  reassemble: (input) => {
+    const { output, debug } = reassemble(parseRawDocument(input));
+    return {
+      output: reassembleSummary(output),
+      debug,
+      also: { enumerateSummary: enumerateSummary(output) },
+      problems: layoutProblems(output),
+    };
+  },
 };
 
 interface Fixture {
@@ -150,8 +208,12 @@ describe('the numbering fixtures', () => {
     it(title, async () => {
       const run = RUNNERS[fixture.stage];
       expect(run, `${name} is green, but nothing runs the ${fixture.stage} stage`).toBeDefined();
-      const { output, debug } = run!(fixture.input);
+      const { output, debug, also = {}, problems = [] } = run!(fixture.input);
+      expect(problems).toEqual([]);
       expect(output).toStrictEqual(expected.expect[fixture.stage]);
+      for (const [key, value] of Object.entries(expected.expect)) {
+        if (key !== fixture.stage) expect(also[key], key).toStrictEqual(value);
+      }
       await expect(debugFile(debug)).toMatchFileSnapshot(join(DEBUG, `${name}.json`));
     });
   }

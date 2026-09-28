@@ -853,7 +853,7 @@ export const ruRU: Record<MessageKey, string> = {
   'paper.heading': 'Сделать форму из бумаги',
   'paper.explain':
     'Загрузите PDF, который у вас уже есть, или сфотографируйте каждую страницу. Поля, объявленные в PDF, читаются как есть; на фотографии вы рисуете рамки сами.',
-  'paper.choose': 'PDF или фотографии',
+  'paper.choose': 'PDF, документ Word или фотографии',
   'paper.reading': 'Чтение…',
   'paper.storing': 'Сохранение…',
   'paper.pages':
@@ -886,6 +886,27 @@ export const ruRU: Record<MessageKey, string> = {
   'paper.corner.1': 'Верхний правый угол',
   'paper.corner.2': 'Нижний правый угол',
   'paper.corner.3': 'Нижний левый угол',
+  'paper.docx.too-large': 'Файл больше 10 МБ — это максимум, который можно прочитать.',
+  'paper.docx.unreadable': 'Не удалось прочитать документ Word.',
+  'paper.docx.too-complex': 'Документ Word слишком велик внутри, чтобы безопасно его прочитать.',
+  'paper.docx.unsafe':
+    'Документ Word содержит часть, которая может быть небезопасной, поэтому он не был прочитан.',
+  'paper.docx.protected':
+    'Документ Word защищён паролем. Сохраните копию без пароля и попробуйте снова.',
+  'paper.tooSlow':
+    'Чтение заняло слишком много времени и было остановлено. Попробуйте документ покороче.',
+  'paper.paste.open': 'Вставить текст вместо этого',
+  'paper.paste.label': 'Текст из вашего документа',
+  'paper.paste.read': 'Прочитать текст',
+  'paper.read.heading': 'Что прочитала Loppa',
+  'paper.read.pasted': 'Вставленный текст',
+  'paper.read.lines':
+    'plural:one {count} строка | few {count} строки | many {count} строк | other {count} строки',
+  'paper.read.items':
+    'plural:one {count} нумерованный пункт | few {count} нумерованных пункта | many {count} нумерованных пунктов | other {count} нумерованного пункта',
+  'paper.read.noText': 'В файле не найден печатный текст.',
+  'paper.read.unchanged': 'Вот что было прочитано, по порядку. Форма не меняется.',
+  'paper.read.download': 'Скачать прочитанное',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Подписание',
   'signing.heading': 'Подписание',

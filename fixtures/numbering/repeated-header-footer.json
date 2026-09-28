@@ -2,7 +2,7 @@
   "fixture": "repeated-header-footer",
   "caveats": ["repeated-header-footer"],
   "stage": "reassemble",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S7",
   "summary": "A running header and \"Sida N av 3\" on three pages are stripped as page furniture (margin band + cross-page repetition with digits folded), not read as questions.",
   "input": {

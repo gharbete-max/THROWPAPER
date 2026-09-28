@@ -841,7 +841,7 @@ export const isIS: Record<MessageKey, string> = {
   'paper.heading': 'Búa til eyðublað úr pappír',
   'paper.explain':
     'Hladdu upp PDF-skjalinu sem þú átt, eða taktu mynd af hverri síðu. Reitir sem PDF-skjalið lýsir eru lesnir eins og þeir eru; á ljósmynd teiknar þú reitina sjálf.',
-  'paper.choose': 'PDF eða ljósmyndir',
+  'paper.choose': 'PDF, Word-skjal eða ljósmyndir',
   'paper.reading': 'Les…',
   'paper.storing': 'Vistar…',
   'paper.pages': 'plural:one {count} síða | other {count} síður',
@@ -871,6 +871,24 @@ export const isIS: Record<MessageKey, string> = {
   'paper.corner.1': 'Efra hægra horn',
   'paper.corner.2': 'Neðra hægra horn',
   'paper.corner.3': 'Neðra vinstra horn',
+  'paper.docx.too-large': 'Skráin er stærri en 10 MB, það mesta sem hægt er að lesa.',
+  'paper.docx.unreadable': 'Ekki tókst að lesa Word-skjalið.',
+  'paper.docx.too-complex': 'Word-skjalið er of stórt að innan til að lesa það örugglega.',
+  'paper.docx.unsafe':
+    'Word-skjalið inniheldur hluta sem gæti verið óöruggur, svo það var ekki lesið.',
+  'paper.docx.protected':
+    'Word-skjalið er varið með lykilorði. Vistaðu afrit án þess og reyndu aftur.',
+  'paper.tooSlow': 'Lesturinn tók of langan tíma og var stöðvaður. Prófaðu styttra skjal.',
+  'paper.paste.open': 'Líma inn texta í staðinn',
+  'paper.paste.label': 'Texti úr skjalinu þínu',
+  'paper.paste.read': 'Lesa textann',
+  'paper.read.heading': 'Þetta las Loppa',
+  'paper.read.pasted': 'Innlímdur texti',
+  'paper.read.lines': 'plural:one {count} lína | other {count} línur',
+  'paper.read.items': 'plural:one {count} númeraður liður | other {count} númeraðir liðir',
+  'paper.read.noText': 'Enginn prentaður texti fannst í skránni.',
+  'paper.read.unchanged': 'Svona var það lesið, í röð. Eyðublaðinu er ekki breytt.',
+  'paper.read.download': 'Sækja það sem var lesið',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Undirritun',
   'signing.heading': 'Undirritun',

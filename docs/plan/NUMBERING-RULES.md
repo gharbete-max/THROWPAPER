@@ -41,14 +41,20 @@ export type Flag =
   | 'style-inconsistent';
 
 export interface Marker {
-  /** Verbatim: the first word's text, or the first two words joined by one space (spaced styles). */
+  /**
+   * Verbatim: the first word's text, or the first two words joined by one space (spaced styles);
+   * for Word's own numbering (§11), the marker Word draws.
+   */
   raw: string;
   family: Family;
   style: Style;
   /** "12.1" → [12, 1]; "iv." → [4]; "c)" → [3]; a bullet → []. */
   path: number[];
-  /** How many words at the start of the line the marker occupies: 2 for spaced styles, else 1. */
-  wordCount: 1 | 2;
+  /**
+   * How many words at the start of the line the marker occupies: 2 for spaced styles, 1 for the
+   * rest, 0 for Word's own numbering (§11), which is not in the line's text.
+   */
+  wordCount: 0 | 1 | 2;
 }
 
 export interface Item {
@@ -69,7 +75,8 @@ export interface Item {
   verdict: Exclude<Verdict, 'inline-text'>;
   /** Sorted ascending (code-point order), no duplicates. */
   flags: Flag[];
-  decidedBy: 'D1' | 'D2' | 'D3';
+  /** The verdict's rule: D1–D3 (§8), or W1 for a line Word numbers (§11). */
+  decidedBy: 'D1' | 'D2' | 'D3' | 'W1';
 }
 
 /** A line that looked like it started with a marker and was ruled out, and the rule that did it. */
@@ -454,6 +461,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | D2 | run of ≥ 2 (or sub-item/orphan), any flag | accept-flagged | `sequence-continuity` |
 | D3 | run of 1: band evidence and field evidence | accept; else candidate + `single-item` | `single-item-list` |
 | D4 | alpha run of 1 with no field evidence | rejected, prose; everything below it up one level | `letter-vs-word`, `letter-vs-word--nested` |
+| W1 | the line carries `hints.docxNumbering` (§11) | an item: Word's marker, level `ilvl` + 1, run `numId`, the whole text as its label; no other rule reads the line | `docx-numbering` |
 
 ## 11. What this does not decide
 
@@ -463,9 +471,20 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 - What **kind** of answer an item wants (stage 5).
 - How confident the draft is overall (stage 7). The verdicts here feed it: `accept` contributes
   full marker evidence, `accept-flagged` half, `candidate` none.
-- **DOCX numbering.** When a line carries `hints.docxNumbering`, Word has already said what the
-  marker is: stage 3 uses `docxNumbering.rendered` as the marker, `ilvl + 1` as the level, and the
-  `numId` as the run, and none of the rules above apply to that line. The rules exist for text
-  that has lost its structure, and a DOCX paragraph with numbering has not. **Not built in S1b:**
-  no extractor sets the hint until the DOCX adapter lands (S7), and S7 builds this path with its
-  first DOCX fixture. Until then the detector reads such a line like any other.
+- **DOCX numbering (W1).** When a `docx` line carries `hints.docxNumbering`, Word has already said
+  what the marker is, and none of the rules above read the line — they exist for text that has
+  lost its structure, and a Word paragraph with numbering has not. Stage 3 makes it an item:
+  - the marker is `docxNumbering.rendered`, with `wordCount` 0 — Word draws it, and it is not in
+    the line's text, so the **label is the line's whole text**, verbatim, even where the text
+    itself begins "3.5" or "1.";
+  - its family is the level's `w:numFmt` (`decimal` and Word's other counting formats → arabic,
+    `lowerRoman`/`upperRoman`, `lowerLetter`/`upperLetter` and `russianLower`/`russianUpper` →
+    alpha, `bullet`), its style the rendered marker's punctuation (`(…)` enclosed, `)` paren, `:`
+    colon, otherwise dot; a bullet is a glyph), and its path the numbers in the rendered marker
+    ("12.1." → [12, 1], "b)" → [2], "aa." → [27]);
+  - its level is `ilvl + 1`, its run is the `numId`'s (`r-` + the id of that list's first line),
+    and its parent is the latest item of the same `numId` at the nearest level above it;
+  - its verdict is `accept`, with no flags, decided by W1 — alone or not: Word said it is a list.
+  A plain paragraph after it at its text indent is its detail line (J1), as after any item. The
+  rules' runs are untouched, so a number typed into a paragraph Word does not number goes through
+  them like any other line. Built in S7, with `docx-numbering`; the stage's version is 2.

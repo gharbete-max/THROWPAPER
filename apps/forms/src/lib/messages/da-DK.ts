@@ -835,7 +835,7 @@ export const daDK: Record<MessageKey, string> = {
   'paper.heading': 'Lav en formular af papir',
   'paper.explain':
     'Upload den PDF du allerede har, eller fotografér hver side. Felter som PDF’en erklærer, læses som de er; på et fotografi tegner du selv felterne.',
-  'paper.choose': 'PDF eller fotografier',
+  'paper.choose': 'PDF, Word-dokument eller fotografier',
   'paper.reading': 'Læser…',
   'paper.storing': 'Gemmer…',
   'paper.pages': 'plural:one {count} side | other {count} sider',
@@ -866,6 +866,24 @@ export const daDK: Record<MessageKey, string> = {
   'paper.corner.1': 'Øverste højre hjørne',
   'paper.corner.2': 'Nederste højre hjørne',
   'paper.corner.3': 'Nederste venstre hjørne',
+  'paper.docx.too-large': 'Filen er større end 10 MB, det meste der kan læses.',
+  'paper.docx.unreadable': 'Word-dokumentet kunne ikke læses.',
+  'paper.docx.too-complex': 'Word-dokumentet er for stort indvendigt til at blive læst sikkert.',
+  'paper.docx.unsafe':
+    'Word-dokumentet indeholder en del, der kan være usikker, så det blev ikke læst.',
+  'paper.docx.protected':
+    'Word-dokumentet er beskyttet med en adgangskode. Gem en kopi uden, og prøv igen.',
+  'paper.tooSlow': 'Læsningen tog for lang tid og blev stoppet. Prøv et kortere dokument.',
+  'paper.paste.open': 'Indsæt tekst i stedet',
+  'paper.paste.label': 'Tekst fra dit dokument',
+  'paper.paste.read': 'Læs teksten',
+  'paper.read.heading': 'Det her læste Loppa',
+  'paper.read.pasted': 'Indsat tekst',
+  'paper.read.lines': 'plural:one {count} linje | other {count} linjer',
+  'paper.read.items': 'plural:one {count} nummereret punkt | other {count} nummererede punkter',
+  'paper.read.noText': 'Der blev ikke fundet nogen trykt tekst i filen.',
+  'paper.read.unchanged': 'Sådan blev det læst, i rækkefølge. Formularen ændres ikke.',
+  'paper.read.download': 'Hent det, der blev læst',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Underskrift',
   'signing.heading': 'Underskrift',

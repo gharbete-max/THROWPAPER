@@ -1,4 +1,6 @@
+import { unionBox as union } from './ir/geometry.js';
 import type { Box, IrBlock, IrColumn, IrLine, IrPage, IrWord, LayoutDocument } from './ir/types.js';
+import { textHints } from './layout/hints.js';
 
 /**
  * Pasted text as a layout document — `docs/plan/LAYOUT-IR.md`, "How each source fills it", the
@@ -32,41 +34,8 @@ const ASCENT = 105;
 const DESCENT = 26;
 const EDGE = 10_000;
 
-const CHECKBOXES = /[☐☑☒□■▢○●◯◻◼]/gu;
-
 /** A line past the page's edge is pinned to it: geometry here is synthetic, never measured. */
 const pinned = (x: number) => Math.min(x, EDGE);
-
-function union(boxes: readonly Box[]): Box {
-  return {
-    x0: Math.min(...boxes.map((b) => b.x0)),
-    y0: Math.min(...boxes.map((b) => b.y0)),
-    x1: Math.max(...boxes.map((b) => b.x1)),
-    y1: Math.max(...boxes.map((b) => b.y1)),
-  };
-}
-
-/** `LineHints`, from the text alone — the only facts a paste can know. */
-function hintsOf(text: string): IrLine['hints'] {
-  const dots = /[.…]{2,}/gu;
-  let leader = false;
-  for (const run of text.match(dots) ?? []) {
-    const count = [...run].reduce((n, c) => n + (c === '…' ? 3 : 1), 0);
-    if (count >= 4) leader = true;
-  }
-  const blankRun = /_{3,}/u.test(text) || leader;
-  const withoutBlanks = text.replace(/_{3,}/gu, '').replace(/[.…]{2,}/gu, (run) => {
-    const count = [...run].reduce((n, c) => n + (c === '…' ? 3 : 1), 0);
-    return count >= 4 ? '' : run;
-  });
-  return {
-    blankRun,
-    checkboxes: (text.match(CHECKBOXES) ?? []).length,
-    endsWithColon: withoutBlanks.trim().endsWith(':'),
-    ruleBelow: false,
-    docxNumbering: null,
-  };
-}
 
 /** A pasted line's words, placed; null for a blank line. */
 function wordsOf(line: string, baseline: number): { words: IrWord[]; x0: number } | null {
@@ -218,7 +187,7 @@ export function pasteDocument(text: string): LayoutDocument {
         indentBand: 0,
         source: 'paste',
         ocrConfidence: null,
-        hints: hintsOf(lineText),
+        hints: textHints(lineText),
         cell: null,
       });
     }

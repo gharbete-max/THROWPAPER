@@ -2,7 +2,7 @@
   "fixture": "ligature-and-quote-repair",
   "caveats": ["ligature-and-quote-repair"],
   "stage": "reassemble",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S7",
   "summary": "Presentation-form ligatures are expanded (ﬁ → fi); curly quotes are the author's and are kept.",
   "input": {

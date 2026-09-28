@@ -860,7 +860,7 @@ export const frFR: Record<MessageKey, string> = {
   'paper.heading': 'Créer un formulaire à partir du papier',
   'paper.explain':
     'Téléversez le PDF que vous avez déjà, ou photographiez chaque page. Les champs déclarés par le PDF sont lus tels quels ; sur une photo, vous tracez les cases vous-même.',
-  'paper.choose': 'PDF ou photographies',
+  'paper.choose': 'PDF, document Word ou photos',
   'paper.reading': 'Lecture…',
   'paper.storing': 'Enregistrement…',
   'paper.pages': 'plural:one {count} page | other {count} pages',
@@ -890,6 +890,27 @@ export const frFR: Record<MessageKey, string> = {
   'paper.corner.1': 'Coin supérieur droit',
   'paper.corner.2': 'Coin inférieur droit',
   'paper.corner.3': 'Coin inférieur gauche',
+  'paper.docx.too-large': 'Ce fichier dépasse 10 Mo, le maximum lisible.',
+  'paper.docx.unreadable': 'Ce document Word n’a pas pu être lu.',
+  'paper.docx.too-complex':
+    'Ce document Word est trop volumineux à l’intérieur pour être lu en toute sécurité.',
+  'paper.docx.unsafe':
+    'Ce document Word contient une partie qui pourrait être dangereuse ; il n’a donc pas été lu.',
+  'paper.docx.protected':
+    'Ce document Word est protégé par un mot de passe. Enregistrez-en une copie sans mot de passe et réessayez.',
+  'paper.tooSlow':
+    'La lecture a pris trop de temps et a été arrêtée. Essayez un document plus court.',
+  'paper.paste.open': 'Coller du texte à la place',
+  'paper.paste.label': 'Texte de votre document',
+  'paper.paste.read': 'Lire le texte',
+  'paper.read.heading': 'Ce que Loppa a lu',
+  'paper.read.pasted': 'Texte collé',
+  'paper.read.lines': 'plural:one {count} ligne | other {count} lignes',
+  'paper.read.items': 'plural:one {count} élément numéroté | other {count} éléments numérotés',
+  'paper.read.noText': 'Aucun texte imprimé n’a été trouvé dans ce fichier.',
+  'paper.read.unchanged':
+    'Voici ce qui a été lu, dans l’ordre. Votre formulaire n’est pas modifié.',
+  'paper.read.download': 'Télécharger ce qui a été lu',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signature',
   'signing.heading': 'Signature',

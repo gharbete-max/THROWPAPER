@@ -1,4 +1,5 @@
 import type { z } from 'zod';
+import { lowerMedian } from './geometry.js';
 import { LayoutDocumentSchema, RawDocumentSchema } from './schema.js';
 import type { Box, IrBlock, IrColumn, IrLine, LayoutDocument, RawDocument } from './types.js';
 
@@ -39,6 +40,13 @@ export function parseLayoutDocument(input: unknown): LayoutDocument {
   return input as LayoutDocument;
 }
 
+/** The raw document, typed, or an `IrError` listing every problem. */
+export function parseRawDocument(input: unknown): RawDocument {
+  const problems = rawProblems(input);
+  if (problems.length > 0) throw new IrError(problems);
+  return input as RawDocument;
+}
+
 function shapeProblems(error: z.ZodError): string[] {
   const problems = error.issues
     .slice(0, MAX_SHAPE_PROBLEMS)
@@ -50,12 +58,6 @@ function shapeProblems(error: z.ZodError): string[] {
 
 function inverted(box: Box): boolean {
   return box.x0 > box.x1 || box.y0 > box.y1;
-}
-
-/** The smaller of the two middle values for an even count (`LAYOUT-IR.md`, `IrLine`). */
-function lowerMedian(values: readonly number[]): number {
-  const sorted = [...values].sort((a, b) => a - b);
-  return sorted[(sorted.length - 1) >> 1] ?? 0;
 }
 
 /** The band a furniture or footnote line is given: the one its x0 falls in, else 0. */

@@ -837,7 +837,7 @@ export const nbNO: Record<MessageKey, string> = {
   'paper.heading': 'Lag et skjema av papir',
   'paper.explain':
     'Last opp PDF-en du allerede har, eller fotografer hver side. Felt som PDF-en erklærer leses som de er; på et fotografi tegner du boksene selv.',
-  'paper.choose': 'PDF eller fotografier',
+  'paper.choose': 'PDF, Word-dokument eller fotografier',
   'paper.reading': 'Leser…',
   'paper.storing': 'Lagrer…',
   'paper.pages': 'plural:one {count} side | other {count} sider',
@@ -867,6 +867,24 @@ export const nbNO: Record<MessageKey, string> = {
   'paper.corner.1': 'Øvre høyre hjørne',
   'paper.corner.2': 'Nedre høyre hjørne',
   'paper.corner.3': 'Nedre venstre hjørne',
+  'paper.docx.too-large': 'Filen er større enn 10 MB, det meste som kan leses.',
+  'paper.docx.unreadable': 'Word-dokumentet kunne ikke leses.',
+  'paper.docx.too-complex': 'Word-dokumentet er for stort innvendig til å leses trygt.',
+  'paper.docx.unsafe':
+    'Word-dokumentet inneholder en del som kan være utrygg, så det ble ikke lest.',
+  'paper.docx.protected':
+    'Word-dokumentet er beskyttet med passord. Lagre en kopi uten, og prøv igjen.',
+  'paper.tooSlow': 'Lesingen tok for lang tid og ble stoppet. Prøv et kortere dokument.',
+  'paper.paste.open': 'Lim inn tekst i stedet',
+  'paper.paste.label': 'Tekst fra dokumentet ditt',
+  'paper.paste.read': 'Les teksten',
+  'paper.read.heading': 'Dette leste Loppa',
+  'paper.read.pasted': 'Innlimt tekst',
+  'paper.read.lines': 'plural:one {count} linje | other {count} linjer',
+  'paper.read.items': 'plural:one {count} nummerert punkt | other {count} nummererte punkter',
+  'paper.read.noText': 'Fant ingen trykt tekst i filen.',
+  'paper.read.unchanged': 'Slik ble det lest, i rekkefølge. Skjemaet endres ikke.',
+  'paper.read.download': 'Last ned det som ble lest',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signering',
   'signing.heading': 'Signering',

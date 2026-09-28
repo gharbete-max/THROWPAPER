@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { canonicalJson, inputSha256 } from '../debug.js';
 import { parseLayoutDocument } from '../ir/validate.js';
 import type { LayoutDocument } from '../ir/types.js';
-import { enumerate } from './enumerate.js';
+import { enumerate, ENUMERATE_STAGE_VERSION } from './enumerate.js';
 
 /**
  * What the detector promises beyond any one fixture's expectation, over every layout document in
@@ -89,7 +89,11 @@ describe('enumerate is deterministic', () => {
 describe('the debug artifact', () => {
   it.each(documents)('accounts for every line of $name, once', ({ doc }) => {
     const { output, debug } = enumerate(doc);
-    expect(debug).toMatchObject({ stage: 'enumerate', stageVersion: 1, irVersion: 1 });
+    expect(debug).toMatchObject({
+      stage: 'enumerate',
+      stageVersion: ENUMERATE_STAGE_VERSION,
+      irVersion: 1,
+    });
     expect(debug.inputSha256).toBe(inputSha256(doc));
 
     const ids = debug.decisions.map((decision) => decision.id);
