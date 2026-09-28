@@ -45,6 +45,12 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * budget is set well above its measurement, so an ordinary feature does not trip it and a doubling
  * does.
  *
+ * The guided builder (ADR 0017, slices S1–S5) then took the total from 774.0 to 860.3 KB: one
+ * lazily-loaded chunk of 55 KB gzipped — about 25 KB of it the built-in aliases in twelve
+ * languages — that only an author pressing "Start from questions" downloads, and its words in all
+ * twelve catalogues. By S4 it had left the total 2 KB under 850, so the total was raised to 1 000:
+ * about the headroom it had when it was set (entry 6.7 and stylesheet 15.2 are well inside theirs).
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -57,7 +63,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 850,
+  total: 1000,
 } as const;
 
 function gzippedKb(path: string): number {

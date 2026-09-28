@@ -80,6 +80,7 @@ pnpm verify         # format + typecheck + lint + test + build across the worksp
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
+pnpm bundle:budget  # after a build: Forms' entry, stylesheet and total, gzipped. CI runs it; verify does not
 pnpm builder:validate # the guided builder's graph against rules G0–G13, with all twelve catalogues, and its built-in aliases
 pnpm test:e2e
 ```
