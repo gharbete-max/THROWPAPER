@@ -875,6 +875,8 @@ export const nbNO: Record<MessageKey, string> = {
   'paper.docx.protected':
     'Word-dokumentet er beskyttet med passord. Lagre en kopi uten, og prøv igjen.',
   'paper.tooSlow': 'Lesingen tok for lang tid og ble stoppet. Prøv et kortere dokument.',
+  'paper.noWorker':
+    'Denne nettleseren kan ikke lese dokumenter her. Åpne Loppa i en oppdatert nettleser for å lese dette.',
   'paper.paste.open': 'Lim inn tekst i stedet',
   'paper.paste.label': 'Tekst fra dokumentet ditt',
   'paper.paste.read': 'Les teksten',

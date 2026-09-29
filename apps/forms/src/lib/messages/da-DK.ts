@@ -874,6 +874,8 @@ export const daDK: Record<MessageKey, string> = {
   'paper.docx.protected':
     'Word-dokumentet er beskyttet med en adgangskode. Gem en kopi uden, og prøv igen.',
   'paper.tooSlow': 'Læsningen tog for lang tid og blev stoppet. Prøv et kortere dokument.',
+  'paper.noWorker':
+    'Denne browser kan ikke læse dokumenter her. Åbn Loppa i en opdateret browser for at læse dette.',
   'paper.paste.open': 'Indsæt tekst i stedet',
   'paper.paste.label': 'Tekst fra dit dokument',
   'paper.paste.read': 'Læs teksten',

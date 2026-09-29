@@ -10,11 +10,12 @@ import {
 } from './docx.fixture.js';
 import { readDocx } from './docx.js';
 import { readingFile } from './reading.js';
-import { readInWorker } from './read-in-worker.js';
+import { readDocument } from './pipeline.js';
+import { NoWorker, readInWorker } from './read-in-worker.js';
 
 /**
- * Stages 2 to 7 as the paper door runs them. Here there is no `Worker`, so `readInWorker` runs
- * the same function on the page; the worker itself is pressed in `e2e/paper-import.spec.ts`.
+ * Stages 2 to 7 as the paper door runs them: `readDocument`, the function the worker runs. The
+ * worker itself is pressed in `e2e/paper-import.spec.ts`.
  */
 
 describe('reading a document', () => {
@@ -27,7 +28,7 @@ describe('reading a document', () => {
         numbering: numberingXml(abstractList(0, [['decimal', '%1.']]) + list(1, 0)),
       }),
     );
-    const reading = await readInWorker({ kind: 'raw', raw });
+    const reading = readDocument({ kind: 'raw', raw });
     expect(layoutProblems(reading.layout)).toEqual([]);
     expect(reading.debug.map((d) => d.stage)).toEqual([
       'reassemble',
@@ -50,7 +51,7 @@ describe('reading a document', () => {
   });
 
   it('reads a paste from the list detector on, with no layout stage to run', async () => {
-    const reading = await readInWorker({ kind: 'paste', text: '1. Namn\n2. Adress' });
+    const reading = readDocument({ kind: 'paste', text: '1. Namn\n2. Adress' });
     expect(reading.debug.map((d) => d.stage)).toEqual([
       'enumerate',
       'segment',
@@ -61,7 +62,7 @@ describe('reading a document', () => {
   });
 
   it('downloads as one JSON file holding everything that was read', async () => {
-    const reading = await readInWorker({ kind: 'paste', text: 'a) Ja\nb) Nej' });
+    const reading = readDocument({ kind: 'paste', text: 'a) Ja\nb) Nej' });
     const file = JSON.parse(readingFile(reading)) as Record<string, unknown>;
     expect(Object.keys(file).sort()).toEqual([
       'classified',
@@ -74,5 +75,12 @@ describe('reading a document', () => {
       'segments',
     ]);
     expect(file.readingVersion).toBe(2);
+  });
+});
+
+describe('without a worker', () => {
+  it('says so, and reads nothing on the page (the stages live in the worker only)', async () => {
+    expect(typeof Worker).toBe('undefined');
+    await expect(readInWorker({ kind: 'paste', text: '1. Namn' })).rejects.toBeInstanceOf(NoWorker);
   });
 });

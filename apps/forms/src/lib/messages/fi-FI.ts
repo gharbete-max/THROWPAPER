@@ -881,6 +881,8 @@ export const fiFI: Record<MessageKey, string> = {
   'paper.docx.protected':
     'Word-asiakirja on suojattu salasanalla. Tallenna kopio ilman salasanaa ja yritä uudelleen.',
   'paper.tooSlow': 'Lukeminen kesti liian kauan ja keskeytettiin. Kokeile lyhyempää asiakirjaa.',
+  'paper.noWorker':
+    'Tämä selain ei voi lukea asiakirjoja täällä. Avaa Loppa ajantasaisessa selaimessa lukeaksesi tämän.',
   'paper.paste.open': 'Liitä teksti sen sijaan',
   'paper.paste.label': 'Teksti asiakirjastasi',
   'paper.paste.read': 'Lue teksti',

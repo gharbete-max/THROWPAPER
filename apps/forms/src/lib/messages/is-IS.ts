@@ -879,6 +879,8 @@ export const isIS: Record<MessageKey, string> = {
   'paper.docx.protected':
     'Word-skjalið er varið með lykilorði. Vistaðu afrit án þess og reyndu aftur.',
   'paper.tooSlow': 'Lesturinn tók of langan tíma og var stöðvaður. Prófaðu styttra skjal.',
+  'paper.noWorker':
+    'Þessi vafri getur ekki lesið skjöl hér. Opnaðu Loppa í uppfærðum vafra til að lesa þetta.',
   'paper.paste.open': 'Líma inn texta í staðinn',
   'paper.paste.label': 'Texti úr skjalinu þínu',
   'paper.paste.read': 'Lesa textann',

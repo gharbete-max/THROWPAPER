@@ -840,6 +840,7 @@ export const zhCN: Record<MessageKey, string> = {
   'paper.docx.unsafe': '该 Word 文档包含可能不安全的部分，因此未读取。',
   'paper.docx.protected': '该 Word 文档受密码保护。请另存一份不带密码的副本后重试。',
   'paper.tooSlow': '读取耗时过长，已停止。请尝试较短的文档。',
+  'paper.noWorker': '此浏览器无法在这里读取文档。请在最新版浏览器中打开 Loppa 来读取。',
   'paper.paste.open': '改为粘贴文本',
   'paper.paste.label': '文档中的文本',
   'paper.paste.read': '读取文本',

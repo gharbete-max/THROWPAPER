@@ -891,6 +891,8 @@ export const esES: Record<MessageKey, string> = {
   'paper.docx.protected':
     'El documento de Word está protegido con contraseña. Guarde una copia sin contraseña e inténtelo de nuevo.',
   'paper.tooSlow': 'La lectura tardó demasiado y se detuvo. Pruebe con un documento más corto.',
+  'paper.noWorker':
+    'Este navegador no puede leer documentos aquí. Abre Loppa en un navegador actualizado para leer este.',
   'paper.paste.open': 'Pegar texto en su lugar',
   'paper.paste.label': 'Texto de su documento',
   'paper.paste.read': 'Leer el texto',

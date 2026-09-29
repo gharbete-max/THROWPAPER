@@ -876,6 +876,8 @@ export const svSE: Record<MessageKey, string> = {
   'paper.docx.protected':
     'Word-dokumentet är skyddat med lösenord. Spara en kopia utan lösenord och försök igen.',
   'paper.tooSlow': 'Läsningen tog för lång tid och avbröts. Prova ett kortare dokument.',
+  'paper.noWorker':
+    'Den här webbläsaren kan inte läsa dokument här. Öppna Loppa i en uppdaterad webbläsare för att läsa det här.',
   'paper.paste.open': 'Klistra in text i stället',
   'paper.paste.label': 'Text från ditt dokument',
   'paper.paste.read': 'Läs texten',

@@ -894,6 +894,8 @@ export const enGB = {
   'paper.docx.protected':
     'That Word document is protected by a password. Save a copy without one and try again.',
   'paper.tooSlow': 'Reading took too long and was stopped. Try a shorter document.',
+  'paper.noWorker':
+    "This browser can't read documents here. Open Loppa in an up-to-date browser to read this one.",
   'paper.paste.open': 'Paste text instead',
   'paper.paste.label': 'Text from your document',
   'paper.paste.read': 'Read the text',

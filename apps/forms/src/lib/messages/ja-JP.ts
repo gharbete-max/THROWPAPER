@@ -879,6 +879,8 @@ export const jaJP: Record<MessageKey, string> = {
   'paper.docx.protected':
     'このWord文書はパスワードで保護されています。パスワードなしのコピーを保存して、もう一度お試しください。',
   'paper.tooSlow': '読み取りに時間がかかりすぎたため中止しました。もっと短い文書でお試しください。',
+  'paper.noWorker':
+    'このブラウザーではここで文書を読み取れません。最新のブラウザーで Loppa を開いて読み取ってください。',
   'paper.paste.open': '代わりにテキストを貼り付ける',
   'paper.paste.label': '文書のテキスト',
   'paper.paste.read': 'テキストを読み取る',

@@ -900,6 +900,8 @@ export const frFR: Record<MessageKey, string> = {
     'Ce document Word est protégé par un mot de passe. Enregistrez-en une copie sans mot de passe et réessayez.',
   'paper.tooSlow':
     'La lecture a pris trop de temps et a été arrêtée. Essayez un document plus court.',
+  'paper.noWorker':
+    'Ce navigateur ne peut pas lire de documents ici. Ouvrez Loppa dans un navigateur à jour pour lire celui-ci.',
   'paper.paste.open': 'Coller du texte à la place',
   'paper.paste.label': 'Texte de votre document',
   'paper.paste.read': 'Lire le texte',

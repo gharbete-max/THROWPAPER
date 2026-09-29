@@ -902,6 +902,8 @@ export const deDE: Record<MessageKey, string> = {
     'Das Word-Dokument ist mit einem Passwort geschützt. Speichern Sie eine Kopie ohne Passwort und versuchen Sie es erneut.',
   'paper.tooSlow':
     'Das Lesen hat zu lange gedauert und wurde abgebrochen. Versuchen Sie ein kürzeres Dokument.',
+  'paper.noWorker':
+    'Dieser Browser kann hier keine Dokumente lesen. Öffnen Sie Loppa in einem aktuellen Browser, um dieses zu lesen.',
   'paper.paste.open': 'Stattdessen Text einfügen',
   'paper.paste.label': 'Text aus Ihrem Dokument',
   'paper.paste.read': 'Text lesen',

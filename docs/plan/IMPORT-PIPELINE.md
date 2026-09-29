@@ -121,7 +121,11 @@ with the number or bullet its list shows, a table cell a tab). S4 and S5 enter h
 
 **Where it runs.** Stages 2 to 7 run in a Web Worker (`paper/import.worker.ts`, started by
 `paper/read-in-worker.ts`), so a long document never freezes the page; after 30 seconds the worker
-is ended and the author is told. Where there is no `Worker`, the same function runs on the page.
+is ended and the author is told. They run nowhere else: without a `Worker` the door says this
+browser cannot read documents (`NoWorker`). (First written as running the same function on the
+page instead. Every supported browser and the desktop have module workers, so that second copy of
+the stages was downloaded by nobody and weighed on the bundle; S10 removed it, and the bundle
+budget now fails a build that carries the stages' word lists outside the worker.)
 
 ## Stage 2 — reassemble
 

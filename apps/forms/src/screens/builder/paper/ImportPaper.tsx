@@ -19,7 +19,7 @@ import { isUsable, straightenFile, type Corners } from './warp.js';
 import { clipboardText } from './clipboard.js';
 import { isDocx, readDocx } from './docx.js';
 import type { Reading } from './reading.js';
-import { ReadingTooSlow, readInWorker } from './read-in-worker.js';
+import { NoWorker, ReadingTooSlow, readInWorker } from './read-in-worker.js';
 import { ReadingView } from './ReadingView.js';
 import { DocxRefused } from './refusal.js';
 
@@ -75,7 +75,9 @@ export function ImportPaper({
             ? t(`paper.docx.${error.reason}`)
             : error instanceof ReadingTooSlow
               ? t('paper.tooSlow')
-              : t('paper.notReadable'),
+              : error instanceof NoWorker
+                ? t('paper.noWorker')
+                : t('paper.notReadable'),
     });
   }
 
@@ -338,7 +340,7 @@ type State = { kind: 'empty' } | { kind: 'reading' } | { kind: 'error'; message:
 
 /**
  * What these files would become, and what their text reads as. Throws `TooManyPages`,
- * `DocxRefused`, `ReadingTooSlow`, or whatever pdfjs throws at a non-PDF.
+ * `DocxRefused`, `ReadingTooSlow`, `NoWorker`, or whatever pdfjs throws at a non-PDF.
  */
 async function read(files: File[], locale: string): Promise<Ready> {
   const fields: AcroField[] = [];
