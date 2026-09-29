@@ -7,12 +7,15 @@ import {
   type LearnedAlias,
   type RememberAlias,
 } from '@tp/shared/interpret';
+import type { TokenSet } from '@tp/tokens';
 import { LoadFailed } from '../../../components/LoadFailed.js';
 import { Loading } from '../../../components/Loading.js';
 import { ApiError, client } from '../../../lib/api.js';
+import { useBrand } from '../../../lib/brand.js';
 import { useEdition } from '../../../lib/edition.js';
 import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
+import { presetById, withPreset } from '../../../lib/theme-preset.js';
 import { startConversation, type Remembered, type Started } from './conversation.js';
 import { Saver, type SaveStatus } from './saver.js';
 import { Shell } from './Shell.js';
@@ -29,14 +32,22 @@ export function GuidedBuilder() {
   const t = useT();
   const navigate = useNavigate();
   const edition = useEdition();
-  const { locale, locales, contentLocale, organisation } = useSession();
+  const { locale, locales, contentLocale, organisation, user } = useSession();
+  const { refresh: repaint } = useBrand();
+  /** Only an administrator may change the organisation's colours (owner question 8). */
+  const canChangeBrand = user?.role === 'admin';
 
   const [started, setStarted] = useState<Started | null>(null);
-  /** The organisation's logo, and whether it has a brand kit of its own — for the preview. */
-  const [kit, setKit] = useState<{ customised: boolean; logo: string | null }>({
-    customised: false,
-    logo: null,
-  });
+  /**
+   * The organisation's brand kit: whether it has one of its own, and its logo, for the preview; and
+   * its tokens, which a preset is applied over. Null tokens: the kit could not be read, so a preset
+   * is not applied — it would be saved over a logo nobody could see.
+   */
+  const [kit, setKit] = useState<{
+    customised: boolean;
+    logo: string | null;
+    tokens: TokenSet | null;
+  }>({ customised: false, logo: null, tokens: null });
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [failed, setFailed] = useState(false);
   const [status, setStatus] = useState<SaveStatus>('saved');
@@ -66,6 +77,7 @@ export function GuidedBuilder() {
           title: form.title,
           stored: stored.session,
           brandKitExists: brand?.customised ?? false,
+          canChangeBrand,
         });
         saver.current = new Saver(
           client,
@@ -75,12 +87,34 @@ export function GuidedBuilder() {
           setStatus,
         );
         setStatus('saved');
-        setKit({ customised: brand?.customised ?? false, logo: brand?.tokens.logoLight ?? null });
+        setKit({
+          customised: brand?.customised ?? false,
+          logo: brand?.tokens.logoLight ?? null,
+          tokens: brand?.tokens ?? null,
+        });
         setStarted(begun);
         setConversation(begun.conversation);
       })
       .catch(() => setFailed(true));
-  }, [id]);
+  }, [id, canChangeBrand]);
+
+  /**
+   * "Use these colours", pressed: the preset over the organisation's kit — its logo kept — or, with
+   * no kit yet, its first one (owner question 8). The server takes it from an administrator only.
+   */
+  async function applyPreset(presetId: string): Promise<boolean> {
+    const theme = presetById(presetId);
+    if (!theme || !kit.tokens) return false;
+    try {
+      const saved = await client.saveBrandKit(withPreset(theme, kit.tokens));
+      setKit({ customised: saved.customised, logo: saved.tokens.logoLight, tokens: saved.tokens });
+      // The app, and with it the preview, is painted with the kit: now with these colours.
+      repaint();
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   useEffect(load, [load]);
 
@@ -142,8 +176,13 @@ export function GuidedBuilder() {
         locales={{ interfaceLocale: locale, contentLocale }}
         contentLocales={locales}
         desktop={edition === 'desktop'}
-        brand={{ ...kit, organisationName: organisation?.name ?? '' }}
+        brand={{
+          customised: kit.customised,
+          logo: kit.logo,
+          organisationName: organisation?.name ?? '',
+        }}
         learning={{ aliases, remember }}
+        colours={{ canChange: canChangeBrand, apply: applyPreset }}
         onOpenEditor={() => void openEditor()}
         status={
           <SaveState status={status} onRetry={() => void saver.current?.retry()} onReload={load} />

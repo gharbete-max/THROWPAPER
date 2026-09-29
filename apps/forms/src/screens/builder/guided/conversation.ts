@@ -11,6 +11,7 @@ import {
   jumpTargets,
   optionsOf,
   rebase,
+  resume,
   rewind,
   trail,
   type Answer,
@@ -64,6 +65,10 @@ export type Started =
  * there is none or it cannot be read. The form always wins over the saved draft — resuming never
  * saves an older draft over edits made since (`CLAUDE.md`, "Never destroy user text or edits";
  * `CAVEATS.md` #75), and those edits are reconciled rather than discarded.
+ *
+ * The facts the screen provides (the graph's `inputs`) are today's, on a resumed conversation too:
+ * a brand kit made since, or a role changed since, decides what is asked from here on. What was
+ * asked before stays as it was; the log records where each answer led.
  */
 export function startConversation(input: {
   readonly graph: BuilderGraph;
@@ -71,19 +76,19 @@ export function startConversation(input: {
   readonly title: Record<string, string>;
   readonly stored: unknown;
   readonly brandKitExists: boolean;
+  /** An administrator: only they may change the organisation's colours (owner question 8). */
+  readonly canChangeBrand: boolean;
 }): Started {
+  const inputs = { brandKitExists: input.brandKitExists, canChangeBrand: input.canChangeBrand };
   const fresh = () =>
-    begin(input.graph, {
-      definition: input.definition,
-      title: input.title,
-      pending: { brandKitExists: input.brandKitExists },
-    });
+    begin(input.graph, { definition: input.definition, title: input.title, pending: inputs });
   if (input.stored === null || input.stored === undefined) {
     return { kind: 'fresh', conversation: fresh(), discarded: null };
   }
   let saved: Conversation;
   try {
-    saved = fromSession(input.stored);
+    const stored = fromSession(input.stored);
+    saved = resume({ ...stored.base, pending: { ...stored.base.pending, ...inputs } }, stored.log);
   } catch (error) {
     if (!(error instanceof MachineError)) throw error;
     return { kind: 'fresh', conversation: fresh(), discarded: 'unreadable' };
@@ -127,6 +132,41 @@ export function choose(
     if (!(error instanceof MachineError)) throw error;
     return { kind: 'refused', code: error.code };
   }
+}
+
+/**
+ * The organisation's colours, as the conversation may change them (owner question 8): whether this
+ * person may (an administrator), and the change itself — the brand kit, made or replaced with a
+ * preset — which the screen makes only after "Use these colours". It says whether it was saved.
+ */
+export interface Colours {
+  readonly canChange: boolean;
+  readonly apply: (presetId: string) => Promise<boolean>;
+}
+
+/**
+ * The preset a step chose ("Which colours should your form use?"), or null. It can take effect
+ * only through the brand kit, which is every form's and every mail's, so the screen holds a step
+ * that chose one until an administrator confirms it — and never takes it for anyone else. Read
+ * from the changes the step made, not from which node it answered, so a preset pressed, typed or
+ * picked from the answers offered is held alike, and choosing the one already chosen is held again.
+ */
+export function presetChosen(before: Conversation, after: Conversation): string | null {
+  const steps = after.log.slice(before.log.length);
+  for (const entry of steps) {
+    for (const change of entry.patch) {
+      if (
+        change.op === 'set' &&
+        change.at.length === 2 &&
+        change.at[0] === 'pending' &&
+        change.at[1] === 'themePreset' &&
+        typeof change.value === 'string'
+      ) {
+        return change.value;
+      }
+    }
+  }
+  return null;
 }
 
 /** What the conversation learns with: the aliases it reads, and the "Remember" press. */

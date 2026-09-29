@@ -1047,6 +1047,7 @@ export const jaJP: Record<MessageKey, string> = {
   'guided.skip.decided': '決定済み',
   'guided.skip.noButtons': 'ボタンなしを選びました',
   'guided.skip.brandDecided': '決定済み',
+  'guided.skip.brandByAdministrator': '組織の色は管理者が設定します。',
   'guided.skip.nothingToGuess': 'まだ推測できません',
   'guided.skip.noQuestion': '変更する質問はまだありません',
   'guided.preview.ask': 'このように表示されます。',
@@ -1203,6 +1204,13 @@ export const jaJP: Record<MessageKey, string> = {
   'conversation.remember.means': '「{phrase}」はすでに「{option}」の意味です。',
   'conversation.remember.known': 'Loppa はすでにそのように理解しています。',
   'conversation.remember.failed': '覚えられませんでした。後でもう一度お試しください。',
+  'conversation.colours.ask':
+    'この色を組織のすべてのフォームに使いますか？（ブランド設定が変わります）',
+  'conversation.colours.yes': 'この色を使う',
+  'conversation.colours.no': 'キャンセル',
+  'conversation.colours.done': '完了しました。組織のすべてのフォームがこの色になりました。',
+  'conversation.colours.failed':
+    '色を保存できませんでした。何も変更されていません。後でもう一度お試しください。',
   'phrases.title': '覚えた言い方',
   'phrases.intro':
     'あなたの組織が Loppa に教えた回答の言い方です。どれも、誰かが「覚える」を選んだときにだけ記録されました。',

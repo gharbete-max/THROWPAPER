@@ -1061,6 +1061,7 @@ export const enGB = {
   'guided.skip.decided': 'Already decided',
   'guided.skip.noButtons': 'You chose no buttons',
   'guided.skip.brandDecided': 'Already decided',
+  'guided.skip.brandByAdministrator': "Your organisation's colours are set by an administrator.",
   'guided.skip.nothingToGuess': 'Nothing to guess yet',
   'guided.skip.noQuestion': 'No question to change yet',
   'guided.preview.ask': "Here's how it looks.",
@@ -1217,6 +1218,13 @@ export const enGB = {
   'conversation.remember.means': '“{phrase}” already means “{option}”.',
   'conversation.remember.known': 'Loppa already reads it that way.',
   'conversation.remember.failed': 'That could not be remembered. Try again later.',
+  'conversation.colours.ask':
+    "Use these colours for all your organisation's forms? (changes your brand kit)",
+  'conversation.colours.yes': 'Use these colours',
+  'conversation.colours.no': 'Cancel',
+  'conversation.colours.done': "Done. Your organisation's forms now use these colours.",
+  'conversation.colours.failed':
+    'The colours could not be saved, and nothing was changed. Try again later.',
   'phrases.title': 'Learned phrases',
   'phrases.intro':
     'Ways your organisation has taught Loppa to say an answer. Each one was remembered only because someone chose Remember.',

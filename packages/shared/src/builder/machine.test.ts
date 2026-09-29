@@ -31,8 +31,13 @@ import { MachineError } from './state.js';
 
 const G = BUILDER_GRAPH;
 const locale = 'sv-SE';
-const fresh = () =>
-  begin(G, { definition: emptyDefinition, title: {}, pending: { brandKitExists: false } });
+/** Anyone but an administrator, unless it says so: only an administrator is asked the colours. */
+const fresh = (canChangeBrand = false) =>
+  begin(G, {
+    definition: emptyDefinition,
+    title: {},
+    pending: { brandKitExists: false, canChangeBrand },
+  });
 
 const nodeAt = (c: Conversation): Node => {
   const node = G.nodes.find((candidate) => candidate.id === c.state.cursor);
@@ -169,7 +174,8 @@ describe('every answer, from every state a person can reach', () => {
   it('is accepted, keeps a publishable draft publishable, replays and undoes exactly', () => {
     const seen = new Set<string>();
     const reached = new Set<string>();
-    let frontier: Conversation[] = [fresh()];
+    // Both kinds of person: the colours are asked only of an administrator (owner question 8).
+    let frontier: Conversation[] = [fresh(false), fresh(true)];
     let transitions = 0;
     for (let depth = 0; depth < DEPTH; depth += 1) {
       const next: Conversation[] = [];

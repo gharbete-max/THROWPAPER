@@ -428,8 +428,10 @@ owner accepts them (S13 asks).
    without the confirmation; with no brand kit yet, the confirmed choice creates the first one. For
    an **operator** the question is skipped, with the sentence "Your organisation's colours are set
    by an administrator." This keeps one brand source of truth and never restyles other forms
-   silently. *Built in its own commit after S9*; until then the preset is recorded in the
-   conversation and not applied, and the preview wears the organisation's kit.
+   silently. *Built after S9* (graph version 4): the question is guarded by
+   `pending.canChangeBrand`, and the screen holds an administrator's choice — pressed or typed —
+   until "Use these colours" is pressed, then saves the preset over the kit (its logo kept) before
+   the conversation moves on. The preview wears the kit, now with those colours.
 
 Three questions this plan raised are settled by revision 3 of the brief:
 

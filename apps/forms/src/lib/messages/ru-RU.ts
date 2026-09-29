@@ -1069,6 +1069,7 @@ export const ruRU: Record<MessageKey, string> = {
   'guided.skip.decided': 'Уже решено',
   'guided.skip.noButtons': 'Вы выбрали без кнопок',
   'guided.skip.brandDecided': 'Уже решено',
+  'guided.skip.brandByAdministrator': 'Цвета вашей организации задаёт администратор.',
   'guided.skip.nothingToGuess': 'Пока нечего угадывать',
   'guided.skip.noQuestion': 'Пока нет вопроса для изменения',
   'guided.preview.ask': 'Вот как это выглядит.',
@@ -1228,6 +1229,13 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.remember.means': '«{phrase}» уже значит «{option}».',
   'conversation.remember.known': 'Loppa уже понимает это так.',
   'conversation.remember.failed': 'Не удалось запомнить. Попробуйте позже.',
+  'conversation.colours.ask':
+    'Использовать эти цвета во всех формах вашей организации? (изменит ваше оформление)',
+  'conversation.colours.yes': 'Использовать цвета',
+  'conversation.colours.no': 'Отмена',
+  'conversation.colours.done': 'Готово. Все формы вашей организации теперь в этих цветах.',
+  'conversation.colours.failed':
+    'Не удалось сохранить цвета, ничего не изменилось. Попробуйте позже.',
   'phrases.title': 'Выученные фразы',
   'phrases.intro':
     'Способы сказать ответ, которым ваша организация научила Loppa. Каждый запомнен только потому, что кто-то выбрал «Запомнить».',

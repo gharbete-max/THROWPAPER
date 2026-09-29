@@ -1060,6 +1060,7 @@ export const esES: Record<MessageKey, string> = {
   'guided.skip.decided': 'Ya está decidido',
   'guided.skip.noButtons': 'Elegiste no usar botones',
   'guided.skip.brandDecided': 'Ya decidido',
+  'guided.skip.brandByAdministrator': 'Los colores de tu organización los define un administrador.',
   'guided.skip.nothingToGuess': 'Todavía no hay nada que adivinar',
   'guided.skip.noQuestion': 'Aún no hay ninguna pregunta que cambiar',
   'guided.preview.ask': 'Así queda.',
@@ -1217,6 +1218,14 @@ export const esES: Record<MessageKey, string> = {
   'conversation.remember.means': '«{phrase}» ya significa «{option}».',
   'conversation.remember.known': 'Loppa ya lo entiende así.',
   'conversation.remember.failed': 'No se ha podido recordar. Inténtalo más tarde.',
+  'conversation.colours.ask':
+    '¿Usar estos colores en todos los formularios de tu organización? (cambia tu marca)',
+  'conversation.colours.yes': 'Usar estos colores',
+  'conversation.colours.no': 'Cancelar',
+  'conversation.colours.done':
+    'Hecho. Los formularios de tu organización usan ahora estos colores.',
+  'conversation.colours.failed':
+    'No se han podido guardar los colores y no se ha cambiado nada. Inténtalo más tarde.',
   'phrases.title': 'Expresiones aprendidas',
   'phrases.intro':
     'Formas en que tu organización ha enseñado a Loppa a decir una respuesta. Cada una se recordó solo porque alguien eligió Recordar.',

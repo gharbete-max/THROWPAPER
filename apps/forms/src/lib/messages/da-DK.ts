@@ -1042,6 +1042,7 @@ export const daDK: Record<MessageKey, string> = {
   'guided.skip.decided': 'Allerede besluttet',
   'guided.skip.noButtons': 'Du fravalgte knapper',
   'guided.skip.brandDecided': 'Allerede besluttet',
+  'guided.skip.brandByAdministrator': 'Jeres organisations farver fastsættes af en administrator.',
   'guided.skip.nothingToGuess': 'Intet at gætte endnu',
   'guided.skip.noQuestion': 'Intet spørgsmål at ændre endnu',
   'guided.preview.ask': 'Sådan ser det ud.',
@@ -1198,6 +1199,13 @@ export const daDK: Record<MessageKey, string> = {
   'conversation.remember.means': '»{phrase}« betyder allerede »{option}«.',
   'conversation.remember.known': 'Loppa forstår det allerede sådan.',
   'conversation.remember.failed': 'Det kunne ikke huskes. Prøv igen senere.',
+  'conversation.colours.ask':
+    'Brug disse farver i alle jeres organisations formularer? (ændrer jeres brand)',
+  'conversation.colours.yes': 'Brug farverne',
+  'conversation.colours.no': 'Annuller',
+  'conversation.colours.done': 'Færdig. Jeres organisations formularer bruger nu disse farver.',
+  'conversation.colours.failed':
+    'Farverne kunne ikke gemmes, og intet blev ændret. Prøv igen senere.',
   'phrases.title': 'Lærte udtryk',
   'phrases.intro':
     'Måder, jeres organisation har lært Loppa at sige et svar på. Hver af dem blev kun husket, fordi nogen valgte Husk.',

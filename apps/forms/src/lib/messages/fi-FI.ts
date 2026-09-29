@@ -1052,6 +1052,7 @@ export const fiFI: Record<MessageKey, string> = {
   'guided.skip.decided': 'Päätetty jo',
   'guided.skip.noButtons': 'Valitsit ei painikkeita',
   'guided.skip.brandDecided': 'Päätetty jo',
+  'guided.skip.brandByAdministrator': 'Organisaationne värit määrittää ylläpitäjä.',
   'guided.skip.nothingToGuess': 'Ei vielä arvattavaa',
   'guided.skip.noQuestion': 'Ei vielä muutettavaa kysymystä',
   'guided.preview.ask': 'Tältä se näyttää.',
@@ -1210,6 +1211,13 @@ export const fiFI: Record<MessageKey, string> = {
   'conversation.remember.means': '”{phrase}” tarkoittaa jo: ”{option}”.',
   'conversation.remember.known': 'Loppa ymmärtää sen jo niin.',
   'conversation.remember.failed': 'Muistaminen ei onnistunut. Yritä myöhemmin uudelleen.',
+  'conversation.colours.ask':
+    'Käytetäänkö näitä värejä kaikissa organisaationne lomakkeissa? (muuttaa ilmettänne)',
+  'conversation.colours.yes': 'Käytä värejä',
+  'conversation.colours.no': 'Peruuta',
+  'conversation.colours.done': 'Valmis. Organisaationne lomakkeet käyttävät nyt näitä värejä.',
+  'conversation.colours.failed':
+    'Värejä ei voitu tallentaa, eikä mitään muutettu. Yritä myöhemmin uudelleen.',
   'phrases.title': 'Opitut ilmaukset',
   'phrases.intro':
     'Tapoja, joilla organisaationne on opettanut Lopan sanomaan vastauksen. Jokainen muistettiin vain, koska joku valitsi Muista.',

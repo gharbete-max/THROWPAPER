@@ -1078,6 +1078,8 @@ export const deDE: Record<MessageKey, string> = {
   'guided.skip.decided': 'Bereits entschieden',
   'guided.skip.noButtons': 'Sie haben keine Schaltflächen gewählt',
   'guided.skip.brandDecided': 'Bereits entschieden',
+  'guided.skip.brandByAdministrator':
+    'Die Farben Ihrer Organisation legt eine Administratorin oder ein Administrator fest.',
   'guided.skip.nothingToGuess': 'Noch nichts zu erraten',
   'guided.skip.noQuestion': 'Noch keine Frage zum Ändern',
   'guided.preview.ask': 'So sieht es aus.',
@@ -1242,6 +1244,14 @@ export const deDE: Record<MessageKey, string> = {
   'conversation.remember.known': 'Loppa versteht das schon so.',
   'conversation.remember.failed':
     'Das ließ sich nicht merken. Versuchen Sie es später noch einmal.',
+  'conversation.colours.ask':
+    'Diese Farben für alle Formulare Ihrer Organisation verwenden? (ändert Ihre Marke)',
+  'conversation.colours.yes': 'Farben verwenden',
+  'conversation.colours.no': 'Abbrechen',
+  'conversation.colours.done':
+    'Erledigt. Alle Formulare Ihrer Organisation verwenden jetzt diese Farben.',
+  'conversation.colours.failed':
+    'Die Farben konnten nicht gespeichert werden, und nichts wurde geändert. Versuchen Sie es später noch einmal.',
   'phrases.title': 'Gelernte Wendungen',
   'phrases.intro':
     'Wie Ihre Organisation Loppa beigebracht hat, eine Antwort zu sagen. Jede wurde nur gemerkt, weil jemand „Merken“ gewählt hat.',

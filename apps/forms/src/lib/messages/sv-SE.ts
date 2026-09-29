@@ -1042,6 +1042,7 @@ export const svSE: Record<MessageKey, string> = {
   'guided.skip.decided': 'Redan bestämt',
   'guided.skip.noButtons': 'Du valde bort knappar',
   'guided.skip.brandDecided': 'Redan bestämt',
+  'guided.skip.brandByAdministrator': 'Er organisations färger bestäms av en administratör.',
   'guided.skip.nothingToGuess': 'Inget att gissa ännu',
   'guided.skip.noQuestion': 'Ingen fråga att ändra ännu',
   'guided.preview.ask': 'Så här ser det ut.',
@@ -1199,6 +1200,13 @@ export const svSE: Record<MessageKey, string> = {
   'conversation.remember.means': '”{phrase}” betyder redan ”{option}”.',
   'conversation.remember.known': 'Loppa förstår det redan så.',
   'conversation.remember.failed': 'Det gick inte att komma ihåg. Försök igen senare.',
+  'conversation.colours.ask':
+    'Använda de här färgerna i alla er organisations formulär? (ändrar ert utseende)',
+  'conversation.colours.yes': 'Använd färgerna',
+  'conversation.colours.no': 'Avbryt',
+  'conversation.colours.done': 'Klart. Er organisations formulär har nu de här färgerna.',
+  'conversation.colours.failed':
+    'Färgerna kunde inte sparas, och inget ändrades. Försök igen senare.',
   'phrases.title': 'Inlärda fraser',
   'phrases.intro':
     'Sätt som er organisation har lärt Loppa att säga ett svar på. Var och en kom Loppa ihåg bara för att någon valde Kom ihåg.',

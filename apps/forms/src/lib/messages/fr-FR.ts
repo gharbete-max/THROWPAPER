@@ -1070,6 +1070,8 @@ export const frFR: Record<MessageKey, string> = {
   'guided.skip.decided': 'Déjà décidé',
   'guided.skip.noButtons': 'Vous avez choisi sans boutons',
   'guided.skip.brandDecided': 'Déjà décidé',
+  'guided.skip.brandByAdministrator':
+    'Les couleurs de votre organisation sont définies par un administrateur.',
   'guided.skip.nothingToGuess': 'Rien à deviner pour l’instant',
   'guided.skip.noQuestion': 'Aucune question à modifier pour l’instant',
   'guided.preview.ask': 'Voici le rendu.',
@@ -1232,6 +1234,14 @@ export const frFR: Record<MessageKey, string> = {
   'conversation.remember.means': '« {phrase} » veut déjà dire « {option} ».',
   'conversation.remember.known': 'Loppa le comprend déjà ainsi.',
   'conversation.remember.failed': 'Impossible de le retenir. Réessayez plus tard.',
+  'conversation.colours.ask':
+    'Utiliser ces couleurs pour tous les formulaires de votre organisation ? (modifie votre identité)',
+  'conversation.colours.yes': 'Utiliser ces couleurs',
+  'conversation.colours.no': 'Annuler',
+  'conversation.colours.done':
+    'C’est fait. Les formulaires de votre organisation utilisent désormais ces couleurs.',
+  'conversation.colours.failed':
+    'Les couleurs n’ont pas pu être enregistrées, et rien n’a changé. Réessayez plus tard.',
   'phrases.title': 'Expressions apprises',
   'phrases.intro':
     'Les façons dont votre organisation a appris à Loppa à dire une réponse. Chacune n’a été retenue que parce que quelqu’un a choisi Retenir.',

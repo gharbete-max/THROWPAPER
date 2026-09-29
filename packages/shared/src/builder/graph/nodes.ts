@@ -25,11 +25,16 @@ import type { BuilderGraph } from './schema.js';
  * answers several at once — "three buttons, pill shape, side by side" — can answer them ahead of
  * their turn, and the conversation passes them by when it gets there instead of asking again.
  * "One answer or several?" and "Where should they sit?" gained the `decided()` guard that does it.
+ *
+ * **Version 4 (owner question 8)** asks "Which colours should your form use?" only of someone who
+ * may change the organisation's colours (`pending.canChangeBrand`, an administrator): a preset takes
+ * effect only through the brand kit, which is every form's and every mail's. Anyone else passes it
+ * by, told why. What the administrator picks is applied only once they confirm it, on the screen.
  */
 export const BUILDER_GRAPH = {
-  graphVersion: 3,
+  graphVersion: 4,
   start: 'flow.start',
-  inputs: ['pending.brandKitExists', 'guess.pMille'],
+  inputs: ['pending.brandKitExists', 'pending.canChangeBrand', 'guess.pMille'],
   nodes: [
     {
       id: 'flow.start',
@@ -166,6 +171,10 @@ export const BUILDER_GRAPH = {
       kind: 'pick-one',
       ask: 'guided.brand.quick.ask',
       help: 'guided.brand.quick.help',
+      // The colours are the organisation's, and only an administrator may change them (owner
+      // question 8). The screen asks an administrator before a preset changes the brand kit.
+      when: 'pending.canChangeBrand == true',
+      skip: 'guided.skip.brandByAdministrator',
       next: 'brand.logoSlot',
       escape: 'menu.siblings(brand)',
       // Loppa's own `default` look is not offered: a user's preview is never in Loppa's colours

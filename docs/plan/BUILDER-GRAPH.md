@@ -133,8 +133,10 @@ joins the state with the engine that updates it, S11.)
 Guards read `draft`, `sidecar`, `pending`, `focus` and `guess`, and `answered()` reads the log. A
 guard that reads `pending.x` or `guess.x` must name something a patch writes or the graph lists in
 `inputs` — the facts the shell provides before the conversation starts (`pending.brandKitExists`
-from `GET /v1/brand-kit`; `guess.pMille` from the belief engine). A typo'd key fails G8 instead of
-silently reading `null` for ever.
+from `GET /v1/brand-kit`; `pending.canChangeBrand`, whether the person is an administrator, since
+graph version 4; `guess.pMille` from the belief engine). A typo'd key fails G8 instead of silently
+reading `null` for ever. A resumed conversation is given today's, not the saved ones: they decide
+only what is asked from then on, and the log keeps where each earlier answer led.
 
 A **path** addresses state without array indices, so a path written today still means the same
 field after the person reorders their questions:
@@ -470,6 +472,8 @@ editing on the preview renames (S5).
   id: 'brand.quick', group: 'brand', kind: 'pick-one',
   ask: 'guided.brand.quick.ask',                  // "Which colours should your form use?"
   help: 'guided.brand.quick.help',
+  // Graph version 4: an administrator's question alone (owner question 8).
+  when: 'pending.canChangeBrand == true', skip: 'guided.skip.brandByAdministrator',
   next: 'brand.logoSlot', escape: 'menu.siblings(brand)',
   options: [
     { id: 'minimal', label: 'guided.brand.quick.minimal',
@@ -491,13 +495,18 @@ editing on the preview renames (S5).
 ```
 
 `pending.brandKitExists` is set by the shell before the conversation starts, from `GET
-/v1/brand-kit` — one of the graph's two `inputs`, and it arrives as data in state, not as a call
+/v1/brand-kit` — one of the graph's `inputs`, and it arrives as data in state, not as a call
 from inside a guard. Since graph version 2 (S5) the logo slot is written into the form,
-`settings.layout.logoSlot`. The preset stays in `pending`: applying it means changing the brand kit,
-which is organisation-wide and an administrator's to change — owner question 8
-(`PREDICTIVE-BUILDER.md`). Until it is answered the preview wears the organisation's kit, and says
-so when there is none (`CAVEATS.md` #32). The logo upload with colours from the logo
-(`dominant-colour.ts`) waits with it.
+`settings.layout.logoSlot`. The preset is written to `pending`, never to the form: it takes
+effect only through the brand kit, which is organisation-wide and an administrator's to change
+(owner question 8, `PREDICTIVE-BUILDER.md`). So since graph version 4 the question is asked only
+when `pending.canChangeBrand` holds, and anyone else passes it by with "Your organisation's
+colours are set by an administrator." For an administrator the screen holds the step that chose a
+preset until "Use these colours for all your organisation's forms? (changes your brand kit)" is
+confirmed, saves the preset over the kit (its logo kept, or as the organisation's first kit), and
+only then takes the step; Cancel, Back and Escape change nothing. The preview wears the kit, and
+says so when there is none (`CAVEATS.md` #32). The logo upload with colours from the logo
+(`dominant-colour.ts`) is still to come.
 
 ## The nodes of slice S1
 
@@ -532,7 +541,8 @@ languages).
 
 Graph version 3 (S6) gave `choice.buttons` and `choice.answers` the slot `kind`, `choice.count`
 `options`, `choice.shape` `shape`, `choice.placement` `placement` and `text.required` `required`,
-each with the `decided()` guard G14 asks for.
+each with the `decided()` guard G14 asks for. Graph version 4 (owner question 8) asks `brand.quick`
+of an administrator alone, through the input `pending.canChangeBrand`.
 
 S2 changed three things the walk over the whole graph found (`CAVEATS.md` #62, #65):
 `text.required` asks only when there is a question (`when: 'has(focus)'`, skip reason

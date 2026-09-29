@@ -1042,6 +1042,7 @@ export const nbNO: Record<MessageKey, string> = {
   'guided.skip.decided': 'Allerede bestemt',
   'guided.skip.noButtons': 'Du valgte bort knapper',
   'guided.skip.brandDecided': 'Allerede bestemt',
+  'guided.skip.brandByAdministrator': 'Organisasjonens farger bestemmes av en administrator.',
   'guided.skip.nothingToGuess': 'Ingenting å gjette ennå',
   'guided.skip.noQuestion': 'Ingen spørsmål å endre ennå',
   'guided.preview.ask': 'Slik ser det ut.',
@@ -1196,6 +1197,13 @@ export const nbNO: Record<MessageKey, string> = {
   'conversation.remember.means': '«{phrase}» betyr allerede «{option}».',
   'conversation.remember.known': 'Loppa forstår det allerede slik.',
   'conversation.remember.failed': 'Det kunne ikke huskes. Prøv igjen senere.',
+  'conversation.colours.ask':
+    'Bruke disse fargene i alle organisasjonens skjemaer? (endrer merkevaren deres)',
+  'conversation.colours.yes': 'Bruk fargene',
+  'conversation.colours.no': 'Avbryt',
+  'conversation.colours.done': 'Ferdig. Organisasjonens skjemaer bruker nå disse fargene.',
+  'conversation.colours.failed':
+    'Fargene kunne ikke lagres, og ingenting ble endret. Prøv igjen senere.',
   'phrases.title': 'Lærte uttrykk',
   'phrases.intro':
     'Måter organisasjonen deres har lært Loppa å si et svar på. Hvert av dem ble husket bare fordi noen valgte Husk.',

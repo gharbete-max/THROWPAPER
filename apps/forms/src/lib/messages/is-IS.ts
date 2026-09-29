@@ -1046,6 +1046,7 @@ export const isIS: Record<MessageKey, string> = {
   'guided.skip.decided': 'Þegar ákveðið',
   'guided.skip.noButtons': 'Þú valdir enga hnappa',
   'guided.skip.brandDecided': 'Þegar ákveðið',
+  'guided.skip.brandByAdministrator': 'Stjórnandi ákveður liti félagsins ykkar.',
   'guided.skip.nothingToGuess': 'Ekkert að giska á enn',
   'guided.skip.noQuestion': 'Engin spurning til að breyta enn',
   'guided.preview.ask': 'Svona lítur þetta út.',
@@ -1204,6 +1205,13 @@ export const isIS: Record<MessageKey, string> = {
   'conversation.remember.means': '„{phrase}“ þýðir nú þegar „{option}“.',
   'conversation.remember.known': 'Loppa skilur þetta nú þegar þannig.',
   'conversation.remember.failed': 'Ekki tókst að muna þetta. Reyndu aftur síðar.',
+  'conversation.colours.ask':
+    'Nota þessa liti á öllum eyðublöðum félagsins ykkar? (breytir útlitinu ykkar)',
+  'conversation.colours.yes': 'Nota litina',
+  'conversation.colours.no': 'Hætta við',
+  'conversation.colours.done': 'Lokið. Öll eyðublöð félagsins ykkar nota nú þessa liti.',
+  'conversation.colours.failed':
+    'Ekki tókst að vista litina og engu var breytt. Reyndu aftur síðar.',
   'phrases.title': 'Lærð orðasambönd',
   'phrases.intro':
     'Leiðir sem fyrirtækið ykkar hefur kennt Loppu til að segja svar. Hvert þeirra var aðeins munað af því að einhver valdi Muna.',

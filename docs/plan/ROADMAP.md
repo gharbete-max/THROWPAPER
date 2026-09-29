@@ -307,3 +307,18 @@ when each slice ends.)*
   formats, items and segments, 110 debug snapshots, mutation-checked); the budget (stages 2–7).
   Next: S10, the review screen. Open: ADRs 0017–0021 to accept; scanned pages and other writers'
   files in the corpus; `glued-marker`.
+- **Owner question 8, the colours (2026-09-29).** What: "Which colours should your form use?" is
+  asked only of an administrator (graph version 4, input `pending.canChangeBrand`); anyone else
+  passes it by, and the trail says "Your organisation's colours are set by an administrator." An
+  administrator's choice, pressed or typed, is held — not taken — until "Use these colours for all
+  your organisation's forms? (changes your brand kit)" is confirmed; then the preset is saved over
+  the organisation's kit, its logo kept (or as its first kit), and only once it is saved does the
+  conversation move on. Cancel, Back or Escape change nothing. A resumed conversation reads today's
+  facts, so a role or a kit changed since decides what is asked from then on. The Brand screen's
+  gallery and the conversation apply a preset with one function (`lib/theme-preset.ts`). Why: the
+  owner's delegated answer to question 8 — one brand source of truth, and no form restyling the
+  others silently. Tests: the operator's skip and its reason, the administrator's question, a
+  preset held however it was given (and again when chosen twice), the resume with today's facts, the
+  presets the graph offers against the kit's (#32), the machine's walk from both kinds of person,
+  and two journeys in `e2e/guided-builder.spec.ts`: Cancel and Escape change nothing, Enter makes
+  the first kit in Garden's colours; an operator is never asked. Next: S10.

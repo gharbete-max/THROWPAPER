@@ -31,12 +31,14 @@ import {
   choose,
   confirmGuess,
   lastChoice,
+  presetChosen,
   previewOf,
   readsFreeText,
   rememberOffer,
   stepBack,
   typed,
   wayOut,
+  type Colours,
   type Elsewhere,
   type Learning,
   type Locales,
@@ -74,6 +76,8 @@ export interface ShellProps {
   readonly brand: PreviewBrand;
   /** The aliases the ladder reads with, and "Remember". Built-in aliases only when absent. */
   readonly learning?: Learning;
+  /** Whether this person may change the organisation's colours, and the change. Absent: nobody. */
+  readonly colours?: Colours;
 }
 
 /** Misses in a row before the conversation stops asking and shows every question of the group. */
@@ -123,8 +127,24 @@ type Said =
       readonly label: string;
       readonly atStep: number;
     }
-  /** What came of "Remember". */
-  | { readonly kind: 'learned'; readonly note: string; readonly atStep: number };
+  /** What came of "Remember", or of "Use these colours". */
+  | { readonly kind: 'learned'; readonly note: string; readonly atStep: number }
+  /**
+   * Owner question 8: a step that chose the organisation's colours, held — not taken — until an
+   * administrator presses "Use these colours", and then only once the brand kit is saved.
+   */
+  | {
+      readonly kind: 'colours';
+      readonly preset: string;
+      /** The conversation the step was taken from, and the step. */
+      readonly from: Conversation;
+      readonly next: Conversation;
+      /** What the step would have said, had it not been held. */
+      readonly after: Said | null;
+      readonly state: 'asking' | 'saving' | 'failed';
+    }
+  /** Colours chosen by someone who may not change them: never taken, and said why. */
+  | { readonly kind: 'coloursRefused' };
 
 /** Where focus goes after "change": back into the box, to edit the words. */
 const THE_BOX = '\u0000box';
@@ -140,6 +160,7 @@ export function Shell({
   status,
   brand,
   learning,
+  colours,
 }: ShellProps) {
   const t = useT();
   const reduced = useReducedMotion();
@@ -176,6 +197,13 @@ export function Shell({
   /** The node's own answers, without the question's "?" or the preview's controls. */
   const bodyRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLTextAreaElement>(null);
+  /** "Use these colours": focused when it is asked, so Enter answers it and Tab passes it. */
+  const confirmColoursRef = useRef<HTMLButtonElement>(null);
+  /** The conversation as it is now, for a save that finishes after the person has moved on. */
+  const latest = useRef(conversation);
+  useEffect(() => {
+    latest.current = conversation;
+  });
 
   /** The label an option id reads as, in the interface language. */
   const labelOf = (optionId: string | null, value: unknown): string => {
@@ -207,18 +235,66 @@ export function Shell({
     onChange(next);
   }
 
+  /**
+   * A step taken, and what it said shown with it. A step that chose the organisation's colours is
+   * held for an administrator's "Use these colours" instead, and is never taken for anyone else
+   * (owner question 8): the brand kit is every form's and every mail's.
+   */
+  function take(next: Conversation, after: Said | null) {
+    if (said?.kind === 'colours' && said.state === 'saving') return;
+    const preset = presetChosen(conversation, next);
+    if (preset !== null) {
+      setSaid(
+        colours?.canChange
+          ? { kind: 'colours', preset, from: conversation, next, after, state: 'asking' }
+          : { kind: 'coloursRefused' },
+      );
+      return;
+    }
+    setSaid(after);
+    setText('');
+    go(next, false);
+  }
+
+  /** "Use these colours": the brand kit first; the step only once it is saved. */
+  async function applyColours(held: Extract<Said, { kind: 'colours' }>) {
+    if (!colours) return;
+    setSaid({ ...held, state: 'saving' });
+    if (!(await colours.apply(held.preset))) {
+      setSaid({ ...held, state: 'failed' });
+      return;
+    }
+    // Moved on while it saved: the kit is as confirmed, but a step from elsewhere is not taken.
+    if (latest.current !== held.from) {
+      setSaid(null);
+      return;
+    }
+    setSaid(
+      held.after ?? {
+        kind: 'learned',
+        note: t('conversation.colours.done'),
+        atStep: held.next.log.length,
+      },
+    );
+    setText('');
+    go(held.next, false);
+  }
+
   function answer(given: Answer) {
     const result = choose(graph, conversation, given, locales);
     if (result.kind === 'refused') {
       setSaid({ kind: 'refused' });
       return;
     }
-    setSaid(null);
-    setText('');
-    go(result.conversation, false);
+    take(result.conversation, null);
   }
 
   function goBack() {
+    // Colours waiting for "Use these colours": Back (and Escape) cancels them first.
+    if (said?.kind === 'colours') {
+      if (said.state !== 'saving') setSaid(null);
+      return;
+    }
     if (step === 0) return;
     const focus = lastChoice(conversation);
     setSaid(null);
@@ -251,7 +327,7 @@ export function Shell({
       setSaid({ kind: 'refused' });
       return;
     }
-    setSaid({
+    take(result.conversation, {
       kind: 'read',
       text,
       answers: result.readings.map(answerOf),
@@ -259,8 +335,6 @@ export function Shell({
       from: step,
       atStep: result.conversation.log.length,
     });
-    setText('');
-    go(result.conversation, false);
   }
 
   /** "Did you mean …?" — yes: the guessed answer, as a step, with its chip. */
@@ -270,7 +344,7 @@ export function Shell({
       setSaid({ kind: 'refused' });
       return;
     }
-    setSaid({
+    take(result.conversation, {
       kind: 'read',
       text: guessed.text,
       answers: result.readings.map(answerOf),
@@ -278,8 +352,6 @@ export function Shell({
       from: step,
       atStep: result.conversation.log.length,
     });
-    setText('');
-    go(result.conversation, false);
   }
 
   /** "Did you mean …?" — no: this question's own answers, to pick from, as for any miss. */
@@ -342,7 +414,8 @@ export function Shell({
       return;
     }
     const offer = learning ? rememberOffer(graph, words, reading, locales, learning.aliases) : null;
-    setSaid(
+    take(
+      result.conversation,
       offer
         ? {
             kind: 'remember',
@@ -352,8 +425,6 @@ export function Shell({
           }
         : null,
     );
-    setText('');
-    go(result.conversation, false);
   }
 
   // A new node: focus its first answer, or the one chosen before on Back — where there are no
@@ -393,6 +464,12 @@ export function Shell({
     );
     // Only on arriving somewhere: a move, or a question to reconcile coming or going.
   }, [node.id, position, waiting]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // "Use these colours?" takes focus when it is asked, and again after a save that failed (the
+  // button was disabled while it saved), so Enter answers it and Back cancels it.
+  useEffect(() => {
+    if (said?.kind === 'colours' && said.state !== 'saving') confirmColoursRef.current?.focus();
+  }, [said]);
 
   // The keys, on the whole window, so they work wherever focus is.
   useEffect(() => {
@@ -563,6 +640,37 @@ export function Shell({
           </p>
         )}
 
+        {said?.kind === 'colours' && (
+          <div className="conversation__notice" role="status">
+            <p>{t('conversation.colours.ask')}</p>
+            {said.state === 'failed' && <p className="small">{t('conversation.colours.failed')}</p>}
+            <div className="conversation__maybe">
+              <button
+                ref={confirmColoursRef}
+                type="button"
+                className="button"
+                disabled={said.state === 'saving'}
+                onClick={() => void applyColours(said)}
+              >
+                {t('conversation.colours.yes')}
+              </button>
+              <button
+                type="button"
+                className="button button--quiet"
+                disabled={said.state === 'saving'}
+                onClick={() => setSaid(null)}
+              >
+                {t('conversation.colours.no')}
+              </button>
+            </div>
+          </div>
+        )}
+        {said?.kind === 'coloursRefused' && (
+          <p className="conversation__reading" role="status">
+            {t('guided.skip.brandByAdministrator')}
+          </p>
+        )}
+
         {!waiting && readsFreeText(node) && (
           <form
             className="conversation__type"
@@ -583,7 +691,14 @@ export function Shell({
               maxLength={MAX_LIST}
               onChange={(event) => {
                 setText(event.target.value);
-                if (said?.kind === 'ask' || said?.kind === 'refused' || said?.kind === 'guess') {
+                // Typing again is a new answer: what the last one said, or was held for, is gone.
+                if (
+                  said?.kind === 'ask' ||
+                  said?.kind === 'refused' ||
+                  said?.kind === 'guess' ||
+                  said?.kind === 'coloursRefused' ||
+                  (said?.kind === 'colours' && said.state !== 'saving')
+                ) {
                   setSaid(null);
                 }
               }}

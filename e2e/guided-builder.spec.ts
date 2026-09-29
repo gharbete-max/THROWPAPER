@@ -335,18 +335,106 @@ test.describe('on a small phone, by keyboard alone', () => {
     await question(page, 'Should this look like your organisation?');
     await page.keyboard.press('1');
 
-    // The colours are asked only when there is no brand kit to use; where the logo goes, always.
-    const colours = page.getByRole('heading', { name: 'Which colours should your form use?' });
+    // The demo organisation has a brand kit, so the colours are not asked: where the logo goes
+    // always is. The colours are pressed at this size in "the colours are the organisation's".
     const logo = page.getByRole('heading', { name: 'Where should your logo go?' });
-    await expect(colours.or(logo)).toBeVisible();
-    if (await colours.isVisible()) {
-      await answersFit(page);
-      await page.keyboard.press('1');
-    }
     await expect(logo).toBeVisible();
     await answersFit(page);
     await page.keyboard.press('1');
     await expect(page.getByRole('button', { name: 'Continue' })).toBeFocused();
+  });
+
+  /**
+   * Owner question 8. "Which colours should your form use?" can take effect only through the brand
+   * kit, which is the whole organisation's: an administrator is asked before it changes, and
+   * nobody else is asked at all. The colours are asked only when there is no kit, and the demo
+   * organisation has one, so these take it away and put it back.
+   */
+  test.describe("the colours are the organisation's (owner question 8)", () => {
+    type Kit = {
+      organisation_id: string;
+      tokens: Parameters<typeof sql.json>[0];
+      updated_by: string | null;
+    };
+    let kits: Kit[] = [];
+    test.beforeAll(async () => {
+      kits = await sql<Kit[]>`select organisation_id, tokens, updated_by from brand_kits`;
+    });
+    test.beforeEach(async () => {
+      await sql`delete from brand_kits`;
+    });
+    test.afterAll(async () => {
+      await sql`delete from brand_kits`;
+      for (const kit of kits) {
+        await sql`insert into brand_kits (organisation_id, tokens, updated_by)
+          values (${kit.organisation_id}, ${sql.json(kit.tokens)}, ${kit.updated_by})`;
+      }
+    });
+
+    const theKit = async () =>
+      (await sql`select tokens from brand_kits`).map((row) => row['tokens']);
+    const notice = (page: Page) => page.locator('.conversation__notice');
+
+    test('an administrator is asked first, Cancel changes nothing, and Enter makes the first kit', async ({
+      page,
+    }) => {
+      await signInAs(page, sql, 'admin@example.com', 'en-GB');
+      await startFromQuestions(page);
+      await page.keyboard.press('1');
+      await question(page, 'Should this look like your organisation?');
+      await page.keyboard.press('1');
+      await question(page, 'Which colours should your form use?');
+      await answersFit(page);
+
+      // Garden, by its digit: asked about, and nothing changed yet.
+      await page.keyboard.press('2');
+      await expect(
+        notice(page).getByText(
+          "Use these colours for all your organisation's forms? (changes your brand kit)",
+        ),
+      ).toBeVisible();
+      const use = notice(page).getByRole('button', { name: 'Use these colours' });
+      await expect(use).toBeFocused();
+      await expect(use).toBeInViewport();
+      await notice(page).getByRole('button', { name: 'Cancel' }).click();
+      await expect(notice(page)).toHaveCount(0);
+      await question(page, 'Which colours should your form use?');
+      expect(await theKit()).toEqual([]);
+
+      // Again, and Escape: cancelled, still asking, the kit untouched.
+      await page.keyboard.press('2');
+      await expect(use).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(notice(page)).toHaveCount(0);
+      await question(page, 'Which colours should your form use?');
+      expect(await theKit()).toEqual([]);
+
+      // Again, and Enter: the organisation's first kit, in Garden's colours, and on to the logo.
+      await page.keyboard.press('2');
+      await expect(use).toBeFocused();
+      await page.keyboard.press('Enter');
+      await question(page, 'Where should your logo go?');
+      await expect(
+        page.getByText("Done. Your organisation's forms now use these colours."),
+      ).toBeVisible();
+      const [kit] = (await theKit()) as { colour: { primary: string }; radius: string }[];
+      expect(kit).toMatchObject({ colour: { primary: '#2f6b4f' }, radius: '14px' });
+    });
+
+    test('anyone else is never asked, and the trail says why', async ({ page }) => {
+      await signInAs(page, sql, 'operator@example.com', 'en-GB');
+      await startFromQuestions(page);
+      await page.keyboard.press('1');
+      await question(page, 'Should this look like your organisation?');
+      await page.keyboard.press('1');
+      await question(page, 'Where should your logo go?');
+      await expect(
+        page.locator('.conversation__skipped', {
+          hasText: "Your organisation's colours are set by an administrator.",
+        }),
+      ).toBeVisible();
+      expect(await theKit()).toEqual([]);
+    });
   });
 });
 

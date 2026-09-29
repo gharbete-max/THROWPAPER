@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { BUILDER_GRAPH, changedByHand, toSession, type Conversation } from '@tp/shared/builder';
+import {
+  BUILDER_GRAPH,
+  changedByHand,
+  optionsOf,
+  toSession,
+  type Conversation,
+} from '@tp/shared/builder';
 import { emptyDefinition, type FormDefinition } from '@tp/shared/forms';
 import { BUILTIN_ALIASES } from '@tp/shared/interpret';
+import { THEME_PRESET_IDS } from '@tp/tokens';
 import {
   askMenu,
   backTo,
@@ -11,6 +18,7 @@ import {
   crumbs,
   focusedField,
   lastChoice,
+  presetChosen,
   readsFreeText,
   rememberOffer,
   showsPreview,
@@ -30,8 +38,13 @@ const G = BUILDER_GRAPH;
 const locales: Locales = { interfaceLocale: 'en-GB', contentLocale: 'sv-SE' };
 const title = { 'sv-SE': 'Mat' };
 
-const start = (definition: FormDefinition = emptyDefinition, stored: unknown = null) =>
-  startConversation({ graph: G, definition, title, stored, brandKitExists: false });
+/** An administrator's conversation, unless it says otherwise: only they are asked the colours. */
+const start = (
+  definition: FormDefinition = emptyDefinition,
+  stored: unknown = null,
+  canChangeBrand = true,
+) =>
+  startConversation({ graph: G, definition, title, stored, brandKitExists: false, canChangeBrand });
 
 function stepped(result: ReturnType<typeof choose> | ReturnType<typeof typed>): Conversation {
   if (result.kind !== 'stepped') throw new Error(`not a step: ${JSON.stringify(result)}`);
@@ -298,5 +311,71 @@ describe('the way out', () => {
     const out = wayOut(G, c).map((o) => o.nodeId);
     expect(out).toEqual(['brand.quick', 'brand.logoSlot', 'brand.preview']);
     expect(wayOut(G, start().conversation).map((o) => o.nodeId)).toEqual(['menu.top']);
+  });
+});
+
+describe('the colours (owner question 8)', () => {
+  /** "Should this look like your organisation?" — yes, with no brand kit yet. */
+  const toColours = (canChangeBrand: boolean) =>
+    press(press(start(emptyDefinition, null, canChangeBrand).conversation, 'signup'), 'yes');
+
+  it('are asked of an administrator', () => {
+    expect(toColours(true).state.cursor).toBe('brand.quick');
+  });
+
+  it('are passed by for anyone else, and the trail says why', () => {
+    const c = toColours(false);
+    expect(c.state.cursor).toBe('brand.logoSlot');
+    expect(crumbs(G, c).at(-1)?.skipped).toEqual([
+      { question: 'guided.brand.quick.ask', reason: 'guided.skip.brandByAdministrator' },
+    ]);
+  });
+
+  it('offer only presets a brand kit can take, never Loppa’s own look (CAVEATS.md #32)', () => {
+    const node = G.nodes.find((n) => n.id === 'brand.quick')!;
+    const written = optionsOf(node).flatMap((option) =>
+      option.patch.flatMap((op) =>
+        op.op === 'set' && op.path === 'pending.themePreset' ? [op.value] : [],
+      ),
+    );
+    expect(written).toHaveLength(optionsOf(node).length);
+    for (const preset of written) {
+      expect(THEME_PRESET_IDS).toContain(preset);
+      expect(preset).not.toBe('default');
+    }
+  });
+
+  it('a step that chose one is known by what it changed: pressed or typed alike', () => {
+    const at = toColours(true);
+    expect(presetChosen(at, press(at, 'garden'))).toBe('garden');
+    expect(presetChosen(at, stepped(typed(G, at, 'Garden', locales)))).toBe('garden');
+  });
+
+  it('nothing else is a colour choice: another answer, a jump, or Back', () => {
+    const at = toColours(true);
+    const garden = press(at, 'garden');
+    expect(presetChosen(at, press(at, 'midnight'))).toBe('midnight');
+    expect(presetChosen(garden, press(garden, 'header-left'))).toBeNull();
+    expect(
+      presetChosen(at, stepped(choose(G, at, { kind: 'jump', to: 'brand.logoSlot' }, locales))),
+    ).toBeNull();
+    expect(presetChosen(garden, stepBack(garden))).toBeNull();
+  });
+
+  it('choosing the preset already chosen is held again', () => {
+    const garden = press(toColours(true), 'garden');
+    const again = stepped(choose(G, garden, { kind: 'jump', to: 'brand.quick' }, locales));
+    expect(again.state.cursor).toBe('brand.quick');
+    expect(presetChosen(again, press(again, 'garden'))).toBe('garden');
+  });
+
+  it('resumes with today’s facts: a role changed since decides what is asked from now on', () => {
+    const asAdmin = press(start().conversation, 'signup');
+    const stored = JSON.parse(JSON.stringify(toSession(G, asAdmin))) as unknown;
+    const again = start(asAdmin.state.draft.definition, stored, false);
+    expect(again).toMatchObject({ kind: 'resumed', rebased: false });
+    expect(again.conversation.log).toEqual(asAdmin.log);
+    expect(again.conversation.state.pending).toMatchObject({ canChangeBrand: false });
+    expect(press(again.conversation, 'yes').state.cursor).toBe('brand.logoSlot');
   });
 });

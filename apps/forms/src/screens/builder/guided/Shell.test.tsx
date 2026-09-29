@@ -33,6 +33,7 @@ const first = startConversation({
   title: {},
   stored: null,
   brandKitExists: false,
+  canChangeBrand: true,
 }).conversation;
 
 function walk(...answers: (string | number)[]): Conversation {
