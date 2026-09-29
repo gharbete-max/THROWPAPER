@@ -53,8 +53,18 @@ export type NodeKind = (typeof NODE_KINDS)[number];
 export const SLOTS = ['kind', 'required', 'options', 'shape', 'placement', 'validation'] as const;
 export type Slot = (typeof SLOTS)[number];
 
-/** Where to go next: one node, or guarded branches read top to bottom ending in `when: 'true'`. */
-export type Next = string | readonly { readonly when: Guard; readonly to: string }[];
+/**
+ * Where to go next: one node, or guarded branches read top to bottom ending in `when: 'true'`, or
+ * the question of a group that tells the belief most, and `else` when none is worth asking
+ * (`docs/plan/BELIEF.md`, "Which question next").
+ */
+export type Next =
+  | string
+  | readonly { readonly when: Guard; readonly to: string }[]
+  | {
+      readonly best: string;
+      readonly else: string | readonly { readonly when: Guard; readonly to: string }[];
+    };
 
 /**
  * Why a node was skipped, as the trail says it: one sentence, or — for a node with more than one
@@ -211,7 +221,14 @@ export const KIND_KEYS: Readonly<Record<NodeKind, readonly MessageKey[]>> = {
 
 const key = z.string().regex(/^guided\.[a-zA-Z0-9.]+$/);
 const id = z.string().regex(/^[a-z][a-zA-Z0-9]*(\.[a-zA-Z][a-zA-Z0-9-]*)*$/);
-const next = z.union([id, z.array(z.object({ when: z.string().min(1), to: id }).strict()).min(1)]);
+const branches = z.array(z.object({ when: z.string().min(1), to: id }).strict()).min(1);
+const next = z.union([
+  id,
+  branches,
+  z
+    .object({ best: z.string().regex(/^[a-z][a-zA-Z0-9]*$/), else: z.union([id, branches]) })
+    .strict(),
+]);
 const skip = z.union([
   key,
   z.array(z.object({ when: z.string().min(1), skip: key }).strict()).min(1),

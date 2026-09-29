@@ -1,5 +1,18 @@
 import { LocalisedText, Locale } from '../api/common.js';
 import { FormDefinition, PRESENTATIONAL_TYPES } from '../forms/definition.js';
+import {
+  beliefOf,
+  bestQuestion,
+  guessOf,
+  recipeOf,
+  seedChanges,
+  TOLD_BEFORE,
+  toldBefore,
+  toldParts,
+  type BeliefState,
+  type SeedSource,
+  type Told,
+} from './belief/index.js';
 import { applyAll, jsonEqual, type Change } from './changes.js';
 import { evaluateGuard, parseGuard, type GuardState } from './graph/guards.js';
 import { opProblem } from './graph/paths.js';
@@ -65,8 +78,16 @@ export type Answer =
    */
   | { readonly kind: 'list'; readonly labels: readonly string[] }
   | { readonly kind: 'text'; readonly value: string }
-  /** Right / Sort of / No on a `confirm-guess`. What each seeds is S11's; here it moves on. */
-  | { readonly kind: 'guess'; readonly verdict: 'right' | 'sort-of' | 'no' }
+  /**
+   * Right / Sort of / No on a `confirm-guess`, about the recipe it guessed (`BELIEF.md`): Right
+   * seeds it, Sort of halves it, No rules it out. The recipe is named so the log alone says what
+   * was believed.
+   */
+  | {
+      readonly kind: 'guess';
+      readonly verdict: 'right' | 'sort-of' | 'no';
+      readonly templateId: string;
+    }
   /** On past a `preview-moment` or a `review-queue`. */
   | { readonly kind: 'continue' }
   /** Out through the escape — a menu, a sibling — or a menu's pick. */
@@ -116,6 +137,12 @@ export interface AnswerContext {
   readonly locale: string;
   /** How a free-text answer was read; absent for a click or a key. */
   readonly tier?: Tier | null;
+  /**
+   * The template catalogue, as the API gives it: what "Right" adds from when the guess is a
+   * template (`BELIEF.md`). Only that answer reads it; replay never does, since the step holds the
+   * questions it added.
+   */
+  readonly templates?: readonly SeedSource[];
 }
 
 // --- Reading the graph ------------------------------------------------------------------------
@@ -132,7 +159,7 @@ export function currentNode(graph: BuilderGraph, conversation: Conversation): No
 }
 
 /** Whether a step answered the node it names: not a jump, a hand edit or an import. */
-export function answers(entry: LogEntry): boolean {
+export function answers(entry: Pick<LogEntry, 'answer'> | Told): boolean {
   const { kind } = entry.answer;
   return kind !== 'jump' && kind !== 'edit' && kind !== 'import';
 }
@@ -157,10 +184,44 @@ export function guardStateOf(conversation: Conversation): GuardState {
   return guardState(conversation.state, answeredIds(conversation.log));
 }
 
-/** The first branch of `next` whose guard holds. */
-function pickNext(next: Next, state: GuardState): string {
+/** A step as the belief reads it: a log entry, or the one being taken. */
+type LogEntryLike = Told;
+
+/**
+ * Everything the belief has been told in a conversation: what a rebase carried into its base, then
+ * its log (`BELIEF.md`, "Over a rebase").
+ */
+export function toldOf(conversation: Conversation): readonly Told[] {
+  return [...toldBefore(conversation.base.pending), ...conversation.log];
+}
+
+/** The question of a group that tells the belief most, or null to go on (`BELIEF.md`). */
+type BestOf = (group: string) => string | null;
+
+/**
+ * Asks the belief which question of a group is worth asking now: the belief after `told`, the
+ * group's questions answered in it, and whether each could be asked here.
+ */
+function bestOf(graph: BuilderGraph, told: readonly LogEntryLike[], guards: GuardState): BestOf {
+  let known: BeliefState | null = null;
+  const asked = told.filter(answers).map((entry) => entry.nodeId);
+  return (group) => {
+    known ??= beliefOf(graph, told);
+    const askable = (node: Node) => node.when === undefined || holds(node.when, guards);
+    return bestQuestion(graph, known, group, asked, askable);
+  };
+}
+
+/** The first branch of `next` whose guard holds; or the best question of a group, else `else`. */
+function pickNext(next: Next, state: GuardState, best: BestOf): string {
   if (typeof next === 'string') return next;
-  const branch = next.find((candidate) => holds(candidate.when, state));
+  if (!Array.isArray(next)) {
+    const { best: group, else: otherwise } = next as Extract<Next, { readonly best: string }>;
+    return best(group) ?? pickNext(otherwise, state, best);
+  }
+  const branch = (next as Extract<Next, readonly unknown[]>).find((candidate) =>
+    holds(candidate.when, state),
+  );
   if (!branch) throw new MachineError('no-node', 'No branch of `next` holds');
   return branch.to;
 }
@@ -198,8 +259,10 @@ function settle(
   answered: readonly string[],
   target: string,
   asked = false,
+  told: readonly LogEntryLike[] = [],
 ): { to: string; skipped: Skipped[] } {
   const guards = guardState(state, answered);
+  const best = bestOf(graph, told, guards);
   const skipped: Skipped[] = [];
   let id = target;
   for (let hops = 0; hops <= graph.nodes.length; hops += 1) {
@@ -208,7 +271,7 @@ function settle(
     if (node.when === undefined || holds(node.when, here)) return { to: id, skipped };
     if (node.kind === 'end') break;
     skipped.push({ nodeId: id, reason: reasonFor(node, guards) });
-    id = pickNext(node.next, guards);
+    id = pickNext(node.next, guards, best);
   }
   throw new MachineError('no-node', `Nothing to ask after skipping from "${target}"`);
 }
@@ -375,6 +438,34 @@ function planFor(
   }
 }
 
+/** What "Right" adds for a recipe: its structure, or its template from the catalogue given. */
+function seedSource(id: string, context: AnswerContext): SeedSource {
+  const recipe = recipeOf(id);
+  if (!recipe) throw new MachineError('wrong-answer', `${id} is not a recipe`);
+  const source = recipe.structure ?? context.templates?.find((template) => template.id === id);
+  if (!source) throw new MachineError('not-found', `${id}: the template to add was not given`);
+  return source;
+}
+
+/**
+ * The guess after these steps (`BELIEF.md`, "The guess"), written into the state when it moved: a
+ * change in the step, so Back and replay restore it without the belief.
+ */
+function withGuess(
+  graph: BuilderGraph,
+  state: BuilderState,
+  told: readonly Told[],
+  tracked: Tracked,
+): BuilderState {
+  const guess = guessOf(beliefOf(graph, told));
+  if (jsonEqual(guess, state.guess)) return state;
+  return applyTracked(
+    state,
+    [{ op: 'set', at: ['guess'], value: guess as unknown as Json }],
+    tracked,
+  );
+}
+
 /**
  * A guided step's patch applied to the state. Reconciliation (`reconcile.ts`): the step runs on the
  * conversation's own versions of the questions, and never changes one a person has changed by hand
@@ -385,6 +476,7 @@ function guidedStep(
   node: Node,
   plan: ReturnType<typeof planFor>,
   context: AnswerContext,
+  more?: (after: BuilderState) => readonly Change[],
 ): { settled: BuilderState; tracked: Tracked } {
   const tracked: Tracked = { changes: [], inverse: [] };
   const view = guidedView(state, tracked);
@@ -396,7 +488,8 @@ function guidedStep(
   });
   tracked.changes.push(...applied.changes);
   tracked.inverse = [...applied.inverse, ...tracked.inverse];
-  const settled = applyTracked(applied.state, settleQuestions(state, view, applied.state), tracked);
+  const after = more ? applyTracked(applied.state, more(applied.state), tracked) : applied.state;
+  const settled = applyTracked(after, settleQuestions(state, view, after), tracked);
   checkDraft(settled.draft);
   return { settled, tracked };
 }
@@ -418,12 +511,29 @@ export function answer(
   const { state, log } = conversation;
   const node = nodeOf(graph, state.cursor);
   const plan = planFor(graph, node, given);
-  const { settled, tracked } = guidedStep(state, node, plan, context);
+  if (given.kind === 'guess' && given.templateId !== state.guess?.templateId) {
+    throw new MachineError('wrong-answer', `${node.id}: ${given.templateId} is not the guess`);
+  }
+  // "Right" adds the recipe's questions in the same step, so they are the conversation's.
+  const seeded =
+    given.kind === 'guess' && given.verdict === 'right'
+      ? seedSource(given.templateId, context)
+      : null;
+  const { settled: stepped, tracked } = guidedStep(
+    state,
+    node,
+    plan,
+    context,
+    seeded ? (after) => seedChanges(after, seeded, node.id) : undefined,
+  );
 
+  const told = [...toldOf(conversation), { nodeId: node.id, answer: given }];
+  const settled = withGuess(graph, stepped, told, tracked);
   const jump = given.kind === 'jump';
   const answered = jump ? answeredIds(log) : [...answeredIds(log), node.id];
-  const target = pickNext(plan.next, guardState(settled, answered));
-  const { to, skipped } = settle(graph, settled, answered, target, jump);
+  const guards = guardState(settled, answered);
+  const target = pickNext(plan.next, guards, bestOf(graph, told, guards));
+  const { to, skipped } = settle(graph, settled, answered, target, jump, told);
 
   const entry: LogEntry = {
     nodeId: node.id,
@@ -492,7 +602,10 @@ export function answerAt(
         );
 
   const answered = [...answeredIds(log), node.id];
-  const { to, skipped } = settle(graph, marked, answered, state.cursor);
+  const { to, skipped } = settle(graph, marked, answered, state.cursor, false, [
+    ...toldOf(conversation),
+    { nodeId: node.id, answer: given },
+  ]);
   const entry: LogEntry = {
     nodeId: node.id,
     answer: given,
@@ -741,13 +854,17 @@ export function rebase(
   const { state } = conversation;
   const kept =
     state.focus === null || draft.definition.fields.some((field) => field.id === state.focus);
-  const moved: BuilderState = { ...state, draft, focus: kept ? state.focus : null };
+  // What the belief was told goes with it, or the new log would begin the guess again.
+  const told = toldParts(graph, toldOf(conversation));
+  const pending =
+    told.length > 0 ? { ...state.pending, [TOLD_BEFORE]: told as unknown as Json } : state.pending;
+  const moved: BuilderState = { ...state, draft, focus: kept ? state.focus : null, pending };
   // The question being built is gone: its node has nothing to write to, so the conversation goes
   // to the menu — "What do you want to change?" — rather than to a question it cannot take.
   const from = kept
     ? state.cursor
     : (graph.nodes.find((n) => n.kind === 'menu')?.id ?? graph.start);
-  const base = { ...moved, cursor: settle(graph, moved, [], from).to };
+  const base = { ...moved, cursor: settle(graph, moved, [], from, false, told).to };
   return { base, log: [], state: base };
 }
 

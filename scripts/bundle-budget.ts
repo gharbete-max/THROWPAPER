@@ -167,6 +167,29 @@ if (strays.length > 0) {
   process.exit(1);
 }
 
+/**
+ * The template catalogue is the API's (`GET /v1/form-templates`): the gallery and the guess (S11)
+ * both fetch it, so no chunk carries every template in every language (36 KB gzipped). One import
+ * of `FORM_TEMPLATES` into the guided builder's recipes put it in the editor's own chunk once; a
+ * question only the catalogue has, anywhere in the bundle, fails the build. Not a template's name:
+ * the recipes carry those, so the guess is named without the catalogue (`CAVEATS.md` #121).
+ */
+const CATALOGUE_MARKERS = ['Welche Versammlung'];
+const catalogue = everyBundleFile(DIST)
+  .filter((path) => path.endsWith('.js'))
+  .filter((path) => {
+    const source = readFileSync(path, 'utf8');
+    return CATALOGUE_MARKERS.some((marker) => source.includes(marker));
+  });
+if (catalogue.length > 0) {
+  console.error(
+    `The template catalogue is in ${catalogue.map((path) => path.slice(DIST.length + 1)).join(', ')}.\n` +
+      '  The screen gets it from GET /v1/form-templates; import it from @tp/shared/forms only on the\n' +
+      '  server, or in tests.',
+  );
+  process.exit(1);
+}
+
 const broken = rows.filter((row) => row.over);
 if (broken.length > 0) {
   for (const row of broken) {

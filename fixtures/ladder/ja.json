@@ -3,109 +3,1067 @@
   "locale": "ja-JP",
   "source": "docs/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. Japanese is read as character bigrams, which T3 never compares fuzzily, so there are no T3 rows. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
   "rows": [
-    { "phrase": "複数選べる", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T0" }, "note": "the card's own label" },
-    { "phrase": "ピル型", "nodeId": "choice.shape", "expect": { "optionId": "pill", "tier": "T0" } },
-    { "phrase": "横に並べる", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T0" } },
-    { "phrase": "ボタンなし", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T0" } },
-    { "phrase": "後で決める", "nodeId": "brand.start", "expect": { "optionId": "later", "tier": "T0" } },
-    { "phrase": "いいえ、これで全部です", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T0" } },
-    { "phrase": "必須", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T0" } },
-    { "phrase": "申し込みの受付", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T0" } },
-    { "phrase": "ダーク", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T0" } },
-    { "phrase": "左上、タイトルの横", "nodeId": "brand.logoSlot", "expect": { "optionId": "header-left", "tier": "T0" } },
-    { "phrase": "角丸", "nodeId": "choice.shape", "expect": { "optionId": "rounded", "tier": "T0" } },
-    { "phrase": "square", "nodeId": "choice.shape", "expect": { "optionId": "square", "tier": "T0" }, "note": "an option id" },
-
-    { "phrase": "ボタンでお願いします", "nodeId": "choice.buttons", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "ボタンはいらない", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T1" }, "note": "the negator after the word" },
-    { "phrase": "必須ではないです", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "必須です", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "任意です", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "透かしで", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T1" } },
-    { "phrase": "ダークで", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T1" } },
-    { "phrase": "横並びで", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T1" } },
-    { "phrase": "これで全部です", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "ロゴはスキップ", "nodeId": "brand.start", "expect": { "optionId": "later", "tier": "T1" } },
-    { "phrase": "ロゴで", "nodeId": "brand.start", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "一つだけで", "nodeId": "choice.answers", "expect": { "optionId": "one", "tier": "T1" } },
-    { "phrase": "チェックボックスで", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T1" } },
-
-    { "phrase": "ボタンをカプセルみたいな形にしてほしいです", "nodeId": "choice.shape", "expect": { "optionId": "pill", "tier": "T2" } },
-    { "phrase": "講座をやるので参加者に事前に申し込みをしてもらいたい", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T2" } },
-    { "phrase": "この質問は一人でいくつも複数回答できるようにしたい", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T2" } },
-    { "phrase": "選択肢を横並びにしてすぐ見られるようにしたい", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T2" } },
-    { "phrase": "ロゴはページの隅に控えめに透かしで入れたい", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T2" } },
-    { "phrase": "ダークな雰囲気が夜のパーティーに合いそう", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T2" } },
-    { "phrase": "この項目は全員にとって完全に任意でいいと思う", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T2" } },
-    { "phrase": "質問の下に長いリストで縦に並べて", "nodeId": "choice.placement", "expect": { "optionId": "under-full", "tier": "T2" } },
-    { "phrase": "みんなの感想を気軽に聞きたいです", "nodeId": "flow.start", "expect": { "optionId": "feedback", "tier": "T2" } },
-    { "phrase": "この後にもう一つ質問を追加したいです", "nodeId": "flow.more", "expect": { "optionId": "yes", "tier": "T2" } },
-    { "phrase": "送信する前に全員が必ず答える必要があります", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T2" } },
-    { "phrase": "選択肢は料理ごとに画像付きの大きなタイルにしたい", "nodeId": "choice.shape", "expect": { "optionId": "tile", "tier": "T2" } },
-
-    { "phrase": "4", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "四", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "十二", "nodeId": "choice.count", "expect": { "value": 12, "tier": "T4" } },
-    { "phrase": "四つ", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "よっつ", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" }, "note": "a native count, as a word" },
-    { "phrase": "選択肢は四つ", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "ふたつ", "nodeId": "choice.count", "expect": { "value": 2, "tier": "T4" } },
-    { "phrase": "3500ユーロ", "pattern": "currency", "expect": { "value": { "amount": "3500", "currency": "EUR" }, "tier": "T4" } },
-    { "phrase": "€12.50", "pattern": "currency", "expect": { "value": { "amount": "12.50", "currency": "EUR" }, "tier": "T4" } },
-    { "phrase": "2026年5月1日", "pattern": "date", "expect": { "value": "2026-05-01", "tier": "T4" } },
-    { "phrase": "2026/5/1", "pattern": "date", "expect": { "value": "2026-05-01", "tier": "T4" } },
-
-    { "phrase": "いくつか", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "複数", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "たくさん", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "3か4", "nodeId": "choice.count", "expect": { "ask": "ambiguous" } },
-    { "phrase": "四十", "nodeId": "choice.count", "expect": { "ask": "out-of-range" } },
-    { "phrase": "四つじゃない", "nodeId": "choice.count", "expect": { "ask": "negated" } },
-    { "phrase": "カプセルじゃない", "nodeId": "choice.shape", "expect": { "ask": "negated" } },
-    { "phrase": "一つだけじゃない", "nodeId": "choice.answers", "expect": { "ask": "negated" } },
-    { "phrase": "バナナ", "nodeId": "choice.shape", "expect": { "ask": "nothing" } },
-    { "phrase": "一つか複数", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
-    { "phrase": "左上か中央", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "ようこそ", "nodeId": "text.label", "expect": { "ask": "not-readable" } },
-    { "phrase": "2026年2月30日", "pattern": "date", "expect": { "none": true } },
-    { "phrase": "タブ形式", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
-    { "phrase": "一本のバーにしてください", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T2" }, "note": "S5: the tab and segmented shapes" },
-    { "phrase": "3つのボタン、ピル型、横並び", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.shape", "optionId": "pill" }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "the demo sentence: four answers, each its own step" },
-    { "phrase": "4つのボタン", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 4 }], "tier": "T5" }, "note": "one clause, two answers" },
-    { "phrase": "ボタン、一つだけ", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.answers", "optionId": "one" }], "tier": "T5" } },
-    { "phrase": "5つのボタン、横並び", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 5 }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "how many buttons, and where" },
-    { "phrase": "複数回答とタブ", "nodeId": "choice.answers", "expect": { "fill": [{ "nodeId": "choice.answers", "optionId": "many" }, { "nodeId": "choice.shape", "optionId": "tab" }], "tier": "T5" }, "note": "cut at the conjunction" },
-    { "phrase": "一つだけ、3つの", "nodeId": "choice.answers", "expect": { "fill": [{ "nodeId": "choice.answers", "optionId": "one" }, { "nodeId": "choice.count", "value": 3 }], "tier": "T5" } },
-    { "phrase": "4つの、四角", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 4 }, { "nodeId": "choice.shape", "optionId": "square" }], "tier": "T5" } },
-    { "phrase": "3つの、角丸、xyzzy", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.shape", "optionId": "rounded" }], "unused": ["xyzzy"], "tier": "T5" }, "note": "a clause that answers nothing is shown back" },
-    { "phrase": "3つの、ピル型、四角、横並び", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.placement", "optionId": "row" }], "unused": ["ピル型", "四角"], "tier": "T5" }, "note": "two shapes contradict: the shape is left to ask" },
-    { "phrase": "ピル型、横並び", "nodeId": "choice.shape", "expect": { "fill": [{ "nodeId": "choice.shape", "optionId": "pill" }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" } },
-    { "phrase": "画像付きと質問の下", "nodeId": "choice.shape", "expect": { "fill": [{ "nodeId": "choice.shape", "optionId": "tile" }, { "nodeId": "choice.placement", "optionId": "under-full" }], "tier": "T5" } },
-    { "phrase": "赤、緑、青", "nodeId": "choice.count", "expect": { "list": ["赤", "緑", "青"], "tier": "T6" }, "note": "labels verbatim, the count the list’s" },
-    { "phrase": "小；中；大", "nodeId": "choice.count", "expect": { "list": ["小", "中", "大"], "tier": "T6" } },
-    { "phrase": "月曜日\n火曜日\n水曜日", "nodeId": "choice.count", "expect": { "list": ["月曜日", "火曜日", "水曜日"], "tier": "T6" }, "note": "one line, one option" },
-    { "phrase": "1. 赤\n2. 緑\n3. 青", "nodeId": "choice.count", "expect": { "list": ["赤", "緑", "青"], "tier": "T6" }, "note": "a numbered list: the markers are not the labels" },
-    { "phrase": "• 小\n• 大", "nodeId": "choice.count", "expect": { "list": ["小", "大"], "tier": "T6" }, "note": "a bulleted list" },
-    { "phrase": "a) 月曜日\nb) 火曜日", "nodeId": "choice.count", "expect": { "list": ["月曜日", "火曜日"], "tier": "T6" }, "note": "lettered" },
-    { "phrase": "赤、緑", "nodeId": "choice.answers", "expect": { "list": ["赤", "緑"], "at": "choice.count", "tier": "T6" }, "note": "the options, for the question ahead that takes them" },
-    { "phrase": "月曜日、火曜日、水曜日、木曜日、金曜日", "nodeId": "choice.count", "expect": { "list": ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日"], "tier": "T6" } },
-    { "phrase": "A, B, C, D, E, F, G, H, I, J, K, L", "nodeId": "choice.count", "expect": { "list": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"], "tier": "T6" }, "note": "twelve, the most allowed" },
-    { "phrase": "3.50円；4.50円", "nodeId": "choice.count", "expect": { "list": ["3.50円", "4.50円"], "tier": "T6" }, "note": "a semicolon lets an item keep its comma" },
-    { "phrase": "ピル型", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "pill" }, "tier": "T7" } },
-    { "phrase": "横並び", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" } },
-    { "phrase": "4つの", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.count", "value": 4 }, "tier": "T7" }, "note": "a number, for the question that counts" },
-    { "phrase": "複数回答", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.answers", "optionId": "many" }, "tier": "T7" } },
-    { "phrase": "タブ", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tab" }, "tier": "T7" } },
-    { "phrase": "四角", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "square" }, "tier": "T7" } },
-    { "phrase": "質問の下", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "under-full" }, "tier": "T7" } },
-    { "phrase": "横並び", "nodeId": "choice.shape", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" } },
-    { "phrase": "質問の下", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "under-full" }, "tier": "T7" } },
-    { "phrase": "画像付き", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tile" }, "tier": "T7" } },
-    { "phrase": "タブ", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tab" }, "tier": "T7" } },
-    { "phrase": "ピル型、四角", "nodeId": "choice.shape", "expect": { "ask": "ambiguous" }, "note": "two shapes" },
-    { "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M", "nodeId": "choice.count", "expect": { "ask": "out-of-range" }, "note": "thirteen: more than a question may have, and never cut" },
-    { "phrase": "ピル型、四角", "nodeId": "choice.count", "expect": { "ask": "nothing", "elsewhere": ["choice.shape"] }, "note": "two shapes, not two options: offered, never guessed" },
-    { "phrase": "一列", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" }, "note": "一列 is a row, not the number 1" },
-    { "phrase": "十分です", "nodeId": "choice.count", "expect": { "ask": "nothing" }, "note": "十分 is \"enough\", not ten" }
+    {
+      "phrase": "複数選べる",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T0"
+      },
+      "note": "the card's own label"
+    },
+    {
+      "phrase": "ピル型",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "横に並べる",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "ボタンなし",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "後で決める",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "いいえ、これで全部です",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "必須",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "申し込みの受付",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "ダーク",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "左上、タイトルの横",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "header-left",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "角丸",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "rounded",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "square",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "square",
+        "tier": "T0"
+      },
+      "note": "an option id"
+    },
+    {
+      "phrase": "ボタンでお願いします",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ボタンはいらない",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      },
+      "note": "the negator after the word"
+    },
+    {
+      "phrase": "必須ではないです",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "必須です",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "任意です",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "透かしで",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ダークで",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "横並びで",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "これで全部です",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ロゴはスキップ",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ロゴで",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "一つだけで",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "one",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "チェックボックスで",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ボタンをカプセルみたいな形にしてほしいです",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "講座をやるので参加者に事前に申し込みをしてもらいたい",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "この質問は一人でいくつも複数回答できるようにしたい",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "選択肢を横並びにしてすぐ見られるようにしたい",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "ロゴはページの隅に控えめに透かしで入れたい",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "ダークな雰囲気が夜のパーティーに合いそう",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "この項目は全員にとって完全に任意でいいと思う",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "質問の下に長いリストで縦に並べて",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "under-full",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "みんなの感想を気軽に聞きたいです",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "この後にもう一つ質問を追加したいです",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "送信する前に全員が必ず答える必要があります",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "選択肢は料理ごとに画像付きの大きなタイルにしたい",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tile",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "4",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "四",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "十二",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 12,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "四つ",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "よっつ",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      },
+      "note": "a native count, as a word"
+    },
+    {
+      "phrase": "選択肢は四つ",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "ふたつ",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 2,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "3500ユーロ",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "3500",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "€12.50",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "12.50",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "2026年5月1日",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "2026/5/1",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "いくつか",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "複数",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "たくさん",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "3か4",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "四十",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      }
+    },
+    {
+      "phrase": "四つじゃない",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "カプセルじゃない",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "一つだけじゃない",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "バナナ",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "nothing"
+      }
+    },
+    {
+      "phrase": "一つか複数",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "左上か中央",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "ようこそ",
+      "nodeId": "text.label",
+      "expect": {
+        "ask": "not-readable"
+      }
+    },
+    {
+      "phrase": "2026年2月30日",
+      "pattern": "date",
+      "expect": {
+        "none": true
+      }
+    },
+    {
+      "phrase": "タブ形式",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tab",
+        "tier": "T0"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "一本のバーにしてください",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "segmented",
+        "tier": "T2"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "3つのボタン、ピル型、横並び",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "the demo sentence: four answers, each its own step"
+    },
+    {
+      "phrase": "4つのボタン",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "one clause, two answers"
+    },
+    {
+      "phrase": "ボタン、一つだけ",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "5つのボタン、横並び",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 5
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "how many buttons, and where"
+    },
+    {
+      "phrase": "複数回答とタブ",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "many"
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tab"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "cut at the conjunction"
+    },
+    {
+      "phrase": "一つだけ、3つの",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "4つの、四角",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "square"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "3つの、角丸、xyzzy",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "rounded"
+          }
+        ],
+        "unused": [
+          "xyzzy"
+        ],
+        "tier": "T5"
+      },
+      "note": "a clause that answers nothing is shown back"
+    },
+    {
+      "phrase": "3つの、ピル型、四角、横並び",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "unused": [
+          "ピル型",
+          "四角"
+        ],
+        "tier": "T5"
+      },
+      "note": "two shapes contradict: the shape is left to ask"
+    },
+    {
+      "phrase": "ピル型、横並び",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "画像付きと質問の下",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tile"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "under-full"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "赤、緑、青",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "赤",
+          "緑",
+          "青"
+        ],
+        "tier": "T6"
+      },
+      "note": "labels verbatim, the count the list’s"
+    },
+    {
+      "phrase": "小；中；大",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "小",
+          "中",
+          "大"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "月曜日\n火曜日\n水曜日",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "月曜日",
+          "火曜日",
+          "水曜日"
+        ],
+        "tier": "T6"
+      },
+      "note": "one line, one option"
+    },
+    {
+      "phrase": "1. 赤\n2. 緑\n3. 青",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "赤",
+          "緑",
+          "青"
+        ],
+        "tier": "T6"
+      },
+      "note": "a numbered list: the markers are not the labels"
+    },
+    {
+      "phrase": "• 小\n• 大",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "小",
+          "大"
+        ],
+        "tier": "T6"
+      },
+      "note": "a bulleted list"
+    },
+    {
+      "phrase": "a) 月曜日\nb) 火曜日",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "月曜日",
+          "火曜日"
+        ],
+        "tier": "T6"
+      },
+      "note": "lettered"
+    },
+    {
+      "phrase": "赤、緑",
+      "nodeId": "choice.answers",
+      "expect": {
+        "list": [
+          "赤",
+          "緑"
+        ],
+        "at": "choice.count",
+        "tier": "T6"
+      },
+      "note": "the options, for the question ahead that takes them"
+    },
+    {
+      "phrase": "月曜日、火曜日、水曜日、木曜日、金曜日",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "月曜日",
+          "火曜日",
+          "水曜日",
+          "木曜日",
+          "金曜日"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L"
+        ],
+        "tier": "T6"
+      },
+      "note": "twelve, the most allowed"
+    },
+    {
+      "phrase": "3.50円；4.50円",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "3.50円",
+          "4.50円"
+        ],
+        "tier": "T6"
+      },
+      "note": "a semicolon lets an item keep its comma"
+    },
+    {
+      "phrase": "ピル型",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "pill"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "横並び",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "4つの",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.count",
+          "value": 4
+        },
+        "tier": "T7"
+      },
+      "note": "a number, for the question that counts"
+    },
+    {
+      "phrase": "複数回答",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.answers",
+          "optionId": "many"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "タブ",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "四角",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "square"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "質問の下",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "横並び",
+      "nodeId": "choice.shape",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "質問の下",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "画像付き",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tile"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "タブ",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "ピル型、四角",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "two shapes"
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      },
+      "note": "thirteen: more than a question may have, and never cut"
+    },
+    {
+      "phrase": "ピル型、四角",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing",
+        "elsewhere": [
+          "choice.shape"
+        ]
+      },
+      "note": "two shapes, not two options: offered, never guessed"
+    },
+    {
+      "phrase": "一列",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      },
+      "note": "一列 is a row, not the number 1"
+    },
+    {
+      "phrase": "十分です",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing"
+      },
+      "note": "十分 is \"enough\", not ten"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.date",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      },
+      "note": "a guess question's yes, its card's own label (S11)"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.signature",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.pay",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      },
+      "note": "\"not sure\" is an answer that says nothing, never a no"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.research",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.meeting",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    }
   ]
 }

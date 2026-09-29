@@ -1852,6 +1852,3086 @@
       "notes": ""
     },
     {
+      "phrase": "Nej",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "næ",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "slet ikke",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ved ikke",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aner det ikke",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ingen anelse",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "måske",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "usikker",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det passer",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jep",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "korrekt",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
       "phrase": "Nej, det er frivilligt",
       "nodeId": "text.required",
       "optionId": "no",

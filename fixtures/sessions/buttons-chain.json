@@ -1,7 +1,7 @@
 {
   "session": {
     "sessionVersion": 1,
-    "graphVersion": 4,
+    "graphVersion": 5,
     "base": {
       "draft": {
         "definition": {
@@ -128,9 +128,26 @@
               "width": "full",
               "type": "short_text"
             }
+          },
+          {
+            "op": "set",
+            "at": [
+              "guess"
+            ],
+            "value": {
+              "templateId": "event-registration",
+              "pMille": 218
+            }
           }
         ],
         "inverse": [
+          {
+            "op": "set",
+            "at": [
+              "guess"
+            ],
+            "value": null
+          },
           {
             "op": "unset",
             "at": [
@@ -175,6 +192,32 @@
             ]
           }
         ],
+        "to": "guess.date",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "guess.date",
+        "answer": {
+          "kind": "option",
+          "optionId": "unsure"
+        },
+        "patch": [],
+        "inverse": [],
+        "to": "guess.learn",
+        "skipped": [],
+        "tier": null,
+        "source": "guided"
+      },
+      {
+        "nodeId": "guess.learn",
+        "answer": {
+          "kind": "option",
+          "optionId": "unsure"
+        },
+        "patch": [],
+        "inverse": [],
         "to": "brand.start",
         "skipped": [
           {

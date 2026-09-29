@@ -38,6 +38,8 @@ const option = (optionId: string): Answer => ({ kind: 'option', optionId });
 function atButtons(): Conversation {
   return [
     option('signup'),
+    option('unsure'),
+    option('unsure'),
     option('later'),
     { kind: 'text', value: 'Vilken dag?' } as const,
     option('yes'),

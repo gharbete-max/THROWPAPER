@@ -60,6 +60,8 @@ describe('a question keeps its id', () => {
   const start = (): Conversation => {
     let c = begin(BUILDER_GRAPH, { definition: emptyDefinition, title: {} });
     c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'collect' }, { locale });
+    c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale });
+    c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale });
     c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'later' }, { locale });
     return answer(BUILDER_GRAPH, c, { kind: 'text', value: 'Allergier' }, { locale });
   };

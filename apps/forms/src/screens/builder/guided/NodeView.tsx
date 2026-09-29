@@ -10,6 +10,7 @@ import {
 } from '@tp/shared/builder';
 import { Icon, type IconName } from '../../../components/Icon.js';
 import { useT } from '../../../lib/i18n.js';
+import { guessReasons, type GuessReason } from './conversation.js';
 
 /**
  * One node's answers — `DESIGN-LANGUAGE.md`, "One decision per screen". Each kind renders its
@@ -68,19 +69,30 @@ export function NodeView(props: NodeViewProps) {
           onDone={(value) => onAnswer({ kind: 'text', value })}
         />
       );
-    case 'confirm-guess':
+    case 'confirm-guess': {
+      // The guess names its recipe, so the log alone says what was believed (`BELIEF.md`).
+      const templateId = props.conversation.state.guess?.templateId;
+      if (!templateId) return null;
       return (
-        <Cards
-          items={[
-            { id: 'right', label: 'guided.guess.right' },
-            { id: 'sort-of', label: 'guided.guess.sortOf' },
-            { id: 'no', label: 'guided.guess.no' },
-          ]}
-          onPick={(verdict) =>
-            onAnswer({ kind: 'guess', verdict: verdict as 'right' | 'sort-of' | 'no' })
-          }
-        />
+        <>
+          <Cards
+            items={[
+              { id: 'right', label: 'guided.guess.right' },
+              { id: 'sort-of', label: 'guided.guess.sortOf' },
+              { id: 'no', label: 'guided.guess.no' },
+            ]}
+            onPick={(verdict) =>
+              onAnswer({
+                kind: 'guess',
+                verdict: verdict as 'right' | 'sort-of' | 'no',
+                templateId,
+              })
+            }
+          />
+          <WhyGuess reasons={guessReasons(props.graph, props.conversation)} />
+        </>
       );
+    }
     case 'preview-moment':
       return (
         <>
@@ -354,5 +366,26 @@ function End({ graph, conversation, onAnswer, onOpenEditor }: NodeViewProps) {
         </button>
       )}
     </div>
+  );
+}
+
+/** "Why this guess": the answers that moved it most, in the trail's words — one press away. */
+function WhyGuess({ reasons }: { reasons: readonly GuessReason[] }) {
+  const t = useT();
+  if (reasons.length === 0) return null;
+  return (
+    <details className="conversation__why">
+      <summary>{t('conversation.guess.why')}</summary>
+      <ul>
+        {reasons.map((reason, index) => (
+          <li key={index}>
+            {t('conversation.guess.whyLine', {
+              question: t(reason.question),
+              answer: t(reason.answer),
+            })}
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }

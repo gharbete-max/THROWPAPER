@@ -46,7 +46,7 @@ assumes:
 | The brief's idea | Already in the repository | What happens to it |
 | --- | --- | --- |
 | An Akinator-style start | `packages/shared/src/wizard/tree.ts` (sector, then facets; ADR 0006) and `forms/wizard.ts` + `wizard-definition.ts` (the form questions; the server resolves `wizardAnswers` on `POST /v1/forms`) | The guided graph **replaces the form wizard's questions** as the "Start from questions" door (S4). `tree.ts` and `forms/wizard.ts` stay, because the API still resolves `wizardAnswers` for old clients (`CAVEATS.md` #56); the `Wizard` component, whose only use was New form, went with S4. (An earlier revision said the component also started mailings and invoice runs; nothing did.) ADR 0020 records how the graph amends ADR 0006. |
-| Template recipes | `forms/templates.ts`: **23 templates**, every string in twelve languages, parsed against `FormDefinition` by `templates.test.ts` | The belief engine (§6) guesses **these**. Recipes add only priors and score weights (JSON), never a second copy of the questions. Missing recipes (donation, address change, check-in, exam sheet, consent form, incident report) are new templates, and two of them are rule 8 (below). |
+| Template recipes | `forms/templates.ts`: **23 templates**, every string in twelve languages, parsed against `FormDefinition` by `templates.test.ts` | The belief engine (§6) guesses **these**. Recipes add only priors and names (`belief/recipes.json`, the names held to the catalogue's by a test) and score weights (the graph), never a second copy of the questions. Consent form and incident report are recipes with structure only (S11, below); donation, address change, check-in and exam sheet are new templates still owed. |
 | `FormDraft` | `FormDefinition` (`forms/definition.ts`), versioned, `schemaVersion: 1`, the only thing the editor, renderer, PDF and CSV read | **No second document model.** The draft is a `FormDefinition` plus a builder sidecar (below). |
 | Undo | `apps/forms/src/screens/builder/history.ts` — snapshot undo, 50 deep, coalesced | Stays for the classic editor. The conversation has its own **patch log** (replayable, forever), because snapshots cannot be replayed or explained. |
 | Real preview | `builder/FormPreview.tsx` renders the **same `FieldInput`** as the public page | The preview moment **is** this, scoped to one question, on the brand kit. No wireframes can exist because none are written. |
@@ -183,11 +183,13 @@ draft and the sidecar. Patches are the only way the conversation changes anythin
 - **Free text** is offered at every node ("Or type it — e.g. 'four buttons in a row'") and read by
   the deterministic ladder in `INTENT-LADDER.md`. A reading applies only above its threshold, and
   shows what it read in a chip that undoes it in one press.
-- **The guess** (§6 of the brief): a belief over the templates, updated by each answer's declared
-  scores; at p ≥ 0.80 Loppa asks "This looks like an event registration — right?" (Right / Sort of
-  / No). "Right" seeds the template and the conversation continues **only on the gaps**. The
-  reasoning is always one press away ("Why this guess": the three answers that moved it most).
-  Arithmetic is integer log-odds (ADR 0019), so the guess is the same on every machine.
+- **The guess** (§6 of the brief; S11, `BELIEF.md`): a belief over the templates, updated by each
+  answer's declared scores, with yes / no / not sure questions chosen one at a time for what they
+  would tell it (five at most); at p ≥ 0.80 Loppa asks "This looks like an event registration —
+  right?" (Right / Sort of / No). "Right" seeds the template, shows the whole form to change in
+  place, and the conversation continues **only on the gaps**. The reasoning is always one press
+  away ("Why this guess": the three answers that moved it most). Arithmetic is integer log-odds
+  (ADR 0019), so the guess is the same on every machine.
 
 ## The preview contract
 

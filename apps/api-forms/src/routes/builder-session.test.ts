@@ -52,6 +52,9 @@ function conversation(): BuilderSession {
     title: { 'sv-SE': 'Mat' },
   });
   c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'signup' }, { locale: 'sv-SE' });
+  // Past the guess (S11): two "Not sure" and it asks no more.
+  c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
+  c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
   c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'later' }, { locale: 'sv-SE' });
   return toSession(BUILDER_GRAPH, c);
 }
@@ -90,7 +93,12 @@ describe('the builder session', () => {
     expect(back.version).toBe(1);
     const resumed = fromSession(back.session);
     expect(resumed.state.cursor).toBe('text.label');
-    expect(resumed.log.map((entry) => entry.nodeId)).toEqual(['flow.start', 'brand.start']);
+    expect(resumed.log.map((entry) => entry.nodeId)).toEqual([
+      'flow.start',
+      'guess.date',
+      'guess.learn',
+      'brand.start',
+    ]);
     expect(back.session).toEqual(session);
   });
 

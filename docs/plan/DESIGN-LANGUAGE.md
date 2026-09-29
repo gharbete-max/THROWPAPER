@@ -140,7 +140,7 @@ own (the machine decides; these render):
 | `NodeView`: `TextEntry` | one box and its example chips (S4) |
 | `NodeView`: `LivePreview` | the real control through `FormPreview`, after the shape and at a preview moment (S4); on the brand kit, with the fixed sentence, as `PreviewMoment` (S5) |
 | `Doors` | the two doors after New form, with "Build it myself" beneath (S4) |
-| `GuessCard` | "This looks like …" with Right / Sort of / No and "Why this guess" (S11; until then, three cards) |
+| `NodeView`: `confirm-guess` | "This looks like …" with Right / Sort of / No as the three cards, and "Why this guess" (`WhyGuess`) folded beneath them — the three answers that moved it most, in the trail's words (S11) |
 | `PreviewMoment` | `FieldInput` on the brand kit, the fixed sentence, "What Loppa assumed" (S5) |
 | `InlineEdit/` | shape samples, the size step, the swatch row, the question's and answers' words in place, answers moved by drag grip or Move up / Move down — each snapping to schema values (S5; moving questions stays with the classic editor) |
 | `PreviewMoment`: the badge; `Reconcile` | "changed by hand" with Revert to guided; the three-way question, a screen of its own rather than a dialog — one decision per screen (S5) |

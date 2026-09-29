@@ -183,6 +183,11 @@ describe('each rule catches its own mistake', () => {
       (g) => (node(g, 'flow.start').options![0]!.score = { rsvp: 0.2 }),
     ],
     [
+      'G9',
+      'a score on one option of a node alone, which no answer can weigh against another',
+      (g) => (node(g, 'text.required').options![0]!.score = { rsvp: 700 }),
+    ],
+    [
       'G11',
       `a chain longer than ${MAX_CHAIN} before a preview`,
       (g) => {
@@ -195,6 +200,32 @@ describe('each rule catches its own mistake', () => {
           });
         }
         shape.next = 'choice.extra1';
+      },
+    ],
+    [
+      'G9',
+      'the best question of a group that has no scored questions to ask',
+      (g) => (node(g, 'flow.start').next = { best: 'brand', else: 'guess.confirm' }),
+    ],
+    [
+      'G1',
+      'a best question whose `else` names nothing',
+      (g) => (node(g, 'guess.date').next = { best: 'guess', else: 'guess.nowhere' }),
+    ],
+    [
+      'G11',
+      `a chain after the best questions that makes more than ${MAX_CHAIN} in a row`,
+      (g) => {
+        // The best questions count as MAX_ASKED at most, whatever order they come in; two plain
+        // questions of the same group after them are two too many.
+        const date = node(g, 'guess.date');
+        const plain = { ...node(g, 'text.required'), group: 'guess', slot: undefined };
+        delete (plain as Record<string, unknown>).when;
+        delete (plain as Record<string, unknown>).skip;
+        delete (plain as Record<string, unknown>).slot;
+        g.nodes.push({ ...plain, id: 'guess.extra1', next: 'guess.extra2' });
+        g.nodes.push({ ...plain, id: 'guess.extra2', next: 'guess.confirm' });
+        date.next = { best: 'guess', else: 'guess.extra1' };
       },
     ],
     ['G12', 'something that does not survive JSON', (g) => (node(g, 'end').help = undefined)],

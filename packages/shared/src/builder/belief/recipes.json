@@ -1,0 +1,430 @@
+{
+  "source": "docs/plan/BELIEF.md, \"Recipes\": the 23 FORM_TEMPLATES and the two structure-only recipes of belief/structures.ts, each with its prior in millinats. Every prior is 0 but one: event-registration, the catalogue's general sign-up, is +700 (about twice as likely before any answer), because a person signing people up to an event says \"no\" to every more particular question, and nothing else would ever set it apart.",
+  "recipesVersion": 1,
+  "recipes": [
+    {
+      "id": "event-registration",
+      "prior": 700,
+      "name": {
+        "en-GB": "Event registration",
+        "sv-SE": "Anmälan till evenemang",
+        "da-DK": "Tilmelding til arrangement",
+        "nb-NO": "Påmelding til arrangement",
+        "fi-FI": "Ilmoittautuminen tapahtumaan",
+        "is-IS": "Skráning á viðburð",
+        "fr-FR": "Inscription à un événement",
+        "de-DE": "Veranstaltungsanmeldung",
+        "es-ES": "Inscripción a un evento",
+        "zh-CN": "活动报名",
+        "ja-JP": "イベント申込",
+        "ru-RU": "Регистрация на мероприятие"
+      }
+    },
+    {
+      "id": "rsvp",
+      "prior": 0,
+      "name": {
+        "en-GB": "RSVP",
+        "sv-SE": "OSA",
+        "da-DK": "S.U.",
+        "nb-NO": "S.U.",
+        "fi-FI": "Vastaus kutsuun",
+        "is-IS": "Svar við boði",
+        "fr-FR": "RSVP",
+        "de-DE": "Rückmeldung",
+        "es-ES": "Confirmación de asistencia",
+        "zh-CN": "出席回复",
+        "ja-JP": "出欠のご返事",
+        "ru-RU": "Ответ на приглашение"
+      }
+    },
+    {
+      "id": "contact-enquiry",
+      "prior": 0,
+      "name": {
+        "en-GB": "Contact enquiry",
+        "sv-SE": "Kontaktförfrågan",
+        "da-DK": "Kontaktformular",
+        "nb-NO": "Kontaktskjema",
+        "fi-FI": "Yhteydenottopyyntö",
+        "is-IS": "Fyrirspurn",
+        "fr-FR": "Demande de contact",
+        "de-DE": "Kontaktanfrage",
+        "es-ES": "Formulario de contacto",
+        "zh-CN": "联系咨询",
+        "ja-JP": "お問い合わせ",
+        "ru-RU": "Обратная связь"
+      }
+    },
+    {
+      "id": "customer-feedback",
+      "prior": 0,
+      "name": {
+        "en-GB": "Customer feedback",
+        "sv-SE": "Kundfeedback",
+        "da-DK": "Kundefeedback",
+        "nb-NO": "Kundetilbakemelding",
+        "fi-FI": "Asiakaspalaute",
+        "is-IS": "Umsögn viðskiptavina",
+        "fr-FR": "Avis client",
+        "de-DE": "Kundenfeedback",
+        "es-ES": "Opinión de clientes",
+        "zh-CN": "客户反馈",
+        "ja-JP": "お客様アンケート",
+        "ru-RU": "Отзыв клиента"
+      }
+    },
+    {
+      "id": "satisfaction-survey",
+      "prior": 0,
+      "name": {
+        "en-GB": "Satisfaction survey",
+        "sv-SE": "Nöjdhetsundersökning",
+        "da-DK": "Tilfredshedsundersøgelse",
+        "nb-NO": "Tilfredshetsundersøkelse",
+        "fi-FI": "Tyytyväisyyskysely",
+        "is-IS": "Ánægjukönnun",
+        "fr-FR": "Enquête de satisfaction",
+        "de-DE": "Zufriedenheitsumfrage",
+        "es-ES": "Encuesta de satisfacción",
+        "zh-CN": "满意度调查",
+        "ja-JP": "満足度アンケート",
+        "ru-RU": "Опрос удовлетворённости"
+      }
+    },
+    {
+      "id": "course-signup",
+      "prior": 0,
+      "name": {
+        "en-GB": "Course sign-up",
+        "sv-SE": "Kursanmälan",
+        "da-DK": "Kursustilmelding",
+        "nb-NO": "Kurspåmelding",
+        "fi-FI": "Kurssi-ilmoittautuminen",
+        "is-IS": "Námskeiðsskráning",
+        "fr-FR": "Inscription à un cours",
+        "de-DE": "Kursanmeldung",
+        "es-ES": "Inscripción a un curso",
+        "zh-CN": "课程报名",
+        "ja-JP": "講座申込",
+        "ru-RU": "Запись на курс"
+      }
+    },
+    {
+      "id": "booking-request",
+      "prior": 0,
+      "name": {
+        "en-GB": "Booking request",
+        "sv-SE": "Bokningsförfrågan",
+        "da-DK": "Bookingforespørgsel",
+        "nb-NO": "Bestillingsforespørsel",
+        "fi-FI": "Varauspyyntö",
+        "is-IS": "Bókunarbeiðni",
+        "fr-FR": "Demande de réservation",
+        "de-DE": "Buchungsanfrage",
+        "es-ES": "Solicitud de reserva",
+        "zh-CN": "预约请求",
+        "ja-JP": "予約リクエスト",
+        "ru-RU": "Запрос на бронирование"
+      }
+    },
+    {
+      "id": "quote-request",
+      "prior": 0,
+      "name": {
+        "en-GB": "Quote request",
+        "sv-SE": "Offertförfrågan",
+        "da-DK": "Tilbudsanmodning",
+        "nb-NO": "Tilbudsforespørsel",
+        "fi-FI": "Tarjouspyyntö",
+        "is-IS": "Beiðni um tilboð",
+        "fr-FR": "Demande de devis",
+        "de-DE": "Angebotsanfrage",
+        "es-ES": "Solicitud de presupuesto",
+        "zh-CN": "报价请求",
+        "ja-JP": "お見積り依頼",
+        "ru-RU": "Запрос коммерческого предложения"
+      }
+    },
+    {
+      "id": "support-request",
+      "prior": 0,
+      "name": {
+        "en-GB": "Support request",
+        "sv-SE": "Supportärende",
+        "da-DK": "Supportsag",
+        "nb-NO": "Støttesak",
+        "fi-FI": "Tukipyyntö",
+        "is-IS": "Aðstoðarbeiðni",
+        "fr-FR": "Demande d’assistance",
+        "de-DE": "Supportanfrage",
+        "es-ES": "Solicitud de soporte",
+        "zh-CN": "支持请求",
+        "ja-JP": "サポート依頼",
+        "ru-RU": "Обращение в поддержку"
+      }
+    },
+    {
+      "id": "job-application",
+      "prior": 0,
+      "name": {
+        "en-GB": "Job application",
+        "sv-SE": "Jobbansökan",
+        "da-DK": "Jobansøgning",
+        "nb-NO": "Jobbsøknad",
+        "fi-FI": "Työhakemus",
+        "is-IS": "Atvinnuumsókn",
+        "fr-FR": "Candidature",
+        "de-DE": "Bewerbung",
+        "es-ES": "Solicitud de empleo",
+        "zh-CN": "求职申请",
+        "ja-JP": "応募フォーム",
+        "ru-RU": "Заявление о приёме на работу"
+      }
+    },
+    {
+      "id": "volunteer-signup",
+      "prior": 0,
+      "name": {
+        "en-GB": "Volunteer sign-up",
+        "sv-SE": "Anmälan som volontär",
+        "da-DK": "Tilmelding som frivillig",
+        "nb-NO": "Påmelding som frivillig",
+        "fi-FI": "Vapaaehtoiseksi ilmoittautuminen",
+        "is-IS": "Skráning sjálfboðaliða",
+        "fr-FR": "Inscription bénévole",
+        "de-DE": "Anmeldung als Freiwillige:r",
+        "es-ES": "Alta de voluntariado",
+        "zh-CN": "志愿者报名",
+        "ja-JP": "ボランティア登録",
+        "ru-RU": "Запись в волонтёры"
+      }
+    },
+    {
+      "id": "member-details",
+      "prior": 0,
+      "name": {
+        "en-GB": "Member details",
+        "sv-SE": "Medlemsuppgifter",
+        "da-DK": "Medlemsoplysninger",
+        "nb-NO": "Medlemsopplysninger",
+        "fi-FI": "Jäsentiedot",
+        "is-IS": "Upplýsingar félaga",
+        "fr-FR": "Coordonnées de membre",
+        "de-DE": "Mitgliedsdaten",
+        "es-ES": "Datos de socio",
+        "zh-CN": "会员资料",
+        "ja-JP": "会員情報",
+        "ru-RU": "Данные участника"
+      }
+    },
+    {
+      "id": "newsletter-signup",
+      "prior": 0,
+      "name": {
+        "en-GB": "Newsletter sign-up",
+        "sv-SE": "Prenumerera på nyhetsbrev",
+        "da-DK": "Tilmeld nyhedsbrev",
+        "nb-NO": "Meld deg på nyhetsbrev",
+        "fi-FI": "Uutiskirjeen tilaus",
+        "is-IS": "Skráning á fréttabréf",
+        "fr-FR": "Inscription à la newsletter",
+        "de-DE": "Newsletter-Anmeldung",
+        "es-ES": "Alta en el boletín",
+        "zh-CN": "订阅新闻通讯",
+        "ja-JP": "ニュースレター登録",
+        "ru-RU": "Подписка на рассылку"
+      }
+    },
+    {
+      "id": "suggestion-box",
+      "prior": 0,
+      "name": {
+        "en-GB": "Suggestion box",
+        "sv-SE": "Förslagslåda",
+        "da-DK": "Idékasse",
+        "nb-NO": "Forslagskasse",
+        "fi-FI": "Aloitelaatikko",
+        "is-IS": "Hugmyndakassi",
+        "fr-FR": "Boîte à idées",
+        "de-DE": "Ideenbriefkasten",
+        "es-ES": "Buzón de sugerencias",
+        "zh-CN": "意见箱",
+        "ja-JP": "ご意見箱",
+        "ru-RU": "Ящик предложений"
+      }
+    },
+    {
+      "id": "facility-booking",
+      "prior": 0,
+      "name": {
+        "en-GB": "Room or equipment booking",
+        "sv-SE": "Boka lokal eller utrustning",
+        "da-DK": "Book lokale eller udstyr",
+        "nb-NO": "Book rom eller utstyr",
+        "fi-FI": "Tilan tai välineen varaus",
+        "is-IS": "Bókun á sal eða búnaði",
+        "fr-FR": "Réservation de salle ou de matériel",
+        "de-DE": "Raum- oder Gerätebuchung",
+        "es-ES": "Reserva de sala o equipo",
+        "zh-CN": "场地或设备预订",
+        "ja-JP": "会議室・備品の予約",
+        "ru-RU": "Бронирование помещения или оборудования"
+      }
+    },
+    {
+      "id": "absence-notice",
+      "prior": 0,
+      "name": {
+        "en-GB": "Absence notice",
+        "sv-SE": "Frånvaroanmälan",
+        "da-DK": "Fraværsmelding",
+        "nb-NO": "Fraværsmelding",
+        "fi-FI": "Poissaoloilmoitus",
+        "is-IS": "Fjarvistartilkynning",
+        "fr-FR": "Signalement d’absence",
+        "de-DE": "Abwesenheitsmeldung",
+        "es-ES": "Aviso de ausencia",
+        "zh-CN": "缺席通知",
+        "ja-JP": "欠席の連絡",
+        "ru-RU": "Уведомление об отсутствии"
+      }
+    },
+    {
+      "id": "motion-submission",
+      "prior": 0,
+      "name": {
+        "en-GB": "Motion to a meeting",
+        "sv-SE": "Motion till möte",
+        "da-DK": "Forslag til møde",
+        "nb-NO": "Forslag til møte",
+        "fi-FI": "Aloite kokoukselle",
+        "is-IS": "Tillaga til fundar",
+        "fr-FR": "Motion pour une assemblée",
+        "de-DE": "Antrag an eine Versammlung",
+        "es-ES": "Propuesta a una asamblea",
+        "zh-CN": "会议提案",
+        "ja-JP": "議案の提出",
+        "ru-RU": "Предложение к собранию"
+      }
+    },
+    {
+      "id": "meeting-proxy",
+      "prior": 0,
+      "name": {
+        "en-GB": "Proxy form",
+        "sv-SE": "Fullmakt",
+        "da-DK": "Fuldmagt",
+        "nb-NO": "Fullmakt",
+        "fi-FI": "Valtakirja",
+        "is-IS": "Umboð",
+        "fr-FR": "Procuration",
+        "de-DE": "Vollmacht",
+        "es-ES": "Delegación de voto",
+        "zh-CN": "委托书",
+        "ja-JP": "委任状",
+        "ru-RU": "Доверенность"
+      }
+    },
+    {
+      "id": "general-meeting-registration",
+      "prior": 0,
+      "name": {
+        "en-GB": "General meeting registration",
+        "sv-SE": "Anmälan till stämma",
+        "da-DK": "Tilmelding til generalforsamling",
+        "nb-NO": "Påmelding til generalforsamling",
+        "fi-FI": "Ilmoittautuminen yhtiökokoukseen",
+        "is-IS": "Skráning á aðalfund",
+        "fr-FR": "Inscription à une assemblée générale",
+        "de-DE": "Anmeldung zur Hauptversammlung",
+        "es-ES": "Inscripción a la junta general",
+        "zh-CN": "股东大会报名",
+        "ja-JP": "総会への出席登録",
+        "ru-RU": "Регистрация на общее собрание"
+      }
+    },
+    {
+      "id": "power-of-attorney",
+      "prior": 0,
+      "name": {
+        "en-GB": "Power of attorney",
+        "sv-SE": "Fullmakt",
+        "da-DK": "Fuldmagt",
+        "nb-NO": "Fullmakt",
+        "fi-FI": "Valtakirja",
+        "is-IS": "Umboð",
+        "fr-FR": "Procuration",
+        "de-DE": "Vollmacht",
+        "es-ES": "Poder notarial",
+        "zh-CN": "授权委托书",
+        "ja-JP": "委任状",
+        "ru-RU": "Доверенность"
+      }
+    },
+    {
+      "id": "conference-registration",
+      "prior": 0,
+      "name": {
+        "en-GB": "Conference registration",
+        "sv-SE": "Konferensanmälan",
+        "da-DK": "Konferencetilmelding",
+        "nb-NO": "Konferansepåmelding",
+        "fi-FI": "Konferenssi-ilmoittautuminen",
+        "is-IS": "Ráðstefnuskráning",
+        "fr-FR": "Inscription à une conférence",
+        "de-DE": "Konferenzanmeldung",
+        "es-ES": "Inscripción a un congreso",
+        "zh-CN": "会议注册",
+        "ja-JP": "カンファレンス参加登録",
+        "ru-RU": "Регистрация на конференцию"
+      }
+    },
+    {
+      "id": "lab-observation",
+      "prior": 0,
+      "name": {
+        "en-GB": "Observation log",
+        "sv-SE": "Observationsprotokoll",
+        "da-DK": "Observationslog",
+        "nb-NO": "Observasjonslogg",
+        "fi-FI": "Havaintopöytäkirja",
+        "is-IS": "Athugunarskrá",
+        "fr-FR": "Journal d’observation",
+        "de-DE": "Beobachtungsprotokoll",
+        "es-ES": "Registro de observaciones",
+        "zh-CN": "观察记录",
+        "ja-JP": "観察記録",
+        "ru-RU": "Журнал наблюдений"
+      }
+    },
+    {
+      "id": "sample-submission",
+      "prior": 0,
+      "name": {
+        "en-GB": "Sample submission",
+        "sv-SE": "Provinlämning",
+        "da-DK": "Prøveindlevering",
+        "nb-NO": "Prøveinnlevering",
+        "fi-FI": "Näytteen toimitus",
+        "is-IS": "Sýnaskil",
+        "fr-FR": "Dépôt d’échantillon",
+        "de-DE": "Probeneinreichung",
+        "es-ES": "Entrega de muestra",
+        "zh-CN": "样本提交",
+        "ja-JP": "検体の提出",
+        "ru-RU": "Передача образца"
+      }
+    },
+    {
+      "id": "consent-form",
+      "prior": 0,
+      "structureOnly": true
+    },
+    {
+      "id": "incident-report",
+      "prior": 0,
+      "structureOnly": true
+    }
+  ]
+}

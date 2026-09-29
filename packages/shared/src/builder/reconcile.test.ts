@@ -36,6 +36,8 @@ const option = (optionId: string): Answer => ({ kind: 'option', optionId });
 function aChoice(): Conversation {
   return [
     option('signup'),
+    option('unsure'),
+    option('unsure'),
     option('later'),
     { kind: 'text', value: 'Mat' } as Answer,
     option('yes'),

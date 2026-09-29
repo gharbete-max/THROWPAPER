@@ -6438,6 +6438,7 @@ body:has(> #root .shell--narrow) {
 
 .preview-moment__sentence:focus-visible,
 .preview-moment__assumed summary:focus-visible,
+.conversation__why summary:focus-visible,
 .inline-edit__shape:focus-visible,
 .inline-edit__swatch:focus-visible,
 .inline-edit__step:focus-visible,
@@ -6446,7 +6447,9 @@ body:has(> #root .shell--narrow) {
   outline-offset: 2px;
 }
 
-.preview-moment__assumed summary {
+/* "Why this guess" (S11) is read the way "What Loppa assumed" is: one press away, never hidden. */
+.preview-moment__assumed summary,
+.conversation__why summary {
   display: flex;
   align-items: center;
   min-block-size: 44px;
@@ -6455,7 +6458,8 @@ body:has(> #root .shell--narrow) {
   cursor: pointer;
 }
 
-.preview-moment__assumed ul {
+.preview-moment__assumed ul,
+.conversation__why ul {
   display: grid;
   gap: calc(var(--tp-spacing-unit) * 0.5);
   margin: 0;

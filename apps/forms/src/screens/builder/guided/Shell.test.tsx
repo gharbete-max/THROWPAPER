@@ -73,7 +73,8 @@ const render = (conversation: Conversation) =>
 const count = (html: string, needle: string) => html.split(needle).length - 1;
 
 /** The buttons chain up to the question named. */
-const untilCount = () => walk('signup', 'later', 'Which day?', 'yes', 'yes', 'one');
+const untilCount = () =>
+  walk('signup', 'unsure', 'unsure', 'later', 'Which day?', 'yes', 'yes', 'one');
 
 describe('a question', () => {
   const html = render(first);
@@ -99,9 +100,10 @@ describe('a question', () => {
 
 describe('the trail', () => {
   it('says each answer, and greys what was passed over with its reason', () => {
-    const html = render(walk('signup'));
+    const html = render(walk('signup', 'unsure', 'unsure'));
     expect(html).toContain(`aria-label="${en('conversation.trail')}"`);
     expect(html).toContain(en('guided.flow.start.signup'));
+    expect(html).toContain(en('guided.common.unsure'));
     expect(html).toContain(`class="conversation__skipped">${en('guided.skip.nothingToGuess')}<`);
     // Something to go back to now.
     expect(html).not.toMatch(/button--quiet" disabled="">/);
@@ -110,7 +112,7 @@ describe('the trail', () => {
 
 describe('each kind of node', () => {
   it('a text answer: its own box and example chips, not "Or type it"', () => {
-    const at = walk('signup', 'later');
+    const at = walk('signup', 'unsure', 'unsure', 'later');
     expect(at.state.cursor).toBe('text.label');
     const html = render(at);
     expect(html).toContain('aria-labelledby="conversation-question"');
@@ -135,10 +137,21 @@ describe('each kind of node', () => {
   });
 
   it('the live preview: after the shape, and at the preview moment — not before', () => {
-    expect(render(walk('signup', 'later', 'Which day?', 'yes', 'yes', 'one', 4))).not.toContain(
-      'conversation__preview',
+    expect(
+      render(walk('signup', 'unsure', 'unsure', 'later', 'Which day?', 'yes', 'yes', 'one', 4)),
+    ).not.toContain('conversation__preview');
+    const placement = walk(
+      'signup',
+      'unsure',
+      'unsure',
+      'later',
+      'Which day?',
+      'yes',
+      'yes',
+      'one',
+      4,
+      'pill',
     );
-    const placement = walk('signup', 'later', 'Which day?', 'yes', 'yes', 'one', 4, 'pill');
     expect(placement.state.cursor).toBe('choice.placement');
     const html = render(placement);
     expect(html).toContain('conversation__preview');
@@ -147,7 +160,7 @@ describe('each kind of node', () => {
   });
 
   it('the end: open it in the editor, or keep going', () => {
-    const at = walk('signup', 'later', 'Which day?', 'yes', 'no', 'no');
+    const at = walk('signup', 'unsure', 'unsure', 'later', 'Which day?', 'yes', 'no', 'no');
     expect(G.nodes.find((n) => n.id === at.state.cursor)?.kind).toBe('end');
     const html = render(at);
     expect(html).toContain(en('wizard.open'));

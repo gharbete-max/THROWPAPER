@@ -86,6 +86,8 @@ describe('what the conversation’s state hides', () => {
   const atButtons = () =>
     [
       { kind: 'option', optionId: 'signup' },
+      { kind: 'option', optionId: 'unsure' },
+      { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Which day?' },
       { kind: 'option', optionId: 'yes' },

@@ -1842,6 +1842,2866 @@
       "notes": ""
     },
     {
+      "phrase": "Nein",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eher nicht",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "gar nicht",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nee",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "keine Ahnung",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vielleicht",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "genau",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jawohl",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "richtig",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
       "phrase": "Nein, das ist freiwillig",
       "nodeId": "text.required",
       "optionId": "no",

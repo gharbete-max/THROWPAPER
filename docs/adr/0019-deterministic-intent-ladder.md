@@ -34,14 +34,22 @@ Node and the desktop's Electron — rarely, which is the worst kind of rarely.
    and learned aliases need weights computed at runtime anyway; `INTENT-LADDER.md`, "No generated
    index".) The
    sigmoid used for display and the p ≥ 0.80 test is a **committed lookup table**
-   (`packages/shared/src/interpret/sigmoid.json`, −8000 to +8000 millinats in steps of 50, shared by the ladder, the importer's scores and the belief engine), not a runtime `Math.exp`.
+   (`packages/shared/src/interpret/sigmoid.json`, −8000 to +8000 millinats in steps of 50, shared
+   by the ladder and the importer's scores), not a runtime `Math.exp`. The belief engine, which
+   needs e^x over a whole belief rather than one sigmoid, has an **integer exponential** instead:
+   `expMicro` (`interpret/exp.ts`), 10⁶·e^(−x) by the same 40-digit series the table was made
+   with, which also needs no build step.
 3. **Learning without a model.** When the menu resolves an input, Loppa offers to remember the
    phrase as an alias — only on the person's press, per organisation, exportable and importable as
    `aliases.json` (ADR 0021). Learned aliases never override built-in ones or option ids.
-4. **The guess** is a belief over `FORM_TEMPLATES`, updated only by `score` weights declared on the
-   graph's options, three-state (Right / Sort of / No at 1.0 / 0.5 / 0.0), with the next question
-   chosen by the largest expected reduction in belief entropy — computed from the same table — and
-   the three strongest contributing answers always shown.
+4. **The guess** is a belief over `FORM_TEMPLATES` (and two structure-only recipes rule 8 keeps
+   out of the catalogue), updated only by `score` weights declared on the graph's options,
+   three-state (Right / Sort of / No at 1.0 / 0.5 / 0.0), with the next question chosen by the
+   largest expected reduction in belief entropy — computed with the same integers — and the three
+   strongest contributing answers always shown. As built in S11 (`docs/plan/BELIEF.md`), a score
+   is normalised over its node's scored options, `P(option | recipe) = e^score / Σ e^score`,
+   rather than added as it stands: only then can a question's answers be weighed against each
+   other, which choosing the question that tells most requires.
 5. **ADR 0013 is narrowed**: its `form-from-description`, `form-from-page`, `suggest-validation`
    and `map-scanned-fields` tasks are done by these rules and by ADR 0018's pipeline. Whatever is
    left of it (summarising responses) remains the owner's decision and nothing here depends on it.

@@ -19,6 +19,8 @@ const FIXTURE = new URL('../../../../fixtures/sessions/buttons-chain.json', impo
 
 const chain: Answer[] = [
   { kind: 'option', optionId: 'signup' },
+  { kind: 'option', optionId: 'unsure' },
+  { kind: 'option', optionId: 'unsure' },
   { kind: 'option', optionId: 'later' },
   { kind: 'text', value: 'Vilken mat vill du ha?' },
   { kind: 'option', optionId: 'yes' },

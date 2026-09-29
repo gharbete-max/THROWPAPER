@@ -77,21 +77,22 @@ describe('the saver', () => {
     const s = server();
     const { saver } = saverFor(s);
     const one = next(first, 'signup');
-    const two = next(one, 'later');
+    // Past the guess (S11) and the brand, to a question that writes a field.
+    const two = next(next(next(one, 'unsure'), 'unsure'), 'later');
     const three = answer(G, two, { kind: 'text', value: 'Dag?' }, { locale: 'sv-SE' });
     const saving = saver.save(one);
     void saver.save(two);
     void saver.save(three);
     await s.flush();
     await saving;
-    expect(s.calls).toEqual(['draft 1', 'session v0 log 1', 'draft 2', 'session v1 log 3']);
+    expect(s.calls).toEqual(['draft 1', 'session v0 log 1', 'draft 2', 'session v1 log 5']);
   });
 
   it('does not save a draft that has not changed', async () => {
     const s = server();
     const { saver } = saverFor(s);
     const one = next(first, 'signup');
-    const two = next(one, 'later'); // the brand question writes no field
+    const two = next(one, 'unsure'); // a guess question writes no field
     void saver.save(one);
     await s.flush();
     void saver.save(two);
@@ -106,7 +107,7 @@ describe('the saver', () => {
     void saver.save(next(first, 'signup'));
     await s.flush();
     expect(statuses.at(-1)).toBe('conflict');
-    void saver.save(next(next(first, 'signup'), 'later'));
+    void saver.save(next(next(first, 'signup'), 'unsure'));
     await s.flush();
     expect(s.calls).toEqual(['draft 1', 'session v0 log 1']);
   });

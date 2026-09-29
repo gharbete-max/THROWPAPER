@@ -46,7 +46,13 @@ const AnswerSchema: z.ZodType<Answer> = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('quantity'), value: z.number().int() }).strict(),
   z.object({ kind: z.literal('list'), labels: z.array(z.string()) }).strict(),
   z.object({ kind: z.literal('text'), value: z.string() }).strict(),
-  z.object({ kind: z.literal('guess'), verdict: z.enum(['right', 'sort-of', 'no']) }).strict(),
+  z
+    .object({
+      kind: z.literal('guess'),
+      verdict: z.enum(['right', 'sort-of', 'no']),
+      templateId: z.string().min(1),
+    })
+    .strict(),
   z.object({ kind: z.literal('continue') }).strict(),
   z.object({ kind: z.literal('jump'), to: z.string() }).strict(),
   z.object({ kind: z.literal('edit') }).strict(),

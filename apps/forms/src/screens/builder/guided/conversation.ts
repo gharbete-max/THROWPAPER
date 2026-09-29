@@ -11,9 +11,12 @@ import {
   jumpTargets,
   optionsOf,
   rebase,
+  recipeOf,
   resume,
   rewind,
+  toldOf,
   trail,
+  whyGuess,
   type Answer,
   type BuilderGraph,
   type Conversation,
@@ -21,7 +24,7 @@ import {
   type Node,
   type Tier,
 } from '@tp/shared/builder';
-import type { FormDefinition } from '@tp/shared/forms';
+import type { FormDefinition, FormTemplate } from '@tp/shared/forms';
 import {
   aliasRefusal,
   interpret,
@@ -119,6 +122,8 @@ export function choose(
   given: Answer,
   locales: Locales,
   tier: Tier | null = null,
+  /** The template catalogue, from the API: what "Right" adds from (S11). */
+  templates: readonly FormTemplate[] = [],
 ): Stepped {
   try {
     return {
@@ -126,6 +131,7 @@ export function choose(
       conversation: answerNode(graph, conversation, given, {
         locale: locales.contentLocale,
         tier,
+        templates,
       }),
     };
   } catch (error) {
@@ -393,8 +399,11 @@ export function lastChoice(conversation: Conversation): string | null {
   return choiceAt(conversation, conversation.log.length - 1);
 }
 
-/** Which preview a screen shows, named as the graph names it: a control, or the masthead. */
-export type PreviewSpec = 'choice.control' | 'brand.masthead';
+/**
+ * Which preview a screen shows, named as the graph names it: a control, the masthead, or the whole
+ * form — what "Right" added to it (S11).
+ */
+export type PreviewSpec = 'choice.control' | 'brand.masthead' | 'form.whole';
 
 /**
  * The preview a screen shows, or null: on a preview moment, its own; on the screen right after a
@@ -409,7 +418,7 @@ export function previewOf(
 ): PreviewSpec | null {
   const node = currentNode(graph, conversation);
   const named = (spec: string | undefined): PreviewSpec | null =>
-    spec === 'choice.control' || spec === 'brand.masthead' ? spec : null;
+    spec === 'choice.control' || spec === 'brand.masthead' || spec === 'form.whole' ? spec : null;
   if (node.kind === 'preview-moment') return named(node.preview);
   const last = conversation.log
     .filter((entry) => entry.answer.kind !== 'edit' && entry.answer.kind !== 'import')
@@ -459,6 +468,36 @@ const GUESS: Record<'right' | 'sort-of' | 'no', MessageKey> = {
   'sort-of': 'guided.guess.sortOf',
   no: 'guided.guess.no',
 };
+
+/**
+ * The recipe the conversation guesses, named in the screen's language: what "This looks like …"
+ * says. The recipes carry their names, so the guess is named even when the catalogue could not be
+ * loaded. Null while there is no guess.
+ */
+export function guessName(conversation: Conversation, locale: string): string | null {
+  const id = conversation.state.guess?.templateId;
+  const recipe = id ? recipeOf(id) : null;
+  if (!recipe) return null;
+  return recipe.name[locale] ?? recipe.name['en-GB'] ?? null;
+}
+
+/** One answer behind the guess, in the trail's words: the question asked, and what was said. */
+export interface GuessReason {
+  readonly question: MessageKey;
+  readonly answer: MessageKey;
+}
+
+/** "Why this guess": the three answers that moved it most, strongest first. Never hidden. */
+export function guessReasons(graph: BuilderGraph, conversation: Conversation): GuessReason[] {
+  const id = conversation.state.guess?.templateId;
+  if (!id) return [];
+  // Everything said, a rebase's carried answers too: the editor between two answers changes nothing.
+  return whyGuess(graph, toldOf(conversation), id).flatMap((reason) => {
+    const node = graph.nodes.find((candidate) => candidate.id === reason.nodeId);
+    const option = node ? optionsOf(node).find((o) => o.id === reason.optionId) : undefined;
+    return node && option ? [{ question: node.ask, answer: option.label }] : [];
+  });
+}
 
 /** The trail, in words: every answer and jump, each a way back to its question. */
 export function crumbs(graph: BuilderGraph, conversation: Conversation): Crumb[] {

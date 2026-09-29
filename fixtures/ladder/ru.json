@@ -3,121 +3,1160 @@
   "locale": "ru-RU",
   "source": "docs/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
   "rows": [
-    { "phrase": "Можно несколько ответов", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T0" }, "note": "the card's own label" },
-    { "phrase": "капсула", "nodeId": "choice.shape", "expect": { "optionId": "pill", "tier": "T0" } },
-    { "phrase": "В ряд", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T0" } },
-    { "phrase": "БЕЗ КНОПОК", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T0" } },
-    { "phrase": "Решить позже", "nodeId": "brand.start", "expect": { "optionId": "later", "tier": "T0" } },
-    { "phrase": "Нет, это всё", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T0" } },
-    { "phrase": "обязательный", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T0" } },
-    { "phrase": "Запись участников", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T0" } },
-    { "phrase": "тёмная тема", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T0" } },
-    { "phrase": "Слева вверху, рядом с заголовком", "nodeId": "brand.logoSlot", "expect": { "optionId": "header-left", "tier": "T0" } },
-    { "phrase": "скруглённые углы!", "nodeId": "choice.shape", "expect": { "optionId": "rounded", "tier": "T0" } },
-    { "phrase": "square", "nodeId": "choice.shape", "expect": { "optionId": "square", "tier": "T0" }, "note": "an option id" },
-
-    { "phrase": "хочу кнопки пожалуйста", "nodeId": "choice.buttons", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "никаких кнопок", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "не нужно кнопок", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "это не обязательно", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "это обязательный вопрос", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "по желанию для всех", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "поставь его в углу", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T1" } },
-    { "phrase": "тёмный фон пожалуйста", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T1" } },
-    { "phrase": "в ряд пожалуйста", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T1" } },
-    { "phrase": "всё готово", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "больше ничего спасибо", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "пропустить логотип", "nodeId": "brand.start", "expect": { "optionId": "later", "tier": "T1" } },
-    { "phrase": "используй наш логотип", "nodeId": "brand.start", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "только один ответ пожалуйста", "nodeId": "choice.answers", "expect": { "optionId": "one", "tier": "T1" } },
-
-    { "phrase": "очень хочется чтобы кнопки выглядели как капсулы", "nodeId": "choice.shape", "expect": { "optionId": "pill", "tier": "T2" } },
-    { "phrase": "мы проводим курс и людям нужно записаться заранее", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T2" } },
-    { "phrase": "вопрос должен принимать несколько ответов от каждого человека", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T2" } },
-    { "phrase": "расположи варианты в ряд чтобы люди быстро их видели", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T2" } },
-    { "phrase": "логотип должен скромно стоять в углу страницы", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T2" } },
-    { "phrase": "тёмный стиль подойдёт для нашего вечернего праздника", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T2" } },
-    { "phrase": "я думаю этот вопрос для всех совершенно по желанию", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T2" } },
-    { "phrase": "поставь их под вопросом длинным списком вниз", "nodeId": "choice.placement", "expect": { "optionId": "under-full", "tier": "T2" } },
-    { "phrase": "мы просто хотим узнать мнение людей о дне", "nodeId": "flow.start", "expect": { "optionId": "feedback", "tier": "T2" } },
-    { "phrase": "я бы хотел добавить ещё вопрос после этого", "nodeId": "flow.more", "expect": { "optionId": "yes", "tier": "T2" } },
-    { "phrase": "каждый участник должен ответить до отправки, вопрос обязательный", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T2" } },
-    { "phrase": "варианты должны быть большими плитками с картинками каждого блюда", "nodeId": "choice.shape", "expect": { "optionId": "tile", "tier": "T2" } },
-
-    { "phrase": "кнопкы", "nodeId": "choice.buttons", "expect": { "optionId": "yes", "tier": "T3" } },
-    { "phrase": "без кнопкы", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T3" } },
-    { "phrase": "прямоугольнная", "nodeId": "choice.shape", "expect": { "optionId": "square", "tier": "T3" } },
-    { "phrase": "требуеться", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T3" } },
-    { "phrase": "необязателно", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T3" } },
-    { "phrase": "горизонтално", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T3" } },
-    { "phrase": "полнчь", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T3" } },
-    { "phrase": "водянной знак", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T3" } },
-    { "phrase": "отзывыы", "nodeId": "flow.start", "expect": { "optionId": "feedback", "tier": "T3" } },
-    { "phrase": "регистрацыя", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T3" } },
-    { "phrase": "множественый выбор", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T3" } },
-
-    { "phrase": "4", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "четыре", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "Двенадцать", "nodeId": "choice.count", "expect": { "value": 12, "tier": "T4" } },
-    { "phrase": "четыре кнопки в ряд", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 4 }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "how many and where they sit, each its own answer" },
-    { "phrase": "думаю шесть будет хорошо", "nodeId": "choice.count", "expect": { "value": 6, "tier": "T4" } },
-    { "phrase": "3 500 евро", "pattern": "currency", "expect": { "value": { "amount": "3500", "currency": "EUR" }, "tier": "T4" } },
-    { "phrase": "12,50 €", "pattern": "currency", "expect": { "value": { "amount": "12.50", "currency": "EUR" }, "tier": "T4" } },
-    { "phrase": "1 мая 2026", "pattern": "date", "expect": { "value": "2026-05-01", "tier": "T4" }, "note": "the genitive month" },
-    { "phrase": "01.05.2026", "pattern": "date", "expect": { "value": "2026-05-01", "tier": "T4" } },
-    { "phrase": "+7 912 345-67-89", "pattern": "phone", "expect": { "value": "+79123456789", "tier": "T4" } },
-    { "phrase": "info@klub.ru", "pattern": "email", "expect": { "value": "info@klub.ru", "tier": "T4" } },
-
-    { "phrase": "несколько", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "пару", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "много", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "3 или 4", "nodeId": "choice.count", "expect": { "ask": "ambiguous" } },
-    { "phrase": "40", "nodeId": "choice.count", "expect": { "ask": "out-of-range" } },
-    { "phrase": "не четыре", "nodeId": "choice.count", "expect": { "ask": "negated" } },
-    { "phrase": "не капсула", "nodeId": "choice.shape", "expect": { "ask": "negated" } },
-    { "phrase": "не только один", "nodeId": "choice.answers", "expect": { "ask": "negated" } },
-    { "phrase": "банан", "nodeId": "choice.shape", "expect": { "ask": "nothing" } },
-    { "phrase": "кнопки не нужны", "nodeId": "choice.buttons", "expect": { "ask": "negated" } },
-    { "phrase": "один или несколько", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
-    { "phrase": "угол вверху", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "обязательнй", "nodeId": "text.required", "expect": { "ask": "ambiguous" }, "note": "close to 'обязательный' and to 'необязательный' alike" },
-    { "phrase": "30 февраля 2026", "pattern": "date", "expect": { "none": true } },
-    { "phrase": "как вкладки", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
-    { "phrase": "хочу одной сплошной полосой", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" },
-    { "phrase": "три кнопки, таблетка, в ряд", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.shape", "optionId": "pill" }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "the demo sentence: four answers, each its own step" },
-    { "phrase": "четыре кнопки", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 4 }], "tier": "T5" }, "note": "one clause, two answers" },
-    { "phrase": "кнопки, только один ответ", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.answers", "optionId": "one" }], "tier": "T5" } },
-    { "phrase": "5 кнопки в ряд", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 5 }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "three answers in one clause" },
-    { "phrase": "несколько ответов и вкладки", "nodeId": "choice.answers", "expect": { "fill": [{ "nodeId": "choice.answers", "optionId": "many" }, { "nodeId": "choice.shape", "optionId": "tab" }], "tier": "T5" }, "note": "cut at the conjunction" },
-    { "phrase": "только один ответ, три", "nodeId": "choice.answers", "expect": { "fill": [{ "nodeId": "choice.answers", "optionId": "one" }, { "nodeId": "choice.count", "value": 3 }], "tier": "T5" } },
-    { "phrase": "четыре, квадратные", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 4 }, { "nodeId": "choice.shape", "optionId": "square" }], "tier": "T5" } },
-    { "phrase": "три, скруглённые углы, xyzzy", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.shape", "optionId": "rounded" }], "unused": ["xyzzy"], "tier": "T5" }, "note": "a clause that answers nothing is shown back" },
-    { "phrase": "три, таблетка, квадратные, в ряд", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.placement", "optionId": "row" }], "unused": ["таблетка", "квадратные"], "tier": "T5" }, "note": "two shapes contradict: the shape is left to ask" },
-    { "phrase": "таблетка, в ряд", "nodeId": "choice.shape", "expect": { "fill": [{ "nodeId": "choice.shape", "optionId": "pill" }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" } },
-    { "phrase": "с картинками и под вопросом", "nodeId": "choice.shape", "expect": { "fill": [{ "nodeId": "choice.shape", "optionId": "tile" }, { "nodeId": "choice.placement", "optionId": "under-full" }], "tier": "T5" } },
-    { "phrase": "Красный, Зелёный, Синий", "nodeId": "choice.count", "expect": { "list": ["Красный", "Зелёный", "Синий"], "tier": "T6" }, "note": "labels verbatim, the count the list’s" },
-    { "phrase": "Маленький; Средний; Большой", "nodeId": "choice.count", "expect": { "list": ["Маленький", "Средний", "Большой"], "tier": "T6" } },
-    { "phrase": "Понедельник\nВторник\nСреда", "nodeId": "choice.count", "expect": { "list": ["Понедельник", "Вторник", "Среда"], "tier": "T6" }, "note": "one line, one option" },
-    { "phrase": "1. Красный\n2. Зелёный\n3. Синий", "nodeId": "choice.count", "expect": { "list": ["Красный", "Зелёный", "Синий"], "tier": "T6" }, "note": "a numbered list: the markers are not the labels" },
-    { "phrase": "• Маленький\n• Большой", "nodeId": "choice.count", "expect": { "list": ["Маленький", "Большой"], "tier": "T6" }, "note": "a bulleted list" },
-    { "phrase": "a) Понедельник\nb) Вторник", "nodeId": "choice.count", "expect": { "list": ["Понедельник", "Вторник"], "tier": "T6" }, "note": "lettered" },
-    { "phrase": "Красный, Зелёный", "nodeId": "choice.answers", "expect": { "list": ["Красный", "Зелёный"], "at": "choice.count", "tier": "T6" }, "note": "the options, for the question ahead that takes them" },
-    { "phrase": "Понедельник, Вторник, Среда, Четверг, Пятница", "nodeId": "choice.count", "expect": { "list": ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница"], "tier": "T6" } },
-    { "phrase": "A, B, C, D, E, F, G, H, I, J, K, L", "nodeId": "choice.count", "expect": { "list": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"], "tier": "T6" }, "note": "twelve, the most allowed" },
-    { "phrase": "3,50 ₽; 4,50 ₽", "nodeId": "choice.count", "expect": { "list": ["3,50 ₽", "4,50 ₽"], "tier": "T6" }, "note": "a semicolon lets an item keep its comma" },
-    { "phrase": "таблетка", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "pill" }, "tier": "T7" } },
-    { "phrase": "в ряд", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" } },
-    { "phrase": "четыре", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.count", "value": 4 }, "tier": "T7" }, "note": "a number, for the question that counts" },
-    { "phrase": "несколько ответов", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.answers", "optionId": "many" }, "tier": "T7" } },
-    { "phrase": "вкладки", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tab" }, "tier": "T7" } },
-    { "phrase": "квадратные", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "square" }, "tier": "T7" } },
-    { "phrase": "под вопросом", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "under-full" }, "tier": "T7" } },
-    { "phrase": "в ряд", "nodeId": "choice.shape", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" } },
-    { "phrase": "под вопросом", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "under-full" }, "tier": "T7" } },
-    { "phrase": "с картинками", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tile" }, "tier": "T7" } },
-    { "phrase": "вкладки", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tab" }, "tier": "T7" } },
-    { "phrase": "таблетка, квадратные", "nodeId": "choice.shape", "expect": { "ask": "ambiguous" }, "note": "two shapes" },
-    { "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M", "nodeId": "choice.count", "expect": { "ask": "out-of-range" }, "note": "thirteen: more than a question may have, and never cut" },
-    { "phrase": "таблетка, квадратные", "nodeId": "choice.count", "expect": { "ask": "nothing", "elsewhere": ["choice.shape"] }, "note": "two shapes, not two options: offered, never guessed" }
+    {
+      "phrase": "Можно несколько ответов",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T0"
+      },
+      "note": "the card's own label"
+    },
+    {
+      "phrase": "капсула",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "В ряд",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "БЕЗ КНОПОК",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Решить позже",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Нет, это всё",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "обязательный",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Запись участников",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "тёмная тема",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Слева вверху, рядом с заголовком",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "header-left",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "скруглённые углы!",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "rounded",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "square",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "square",
+        "tier": "T0"
+      },
+      "note": "an option id"
+    },
+    {
+      "phrase": "хочу кнопки пожалуйста",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "никаких кнопок",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "не нужно кнопок",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "это не обязательно",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "это обязательный вопрос",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "по желанию для всех",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "поставь его в углу",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "тёмный фон пожалуйста",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "в ряд пожалуйста",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "всё готово",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "больше ничего спасибо",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "пропустить логотип",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "используй наш логотип",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "только один ответ пожалуйста",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "one",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "очень хочется чтобы кнопки выглядели как капсулы",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "мы проводим курс и людям нужно записаться заранее",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "вопрос должен принимать несколько ответов от каждого человека",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "расположи варианты в ряд чтобы люди быстро их видели",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "логотип должен скромно стоять в углу страницы",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "тёмный стиль подойдёт для нашего вечернего праздника",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "я думаю этот вопрос для всех совершенно по желанию",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "поставь их под вопросом длинным списком вниз",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "under-full",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "мы просто хотим узнать мнение людей о дне",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "я бы хотел добавить ещё вопрос после этого",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "каждый участник должен ответить до отправки, вопрос обязательный",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "варианты должны быть большими плитками с картинками каждого блюда",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tile",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "кнопкы",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "без кнопкы",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "прямоугольнная",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "square",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "требуеться",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "необязателно",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "горизонтално",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "полнчь",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "водянной знак",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "отзывыы",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "регистрацыя",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "множественый выбор",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "4",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "четыре",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "Двенадцать",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 12,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "четыре кнопки в ряд",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "how many and where they sit, each its own answer"
+    },
+    {
+      "phrase": "думаю шесть будет хорошо",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 6,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "3 500 евро",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "3500",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "12,50 €",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "12.50",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "1 мая 2026",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      },
+      "note": "the genitive month"
+    },
+    {
+      "phrase": "01.05.2026",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "+7 912 345-67-89",
+      "pattern": "phone",
+      "expect": {
+        "value": "+79123456789",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "info@klub.ru",
+      "pattern": "email",
+      "expect": {
+        "value": "info@klub.ru",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "несколько",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "пару",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "много",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "3 или 4",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "40",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      }
+    },
+    {
+      "phrase": "не четыре",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "не капсула",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "не только один",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "банан",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "nothing"
+      }
+    },
+    {
+      "phrase": "кнопки не нужны",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "один или несколько",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "угол вверху",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "обязательнй",
+      "nodeId": "text.required",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "close to 'обязательный' and to 'необязательный' alike"
+    },
+    {
+      "phrase": "30 февраля 2026",
+      "pattern": "date",
+      "expect": {
+        "none": true
+      }
+    },
+    {
+      "phrase": "как вкладки",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tab",
+        "tier": "T0"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "хочу одной сплошной полосой",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "segmented",
+        "tier": "T1"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "три кнопки, таблетка, в ряд",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "the demo sentence: four answers, each its own step"
+    },
+    {
+      "phrase": "четыре кнопки",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "one clause, two answers"
+    },
+    {
+      "phrase": "кнопки, только один ответ",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "5 кнопки в ряд",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 5
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "three answers in one clause"
+    },
+    {
+      "phrase": "несколько ответов и вкладки",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "many"
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tab"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "cut at the conjunction"
+    },
+    {
+      "phrase": "только один ответ, три",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "четыре, квадратные",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "square"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "три, скруглённые углы, xyzzy",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "rounded"
+          }
+        ],
+        "unused": [
+          "xyzzy"
+        ],
+        "tier": "T5"
+      },
+      "note": "a clause that answers nothing is shown back"
+    },
+    {
+      "phrase": "три, таблетка, квадратные, в ряд",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "unused": [
+          "таблетка",
+          "квадратные"
+        ],
+        "tier": "T5"
+      },
+      "note": "two shapes contradict: the shape is left to ask"
+    },
+    {
+      "phrase": "таблетка, в ряд",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "с картинками и под вопросом",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tile"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "under-full"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "Красный, Зелёный, Синий",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Красный",
+          "Зелёный",
+          "Синий"
+        ],
+        "tier": "T6"
+      },
+      "note": "labels verbatim, the count the list’s"
+    },
+    {
+      "phrase": "Маленький; Средний; Большой",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Маленький",
+          "Средний",
+          "Большой"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "Понедельник\nВторник\nСреда",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Понедельник",
+          "Вторник",
+          "Среда"
+        ],
+        "tier": "T6"
+      },
+      "note": "one line, one option"
+    },
+    {
+      "phrase": "1. Красный\n2. Зелёный\n3. Синий",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Красный",
+          "Зелёный",
+          "Синий"
+        ],
+        "tier": "T6"
+      },
+      "note": "a numbered list: the markers are not the labels"
+    },
+    {
+      "phrase": "• Маленький\n• Большой",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Маленький",
+          "Большой"
+        ],
+        "tier": "T6"
+      },
+      "note": "a bulleted list"
+    },
+    {
+      "phrase": "a) Понедельник\nb) Вторник",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Понедельник",
+          "Вторник"
+        ],
+        "tier": "T6"
+      },
+      "note": "lettered"
+    },
+    {
+      "phrase": "Красный, Зелёный",
+      "nodeId": "choice.answers",
+      "expect": {
+        "list": [
+          "Красный",
+          "Зелёный"
+        ],
+        "at": "choice.count",
+        "tier": "T6"
+      },
+      "note": "the options, for the question ahead that takes them"
+    },
+    {
+      "phrase": "Понедельник, Вторник, Среда, Четверг, Пятница",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Понедельник",
+          "Вторник",
+          "Среда",
+          "Четверг",
+          "Пятница"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L"
+        ],
+        "tier": "T6"
+      },
+      "note": "twelve, the most allowed"
+    },
+    {
+      "phrase": "3,50 ₽; 4,50 ₽",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "3,50 ₽",
+          "4,50 ₽"
+        ],
+        "tier": "T6"
+      },
+      "note": "a semicolon lets an item keep its comma"
+    },
+    {
+      "phrase": "таблетка",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "pill"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "в ряд",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "четыре",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.count",
+          "value": 4
+        },
+        "tier": "T7"
+      },
+      "note": "a number, for the question that counts"
+    },
+    {
+      "phrase": "несколько ответов",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.answers",
+          "optionId": "many"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "вкладки",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "квадратные",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "square"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "под вопросом",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "в ряд",
+      "nodeId": "choice.shape",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "под вопросом",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "с картинками",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tile"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "вкладки",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "таблетка, квадратные",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "two shapes"
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      },
+      "note": "thirteen: more than a question may have, and never cut"
+    },
+    {
+      "phrase": "таблетка, квадратные",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing",
+        "elsewhere": [
+          "choice.shape"
+        ]
+      },
+      "note": "two shapes, not two options: offered, never guessed"
+    },
+    {
+      "phrase": "Да",
+      "nodeId": "guess.date",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      },
+      "note": "a guess question's yes, its card's own label (S11)"
+    },
+    {
+      "phrase": "Нет",
+      "nodeId": "guess.signature",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "не уверен",
+      "nodeId": "guess.pay",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      },
+      "note": "\"not sure\" is an answer that says nothing, never a no"
+    },
+    {
+      "phrase": "Не знаю",
+      "nodeId": "guess.research",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "верно",
+      "nodeId": "guess.meeting",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    }
   ]
 }

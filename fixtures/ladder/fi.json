@@ -3,119 +3,1144 @@
   "locale": "fi-FI",
   "source": "docs/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
   "rows": [
-    { "phrase": "Useampi vastaus sallittu", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T0" }, "note": "the card's own label" },
-    { "phrase": "kapseli", "nodeId": "choice.shape", "expect": { "optionId": "pill", "tier": "T0" } },
-    { "phrase": "Rinnakkain", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T0" } },
-    { "phrase": "EI PAINIKKEITA", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T0" } },
-    { "phrase": "Päätä myöhemmin", "nodeId": "brand.start", "expect": { "optionId": "later", "tier": "T0" } },
-    { "phrase": "Ei, siinä kaikki", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T0" } },
-    { "phrase": "pakollinen", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T0" } },
-    { "phrase": "Ilmoittautumiset", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T0" } },
-    { "phrase": "tumma tila", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T0" } },
-    { "phrase": "Vasemmalla ylhäällä, otsikon vieressä", "nodeId": "brand.logoSlot", "expect": { "optionId": "header-left", "tier": "T0" } },
-    { "phrase": "pyöristetyt kulmat!", "nodeId": "choice.shape", "expect": { "optionId": "rounded", "tier": "T0" } },
-    { "phrase": "under-full", "nodeId": "choice.placement", "expect": { "optionId": "under-full", "tier": "T0" }, "note": "an option id" },
-
-    { "phrase": "haluan painikkeet kiitos", "nodeId": "choice.buttons", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "ei painikkeita ollenkaan", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "se ei ole pakollinen", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "se on pakollinen kaikille", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "se on vapaaehtoinen heille", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "pienenä kulmassa kiitos", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T1" } },
-    { "phrase": "tumma tausta kiitos", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T1" } },
-    { "phrase": "vierekkäin kiitos", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T1" } },
-    { "phrase": "olen nyt valmis", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "ei muuta kiitos", "nodeId": "flow.more", "expect": { "optionId": "no", "tier": "T1" } },
-    { "phrase": "ohita logo", "nodeId": "brand.start", "expect": { "optionId": "later", "tier": "T1" } },
-    { "phrase": "meidän brändi ja värit", "nodeId": "brand.start", "expect": { "optionId": "yes", "tier": "T1" } },
-    { "phrase": "vain yksi vastaus kiitos", "nodeId": "choice.answers", "expect": { "optionId": "one", "tier": "T1" } },
-
-    { "phrase": "painikkeiden muoto saisi olla kapseli tai jotain sellaista", "nodeId": "choice.shape", "expect": { "optionId": "pill", "tier": "T2" } },
-    { "phrase": "järjestämme kurssin ja ihmisten täytyy ilmoittautua etukäteen", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T2" } },
-    { "phrase": "kysymyksen pitää hyväksyä useita vastauksia jokaiselta", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T2" } },
-    { "phrase": "vaihtoehdot saavat olla vierekkäin jotta ne näkee nopeasti", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T2" } },
-    { "phrase": "logo saa olla huomaamaton pieni merkki kulmassa", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T2" } },
-    { "phrase": "tumma tyyli sopisi iltajuhlaamme hyvin", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T2" } },
-    { "phrase": "minusta tämä kysymys on kaikille täysin vapaaehtoinen", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T2" } },
-    { "phrase": "laita ne kysymyksen alla pitkäksi listaksi", "nodeId": "choice.placement", "expect": { "optionId": "under-full", "tier": "T2" } },
-    { "phrase": "haluamme kerätä palautetta osallistujilta päivän jälkeen", "nodeId": "flow.start", "expect": { "optionId": "feedback", "tier": "T2" } },
-    { "phrase": "vielä yksi kysymys tämän jälkeen, kiitos", "nodeId": "flow.more", "expect": { "optionId": "yes", "tier": "T2" } },
-    { "phrase": "jokaisen osallistujan täytyy vastata ennen lähettämistä, pakollinen", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T2" } },
-    { "phrase": "vaihtoehtojen pitäisi olla isoja laattoja kuvilla jokaisesta ruoasta", "nodeId": "choice.shape", "expect": { "optionId": "tile", "tier": "T2" } },
-
-    { "phrase": "painikeet kiitos", "nodeId": "choice.buttons", "expect": { "optionId": "yes", "tier": "T3" } },
-    { "phrase": "ei painikeita", "nodeId": "choice.buttons", "expect": { "optionId": "no", "tier": "T3" } },
-    { "phrase": "suorakulmo", "nodeId": "choice.shape", "expect": { "optionId": "square", "tier": "T3" } },
-    { "phrase": "pakolinen", "nodeId": "text.required", "expect": { "optionId": "yes", "tier": "T3" } },
-    { "phrase": "vapaaehtonen", "nodeId": "text.required", "expect": { "optionId": "no", "tier": "T3" } },
-    { "phrase": "vierekäin", "nodeId": "choice.placement", "expect": { "optionId": "row", "tier": "T3" } },
-    { "phrase": "keskyö", "nodeId": "brand.quick", "expect": { "optionId": "midnight", "tier": "T3" } },
-    { "phrase": "vesileina", "nodeId": "brand.logoSlot", "expect": { "optionId": "corner-watermark", "tier": "T3" } },
-    { "phrase": "palutetta", "nodeId": "flow.start", "expect": { "optionId": "feedback", "tier": "T3" } },
-    { "phrase": "ilmoitautuminen", "nodeId": "flow.start", "expect": { "optionId": "signup", "tier": "T3" } },
-    { "phrase": "valintaruudt", "nodeId": "choice.answers", "expect": { "optionId": "many", "tier": "T3" } },
-
-    { "phrase": "4", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "neljä", "nodeId": "choice.count", "expect": { "value": 4, "tier": "T4" } },
-    { "phrase": "Kaksitoista", "nodeId": "choice.count", "expect": { "value": 12, "tier": "T4" } },
-    { "phrase": "neljä painiketta rivissä", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 4 }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "how many and where they sit, each its own answer" },
-    { "phrase": "kuusi olisi hyvä", "nodeId": "choice.count", "expect": { "value": 6, "tier": "T4" } },
-    { "phrase": "3 500 €", "pattern": "currency", "expect": { "value": { "amount": "3500", "currency": "EUR" }, "tier": "T4" } },
-    { "phrase": "12,50 euroa", "pattern": "currency", "expect": { "value": { "amount": "12.50", "currency": "EUR" }, "tier": "T4" } },
-    { "phrase": "1. toukokuuta 2026", "pattern": "date", "expect": { "value": "2026-05-01", "tier": "T4" } },
-    { "phrase": "1.5.2026", "pattern": "date", "expect": { "value": "2026-05-01", "tier": "T4" } },
-    { "phrase": "+358 40 123 4567", "pattern": "phone", "expect": { "value": "+358401234567", "tier": "T4" } },
-    { "phrase": "info@yhdistys.fi", "pattern": "email", "expect": { "value": "info@yhdistys.fi", "tier": "T4" } },
-
-    { "phrase": "muutama", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "useita", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "pari", "nodeId": "choice.count", "expect": { "ask": "vague" } },
-    { "phrase": "3 tai 4", "nodeId": "choice.count", "expect": { "ask": "ambiguous" } },
-    { "phrase": "40", "nodeId": "choice.count", "expect": { "ask": "out-of-range" } },
-    { "phrase": "ei neljä", "nodeId": "choice.count", "expect": { "ask": "negated" } },
-    { "phrase": "ei kapseli", "nodeId": "choice.shape", "expect": { "ask": "negated" } },
-    { "phrase": "ei vain yksi", "nodeId": "choice.answers", "expect": { "ask": "negated" } },
-    { "phrase": "banaani", "nodeId": "choice.shape", "expect": { "ask": "nothing" } },
-    { "phrase": "painikkeita ei tarvita", "nodeId": "choice.buttons", "expect": { "ask": "ambiguous" }, "note": "'ei' is also the answer no: it points both ways" },
-    { "phrase": "yksi tai useampi", "nodeId": "choice.answers", "expect": { "ask": "ambiguous" } },
-    { "phrase": "kulma ylhäällä", "nodeId": "brand.logoSlot", "expect": { "ask": "ambiguous" } },
-    { "phrase": "30. helmikuuta 2026", "pattern": "date", "expect": { "none": true } },
-    { "phrase": "välilehtinä", "nodeId": "choice.shape", "expect": { "optionId": "tab", "tier": "T0" }, "note": "S5: the tab and segmented shapes" },
-    { "phrase": "haluan ne yhdistettynä yhdeksi palkiksi", "nodeId": "choice.shape", "expect": { "optionId": "segmented", "tier": "T1" }, "note": "S5: the tab and segmented shapes" },
-    { "phrase": "kolme painikkeet, pilleri, rinnakkain", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.shape", "optionId": "pill" }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "the demo sentence: four answers, each its own step" },
-    { "phrase": "neljä painikkeet", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 4 }], "tier": "T5" }, "note": "one clause, two answers" },
-    { "phrase": "painikkeet, vain yksi vastaus", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.answers", "optionId": "one" }], "tier": "T5" } },
-    { "phrase": "5 painikkeet rinnakkain", "nodeId": "choice.buttons", "expect": { "fill": [{ "nodeId": "choice.buttons", "optionId": "yes" }, { "nodeId": "choice.count", "value": 5 }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" }, "note": "three answers in one clause" },
-    { "phrase": "useita vastauksia ja välilehdet", "nodeId": "choice.answers", "expect": { "fill": [{ "nodeId": "choice.answers", "optionId": "many" }, { "nodeId": "choice.shape", "optionId": "tab" }], "tier": "T5" }, "note": "cut at the conjunction" },
-    { "phrase": "vain yksi vastaus, kolme", "nodeId": "choice.answers", "expect": { "fill": [{ "nodeId": "choice.answers", "optionId": "one" }, { "nodeId": "choice.count", "value": 3 }], "tier": "T5" } },
-    { "phrase": "neljä, kulmikkaat", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 4 }, { "nodeId": "choice.shape", "optionId": "square" }], "tier": "T5" } },
-    { "phrase": "kolme, pyöristetyt kulmat, xyzzy", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.shape", "optionId": "rounded" }], "unused": ["xyzzy"], "tier": "T5" }, "note": "a clause that answers nothing is shown back" },
-    { "phrase": "kolme, pilleri, kulmikkaat, rinnakkain", "nodeId": "choice.count", "expect": { "fill": [{ "nodeId": "choice.count", "value": 3 }, { "nodeId": "choice.placement", "optionId": "row" }], "unused": ["pilleri", "kulmikkaat"], "tier": "T5" }, "note": "two shapes contradict: the shape is left to ask" },
-    { "phrase": "pilleri, rinnakkain", "nodeId": "choice.shape", "expect": { "fill": [{ "nodeId": "choice.shape", "optionId": "pill" }, { "nodeId": "choice.placement", "optionId": "row" }], "tier": "T5" } },
-    { "phrase": "kuvilla ja kysymyksen alla", "nodeId": "choice.shape", "expect": { "fill": [{ "nodeId": "choice.shape", "optionId": "tile" }, { "nodeId": "choice.placement", "optionId": "under-full" }], "tier": "T5" } },
-    { "phrase": "Punainen, Vihreä, Sininen", "nodeId": "choice.count", "expect": { "list": ["Punainen", "Vihreä", "Sininen"], "tier": "T6" }, "note": "labels verbatim, the count the list’s" },
-    { "phrase": "Pieni; Keskikokoinen; Suuri", "nodeId": "choice.count", "expect": { "list": ["Pieni", "Keskikokoinen", "Suuri"], "tier": "T6" } },
-    { "phrase": "Maanantai\nTiistai\nKeskiviikko", "nodeId": "choice.count", "expect": { "list": ["Maanantai", "Tiistai", "Keskiviikko"], "tier": "T6" }, "note": "one line, one option" },
-    { "phrase": "1. Punainen\n2. Vihreä\n3. Sininen", "nodeId": "choice.count", "expect": { "list": ["Punainen", "Vihreä", "Sininen"], "tier": "T6" }, "note": "a numbered list: the markers are not the labels" },
-    { "phrase": "• Pieni\n• Suuri", "nodeId": "choice.count", "expect": { "list": ["Pieni", "Suuri"], "tier": "T6" }, "note": "a bulleted list" },
-    { "phrase": "a) Maanantai\nb) Tiistai", "nodeId": "choice.count", "expect": { "list": ["Maanantai", "Tiistai"], "tier": "T6" }, "note": "lettered" },
-    { "phrase": "Punainen, Vihreä", "nodeId": "choice.answers", "expect": { "list": ["Punainen", "Vihreä"], "at": "choice.count", "tier": "T6" }, "note": "the options, for the question ahead that takes them" },
-    { "phrase": "Maanantai, Tiistai, Keskiviikko, Torstai, Perjantai", "nodeId": "choice.count", "expect": { "list": ["Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai"], "tier": "T6" } },
-    { "phrase": "A, B, C, D, E, F, G, H, I, J, K, L", "nodeId": "choice.count", "expect": { "list": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"], "tier": "T6" }, "note": "twelve, the most allowed" },
-    { "phrase": "3,50 €; 4,50 €", "nodeId": "choice.count", "expect": { "list": ["3,50 €", "4,50 €"], "tier": "T6" }, "note": "a semicolon lets an item keep its comma" },
-    { "phrase": "pilleri", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "pill" }, "tier": "T7" } },
-    { "phrase": "rinnakkain", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" } },
-    { "phrase": "neljä", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.count", "value": 4 }, "tier": "T7" }, "note": "a number, for the question that counts" },
-    { "phrase": "useita vastauksia", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.answers", "optionId": "many" }, "tier": "T7" } },
-    { "phrase": "välilehdet", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tab" }, "tier": "T7" } },
-    { "phrase": "kulmikkaat", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "square" }, "tier": "T7" } },
-    { "phrase": "kysymyksen alla", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "under-full" }, "tier": "T7" } },
-    { "phrase": "rinnakkain", "nodeId": "choice.shape", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "row" }, "tier": "T7" } },
-    { "phrase": "kysymyksen alla", "nodeId": "choice.buttons", "expect": { "guess": { "nodeId": "choice.placement", "optionId": "under-full" }, "tier": "T7" } },
-    { "phrase": "kuvilla", "nodeId": "choice.answers", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tile" }, "tier": "T7" } },
-    { "phrase": "välilehdet", "nodeId": "choice.count", "expect": { "guess": { "nodeId": "choice.shape", "optionId": "tab" }, "tier": "T7" } },
-    { "phrase": "pilleri, kulmikkaat", "nodeId": "choice.shape", "expect": { "ask": "ambiguous" }, "note": "two shapes" },
-    { "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M", "nodeId": "choice.count", "expect": { "ask": "out-of-range" }, "note": "thirteen: more than a question may have, and never cut" },
-    { "phrase": "pilleri, kulmikkaat", "nodeId": "choice.count", "expect": { "ask": "nothing", "elsewhere": ["choice.shape"] }, "note": "two shapes, not two options: offered, never guessed" }
+    {
+      "phrase": "Useampi vastaus sallittu",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T0"
+      },
+      "note": "the card's own label"
+    },
+    {
+      "phrase": "kapseli",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Rinnakkain",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "EI PAINIKKEITA",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Päätä myöhemmin",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Ei, siinä kaikki",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "pakollinen",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Ilmoittautumiset",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "tumma tila",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Vasemmalla ylhäällä, otsikon vieressä",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "header-left",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "pyöristetyt kulmat!",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "rounded",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "under-full",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "under-full",
+        "tier": "T0"
+      },
+      "note": "an option id"
+    },
+    {
+      "phrase": "haluan painikkeet kiitos",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ei painikkeita ollenkaan",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "se ei ole pakollinen",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "se on pakollinen kaikille",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "se on vapaaehtoinen heille",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "pienenä kulmassa kiitos",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "tumma tausta kiitos",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "vierekkäin kiitos",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "olen nyt valmis",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ei muuta kiitos",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ohita logo",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "meidän brändi ja värit",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "vain yksi vastaus kiitos",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "one",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "painikkeiden muoto saisi olla kapseli tai jotain sellaista",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "järjestämme kurssin ja ihmisten täytyy ilmoittautua etukäteen",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "kysymyksen pitää hyväksyä useita vastauksia jokaiselta",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "vaihtoehdot saavat olla vierekkäin jotta ne näkee nopeasti",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "logo saa olla huomaamaton pieni merkki kulmassa",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "tumma tyyli sopisi iltajuhlaamme hyvin",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "minusta tämä kysymys on kaikille täysin vapaaehtoinen",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "laita ne kysymyksen alla pitkäksi listaksi",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "under-full",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "haluamme kerätä palautetta osallistujilta päivän jälkeen",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "vielä yksi kysymys tämän jälkeen, kiitos",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "jokaisen osallistujan täytyy vastata ennen lähettämistä, pakollinen",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "vaihtoehtojen pitäisi olla isoja laattoja kuvilla jokaisesta ruoasta",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tile",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "painikeet kiitos",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "ei painikeita",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "suorakulmo",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "square",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "pakolinen",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "vapaaehtonen",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "vierekäin",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "keskyö",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "vesileina",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "palutetta",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "ilmoitautuminen",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "valintaruudt",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "4",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "neljä",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "Kaksitoista",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 12,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "neljä painiketta rivissä",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "how many and where they sit, each its own answer"
+    },
+    {
+      "phrase": "kuusi olisi hyvä",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 6,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "3 500 €",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "3500",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "12,50 euroa",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "12.50",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "1. toukokuuta 2026",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "1.5.2026",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "+358 40 123 4567",
+      "pattern": "phone",
+      "expect": {
+        "value": "+358401234567",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "info@yhdistys.fi",
+      "pattern": "email",
+      "expect": {
+        "value": "info@yhdistys.fi",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "muutama",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "useita",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "pari",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "3 tai 4",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "40",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      }
+    },
+    {
+      "phrase": "ei neljä",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "ei kapseli",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "ei vain yksi",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "banaani",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "nothing"
+      }
+    },
+    {
+      "phrase": "painikkeita ei tarvita",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "'ei' is also the answer no: it points both ways"
+    },
+    {
+      "phrase": "yksi tai useampi",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "kulma ylhäällä",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "30. helmikuuta 2026",
+      "pattern": "date",
+      "expect": {
+        "none": true
+      }
+    },
+    {
+      "phrase": "välilehtinä",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tab",
+        "tier": "T0"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "haluan ne yhdistettynä yhdeksi palkiksi",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "segmented",
+        "tier": "T1"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "kolme painikkeet, pilleri, rinnakkain",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "the demo sentence: four answers, each its own step"
+    },
+    {
+      "phrase": "neljä painikkeet",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "one clause, two answers"
+    },
+    {
+      "phrase": "painikkeet, vain yksi vastaus",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "5 painikkeet rinnakkain",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 5
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "three answers in one clause"
+    },
+    {
+      "phrase": "useita vastauksia ja välilehdet",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "many"
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tab"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "cut at the conjunction"
+    },
+    {
+      "phrase": "vain yksi vastaus, kolme",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "neljä, kulmikkaat",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "square"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "kolme, pyöristetyt kulmat, xyzzy",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "rounded"
+          }
+        ],
+        "unused": [
+          "xyzzy"
+        ],
+        "tier": "T5"
+      },
+      "note": "a clause that answers nothing is shown back"
+    },
+    {
+      "phrase": "kolme, pilleri, kulmikkaat, rinnakkain",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "unused": [
+          "pilleri",
+          "kulmikkaat"
+        ],
+        "tier": "T5"
+      },
+      "note": "two shapes contradict: the shape is left to ask"
+    },
+    {
+      "phrase": "pilleri, rinnakkain",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "kuvilla ja kysymyksen alla",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tile"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "under-full"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "Punainen, Vihreä, Sininen",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Punainen",
+          "Vihreä",
+          "Sininen"
+        ],
+        "tier": "T6"
+      },
+      "note": "labels verbatim, the count the list’s"
+    },
+    {
+      "phrase": "Pieni; Keskikokoinen; Suuri",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Pieni",
+          "Keskikokoinen",
+          "Suuri"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "Maanantai\nTiistai\nKeskiviikko",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Maanantai",
+          "Tiistai",
+          "Keskiviikko"
+        ],
+        "tier": "T6"
+      },
+      "note": "one line, one option"
+    },
+    {
+      "phrase": "1. Punainen\n2. Vihreä\n3. Sininen",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Punainen",
+          "Vihreä",
+          "Sininen"
+        ],
+        "tier": "T6"
+      },
+      "note": "a numbered list: the markers are not the labels"
+    },
+    {
+      "phrase": "• Pieni\n• Suuri",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Pieni",
+          "Suuri"
+        ],
+        "tier": "T6"
+      },
+      "note": "a bulleted list"
+    },
+    {
+      "phrase": "a) Maanantai\nb) Tiistai",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Maanantai",
+          "Tiistai"
+        ],
+        "tier": "T6"
+      },
+      "note": "lettered"
+    },
+    {
+      "phrase": "Punainen, Vihreä",
+      "nodeId": "choice.answers",
+      "expect": {
+        "list": [
+          "Punainen",
+          "Vihreä"
+        ],
+        "at": "choice.count",
+        "tier": "T6"
+      },
+      "note": "the options, for the question ahead that takes them"
+    },
+    {
+      "phrase": "Maanantai, Tiistai, Keskiviikko, Torstai, Perjantai",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Maanantai",
+          "Tiistai",
+          "Keskiviikko",
+          "Torstai",
+          "Perjantai"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L"
+        ],
+        "tier": "T6"
+      },
+      "note": "twelve, the most allowed"
+    },
+    {
+      "phrase": "3,50 €; 4,50 €",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "3,50 €",
+          "4,50 €"
+        ],
+        "tier": "T6"
+      },
+      "note": "a semicolon lets an item keep its comma"
+    },
+    {
+      "phrase": "pilleri",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "pill"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "rinnakkain",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "neljä",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.count",
+          "value": 4
+        },
+        "tier": "T7"
+      },
+      "note": "a number, for the question that counts"
+    },
+    {
+      "phrase": "useita vastauksia",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.answers",
+          "optionId": "many"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "välilehdet",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "kulmikkaat",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "square"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "kysymyksen alla",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "rinnakkain",
+      "nodeId": "choice.shape",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "kysymyksen alla",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "kuvilla",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tile"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "välilehdet",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "pilleri, kulmikkaat",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "two shapes"
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      },
+      "note": "thirteen: more than a question may have, and never cut"
+    },
+    {
+      "phrase": "pilleri, kulmikkaat",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing",
+        "elsewhere": [
+          "choice.shape"
+        ]
+      },
+      "note": "two shapes, not two options: offered, never guessed"
+    },
+    {
+      "phrase": "Kyllä",
+      "nodeId": "guess.date",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      },
+      "note": "a guess question's yes, its card's own label (S11)"
+    },
+    {
+      "phrase": "Ei",
+      "nodeId": "guess.signature",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "epävarma",
+      "nodeId": "guess.pay",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      },
+      "note": "\"not sure\" is an answer that says nothing, never a no"
+    },
+    {
+      "phrase": "En tiedä",
+      "nodeId": "guess.research",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "juu",
+      "nodeId": "guess.meeting",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    }
   ]
 }

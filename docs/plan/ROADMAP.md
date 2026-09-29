@@ -80,7 +80,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | **done** — in review, PR #147 |
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
-| **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | not started |
+| **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
 | **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
 
@@ -356,3 +356,22 @@ when each slice ends.)*
   (merges, splits, "just text", the form field, the selection, the count), `keys.test.ts`,
   `panes.test.tsx`, `imported.test.ts`; `e2e/review.spec.ts`: a reading of no questions made one,
   saved in another tab, the Word grid's count through to the conversation.
+- **S11, the guess (2026-09-29).** What: after "What is this form for?" the conversation asks
+  yes / no / not sure questions (twenty-two, graph version 5), each the one expected to tell it most,
+  until one of 25 recipes — the 23 templates and two structure-only ones rule 8 keeps out of the
+  catalogue — is at 800 per mille: "This looks like a proxy form. Right?", with "Why this guess".
+  "Right" adds the template's questions as the conversation's own, in place of an untouched
+  starter, shows the whole form to change in place, and goes on with only the gaps; "Sort of" and
+  "No" ask on (`BELIEF.md`). All in integers: `expMicro`, a 40-digit series, beside `lnMille`. Why:
+  M5 — brief §6 and ADR 0019 point 4. Decided: a score is normalised over its node's options
+  (added as it stood, no question could be weighed against another), so `flow.start`'s were re-set
+  and the one on `choice.buttons` removed (G9 now refuses a score alone); twenty-two questions, not
+  eight, which could not tell 25 recipes apart; at most five asked, and two "Not sure" end them; the
+  catalogue comes from the API, not the bundle (#118). Found on the way: no recipe could reach
+  800 (#115), "Not sure" for ever (#116), a name asked twice after "Right" (#117), a sure recipe
+  never offered after "No" (#119), the guess begun again after a trip to the editor (#120), a recipe named by its id when the
+  catalogue did not load (#121). Tests:
+  `belief.test.ts` (frozen numbers, every recipe as itself), `seed.test.ts`, `exp.test.ts`, G9 and
+  G11 cases, `guess.test.tsx`, two journeys in `e2e/guided-builder.spec.ts`; every earlier walk now
+  passes the guess. Next: S12, convergence. Open: `member-details` and `absence-notice` answer
+  alike (`BELIEF.md`, "Known limits"); the brief's five new templates; ADRs 0017–0021.

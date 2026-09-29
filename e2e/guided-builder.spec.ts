@@ -37,6 +37,18 @@ async function startFromQuestions(page: Page): Promise<string> {
 const question = (page: Page, text: string) =>
   expect(page.getByRole('heading', { level: 1, name: text })).toBeVisible();
 
+/**
+ * Past the guess (S11): after "Signing people up" the engine asks what tells it most — first
+ * whether it is on a set date, then whether people learn something — and two "Not sure" end it.
+ */
+async function notSureTwice(page: Page) {
+  for (const ask of ['Is it for something on a set date?', 'Will people learn something there?']) {
+    await question(page, ask);
+    // Exactly: the trail's crumb for an answered question says "Not sure" too.
+    await page.getByRole('button', { name: 'Not sure', exact: true }).click();
+  }
+}
+
 async function draftOf(formId: string) {
   const [row] = await sql`select draft_definition from forms where id = ${formId}`;
   return row!['draft_definition'] as {
@@ -56,6 +68,7 @@ test('the buttons chain builds the form it describes, without the editor', async
   const formId = await startFromQuestions(page);
 
   await page.getByRole('button', { name: /Signing people up/ }).click();
+  await notSureTwice(page);
   await question(page, 'Should this look like your organisation?');
   await page.getByRole('button', { name: /Decide later/ }).click();
 
@@ -117,6 +130,7 @@ test('a reload comes back to the same question, with Back still there', async ({
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await startFromQuestions(page);
   await page.getByRole('button', { name: /Signing people up/ }).click();
+  await notSureTwice(page);
   await page.getByRole('button', { name: /Decide later/ }).click();
   await question(page, 'What do you want to ask?');
   await expect(page.getByText('Saved', { exact: true })).toBeVisible();
@@ -154,6 +168,9 @@ test('not happy with the preview: edited in place, reverted, reconciled, and nev
   const formId = await startFromQuestions(page);
   for (const [ask, pick] of [
     ['What is this form for?', /Signing people up/],
+    // Exactly "Not sure": the trail's crumb for the first says it too.
+    ['Is it for something on a set date?', /^Not sure$/],
+    ['Will people learn something there?', /^Not sure$/],
     ['Should this look like your organisation?', /Decide later/],
   ] as const) {
     await question(page, ask);
@@ -292,6 +309,9 @@ test.describe('on a small phone, by keyboard alone', () => {
     };
 
     await step('What is this form for?', '1');
+    // Past the guess by its third answer, "Not sure" (S11).
+    await step('Is it for something on a set date?', '3');
+    await step('Will people learn something there?', '3');
     await step('Should this look like your organisation?', '2');
     await question(page, 'What do you want to ask?');
     // Focus is in the box already; Enter answers.
@@ -333,6 +353,7 @@ test.describe('on a small phone, by keyboard alone', () => {
     await signInAs(page, sql, 'admin@example.com', 'en-GB');
     await startFromQuestions(page);
     await page.keyboard.press('1');
+    await pastTheGuessByKeys(page);
     await question(page, 'Should this look like your organisation?');
     await page.keyboard.press('1');
 
@@ -382,6 +403,7 @@ test.describe('on a small phone, by keyboard alone', () => {
       await signInAs(page, sql, 'admin@example.com', 'en-GB');
       await startFromQuestions(page);
       await page.keyboard.press('1');
+      await pastTheGuessByKeys(page);
       await question(page, 'Should this look like your organisation?');
       await page.keyboard.press('1');
       await question(page, 'Which colours should your form use?');
@@ -426,6 +448,7 @@ test.describe('on a small phone, by keyboard alone', () => {
       await signInAs(page, sql, 'operator@example.com', 'en-GB');
       await startFromQuestions(page);
       await page.keyboard.press('1');
+      await pastTheGuessByKeys(page);
       await question(page, 'Should this look like your organisation?');
       await page.keyboard.press('1');
       await question(page, 'Where should your logo go?');
@@ -439,9 +462,18 @@ test.describe('on a small phone, by keyboard alone', () => {
   });
 });
 
+/** Past the guess by keyboard: its third answer, "Not sure", twice. */
+async function pastTheGuessByKeys(page: Page) {
+  for (const ask of ['Is it for something on a set date?', 'Will people learn something there?']) {
+    await question(page, ask);
+    await page.keyboard.press('3');
+  }
+}
+
 /** S6 — to "Do you want buttons?" about a new question, "Which day suits you?". */
 async function toButtons(page: Page) {
   await page.getByRole('button', { name: /Signing people up/ }).click();
+  await notSureTwice(page);
   await page.getByRole('button', { name: /Decide later/ }).click();
   await page.getByRole('button', { name: 'Which day suits you?' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
@@ -578,4 +610,100 @@ test('a phrase it did not understand can be taught — with consent — and remo
   await expect(page.getByText(/Nothing learned yet/)).toBeVisible();
   const [row] = await sql`select count(*)::int as n from builder_aliases where phrase = 'blobby'`;
   expect(row!['n']).toBe(0);
+});
+
+/**
+ * S11 — the guess (`docs/plan/BELIEF.md`). Somebody collecting proxies for an association's
+ * meeting, answering whatever the engine asks in the order it asks: it guesses the proxy form,
+ * says why, and "Right" adds the template's questions, shown whole before the brand.
+ */
+const AS_A_PROXY: Record<string, RegExp> = {
+  'Will you answer each person yourself?': /^\s*\d?\s*No$/,
+  'Must people sign it?': /^\s*\d?\s*Yes$/,
+  "Does someone act on another person's behalf?": /^\s*\d?\s*Yes$/,
+  'Is it for something on a set date?': /^\s*\d?\s*Yes$/,
+  "Is it for an association's meeting?": /^\s*\d?\s*Yes$/,
+};
+
+async function toTheGuess(page: Page) {
+  await page.getByRole('button', { name: /Collecting information/ }).click();
+  const heading = page.getByRole('heading', { level: 1 });
+  for (let asked = 0; asked < 6; asked += 1) {
+    await expect(heading).not.toHaveText('What is this form for?');
+    const text = (await heading.textContent())?.trim() ?? '';
+    if (text.startsWith('This looks like')) return;
+    const answer = AS_A_PROXY[text];
+    expect(answer, `asked "${text}"`).toBeDefined();
+    await page.getByRole('button', { name: answer! }).click();
+    await expect(heading).not.toHaveText(text);
+  }
+}
+
+test('the guess: a proxy form, why, and "Right" adds its questions (S11)', async ({ page }) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromQuestions(page);
+  await toTheGuess(page);
+  await question(page, 'This looks like Proxy form. Right?');
+
+  // The reasoning is one press away.
+  await page.getByText('Why this guess?').click();
+  await expect(
+    page
+      .locator('.conversation__why')
+      .getByText("Does someone act on another person's behalf? Yes"),
+  ).toBeVisible();
+
+  await page.getByRole('button', { name: /Right/ }).click();
+  await question(page, "Here's how it looks.");
+  await expect(page.locator('.conversation__preview')).toContainText('Which meeting');
+
+  // Every question it added can be changed in place.
+  await page.getByRole('button', { name: /Not completely happy with the preview/ }).click();
+  await page.getByRole('button', { name: 'Which meeting' }).click();
+  await expect(page.getByRole('group', { name: 'Change it here' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await question(page, 'Should this look like your organisation?');
+  await page.getByRole('button', { name: /Decide later/ }).click();
+  // Only the gaps are left: the form has its questions.
+  await question(page, 'Add another question?');
+
+  const { fields } = await draftOf(formId);
+  const keys = fields.map((f) => (f as unknown as { key: string }).key);
+  // The template's questions, in its order: its own name questions, not the conversation's starter.
+  expect(keys[0]).toBe('authorisation_wording');
+  expect(keys).toContain('meeting');
+  expect(keys).not.toContain('name');
+  expect(new Set(keys).size).toBe(keys.length);
+});
+
+test('the guess: "Right" without the catalogue says why, and changes nothing (S11)', async ({
+  page,
+}) => {
+  // The catalogue does not load: the guess still guesses, but has nothing to add from.
+  await page.route('**/v1/form-templates', (route) => route.abort());
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromQuestions(page);
+  await toTheGuess(page);
+  await question(page, 'This looks like Proxy form. Right?');
+  await page.getByRole('button', { name: /Right/ }).click();
+  await expect(page.getByText(/^The template could not be loaded/)).toBeVisible();
+  // No step was taken: still the guess, and the draft still only the conversation's starter.
+  await question(page, 'This looks like Proxy form. Right?');
+  await expect
+    .poll(async () => (await draftOf(formId)).fields.map((f) => (f as { key?: string }).key))
+    .toEqual(['name']);
+});
+
+test('the guess: "No" goes on without it, and Back takes it back (S11)', async ({ page }) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  await startFromQuestions(page);
+  await toTheGuess(page);
+  await question(page, 'This looks like Proxy form. Right?');
+  await page.getByRole('button', { name: /^\s*\d?\s*No$/ }).click();
+  // What answers alike but for that one is already sure enough: it is asked about next (#119).
+  await question(page, 'This looks like Power of attorney. Right?');
+  await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Proxy form/);
+  await page.getByRole('button', { name: 'Back' }).click();
+  await question(page, 'This looks like Proxy form. Right?');
 });

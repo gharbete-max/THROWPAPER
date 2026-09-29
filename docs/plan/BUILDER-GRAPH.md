@@ -3,7 +3,8 @@
 **Status:** the specification for slices S1 and S2 (`ROADMAP.md`), proposed 2026-09-25; the graph
 **built in S1** (`packages/shared/src/builder/graph/`), the machine that walks it **in S2**
 (`packages/shared/src/builder/`, "The machine" below); answers ahead of their turn and graph
-version 3's slots **in S6**. Where this document and the code disagree, the code is
+version 3's slots **in S6**; the guess, graph version 5, **in S11** (`BELIEF.md`). Where this
+document and the code disagree, the code is
 checked by tests and this document is the bug — fix it in the same change. Decisions: ADR 0020
 (graph as data) and ADR 0021 (JSON or typed TS, never YAML).
 
@@ -64,8 +65,12 @@ interface NodeBase {
 
 type Slot = 'kind' | 'required' | 'options' | 'shape' | 'placement' | 'validation';
 
-export type Next = string | { when: Guard; to: string }[];   // list: first true guard wins; the
-                                                             // last entry must be { when: 'true' }
+export type Next =
+  | string
+  | { when: Guard; to: string }[]            // list: first true guard wins; the last entry must be
+                                             // { when: 'true' }
+  | { best: string; else: string | { when: Guard; to: string }[] };   // S11: the question of group
+                                             // `best` that tells the belief most, else `else`
 export type Skip = MessageKey | { when: Guard; skip: MessageKey }[];   // one reason, or one per
                                                              // reason, read the same way as Next
 
@@ -102,7 +107,7 @@ export type Node =
 | `pick-one` | a visual chooser (shapes, slots, layouts), 2–8 tiles | arrows move, Enter picks | the option's `patch` |
 | `pick-many` | multi-select cards, "Done" | Space toggles, Enter is Done | every picked option's `patch`, in declared order |
 | `text-entry` | one text box, example chips under it | Enter accepts, Tab to chips | `patch` with `$answer` = the text, trimmed, verbatim otherwise |
-| `confirm-guess` | "This looks like an event registration. Right?" | 1 Right, 2 Sort of, 3 No | a belief update; "Right" seeds (`PREDICTIVE-BUILDER.md`) |
+| `confirm-guess` | "This looks like an event registration. Right?", and "Why this guess" | 1 Right, 2 Sort of, 3 No | a belief update; "Right" adds the recipe's questions (`BELIEF.md`) |
 | `preview-moment` | the real control on the brand kit + "Not completely happy…" | Enter continues, E edits | none; inline edits are `source: 'manual'` patches |
 | `review-queue` | the import review screen | as the review screen | its own chips' patches |
 | `menu` | the sibling grid — every node in a group as a card | arrows, Enter | jump to that node |
@@ -127,14 +132,16 @@ interface BuilderState {
 }
 ```
 
-(`packages/shared/src/builder/state.ts`. The belief itself, `Record<TemplateId, Millinats>`,
-joins the state with the engine that updates it, S11.)
+(`packages/shared/src/builder/state.ts`. The belief itself is not in the state: it is the log's,
+worked out from the answers in it by `beliefOf` whenever it is needed, so there is nothing to keep
+in step. `guess` is what it concluded, written as a change in each step, so Back restores it.)
 
 Guards read `draft`, `sidecar`, `pending`, `focus` and `guess`, and `answered()` reads the log. A
 guard that reads `pending.x` or `guess.x` must name something a patch writes or the graph lists in
 `inputs` — the facts the shell provides before the conversation starts (`pending.brandKitExists`
 from `GET /v1/brand-kit`; `pending.canChangeBrand`, whether the person is an administrator, since
-graph version 4; `guess.pMille` from the belief engine). A typo'd key fails G8 instead of silently
+graph version 4; `guess.pMille` and `pending.seeded`, what "Right" added, from the belief engine
+since graph version 5). A typo'd key fails G8 instead of silently
 reading `null` for ever. A resumed conversation is given today's, not the saved ones: they decide
 only what is asked from then on, and the log keeps where each earlier answer led.
 
@@ -244,11 +251,18 @@ where it started (`base`) and every step since (`log`); its state is always exac
   `takeGuided` (also "Revert to guided") makes the question the conversation's version again; both
   are steps. When a proposal comes round to the person's version, there is nothing left to ask.
   `rebase` carries a conversation on over a draft changed outside it, with a new log, so Back can
-  never undo the editor's changes; losing the question in focus sends it to the menu.
+  never undo the editor's changes; losing the question in focus sends it to the menu. What the
+  belief was told goes with it, in the new base (`BELIEF.md`, "Over a rebase").
 - **Saved** as `BuilderSession` (`session.ts`): the base and the log, nothing derived, at most
   2 000 steps; `GET/PUT /v1/forms/:id/builder-session`, one per form and person, with a version
   lock (409 on a save over a version the saver did not read). A stored session that does not
   replay is `bad-session`, and the builder offers to start again rather than guess.
+- **The guess** (S11, `BELIEF.md`). A `next` of `{ best, else }` goes to the question of that
+  group expected to tell the belief most, or to `else` when none is worth asking; the log records
+  which, so replay needs no belief. After every step the machine writes the recipe it would guess,
+  and how sure it is, into `guess`. The guess's answer names the recipe
+  (`{ kind: 'guess', verdict, templateId }`); "Right" adds its questions (`belief/seed.ts`) from the
+  catalogue the screen passes in `AnswerContext.templates`, and is refused without it.
 - **Proved over the whole graph** (`machine.test.ts`): every answer the graph offers, from every
   state reachable in seven steps — escapes included — is accepted; a publishable draft stays
   publishable; each step replays and undoes exactly. `fixtures/sessions/buttons-chain.json` is a
@@ -293,15 +307,22 @@ call     = 'answered(' nodeId ')'     -- the node has an answer in the log
 
 ## `score`
 
-An option may declare `score: { 'event-registration': 200, 'rsvp': 120 }` — integer millinats
-added to the belief when that option is chosen. The belief engine (S11) reads nothing else from
-the graph. Scores are integers so the update is exact; probabilities are computed only for display
-and for the p ≥ 0.80 test, via the committed table in ADR 0019.
+An option may declare `score: { 'event-registration': 3500, 'rsvp': 2800 }` — integer millinats:
+how much likelier a person building that recipe is to choose this option, as a log. Choosing it
+adds `log P(option | recipe)` to each recipe's belief, where
+`P(option | recipe) = e^score / Σ e^score` over the node's scored options (a recipe an option does
+not name scores 0 there). So a recipe no option of a node names is indifferent to it, an option with
+no `score` ("Not sure") changes nothing, and a score on one option alone could never move anything,
+which G9 refuses. The belief engine reads nothing else from the graph. (Until graph version 5 a
+score was added as it stood; `BELIEF.md`, "What an answer says", says why it changed.) The
+arithmetic is integers throughout — `expMicro` and `lnMille`, ADR 0019.
 
 ## `next`, `escape`, `preview`
 
 - `next` is a node id, or a list of `{ when, to }` read top to bottom, ending with
-  `{ when: 'true', to }`. An option's own `next` overrides the node's.
+  `{ when: 'true', to }`, or `{ best: <group>, else }`: the question of that group expected to tell
+  the belief most, and `else` (a node id or a list) when there is none worth asking (`BELIEF.md`,
+  "Which question next"). An option's own `next` overrides the node's.
 - `escape` names the way out of this node without answering it: a `menu` node, or
   `'menu.siblings(<group>)'`, which renders every node of that group as a card. **Every node has
   one** (validator rule G3); `end` escapes to the top-level menu.
@@ -327,9 +348,9 @@ all of them and lists every problem at once; `pnpm verify` runs them through
 | G6 | a cycle in the `next` graph (menus and escapes are not `next` edges) is made only of unconditional edges — a node-level `next` string, or a `{ when: 'true' }` branch — or has no edge that leaves it. An edge is conditional when only one option takes it or a `when` selects it: a loop the person steers is fine, a loop that turns by itself is not |
 | G7 | a `question` has fewer than 2 or more than 4 options; `pick-one`/`pick-many` fewer than 2 or more than 8; a `quantity` whose `min ≤ default ≤ max` does not hold |
 | G8 | a `when` (on a node, a `next` branch or a `skip` reason) does not parse, exceeds its bounds, reads a `pending.*` or `guess.*` key that no patch writes and `inputs` does not list; a node with `when` has no `skip`; or a `next` or `skip` list does not end with `when: 'true'` (none might hold, and the conversation would have nowhere to go or nothing to say) |
-| G9 | a `score` names a template id not in `FORM_TEMPLATES`, or is not an integer |
+| G9 | a `score` names a recipe not in `belief/recipes.json`, or is not an integer; a node scores one option alone; a `best` names a group with no scored question |
 | G10 | in any locale, a question is over its limit (9 words in English, 12 in the other space-separated languages, 24 characters in `zh-CN` and `ja-JP`; `{placeholders}` and punctuation-only tokens do not count), or anything the node says — question, help, options, skip reason — contains a banned word from `graph/voice.json` (whole words; substrings for `zh` and `ja`) |
-| G11 | from any node, the longest simple path through nodes of its own group before a `preview-moment` or `end` exceeds **6** nodes — ADR 0006's four-press promise, restated for chains |
+| G11 | from any node, the longest simple path through nodes of its own group before a `preview-moment`, `confirm-guess` or `end` exceeds **6** nodes — ADR 0006's four-press promise, restated for chains. The best questions of a group count as `MAX_ASKED` (5) at most along a path, whatever order they come in |
 | G12 | the graph does not survive a JSON round trip exactly (a function, a class, a key holding `undefined`) |
 | G13 | a `text-entry` example, in any locale, contains a regulated word (`forms/wording.ts`, the same list `templates.test.ts` holds the templates to) |
 | G14 | a node declares a `slot` but its `when` does not read `decided(<slot>)` — an answer ahead of its turn would be asked again — or declares one on a kind with no answer to give ahead of its turn (only `question`, `pick-one`, `pick-many`, `quantity`) |
@@ -361,8 +382,7 @@ stop (`CAVEATS.md` #62, #65). English values from `apps/forms/src/lib/messages/e
       // node after this one finds a choice to shape, however it is reached.
       patch: [{ op: 'set', path: 'pending.buttons', value: true },
               { op: 'set', path: 'draft.definition.fields[focus].type', value: 'single_select' },
-              { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' }],
-      score: { 'event-registration': 120, 'customer-feedback': 80 } },
+              { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' }] },
     { id: 'no', label: 'guided.choice.buttons.no',          // "No, people type an answer"
       patch: [{ op: 'set', path: 'pending.buttons', value: false },
               { op: 'set', path: 'draft.definition.fields[focus].type', value: 'short_text' }],
@@ -470,7 +490,9 @@ editing on the preview renames (S5).
       patch: [{ op: 'set', path: 'sidecar.brandDecided', value: 'organisation' }] },
     { id: 'later', label: 'guided.brand.start.later',         // "Decide later"
       patch: [{ op: 'set', path: 'sidecar.brandDecided', value: 'default' }],
-      next: 'text.label' },
+      // A seeded form has its questions: only "Add another question?" is left (S11).
+      next: [{ when: 'has(pending.seeded)', to: 'flow.more' },
+             { when: 'true', to: 'text.label' }] },
   ],
 },
 {
@@ -521,8 +543,8 @@ ones every graph has:
 
 | Id | Kind | Asks (English) |
 | --- | --- | --- |
-| `flow.start` | question | What is this form for? (ADR 0006's sector question, now scoring templates) |
-| `guess.confirm` | confirm-guess | This looks like an event registration. Right? |
+| `flow.start` | question | What is this form for? (ADR 0006's sector question, now scoring recipes) |
+| `guess.confirm` | confirm-guess | This looks like an event registration. Right? (asked since S11) |
 | `brand.start` | question | Should this look like your organisation? |
 | `brand.quick` | pick-one | Which colours should your form use? |
 | `brand.logoSlot` | pick-one | Where should your logo go? |
@@ -548,6 +570,18 @@ Graph version 3 (S6) gave `choice.buttons` and `choice.answers` the slot `kind`,
 `options`, `choice.shape` `shape`, `choice.placement` `placement` and `text.required` `required`,
 each with the `decided()` guard G14 asks for. Graph version 4 (owner question 8) asks `brand.quick`
 of an administrator alone, through the input `pending.canChangeBrand`.
+
+Graph version 5 (S11, `BELIEF.md`) adds the guess: twenty-two yes / no / not sure questions of
+group `guess` (`guess.date` … `guess.behalf`, listed in `BELIEF.md`), which patch nothing and move
+only the belief, and `guess.seeded`, a `preview-moment` of the whole form (`form.whole`, any
+question of it picked and changed in place) asked only when "Right" added something. `flow.start`
+and every guess question go on with `{ best: 'guess', else }`: `flow.start` to `guess.confirm`,
+asked when `guess.pMille >= 800` and nothing was seeded; `guess.confirm` to `guess.seeded` after
+"Right", to itself when "No" has left another recipe sure enough (the one self-loop in the graph,
+taken only on a guard, so G6 passes it), otherwise to `brand.start`. After a seeded form the brand goes on to "Add another
+question?" rather than "What do you want to ask?": the recipe has asked it. `flow.start`'s scores
+were re-set for the new meaning of a score, and `choice.buttons`' "yes" lost the one it had had
+since S1, which, alone on its node, could never have moved anything (G9 now refuses one).
 
 S2 changed three things the walk over the whole graph found (`CAVEATS.md` #62, #65):
 `text.required` asks only when there is a question (`when: 'has(focus)'`, skip reason

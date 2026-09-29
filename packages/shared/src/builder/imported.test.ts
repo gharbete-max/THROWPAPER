@@ -65,6 +65,8 @@ describe('importing the questions a document was read as', () => {
     // Into a form that already has a question: mixed.
     let c = fresh();
     c = answer(G, c, { kind: 'option', optionId: 'signup' }, { locale: 'sv-SE' });
+    c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
+    c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'option', optionId: 'later' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'text', value: 'Vilken dag?' }, { locale: 'sv-SE' });
     expect(importQuestions(c, two).state.sidecar.provenance).toBe('mixed');

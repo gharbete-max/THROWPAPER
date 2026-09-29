@@ -2132,6 +2132,3086 @@
       "notes": ""
     },
     {
+      "phrase": "Nej",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nej",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "inte alls",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nix",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "nä",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Vet inte",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ingen aning",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kanske",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "osäker",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "vet ej",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "absolut",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "det stämmer",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "japp",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "stämmer",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
       "phrase": "Nej, det är frivilligt",
       "nodeId": "text.required",
       "optionId": "no",

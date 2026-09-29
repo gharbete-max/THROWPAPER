@@ -74,10 +74,19 @@ export function PreviewMoment({
   const t = useT();
   const coarse = useCoarsePointer();
   const { draft } = conversation.state;
-  const field = spec === 'choice.control' ? focusedField(conversation) : null;
+  const focused = spec === 'choice.control' ? focusedField(conversation) : null;
+  // The whole form (`form.whole`, what "Right" added): any question of it, picked, is edited.
+  const [picked, setPicked] = useState<string | null>(null);
+  const field =
+    focused ??
+    (spec === 'form.whole'
+      ? (draft.definition.fields.find((candidate) => candidate.id === picked) ?? null)
+      : null);
   const slot = draft.definition.settings.layout?.logoSlot;
   const byHand = field !== null && changedByHand(conversation.state, field.id);
-  const shown: FormDefinition = field ? { ...draft.definition, fields: [field] } : draft.definition;
+  const shown: FormDefinition = focused
+    ? { ...draft.definition, fields: [focused] }
+    : draft.definition;
   const words = (said: readonly Said[]) =>
     said.map((one) => ('key' in one ? t(one.key, one.values) : one.text)).join(', ');
 
@@ -155,6 +164,13 @@ export function PreviewMoment({
             }
             onDone={() => onEditing(false)}
           />
+        ) : spec === 'form.whole' && field === null ? (
+          <PickQuestion
+            fields={draft.definition.fields}
+            locale={contentLocale}
+            locales={contentLocales}
+            onPick={setPicked}
+          />
         ) : field ? (
           <InlineEdit
             field={field}
@@ -166,6 +182,41 @@ export function PreviewMoment({
 
       <AssumedList crumbs={assumed(graph, conversation)} words={words} onBackTo={onBackTo} />
     </section>
+  );
+}
+
+/** Which question of the whole form to edit: each one that has words, by its words. */
+function PickQuestion({
+  fields,
+  locale,
+  locales,
+  onPick,
+}: {
+  fields: FormDefinition['fields'];
+  locale: string;
+  locales: LocaleConfig;
+  onPick: (fieldId: string) => void;
+}) {
+  const t = useT();
+  const named = fields.filter(
+    (field): field is Extract<typeof field, { label: unknown }> => 'label' in field,
+  );
+  return (
+    <fieldset className="inline-edit" aria-label={t('conversation.preview.pick')}>
+      <legend>{t('conversation.preview.pick')}</legend>
+      <div className="inline-edit__row">
+        {named.map((field) => (
+          <button
+            key={field.id}
+            type="button"
+            className="button button--quiet"
+            onClick={() => onPick(field.id)}
+          >
+            {pickText(locales, field.label, locale).value || field.key}
+          </button>
+        ))}
+      </div>
+    </fieldset>
   );
 }
 

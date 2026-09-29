@@ -1692,6 +1692,2866 @@
       "notes": ""
     },
     {
+      "phrase": "Nei",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Nei",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "alls ekki",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "neibb",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Veit ekki",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hef ekki hugmynd",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "kannski",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ég veit ekki",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "óviss",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Já",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "einmitt",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "jú",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "rétt",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "það passar",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
       "phrase": "Nei, það er valfrjálst",
       "nodeId": "text.required",
       "optionId": "no",

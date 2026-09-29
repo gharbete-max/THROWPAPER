@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { FORM_TEMPLATES } from '../forms/templates.js';
 import { definitionProblems } from '../forms/helpers.js';
 import { emptyDefinition } from '../forms/definition.js';
 import { jsonEqual } from './changes.js';
@@ -67,9 +68,16 @@ function everyAnswer(c: Conversation): Answer[] {
     case 'text-entry':
       answers.push({ kind: 'text', value: 'Vilken mat vill du ha?' });
       break;
-    case 'confirm-guess':
-      answers.push({ kind: 'guess', verdict: 'right' });
+    case 'confirm-guess': {
+      // The guess is about the recipe the belief put forward: all three verdicts on it.
+      const templateId = c.state.guess?.templateId;
+      if (templateId) {
+        for (const verdict of ['right', 'sort-of', 'no'] as const) {
+          answers.push({ kind: 'guess', verdict, templateId });
+        }
+      }
       break;
+    }
     case 'preview-moment':
     case 'review-queue':
       answers.push({ kind: 'continue' });
@@ -85,6 +93,8 @@ const publishable = (c: Conversation) => definitionProblems(c.state.draft.defini
 describe('the buttons chain (acceptance scenario S2)', () => {
   const chain: Answer[] = [
     { kind: 'option', optionId: 'signup' },
+    { kind: 'option', optionId: 'unsure' },
+    { kind: 'option', optionId: 'unsure' },
     { kind: 'option', optionId: 'later' },
     { kind: 'text', value: '  Vilken mat vill du ha?  ' },
     { kind: 'option', optionId: 'yes' },
@@ -122,6 +132,9 @@ describe('the buttons chain (acceptance scenario S2)', () => {
     const crumbs = trail(run());
     expect(crumbs.map((crumb) => crumb.nodeId)).toEqual([
       'flow.start',
+      // The guess asks what tells it most (S11); two "Not sure" and it asks no more.
+      'guess.date',
+      'guess.learn',
       'brand.start',
       'text.label',
       'text.required',
@@ -132,7 +145,7 @@ describe('the buttons chain (acceptance scenario S2)', () => {
       'choice.placement',
     ]);
     expect(fresh().state.cursor).toBe('flow.start');
-    expect(crumbs[0]?.skipped).toEqual([
+    expect(crumbs[2]?.skipped).toEqual([
       { nodeId: 'guess.confirm', reason: 'guided.skip.nothingToGuess' },
     ]);
   });
@@ -181,7 +194,8 @@ describe('every answer, from every state a person can reach', () => {
       const next: Conversation[] = [];
       for (const c of frontier) {
         for (const given of everyAnswer(c)) {
-          const after = answer(G, c, given, { locale });
+          // The catalogue, as the screen gives it: what "Right" adds from (S11).
+          const after = answer(G, c, given, { locale, templates: FORM_TEMPLATES });
           transitions += 1;
           reached.add(after.state.cursor);
           if (publishable(c))
@@ -197,14 +211,9 @@ describe('every answer, from every state a person can reach', () => {
       }
       frontier = next;
     }
-    // The walk really went everywhere: every node is reached by some answer, but the guess,
-    // which nothing can make before the belief engine (S11), so it is always skipped.
-    expect([...reached].sort()).toEqual(
-      G.nodes
-        .map((node) => node.id)
-        .filter((id) => id !== 'guess.confirm')
-        .sort(),
-    );
+    // The walk really went everywhere: every node is reached by some answer — the guess and
+    // what it seeds included, since S11 makes a guess.
+    expect([...reached].sort()).toEqual(G.nodes.map((node) => node.id).sort());
     expect(transitions).toBeGreaterThan(5000);
   });
 
@@ -244,7 +253,7 @@ describe('long walks, with Back', () => {
         } else {
           const options = everyAnswer(c);
           if (options.length === 0) break;
-          c = answer(G, c, options[pick(options.length)]!, { locale });
+          c = answer(G, c, options[pick(options.length)]!, { locale, templates: FORM_TEMPLATES });
           history.push(c);
         }
         expect(jsonEqual(replay(c.base, c.log), c.state)).toBe(true);
@@ -261,6 +270,8 @@ describe('long walks, with Back', () => {
 describe('what a person writes', () => {
   it('is trimmed and otherwise verbatim, in the author’s language', () => {
     let c = answer(G, fresh(), { kind: 'option', optionId: 'collect' }, { locale: 'en-GB' });
+    c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'en-GB' });
+    c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'en-GB' });
     c = answer(G, c, { kind: 'option', optionId: 'later' }, { locale: 'en-GB' });
     c = answer(G, c, { kind: 'text', value: '\t  e-POST  ,  please!! \n' }, { locale: 'en-GB' });
     expect(c.state.draft.definition.fields[1]).toMatchObject({
@@ -272,6 +283,8 @@ describe('what a person writes', () => {
     let c = fresh();
     for (const given of [
       { kind: 'option', optionId: 'signup' },
+      { kind: 'option', optionId: 'unsure' },
+      { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Mat' },
       { kind: 'option', optionId: 'no' },
@@ -317,6 +330,8 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
       'a count out of range',
       at([
         { kind: 'option', optionId: 'signup' },
+        { kind: 'option', optionId: 'unsure' },
+        { kind: 'option', optionId: 'unsure' },
         { kind: 'option', optionId: 'later' },
         { kind: 'text', value: 'Mat' },
         { kind: 'option', optionId: 'yes' },
@@ -330,6 +345,8 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
       'a count that is not whole',
       at([
         { kind: 'option', optionId: 'signup' },
+        { kind: 'option', optionId: 'unsure' },
+        { kind: 'option', optionId: 'unsure' },
         { kind: 'option', optionId: 'later' },
         { kind: 'text', value: 'Mat' },
         { kind: 'option', optionId: 'yes' },
@@ -343,6 +360,8 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
       'an empty answer to a question that needs one',
       at([
         { kind: 'option', optionId: 'signup' },
+        { kind: 'option', optionId: 'unsure' },
+        { kind: 'option', optionId: 'unsure' },
         { kind: 'option', optionId: 'later' },
       ]),
       { kind: 'text', value: '   ' },
@@ -362,6 +381,8 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
     ).toThrow(MachineError);
     const end = at([
       { kind: 'option', optionId: 'signup' },
+      { kind: 'option', optionId: 'unsure' },
+      { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Mat' },
       { kind: 'option', optionId: 'yes' },
@@ -470,6 +491,8 @@ describe('replay needs no graph', () => {
   it('reproduces a session recorded under one graph after the graph has changed', () => {
     const recorded = [
       { kind: 'option', optionId: 'feedback' },
+      { kind: 'option', optionId: 'unsure' },
+      { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Vad tyckte du?' },
     ] as Answer[];

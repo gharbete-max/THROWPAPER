@@ -38,6 +38,8 @@ function atPlacement(): Conversation {
   return (
     [
       { kind: 'option', optionId: 'signup' },
+      { kind: 'option', optionId: 'unsure' },
+      { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Which day suits you?' },
       { kind: 'option', optionId: 'yes' },

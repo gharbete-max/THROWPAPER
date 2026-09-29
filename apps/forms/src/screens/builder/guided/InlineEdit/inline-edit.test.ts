@@ -39,6 +39,8 @@ function aChoice(): { c: Conversation; field: () => Field } {
   const c = (
     [
       { kind: 'option', optionId: 'signup' },
+      { kind: 'option', optionId: 'unsure' },
+      { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Vilken dag?' },
       { kind: 'option', optionId: 'yes' },

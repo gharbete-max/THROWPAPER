@@ -1068,6 +1068,8 @@ export const ruRU: Record<MessageKey, string> = {
   // The guided builder's conversation: packages/shared/src/builder/graph/nodes.ts. Its rules
   // (at most nine words a question, no jargon) are checked by guided-graph.test.ts.
   'guided.common.yes': 'Да',
+  'guided.common.no': 'Нет',
+  'guided.common.unsure': 'Не знаю',
   'guided.skip.decided': 'Уже решено',
   'guided.skip.noButtons': 'Вы выбрали без кнопок',
   'guided.skip.brandDecided': 'Уже решено',
@@ -1076,6 +1078,8 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.import.said':
     'plural:one {count} вопрос | few {count} вопроса | many {count} вопросов | other {count} вопроса',
   'guided.skip.nothingToGuess': 'Пока нечего угадывать',
+  'guided.skip.seeded': 'Уже добавлено по догадке',
+  'guided.skip.nothingSeeded': 'По догадке ничего не добавлено',
   'guided.skip.noQuestion': 'Пока нет вопроса для изменения',
   'guided.preview.ask': 'Вот как это выглядит.',
   'guided.guess.ask': 'Похоже на {template}. Верно?',
@@ -1083,6 +1087,31 @@ export const ruRU: Record<MessageKey, string> = {
   'guided.guess.right': 'Верно',
   'guided.guess.sortOf': 'Отчасти',
   'guided.guess.no': 'Нет',
+  'guided.guess.why': 'Ваш ответ помогает Loppa угадать, что это за форма.',
+  'guided.guess.date.ask': 'Это для чего-то в определённую дату?',
+  'guided.guess.meeting.ask': 'Это для собрания ассоциации?',
+  'guided.guess.reply.ask': 'Вы отвечаете каждому сами?',
+  'guided.guess.anonymous.ask': 'Можно ли ответить, не называя имени?',
+  'guided.guess.signature.ask': 'Нужно ли подписать?',
+  'guided.guess.pay.ask': 'Нужно ли платить за участие?',
+  'guided.guess.invite.ask': 'Вы сами пригласили каждого?',
+  'guided.guess.research.ask': 'Это для записи измерений или образцов?',
+  'guided.guess.samples.ask': 'Вам присылают образцы?',
+  'guided.guess.contact.ask': 'Это просто способ связаться с вами?',
+  'guided.guess.job.ask': 'Это о работе или должности?',
+  'guided.guess.membership.ask': 'Это для вступления или обновления членства?',
+  'guided.guess.price.ask': 'Вас просят назвать цену?',
+  'guided.guess.problem.ask': 'Это чтобы сообщить о проблеме?',
+  'guided.guess.booking.ask': 'Бронируют время или место?',
+  'guided.guess.place.ask': 'Бронируют помещение или место?',
+  'guided.guess.learn.ask': 'Там чему-то учатся?',
+  'guided.guess.sessions.ask': 'Встречаются больше одного раза?',
+  'guided.guess.news.ask': 'Вы будете позже присылать им новости?',
+  'guided.guess.absence.ask': 'Это чтобы сообщить об отсутствии?',
+  'guided.guess.proposal.ask': 'Это чтобы внести предложение?',
+  'guided.guess.behalf.ask': 'Кто-то действует от имени другого человека?',
+  'guided.guess.seeded.help':
+    'Это вопросы, которые добавил Loppa. Нажмите на вопрос, чтобы изменить его.',
   'guided.flow.start.ask': 'Для чего эта форма?',
   'guided.flow.start.help': 'Ваш ответ поможет Loppa предложить нужные вопросы.',
   'guided.flow.start.signup': 'Запись участников',
@@ -1198,6 +1227,7 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.preview.editTouch':
     'Предпросмотр не совсем устраивает? Коснитесь его, чтобы изменить.',
   'conversation.preview.assumed': 'Что предположила Loppa',
+  'conversation.preview.pick': 'Какой вопрос?',
   'conversation.preview.noBrand':
     'У вашей организации пока нет оформления, поэтому форма будет выглядеть так. Администратор может настроить его в разделе «Оформление».',
   'conversation.byHand': 'изменено вручную',
@@ -1224,6 +1254,10 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.guess.ask': 'Вы имели в виду «{question}» — {answer}?',
   'conversation.guess.yes': 'Да',
   'conversation.guess.no': 'Нет',
+  'conversation.guess.why': 'Почему такая догадка?',
+  'conversation.guess.whyLine': '{question} {answer}',
+  'conversation.guess.unavailable':
+    'Не удалось загрузить шаблон, поэтому сейчас его нельзя добавить. Попробуйте позже или выберите другой ответ.',
   'conversation.elsewhere': 'Или это об одном из этих вопросов?',
   'conversation.shoppingList':
     'Всё, что здесь можно настроить, перечислено ниже — выберите оттуда.',

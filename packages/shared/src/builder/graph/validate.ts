@@ -1,4 +1,5 @@
-import { FORM_TEMPLATES } from '../../forms/templates.js';
+import { MAX_ASKED } from '../belief/entropy.js';
+import { RECIPE_IDS } from '../belief/recipes.js';
 import { regulatedWordsIn } from '../../forms/wording.js';
 import { GuardError, parseGuard, type GuardExpr } from './guards.js';
 import { opProblem, type ParsedPath } from './paths.js';
@@ -9,6 +10,7 @@ import {
   patchesOf,
   type BuilderGraph,
   type MessageKey,
+  type Next,
   type Node,
 } from './schema.js';
 import voice from './voice.json';
@@ -60,21 +62,38 @@ export const MAX_CHAIN = 6;
 
 const SIBLINGS = /^menu\.siblings\(([a-zA-Z0-9]+)\)$/;
 
-function targetsOf(next: unknown): string[] {
+/** A `next` that asks the best question of a group (`BELIEF.md`). */
+const isBest = (next: unknown): next is Extract<Next, { readonly best: string }> =>
+  typeof next === 'object' && next !== null && !Array.isArray(next) && 'best' in next;
+
+function targetsOf(next: unknown, graph: BuilderGraph): string[] {
   if (typeof next === 'string') return [next];
   if (Array.isArray(next)) return next.map((branch: { to: string }) => branch.to);
+  if (isBest(next)) {
+    return [
+      ...graph.nodes.filter((n) => n.group === next.best).map((n) => n.id),
+      ...targetsOf(next.else, graph),
+    ];
+  }
   return [];
 }
 
-/** Every `next` edge of a node, with whether taking it depends on an answer or a guard (G6). */
-function edgesOf(node: Node): { to: string; conditional: boolean }[] {
+/**
+ * Every `next` edge of a node, with whether taking it depends on an answer or a guard (G6). The
+ * best question of a group depends on every answer before it, so its edges are all conditional.
+ */
+function edgesOf(node: Node, graph: BuilderGraph): { to: string; conditional: boolean }[] {
   const edges: { to: string; conditional: boolean }[] = [];
   if ('next' in node) {
     if (typeof node.next === 'string') edges.push({ to: node.next, conditional: false });
-    else for (const b of node.next) edges.push({ to: b.to, conditional: b.when.trim() !== 'true' });
+    else if (isBest(node.next)) {
+      for (const to of targetsOf(node.next, graph)) edges.push({ to, conditional: true });
+    } else {
+      for (const b of node.next) edges.push({ to: b.to, conditional: b.when.trim() !== 'true' });
+    }
   }
   for (const option of optionsOf(node)) {
-    for (const to of targetsOf(option.next)) edges.push({ to, conditional: true });
+    for (const to of targetsOf(option.next, graph)) edges.push({ to, conditional: true });
   }
   return edges;
 }
@@ -98,6 +117,7 @@ function guardedListsOf(node: Node): (readonly { readonly when: string }[])[] {
   const nexts = ['next' in node ? node.next : undefined, ...optionsOf(node).map((o) => o.next)];
   for (const candidate of [...nexts, node.skip]) {
     if (Array.isArray(candidate)) lists.push(candidate);
+    else if (isBest(candidate) && Array.isArray(candidate.else)) lists.push(candidate.else);
   }
   return lists;
 }
@@ -196,7 +216,7 @@ export function structuralProblems(input: unknown): GraphProblem[] {
   if (!exists(graph.start)) add('G1', `start names ${graph.start}, which does not exist`);
   for (const node of graph.nodes) {
     const refs = [
-      ...edgesOf(node).map((edge) => edge.to),
+      ...edgesOf(node, graph).map((edge) => edge.to),
       ...(node.kind === 'menu' ? node.entries : []),
     ];
     for (const ref of refs)
@@ -223,7 +243,7 @@ export function structuralProblems(input: unknown): GraphProblem[] {
     reached.add(id);
     const node = byId.get(id)!;
     const onward = [
-      ...edgesOf(node).map((edge) => edge.to),
+      ...edgesOf(node, graph).map((edge) => edge.to),
       ...(node.kind === 'menu' ? node.entries : []),
     ];
     if ('escape' in node) {
@@ -328,13 +348,28 @@ export function structuralProblems(input: unknown): GraphProblem[] {
     }
   }
 
-  // G9 — scores name real templates, in whole millinats.
-  const templates = new Set(FORM_TEMPLATES.map((template) => template.id));
+  // G9 — scores name real recipes, in whole millinats, on two options of a node at least; a best
+  // question is of a group that has scored questions to ask.
+  const recipes = new Set(RECIPE_IDS);
   for (const node of graph.nodes) {
+    // A likelihood is over a node's scored options (`BELIEF.md`): one alone is certain for every
+    // recipe, so choosing it could never move the belief, and the score would only look like it did.
+    if (optionsOf(node).filter((o) => o.score !== undefined).length === 1) {
+      add('G9', 'scores one option alone, which no answer can weigh against another', node.id);
+    }
+    const nexts = ['next' in node ? node.next : undefined, ...optionsOf(node).map((o) => o.next)];
+    for (const candidate of nexts) {
+      if (!isBest(candidate)) continue;
+      const scored = graph.nodes.filter(
+        (n) => n.group === candidate.best && optionsOf(n).some((o) => o.score !== undefined),
+      );
+      if (scored.length === 0) {
+        add('G9', `asks the best question of ${candidate.best}, which has none scored`, node.id);
+      }
+    }
     for (const option of optionsOf(node)) {
       for (const [template, value] of Object.entries(option.score ?? {})) {
-        if (!templates.has(template))
-          add('G9', `scores ${template}, which is not a template`, node.id);
+        if (!recipes.has(template)) add('G9', `scores ${template}, which is not a recipe`, node.id);
         if (!Number.isInteger(value))
           add('G9', `scores ${template} with ${value}, not an integer`, node.id);
       }
@@ -343,7 +378,7 @@ export function structuralProblems(input: unknown): GraphProblem[] {
 
   // G6 — no cycle turns by itself, and every cycle has a way out.
   const edges = new Map(
-    graph.nodes.map((node) => [node.id, edgesOf(node).filter((e) => exists(e.to))]),
+    graph.nodes.map((node) => [node.id, edgesOf(node, graph).filter((e) => exists(e.to))]),
   );
   for (const component of stronglyConnected(
     graph.nodes.map((n) => n.id),
@@ -419,17 +454,42 @@ function longestChain(
   byId: ReadonlyMap<string, Node>,
   edges: ReadonlyMap<string, readonly { to: string }[]>,
 ): number {
-  const walk = (node: Node, seen: ReadonlySet<string>): number => {
-    if (node.kind === 'preview-moment' || node.kind === 'end') return 1;
+  /** `used`: the questions of a best group already on the chain, asked or counted as asked. */
+  const walk = (node: Node, seen: ReadonlySet<string>, used: number): number => {
+    // Something shown ends a chain: a preview, the end, or the guess ("This looks like …").
+    if (node.kind === 'preview-moment' || node.kind === 'end' || node.kind === 'confirm-guess') {
+      return 1;
+    }
+    // The best question of a group is asked at most MAX_ASKED times in all, then `else`: a chain
+    // through them is that many at most, whatever order they come in (`BELIEF.md`).
+    if ('next' in node && isBest(node.next)) {
+      const { best: group, else: after } = node.next;
+      const members = [...byId.values()].filter(
+        (n) => n.group === group && optionsOf(n).some((o) => o.score !== undefined),
+      );
+      const left = members.filter((n) => !seen.has(n.id)).length;
+      const more = group === start.group ? Math.min(Math.max(0, MAX_ASKED - used), left) : 0;
+      const tails = typeof after === 'string' ? [after] : after.map((branch) => branch.to);
+      let rest = 0;
+      for (const id of tails) {
+        const tail = byId.get(id);
+        if (tail && tail.group === start.group && !seen.has(id)) {
+          rest = Math.max(rest, walk(tail, new Set([...seen, id]), used + more));
+        }
+      }
+      return 1 + more + rest;
+    }
     let best = 0;
     for (const { to } of edges.get(node.id) ?? []) {
       const next = byId.get(to);
       if (!next || next.group !== start.group || seen.has(to)) continue;
-      best = Math.max(best, walk(next, new Set([...seen, to])));
+      const counted = optionsOf(next).some((o) => o.score !== undefined) ? 1 : 0;
+      best = Math.max(best, walk(next, new Set([...seen, to]), used + counted));
     }
     return 1 + best;
   };
-  return walk(start, new Set([start.id]));
+  const first = optionsOf(start).some((o) => o.score !== undefined) ? 1 : 0;
+  return walk(start, new Set([start.id]), first);
 }
 
 const language = (locale: string) => locale.split('-')[0]!;

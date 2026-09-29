@@ -16,4 +16,5 @@ export * from './ids.js';
 export { runPatch, type PatchContext } from './patches.js';
 export * from './machine.js';
 export { changedByHand, proposals } from './reconcile.js';
+export * from './belief/index.js';
 export * from './session.js';

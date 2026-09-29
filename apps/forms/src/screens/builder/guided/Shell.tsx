@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LocaleConfig } from '@tp/i18n';
+import type { FormTemplate } from '@tp/shared/forms';
 import {
   MachineError,
   currentNode,
@@ -30,6 +31,7 @@ import {
   choiceAt,
   choose,
   confirmGuess,
+  guessName,
   lastChoice,
   presetChosen,
   previewOf,
@@ -59,6 +61,9 @@ import { Trail } from './Trail.js';
  * `keyboard.ts`'s. The conversation itself is the caller's, which saves it.
  */
 
+/** One empty catalogue, so a Shell given none keeps the same one across renders. */
+const NO_TEMPLATES: readonly FormTemplate[] = [];
+
 export interface ShellProps {
   readonly graph: BuilderGraph;
   readonly conversation: Conversation;
@@ -72,6 +77,8 @@ export interface ShellProps {
   readonly onOpenEditor: () => void;
   /** Whether the latest step is saved — shown beside the way out. */
   readonly status?: React.ReactNode;
+  /** The template catalogue, from the API: the guess's names, and what "Right" adds (S11). */
+  readonly templates?: readonly FormTemplate[];
   /** Whose the form is, for the preview: the organisation's logo, name, and whether it has a kit. */
   readonly brand: PreviewBrand;
   /** The aliases the ladder reads with, and "Remember". Built-in aliases only when absent. */
@@ -107,7 +114,8 @@ type Said =
       /** The second miss in a row: every question of the group is shown instead. */
       readonly listed: boolean;
     }
-  | { readonly kind: 'refused' }
+  /** The machine refused the step; `note` says why when there is more to say than "not here". */
+  | { readonly kind: 'refused'; readonly note?: string }
   /** T7: "Did you mean …?" — nothing happens until it is answered. */
   | { readonly kind: 'guess'; readonly text: string; readonly reading: Reading }
   /** Applied: the transparency chip, until the next step. */
@@ -158,6 +166,7 @@ export function Shell({
   desktop,
   onOpenEditor,
   status,
+  templates = NO_TEMPLATES,
   brand,
   learning,
   colours,
@@ -165,6 +174,9 @@ export function Shell({
   const t = useT();
   const reduced = useReducedMotion();
   const node = currentNode(graph, conversation);
+  // "This looks like {template}. Right?" names the recipe the belief guesses (S11).
+  const guessed = guessName(conversation, locales.interfaceLocale);
+  const askValues = node.kind === 'confirm-guess' && guessed ? { template: guessed } : undefined;
   const step = conversation.log.length;
   /**
    * Where the conversation is, counting answers only. A hand edit or a reconciliation is a step in
@@ -281,9 +293,15 @@ export function Shell({
   }
 
   function answer(given: Answer) {
-    const result = choose(graph, conversation, given, locales);
+    const result = choose(graph, conversation, given, locales, null, templates);
     if (result.kind === 'refused') {
-      setSaid({ kind: 'refused' });
+      // "Right" on a template the catalogue did not load: the answer fits, the template is missing.
+      const unavailable = given.kind === 'guess' && result.code === 'not-found';
+      setSaid(
+        unavailable
+          ? { kind: 'refused', note: 'conversation.guess.unavailable' }
+          : { kind: 'refused' },
+      );
       return;
     }
     take(result.conversation, null);
@@ -434,7 +452,7 @@ export function Shell({
     const body = bodyRef.current;
     if (!body) return;
     const answers = body.querySelectorAll<HTMLElement>('[data-answer]');
-    const asked = waiting ? t('conversation.reconcile.ask') : t(node.ask);
+    const asked = waiting ? t('conversation.reconcile.ask') : t(node.ask, askValues);
     const wanted =
       moved.focus === THE_BOX
         ? boxRef.current
@@ -548,7 +566,7 @@ export function Shell({
       <div key={`${position}:${node.id}`} className={`conversation__node${slide}`}>
         <div className="conversation__ask">
           <h1 id="conversation-question" className="conversation__question">
-            {waiting ? t('conversation.reconcile.ask') : t(node.ask)}
+            {waiting ? t('conversation.reconcile.ask') : t(node.ask, askValues)}
           </h1>
           <button
             type="button"
@@ -745,7 +763,9 @@ export function Shell({
 
         {(said?.kind === 'ask' || said?.kind === 'refused') && (
           <div className="conversation__notice" role="status">
-            <p>{t(said.kind === 'ask' ? ASK[said.reason] : 'conversation.refused')}</p>
+            <p>
+              {t(said.kind === 'ask' ? ASK[said.reason] : (said.note ?? 'conversation.refused'))}
+            </p>
             {said.kind === 'ask' && said.options.length > 0 && (
               <div className="conversation__maybe">
                 {said.options.map((option) => (

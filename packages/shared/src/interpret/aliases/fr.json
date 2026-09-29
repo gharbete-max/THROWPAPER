@@ -1872,6 +1872,3086 @@
       "notes": ""
     },
     {
+      "phrase": "Non",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Non",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nan",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas du tout",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas vraiment",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Je ne sais pas",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aucune idée",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "je sais pas",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "pas sûr",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "peut-être",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "Oui",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est ça",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "exact",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ouais",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "tout à fait",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
       "phrase": "Non, c’est facultatif",
       "nodeId": "text.required",
       "optionId": "no",

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { BUILDER_GRAPH, type Conversation } from '@tp/shared/builder';
+import type { FormTemplate } from '@tp/shared/forms';
 import {
   BUILTIN_ALIASES,
   type AliasRefusalReason,
@@ -54,6 +55,7 @@ export function GuidedBuilder() {
   const saver = useRef<Saver | null>(null);
   /** The organisation's learned aliases: the ladder reads them with the built-in ones. */
   const [learned, setLearned] = useState<readonly LearnedAlias[]>([]);
+  const [templates, setTemplates] = useState<readonly FormTemplate[]>([]);
   // One array for as long as nothing is learned: the ladder keeps its vocabulary per array.
   const aliases = useMemo(() => [...BUILTIN_ALIASES, ...learned], [learned]);
 
@@ -68,9 +70,13 @@ export function GuidedBuilder() {
       client.brandKit().catch(() => null),
       // Without them the built-in aliases still read everything they did: never a reason to fail.
       client.learnedAliases().catch(() => ({ aliases: [] })),
+      // What "Right" adds from, as the gallery has it. Without it the guess still guesses; "Right"
+      // on a template is then refused and says so (S11).
+      client.formTemplates().catch(() => ({ templates: [] })),
     ])
-      .then(([form, stored, brand, known]) => {
+      .then(([form, stored, brand, known, catalogue]) => {
         setLearned(known.aliases);
+        setTemplates(catalogue.templates);
         const begun = startConversation({
           graph: BUILDER_GRAPH,
           definition: form.draftDefinition,
@@ -182,6 +188,7 @@ export function GuidedBuilder() {
           organisationName: organisation?.name ?? '',
         }}
         learning={{ aliases, remember }}
+        templates={templates}
         colours={{ canChange: canChangeBrand, apply: applyPreset }}
         onOpenEditor={() => void openEditor()}
         status={

@@ -1573,6 +1573,3086 @@
     },
     {
       "phrase": "いいえ",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.absence",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.absence",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.absence",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.anonymous",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.anonymous",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.anonymous",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.behalf",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.behalf",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.behalf",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.booking",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.booking",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.booking",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.contact",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.contact",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.contact",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.date",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.date",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.date",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.invite",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.invite",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.invite",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.job",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.job",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.job",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.learn",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.learn",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.learn",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.meeting",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.meeting",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.meeting",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.membership",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.membership",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.membership",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.news",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.news",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.news",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.pay",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.pay",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.pay",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.place",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.place",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.place",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.price",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.price",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.price",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.problem",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.problem",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.problem",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.proposal",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.proposal",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.proposal",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.reply",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.reply",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.reply",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.research",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.research",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.research",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.samples",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.samples",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.samples",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.sessions",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.sessions",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.sessions",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いや",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ちがう",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "違います",
+      "nodeId": "guess.signature",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "たぶん",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "わからない",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "不明",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "分からない",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "知らない",
+      "nodeId": "guess.signature",
+      "optionId": "unsure",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "うん",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "ええ",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "そうです",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "その通り",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "shared by every guess question"
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "guess.signature",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-29",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ",
       "nodeId": "text.required",
       "optionId": "no",
       "locale": "ja",
