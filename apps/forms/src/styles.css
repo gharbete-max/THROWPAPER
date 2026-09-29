@@ -7037,3 +7037,253 @@ body:has(> #root .shell--narrow) {
 .nav-link__count {
   margin-inline-start: auto;
 }
+
+/* The review screen (S10, IMPORT-PIPELINE.md §8): the document beside the form it makes, each line
+   highlighted by how sure the reading is, linked to its item both ways. */
+.review {
+  width: min(100%, 1400px);
+  margin-inline: auto;
+  padding: calc(var(--tp-spacing-unit) * 2);
+}
+
+.review--choose {
+  width: min(100%, 720px);
+}
+
+.review__summary {
+  margin: 0;
+  font-size: var(--tp-text-xl);
+}
+
+.review__head p {
+  margin: 0;
+}
+
+.review__panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+.review-source,
+.review-draft {
+  max-height: 70vh;
+  overflow: auto;
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+@media (max-width: 900px) {
+  .review__panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .review-source {
+    max-height: 40vh;
+  }
+
+  .review-draft {
+    max-height: none;
+  }
+
+  /* Four buttons wrap to two rows on a phone: pinned, they would cover the items. */
+  .review__foot {
+    position: static;
+  }
+}
+
+.review-page {
+  position: relative;
+  margin-block-end: var(--tp-spacing-unit);
+  background: var(--tp-colour-background);
+}
+
+.review-page__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.review-page__lines {
+  position: absolute;
+  inset: 0;
+}
+
+.review-source__block {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 4);
+  margin-block-end: var(--tp-spacing-unit);
+}
+
+.review-line {
+  display: block;
+  padding: calc(var(--tp-spacing-unit) / 4) calc(var(--tp-spacing-unit) / 2);
+  border: 0;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Exactly the printed line's box: not the 44 px every other button has, or the line below would
+   cover this one and take its press. */
+.review-page__lines .review-line {
+  position: absolute;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.review-line:disabled {
+  color: var(--tp-colour-muted);
+  cursor: default;
+}
+
+.review-line--auto {
+  background: color-mix(in srgb, var(--tp-colour-success) 16%, transparent);
+}
+
+.review-line--flag {
+  background: color-mix(in srgb, var(--tp-colour-warning) 24%, transparent);
+}
+
+.review-line--review {
+  background: color-mix(in srgb, var(--tp-colour-danger) 24%, transparent);
+}
+
+.review-line--settled {
+  background: color-mix(in srgb, var(--tp-colour-primary) 14%, transparent);
+}
+
+.review-line--selected {
+  outline: 2px solid var(--tp-colour-primary);
+  outline-offset: 1px;
+}
+
+.review-draft__items {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-item {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-inline-start: 4px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  cursor: pointer;
+}
+
+.review-item:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+.review-item--auto {
+  border-inline-start-color: var(--tp-colour-success);
+}
+
+.review-item--flag {
+  border-inline-start-color: var(--tp-colour-warning);
+}
+
+.review-item--review {
+  border-inline-start-color: var(--tp-colour-danger);
+}
+
+.review-item--settled {
+  border-inline-start-color: var(--tp-colour-primary);
+}
+
+.review-item--selected {
+  box-shadow: 0 0 0 2px var(--tp-colour-primary);
+}
+
+.review-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  align-items: baseline;
+  font-size: var(--tp-text-sm);
+}
+
+.review-item__kind {
+  color: var(--tp-colour-muted);
+}
+
+.review-item__bucket {
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.review-item__heading {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+.review-item__text {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.review-item__chips {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+}
+
+.review-item__chips p {
+  margin: 0;
+}
+
+.review-chip {
+  display: inline-flex;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  align-items: center;
+  min-height: var(--tp-control-height);
+  padding-inline: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.review-chip[aria-pressed='true'] {
+  border-color: var(--tp-colour-primary);
+  background: color-mix(in srgb, var(--tp-colour-primary) 12%, var(--tp-colour-background));
+}
+
+.review-chip__key {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-xs);
+}
+
+.review-item__actions {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+}
+
+.review-item__why {
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 2);
+}
+
+.review__foot {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding-block: var(--tp-spacing-unit);
+  background: var(--tp-colour-background);
+}

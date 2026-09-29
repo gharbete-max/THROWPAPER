@@ -146,7 +146,7 @@ own (the machine decides; these render):
 | `PreviewMoment`: the badge; `Reconcile` | "changed by hand" with Revert to guided; the three-way question, a screen of its own rather than a dialog — one decision per screen (S5) |
 | `Trail`, `WhyChip`, `ReadingChip` | breadcrumbs; the "why"; the transparency chip |
 | `SiblingMenu`, `ShoppingList` | the way-out grid; the categorised menu after two misses |
-| `review/ReviewScreen` (+ `SourcePane`, `DraftPane`, `Chips`) | the import review (`IMPORT-PIPELINE.md` §8) |
+| `review/ReviewScreen` (+ `SourcePane`, `DraftPane` with its chips; the rules in `review.ts`, `fields.ts`, `keys.ts`) | the import review (`IMPORT-PIPELINE.md` §8, S10) |
 
 Reused as they are: `FieldInput`, `FormPreview`, `Icon`, `Confirm`, `toast`, `ColourChoice`,
 `ThemePicker`, `ImagePicker`, `CameraScan`, `PhoneScan`, `LoadFailed`, `Loading`.

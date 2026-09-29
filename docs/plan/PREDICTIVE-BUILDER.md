@@ -63,8 +63,10 @@ The first screen after **New form** has two large cards and nothing else:
 
 - **Start from paper.** Drop a PDF, a Word file or a photographed page, paste text, or scan with a
   phone (the existing LAN scan). Loppa reads it locally (`IMPORT-PIPELINE.md`) and opens the
-  **review screen**, which is never skipped. *Until the review screen (S10):* the door makes a
-  blank form and opens it in the editor with the paper import (ADR 0004) already open.
+  **review screen**, which is never skipped. *As built (S10):* the door makes a blank form and
+  opens its review at `/forms/:id/import`, for a PDF with a text layer, a Word file or pasted text.
+  A photographed page or a scan is not read there yet: the review points to the editor's paper
+  import (ADR 0004), where it becomes pages to draw on.
 - **Start from questions.** The guided conversation. Nothing is required first: the brand kit can
   be answered later, and every skipped answer is recorded as "use Loppa's default" so the draft is
   always complete. The door makes the form first — a blank draft titled "Untitled form", with a
@@ -270,7 +272,7 @@ apps/forms/src/screens/builder/
                  Trail.tsx  Doors.tsx  GuidedBuilder.tsx  conversation.ts  keyboard.ts  saver.ts (S4)
                  PreviewMoment.tsx  InlineEdit/  Reconcile.tsx                                 (S5)
                  LearnedPhrases.tsx                                                            (S6)
-  review/        ReviewScreen.tsx  SourcePane.tsx  DraftPane.tsx  Chips.tsx
+  review/        review.ts  fields.ts  keys.ts  ReviewScreen.tsx  SourcePane.tsx  DraftPane.tsx  (S10)
 apps/api-forms/src/
   routes/        builder-session.ts (builder_sessions, S2); builder-aliases.ts (builder_aliases, S6)
 scripts/         builder-validate.ts (pnpm builder:validate)  caveat-fixtures.test.ts

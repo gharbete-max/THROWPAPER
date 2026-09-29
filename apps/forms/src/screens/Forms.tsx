@@ -95,7 +95,7 @@ export function Forms() {
         title: { [locales.default]: t('forms.untitled') },
       });
       setCreating(null);
-      navigate(door === 'questions' ? `/forms/${created.id}/guided` : `/forms/${created.id}?paper`);
+      navigate(`/forms/${created.id}/${door === 'questions' ? 'guided' : 'import'}`);
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : String(cause));
     } finally {

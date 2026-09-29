@@ -411,7 +411,9 @@ export function previewOf(
   const named = (spec: string | undefined): PreviewSpec | null =>
     spec === 'choice.control' || spec === 'brand.masthead' ? spec : null;
   if (node.kind === 'preview-moment') return named(node.preview);
-  const last = conversation.log.filter((entry) => entry.answer.kind !== 'edit').at(-1);
+  const last = conversation.log
+    .filter((entry) => entry.answer.kind !== 'edit' && entry.answer.kind !== 'import')
+    .at(-1);
   if (last && last.answer.kind !== 'jump' && last.to === node.id) {
     const answered = graph.nodes.find((n) => n.id === last.nodeId);
     if (answered?.kind !== 'preview-moment') {
@@ -427,15 +429,26 @@ export function showsPreview(graph: BuilderGraph, conversation: Conversation): b
   return previewOf(graph, conversation) !== null;
 }
 
-/** An answer, as the trail says it: a message key, or the words the person gave. */
-export type Said = { readonly key: MessageKey } | { readonly text: string };
+/**
+ * The trail's words for questions read from a document (S10): the screen's own, not the graph's,
+ * since `guided.*` holds exactly the graph's strings (`guided-graph.test.ts`).
+ */
+type ImportWords = 'conversation.import.ask' | 'conversation.import.said';
+
+/**
+ * An answer, as the trail says it: a message key (with its numbers, for an import's count), or the
+ * words the person gave.
+ */
+export type Said =
+  | { readonly key: MessageKey | ImportWords; readonly values?: Readonly<Record<string, number>> }
+  | { readonly text: string };
 
 export interface Crumb {
   /** `rewind(conversation, step)` returns to this node, to answer it again. */
   readonly step: number;
   readonly nodeId: string;
-  /** The question it answered. */
-  readonly question: MessageKey;
+  /** The question it answered; for an import, where its questions came from. */
+  readonly question: MessageKey | ImportWords;
   readonly said: readonly Said[];
   /** Questions passed over after it, and why — greyed in the trail. */
   readonly skipped: readonly { readonly question: MessageKey; readonly reason: MessageKey }[];
@@ -452,6 +465,16 @@ export function crumbs(graph: BuilderGraph, conversation: Conversation): Crumb[]
   const nodeOf = (id: string) => graph.nodes.find((n) => n.id === id);
   const askOf = (id: string): MessageKey => nodeOf(id)?.ask ?? 'guided.end.ask';
   return trail(conversation).map((crumb) => {
+    // Questions read from a document (S10): not an answer to the node the conversation was at.
+    if (crumb.answer.kind === 'import') {
+      return {
+        step: crumb.step,
+        nodeId: crumb.nodeId,
+        question: 'conversation.import.ask',
+        said: [{ key: 'conversation.import.said', values: { count: crumb.answer.count } }],
+        skipped: [],
+      };
+    }
     const node = nodeOf(crumb.nodeId);
     const labelOf = (optionId: string): Said => {
       const option = node ? optionsOf(node).find((o) => o.id === optionId) : undefined;

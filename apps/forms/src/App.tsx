@@ -42,6 +42,9 @@ const FormBuilder = lazy(() =>
 const GuidedBuilder = lazy(() =>
   import('./screens/builder/guided/GuidedBuilder.js').then((m) => ({ default: m.GuidedBuilder })),
 );
+const ReviewScreen = lazy(() =>
+  import('./screens/builder/review/ReviewScreen.js').then((m) => ({ default: m.ReviewScreen })),
+);
 const LearnedPhrases = lazy(() =>
   import('./screens/builder/guided/LearnedPhrases.js').then((m) => ({
     default: m.LearnedPhrases,
@@ -237,8 +240,11 @@ function Shell() {
    * The guided conversation is the same kind of screen: one decision at a time, full screen, its
    * answers on a 360 × 640 phone without scrolling (`docs/plan/CAVEATS.md` #37) — which the rail
    * and the session row made impossible. Its way out is "Build it myself", into the editor.
+   * So is the paper door's review (S10): the document beside the form it makes, which needs the
+   * whole width; its way out is Cancel, into the editor.
    */
-  const door = /^\/events\/[^/]+\/check-in$/.test(path) || /^\/forms\/[^/]+\/guided$/.test(path);
+  const door =
+    /^\/events\/[^/]+\/check-in$/.test(path) || /^\/forms\/[^/]+\/(guided|import)$/.test(path);
   const wide = /^\/forms\/[^/]+/.test(path);
   const roomy =
     !wide &&
@@ -380,6 +386,7 @@ function Shell() {
               {/* Before `/forms/:id`, or the builder would claim `submissions` as an id. */}
               <Route path="/forms/:id/submissions" element={<FormResponses />} />
               <Route path="/forms/:id/guided" element={<GuidedBuilder />} />
+              <Route path="/forms/:id/import" element={<ReviewScreen />} />
               <Route path="/forms/phrases" element={<LearnedPhrases />} />
               <Route path="/forms/:id" element={<FormBuilder />} />
               <Route path="/events/:id/attendance" element={<EventReport />} />

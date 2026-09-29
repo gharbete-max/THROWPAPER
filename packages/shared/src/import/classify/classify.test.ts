@@ -102,6 +102,23 @@ describe('stage 5, classify: every feature', () => {
     }
   });
 
+  it('offers the review screen its top three kinds, the winner first, the runner-up second', () => {
+    const texts = [
+      '1. Question one',
+      'E-post: ______',
+      'Vilka dagar? Välj en eller flera. ☐ Lördag ☐ Söndag',
+      'Kommer du? ☐ Ja ☐ Nej',
+    ];
+    for (const text of texts) {
+      const c = first(text, 'sv');
+      expect(c.alternatives[0]).toBe(c.kind);
+      expect(c.alternatives[1] ?? null).toBe(c.runnerUp);
+      expect(c.alternatives.length).toBeLessThanOrEqual(3);
+      expect(new Set(c.alternatives).size).toBe(c.alternatives.length);
+    }
+    expect(first('1. Question one').alternatives).toEqual(['short_text', 'long_text', 'number']);
+  });
+
   it('keeps the three features that weighed most, strongest first', () => {
     const c = first('Födelsedatum (ÅÅÅÅ-MM-DD): ______', 'sv');
     // Equal weights: code-point order of their names.

@@ -79,7 +79,7 @@ export function PreviewMoment({
   const byHand = field !== null && changedByHand(conversation.state, field.id);
   const shown: FormDefinition = field ? { ...draft.definition, fields: [field] } : draft.definition;
   const words = (said: readonly Said[]) =>
-    said.map((one) => ('key' in one ? t(one.key) : one.text)).join(', ');
+    said.map((one) => ('key' in one ? t(one.key, one.values) : one.text)).join(', ');
 
   return (
     <section

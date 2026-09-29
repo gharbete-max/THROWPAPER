@@ -65,12 +65,15 @@ describe('the PDF reader and the OCR engine', () => {
  * is never stored anywhere but where the author saves it.
  *
  * The readers — the Word unzipper and XML reader, the stages, the worker — live in the paper
- * door and nowhere else, so they load only when somebody opens it. And none of the modules that
- * hold a reading can reach the server: the only thing an import keeps is the source file, sent by
- * `ImportPaper` when the author presses the button (ADR 0004).
+ * door and nowhere else, so they load only when somebody opens it: the editor's paper import
+ * (`paper/`) and, since S10, the review screen (`review/`). And none of the modules that hold a
+ * reading can reach the server. An import keeps only what the author presses a button for: the
+ * source file, sent by `ImportPaper` (ADR 0004), or the questions "Use these questions" adds to
+ * the draft, saved by `ReviewScreen`.
  */
 describe('the document readers', () => {
   const PAPER = join('screens', 'builder', 'paper');
+  const REVIEW = join('screens', 'builder', 'review');
   const READERS = [
     'docx.js',
     'zip.js',
@@ -83,8 +86,10 @@ describe('the document readers', () => {
   ];
 
   it('are imported from the paper door only', () => {
+    const door = (path: string) =>
+      [PAPER, REVIEW].some((dir) => path.includes(`${dir}/`) || path.includes(`${dir}\\`));
     const offenders = sourceFiles(ROOT)
-      .filter((path) => !path.includes(`${PAPER}${'/'}`) && !path.includes(PAPER + '\\'))
+      .filter((path) => !door(path))
       .filter((path) => {
         const source = readFileSync(path, 'utf8');
         return READERS.some((name) => source.includes(`paper/${name}`));
@@ -111,6 +116,11 @@ describe('the document readers', () => {
     ];
     for (const name of quiet) {
       const source = readFileSync(join(ROOT, PAPER, name), 'utf8');
+      expect(source, name).not.toMatch(/lib\/api|fetch\(|XMLHttpRequest|sendBeacon/);
+    }
+    const review = ['review.ts', 'fields.ts', 'keys.ts', 'SourcePane.tsx', 'DraftPane.tsx'];
+    for (const name of review) {
+      const source = readFileSync(join(ROOT, REVIEW, name), 'utf8');
       expect(source, name).not.toMatch(/lib\/api|fetch\(|XMLHttpRequest|sendBeacon/);
     }
   });

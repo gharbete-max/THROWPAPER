@@ -1,6 +1,6 @@
 {
   "stage": "classify",
-  "stageVersion": 1,
+  "stageVersion": 2,
   "irVersion": 1,
   "inputSha256": "f7f4c66c38212b9acfc565d8749f37940fc912b90eefe1ffae58442bf2267fd8",
   "decisions": [

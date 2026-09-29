@@ -492,6 +492,43 @@ Never skipped. It opens with one sentence: **"I read 14 questions. 3 need your e
 - **Nothing enters the draft until "Use these questions"**, and that button names what it will do
   ("Add 14 questions"). After it, the conversation resumes on what is still undecided (S6).
 
+**As built (S10).** `apps/forms/src/screens/builder/review/`: the rules in `review.ts` (items,
+actions, counts), `fields.ts` (what each becomes) and `keys.ts`; the screen in `ReviewScreen`,
+`SourcePane` and `DraftPane`. "Start from paper" opens it at `/forms/:id/import`.
+
+- **The document**: a PDF is its own pages, drawn by pdf.js, each line a box over where it was
+  printed; a Word file or a paste, which have no pages, is its lines in reading order. Each line is
+  highlighted by its item's bucket, or as settled. The lines are for the pointer; by keyboard the
+  items are the way through, one stop each.
+- **The draft**: every question through `FormPreview` — the public page's own `FieldInput`, as the
+  control it will become — and headings and text as they will read. A PDF's own form field (#54)
+  is one item with its field's type, never a guess, and is not merged or split.
+- **The chips** are stage 5's top three kinds (`Classification.alternatives`), offered on what is
+  not `auto`. **Merge** joins an item to the one before it: a note under a question becomes the
+  question's note, anything else one item. **Split** makes two items at a line, each with its own
+  lines' words. **Just text** keeps every word (label, options, notes, a paragraph each);
+  **make this a question** is a question of unknown type, with chips. Keys as above, plus Q for
+  "make this a question" and ⌘/Ctrl+Z to undo.
+- **"Use these questions" is shut while anything needs your eye** — `review` and not yet settled.
+  Below the threshold Loppa asks and never guesses; one Enter settles an item.
+- **The review's actions stay on the screen**, with their own Undo, as a list replayed from the
+  reading like the conversation's log. (First written as every action being a step in the
+  conversation's log. Nothing is in the form until the questions are used, so there is nothing
+  for those steps to change; the form changes once, when they are used.) **"Use these questions"
+  is one step in the conversation's log** (`importQuestions`, `source: 'import'`): Back undoes it,
+  replay replays it, and the session is saved with it before the editor opens.
+- **What a reading becomes.** Every word verbatim, in the form's language. Money becomes a number
+  with two decimals. An address becomes long text. A personnummer or an organisation number
+  becomes short text; its check is S12's. Consent becomes yes/no, its text byte for byte (#28). A
+  grid becomes one single choice per row, under a section of its label; a grid of one column is a
+  list to tick. A table becomes a repeating group, a question per column, with as many entries as
+  it printed rows. Headings become section breaks; text becomes text blocks. Ids are fingerprints
+  of the document's text and place, and never one the form used. Keys come from the labels, without
+  their accents.
+- **Not yet here**: photographed and scanned pages (the review points to the editor's paper import);
+  the decided slots an import records, and the conversation walking only what is undecided (S12);
+  re-import (stage 9, S12).
+
 ## Stage 9 — importing the same form again
 
 - The file's SHA-256 equals the kept source's: nothing to do, and the screen says so.

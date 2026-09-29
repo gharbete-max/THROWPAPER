@@ -31,17 +31,18 @@ packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
 packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
-packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's conversation
-                graph, its `when` language, its validator, and the machine that walks it — answers
-                as undoable changes, answers ahead of their turn, replay, stable question ids, the
-                saved session, and reconciliation that never writes over a hand edit
-                (@tp/shared/builder); document import's Layout IR with its validator, pasted text as
-                a layout document, stage 2 (columns, lines, hyphenation, blocks, page furniture,
-                headings, the document's language), stage 3 (the list-marker detector, with Word's
-                own numbering), stage 4 (headings, instructions and questions with what answers
-                them, grids, tables), stage 5 (each question's likely type, by integer weights over
-                word lists in twelve languages), stage 7 (confidence and bucket, the OCR cap), a
-                PDF's own form fields over its text, and all of them in one call, each with its
+packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's
+                conversation graph, its `when` language, its validator, and the machine that walks
+                it — answers as undoable changes, answers ahead of their turn, replay, stable
+                question ids, the saved session, reconciliation that never writes over a hand edit,
+                and questions read from a document added as one step (@tp/shared/builder); document
+                import's Layout IR with its validator, pasted text as a layout document, stage 2
+                (columns, lines, hyphenation, blocks, page furniture, headings, the document's
+                language), stage 3 (the list-marker detector, with Word's own numbering), stage 4
+                (headings, instructions and questions with what answers them, grids, tables), stage
+                5 (each question's likely type, by integer weights over word lists in twelve
+                languages, with its three likeliest), stage 7 (confidence and bucket, the OCR cap),
+                a PDF's own form fields over its text, and all of them in one call, each with its
                 debug artifact (@tp/shared/import); free text read by rules — normalisation, word
                 lists and built-in aliases in twelve languages, the rules for learned ones, the
                 ladder T0–T8, and the committed sigmoid table (@tp/shared/interpret)

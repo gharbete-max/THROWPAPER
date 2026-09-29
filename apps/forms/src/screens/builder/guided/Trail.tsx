@@ -32,7 +32,7 @@ export function Trail({
   if (all.length === 0) return null;
 
   const words = (said: readonly Said[]) =>
-    said.map((one) => ('key' in one ? t(one.key) : one.text)).join(', ');
+    said.map((one) => ('key' in one ? t(one.key, one.values) : one.text)).join(', ');
 
   return (
     <nav className="conversation__trail" aria-label={t('conversation.trail')}>

@@ -4,7 +4,7 @@ import { useT } from '../../../lib/i18n.js';
 /**
  * The two doors — `PREDICTIVE-BUILDER.md`, "The two doors": after **New form**, two large cards and
  * nothing else. Start from questions opens the guided conversation; start from paper opens the
- * paper import on a new blank form. "Build it myself" — the classic route, with its templates and
+ * review screen (S10) for a new blank form. "Build it myself" — the classic route, with its templates and
  * its own link address — is not a third door but the way out every screen has.
  */
 export function Doors({

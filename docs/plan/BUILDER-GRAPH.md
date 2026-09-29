@@ -231,6 +231,11 @@ where it started (`base`) and every step since (`log`); its state is always exac
   makes one option per label, verbatim, in the author's language, keeping the values and pictures
   of the options there are (T6). **A hand edit** (`edit`, inline editing on the preview) is a step with `source: 'manual'`
   on paths `WRITABLE` allows, in the same log, as undoable as an answer; the trail does not show it.
+- **Questions from a document** (`importQuestions`, `{ kind: 'import', count }`, S10): "Use these
+  questions" on the review screen appends them in the document's order as one step with
+  `source: 'import'`, each recorded as the import's, and the conversation stays where it was. It
+  answers no node — `answered()` does not read it — and the trail shows it as "From your document:
+  14 questions". An id the form ever used, or a key it has, is refused.
 - **Reconciliation** (`reconcile.ts`, S5). Every guided step records each question it made or
   changed as it left it (`guided`); a question that differs from that has been changed by hand.
   A guided step runs on the conversation's own versions and never changes a question changed by

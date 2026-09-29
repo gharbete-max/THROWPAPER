@@ -50,6 +50,7 @@ const AnswerSchema: z.ZodType<Answer> = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('continue') }).strict(),
   z.object({ kind: z.literal('jump'), to: z.string() }).strict(),
   z.object({ kind: z.literal('edit') }).strict(),
+  z.object({ kind: z.literal('import'), count: z.number().int().min(1) }).strict(),
 ]);
 
 const source = z.enum(['guided', 'import', 'manual']);

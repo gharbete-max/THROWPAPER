@@ -29,8 +29,11 @@ import weights from './weights.json';
  * is a proposal the review screen shows (stage 8), and the label is never touched.
  */
 
-/** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const CLASSIFY_STAGE_VERSION = 1;
+/**
+ * Bumped when the stage's output changes on purpose (the debug artifact records it). 2 (S10): each
+ * classification carries its three likeliest kinds, `alternatives`, the review screen's chips.
+ */
+export const CLASSIFY_STAGE_VERSION = 2;
 
 const ALL_FEATURES: readonly Feature[] = [...WORD_FEATURES, ...SHAPE_FEATURES];
 const kindSchema = z.enum(KINDS);
@@ -98,6 +101,7 @@ interface Scored {
   confidence: number;
   margin: number;
   runnerUp: Kind | null;
+  alternatives: Kind[];
   why: Feature[];
 }
 
@@ -123,6 +127,7 @@ function best(candidates: readonly Kind[], present: ReadonlySet<Feature>): Score
     confidence: sigmoidMille(margin),
     margin,
     runnerUp: runner?.kind ?? null,
+    alternatives: scored.slice(0, 3).map((candidate) => candidate.kind),
     why: [...winner!.contributions]
       .sort((a, b) => b.weight - a.weight || (a.feature < b.feature ? -1 : 1))
       .slice(0, 3)
@@ -256,6 +261,7 @@ export function classify(
       confidence: read.confidence,
       margin: read.margin,
       runnerUp: read.runnerUp,
+      alternatives: read.alternatives,
       why: read.why,
       features,
       required,

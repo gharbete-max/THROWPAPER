@@ -72,7 +72,12 @@ export type Answer =
   /** Out through the escape — a menu, a sibling — or a menu's pick. */
   | { readonly kind: 'jump'; readonly to: string }
   /** A hand edit (`source: 'manual'`): inline editing on the preview. */
-  | { readonly kind: 'edit' };
+  | { readonly kind: 'edit' }
+  /**
+   * "Use these questions" on the review screen (S10): questions read from a document, added at
+   * once (`source: 'import'`). In the trail, not an answer to the node the conversation is at.
+   */
+  | { readonly kind: 'import'; readonly count: number };
 
 /** A node passed over because its `when` was false, and the sentence that says why. */
 export interface Skipped {
@@ -126,11 +131,15 @@ export function currentNode(graph: BuilderGraph, conversation: Conversation): No
   return nodeOf(graph, conversation.state.cursor);
 }
 
+/** Whether a step answered the node it names: not a jump, a hand edit or an import. */
+export function answers(entry: LogEntry): boolean {
+  const { kind } = entry.answer;
+  return kind !== 'jump' && kind !== 'edit' && kind !== 'import';
+}
+
 /** The nodes that have an answer in the log — what `answered()` reads. */
 function answeredIds(log: readonly LogEntry[]): string[] {
-  return log
-    .filter((entry) => entry.answer.kind !== 'jump' && entry.answer.kind !== 'edit')
-    .map((entry) => entry.nodeId);
+  return log.filter(answers).map((entry) => entry.nodeId);
 }
 
 function guardState(state: BuilderState, answered: readonly string[]): GuardState {
@@ -453,7 +462,7 @@ export function answerAt(
   const node = nodeOf(graph, nodeId);
   const slot = node.slot;
   if (!slot) throw new MachineError('not-now', `${node.id} is answered only in its turn`);
-  if (given.kind === 'jump' || given.kind === 'edit') {
+  if (given.kind === 'jump' || given.kind === 'edit' || given.kind === 'import') {
     throw new MachineError('wrong-answer', `${node.id}: a ${given.kind} is not an answer`);
   }
   if (node.when !== undefined && !holds(node.when, guardState(state, answeredIds(log)))) {
@@ -573,6 +582,84 @@ export function edit(
     source: 'manual',
   };
   return { base: conversation.base, log: [...log, entry], state: applied.state };
+}
+
+/**
+ * "Use these questions" on the review screen (S10, `IMPORT-PIPELINE.md` §8): the questions read
+ * from a document, appended in the document's order as **one** step in the same log — undone by
+ * Back like any answer, replayed like any step. The conversation stays where it is.
+ *
+ * Each is recorded as the import's (`source: 'import'`) with no guided baseline, so reconciliation
+ * reads it as it reads any question the conversation did not make; what the import decided about
+ * it (its slots, its evidence) is S12's. The ids and keys are the review's, made from the
+ * document's text (`fingerprint`), and are checked here: an id the form has ever used, or a key it
+ * already has, is refused, because an old answer would attach to it (`CAVEATS.md` #49).
+ */
+export function importQuestions(
+  conversation: Conversation,
+  fields: readonly FormDefinition['fields'][number][],
+): Conversation {
+  if (fields.length === 0) throw new MachineError('nothing-to-do', 'No questions to add');
+  const { state, log } = conversation;
+  const definition = state.draft.definition;
+  const used = new Set([
+    ...definition.fields.flatMap((field) =>
+      field.type === 'repeating_group' ? [field.id, ...field.fields.map((f) => f.id)] : [field.id],
+    ),
+    ...state.sidecar.retiredIds,
+  ]);
+  const keys = new Set(definition.fields.map((field) => field.key));
+  const added: string[] = [];
+  for (const field of fields) {
+    const ids =
+      field.type === 'repeating_group' ? [field.id, ...field.fields.map((f) => f.id)] : [field.id];
+    for (const id of ids) {
+      if (used.has(id)) throw new MachineError('invalid-draft', `The id ${id} was used before`);
+      used.add(id);
+    }
+    if (keys.has(field.key))
+      throw new MachineError('invalid-draft', `The key ${field.key} is taken`);
+    keys.add(field.key);
+    added.push(...ids);
+  }
+
+  const list = ['draft', 'definition', 'fields'] as const;
+  const changes: Change[] = [];
+  let after = definition.fields.at(-1)?.id ?? null;
+  for (const field of fields) {
+    changes.push({
+      op: 'insert',
+      at: list,
+      value: field as unknown as Json,
+      after: after === null ? null : { id: after },
+    });
+    changes.push({ op: 'set', at: provenancePointer(field.id), value: { source: 'import' } });
+    after = field.id;
+  }
+  changes.push({
+    op: 'set',
+    at: ['sidecar', 'retiredIds'],
+    value: [...state.sidecar.retiredIds, ...added],
+  });
+  const provenance = definition.fields.length === 0 ? 'import' : 'mixed';
+  if (state.sidecar.provenance !== provenance && state.sidecar.provenance !== 'mixed') {
+    changes.push({ op: 'set', at: ['sidecar', 'provenance'], value: provenance });
+  }
+
+  const tracked: Tracked = { changes: [], inverse: [] };
+  const next = applyTracked(state, changes, tracked);
+  checkDraft(next.draft);
+  const entry: LogEntry = {
+    nodeId: state.cursor,
+    answer: { kind: 'import', count: fields.length },
+    patch: tracked.changes,
+    inverse: tracked.inverse,
+    to: state.cursor,
+    skipped: [],
+    tier: null,
+    source: 'import',
+  };
+  return { base: conversation.base, log: [...log, entry], state: next };
 }
 
 // --- Reconciling ------------------------------------------------------------------------------

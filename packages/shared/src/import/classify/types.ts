@@ -107,6 +107,11 @@ export interface Classification {
   /** Millinats: the winner's score less the runner-up's (or the winner's score, alone). */
   margin: number;
   runnerUp: Kind | null;
+  /**
+   * The kinds in the order the weights put them, the winner first, at most three: the review
+   * screen's one-tap chips for a question it is not sure of (`IMPORT-PIPELINE.md` §8).
+   */
+  alternatives: Kind[];
   /** The winner's features that weighed most, strongest first, at most three — the "why". */
   why: Feature[];
   /** Every feature present, in code-point order. */

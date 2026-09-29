@@ -79,7 +79,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S7** Extract + reassemble | `paper/docx.ts`, the clipboard around `import/paste.ts` (built in S6), operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | **done** — in review, PR #147 |
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
-| **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms` | not started |
+| **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | not started |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
 | **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
@@ -322,3 +322,23 @@ when each slice ends.)*
   presets the graph offers against the kit's (#32), the machine's walk from both kinds of person,
   and two journeys in `e2e/guided-builder.spec.ts`: Cancel and Escape change nothing, Enter makes
   the first kit in Garden's colours; an operator is never asked. Next: S10.
+- **S10, the review screen (2026-09-29).** What: "Start from paper" opens a review of the document
+  at `/forms/:id/import`: "I read 14 questions. 3 need your eye.", the document beside the form it
+  would make — a PDF as its own pages, a Word file or a paste as its lines — linked line by line
+  both ways; every question as the control it will become; chips of the three likeliest types on
+  what is not sure; accept, merge with the item before, split at a line, "this is just text",
+  "make this a question", each with its own Undo and a key (`IMPORT-PIPELINE.md` §8, "As built").
+  "Use these questions" is shut while anything needs your eye, and then adds everything, verbatim
+  and in order, as one step in the form's conversation (`importQuestions`), saved before the
+  editor opens. First, the bundle: `@tp/shared` without side effects and the stages only in their
+  worker took the total from 978.4 to 914.4 KB and the editor's chunk from 42.7 to 29.4 (#109).
+  Why: M5 — an import that ends in real questions, which the plan (Q7) put before the guess. Found
+  on the way: the stages in the editor's chunk (#109); a chip press lost to a layout shift (#110);
+  a PDF line covered by the one below it (#111). Decided: the review's actions stay on the screen
+  (the form changes once); nothing below the threshold is added unsettled; consent is a yes/no,
+  as the wizard asks it. Tests: `review.test.ts` (acceptance S4 and S5 at the model, every action,
+  undo by replay, every mapping, ids and keys, through the machine into a publishable form),
+  `keys.test.ts`, `panes.test.tsx`, `imported.test.ts` (the import step), classify's top three;
+  `e2e/review.spec.ts`: S4 by pointer and by keyboard alone, S5, the gate, a PDF linked both ways
+  with merge and Undo, a Word grid. Next: S11, the belief engine. Open: ADRs 0017–0021; photographs
+  and scans through the stages; S12's decided slots.

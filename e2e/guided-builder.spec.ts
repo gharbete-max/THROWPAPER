@@ -132,16 +132,17 @@ test('a reload comes back to the same question, with Back still there', async ({
   await expect(page.getByRole('button', { name: /Decide later/ })).toBeFocused();
 });
 
-test('the paper door opens a new form in the editor, its paper import already open', async ({
-  page,
-}) => {
+test('the paper door opens the review screen for a new form (S10)', async ({ page }) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await page.goto('/forms');
   await page.getByRole('button', { name: 'New form' }).first().click();
   await page.getByRole('button', { name: /Start from paper/ }).click();
-  // The address is the form's own: the door's `?paper` is read once and dropped.
+  await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}\/import$/);
+  created.push(page.url().split('/').at(-2)!);
+  await expect(page.getByLabel('PDF or Word document')).toBeAttached();
+  // A photograph still has the editor's paper import, open on arrival there.
+  await page.getByRole('link', { name: 'Open the editor' }).click();
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
-  created.push(page.url().split('/').pop()!);
   await expect(page.getByLabel('PDF, Word document or photographs')).toBeAttached();
 });
 
