@@ -1254,6 +1254,17 @@ export const nbNO: Record<MessageKey, string> = {
   'review.why': 'Hvorfor?',
   'review.whyLine': '{stage}, regel {rule}: {verdict}',
   'review.empty': 'Ingenting som kunne bli et spørsmål, ble lest fra dette dokumentet.',
+  'review.noQuestions':
+    'Ingenting ble lest som et spørsmål. Hvis en linje er et, marker den og velg “Gjør dette til et spørsmål”.',
+  'review.conflict':
+    'Skjemaet ble endret i en annen fane eller et annet vindu mens du gikk gjennom det. Åpne det og se hva det inneholder nå, før du legger til noe.',
+  'review.stage.extract': 'Lesing av filen',
+  'review.stage.reassemble': 'Leserekkefølge',
+  'review.stage.enumerate': 'Listenumre',
+  'review.stage.segment': 'Spørsmål og tekst',
+  'review.stage.classify': 'Svartyper',
+  'review.stage.map': 'PDF-felt',
+  'review.stage.score': 'Sikkerhet',
   'review.formField': 'Et felt i PDF-en',
   'review.noLabel': 'Ingen etikett',
   'review.again': 'Les et annet dokument',

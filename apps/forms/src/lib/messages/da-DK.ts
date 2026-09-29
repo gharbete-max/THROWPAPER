@@ -1256,6 +1256,17 @@ export const daDK: Record<MessageKey, string> = {
   'review.why': 'Hvorfor?',
   'review.whyLine': '{stage}, regel {rule}: {verdict}',
   'review.empty': 'Der blev ikke læst noget i dokumentet, som kunne blive til et spørgsmål.',
+  'review.noQuestions':
+    'Intet blev læst som et spørgsmål. Hvis en linje er et, så markér den og vælg “Gør det til et spørgsmål”.',
+  'review.conflict':
+    'Formularen blev ændret i en anden fane eller et andet vindue, mens du gennemgik den. Åbn den og se, hvad den indeholder nu, før du tilføjer noget.',
+  'review.stage.extract': 'Læsning af filen',
+  'review.stage.reassemble': 'Læserækkefølge',
+  'review.stage.enumerate': 'Listenumre',
+  'review.stage.segment': 'Spørgsmål og tekst',
+  'review.stage.classify': 'Svartyper',
+  'review.stage.map': 'PDF-felter',
+  'review.stage.score': 'Sikkerhed',
   'review.formField': 'Et felt i PDF’en',
   'review.noLabel': 'Ingen etiket',
   'review.again': 'Læs et andet dokument',

@@ -144,22 +144,31 @@ test('what needs your eye holds "Use these questions" until it is settled', asyn
   await expect(summary(page)).toHaveText('I read 1 question. 1 needs your eye.');
   await expect(page.getByText('Settle what needs your eye first.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Add 1 question' })).toBeDisabled();
+  // Focused, so the screen's keys are listening: both are set up by the same render.
+  await expect(item(page, 'Namn')).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(summary(page)).toHaveText('I read 1 question. Nothing needs your eye.');
 
   // Another document instead: two lines with no answer space are text to read, until they are
-  // made questions.
+  // made questions — never a dead end.
   await page.getByRole('button', { name: 'Read another document' }).click();
   await paste(page, 'Namn\nAdress');
   await expect(summary(page)).toHaveText('I read 0 questions. Nothing needs your eye.');
-  await expect(page.getByText('Nothing that could become a question')).toBeVisible();
+  await expect(page.getByText('Nothing was read as a question.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Add 0 questions' })).toBeDisabled();
+  await item(page, 'Adress').click();
+  await page.keyboard.press('q');
+  await expect(summary(page)).toHaveText('I read 1 question. Nothing needs your eye.');
+  await expect(page.getByRole('button', { name: 'Add 1 question' })).toBeEnabled();
+  await page.keyboard.press('Control+z');
+  await expect(summary(page)).toHaveText('I read 0 questions. Nothing needs your eye.');
   await page.getByRole('button', { name: 'Read another document' }).click();
   await paste(page, 'ANMÄLAN\n\nNamn:\nTack!');
   await item(page, 'Tack!').click();
   await page.keyboard.press('q');
   await expect(item(page, 'Tack!').getByText('Question', { exact: true })).toBeVisible();
   await page.keyboard.press('Control+z');
-  await expect(item(page, 'Tack!').getByText('Text to read')).toBeVisible();
+  await expect(item(page, 'Tack!').getByText('Text to read', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Add 1 question' })).toBeEnabled();
   await page.getByRole('button', { name: 'Add 1 question' }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
@@ -168,6 +177,25 @@ test('what needs your eye holds "Use these questions" until it is settled', asyn
     'short_text',
     'rich_text',
   ]);
+});
+
+test('saved in another tab meanwhile: said, and nothing is added twice', async ({ page }) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromPaper(page);
+  await paste(page, '1. Question one\n2. Question two');
+  await expect(summary(page)).toHaveText('I read 2 questions. Nothing needs your eye.');
+  // Another tab saves this form's conversation after this one read it.
+  await sql`
+    insert into builder_sessions (form_id, user_id, organisation_id, session, version)
+    select f.id, u.id, f.organisation_id, '{}'::jsonb, 1
+    from forms f, users u
+    where f.id = ${formId} and u.email = 'admin@example.com'`;
+  await page.getByRole('button', { name: 'Add 2 questions' }).click();
+  await expect(page.getByText('This form was changed in another tab or window')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Add 2 questions' })).toBeDisabled();
+  await expect(page).toHaveURL(REVIEW);
+  const [row] = await sql`select version from builder_sessions where form_id = ${formId}`;
+  expect(row!['version']).toBe(1);
 });
 
 test('a PDF: its own page, each line linked to its question both ways, merged and undone', async ({
@@ -224,8 +252,9 @@ test('a Word file: a grid becomes one choice per row, under what the document pr
     mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     buffer: readFileSync(new URL('enkat-rutnat.docx', CORPUS)),
   });
-  await expect(summary(page)).toHaveText('I read 3 questions. Nothing needs your eye.');
-  await page.getByRole('button', { name: 'Add 3 questions' }).click();
+  // Two numbered questions, and a grid of three rows: three questions in the form.
+  await expect(summary(page)).toHaveText('I read 5 questions. Nothing needs your eye.');
+  await page.getByRole('button', { name: 'Add 5 questions' }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
   const optionsOf = (f: Draft['fields'][number]) =>
     ((f.options ?? []) as { label: Record<string, string> }[]).map((o) => o.label['en-GB']);
@@ -236,5 +265,9 @@ test('a Word file: a grid becomes one choice per row, under what the document pr
     'Mötena är lagom långa',
     'Informationen når fram',
     'Lokalerna fungerar bra',
+  ]);
+  // The step in the conversation counts what the button said.
+  expect((await sessionLog(formId)).map((entry) => entry.answer)).toEqual([
+    { kind: 'import', count: 5 },
   ]);
 });

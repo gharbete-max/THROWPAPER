@@ -342,3 +342,17 @@ when each slice ends.)*
   `e2e/review.spec.ts`: S4 by pointer and by keyboard alone, S5, the gate, a PDF linked both ways
   with merge and Undo, a Word grid. Next: S11, the belief engine. Open: ADRs 0017–0021; photographs
   and scans through the stages; S12's decided slots.
+- **S10, after its review (2026-09-29).** What: an adversarial read of S10 found words a merge or
+  "just text" dropped, a PDF form field without its printed options, grid chips that did nothing,
+  table columns with one key between them, a reading of no questions with no way on, a save
+  conflict that left the screen stuck, split parts that both kept the options, a selection left on
+  an item that had gone, two drawings on one canvas, and a screen that could be left mid-save. All
+  fixed, each with its test (#112–#114; `IMPORT-PIPELINE.md` §8, "As built": no word lost and none twice; how
+  many questions; saved in another tab). Decided: a grid of two or more columns counts as a
+  question per row, everywhere the number is said; the import step counts questions, not headings
+  and text (`packages/shared`: `importQuestions`); a second import into an imported form keeps it
+  imported; "Why?" names stages and verdicts in the person's language. The editor's paper canvas
+  had the same two drawings on one canvas, and is fixed with it. Tests: `review.test.ts`
+  (merges, splits, "just text", the form field, the selection, the count), `keys.test.ts`,
+  `panes.test.tsx`, `imported.test.ts`; `e2e/review.spec.ts`: a reading of no questions made one,
+  saved in another tab, the Word grid's count through to the conversation.

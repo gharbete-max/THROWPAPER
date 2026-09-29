@@ -68,6 +68,34 @@ describe('importing the questions a document was read as', () => {
     c = answer(G, c, { kind: 'option', optionId: 'later' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'text', value: 'Vilken dag?' }, { locale: 'sv-SE' });
     expect(importQuestions(c, two).state.sidecar.provenance).toBe('mixed');
+
+    // A second document into a form the first one made: still an imported form.
+    const second = importQuestions(importQuestions(fresh(), two), [
+      question('q-tel', 'telefon', 'Telefon'),
+    ]);
+    expect(second.state.sidecar.provenance).toBe('import');
+  });
+
+  it('counts the questions it adds, not the headings and text that come with them', () => {
+    const heading = {
+      id: 'q-rubrik',
+      key: 'personuppgifter',
+      type: 'section_break',
+      width: 'full',
+      label: { 'sv-SE': 'Personuppgifter' },
+    } as unknown as Field;
+    const text = {
+      id: 'q-text',
+      key: 'text',
+      type: 'rich_text',
+      width: 'full',
+      content: { 'sv-SE': 'Fyll i med versaler.' },
+    } as unknown as Field;
+    const after = importQuestions(fresh(), [heading, ...two, text]);
+    expect(after.state.draft.definition.fields).toHaveLength(4);
+    expect(after.log[0]!.answer).toEqual({ kind: 'import', count: 2 });
+    // Headings and text alone are nothing to add.
+    expect(refusal(() => importQuestions(fresh(), [heading, text]))).toBe('nothing-to-do');
   });
 
   it('refuses an id the form ever used, a key it has, nothing at all, or a question it cannot hold', () => {

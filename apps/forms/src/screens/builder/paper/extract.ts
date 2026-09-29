@@ -36,8 +36,17 @@ export interface PaperPdf {
   text(page: number): Promise<TextRun[]>;
   /** The whole document as stage 1's raw document: its words and its printed rules. */
   raw(): Promise<RawDocument>;
-  /** Draws the page at `width` CSS pixels wide. */
-  render(page: number, width: number, canvas: HTMLCanvasElement): Promise<void>;
+  /**
+   * Draws the page at `width` CSS pixels wide. Aborting `signal` cancels a drawing still under way,
+   * and must come before the same canvas is drawn on again: pdf.js refuses a canvas in use, and the
+   * first drawing would go on over the second.
+   */
+  render(
+    page: number,
+    width: number,
+    canvas: HTMLCanvasElement,
+    signal?: AbortSignal,
+  ): Promise<void>;
   close(): Promise<void>;
 }
 
@@ -191,15 +200,23 @@ export async function openPdf(
         pages,
       };
     },
-    async render(index, width, canvas) {
+    async render(index, width, canvas, signal) {
       const page = await document.getPage(index + 1);
+      if (signal?.aborted) return;
       const scale = width / page.getViewport({ scale: 1 }).width;
       const viewport = page.getViewport({ scale: scale * (window.devicePixelRatio || 1) });
       canvas.width = Math.round(viewport.width);
       canvas.height = Math.round(viewport.height);
       // 'print' draws the same picture but does not pace itself with requestAnimationFrame, so
       // a builder opened in a background tab has its pages when somebody switches to it.
-      await page.render({ canvas, viewport, intent: 'print' }).promise;
+      const task = page.render({ canvas, viewport, intent: 'print' });
+      const cancel = () => task.cancel();
+      signal?.addEventListener('abort', cancel, { once: true });
+      try {
+        await task.promise;
+      } finally {
+        signal?.removeEventListener('abort', cancel);
+      }
     },
     close: () => document.loadingTask.destroy(),
   };

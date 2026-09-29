@@ -1263,6 +1263,17 @@ export const isIS: Record<MessageKey, string> = {
   'review.why': 'Hvers vegna?',
   'review.whyLine': '{stage}, regla {rule}: {verdict}',
   'review.empty': 'Ekkert sem gæti orðið að spurningu var lesið úr þessu skjali.',
+  'review.noQuestions':
+    'Ekkert var lesið sem spurning. Ef lína er spurning skaltu velja hana og síðan “Gera þetta að spurningu”.',
+  'review.conflict':
+    'Þessu eyðublaði var breytt í öðrum flipa eða glugga á meðan þú fórst yfir það. Opnaðu það og sjáðu hvað það inniheldur núna áður en þú bætir einhverju við.',
+  'review.stage.extract': 'Lestur skrárinnar',
+  'review.stage.reassemble': 'Lestrarröð',
+  'review.stage.enumerate': 'Listanúmer',
+  'review.stage.segment': 'Spurningar og texti',
+  'review.stage.classify': 'Svartegundir',
+  'review.stage.map': 'PDF-reitir',
+  'review.stage.score': 'Vissa',
   'review.formField': 'Reitur í PDF-skjalinu',
   'review.noLabel': 'Engin merking',
   'review.again': 'Lesa annað skjal',

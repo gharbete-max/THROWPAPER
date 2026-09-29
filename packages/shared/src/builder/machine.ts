@@ -1,5 +1,5 @@
 import { LocalisedText, Locale } from '../api/common.js';
-import { FormDefinition } from '../forms/definition.js';
+import { FormDefinition, PRESENTATIONAL_TYPES } from '../forms/definition.js';
 import { applyAll, jsonEqual, type Change } from './changes.js';
 import { evaluateGuard, parseGuard, type GuardState } from './graph/guards.js';
 import { opProblem } from './graph/paths.js';
@@ -594,12 +594,17 @@ export function edit(
  * it (its slots, its evidence) is S12's. The ids and keys are the review's, made from the
  * document's text (`fingerprint`), and are checked here: an id the form has ever used, or a key it
  * already has, is refused, because an old answer would attach to it (`CAVEATS.md` #49).
+ *
+ * Headings and text to read come with the questions; the step's `count` is the questions alone,
+ * as the review screen counted them, and an import with none is nothing to do.
  */
 export function importQuestions(
   conversation: Conversation,
   fields: readonly FormDefinition['fields'][number][],
 ): Conversation {
-  if (fields.length === 0) throw new MachineError('nothing-to-do', 'No questions to add');
+  const shown = new Set<string>(PRESENTATIONAL_TYPES);
+  const count = fields.filter((field) => !shown.has(field.type)).length;
+  if (count === 0) throw new MachineError('nothing-to-do', 'No questions to add');
   const { state, log } = conversation;
   const definition = state.draft.definition;
   const used = new Set([
@@ -641,7 +646,9 @@ export function importQuestions(
     at: ['sidecar', 'retiredIds'],
     value: [...state.sidecar.retiredIds, ...added],
   });
-  const provenance = definition.fields.length === 0 ? 'import' : 'mixed';
+  // A form every question of which came from documents stays an imported one.
+  const provenance =
+    definition.fields.length === 0 || state.sidecar.provenance === 'import' ? 'import' : 'mixed';
   if (state.sidecar.provenance !== provenance && state.sidecar.provenance !== 'mixed') {
     changes.push({ op: 'set', at: ['sidecar', 'provenance'], value: provenance });
   }
@@ -651,7 +658,7 @@ export function importQuestions(
   checkDraft(next.draft);
   const entry: LogEntry = {
     nodeId: state.cursor,
-    answer: { kind: 'import', count: fields.length },
+    answer: { kind: 'import', count },
     patch: tracked.changes,
     inverse: tracked.inverse,
     to: state.cursor,

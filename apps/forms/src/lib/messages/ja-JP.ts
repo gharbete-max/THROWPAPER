@@ -1261,6 +1261,17 @@ export const jaJP: Record<MessageKey, string> = {
   'review.why': '理由は？',
   'review.whyLine': '{stage}、ルール {rule}：{verdict}',
   'review.empty': 'この文書からは、質問にできるものを読み取れませんでした。',
+  'review.noQuestions':
+    '質問として読み取られたものはありません。質問である行があれば、それを選んで「質問にする」を選んでください。',
+  'review.conflict':
+    '確認している間に、このフォームは別のタブまたはウィンドウで変更されました。何かを追加する前に、フォームを開いて現在の内容を確認してください。',
+  'review.stage.extract': 'ファイルの読み取り',
+  'review.stage.reassemble': '読む順序',
+  'review.stage.enumerate': 'リスト番号',
+  'review.stage.segment': '質問とテキスト',
+  'review.stage.classify': '回答の種類',
+  'review.stage.map': 'PDF のフィールド',
+  'review.stage.score': '確信度',
   'review.formField': 'PDFのフィールド',
   'review.noLabel': 'ラベルなし',
   'review.again': '別の文書を読み取る',

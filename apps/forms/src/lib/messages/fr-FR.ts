@@ -1293,6 +1293,17 @@ export const frFR: Record<MessageKey, string> = {
   'review.why': 'Pourquoi ?',
   'review.whyLine': '{stage}, règle {rule} : {verdict}',
   'review.empty': 'Rien qui puisse devenir une question n’a été lu dans ce document.',
+  'review.noQuestions':
+    'Rien n’a été lu comme une question. Si une ligne en est une, sélectionnez-la puis choisissez « En faire une question ».',
+  'review.conflict':
+    'Ce formulaire a été modifié dans un autre onglet ou une autre fenêtre pendant votre relecture. Ouvrez-le pour voir ce qu’il contient maintenant avant d’ajouter quoi que ce soit.',
+  'review.stage.extract': 'Lecture du fichier',
+  'review.stage.reassemble': 'Ordre de lecture',
+  'review.stage.enumerate': 'Numéros de liste',
+  'review.stage.segment': 'Questions et texte',
+  'review.stage.classify': 'Types de réponse',
+  'review.stage.map': 'Champs PDF',
+  'review.stage.score': 'Confiance',
   'review.formField': 'Un champ du PDF',
   'review.noLabel': 'Sans libellé',
   'review.again': 'Lire un autre document',

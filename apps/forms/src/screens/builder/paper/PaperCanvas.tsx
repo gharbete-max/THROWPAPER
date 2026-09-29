@@ -336,11 +336,15 @@ function PaperPage({
     if (page.kind !== 'pdf' || !canvas.current || !surface.current) return;
     const element = canvas.current;
     let drawn = 0;
+    let drawing: AbortController | null = null;
     const draw = (width: number) => {
       width = Math.round(width);
       if (width > 0 && width !== drawn) {
         drawn = width;
-        void page.pdf.render(page.index, width, element);
+        // A new width cancels the drawing still under way; a cancelled one is not a failure.
+        drawing?.abort();
+        drawing = new AbortController();
+        page.pdf.render(page.index, width, element, drawing.signal).catch(() => {});
       }
     };
     // Once now, from layout, rather than waiting for the observer: it reports during rendering,
@@ -348,7 +352,10 @@ function PaperPage({
     draw(surface.current.clientWidth);
     const observer = new ResizeObserver(([entry]) => draw(entry?.contentRect.width ?? 0));
     observer.observe(surface.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      drawing?.abort();
+    };
   }, [page]);
 
   function fraction(event: ReactPointerEvent): { x: number; y: number } {

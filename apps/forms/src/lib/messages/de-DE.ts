@@ -1305,6 +1305,17 @@ export const deDE: Record<MessageKey, string> = {
   'review.why': 'Warum?',
   'review.whyLine': '{stage}, Regel {rule}: {verdict}',
   'review.empty': 'In diesem Dokument wurde nichts gelesen, was eine Frage werden könnte.',
+  'review.noQuestions':
+    'Nichts wurde als Frage gelesen. Wenn eine Zeile eine ist, wählen Sie sie aus und dann „Zur Frage machen“.',
+  'review.conflict':
+    'Dieses Formular wurde in einem anderen Tab oder Fenster geändert, während Sie es geprüft haben. Öffnen Sie es und sehen Sie nach, was es jetzt enthält, bevor Sie etwas hinzufügen.',
+  'review.stage.extract': 'Datei lesen',
+  'review.stage.reassemble': 'Lesereihenfolge',
+  'review.stage.enumerate': 'Listennummern',
+  'review.stage.segment': 'Fragen und Text',
+  'review.stage.classify': 'Antworttypen',
+  'review.stage.map': 'PDF-Felder',
+  'review.stage.score': 'Sicherheit',
   'review.formField': 'Ein Feld im PDF',
   'review.noLabel': 'Keine Beschriftung',
   'review.again': 'Ein anderes Dokument lesen',

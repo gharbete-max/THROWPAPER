@@ -1277,6 +1277,17 @@ export const esES: Record<MessageKey, string> = {
   'review.why': '¿Por qué?',
   'review.whyLine': '{stage}, regla {rule}: {verdict}',
   'review.empty': 'No se ha leído nada en este documento que pueda convertirse en una pregunta.',
+  'review.noQuestions':
+    'No se ha leído nada como pregunta. Si una línea lo es, selecciónala y elige «Convertir en pregunta».',
+  'review.conflict':
+    'Este formulario se ha cambiado en otra pestaña o ventana mientras lo revisabas. Ábrelo para ver lo que contiene ahora antes de añadir nada.',
+  'review.stage.extract': 'Lectura del archivo',
+  'review.stage.reassemble': 'Orden de lectura',
+  'review.stage.enumerate': 'Números de lista',
+  'review.stage.segment': 'Preguntas y texto',
+  'review.stage.classify': 'Tipos de respuesta',
+  'review.stage.map': 'Campos del PDF',
+  'review.stage.score': 'Confianza',
   'review.formField': 'Un campo del PDF',
   'review.noLabel': 'Sin etiqueta',
   'review.again': 'Leer otro documento',

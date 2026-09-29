@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import type { LocaleConfig } from '@tp/i18n';
 import { emptyDefinition, type FieldType } from '@tp/shared/forms';
-import type { Kind, StageDebug } from '@tp/shared/import';
+import { KINDS, type Kind, type StageDebug } from '@tp/shared/import';
 import { useT } from '../../../lib/i18n.js';
 import { FormPreview } from '../FormPreview.js';
 import { fieldsOf, fieldTypeOf } from './fields.js';
@@ -10,6 +10,27 @@ import { asks, type Action, type Review, type ReviewItem, refusal } from './revi
 /** A type's name: the field type's own, or the review's for a kind the form has no field for. */
 export function kindName(kind: Kind): string {
   return fieldTypeOf(kind) === kind ? `fieldType.${kind as FieldType}` : `review.type.${kind}`;
+}
+
+const KIND_NAMES: ReadonlySet<string> = new Set(KINDS);
+const BUCKETS: ReadonlySet<string> = new Set(['auto', 'flag', 'review']);
+/** What stage 4 read a line as, in the words the items use. */
+const SEGMENT_KINDS: Readonly<Record<string, string>> = {
+  heading: 'review.kind.heading',
+  instruction: 'review.kind.text',
+  meta: 'review.kind.text',
+  table: 'review.kind.table',
+};
+
+/**
+ * A stage's verdict in the person's words where it is one they have seen — a type, how sure, what
+ * a line was read as — and otherwise the rule's own word, which `docs/plan/` defines.
+ */
+export function verdictName(verdict: string): string | null {
+  if (KIND_NAMES.has(verdict)) return kindName(verdict as Kind);
+  if (BUCKETS.has(verdict)) return `review.bucket.${verdict}`;
+  if (verdict.startsWith('question:')) return 'review.kind.question';
+  return SEGMENT_KINDS[verdict] ?? null;
 }
 
 /**
@@ -194,15 +215,18 @@ function Actions({
         <details className="small" onClick={(event) => event.stopPropagation()}>
           <summary>{t('review.why')}</summary>
           <ul className="review-item__why">
-            {why.map((line, index) => (
-              <li key={index}>
-                {t('review.whyLine', {
-                  stage: line.stage,
-                  rule: line.rule,
-                  verdict: String(line.verdict),
-                })}
-              </li>
-            ))}
+            {why.map((line, index) => {
+              const verdict = verdictName(line.verdict);
+              return (
+                <li key={index}>
+                  {t('review.whyLine', {
+                    stage: t(`review.stage.${line.stage}`),
+                    rule: line.rule,
+                    verdict: verdict ? t(verdict) : line.verdict,
+                  })}
+                </li>
+              );
+            })}
           </ul>
         </details>
       )}

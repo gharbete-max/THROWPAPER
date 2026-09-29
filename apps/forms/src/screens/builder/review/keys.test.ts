@@ -9,6 +9,7 @@ const press = (key: string, more: Partial<ReviewKeyPress> = {}): ReviewKeyPress 
   ctrlKey: false,
   metaKey: false,
   shiftKey: false,
+  repeat: false,
   ...more,
 });
 const free = { typing: false, onControl: false };
@@ -42,5 +43,13 @@ describe('the review screen’s keys', () => {
     expect(reviewKey(press('4'), free)).toBeNull();
     expect(reviewKey(press('Enter'), { typing: false, onControl: true })).toBeNull();
     expect(reviewKey(press('z', { ctrlKey: true, shiftKey: true }), free)).toBeNull();
+  });
+
+  it('moves on while a key is held, but acts once', () => {
+    expect(reviewKey(press('ArrowDown', { repeat: true }), free)).toEqual({ kind: 'move', by: 1 });
+    for (const key of ['m', 's', 't', 'q', '1', 'Enter']) {
+      expect(reviewKey(press(key, { repeat: true }), free), key).toBeNull();
+    }
+    expect(reviewKey(press('z', { ctrlKey: true, repeat: true }), free)).toBeNull();
   });
 });

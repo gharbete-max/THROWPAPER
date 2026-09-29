@@ -1257,6 +1257,17 @@ export const svSE: Record<MessageKey, string> = {
   'review.why': 'Varför?',
   'review.whyLine': '{stage}, regel {rule}: {verdict}',
   'review.empty': 'Inget som kunde bli en fråga lästes ur det här dokumentet.',
+  'review.noQuestions':
+    'Inget lästes som en fråga. Om en rad är en fråga, markera den och välj ”Gör det här till en fråga”.',
+  'review.conflict':
+    'Formuläret ändrades i en annan flik eller ett annat fönster medan du granskade. Öppna det och se vad det innehåller nu innan du lägger till något.',
+  'review.stage.extract': 'Läsning av filen',
+  'review.stage.reassemble': 'Läsordning',
+  'review.stage.enumerate': 'Listnummer',
+  'review.stage.segment': 'Frågor och text',
+  'review.stage.classify': 'Svarstyper',
+  'review.stage.map': 'PDF-fält',
+  'review.stage.score': 'Säkerhet',
   'review.formField': 'Ett fält i PDF:en',
   'review.noLabel': 'Ingen etikett',
   'review.again': 'Läs ett annat dokument',

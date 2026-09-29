@@ -1290,6 +1290,17 @@ export const ruRU: Record<MessageKey, string> = {
   'review.why': 'Почему?',
   'review.whyLine': '{stage}, правило {rule}: {verdict}',
   'review.empty': 'В этом документе не удалось прочитать ничего, что могло бы стать вопросом.',
+  'review.noQuestions':
+    'Ничего не было прочитано как вопрос. Если строка — вопрос, выберите её и нажмите «Сделать вопросом».',
+  'review.conflict':
+    'Эту форму изменили в другой вкладке или окне, пока вы её проверяли. Откройте её и посмотрите, что в ней сейчас, прежде чем что-либо добавлять.',
+  'review.stage.extract': 'Чтение файла',
+  'review.stage.reassemble': 'Порядок чтения',
+  'review.stage.enumerate': 'Номера списков',
+  'review.stage.segment': 'Вопросы и текст',
+  'review.stage.classify': 'Типы ответов',
+  'review.stage.map': 'Поля PDF',
+  'review.stage.score': 'Уверенность',
   'review.formField': 'Поле в PDF',
   'review.noLabel': 'Без подписи',
   'review.again': 'Прочитать другой документ',

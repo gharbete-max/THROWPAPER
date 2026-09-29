@@ -29,9 +29,12 @@ export function SourcePane({
 }) {
   const t = useT();
   const pane = useRef<HTMLDivElement>(null);
+  // A line in two items (two questions read from one line) belongs to the first, as `itemOfLine`.
   const itemOf = useMemo(() => {
     const map = new Map<string, ReviewItem>();
-    for (const item of items) for (const line of item.lineIds) map.set(line, item);
+    for (const item of items) {
+      for (const line of item.lineIds) if (!map.has(line)) map.set(line, item);
+    }
     return map;
   }, [items]);
 
@@ -120,9 +123,13 @@ function PdfPage({
   }, []);
 
   useEffect(() => {
+    if (width === 0 || !canvas.current) return;
+    // A new width cancels the drawing still under way, before this one starts on the same canvas.
     // A page still drawing when its document is closed (another one read, or the screen left)
     // fails its render: nothing is waiting for that picture any more.
-    if (width > 0 && canvas.current) pdf.render(index, width, canvas.current).catch(() => {});
+    const drawing = new AbortController();
+    pdf.render(index, width, canvas.current, drawing.signal).catch(() => {});
+    return () => drawing.abort();
   }, [pdf, index, width]);
 
   return (

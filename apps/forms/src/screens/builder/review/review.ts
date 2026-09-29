@@ -72,8 +72,15 @@ export interface Review {
   readonly base: readonly ReviewItem[];
   readonly actions: readonly Action[];
   readonly items: readonly ReviewItem[];
-  /** Each line's words without their answer space, for splitting. */
-  readonly lines: ReadonlyMap<string, string>;
+  /** Each line's words, as printed and without its marker and answer space: for splitting. */
+  readonly lines: ReadonlyMap<string, LineWords>;
+}
+
+export interface LineWords {
+  /** As printed: text to read splits into these. */
+  readonly raw: string;
+  /** Less its list marker, its blanks and boxes, and a trailing colon: a label splits into these. */
+  readonly spoken: string;
 }
 
 /** Types a question may be when nothing says which: the classifier's own order for no evidence. */
@@ -93,12 +100,15 @@ function spokenText(text: string, marker: string | null): string {
     .trim();
 }
 
-function linesOf(layout: LayoutDocument, reading: Reading): Map<string, string> {
+function linesOf(layout: LayoutDocument, reading: Reading): Map<string, LineWords> {
   const markers = new Map(reading.lists.items.map((item) => [item.lineIds[0]!, item.marker.raw]));
   return new Map(
     layout.pages.flatMap((page) =>
       page.blocks.flatMap((block) =>
-        block.lines.map((line) => [line.id, spokenText(line.text, markers.get(line.id) ?? null)]),
+        block.lines.map((line) => [
+          line.id,
+          { raw: line.text, spoken: spokenText(line.text, markers.get(line.id) ?? null) },
+        ]),
       ),
     ),
   );
@@ -196,23 +206,29 @@ export function itemsOf(reading: Reading): ReviewItem[] {
       if (n === 0) covering.set(index, field);
     });
   }
-  const fieldItem = (field: (typeof fields)[number]): ReviewItem => ({
-    id: `field:${field.name}`,
-    kind: 'question',
-    lineIds: field.covers.flatMap((index) => segments[index]?.lineIds ?? []),
-    text: field.label ?? '',
-    options: [],
-    details: [],
-    rows: [],
-    columns: [],
-    rowCount: 0,
-    type: field.kind,
-    alternatives: [],
-    required: false,
-    bucket: field.bucket,
-    decided: false,
-    field: true,
-  });
+  // The field says what answers it; the text it sits on still says what is printed: the options
+  // beside a radio button, the notes under it, and whether it must be answered (#26).
+  const fieldItem = (field: (typeof fields)[number]): ReviewItem => {
+    const printed = field.covers.map((index) => segments[index]).filter((s) => s !== undefined);
+    const questions = printed.filter((segment) => segment.kind === 'question');
+    return {
+      id: `field:${field.name}`,
+      kind: 'question',
+      lineIds: printed.flatMap((segment) => segment.lineIds),
+      text: field.label ?? '',
+      options: questions.flatMap((segment) => segment.options),
+      details: questions.flatMap((segment) => segment.details),
+      rows: [],
+      columns: [],
+      rowCount: 0,
+      type: field.kind,
+      alternatives: [],
+      required: field.covers.some((index) => classified.get(index)?.required === 'yes'),
+      bucket: field.bucket,
+      decided: false,
+      field: true,
+    };
+  };
 
   const items: ReviewItem[] = [];
   segments.forEach((segment, index) => {
@@ -240,17 +256,99 @@ export function startReview(reading: Reading): Review {
 export type Refusal = 'no-item' | 'first' | 'form-field' | 'one-line' | 'not-a-chip' | 'already';
 
 const join = (a: string, b: string) => (a === '' ? b : b === '' ? a : `${a} ${b}`);
+const unique = (ids: readonly string[]) => [...new Set(ids)];
+const sameWords = (a: readonly string[], b: readonly string[]) =>
+  a.length === b.length && a.every((word, i) => word === b[i]);
 
-/** Text to read made of a question: its label, options and notes, each on its own line. */
+/** Every word an item holds besides its own text: what its label does not say. */
+function extras(item: ReviewItem): string[] {
+  return [...item.columns, ...item.options, ...item.rows, ...item.details].filter((w) => w !== '');
+}
+
+/** Text to read made of a question: its label, then its columns, options, rows and notes. */
 function asText(item: ReviewItem): string {
-  return [item.text, ...item.options, ...item.rows, ...item.details]
-    .filter((line) => line !== '')
-    .join('\n');
+  return [item.text, ...extras(item)].filter((line) => line !== '').join('\n');
+}
+
+/** Types that are nothing without the options, rows or columns a split leaves behind. */
+const STRUCTURED: ReadonlySet<Kind> = new Set([
+  'single_select',
+  'multi_select',
+  'grid',
+  'repeating_group',
+]);
+
+/** The chips for a question whose type is `type`: it first, then the unsure three. */
+function chipsFor(type: Kind): Kind[] {
+  return [type, ...UNSURE.filter((kind) => kind !== type)].slice(0, 3);
+}
+
+/**
+ * Two items as one: `item` into `before`. No word of either is lost.
+ *
+ * - A note under a question (text after it) stays its note.
+ * - Text before a question (a label printed on two lines) begins its label.
+ * - Two questions are one, with both labels, options and notes.
+ * - A question with a grid or a table is the grid or table, labelled by both; a grid or table
+ *   continued is one, when their columns are the same. Whatever the result has no place for — a
+ *   question's options beside a table, say — is kept as its notes.
+ * - Anything else is one text, or one heading, as `before` was.
+ */
+function merged(before: ReviewItem, item: ReviewItem): ReviewItem {
+  const lineIds = unique([...before.lineIds, ...item.lineIds]);
+  const settled = { id: before.id, lineIds, decided: true } as const;
+  if (!asks(before) && !asks(item)) {
+    return { ...before, ...settled, text: join(before.text, item.text) };
+  }
+  if (asks(before) && !asks(item)) {
+    return { ...before, ...settled, details: [...before.details, asText(item)] };
+  }
+  if (!asks(before)) {
+    return { ...item, ...settled, text: join(before.text.replace(/\n/g, ' '), item.text) };
+  }
+  const text = join(before.text, item.text);
+  const required = before.required || item.required;
+  if (before.kind === 'question' && item.kind === 'question') {
+    // A label, then its choices on the next line: the type is the choices'.
+    const typed = before.options.length === 0 && item.options.length > 0 ? item : before;
+    return {
+      ...before,
+      ...settled,
+      text,
+      required,
+      type: typed.type,
+      alternatives: typed.alternatives,
+      options: [...before.options, ...item.options],
+      details: [...before.details, ...item.details],
+    };
+  }
+  const structured = (x: ReviewItem) => x.kind === 'grid' || x.kind === 'table';
+  const host = structured(item) && !structured(before) ? item : before;
+  const other = host === item ? before : item;
+  if (host.kind === other.kind && sameWords(host.columns, other.columns)) {
+    // One grid, or one table, printed in two parts.
+    return {
+      ...host,
+      ...settled,
+      text,
+      required,
+      rows: [...before.rows, ...item.rows],
+      rowCount: before.rowCount + item.rowCount,
+      details: [...before.details, ...item.details],
+    };
+  }
+  return {
+    ...host,
+    ...settled,
+    text,
+    required,
+    details: [...host.details, ...extras(other)],
+  };
 }
 
 function apply(
   items: readonly ReviewItem[],
-  lines: ReadonlyMap<string, string>,
+  lines: ReadonlyMap<string, LineWords>,
   action: Action,
 ): ReviewItem[] | Refusal {
   const at = items.findIndex((item) => item.id === action.itemId);
@@ -298,47 +396,50 @@ function apply(
       if (at === 0) return 'first';
       const before = items[at - 1]!;
       if (item.field || before.field) return 'form-field';
-      const lineIds = [...before.lineIds, ...item.lineIds];
-      // A note under a question stays its note; anything else is one text, or one question.
-      const merged: ReviewItem =
-        asks(before) && !asks(item)
-          ? { ...before, lineIds, details: [...before.details, asText(item)], decided: true }
-          : {
-              ...before,
-              lineIds,
-              text: join(before.text, item.text),
-              options: [...before.options, ...item.options],
-              details: [...before.details, ...item.details],
-              rows: [...before.rows, ...item.rows],
-              columns: before.columns.length > 0 ? before.columns : item.columns,
-              decided: true,
-            };
-      return [...items.slice(0, at - 1), merged, ...items.slice(at + 1)];
+      return [...items.slice(0, at - 1), merged(before, item), ...items.slice(at + 1)];
     }
     case 'split': {
       if (item.field) return 'form-field';
       const cut = action.at;
       if (item.lineIds.length < 2 || cut < 1 || cut >= item.lineIds.length) return 'one-line';
-      const words = (ids: readonly string[]) =>
-        ids
-          .map((id) => lines.get(id) ?? '')
-          .filter((text) => text !== '')
-          .join(' ');
       const head = item.lineIds.slice(0, cut);
       const tail = item.lineIds.slice(cut);
-      return replaced(
-        { ...item, lineIds: head, text: words(head), decided: true },
-        {
+      // Each part is the words of its own lines, as printed: nothing is in both, nothing is lost.
+      // A question's parts are questions labelled by their lines; what answers each is asked again.
+      const words = (ids: readonly string[], as: keyof LineWords) =>
+        ids
+          .map((id) => lines.get(id)?.[as] ?? '')
+          .filter((text) => text !== '')
+          .join(' ');
+      const part = (id: string, ids: readonly string[], first: boolean): ReviewItem => {
+        if (!asks(item)) {
+          return {
+            ...item,
+            id,
+            lineIds: ids,
+            text: words(ids, item.kind === 'text' ? 'raw' : 'spoken'),
+            decided: true,
+          };
+        }
+        const type = item.type && !STRUCTURED.has(item.type) ? item.type : 'short_text';
+        return {
           ...item,
-          id: `${item.id}/${cut}`,
-          lineIds: tail,
-          text: words(tail),
+          id,
+          kind: 'question',
+          lineIds: ids,
+          text: words(ids, 'spoken'),
           options: [],
           details: [],
           rows: [],
+          columns: [],
+          rowCount: 0,
+          type,
+          alternatives: chipsFor(type),
+          required: first && item.required,
           decided: true,
-        },
-      );
+        };
+      };
+      return replaced(part(item.id, head, true), part(`${item.id}/${cut}`, tail, false));
     }
   }
 }
@@ -371,7 +472,7 @@ export function undo(review: Review): Review {
 // --- What the screen says ------------------------------------------------------------------
 
 export interface Counts {
-  /** Questions, grids and tables: "I read 14 questions." */
+  /** The questions the form would get: "I read 14 questions." (`questionsIn`) */
   readonly questions: number;
   /** Anything read with too little confidence, not yet settled: "3 need your eye." */
   readonly needEye: number;
@@ -381,10 +482,19 @@ export interface Counts {
   readonly texts: number;
 }
 
+/**
+ * How many questions an item becomes in the form: a grid of two or more columns is a question per
+ * row; anything else that asks is one. What "Add 14 questions" and the conversation's step count.
+ */
+export function questionsIn(item: ReviewItem): number {
+  if (!asks(item)) return 0;
+  return item.kind === 'grid' && item.columns.length > 1 ? item.rows.length : 1;
+}
+
 export function counts(items: readonly ReviewItem[]): Counts {
   const open = (bucket: Bucket) => items.filter((i) => i.bucket === bucket && !i.decided).length;
   return {
-    questions: items.filter(asks).length,
+    questions: items.reduce((sum, item) => sum + questionsIn(item), 0),
     needEye: open('review'),
     check: open('flag'),
     texts: items.filter((item) => !asks(item)).length,
@@ -393,14 +503,34 @@ export function counts(items: readonly ReviewItem[]): Counts {
 
 /**
  * "Use these questions" is pressed only when nothing still needs the person's eye: below the
- * threshold Loppa asks, it never guesses (`CLAUDE.md`, non-negotiable 3). A question the form
- * would take without a label is one of those.
+ * threshold Loppa asks, it never guesses (`CLAUDE.md`, non-negotiable 3). A question with no label
+ * is not held back — it says so on the screen, and the editor asks for one before publishing.
  */
 export function readyToUse(items: readonly ReviewItem[]): boolean {
   return items.length > 0 && counts(items).needEye === 0;
 }
 
-/** The item a line was read into: the source pane's half of the highlight. */
+/**
+ * The item a line was read into: the source pane's half of the highlight. A line read as two
+ * questions (two blanks on it, `split-line`) is in both; pressing it selects the first.
+ */
 export function itemOfLine(items: readonly ReviewItem[], lineId: string): ReviewItem | null {
   return items.find((item) => item.lineIds.includes(lineId)) ?? null;
+}
+
+/**
+ * What is selected after `before` became `after`: the same item if it is still there; else the one
+ * its first line is now in (merged into, or put back together by Undo); else the one in its place.
+ */
+export function follow(
+  before: readonly ReviewItem[],
+  after: readonly ReviewItem[],
+  selectedId: string | null,
+): string | null {
+  if (after.some((item) => item.id === selectedId)) return selectedId;
+  const was = before.findIndex((item) => item.id === selectedId);
+  const line = before[was]?.lineIds[0];
+  const holder = line === undefined ? null : itemOfLine(after, line);
+  if (holder) return holder.id;
+  return after[Math.min(Math.max(was, 0), after.length - 1)]?.id ?? null;
 }

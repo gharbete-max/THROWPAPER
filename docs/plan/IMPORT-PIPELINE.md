@@ -502,13 +502,26 @@ actions, counts), `fields.ts` (what each becomes) and `keys.ts`; the screen in `
   items are the way through, one stop each.
 - **The draft**: every question through `FormPreview` — the public page's own `FieldInput`, as the
   control it will become — and headings and text as they will read. A PDF's own form field (#54)
-  is one item with its field's type, never a guess, and is not merged or split.
+  is one item with its field's type, never a guess, and is not merged or split; the text it sits
+  on still gives it the options printed beside it, the notes under it, and a required mark (#26).
+  Nothing read is a dead end: while anything was read, both panes are there, and a reading with no
+  question says so and how to make one.
 - **The chips** are stage 5's top three kinds (`Classification.alternatives`), offered on what is
-  not `auto`. **Merge** joins an item to the one before it: a note under a question becomes the
-  question's note, anything else one item. **Split** makes two items at a line, each with its own
-  lines' words. **Just text** keeps every word (label, options, notes, a paragraph each);
-  **make this a question** is a question of unknown type, with chips. Keys as above, plus Q for
-  "make this a question" and ⌘/Ctrl+Z to undo.
+  not `auto`. **Make this a question** is a question of unknown type, with chips. Keys as above,
+  plus Q for "make this a question" and ⌘/Ctrl+Z to undo; a key held down moves on through the
+  items but acts once. The selection follows an action: onto what the selected item was merged
+  into, or put back together as by Undo.
+- **No word is lost, and none is in two places**, whatever the person does:
+  - **Merge** joins an item to the one before it. A note under a question becomes its note; text
+    before a question (a label printed on two lines) begins its label; two questions are one, with
+    both labels, options and notes, and the type of the one with choices; a question with a grid or table is the grid or table,
+    labelled by both, and what it has no place for (a question's options beside a table) is kept
+    as its notes; a grid or table printed in two parts, with the same columns, is one. A line read
+    as two questions (`split-line`) is in the merged item once.
+  - **Split** makes two items at a line, each the words of its own lines. A question's parts are
+    questions labelled by their lines, each asked its type again: a choice without its options
+    would be a choice of placeholders.
+  - **Just text** keeps every word: label, columns, options, rows and notes, a line each.
 - **"Use these questions" is shut while anything needs your eye** — `review` and not yet settled.
   Below the threshold Loppa asks and never guesses; one Enter settles an item.
 - **The review's actions stay on the screen**, with their own Undo, as a list replayed from the
@@ -520,11 +533,25 @@ actions, counts), `fields.ts` (what each becomes) and `keys.ts`; the screen in `
 - **What a reading becomes.** Every word verbatim, in the form's language. Money becomes a number
   with two decimals. An address becomes long text. A personnummer or an organisation number
   becomes short text; its check is S12's. Consent becomes yes/no, its text byte for byte (#28). A
-  grid becomes one single choice per row, under a section of its label; a grid of one column is a
-  list to tick. A table becomes a repeating group, a question per column, with as many entries as
-  it printed rows. Headings become section breaks; text becomes text blocks. Ids are fingerprints
-  of the document's text and place, and never one the form used. Keys come from the labels, without
-  their accents.
+  grid becomes a choice per row, under a section of its label: one of its columns, or any number
+  when its "Multiple choice" chip is picked; a grid of one column is a list to tick, its header
+  the help. A table becomes a repeating group, a question per column, with as many entries as it
+  printed rows. Notes are help text, and so are a question's options when it is given a type that
+  holds none (a yes/no's printed pair is the type itself). Headings become section breaks; text becomes text blocks. Ids
+  are fingerprints of the document's text and place, and never one the form used. Keys come from
+  the labels, without their accents, and each is its own within the form and within a group: two
+  columns of one name, or of a script a key cannot hold ("Имя", "氏名"), are `namn`, `namn_2`.
+- **How many questions** is how many the form will have: a grid of two or more columns is a
+  question per row. "I read 14 questions", "Add 14 questions" and the step in the conversation
+  (`{ kind: 'import', count }`, the questions without the headings and text that come with them)
+  all say the same number.
+- **Why?** names each stage, and a verdict the person has seen (a type, how sure, what a line was
+  read as), in their language; a rule's code and its own words stay as `docs/plan/` defines them.
+- **Saved in another tab meanwhile.** "Use these questions" saves the draft and then the session;
+  if another tab saved the session after this screen read it, the screen says so and adds nothing
+  more — the draft may already hold the questions, and adding them again would add them twice.
+  The form's editor shows what it holds. Nothing can be left, by Cancel, while the questions are
+  being saved.
 - **Not yet here**: photographed and scanned pages (the review points to the editor's paper import);
   the decided slots an import records, and the conversation walking only what is undecided (S12);
   re-import (stage 9, S12).

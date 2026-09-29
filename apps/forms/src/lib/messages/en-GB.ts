@@ -1275,6 +1275,17 @@ export const enGB = {
   'review.why': 'Why?',
   'review.whyLine': '{stage}, rule {rule}: {verdict}',
   'review.empty': 'Nothing that could become a question was read from this document.',
+  'review.noQuestions':
+    'Nothing was read as a question. If a line is one, select it and choose “Make this a question”.',
+  'review.conflict':
+    'This form was changed in another tab or window while you were reviewing. Open it to see what it holds now before adding anything.',
+  'review.stage.extract': 'Reading the file',
+  'review.stage.reassemble': 'Reading order',
+  'review.stage.enumerate': 'List numbers',
+  'review.stage.segment': 'Questions and text',
+  'review.stage.classify': 'Answer types',
+  'review.stage.map': 'PDF fields',
+  'review.stage.score': 'Confidence',
   'review.formField': 'A field in the PDF',
   'review.noLabel': 'No label',
   'review.again': 'Read another document',

@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import {
-  BUILDER_GRAPH,
-  importQuestions,
-  MachineError,
-  type Conversation,
-} from '@tp/shared/builder';
+import { BUILDER_GRAPH, importQuestions, type Conversation } from '@tp/shared/builder';
 import { MAX_PAPER_PAGES } from '@tp/shared/forms';
 import { MAX_PASTE } from '@tp/shared/import';
 import { LoadFailed } from '../../../components/LoadFailed.js';
@@ -24,7 +19,16 @@ import { DocxRefused } from '../paper/refusal.js';
 import { DraftPane } from './DraftPane.js';
 import { fieldsOf } from './fields.js';
 import { reviewKey } from './keys.js';
-import { act, counts, readyToUse, startReview, undo, type Action, type Review } from './review.js';
+import {
+  act,
+  counts,
+  follow,
+  readyToUse,
+  startReview,
+  undo,
+  type Action,
+  type Review,
+} from './review.js';
 import { SourcePane } from './SourcePane.js';
 
 /**
@@ -58,6 +62,16 @@ export function ReviewScreen() {
   const [read, setRead] = useState<{ reading: Reading; pdf: PaperPdf | null } | null>(null);
   const [review, setReview] = useState<Review | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  /** Somebody saved this form's conversation in another tab: nothing more is added from here. */
+  const [conflict, setConflict] = useState(false);
+  /** Whether the screen is still open, for a document that finishes reading after it was left. */
+  const open = useRef(true);
+  useEffect(
+    () => () => {
+      open.current = false;
+    },
+    [],
+  );
 
   const load = useCallback(() => {
     if (!id) return;
@@ -107,6 +121,10 @@ export function ReviewScreen() {
   }
 
   function opened(reading: Reading, pdf: PaperPdf | null) {
+    if (!open.current) {
+      void pdf?.close();
+      return;
+    }
     const started = startReview(reading);
     setRead({ reading, pdf });
     setReview(started);
@@ -152,12 +170,20 @@ export function ReviewScreen() {
     }
   }
 
+  /** The review after `step`, with the selection on what became of the selected item. */
+  function change(step: (current: Review) => Review) {
+    if (!review) return;
+    const next = step(review);
+    setReview(next);
+    setSelectedId(follow(review.items, next.items, selectedId));
+  }
+
   function perform(action: Action) {
-    setReview((current) => (current ? act(current, action) : current));
+    change((current) => act(current, action));
   }
 
   async function use() {
-    if (!review || !conversation || !saver.current || !id) return;
+    if (!review || !conversation || !saver.current || !id || conflict) return;
     setError(null);
     let next: Conversation;
     try {
@@ -167,15 +193,23 @@ export function ReviewScreen() {
         locale: contentLocale,
       });
       next = importQuestions(conversation, fields);
-    } catch (cause) {
-      if (!(cause instanceof MachineError)) throw cause;
+    } catch {
+      // Refused by the machine, or a question the form cannot hold: said, never left unhandled.
       setError(t('review.useFailed'));
       return;
     }
     setPhase('using');
+    // The saver never rejects: how it went is its status.
     const current = saver.current;
     await current.save(next);
     await current.settled();
+    if (current.status === 'conflict') {
+      // The draft may already hold the questions; adding them again would add them twice.
+      setConflict(true);
+      setPhase('review');
+      setError(t('review.conflict'));
+      return;
+    }
     if (current.status !== 'saved') {
       setPhase('review');
       setError(t('review.useFailed'));
@@ -202,7 +236,7 @@ export function ReviewScreen() {
       event.preventDefault();
       const at = review.items.findIndex((item) => item.id === selectedId);
       const item = review.items[at];
-      if (key.kind === 'undo') setReview(undo(review));
+      if (key.kind === 'undo') change(undo);
       else if (key.kind === 'move') {
         const next = review.items[Math.min(review.items.length - 1, Math.max(0, at + key.by))];
         if (next) setSelectedId(next.id);
@@ -211,11 +245,7 @@ export function ReviewScreen() {
         const type = item.alternatives[key.index];
         if (type) perform({ kind: 'pick', itemId: item.id, type });
       } else if (key.kind === 'split') perform({ kind: 'split', itemId: item.id, at: 1 });
-      else if (key.kind === 'merge') {
-        perform({ kind: 'merge', itemId: item.id });
-        const before = review.items[at - 1];
-        if (before && !before.field && !item.field) setSelectedId(before.id);
-      } else perform({ kind: key.kind, itemId: item.id });
+      else perform({ kind: key.kind, itemId: item.id });
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -315,9 +345,12 @@ export function ReviewScreen() {
         <p className="small muted">{t('review.keys')}</p>
       </header>
 
-      {tally.questions === 0 ? (
-        <p className="status-warning">{t('review.empty')}</p>
-      ) : (
+      {tally.questions === 0 && (
+        <p className="status-warning">
+          {review.items.length === 0 ? t('review.empty') : t('review.noQuestions')}
+        </p>
+      )}
+      {review.items.length > 0 && (
         <div className="review__panes">
           <SourcePane
             layout={read.reading.layout}
@@ -350,7 +383,7 @@ export function ReviewScreen() {
           <button
             type="button"
             className="button"
-            disabled={!ready || tally.questions === 0 || phase === 'using'}
+            disabled={!ready || tally.questions === 0 || phase === 'using' || conflict}
             onClick={() => void use()}
           >
             {phase === 'using' ? t('review.using') : t('review.use', { count: tally.questions })}
@@ -360,7 +393,7 @@ export function ReviewScreen() {
             className="button button--quiet"
             disabled={review.actions.length === 0 || phase === 'using'}
             aria-keyshortcuts="Control+Z Meta+Z"
-            onClick={() => setReview(undo(review))}
+            onClick={() => change(undo)}
           >
             {t('review.undo')}
           </button>
@@ -371,6 +404,7 @@ export function ReviewScreen() {
             onClick={() => {
               setRead(null);
               setReview(null);
+              setSelectedId(null);
               setPasting(false);
               setPasted('');
               setError(null);
@@ -379,9 +413,15 @@ export function ReviewScreen() {
           >
             {t('review.again')}
           </button>
-          <Link className="button button--bare" to={editor}>
+          {/* Not while the questions are saved: the editor would open on the draft before them. */}
+          <button
+            type="button"
+            className="button button--bare"
+            disabled={phase === 'using'}
+            onClick={() => navigate(editor)}
+          >
             {t('review.cancel')}
-          </Link>
+          </button>
         </div>
       </footer>
     </section>

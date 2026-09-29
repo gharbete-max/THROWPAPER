@@ -1268,6 +1268,17 @@ export const fiFI: Record<MessageKey, string> = {
   'review.why': 'Miksi?',
   'review.whyLine': '{stage}, sääntö {rule}: {verdict}',
   'review.empty': 'Tästä asiakirjasta ei luettu mitään, mistä voisi tulla kysymys.',
+  'review.noQuestions':
+    'Mitään ei luettu kysymykseksi. Jos rivi on kysymys, valitse se ja sitten “Tee tästä kysymys”.',
+  'review.conflict':
+    'Lomaketta muutettiin toisessa välilehdessä tai ikkunassa tarkistuksesi aikana. Avaa se ja katso, mitä se nyt sisältää, ennen kuin lisäät mitään.',
+  'review.stage.extract': 'Tiedoston lukeminen',
+  'review.stage.reassemble': 'Lukujärjestys',
+  'review.stage.enumerate': 'Luettelonumerot',
+  'review.stage.segment': 'Kysymykset ja teksti',
+  'review.stage.classify': 'Vastaustyypit',
+  'review.stage.map': 'PDF-kentät',
+  'review.stage.score': 'Varmuus',
   'review.formField': 'PDF:n kenttä',
   'review.noLabel': 'Ei nimikettä',
   'review.again': 'Lue toinen asiakirja',

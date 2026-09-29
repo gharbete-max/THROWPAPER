@@ -29,8 +29,13 @@ import { asks, type ReviewItem } from './review.js';
  * | address | long text (an address is several lines) |
  * | personnummer, organisation number | short text; the number's own check is S12's |
  * | consent | yes/no, as the wizard asks for a consent — its text kept byte for byte (#28) |
- * | grid | one single choice per row under a heading of the grid's label; a grid of one column is a list to tick (`CAVEATS.md`, known unknowns: the grid fallback) |
+ * | grid | a choice per row under a heading of the grid's label: one of its columns ("Grid"), or any number ("Multiple choice"); a grid of one column is a list to tick, its column's header as help (`CAVEATS.md`, known unknowns: the grid fallback) |
  * | table | a repeating group, a question per column, as many entries as it printed rows |
+ *
+ * Notes an item carries — printed under a question, or kept by a merge — are its help text; a
+ * grid's are its heading's, or text to read above its rows when it has no heading. So are a
+ * question's options when it is given a type that has none (short text, say): the person sees them
+ * in the preview, and the editor has them to delete. A yes/no's printed pair is the type itself.
  * | heading | a section break |
  * | text to read | text, one paragraph per line it was read as |
  *
@@ -127,12 +132,15 @@ export function fieldsOf(
   const question = (item: ReviewItem, label: string, kind: Kind, extra: object = {}) => {
     const type = fieldTypeOf(kind);
     const { id, key } = name(label || item.id, label, type);
-    const options =
-      type === 'single_select' || type === 'multi_select'
-        ? item.options.length > 0
-          ? labelledOptions([], item.options, locale)
-          : resizeOptions([], DEFAULT_OPTION_COUNT)
-        : undefined;
+    const choice = type === 'single_select' || type === 'multi_select';
+    const options = choice
+      ? item.options.length > 0
+        ? labelledOptions([], item.options, locale)
+        : resizeOptions([], DEFAULT_OPTION_COUNT)
+      : undefined;
+    // Options a type has no place for are kept as help, but a yes/no's pair is the type itself.
+    const kept = choice || type === 'yes_no' ? [] : item.options;
+    const help = [...kept, ...item.details];
     out.push(
       Field.parse({
         id,
@@ -140,7 +148,7 @@ export function fieldsOf(
         type,
         label: label === '' ? {} : words(label),
         required: item.required,
-        ...(item.details.length > 0 ? { helpText: words(item.details.join('\n')) } : {}),
+        ...(help.length > 0 ? { helpText: words(help.join('\n')) } : {}),
         ...(options ? { options } : {}),
         ...(kind === 'money' ? { decimals: 2 } : {}),
         ...extra,
@@ -164,17 +172,26 @@ export function fieldsOf(
 
     if (item.kind === 'grid') {
       if (item.columns.length <= 1) {
-        // A grid of one column is a list to tick: its rows are the options.
-        question({ ...item, options: item.rows }, item.text, 'multi_select');
+        // A grid of one column is a list to tick: its rows are the options, its header the help.
+        const help = [...item.columns.filter((column) => column !== ''), ...item.details];
+        question({ ...item, options: item.rows, details: help }, item.text, 'multi_select');
         continue;
       }
+      const help = item.details.length > 0 ? { helpText: words(item.details.join('\n')) } : {};
       if (item.text !== '') {
         const { id, key } = name(item.text, item.text, 'section');
         section = id;
-        out.push(Field.parse({ id, key, type: 'section_break', label: words(item.text) }));
+        out.push(Field.parse({ id, key, type: 'section_break', label: words(item.text), ...help }));
+      } else if (item.details.length > 0) {
+        const { id, key } = name(item.details.join('\n'), 'text', 'text');
+        out.push(
+          Field.parse({ id, key, type: 'rich_text', content: words(item.details.join('\n')) }),
+        );
       }
+      // "Grid": one of the columns per row. "Multiple choice": any number of them.
+      const each = item.type === 'multi_select' ? 'multi_select' : 'single_select';
       for (const row of item.rows) {
-        question({ ...item, options: item.columns, details: [] }, row, 'single_select');
+        question({ ...item, options: item.columns, details: [] }, row, each);
       }
       continue;
     }
@@ -183,23 +200,27 @@ export function fieldsOf(
       const label = item.text;
       const { id, key } = name(label || item.id, label, 'group');
       const columns = item.columns.length > 0 ? item.columns : [label];
+      // Keys within the group are taken one by one: two columns of the same name, or two with no
+      // letters a key can hold ("Имя", "氏名"), still get their own.
       const inner = new Set<string>();
-      const fields = columns.map((column, at) =>
-        EntryField.parse({
+      const fields = columns.map((column, at) => {
+        const inside = uniqueKey(labelKey(column, 'answer'), inner);
+        inner.add(inside);
+        return EntryField.parse({
           id: innerId(`${label}|${column}`, at + 1),
-          key: uniqueKey(labelKey(column, 'answer'), inner),
+          key: inside,
           type: 'short_text',
           label: column === '' ? {} : words(column),
           required: false,
-        }),
-      );
-      for (const field of fields) inner.add(field.key);
+        });
+      });
       out.push(
         Field.parse({
           id,
           key,
           type: 'repeating_group',
           label: label === '' ? {} : words(label),
+          ...(item.details.length > 0 ? { helpText: words(item.details.join('\n')) } : {}),
           required: item.required,
           fields,
           min: 0,

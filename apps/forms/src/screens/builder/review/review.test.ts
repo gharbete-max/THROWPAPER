@@ -9,7 +9,10 @@ import { fieldsOf, fieldTypeOf, labelKey } from './fields.js';
 import {
   act,
   counts,
+  follow,
   itemOfLine,
+  itemsOf,
+  questionsIn,
   readyToUse,
   refusal,
   replay,
@@ -171,6 +174,222 @@ describe('what the person does', () => {
   });
 });
 
+describe('no word lost, none twice', () => {
+  const choice = () =>
+    startReview(paste('Välj dag\nVilken? ☐ Lördag ☐ Söndag\nObs: ta med matsäck'));
+
+  it('a question merged into the text before it takes that text into its label', () => {
+    const review = choice();
+    const merged = act(review, { kind: 'merge', itemId: review.items[1]!.id });
+    expect(merged.items[0]).toMatchObject({
+      id: review.items[0]!.id,
+      kind: 'question',
+      text: 'Välj dag Vilken?',
+      options: ['Lördag', 'Söndag'],
+      decided: true,
+    });
+    // And the note after it is its note: every word, in the form.
+    const noted = act(merged, { kind: 'merge', itemId: merged.items[1]!.id });
+    const [field] = fieldsFrom(noted.items);
+    expect(field).toMatchObject({
+      type: 'single_select',
+      label: { 'sv-SE': 'Välj dag Vilken?' },
+      helpText: { 'sv-SE': 'Obs: ta med matsäck' },
+      options: [{ label: { 'sv-SE': 'Lördag' } }, { label: { 'sv-SE': 'Söndag' } }],
+    });
+  });
+
+  it('"this is just text" keeps a table’s columns and a question’s options', () => {
+    const table = startReview(fixture('table-rows'));
+    const text = act(table, { kind: 'text', itemId: table.items[0]!.id });
+    expect(text.items[0]!.text.split('\n')).toEqual(['Deltagare', 'Namn', 'Telefon', 'E-post']);
+    const unlabelled = startReview(fixture('table-rows'));
+    const bare = { ...unlabelled, items: [{ ...unlabelled.items[0]!, text: '' }] };
+    const words = act(bare, { kind: 'text', itemId: bare.items[0]!.id }).items[0]!.text;
+    expect(words).toBe('Namn\nTelefon\nE-post');
+    const review = choice();
+    expect(act(review, { kind: 'text', itemId: review.items[1]!.id }).items[1]!.text).toBe(
+      'Vilken?\nLördag\nSöndag',
+    );
+  });
+
+  it('two questions merged take the type of the one with choices; a type without them keeps them as help', () => {
+    const review = startReview(paste('Namn: ____\nVilken dag? ☐ Lördag ☐ Söndag'));
+    const [name, day] = review.items;
+    expect([name!.type, day!.type]).toEqual(['short_text', 'single_select']);
+    const merged = act(review, { kind: 'merge', itemId: day!.id }).items[0]!;
+    expect(merged).toMatchObject({
+      text: 'Namn Vilken dag?',
+      type: 'single_select',
+      options: ['Lördag', 'Söndag'],
+    });
+    const [asText] = fieldsFrom([{ ...merged, type: 'short_text' }]);
+    expect(asText).toMatchObject({
+      type: 'short_text',
+      helpText: { 'sv-SE': 'Lördag\nSöndag' },
+    });
+    const [yesNo] = fieldsFrom([{ ...merged, type: 'yes_no', options: ['Ja', 'Nej'] }]);
+    expect(yesNo).not.toHaveProperty('helpText');
+  });
+
+  it('a question merged with a table is the table, its options kept as notes', () => {
+    const table = startReview(fixture('table-rows')).items[0]!;
+    const question = choice().items[1]!;
+    const review = { ...choice(), base: [question, table], items: [question, table] };
+    const merged = act(review, { kind: 'merge', itemId: table.id }).items[0]!;
+    expect(merged).toMatchObject({
+      kind: 'table',
+      text: 'Vilken? Deltagare',
+      columns: ['Namn', 'Telefon', 'E-post'],
+      details: ['Lördag', 'Söndag'],
+    });
+    expect(fieldsFrom([merged])[0]).toMatchObject({
+      type: 'repeating_group',
+      helpText: { 'sv-SE': 'Lördag\nSöndag' },
+    });
+  });
+
+  it('a grid printed in two parts is one grid', () => {
+    const grid = startReview(fixture('checkbox-grid')).items.find((i) => i.kind === 'grid')!;
+    const rest = { ...grid, id: 'rest', lineIds: ['p9-l1'], text: '', rows: ['Sista raden'] };
+    const review = { ...startReview(fixture('checkbox-grid')), items: [grid, rest] };
+    const merged = act(review, { kind: 'merge', itemId: 'rest' }).items[0]!;
+    expect(merged.rows).toEqual([...grid.rows, 'Sista raden']);
+    expect(merged.details).toEqual([]);
+  });
+
+  it('a split question is two, each with its own lines’ words; nothing is in both', () => {
+    const review = startReview(
+      paste('1. Kön * ☐ Man ☐ Kvinna\n   Välj det som passar.\n2. Namn: ____'),
+    );
+    const sex = review.items[0]!;
+    expect(sex).toMatchObject({ options: ['Man', 'Kvinna'], details: ['Välj det som passar.'] });
+    const [head, tail] = act(review, { kind: 'split', itemId: sex.id, at: 1 }).items;
+    expect(head).toMatchObject({
+      text: 'Kön * Man Kvinna',
+      options: [],
+      details: [],
+      required: true,
+    });
+    expect(tail).toMatchObject({ text: 'Välj det som passar.', options: [], required: false });
+    // A choice without its options would be a choice of placeholders: each part is asked again.
+    expect([head!.type, tail!.type]).toEqual(['short_text', 'short_text']);
+    expect(head!.alternatives).toEqual(['short_text', 'long_text', 'number']);
+  });
+
+  it('a split table is two questions, not two tables with the same columns', () => {
+    const table = startReview(fixture('table-rows'));
+    const parts = act(table, { kind: 'split', itemId: table.items[0]!.id, at: 1 }).items;
+    expect(parts.slice(0, 2).map((i) => [i.kind, i.columns, i.rowCount])).toEqual([
+      ['question', [], 0],
+      ['question', [], 0],
+    ]);
+    const words = parts.slice(0, 2).flatMap((i) => i.text.split(' '));
+    expect(new Set(words).size).toBe(words.length);
+  });
+
+  it('text merged and split again keeps its lines as printed', () => {
+    const review = startReview(paste('Tack för att du deltar i\nårets möte i föreningen.'));
+    const text = act(review, { kind: 'merge', itemId: review.items[1]!.id });
+    expect(text.items).toHaveLength(1);
+    expect(text.items[0]).toMatchObject({
+      kind: 'text',
+      text: 'Tack för att du deltar i årets möte i föreningen.',
+    });
+    const parts = act(text, { kind: 'split', itemId: text.items[0]!.id, at: 1 }).items;
+    expect(parts.map((i) => [i.kind, i.text])).toEqual([
+      ['text', 'Tack för att du deltar i'],
+      ['text', 'årets möte i föreningen.'],
+    ]);
+  });
+
+  it('two questions read from one line are merged into one, on that line once', () => {
+    const review = startReview(paste('Namn: ____ Telefon: ____\nAdress: ____'));
+    expect(review.items.slice(0, 2).map((i) => [i.id, i.lineIds])).toEqual([
+      ['p1-l1', ['p1-l1']],
+      ['p1-l1#2', ['p1-l1']],
+    ]);
+    const merged = act(review, { kind: 'merge', itemId: 'p1-l1#2' });
+    expect(merged.items[0]).toMatchObject({ text: 'Namn Telefon', lineIds: ['p1-l1'] });
+    // One line: nothing to split it at.
+    expect(refusal(merged, { kind: 'split', itemId: 'p1-l1', at: 1 })).toBe('one-line');
+    expect(itemOfLine(review.items, 'p1-l1')?.id).toBe('p1-l1');
+  });
+});
+
+describe('a PDF’s own form field', () => {
+  it('keeps the options, notes and required mark printed where it sits (#54, #26)', () => {
+    const reading = paste('1. Kön * ☐ Man ☐ Kvinna\n   Välj det som passar.\n2. Namn: ____');
+    const withField: Reading = {
+      ...reading,
+      fields: {
+        fields: [
+          {
+            name: 'kon',
+            label: 'Kön',
+            labelFrom: 'field',
+            kind: 'single_select',
+            confidence: 1000,
+            bucket: 'auto',
+            covers: [0],
+          },
+        ],
+        covered: [0],
+      },
+    };
+    const [field, name] = itemsOf(withField);
+    expect(field).toMatchObject({
+      id: 'field:kon',
+      field: true,
+      text: 'Kön',
+      options: ['Man', 'Kvinna'],
+      details: ['Välj det som passar.'],
+      required: true,
+      lineIds: ['p1-l1', 'p1-l2'],
+    });
+    expect(name!.text).toBe('Namn');
+    expect(fieldsFrom([field!])[0]).toMatchObject({
+      type: 'single_select',
+      required: true,
+      options: [{ label: { 'sv-SE': 'Man' } }, { label: { 'sv-SE': 'Kvinna' } }],
+      helpText: { 'sv-SE': 'Välj det som passar.' },
+    });
+  });
+});
+
+describe('what is selected after an action', () => {
+  const start = () => startReview(paste('1. Question one\n2. Question two\nThanks for your help'));
+
+  it('stays on an item still there, moves to what it was merged into, and back on Undo', () => {
+    const review = start();
+    const [one, two] = review.items;
+    expect(follow(review.items, review.items, two!.id)).toBe(two!.id);
+    const merged = act(review, { kind: 'merge', itemId: two!.id });
+    expect(follow(review.items, merged.items, two!.id)).toBe(one!.id);
+    const split = act(merged, { kind: 'split', itemId: one!.id, at: 1 });
+    const second = split.items[1]!;
+    expect(second.id).toBe(`${one!.id}/1`);
+    expect(follow(split.items, undo(split).items, second.id)).toBe(one!.id);
+    expect(follow(review.items, [], one!.id)).toBeNull();
+  });
+});
+
+describe('how many questions', () => {
+  it('a grid is a question per row, as the form will have them; the machine counts the same', () => {
+    const items = startReview(fixture('checkbox-grid')).items;
+    const grid = items.find((i) => i.kind === 'grid')!;
+    expect(questionsIn(grid)).toBe(grid.rows.length);
+    expect(questionsIn({ ...grid, columns: ['Ja'] })).toBe(1);
+    const c = begin(BUILDER_GRAPH, {
+      definition: emptyDefinition,
+      title: {},
+      pending: { brandKitExists: false, canChangeBrand: true },
+    });
+    const after = importQuestions(c, fieldsFrom(items));
+    expect(after.log[0]!.answer).toEqual({ kind: 'import', count: counts(items).questions });
+  });
+});
+
 describe('what needs the person’s eye', () => {
   const unsure: ReviewItem = {
     id: 'x',
@@ -262,6 +481,29 @@ describe('the questions they become', () => {
         ? group.fields.map((f) => ('label' in f ? f.label['sv-SE'] : null))
         : [],
     ).toEqual(['Namn', 'Telefon', 'E-post']);
+  });
+
+  it('a grid’s "Multiple choice" chip: any number of its columns per row', () => {
+    const grid = startReview(fixture('checkbox-grid')).items.find((i) => i.kind === 'grid')!;
+    const fields = fieldsFrom([{ ...grid, type: 'multi_select' }]);
+    const rows = fields.filter((f) => f.type !== 'section_break');
+    expect(rows.map((f) => f.type)).toEqual(grid.rows.map(() => 'multi_select'));
+  });
+
+  it('a table’s columns each get their own key, whatever their words', () => {
+    const table = startReview(fixture('table-rows')).items[0]!;
+    const keysOf = (columns: string[]) => {
+      const [group] = fieldsFrom([{ ...table, columns }]);
+      return group && 'fields' in group ? group.fields.map((f) => f.key) : [];
+    };
+    expect(keysOf(['Namn', 'Namn'])).toEqual(['namn', 'namn_2']);
+    expect(keysOf(['Datum', 'Datum:'])).toEqual(['datum', 'datum_2']);
+    expect(keysOf(['Имя', 'Фамилия', 'Телефон'])).toEqual(['answer', 'answer_2', 'answer_3']);
+    const definition = {
+      ...emptyDefinition,
+      fields: fieldsFrom([{ ...table, columns: ['氏名', '電話'] }]),
+    };
+    expect(definitionProblems(definition)).toEqual([]);
   });
 
   it('keys from labels, accents and all; ids the same every time and never one used before', () => {

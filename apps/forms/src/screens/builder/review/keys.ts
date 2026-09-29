@@ -14,7 +14,8 @@
  * | ⌘/Ctrl+Z | undo the last action |
  *
  * None of them while focus is in a text box, and no letter with ⌘, Ctrl or Alt held: those are
- * the browser's.
+ * the browser's. A key held down moves on through the items, but acts once: holding M does not
+ * merge its way up the document.
  */
 
 export type ReviewKey =
@@ -33,6 +34,8 @@ export interface ReviewKeyPress {
   readonly ctrlKey: boolean;
   readonly metaKey: boolean;
   readonly shiftKey: boolean;
+  /** The key is held down, and this press is its repeat. */
+  readonly repeat: boolean;
 }
 
 export interface ReviewKeyContext {
@@ -51,6 +54,11 @@ const LETTERS: Readonly<Record<string, ReviewKey>> = {
 
 /** The action for a key press, or null to leave it to the browser. */
 export function reviewKey(press: ReviewKeyPress, context: ReviewKeyContext): ReviewKey | null {
+  const key = pressed(press, context);
+  return press.repeat && key?.kind !== 'move' ? null : key;
+}
+
+function pressed(press: ReviewKeyPress, context: ReviewKeyContext): ReviewKey | null {
   if (context.typing) return null;
   const command = press.ctrlKey || press.metaKey;
   if (command && !press.altKey && !press.shiftKey && press.key.toLowerCase() === 'z') {

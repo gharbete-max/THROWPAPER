@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { LocaleConfig } from '@tp/i18n';
 import { messages } from '../../../lib/messages/all.js';
 import { readDocument } from '../paper/pipeline.js';
-import { DraftPane, kindName } from './DraftPane.js';
+import { DraftPane, kindName, verdictName } from './DraftPane.js';
 import { act, startReview, type Review } from './review.js';
 import { SourcePane } from './SourcePane.js';
 
@@ -81,6 +81,33 @@ describe('the draft pane', () => {
     const html = draft(picked, null);
     expect(html).toContain(en('review.settled'));
     expect(html).toContain('aria-pressed="true"');
+  });
+
+  it('says why in the person’s words: the stage by name, a verdict they have seen by its name', () => {
+    const question = start.items.find((item) => item.text === 'Question one')!;
+    const html = draft(start, question.id);
+    expect(html).toContain(en('review.stage.segment'));
+    expect(html).toContain(en('review.stage.classify'));
+    expect(html).toContain(en('review.stage.score'));
+    expect(html).not.toMatch(/>segment, /);
+    expect(verdictName('short_text')).toBe('fieldType.short_text');
+    expect(verdictName('money')).toBe('review.type.money');
+    expect(verdictName('flag')).toBe('review.bucket.flag');
+    expect(verdictName('question:blank')).toBe('review.kind.question');
+    expect(verdictName('instruction')).toBe('review.kind.text');
+    // The rules' own words stay theirs: `docs/plan/` defines them.
+    expect(verdictName('prose')).toBeNull();
+    for (const stage of [
+      'extract',
+      'reassemble',
+      'enumerate',
+      'segment',
+      'classify',
+      'map',
+      'score',
+    ]) {
+      expect(messages[`review.stage.${stage}`], stage).toBeDefined();
+    }
   });
 
   it('names every kind a chip can offer', () => {
