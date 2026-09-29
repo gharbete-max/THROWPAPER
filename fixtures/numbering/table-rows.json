@@ -2,7 +2,7 @@
   "fixture": "table-rows",
   "caveats": ["table-rows"],
   "stage": "segment",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S9",
   "summary": "A table with a header row and three ruled, numbered empty rows is one repeating table (Namn, Telefon, E-post × 3), not three questions called \"1\", \"2\", \"3\".",
   "input": {

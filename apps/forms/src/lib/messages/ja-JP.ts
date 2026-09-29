@@ -887,7 +887,8 @@ export const jaJP: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:other {count} 行',
   'paper.read.items': 'plural:other 番号付きの項目 {count} 件',
   'paper.read.noText': 'このファイルには印刷されたテキストが見つかりませんでした。',
-  'paper.read.unchanged': '読み取った内容を順番に表示しています。フォームは変更されません。',
+  'paper.read.unchanged':
+    '読み取った内容を順番に表示しています。フォームは変更されません。質問になる前に、内容を確認していただきます。',
   'paper.read.download': '読み取った内容をダウンロード',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': '署名',

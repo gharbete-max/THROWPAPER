@@ -42,5 +42,79 @@
       "marker": "10.",
       "label": "Simkunnig"
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmälan till sommarlägret"
+    },
+    {
+      "kind": "instruction",
+      "text": "Fyll i uppgifterna nedan och lämna blanketten till din ledare senast den 15 maj. Vi behöver veta vem du är, hur vi når dig och dina föräldrar, och om det finns något vi måste tänka på under lägret."
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Födelsedatum",
+      "answer": "unknown",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Adress",
+      "answer": "unknown",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "Postnummer och ort",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "unknown",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Förälders namn",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Förälders telefon",
+      "answer": "unknown",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Allergier",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Mediciner",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Simkunnig",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "instruction",
+      "text": "Lägret kostar 1 200 kronor, som betalas in till föreningens bankgiro senast den 1 juni. Om du har frågor om lägret kan du vänligen kontakta din ledare, som gärna berättar mer."
+    }
   ]
 }

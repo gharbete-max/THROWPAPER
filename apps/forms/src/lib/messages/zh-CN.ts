@@ -848,7 +848,8 @@ export const zhCN: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:other {count} 行',
   'paper.read.items': 'plural:other {count} 个编号项',
   'paper.read.noText': '在该文件中未找到打印文本。',
-  'paper.read.unchanged': '以下是按顺序读取的内容。您的表单不会改变。',
+  'paper.read.unchanged':
+    '以下是按顺序读取的内容。您的表单不会改变：在任何内容成为问题之前，您都会先检查一遍。',
   'paper.read.download': '下载读取的内容',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': '签署',

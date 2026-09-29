@@ -9,7 +9,7 @@ import type {
   LayoutDocument,
 } from '../ir/types.js';
 import { gazetteerForm, isContinuationNotice, isMonth, isUnitWord } from './gazetteers.js';
-import { grammar, romanValue, type MarkerMatch, type Reading } from './grammar.js';
+import { grammar, probe, romanValue, type MarkerMatch, type Reading } from './grammar.js';
 import type {
   EnumerateResult,
   Family,
@@ -35,7 +35,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 3;
+export const ENUMERATE_STAGE_VERSION = 4;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -98,6 +98,20 @@ interface NonMarker {
   readonly rule: 'R6a' | 'V7' | 'J1' | 'R6b';
   readonly verdict: 'prose' | 'detail';
   readonly evidence: Evidence;
+}
+
+/**
+ * V6: a time of day, "09.00" or "9.05" — two parts, minutes of two digits up to 59, an hour up to
+ * 23 written with two digits or followed by minutes that start with 0. A list number is never
+ * written 09, and a sub-number never starts with 0 (`time-not-marker`).
+ */
+function isTimeOfDay(word: string): boolean {
+  const time = /^(\d{1,2})\.(\d{2})$/u.exec(word);
+  if (!time) return false;
+  const [, hour, minutes] = time as unknown as [string, string, string];
+  return (
+    Number(hour) <= 23 && Number(minutes) <= 59 && (hour.length === 2 || minutes.startsWith('0'))
+  );
 }
 
 /** §2 `SAME_BAND`: two relX values within 2% of the column width. */
@@ -269,6 +283,7 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     if (arabic && dot && f !== null && isMonth(f)) return 'V3';
     if (arabic && (reading.path[0] ?? 0) > MAX_ARABIC) return 'V4';
     if (reading.style === 'spaced-dash' && F && /^\p{Nd}/u.test(F.text)) return 'V5';
+    if (match.production === 'M4' && isTimeOfDay(probe(line.ir.words[0]!.text))) return 'V6';
     return null;
   };
 

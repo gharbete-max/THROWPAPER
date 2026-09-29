@@ -39,5 +39,72 @@
       "marker": "6.",
       "label": "Underskrift: ________________________"
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Medlemsansökan"
+    },
+    {
+      "kind": "instruction",
+      "text": "Fyll i blanketten och lämna den till kansliet eller skicka den med post. Vi behöver alla uppgifter för att kunna registrera dig som medlem, och de används bara för föreningens eget register. Om något är oklart kan du vänligen kontakta kansliet, så hjälper vi dig."
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Personnummer",
+      "answer": "blank",
+      "type": "personnummer"
+    },
+    {
+      "kind": "question",
+      "label": "Adress",
+      "answer": "blank",
+      "type": "address",
+      "details": [
+        "Skriv den adress dit vi ska skicka medlemskortet."
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "Kontaktuppgifter"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "E-post",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Vill du ha föreningens nyhetsbrev?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Underskrift",
+      "answer": "blank",
+      "type": "signature"
+    },
+    {
+      "kind": "instruction",
+      "text": "Uppgifterna används bara för föreningens medlemsregister och lämnas inte ut."
+    }
   ]
 }

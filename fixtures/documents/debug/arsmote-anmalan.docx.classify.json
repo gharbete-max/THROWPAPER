@@ -1,0 +1,16 @@
+{
+  "stage": "classify",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "24a89997c536751342374436997728668e73839e568aa81bbf7697e69dc7ad60",
+  "decisions": [
+    {"id":"classify:p1-l18","rule":"K1","verdict":"short_text","subject":["p1-l18"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l19","rule":"K1","verdict":"short_text","subject":["p1-l19"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l20","rule":"K1","verdict":"phone","subject":["p1-l20"],"evidence":{"confidence":953,"features":"phoneWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l21","rule":"K1","verdict":"email","subject":["p1-l21"],"evidence":{"confidence":953,"features":"emailWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l22","rule":"K1","verdict":"yes_no","subject":["p1-l22"],"evidence":{"confidence":1000,"features":"answerBoolean booleanPair","margin":9000,"required":"unknown","runnerUp":"consent"}},
+    {"id":"classify:p1-l23","rule":"K1","verdict":"short_text","subject":["p1-l23"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l24","rule":"K1","verdict":"short_text","subject":["p1-l24"],"evidence":{"confidence":900,"features":"longPromptNoBlank nameWord","margin":2200,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l25","rule":"K1","verdict":"long_text","subject":["p1-l25"],"evidence":{"confidence":909,"features":"commentWord","margin":2300,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

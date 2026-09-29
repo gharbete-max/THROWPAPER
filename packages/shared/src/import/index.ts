@@ -38,3 +38,25 @@ export {
   isUnitWord,
 } from './enumerate/gazetteers.js';
 export { enumerate, ENUMERATE_STAGE_VERSION, MAX_ARABIC } from './enumerate/enumerate.js';
+export * from './segment/types.js';
+export { MAX_OPTIONS, segment, SEGMENT_STAGE_VERSION } from './segment/segment.js';
+export { isBooleanPair, isMetaLine, mentionsTable } from './segment/lexicon.js';
+export * from './classify/types.js';
+export { classify, CLASSIFY_STAGE_VERSION, WEIGHTS } from './classify/classify.js';
+export { CLASSIFY_LEXICONS, languagesFor, wordsIn } from './classify/lexicon.js';
+export type { LabelWords, WordMatch } from './classify/lexicon.js';
+export {
+  AUTO_AT,
+  bucketOf,
+  FLAG_AT,
+  lower,
+  OCR_FLAG_BELOW,
+  OCR_REVIEW_BELOW,
+  score,
+  SCORE_STAGE_VERSION,
+} from './score/score.js';
+export type { Bucket, Cap, Judgement, ScoredSegment, ScoreResult } from './score/score.js';
+export { fieldsFirst, FIELDS_STAGE_VERSION } from './fields.js';
+export type { FieldReading, FieldsResult, FormFieldBox } from './fields.js';
+export { readLayout } from './pipeline.js';
+export type { LayoutReading } from './pipeline.js';

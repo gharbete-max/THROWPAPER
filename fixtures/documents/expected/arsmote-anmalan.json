@@ -34,5 +34,127 @@
       "marker": "8.",
       "label": "Övrigt: ______________________________"
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmälan till årsmötet"
+    },
+    {
+      "kind": "instruction",
+      "text": "Årsmötet hålls i föreningens lokaler den 12 juni klockan 18.00. Alla medlemmar är välkomna, och vi hoppas att så många som möjligt vill vara med och påverka föreningens arbete under det kommande året."
+    },
+    {
+      "kind": "instruction",
+      "text": "För att vi ska kunna planera lokal, mat och material behöver vi veta hur många som kommer. Anmäl dig därför senast den 1 juni genom att fylla i blanketten och lämna den till kansliet, eller skicka den med post till föreningens adress."
+    },
+    {
+      "kind": "instruction",
+      "text": "Varje medlem har en röst, och den som inte kan komma får lämna en skriftlig fullmakt enligt punkt 12.1 i stadgarna. Fullmakten ska vara undertecknad och lämnas till ordföranden innan mötet börjar."
+    },
+    {
+      "kind": "instruction",
+      "text": "Under mötet går vi igenom verksamhetsberättelsen, den ekonomiska redovisningen och revisorernas berättelse. Därefter beslutar mötet om ansvarsfrihet för styrelsen och väljer styrelse och revisorer för nästa år."
+    },
+    {
+      "kind": "instruction",
+      "text": "Motioner till årsmötet ska ha kommit in till styrelsen senast fyra veckor före mötet. Styrelsens yttrande över varje motion skickas ut tillsammans med de övriga handlingarna en vecka före mötet."
+    },
+    {
+      "kind": "instruction",
+      "text": "Efter mötet bjuder föreningen på middag. Ange i blanketten om du vill äta och om du har några allergier eller andra önskemål om maten, så att köket kan förbereda sig."
+    },
+    {
+      "kind": "instruction",
+      "text": "Har du frågor om årsmötet är du välkommen att kontakta kansliet på vardagar mellan klockan nio och tolv. Vi svarar också gärna på e-post, men räkna med att det kan ta några dagar innan du får svar."
+    },
+    {
+      "kind": "instruction",
+      "text": "Tänk på att parkeringen vid lokalen är begränsad. Vi rekommenderar att du tar bussen eller cyklar, och den som behöver hjälp med resan kan höra av sig till kansliet så försöker vi ordna samåkning."
+    },
+    {
+      "kind": "instruction",
+      "text": "Ta gärna med dig årsredovisningen, som skickas ut till alla medlemmar två veckor före mötet. Den finns också att hämta på kansliet för den som inte har fått den med posten."
+    },
+    {
+      "kind": "instruction",
+      "text": "Valberedningen tar gärna emot förslag på kandidater till styrelsen fram till två veckor före mötet. Den som vill föreslå någon kan göra det skriftligt eller muntligt, men den föreslagna ska ha tackat ja innan förslaget lämnas in."
+    },
+    {
+      "kind": "instruction",
+      "text": "Styrelsen föreslår att årsavgiften lämnas oförändrad för det kommande året. Förslaget och styrelsens motivering finns med bland handlingarna, tillsammans med budgeten och verksamhetsplanen för nästa år."
+    },
+    {
+      "kind": "instruction",
+      "text": "Lokalen är tillgänglig för rullstol, och det finns hörslinga i den stora salen. Meddela gärna i förväg om du behöver någon annan hjälp under mötet, så ordnar vi det så gott vi kan."
+    },
+    {
+      "kind": "instruction",
+      "text": "Barn är välkomna att följa med, och under mötet finns det lek och fika i rummet bredvid. Två av föreningens ledare tar hand om barnen, så att föräldrarna kan delta i mötet i lugn och ro."
+    },
+    {
+      "kind": "instruction",
+      "text": "Protokollet från mötet justeras inom två veckor och skickas sedan ut till alla medlemmar. Det finns också att läsa på kansliet, där du kan ställa frågor om besluten till styrelsen."
+    },
+    {
+      "kind": "instruction",
+      "text": "Föreningen fyller femtio år i höst, och styrelsen vill gärna höra vad medlemmarna tycker att vi ska göra för att fira. Skriv ditt förslag under Övrigt i blanketten, eller berätta om det för någon i styrelsen under kvällen."
+    },
+    {
+      "kind": "instruction",
+      "text": "Vi tackar alla som har hjälpt till under året, både i styrelsen, i kommittéerna och vid våra arrangemang. Utan er skulle föreningen inte kunna göra så mycket som den gör, och vi hoppas att ni vill fortsätta även nästa år."
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Medlemsnummer",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "E-post",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Deltar du i middagen efter mötet?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Allergier eller önskemål om maten",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Lämnar du fullmakt åt en annan medlem? Skriv i så fall namnet på den som ska rösta för dig, och lämna fullmakten till ordföranden innan mötet börjar.",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Övrigt",
+      "answer": "blank",
+      "type": "long_text"
+    }
   ]
 }

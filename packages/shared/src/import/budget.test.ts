@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { enumerate } from './enumerate/enumerate.js';
 import type { RawDocument, RawWord } from './ir/types.js';
 import { layoutProblems } from './ir/validate.js';
 import { reassemble } from './layout/reassemble.js';
+import { readLayout } from './pipeline.js';
 
 /**
  * `CAVEATS.md` #42, `perf-budget`: twenty pages read in under four seconds. Twenty dense pages —
  * two columns of forty-five lines, a numbered list with sub-items down each, a running header and a
- * page number — go through stage 2 and stage 3, as the worker runs them, well inside it. The
- * clock is only in this test; the stages have none.
+ * page number — go through stages 2 to 7, as the worker runs them, well inside it. The clock is
+ * only in this test; the stages have none.
  */
 
 const PAGES = 20;
@@ -69,15 +69,19 @@ const document: RawDocument = {
 };
 
 describe('the import budget', () => {
-  it(`reads ${PAGES} dense pages through stages 2 and 3 in under ${BUDGET_MS / 1000} s`, () => {
+  it(`reads ${PAGES} dense pages through stages 2 to 7 in under ${BUDGET_MS / 1000} s`, () => {
     const words = document.pages.reduce((n, page) => n + page.words.length, 0);
     expect(words).toBeGreaterThan(9000);
     const start = performance.now();
     const layout = reassemble(document).output;
-    const lists = enumerate(layout).output;
+    const read = readLayout(layout);
     const elapsed = performance.now() - start;
     expect(layoutProblems(layout)).toEqual([]);
-    expect(lists.items.length).toBe(PAGES * 90);
+    expect(read.lists.items.length).toBe(PAGES * 90);
+    expect(read.scored.counts.questions).toBeGreaterThanOrEqual(PAGES * 60);
     expect(elapsed).toBeLessThan(BUDGET_MS);
+    console.log(
+      `import budget: ${PAGES} pages, ${words} words, stages 2–7 in ${Math.round(elapsed)} ms`,
+    );
   });
 });

@@ -11,7 +11,7 @@ import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { Icon } from '../../../components/Icon.js';
 import { MAX_PASTE } from '@tp/shared/import';
-import { openPdf, TooManyPages } from './extract.js';
+import { fieldBoxes, openPdf, TooManyPages } from './extract.js';
 import { CropPhoto, WHOLE_PICTURE } from './CropPhoto.js';
 import { detectPage } from './detect.js';
 import { CameraScan } from '../../../components/CameraScan.js';
@@ -353,11 +353,15 @@ async function read(files: File[], locale: string): Promise<Ready> {
     } else if (file.type === 'application/pdf') {
       const pdf = await openPdf(await file.arrayBuffer(), pages);
       fields.push(...pdf.fields);
+      const boxes = fieldBoxes(pdf.fields, pages);
       counted.push({ file, pages: pdf.pageCount });
       pages += pdf.pageCount;
       const raw = await pdf.raw();
       await pdf.close();
-      readings.push({ name: file.name, reading: await readInWorker({ kind: 'raw', raw }) });
+      readings.push({
+        name: file.name,
+        reading: await readInWorker({ kind: 'raw', raw, fields: boxes }),
+      });
     } else {
       counted.push({ file, pages: 1, corners: (await detectPage(file)) ?? WHOLE_PICTURE });
       pages += 1;

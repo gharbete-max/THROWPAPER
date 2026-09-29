@@ -1,0 +1,12 @@
+{
+  "fixture": "two-blanks-one-line",
+  "expect": {
+    "segment": {
+      "segments": [
+        { "kind": "question", "lineIds": ["p1-l1"], "label": "Postnummer", "itemId": null, "answer": "blank", "options": [], "details": [], "flags": ["split-line"] },
+        { "kind": "question", "lineIds": ["p1-l1"], "label": "Ort", "itemId": null, "answer": "blank", "options": [], "details": [], "flags": ["split-line"] },
+        { "kind": "question", "lineIds": ["p1-l2"], "label": "Födelsedatum (ÅÅÅÅ-MM-DD)", "itemId": null, "answer": "blank", "options": [], "details": [], "flags": [] }
+      ]
+    }
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "fixture": "time-not-marker",
+  "caveats": ["time-not-marker"],
+  "stage": "enumerate",
+  "status": "green",
+  "turnsGreenIn": "S9",
+  "summary": "A time of day at the start of a line — \"09.00 Frukost\", \"10.30 Kanotpaddling\", \"9.05 Samling\", as a schedule prints them — is not a dotted list number: its minutes are two digits up to 59, and a list number is never written 09 or with minutes that start with 0 (V6). Dotted sub-items of a real list after it stay items.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "paste",
+      "extractor": "fixture: pasteDocument (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [{ "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 2466, "bands": [1000] }],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 3484, "y1": 2466 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Schema för dagen",
+                "words": [
+                  { "text": "Schema", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1552, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "för", "start": 7, "box": { "x0": 1644, "y0": 895, "x1": 1920, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "dagen", "start": 11, "box": { "x0": 2012, "y0": 895, "x1": 2472, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 2472, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "09.00 Frukost och samling",
+                "words": [
+                  { "text": "09.00", "start": 0, "box": { "x0": 1000, "y0": 1075, "x1": 1460, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Frukost", "start": 6, "box": { "x0": 1552, "y0": 1075, "x1": 2196, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "och", "start": 14, "box": { "x0": 2288, "y0": 1075, "x1": 2564, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "samling", "start": 18, "box": { "x0": 2656, "y0": 1075, "x1": 3300, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1075, "x1": 3300, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "10.30 Kanotpaddling på sjön",
+                "words": [
+                  { "text": "10.30", "start": 0, "box": { "x0": 1000, "y0": 1255, "x1": 1460, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Kanotpaddling", "start": 6, "box": { "x0": 1552, "y0": 1255, "x1": 2748, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "på", "start": 20, "box": { "x0": 2840, "y0": 1255, "x1": 3024, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "sjön", "start": 23, "box": { "x0": 3116, "y0": 1255, "x1": 3484, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1255, "x1": 3484, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "13.00 Lunch",
+                "words": [
+                  { "text": "13.00", "start": 0, "box": { "x0": 1000, "y0": 1435, "x1": 1460, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Lunch", "start": 6, "box": { "x0": 1552, "y0": 1435, "x1": 2012, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1435, "x1": 2012, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "9.05 Samling vid bussen",
+                "words": [
+                  { "text": "9.05", "start": 0, "box": { "x0": 1000, "y0": 1615, "x1": 1368, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Samling", "start": 5, "box": { "x0": 1460, "y0": 1615, "x1": 2104, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "vid", "start": 13, "box": { "x0": 2196, "y0": 1615, "x1": 2472, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "bussen", "start": 17, "box": { "x0": 2564, "y0": 1615, "x1": 3116, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1615, "x1": 3116, "y1": 1746 },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1. Anmälan",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 1795, "x1": 1184, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Anmälan", "start": 3, "box": { "x0": 1276, "y0": 1795, "x1": 1920, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1795, "x1": 1920, "y1": 1926 },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1.1 Namn",
+                "words": [
+                  { "text": "1.1", "start": 0, "box": { "x0": 1000, "y0": 1975, "x1": 1276, "y1": 2106 }, "baseline": 2080, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Namn", "start": 4, "box": { "x0": 1368, "y0": 1975, "x1": 1736, "y1": 2106 }, "baseline": 2080, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1975, "x1": 1736, "y1": 2106 },
+                "baseline": 2080,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1.2 Adress",
+                "words": [
+                  { "text": "1.2", "start": 0, "box": { "x0": 1000, "y0": 2155, "x1": 1276, "y1": 2286 }, "baseline": 2260, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Adress", "start": 4, "box": { "x0": 1368, "y0": 2155, "x1": 1920, "y1": 2286 }, "baseline": 2260, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2155, "x1": 1920, "y1": 2286 },
+                "baseline": 2260,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "2. Betalning",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 2335, "x1": 1184, "y1": 2466 }, "baseline": 2440, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Betalning", "start": 3, "box": { "x0": 1276, "y0": 2335, "x1": 2104, "y1": 2466 }, "baseline": 2440, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2335, "x1": 2104, "y1": 2466 },
+                "baseline": 2440,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

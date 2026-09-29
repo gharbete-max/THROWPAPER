@@ -119,7 +119,7 @@ every program that copies puts plain text beside its HTML, with the numbers and 
 reader saw — and only a paste with no plain text is read from its HTML (blocks as lines, a list item
 with the number or bullet its list shows, a table cell a tab). S4 and S5 enter here.
 
-**Where it runs.** Stages 2 and 3 run in a Web Worker (`paper/import.worker.ts`, started by
+**Where it runs.** Stages 2 to 7 run in a Web Worker (`paper/import.worker.ts`, started by
 `paper/read-in-worker.ts`), so a long document never freezes the page; after 30 seconds the worker
 is ended and the author is told. Where there is no `Worker`, the same function runs on the page.
 
@@ -259,7 +259,8 @@ look-alikes, and prose lines.
 
 ## Stage 4 — segment
 
-Stage 3's items and the layout's lines in, **segments** out:
+`segment` in `@tp/shared/import` (`segment/`, built in S9). The layout document and stage 3's
+reading in, **segments** out (`segment/types.ts`):
 
 ```ts
 type Segment =
@@ -267,98 +268,186 @@ type Segment =
   | { kind: 'instruction'; lineIds: string[]; text: string }
   | { kind: 'meta'; lineIds: string[]; text: string }            // a form number, a revision date
   | { kind: 'question'; lineIds: string[]; label: string; itemId: string | null;
-      answer: 'blank' | 'choice' | 'boolean' | 'unknown'; options: string[] }
-  | { kind: 'grid'; lineIds: string[]; label: string | null; rows: string[]; columns: string[] }
-  | { kind: 'table'; lineIds: string[]; label: string | null; columns: string[]; rowCount: number;
-      shape: 'repeating-rows' | 'labelled-fields' };
+      answer: 'blank' | 'choice' | 'boolean' | 'unknown'; options: string[];
+      details: string[]; flags: SegmentFlag[] }
+  | { kind: 'grid'; lineIds: string[]; label: string | null; itemId: string | null;
+      rows: string[]; columns: string[]; flags: SegmentFlag[] }
+  | { kind: 'table'; lineIds: string[]; label: string | null; itemId: string | null;
+      columns: string[]; rowCount: number; shape: 'repeating-rows' | 'labelled-fields';
+      flags: SegmentFlag[] };
+// SegmentFlag: 'label-by-reference' | 'many-options' | 'same-as-earlier' | 'split-line'
 ```
 
-Rules, first match wins, each with its fixture or ledger id:
+Every line a reader reads is in exactly one segment, in reading order of its first line; page
+furniture is in none (S0). The one exception is a line of two label-and-blank pairs, which is in
+each question split from it. Labels, options and text are verbatim: a label loses only its marker,
+its blank runs and one trailing colon. `details` are the lines under an item that belong to it
+(J1); `itemId` links a question to stage 3's item.
 
-1. **Heading** — a `heading` block without a marker; or an ALL-CAPS line (H3) inside body text
-   (#23). `PARTICIPANT DETAILS` is a section, never a field.
-2. **Grid** — two or more consecutive lines with the same number (≥ 2) of checkbox glyphs whose
-   x0s align within 2% of the column width, under a line whose words align with those columns: the
-   header gives `columns` (adjacent header words closer than one em are one header, "Vet ej"), the
-   first word run of each row gives `rows`, and the line above the header, if it is prose, is the
-   `label`. *Fixture:* `checkbox-grid`.
-3. **Table** — a line of at least 2 words separated by gaps of at least 4 em, followed by at least
-   2 lines that each have `ruleBelow` or contain nothing but a row number: `repeating-rows`, with
-   the header words as `columns` and the row count. Rows with a label in the first column and blanks
-   in the rest are `labelled-fields`. Row numbers are never questions. *Fixture:* `table-rows`.
-4. **Boolean pair** — a line whose checkboxes are followed by exactly the words of a yes/no pair in
-   any shipped language (Ja/Nej, Yes/No, Kyllä/Ei, Oui/Non, Sí/No, Да/Нет, 是/否, はい/いいえ, …):
-   a question, `answer: 'boolean'`, the pair as options, the text before the first checkbox as the
-   label. *Fixture:* `checkbox-grid`.
-5. **Choice** — a line (or an item's detail lines) with 2 or more checkbox glyphs each followed by
-   words: a question with those words as options. An item at level L + 1 directly under an item at
-   level L whose label ends in `?` or `:` and has no blank of its own is an **option** of that item.
-   More than 30 options is flagged "this looks like a table or two questions" (#30).
-6. **Labelled blank** — a line with a blank run: a question, `answer: 'blank'`, whose label is the
-   text with the blank run and one trailing `:` removed, trimmed (the raw text stays on the
-   provenance). *Fixture:* `blank-line-leaders`. A line ending in `:` followed in the same block by
-   a line that is only a blank or has only `ruleBelow` pairs with it into one question (#24).
-7. **Item** — any other accepted or flagged item from stage 3: a question, `answer: 'unknown'`.
-8. **Instruction** — prose longer than 120 characters, or any prose without a blank, checkbox or
-   trailing colon ("Please read the terms and conditions.") (#22). One tap on the review screen
-   makes it a question.
-9. **Meta** — a line matching a form-number pattern (`Blankett 1234`, `Form A-12`, `Rev. 2024-03`).
+It runs in **three passes**, and every decision in the debug artifact names its rule. (First
+written as one list, first match wins, with the heading rule first. A real ruled table's header row
+comes out of stage 2 as one bold region per cell, which H2 calls a heading, so a grid lost its
+columns to three section headings — `grid-header-cells`, #99.)
 
-Nothing is de-duplicated: the same question in two sections stays two questions, and the review
-screen offers a "these look the same" chip (#25).
+**Pass 1 — structures claim their lines.**
+
+- **Grid** (S2) — two or more consecutive lines, each a label and then only checkboxes, the same
+  number of them, their x0s within 2% of the column width; under a header: the words on the nearest
+  baseline above the first row, *across regions*, grouped into cells where words are closer than
+  one em ("Vet ej"). Each checkbox's centre falls within a cell, give or take an em, left to right;
+  cells left of the first answer column head the row labels ("Session", "Day") and any other cell
+  means the header is not this grid's. `rows` are each row's words before its first box, `columns`
+  the cells over the boxes. One column is a list to tick. *Fixtures:* `checkbox-grid`,
+  `grid-header-cells`, `grid-table-reference`.
+- **A Word table's grid** (S2c) — from the cells, not geometry: row 0 names the columns (its empty
+  cell is absent, as Word gives it), each later row is its text cells and one checkbox per column.
+  *Fixture:* `grid-from-cells`.
+- **Table** (S3) — at least two consecutive lines that are only a row number (1, 2, 3 … in order)
+  or only a blank, under a header of at least two cells at least 4 em apart with no answer space:
+  `repeating-rows`, the cells as `columns`. The rows are found first, because a line of words is
+  not a header until rows follow. *Fixture:* `table-rows`. (`labelled-fields` is in the type and
+  not yet produced: a Word table's empty cells are not in IR version 1, so its rows cannot be
+  counted.)
+- **A table of text** (S3t, S3tc) — a header row of two or more cells on one baseline, in regions
+  side by side, none of them a list item, set in bold or over ruled rows; under it, rows of cells
+  until a line that spans the header's width. Each row, header included, is one instruction read
+  across, its words left to right; a Word table of text the same from its cells. Stage 2 cuts such
+  a table into column regions exactly as it cuts two columns of text, and reads it down its columns;
+  stage 4 undoes that (#108). Not a table of text: one with a blank, a box or a cell ending in
+  `:` in it (a form laid out in a table, left to the line rules — `docx-layout-table`); a Word table
+  with a row of one cell; and columns whose lines run to their column's edge, as prose does and a
+  cell does not (two columns under bold headings — `two-columns-of-prose`). *Corpus:* `lagerschema`.
+- **The label** of a grid or table is the line just before it when that is a body line of at most
+  120 characters, not ending in `.` or `!`, with no answer space of its own — prose, or an item of
+  one line (then `itemId`). "Kryssa i ett svar på varje rad." is an instruction, not a label.
+  Failing that, the nearest earlier question within the section (six lines, back to a heading) that
+  points at a table — a word starting with a table word in any shipped language (`tabell…`,
+  `Tabelle…`, `tauluk…`, `table…`, `下表` …, `segment/lexicon.json`) — and has no answer space is the
+  label, flagged `label-by-reference` (S2r). *Fixture:* `grid-table-reference`.
+- **A table's edge is not an answer line** (#100). A ruled table draws its top edge under the line
+  above it and its borders under its header and rows, and stage 1 reports each as `ruleBelow`. For
+  the line just before a structure and for every line of it, `ruleBelow` is not answer space.
+
+**Pass 2 — items with items under them**, in reading order, so the question that comes first claims
+the answers under it:
+
+- **Options under an item** (S5b) — two or more items directly under an item, lettered, bulleted or
+  small roman (never numbered: numbers are sub-questions), none with an answer space and none ending
+  in `?` or `:`, when the parent has no answer space either: one choice question, the children's
+  labels its options. The parent need not end in `?` ("Voice part", "Röststämma"). (First written
+  as "under an item whose label ends in `?` or `:`".) *Fixture:* `options-or-section`.
+- **A section** (S1c) — an item whose items are the questions (they have answer spaces, or are
+  numbered), with no answer space of its own, not ending in `?` and at most 80 characters, is a
+  heading: "Kontaktuppgifter", "About you". *Fixture:* `options-or-section`.
+- **Options under a sentence that asks** (S5c) — lettered or bulleted items right after a prose line
+  of at most 120 characters ending in `?`. *Fixture:* `prose-question`.
+- **Lines of one checkbox each under a question** (S5d) — two or more lines that each start with one
+  box and then words, right after a line or item ending in `?` or `:`, **in its block**: a paragraph
+  break ends its answers. *Fixture:* `single-checkbox-line`.
+
+**Pass 3 — every line or item left**, first match wins:
+
+1. **Heading** (S1) — a `heading` block (an item in one: its label). A footnote block is an
+   instruction (S8b). **Capitals** (S1b): a prose line with at least 3 cased letters, all upper
+   case, at most 60 characters, no answer space and no closing punctuation (#23).
+2. **Meta** (S9) — two to four words, the first a form or revision word in any shipped language
+   (`blankett`, `form`, `rev`, `version`, `lomake` …), the rest upper case, digits and `. / -`,
+   one of them with a digit: "Blankett 1234", "Rev. 2024-03".
+3. **Boolean pair** (S4) — the words after two checkboxes are a yes/no pair in a shipped language,
+   in that order (Ja/Nej, Yes/No, Kyllä/Ei, Oui/Non, Sí/No, Да/Нет, 是/否, はい/いいえ …); the label is
+   the text before the first box. **One box** (S4b), before the words or after them ("☐ Jag
+   godkänner …", "Har du allergier? ☐"): a question ticked or not, the words its label.
+   *Fixtures:* `checkbox-grid`, `single-checkbox-line`.
+4. **Choice** (S5) — two or more boxes each followed by words: those words are the options.
+   Boxes with no words to name them and no header: a question of unknown answer.
+5. **Labelled blank** (S6) — a blank run (at least 3 `_`, or at least 4 leader dots with `…` as
+   three). **Two or more label-and-blank pairs on a line** are one question each, flagged
+   `split-line`, and text after a line's only blank stays in its label ("Födelsedatum ____
+   (ÅÅÅÅ-MM-DD)") (S6c, `two-blanks-one-line`). A printed answer line (`ruleBelow`) is a blank too
+   (S6d). **Lines of nothing but a blank directly under** a question, in its block, are more room
+   for its answer — and under a label ending in `:` make it one (S6b, #24,
+   `label-colon-blank-below`).
+6. **Item** (S7) — any other item from stage 3, accepted, flagged or candidate: a question of
+   unknown answer (stage 7 scores the verdict). A **bullet with no answer space** is an instruction
+   (S8c).
+7. **A sentence that asks** (S7b) — a prose paragraph of at most 120 characters ending in `?`, or
+   `?` and a note in brackets ("… gäster? (max 8)"); or at most 60 ending in `:` that does not
+   introduce bullets. (First written as "prose without a blank, checkbox or trailing colon is an
+   instruction", which made "Har du några allergier?" text to read.) *Fixture:* `prose-question`.
+8. **Instruction** (S8) — anything else: a paragraph. On a measured page, the next line goes on with
+   the paragraph when it is at the block's line pitch (its lower quartile of gaps; a paragraph's own
+   spacing is more than a tenth larger) and the line before did not end a sentence short of the
+   margin; a Word or pasted line is a paragraph of its own. (First written as "the line before
+   reached the margin", which cut a paragraph wherever a long word wrapped early and joined two
+   whenever a last line was long — `arsmote-anmalan`.) One tap on the review screen makes it a
+   question (#22).
+
+Afterwards, over the whole document: the same label as an earlier question is flagged
+`same-as-earlier`, never merged (#25); more than 30 options, `many-options` (#30).
 
 ## Stage 5 — classify
 
-For each question segment, a **scored feature model** proposes a kind (`PREDICTIVE-BUILDER.md`,
-the kind table), validation, and whether it is required.
+`classify` in `@tp/shared/import` (`classify/`, built in S9). For each question, grid and table, a
+**scored feature model** proposes a kind (`PREDICTIVE-BUILDER.md`, "Kinds": a `FieldType`, or
+`money`, `personnummer`, `orgnr`, `address`, `consent`, `grid`), whether it is required, a format,
+and chips. Nothing is applied: stage 8 asks, and the label is never touched.
 
-- **Features** are named predicates with concrete tests, each in `classify/features.ts`:
-  `hasBlankRun`, `hasCheckboxGlyph` (+ count, row/column layout), `selectAllPhrase`, `datePattern`
-  (+ a date-ish label word in the locale pack), `timeSlotPattern` (`kl. 18:00`, `18:00–19:00`, a
-  table of slots), `currencyHint` (`kr`, `SEK`, `EUR`, `€`, `belopp`, `summa`, `moms`, …),
-  `emailWord`, `phoneWord`, `addressWord`, `personnummerWord`, `orgNrWord`, `signatureHint` (+ a long
-  blank at the foot of the page), `fileHint` (`bifoga`, `attach`, `upload`, …), `consentHint`
-  (`samtycke`, `GDPR`, `I agree to`, …), `repeatableHint` (`per person`, `varje deltagare`, `antal` +
-  sub-blocks), `longPromptNoBlank` (> 120 characters), `labelColonThenBlank`, `booleanPair`,
-  `gridAlignment`. Word lists live in `classify/lexicon/<language>.json`.
-- **Weights** live in `classify/weights.json` — integer millinats, one bias per kind and one weight
-  per feature per kind:
-  ```json
-  { "weightsVersion": 1,
-    "kinds": { "email": { "bias": -2000, "features": { "emailWord": 3500, "hasBlankRun": 400 } } } }
-  ```
-  A kind's score is its bias plus the weights of the features present. The best kind wins; its
-  confidence is `sigmoid(best − runner-up)` from the committed table (ADR 0019); the three features
-  that contributed most are kept for the "why" chip.
-- **When nothing fires**, the kind is `short_text` at a confidence that lands in `flag` — the
-  S4 promise: "I guessed the answer type — tap to change".
-- **Required** (#26): `*`, `required`, `obligatoriskt`, `(mandatory)`, `påkrevd`, `pakollinen`,
-  `Pflichtfeld`, `obligatoire`, `obligatorio`, … → `required: true`. **No hint is `unknown`, not
-  `false`**, and `unknown` is flagged.
-- **Locale-specific validation** (#27) is proposed only when the document locale (stage 2) is that
-  locale's: a Swedish personnummer check on a Swedish document; on a document of unknown locale
-  the format is offered as a chip, never applied.
-- **Consent** (#28) proposes the consent presentation; its text is the label, verbatim, never
-  shortened.
-- **Numbers inside a question** ("How many guests? (max 8)") are part of the label; they may
-  propose `max: 8` validation as a chip, never options or extra questions (#29).
+- **Which kinds** a question may be comes from its answer shape (`candidates` in
+  `classify/weights.json`): a blank or unknown answer, one of the text kinds (short and long text,
+  number, money, date, time, e-mail, phone, address, personnummer, orgnr, file, signature); a
+  boolean, `yes_no` or `consent`; a choice, `single_select` or `multi_select`; a grid, `grid` or
+  (one column) `multi_select`; a table, `repeating_group`, and each of its columns read as a text
+  question of its own.
+- **Features** (`CAVEATS.md` §8.4) are words from `classify/lexicon/<language>.json`, twelve files,
+  and shapes read from the segment. A label's words are the interpreter's (`interpret/text.ts`:
+  NFKC, lower case, Chinese and Japanese as character pairs); each word is claimed by one entry,
+  whole phrases before an entry marked to match a word's start (`telefon*`) or end (`*adress`), so
+  "E-mail address" is an e-mail word and not also an address; a sign that is no word (`€`, `£`) is
+  found anywhere. A word several languages list counts for each of them. The lists read are the
+  document's language's and English, or all twelve when stage 2 found none.
+- **Weights** are integer millinats: a bias per kind and a weight per feature. A kind's score is its
+  bias plus its features' weights; the best candidate wins; its confidence is
+  `sigmoid(best − runner-up)` from the committed table (`interpret/sigmoid.json`, ADR 0019), and the
+  three features that weighed most are the "why". **With no feature at all**, short text beats long
+  text by 1 200 millinats: confidence 769, the `flag` bucket — acceptance S4's "I guessed the answer
+  type — tap to change".
+- **Required** (#26): an asterisk, or a required word in any language → `yes`; an optional word
+  ("frivilligt", "optional") → `no`; no hint → `unknown`, never `no`. The words that said so are
+  kept verbatim for the chip.
+- **Formats** (#27): a personnummer or organisation-number word proposes its language's check
+  (`se-personnummer`, `no-fodselsnummer`, `dk-cpr`, `fi-hetu`, `is-kennitala`, and the
+  organisation numbers), applied only when the document is in that language; offered as a chip when
+  one language's word matched and the document's language is unknown or another; nothing when that
+  is ambiguous ("personnummer" is Swedish, Danish and Norwegian).
+- **Consent** (#28) proposes the consent presentation; its text is the label, byte for byte.
+- **Numbers inside a question** (#29) stay in the label; a max or min word followed by a number
+  proposes a `max` or `min` chip, never options or questions. "per person" proposes a `repeatable`
+  chip.
 
 ## Stage 6 — map to a template, and the paper twin
 
 - **Template.** The imported labels are read by the ladder's T2 keyword scores against each
   template's labels (`FORM_TEMPLATES`), giving the belief engine a starting point, so that after
   an import Loppa can say "This looks like a membership form — right?" and seed only what is
-  missing. It never replaces or reorders an imported question.
+  missing. It never replaces or reorders an imported question. (S11–S12.)
 - **Paper twin.** For PDF and photo sources (not DOCX or paste, which have no page), each
   question's `PaperAnchor` is the box it will be written into: the union of its blank run,
   checkboxes or rule; failing those, from the label's right edge to the column's right edge on the
   label's line. Each option's anchor is its checkbox. Anchors are iu ÷ 10 000 — the fractions
   `PaperAnchor` already stores, which `documents/paper.ts` already writes answers onto. The source
-  file goes into `definition.paper.sources` exactly as the manual paper flow does today.
+  file goes into `definition.paper.sources` exactly as the manual paper flow does today. (S12.)
+- **A PDF's own form fields beat its text** (#54, built in S9: `fieldsFirst`, `import/fields.ts`,
+  rule A1). The paper door passes each field with its widget in layout units (`fieldBoxes`). Each is
+  a question at confidence 1000; a question read from the text that sits on the widget's line, or
+  just above it, is that field's label rather than a second question; a field with no label of its
+  own takes that text's, verbatim, and a text field its printed label's kind ("E-post" → e-mail); a
+  field with neither is asked about. The field's own type (a checkbox, a choice) is never
+  overridden. Headings and instructions stay.
 
 ## Stage 7 — score and bucket
 
-Every decision the review screen will show has a confidence in per mille and a bucket:
+`score` in `@tp/shared/import` (`score/`, built in S9). Every decision the review screen will show
+has a confidence in per mille and a bucket:
 
 | Bucket | Confidence | On the review screen |
 | --- | --- | --- |
@@ -366,16 +455,23 @@ Every decision the review screen will show has a confidence in per mille and a b
 | `flag` | 550–849 | listed with its chips, "check this" |
 | `review` | < 550 | "needs your eye", nothing assumed |
 
-A question's confidence is `sigmoid(Σ named contributions)` in millinats, each from
-`classify/weights.json` (`score` section): marker verdict (`accept` +1500, `accept-flagged` +300,
-`candidate` −1500; a DOCX numbering fact +3000), segment evidence (a blank, a checkbox, a trailing
-colon: +800 each), the kind margin from stage 5, and penalties. Two caps apply after the sum, and
-cannot be outweighed:
-
-- **OCR** (#20): the lowest word confidence in the label below 60 → at most `review`; 60–84 → at
-  most `flag`. The text is never changed: "Adr3ss" and a proper noun reach the screen exactly as
-  read. *Fixture:* `ocr-noise-budget`.
-- **Unknown required** (#26) → at most `flag`.
+- **A segment's own confidence** is `sigmoid(Σ named contributions)` in millinats, each from
+  `classify/weights.json` (`score`): a bias of 500; stage 3's verdict (`accept` +1500,
+  `accept-flagged` +300, `candidate` −1500; a Word numbering fact +3000); the evidence on its lines
+  (a blank or rule +1500, a checkbox +1500, a colon +500, a question mark +300, a grid or table
+  +3000); its flags (`many-options` −2500, `label-by-reference` −800, `same-as-earlier` and
+  `split-line` −300). Headings, meta and long instructions +2500; an instruction under 120
+  characters that does not end in `.` or `!`, +800 — "is this a question?".
+- **A question's bucket** is the lower of its own and its kind's (stage 5), then the caps.
+- **The OCR cap** (#20): the lowest OCR confidence among its words — not its marker, blanks or
+  boxes — below 60 caps it at `review`, 60–84 at `flag`. The text is never changed: "Adr3ss" and a
+  proper noun reach the screen exactly as read. *Fixture:* `ocr-noise-budget`.
+- **Required is its own decision** (#26): a hint is 953; no hint is 701, and at most `flag`
+  whatever the weights say. It does **not** lower the question's bucket. (First written as a cap on
+  the question: most forms mark nothing required, so every question of them would have been "check
+  this", and "3 need your eye" would stop meaning anything.)
+- **Counts**: questions, grids and tables by bucket — the review screen's "I read 14 questions. 3
+  need your eye."
 
 ## Stage 8 — the review screen
 
@@ -414,7 +510,7 @@ interface StageDebug {
   stage: 'extract' | 'reassemble' | 'enumerate' | 'segment' | 'classify' | 'map' | 'score';
   stageVersion: number;      // bumped when the stage's behaviour changes on purpose
   irVersion: 1;
-  inputSha256: string;       // of the canonical JSON of the stage's input
+  inputSha256: string;       // of the canonical JSON of the stage's input (below)
   decisions: {
     id: string;              // 'enumerate:p1-l3'
     rule: string;            // 'R4', 'V1', 'G2-grid', …
@@ -429,6 +525,12 @@ interface StageDebug {
   is a meaningful test and the SHA-256 of a stage's input identifies it. Both are in
   `@tp/shared/import` (`debug.ts`, `sha256.ts`): the hash is written out in integer arithmetic,
   because `node:crypto` is not allowed in the core and `crypto.subtle` is asynchronous.
+- **A stage that reads several inputs** (stages 4–7 read the layout document and the stages before
+  them) hashes each part by itself, then the parts' hashes by their names (`inputsSha256`). An
+  object's digest is taken once: the layout document is hashed once per import, however many stages
+  read it. (First written as the hash of the whole input: hashing the layout anew at every stage
+  cost more than all the stages' own work, and twenty pages took 2.7 s of the 4 s budget. With the
+  SHA-256 on typed arrays, stages 2–7 on the same twenty pages take 0.75 s.)
 - Snapshots of these are the corpus's expected files; a diff in one needs a reviewed update. The
   numbering fixtures' are `fixtures/numbering/debug/<fixture>.json`, one decision per line, written
   and compared by `scripts/caveat-fixtures.test.ts` for every fixture whose status is `green`.
@@ -445,10 +547,10 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today (S8): ten documents, each a PDF and a Word file** — seven Swedish, one each in
+**What it holds today (S9): eleven documents, each a PDF and a Word file** — eight Swedish, one each in
 English, Danish, Norwegian, Finnish and German; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
-and a table of text cells; Word's own numbering at three levels, and numbers typed into the text
+and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
 wrapped line of prose. Scanned and photographed documents, and the exact §8.1.1 case, are still
 owed (S9 onward).
@@ -464,13 +566,19 @@ owed (S9 onward).
   rebuild only when a spec changes).
 - **`expected/<document>.json`, written by hand before the document was first run**: the numbered
   items a person reading it would list, in reading order, nested as they are nested, verbatim, with
-  the lines under an item that belong to it (J1), and the document's language. The PDF and the
-  Word file of a document are held to the same expectation, so they agree.
+  the lines under an item that belong to it (J1), and the document's language — and, since S9,
+  `segments`: every part of it a person would list, its headings, its text and its questions, each
+  question with what answers it and the type they would give it, grids with their rows and
+  columns. Long paragraphs are copied from the spec, so they are verbatim; every kind, label, type
+  and option is decided by hand. The PDF and the Word file of a document are held to the same
+  expectation, so they agree. The language is `null` where the document has too little prose for
+  §2.11 to be sure (`lagerschema`).
 - **`debug/<document>.<format>.<stage>.json`**: each stage's debug artifact, one decision per line,
   so a change to any decision is a diff to review, not only a change to the items.
 - `apps/forms/src/screens/builder/paper/corpus.test.ts` reads each file with exactly the paper
-  door's code — `openPdf` with Node's pdf.js, or `readDocx` — and runs stages 2 and 3 as the
-  worker does.
+  door's code — `openPdf` with Node's pdf.js, or `readDocx` — and runs stages 2 to 7 as the
+  worker does, holding the reading to the items and the segments, with five debug snapshots a
+  file.
 
 `fixtures/numbering/` (hand-authored IR, no PDF at all) stays what each rule is held to; the corpus
 is what the rules together are held to.

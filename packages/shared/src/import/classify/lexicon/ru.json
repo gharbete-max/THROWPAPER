@@ -1,0 +1,28 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in ru. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "ru",
+  "features": {
+    "nameWord": ["имя", "фамилия", "фио", "отчество", "полное имя"],
+    "emailWord": ["электронная почта", "email", "e-mail", "почта", "эл. почта"],
+    "phoneWord": ["телефон*", "номер телефона", "тел", "мобильный"],
+    "addressWord": ["адрес", "почтовый адрес"],
+    "dateWord": ["дата", "дата рождения"],
+    "timeWord": ["время"],
+    "numberWord": ["количество", "сколько", "возраст"],
+    "currencyHint": ["сумма", "цена", "₽", "руб", "рублей", "стоимость"],
+    "personnummerWord": ["снилс"],
+    "orgNrWord": ["инн", "огрн"],
+    "signatureHint": ["подпись"],
+    "fileHint": ["приложить", "прикрепить", "загрузить", "вложение"],
+    "consentHint": ["согласие", "согласен", "согласна"],
+    "commentWord": ["комментари*", "примечани*", "сообщение", "другое"],
+    "selectAllPhrase": ["несколько вариантов", "все подходящие"],
+    "repeatableHint": ["на человека", "каждого участника"],
+    "required": ["обязательн*"],
+    "optional": ["необязательн*"],
+    "maxWords": ["макс", "максимум", "не более"],
+    "minWords": ["мин", "минимум", "не менее"]
+  },
+  "formats": {}
+}

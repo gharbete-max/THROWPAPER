@@ -24,5 +24,63 @@
         }
       ]
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Enkät om föreningens aktiviteter"
+    },
+    {
+      "kind": "instruction",
+      "text": "Vi vill veta vad du tycker om föreningens aktiviteter, så att vi kan göra dem bättre. Enkäten tar bara några minuter att fylla i, och svaren är anonyma. Lämna den i lådan vid entrén när du är klar."
+    },
+    {
+      "kind": "heading",
+      "text": "Del 1"
+    },
+    {
+      "kind": "question",
+      "label": "Hur länge har du varit medlem?",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Hur ofta deltar du i föreningens aktiviteter?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Varje vecka",
+        "Varje månad",
+        "Mer sällan"
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "Del 2"
+    },
+    {
+      "kind": "instruction",
+      "text": "Kryssa i ett svar på varje rad."
+    },
+    {
+      "kind": "grid",
+      "label": null,
+      "rows": [
+        "Mötena är lagom långa",
+        "Informationen når fram",
+        "Lokalerna fungerar bra"
+      ],
+      "columns": [
+        "Ja",
+        "Nej",
+        "Vet ej"
+      ],
+      "type": "grid"
+    },
+    {
+      "kind": "instruction",
+      "text": "Tack för att du tog dig tid att svara!"
+    }
   ]
 }

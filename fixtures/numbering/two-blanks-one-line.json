@@ -1,0 +1,91 @@
+{
+  "fixture": "two-blanks-one-line",
+  "caveats": ["two-blanks-one-line"],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S9",
+  "summary": "Two labels, each with its own blank, on one line are two questions, both flagged as split from one line. Text after the only blank belongs to its label: \"Födelsedatum ____ (ÅÅÅÅ-MM-DD)\" is one question labelled \"Födelsedatum (ÅÅÅÅ-MM-DD)\".",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "paste",
+      "extractor": "fixture: pasteDocument (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [{ "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1206, "bands": [1000] }],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 5048, "y1": 1206 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Postnummer ________ Ort ____________________",
+                "words": [
+                  { "text": "Postnummer", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1920, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "________", "start": 11, "box": { "x0": 2012, "y0": 895, "x1": 2748, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Ort", "start": 20, "box": { "x0": 2840, "y0": 895, "x1": 3116, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "____________________", "start": 24, "box": { "x0": 3208, "y0": 895, "x1": 5048, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 5048, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Födelsedatum ____________ (ÅÅÅÅ-MM-DD)",
+                "words": [
+                  { "text": "Födelsedatum", "start": 0, "box": { "x0": 1000, "y0": 1075, "x1": 2104, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "____________", "start": 13, "box": { "x0": 2196, "y0": 1075, "x1": 3300, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "(ÅÅÅÅ-MM-DD)", "start": 26, "box": { "x0": 3392, "y0": 1075, "x1": 4496, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1075, "x1": 4496, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

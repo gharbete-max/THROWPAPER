@@ -236,6 +236,7 @@ with trailing `. , ; : ! ? )` removed. Vetoes that name `F` do not fire when the
 | V3 | family arabic, style `dot` or `spaced-dot`, and `f` is in `MONTHS` (§9) | a Nordic or German ordinal date: "1. mai", "1. Mai" | `ordinal-not-marker` |
 | V4 | family arabic and `path[0] > 199` | a number that ended a sentence on the line before: "250. Anmäl dig i tid." (A four-digit year such as "2026." never gets this far: the productions allow three digits.) | `decimal-not-marker` |
 | V5 | style `spaced-dash` and `F.text` starts with a digit | a range: "1 - 3 dagar" | `nordic-numbering` |
+| V6 | production M4, and `W1` is `^(\d{1,2})\.(\d{2})$` with the hour at most 23, the minutes at most 59, and the hour written with two digits or the minutes starting with `0` | a time of day, as a schedule prints it: "09.00 Frukost", "10.30 Kanotpaddling", "9.05 Samling". A list number is never written `09`, and a sub-number never starts with `0`. (Added by S9, when a table of times in the corpus, `lagerschema`, read as a list. It costs a two-digit section's two-digit sub-items, "10.10" and "11.12", which forms rarely have; a one-digit hour with minutes of 10 or more, "9.30", is still read as a number.) | `time-not-marker` |
 
 **Resolved conflict, `CAVEATS.md` #2 against #3.** A dotted number at the start of a line is a
 sub-item (#2) or a decimal in prose (#3). V1 and V2 decide it: a lower-case word or a unit after
@@ -454,6 +455,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | V3 | arabic, dot/spaced-dot, next word ∈ `MONTHS` | inline-text | `ordinal-not-marker` |
 | V4 | arabic and `path[0] > 199` | inline-text | `decimal-not-marker` |
 | V5 | spaced-dash and next word starts with a digit | inline-text | `nordic-numbering` |
+| V6 | M4 and `W1` a time of day (§5) | inline-text | `time-not-marker` |
 | V7 | ≤ 60 code points and contains a `CONTINUATION` phrase | prose, closes nothing | `page-break-continuation` |
 | R1 | same band (×50 ≤ w), same family, path ∈ `expectedNext` | appended | every accepted list |
 | R2 | no run at the band, a run open to the left | nested, level + 1 | `nested-by-indent` |

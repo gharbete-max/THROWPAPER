@@ -882,7 +882,8 @@ export const daDK: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:one {count} linje | other {count} linjer',
   'paper.read.items': 'plural:one {count} nummereret punkt | other {count} nummererede punkter',
   'paper.read.noText': 'Der blev ikke fundet nogen trykt tekst i filen.',
-  'paper.read.unchanged': 'Sådan blev det læst, i rækkefølge. Formularen ændres ikke.',
+  'paper.read.unchanged':
+    'Sådan blev det læst, i rækkefølge. Formularen ændres ikke: du gennemgår det, før noget af det bliver til spørgsmål.',
   'paper.read.download': 'Hent det, der blev læst',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Underskrift',

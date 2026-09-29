@@ -1,0 +1,28 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in zh. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "zh",
+  "features": {
+    "nameWord": ["姓名", "名字"],
+    "emailWord": ["电子邮件", "邮箱", "电邮", "email"],
+    "phoneWord": ["电话", "手机", "联系电话"],
+    "addressWord": ["地址", "住址"],
+    "dateWord": ["日期", "出生日期", "生日"],
+    "timeWord": ["时间"],
+    "numberWord": ["数量", "人数", "年龄", "多少"],
+    "currencyHint": ["金额", "价格", "费用", "元", "人民币"],
+    "personnummerWord": ["身份证号", "身份证"],
+    "orgNrWord": ["统一社会信用代码", "营业执照"],
+    "signatureHint": ["签名", "签字"],
+    "fileHint": ["附件", "上传"],
+    "consentHint": ["同意", "我同意"],
+    "commentWord": ["备注", "意见", "留言", "其他"],
+    "selectAllPhrase": ["多选", "可多选"],
+    "repeatableHint": ["每人", "每位参与者"],
+    "required": ["必填"],
+    "optional": ["选填", "可选"],
+    "maxWords": ["最多", "不超过"],
+    "minWords": ["最少", "至少"]
+  },
+  "formats": {}
+}

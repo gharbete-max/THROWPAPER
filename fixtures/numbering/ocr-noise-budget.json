@@ -1,8 +1,8 @@
 {
   "fixture": "ocr-noise-budget",
   "caveats": ["ocr-noise-budget"],
-  "stage": "classify",
-  "status": "todo",
+  "stage": "score",
+  "status": "green",
   "turnsGreenIn": "S9",
   "summary": "A label with a word read at OCR confidence below 60 is capped at the review bucket; nothing \"fixes\" it — \"Adr3ss\" and the proper noun \"Öhrqvists\" reach the review screen exactly as read.",
   "input": {

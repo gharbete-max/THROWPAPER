@@ -884,7 +884,8 @@ export const svSE: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:one {count} rad | other {count} rader',
   'paper.read.items': 'plural:one {count} numrerad punkt | other {count} numrerade punkter',
   'paper.read.noText': 'Ingen tryckt text hittades i filen.',
-  'paper.read.unchanged': 'Så här lästes det, i ordning. Formuläret ändras inte.',
+  'paper.read.unchanged':
+    'Så här lästes det, i ordning. Formuläret ändras inte: du går igenom det innan något av det blir frågor.',
   'paper.read.download': 'Ladda ned det som lästes',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signering',

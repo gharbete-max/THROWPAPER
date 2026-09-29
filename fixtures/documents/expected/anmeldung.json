@@ -18,5 +18,43 @@
       "marker": "4.",
       "label": "E-Mail: ____________________________"
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmeldung zur Jahresversammlung"
+    },
+    {
+      "kind": "instruction",
+      "text": "Wenn Sie an der Jahresversammlung teilnehmen möchten, füllen Sie bitte das Formular aus und senden Sie es bis Freitag an uns zurück. Wir müssen wissen, wie viele Personen kommen, was Sie essen möchten und ob jemand von Ihnen Allergien hat. Es ist wichtig, dass alle Angaben richtig sind, sonst können wir die Einladung nicht rechtzeitig verschicken. Schreiben Sie bitte deutlich und prüfen Sie, ob Sie alle Fragen beantwortet haben. Wenn etwas unklar ist, wenden Sie sich an das Sekretariat, das Ihnen gerne mit der Anmeldung hilft."
+    },
+    {
+      "kind": "instruction",
+      "text": "Bitte beachten Sie: Die Anmeldung ist nur bis zum 1. Mai möglich."
+    },
+    {
+      "kind": "question",
+      "label": "Name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Anschrift",
+      "answer": "blank",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "E-Mail",
+      "answer": "blank",
+      "type": "email"
+    }
   ]
 }

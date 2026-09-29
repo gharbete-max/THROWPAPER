@@ -2,7 +2,7 @@
   "fixture": "blank-line-leaders",
   "caveats": ["blank-line-leaders"],
   "stage": "segment",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S9",
   "summary": "Leader dots and underscores are blanks to write on: each line is a question with a blank answer, label without the leaders or a trailing colon. Three dots are an ellipsis, not a blank.",
   "input": {

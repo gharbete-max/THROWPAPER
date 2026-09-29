@@ -155,9 +155,26 @@ test('a Word document and pasted text are read in order, and change nothing', as
   const file = JSON.parse(await readFile((await download.path())!, 'utf8')) as {
     debug: { stage: string }[];
     lists: { items: { decidedBy: string }[] };
+    segments: { segments: { kind: string; label?: string; answer?: string }[] };
+    scored: { counts: { questions: number } };
   };
-  expect(file.debug.map((d) => d.stage)).toEqual(['reassemble', 'enumerate']);
+  // Stages 2 to 7, all in the worker (S9): what each part is, and how sure.
+  expect(file.debug.map((d) => d.stage)).toEqual([
+    'reassemble',
+    'enumerate',
+    'segment',
+    'classify',
+    'score',
+  ]);
   expect(new Set(file.lists.items.map((i) => i.decidedBy))).toEqual(new Set(['W1']));
+  // "Kontakt" with its lettered answers is a choice between them — a reading the review screen
+  // (S10) asks about, since "Telefon" and "E-post" could as well be two questions.
+  expect(
+    file.segments.segments.map((s) =>
+      s.kind === 'question' ? `${s.label} (${s.answer})` : s.kind,
+    ),
+  ).toEqual(['heading', 'Namn (unknown)', 'Kontakt (choice)', 'Allergier (unknown)']);
+  expect(file.scored.counts.questions).toBe(3);
 
   // Pasted text, read the same way.
   await page.getByRole('button', { name: 'Klistra in text i stället' }).click();

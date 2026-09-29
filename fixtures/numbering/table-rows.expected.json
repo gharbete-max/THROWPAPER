@@ -9,7 +9,9 @@
           "label": "Deltagare",
           "columns": ["Namn", "Telefon", "E-post"],
           "rowCount": 3,
-          "shape": "repeating-rows"
+          "shape": "repeating-rows",
+          "itemId": null,
+          "flags": []
         }
       ]
     }

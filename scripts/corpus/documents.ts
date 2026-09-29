@@ -283,6 +283,35 @@ export const CORPUS: CorpusDocument[] = [
     },
   },
   {
+    name: 'lagerschema',
+    language: 'sv',
+    summary:
+      'A ruled table of plain text — times, activities, places — with a header row, between an introduction and two numbered questions: read across each row, never down the columns.',
+    features: ['text-table', 'ruled-table', 'word-numbering', 'blanks'],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Schema för sommarlägret'),
+        para(
+          'Här är schemat för lägrets första dag. Tiderna kan ändras om vädret är dåligt, och då säger ledarna till i god tid.',
+        ),
+        table(
+          [
+            ['Tid', 'Aktivitet', 'Plats'],
+            ['09.00', 'Frukost och samling', 'Matsalen'],
+            ['10.30', 'Kanotpaddling på sjön', 'Bryggan'],
+            ['13.00', 'Lunch', 'Matsalen'],
+            ['15.00', 'Tipspromenad i skogen', 'Stora ängen'],
+          ],
+          [1600, 4000, 2600],
+        ),
+        item(1, `Namn: ${blank(30)}`),
+        item(1, `Förälders telefon: ${blank(20)}`),
+        para('Lämna blanketten till din ledare senast den 1 juni.'),
+      ],
+    },
+  },
+  {
     name: 'tilmelding',
     language: 'da',
     summary: 'A short Danish form: ordinary prose, and a Word list numbered 1), 2), 3), 4).',

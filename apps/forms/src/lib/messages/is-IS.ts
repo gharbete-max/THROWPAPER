@@ -887,7 +887,8 @@ export const isIS: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:one {count} lína | other {count} línur',
   'paper.read.items': 'plural:one {count} númeraður liður | other {count} númeraðir liðir',
   'paper.read.noText': 'Enginn prentaður texti fannst í skránni.',
-  'paper.read.unchanged': 'Svona var það lesið, í röð. Eyðublaðinu er ekki breytt.',
+  'paper.read.unchanged':
+    'Svona var það lesið, í röð. Eyðublaðinu er ekki breytt: þú ferð yfir það áður en nokkuð af því verður að spurningum.',
   'paper.read.download': 'Sækja það sem var lesið',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Undirritun',

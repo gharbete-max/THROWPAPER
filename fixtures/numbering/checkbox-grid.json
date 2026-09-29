@@ -2,7 +2,7 @@
   "fixture": "checkbox-grid",
   "caveats": ["checkbox-grid"],
   "stage": "segment",
-  "status": "todo",
+  "status": "green",
   "turnsGreenIn": "S9",
   "summary": "Checkboxes aligned in columns under a header row are one grid question with its rows and columns. A single row \"☐ Ja ☐ Nej\" is a yes/no question.",
   "input": {

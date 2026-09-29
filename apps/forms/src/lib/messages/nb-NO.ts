@@ -883,7 +883,8 @@ export const nbNO: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:one {count} linje | other {count} linjer',
   'paper.read.items': 'plural:one {count} nummerert punkt | other {count} nummererte punkter',
   'paper.read.noText': 'Fant ingen trykt tekst i filen.',
-  'paper.read.unchanged': 'Slik ble det lest, i rekkefølge. Skjemaet endres ikke.',
+  'paper.read.unchanged':
+    'Slik ble det lest, i rekkefølge. Skjemaet endres ikke: du går gjennom det før noe av det blir til spørsmål.',
   'paper.read.download': 'Last ned det som ble lest',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signering',

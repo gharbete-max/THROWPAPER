@@ -36,5 +36,58 @@
         }
       ]
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmälan till kursen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Kursen hålls på tisdagar under hösten och är öppen för alla medlemmar. Fyll i blanketten och lämna den till kursledaren, som hör av sig när det är klart vilka som har fått en plats."
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Adress",
+      "answer": "blank",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "heading",
+      "text": "Tidigare erfarenhet"
+    },
+    {
+      "kind": "question",
+      "label": "Har du gått kursen förut?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Vilken nivå har du?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Nybörjare",
+        "Van",
+        "Mycket van"
+      ]
+    }
   ]
 }

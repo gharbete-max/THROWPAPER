@@ -252,7 +252,8 @@ Proposed, pending §14 question 1 (none of the types depend on the answer):
 
 ```
 packages/shared/src/                         (@tp/shared — the forms core already lives here)
-  import/        ir/  layout/  enumerate/  segment/  classify/  overlay/  pipeline.ts
+  import/        ir/  layout/  enumerate/  segment/  classify/  score/  fields.ts  pipeline.ts   (S9)
+                 overlay/                                                                 (S12)
                  paste.ts — pasted text as a layout document                              (S6)
                  classify/weights.json
   builder/       graph/nodes.ts  graph/schema.ts  graph/validate.ts  graph/guards.ts  graph/paths.ts
@@ -391,43 +392,49 @@ permission of 2026-09-25, so the brief and this plan now agree.
 
 ## Questions for the owner
 
-`BRIEF.md` §14, each with the assumption work proceeds on until it is answered:
+`BRIEF.md` §14. **Decided on 2026-09-29**: the owner asked for "the most logical route for each
+question in relation to the project", so each answer below is the recommendation this plan made,
+now a decision; any of them is the owner's to overturn. ADRs 0017–0021 stay *proposed* until the
+owner accepts them (S13 asks).
 
-1. **Which package owns `builder/`, `import/`, `interpret/`, and which app hosts the UI?** *Proceeding
-   on:* `@tp/shared` (subpath exports), and `apps/forms` (the desktop hosts the same bundle). S1
-   built `@tp/shared/builder` on it.
+1. **Which package owns `builder/`, `import/`, `interpret/`, and which app hosts the UI?**
+   *Decided:* `@tp/shared` (subpath exports), and `apps/forms` (the desktop hosts the same bundle).
+   S1 built `@tp/shared/builder` on it.
 2. **Is the paper twin a first-class response PDF beside the standard one, or the default when the
-   form came from paper?** *Proceeding on:* both are offered, and the paper twin is the default for
-   an imported form that kept its source (the README already promises "a form made from paper
-   comes back as that paper").
-3. **Consent/GDPR text: may Loppa ever reformat it, or is it preserved byte for byte?** *Proceeding
-   on:* byte for byte, rendered as-is; only its container (the checkbox, the box it sits in)
-   follows the brand.
-4. **Are learned aliases per install, or a shared team file?** *Proceeding on — and built so in
-   S6:* per organisation (`builder_aliases`), exportable and importable as `aliases.json`; on the
-   desktop that is the install.
+   form came from paper?** *Decided:* both are offered, and the paper twin is the default for an
+   imported form that kept its source (the README already promises "a form made from paper comes
+   back as that paper"). S12 builds it.
+3. **Consent/GDPR text: may Loppa ever reformat it, or is it preserved byte for byte?**
+   *Decided:* byte for byte, always, rendered as-is; only its container (the checkbox, the box it
+   sits in) follows the brand. Held by `CAVEATS.md` #28.
+4. **Are learned aliases per install, or a shared team file?** *Decided — and built so in S6:* per
+   organisation (`builder_aliases`), exportable and importable as `aliases.json`; on the desktop
+   that is the install.
 5. ~~Is there an i18n workflow the graph strings must follow?~~ *Answered by the repository:* a
    TypeScript catalogue per locale (`apps/forms/src/lib/messages/`), no translation platform; a
    missing key is a compile error. The graph's strings are there, under `guided.*` (S1).
-6. **Which brand-kit print/design constraints beat the layout shelf?** *Proceeding on:* the logo's
+6. **Which brand-kit print/design constraints beat the layout shelf?** *Decided:* the logo's
    aspect ratio, the contrast floor (`packages/tokens` contrast guard) and the 44 px tap target are
    hard; everything else in the shelf is a preference.
-7. **Which door is the headline?** *Proceeding on:* the document import — so the detector runs as
-   **S1b**, immediately after S1, because it is the highest-risk module, it is blocked only on the
-   IR, and its failure would change the roadmap (the fallback is the paper-twin path: keep the page
-   as an image and place fields on it, which exists today).
+7. **Which door is the headline?** *Decided:* the document import. The detector ran as **S1b**,
+   immediately after S1; now S9 (segment, classify, score) and **S10, the review screen**, come
+   before the guess (S11), because an import that ends in real questions is the biggest thing a
+   user is still missing.
 8. **May a colour preset chosen in one form's conversation change the brand kit?** (raised by S5)
    "Which colours should your form use?" can only take effect through the brand kit, which is the
-   whole organisation's — every form and every mail — and only an administrator may change it. So
-   answering it from one form would restyle all of them, and an operator could not answer it at all.
-   *Proceeding on:* the preset is recorded in the conversation and not applied; the preview wears
-   the organisation's kit, what will actually publish, and says so when there is none. The
-   alternatives are a per-form theme (a presentation-only `settings.layout.theme`, rendered only
-   where no kit exists) or applying the preset to the kit with a confirmation, for administrators.
+   whole organisation's — every form and every mail — and only an administrator may change it.
+   *Decided:* an **administrator** answering it is asked "Use these colours for all your
+   organisation's forms? (changes your brand kit)", with confirm or cancel, and nothing changes
+   without the confirmation; with no brand kit yet, the confirmed choice creates the first one. For
+   an **operator** the question is skipped, with the sentence "Your organisation's colours are set
+   by an administrator." This keeps one brand source of truth and never restyles other forms
+   silently. *Built in its own commit after S9*; until then the preset is recorded in the
+   conversation and not applied, and the preview wears the organisation's kit.
 
 Three questions this plan raised are settled by revision 3 of the brief:
 
 - **Motion** (item 7 above): 220 ms (`--tp-motion-preview`) on the brand's `unfurl` curve.
 - **Grid questions**: the one-select-per-row fallback stands until S9, which either writes the
-  grid field type's ADR (CSV shape first) or keeps the fallback.
+  grid field type's ADR (CSV shape first) or keeps the fallback. *S9 kept the fallback* (a grid of
+  one column is a list to tick, `multi_select`); `CAVEATS.md`, known unknowns.
 - **Commits**: each slice on the session branch, one draft pull request (item 13 above).

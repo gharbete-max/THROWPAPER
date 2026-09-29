@@ -1,4 +1,4 @@
-import type { EnumerateResult, LayoutDocument, RawDocument, StageDebug } from '@tp/shared/import';
+import type { FormFieldBox, LayoutDocument, LayoutReading, RawDocument } from '@tp/shared/import';
 
 /**
  * What the import's stages read, as plain data — the shape `pipeline.ts` produces, in the worker
@@ -6,16 +6,16 @@ import type { EnumerateResult, LayoutDocument, RawDocument, StageDebug } from '@
  * pulls the stages themselves into the page's chunk: they load only in the worker.
  */
 
-export type ReadRequest = { kind: 'raw'; raw: RawDocument } | { kind: 'paste'; text: string };
+/** A PDF's own form fields go with its text, so that they beat it (`CAVEATS.md` #54). */
+export type ReadRequest =
+  { kind: 'raw'; raw: RawDocument; fields?: FormFieldBox[] } | { kind: 'paste'; text: string };
 
-export interface Reading {
+/** Stages 3–7 of `@tp/shared/import`, with the layout document they read. */
+export interface Reading extends LayoutReading {
   layout: LayoutDocument;
-  lists: EnumerateResult;
-  /** One artifact per stage that ran, in order. */
-  debug: StageDebug[];
 }
 
 /** What the author downloads: everything that was read, and how, as one JSON file. */
 export function readingFile(reading: Reading): string {
-  return `${JSON.stringify({ readingVersion: 1, ...reading }, null, 2)}\n`;
+  return `${JSON.stringify({ readingVersion: 2, ...reading }, null, 2)}\n`;
 }

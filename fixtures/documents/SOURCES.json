@@ -136,6 +136,28 @@
       }
     },
     {
+      "name": "lagerschema",
+      "language": "sv",
+      "summary": "A ruled table of plain text — times, activities, places — with a header row, between an introduction and two numbered questions: read across each row, never down the columns.",
+      "features": [
+        "text-table",
+        "ruled-table",
+        "word-numbering",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "lagerschema.pdf",
+          "sha256": "017974d7b3e334459728852eaa7b30819e0b44747ca65837fabbfae3add53fcc"
+        },
+        "docx": {
+          "path": "lagerschema.docx",
+          "sha256": "fb9b0a5c6ca1ee877889c1f3d3cf89f47b4df5ae695468cfc3ea71078ead48c1"
+        }
+      }
+    },
+    {
       "name": "medlemsansokan",
       "language": "sv",
       "summary": "A one-page membership application: a Word list with a lettered sub-list, blanks, a yes/no question with checkboxes, and a page-number footer.",

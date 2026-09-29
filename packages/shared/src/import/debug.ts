@@ -77,9 +77,34 @@ export function canonicalJson(value: unknown): string {
   throw new TypeError(`canonicalJson: ${typeof value} is not JSON data`);
 }
 
+/**
+ * Digests already taken, by the object: every stage after the second reads the same layout
+ * document, and hashing it anew at each stage cost more than all the stages' own work together.
+ * The stages never change their inputs, so an object's digest does not go stale.
+ */
+const DIGESTS = new WeakMap<object, string>();
+
 /** The hash a debug artifact names its input by. */
 export function inputSha256(input: unknown): string {
-  return sha256Hex(canonicalJson(input));
+  if (input === null || typeof input !== 'object') return sha256Hex(canonicalJson(input));
+  const known = DIGESTS.get(input);
+  if (known) return known;
+  const digest = sha256Hex(canonicalJson(input));
+  DIGESTS.set(input, digest);
+  return digest;
+}
+
+/**
+ * The hash of a stage that reads several inputs: each part is hashed by itself (the layout
+ * document once per import, however many stages read it), then the parts' hashes by their names.
+ * As exact an identity of the input as hashing it whole, at a fraction of the cost.
+ */
+export function inputsSha256(parts: Record<string, unknown>): string {
+  return sha256Hex(
+    canonicalJson(
+      Object.fromEntries(Object.entries(parts).map(([name, part]) => [name, inputSha256(part)])),
+    ),
+  );
 }
 
 /**

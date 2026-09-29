@@ -18,5 +18,39 @@
       "marker": "4)",
       "label": "E-mail: ____________________________"
     }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Tilmelding til generalforsamlingen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Hvis du vil deltage i årsmødet, skal du udfylde blanketten og sende den til os senest fredag. Vi har brug for at vide, hvor mange af jer der kommer, hvad I gerne vil spise, og om nogle af jer har allergier. Det er vigtigt at alle oplysninger er korrekte, for ellers kan vi ikke nå at sende indkaldelsen ud i tide. Skriv tydeligt, og kontrollér at du har svaret på alt, før du afleverer den. Hvis noget er uklart, bedes du venligst kontakte sekretariatet, så hjælper vi dig gennem det. Blanketten bliver gemt hos os, og ingen andre end bestyrelsen får adgang til den, uden at du har givet os lov. Mellem mødets punkter blev der tidligere holdt pauser, og det bliver der også i år, så du kan tale med hende eller ham, som står for maden."
+    },
+    {
+      "kind": "question",
+      "label": "Navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Adresse",
+      "answer": "blank",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "E-mail",
+      "answer": "blank",
+      "type": "email"
+    }
   ]
 }

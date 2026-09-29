@@ -8,7 +8,9 @@ import {
   parseLayoutDocument,
   parseRawDocument,
   rawProblems,
+  readLayout,
   reassemble,
+  segment,
   type LayoutDocument,
   type StageResult,
 } from '@tp/shared/import';
@@ -35,13 +37,14 @@ const NUMBERING = join(ROOT, 'fixtures', 'numbering');
 const DEBUG = join(NUMBERING, 'debug');
 const SAMPLES = join(ROOT, 'fixtures', 'ir');
 
-const STAGES = ['reassemble', 'enumerate', 'segment', 'classify'] as const;
+const STAGES = ['reassemble', 'enumerate', 'segment', 'classify', 'score'] as const;
 type Stage = (typeof STAGES)[number];
 const EXPECT_KEYS: Record<Stage, string[]> = {
   reassemble: ['reassemble', 'enumerateSummary'],
   enumerate: ['enumerate'],
   segment: ['segment'],
-  classify: ['classify', 'enumerateSummary'],
+  classify: ['classify'],
+  score: ['score', 'enumerateSummary'],
 };
 
 /**
@@ -93,6 +96,34 @@ const RUNNERS: Partial<
   >
 > = {
   enumerate: (input) => enumerate(parseLayoutDocument(input)),
+  segment: (input) => {
+    const layout = parseLayoutDocument(input);
+    return segment(layout, enumerate(layout).output);
+  },
+  // What a score fixture expects of each question: its lines, its label, and the strictest cap
+  // on its bucket when one applies (`ocr-noise-budget`).
+  score: (input) => {
+    const layout = parseLayoutDocument(input);
+    const read = readLayout(layout);
+    const items = read.scored.scored.flatMap((scored) => {
+      const segment = read.segments.segments[scored.segmentIndex]!;
+      if (segment.kind !== 'question') return [];
+      const caps = scored.caps.map((cap) => cap.bucketAtMost);
+      const strictest = caps.includes('review') ? 'review' : caps.includes('flag') ? 'flag' : null;
+      return [
+        {
+          lineIds: segment.lineIds,
+          label: segment.label,
+          ...(strictest ? { bucketAtMost: strictest } : {}),
+        },
+      ];
+    });
+    return {
+      output: { items },
+      debug: read.debug.find((debug) => debug.stage === 'score')!,
+      also: { enumerateSummary: enumerateSummary(layout) },
+    };
+  },
   reassemble: (input) => {
     const { output, debug } = reassemble(parseRawDocument(input));
     return {

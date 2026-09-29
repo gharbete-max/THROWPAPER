@@ -1,0 +1,31 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in fi. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "fi",
+  "features": {
+    "nameWord": ["nimi", "etunimi", "sukunimi", "*nimi"],
+    "emailWord": ["sähköposti", "sähköpostiosoite", "s-posti", "email", "e-mail"],
+    "phoneWord": ["puhelin*", "*puhelin", "puh", "matkapuhelin"],
+    "addressWord": ["osoite", "*osoite"],
+    "dateWord": ["päivämäärä", "pvm", "syntymäaika", "syntymäpäivä"],
+    "timeWord": ["aika", "kellonaika", "klo"],
+    "numberWord": ["määrä", "lukumäärä", "kuinka monta", "ikä"],
+    "currencyHint": ["euro*", "€", "eur", "summa", "hinta", "maksu", "alv"],
+    "personnummerWord": ["henkilötunnus", "hetu"],
+    "orgNrWord": ["y-tunnus", "ytunnus"],
+    "signatureHint": ["allekirjoitus", "*allekirjoitus"],
+    "fileHint": ["liitä", "liite*", "lataa"],
+    "consentHint": ["suostu*", "hyväksyn", "gdpr"],
+    "commentWord": ["lisätiedot", "lisätietoja", "kommentti*", "muuta", "viesti", "kuvaile"],
+    "selectAllPhrase": ["voit valita useamman", "valitse kaikki"],
+    "repeatableHint": ["henkeä kohden", "jokaisesta osallistujasta"],
+    "required": ["pakollinen*"],
+    "optional": ["vapaaehtoinen*", "valinnainen"],
+    "maxWords": ["max", "enintään", "maksimi"],
+    "minWords": ["min", "vähintään"]
+  },
+  "formats": {
+    "personnummerWord": "fi-hetu",
+    "orgNrWord": "fi-ytunnus"
+  }
+}

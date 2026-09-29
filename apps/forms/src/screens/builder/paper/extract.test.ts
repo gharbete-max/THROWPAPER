@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { importAcroFields, type AcroField } from '@tp/shared/forms';
 import {
+  fieldBoxes,
   anchorFor,
   fontLook,
   horizontalRules,
@@ -221,6 +222,45 @@ describe('printed rules from the drawing operations', () => {
     expect(rules.map((r) => [r.x0, r.x1])).toEqual([
       [1681, 6723],
       [840, 3361],
+    ]);
+  });
+});
+
+describe("a PDF's fields for the import's stages (CAVEATS #54)", () => {
+  const field = (over: Partial<AcroField>): AcroField => ({
+    name: 'f',
+    type: 'text',
+    paper: { page: 3, x: 0.5, y: 0.25, w: 0.3, h: 0.02 },
+    ...over,
+  });
+
+  it('puts each widget in layout units, on its page counted within this PDF', () => {
+    expect(fieldBoxes([field({ name: 'namn', label: 'Namn' })], 2)).toEqual([
+      {
+        name: 'namn',
+        label: 'Namn',
+        type: 'text',
+        multiline: false,
+        multiSelect: false,
+        pageNo: 2,
+        box: { x0: 5000, y0: 2500, x1: 8000, y1: 2700 },
+      },
+    ]);
+  });
+
+  it('leaves out what asks nothing, and what has nowhere to be', () => {
+    const boxes = fieldBoxes(
+      [
+        field({ name: 'send', type: 'button' }),
+        field({ name: 'total', readOnly: true }),
+        field({ name: 'secret', hidden: true }),
+        field({ name: 'nowhere', paper: undefined }),
+        field({ name: 'kept', multiline: true }),
+      ],
+      0,
+    );
+    expect(boxes.map((box) => [box.name, box.multiline, box.label])).toEqual([
+      ['kept', true, null],
     ]);
   });
 });

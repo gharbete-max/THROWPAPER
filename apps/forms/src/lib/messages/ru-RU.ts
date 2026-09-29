@@ -905,7 +905,8 @@ export const ruRU: Record<MessageKey, string> = {
   'paper.read.items':
     'plural:one {count} нумерованный пункт | few {count} нумерованных пункта | many {count} нумерованных пунктов | other {count} нумерованного пункта',
   'paper.read.noText': 'В файле не найден печатный текст.',
-  'paper.read.unchanged': 'Вот что было прочитано, по порядку. Форма не меняется.',
+  'paper.read.unchanged':
+    'Вот что было прочитано, по порядку. Форма не меняется: вы всё проверите, прежде чем что-либо из этого станет вопросом.',
   'paper.read.download': 'Скачать прочитанное',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Подписание',

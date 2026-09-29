@@ -27,6 +27,13 @@ describe('sha256Hex', () => {
     for (const text of texts) expect(sha256Hex(text), text).toBe(node(text));
   });
 
+  it('agrees with node:crypto on megabytes of every script, as a layout document is', () => {
+    const pieces = ['Anmälan ', '{"x0":1000,', '続く — ', '𝒜😀', 'Öhrqvists ', '\u0000\u007f', 'ﬁ'];
+    let text = '';
+    for (let i = 0; text.length < 1_500_000; i += 1) text += pieces[(i * 7) % pieces.length]! + i;
+    expect(sha256Hex(text)).toBe(node(text));
+  });
+
   it('hashes a lone surrogate as U+FFFD, as TextEncoder would encode it', () => {
     expect(sha256Hex('a\uD800b')).toBe(sha256Hex('a\uFFFDb'));
   });

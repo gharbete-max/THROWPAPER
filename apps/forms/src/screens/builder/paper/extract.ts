@@ -1,6 +1,6 @@
 import type { AcroField, PaperAnchor } from '@tp/shared/forms';
 import { MAX_PAPER_PAGES } from '@tp/shared/forms';
-import type { Box, RawDocument, RawPage, RawWord } from '@tp/shared/import';
+import type { Box, FormFieldBox, RawDocument, RawPage, RawWord } from '@tp/shared/import';
 
 /**
  * Reads a PDF in the browser: its pages as pictures, its form fields, its printed text.
@@ -46,6 +46,37 @@ export class TooManyPages extends Error {
     super(`${pages} pages`);
     this.name = 'TooManyPages';
   }
+}
+
+/**
+ * A PDF's own fields as the import's stages take them (`CAVEATS.md` #54): each widget's anchor —
+ * fractions of the page, y down, as `anchorFor` makes them — in layout units, on its page counted
+ * from 1 within this PDF (`firstPage` is where this PDF's pages start among the files read).
+ * Buttons, read-only and hidden fields ask nothing, as `importAcroFields` also says, and a field
+ * with no widget has nowhere to be.
+ */
+export function fieldBoxes(fields: readonly AcroField[], firstPage: number): FormFieldBox[] {
+  const iu = (fraction: number) => Math.min(10_000, Math.max(0, Math.round(fraction * 10_000)));
+  return fields.flatMap((field) => {
+    const anchor = field.paper;
+    if (!anchor || field.type === 'button' || field.readOnly || field.hidden) return [];
+    return [
+      {
+        name: field.name,
+        label: field.label ?? null,
+        type: field.type,
+        multiline: field.multiline ?? false,
+        multiSelect: field.multiSelect ?? false,
+        pageNo: anchor.page - firstPage + 1,
+        box: {
+          x0: iu(anchor.x),
+          y0: iu(anchor.y),
+          x1: iu(anchor.x + anchor.w),
+          y1: iu(anchor.y + anchor.h),
+        },
+      },
+    ];
+  });
 }
 
 /** The pdf.js module, as `openPdf` uses it. */

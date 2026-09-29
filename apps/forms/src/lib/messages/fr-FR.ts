@@ -909,7 +909,7 @@ export const frFR: Record<MessageKey, string> = {
   'paper.read.items': 'plural:one {count} élément numéroté | other {count} éléments numérotés',
   'paper.read.noText': 'Aucun texte imprimé n’a été trouvé dans ce fichier.',
   'paper.read.unchanged':
-    'Voici ce qui a été lu, dans l’ordre. Votre formulaire n’est pas modifié.',
+    'Voici ce qui a été lu, dans l’ordre. Votre formulaire n’est pas modifié : vous le vérifierez avant que quoi que ce soit ne devienne une question.',
   'paper.read.download': 'Télécharger ce qui a été lu',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signature',

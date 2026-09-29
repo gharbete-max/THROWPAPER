@@ -1,0 +1,28 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in fr. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "fr",
+  "features": {
+    "nameWord": ["nom", "prénom", "nom de famille"],
+    "emailWord": ["e-mail", "email", "courriel", "adresse e-mail", "adresse électronique", "mail"],
+    "phoneWord": ["téléphone", "tél", "portable", "mobile"],
+    "addressWord": ["adresse", "adresse postale", "domicile"],
+    "dateWord": ["date", "date de naissance"],
+    "timeWord": ["heure", "horaire"],
+    "numberWord": ["nombre de", "combien", "âge", "quantité"],
+    "currencyHint": ["montant", "prix", "€", "eur", "euros", "tarif"],
+    "personnummerWord": ["numéro de sécurité sociale"],
+    "orgNrWord": ["siren", "siret"],
+    "signatureHint": ["signature"],
+    "fileHint": ["joindre", "pièce jointe", "télécharger"],
+    "consentHint": ["consent*", "j'accepte", "accepte", "rgpd", "gdpr"],
+    "commentWord": ["commentaire*", "remarque*", "message", "précisez", "autres informations"],
+    "selectAllPhrase": ["plusieurs réponses", "cochez toutes"],
+    "repeatableHint": ["par personne", "chaque participant"],
+    "required": ["obligatoire"],
+    "optional": ["facultatif", "optionnel"],
+    "maxWords": ["max", "maximum", "au plus", "jusqu'à"],
+    "minWords": ["min", "minimum", "au moins"]
+  },
+  "formats": {}
+}

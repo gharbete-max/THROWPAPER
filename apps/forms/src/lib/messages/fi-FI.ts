@@ -889,7 +889,8 @@ export const fiFI: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:one {count} rivi | other {count} riviä',
   'paper.read.items': 'plural:one {count} numeroitu kohta | other {count} numeroitua kohtaa',
   'paper.read.noText': 'Tiedostosta ei löytynyt painettua tekstiä.',
-  'paper.read.unchanged': 'Näin se luettiin, järjestyksessä. Lomakkeesi ei muutu.',
+  'paper.read.unchanged':
+    'Näin se luettiin, järjestyksessä. Lomakkeesi ei muutu: tarkistat kaiken ennen kuin siitä tulee kysymyksiä.',
   'paper.read.download': 'Lataa luettu',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Allekirjoitus',

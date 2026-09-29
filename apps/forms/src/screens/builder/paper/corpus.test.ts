@@ -13,12 +13,14 @@ import type { Reading } from './reading.js';
 /**
  * The golden corpus — `docs/plan/IMPORT-PIPELINE.md`, "The golden corpus": real documents, written
  * by a real word processor, read by exactly the code the paper door runs. Stage 1 (`openPdf` with
- * Node's pdf.js, or `readDocx`), then stages 2 and 3 (`readDocument`, as in the worker).
+ * Node's pdf.js, or `readDocx`), then stages 2 to 7 (`readDocument`, as in the worker).
  *
  * Each document's expectation (`fixtures/documents/expected/`) was written by hand from what the
  * document says, before it was run: the numbered items a person reading it would list, in reading
- * order, nested as they are nested, with their wording verbatim — and the document's language. The
- * PDF and the Word file of a document are held to the same expectation, so they agree. Each stage's
+ * order, nested as they are nested, with their wording verbatim — and the document's language, and
+ * (since S9) every part of it a person would list: its headings, its text, and its questions with
+ * what answers them and the type they would give them. The PDF and the Word file of a document are
+ * held to the same expectation, so they agree. Each stage's
  * debug artifact is a snapshot besides (`fixtures/documents/debug/`), so a change to any decision is
  * a diff to review, not only a change to the items.
  */
@@ -58,10 +60,28 @@ interface Listed {
   flags?: string[];
   items?: Listed[];
 }
+/**
+ * A part of the document as a person lists it: a heading, text to read, or a question with what
+ * answers it and the type they would give it (stages 4 and 5).
+ */
+interface Seen {
+  kind: string;
+  text?: string;
+  label?: string | null;
+  answer?: string;
+  type?: string;
+  options?: string[];
+  details?: string[];
+  rows?: string[];
+  columns?: string[];
+  rowCount?: number;
+  flags?: string[];
+}
 interface Expectation {
   document: string;
   locale: string;
   items: Listed[];
+  segments: Seen[];
 }
 
 const sources = JSON.parse(readFileSync(join(CORPUS, 'SOURCES.json'), 'utf8')) as Sources;
@@ -114,6 +134,48 @@ function listed({ lists, layout }: Reading): Listed[] {
   return under(null);
 }
 
+/** Stage 4's segments, with stage 5's type for each question, as the expectations write them. */
+function seen({ segments, classified }: Reading): Seen[] {
+  const types = new Map(classified.classified.map((c) => [c.segmentIndex, c.kind]));
+  return segments.segments.map((segment, index): Seen => {
+    const type = types.get(index);
+    switch (segment.kind) {
+      case 'heading':
+      case 'instruction':
+      case 'meta':
+        return { kind: segment.kind, text: segment.text };
+      case 'question':
+        return {
+          kind: 'question',
+          label: segment.label,
+          answer: segment.answer,
+          type,
+          ...(segment.options.length ? { options: segment.options } : {}),
+          ...(segment.details.length ? { details: segment.details } : {}),
+          ...(segment.flags.length ? { flags: segment.flags } : {}),
+        };
+      case 'grid':
+        return {
+          kind: 'grid',
+          label: segment.label,
+          rows: segment.rows,
+          columns: segment.columns,
+          type,
+          ...(segment.flags.length ? { flags: segment.flags } : {}),
+        };
+      case 'table':
+        return {
+          kind: 'table',
+          label: segment.label,
+          columns: segment.columns,
+          rowCount: segment.rowCount,
+          type,
+          ...(segment.flags.length ? { flags: segment.flags } : {}),
+        };
+    }
+  });
+}
+
 describe('the golden corpus', () => {
   it('lists every file it holds, by hash, under its licence', () => {
     expect(sources.licence).toBe('CC0-1.0');
@@ -158,6 +220,7 @@ describe('the golden corpus', () => {
         const reading = readDocument({ kind: 'raw', raw });
         expect(listed(reading)).toStrictEqual(expected.items);
         expect(reading.layout.locale).toBe(expected.locale);
+        expect(seen(reading)).toStrictEqual(expected.segments);
         for (const debug of reading.debug) {
           await expect(debugSnapshot(debug)).toMatchFileSnapshot(
             join(DEBUG, `${doc.name}.${format}.${debug.stage}.json`),
@@ -172,7 +235,9 @@ describe('the golden corpus', () => {
     const written = new Set(
       sources.documents.flatMap((doc) =>
         FORMATS.flatMap((format) =>
-          ['reassemble', 'enumerate'].map((stage) => `${doc.name}.${format}.${stage}.json`),
+          ['reassemble', 'enumerate', 'segment', 'classify', 'score'].map(
+            (stage) => `${doc.name}.${format}.${stage}.json`,
+          ),
         ),
       ),
     );

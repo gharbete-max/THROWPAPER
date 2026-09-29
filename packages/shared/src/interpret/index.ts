@@ -13,6 +13,7 @@ export { clausesOf, type Clause } from './clauses.js';
 export { listOf, type ListReading } from './list.js';
 export { LANGUAGES, languageOf, lexiconFor, type Language, type Lexicon } from './lexicon.js';
 export { lnMille } from './ln.js';
+export { sigmoidMille } from './sigmoid.js';
 export { PATTERN_KINDS, readPattern, type PatternKind, type PatternReading } from './patterns.js';
 export { keyOf, type Token } from './text.js';
 export { vocabularyFor, type Vocabulary } from './vocabulary.js';

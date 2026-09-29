@@ -1,0 +1,31 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in is. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "is",
+  "features": {
+    "nameWord": ["nafn", "*nafn", "fornafn", "eftirnafn"],
+    "emailWord": ["netfang", "tölvupóstur", "tölvupóstfang"],
+    "phoneWord": ["sími", "símanúmer", "farsími", "gsm"],
+    "addressWord": ["heimilisfang", "póstfang"],
+    "dateWord": ["dagsetning", "fæðingardagur", "dags"],
+    "timeWord": ["tími", "klukkan", "kl"],
+    "numberWord": ["fjöldi", "aldur", "hversu margir"],
+    "currencyHint": ["kr", "krónur", "isk", "upphæð", "verð", "gjald"],
+    "personnummerWord": ["kennitala", "kt"],
+    "orgNrWord": ["kennitala fyrirtækis"],
+    "signatureHint": ["undirskrift"],
+    "fileHint": ["viðhengi", "hlaða upp"],
+    "consentHint": ["samþykki*", "ég samþykki"],
+    "commentWord": ["athugasemd*", "annað", "skilaboð"],
+    "selectAllPhrase": ["fleiri en eitt"],
+    "repeatableHint": ["á mann", "hvern þátttakanda"],
+    "required": ["skylda", "skyldureitur", "nauðsynlegt"],
+    "optional": ["valfrjálst"],
+    "maxWords": ["hámark", "mest"],
+    "minWords": ["lágmark", "minnst"]
+  },
+  "formats": {
+    "personnummerWord": "is-kennitala",
+    "orgNrWord": "is-kennitala"
+  }
+}

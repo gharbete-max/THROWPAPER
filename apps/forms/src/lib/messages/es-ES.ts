@@ -899,7 +899,8 @@ export const esES: Record<MessageKey, string> = {
   'paper.read.lines': 'plural:one {count} línea | other {count} líneas',
   'paper.read.items': 'plural:one {count} elemento numerado | other {count} elementos numerados',
   'paper.read.noText': 'No se encontró texto impreso en el archivo.',
-  'paper.read.unchanged': 'Esto es lo que se leyó, en orden. Su formulario no cambia.',
+  'paper.read.unchanged':
+    'Esto es lo que se leyó, en orden. Su formulario no cambia: lo revisará antes de que nada de esto se convierta en preguntas.',
   'paper.read.download': 'Descargar lo leído',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Firma',

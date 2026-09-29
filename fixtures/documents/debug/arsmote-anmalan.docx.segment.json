@@ -1,0 +1,33 @@
+{
+  "stage": "segment",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "d463073a0d640fde977b3306d14343ef70c03dd5ae48dd8affe777757ed512ac",
+  "decisions": [
+    {"id":"segment:p1-l1","rule":"S1","verdict":"heading","subject":["p1-l1"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l2","rule":"S8","verdict":"instruction","subject":["p1-l2"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l3","rule":"S8","verdict":"instruction","subject":["p1-l3"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l4","rule":"S8","verdict":"instruction","subject":["p1-l4"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l5","rule":"S8","verdict":"instruction","subject":["p1-l5"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l6","rule":"S8","verdict":"instruction","subject":["p1-l6"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l7","rule":"S8","verdict":"instruction","subject":["p1-l7"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l8","rule":"S8","verdict":"instruction","subject":["p1-l8"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l9","rule":"S8","verdict":"instruction","subject":["p1-l9"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l10","rule":"S8","verdict":"instruction","subject":["p1-l10"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l11","rule":"S8","verdict":"instruction","subject":["p1-l11"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l12","rule":"S8","verdict":"instruction","subject":["p1-l12"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l13","rule":"S8","verdict":"instruction","subject":["p1-l13"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l14","rule":"S8","verdict":"instruction","subject":["p1-l14"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l15","rule":"S8","verdict":"instruction","subject":["p1-l15"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l16","rule":"S8","verdict":"instruction","subject":["p1-l16"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l17","rule":"S8","verdict":"instruction","subject":["p1-l17"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l18","rule":"S6","verdict":"question:blank","subject":["p1-l18"],"evidence":{"room":0}},
+    {"id":"segment:p1-l19","rule":"S6","verdict":"question:blank","subject":["p1-l19"],"evidence":{"room":0}},
+    {"id":"segment:p1-l20","rule":"S6","verdict":"question:blank","subject":["p1-l20"],"evidence":{"room":0}},
+    {"id":"segment:p1-l21","rule":"S6","verdict":"question:blank","subject":["p1-l21"],"evidence":{"room":0}},
+    {"id":"segment:p1-l22","rule":"S4","verdict":"question:boolean","subject":["p1-l22"],"evidence":{"options":2}},
+    {"id":"segment:p1-l23","rule":"S6","verdict":"question:blank","subject":["p1-l23"],"evidence":{"room":0}},
+    {"id":"segment:p1-l24","rule":"S7","verdict":"question:unknown","subject":["p1-l24"],"evidence":{"verdict":"accept"}},
+    {"id":"segment:p1-l25","rule":"S6","verdict":"question:blank","subject":["p1-l25"],"evidence":{"room":0}}
+  ]
+}

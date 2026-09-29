@@ -1,7 +1,7 @@
 {
   "fixture": "ocr-noise-budget",
   "expect": {
-    "classify": {
+    "score": {
       "items": [
         { "lineIds": ["p1-l1"], "label": "Namn" },
         { "lineIds": ["p1-l2"], "label": "Adr3ss", "bucketAtMost": "review" },

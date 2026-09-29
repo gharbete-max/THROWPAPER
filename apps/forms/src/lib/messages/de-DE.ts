@@ -911,7 +911,7 @@ export const deDE: Record<MessageKey, string> = {
   'paper.read.items': 'plural:one {count} nummerierter Punkt | other {count} nummerierte Punkte',
   'paper.read.noText': 'In der Datei wurde kein gedruckter Text gefunden.',
   'paper.read.unchanged':
-    'So wurde es gelesen, in dieser Reihenfolge. Ihr Formular ändert sich nicht.',
+    'So wurde es gelesen, in dieser Reihenfolge. Ihr Formular ändert sich nicht: Sie prüfen alles, bevor daraus Fragen werden.',
   'paper.read.download': 'Gelesenes herunterladen',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Unterschrift',

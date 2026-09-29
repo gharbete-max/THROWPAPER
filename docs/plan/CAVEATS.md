@@ -40,31 +40,37 @@ The detector's own procedure is `NUMBERING-RULES.md`; the rule ids below are its
 | 17 | `table-rows` | a table with a header row becomes N questions with jumbled text | header of ≥ 2 widely spaced words + ≥ 2 ruled or numbered rows → one table segment (§4.3) | `fixtures/numbering/table-rows.json` |
 | 18 | `checkbox-grid` | a checkbox matrix becomes loose options; "☐ Ja ☐ Nej" becomes two questions | aligned checkbox rows under a header → grid (§4.2); a single yes/no pair → boolean (§4.4) | `fixtures/numbering/checkbox-grid.json` |
 | 19 | `blank-line-leaders` | "Namn ........." is read as prose | ≥ 3 underscores or ≥ 4 leader dots is a blank; label without it and one trailing colon (§4.6) | `fixtures/numbering/blank-line-leaders.json` |
-| 20 | `ocr-noise-budget` | a noisy OCR label is accepted silently, or "fixed" | lowest word confidence < 60 caps at `review`, < 85 at `flag`; the text is never changed (§7) | `fixtures/numbering/ocr-noise-budget.json` |
+| 20 | `ocr-noise-budget` | a noisy OCR label is accepted silently, or "fixed" | lowest word confidence < 60 caps at `review`, < 85 at `flag`; the text is never changed (§7) | `fixtures/numbering/ocr-noise-budget.json` (a stage 7 fixture since S9); `packages/shared/src/import/pipeline.test.ts` ("#20") |
 | 21 | `layout-shift-within-document` | a full-width intro above two columns scrambles the order | XY-cut produces three regions: top, then left, then right (§2.2) | `fixtures/numbering/layout-shift-within-document.json` |
 
 ## 8.3 Semantic traps
 
 | # | Id | Symptom | Rule | Test |
 | --- | --- | --- | --- | --- |
-| 22 | `instruction-vs-question` | "Please read the terms and conditions." becomes a question | prose with no blank, checkbox or trailing colon is an instruction; one tap makes it a question | planned: `packages/shared/src/import/segment/segment.test.ts` (S9) |
-| 23 | `heading-vs-question` | "PARTICIPANT DETAILS" becomes a field | a heading block or an all-caps line without a marker is a heading segment | planned: `segment.test.ts` (S9) |
-| 24 | `label-and-field-split` | "E-post:" and the blank line under it become two things | a line ending in `:` followed in its block by a line that is only a blank or a rule is one question | planned: `segment.test.ts` (S9) |
-| 25 | `same-question-repeated` | the same question in two sections is merged | never de-duplicated; a "these look the same" chip | planned: `segment.test.ts` (S9) |
-| 26 | `required-inference` | no hint is read as "optional" | `*`, "required", "obligatoriskt", "(mandatory)"… → required; no hint → **unknown**, capped at `flag` | planned: `packages/shared/src/import/classify/classify.test.ts` (S9) |
-| 27 | `locale-specific-fields` | a Swedish personnummer check runs on a Norwegian form | a locale's validator is proposed only when the document locale (§2.11) is that locale; otherwise it is a chip | planned: `classify.test.ts` (S9) |
-| 28 | `consent-language` | consent text is summarised, shortened or tidied | "samtycke", "GDPR", "I agree to…" → the consent presentation; the text verbatim, byte for byte | planned: `classify.test.ts` (S9) |
-| 29 | `number-in-question-text` | "How many guests? (max 8)" grows 8 options or a second question | numbers inside a label stay in it; `max: 8` is offered as a chip | planned: `classify.test.ts` (S9) |
-| 30 | `option-count-sanity` | a single choice with 45 options is accepted | > 30 options is flagged "this looks like a table or two questions" | planned: `segment.test.ts` (S9) |
+| 22 | `instruction-vs-question` | "Please read the terms and conditions." becomes a question | prose with no blank, checkbox or trailing colon is an instruction; one tap makes it a question | `fixtures/numbering/prose-question.json`, `packages/shared/src/import/segment/segment.test.ts` |
+| 23 | `heading-vs-question` | "PARTICIPANT DETAILS" becomes a field | a heading block or an all-caps line without a marker is a heading segment | `packages/shared/src/import/segment/segment.test.ts` ("#23") |
+| 24 | `label-and-field-split` | "E-post:" and the blank line under it become two things | a line ending in `:` followed in its block by a line that is only a blank or a rule is one question | `fixtures/numbering/label-colon-blank-below.json` |
+| 25 | `same-question-repeated` | the same question in two sections is merged | never de-duplicated; a "these look the same" chip | `packages/shared/src/import/segment/segment.test.ts` ("#25") |
+| 26 | `required-inference` | no hint is read as "optional" | `*`, "required", "obligatoriskt", "(mandatory)"… → required; "(frivilligt)", "optional"… → not required; no hint → **unknown**. The required decision is its own, at most `flag` when unknown, and does not lower the question's bucket (IMPORT-PIPELINE §7) | `packages/shared/src/import/classify/classify.test.ts` ("#26"); `packages/shared/src/import/pipeline.test.ts` ("#26") |
+| 27 | `locale-specific-fields` | a Swedish personnummer check runs on a Norwegian form | a locale's validator is proposed only when the document locale (§2.11) is that locale; otherwise it is a chip | `packages/shared/src/import/classify/classify.test.ts` ("#27") |
+| 28 | `consent-language` | consent text is summarised, shortened or tidied | "samtycke", "GDPR", "I agree to…" → the consent presentation; the text verbatim, byte for byte | `packages/shared/src/import/classify/classify.test.ts` ("#28") |
+| 29 | `number-in-question-text` | "How many guests? (max 8)" grows 8 options or a second question | numbers inside a label stay in it; `max: 8` is offered as a chip | `packages/shared/src/import/classify/classify.test.ts` ("#29"); `segment.test.ts` ("§4.7") |
+| 30 | `option-count-sanity` | a single choice with 45 options is accepted | > 30 options is flagged "this looks like a table or two questions" | `packages/shared/src/import/segment/segment.test.ts` ("#30") |
 
 ## 8.4 The classification features
 
-Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasCheckboxGlyph`,
-`selectAllPhrase`, `datePattern`, `timeSlotPattern`, `currencyHint`, the field gazetteers,
-`signatureHint`, `fileHint`, `consentHint`, `repeatableHint`, `longPromptNoBlank`,
-`labelColonThenBlank`, `booleanPair`, `gridAlignment`. Their definitions and weights are in
-`IMPORT-PIPELINE.md`, stage 5, and `classify/weights.json`; each feature gets a row in
-`classify.test.ts` (S9).
+Not traps but the scored feature model that avoids them (`IMPORT-PIPELINE.md` §5, built in S9):
+word features read from `classify/lexicon/<language>.json` in twelve languages — `nameWord`,
+`emailWord`, `phoneWord`, `addressWord`, `dateWord`, `timeWord`, `numberWord`, `currencyHint`,
+`personnummerWord`, `orgNrWord`, `signatureHint`, `fileHint`, `consentHint`, `commentWord`,
+`selectAllPhrase`, `repeatableHint`, and the `required`, `optional`, `maxWords` and `minWords`
+words — and shape features read from the segment and its lines — `answerBoolean`, `answerChoice`,
+`booleanPair`, `singleCheckbox`, `gridAlignment`, `gridSingleColumn`, `tableRows`,
+`multiLineBlank`, `longPromptNoBlank`, `datePattern`, `timeSlotPattern`. Their weights are in
+`classify/weights.json`. Every feature has a row in `classify.test.ts` ("every feature"), which
+also fails when a feature is added without one. (First listed with `hasBlankRun`,
+`hasCheckboxGlyph` and `labelColonThenBlank`: which kinds a question may be is now decided by its
+answer shape — `candidates` in `weights.json` — so those three decide nothing a weight would.)
 
 ## 8.5 Design
 
@@ -86,7 +92,7 @@ Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasC
 | 39 | `stable-ids` | a rename, reorder or re-import changes a question's id | fingerprint-seeded once, never recomputed, never reused (`retiredIds`) | `packages/shared/src/builder/ids.test.ts` (the same answers give the same ids; kept through a rename, a change of type and a reorder) |
 | 40 | `contract-and-parity` | the desktop and the browser disagree, or `contract:check` breaks | one table on Postgres and PGlite; Forms-internal endpoints are documented by their Zod schemas (not `CONTRACT.md`, which is inter-product); `contract:check` run every slice | `apps/api-forms/src/db/pglite.test.ts` and `db/database.test.ts` (`builder_sessions` and its version lock on PGlite and on Postgres), `routes/builder-session.test.ts`; `pnpm contract:check` |
 | 41 | `no-new-runtime-deps` | a parser or a model library appears in `package.json` | an ADR first; DOCX uses `DecompressionStream` and an in-house XML tokenizer | `scripts/licence-check.ts` + review; ADR 0018 |
-| 42 | `perf-budget` | a node takes a frame too long; 20 pages take a minute | node render < 16 ms, graph load < 50 ms, interpretation < 10 ms (a comparison budget), 20 pages < 4 s, no spinner under 150 ms | interpretation: `packages/shared/src/interpret/ladder.test.ts` ("the comparison budget": no English row decided by it; a pathological input spends it and asks, the same way twice); `packages/shared/src/import/budget.test.ts` (twenty dense pages, nearly ten thousand words, through stages 2 and 3 in under 4 s — 0.85 s here) |
+| 42 | `perf-budget` | a node takes a frame too long; 20 pages take a minute | node render < 16 ms, graph load < 50 ms, interpretation < 10 ms (a comparison budget), 20 pages < 4 s, no spinner under 150 ms | interpretation: `packages/shared/src/interpret/ladder.test.ts` ("the comparison budget": no English row decided by it; a pathological input spends it and asks, the same way twice); `packages/shared/src/import/budget.test.ts` (twenty dense pages, nearly ten thousand words, through stages 2 to 7 in under 4 s — 0.75 s here since S9 hashes each stage's input by its parts) |
 | 43 | `privacy` | a document leaves the machine, or its traces cannot be removed | parsing is local; the source is kept only for a paper twin, in the organisation's own store, deletable; debug artifacts are never stored server-side | `apps/forms/src/lib/bundle-split.test.ts` ("the document readers": loaded from the paper door only, and nothing that holds a reading imports the API client or `fetch`) + review |
 | 44 | `accessibility-of-the-conversation` | a step needs a pointer | 1–9 / Alt+1–9 pick, Enter accepts, Escape and ⌘Z go back; a live region announces each question | `apps/forms/src/screens/builder/guided/keyboard.test.ts` (every key), `e2e/guided-builder.spec.ts` (the buttons chain by keyboard alone, S4); each drag's twin with its drag — Move up and Move down beside every answer on the preview (`e2e/guided-builder.spec.ts`, acceptance S3, S5); the whole flow (S13) |
 | 45 | `never-lose-work` | a refresh mid-conversation starts over | the log autosaves to `builder_sessions` (the node is where the log leads); resume returns to the same node and trail | API: `apps/api-forms/src/routes/builder-session.test.ts`, `packages/shared/src/builder/session.test.ts` (and `fixtures/sessions/buttons-chain.json`, replayed into the draft recorded with it); UI: `e2e/guided-builder.spec.ts` (a reload returns to the same question and trail), `apps/forms/src/screens/builder/guided/saver.test.ts` (every step, in order, the draft first, a second tab never overwritten) |
@@ -103,7 +109,7 @@ Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasC
 | 51 | `browser-reserved-shortcuts` | ⌘1–9 switches browser tabs instead of picking an option | browser: 1–9 when the text box is not focused, Alt+1–9 anywhere; desktop adds ⌘/Ctrl+1–9 | `apps/forms/src/screens/builder/guided/keyboard.test.ts` |
 | 52 | `operative-wording-never-generated` | an example chip or a seeded template writes a consent or safety sentence | chips are labels only, held to the same regulated-word list as the templates (`forms/wording.ts`); consent text comes from the organisation, or publishing is blocked (ADR 0012) | `packages/shared/src/builder/graph/validate.test.ts` (G13), `apps/forms/src/lib/guided-graph.test.ts` |
 | 53 | `untrusted-docx` | a zip bomb or an XML entity expansion from an uploaded .docx | caps counted while inflating; DOCTYPE or ENTITY refused (IMPORT-PIPELINE, "Caps") | `apps/forms/src/screens/builder/paper/docx.test.ts` ("an untrusted document": 10 MB, a zip bomb stopped at the budget, 201 entries even when the file says fewer, DTD and ENTITY refused before parsing, the billion laughs, 65 levels deep, encrypted, another compression method) |
-| 54 | `acroform-first` | a PDF with real form fields is guessed at from its text | AcroForm fields are mapped by `importAcroFields` at confidence 1000; text only fills what they lack | planned: `packages/shared/src/import/pipeline.test.ts` (S9 — confidence and "fills what they lack" are stages 6 and 7; S7 reads the text layer beside the fields and shows it, and changes nothing) |
+| 54 | `acroform-first` | a PDF with real form fields is guessed at from its text | AcroForm fields are mapped by `importAcroFields` at confidence 1000; text only fills what they lack | `packages/shared/src/import/pipeline.test.ts` ("#54"); `apps/forms/src/screens/builder/paper/extract.test.ts` (a PDF's fields in layout units) |
 | 55 | `tap-target-floor` | an inline-edit handle drags a choice below 44 px or to a free colour | handles snap to `ChoiceStyle` values; there is no smaller size and no hex | `apps/forms/src/screens/builder/guided/InlineEdit/inline-edit.test.ts` |
 | 56 | `legacy-wizard-answers` | an old client's `wizardAnswers` stop resolving when the new door ships | `POST /v1/forms` keeps accepting them (`wizard-definition.ts`) until a removal is decided | existing: `apps/api-forms/src/forms/forms.test.ts` (keep green) |
 | 57 | `cjk-tokenisation` | Chinese and Japanese free text never matches anything | CJK runs are split into character bigrams, not whitespace words (INTENT-LADDER, normalisation) | `fixtures/ladder/zh.json`, `ja.json` (read by `packages/shared/src/interpret/ladder.test.ts`), `interpret/text.test.ts` (bigrams) |
@@ -148,6 +154,16 @@ Not traps but the scored feature model that avoids them — `hasBlankRun`, `hasC
 | 96 | `large-type-gutter` | a heading in large type split into a column per word: pdf.js gives a run, its width is shared by character, and at 24 pt a space comes out wider than a gutter | a vertical gutter is at least 200 iu **and** two ems of its region's type (IMPORT-PIPELINE §2.2) | `fixtures/numbering/large-heading-words.json` |
 | 97 | `columns-inside-flow` | a two-column list with full-width text above and below and only line spacing between read across the columns, "1. Namn 4. E-post" as one line | cut at every gap between rows; rows that share a gutter are columns, read top to bottom, left then right (§2.2, C4) | `fixtures/numbering/columns-without-margin.json` |
 | 98 | `column-break-indent` | a list continued in the next column flagged `starts-mid-sequence`, or its sub-list joined to the wrong run, because the column's left edge is not the page's | across a column or page break, the first marker that continues an open list by its numbers moves every open list to its indent (NUMBERING-RULES R8b) | `fixtures/numbering/column-break-indent.json` |
+| 99 | `grid-header-cells` | a ruled checkbox table's header row, which stage 2 cuts into a bold one-cell region per column (a heading, by H2), becomes three section headings, and the grid has no columns | grids and tables claim their lines before any line-by-line rule; the header is the words on the nearest baseline above the first checkbox row, across regions, that align with its checkbox columns (IMPORT-PIPELINE §4.2) | `fixtures/numbering/grid-header-cells.json` |
+| 100 | `table-edge-rule` | the line above a ruled table carries the table's top edge as `ruleBelow`, so "Kryssa i ett svar på varje rad." becomes a question with an answer line | a rule under the line directly above a grid or table, or under its header, is the table's edge, never an answer line (§4.2) | `fixtures/numbering/grid-header-cells.json`, `fixtures/numbering/grid-table-reference.json` |
+| 101 | `grid-from-cells` | a Word table of checkboxes, whose lines have no geometry to align, is read as loose lines | a DOCX table's grid is read from its cells: row 0 names the columns, each later row is its text cells and one checkbox per column (§4.2) | `fixtures/numbering/grid-from-cells.json` |
+| 102 | `grid-table-reference` | a list to tick in a table loses the question that asks for it, two lines above ("Tick them in the table below") | a grid with no label takes the nearest earlier question in its section that mentions a table and has no answer space of its own, flagged `label-by-reference` (§4.2) | `fixtures/numbering/grid-table-reference.json` |
+| 103 | `options-or-section` | the lettered answers under "Voice part" become four questions; "Kontaktuppgifter", whose sub-items are questions, becomes a question itself | lettered or bulleted items under an item, none with an answer space of its own, are its options; when they have answer spaces the parent is a section heading (§4.5) | `fixtures/numbering/options-or-section.json` |
+| 104 | `single-checkbox-line` | "☐ Jag godkänner …" on its own is dropped as prose, or lines of one checkbox each become questions of their own under the question that asks for them | lines that each start with one checkbox are the options of the question directly above; with none above, each is a question that is ticked or not, its text the label verbatim (§4.4) | `fixtures/numbering/single-checkbox-line.json` |
+| 105 | `two-blanks-one-line` | "Postnummer ____ Ort ____" becomes one question, "Postnummer Ort" | a line with two or more label-and-blank pairs is one question per pair, each flagged `split-line`; text after a line's only blank stays in its label (§4.6) | `fixtures/numbering/two-blanks-one-line.json` |
+| 106 | `prose-question` | "Har du några allergier?", with no number and no answer line, is an instruction, and the answers lettered under it are questions of their own | a short sentence ending in "?" is a question of unknown answer, with lettered items under it its options; a line ending in ":" that introduces bullets, and bullets with no answer space, are instructions (§4.7) | `fixtures/numbering/prose-question.json` |
+| 107 | `time-not-marker` | a schedule's times at the start of their lines ("09.00 Frukost", "10.30 Kanotpaddling") read as dotted list numbers 9.0 and 10.30, so a table of times became a list of questions | a dotted number of two parts whose minutes are two digits up to 59, and whose hour (at most 23) is written with two digits or whose minutes start with 0, is a time (NUMBERING-RULES V6) | `fixtures/numbering/time-not-marker.json` |
+| 108 | `text-table-rows` | a table of text cells in a PDF, which stage 2 cuts into a region per column exactly as it would two columns of text, is read down its columns ("09.00 10.30 13.00 15.00"), and its ruled rows become questions with answer lines | a header row cut into cells on one baseline, none a list item, bold or over ruled rows, with rows of cells under it until a full-width line, is re-read row by row, each row one instruction read across; a Word table of text the same from its cells (IMPORT-PIPELINE §4.3) | `apps/forms/src/screens/builder/paper/corpus.test.ts` (`lagerschema`, PDF and Word; `anmalan-tva-spalter` still reads down its columns); `fixtures/numbering/two-columns-of-prose.json` and `fixtures/numbering/docx-layout-table.json` (what is not a table of text) |
 
 ## Known unknowns
 
@@ -156,9 +172,11 @@ Not yet decided, and not to be decided by an implementation quietly choosing:
 - **`glued-marker`** — `1.Namn` (no space after the marker) is common in pasted text and matches no
   production today. Accepting it risks `3.5million`-style prose. Decide with corpus evidence, then
   add a production and a fixture together.
-- **Grid as a field type** — an imported grid is one `single_select` per row until a grid field
-  type exists (its own ADR, CSV shape first). S9 writes that ADR or keeps the fallback
-  (`BRIEF.md` §12).
+- **Grid as a field type** — *decided in S9, with the owner's delegated answer (2026-09-29):* the
+  fallback stays for v1. An imported grid of two or more columns is one `single_select` per row,
+  grouped under its shared header on the review screen (presentation only); a grid of one column is
+  a list to tick, `multi_select`. No new field type and no ADR: responses stay CSV-friendly and it
+  works at 360 px. Revisit when users ask.
 - **Right-to-left** — none of the twelve locales is RTL; #36 tests a pseudo-RTL run so the day one
   is added is not the day RTL is discovered. `IrLine.words` is left to right by contract; an RTL
   locale would need an `irVersion` bump.
@@ -167,16 +185,16 @@ Not yet decided, and not to be decided by an implementation quietly choosing:
   (`scripts/corpus/`, written by LibreOffice, CC0). Still owed: scanned and photographed pages,
   which a word processor cannot make, and documents made by other writers (Word itself, Google
   Docs, InDesign), whose PDFs differ in ways LibreOffice's do not.
-- **Table or columns** — a PDF table of text cells (not a Word table: that one says so) is cut into
-  column regions by stage 2 exactly as two columns of text are, because the geometry of the two is
-  the same: aligned baselines, a wide gap. Stage 2 keeps a gutter together only when one side is
-  markers or answer space (#88). Whether a stripe of text cells is a table is stage 4's to find
-  (#17); decide with corpus evidence (S8) whether stage 2 should keep row-aligned text together.
-  *S8's evidence:* in the corpus's two checkbox tables (`enkat-rutnat`, `event-registration`) every
-  row of cells stays one line, kept by its answer column (#88); only the header row, which has no
-  checkbox, is cut into a region per cell, whose words still read left to right. So far nothing
-  reads out of order. A multi-row table of text alone, which C4 would read column by column, is
-  not in the corpus yet — the question stays open until one is.
+- **Table or columns** — *decided in S9, on corpus evidence (`lagerschema`, #108):* stage 2 stays
+  as it is, and stage 4 finds the table. A ruled table of text cells comes out of stage 2 as a
+  bold header row cut into a region per cell and its body cut into column regions, read down each
+  column — exactly as feared. Stage 4 recognises it by its header row (two or more cells on one
+  baseline, none a list item, bold or over ruled rows) and re-reads it row by row from the words'
+  boxes, so column-wise reading never reaches a question; a Word table the same from its cells. The
+  two-column list in `anmalan-tva-spalter`, whose first line in each column is a numbered item,
+  still reads down its columns. The same document found #107: a schedule's times read as list
+  numbers.
 - **Handwriting** — a photographed form filled in by hand is out of scope: OCR reads print. A page
   that is mostly handwriting lands in `review` because its confidence is low; nothing more.
-- **Consent reformatting** — byte for byte is assumed until the owner answers question 3.
+- **Consent reformatting** — *decided (the owner's delegated answer, 2026-09-29, question 3):*
+  byte for byte, always; only its container follows the brand. Held by #28.

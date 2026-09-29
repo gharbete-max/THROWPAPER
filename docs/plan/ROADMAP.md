@@ -78,7 +78,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S6** Ladder T5–T8 | multi-slot parse, list extraction (through the paste IR), group ranking, disambiguation, alias capture, export/import, `builder_aliases`; answers ahead of their turn (`answerAt`, `fill`, graph version 3's slots) | T5–T7 tables; capture needs consent; import diff | `packages/shared`, `apps/forms`, `apps/api-forms` (migration 0020) | **done** — in review, PR #147 |
 | **S7** Extract + reassemble | `paper/docx.ts`, the clipboard around `import/paste.ts` (built in S6), operator-list rules in `extract.ts`, `import/layout/`, `import.worker.ts`; Word's own numbering in enumerate (`NUMBERING-RULES.md` §11) | the 5 reassemble fixtures; a DOCX numbering fixture; DOCX caps and entity refusal; the budget | `apps/forms`, `packages/shared` | **done** — in review, PR #147 |
 | **S8** Enumerate on real input | S1b wired to extraction; the corpus's first documents | the corpus so far, through stages 1–3 | `packages/shared`, `fixtures/documents/` | **done** — in review, PR #147 |
-| **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared` | not started |
+| **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms` | not started |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | not started |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
@@ -280,3 +280,30 @@ when each slice ends.)*
   `layout/reassemble.test.ts` (a gutter of two ems, rows that share a gutter). Next: S9, segment,
   classify and score. Open: owner questions 1–4, 6, 7 and 8; "table or columns" has its first
   evidence (checkbox tables keep their rows) and waits for a table of text alone.
+- **S9, segment, classify and score (2026-09-29).** What: stage 4 (`import/segment/`) — every
+  line read once, as a heading, an instruction, a form number, a question with what answers it, a
+  grid or a table, in three passes: structures claim their lines first (grids by geometry and from
+  Word's cells, repeating tables, tables of text re-read row by row, a grid's label or the question
+  that points at "the table below"), then items with items under them (options, or a section), then
+  every line left, rule by rule; stage 5 (`import/classify/`) — a proposed kind, required or not, a
+  format and chips for every question, by integer weights (`weights.json`) over word lists in
+  twelve languages and the committed sigmoid (`interpret/sigmoid.json`, made by an integer series);
+  stage 7 (`import/score/`) — a confidence and bucket for every segment, the OCR cap, and required
+  as a decision of its own; a PDF's own form fields over its text (#54, `fields.ts`); stages 2–7 in
+  the paper door's worker (`import/pipeline.ts`), and the reading's download with all of it. Why:
+  M5 — an import that ends in questions the review screen (S10) can show, "I read 14 questions. 3
+  need your eye." Found on the way, each fixed with its fixture first: the heading rule taking a
+  real table's header cells (#99); a table's edge read as an answer line (#100); a Word grid
+  (#101); the question that points at a table (#102); options versus a section (#103); one checkbox
+  per line (#104); two blanks on a line (#105); a sentence that asks (#106); a paragraph cut where a
+  long word wrapped, or two joined (`arsmote-anmalan`); required as a cap on the whole question;
+  Scandinavian definite forms missing from the word lists (`namnet`); "table or columns", decided on
+  a new corpus document, `lagerschema` (#108), which also found that a schedule's times read as list
+  numbers — V6, enumerate version 4 (#107); and hashing that took most of the budget (now 0.75 s for
+  twenty pages through stages 2–7). Decided: the grid fallback stays (no grid type); the owner's
+  questions, on their delegated answer. Tests: the 4 fixtures owed and 11 new ones green, with
+  their snapshots; `segment.test.ts`, `classify.test.ts` (a row for every feature, every language),
+  `pipeline.test.ts` (#20, #26, #54, the counts), `sigmoid.test.ts`; the corpus (11 documents × 2
+  formats, items and segments, 110 debug snapshots, mutation-checked); the budget (stages 2–7).
+  Next: S10, the review screen. Open: ADRs 0017–0021 to accept; scanned pages and other writers'
+  files in the corpus; `glued-marker`.

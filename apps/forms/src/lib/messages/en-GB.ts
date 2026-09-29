@@ -902,7 +902,8 @@ export const enGB = {
   'paper.read.lines': 'plural:one {count} line | other {count} lines',
   'paper.read.items': 'plural:one {count} numbered item | other {count} numbered items',
   'paper.read.noText': 'No printed text was found in this file.',
-  'paper.read.unchanged': 'This is what was read, in order. It does not change your form.',
+  'paper.read.unchanged':
+    "This is what was read, in order. It does not change your form: you'll review it before any of it becomes a question.",
   'paper.read.download': 'Download what was read',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
   'nav.signing': 'Signing',

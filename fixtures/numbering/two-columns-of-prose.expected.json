@@ -1,0 +1,21 @@
+{
+  "fixture": "two-columns-of-prose",
+  "expect": {
+    "segment": {
+      "segments": [
+        { "kind": "heading", "lineIds": ["p1-l1"], "text": "Historia" },
+        { "kind": "heading", "lineIds": ["p1-l2"], "text": "Styrelsen" },
+        {
+          "kind": "instruction",
+          "lineIds": ["p1-l3", "p1-l4", "p1-l5"],
+          "text": "Föreningen bildades för länge sedan av några medlemmar som ville träffas och göra saker tillsammans varje vecka."
+        },
+        {
+          "kind": "instruction",
+          "lineIds": ["p1-l6", "p1-l7", "p1-l8"],
+          "text": "Styrelsen väljs på årsmötet och består av fem ledamöter som ansvarar för att verksamheten sköts på rätt sätt."
+        }
+      ]
+    }
+  }
+}

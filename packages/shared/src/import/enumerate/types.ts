@@ -51,7 +51,7 @@ export interface Item {
   decidedBy: 'D1' | 'D2' | 'D3' | 'W1';
 }
 
-export type RejectRule = 'V1' | 'V2' | 'V3' | 'V4' | 'V5' | 'P4' | 'D4';
+export type RejectRule = 'V1' | 'V2' | 'V3' | 'V4' | 'V5' | 'V6' | 'P4' | 'D4';
 
 /** A line that looked like it started with a marker and was ruled out, and the rule that did it. */
 export interface Rejected {
