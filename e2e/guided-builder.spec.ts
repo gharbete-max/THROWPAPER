@@ -193,6 +193,12 @@ test('not happy with the preview: edited in place, reverted, reconciled, and nev
   await panel.getByRole('button', { name: 'Move down' }).first().click();
   await expect(control.locator('.choice__option').nth(1)).toContainText('Saturday');
   const grips = panel.getByRole('button', { name: 'Drag to move' });
+  // Centred first, at once (the page scrolls smoothly, and a box measured mid-scroll is wrong):
+  // dragged near the window's edge, dnd-kit scrolls the page as the pointer moves, as far as the
+  // time allows, and the drop lands wherever that leaves it.
+  await grips
+    .nth(1)
+    .evaluate((grip) => grip.scrollIntoView({ block: 'center', behavior: 'instant' }));
   const from = (await grips.nth(2).boundingBox())!;
   const to = (await grips.nth(0).boundingBox())!;
   await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
@@ -200,6 +206,10 @@ test('not happy with the preview: edited in place, reverted, reconciled, and nev
   await page.mouse.move(from.x + from.width / 2, from.y - 10, { steps: 5 });
   await page.mouse.move(to.x + to.width / 2, to.y + to.height / 4, { steps: 10 });
   await page.mouse.up();
+  // dnd-kit swallows every click for 50 ms after a drop: its pointer sensor takes its capturing
+  // click listener off on a 50 ms timer. No person is that quick; a test runner is, and "Revert to
+  // guided" below went unheard. A timer of the page's own, set now, fires after that one.
+  await page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 50)));
   await expect(control.locator('.choice__option').nth(2)).toContainText('Saturday');
 
   // Changed by hand, with its way back — and the way back is itself undone by Back.
