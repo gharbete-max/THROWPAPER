@@ -838,6 +838,7 @@ export const jaJP: Record<MessageKey, string> = {
   'submissions.noPaper': 'この回答はフォームに紙が付く前のものです',
 
   'paper.open': '紙から',
+  'paper.update': '文書から更新',
   'paper.heading': '紙からフォームを作る',
   'paper.explain':
     'お手元のPDFをアップロードするか、各ページを撮影してください。PDFが宣言しているフィールドはそのまま読み取られます。写真の場合は枠を自分で描きます。',
@@ -1054,6 +1055,8 @@ export const jaJP: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': '組織の色は管理者が設定します。',
   'conversation.import.ask': '文書から',
   'conversation.import.said': 'plural:other 質問 {count} 件',
+  'conversation.reimport.ask': '文書から更新',
+  'conversation.reimport.said': '追加 {added}、削除 {removed}、表現変更 {reworded}、移動 {moved}',
   'guided.skip.nothingToGuess': 'まだ推測できません',
   'guided.skip.seeded': '推測からすでに追加済み',
   'guided.skip.nothingSeeded': '推測から追加されたものはありません',
@@ -1260,6 +1263,8 @@ export const jaJP: Record<MessageKey, string> = {
     '色を保存できませんでした。何も変更されていません。後でもう一度お試しください。',
   'review.choose.explain':
     'PDFまたはWord文書を選ぶか、そのテキストを貼り付けてください。Loppa はここで、この端末上で読み取り、何かを質問にする前に、読み取った内容をお見せします。',
+  'review.choose.update':
+    'フォームの元になった文書、またはその新しい版を選ぶか、テキストを貼り付けてください。Loppa がフォームと比較し、新しい内容は追加されます。それ以外の扱いはあなたが選びます。',
   'review.choose.file': 'PDFまたはWord文書',
   'review.photo':
     '写真やスキャンしたページの場合は、エディターにページとしてインポートし、そこで質問を描き込んでください。',
@@ -1299,6 +1304,24 @@ export const jaJP: Record<MessageKey, string> = {
   'review.useTexts': '見出しと説明文も一緒に追加されます。',
   'review.paperFull':
     'このフォームにはすでに上限の{max}件の文書が保存されています。質問は追加されますが、回答はこの文書には書き戻されません。',
+  'review.update': 'フォームを更新',
+  'review.changes.heading': 'フォームとの比較',
+  'review.changes.added': '文書で新しく追加されたもの（更新すると追加されます）',
+  'review.changes.addBack': 'フォームから削除した項目です。文書にはまだあります。',
+  'review.changes.addBackToggle': '元に戻す',
+  'review.changes.reworded': '文書では表現が異なります',
+  'review.changes.formSays': 'フォーム：{text}',
+  'review.changes.documentSays': '文書：{text}',
+  'review.changes.rewordToggle': '文書の表現を使う',
+  'review.changes.gone': '文書にはもうありません',
+  'review.changes.removeToggle': 'フォームから削除',
+  'review.changes.moved': '文書では別の位置にあります',
+  'review.changes.moveToggle': '文書に合わせて移動',
+  'review.changes.nothing': 'この文書の内容はすべてフォームにあります。',
+  'review.changes.same': 'これはフォームの元になった文書で、変更されていません。',
+  'review.changes.noPaper':
+    '新しい質問はフォームが保存している用紙にはないため、その回答は用紙に書き込まれません。',
+  'review.changes.pick': '上で何かを選ぶまで、何も変わりません。',
   'review.useBlocked': '先に、確認が必要なものを解決してください。',
   'review.using': '追加中…',
   'review.useFailed': '質問をフォームに追加できませんでした。もう一度お試しください。',

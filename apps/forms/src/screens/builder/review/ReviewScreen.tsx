@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import { BUILDER_GRAPH, importQuestions, type Conversation } from '@tp/shared/builder';
+import { BUILDER_GRAPH, importQuestions, reimport, type Conversation } from '@tp/shared/builder';
 import { MAX_PAPER_PAGES } from '@tp/shared/forms';
-import { MAX_PASTE, type PageBox } from '@tp/shared/import';
+import { MAX_PASTE, type ImportChoices, type PageBox } from '@tp/shared/import';
 import { LoadFailed } from '../../../components/LoadFailed.js';
 import { Loading } from '../../../components/Loading.js';
 import { client } from '../../../lib/api.js';
@@ -16,9 +16,21 @@ import { fieldBoxes, openPdf, TooManyPages, type PaperPdf } from '../paper/extra
 import type { Reading } from '../paper/reading.js';
 import { NoWorker, ReadingTooSlow, readInWorker } from '../paper/read-in-worker.js';
 import { DocxRefused } from '../paper/refusal.js';
+import { ChangesPane } from './ChangesPane.js';
 import { DraftPane } from './DraftPane.js';
 import { importOf, roomForPaper, type PaperOf } from './fields.js';
 import { reviewKey } from './keys.js';
+import {
+  changesAnything,
+  compareWithForm,
+  isUpdate,
+  itemsAdded,
+  keptAlready,
+  noChoices,
+  nothingChanged,
+  reimportOf,
+  type Update,
+} from './reimport.js';
 import {
   act,
   counts,
@@ -67,6 +79,8 @@ export function ReviewScreen() {
   } | null>(null);
   const [review, setReview] = useState<Review | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  /** On a form that has anything already (S12c): what the person chose to take from the document. */
+  const [choices, setChoices] = useState<ImportChoices>(noChoices);
   /** Somebody saved this form's conversation in another tab: nothing more is added from here. */
   const [conflict, setConflict] = useState(false);
   /** Whether the screen is still open, for a document that finishes reading after it was left. */
@@ -137,6 +151,7 @@ export function ReviewScreen() {
     const started = startReview(reading);
     setRead({ reading, pdf, paper });
     setReview(started);
+    setChoices(noChoices);
     setSelectedId(started.items[0]?.id ?? null);
     setError(null);
     setPhase('review');
@@ -260,6 +275,46 @@ export function ReviewScreen() {
     navigate(`/forms/${id}/guided`);
   }
 
+  /**
+   * "Update the form" (S12c): the form brought up to date with the document read again, as one step
+   * the conversation's Back undoes; then on in the conversation, which walks what was added. The
+   * paper the form keeps is left as it is (`CONVERGENCE.md`, "Not in S12").
+   */
+  async function updateForm(update: Update) {
+    if (!conversation || !saver.current || !id || conflict) return;
+    setError(null);
+    setPhase('using');
+    let next: Conversation;
+    try {
+      const plan = reimportOf(update, choices, {
+        definition: conversation.state.draft.definition,
+        sidecar: conversation.state.sidecar,
+        locale: contentLocale,
+      });
+      next = reimport(BUILDER_GRAPH, conversation, plan);
+    } catch {
+      setPhase('review');
+      setError(t('review.useFailed'));
+      return;
+    }
+    const current = saver.current;
+    await current.save(next);
+    await current.settled();
+    if (current.status === 'conflict') {
+      setConflict(true);
+      setPhase('review');
+      setError(t('review.conflict'));
+      return;
+    }
+    if (current.status !== 'saved') {
+      setPhase('review');
+      setError(t('review.useFailed'));
+      return;
+    }
+    setConversation(next);
+    navigate(`/forms/${id}/guided`);
+  }
+
   // The keys, on the whole window, while a review is open.
   useEffect(() => {
     if (phase !== 'review' || !review) return;
@@ -300,8 +355,17 @@ export function ReviewScreen() {
   if (phase !== 'review' && phase !== 'using') {
     return (
       <section className="review review--choose stack">
-        <h1>{t('conversation.doors.paper')}</h1>
-        <p className="muted">{t('review.choose.explain')}</p>
+        {isUpdate(conversation.state.draft.definition) ? (
+          <>
+            <h1>{t('paper.update')}</h1>
+            <p className="muted">{t('review.choose.update')}</p>
+          </>
+        ) : (
+          <>
+            <h1>{t('conversation.doors.paper')}</h1>
+            <p className="muted">{t('review.choose.explain')}</p>
+          </>
+        )}
         <div className="row">
           <label className="field">
             <span>{t('review.choose.file')}</span>
@@ -379,6 +443,23 @@ export function ReviewScreen() {
     read.paper !== null &&
     conversation !== null &&
     !roomForPaper(conversation.state.draft.definition);
+  // A form that has anything already is brought up to date, not added to (S12c).
+  const definition = conversation?.state.draft.definition ?? null;
+  const updating = definition !== null && isUpdate(definition);
+  const same = updating && keptAlready(definition, read.reading.layout.source.sha256);
+  const update =
+    updating && !same && conversation
+      ? compareWithForm(review.items, {
+          definition,
+          sidecar: conversation.state.sidecar,
+          locale: contentLocale,
+        })
+      : null;
+  const adding = update ? new Set(itemsAdded(update, choices)) : new Set<string>();
+  const heldBack = review.items.some(
+    (item) => adding.has(item.id) && item.bucket === 'review' && !item.decided,
+  );
+  const changing = update !== null && changesAnything(update, choices);
 
   return (
     <section className="review stack">
@@ -395,6 +476,15 @@ export function ReviewScreen() {
         <p className="status-warning">
           {review.items.length === 0 ? t('review.empty') : t('review.noQuestions')}
         </p>
+      )}
+      {same && <p className="status-ok">{t('review.changes.same')}</p>}
+      {update && (
+        <ChangesPane
+          update={update}
+          choices={choices}
+          onChoose={setChoices}
+          keepsPaper={(definition?.paper?.sources.length ?? 0) > 0}
+        />
       )}
       {review.items.length > 0 && (
         <div className="review__panes">
@@ -420,21 +510,38 @@ export function ReviewScreen() {
       <footer className="review__foot">
         <div role="status" className="small">
           {error && <span className="status-down">{error}</span>}
-          {!error && tally.needEye > 0 && <span>{t('review.useBlocked')}</span>}
-          {!error && tally.needEye === 0 && tally.texts > 0 && tally.questions > 0 && (
+          {!error && !updating && tally.needEye > 0 && <span>{t('review.useBlocked')}</span>}
+          {!error && !updating && tally.needEye === 0 && tally.texts > 0 && tally.questions > 0 && (
             <span className="muted">{t('review.useTexts')}</span>
           )}
-          {!error && full && <span>{t('review.paperFull', { max: MAX_PAPER_PAGES })}</span>}
+          {!error && !updating && full && (
+            <span>{t('review.paperFull', { max: MAX_PAPER_PAGES })}</span>
+          )}
+          {!error && update && heldBack && <span>{t('review.useBlocked')}</span>}
+          {!error && update && !changing && !nothingChanged(update.comparison) && (
+            <span className="muted">{t('review.changes.pick')}</span>
+          )}
         </div>
         <div className="row">
-          <button
-            type="button"
-            className="button"
-            disabled={!ready || tally.questions === 0 || phase === 'using' || conflict}
-            onClick={() => void use()}
-          >
-            {phase === 'using' ? t('review.using') : t('review.use', { count: tally.questions })}
-          </button>
+          {updating ? (
+            <button
+              type="button"
+              className="button"
+              disabled={!update || !changing || heldBack || phase === 'using' || conflict}
+              onClick={() => update && void updateForm(update)}
+            >
+              {phase === 'using' ? t('review.using') : t('review.update')}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="button"
+              disabled={!ready || tally.questions === 0 || phase === 'using' || conflict}
+              onClick={() => void use()}
+            >
+              {phase === 'using' ? t('review.using') : t('review.use', { count: tally.questions })}
+            </button>
+          )}
           <button
             type="button"
             className="button button--quiet"

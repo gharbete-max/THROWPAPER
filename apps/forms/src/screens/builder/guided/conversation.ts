@@ -421,7 +421,12 @@ export function previewOf(
     spec === 'choice.control' || spec === 'brand.masthead' || spec === 'form.whole' ? spec : null;
   if (node.kind === 'preview-moment') return named(node.preview);
   const last = conversation.log
-    .filter((entry) => entry.answer.kind !== 'edit' && entry.answer.kind !== 'import')
+    .filter(
+      (entry) =>
+        entry.answer.kind !== 'edit' &&
+        entry.answer.kind !== 'import' &&
+        entry.answer.kind !== 'reimport',
+    )
     .at(-1);
   if (last && last.answer.kind !== 'jump' && last.to === node.id) {
     const answered = graph.nodes.find((n) => n.id === last.nodeId);
@@ -442,7 +447,11 @@ export function showsPreview(graph: BuilderGraph, conversation: Conversation): b
  * The trail's words for questions read from a document (S10): the screen's own, not the graph's,
  * since `guided.*` holds exactly the graph's strings (`guided-graph.test.ts`).
  */
-type ImportWords = 'conversation.import.ask' | 'conversation.import.said';
+type ImportWords =
+  | 'conversation.import.ask'
+  | 'conversation.import.said'
+  | 'conversation.reimport.ask'
+  | 'conversation.reimport.said';
 
 /**
  * An answer, as the trail says it: a message key (with its numbers, for an import's count), or the
@@ -505,6 +514,17 @@ export function crumbs(graph: BuilderGraph, conversation: Conversation): Crumb[]
   const askOf = (id: string): MessageKey => nodeOf(id)?.ask ?? 'guided.end.ask';
   return trail(conversation).map((crumb) => {
     // Questions read from a document (S10): not an answer to the node the conversation was at.
+    // The form brought up to date with its document (S12c): what was added, removed, reworded, moved.
+    if (crumb.answer.kind === 'reimport') {
+      const { added, removed, reworded, moved } = crumb.answer;
+      return {
+        step: crumb.step,
+        nodeId: crumb.nodeId,
+        question: 'conversation.reimport.ask',
+        said: [{ key: 'conversation.reimport.said', values: { added, removed, reworded, moved } }],
+        skipped: [],
+      };
+    }
     if (crumb.answer.kind === 'import') {
       return {
         step: crumb.step,

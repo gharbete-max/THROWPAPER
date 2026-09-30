@@ -832,6 +832,7 @@ export const daDK: Record<MessageKey, string> = {
   'submissions.noPaper': 'Udfyldt før formularen havde papir',
 
   'paper.open': 'Fra papir',
+  'paper.update': 'Opdater fra et dokument',
   'paper.heading': 'Lav en formular af papir',
   'paper.explain':
     'Upload den PDF du allerede har, eller fotografér hver side. Felter som PDF’en erklærer, læses som de er; på et fotografi tegner du selv felterne.',
@@ -1049,6 +1050,9 @@ export const daDK: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': 'Jeres organisations farver fastsættes af en administrator.',
   'conversation.import.ask': 'Fra dit dokument',
   'conversation.import.said': 'plural:one {count} spørgsmål | other {count} spørgsmål',
+  'conversation.reimport.ask': 'Opdateret fra dit dokument',
+  'conversation.reimport.said':
+    'Tilføjet {added}, fjernet {removed}, omformuleret {reworded}, flyttet {moved}',
   'guided.skip.nothingToGuess': 'Intet at gætte endnu',
   'guided.skip.seeded': 'Allerede tilføjet fra gættet',
   'guided.skip.nothingSeeded': 'Intet blev tilføjet fra et gæt',
@@ -1255,6 +1259,8 @@ export const daDK: Record<MessageKey, string> = {
     'Farverne kunne ikke gemmes, og intet blev ændret. Prøv igen senere.',
   'review.choose.explain':
     'Vælg en PDF eller et Word-dokument, eller indsæt teksten. Loppa læser det her, på denne enhed, og viser dig, hvad den læste, før noget bliver til et spørgsmål.',
+  'review.choose.update':
+    'Vælg det dokument, din formular blev lavet ud fra, eller en ny version af det, eller indsæt teksten. Loppa sammenligner det med din formular: det nye tilføjes, og du vælger, hvad der sker med resten.',
   'review.choose.file': 'PDF eller Word-dokument',
   'review.photo':
     'Et fotografi eller en scannet side? Importér det som sider i editoren, hvor du tegner spørgsmålene ind.',
@@ -1294,6 +1300,25 @@ export const daDK: Record<MessageKey, string> = {
   'review.useTexts': 'Overskrifter og tekst til læsning kommer med.',
   'review.paperFull':
     'Formularen har allerede {max} dokumenter, så mange den kan have: spørgsmålene tilføjes, men svarene skrives ikke tilbage på dette.',
+  'review.update': 'Opdater formularen',
+  'review.changes.heading': 'Sammenlignet med din formular',
+  'review.changes.added': 'Nyt i dokumentet – tilføjes, når du opdaterer',
+  'review.changes.addBack': 'Du fjernede disse fra din formular. Dokumentet har dem stadig.',
+  'review.changes.addBackToggle': 'Tilføj den igen',
+  'review.changes.reworded': 'Formuleret anderledes i dokumentet',
+  'review.changes.formSays': 'Din formular: {text}',
+  'review.changes.documentSays': 'Dokumentet: {text}',
+  'review.changes.rewordToggle': 'Brug dokumentets formulering',
+  'review.changes.gone': 'Ikke længere i dokumentet',
+  'review.changes.removeToggle': 'Fjern den fra formularen',
+  'review.changes.moved': 'Et andet sted i dokumentet',
+  'review.changes.moveToggle': 'Flyt den, så den passer',
+  'review.changes.nothing': 'Din formular har allerede alt, hvad der står i dette dokument.',
+  'review.changes.same':
+    'Dette er det dokument, din formular blev lavet ud fra, og det er ikke ændret.',
+  'review.changes.noPaper':
+    'Nye spørgsmål står ikke på det papir, din formular gemmer: svarene på dem skrives ikke ind på det.',
+  'review.changes.pick': 'Intet ændres, før du vælger noget ovenfor.',
   'review.useBlocked': 'Gennemgå først det, der skal ses efter.',
   'review.using': 'Tilføjer…',
   'review.useFailed': 'Spørgsmålene kunne ikke føjes til din formular. Prøv igen.',

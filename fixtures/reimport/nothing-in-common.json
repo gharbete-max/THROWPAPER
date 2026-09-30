@@ -1,0 +1,66 @@
+{
+  "note": "A form with nothing in common with the document — its one question made by hand: nothing is matched, so nothing in the form marks where the document's fields go, and they are added at the end, in the document's order, rather than above what the person made. Nothing is asked: the hand-made question is not the import's.",
+  "form": [
+    {
+      "id": "q-allergier",
+      "family": "question",
+      "text": "Allergier",
+      "fromDocument": false
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": null,
+        "by": null
+      }
+    ],
+    "added": [
+      0,
+      1
+    ],
+    "addBack": [],
+    "reworded": [],
+    "gone": [],
+    "moved": []
+  },
+  "choices": {
+    "addBack": [],
+    "reword": [],
+    "remove": [],
+    "move": []
+  },
+  "plan": {
+    "place": [
+      {
+        "kind": "add",
+        "index": 0,
+        "after": "q-allergier"
+      },
+      {
+        "kind": "add",
+        "index": 1,
+        "after": "h-anmalan"
+      }
+    ],
+    "reword": [],
+    "remove": []
+  }
+}

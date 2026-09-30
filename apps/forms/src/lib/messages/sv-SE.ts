@@ -836,6 +836,7 @@ export const svSE: Record<MessageKey, string> = {
   'submissions.noPaper': 'Ifylld innan formuläret hade papper',
 
   'paper.open': 'Från papper',
+  'paper.update': 'Uppdatera från ett dokument',
   'paper.heading': 'Gör ett formulär av papper',
   'paper.explain':
     'Ladda upp den PDF du redan har, eller fotografera varje sida. Fält som PDF:en deklarerar läses som de är; på ett fotografi ritar du rutorna själv.',
@@ -1049,6 +1050,9 @@ export const svSE: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': 'Er organisations färger bestäms av en administratör.',
   'conversation.import.ask': 'Från ditt dokument',
   'conversation.import.said': 'plural:one {count} fråga | other {count} frågor',
+  'conversation.reimport.ask': 'Uppdaterat från ditt dokument',
+  'conversation.reimport.said':
+    'Tillagda {added}, borttagna {removed}, omformulerade {reworded}, flyttade {moved}',
   'guided.skip.nothingToGuess': 'Inget att gissa ännu',
   'guided.skip.seeded': 'Redan tillagt från gissningen',
   'guided.skip.nothingSeeded': 'Inget lades till från en gissning',
@@ -1257,6 +1261,8 @@ export const svSE: Record<MessageKey, string> = {
     'Färgerna kunde inte sparas, och inget ändrades. Försök igen senare.',
   'review.choose.explain':
     'Välj en PDF eller ett Word-dokument, eller klistra in texten. Loppa läser det här, på den här enheten, och visar dig vad den läste innan något blir en fråga.',
+  'review.choose.update':
+    'Välj dokumentet som ditt formulär gjordes av, eller en ny version av det, eller klistra in texten. Loppa jämför det med ditt formulär: det som är nytt läggs till, och du väljer vad som händer med resten.',
   'review.choose.file': 'PDF eller Word-dokument',
   'review.photo':
     'Ett fotografi eller en skannad sida? Importera det som sidor i redigeraren, där du ritar in frågorna.',
@@ -1296,6 +1302,25 @@ export const svSE: Record<MessageKey, string> = {
   'review.useTexts': 'Rubriker och text att läsa följer med.',
   'review.paperFull':
     'Formuläret har redan {max} dokument, så många det kan ha: frågorna läggs till, men svaren skrivs inte tillbaka på det här.',
+  'review.update': 'Uppdatera formuläret',
+  'review.changes.heading': 'Jämfört med ditt formulär',
+  'review.changes.added': 'Nytt i dokumentet – läggs till när du uppdaterar',
+  'review.changes.addBack': 'Du tog bort de här ur formuläret. Dokumentet har dem fortfarande.',
+  'review.changes.addBackToggle': 'Lägg tillbaka den',
+  'review.changes.reworded': 'Annorlunda formulerat i dokumentet',
+  'review.changes.formSays': 'Ditt formulär: {text}',
+  'review.changes.documentSays': 'Dokumentet: {text}',
+  'review.changes.rewordToggle': 'Använd dokumentets formulering',
+  'review.changes.gone': 'Finns inte längre i dokumentet',
+  'review.changes.removeToggle': 'Ta bort den ur formuläret',
+  'review.changes.moved': 'På ett annat ställe i dokumentet',
+  'review.changes.moveToggle': 'Flytta den så att den stämmer',
+  'review.changes.nothing': 'Ditt formulär har redan allt som står i det här dokumentet.',
+  'review.changes.same':
+    'Det här är dokumentet som ditt formulär gjordes av, och det har inte ändrats.',
+  'review.changes.noPaper':
+    'Nya frågor finns inte på pappret som ditt formulär sparar: svaren på dem skrivs inte in på det.',
+  'review.changes.pick': 'Inget ändras förrän du väljer något ovan.',
   'review.useBlocked': 'Gå först igenom det som behöver ses över.',
   'review.using': 'Lägger till…',
   'review.useFailed': 'Frågorna kunde inte läggas till i ditt formulär. Försök igen.',

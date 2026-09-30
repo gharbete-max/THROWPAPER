@@ -3,7 +3,12 @@ import { describe, expect, it, vi } from 'vitest';
 import type { LocaleConfig } from '@tp/i18n';
 import { messages } from '../../../lib/messages/all.js';
 import { readDocument } from '../paper/pipeline.js';
+import { begin, BUILDER_GRAPH, importQuestions } from '@tp/shared/builder';
+import { emptyDefinition } from '@tp/shared/forms';
+import { ChangesPane } from './ChangesPane.js';
 import { DraftPane, kindName, verdictName } from './DraftPane.js';
+import { importOf } from './fields.js';
+import { compareWithForm, noChoices } from './reimport.js';
 import { act, startReview, type Review } from './review.js';
 import { SourcePane } from './SourcePane.js';
 
@@ -154,5 +159,47 @@ describe('the source pane', () => {
     expect(html).toMatch(/review-line--flag review-line--selected"[^>]*>1\. Question one</);
     // By keyboard, the items are the way through: the lines are for the pointer.
     expect(html).not.toMatch(/data-line="[^"]+" class="[^"]+"[^>]*tabindex="0"/);
+  });
+});
+
+/** "Compared with your form" (S12c): a form made from one paste, and another read against it. */
+describe('the comparison with the form', () => {
+  const items = (text: string) => startReview(readDocument({ kind: 'paste', text })).items;
+  const FIRST = '1. Namn: ____\n2. Telefon: ____\n3. Vilken dag kommer du?';
+  const form = importQuestions(
+    BUILDER_GRAPH,
+    begin(BUILDER_GRAPH, { definition: emptyDefinition, title: {} }),
+    importOf(items(FIRST), { definition: emptyDefinition, retired: [], locale: 'en-GB' }).fields,
+  );
+  const context = {
+    definition: form.state.draft.definition,
+    sidecar: form.state.sidecar,
+    locale: 'en-GB',
+  };
+  const render = (text: string, keepsPaper = false) =>
+    renderToStaticMarkup(
+      <ChangesPane
+        update={compareWithForm(items(text), context)}
+        choices={noChoices}
+        onChoose={() => {}}
+        keepsPaper={keepsPaper}
+      />,
+    );
+
+  it('lists what is added, and asks the rest with every toggle off', () => {
+    const html = render('1. Namn: ____\n2. E-post: ____\n3. Vilken dag kommer ni?', true);
+    expect(html).toContain(en('review.changes.added'));
+    expect(html).toContain('E-post');
+    expect(html).toContain(en('review.changes.noPaper'));
+    expect(html).toContain(en('review.changes.rewordToggle').replace("'", '&#x27;'));
+    expect(html).toContain(en('review.changes.removeToggle'));
+    expect(html).toContain('aria-pressed="false"');
+    expect(html).not.toContain('aria-pressed="true"');
+  });
+
+  it('says so when the form has everything in the document', () => {
+    const html = render(FIRST);
+    expect(html).toContain(en('review.changes.nothing'));
+    expect(html).not.toContain('<button');
   });
 });

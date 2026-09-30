@@ -859,6 +859,7 @@ export const deDE: Record<MessageKey, string> = {
   'submissions.noPaper': 'Ausgefüllt, bevor das Formular Papier hatte',
 
   'paper.open': 'Aus Papier',
+  'paper.update': 'Aus einem Dokument aktualisieren',
   'paper.heading': 'Ein Formular aus Papier machen',
   'paper.explain':
     'Laden Sie das PDF hoch, das Sie schon haben, oder fotografieren Sie jede Seite. Felder, die das PDF deklariert, werden so gelesen, wie sie sind; auf einem Foto zeichnen Sie die Kästchen selbst.',
@@ -1086,6 +1087,9 @@ export const deDE: Record<MessageKey, string> = {
     'Die Farben Ihrer Organisation legt eine Administratorin oder ein Administrator fest.',
   'conversation.import.ask': 'Aus Ihrem Dokument',
   'conversation.import.said': 'plural:one {count} Frage | other {count} Fragen',
+  'conversation.reimport.ask': 'Aus Ihrem Dokument aktualisiert',
+  'conversation.reimport.said':
+    'Hinzugefügt {added}, entfernt {removed}, umformuliert {reworded}, verschoben {moved}',
   'guided.skip.nothingToGuess': 'Noch nichts zu erraten',
   'guided.skip.seeded': 'Schon aus der Vermutung hinzugefügt',
   'guided.skip.nothingSeeded': 'Aus einer Vermutung wurde nichts hinzugefügt',
@@ -1302,6 +1306,8 @@ export const deDE: Record<MessageKey, string> = {
     'Die Farben konnten nicht gespeichert werden, und nichts wurde geändert. Versuchen Sie es später noch einmal.',
   'review.choose.explain':
     'Wählen Sie ein PDF oder ein Word-Dokument, oder fügen Sie den Text ein. Loppa liest es hier, auf diesem Gerät, und zeigt Ihnen, was es gelesen hat, bevor etwas zu einer Frage wird.',
+  'review.choose.update':
+    'Wählen Sie das Dokument, aus dem Ihr Formular erstellt wurde, oder eine neue Fassung davon, oder fügen Sie seinen Text ein. Loppa vergleicht es mit Ihrem Formular: Neues wird hinzugefügt, und Sie entscheiden, was mit dem Rest geschieht.',
   'review.choose.file': 'PDF oder Word-Dokument',
   'review.photo':
     'Ein Foto oder eine gescannte Seite? Importieren Sie die Seiten in den Editor und zeichnen Sie dort die Fragen ein.',
@@ -1343,6 +1349,26 @@ export const deDE: Record<MessageKey, string> = {
   'review.useTexts': 'Überschriften und Text zum Lesen kommen mit.',
   'review.paperFull':
     'Dieses Formular bewahrt bereits {max} Dokumente auf, so viele es kann: Die Fragen werden hinzugefügt, ihre Antworten aber nicht auf dieses Dokument zurückgeschrieben.',
+  'review.update': 'Formular aktualisieren',
+  'review.changes.heading': 'Im Vergleich zu Ihrem Formular',
+  'review.changes.added': 'Neu im Dokument – wird beim Aktualisieren hinzugefügt',
+  'review.changes.addBack':
+    'Diese haben Sie aus Ihrem Formular entfernt. Das Dokument enthält sie noch.',
+  'review.changes.addBackToggle': 'Wieder hinzufügen',
+  'review.changes.reworded': 'Im Dokument anders formuliert',
+  'review.changes.formSays': 'Ihr Formular: {text}',
+  'review.changes.documentSays': 'Das Dokument: {text}',
+  'review.changes.rewordToggle': 'Formulierung des Dokuments übernehmen',
+  'review.changes.gone': 'Nicht mehr im Dokument',
+  'review.changes.removeToggle': 'Aus dem Formular entfernen',
+  'review.changes.moved': 'An anderer Stelle im Dokument',
+  'review.changes.moveToggle': 'Passend verschieben',
+  'review.changes.nothing': 'Ihr Formular enthält bereits alles, was in diesem Dokument steht.',
+  'review.changes.same':
+    'Dies ist das Dokument, aus dem Ihr Formular erstellt wurde, und es hat sich nicht geändert.',
+  'review.changes.noPaper':
+    'Neue Fragen stehen nicht auf dem Papier, das Ihr Formular aufbewahrt: Ihre Antworten werden nicht darauf geschrieben.',
+  'review.changes.pick': 'Nichts ändert sich, bis Sie oben etwas auswählen.',
   'review.useBlocked': 'Klären Sie zuerst, was Ihre Aufmerksamkeit braucht.',
   'review.using': 'Wird hinzugefügt…',
   'review.useFailed':

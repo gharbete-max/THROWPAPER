@@ -857,6 +857,7 @@ export const frFR: Record<MessageKey, string> = {
   'submissions.noPaper': 'Rempli avant que le formulaire ait du papier',
 
   'paper.open': 'Depuis du papier',
+  'paper.update': 'Mettre à jour depuis un document',
   'paper.heading': 'Créer un formulaire à partir du papier',
   'paper.explain':
     'Téléversez le PDF que vous avez déjà, ou photographiez chaque page. Les champs déclarés par le PDF sont lus tels quels ; sur une photo, vous tracez les cases vous-même.',
@@ -1078,6 +1079,9 @@ export const frFR: Record<MessageKey, string> = {
     'Les couleurs de votre organisation sont définies par un administrateur.',
   'conversation.import.ask': 'Depuis votre document',
   'conversation.import.said': 'plural:one {count} question | other {count} questions',
+  'conversation.reimport.ask': 'Mis à jour depuis votre document',
+  'conversation.reimport.said':
+    'Ajoutées {added}, retirées {removed}, reformulées {reworded}, déplacées {moved}',
   'guided.skip.nothingToGuess': 'Rien à deviner pour l’instant',
   'guided.skip.seeded': 'Déjà ajouté grâce à la supposition',
   'guided.skip.nothingSeeded': 'Rien n’a été ajouté à partir d’une supposition',
@@ -1292,6 +1296,8 @@ export const frFR: Record<MessageKey, string> = {
     'Les couleurs n’ont pas pu être enregistrées, et rien n’a changé. Réessayez plus tard.',
   'review.choose.explain':
     'Choisissez un PDF ou un document Word, ou collez son texte. Loppa le lit ici, sur cet appareil, et vous montre ce qu’il a lu avant que quoi que ce soit ne devienne une question.',
+  'review.choose.update':
+    'Choisissez le document à partir duquel votre formulaire a été créé, ou une nouvelle version, ou collez son texte. Loppa le compare à votre formulaire : ce qui est nouveau est ajouté, et vous choisissez ce qu’il advient du reste.',
   'review.choose.file': 'PDF ou document Word',
   'review.photo':
     'Une photo ou une page numérisée ? Importez-la sous forme de pages dans l’éditeur, où vous tracez ses questions.',
@@ -1332,6 +1338,26 @@ export const frFR: Record<MessageKey, string> = {
   'review.useTexts': 'Les titres et le texte à lire les accompagnent.',
   'review.paperFull':
     'Ce formulaire conserve déjà {max} documents, le maximum : les questions sont ajoutées, mais leurs réponses ne seront pas réécrites sur celui-ci.',
+  'review.update': 'Mettre à jour le formulaire',
+  'review.changes.heading': 'Par rapport à votre formulaire',
+  'review.changes.added': 'Nouveau dans le document — ajouté lors de la mise à jour',
+  'review.changes.addBack':
+    'Vous les avez retirées de votre formulaire. Le document les contient toujours.',
+  'review.changes.addBackToggle': 'La rajouter',
+  'review.changes.reworded': 'Formulé autrement dans le document',
+  'review.changes.formSays': 'Votre formulaire : {text}',
+  'review.changes.documentSays': 'Le document : {text}',
+  'review.changes.rewordToggle': 'Reprendre la formulation du document',
+  'review.changes.gone': 'Plus dans le document',
+  'review.changes.removeToggle': 'La retirer du formulaire',
+  'review.changes.moved': 'À un autre endroit dans le document',
+  'review.changes.moveToggle': 'La déplacer pour correspondre',
+  'review.changes.nothing': 'Votre formulaire contient déjà tout ce qui figure dans ce document.',
+  'review.changes.same':
+    'C’est le document à partir duquel votre formulaire a été créé, et il n’a pas changé.',
+  'review.changes.noPaper':
+    'Les nouvelles questions ne figurent pas sur le papier que conserve votre formulaire : leurs réponses n’y sont pas écrites.',
+  'review.changes.pick': 'Rien ne change tant que vous ne choisissez rien ci-dessus.',
   'review.useBlocked': 'Réglez d’abord ce qui demande votre attention.',
   'review.using': 'Ajout…',
   'review.useFailed': 'Les questions n’ont pas pu être ajoutées à votre formulaire. Réessayez.',

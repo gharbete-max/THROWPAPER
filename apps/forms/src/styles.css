@@ -7283,6 +7283,37 @@ body:has(> #root .shell--narrow) {
   padding-inline-start: calc(var(--tp-spacing-unit) * 2);
 }
 
+/* "Compared with your form": the document read again (S12c). */
+.review-changes {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.review-changes h2,
+.review-changes h3 {
+  margin: 0;
+  font-size: var(--tp-text-ui);
+}
+
+.review-changes ul {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  margin: calc(var(--tp-spacing-unit) / 2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-changes li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  align-items: center;
+  justify-content: space-between;
+}
+
 .review__foot {
   position: sticky;
   bottom: 0;

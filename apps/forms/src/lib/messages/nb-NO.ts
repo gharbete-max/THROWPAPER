@@ -834,6 +834,7 @@ export const nbNO: Record<MessageKey, string> = {
   'submissions.noPaper': 'Fylt ut før skjemaet hadde papir',
 
   'paper.open': 'Fra papir',
+  'paper.update': 'Oppdater fra et dokument',
   'paper.heading': 'Lag et skjema av papir',
   'paper.explain':
     'Last opp PDF-en du allerede har, eller fotografer hver side. Felt som PDF-en erklærer leses som de er; på et fotografi tegner du boksene selv.',
@@ -1049,6 +1050,9 @@ export const nbNO: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': 'Organisasjonens farger bestemmes av en administrator.',
   'conversation.import.ask': 'Fra dokumentet ditt',
   'conversation.import.said': 'plural:one {count} spørsmål | other {count} spørsmål',
+  'conversation.reimport.ask': 'Oppdatert fra dokumentet ditt',
+  'conversation.reimport.said':
+    'Lagt til {added}, fjernet {removed}, omformulert {reworded}, flyttet {moved}',
   'guided.skip.nothingToGuess': 'Ingenting å gjette ennå',
   'guided.skip.seeded': 'Allerede lagt til fra gjetningen',
   'guided.skip.nothingSeeded': 'Ingenting ble lagt til fra en gjetning',
@@ -1253,6 +1257,8 @@ export const nbNO: Record<MessageKey, string> = {
     'Fargene kunne ikke lagres, og ingenting ble endret. Prøv igjen senere.',
   'review.choose.explain':
     'Velg en PDF eller et Word-dokument, eller lim inn teksten. Loppa leser det her, på denne enheten, og viser deg hva den leste før noe blir til et spørsmål.',
+  'review.choose.update':
+    'Velg dokumentet skjemaet ditt ble laget av, eller en ny versjon av det, eller lim inn teksten. Loppa sammenligner det med skjemaet ditt: det som er nytt, legges til, og du velger hva som skjer med resten.',
   'review.choose.file': 'PDF eller Word-dokument',
   'review.photo':
     'Et fotografi eller en skannet side? Importer det som sider i editoren, der du tegner inn spørsmålene.',
@@ -1292,6 +1298,24 @@ export const nbNO: Record<MessageKey, string> = {
   'review.useTexts': 'Overskrifter og tekst å lese blir med.',
   'review.paperFull':
     'Skjemaet har allerede {max} dokumenter, så mange det kan ha: spørsmålene legges til, men svarene skrives ikke tilbake på dette.',
+  'review.update': 'Oppdater skjemaet',
+  'review.changes.heading': 'Sammenlignet med skjemaet ditt',
+  'review.changes.added': 'Nytt i dokumentet – legges til når du oppdaterer',
+  'review.changes.addBack': 'Du tok disse ut av skjemaet. Dokumentet har dem fortsatt.',
+  'review.changes.addBackToggle': 'Legg den til igjen',
+  'review.changes.reworded': 'Formulert annerledes i dokumentet',
+  'review.changes.formSays': 'Skjemaet ditt: {text}',
+  'review.changes.documentSays': 'Dokumentet: {text}',
+  'review.changes.rewordToggle': 'Bruk dokumentets formulering',
+  'review.changes.gone': 'Ikke lenger i dokumentet',
+  'review.changes.removeToggle': 'Fjern den fra skjemaet',
+  'review.changes.moved': 'Et annet sted i dokumentet',
+  'review.changes.moveToggle': 'Flytt den så den stemmer',
+  'review.changes.nothing': 'Skjemaet ditt har allerede alt som står i dette dokumentet.',
+  'review.changes.same': 'Dette er dokumentet skjemaet ditt ble laget av, og det er ikke endret.',
+  'review.changes.noPaper':
+    'Nye spørsmål står ikke på papiret skjemaet ditt tar vare på: svarene på dem skrives ikke inn på det.',
+  'review.changes.pick': 'Ingenting endres før du velger noe ovenfor.',
   'review.useBlocked': 'Gå først gjennom det som må ses på.',
   'review.using': 'Legger til…',
   'review.useFailed': 'Spørsmålene kunne ikke legges til i skjemaet ditt. Prøv igjen.',

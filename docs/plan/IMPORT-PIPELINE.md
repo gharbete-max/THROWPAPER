@@ -569,7 +569,9 @@ The comparison is built (S12c, `import/reimport.ts`, `CONVERGENCE.md`, with the 
 `fixtures/reimport/`): the "origin fingerprint" is the field's own id, which is its source text's
 fingerprint, so a document read again as if into an empty form gives an unchanged field the id it
 had, and nothing needs storing; and a third rule matches a field by the same wording wherever it
-is, when that wording is one field's on each side (#126).
+is, when that wording is one field's on each side (#126). On screen (S12c, part two): the editor's
+"Update from a document" opens the review, which on a form with anything in it shows "Compared with
+your form" and "Update the form", one step the conversation's Back undoes (`reimport`).
 
 - The file's SHA-256 equals the kept source's: nothing to do, and the screen says so.
 - Otherwise stages 1–7 run again, and new questions are matched to the draft's: first by equal

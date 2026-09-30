@@ -850,6 +850,7 @@ export const ruRU: Record<MessageKey, string> = {
   'submissions.noPaper': 'Заполнено до того, как у формы появилась бумага',
 
   'paper.open': 'С бумаги',
+  'paper.update': 'Обновить по документу',
   'paper.heading': 'Сделать форму из бумаги',
   'paper.explain':
     'Загрузите PDF, который у вас уже есть, или сфотографируйте каждую страницу. Поля, объявленные в PDF, читаются как есть; на фотографии вы рисуете рамки сами.',
@@ -1077,6 +1078,9 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.import.ask': 'Из вашего документа',
   'conversation.import.said':
     'plural:one {count} вопрос | few {count} вопроса | many {count} вопросов | other {count} вопроса',
+  'conversation.reimport.ask': 'Обновлено по вашему документу',
+  'conversation.reimport.said':
+    'Добавлено {added}, убрано {removed}, переформулировано {reworded}, перемещено {moved}',
   'guided.skip.nothingToGuess': 'Пока нечего угадывать',
   'guided.skip.seeded': 'Уже добавлено по догадке',
   'guided.skip.nothingSeeded': 'По догадке ничего не добавлено',
@@ -1287,6 +1291,8 @@ export const ruRU: Record<MessageKey, string> = {
     'Не удалось сохранить цвета, ничего не изменилось. Попробуйте позже.',
   'review.choose.explain':
     'Выберите PDF или документ Word либо вставьте его текст. Loppa прочитает его здесь, на этом устройстве, и покажет, что прочитала, прежде чем что-либо станет вопросом.',
+  'review.choose.update':
+    'Выберите документ, по которому сделана ваша форма, или его новую версию, или вставьте его текст. Loppa сравнит его с вашей формой: новое будет добавлено, а что делать с остальным, решаете вы.',
   'review.choose.file': 'PDF или документ Word',
   'review.photo':
     'Фотография или отсканированная страница? Импортируйте её как страницы в редактор и нарисуйте там вопросы.',
@@ -1329,6 +1335,24 @@ export const ruRU: Record<MessageKey, string> = {
   'review.useTexts': 'Заголовки и текст для чтения добавятся вместе с ними.',
   'review.paperFull':
     'В этой форме уже хранится {max} документов — это максимум: вопросы добавятся, но ответы на них не будут вписаны в этот документ.',
+  'review.update': 'Обновить форму',
+  'review.changes.heading': 'По сравнению с вашей формой',
+  'review.changes.added': 'Новое в документе — добавится при обновлении',
+  'review.changes.addBack': 'Вы убрали это из формы. В документе это всё ещё есть.',
+  'review.changes.addBackToggle': 'Вернуть',
+  'review.changes.reworded': 'В документе сформулировано иначе',
+  'review.changes.formSays': 'Ваша форма: {text}',
+  'review.changes.documentSays': 'Документ: {text}',
+  'review.changes.rewordToggle': 'Взять формулировку документа',
+  'review.changes.gone': 'Этого больше нет в документе',
+  'review.changes.removeToggle': 'Убрать из формы',
+  'review.changes.moved': 'В другом месте документа',
+  'review.changes.moveToggle': 'Переместить так же',
+  'review.changes.nothing': 'В вашей форме уже есть всё, что есть в этом документе.',
+  'review.changes.same': 'Это тот документ, по которому сделана ваша форма, и он не изменился.',
+  'review.changes.noPaper':
+    'Новых вопросов нет на бумаге, которую хранит ваша форма: ответы на них не вписываются в неё.',
+  'review.changes.pick': 'Ничего не изменится, пока вы что-нибудь не выберете выше.',
   'review.useBlocked': 'Сначала разберитесь с тем, что требует вашего внимания.',
   'review.using': 'Добавление…',
   'review.useFailed': 'Не удалось добавить вопросы в вашу форму. Попробуйте ещё раз.',

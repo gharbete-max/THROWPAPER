@@ -79,7 +79,8 @@ export type Placement =
 
 /**
  * What to do to the form, in the order to do it: placements in the document's order, each after
- * the field before it in the document (null: first); rewordings; removals last.
+ * the field before it in the document (null: first; at the end when nothing matched); rewordings;
+ * removals last.
  */
 export interface ImportPlan {
   readonly place: readonly Placement[];
@@ -277,7 +278,11 @@ export function planImport(
   const move = new Set(choices.move.filter((d) => comparison.moved.includes(d)));
   const added = new Set(comparison.added);
   const place: Placement[] = [];
-  let anchor: string | null = null;
+  // Where an addition goes that no matched field precedes: first, before the form's own — unless
+  // nothing matched at all, when the form marks no place for the document, and it goes at the end
+  // (`fixtures/reimport/nothing-in-common.json`).
+  const anyMatched = comparison.matches.some((match) => match.formId !== null);
+  let anchor: string | null = anyMatched ? null : (input.form.at(-1)?.id ?? null);
   input.document.forEach((entry, d) => {
     const { formId } = comparison.matches[d]!;
     if (formId !== null) {

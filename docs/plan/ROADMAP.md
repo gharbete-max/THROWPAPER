@@ -81,7 +81,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
-| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | in progress — S12a (the walk, acceptance S6), S12b (the paper twin) and stage 9's comparison done, in review, PR #147; the update on screen next (`CONVERGENCE.md`) |
+| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
 
 ## Log
@@ -415,3 +415,11 @@ when each slice ends.)*
   questions inserted before one would have added it twice (#126). Tests: eleven fixtures in
   `fixtures/reimport/`, written first and compared whole; the Dice arithmetic exactly; the edges.
   Next: the machine's step and the review screen's update.
+- **S12c, part two: the update on screen (2026-09-30).** What: the machine's `reimport` — one step
+  that adds, moves, rewords and removes, Back exact — and the review screen's update mode: "Update
+  from a document" in the editor, "Compared with your form" with a toggle for each question asked
+  (every toggle starting off), "Update the form" held back only by what it would add, and the
+  document the form keeps said to be unchanged. Twenty-one messages in twelve catalogues. Why:
+  stage 9, acceptance "re-import asks before removing". Found on the way: a form made by hand had
+  every addition put above what the person made (#127). Tests: `builder/reimport.test.ts`,
+  `review/reimport.test.ts`, and two journeys in `e2e/reimport.spec.ts`. Next: S13.

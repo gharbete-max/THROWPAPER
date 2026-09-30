@@ -838,6 +838,7 @@ export const isIS: Record<MessageKey, string> = {
   'submissions.noPaper': 'Fyllt út áður en eyðublaðið fékk pappír',
 
   'paper.open': 'Af pappír',
+  'paper.update': 'Uppfæra úr skjali',
   'paper.heading': 'Búa til eyðublað úr pappír',
   'paper.explain':
     'Hladdu upp PDF-skjalinu sem þú átt, eða taktu mynd af hverri síðu. Reitir sem PDF-skjalið lýsir eru lesnir eins og þeir eru; á ljósmynd teiknar þú reitina sjálf.',
@@ -1053,6 +1054,9 @@ export const isIS: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': 'Stjórnandi ákveður liti félagsins ykkar.',
   'conversation.import.ask': 'Úr skjalinu þínu',
   'conversation.import.said': 'plural:one {count} spurning | other {count} spurningar',
+  'conversation.reimport.ask': 'Uppfært úr skjalinu þínu',
+  'conversation.reimport.said':
+    'Bætt við {added}, fjarlægt {removed}, endurorðað {reworded}, fært {moved}',
   'guided.skip.nothingToGuess': 'Ekkert að giska á enn',
   'guided.skip.seeded': 'Þegar bætt við út frá ágiskuninni',
   'guided.skip.nothingSeeded': 'Engu var bætt við út frá ágiskun',
@@ -1262,6 +1266,8 @@ export const isIS: Record<MessageKey, string> = {
     'Ekki tókst að vista litina og engu var breytt. Reyndu aftur síðar.',
   'review.choose.explain':
     'Veldu PDF-skjal eða Word-skjal, eða límdu inn textann. Loppa les það hér, á þessu tæki, og sýnir þér hvað hún las áður en nokkuð verður að spurningu.',
+  'review.choose.update':
+    'Veldu skjalið sem eyðublaðið þitt var gert úr, eða nýja útgáfu af því, eða límdu inn textann. Loppa ber það saman við eyðublaðið þitt: því sem er nýtt er bætt við og þú velur hvað verður um afganginn.',
   'review.choose.file': 'PDF- eða Word-skjal',
   'review.photo':
     'Ljósmynd eða skönnuð síða? Flyttu hana inn sem síður í ritlinum, þar sem þú teiknar spurningarnar.',
@@ -1302,6 +1308,25 @@ export const isIS: Record<MessageKey, string> = {
   'review.useTexts': 'Fyrirsagnir og texti til lestrar fylgja með.',
   'review.paperFull':
     'Eyðublaðið geymir þegar {max} skjöl, eins mörg og það getur: spurningunum er bætt við, en svörin verða ekki skrifuð aftur á þetta skjal.',
+  'review.update': 'Uppfæra eyðublaðið',
+  'review.changes.heading': 'Borið saman við eyðublaðið þitt',
+  'review.changes.added': 'Nýtt í skjalinu – bætt við þegar þú uppfærir',
+  'review.changes.addBack': 'Þú tókst þetta út úr eyðublaðinu. Skjalið hefur það enn.',
+  'review.changes.addBackToggle': 'Bæta henni aftur við',
+  'review.changes.reworded': 'Orðað öðruvísi í skjalinu',
+  'review.changes.formSays': 'Eyðublaðið þitt: {text}',
+  'review.changes.documentSays': 'Skjalið: {text}',
+  'review.changes.rewordToggle': 'Nota orðalag skjalsins',
+  'review.changes.gone': 'Ekki lengur í skjalinu',
+  'review.changes.removeToggle': 'Fjarlægja hana úr eyðublaðinu',
+  'review.changes.moved': 'Á öðrum stað í skjalinu',
+  'review.changes.moveToggle': 'Færa hana til samræmis',
+  'review.changes.nothing': 'Eyðublaðið þitt hefur þegar allt sem er í þessu skjali.',
+  'review.changes.same':
+    'Þetta er skjalið sem eyðublaðið þitt var gert úr, og því hefur ekki verið breytt.',
+  'review.changes.noPaper':
+    'Nýjar spurningar eru ekki á pappírnum sem eyðublaðið geymir: svörin við þeim eru ekki skrifuð á hann.',
+  'review.changes.pick': 'Ekkert breytist fyrr en þú velur eitthvað hér að ofan.',
   'review.useBlocked': 'Farðu fyrst yfir það sem þarf að skoða betur.',
   'review.using': 'Bætir við…',
   'review.useFailed': 'Ekki tókst að bæta spurningunum við eyðublaðið þitt. Reyndu aftur.',

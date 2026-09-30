@@ -34,8 +34,8 @@ const fixtures = readdirSync(dir)
   }));
 
 describe('the fixtures', () => {
-  it('are there, thirteen of them at least', () => {
-    expect(fixtures.length).toBeGreaterThanOrEqual(13);
+  it('are there, fourteen of them at least', () => {
+    expect(fixtures.length).toBeGreaterThanOrEqual(14);
   });
 
   for (const { name, fixture } of fixtures) {

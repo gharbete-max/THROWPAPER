@@ -165,9 +165,13 @@ every published version stays what it is.
 
 ### Where it starts
 
-The review screen, `/forms/:id/import`, on a form that already has questions: the editor's paper
-menu offers "Update from a document" beside "From paper", and the review reads the document as it
-always does. What changes is what "Use these questions" does, and what the screen says before it.
+The review screen, `/forms/:id/import`, on a form that already has questions: the editor offers
+"Update from a document" beside "From paper", and the review reads the document as it always does.
+What changes is what the screen says before it reads — "Update from a document", and what an update
+does — and its button: "Update the form" in place of "Use these questions", with "Compared with your
+form" above the document. *Built so; a form with anything in it is updated, whatever it was made
+from — a form made by hand has nothing the document matches, and gets the document's questions at
+its end (below).*
 
 ### Matching, without a stored record
 
@@ -201,8 +205,8 @@ Then, for the person:
 
 | What | When | Done |
 | --- | --- | --- |
-| **Added** | a document field matched by nothing, and whose id the form never used | applied: at its place in the document, after the form field matched to the nearest document field before it (first, if none), each with what the document decided (S12a) |
-| **Added back?** | a document field whose id the form used once and the person removed (`retiredIds`) | asked, default no: the person took it out |
+| **Added** | a document field matched by nothing, and whose id the form never used | applied: at its place in the document, after the form field matched to the nearest document field before it (first, if none; at the end, when nothing matched at all — #127), each with what the document decided (S12a) |
+| **Added back?** | a document field whose id the form used once and the person removed (`retiredIds`) | asked, default no: the person took it out. Added back, it is a new question with a new id (`<id>-2`), never the old one (#49); read again, it is matched by its wording |
 | **Reworded** | matched by wording, and the texts differ | asked: "The document now says …" — *Use the document's wording* / *Keep the form's* (default) |
 | **No longer in the document** | a form field the import made (`source: 'import'` in this author's sidecar) matched by nothing | asked: *Remove* / *Keep* (default) |
 | **Moved** | matched by wording, and out of the document's order: not in the longest run of matched fields whose form order is the document's (every match weighs the same; ties to the earlier document field) | asked: *Move it* / *Leave it* (default) |
@@ -243,11 +247,23 @@ paper — moving every matched question's box onto it — is not in S12 (below).
   was checked by mutation against them. *Built: thirteen fixtures, 23 tests.*
 - `machine`: the step — additions at their places, removals, rewordings, moves — Back exact, replay,
   the session round trip, a refused plan (an id taken, a removal of a question not there).
+  *Built: `builder/reimport.test.ts`, 6 tests, also the trail and headings not counted as added.*
 - `review.test.ts`: the form's fields and the document's, as `compareImport` is given them; the
-  same bytes; what "Update the form" adds, through the machine.
+  same bytes; what "Update the form" adds, through the machine. *Built: `review/reimport.test.ts`,
+  9 tests on real readings of pastes — the same document changes nothing; hand edits are not asked;
+  a new version adds, asks, and does exactly what was chosen, and then compares to nothing; a
+  question taken out comes back under a new id; a colleague's session offers nothing for removal;
+  only the items being added hold the button back.*
 - `e2e/reimport.spec.ts`: a form made from a paste, a question reworded and one removed by hand;
   the new version read: one added, one reworded (kept), one no longer in the document (removed),
-  the hand edit untouched; a PDF read again unchanged says so and changes nothing.
+  the hand edit untouched; a PDF read again unchanged says so and changes nothing. *Built: two
+  journeys; ignoring the person's removal fails the first (checked by mutation). The hand edit is
+  written into the draft as the editor saves it.*
+- `fixtures/reimport/nothing-in-common.json` (added while building): a form made by hand gets the
+  document's fields at its end, not above what the person made (#127).
+- `panes.test.tsx`: "Compared with your form" rendered — what is added, every question asked with
+  its toggle off, the note that new questions are not on the kept paper, and "Your form already has
+  everything in this document" with nothing to press.
 
 ## Not in S12
 

@@ -100,7 +100,18 @@ export type Answer =
    * "Use these questions" on the review screen (S10): questions read from a document, added at
    * once (`source: 'import'`). In the trail, not an answer to the node the conversation is at.
    */
-  | { readonly kind: 'import'; readonly count: number };
+  | { readonly kind: 'import'; readonly count: number }
+  /**
+   * "Update the form" on the review screen (S12c): the document read again — what it added, and
+   * what the person chose to remove, reword and move. In the trail, not an answer to a node.
+   */
+  | {
+      readonly kind: 'reimport';
+      readonly added: number;
+      readonly removed: number;
+      readonly reworded: number;
+      readonly moved: number;
+    };
 
 /** A node passed over because its `when` was false, and the sentence that says why. */
 export interface Skipped {
@@ -160,10 +171,10 @@ export function currentNode(graph: BuilderGraph, conversation: Conversation): No
   return nodeOf(graph, conversation.state.cursor);
 }
 
-/** Whether a step answered the node it names: not a jump, a hand edit or an import. */
+/** Whether a step answered the node it names: not a jump, a hand edit, an import or a re-import. */
 export function answers(entry: Pick<LogEntry, 'answer'> | Told): boolean {
   const { kind } = entry.answer;
-  return kind !== 'jump' && kind !== 'edit' && kind !== 'import';
+  return kind !== 'jump' && kind !== 'edit' && kind !== 'import' && kind !== 'reimport';
 }
 
 /** The nodes that have an answer in the log — what `answered()` reads. */
@@ -622,7 +633,12 @@ export function answerAt(
   const node = nodeOf(graph, nodeId);
   const slot = node.slot;
   if (!slot) throw new MachineError('not-now', `${node.id} is answered only in its turn`);
-  if (given.kind === 'jump' || given.kind === 'edit' || given.kind === 'import') {
+  if (
+    given.kind === 'jump' ||
+    given.kind === 'edit' ||
+    given.kind === 'import' ||
+    given.kind === 'reimport'
+  ) {
     throw new MachineError('wrong-answer', `${node.id}: a ${given.kind} is not an answer`);
   }
   if (node.when !== undefined && !holds(node.when, guardState(state, answeredIds(log)))) {
@@ -863,6 +879,150 @@ export function importQuestions(
   const entry: LogEntry = {
     nodeId: state.cursor,
     answer: { kind: 'import', count },
+    patch: tracked.changes,
+    inverse: tracked.inverse,
+    to,
+    skipped,
+    tier: null,
+    source: 'import',
+  };
+  return { base: conversation.base, log: [...log, entry], state: { ...next, cursor: to } };
+}
+
+/** One placement of a re-import, in the document's order (`CONVERGENCE.md`, S12c). */
+export type ReimportPlacement =
+  | {
+      readonly kind: 'add';
+      readonly field: FormDefinition['fields'][number];
+      /** The field it goes after — the form's, or one added before it in this step; null: first. */
+      readonly after: string | null;
+      /** The slots the document decided (S12a). */
+      readonly decided: readonly Slot[];
+    }
+  | { readonly kind: 'move'; readonly id: string; readonly after: string | null };
+
+/** What "Update the form" does: what the document added, and what the person chose. */
+export interface Reimport {
+  readonly place: readonly ReimportPlacement[];
+  /** The document's wording, taken for a field: its label, or a text's content, whole. */
+  readonly reword: readonly {
+    readonly id: string;
+    readonly property: 'label' | 'content';
+    readonly value: { readonly [locale: string]: string };
+  }[];
+  readonly remove: readonly string[];
+}
+
+/**
+ * The document read again, and the form brought up to date with it (S12c, `CONVERGENCE.md`): one
+ * step, as "Use these questions" is, that Back undoes and a replay gives exactly.
+ *
+ * Additions are placed in the document's order, each after the field before it, and recorded as
+ * the import's, with what the document decided; moves are placed in the same pass; then the
+ * rewordings the person took; removals last, so nothing is placed after a field about to go. An id
+ * the form ever used, or a key it has, is refused for an addition (`CAVEATS.md` #49) — the review
+ * gives a question the person took out and adds back a new one. A removed question's id stays
+ * retired, and its sidecar record goes with it. Nothing in focus afterwards: the conversation goes
+ * on at "Go through the questions from your document?", from the top.
+ */
+export function reimport(
+  graph: BuilderGraph,
+  conversation: Conversation,
+  plan: Reimport,
+): Conversation {
+  const { state, log } = conversation;
+  const definition = state.draft.definition;
+  const shown = new Set<string>(PRESENTATIONAL_TYPES);
+  const adds = plan.place.filter((p) => p.kind === 'add');
+  const moves = plan.place.filter((p) => p.kind === 'move');
+  const counted = {
+    added: adds.filter((p) => !shown.has(p.field.type)).length,
+    removed: plan.remove.length,
+    reworded: plan.reword.length,
+    moved: moves.length,
+  };
+  if (plan.place.length + plan.reword.length + plan.remove.length === 0) {
+    throw new MachineError('nothing-to-do', 'Nothing to change');
+  }
+  const present = new Set(definition.fields.map((field) => field.id));
+  const used = new Set([
+    ...definition.fields.flatMap((field) =>
+      field.type === 'repeating_group' ? [field.id, ...field.fields.map((f) => f.id)] : [field.id],
+    ),
+    ...state.sidecar.retiredIds,
+  ]);
+  const keys = new Set(definition.fields.map((field) => field.key));
+  const added: string[] = [];
+  for (const { field } of adds) {
+    const ids =
+      field.type === 'repeating_group' ? [field.id, ...field.fields.map((f) => f.id)] : [field.id];
+    for (const id of ids) {
+      if (used.has(id)) throw new MachineError('invalid-draft', `The id ${id} was used before`);
+      used.add(id);
+    }
+    if (keys.has(field.key))
+      throw new MachineError('invalid-draft', `The key ${field.key} is taken`);
+    keys.add(field.key);
+    added.push(...ids);
+  }
+  const named = [...moves.map((m) => m.id), ...plan.reword.map((r) => r.id), ...plan.remove];
+  const missing = named.find((id) => !present.has(id));
+  if (missing !== undefined) throw new MachineError('not-found', `No question ${missing}`);
+  if (new Set(plan.remove).size !== plan.remove.length) {
+    throw new MachineError('wrong-answer', 'A question is removed twice');
+  }
+
+  const list = ['draft', 'definition', 'fields'] as const;
+  const at = (id: string) => [...list, { id }] as const;
+  const changes: Change[] = [];
+  for (const placement of plan.place) {
+    const after = placement.after === null ? null : { id: placement.after };
+    if (placement.kind === 'move') {
+      changes.push({ op: 'reorder', at: [...at(placement.id)], after });
+      continue;
+    }
+    const { field, decided } = placement;
+    changes.push({ op: 'insert', at: [...list], value: field as unknown as Json, after });
+    changes.push({
+      op: 'set',
+      at: provenancePointer(field.id),
+      value:
+        decided.length === 0
+          ? { source: 'import' }
+          : { source: 'import', decided: Object.fromEntries(decided.map((slot) => [slot, true])) },
+    });
+  }
+  for (const { id, property, value } of plan.reword) {
+    changes.push({ op: 'set', at: [...at(id), property], value: value as unknown as Json });
+  }
+  for (const id of plan.remove) {
+    changes.push({ op: 'remove', at: [...at(id)] });
+    if (state.sidecar.fields[id] !== undefined) {
+      changes.push({ op: 'unset', at: ['sidecar', 'fields', id] });
+    }
+  }
+  if (added.length > 0) {
+    changes.push({
+      op: 'set',
+      at: ['sidecar', 'retiredIds'],
+      value: [...state.sidecar.retiredIds, ...added],
+    });
+  }
+  if (adds.length > 0 && state.sidecar.provenance === 'guided' && definition.fields.length > 0) {
+    changes.push({ op: 'set', at: ['sidecar', 'provenance'], value: 'mixed' });
+  }
+  if (state.focus !== null) changes.push({ op: 'set', at: ['focus'], value: null });
+
+  const tracked: Tracked = { changes: [], inverse: [] };
+  const next = withWalk(applyTracked(state, changes, tracked), tracked);
+  checkDraft(next.draft);
+  const walk = graph.nodes.some((node) => node.id === IMPORT_WALK);
+  const { to, skipped } = walk
+    ? settle(graph, next, answeredIds(log), IMPORT_WALK, false, toldOf(conversation))
+    : { to: state.cursor, skipped: [] };
+  const entry: LogEntry = {
+    nodeId: state.cursor,
+    answer: { kind: 'reimport', ...counted },
     patch: tracked.changes,
     inverse: tracked.inverse,
     to,

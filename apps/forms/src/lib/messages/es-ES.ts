@@ -849,6 +849,7 @@ export const esES: Record<MessageKey, string> = {
   'submissions.noPaper': 'Rellenado antes de que el formulario tuviera papel',
 
   'paper.open': 'Desde papel',
+  'paper.update': 'Actualizar desde un documento',
   'paper.heading': 'Crear un formulario a partir de papel',
   'paper.explain':
     'Suba el PDF que ya tiene, o fotografíe cada página. Los campos que declara el PDF se leen tal cual; en una fotografía usted dibuja las casillas.',
@@ -1067,6 +1068,9 @@ export const esES: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': 'Los colores de tu organización los define un administrador.',
   'conversation.import.ask': 'De tu documento',
   'conversation.import.said': 'plural:one {count} pregunta | other {count} preguntas',
+  'conversation.reimport.ask': 'Actualizado desde tu documento',
+  'conversation.reimport.said':
+    'Añadidas {added}, quitadas {removed}, redactadas de nuevo {reworded}, movidas {moved}',
   'guided.skip.nothingToGuess': 'Todavía no hay nada que adivinar',
   'guided.skip.seeded': 'Ya añadido a partir de la suposición',
   'guided.skip.nothingSeeded': 'No se añadió nada a partir de una suposición',
@@ -1276,6 +1280,8 @@ export const esES: Record<MessageKey, string> = {
     'No se han podido guardar los colores y no se ha cambiado nada. Inténtalo más tarde.',
   'review.choose.explain':
     'Elige un PDF o un documento de Word, o pega su texto. Loppa lo lee aquí, en este dispositivo, y te muestra lo que ha leído antes de que nada se convierta en una pregunta.',
+  'review.choose.update':
+    'Elige el documento con el que se hizo tu formulario, o una versión nueva, o pega su texto. Loppa lo compara con tu formulario: lo nuevo se añade y tú eliges qué pasa con lo demás.',
   'review.choose.file': 'PDF o documento de Word',
   'review.photo':
     '¿Una fotografía o una página escaneada? Impórtala como páginas en el editor, donde dibujas sus preguntas.',
@@ -1316,6 +1322,24 @@ export const esES: Record<MessageKey, string> = {
   'review.useTexts': 'Los títulos y el texto para leer se añaden con ellas.',
   'review.paperFull':
     'Este formulario ya guarda {max} documentos, el máximo: las preguntas se añaden, pero sus respuestas no se escribirán sobre este.',
+  'review.update': 'Actualizar el formulario',
+  'review.changes.heading': 'Comparado con tu formulario',
+  'review.changes.added': 'Nuevo en el documento: se añade al actualizar',
+  'review.changes.addBack': 'Quitaste estas de tu formulario. El documento todavía las tiene.',
+  'review.changes.addBackToggle': 'Volver a añadirla',
+  'review.changes.reworded': 'Redactado de otra forma en el documento',
+  'review.changes.formSays': 'Tu formulario: {text}',
+  'review.changes.documentSays': 'El documento: {text}',
+  'review.changes.rewordToggle': 'Usar la redacción del documento',
+  'review.changes.gone': 'Ya no está en el documento',
+  'review.changes.removeToggle': 'Quitarla del formulario',
+  'review.changes.moved': 'En otro lugar del documento',
+  'review.changes.moveToggle': 'Moverla para que coincida',
+  'review.changes.nothing': 'Tu formulario ya tiene todo lo que hay en este documento.',
+  'review.changes.same': 'Este es el documento con el que se hizo tu formulario, y no ha cambiado.',
+  'review.changes.noPaper':
+    'Las preguntas nuevas no están en el papel que guarda tu formulario: sus respuestas no se escriben en él.',
+  'review.changes.pick': 'No cambia nada hasta que elijas algo arriba.',
   'review.useBlocked': 'Primero resuelve lo que necesita tu atención.',
   'review.using': 'Añadiendo…',
   'review.useFailed': 'No se han podido añadir las preguntas a tu formulario. Inténtalo de nuevo.',

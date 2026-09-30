@@ -841,6 +841,7 @@ export const fiFI: Record<MessageKey, string> = {
   'submissions.noPaper': 'Täytetty ennen kuin lomakkeella oli paperi',
 
   'paper.open': 'Paperista',
+  'paper.update': 'Päivitä asiakirjasta',
   'paper.heading': 'Tee lomake paperista',
   'paper.explain':
     'Lataa PDF, joka sinulla jo on, tai valokuvaa jokainen sivu. PDF:n ilmoittamat kentät luetaan sellaisinaan; valokuvaan piirrät ruudut itse.',
@@ -1059,6 +1060,9 @@ export const fiFI: Record<MessageKey, string> = {
   'guided.skip.brandByAdministrator': 'Organisaationne värit määrittää ylläpitäjä.',
   'conversation.import.ask': 'Asiakirjastasi',
   'conversation.import.said': 'plural:one {count} kysymys | other {count} kysymystä',
+  'conversation.reimport.ask': 'Päivitetty asiakirjastasi',
+  'conversation.reimport.said':
+    'Lisätty {added}, poistettu {removed}, muotoiltu uudelleen {reworded}, siirretty {moved}',
   'guided.skip.nothingToGuess': 'Ei vielä arvattavaa',
   'guided.skip.seeded': 'Lisätty jo arvauksesta',
   'guided.skip.nothingSeeded': 'Arvauksesta ei lisätty mitään',
@@ -1268,6 +1272,8 @@ export const fiFI: Record<MessageKey, string> = {
     'Värejä ei voitu tallentaa, eikä mitään muutettu. Yritä myöhemmin uudelleen.',
   'review.choose.explain':
     'Valitse PDF tai Word-asiakirja tai liitä sen teksti. Loppa lukee sen täällä, tällä laitteella, ja näyttää, mitä se luki, ennen kuin mistään tulee kysymystä.',
+  'review.choose.update':
+    'Valitse asiakirja, josta lomakkeesi tehtiin, tai sen uusi versio, tai liitä sen teksti. Loppa vertaa sitä lomakkeeseesi: uusi lisätään, ja sinä valitset, mitä muulle tehdään.',
   'review.choose.file': 'PDF tai Word-asiakirja',
   'review.photo':
     'Valokuva tai skannattu sivu? Tuo se sivuina muokkaimeen, jossa piirrät sen kysymykset.',
@@ -1307,6 +1313,24 @@ export const fiFI: Record<MessageKey, string> = {
   'review.useTexts': 'Otsikot ja luettava teksti tulevat mukana.',
   'review.paperFull':
     'Lomakkeella on jo {max} asiakirjaa, enempää se ei voi säilyttää: kysymykset lisätään, mutta vastauksia ei kirjoiteta takaisin tähän asiakirjaan.',
+  'review.update': 'Päivitä lomake',
+  'review.changes.heading': 'Verrattuna lomakkeeseesi',
+  'review.changes.added': 'Uutta asiakirjassa – lisätään, kun päivität',
+  'review.changes.addBack': 'Poistit nämä lomakkeestasi. Asiakirjassa ne ovat yhä.',
+  'review.changes.addBackToggle': 'Lisää se takaisin',
+  'review.changes.reworded': 'Asiakirjassa eri sanoin',
+  'review.changes.formSays': 'Lomakkeesi: {text}',
+  'review.changes.documentSays': 'Asiakirja: {text}',
+  'review.changes.rewordToggle': 'Käytä asiakirjan sanamuotoa',
+  'review.changes.gone': 'Ei enää asiakirjassa',
+  'review.changes.removeToggle': 'Poista se lomakkeesta',
+  'review.changes.moved': 'Eri kohdassa asiakirjassa',
+  'review.changes.moveToggle': 'Siirrä se vastaamaan asiakirjaa',
+  'review.changes.nothing': 'Lomakkeessasi on jo kaikki, mitä tässä asiakirjassa on.',
+  'review.changes.same': 'Tämä on asiakirja, josta lomakkeesi tehtiin, eikä se ole muuttunut.',
+  'review.changes.noPaper':
+    'Uudet kysymykset eivät ole paperilla, jonka lomakkeesi säilyttää: niiden vastauksia ei kirjoiteta siihen.',
+  'review.changes.pick': 'Mikään ei muutu, ennen kuin valitset jotain yltä.',
   'review.useBlocked': 'Ratkaise ensin, mikä kaipaa huomiotasi.',
   'review.using': 'Lisätään…',
   'review.useFailed': 'Kysymyksiä ei voitu lisätä lomakkeeseesi. Yritä uudelleen.',

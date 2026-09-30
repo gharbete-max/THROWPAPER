@@ -853,6 +853,7 @@ export const enGB = {
   'submissions.noPaper': 'Filled in before this form had paper',
 
   'paper.open': 'From paper',
+  'paper.update': 'Update from a document',
   'paper.heading': 'Make a form from paper',
   'paper.explain':
     'Upload the PDF you already have, or photograph each page. Fields the PDF declares are read as they are; on a photograph you draw the boxes yourself.',
@@ -1068,6 +1069,9 @@ export const enGB = {
   'guided.skip.brandByAdministrator': "Your organisation's colours are set by an administrator.",
   'conversation.import.ask': 'From your document',
   'conversation.import.said': 'plural:one {count} question | other {count} questions',
+  'conversation.reimport.ask': 'Updated from your document',
+  'conversation.reimport.said':
+    'Added {added}, removed {removed}, reworded {reworded}, moved {moved}',
   'guided.skip.nothingToGuess': 'Nothing to guess yet',
   'guided.skip.seeded': 'Already added from the guess',
   'guided.skip.nothingSeeded': 'Nothing was added from a guess',
@@ -1274,6 +1278,8 @@ export const enGB = {
     'The colours could not be saved, and nothing was changed. Try again later.',
   'review.choose.explain':
     'Choose a PDF or a Word document, or paste its text. Loppa reads it here, on this device, and shows you what it read before anything becomes a question.',
+  'review.choose.update':
+    'Choose the document your form was made from, or a new version of it, or paste its text. Loppa compares it with your form: what is new is added, and you choose what happens to the rest.',
   'review.choose.file': 'PDF or Word document',
   'review.photo':
     'A photograph or a scanned page? Import it as pages in the editor, where you draw its questions.',
@@ -1313,6 +1319,24 @@ export const enGB = {
   'review.useTexts': 'Headings and text to read come with them.',
   'review.paperFull':
     'This form already keeps {max} documents, the most it can: these questions are added, but their answers will not be written back onto this one.',
+  'review.update': 'Update the form',
+  'review.changes.heading': 'Compared with your form',
+  'review.changes.added': 'New in the document — added when you update',
+  'review.changes.addBack': 'You took these out of your form. The document still has them.',
+  'review.changes.addBackToggle': 'Add it back',
+  'review.changes.reworded': 'Worded differently in the document',
+  'review.changes.formSays': 'Your form: {text}',
+  'review.changes.documentSays': 'The document: {text}',
+  'review.changes.rewordToggle': "Use the document's wording",
+  'review.changes.gone': 'No longer in the document',
+  'review.changes.removeToggle': 'Remove it from the form',
+  'review.changes.moved': 'In another place in the document',
+  'review.changes.moveToggle': 'Move it to match',
+  'review.changes.nothing': 'Your form already has everything in this document.',
+  'review.changes.same': 'This is the document your form was made from, and it has not changed.',
+  'review.changes.noPaper':
+    'New questions are not on the paper your form keeps: their answers are not written onto it.',
+  'review.changes.pick': 'Nothing changes until you choose something above.',
   'review.useBlocked': 'Settle what needs your eye first.',
   'review.using': 'Adding…',
   'review.useFailed': 'The questions could not be added to your form. Try again.',

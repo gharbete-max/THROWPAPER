@@ -247,6 +247,10 @@ where it started (`base`) and every step since (`log`); its state is always exac
   It answers no node — `answered()` does not read it — and the trail shows it as "From your
   document: 14 questions". An id the form ever used, or a key it has, is refused. Since S12 the
   step goes on to `import.walk` (`CONVERGENCE.md`); until then the conversation stayed where it was.
+- **The document read again** (`reimport`, `{ kind: 'reimport', added, removed, reworded, moved }`,
+  S12c): "Update the form" on the review screen — what the document added, and what the person
+  chose to remove, reword and move — as one step, in the trail as "Updated from your document",
+  not an answer to a node. It goes on to `import.walk`, from the top.
 - **The walk** (S12). After every step the machine writes `pending.toWalk`: the first question
   after the one in focus, in the form's order, that came from a document and has a slot the walk
   asks still open (`required`; for a choice, `options`, `shape`, `placement`). A rebase reads it

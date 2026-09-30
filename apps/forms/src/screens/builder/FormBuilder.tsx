@@ -402,6 +402,15 @@ export function FormBuilder() {
               }}
             />
           )}
+          {/*
+            A form with anything in it can be brought up to date with the document it was made from,
+            or a new version of it (S12c): the review compares, adds what is new and asks the rest.
+          */}
+          {id && definition.fields.length > 0 && (
+            <Link className="button button--quiet" to={`/forms/${id}/import`}>
+              {t('paper.update')}
+            </Link>
+          )}
 
           <span className="small muted">{t(`builder.${saveState}`)}</span>
           <button

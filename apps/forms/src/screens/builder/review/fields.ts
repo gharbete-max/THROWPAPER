@@ -105,6 +105,8 @@ export interface Imported {
    * either way; the options, when they were printed. The walk asks the rest.
    */
   readonly decided: Record<string, Slot[]>;
+  /** By field id, the review item it was made from: a re-import holds back only what it adds (S12c). */
+  readonly itemOf: Record<string, string>;
 }
 
 /** The questions the items become, for a form that already holds `definition` and has retired `retired`. */
@@ -242,7 +244,9 @@ export function importOf(
     );
   };
 
+  const starts: { readonly itemId: string; readonly from: number }[] = [];
   for (const item of items) {
+    starts.push({ itemId: item.id, from: out.length });
     if (!asks(item)) {
       if (item.kind === 'heading') {
         const { id, key } = name(item.text, item.text, 'section');
@@ -349,5 +353,10 @@ export function importOf(
 
     question(item, item.text, kind);
   }
-  return { fields: out, decided };
+  const itemOf: Record<string, string> = {};
+  starts.forEach(({ itemId, from }, i) => {
+    for (const field of out.slice(from, starts[i + 1]?.from ?? out.length))
+      itemOf[field.id] = itemId;
+  });
+  return { fields: out, decided, itemOf };
 }
