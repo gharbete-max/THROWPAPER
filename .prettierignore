@@ -19,6 +19,11 @@ apps/desktop/release/
 # scripts/caveat-fixtures.test.ts instead.
 fixtures/
 
+# The guess questions' shared answers: one line per language's answer, so a diff reads as the ways
+# that changed. Prettier would break the long lines where its print width falls. Its bytes are
+# checked by packages/shared/src/interpret/data.test.ts ("the shared answers").
+packages/shared/src/interpret/aliases/answers.json
+
 .impeccable/hook.cache.json
 .impeccable/critique/
 

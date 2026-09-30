@@ -3,9 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { BUILDER_GRAPH } from '../builder/graph/nodes.js';
 import {
   AliasFile,
+  AnswersFile,
+  BUILTIN_ALIASES,
   BUILTIN_ALIAS_FILES,
+  BUILTIN_ANSWERS_FILE,
   aliasProblems,
   formatAliasFile,
+  formatAnswersFile,
   type AliasEntry,
 } from './aliases.js';
 import { LANGUAGES, lexiconFor } from './lexicon.js';
@@ -18,6 +22,50 @@ import { isCjk, phraseTokens } from './text.js';
  */
 
 const aliasPath = (language: string) => new URL(`./aliases/${language}.json`, import.meta.url);
+
+describe('the shared answers', () => {
+  const file = AnswersFile.parse(BUILTIN_ANSWERS_FILE);
+  const guess = BUILDER_GRAPH.nodes.filter(
+    (node) => node.group === 'guess' && node.kind === 'question',
+  );
+
+  it('are exactly the bytes they give', () => {
+    const bytes = readFileSync(new URL('./aliases/answers.json', import.meta.url), 'utf8');
+    expect(formatAnswersFile(AnswersFile.parse(JSON.parse(bytes)))).toBe(bytes);
+  });
+
+  it('list every guess question, and give each the same ways in every language', () => {
+    expect(file.nodes).toEqual(guess.map((node) => node.id).sort());
+    for (const language of LANGUAGES) {
+      const ways = (nodeId: string) =>
+        BUILTIN_ALIASES.filter((a) => a.locale === language && a.nodeId === nodeId)
+          .map((a) => `${a.optionId}:${a.phrase}`)
+          .sort();
+      const first = ways(guess[0]!.id);
+      expect(first.length).toBeGreaterThanOrEqual(9);
+      for (const node of guess) expect(ways(node.id)).toEqual(first);
+    }
+  });
+
+  it.each<[string, (f: AnswersFile) => AnswersFile, string]>([
+    ['a question left out', (f) => ({ ...f, nodes: f.nodes.slice(1) }), 'uncovered'],
+    [
+      'a question the graph lacks',
+      (f) => ({ ...f, nodes: [...f.nodes, 'guess.nothing'] }),
+      'unknown-node',
+    ],
+    [
+      'a question whose cards are not yes, no and not sure',
+      (f) => ({ ...f, nodes: [...f.nodes, 'text.required'] }),
+      'unknown-option',
+    ],
+    ['not the schema', (f) => ({ ...f, answersVersion: 2 as 1 }), 'schema'],
+  ])('%s is caught', (_name, spoil, rule) => {
+    expect(
+      aliasProblems(BUILDER_GRAPH, BUILTIN_ALIAS_FILES, spoil(file)).map((p) => p.rule),
+    ).toContain(rule);
+  });
+});
 
 describe('the alias files', () => {
   it('pass every check against the graph', () => {

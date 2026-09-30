@@ -145,9 +145,12 @@ One step (`guess.confirm`'s answer), which Back undoes:
 ## The questions
 
 Twenty-two yes / no / not sure questions, group `guess`, patching nothing. Each is at most nine
-words in English (G10); every option can be typed in twelve languages (aliases written by
-`scripts/guess-aliases.ts` from each language's ways of saying yes, no and not sure); and the
-phrase tables hold five rows per language for them. (The plan had eight; eight could not tell 25
+words in English (G10); every option can be typed in twelve languages; and the phrase tables hold
+five rows per language for them. The aliases are each language's ways of saying yes, no and not
+sure, written once in `interpret/aliases/answers.json` with the questions they apply to, and given
+to each question when the aliases load: the same 3 652 entries as one per question, 18 KB less in
+the bundle. `pnpm builder:validate` holds the list to the graph: a guess question left off it
+cannot be typed, and fails. (The plan had eight; eight could not tell 25
 recipes apart in any number of answers — a course from a conference, a room booking from an
 appointment, a lab observation from a sample.)
 

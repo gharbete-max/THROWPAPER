@@ -265,7 +265,10 @@ third open question.
 ## Aliases: `aliases.json`
 
 Built-in aliases ship as `packages/shared/src/interpret/aliases/<language>.json` — every card's
-own label and the other ways people say it, 2 400 in all. Learned aliases are the organisation's
+own label and the other ways people say it, 2 400 in all — and `aliases/answers.json` (S11): the
+guess questions' cards are all yes, no and not sure, so each language's ways of saying those three
+are written there once and given to every question it lists when the aliases load, 3 652 entries
+more (`BELIEF.md`, "The questions"). The ladder reads the same entries either way. Learned aliases are the organisation's
 (`builder_aliases`, migration 0020, one row each; the desktop's is its own install, in its embedded
 database), read by the ladder with the built-in ones, and exported and imported as a file of
 exactly the same shape (`/v1/builder/aliases`, `…/export`, `…/import`):

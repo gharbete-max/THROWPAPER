@@ -367,7 +367,8 @@ when each slice ends.)*
   (added as it stood, no question could be weighed against another), so `flow.start`'s were re-set
   and the one on `choice.buttons` removed (G9 now refuses a score alone); twenty-two questions, not
   eight, which could not tell 25 recipes apart; at most five asked, and two "Not sure" end them; the
-  catalogue comes from the API, not the bundle (#118). Found on the way: no recipe could reach
+  catalogue comes from the API, not the bundle (#118); the guess questions' yes, no and not sure are
+  written once per language, not once per question (`aliases/answers.json`, 18 KB). Found on the way: no recipe could reach
   800 (#115), "Not sure" for ever (#116), a name asked twice after "Right" (#117), a sure recipe
   never offered after "No" (#119), the guess begun again after a trip to the editor (#120), a recipe named by its id when the
   catalogue did not load (#121). Tests:

@@ -12,6 +12,7 @@ import nb from './aliases/nb.json';
 import ru from './aliases/ru.json';
 import sv from './aliases/sv.json';
 import zh from './aliases/zh.json';
+import answers from './aliases/answers.json';
 import { LANGUAGES, type Language } from './lexicon.js';
 import { compareCodePoints, keyOf } from './text.js';
 
@@ -105,9 +106,87 @@ export const BUILTIN_ALIAS_FILES: Readonly<Record<Language, unknown>> = {
   ru,
 };
 
+/**
+ * The shared answers (S11): questions whose cards are all yes, no and not sure are said the same
+ * way, so each language's ways are written once, in `aliases/answers.json`, and given to every
+ * question it lists when the built-in aliases load — the entries one per question would be, without
+ * shipping them once for each (`docs/plan/BELIEF.md`, "The questions"). The card's label is first.
+ */
+export const AnswersFile = z
+  .object({
+    source: z.string().min(1),
+    answersVersion: z.literal(1),
+    createdAt: AliasEntry.shape.createdAt,
+    nodes: z.array(z.string().min(1)).min(1),
+    ways: z.record(
+      z.enum(LANGUAGES),
+      z.record(z.string().min(1), z.array(AliasEntry.shape.phrase).min(1)),
+    ),
+  })
+  .strict();
+export type AnswersFile = z.infer<typeof AnswersFile>;
+
+/** The shipped file, as it is on disk. */
+export const BUILTIN_ANSWERS_FILE: unknown = answers;
+
+/** The shared answers' entries in one language, for every question the file lists. */
+export function answerAliases(file: AnswersFile, language: Language): AliasEntry[] {
+  const ways = file.ways[language] ?? {};
+  return file.nodes.flatMap((nodeId) =>
+    Object.entries(ways).flatMap(([optionId, phrases]) =>
+      phrases.map((phrase, i) => ({
+        phrase,
+        nodeId,
+        optionId,
+        locale: language,
+        source: 'built-in' as const,
+        createdAt: file.createdAt,
+        count: 0,
+        notes: i === 0 ? "the card's label" : 'shared by every guess question',
+      })),
+    ),
+  );
+}
+
+/**
+ * The shared answers file's bytes: keys in the schema's order, languages in `LANGUAGES` order, and
+ * one line for each language's ways of saying one answer, so a diff reads as the ways that changed.
+ * Prettier leaves the file alone (`.prettierignore`); `data.test.ts` holds it to these bytes.
+ */
+export function formatAnswersFile(file: AnswersFile): string {
+  const q = (text: string) => JSON.stringify(text);
+  const ways = LANGUAGES.flatMap((language) => {
+    const options = file.ways[language];
+    if (!options) return [];
+    const lines = Object.entries(options).map(
+      ([optionId, phrases]) => `      ${q(optionId)}: [${phrases.map(q).join(', ')}]`,
+    );
+    return [`    ${q(language)}: {\n${lines.join(',\n')}\n    }`];
+  });
+  return [
+    '{',
+    `  "source": ${q(file.source)},`,
+    `  "answersVersion": ${file.answersVersion},`,
+    `  "createdAt": ${q(file.createdAt)},`,
+    `  "nodes": [\n${file.nodes.map((node) => `    ${q(node)}`).join(',\n')}\n  ],`,
+    `  "ways": {\n${ways.join(',\n')}\n  }`,
+    '}',
+    '',
+  ].join('\n');
+}
+
+/** A language's built-in aliases: its file's, and the shared answers', in the file's order. */
+function builtIn(language: Language, file: AliasFile, shared: AnswersFile): AliasEntry[] {
+  return sortEntries([...file.entries, ...answerAliases(shared, language)]);
+}
+
 /** Every built-in alias. The files are checked by `aliasProblems`, in `pnpm builder:validate`. */
-export const BUILTIN_ALIASES: readonly AliasEntry[] = LANGUAGES.flatMap(
-  (language) => AliasFile.parse(BUILTIN_ALIAS_FILES[language]).entries,
+export const BUILTIN_ALIASES: readonly AliasEntry[] = LANGUAGES.flatMap((language) =>
+  builtIn(
+    language,
+    AliasFile.parse(BUILTIN_ALIAS_FILES[language]),
+    AnswersFile.parse(BUILTIN_ANSWERS_FILE),
+  ),
 );
 
 export interface AliasProblem {
@@ -138,8 +217,18 @@ export interface AliasProblem {
 export function aliasProblems(
   graph: BuilderGraph,
   files: Readonly<Record<Language, unknown>> = BUILTIN_ALIAS_FILES,
+  answersFile: unknown = BUILTIN_ANSWERS_FILE,
 ): AliasProblem[] {
   const problems: AliasProblem[] = [];
+  const shared = AnswersFile.safeParse(answersFile);
+  if (!shared.success) {
+    const issue = shared.error.issues[0];
+    return LANGUAGES.map((language) => ({
+      language,
+      rule: 'schema' as const,
+      message: `answers.json ${issue?.path.join('.') ?? ''}: ${issue?.message ?? ''}`,
+    }));
+  }
   for (const language of LANGUAGES) {
     const parsed = AliasFile.safeParse(files[language]);
     if (!parsed.success) {
@@ -151,11 +240,14 @@ export function aliasProblems(
       });
       continue;
     }
-    const { entries } = parsed.data;
-    const sorted = sortEntries(entries);
-    if (sorted.some((entry, i) => entry !== entries[i])) {
+    const own = parsed.data.entries;
+    const sorted = sortEntries(own);
+    if (sorted.some((entry, i) => entry !== own[i])) {
       problems.push({ language, rule: 'order', message: 'entries are not in canonical order' });
     }
+    // The file's entries and the shared answers', checked as one: a phrase the two both give a
+    // question is a duplicate, and a listed question the graph lacks is unknown.
+    const entries = builtIn(language, parsed.data, shared.data);
     const said = new Map<string, string>();
     for (const entry of entries) {
       const at = { language, nodeId: entry.nodeId, optionId: entry.optionId, phrase: entry.phrase };
