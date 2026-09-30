@@ -1330,6 +1330,8 @@ export const frFR: Record<MessageKey, string> = {
     'Touches : ↑ ↓ se déplacer, 1–3 choisir un type, M fusionner, S scinder, T texte, Q question, Enter accepter, Ctrl+Z défaire.',
   'review.use': 'plural:one Ajouter {count} question | other Ajouter {count} questions',
   'review.useTexts': 'Les titres et le texte à lire les accompagnent.',
+  'review.paperFull':
+    'Ce formulaire conserve déjà {max} documents, le maximum : les questions sont ajoutées, mais leurs réponses ne seront pas réécrites sur celui-ci.',
   'review.useBlocked': 'Réglez d’abord ce qui demande votre attention.',
   'review.using': 'Ajout…',
   'review.useFailed': 'Les questions n’ont pas pu être ajoutées à votre formulaire. Réessayez.',

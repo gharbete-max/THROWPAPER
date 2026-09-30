@@ -127,3 +127,71 @@ describe('importing the questions a document was read as', () => {
     expect(jsonEqual(again.state, c.state)).toBe(true);
   });
 });
+
+/** The paper twin (S12b, `CONVERGENCE.md`): a PDF the form keeps arrives with its questions. */
+describe('the paper a document was read from', () => {
+  const KEY = `${'a'.repeat(64)}.pdf`;
+  const OTHER = `${'b'.repeat(64)}.pdf`;
+  const anchored = (id: string, key: string, label: string): Field => ({
+    ...question(id, key, label),
+    paper: { page: 0, x: 0.3, y: 0.1, w: 0.5, h: 0.02 },
+  });
+
+  it('joins the form’s sources in the same step as its questions, and Back takes both away', () => {
+    const c = fresh();
+    const after = importQuestions(
+      G,
+      c,
+      [anchored('q-namn', 'namn', 'Namn')],
+      {},
+      {
+        key: KEY,
+        pages: 2,
+      },
+    );
+    expect(after.state.draft.definition.paper).toEqual({ sources: [{ key: KEY, pages: 2 }] });
+    expect(after.state.draft.definition.fields[0]).toMatchObject({ paper: { page: 0 } });
+    expect(after.log).toHaveLength(1);
+    expect(jsonEqual(back(after), c)).toBe(true);
+    expect(jsonEqual(replay(after.base, after.log), after.state)).toBe(true);
+  });
+
+  it('follows the sources the form already keeps', () => {
+    const once = importQuestions(
+      G,
+      fresh(),
+      [question('q-a', 'a', 'A')],
+      {},
+      { key: KEY, pages: 2 },
+    );
+    const twice = importQuestions(
+      G,
+      once,
+      [question('q-b', 'b', 'B')],
+      {},
+      { key: OTHER, pages: 1 },
+    );
+    expect(twice.state.draft.definition.paper?.sources).toEqual([
+      { key: KEY, pages: 2 },
+      { key: OTHER, pages: 1 },
+    ]);
+  });
+
+  it('is left as it is by an import with no paper: a Word file or a paste', () => {
+    const once = importQuestions(
+      G,
+      fresh(),
+      [question('q-a', 'a', 'A')],
+      {},
+      { key: KEY, pages: 2 },
+    );
+    const pasted = importQuestions(G, once, [question('q-b', 'b', 'B')]);
+    expect(pasted.state.draft.definition.paper).toEqual({ sources: [{ key: KEY, pages: 2 }] });
+  });
+
+  it('is refused whole when it is not one the form could keep', () => {
+    expect(() =>
+      importQuestions(G, fresh(), [question('q-a', 'a', 'A')], {}, { key: 'x.pdf', pages: 2 }),
+    ).toThrow();
+  });
+});

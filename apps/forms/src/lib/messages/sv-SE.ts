@@ -1294,6 +1294,8 @@ export const svSE: Record<MessageKey, string> = {
     'Tangenter: ↑ ↓ flytta, 1–3 välj en typ, M slå ihop, S dela, T text, Q fråga, Enter godta, Ctrl+Z ångra.',
   'review.use': 'plural:one Lägg till {count} fråga | other Lägg till {count} frågor',
   'review.useTexts': 'Rubriker och text att läsa följer med.',
+  'review.paperFull':
+    'Formuläret har redan {max} dokument, så många det kan ha: frågorna läggs till, men svaren skrivs inte tillbaka på det här.',
   'review.useBlocked': 'Gå först igenom det som behöver ses över.',
   'review.using': 'Lägger till…',
   'review.useFailed': 'Frågorna kunde inte läggas till i ditt formulär. Försök igen.',

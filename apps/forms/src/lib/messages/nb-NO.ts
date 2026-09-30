@@ -1290,6 +1290,8 @@ export const nbNO: Record<MessageKey, string> = {
     'Taster: ↑ ↓ flytt, 1–3 velg en type, M slå sammen, S del, T tekst, Q spørsmål, Enter godta, Ctrl+Z angre.',
   'review.use': 'plural:one Legg til {count} spørsmål | other Legg til {count} spørsmål',
   'review.useTexts': 'Overskrifter og tekst å lese blir med.',
+  'review.paperFull':
+    'Skjemaet har allerede {max} dokumenter, så mange det kan ha: spørsmålene legges til, men svarene skrives ikke tilbake på dette.',
   'review.useBlocked': 'Gå først gjennom det som må ses på.',
   'review.using': 'Legger til…',
   'review.useFailed': 'Spørsmålene kunne ikke legges til i skjemaet ditt. Prøv igjen.',

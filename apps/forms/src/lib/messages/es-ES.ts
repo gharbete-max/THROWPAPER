@@ -1314,6 +1314,8 @@ export const esES: Record<MessageKey, string> = {
     'Teclas: ↑ ↓ mover, 1–3 elegir un tipo, M unir, S dividir, T texto, Q pregunta, Enter aceptar, Ctrl+Z deshacer.',
   'review.use': 'plural:one Añadir {count} pregunta | other Añadir {count} preguntas',
   'review.useTexts': 'Los títulos y el texto para leer se añaden con ellas.',
+  'review.paperFull':
+    'Este formulario ya guarda {max} documentos, el máximo: las preguntas se añaden, pero sus respuestas no se escribirán sobre este.',
   'review.useBlocked': 'Primero resuelve lo que necesita tu atención.',
   'review.using': 'Añadiendo…',
   'review.useFailed': 'No se han podido añadir las preguntas a tu formulario. Inténtalo de nuevo.',

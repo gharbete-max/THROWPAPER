@@ -81,7 +81,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
-| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | in progress — S12a (the walk, acceptance S6) done, in review, PR #147; S12b and S12c next (`CONVERGENCE.md`) |
+| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | in progress — S12a (the walk, acceptance S6) and S12b (the paper twin) done, in review, PR #147; S12c next (`CONVERGENCE.md`) |
 | **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
 
 ## Log
@@ -391,3 +391,17 @@ when each slice ends.)*
   the whole-graph walk from an imported form, `review.test.ts` (what the document decided), and
   acceptance S6 in `e2e/review.spec.ts` by pointer and by keyboard alone. Next: S12b, the paper
   twin from an import.
+- **S12b, the paper twin from an import (2026-09-30).** What: a PDF read on the review screen is
+  kept with the form (the editor's own route) before its questions are added, and each question,
+  option and grid row gets its box on the page — a form field's widget, else its blank runs after
+  its own label, else its checkboxes, else the rest of its line (`import/anchors.ts`, pure, in
+  layout units); the source joins `definition.paper.sources` in the import's one step. A response
+  then comes back as that paper, through `documents/paper.ts` unchanged. Why: owner question 2 —
+  the paper twin is the default for an imported form that kept its source. Found on the way: two
+  questions on one line would have shared both blanks (#124); a form keeping twenty documents
+  would have refused the twenty-first's questions on every press (#125), so those come without
+  their places, said first. Tests: `anchors.test.ts` (and every box of every layout fixture within
+  its page), `review.test.ts`, `imported.test.ts`, and `e2e/paper-twin.spec.ts` — published,
+  filled in, downloaded and read with pdf.js, each answer inside its box on its label's line
+  (a shifted box fails it, checked by mutation); a file that cannot be kept; a full form. Next:
+  S12c, importing the same form again.

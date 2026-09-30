@@ -79,14 +79,80 @@ address). "Build it myself" is one press from every question of it.
 
 ## S12b — the paper twin from an import
 
-For a PDF (not a Word file or a paste, which have no page): "Use these questions" keeps the file
-with the form (`POST /v1/forms/:id/paper`, as the editor's paper import does), sets
-`definition.paper.sources`, and gives each question the box it will be written into
-(`IMPORT-PIPELINE.md`, stage 6): the union of its blank run, checkboxes or rule; failing those, from
-the label's right edge to its column's right edge on the label's line. Each option's anchor is its
-checkbox. A PDF's own form field's anchor is its widget. Anchors are fractions of the page, from the
-reading's layout units. Then a filled response comes back as that paper, which `documents/paper.ts`
-already writes (ADR 0004). Planned in detail when S12a lands.
+A PDF read by the review comes back filled in, as that paper (`PREDICTIVE-BUILDER.md`, owner
+question 2: the paper twin is the default for an imported form that kept its source). Everything
+that writes answers onto a page exists already (ADR 0004, `apps/api-forms/src/documents/paper.ts`):
+it needs the file kept with the form, `definition.paper.sources`, and a box on the page for each
+question and each option. A Word file or a paste has no page, and gets neither.
+
+### The boxes (`@tp/shared/import`, `anchors.ts`)
+
+Pure, from the reading's layout (`IMPORT-PIPELINE.md`, stage 6), in layout units (1/10 000 of the
+page), a box a question's answer is written into:
+
+1. **A PDF's own form field**: its widget, exactly (the review item of a field is `field:<name>`,
+   and the screen passes each widget by name; `review/fields.ts`, `placementOf`).
+2. **Its blank runs** ("______", "……", ".........."), **after its own label**: the blank part of
+   the label's last word if the blank is glued to it ("Adress:______", its width shared out by
+   character as `CAVEATS.md` #58 shares a run's), then the blank words that follow on its line; or
+   a line of nothing but blanks under it. After its label, not every blank on its lines: two
+   questions on one line each have their own (#124).
+3. **Its checkboxes** (`☐ ☑ ☒ □ ■ ▢ ○ ● ◯ ◻ ◼`, the glyphs `isCheckboxWord` reads): their union
+   after the label — a choice's answer is the box ticked.
+4. **Otherwise**: from the right edge of the label's last word to its column's right edge, on
+   the label's line, a line high; with no room there, a line's height under it. (A drawn rule under
+   the label is not in the Layout IR, which keeps only that there is one; the fallback is where the
+   rule is.)
+
+Each option's box is its own checkbox: the checkbox glyph nearest before the option's first word
+on the line that holds it, else nearest after it; the options are found in order, each after the
+one before. A grid's row is a question whose options are the columns: the row is found by its
+words before its first checkbox, and each column's checkbox on that line, left to right, is its
+option's. A table (a repeating group) has no box that could hold its rows, and gets none, as
+`paper.ts` already says. A heading or a text gets none.
+
+A box becomes a `PaperAnchor` (`paperAnchor`): `page` counts across every source the form keeps
+(so a second document's pages follow the first's), `x`, `y`, `w`, `h` are the box ÷ 10 000.
+
+### Keeping the file
+
+"Use these questions", for a PDF, first keeps the file with the form (`POST /v1/forms/:id/paper`,
+the editor's own route), then adds the questions, their boxes and the new source in the same one
+step (`importQuestions`' `source`: Back takes all three away). If the file cannot be kept, nothing
+is added and the screen says so; trying again is one press, and keeps the same key (the store is
+content-addressed). A file kept whose questions then cannot be saved stays in the store with
+nothing naming it, as one the editor's paper import keeps and the author then discards does: the
+route stores bytes and no row, and the upload sweep reaches only rows (`uploads/lifecycle.ts`). A document over `MAX_PAPER_PAGES` pages is
+refused as it is read, as the editor's paper import refuses it.
+
+A form keeps at most `MAX_PAPER_PAGES` documents (`Paper.sources`). Built as planned, the next
+one's questions would have been refused whole, every time — a press that could never work. A form
+already keeping that many adds a PDF's questions without their places on it, and the review says
+so before the press (`roomForPaper`, `review.paperFull`); nothing is uploaded.
+
+### Tests
+
+- `anchors.test.ts`: pages read from pasted text and from a numbering fixture — a blank run on its
+  own line, a dotted leader in full stops and in ellipses, two blanks on one line (each question its
+  own), a blank glued to its label, the blank line under a label, checkboxes as a question's answer
+  and as each option's (before it and after it), a grid's rows and columns, the fallback to the
+  column's edge, nothing for a line the layout lacks; and every box of every question, option and
+  grid row in every layout fixture within its page (over a hundred boxes); a blank run inside a
+  word (`blankRuns`) found exactly where the line hints find one, over every word of those
+  fixtures.
+- `review.test.ts`: `importOf` with a paper gives each question and option its anchor, offset by
+  the pages the form already keeps; a PDF form field's widget exactly, over what is printed; a
+  grid's rows; nothing for a Word file or a paste; `roomForPaper` at the schema's own limit.
+- `imported.test.ts`: the paper source added in the import step, undone by Back and replayed;
+  appended to the sources the form keeps; left alone by an import without one; a key the form
+  could not keep refused whole.
+- `e2e/paper-twin.spec.ts`: a PDF with printed blanks read, its questions added and published; the
+  organisation's copy of a response is the paper, each answer inside the box its question was given
+  and on the line of its own printed label (a shifted box fails it: checked by mutation). A file
+  that cannot be kept adds nothing, says so, and the same press works once it can. A form already
+  keeping twenty documents adds the questions, says so first, and uploads nothing.
+- The paper journeys share one reader (`e2e/pdf-read.ts`, moved from `paper-roundtrip.spec.ts`) and
+  a PDF of printed lines (`linesPdf`, `e2e/pdf.ts`).
 
 ## S12c — importing the same form again
 

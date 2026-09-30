@@ -23,3 +23,34 @@ export function tinyPdf(text: string, rotate = 0): Buffer {
   body += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
   return Buffer.from(body, 'latin1');
 }
+
+/**
+ * A one-page A4 PDF with a real text layer: `lines` in Helvetica 12 pt, from the top, 24 pt apart —
+ * a form printed with blanks to write in ("1. Namn: __________").
+ */
+export function linesPdf(lines: readonly string[]): Buffer {
+  const escaped = lines.map((line) => line.replace(/[\\()]/g, (c) => `\\${c}`));
+  const content = [
+    'BT /F1 12 Tf 72 780 Td 24 TL',
+    ...escaped.map((line, i) => (i === 0 ? `(${line}) Tj` : `T* (${line}) Tj`)),
+    'ET',
+  ].join('\n');
+  const objects = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+    `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+  ];
+  let body = '%PDF-1.7\n';
+  const offsets: number[] = [];
+  objects.forEach((object, index) => {
+    offsets.push(Buffer.byteLength(body, 'latin1'));
+    body += `${index + 1} 0 obj\n${object}\nendobj\n`;
+  });
+  const xref = Buffer.byteLength(body, 'latin1');
+  body += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (const offset of offsets) body += `${String(offset).padStart(10, '0')} 00000 n \n`;
+  body += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Buffer.from(body, 'latin1');
+}

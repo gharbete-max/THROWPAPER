@@ -1,11 +1,22 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { begin, BUILDER_GRAPH, importQuestions } from '@tp/shared/builder';
-import { definitionProblems, emptyDefinition } from '@tp/shared/forms';
-import { parseLayoutDocument, readLayout } from '@tp/shared/import';
+import {
+  definitionProblems,
+  emptyDefinition,
+  FormDefinition,
+  MAX_PAPER_PAGES,
+} from '@tp/shared/forms';
+import {
+  answerBox,
+  optionBoxes,
+  paperAnchor,
+  parseLayoutDocument,
+  readLayout,
+} from '@tp/shared/import';
 import { readDocument } from '../paper/pipeline.js';
 import type { Reading } from '../paper/reading.js';
-import { fieldsOf, fieldTypeOf, importOf, labelKey } from './fields.js';
+import { fieldsOf, fieldTypeOf, importOf, labelKey, roomForPaper } from './fields.js';
 import {
   act,
   counts,
@@ -586,5 +597,105 @@ describe('what the document decided', () => {
     const after = importQuestions(BUILDER_GRAPH, c, fields, decided);
     expect(after.state.cursor).toBe('import.walk');
     expect(after.state.pending['toWalk']).toBe(fields[2]!.id);
+  });
+});
+
+/** The paper twin (S12b, `CONVERGENCE.md`): each question, and each option, placed on its page. */
+describe('where the questions are written on the paper', () => {
+  const reading = paste('1. Namn: __________\n2. Vilken dag kommer du?\n☐ Fredag\n☐ Lördag');
+  const items = startReview(reading).items;
+  const onPaper = (firstPage: number) =>
+    importOf(items, {
+      ...context,
+      paper: { layout: reading.layout, firstPage, widgets: new Map() },
+    }).fields;
+
+  it('gives each question its box, and each printed option its checkbox', () => {
+    const [namn, dag] = onPaper(0);
+    const [namnItem, dagItem] = items;
+    expect(namn).toMatchObject({
+      paper: paperAnchor(answerBox(reading.layout, namnItem!.lineIds, namnItem!.text)!, 0),
+    });
+    const ticks = optionBoxes(reading.layout, dagItem!.lineIds, dagItem!.options);
+    expect(dag && 'options' in dag ? dag.options.map((o) => o.paper) : null).toEqual(
+      ticks.map((at) => paperAnchor(at!, 0)),
+    );
+  });
+
+  it('counts its pages after the ones the form already keeps', () => {
+    const [namn] = onPaper(3);
+    expect(namn).toMatchObject({ paper: { page: 3 } });
+  });
+
+  it('puts a grid’s rows on their own lines, each column’s box its option’s', () => {
+    const grid = fixture('checkbox-grid');
+    const rows = importOf(startReview(grid).items, {
+      ...context,
+      paper: { layout: grid.layout, firstPage: 0, widgets: new Map() },
+    }).fields.filter((f) => f.type === 'single_select');
+    expect(rows.length).toBeGreaterThan(1);
+    for (const row of rows) {
+      expect(row.paper).toBeDefined();
+      const options = 'options' in row ? row.options : [];
+      expect(options.every((o) => o.paper !== undefined)).toBe(true);
+      // Left to right, on the row's own line.
+      const xs = options.map((o) => o.paper!.x);
+      expect([...xs].sort((a, b) => a - b)).toEqual(xs);
+      expect(new Set(options.map((o) => o.paper!.y)).size).toBe(1);
+    }
+  });
+
+  it('is a PDF form field’s own widget, exactly, over whatever is printed there', () => {
+    const printed = paste('1. Namn: __________\n2. Ort: __________');
+    const withField: Reading = {
+      ...printed,
+      fields: {
+        fields: [
+          {
+            name: 'namn',
+            label: 'Namn',
+            labelFrom: 'field',
+            kind: 'short_text',
+            confidence: 1000,
+            bucket: 'auto',
+            covers: [0],
+          },
+        ],
+        covered: [0],
+      },
+    };
+    const widget = { pageNo: 1, box: { x0: 5000, y0: 1000, x1: 9000, y1: 1300 } };
+    const [namn, ort] = importOf(startReview(withField).items, {
+      ...context,
+      paper: { layout: printed.layout, firstPage: 0, widgets: new Map([['namn', widget]]) },
+    }).fields;
+    expect(namn).toMatchObject({ paper: paperAnchor(widget, 0) });
+    // A question with no field of its own is placed by what the page shows.
+    const [, ortItem] = startReview(withField).items;
+    expect(ort).toMatchObject({
+      paper: paperAnchor(answerBox(printed.layout, ortItem!.lineIds, ortItem!.text)!, 0),
+    });
+  });
+
+  it('is kept only while the form has room for one more document', () => {
+    const keeping = (n: number) => ({
+      ...emptyDefinition,
+      paper: {
+        sources: Array.from({ length: n }, (_, i) => ({
+          key: `${i.toString(16).padStart(64, '0')}.pdf`,
+          pages: 1,
+        })),
+      },
+    });
+    expect(roomForPaper(emptyDefinition)).toBe(true);
+    expect(roomForPaper(keeping(MAX_PAPER_PAGES - 1))).toBe(true);
+    expect(roomForPaper(keeping(MAX_PAPER_PAGES))).toBe(false);
+    // The schema is what it guards: one more would be refused whole.
+    expect(FormDefinition.safeParse(keeping(MAX_PAPER_PAGES)).success).toBe(true);
+    expect(FormDefinition.safeParse(keeping(MAX_PAPER_PAGES + 1)).success).toBe(false);
+  });
+
+  it('is nowhere without a paper: a Word file or a paste the form does not keep', () => {
+    expect(importOf(items, context).fields.every((f) => f.paper === undefined)).toBe(true);
   });
 });

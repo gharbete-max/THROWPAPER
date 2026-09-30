@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { BUILDER_GRAPH, importQuestions, type Conversation } from '@tp/shared/builder';
 import { MAX_PAPER_PAGES } from '@tp/shared/forms';
-import { MAX_PASTE } from '@tp/shared/import';
+import { MAX_PASTE, type PageBox } from '@tp/shared/import';
 import { LoadFailed } from '../../../components/LoadFailed.js';
 import { Loading } from '../../../components/Loading.js';
 import { client } from '../../../lib/api.js';
@@ -17,7 +17,7 @@ import type { Reading } from '../paper/reading.js';
 import { NoWorker, ReadingTooSlow, readInWorker } from '../paper/read-in-worker.js';
 import { DocxRefused } from '../paper/refusal.js';
 import { DraftPane } from './DraftPane.js';
-import { importOf } from './fields.js';
+import { importOf, roomForPaper, type PaperOf } from './fields.js';
 import { reviewKey } from './keys.js';
 import {
   act,
@@ -59,7 +59,12 @@ export function ReviewScreen() {
   const [error, setError] = useState<string | null>(null);
   const [pasting, setPasting] = useState(false);
   const [pasted, setPasted] = useState('');
-  const [read, setRead] = useState<{ reading: Reading; pdf: PaperPdf | null } | null>(null);
+  const [read, setRead] = useState<{
+    reading: Reading;
+    pdf: PaperPdf | null;
+    /** A PDF's file and its own fields' widgets: what the form keeps to write answers back on (S12b). */
+    paper: { file: File; pages: number; widgets: ReadonlyMap<string, PageBox> } | null;
+  } | null>(null);
   const [review, setReview] = useState<Review | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   /** Somebody saved this form's conversation in another tab: nothing more is added from here. */
@@ -120,13 +125,17 @@ export function ReviewScreen() {
     );
   }
 
-  function opened(reading: Reading, pdf: PaperPdf | null) {
+  function opened(
+    reading: Reading,
+    pdf: PaperPdf | null,
+    paper: { file: File; pages: number; widgets: ReadonlyMap<string, PageBox> } | null = null,
+  ) {
     if (!open.current) {
       void pdf?.close();
       return;
     }
     const started = startReview(reading);
-    setRead({ reading, pdf });
+    setRead({ reading, pdf, paper });
     setReview(started);
     setSelectedId(started.items[0]?.id ?? null);
     setError(null);
@@ -146,7 +155,14 @@ export function ReviewScreen() {
         try {
           const boxes = fieldBoxes(pdf.fields, 0);
           const raw = await pdf.raw();
-          opened(await readInWorker({ kind: 'raw', raw, fields: boxes }), pdf);
+          const widgets = new Map(
+            boxes.map((box) => [box.name, { pageNo: box.pageNo, box: box.box }]),
+          );
+          opened(await readInWorker({ kind: 'raw', raw, fields: boxes }), pdf, {
+            file,
+            pages: pdf.pageCount,
+            widgets,
+          });
         } catch (cause) {
           await pdf.close();
           throw cause;
@@ -185,21 +201,43 @@ export function ReviewScreen() {
   async function use() {
     if (!review || !conversation || !saver.current || !id || conflict) return;
     setError(null);
+    setPhase('using');
+    // A PDF is kept with the form first, so a response can come back as that paper (S12b). If it
+    // cannot be kept, nothing is added: trying again is one press.
+    let source: { key: string; pages: number } | undefined;
+    let paper: PaperOf | undefined;
+    if (read?.paper && roomForPaper(conversation.state.draft.definition)) {
+      try {
+        const kept = await client.addPaper(id, read.paper.file);
+        source = { key: kept.key, pages: read.paper.pages };
+      } catch {
+        setPhase('review');
+        setError(t('review.useFailed'));
+        return;
+      }
+      const kept = conversation.state.draft.definition.paper?.sources ?? [];
+      paper = {
+        layout: read.reading.layout,
+        firstPage: kept.reduce((pages, one) => pages + one.pages, 0),
+        widgets: read.paper.widgets,
+      };
+    }
     let next: Conversation;
     try {
       const { fields, decided } = importOf(review.items, {
         definition: conversation.state.draft.definition,
         retired: conversation.state.sidecar.retiredIds,
         locale: contentLocale,
+        ...(paper ? { paper } : {}),
       });
       // What the document decided goes with them, so the conversation asks only the rest (S12).
-      next = importQuestions(BUILDER_GRAPH, conversation, fields, decided);
+      next = importQuestions(BUILDER_GRAPH, conversation, fields, decided, source);
     } catch {
       // Refused by the machine, or a question the form cannot hold: said, never left unhandled.
+      setPhase('review');
       setError(t('review.useFailed'));
       return;
     }
-    setPhase('using');
     // The saver never rejects: how it went is its status.
     const current = saver.current;
     await current.save(next);
@@ -336,6 +374,11 @@ export function ReviewScreen() {
   if (!review || !read) return <Loading />;
   const tally = counts(review.items);
   const ready = readyToUse(review.items);
+  // A PDF the form has no room to keep: its questions come without their places on it (said).
+  const full =
+    read.paper !== null &&
+    conversation !== null &&
+    !roomForPaper(conversation.state.draft.definition);
 
   return (
     <section className="review stack">
@@ -381,6 +424,7 @@ export function ReviewScreen() {
           {!error && tally.needEye === 0 && tally.texts > 0 && tally.questions > 0 && (
             <span className="muted">{t('review.useTexts')}</span>
           )}
+          {!error && full && <span>{t('review.paperFull', { max: MAX_PAPER_PAGES })}</span>}
         </div>
         <div className="row">
           <button

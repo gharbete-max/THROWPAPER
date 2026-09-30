@@ -12,7 +12,13 @@ export { lowerMedian, unionBox } from './ir/geometry.js';
 export * from './debug.js';
 export { sha256Hex } from './sha256.js';
 export { MAX_PASTE, PASTE_EXTRACTOR, pasteDocument } from './paste.js';
-export { CHECKBOX_GLYPHS, isBlankWord, isCheckboxWord, textHints } from './layout/hints.js';
+export {
+  blankRuns,
+  CHECKBOX_GLYPHS,
+  isBlankWord,
+  isCheckboxWord,
+  textHints,
+} from './layout/hints.js';
 export {
   documentLocale,
   furnitureKey,
@@ -59,4 +65,6 @@ export type { Bucket, Cap, Judgement, ScoredSegment, ScoreResult } from './score
 export { fieldsFirst, FIELDS_STAGE_VERSION } from './fields.js';
 export type { FieldReading, FieldsResult, FormFieldBox } from './fields.js';
 export { readLayout } from './pipeline.js';
+export { answerBox, gridBoxes, optionBoxes, paperAnchor } from './anchors.js';
+export type { PageBox } from './anchors.js';
 export type { LayoutReading } from './pipeline.js';

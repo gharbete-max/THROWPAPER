@@ -764,6 +764,10 @@ export function edit(
  * The conversation then goes to "Go through the questions from your document?" (`import.walk`,
  * S12), which passes itself by when the document left nothing open (`docs/plan/CONVERGENCE.md`).
  *
+ * A PDF the form keeps (`source`, already stored with it) joins `definition.paper.sources` in the
+ * same step, so its questions' boxes on the page (`paper`, S12b) and the page itself arrive, and
+ * are undone, together.
+ *
  * Headings and text to read come with the questions; the step's `count` is the questions alone,
  * as the review screen counted them, and an import with none is nothing to do.
  */
@@ -772,6 +776,7 @@ export function importQuestions(
   conversation: Conversation,
   fields: readonly FormDefinition['fields'][number][],
   decided: Readonly<Record<string, readonly Slot[]>> = {},
+  source?: { readonly key: string; readonly pages: number },
 ): Conversation {
   const shown = new Set<string>(PRESENTATIONAL_TYPES);
   const count = fields.filter((field) => !shown.has(field.type)).length;
@@ -832,6 +837,14 @@ export function importQuestions(
     at: ['sidecar', 'retiredIds'],
     value: [...state.sidecar.retiredIds, ...added],
   });
+  if (source) {
+    const sources = definition.paper?.sources ?? [];
+    changes.push({
+      op: 'set',
+      at: ['draft', 'definition', 'paper'],
+      value: { sources: [...sources, { key: source.key, pages: source.pages }] },
+    });
+  }
   // A form every question of which came from documents stays an imported one.
   const provenance =
     definition.fields.length === 0 || state.sidecar.provenance === 'import' ? 'import' : 'mixed';

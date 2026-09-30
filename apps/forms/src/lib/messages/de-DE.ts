@@ -1341,6 +1341,8 @@ export const deDE: Record<MessageKey, string> = {
     'Tasten: ↑ ↓ bewegen, 1–3 Typ wählen, M zusammenführen, S teilen, T Text, Q Frage, Enter übernehmen, Strg+Z rückgängig.',
   'review.use': 'plural:one {count} Frage hinzufügen | other {count} Fragen hinzufügen',
   'review.useTexts': 'Überschriften und Text zum Lesen kommen mit.',
+  'review.paperFull':
+    'Dieses Formular bewahrt bereits {max} Dokumente auf, so viele es kann: Die Fragen werden hinzugefügt, ihre Antworten aber nicht auf dieses Dokument zurückgeschrieben.',
   'review.useBlocked': 'Klären Sie zuerst, was Ihre Aufmerksamkeit braucht.',
   'review.using': 'Wird hinzugefügt…',
   'review.useFailed':

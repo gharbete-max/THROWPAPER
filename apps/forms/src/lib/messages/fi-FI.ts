@@ -1305,6 +1305,8 @@ export const fiFI: Record<MessageKey, string> = {
     'Näppäimet: ↑ ↓ siirry, 1–3 valitse tyyppi, M yhdistä, S jaa, T teksti, Q kysymys, Enter hyväksy, Ctrl+Z kumoa.',
   'review.use': 'plural:one Lisää {count} kysymys | other Lisää {count} kysymystä',
   'review.useTexts': 'Otsikot ja luettava teksti tulevat mukana.',
+  'review.paperFull':
+    'Lomakkeella on jo {max} asiakirjaa, enempää se ei voi säilyttää: kysymykset lisätään, mutta vastauksia ei kirjoiteta takaisin tähän asiakirjaan.',
   'review.useBlocked': 'Ratkaise ensin, mikä kaipaa huomiotasi.',
   'review.using': 'Lisätään…',
   'review.useFailed': 'Kysymyksiä ei voitu lisätä lomakkeeseesi. Yritä uudelleen.',

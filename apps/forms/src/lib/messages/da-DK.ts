@@ -1292,6 +1292,8 @@ export const daDK: Record<MessageKey, string> = {
     'Taster: ↑ ↓ flyt, 1–3 vælg en type, M slå sammen, S del, T tekst, Q spørgsmål, Enter godkend, Ctrl+Z fortryd.',
   'review.use': 'plural:one Tilføj {count} spørgsmål | other Tilføj {count} spørgsmål',
   'review.useTexts': 'Overskrifter og tekst til læsning kommer med.',
+  'review.paperFull':
+    'Formularen har allerede {max} dokumenter, så mange den kan have: spørgsmålene tilføjes, men svarene skrives ikke tilbage på dette.',
   'review.useBlocked': 'Gennemgå først det, der skal ses efter.',
   'review.using': 'Tilføjer…',
   'review.useFailed': 'Spørgsmålene kunne ikke føjes til din formular. Prøv igen.',

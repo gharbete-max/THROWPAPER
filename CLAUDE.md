@@ -35,20 +35,22 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 conversation graph, its `when` language, its validator, and the machine that walks
                 it — answers as undoable changes, answers ahead of their turn, replay, stable
                 question ids, the saved session, reconciliation that never writes over a hand edit,
-                questions read from a document added as one step and walked for what it left open,
-                and the guess — a belief over 25 recipes in integer log-odds, the question that
-                tells it most, and the template's questions "Right" adds, structure only for the two
-                rule 8 keeps out (@tp/shared/builder); document import's Layout IR with its
-                validator, pasted text as a layout document, stage 2 (columns, lines, hyphenation,
-                blocks, page furniture, headings, the document's language), stage 3 (the list-marker
-                detector, with Word's own numbering), stage 4 (headings, instructions and questions
-                with what answers them, grids, tables), stage 5 (each question's likely type, by
-                integer weights over word lists in twelve languages, with its three likeliest),
-                stage 7 (confidence and bucket, the OCR cap), a PDF's own form fields over its text,
-                and all of them in one call, each with its debug artifact (@tp/shared/import); free
-                text read by rules — normalisation, word lists and built-in aliases in twelve
-                languages, the rules for learned ones, the ladder T0–T8, the committed sigmoid
-                table, and an integer logarithm and exponential (@tp/shared/interpret)
+                questions read from a document added as one step, with the PDF they were read from,
+                and walked for what it left open, and the guess — a belief over 25 recipes in
+                integer log-odds, the question that tells it most, and the template's questions
+                "Right" adds, structure only for the two rule 8 keeps out (@tp/shared/builder);
+                document import's Layout IR with its validator, pasted text as a layout document,
+                stage 2 (columns, lines, hyphenation, blocks, page furniture, headings, the
+                document's language), stage 3 (the list-marker detector, with Word's own numbering),
+                stage 4 (headings, instructions and questions with what answers them, grids,
+                tables), stage 5 (each question's likely type, by integer weights over word lists in
+                twelve languages, with its three likeliest), stage 7 (confidence and bucket, the OCR
+                cap), a PDF's own form fields over its text, and all of them in one call, each with
+                its debug artifact; and the paper twin's boxes, where each question's answer and
+                each option's tick go on the page it was read from (@tp/shared/import); free text
+                read by rules — normalisation, word lists and built-in aliases in twelve languages,
+                the rules for learned ones, the ladder T0–T8, the committed sigmoid table, and an
+                integer logarithm and exponential (@tp/shared/interpret)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 

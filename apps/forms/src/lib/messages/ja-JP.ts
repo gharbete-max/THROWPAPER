@@ -1297,6 +1297,8 @@ export const jaJP: Record<MessageKey, string> = {
     'キー：↑ ↓ 移動、1–3 種類を選択、M 結合、S 分割、T テキスト、Q 質問、Enter 確定、Ctrl+Z 元に戻す。',
   'review.use': 'plural:other {count} 件の質問を追加',
   'review.useTexts': '見出しと説明文も一緒に追加されます。',
+  'review.paperFull':
+    'このフォームにはすでに上限の{max}件の文書が保存されています。質問は追加されますが、回答はこの文書には書き戻されません。',
   'review.useBlocked': '先に、確認が必要なものを解決してください。',
   'review.using': '追加中…',
   'review.useFailed': '質問をフォームに追加できませんでした。もう一度お試しください。',

@@ -1233,6 +1233,8 @@ export const zhCN: Record<MessageKey, string> = {
     '按键：↑ ↓ 移动，1–3 选择类型，M 合并，S 拆分，T 文本，Q 问题，Enter 接受，Ctrl+Z 撤销。',
   'review.use': 'plural:other 添加 {count} 个问题',
   'review.useTexts': '标题和说明文字会一并添加。',
+  'review.paperFull':
+    '此表单已保存 {max} 份文档，已达上限：问题会被添加，但答案不会写回到这份文档上。',
   'review.useBlocked': '请先处理需要你确认的内容。',
   'review.using': '添加中…',
   'review.useFailed': '无法将问题添加到你的表单。请重试。',

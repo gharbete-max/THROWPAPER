@@ -1311,6 +1311,8 @@ export const enGB = {
     'Keys: ↑ ↓ move, 1–3 choose a type, M merge, S split, T text, Q question, Enter accept, Ctrl+Z undo.',
   'review.use': 'plural:one Add {count} question | other Add {count} questions',
   'review.useTexts': 'Headings and text to read come with them.',
+  'review.paperFull':
+    'This form already keeps {max} documents, the most it can: these questions are added, but their answers will not be written back onto this one.',
   'review.useBlocked': 'Settle what needs your eye first.',
   'review.using': 'Adding…',
   'review.useFailed': 'The questions could not be added to your form. Try again.',

@@ -11,10 +11,20 @@ import {
   EntryField,
   Field,
   MAX_GROUP_ENTRIES,
+  MAX_PAPER_PAGES,
   type FieldType,
   type FormDefinition,
 } from '@tp/shared/forms';
-import type { Kind } from '@tp/shared/import';
+import {
+  answerBox,
+  gridBoxes,
+  optionBoxes,
+  paperAnchor,
+  unionBox,
+  type Kind,
+  type LayoutDocument,
+  type PageBox,
+} from '@tp/shared/import';
 import { asks, type ReviewItem } from './review.js';
 
 /**
@@ -105,6 +115,32 @@ export function fieldsOf(
   return importOf(items, context).fields;
 }
 
+/**
+ * The page a PDF's questions are written back onto (S12b, `CONVERGENCE.md`): its layout, where its
+ * first page falls among every page the form keeps, and its own form fields' widgets, by name.
+ */
+export interface PaperOf {
+  readonly layout: LayoutDocument;
+  /** 0-based: the pages of the sources the form already keeps come first. */
+  readonly firstPage: number;
+  readonly widgets: ReadonlyMap<string, PageBox>;
+}
+
+/**
+ * Whether the form can keep one more document: `Paper` holds at most `MAX_PAPER_PAGES` sources.
+ * When it cannot, a PDF's questions are added without their places on it, and the review says so
+ * before "Use these questions" is pressed — never a press that fails every time.
+ */
+export function roomForPaper(definition: FormDefinition): boolean {
+  return (definition.paper?.sources.length ?? 0) < MAX_PAPER_PAGES;
+}
+
+/** Where a question, and each of its options, is written on the paper. */
+interface Placement {
+  readonly field: PageBox | null;
+  readonly options: readonly (PageBox | null)[];
+}
+
 /** The questions the items become, and what the document decided about each (S12). */
 export function importOf(
   items: readonly ReviewItem[],
@@ -113,9 +149,11 @@ export function importOf(
     readonly retired: readonly string[];
     /** The form's language: every word goes in under it. */
     readonly locale: string;
+    /** A PDF's pages, when the form keeps it: each question gets its box (S12b). */
+    readonly paper?: PaperOf;
   },
 ): Imported {
-  const { locale } = context;
+  const { locale, paper } = context;
   const taken: Taken = {
     ids: new Set([
       ...context.definition.fields.flatMap((field) =>
@@ -150,7 +188,25 @@ export function importOf(
 
   const out: Field[] = [];
   const decided: Record<string, Slot[]> = {};
-  const question = (item: ReviewItem, label: string, kind: Kind, extra: object = {}) => {
+  /** A question's place on its paper: its field's widget, else what the page shows. */
+  const placementOf = (item: ReviewItem, label: string, options: readonly string[]): Placement => {
+    if (!paper) return { field: null, options: [] };
+    const widget = item.field ? paper.widgets.get(item.id.replace(/^field:/u, '')) : undefined;
+    return {
+      field: widget ?? answerBox(paper.layout, item.lineIds, label),
+      options: optionBoxes(paper.layout, item.lineIds, options),
+    };
+  };
+  const anchored = (at: PageBox | null) =>
+    at && paper ? { paper: paperAnchor(at, paper.firstPage) } : {};
+
+  const question = (
+    item: ReviewItem,
+    label: string,
+    kind: Kind,
+    extra: object = {},
+    placed: Placement = placementOf(item, label, item.options),
+  ) => {
     const type = fieldTypeOf(kind);
     const { id, key } = name(label || item.id, label, type);
     const choice = type === 'single_select' || type === 'multi_select';
@@ -161,7 +217,10 @@ export function importOf(
     ];
     const options = choice
       ? item.options.length > 0
-        ? labelledOptions([], item.options, locale)
+        ? labelledOptions([], item.options, locale).map((option, i) => ({
+            ...option,
+            ...anchored(placed.options[i] ?? null),
+          }))
         : resizeOptions([], DEFAULT_OPTION_COUNT)
       : undefined;
     // Options a type has no place for are kept as help, but a yes/no's pair is the type itself.
@@ -177,6 +236,7 @@ export function importOf(
         ...(help.length > 0 ? { helpText: words(help.join('\n')) } : {}),
         ...(options ? { options } : {}),
         ...(kind === 'money' ? { decimals: 2 } : {}),
+        ...anchored(placed.field),
         ...extra,
       }),
     );
@@ -200,7 +260,24 @@ export function importOf(
       if (item.columns.length <= 1) {
         // A grid of one column is a list to tick: its rows are the options, its header the help.
         const help = [...item.columns.filter((column) => column !== ''), ...item.details];
-        question({ ...item, options: item.rows, details: help }, item.text, 'multi_select');
+        // Each row's one box is its option's; the question's is all of them.
+        const rows = paper ? gridBoxes(paper.layout, item.lineIds, item.rows, 1) : [];
+        const ticks = rows.map((row) => row.options[0] ?? null);
+        const shown = ticks.filter((at): at is PageBox => at !== null);
+        const same = shown.filter((at) => at.pageNo === shown[0]?.pageNo);
+        question(
+          { ...item, options: item.rows, details: help },
+          item.text,
+          'multi_select',
+          {},
+          {
+            field:
+              same.length > 0
+                ? { pageNo: same[0]!.pageNo, box: unionBox(same.map((at) => at.box)) }
+                : null,
+            options: ticks,
+          },
+        );
         continue;
       }
       const help = item.details.length > 0 ? { helpText: words(item.details.join('\n')) } : {};
@@ -216,9 +293,23 @@ export function importOf(
       }
       // "Grid": one of the columns per row. "Multiple choice": any number of them.
       const each = item.type === 'multi_select' ? 'multi_select' : 'single_select';
-      for (const row of item.rows) {
-        question({ ...item, options: item.columns, details: [] }, row, each);
-      }
+      // Each row a question, its options the columns: the row's own boxes, left to right.
+      const placed = paper
+        ? gridBoxes(paper.layout, item.lineIds, item.rows, item.columns.length)
+        : [];
+      item.rows.forEach((row, i) => {
+        const at = placed[i];
+        question(
+          { ...item, options: item.columns, details: [] },
+          row,
+          each,
+          {},
+          {
+            field: at?.row ?? null,
+            options: at?.options ?? [],
+          },
+        );
+      });
       continue;
     }
 

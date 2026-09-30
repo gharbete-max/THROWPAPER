@@ -1300,6 +1300,8 @@ export const isIS: Record<MessageKey, string> = {
     'Takkar: ↑ ↓ færa, 1–3 velja tegund, M sameina, S skipta, T texti, Q spurning, Enter samþykkja, Ctrl+Z afturkalla.',
   'review.use': 'plural:one Bæta við {count} spurningu | other Bæta við {count} spurningum',
   'review.useTexts': 'Fyrirsagnir og texti til lestrar fylgja með.',
+  'review.paperFull':
+    'Eyðublaðið geymir þegar {max} skjöl, eins mörg og það getur: spurningunum er bætt við, en svörin verða ekki skrifuð aftur á þetta skjal.',
   'review.useBlocked': 'Farðu fyrst yfir það sem þarf að skoða betur.',
   'review.using': 'Bætir við…',
   'review.useFailed': 'Ekki tókst að bæta spurningunum við eyðublaðið þitt. Reyndu aftur.',

@@ -26,6 +26,36 @@ function withoutBlanks(text: string): string {
     .replace(/[.…]{2,}/gu, (run) => (dotCount(run) >= 4 ? '' : run));
 }
 
+/**
+ * Where a text's blank runs are, as code-point ranges `[start, end)`: the same runs `hasBlankRun`
+ * finds — at least three `_`, or at least four leader dots. The paper twin's boxes (S12) need where
+ * a blank glued to its label begins.
+ */
+export function blankRuns(text: string): { start: number; end: number }[] {
+  const chars = [...text];
+  const runs: { start: number; end: number }[] = [];
+  let i = 0;
+  while (i < chars.length) {
+    const c = chars[i]!;
+    const underscore = c === '_';
+    if (!underscore && c !== '.' && c !== '…') {
+      i += 1;
+      continue;
+    }
+    let j = i;
+    while (
+      j < chars.length &&
+      (underscore ? chars[j] === '_' : chars[j] === '.' || chars[j] === '…')
+    ) {
+      j += 1;
+    }
+    const run = chars.slice(i, j).join('');
+    if (underscore ? j - i >= 3 : j - i >= 2 && dotCount(run) >= 4) runs.push({ start: i, end: j });
+    i = j;
+  }
+  return runs;
+}
+
 /** A word that is nothing but a blank to write in: `______`, `……`, `.........`. */
 export function isBlankWord(text: string): boolean {
   return hasBlankRun(text) && /^[_.…:]+$/u.test(text);

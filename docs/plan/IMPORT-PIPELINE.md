@@ -434,12 +434,16 @@ and chips. Nothing is applied: stage 8 asks, and the label is never touched.
   template's labels (`FORM_TEMPLATES`), giving the belief engine a starting point, so that after
   an import Loppa can say "This looks like a membership form — right?" and seed only what is
   missing. It never replaces or reorders an imported question. (S11–S12.)
-- **Paper twin.** For PDF and photo sources (not DOCX or paste, which have no page), each
-  question's `PaperAnchor` is the box it will be written into: the union of its blank run,
-  checkboxes or rule; failing those, from the label's right edge to the column's right edge on the
-  label's line. Each option's anchor is its checkbox. Anchors are iu ÷ 10 000 — the fractions
-  `PaperAnchor` already stores, which `documents/paper.ts` already writes answers onto. The source
-  file goes into `definition.paper.sources` exactly as the manual paper flow does today. (S12.)
+- **Paper twin** (built in S12b: `import/anchors.ts`, `CONVERGENCE.md`). For a PDF (not DOCX or
+  paste, which have no page; a photograph is not read by the review screen yet), each question's
+  `PaperAnchor` is the box it will be written into: its field's widget; else its blank runs after
+  its own label (two questions on one line each have their own, #124); else its checkboxes; failing
+  those, from the label's right edge to the column's right edge on the label's line. (A drawn rule
+  is only a hint in the Layout IR, so the fallback is where it is.) Each option's anchor is its
+  checkbox; a grid row's options are its checkboxes left to right. Anchors are iu ÷ 10 000 — the
+  fractions `PaperAnchor` already stores, which `documents/paper.ts` already writes answers onto.
+  The file is kept first, by the editor's own route, and goes into `definition.paper.sources` in
+  the import's one step, so Back takes it away with the questions.
 - **A PDF's own form fields beat its text** (#54, built in S9: `fieldsFirst`, `import/fields.ts`,
   rule A1). The paper door passes each field with its widget in layout units (`fieldBoxes`). Each is
   a question at confidence 1000; a question read from the text that sits on the widget's line, or
