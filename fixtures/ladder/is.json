@@ -1142,6 +1142,38 @@
         "optionId": "yes",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "Já, eina í einu",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "þær eru fínar",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "næsta",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Nei, hætta hér",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
     }
   ]
 }

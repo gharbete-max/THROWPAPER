@@ -38,13 +38,25 @@ import type { BuilderGraph } from './schema.js';
  * option, as a log over the node's scored options, so `flow.start`'s scores are re-set on that
  * scale: a recipe no option names is indifferent to the question. "Right" seeds the recipe, and the
  * conversation goes on with only the gaps: the brand, then "Add another question?".
+ *
+ * **Version 6 (S12)** walks a form read from a document (`docs/plan/CONVERGENCE.md`, acceptance
+ * S6): "Use these questions" leads to "Go through the questions from your document?", and each
+ * question it walks goes through the chain every question goes through, which passes by what the
+ * document decided. The choice chain also serves a question that is a choice before the
+ * conversation met it, and a shape shows the question as buttons.
  */
 export const BUILDER_GRAPH = {
-  graphVersion: 5,
+  graphVersion: 6,
   start: 'flow.start',
   // What the machine or the screen provides, not a patch: `guess.pMille` and `pending.seeded` are
-  // the belief engine's (S11), the rest the screen's at the start.
-  inputs: ['pending.brandKitExists', 'pending.canChangeBrand', 'guess.pMille', 'pending.seeded'],
+  // the belief engine's (S11), `pending.toWalk` the walk's (S12), the rest the screen's at the start.
+  inputs: [
+    'pending.brandKitExists',
+    'pending.canChangeBrand',
+    'guess.pMille',
+    'pending.seeded',
+    'pending.toWalk',
+  ],
   nodes: [
     {
       id: 'flow.start',
@@ -1331,9 +1343,9 @@ export const BUILDER_GRAPH = {
           id: 'later',
           label: 'guided.brand.start.later',
           patch: [{ op: 'set', path: 'sidecar.brandDecided', value: 'default' }],
-          // A seeded form has its questions: only "Add another question?" is left (S11).
+          // A seeded or imported form has its questions: only "Add another question?" is left.
           next: [
-            { when: 'has(pending.seeded)', to: 'flow.more' },
+            { when: "has(pending.seeded) || sidecar.provenance != 'guided'", to: 'flow.more' },
             { when: 'true', to: 'text.label' },
           ],
         },
@@ -1446,7 +1458,7 @@ export const BUILDER_GRAPH = {
       help: 'guided.brand.preview.help',
       preview: 'brand.masthead',
       next: [
-        { when: 'has(pending.seeded)', to: 'flow.more' },
+        { when: "has(pending.seeded) || sidecar.provenance != 'guided'", to: 'flow.more' },
         { when: 'true', to: 'text.label' },
       ],
       escape: 'menu.siblings(brand)',
@@ -1554,8 +1566,10 @@ export const BUILDER_GRAPH = {
       help: 'guided.choice.answers.help',
       when: 'pending.buttons == true && !decided(kind)',
       skip: [
-        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
-        { when: 'true', skip: 'guided.skip.decided' },
+        { when: 'pending.buttons == false', skip: 'guided.skip.noButtons' },
+        // An imported question's kind was the document's (S12).
+        { when: 'decided(kind)', skip: 'guided.skip.decided' },
+        { when: 'true', skip: 'guided.skip.noButtons' },
       ],
       next: 'choice.count',
       escape: 'menu.siblings(choice)',
@@ -1585,9 +1599,11 @@ export const BUILDER_GRAPH = {
       kind: 'quantity',
       ask: 'guided.choice.count.ask',
       help: 'guided.choice.count.help',
-      when: 'pending.buttons == true && !decided(options)',
+      // A question that is a choice already — imported (S12) — is asked too.
+      when: '(pending.buttons == true || has(draft.definition.fields[focus].options)) && !decided(options)',
       skip: [
-        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'pending.buttons == false', skip: 'guided.skip.noButtons' },
+        { when: '!has(draft.definition.fields[focus].options)', skip: 'guided.skip.notAChoice' },
         { when: 'true', skip: 'guided.skip.decided' },
       ],
       min: 2,
@@ -1610,9 +1626,11 @@ export const BUILDER_GRAPH = {
       kind: 'pick-one',
       ask: 'guided.choice.shape.ask',
       help: 'guided.choice.shape.help',
-      when: 'pending.buttons == true && !decided(shape)',
+      // A question that is a choice already — imported (S12) — is asked too.
+      when: '(pending.buttons == true || has(draft.definition.fields[focus].options)) && !decided(shape)',
       skip: [
-        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'pending.buttons == false', skip: 'guided.skip.noButtons' },
+        { when: '!has(draft.definition.fields[focus].options)', skip: 'guided.skip.notAChoice' },
         { when: 'true', skip: 'guided.skip.decided' },
       ],
       next: 'choice.placement',
@@ -1623,12 +1641,16 @@ export const BUILDER_GRAPH = {
         {
           id: 'pill',
           label: 'guided.choice.shape.pill',
-          patch: [{ op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'pill' }],
+          patch: [
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' },
+            { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'pill' },
+          ],
         },
         {
           id: 'rounded',
           label: 'guided.choice.shape.rounded',
           patch: [
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' },
             { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'rounded' },
           ],
         },
@@ -1636,10 +1658,12 @@ export const BUILDER_GRAPH = {
           id: 'square',
           label: 'guided.choice.shape.square',
           patch: [
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'buttons' },
             { op: 'set', path: 'draft.definition.fields[focus].style.shape', value: 'square' },
           ],
         },
-        // Tabs and one joined bar are ways of drawing buttons, so choosing one makes them buttons.
+        // Every shape is a way of drawing buttons, so choosing one makes them buttons: a shape on a
+        // dropdown — an imported choice's (S12) — would change nothing anyone could see.
         {
           id: 'tab',
           label: 'guided.choice.shape.tab',
@@ -1670,9 +1694,11 @@ export const BUILDER_GRAPH = {
       kind: 'pick-one',
       ask: 'guided.choice.placement.ask',
       help: 'guided.choice.placement.help',
-      when: 'pending.buttons == true && !decided(placement)',
+      // A question that is a choice already — imported (S12) — is asked too.
+      when: '(pending.buttons == true || has(draft.definition.fields[focus].options)) && !decided(placement)',
       skip: [
-        { when: 'pending.buttons != true', skip: 'guided.skip.noButtons' },
+        { when: 'pending.buttons == false', skip: 'guided.skip.noButtons' },
+        { when: '!has(draft.definition.fields[focus].options)', skip: 'guided.skip.notAChoice' },
         { when: 'true', skip: 'guided.skip.decided' },
       ],
       next: 'choice.preview',
@@ -1703,8 +1729,82 @@ export const BUILDER_GRAPH = {
       ask: 'guided.preview.ask',
       help: 'guided.choice.preview.help',
       preview: 'choice.control',
-      next: 'flow.more',
+      // While a walk is going (S12): the next question from the document, and at its end the brand.
+      next: [
+        { when: 'pending.walking == true && has(pending.toWalk)', to: 'import.next' },
+        { when: 'pending.walking == true && !has(sidecar.brandDecided)', to: 'brand.start' },
+        { when: 'true', to: 'flow.more' },
+      ],
       escape: 'menu.siblings(choice)',
+    },
+    // The walk over a form read from a document (S12, `docs/plan/CONVERGENCE.md`). Which question is
+    // next is the machine's (`pending.toWalk`): the first after the focus, in the form's order, with
+    // something still open. Each walked question goes through the chain every question does.
+    {
+      id: 'import.walk',
+      group: 'import',
+      kind: 'question',
+      ask: 'guided.import.walk.ask',
+      help: 'guided.import.walk.help',
+      when: 'has(pending.toWalk)',
+      skip: 'guided.skip.nothingToWalk',
+      next: [
+        { when: '!has(sidecar.brandDecided)', to: 'brand.start' },
+        { when: 'true', to: 'flow.more' },
+      ],
+      escape: 'menu.top',
+      negative: 'no',
+      options: [
+        {
+          id: 'yes',
+          label: 'guided.import.walk.yes',
+          patch: [
+            // A question starts with no answer about buttons: the last one's must not leak.
+            { op: 'set', path: 'pending.buttons', value: { $unset: true } },
+            { op: 'set', path: 'focus', value: { $toWalk: true } },
+            { op: 'set', path: 'pending.walking', value: true },
+          ],
+          next: [
+            { when: 'has(focus)', to: 'text.required' },
+            { when: 'true', to: 'flow.more' },
+          ],
+        },
+        { id: 'no', label: 'guided.import.walk.no', patch: [] },
+      ],
+    },
+    {
+      id: 'import.next',
+      group: 'import',
+      kind: 'question',
+      ask: 'guided.import.next.ask',
+      help: 'guided.import.next.help',
+      when: 'has(pending.toWalk)',
+      skip: 'guided.skip.nothingToWalk',
+      next: [
+        { when: '!has(sidecar.brandDecided)', to: 'brand.start' },
+        { when: 'true', to: 'flow.more' },
+      ],
+      escape: 'menu.top',
+      negative: 'no',
+      options: [
+        {
+          id: 'yes',
+          label: 'guided.import.next.yes',
+          patch: [
+            { op: 'set', path: 'pending.buttons', value: { $unset: true } },
+            { op: 'set', path: 'focus', value: { $toWalk: true } },
+          ],
+          next: [
+            { when: 'has(focus)', to: 'text.required' },
+            { when: 'true', to: 'flow.more' },
+          ],
+        },
+        {
+          id: 'no',
+          label: 'guided.import.next.no',
+          patch: [{ op: 'set', path: 'pending.walking', value: false }],
+        },
+      ],
     },
     {
       id: 'flow.more',
@@ -1731,7 +1831,14 @@ export const BUILDER_GRAPH = {
       kind: 'menu',
       ask: 'guided.menu.top.ask',
       help: 'guided.menu.top.help',
-      entries: ['flow.start', 'brand.start', 'text.label', 'choice.buttons', 'flow.more'],
+      entries: [
+        'flow.start',
+        'import.walk',
+        'brand.start',
+        'text.label',
+        'choice.buttons',
+        'flow.more',
+      ],
       next: 'flow.more',
       escape: 'menu.top',
     },

@@ -1094,6 +1094,38 @@
         "optionId": "yes",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "是，一次一个",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不用了",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "下一个",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不，到此为止",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
     }
   ]
 }

@@ -5,6 +5,7 @@ import {
   stableFieldId,
   uniqueKey,
   DEFAULT_OPTION_COUNT,
+  type Slot,
 } from '@tp/shared/builder';
 import {
   EntryField,
@@ -85,8 +86,27 @@ interface Taken {
   readonly keys: Set<string>;
 }
 
+/** What "Use these questions" adds: the questions, and what the document decided about each. */
+export interface Imported {
+  readonly fields: Field[];
+  /**
+   * By field id, the slots the document decided (`docs/plan/CONVERGENCE.md`): the kind always,
+   * since nothing leaves the review unsettled; whether it must be answered, when the document said
+   * either way; the options, when they were printed. The walk asks the rest.
+   */
+  readonly decided: Record<string, Slot[]>;
+}
+
 /** The questions the items become, for a form that already holds `definition` and has retired `retired`. */
 export function fieldsOf(
+  items: readonly ReviewItem[],
+  context: Parameters<typeof importOf>[1],
+): Field[] {
+  return importOf(items, context).fields;
+}
+
+/** The questions the items become, and what the document decided about each (S12). */
+export function importOf(
   items: readonly ReviewItem[],
   context: {
     readonly definition: FormDefinition;
@@ -94,7 +114,7 @@ export function fieldsOf(
     /** The form's language: every word goes in under it. */
     readonly locale: string;
   },
-): Field[] {
+): Imported {
   const { locale } = context;
   const taken: Taken = {
     ids: new Set([
@@ -129,10 +149,16 @@ export function fieldsOf(
   };
 
   const out: Field[] = [];
+  const decided: Record<string, Slot[]> = {};
   const question = (item: ReviewItem, label: string, kind: Kind, extra: object = {}) => {
     const type = fieldTypeOf(kind);
     const { id, key } = name(label || item.id, label, type);
     const choice = type === 'single_select' || type === 'multi_select';
+    decided[id] = [
+      'kind',
+      ...(item.requiredKnown ? (['required'] as const) : []),
+      ...(choice && item.options.length > 0 ? (['options'] as const) : []),
+    ];
     const options = choice
       ? item.options.length > 0
         ? labelledOptions([], item.options, locale)
@@ -232,5 +258,5 @@ export function fieldsOf(
 
     question(item, item.text, kind);
   }
-  return out;
+  return { fields: out, decided };
 }

@@ -1802,6 +1802,176 @@
       "notes": ""
     },
     {
+      "phrase": "Ei, lopetetaan tähän",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ei",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lopeta",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "riittää",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kyllä, seuraava kysymys",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "jatka",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kyllä",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "seuraava",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ei, ne ovat oikein sellaisinaan",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ei",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ei kiitos",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ne ovat hyviä",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ohita",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kyllä, yksi kerrallaan",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kyllä",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "käydään läpi",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yksi kerrallaan",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Ei, se on vapaaehtoinen",
       "nodeId": "text.required",
       "optionId": "no",

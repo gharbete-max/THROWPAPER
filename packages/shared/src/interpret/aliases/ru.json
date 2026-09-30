@@ -1792,6 +1792,176 @@
       "notes": ""
     },
     {
+      "phrase": "Нет, остановиться здесь",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "нет",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "стоп",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "хватит",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Да, следующий вопрос",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "да",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "дальше",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "следующий",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Нет, они и так верны",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "всё верно",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "нет спасибо",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "пропустить",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Да, по одному",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "да",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "по одному",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "пройтись",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Нет, по желанию",
       "nodeId": "text.required",
       "optionId": "no",

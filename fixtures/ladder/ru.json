@@ -1157,6 +1157,38 @@
         "optionId": "yes",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "Да, по одному",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "всё верно",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "следующий",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Нет, остановиться здесь",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
     }
   ]
 }

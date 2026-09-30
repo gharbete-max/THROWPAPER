@@ -1852,6 +1852,176 @@
       "notes": ""
     },
     {
+      "phrase": "No, parar aquí",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "basta",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "no",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "parar",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Sí, la siguiente pregunta",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "continuar",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "siguiente",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sí",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "No, están bien como están",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "están bien",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "no",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "no gracias",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "saltar",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Sí, una a una",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "repasarlas",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sí",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "una a una",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "No, es opcional",
       "nodeId": "text.required",
       "optionId": "no",

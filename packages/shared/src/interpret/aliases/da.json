@@ -1852,6 +1852,186 @@
       "notes": ""
     },
     {
+      "phrase": "Nej, stop her",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "det er nok",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stop",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, næste spørgsmål",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "fortsæt",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "næste",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "videre",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nej, de er rigtige, som de er",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "de er fine",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej tak",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "spring over",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, et ad gangen",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "et ad gangen",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "gå dem igennem",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Nej, det er frivilligt",
       "nodeId": "text.required",
       "optionId": "no",

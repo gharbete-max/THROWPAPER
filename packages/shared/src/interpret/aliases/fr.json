@@ -1872,6 +1872,186 @@
       "notes": ""
     },
     {
+      "phrase": "Non, arrêter ici",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "arrêter",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "non",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stop",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ça suffit",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Oui, la question suivante",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "continuer",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "oui",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "suivante",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Non, elles sont bien comme elles sont",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "c’est bon",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ignorer",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "non",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "non merci",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Oui, une à la fois",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "oui",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "passer en revue",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "une à la fois",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Non, c’est facultatif",
       "nodeId": "text.required",
       "optionId": "no",

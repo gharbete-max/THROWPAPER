@@ -81,7 +81,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
-| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | not started |
+| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | in progress — S12a (the walk, acceptance S6) done, in review, PR #147; S12b and S12c next (`CONVERGENCE.md`) |
 | **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
 
 ## Log
@@ -376,3 +376,18 @@ when each slice ends.)*
   G11 cases, `guess.test.tsx`, two journeys in `e2e/guided-builder.spec.ts`; every earlier walk now
   passes the guess. Next: S12, convergence. Open: `member-details` and `absence-notice` answer
   alike (`BELIEF.md`, "Known limits"); the brief's five new templates; ADRs 0017–0021.
+- **S12a, the conversation over an imported form (2026-09-30).** What: "Use these questions"
+  records what the document decided about each question — its kind always, whether it must be
+  answered when the document said either way, its options when they were printed — and goes on in
+  the conversation (not the editor) at "Go through the questions from your document?" (graph
+  version 6, group `import`). Each question is walked in the form's order through the chain every
+  question goes through, which passes by what the document decided; "Go on to the next one?"
+  between them, "No, stop here" always one press; then the brand and "Add another question?".
+  Why: acceptance S6, the two doors converging. Found on the way: an imported choice passed by
+  with "You chose no buttons" (#122), and a shape on a dropdown changed nothing (#123); the editor
+  had no way into the conversation, so the review now hands over to it. Decided: a format check
+  (personnummer) waits for the form schema to have one; the template match after an import waits
+  for the belief to read imported labels (`CONVERGENCE.md`, "Not in S12"). Tests: `walk.test.ts`,
+  the whole-graph walk from an imported form, `review.test.ts` (what the document decided), and
+  acceptance S6 in `e2e/review.spec.ts` by pointer and by keyboard alone. Next: S12b, the paper
+  twin from an import.

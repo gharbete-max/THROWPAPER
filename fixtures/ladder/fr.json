@@ -1167,6 +1167,38 @@
         "optionId": "yes",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "Oui, une à la fois",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "c’est bon",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "suivante",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Non, arrêter ici",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
     }
   ]
 }

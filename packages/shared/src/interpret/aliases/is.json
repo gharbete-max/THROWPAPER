@@ -1692,6 +1692,176 @@
       "notes": ""
     },
     {
+      "phrase": "Nei, hætta hér",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "hætta",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stopp",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Já, næsta spurning",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "halda áfram",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "já",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "næsta",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nei, þær eru réttar eins og þær eru",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nei",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nei takk",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sleppa",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "þær eru fínar",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Já, eina í einu",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "eina í einu",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "förum yfir þær",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "já",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Nei, það er valfrjálst",
       "nodeId": "text.required",
       "optionId": "no",

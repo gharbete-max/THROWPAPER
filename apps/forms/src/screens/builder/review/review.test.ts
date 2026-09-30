@@ -5,7 +5,7 @@ import { definitionProblems, emptyDefinition } from '@tp/shared/forms';
 import { parseLayoutDocument, readLayout } from '@tp/shared/import';
 import { readDocument } from '../paper/pipeline.js';
 import type { Reading } from '../paper/reading.js';
-import { fieldsOf, fieldTypeOf, labelKey } from './fields.js';
+import { fieldsOf, fieldTypeOf, importOf, labelKey } from './fields.js';
 import {
   act,
   counts,
@@ -385,7 +385,7 @@ describe('how many questions', () => {
       title: {},
       pending: { brandKitExists: false, canChangeBrand: true },
     });
-    const after = importQuestions(c, fieldsFrom(items));
+    const after = importQuestions(BUILDER_GRAPH, c, fieldsFrom(items));
     expect(after.log[0]!.answer).toEqual({ kind: 'import', count: counts(items).questions });
   });
 });
@@ -404,6 +404,7 @@ describe('what needs the person’s eye', () => {
     type: 'short_text',
     alternatives: ['short_text', 'long_text', 'address'],
     required: false,
+    requiredKnown: false,
     bucket: 'review',
     decided: false,
     field: false,
@@ -526,12 +527,64 @@ describe('the questions they become', () => {
       title: {},
       pending: { brandKitExists: false, canChangeBrand: true },
     });
-    const after = importQuestions(c, fieldsFrom(items));
+    const after = importQuestions(BUILDER_GRAPH, c, fieldsFrom(items));
     expect(after.state.draft.definition.fields.map((f) => f.type)).toEqual([
       'section_break',
       'short_text',
       'email',
     ]);
     expect(definitionProblems(after.state.draft.definition)).toEqual([]);
+  });
+});
+
+/**
+ * What the document decided about each question it gives the form (S12, `CONVERGENCE.md`): the
+ * conversation walks the rest, and asks nothing the document said.
+ */
+describe('what the document decided', () => {
+  const said = paste('1. Namn (obligatoriskt): ____\n2. Telefon (valfritt): ____\n3. Adress: ____');
+
+  it('keeps whether the document said a question must be answered, either way', () => {
+    const items = startReview(said).items;
+    expect(items.map((i) => [i.text, i.required, i.requiredKnown])).toEqual([
+      ['Namn (obligatoriskt)', true, true],
+      ['Telefon (valfritt)', false, true],
+      ['Adress', false, false],
+    ]);
+  });
+
+  it('decides the kind of every question, the rest only where the document said', () => {
+    const { fields, decided } = importOf(startReview(said).items, context);
+    expect(fields.map((field) => decided[field.id])).toEqual([
+      ['kind', 'required'],
+      ['kind', 'required'],
+      ['kind'],
+    ]);
+    const choice = importOf(
+      startReview(paste('1. Vilken dag kommer du?\n☐ Fredag\n☐ Lördag')).items,
+      context,
+    );
+    expect(Object.values(choice.decided)).toEqual([['kind', 'options']]);
+  });
+
+  it('keeps it through a merge, and loses it when a question becomes text', () => {
+    const review = startReview(said);
+    const [, telefon, adress] = review.items;
+    const merged = act(review, { kind: 'merge', itemId: adress!.id });
+    expect(merged.items.find((i) => i.id === telefon!.id)).toMatchObject({ requiredKnown: true });
+    const text = act(review, { kind: 'text', itemId: telefon!.id });
+    expect(text.items.find((i) => i.id === telefon!.id)).toMatchObject({ requiredKnown: false });
+  });
+
+  it('goes into the form with them, so the conversation walks only what is open', () => {
+    const { fields, decided } = importOf(startReview(said).items, context);
+    const c = begin(BUILDER_GRAPH, {
+      definition: emptyDefinition,
+      title: {},
+      pending: { brandKitExists: false, canChangeBrand: true },
+    });
+    const after = importQuestions(BUILDER_GRAPH, c, fields, decided);
+    expect(after.state.cursor).toBe('import.walk');
+    expect(after.state.pending['toWalk']).toBe(fields[2]!.id);
   });
 });

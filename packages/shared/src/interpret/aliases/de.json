@@ -1842,6 +1842,186 @@
       "notes": ""
     },
     {
+      "phrase": "Nein, hier aufhören",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "aufhören",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "genug",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nein",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stopp",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, die nächste Frage",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nächste",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "weiter",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nein, sie stimmen so",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "nein",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nein danke",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "passt so",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "überspringen",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, eine nach der anderen",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "durchgehen",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eine nach der anderen",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Nein, das ist freiwillig",
       "nodeId": "text.required",
       "optionId": "no",

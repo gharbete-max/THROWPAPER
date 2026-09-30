@@ -1141,6 +1141,38 @@
         "optionId": "yes",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "Kyllä, yksi kerrallaan",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "ne ovat hyviä",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "seuraava",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Ei, lopetetaan tähän",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
     }
   ]
 }

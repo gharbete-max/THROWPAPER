@@ -1,7 +1,7 @@
 {
   "session": {
     "sessionVersion": 1,
-    "graphVersion": 5,
+    "graphVersion": 6,
     "base": {
       "draft": {
         "definition": {
@@ -1074,6 +1074,19 @@
               {
                 "id": "q-4saczmmkem75x"
               },
+              "appearance"
+            ],
+            "value": "buttons"
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
               "style"
             ],
             "value": {
@@ -1290,6 +1303,19 @@
               },
               "style"
             ]
+          },
+          {
+            "op": "set",
+            "at": [
+              "draft",
+              "definition",
+              "fields",
+              {
+                "id": "q-4saczmmkem75x"
+              },
+              "appearance"
+            ],
+            "value": "buttons"
           }
         ],
         "to": "choice.placement",

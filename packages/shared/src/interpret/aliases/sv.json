@@ -2132,6 +2132,206 @@
       "notes": ""
     },
     {
+      "phrase": "Nej, sluta här",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "det räcker",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sluta",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stopp",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, nästa fråga",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "fortsätt",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "gå vidare",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nästa",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nej, de är rätt som de är",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "de är bra",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hoppa över",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "nej tack",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ja, en i taget",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en i taget",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "gå igenom",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "gå igenom dem",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ja",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "Nej, det är frivilligt",
       "nodeId": "text.required",
       "optionId": "no",

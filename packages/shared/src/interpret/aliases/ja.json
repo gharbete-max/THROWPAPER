@@ -1573,6 +1573,166 @@
     },
     {
       "phrase": "いいえ",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ、ここでやめます",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "やめる",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "終了",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい、次の質問へ",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "次へ",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "続ける",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ、このままで正しいです",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "このままでいい",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不要",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "はい、一つずつ",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "一つずつ",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "確認する",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "いいえ",
       "nodeId": "text.required",
       "optionId": "no",
       "locale": "ja",

@@ -95,7 +95,7 @@ function answerOf(context: PatchContext, rule: Writable): Json {
   return context.answer;
 }
 
-/** A value with its references replaced: `$answer`, `$lastAddedId`, `$options`. */
+/** A value with its references replaced: `$answer`, `$lastAddedId`, `$toWalk`, `$options`. */
 function resolveValue(
   value: Json,
   at: Pointer,
@@ -110,6 +110,12 @@ function resolveValue(
       throw new MachineError('not-found', '$lastAddedId, but nothing was added before it');
     }
     return lastAddedId;
+  }
+  // The next question from a document to walk (`docs/plan/CONVERGENCE.md`), as the step found it;
+  // null when there is none.
+  if (isRef(value, '$toWalk')) {
+    const next = state.pending['toWalk'];
+    return typeof next === 'string' ? next : null;
   }
   if (isRef(value, '$options')) {
     const wanted = value['$options'];

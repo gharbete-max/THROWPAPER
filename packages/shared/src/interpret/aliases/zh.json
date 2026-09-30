@@ -1672,6 +1672,166 @@
       "notes": ""
     },
     {
+      "phrase": "不",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不，到此为止",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "停止",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "够了",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "下一个",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是，下一个问题",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "继续",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不用了",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "不，它们现在就是对的",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "跳过",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "好的",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "是，一次一个",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "逐一查看",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "不是必须的",
       "nodeId": "text.required",
       "optionId": "no",

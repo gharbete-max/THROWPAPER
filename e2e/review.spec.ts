@@ -83,7 +83,7 @@ test('acceptance S4: two numbered questions pasted, a guessed type changed, then
   await expect(second.getByText('Settled')).toBeVisible();
 
   await page.getByRole('button', { name: 'Add 2 questions' }).click();
-  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   const draft = await draftOf(formId);
   expect(draft.fields.map((f) => f.type)).toEqual(['short_text', 'long_text']);
   expect(labels(draft)).toEqual(['Question one', 'Question two']);
@@ -120,7 +120,7 @@ test('acceptance S4 by keyboard alone', async ({ page }) => {
 
   await tabTo(page, page.getByRole('button', { name: 'Add 2 questions' }));
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   expect((await draftOf(formId)).fields.map((f) => f.type)).toEqual(['short_text', 'long_text']);
 });
 
@@ -132,8 +132,96 @@ test('acceptance S5: "12.1" inside a question neither starts one nor splits one'
   await paste(page, '1. A thing 12.1 mentions blabla\n2. Something else');
   await expect(summary(page)).toHaveText(/^I read 2 questions\./);
   await page.getByRole('button', { name: 'Add 2 questions' }).click();
-  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   expect(labels(await draftOf(formId))).toEqual(['A thing 12.1 mentions blabla', 'Something else']);
+});
+
+/**
+ * Acceptance S6 — the two doors converge (`docs/plan/CONVERGENCE.md`, S12). S5's draft, added,
+ * goes on in the conversation, which asks only what the document left open: whether each must be
+ * answered, never its type; never in another order.
+ */
+const question = (page: Page, text: string) =>
+  expect(page.getByRole('heading', { level: 1, name: text })).toBeVisible();
+
+type Walked = { type: string; required: boolean; label?: Record<string, string> };
+async function walkedDraft(formId: string): Promise<Walked[]> {
+  return (await draftOf(formId)).fields as unknown as Walked[];
+}
+
+async function s5Added(page: Page): Promise<string> {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromPaper(page);
+  await paste(page, '1. A thing 12.1 mentions blabla\n2. Something else');
+  await expect(summary(page)).toHaveText(/^I read 2 questions\./);
+  return formId;
+}
+
+test('acceptance S6: the imported draft walked, asked only what the document left open', async ({
+  page,
+}) => {
+  const formId = await s5Added(page);
+  await page.getByRole('button', { name: 'Add 2 questions' }).click();
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
+
+  await question(page, 'Go through the questions from your document?');
+  await page.getByRole('button', { name: /Yes, one at a time/ }).click();
+  // The first question: its type was the document's, so only "required" is asked.
+  await question(page, 'Must everyone answer this?');
+  await page.getByRole('button', { name: /No, it's optional/ }).click();
+  await question(page, "Here's how it looks.");
+  await expect(page.locator('.conversation__preview')).toContainText(
+    'A thing 12.1 mentions blabla',
+  );
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await question(page, 'Go on to the next one?');
+  await page.getByRole('button', { name: /Yes, the next question/ }).click();
+  await question(page, 'Must everyone answer this?');
+  await page.getByRole('button', { name: /Yes, it's needed/ }).click();
+  await question(page, "Here's how it looks.");
+  await expect(page.locator('.conversation__preview')).toContainText('Something else');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  // The walk's end: the brand, then only "Add another question?" — the form has its questions.
+  await question(page, 'Should this look like your organisation?');
+  await page.getByRole('button', { name: /Decide later/ }).click();
+  await question(page, 'Add another question?');
+
+  // Never asked about a type: those were passed by, saying why.
+  await expect(page.getByRole('heading', { name: 'Do you want buttons?' })).toHaveCount(0);
+  await expect
+    .poll(async () =>
+      (await walkedDraft(formId)).map((f) => [f.label?.['en-GB'], f.type, f.required]),
+    )
+    .toEqual([
+      ['A thing 12.1 mentions blabla', 'short_text', false],
+      ['Something else', 'short_text', true],
+    ]);
+});
+
+test('acceptance S6 by keyboard alone', async ({ page }) => {
+  const formId = await s5Added(page);
+  await tabTo(page, page.getByRole('button', { name: 'Add 2 questions' }));
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
+
+  await question(page, 'Go through the questions from your document?');
+  await page.keyboard.press('1');
+  await question(page, 'Must everyone answer this?');
+  await page.keyboard.press('2');
+  await question(page, "Here's how it looks.");
+  await page.keyboard.press('Enter');
+  await question(page, 'Go on to the next one?');
+  await page.keyboard.press('1');
+  await question(page, 'Must everyone answer this?');
+  await page.keyboard.press('1');
+  await question(page, "Here's how it looks.");
+  await page.keyboard.press('Enter');
+  await question(page, 'Should this look like your organisation?');
+  await page.keyboard.press('2');
+  await question(page, 'Add another question?');
+  await expect
+    .poll(async () => (await walkedDraft(formId)).map((f) => f.required))
+    .toEqual([false, true]);
 });
 
 test('what needs your eye holds "Use these questions" until it is settled', async ({ page }) => {
@@ -171,7 +259,7 @@ test('what needs your eye holds "Use these questions" until it is settled', asyn
   await expect(item(page, 'Tack!').getByText('Text to read', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Add 1 question' })).toBeEnabled();
   await page.getByRole('button', { name: 'Add 1 question' }).click();
-  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   expect((await draftOf(formId)).fields.map((f) => f.type)).toEqual([
     'section_break',
     'short_text',
@@ -225,7 +313,7 @@ test('a PDF: its own page, each line linked to its question both ways, merged an
   await expect(summary(page)).toHaveText('I read 7 questions. Nothing needs your eye.');
 
   await page.getByRole('button', { name: 'Add 7 questions' }).click();
-  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   const draft = await draftOf(formId);
   expect(draft.fields.map((f) => f.type)).toEqual([
     'section_break',
@@ -255,7 +343,7 @@ test('a Word file: a grid becomes one choice per row, under what the document pr
   // Two numbered questions, and a grid of three rows: three questions in the form.
   await expect(summary(page)).toHaveText('I read 5 questions. Nothing needs your eye.');
   await page.getByRole('button', { name: 'Add 5 questions' }).click();
-  await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   const optionsOf = (f: Draft['fields'][number]) =>
     ((f.options ?? []) as { label: Record<string, string> }[]).map((o) => o.label['en-GB']);
   const rows = (await draftOf(formId)).fields.filter(

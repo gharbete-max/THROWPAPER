@@ -2462,6 +2462,206 @@
       "notes": ""
     },
     {
+      "phrase": "No, stop here",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "no",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stop",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stop here",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "that is enough",
+      "nodeId": "import.next",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Yes, the next question",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "go on",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "next",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "next one",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yes",
+      "nodeId": "import.next",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "No, they are right as they are",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "no",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "no thanks",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "skip it",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "they are fine",
+      "nodeId": "import.walk",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Yes, one at a time",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "go through them",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "one at a time",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "walk me through",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yes",
+      "nodeId": "import.walk",
+      "optionId": "yes",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
       "phrase": "No, it's optional",
       "nodeId": "text.required",
       "optionId": "no",

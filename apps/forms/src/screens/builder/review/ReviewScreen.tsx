@@ -17,7 +17,7 @@ import type { Reading } from '../paper/reading.js';
 import { NoWorker, ReadingTooSlow, readInWorker } from '../paper/read-in-worker.js';
 import { DocxRefused } from '../paper/refusal.js';
 import { DraftPane } from './DraftPane.js';
-import { fieldsOf } from './fields.js';
+import { importOf } from './fields.js';
 import { reviewKey } from './keys.js';
 import {
   act,
@@ -39,8 +39,8 @@ import { SourcePane } from './SourcePane.js';
  * on this device. The review opens on one sentence — "I read 14 questions. 3 need your eye." — the
  * document on one side and the form it would make on the other, linked line by line. Nothing enters
  * the form until "Use these questions", which adds them through the conversation's machine as one
- * step Back undoes, saves, and opens the editor. What was read never leaves the machine: only the
- * questions the author added do, in the draft (`CAVEATS.md` #43).
+ * step Back undoes, saves, and goes on in the conversation (S12). What was read never leaves the
+ * machine: only the questions the author added do, in the draft (`CAVEATS.md` #43).
  *
  * A photograph or a scanned page is not read here yet; the editor's paper import takes it as pages
  * to draw on (ADR 0004).
@@ -187,12 +187,13 @@ export function ReviewScreen() {
     setError(null);
     let next: Conversation;
     try {
-      const fields = fieldsOf(review.items, {
+      const { fields, decided } = importOf(review.items, {
         definition: conversation.state.draft.definition,
         retired: conversation.state.sidecar.retiredIds,
         locale: contentLocale,
       });
-      next = importQuestions(conversation, fields);
+      // What the document decided goes with them, so the conversation asks only the rest (S12).
+      next = importQuestions(BUILDER_GRAPH, conversation, fields, decided);
     } catch {
       // Refused by the machine, or a question the form cannot hold: said, never left unhandled.
       setError(t('review.useFailed'));
@@ -216,7 +217,9 @@ export function ReviewScreen() {
       return;
     }
     setConversation(next);
-    navigate(`/forms/${id}`);
+    // The two doors meet (S12): the conversation goes on from the questions just added — "Go
+    // through the questions from your document?" — and "Build it myself" is one press from there.
+    navigate(`/forms/${id}/guided`);
   }
 
   // The keys, on the whole window, while a review is open.

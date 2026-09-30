@@ -171,7 +171,15 @@ export interface Writable {
  */
 export const WRITABLE: readonly Writable[] = [
   { pattern: 'pending.*', ops: ['set'], value: z.unknown() },
-  { pattern: 'focus', ops: ['set'], value: z.object({ $lastAddedId: z.literal(true) }).strict() },
+  {
+    pattern: 'focus',
+    ops: ['set'],
+    // The question just added, or the next question from a document to walk (S12).
+    value: z.union([
+      z.object({ $lastAddedId: z.literal(true) }).strict(),
+      z.object({ $toWalk: z.literal(true) }).strict(),
+    ]),
+  },
   { pattern: 'sidecar.brandDecided', ops: ['set'], value: z.enum(['organisation', 'default']) },
   // Where the logo sits: one of six named slots, never a position (CAVEATS #33).
   { pattern: 'draft.definition.settings.layout.logoSlot', ops: ['set'], value: z.enum(LOGO_SLOTS) },

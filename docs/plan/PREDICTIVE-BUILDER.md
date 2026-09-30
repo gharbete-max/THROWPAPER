@@ -334,7 +334,7 @@ about unresolved things (answer types, validation, option shapes), never re-asks
 already determined, and never reorders the user's questions. *Mechanism: every imported field's
 sidecar records which decisions the import made and at what bucket; the graph's `when` guards
 read `sidecar.fields[id].decided`, so a decided slot's node is skipped with an explanation
-("Already read from your document").*
+("Already decided"). Built in S12a: `CONVERGENCE.md`; pressed in `e2e/review.spec.ts`.*
 
 ## Where the brief was fitted to the repository
 

@@ -17,6 +17,7 @@ import { applyAll, jsonEqual, type Change } from './changes.js';
 import { evaluateGuard, parseGuard, type GuardState } from './graph/guards.js';
 import { opProblem } from './graph/paths.js';
 import {
+  SLOTS,
   takesList,
   type BuilderGraph,
   type Json,
@@ -24,6 +25,7 @@ import {
   type Next,
   type Node,
   type Op,
+  type Slot,
 } from './graph/schema.js';
 import { runPatch } from './patches.js';
 import {
@@ -447,6 +449,54 @@ function seedSource(id: string, context: AnswerContext): SeedSource {
   return source;
 }
 
+// --- The walk over an imported form (S12, `docs/plan/CONVERGENCE.md`) --------------------------
+
+const withoutKey = (record: BuilderState['pending'], key: string): BuilderState['pending'] =>
+  Object.fromEntries(Object.entries(record).filter(([k]) => k !== key));
+
+/** Where "Use these questions" takes the conversation. */
+const IMPORT_WALK = 'import.walk';
+
+/** What the walk asks of a question, if the document left it open. */
+const WALK_SLOTS: readonly Slot[] = ['required'];
+/** And of a question with options to choose from. */
+const WALK_CHOICE_SLOTS: readonly Slot[] = ['required', 'options', 'shape', 'placement'];
+
+/**
+ * The next question from a document to walk: the first, in the form's own order and after the one
+ * in focus, that an import added and that has something the walk asks still open. Headings, text
+ * and repeating groups are not walked. Null when there is none.
+ */
+export function nextToWalk(state: BuilderState): string | null {
+  const fields = state.draft.definition.fields;
+  const shown = new Set<string>(PRESENTATIONAL_TYPES);
+  const from = state.focus === null ? 0 : fields.findIndex((field) => field.id === state.focus) + 1;
+  for (const field of fields.slice(from)) {
+    if (shown.has(field.type) || field.type === 'repeating_group') continue;
+    const record = state.sidecar.fields[field.id];
+    if (record?.source !== 'import') continue;
+    const slots = 'options' in field ? WALK_CHOICE_SLOTS : WALK_SLOTS;
+    if (slots.some((slot) => record.decided?.[slot] !== true)) return field.id;
+  }
+  return null;
+}
+
+/** `pending.toWalk` after a step, written when it moved, so Back and replay restore it. */
+function withWalk(state: BuilderState, tracked: Tracked): BuilderState {
+  const next = nextToWalk(state);
+  const now = state.pending['toWalk'];
+  if ((typeof now === 'string' ? now : null) === next) return state;
+  return applyTracked(
+    state,
+    [
+      next === null
+        ? { op: 'unset', at: ['pending', 'toWalk'] }
+        : { op: 'set', at: ['pending', 'toWalk'], value: next },
+    ],
+    tracked,
+  );
+}
+
 /**
  * The guess after these steps (`BELIEF.md`, "The guess"), written into the state when it moved: a
  * change in the step, so Back and replay restore it without the belief.
@@ -528,7 +578,7 @@ export function answer(
   );
 
   const told = [...toldOf(conversation), { nodeId: node.id, answer: given }];
-  const settled = withGuess(graph, stepped, told, tracked);
+  const settled = withWalk(withGuess(graph, stepped, told, tracked), tracked);
   const jump = given.kind === 'jump';
   const answered = jump ? answeredIds(log) : [...answeredIds(log), node.id];
   const guards = guardState(settled, answered);
@@ -584,7 +634,7 @@ export function answerAt(
 
   const focus = settled.focus;
   const record = focus === null ? undefined : settled.sidecar.fields[focus];
-  const marked =
+  const marked = withWalk(
     focus === null || record?.decided?.[slot] === true
       ? settled
       : applyTracked(
@@ -599,7 +649,9 @@ export function answerAt(
                 },
           ],
           tracked,
-        );
+        ),
+    tracked,
+  );
 
   const answered = [...answeredIds(log), node.id];
   const { to, skipped } = settle(graph, marked, answered, state.cursor, false, [
@@ -700,20 +752,26 @@ export function edit(
 /**
  * "Use these questions" on the review screen (S10, `IMPORT-PIPELINE.md` §8): the questions read
  * from a document, appended in the document's order as **one** step in the same log — undone by
- * Back like any answer, replayed like any step. The conversation stays where it is.
+ * Back like any answer, replayed like any step.
  *
  * Each is recorded as the import's (`source: 'import'`) with no guided baseline, so reconciliation
- * reads it as it reads any question the conversation did not make; what the import decided about
- * it (its slots, its evidence) is S12's. The ids and keys are the review's, made from the
- * document's text (`fingerprint`), and are checked here: an id the form has ever used, or a key it
- * already has, is refused, because an old answer would attach to it (`CAVEATS.md` #49).
+ * reads it as it reads any question the conversation did not make, with the slots the document
+ * decided (`decided`, by field id: the kind always, the rest when the document said). The ids and
+ * keys are the review's, made from the document's text (`fingerprint`), and are checked here: an
+ * id the form has ever used, or a key it already has, is refused, because an old answer would
+ * attach to it (`CAVEATS.md` #49).
+ *
+ * The conversation then goes to "Go through the questions from your document?" (`import.walk`,
+ * S12), which passes itself by when the document left nothing open (`docs/plan/CONVERGENCE.md`).
  *
  * Headings and text to read come with the questions; the step's `count` is the questions alone,
  * as the review screen counted them, and an import with none is nothing to do.
  */
 export function importQuestions(
+  graph: BuilderGraph,
   conversation: Conversation,
   fields: readonly FormDefinition['fields'][number][],
+  decided: Readonly<Record<string, readonly Slot[]>> = {},
 ): Conversation {
   const shown = new Set<string>(PRESENTATIONAL_TYPES);
   const count = fields.filter((field) => !shown.has(field.type)).length;
@@ -740,6 +798,13 @@ export function importQuestions(
     keys.add(field.key);
     added.push(...ids);
   }
+  for (const [id, slots] of Object.entries(decided)) {
+    if (!fields.some((field) => field.id === id)) {
+      throw new MachineError('wrong-answer', `${id}: not a question this import adds`);
+    }
+    const unknown = slots.find((slot) => !(SLOTS as readonly string[]).includes(slot));
+    if (unknown !== undefined) throw new MachineError('wrong-answer', `${unknown}: not a slot`);
+  }
 
   const list = ['draft', 'definition', 'fields'] as const;
   const changes: Change[] = [];
@@ -751,7 +816,15 @@ export function importQuestions(
       value: field as unknown as Json,
       after: after === null ? null : { id: after },
     });
-    changes.push({ op: 'set', at: provenancePointer(field.id), value: { source: 'import' } });
+    const slots = decided[field.id] ?? [];
+    changes.push({
+      op: 'set',
+      at: provenancePointer(field.id),
+      value:
+        slots.length === 0
+          ? { source: 'import' }
+          : { source: 'import', decided: Object.fromEntries(slots.map((slot) => [slot, true])) },
+    });
     after = field.id;
   }
   changes.push({
@@ -767,19 +840,24 @@ export function importQuestions(
   }
 
   const tracked: Tracked = { changes: [], inverse: [] };
-  const next = applyTracked(state, changes, tracked);
+  const next = withWalk(applyTracked(state, changes, tracked), tracked);
   checkDraft(next.draft);
+  // On to the walk, if the graph has one; it passes itself by when there is nothing to walk.
+  const walk = graph.nodes.some((node) => node.id === IMPORT_WALK);
+  const { to, skipped } = walk
+    ? settle(graph, next, answeredIds(log), IMPORT_WALK, false, toldOf(conversation))
+    : { to: state.cursor, skipped: [] };
   const entry: LogEntry = {
     nodeId: state.cursor,
     answer: { kind: 'import', count },
     patch: tracked.changes,
     inverse: tracked.inverse,
-    to: state.cursor,
-    skipped: [],
+    to,
+    skipped,
     tier: null,
     source: 'import',
   };
-  return { base: conversation.base, log: [...log, entry], state: next };
+  return { base: conversation.base, log: [...log, entry], state: { ...next, cursor: to } };
 }
 
 // --- Reconciling ------------------------------------------------------------------------------
@@ -858,7 +936,13 @@ export function rebase(
   const told = toldParts(graph, toldOf(conversation));
   const pending =
     told.length > 0 ? { ...state.pending, [TOLD_BEFORE]: told as unknown as Json } : state.pending;
-  const moved: BuilderState = { ...state, draft, focus: kept ? state.focus : null, pending };
+  const shifted: BuilderState = { ...state, draft, focus: kept ? state.focus : null, pending };
+  // What is left to walk is read from the draft the editor left (S12).
+  const walk = nextToWalk(shifted);
+  const moved: BuilderState =
+    walk === null
+      ? { ...shifted, pending: withoutKey(shifted.pending, 'toWalk') }
+      : { ...shifted, pending: { ...shifted.pending, toWalk: walk } };
   // The question being built is gone: its node has nothing to write to, so the conversation goes
   // to the menu — "What do you want to change?" — rather than to a question it cannot take.
   const from = kept

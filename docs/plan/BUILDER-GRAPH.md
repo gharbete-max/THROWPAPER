@@ -3,8 +3,9 @@
 **Status:** the specification for slices S1 and S2 (`ROADMAP.md`), proposed 2026-09-25; the graph
 **built in S1** (`packages/shared/src/builder/graph/`), the machine that walks it **in S2**
 (`packages/shared/src/builder/`, "The machine" below); answers ahead of their turn and graph
-version 3's slots **in S6**; the guess, graph version 5, **in S11** (`BELIEF.md`). Where this
-document and the code disagree, the code is
+version 3's slots **in S6**; the guess, graph version 5, **in S11** (`BELIEF.md`); the walk over
+an imported form, graph version 6, **in S12** (`CONVERGENCE.md`). Where this document and the code
+disagree, the code is
 checked by tests and this document is the bug — fix it in the same change. Decisions: ADR 0020
 (graph as data) and ADR 0021 (JSON or typed TS, never YAML).
 
@@ -141,7 +142,8 @@ guard that reads `pending.x` or `guess.x` must name something a patch writes or 
 `inputs` — the facts the shell provides before the conversation starts (`pending.brandKitExists`
 from `GET /v1/brand-kit`; `pending.canChangeBrand`, whether the person is an administrator, since
 graph version 4; `guess.pMille` and `pending.seeded`, what "Right" added, from the belief engine
-since graph version 5). A typo'd key fails G8 instead of silently
+since graph version 5; `pending.toWalk`, the next question from a document to walk, from the
+machine since graph version 6). A typo'd key fails G8 instead of silently
 reading `null` for ever. A resumed conversation is given today's, not the saved ones: they decide
 only what is asked from then on, and the log keeps where each earlier answer led.
 
@@ -189,6 +191,7 @@ the log: `{ $answer: true }` (the quantity or text just given); `{ $newField: { 
 required? } }` (a new field with a fingerprint id — `PREDICTIVE-BUILDER.md`, "Stable ids" — whose
 label, when `word` is given, is that word from `forms/vocabulary.ts`, which already carries it in
 all twelve languages); `{ $lastAddedId: true }` (the id the previous `add` created, for `focus`);
+`{ $toWalk: true }` (the next question from a document to walk, or null, for `focus`, S12);
 `{ $options: n | { $answer: true } }` (`n` placeholder options); and `{ $unset: true }` with `set`
 (remove the key). Nothing else: no computation, no string building.
 
@@ -240,9 +243,14 @@ where it started (`base`) and every step since (`log`); its state is always exac
   on paths `WRITABLE` allows, in the same log, as undoable as an answer; the trail does not show it.
 - **Questions from a document** (`importQuestions`, `{ kind: 'import', count }`, S10): "Use these
   questions" on the review screen appends them in the document's order as one step with
-  `source: 'import'`, each recorded as the import's, and the conversation stays where it was. It
-  answers no node — `answered()` does not read it — and the trail shows it as "From your document:
-  14 questions". An id the form ever used, or a key it has, is refused.
+  `source: 'import'`, each recorded as the import's with the slots the document decided (S12).
+  It answers no node — `answered()` does not read it — and the trail shows it as "From your
+  document: 14 questions". An id the form ever used, or a key it has, is refused. Since S12 the
+  step goes on to `import.walk` (`CONVERGENCE.md`); until then the conversation stayed where it was.
+- **The walk** (S12). After every step the machine writes `pending.toWalk`: the first question
+  after the one in focus, in the form's order, that came from a document and has a slot the walk
+  asks still open (`required`; for a choice, `options`, `shape`, `placement`). A rebase reads it
+  again from the draft the editor left.
 - **Reconciliation** (`reconcile.ts`, S5). Every guided step records each question it made or
   changed as it left it (`guided`); a question that differs from that has been changed by hand.
   A guided step runs on the conversation's own versions and never changes a question changed by
@@ -582,6 +590,17 @@ taken only on a guard, so G6 passes it), otherwise to `brand.start`. After a see
 question?" rather than "What do you want to ask?": the recipe has asked it. `flow.start`'s scores
 were re-set for the new meaning of a score, and `choice.buttons`' "yes" lost the one it had had
 since S1, which, alone on its node, could never have moved anything (G9 now refuses one).
+
+Graph version 6 (S12, `CONVERGENCE.md`) adds group `import`: `import.walk` ("Go through the
+questions from your document?"), where "Use these questions" leads and which the top menu offers,
+and `import.next` ("Go on to the next one?"), after each walked question while one is left. Both
+ask only while `pending.toWalk` is set. A walked question goes through `text.required` and the
+choice chain like any other: `choice.count`, `choice.shape` and `choice.placement` now ask when the
+question in focus has options, not only after "yes, buttons", and say "This question has no
+answers to choose from" when it has none; every shape shows the question as buttons; and
+`choice.preview` goes on to `import.next` while a walk has a question left, then to the brand if it
+is not decided. After the brand, a form with imported questions, like a seeded one, goes on to "Add
+another question?".
 
 S2 changed three things the walk over the whole graph found (`CAVEATS.md` #62, #65):
 `text.required` asks only when there is a question (`when: 'has(focus)'`, skip reason

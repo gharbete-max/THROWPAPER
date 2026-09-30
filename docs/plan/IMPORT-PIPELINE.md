@@ -529,10 +529,13 @@ actions, counts), `fields.ts` (what each becomes) and `keys.ts`; the screen in `
   conversation's log. Nothing is in the form until the questions are used, so there is nothing
   for those steps to change; the form changes once, when they are used.) **"Use these questions"
   is one step in the conversation's log** (`importQuestions`, `source: 'import'`): Back undoes it,
-  replay replays it, and the session is saved with it before the editor opens.
+  replay replays it, and the session is saved with it before the conversation goes on. (Until S12
+  the editor opened; since S12 the conversation does, at "Go through the questions from your
+  document?", with what the document decided recorded for each question: `CONVERGENCE.md`.)
 - **What a reading becomes.** Every word verbatim, in the form's language. Money becomes a number
   with two decimals. An address becomes long text. A personnummer or an organisation number
-  becomes short text; its check is S12's. Consent becomes yes/no, its text byte for byte (#28). A
+  becomes short text; its check waits for a format check in the form schema (`CONVERGENCE.md`,
+  "Not in S12"). Consent becomes yes/no, its text byte for byte (#28). A
   grid becomes a choice per row, under a section of its label: one of its columns, or any number
   when its "Multiple choice" chip is picked; a grid of one column is a list to tick, its header
   the help. A table becomes a repeating group, a question per column, with as many entries as it

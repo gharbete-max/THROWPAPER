@@ -46,6 +46,11 @@ export interface ReviewItem {
   readonly alternatives: readonly Kind[];
   /** Must be answered: only when the document said so (#26); never assumed. */
   readonly required: boolean;
+  /**
+   * The document said whether it must be answered, either way. "Not required" and "said nothing"
+   * both leave it optional, but only the first is decided: the walk asks the second (S12).
+   */
+  readonly requiredKnown: boolean;
   /** How sure the reading is, as stage 7 put it. */
   readonly bucket: Bucket;
   /** The person settled it: a chip, Accept, merge, split, or what kind it is. */
@@ -137,6 +142,7 @@ function itemOf(
     type: classification?.kind ?? 'short_text',
     alternatives: sure ? [] : (classification?.alternatives ?? UNSURE),
     required: classification?.required === 'yes',
+    requiredKnown: classification !== undefined && classification.required !== 'unknown',
   };
   switch (segment.kind) {
     case 'heading':
@@ -147,6 +153,7 @@ function itemOf(
         type: null,
         alternatives: [],
         required: false,
+        requiredKnown: false,
       };
     case 'instruction':
     case 'meta':
@@ -157,6 +164,7 @@ function itemOf(
         type: null,
         alternatives: [],
         required: false,
+        requiredKnown: false,
       };
     case 'question':
       return {
@@ -224,6 +232,9 @@ export function itemsOf(reading: Reading): ReviewItem[] {
       type: field.kind,
       alternatives: [],
       required: field.covers.some((index) => classified.get(index)?.required === 'yes'),
+      requiredKnown: field.covers.some(
+        (index) => (classified.get(index)?.required ?? 'unknown') !== 'unknown',
+      ),
       bucket: field.bucket,
       decided: false,
       field: true,
@@ -308,6 +319,7 @@ function merged(before: ReviewItem, item: ReviewItem): ReviewItem {
   }
   const text = join(before.text, item.text);
   const required = before.required || item.required;
+  const requiredKnown = before.requiredKnown || item.requiredKnown;
   if (before.kind === 'question' && item.kind === 'question') {
     // A label, then its choices on the next line: the type is the choices'.
     const typed = before.options.length === 0 && item.options.length > 0 ? item : before;
@@ -316,6 +328,7 @@ function merged(before: ReviewItem, item: ReviewItem): ReviewItem {
       ...settled,
       text,
       required,
+      requiredKnown,
       type: typed.type,
       alternatives: typed.alternatives,
       options: [...before.options, ...item.options],
@@ -332,6 +345,7 @@ function merged(before: ReviewItem, item: ReviewItem): ReviewItem {
       ...settled,
       text,
       required,
+      requiredKnown,
       rows: [...before.rows, ...item.rows],
       rowCount: before.rowCount + item.rowCount,
       details: [...before.details, ...item.details],
@@ -342,6 +356,7 @@ function merged(before: ReviewItem, item: ReviewItem): ReviewItem {
     ...settled,
     text,
     required,
+    requiredKnown,
     details: [...host.details, ...extras(other)],
   };
 }
@@ -381,6 +396,7 @@ function apply(
         type: null,
         alternatives: [],
         required: false,
+        requiredKnown: false,
         decided: true,
       });
     case 'question':
@@ -436,6 +452,7 @@ function apply(
           type,
           alternatives: chipsFor(type),
           required: first && item.required,
+          requiredKnown: first && item.requiredKnown,
           decided: true,
         };
       };

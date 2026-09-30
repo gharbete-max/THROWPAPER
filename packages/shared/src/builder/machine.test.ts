@@ -3,6 +3,7 @@ import { FORM_TEMPLATES } from '../forms/templates.js';
 import { definitionProblems } from '../forms/helpers.js';
 import { emptyDefinition } from '../forms/definition.js';
 import { jsonEqual } from './changes.js';
+import { labelledOptions, newQuestion } from './fields.js';
 import { BUILDER_GRAPH } from './graph/nodes.js';
 import type { BuilderGraph, Node, Op } from './graph/schema.js';
 import {
@@ -10,6 +11,7 @@ import {
   back,
   begin,
   edit,
+  importQuestions,
   jumpTargets,
   replay,
   rewind,
@@ -39,6 +41,35 @@ const fresh = (canChangeBrand = false) =>
     title: {},
     pending: { brandKitExists: false, canChangeBrand },
   });
+
+/**
+ * A form read from a document (S12): a question whose "required" the document did not say, and a
+ * choice with its options printed — what the walk over an imported form starts from.
+ */
+const imported = () => {
+  const locale = 'sv-SE';
+  const text = newQuestion({
+    id: 'q-namn',
+    key: 'namn',
+    type: 'short_text',
+    label: { [locale]: 'Namn' },
+    required: false,
+  });
+  const choice = {
+    ...newQuestion({
+      id: 'q-dag',
+      key: 'dag',
+      type: 'single_select',
+      label: { [locale]: 'Vilken dag?' },
+      required: true,
+    }),
+    options: labelledOptions([], ['Fredag', 'Lördag'], locale),
+  } as typeof text;
+  return importQuestions(G, fresh(true), [text, choice], {
+    'q-namn': ['kind'],
+    'q-dag': ['kind', 'required', 'options'],
+  });
+};
 
 const nodeAt = (c: Conversation): Node => {
   const node = G.nodes.find((candidate) => candidate.id === c.state.cursor);
@@ -187,8 +218,9 @@ describe('every answer, from every state a person can reach', () => {
   it('is accepted, keeps a publishable draft publishable, replays and undoes exactly', () => {
     const seen = new Set<string>();
     const reached = new Set<string>();
-    // Both kinds of person: the colours are asked only of an administrator (owner question 8).
-    let frontier: Conversation[] = [fresh(false), fresh(true)];
+    // Both kinds of person: the colours are asked only of an administrator (owner question 8); and
+    // a form read from a document, which the conversation walks (S12).
+    let frontier: Conversation[] = [fresh(false), fresh(true), imported()];
     let transitions = 0;
     for (let depth = 0; depth < DEPTH; depth += 1) {
       const next: Conversation[] = [];
@@ -212,7 +244,7 @@ describe('every answer, from every state a person can reach', () => {
       frontier = next;
     }
     // The walk really went everywhere: every node is reached by some answer — the guess and
-    // what it seeds included, since S11 makes a guess.
+    // what it seeds included, since S11 makes a guess, and the walk over an imported form (S12).
     expect([...reached].sort()).toEqual(G.nodes.map((node) => node.id).sort());
     expect(transitions).toBeGreaterThan(5000);
   });
