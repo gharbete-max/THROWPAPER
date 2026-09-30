@@ -3,8 +3,8 @@
 The two doors meet: a form read from a document can be walked by the conversation, asking only what
 the document left open (acceptance scenario S6, `PREDICTIVE-BUILDER.md`); a PDF it was read from
 comes back filled in, as that paper; and reading the same form again adds what is new and asks
-before it removes anything (`IMPORT-PIPELINE.md`, stage 9). Three commits, in this order: S12a,
-S12b, S12c. This is the plan each is built to; where the build changes it, the section says so.
+before it removes anything (`IMPORT-PIPELINE.md`, stage 9). Four commits, in this order: S12a,
+S12b, and S12c in two — stage 9's comparison, then the update on screen. This is the plan each is built to; where the build changes it, the section says so.
 
 ## S12a — the conversation over an imported form
 
@@ -156,12 +156,107 @@ so before the press (`roomForPaper`, `review.paperFull`); nothing is uploaded.
 
 ## S12c — importing the same form again
 
-Stage 9 as `IMPORT-PIPELINE.md` specifies it: the same bytes, nothing to do; otherwise new questions
-matched to the draft's by their origin fingerprint, then by label similarity near their place;
-additions applied, each a step; removals, reorders and reworded labels listed and asked about, one
-decision each; collected answers never touched. Planned in detail when S12b lands.
+Stage 9 (`IMPORT-PIPELINE.md`): a form read from a document is read again — the same document, or a
+new version of it — and the form is brought up to date with it, without losing anything the person
+did. What is new in the document is added; what the document removed, reworded or moved is listed,
+one decision each, and nothing is removed, reworded or moved without a press (`CLAUDE.md` rule 7,
+non-negotiable 4). Answers already collected are never touched: re-import edits the draft, and
+every published version stays what it is.
+
+### Where it starts
+
+The review screen, `/forms/:id/import`, on a form that already has questions: the editor's paper
+menu offers "Update from a document" beside "From paper", and the review reads the document as it
+always does. What changes is what "Use these questions" does, and what the screen says before it.
+
+### Matching, without a stored record
+
+A question's id is its source text's fingerprint — `normalise(label) | ordinal | section` — made
+once when it was imported and never recomputed (`PREDICTIVE-BUILDER.md`, "Stable ids"). So the
+document read again, turned into questions **as if into an empty form**, gives each question the id
+it had then, if the document still says the same thing in the same place. That is the "origin
+fingerprint" the brief asks for, and it needs nothing stored: the ids are the form's, not an
+author's (the builder's sidecar is one per form **and author**, so a record kept there would be
+invisible to a colleague who reads the document again).
+
+`compareImport` (`@tp/shared/import`, `reimport.ts`, pure) takes the form's fields and the
+document's, each with its text (a question's label, a heading's title, a text's body) and its
+ordinal (1-based, in its own list), and matches them:
+
+1. **By id** — the document's field made with the id a form field has. The document did not change
+   there: the form's own wording and place, whatever the person made of them, are theirs, and
+   nothing is asked.
+2. **By wording near its place** — in document order, each unmatched document field to the
+   unmatched form field of the same family (a question to a question, a heading to a heading, a
+   text to a text) with the highest Dice similarity of their texts' character bigrams, at least
+   4/5 compared as integers (`5 × 2 × shared ≥ 4 × (a + b)`), whose ordinal is within 3 of its own;
+   ties to the lower ordinal. The document changed there — its wording, or what comes before it.
+3. **By the same wording anywhere** (added while building) — a document field whose normalised
+   text is that of exactly one unmatched form field of its family, and of no other unmatched
+   document field. Four questions inserted before "Namn" put it four places from where it was, and
+   without this it would have been added a second time, and the first asked about as gone
+   (`CAVEATS.md` #126).
+
+Then, for the person:
+
+| What | When | Done |
+| --- | --- | --- |
+| **Added** | a document field matched by nothing, and whose id the form never used | applied: at its place in the document, after the form field matched to the nearest document field before it (first, if none), each with what the document decided (S12a) |
+| **Added back?** | a document field whose id the form used once and the person removed (`retiredIds`) | asked, default no: the person took it out |
+| **Reworded** | matched by wording, and the texts differ | asked: "The document now says …" — *Use the document's wording* / *Keep the form's* (default) |
+| **No longer in the document** | a form field the import made (`source: 'import'` in this author's sidecar) matched by nothing | asked: *Remove* / *Keep* (default) |
+| **Moved** | matched by wording, and out of the document's order: not in the longest run of matched fields whose form order is the document's (every match weighs the same; ties to the earlier document field) | asked: *Move it* / *Leave it* (default) |
+
+A field matched by id never counts as reworded or moved: a difference there is the person's edit.
+A question added by hand, or made by the conversation, is never offered for removal; nor is any
+question in a colleague's session, whose sidecar does not say where it came from.
+
+**The same bytes.** A PDF whose SHA-256 is a key the form keeps (`definition.paper.sources`, which
+are `<sha256>.pdf`) is the document the form was made from: "This is the document your form was
+made from, and it has not changed." Nothing is compared. Any other document that compares to
+nothing — no additions, nothing asked — says "Your form already has everything in this document."
+
+### Applying it
+
+"Update the form" is **one step** in the conversation (`reimport` in the machine, answer
+`{ kind: 'reimport', added, removed, reworded, moved }`), as "Use these questions" was: Back undoes
+all of it, and a replay gives it exactly. Additions are recorded as imported, with their decided
+slots, and the conversation goes on at "Go through the questions from your document?", which walks
+what the document left open in them. A removed question's id stays retired. The additions pass the
+review's gate — nothing that needs your eye is added unsettled — and matched fields do not: they
+are not being added.
+
+**The paper does not change.** A re-import adds no source and no box: the new questions are not on
+the paper the form keeps, and `paper.ts` does not draw them (a question added by hand is the same),
+which the screen says when the form keeps paper. Making a new version of a document the form's
+paper — moving every matched question's box onto it — is not in S12 (below).
+
+### Tests
+
+- `fixtures/reimport/*.json` — a document before and after, and what `compareImport` must give,
+  compared whole: the same document; a question inserted at the top (the rest by wording, none
+  moved); one reworded; one removed; two swapped; a heading reworded; a question removed by the
+  person and still in the document; a match just outside the three places; a tie; a question
+  moved by hand beside one the document reworded (only the rewording asked); one moved past an
+  unchanged one (asked). Written before the code, run by `reimport.test.ts`, which also holds the
+  Dice arithmetic to exact fractions; each rule's removal, and the order's tie-break and weighting,
+  was checked by mutation against them. *Built: thirteen fixtures, 23 tests.*
+- `machine`: the step — additions at their places, removals, rewordings, moves — Back exact, replay,
+  the session round trip, a refused plan (an id taken, a removal of a question not there).
+- `review.test.ts`: the form's fields and the document's, as `compareImport` is given them; the
+  same bytes; what "Update the form" adds, through the machine.
+- `e2e/reimport.spec.ts`: a form made from a paste, a question reworded and one removed by hand;
+  the new version read: one added, one reworded (kept), one no longer in the document (removed),
+  the hand edit untouched; a PDF read again unchanged says so and changes nothing.
 
 ## Not in S12
+
+- **A new version of a document as the form's paper.** A re-import leaves the paper as it is; its
+  new questions are not drawn on it. Replacing it means moving every matched question's box, and
+  deciding what becomes of boxes drawn by hand on the old pages.
+- **A form made from two documents**, read again one at a time: the other document's questions
+  are listed as no longer in it, each kept unless removed. Knowing which document each question
+  came from needs a record per form, which the builder does not keep.
 
 - **A format check** (personnummer, organisation number): stage 5 proposes one (#27), but the
   form schema has no check to put it in. Adding one reaches the public form, the API's validation

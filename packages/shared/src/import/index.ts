@@ -67,4 +67,24 @@ export type { FieldReading, FieldsResult, FormFieldBox } from './fields.js';
 export { readLayout } from './pipeline.js';
 export { answerBox, gridBoxes, optionBoxes, paperAnchor } from './anchors.js';
 export type { PageBox } from './anchors.js';
+export {
+  compareImport,
+  dice,
+  DICE_AT_LEAST,
+  NEAR_PLACES,
+  normaliseEntry,
+  nothingChanged,
+  planImport,
+} from './reimport.js';
+export type {
+  Comparison,
+  CompareInput,
+  EntryFamily,
+  EntryMatch,
+  FormEntry,
+  ImportChoices,
+  ImportEntry,
+  ImportPlan,
+  Placement,
+} from './reimport.js';
 export type { LayoutReading } from './pipeline.js';

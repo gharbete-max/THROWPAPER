@@ -1,0 +1,98 @@
+{
+  "note": "Two questions swapped in the document: both ids changed with their ordinals, both are matched by wording, and one of them is out of the document's order. The longest run in order stays, ties to the earlier document field, so 'Namn' is the one asked about; moved, it goes after 'Telefon'.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-telefon-2",
+      "family": "question",
+      "text": "Telefon"
+    },
+    {
+      "id": "q-namn-3",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-telefon",
+        "by": "wording"
+      },
+      {
+        "formId": "q-namn",
+        "by": "wording"
+      },
+      {
+        "formId": "q-dag",
+        "by": "id"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [],
+    "gone": [],
+    "moved": [
+      2
+    ]
+  },
+  "choices": {
+    "addBack": [],
+    "reword": [],
+    "remove": [],
+    "move": [
+      2
+    ]
+  },
+  "plan": {
+    "place": [
+      {
+        "kind": "move",
+        "formId": "q-namn",
+        "after": "q-telefon"
+      }
+    ],
+    "reword": [],
+    "remove": []
+  }
+}

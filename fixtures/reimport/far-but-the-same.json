@@ -1,0 +1,118 @@
+{
+  "note": "Four questions inserted before 'Namn': it is four places from where it was, outside the three the plan allows, so wording near its place does not find it. Its wording is the same and no other field on either side has it, so it is matched anyway (the build's third rule): otherwise 'Namn' would be added a second time. Nothing moved.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-a",
+      "family": "question",
+      "text": "Förnamn"
+    },
+    {
+      "id": "q-b",
+      "family": "question",
+      "text": "Efternamn"
+    },
+    {
+      "id": "q-c",
+      "family": "question",
+      "text": "Personnummer"
+    },
+    {
+      "id": "q-d",
+      "family": "question",
+      "text": "Adress"
+    },
+    {
+      "id": "q-namn-6",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefon-7",
+      "family": "question",
+      "text": "Telefon"
+    },
+    {
+      "id": "q-dag-8",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": "q-namn",
+        "by": "wording"
+      },
+      {
+        "formId": "q-telefon",
+        "by": "wording"
+      },
+      {
+        "formId": "q-dag",
+        "by": "wording"
+      }
+    ],
+    "added": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "addBack": [],
+    "reworded": [],
+    "gone": [],
+    "moved": []
+  }
+}

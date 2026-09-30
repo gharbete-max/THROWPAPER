@@ -1,0 +1,105 @@
+{
+  "note": "A question inserted after the heading: the ones after it moved one place down, so their fingerprints (and ids) changed; each is matched by its wording one place from where it was. The new one is added after the heading, nothing is moved.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-epost",
+      "family": "question",
+      "text": "E-post"
+    },
+    {
+      "id": "q-namn-3",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefon-4",
+      "family": "question",
+      "text": "Telefon"
+    },
+    {
+      "id": "q-dag-5",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": "q-namn",
+        "by": "wording"
+      },
+      {
+        "formId": "q-telefon",
+        "by": "wording"
+      },
+      {
+        "formId": "q-dag",
+        "by": "wording"
+      }
+    ],
+    "added": [
+      1
+    ],
+    "addBack": [],
+    "reworded": [],
+    "gone": [],
+    "moved": []
+  },
+  "choices": {
+    "addBack": [],
+    "reword": [],
+    "remove": [],
+    "move": []
+  },
+  "plan": {
+    "place": [
+      {
+        "kind": "add",
+        "index": 1,
+        "after": "h-anmalan"
+      }
+    ],
+    "reword": [],
+    "remove": []
+  }
+}

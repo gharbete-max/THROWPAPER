@@ -1,0 +1,81 @@
+{
+  "note": "A short label lengthened ('Telefon' to 'Telefonnummer'): Dice 12/18, under 4/5, so they are not the same question. The new wording is added, and the old question is asked about as no longer in the document; nothing is removed without a press.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefonnummer",
+      "family": "question",
+      "text": "Telefonnummer"
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": "q-dag",
+        "by": "id"
+      }
+    ],
+    "added": [
+      2
+    ],
+    "addBack": [],
+    "reworded": [],
+    "gone": [
+      "q-telefon"
+    ],
+    "moved": []
+  }
+}

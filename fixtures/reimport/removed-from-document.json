@@ -1,0 +1,91 @@
+{
+  "note": "A question the document no longer has, and one the person added by hand. Only the one the import made is asked about; the person removes it. The hand-made one is never offered.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    },
+    {
+      "id": "q-allergier",
+      "family": "question",
+      "text": "Allergier",
+      "fromDocument": false
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-dag-4",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      },
+      {
+        "formId": "q-dag",
+        "by": "wording"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [],
+    "gone": [
+      "q-telefon"
+    ],
+    "moved": []
+  },
+  "choices": {
+    "addBack": [],
+    "reword": [],
+    "remove": [
+      "q-telefon"
+    ],
+    "move": []
+  },
+  "plan": {
+    "place": [],
+    "reword": [],
+    "remove": [
+      "q-telefon"
+    ]
+  }
+}

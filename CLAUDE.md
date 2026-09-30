@@ -46,8 +46,9 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 tables), stage 5 (each question's likely type, by integer weights over word lists in
                 twelve languages, with its three likeliest), stage 7 (confidence and bucket, the OCR
                 cap), a PDF's own form fields over its text, and all of them in one call, each with
-                its debug artifact; and the paper twin's boxes, where each question's answer and
-                each option's tick go on the page it was read from (@tp/shared/import); free text
+                its debug artifact; the paper twin's boxes, where each question's answer and each
+                option's tick go on the page it was read from; and stage 9's comparison of a form
+                with its document read again (@tp/shared/import); free text
                 read by rules — normalisation, word lists and built-in aliases in twelve languages,
                 the rules for learned ones, the ladder T0–T8, the committed sigmoid table, and an
                 integer logarithm and exponential (@tp/shared/interpret)

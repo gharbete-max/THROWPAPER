@@ -81,7 +81,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S9** Segment + classify + score | `import/segment/`, `import/classify/` (`weights.json`, lexicons, sigmoid table), buckets | the 3 segment and 1 classify fixtures; #22–#30; every feature | `packages/shared`, `apps/forms` (the worker, the corpus, one message) | **done** — in review, PR #147 |
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
-| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | in progress — S12a (the walk, acceptance S6) and S12b (the paper twin) done, in review, PR #147; S12c next (`CONVERGENCE.md`) |
+| **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | in progress — S12a (the walk, acceptance S6), S12b (the paper twin) and stage 9's comparison done, in review, PR #147; the update on screen next (`CONVERGENCE.md`) |
 | **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
 
 ## Log
@@ -405,3 +405,13 @@ when each slice ends.)*
   filled in, downloaded and read with pdf.js, each answer inside its box on its label's line
   (a shifted box fails it, checked by mutation); a file that cannot be kept; a full form. Next:
   S12c, importing the same form again.
+- **S12c, part one: stage 9's comparison (2026-09-30).** What: `compareImport` and `planImport`
+  (`import/reimport.ts`, pure, integer): a form's fields and its document read again, matched by
+  id — the id is the source text's fingerprint, so an unchanged field has the one it was given and
+  nothing needs storing per author — then by Dice at least 4/5 within three places, then by the
+  same wording anywhere when it is one field's on each side; what is added, asked back, reworded,
+  gone or moved, and the plan the person's choices make of it. Why: the plan lands before the code,
+  and the comparison is the part a test can freeze. Found on the way: without the third rule, four
+  questions inserted before one would have added it twice (#126). Tests: eleven fixtures in
+  `fixtures/reimport/`, written first and compared whole; the Dice arithmetic exactly; the edges.
+  Next: the machine's step and the review screen's update.
