@@ -3,6 +3,12 @@
 **Status:** accepted 2026-09-16 — see "Decided" at the end
 **Date:** 2026-09-15
 
+> **Proposed to be superseded in part (2026-09-25):** ADR 0018 (proposed) would replace this ADR's
+> rule that OCR and layout "never create a field": rules may *propose* questions from a document,
+> and a review screen that is never skipped has a person confirm every one. Everything else here —
+> browser-side parsing, the private store, the caps, verbatim wording — stands. Until ADR 0018 is
+> accepted, this ADR governs.
+>
 > **Since written:** the **mapping** half of step one is built —
 > `packages/shared/src/forms/import-acroform.ts` turns a list of AcroForm field descriptors into a
 > `FormDefinition`, mirroring `importSurveyJson`. That needs none of the decisions below, because

@@ -1,0 +1,77 @@
+{
+  "fixture": "page-break-continuation",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Adress",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": { "raw": "3.", "family": "arabic", "style": "dot", "path": [3], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Telefon",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p2-l2",
+          "runId": "r-p1-l2",
+          "lineIds": ["p2-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "4.", "family": "arabic", "style": "dot", "path": [4], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "E-post",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p2-l3",
+          "runId": "r-p1-l2",
+          "lineIds": ["p2-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "5.", "family": "arabic", "style": "dot", "path": [5], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Allergier",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l5"],
+      "skippedLineIds": ["p1-l1", "p1-l6", "p2-l1", "p2-l4"]
+    }
+  }
+}

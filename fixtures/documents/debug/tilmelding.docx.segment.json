@@ -1,0 +1,14 @@
+{
+  "stage": "segment",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "c5547aeb47cf380d77fbdece4d2e11192d50d3cca2a171bae30b9ef3664c8c41",
+  "decisions": [
+    {"id":"segment:p1-l1","rule":"S1","verdict":"heading","subject":["p1-l1"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l2","rule":"S8","verdict":"instruction","subject":["p1-l2"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l3","rule":"S6","verdict":"question:blank","subject":["p1-l3"],"evidence":{"room":0}},
+    {"id":"segment:p1-l4","rule":"S6","verdict":"question:blank","subject":["p1-l4"],"evidence":{"room":0}},
+    {"id":"segment:p1-l5","rule":"S6","verdict":"question:blank","subject":["p1-l5"],"evidence":{"room":0}},
+    {"id":"segment:p1-l6","rule":"S6","verdict":"question:blank","subject":["p1-l6"],"evidence":{"room":0}}
+  ]
+}

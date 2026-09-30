@@ -45,6 +45,18 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * budget is set well above its measurement, so an ordinary feature does not trip it and a doubling
  * does.
  *
+ * The guided builder (ADR 0017, slices S1–S5) then took the total from 774.0 to 860.3 KB: one
+ * lazily-loaded chunk of 55 KB gzipped — about 25 KB of it the built-in aliases in twelve
+ * languages — that only an author pressing "Start from questions" downloads, and its words in all
+ * twelve catalogues. By S4 it had left the total 2 KB under 850, so the total was raised to 1 000:
+ * about the headroom it had when it was set (entry 6.7 and stylesheet 15.2 are well inside theirs).
+ *
+ * S10 took it back down from 978.4 to 914.4 without removing a feature: `@tp/shared` now declares
+ * `"sideEffects": false`, so a value imported from one of its barrels no longer brings every module
+ * behind it, and the import's stages run only in their worker — the page no longer carries a
+ * second copy for engines without workers, which no supported browser is. The editor's own chunk,
+ * which every author opening a form downloads, went from 42.7 to 29.4.
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -57,7 +69,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 850,
+  total: 1000,
 } as const;
 
 function gzippedKb(path: string): number {
@@ -120,6 +132,63 @@ const rows = (Object.keys(BUDGET_KB) as Array<keyof typeof BUDGET_KB>).map((name
 }));
 
 console.table(rows);
+
+/**
+ * The import's stages run in the paper door's worker, and nowhere else.
+ *
+ * Their word lists in twelve languages are the largest thing the door loads. Until S10 one value
+ * imported from `@tp/shared/import` by the paper door carried every stage's lists into the
+ * editor's own chunk, so every author opening a form downloaded them (14.9 KB gzipped), and
+ * nothing failed: the app worked, and was merely bigger. `@tp/shared` now says it has no side
+ * effects, so the bundler can leave out what is not used — and this is what notices if it ever
+ * stops being able to. A word list's key anywhere but in the worker fails the build.
+ */
+const STAGE_MARKERS = ['lexiconVersion', 'booleanPairs', 'tableWords'];
+const WORKER = /(^|[/\\])import\.worker-[^/\\]*\.js$/;
+const strays = everyBundleFile(DIST)
+  .filter((path) => path.endsWith('.js') && !WORKER.test(path))
+  .filter((path) => {
+    const source = readFileSync(path, 'utf8');
+    return STAGE_MARKERS.some((marker) => source.includes(marker));
+  });
+const workers = everyBundleFile(DIST).filter((path) => WORKER.test(path));
+if (workers.length !== 1) {
+  console.error(
+    `Expected one import worker chunk, found ${workers.length} — has the build changed?`,
+  );
+  process.exit(1);
+}
+if (strays.length > 0) {
+  console.error(
+    `The import's stages are in ${strays.map((path) => path.slice(DIST.length + 1)).join(', ')},\n` +
+      '  not only in the worker. Something outside the paper door imports a value from\n' +
+      '  @tp/shared/import that brings the word lists with it; import it from where it is used.',
+  );
+  process.exit(1);
+}
+
+/**
+ * The template catalogue is the API's (`GET /v1/form-templates`): the gallery and the guess (S11)
+ * both fetch it, so no chunk carries every template in every language (36 KB gzipped). One import
+ * of `FORM_TEMPLATES` into the guided builder's recipes put it in the editor's own chunk once; a
+ * question only the catalogue has, anywhere in the bundle, fails the build. Not a template's name:
+ * the recipes carry those, so the guess is named without the catalogue (`CAVEATS.md` #121).
+ */
+const CATALOGUE_MARKERS = ['Welche Versammlung'];
+const catalogue = everyBundleFile(DIST)
+  .filter((path) => path.endsWith('.js'))
+  .filter((path) => {
+    const source = readFileSync(path, 'utf8');
+    return CATALOGUE_MARKERS.some((marker) => source.includes(marker));
+  });
+if (catalogue.length > 0) {
+  console.error(
+    `The template catalogue is in ${catalogue.map((path) => path.slice(DIST.length + 1)).join(', ')}.\n` +
+      '  The screen gets it from GET /v1/form-templates; import it from @tp/shared/forms only on the\n' +
+      '  server, or in tests.',
+  );
+  process.exit(1);
+}
 
 const broken = rows.filter((row) => row.over);
 if (broken.length > 0) {

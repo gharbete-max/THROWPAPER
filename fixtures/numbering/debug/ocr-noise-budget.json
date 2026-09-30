@@ -1,0 +1,12 @@
+{
+  "stage": "score",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "228fee00291028a3d989d19b482d4d66c09439775d36dc5dfb04ddd9db174bbd",
+  "decisions": [
+    {"id":"score:p1-l1","rule":"Q1","verdict":"auto","subject":["p1-l1"],"evidence":{"answer":976,"bias":500,"confidence":881,"required":"flag","sum":2000,"verdict":1500}},
+    {"id":"score:p1-l2","rule":"Q1","verdict":"review","subject":["p1-l2"],"evidence":{"answer":769,"bias":500,"cap":"ocr 41","confidence":881,"required":"flag","sum":2000,"verdict":1500}},
+    {"id":"score:p1-l3","rule":"Q1","verdict":"auto","subject":["p1-l3"],"evidence":{"answer":953,"bias":500,"confidence":881,"required":"flag","sum":2000,"verdict":1500}},
+    {"id":"score:p1-l4","rule":"Q1","verdict":"review","subject":["p1-l4"],"evidence":{"answer":769,"bias":500,"cap":"ocr 58","confidence":881,"required":"flag","sum":2000,"verdict":1500}}
+  ]
+}

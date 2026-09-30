@@ -1,0 +1,66 @@
+{
+  "document": "ilmoittautuminen",
+  "locale": "fi",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Nimi: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Yhteystiedot",
+      "items": [
+        {
+          "marker": "a)",
+          "label": "Puhelin: ______________________"
+        },
+        {
+          "marker": "b)",
+          "label": "Sähköposti: ___________________"
+        }
+      ]
+    },
+    {
+      "marker": "3.",
+      "label": "Ruokavalio: ________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Ilmoittautuminen vuosikokoukseen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Jos haluat osallistua vuosikokoukseen, täytä tämä lomake ja palauta se meille perjantaihin mennessä. Meidän täytyy tietää, kuinka moni teistä tulee, mitä haluatte syödä ja onko kenelläkään teistä allergioita. On tärkeää, että kaikki tiedot ovat oikein, koska muuten emme voi lähettää kutsua ajoissa. Kirjoita selvästi ja tarkista, että olet vastannut kaikkiin kysymyksiin ennen kuin palautat lomakkeen. Jos jokin on epäselvää, sihteeristö auttaa sinua mielellään ilmoittautumisessa, ja voit myös soittaa meille tai lähettää sähköpostia kokouksen jälkeen."
+    },
+    {
+      "kind": "question",
+      "label": "Nimi",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "heading",
+      "text": "Yhteystiedot"
+    },
+    {
+      "kind": "question",
+      "label": "Puhelin",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Sähköposti",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Ruokavalio",
+      "answer": "blank",
+      "type": "short_text"
+    }
+  ]
+}

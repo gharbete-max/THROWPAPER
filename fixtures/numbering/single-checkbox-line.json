@@ -1,0 +1,191 @@
+{
+  "fixture": "single-checkbox-line",
+  "caveats": ["single-checkbox-line"],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S9",
+  "summary": "Lines that each start with one checkbox are the options of the question directly above them; with no question above, each is a question of its own that is ticked or not — an opt-in, or a consent, whose text is the label, verbatim.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "paste",
+      "extractor": "fixture: pasteDocument (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [{ "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1926, "bands": [1000] }],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 3576, "y1": 1386 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Vilka dagar kan du vara med?",
+                "words": [
+                  { "text": "Vilka", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1460, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "dagar", "start": 6, "box": { "x0": 1552, "y0": 895, "x1": 2012, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "kan", "start": 12, "box": { "x0": 2104, "y0": 895, "x1": 2380, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "du", "start": 16, "box": { "x0": 2472, "y0": 895, "x1": 2656, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "vara", "start": 19, "box": { "x0": 2748, "y0": 895, "x1": 3116, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "med?", "start": 24, "box": { "x0": 3208, "y0": 895, "x1": 3576, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 3576, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "☐ Lördag",
+                "words": [
+                  { "text": "☐", "start": 0, "box": { "x0": 1000, "y0": 1075, "x1": 1092, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Lördag", "start": 2, "box": { "x0": 1184, "y0": 1075, "x1": 1736, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1075, "x1": 1736, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "☐ Söndag",
+                "words": [
+                  { "text": "☐", "start": 0, "box": { "x0": 1000, "y0": 1255, "x1": 1092, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Söndag", "start": 2, "box": { "x0": 1184, "y0": 1255, "x1": 1736, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1255, "x1": 1736, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 1615, "x1": 6980, "y1": 1926 },
+            "lines": [
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "☐ Jag vill ha föreningens nyhetsbrev.",
+                "words": [
+                  { "text": "☐", "start": 0, "box": { "x0": 1000, "y0": 1615, "x1": 1092, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Jag", "start": 2, "box": { "x0": 1184, "y0": 1615, "x1": 1460, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "vill", "start": 6, "box": { "x0": 1552, "y0": 1615, "x1": 1920, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "ha", "start": 11, "box": { "x0": 2012, "y0": 1615, "x1": 2196, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "föreningens", "start": 14, "box": { "x0": 2288, "y0": 1615, "x1": 3300, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "nyhetsbrev.", "start": 26, "box": { "x0": 3392, "y0": 1615, "x1": 4404, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1615, "x1": 4404, "y1": 1746 },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "☐ Jag godkänner att föreningen sparar mina uppgifter enligt GDPR.",
+                "words": [
+                  { "text": "☐", "start": 0, "box": { "x0": 1000, "y0": 1795, "x1": 1092, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Jag", "start": 2, "box": { "x0": 1184, "y0": 1795, "x1": 1460, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "godkänner", "start": 6, "box": { "x0": 1552, "y0": 1795, "x1": 2380, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "att", "start": 16, "box": { "x0": 2472, "y0": 1795, "x1": 2748, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "föreningen", "start": 20, "box": { "x0": 2840, "y0": 1795, "x1": 3760, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "sparar", "start": 31, "box": { "x0": 3852, "y0": 1795, "x1": 4404, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "mina", "start": 38, "box": { "x0": 4496, "y0": 1795, "x1": 4864, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "uppgifter", "start": 43, "box": { "x0": 4956, "y0": 1795, "x1": 5784, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "enligt", "start": 53, "box": { "x0": 5876, "y0": 1795, "x1": 6428, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "GDPR.", "start": 60, "box": { "x0": 6520, "y0": 1795, "x1": 6980, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1795, "x1": 6980, "y1": 1926 },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "paste",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

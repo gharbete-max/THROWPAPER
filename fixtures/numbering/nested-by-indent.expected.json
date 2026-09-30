@@ -1,0 +1,114 @@
+{
+  "fixture": "nested-by-indent",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Mat",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "a)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l1",
+          "label": "Kött",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "b)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l1",
+          "label": "Fisk",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Dryck",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l5",
+          "runId": "r-p1-l5",
+          "lineIds": ["p1-l5"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "a)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l4",
+          "label": "Vin",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l5",
+          "lineIds": ["p1-l6"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "b)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l4",
+          "label": "Vatten",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": [],
+      "skippedLineIds": []
+    }
+  }
+}

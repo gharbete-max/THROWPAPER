@@ -1,0 +1,40 @@
+{
+  "fixture": "blank-line-leaders",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "question",
+          "lineIds": ["p1-l1"],
+          "label": "Namn",
+          "answer": "blank",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": ["p1-l2"],
+          "label": "Adress",
+          "answer": "blank",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": ["p1-l3"],
+          "label": "Telefon",
+          "answer": "blank",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        { "kind": "instruction", "lineIds": ["p1-l4"], "text": "Vänta lite... vi ringer upp." }
+      ]
+    }
+  }
+}

@@ -56,7 +56,61 @@ export default tseslint.config(
   // registries, and it lives outside `apps/`.
   ...productBoundaries(),
   desktopHost(),
+  guidedCorePurity(),
 );
+
+/**
+ * The guided builder's core is pure and headless (`CLAUDE.md`, "Guided Builder & Import"; ADR
+ * 0017). Written as rules so it is enforced rather than remembered: no React, no DOM, no Node, no
+ * clock, no randomness, and none of the floating-point functions whose last bit differs between
+ * engines — which would make "same bytes in, same JSON out, on every machine" false (ADR 0019).
+ * Tests are exempt: they may read a fixture from disk.
+ */
+function guidedCorePurity() {
+  const math = ['exp', 'log', 'log2', 'log10', 'log1p', 'expm1', 'pow', 'random'].map(
+    (property) => ({
+      object: 'Math',
+      property,
+      message: 'Decisions are integers and committed tables (ADR 0019); Math.random is never used.',
+    }),
+  );
+  return {
+    files: ['packages/shared/src/{builder,interpret,import}/**/*.ts'],
+    ignores: ['**/*.test.ts'],
+    rules: {
+      'no-eval': 'error',
+      'no-new-func': 'error',
+      'no-implied-eval': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['react', 'react/*', 'react-dom', 'react-dom/*', 'node:*'],
+              message: 'The guided core is pure and headless: no React, no Node (CLAUDE.md).',
+            },
+          ],
+        },
+      ],
+      'no-restricted-globals': [
+        'error',
+        { name: 'parseFloat', message: 'Use packages/calc decimal helpers.' },
+        ...['window', 'document', 'localStorage', 'sessionStorage', 'fetch', 'performance'].map(
+          (name) => ({ name, message: 'The guided core has no DOM and no I/O (CLAUDE.md).' }),
+        ),
+      ],
+      'no-restricted-properties': [
+        'error',
+        ...math,
+        { object: 'Date', property: 'now', message: 'The guided core has no clock (CLAUDE.md).' },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        { selector: "NewExpression[callee.name='Date']", message: 'The guided core has no clock.' },
+      ],
+    },
+  };
+}
 
 /**
  * `apps/desktop` is not a product: it is the shell that **hosts** products on one computer (ADR

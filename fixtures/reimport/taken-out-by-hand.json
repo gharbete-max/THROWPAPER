@@ -1,0 +1,97 @@
+{
+  "note": "A question the person removed, still in the document with the id it had: not added again on its own; asked, and the person adds it back, at its place in the document.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [
+    "h-anmalan",
+    "q-namn",
+    "q-telefon",
+    "q-dag"
+  ],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon"
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      },
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": "q-dag",
+        "by": "id"
+      }
+    ],
+    "added": [],
+    "addBack": [
+      2
+    ],
+    "reworded": [],
+    "gone": [],
+    "moved": []
+  },
+  "choices": {
+    "addBack": [
+      2
+    ],
+    "reword": [],
+    "remove": [],
+    "move": []
+  },
+  "plan": {
+    "place": [
+      {
+        "kind": "add",
+        "index": 2,
+        "after": "q-namn"
+      }
+    ],
+    "reword": [],
+    "remove": []
+  }
+}

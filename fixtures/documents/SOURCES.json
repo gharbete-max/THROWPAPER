@@ -1,0 +1,247 @@
+{
+  "$comment": "The golden corpus (docs/plan/IMPORT-PIPELINE.md). Written for Loppa and dedicated to the public domain; built by `pnpm corpus:build`, never edited by hand.",
+  "licence": "CC0-1.0",
+  "tool": "LibreOffice 24.2.7.2",
+  "documents": [
+    {
+      "name": "anmalan-tva-spalter",
+      "language": "sv",
+      "summary": "A numbered list set in two columns in the middle of the page, with full-width text above and below and only ordinary spacing between: read down the left column, then the right.",
+      "features": [
+        "word-numbering",
+        "columns-inside-flow",
+        "column-break-continuation"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "anmalan-tva-spalter.pdf",
+          "sha256": "b4325a4ced9138321dcde8be159d4e106477563a85726a21e200c24505f06516"
+        },
+        "docx": {
+          "path": "anmalan-tva-spalter.docx",
+          "sha256": "2116a2859c81220ce3b9297ea6e2b59b3e677631336e273fea595b3496860103"
+        }
+      }
+    },
+    {
+      "name": "anmeldung",
+      "language": "de",
+      "summary": "A short German form: ordinary prose with \"1. Mai\" mid-sentence, and a Word list numbered 1. to 4.",
+      "features": [
+        "word-numbering",
+        "ordinal-mid-sentence",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "anmeldung.pdf",
+          "sha256": "9a04451ae0097555b71b814b9cacf87e7d56fd76d39b4bdb811853031950c310"
+        },
+        "docx": {
+          "path": "anmeldung.docx",
+          "sha256": "a22365785fe54a02a859930b0652fc8a5551c9008276b0298da1b9a80507c95f"
+        }
+      }
+    },
+    {
+      "name": "arsmote-anmalan",
+      "language": "sv",
+      "summary": "Two pages under a running header and a page-number footer: a long introduction, and a numbered list that starts on page 1 and ends on page 2, one of its paragraphs mentioning point 12.1 mid-sentence.",
+      "features": [
+        "word-numbering",
+        "page-break-continuation",
+        "repeated-header",
+        "footer-page-number",
+        "dotted-mid-sentence"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "arsmote-anmalan.pdf",
+          "sha256": "89e2254489ef8ae3af434f556f75d31892071a625203e80dedee7dd8b891a88f"
+        },
+        "docx": {
+          "path": "arsmote-anmalan.docx",
+          "sha256": "688758f4046ff4ae631c7f0aeb3924a942841ab2ac56ea14cce02e57a8677804"
+        }
+      }
+    },
+    {
+      "name": "enkat-rutnat",
+      "language": "sv",
+      "summary": "A survey in two parts under headings: numbered questions with lettered answers, then a grid of yes / no / don't know checkboxes in a ruled table.",
+      "features": [
+        "word-numbering",
+        "headings",
+        "checkbox-grid",
+        "ruled-table"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "enkat-rutnat.pdf",
+          "sha256": "56ce02f30868e0236cbedacc93a699a7ff8b38ecf44b551c460924e2ca594691"
+        },
+        "docx": {
+          "path": "enkat-rutnat.docx",
+          "sha256": "0f74fc716eee1ef61faf85506117dc97ba2e55e42d83b3958e397d2b1725a3e5"
+        }
+      }
+    },
+    {
+      "name": "event-registration",
+      "language": "en",
+      "summary": "Two pages under a running header, in English: sections numbered I. and II. by Word, numbered questions under each, and (a)–(d) answers under one of them; a ruled table of sessions follows.",
+      "features": [
+        "word-numbering",
+        "roman-sections",
+        "enclosed-letters",
+        "repeated-header",
+        "footer-page-number",
+        "ruled-table"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "event-registration.pdf",
+          "sha256": "059708c17445beb8cc1a6a5530f2b5b430739b48965aa32636692f1a58b2ee77"
+        },
+        "docx": {
+          "path": "event-registration.docx",
+          "sha256": "6670622a149fafd6418781e869ce36ee547daf608aad5d800efddfaf517bedb4"
+        }
+      }
+    },
+    {
+      "name": "ilmoittautuminen",
+      "language": "fi",
+      "summary": "A short Finnish form: ordinary prose, and a Word list with a lettered sub-list.",
+      "features": [
+        "word-numbering",
+        "sub-list",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "ilmoittautuminen.pdf",
+          "sha256": "f496752f63160bc05c169563eb8f32e1dec963489cebfeefa3929ebf23c16bc8"
+        },
+        "docx": {
+          "path": "ilmoittautuminen.docx",
+          "sha256": "b0e31037c8c72e34ff2f1ec21c3587eca2b10d6160940f67f78761a95a23d22b"
+        }
+      }
+    },
+    {
+      "name": "lagerschema",
+      "language": "sv",
+      "summary": "A ruled table of plain text — times, activities, places — with a header row, between an introduction and two numbered questions: read across each row, never down the columns.",
+      "features": [
+        "text-table",
+        "ruled-table",
+        "word-numbering",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "lagerschema.pdf",
+          "sha256": "017974d7b3e334459728852eaa7b30819e0b44747ca65837fabbfae3add53fcc"
+        },
+        "docx": {
+          "path": "lagerschema.docx",
+          "sha256": "fb9b0a5c6ca1ee877889c1f3d3cf89f47b4df5ae695468cfc3ea71078ead48c1"
+        }
+      }
+    },
+    {
+      "name": "medlemsansokan",
+      "language": "sv",
+      "summary": "A one-page membership application: a Word list with a lettered sub-list, blanks, a yes/no question with checkboxes, and a page-number footer.",
+      "features": [
+        "word-numbering",
+        "sub-list",
+        "blanks",
+        "checkboxes",
+        "footer-page-number"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "medlemsansokan.pdf",
+          "sha256": "5c9ca8fad075f1baaee9fedb7474b3d2ac009691b5692d8b87fa645e1ebfce47"
+        },
+        "docx": {
+          "path": "medlemsansokan.docx",
+          "sha256": "ee8ffa3f40412ddf2cb57585d6e293bc3287db1616f1963974e4f1d1ab8e9e36"
+        }
+      }
+    },
+    {
+      "name": "pamelding",
+      "language": "nb",
+      "summary": "A short Norwegian form: ordinary prose, and numbers typed into the text.",
+      "features": [
+        "typed-numbering",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "pamelding.pdf",
+          "sha256": "0be4197faf348f4146c82325d4c3e07ceb7fdaba9fc4d18fc63705659e4ed5d2"
+        },
+        "docx": {
+          "path": "pamelding.docx",
+          "sha256": "2cbf1f3f90380b8363e6c1ef0bb3b8212b4e5552138c625bedc2aae1c3d93702"
+        }
+      }
+    },
+    {
+      "name": "tilmelding",
+      "language": "da",
+      "summary": "A short Danish form: ordinary prose, and a Word list numbered 1), 2), 3), 4).",
+      "features": [
+        "word-numbering",
+        "nordic-numbering",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "tilmelding.pdf",
+          "sha256": "01c34e214eb5f399a6f933a5ae9dca9aed97dcacef9dba752c9c1c106fa0a632"
+        },
+        "docx": {
+          "path": "tilmelding.docx",
+          "sha256": "a16d2e83788bf85e3ca8dc5bdfb5e62d075e3d4b91e8a10f4439a643028765b5"
+        }
+      }
+    },
+    {
+      "name": "typade-nummer",
+      "language": "sv",
+      "summary": "Numbers typed into the text, not Word lists: \"1)\" items, a heading, \"1 -\" items with a spaced dash, then lettered answers under a question — read by the rules in both the PDF and the DOCX.",
+      "features": [
+        "typed-numbering",
+        "nordic-numbering",
+        "counter-reset-on-heading",
+        "letter-options"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "typade-nummer.pdf",
+          "sha256": "05a4df5f32e26dca8dbc40e7a0f411ecd75991345ba5b884a4c9d5f015630c20"
+        },
+        "docx": {
+          "path": "typade-nummer.docx",
+          "sha256": "45be74de92ccf94cf463b45a449956a6b38b5e658e0a2c19b58d5664f6bfdb96"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §4: the yes/no pairs of rule 4, the words by which a question points at a table (§4.2, CAVEATS #102), and the words that start a form number or a revision (rule 9). Compared lower-cased after NFKC. tableWords are word prefixes, so that an inflected form matches (tabellen, Tabelle, taulukkoon); for Chinese and Japanese they are substrings.",
+  "lexiconVersion": 1,
+  "booleanPairs": {
+    "da": [["ja", "nej"]],
+    "de": [["ja", "nein"]],
+    "en": [["yes", "no"]],
+    "es": [
+      ["sí", "no"],
+      ["si", "no"]
+    ],
+    "fi": [["kyllä", "ei"]],
+    "fr": [["oui", "non"]],
+    "is": [["já", "nei"]],
+    "ja": [["はい", "いいえ"]],
+    "nb": [["ja", "nei"]],
+    "ru": [["да", "нет"]],
+    "sv": [["ja", "nej"]],
+    "zh": [["是", "否"]]
+  },
+  "tableWords": {
+    "da": ["tabel"],
+    "de": ["tabelle"],
+    "en": ["table"],
+    "es": ["tabla"],
+    "fi": ["tauluk"],
+    "fr": ["tableau"],
+    "is": ["tafl", "töflu"],
+    "ja": ["表に", "表の", "下表", "表で"],
+    "nb": ["tabell"],
+    "ru": ["таблиц"],
+    "sv": ["tabell"],
+    "zh": ["表格", "下表"]
+  },
+  "metaWords": {
+    "da": ["blanket", "formular", "udgave", "version"],
+    "de": ["formular", "formblatt", "fassung", "stand", "version"],
+    "en": ["form", "rev", "revision", "version", "ver"],
+    "es": ["formulario", "versión", "revisión"],
+    "fi": ["lomake", "versio"],
+    "fr": ["formulaire", "version", "révision"],
+    "is": ["eyðublað", "útgáfa"],
+    "ja": ["様式", "版"],
+    "nb": ["skjema", "blankett", "utgave", "versjon"],
+    "ru": ["бланк", "форма", "редакция", "версия"],
+    "sv": ["blankett", "formulär", "utgåva", "version"],
+    "zh": ["表格编号", "版本"]
+  }
+}

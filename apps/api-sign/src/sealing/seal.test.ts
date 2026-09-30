@@ -1,7 +1,15 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { X509Certificate } from 'node:crypto';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
 import { apply, draftEnvelope, type Envelope, type EnvelopeEvent } from '@tp/signing';
-import { generateDevCertificate, loadSealer, type PemPair, type Sealer } from './certificate.js';
+import {
+  generateDevCertificate,
+  loadSealer,
+  readableCertificate,
+  type PemPair,
+  type Sealer,
+} from './certificate.js';
+import { withPaddedSerial } from '../test-certificate.js';
 import { coversWholeFile, extractSeal, opensslVerify } from './openssl-validator.js';
 import { sealEnvelope, type SealInput } from './seal.js';
 import { createHash } from 'node:crypto';
@@ -159,6 +167,52 @@ describe('the seal certificate', () => {
     await expect(loadSealer({ keyPem: other.keyPem, certPem: pair.certPem })).rejects.toThrow(
       /does not belong/,
     );
+  });
+
+  /**
+   * One certificate in 256 once had a serial OpenSSL cannot read — a first byte of 0x00 before one
+   * below 0x80 is padding DER forbids — and every seal made with it failed to verify. The random
+   * bytes are forced to exactly that start here, so the case is tested every run, not by chance.
+   */
+  it('makes a serial OpenSSL reads even when the random bytes begin as padding', async () => {
+    const real = crypto.getRandomValues.bind(crypto);
+    let armed = true;
+    const spy = vi.spyOn(crypto, 'getRandomValues').mockImplementation(((
+      array: Uint8Array<ArrayBuffer>,
+    ) => {
+      real(array);
+      if (armed && array.byteLength === 16) {
+        array[0] = 0x00;
+        array[1] = 0x05;
+        armed = false;
+      }
+      return array;
+    }) as typeof crypto.getRandomValues);
+    try {
+      const padded = await generateDevCertificate();
+      expect(armed).toBe(false);
+      expect(readableCertificate(padded.certPem)).toBe(true);
+      const first = Number.parseInt(
+        new X509Certificate(padded.certPem).serialNumber.slice(0, 2),
+        16,
+      );
+      expect(first).toBeGreaterThanOrEqual(0x40);
+      expect(first).toBeLessThanOrEqual(0x7f);
+
+      const sealed = await sealEnvelope(
+        completed('test', [{ id: 'p1', name: 'Åsa Öberg', locale: 'sv-SE' }]),
+        await loadSealer(padded),
+      );
+      const seal = extractSeal(sealed);
+      expect(opensslVerify(seal.signedContent, seal.cms, 'embedded').ok).toBe(true);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('tells a certificate OpenSSL cannot read from one it can', () => {
+    expect(readableCertificate(pair.certPem)).toBe(true);
+    expect(readableCertificate(withPaddedSerial(pair.certPem))).toBe(false);
   });
 
   it('reads a PEM pair written on one line with literal \\n, as env files carry them', async () => {

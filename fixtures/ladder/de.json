@@ -1,0 +1,1195 @@
+{
+  "language": "de",
+  "locale": "de-DE",
+  "source": "docs/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
+  "rows": [
+    {
+      "phrase": "Mehrere Antworten erlaubt",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T0"
+      },
+      "note": "the card's own label"
+    },
+    {
+      "phrase": "Pille",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Nebeneinander",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "KEINE BUTTONS",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Später entscheiden",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Nein, das ist alles",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Pflichtfeld",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Anmeldungen",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Dunkelmodus",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Oben links, neben dem Titel",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "header-left",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "abgerundete Ecken!",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "rounded",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "many",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T0"
+      },
+      "note": "an option id"
+    },
+    {
+      "phrase": "ich möchte bitte Buttons haben",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "keine Knöpfe bitte",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "Buttons brauche ich nicht",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      },
+      "note": "the negator after the word, ending the clause"
+    },
+    {
+      "phrase": "das ist nicht erforderlich",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "das ist Pflicht für alle",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "das ist freiwillig für sie",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "bitte in die Ecke",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "schwarz und dunkel",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "bitte nebeneinander anordnen",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ich bin jetzt fertig",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "nichts mehr bitte",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      },
+      "note": "'nichts mehr' includes 'mehr'"
+    },
+    {
+      "phrase": "Logo überspringen",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "unser Logo verwenden",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "nur eine Antwort bitte",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "one",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "ich hätte wirklich gern, dass die Knöpfe wie Pillen aussehen",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "wir veranstalten einen Kurs und die Leute müssen sich vorher anmelden",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "die Frage soll mehrere Antworten von jeder Person annehmen",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "stell die Optionen nebeneinander, damit man sie schnell sieht",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "das Logo soll dezent in der Ecke sitzen",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "eine Nacht-Optik würde zu unserem Abendfest passen",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "ich glaube, diese Frage ist für alle ganz freiwillig",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "leg sie unter die Frage in einer langen Liste nach unten",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "under-full",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "wir wollen einfach hören, was die Leute über den Tag denken",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "ich möchte nach dieser noch eine Frage hinzufügen",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "jede Person muss antworten, bevor sie absendet, es ist Pflicht",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "die Auswahl sollen große Kacheln mit Bildern jedes Gerichts sein",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tile",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "Butons bitte",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "keine Butons",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "quadratish",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "square",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "erforderlch",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "freiwilig",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "nebeneinader",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "Mitternach",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "Wasserzeichn",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "Rückmeldug",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "Registriereng",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "Kontrollkästchn",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T3"
+      }
+    },
+    {
+      "phrase": "4",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "vier",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "Zwölf",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 12,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "vier Buttons nebeneinander",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "how many and where they sit, each its own answer"
+    },
+    {
+      "phrase": "ich denke sechs wäre gut",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 6,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "3.500 €",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "3500",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "12,50 Euro",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "12.50",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "1. Mai 2026",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "01.05.2026",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "+49 30 1234567",
+      "pattern": "phone",
+      "expect": {
+        "value": "+49301234567",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "info@verein.de",
+      "pattern": "email",
+      "expect": {
+        "value": "info@verein.de",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "einige",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "ein paar",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "mehrere",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "3 oder 4",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "40",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      }
+    },
+    {
+      "phrase": "nicht vier",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "keine Pille",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "nicht nur eine",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "Banane",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "nothing"
+      }
+    },
+    {
+      "phrase": "nebereinander",
+      "nodeId": "choice.placement",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "one edit from 'nebeneinander' and from 'untereinander'"
+    },
+    {
+      "phrase": "Buttons sind nicht nötig",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "eine oder mehrere",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "Ecke oben",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "30. Februar 2026",
+      "pattern": "date",
+      "expect": {
+        "none": true
+      }
+    },
+    {
+      "phrase": "wie Reiter",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tab",
+        "tier": "T0"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "bitte zu einer Leiste verbunden",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "segmented",
+        "tier": "T1"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "drei Knöpfe, Pillenform, nebeneinander",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "the demo sentence: four answers, each its own step"
+    },
+    {
+      "phrase": "vier Knöpfe",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "one clause, two answers"
+    },
+    {
+      "phrase": "Knöpfe, nur eine Antwort",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "5 Knöpfe nebeneinander",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 5
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "three answers in one clause"
+    },
+    {
+      "phrase": "mehrere Antworten und Reiter",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "many"
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tab"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "cut at the conjunction"
+    },
+    {
+      "phrase": "nur eine Antwort, drei",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "vier, eckig",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "square"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "drei, abgerundete Ecken, xyzzy",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "rounded"
+          }
+        ],
+        "unused": [
+          "xyzzy"
+        ],
+        "tier": "T5"
+      },
+      "note": "a clause that answers nothing is shown back"
+    },
+    {
+      "phrase": "drei, Pillenform, eckig, nebeneinander",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "unused": [
+          "Pillenform",
+          "eckig"
+        ],
+        "tier": "T5"
+      },
+      "note": "two shapes contradict: the shape is left to ask"
+    },
+    {
+      "phrase": "Pillenform, nebeneinander",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "mit Bildern und untereinander",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tile"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "under-full"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "Rot, Grün, Blau",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Rot",
+          "Grün",
+          "Blau"
+        ],
+        "tier": "T6"
+      },
+      "note": "labels verbatim, the count the list’s"
+    },
+    {
+      "phrase": "Klein; Mittel; Groß",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Klein",
+          "Mittel",
+          "Groß"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "Montag\nDienstag\nMittwoch",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Montag",
+          "Dienstag",
+          "Mittwoch"
+        ],
+        "tier": "T6"
+      },
+      "note": "one line, one option"
+    },
+    {
+      "phrase": "1. Rot\n2. Grün\n3. Blau",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Rot",
+          "Grün",
+          "Blau"
+        ],
+        "tier": "T6"
+      },
+      "note": "a numbered list: the markers are not the labels"
+    },
+    {
+      "phrase": "• Klein\n• Groß",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Klein",
+          "Groß"
+        ],
+        "tier": "T6"
+      },
+      "note": "a bulleted list"
+    },
+    {
+      "phrase": "a) Montag\nb) Dienstag",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Montag",
+          "Dienstag"
+        ],
+        "tier": "T6"
+      },
+      "note": "lettered"
+    },
+    {
+      "phrase": "Rot, Grün",
+      "nodeId": "choice.answers",
+      "expect": {
+        "list": [
+          "Rot",
+          "Grün"
+        ],
+        "at": "choice.count",
+        "tier": "T6"
+      },
+      "note": "the options, for the question ahead that takes them"
+    },
+    {
+      "phrase": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "Montag",
+          "Dienstag",
+          "Mittwoch",
+          "Donnerstag",
+          "Freitag"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L"
+        ],
+        "tier": "T6"
+      },
+      "note": "twelve, the most allowed"
+    },
+    {
+      "phrase": "3,50 €; 4,50 €",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "3,50 €",
+          "4,50 €"
+        ],
+        "tier": "T6"
+      },
+      "note": "a semicolon lets an item keep its comma"
+    },
+    {
+      "phrase": "Pillenform",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "pill"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "nebeneinander",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "vier",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.count",
+          "value": 4
+        },
+        "tier": "T7"
+      },
+      "note": "a number, for the question that counts"
+    },
+    {
+      "phrase": "mehrere Antworten",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.answers",
+          "optionId": "many"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "Reiter",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "eckig",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "square"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "untereinander",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "nebeneinander",
+      "nodeId": "choice.shape",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "untereinander",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "mit Bildern",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tile"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "Reiter",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "Pillenform, eckig",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "two shapes"
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      },
+      "note": "thirteen: more than a question may have, and never cut"
+    },
+    {
+      "phrase": "Pillenform, eckig",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing",
+        "elsewhere": [
+          "choice.shape"
+        ]
+      },
+      "note": "two shapes, not two options: offered, never guessed"
+    },
+    {
+      "phrase": "Ja",
+      "nodeId": "guess.date",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      },
+      "note": "a guess question's yes, its card's own label (S11)"
+    },
+    {
+      "phrase": "Nein",
+      "nodeId": "guess.signature",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "unsicher",
+      "nodeId": "guess.pay",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      },
+      "note": "\"not sure\" is an answer that says nothing, never a no"
+    },
+    {
+      "phrase": "Weiß nicht",
+      "nodeId": "guess.research",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "stimmt",
+      "nodeId": "guess.meeting",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Ja, eine nach der anderen",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "passt so",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "nächste",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "Nein, hier aufhören",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    }
+  ]
+}

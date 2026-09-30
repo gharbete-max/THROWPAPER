@@ -14,6 +14,16 @@ docs
 apps/desktop/.stage/
 apps/desktop/release/
 
+# Hand-authored fixtures (docs/adr/0021): one layout-IR word per line so a diff reads like the
+# document. Prettier would spread every word object over twenty lines. Their structure is checked by
+# scripts/caveat-fixtures.test.ts instead.
+fixtures/
+
+# The guess questions' shared answers: one line per language's answer, so a diff reads as the ways
+# that changed. Prettier would break the long lines where its print width falls. Its bytes are
+# checked by packages/shared/src/interpret/data.test.ts ("the shared answers").
+packages/shared/src/interpret/aliases/answers.json
+
 .impeccable/hook.cache.json
 .impeccable/critique/
 

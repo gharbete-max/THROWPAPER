@@ -1,0 +1,243 @@
+{
+  "fixture": "dotted-subnumber-line-start",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Adress",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "3.", "family": "arabic", "style": "dot", "path": [3], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Postnummer",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": { "raw": "4.", "family": "arabic", "style": "dot", "path": [4], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Ort",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l5",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l5"],
+          "detailLineIds": [],
+          "marker": { "raw": "5.", "family": "arabic", "style": "dot", "path": [5], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Telefon",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l6"],
+          "detailLineIds": [],
+          "marker": { "raw": "6.", "family": "arabic", "style": "dot", "path": [6], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "E-post",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l7",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l7"],
+          "detailLineIds": ["p1-l8"],
+          "marker": { "raw": "7.", "family": "arabic", "style": "dot", "path": [7], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Födelsedatum",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l9",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l9"],
+          "detailLineIds": [],
+          "marker": { "raw": "8.", "family": "arabic", "style": "dot", "path": [8], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Medlemsnummer",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l10",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l10"],
+          "detailLineIds": [],
+          "marker": { "raw": "9.", "family": "arabic", "style": "dot", "path": [9], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Specialkost",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l11",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l11"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "10.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [10],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Allergier",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l12",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l12"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "11.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [11],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Boende",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l13",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l13"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "12.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [12],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Medföljande",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l14",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l14"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "12.1",
+            "family": "arabic",
+            "style": "dot",
+            "path": [12, 1],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l13",
+          "label": "Namn på medföljande",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l15",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l15"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "12.2",
+            "family": "arabic",
+            "style": "dot",
+            "path": [12, 2],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l13",
+          "label": "Telefon till medföljande",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l16",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l16"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "13.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [13],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Övrigt",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": [],
+      "skippedLineIds": []
+    }
+  }
+}

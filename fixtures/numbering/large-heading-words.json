@@ -1,0 +1,46 @@
+{
+  "fixture": "large-heading-words",
+  "caveats": ["large-type-gutter"],
+  "stage": "reassemble",
+  "status": "green",
+  "turnsGreenIn": "S7",
+  "summary": "A 24 pt heading as pdf.js gives it — one run whose width is shared out by character, so each space between its words comes out 284 iu wide, more than the 200 a gutter needs — and an 11 pt line with one gap of 230 iu. Neither gap is a column: a gutter is at least two ems of its region's type.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "words": [
+          { "text": "ANMÄLAN", "box": { "x0": 954, "y0": 848, "x1": 2943, "y1": 1133 }, "baseline": 1076, "fontSize": 285, "fontWeight": 700, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "TILL", "box": { "x0": 3228, "y0": 848, "x1": 4364, "y1": 1133 }, "baseline": 1076, "fontSize": 285, "fontWeight": 700, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "ÅRSMÖTET", "box": { "x0": 4648, "y0": 848, "x1": 6922, "y1": 1133 }, "baseline": 1076, "fontSize": 285, "fontWeight": 700, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Fyll", "box": { "x0": 954, "y0": 1339, "x1": 1322, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "i", "box": { "x0": 1414, "y0": 1339, "x1": 1506, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "alla", "box": { "x0": 1598, "y0": 1339, "x1": 1966, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "uppgifter", "box": { "x0": 2058, "y0": 1339, "x1": 2886, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "nedan", "box": { "x0": 2978, "y0": 1339, "x1": 3438, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "och", "box": { "x0": 3530, "y0": 1339, "x1": 3806, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "lämna", "box": { "x0": 3898, "y0": 1339, "x1": 4358, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "blanketten", "box": { "x0": 4450, "y0": 1339, "x1": 5370, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "i", "box": { "x0": 5462, "y0": 1339, "x1": 5554, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "receptionen.", "box": { "x0": 5646, "y0": 1339, "x1": 6750, "y1": 1470 }, "baseline": 1444, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "Datum", "box": { "x0": 954, "y0": 1519, "x1": 1414, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "och", "box": { "x0": 1506, "y0": 1519, "x1": 1782, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "tid:", "box": { "x0": 1874, "y0": 1519, "x1": 2242, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "12", "box": { "x0": 2472, "y0": 1519, "x1": 2656, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "juni", "box": { "x0": 2748, "y0": 1519, "x1": 3116, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "kl.", "box": { "x0": 3208, "y0": 1519, "x1": 3484, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null },
+          { "text": "18.00", "box": { "x0": 3576, "y0": 1519, "x1": 4036, "y1": 1650 }, "baseline": 1624, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null, "source": "text-layer", "paragraph": null, "docxNumbering": null, "cell": null }
+        ],
+        "rules": []
+      }
+    ]
+  }
+}

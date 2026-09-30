@@ -1,0 +1,45 @@
+{
+  "fixture": "repeated-header-footer",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "Föreningen Exempel · Anmälan 2026",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "page-furniture"
+        },
+        { "text": "1. Namn", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "2. Adress", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "Sida 1 av 3", "pageNo": 1, "columnIndex": 0, "role": "page-furniture" },
+        {
+          "text": "Föreningen Exempel · Anmälan 2026",
+          "pageNo": 2,
+          "columnIndex": 0,
+          "role": "page-furniture"
+        },
+        { "text": "3. Telefon", "pageNo": 2, "columnIndex": 0, "role": "body" },
+        { "text": "4. E-post", "pageNo": 2, "columnIndex": 0, "role": "body" },
+        { "text": "Sida 2 av 3", "pageNo": 2, "columnIndex": 0, "role": "page-furniture" },
+        {
+          "text": "Föreningen Exempel · Anmälan 2026",
+          "pageNo": 3,
+          "columnIndex": 0,
+          "role": "page-furniture"
+        },
+        { "text": "5. Allergier", "pageNo": 3, "columnIndex": 0, "role": "body" },
+        { "text": "6. Övrigt", "pageNo": 3, "columnIndex": 0, "role": "body" },
+        { "text": "Sida 3 av 3", "pageNo": 3, "columnIndex": 0, "role": "page-furniture" }
+      ],
+      "repairs": []
+    },
+    "enumerateSummary": [
+      { "raw": "1.", "label": "Namn", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Adress", "level": 1, "verdict": "accept" },
+      { "raw": "3.", "label": "Telefon", "level": 1, "verdict": "accept" },
+      { "raw": "4.", "label": "E-post", "level": 1, "verdict": "accept" },
+      { "raw": "5.", "label": "Allergier", "level": 1, "verdict": "accept" },
+      { "raw": "6.", "label": "Övrigt", "level": 1, "verdict": "accept" }
+    ]
+  }
+}

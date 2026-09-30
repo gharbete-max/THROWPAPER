@@ -1,0 +1,132 @@
+{
+  "fixture": "dotted-subnumber-mid-sentence--wrapped",
+  "caveats": ["dotted-subnumber-mid-sentence"],
+  "stage": "enumerate",
+  "status": "green",
+  "turnsGreenIn": "S1b",
+  "summary": "The same trap after a soft wrap: the first item fills the column and wraps, and the wrapped line starts with \"12.1\" at the hanging text indent. It continues the label (P3a); it is not a marker.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          { "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1386, "bands": [1000, 1368] }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 8360, "y1": 1386 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1. A thing that is long enough to reach the right-hand edge of this column, and",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "A", "start": 3, "box": { "x0": 1368, "y0": 895, "x1": 1460, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "thing", "start": 5, "box": { "x0": 1552, "y0": 895, "x1": 2012, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "that", "start": 11, "box": { "x0": 2104, "y0": 895, "x1": 2472, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "is", "start": 16, "box": { "x0": 2564, "y0": 895, "x1": 2748, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "long", "start": 19, "box": { "x0": 2840, "y0": 895, "x1": 3208, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "enough", "start": 24, "box": { "x0": 3300, "y0": 895, "x1": 3852, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "to", "start": 31, "box": { "x0": 3944, "y0": 895, "x1": 4128, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "reach", "start": 34, "box": { "x0": 4220, "y0": 895, "x1": 4680, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "the", "start": 40, "box": { "x0": 4772, "y0": 895, "x1": 5048, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "right-hand", "start": 44, "box": { "x0": 5140, "y0": 895, "x1": 6060, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "edge", "start": 55, "box": { "x0": 6152, "y0": 895, "x1": 6520, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "of", "start": 60, "box": { "x0": 6612, "y0": 895, "x1": 6796, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "this", "start": 63, "box": { "x0": 6888, "y0": 895, "x1": 7256, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "column,", "start": 68, "box": { "x0": 7348, "y0": 895, "x1": 7992, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "and", "start": 76, "box": { "x0": 8084, "y0": 895, "x1": 8360, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 8360, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "12.1 mentions blabla",
+                "words": [
+                  { "text": "12.1", "start": 0, "box": { "x0": 1368, "y0": 1075, "x1": 1736, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "mentions", "start": 5, "box": { "x0": 1828, "y0": 1075, "x1": 2564, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "blabla", "start": 14, "box": { "x0": 2656, "y0": 1075, "x1": 3208, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1368, "y0": 1075, "x1": 3208, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "2. Something else",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 1255, "x1": 1184, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Something", "start": 3, "box": { "x0": 1368, "y0": 1255, "x1": 2196, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "else", "start": 13, "box": { "x0": 2288, "y0": 1255, "x1": 2656, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1255, "x1": 2656, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

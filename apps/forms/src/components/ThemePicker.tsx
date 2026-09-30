@@ -1,5 +1,6 @@
 import { THEME_PRESETS, type TokenSet } from '@tp/tokens';
 import { useT } from '../lib/i18n.js';
+import { withPreset } from '../lib/theme-preset.js';
 
 /**
  * A gallery of ready-made looks.
@@ -58,15 +59,8 @@ export function ThemePicker({
             className={theme.id === selected ? 'theme theme--current' : 'theme'}
             // The name is on the card, so this only has to say what pressing it does.
             aria-pressed={theme.id === selected}
-            onClick={() =>
-              onApply({
-                ...theme.tokens,
-                // The organisation's marks survive a change of theme.
-                logoLight: current.logoLight,
-                logoDark: current.logoDark,
-                favicon: current.favicon,
-              })
-            }
+            // The organisation's marks survive a change of theme.
+            onClick={() => onApply(withPreset(theme, current))}
           >
             <span
               className="theme__sample"

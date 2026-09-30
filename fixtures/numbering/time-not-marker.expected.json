@@ -1,0 +1,133 @@
+{
+  "fixture": "time-not-marker",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l6",
+          "lineIds": [
+            "p1-l6"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              1
+            ],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Anmälan",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l7",
+          "runId": "r-p1-l6",
+          "lineIds": [
+            "p1-l7"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1.1",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              1,
+              1
+            ],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l6",
+          "label": "Namn",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l8",
+          "runId": "r-p1-l6",
+          "lineIds": [
+            "p1-l8"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1.2",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              1,
+              2
+            ],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l6",
+          "label": "Adress",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l9",
+          "runId": "r-p1-l6",
+          "lineIds": [
+            "p1-l9"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "2.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              2
+            ],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Betalning",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [
+        {
+          "lineId": "p1-l2",
+          "raw": "09.00",
+          "rule": "V6"
+        },
+        {
+          "lineId": "p1-l3",
+          "raw": "10.30",
+          "rule": "V6"
+        },
+        {
+          "lineId": "p1-l4",
+          "raw": "13.00",
+          "rule": "V6"
+        },
+        {
+          "lineId": "p1-l5",
+          "raw": "9.05",
+          "rule": "V6"
+        }
+      ],
+      "proseLineIds": [
+        "p1-l1",
+        "p1-l2",
+        "p1-l3",
+        "p1-l4",
+        "p1-l5"
+      ],
+      "skippedLineIds": []
+    }
+  }
+}

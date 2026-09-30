@@ -1,0 +1,11 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 2,
+  "irVersion": 1,
+  "inputSha256": "75b50191d84b86977649d53643cb7d9c5b1d35954bd83aaece699f1b8256a358",
+  "decisions": [
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3","p1-l4","p1-l5","p1-l6","p1-l7"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"fi","subject":[],"evidence":{"best":"fi","hits":23,"own":20,"runnerUp":0}}
+  ]
+}

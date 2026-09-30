@@ -1,0 +1,12 @@
+{
+  "fixture": "single-checkbox-line",
+  "expect": {
+    "segment": {
+      "segments": [
+        { "kind": "question", "lineIds": ["p1-l1", "p1-l2", "p1-l3"], "label": "Vilka dagar kan du vara med?", "itemId": null, "answer": "choice", "options": ["Lördag", "Söndag"], "details": [], "flags": [] },
+        { "kind": "question", "lineIds": ["p1-l4"], "label": "Jag vill ha föreningens nyhetsbrev.", "itemId": null, "answer": "boolean", "options": [], "details": [], "flags": [] },
+        { "kind": "question", "lineIds": ["p1-l5"], "label": "Jag godkänner att föreningen sparar mina uppgifter enligt GDPR.", "itemId": null, "answer": "boolean", "options": [], "details": [], "flags": [] }
+      ]
+    }
+  }
+}

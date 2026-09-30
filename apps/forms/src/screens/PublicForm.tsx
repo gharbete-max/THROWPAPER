@@ -24,6 +24,7 @@ import { Icon } from '../components/Icon.js';
 import { Meter } from '../components/Meter.js';
 import { Signed } from '../components/Signed.js';
 import { PoweredBy } from '../components/Logo.js';
+import { Masthead, MastheadFoot, mastheadPageClass } from '../components/Masthead.js';
 import { FinishedDocument, type FinishedDocumentHandle } from '../components/FinishedDocument.js';
 import { IdentityStep } from '../components/IdentityStep.js';
 import { finishedState, readFinished } from '../lib/finished-state.js';
@@ -510,55 +511,54 @@ export default function PublicForm() {
     );
   }
 
+  const slot = form?.definition.settings.layout?.logoSlot;
+
   return (
-    <main className="shell shell--narrow stack">
-      <header className="row row--between">
-        {/* The name is the alt text rather than a caption: a logo already says who this is. */}
-        {form?.brand.logoLight ? (
-          <img className="brand-mark" src={form.brand.logoLight} alt={form.organisationName} />
-        ) : (
-          <strong>{form?.organisationName}</strong>
-        )}
-        {/**
-         * The form's own language switcher, separate from the site's.
-         *
-         * The site is in one language at a time and that is a personal setting. A *form* is a
-         * document, and a Swedish association with English-speaking members publishes one form
-         * that reads in both — so the reader flips between them here, with a flag in the corner,
-         * without anything about their account changing.
-         *
-         * Which languages appear is the author's choice (`settings.locales`), not the whole
-         * organisation's list: offering a switcher to ten versions nobody translated is worse
-         * than offering none. `LanguagePicker` renders nothing below two, so a single-language
-         * form simply has no corner control.
-         *
-         * Switching re-renders labels from the same `values` state, so changing language
-         * mid-flow cannot lose what has already been typed.
-         */}
-        <LanguagePicker
-          locales={form?.supportedLocales ?? []}
-          current={resolved}
-          onChange={setLocale}
-          // The form's translator, not the session's — the switcher belongs to this document.
-          t={t}
-          variant="corner"
-        />
-      </header>
-
+    <main className={`shell shell--narrow stack${mastheadPageClass(slot)}`}>
       {/*
-        What this is.
-        
-        The page had no heading: the organisation's name, then a first question. Somebody who
-        followed a link from a chat window saw a card naming the form, opened it, and arrived
-        somewhere that did not name it — which is the moment a careful person closes the tab.
+        Whose this is, and what it is, laid out by the form's logo slot — with no slot, exactly
+        the header forms always had (`components/Masthead.tsx`).
 
-        `h1` and not a caption: on a page whose whole purpose is one document, the document's name
-        is the heading, and a screen reader jumping by heading should land on it.
-
-        Kept on the confirmation too: it used to vanish the moment the form was sent, so the one
-        screen somebody might photograph did not say what they had registered for.
+        The title is an `h1`, not a caption. The page had no heading: the organisation's name, then
+        a first question. Somebody who followed a link from a chat window saw a card naming the
+        form, opened it, and arrived somewhere that did not name it — which is the moment a careful
+        person closes the tab. On a page whose whole purpose is one document, the document's name
+        is the heading, and a screen reader jumping by heading should land on it. Kept on the
+        confirmation too: it used to vanish the moment the form was sent, so the one screen
+        somebody might photograph did not say what they had registered for.
       */}
-      {formTitle && <h1 className="public__title">{formTitle}</h1>}
+      <Masthead
+        slot={slot}
+        logo={form?.brand.logoLight ?? null}
+        organisationName={form?.organisationName ?? ''}
+        title={formTitle}
+        corner={
+          /**
+           * The form's own language switcher, separate from the site's.
+           *
+           * The site is in one language at a time and that is a personal setting. A *form* is a
+           * document, and a Swedish association with English-speaking members publishes one form
+           * that reads in both — so the reader flips between them here, with a flag in the
+           * corner, without anything about their account changing.
+           *
+           * Which languages appear is the author's choice (`settings.locales`), not the whole
+           * organisation's list: offering a switcher to ten versions nobody translated is worse
+           * than offering none. `LanguagePicker` renders nothing below two, so a single-language
+           * form simply has no corner control.
+           *
+           * Switching re-renders labels from the same `values` state, so changing language
+           * mid-flow cannot lose what has already been typed.
+           */
+          <LanguagePicker
+            locales={form?.supportedLocales ?? []}
+            current={resolved}
+            onChange={setLocale}
+            // The form's translator, not the session's — the switcher belongs to this document.
+            t={t}
+            variant="corner"
+          />
+        }
+      />
 
       {phase === 'closed' && (
         <div className="card">
@@ -783,6 +783,11 @@ export default function PublicForm() {
           </div>
         </form>
       )}
+      <MastheadFoot
+        slot={slot}
+        logo={form?.brand.logoLight ?? null}
+        organisationName={form?.organisationName ?? ''}
+      />
       {form && <PoweredBy tokens={form.brand} />}
     </main>
   );

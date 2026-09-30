@@ -195,10 +195,9 @@ a:focus-visible {
 /*
  * Bare: a button that is only its label.
  *
- * `Wizard.tsx` has asked for this tier all along and nothing defined it, so the "build it yourself"
+ * The old wizard asked for this tier all along and nothing defined it, so its "build it yourself"
  * escape rendered as a filled primary wearing `--tp-colour-muted` as its label — grey text on the
- * ink. `.wizard__skip` sets only a colour and a margin, which is a rule that only makes sense on a
- * button with nothing else to it. `button-classes.test.ts` is what found it.
+ * ink. `button-classes.test.ts` is what found it; the conversation's way out uses it now.
  */
 .button--bare {
   background: transparent;
@@ -1036,6 +1035,64 @@ textarea {
   --choice-radius: var(--tp-radius-pill);
 }
 
+/*
+ * Tabs and a segmented bar: the choices joined up rather than floating apart. Joining is all they
+ * do — the chosen one is still marked by the same derived edge as every other shape, the 44px
+ * floor is the same, and on a phone they wrap like any other buttons rather than shrink.
+ */
+.choice--shape-tab {
+  --choice-radius: var(--tp-radius-lg) var(--tp-radius-lg) 0 0;
+}
+
+.choice--shape-segmented {
+  --choice-radius: 0;
+}
+
+.choice--buttons:is(.choice--shape-tab, .choice--shape-segmented) .choice__options {
+  gap: 0;
+}
+
+.choice--buttons.choice--shape-tab .choice__options {
+  border-block-end: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.choice--buttons:is(.choice--shape-tab, .choice--shape-segmented)
+  .choice__option
+  + .choice__option {
+  margin-inline-start: calc(var(--tp-border-width) * -1);
+}
+
+.choice--buttons.choice--shape-segmented .choice__option:first-child {
+  border-start-start-radius: var(--tp-radius-pill);
+  border-end-start-radius: var(--tp-radius-pill);
+}
+
+.choice--buttons.choice--shape-segmented .choice__option:last-child {
+  border-start-end-radius: var(--tp-radius-pill);
+  border-end-end-radius: var(--tp-radius-pill);
+}
+
+/* Stacked in one column, the bar runs downwards: its ends are the top and the bottom. */
+.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option + .choice__option {
+  margin-inline-start: 0;
+  margin-block-start: calc(var(--tp-border-width) * -1);
+}
+
+.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option:first-child {
+  border-radius: var(--tp-radius-lg) var(--tp-radius-lg) 0 0;
+}
+
+.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option:last-child {
+  border-radius: 0 0 var(--tp-radius-lg) var(--tp-radius-lg);
+}
+
+/* The chosen part's edge sits over its neighbours' shared border rather than under it. */
+.choice--buttons:is(.choice--shape-tab, .choice--shape-segmented)
+  .choice__option:has(input:checked) {
+  position: relative;
+  z-index: 1;
+}
+
 .choice--size-large .choice__option {
   min-height: 56px;
   font-size: var(--tp-text-lg);
@@ -1336,6 +1393,24 @@ textarea {
   margin: 0;
   padding-inline-start: calc(var(--tp-spacing-unit) * 2);
   color: var(--tp-colour-muted);
+}
+
+/* What the import read (S7): a document's numbered items in reading order, each at its level,
+ * set apart from the controls by a rule — it is a reading to check, not something to press. */
+.import__reading {
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+  padding-block-start: var(--tp-spacing-unit);
+}
+
+.import__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.import__marker {
+  color: var(--tp-colour-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 /* A repeating block's questions, in the properties panel. Indented against a rule, so the nesting
@@ -3242,6 +3317,8 @@ p {
 .shell--roomy > .stack > header,
 .shell--roomy > .stack > .tabs,
 .shell--roomy > .stack > form,
+/* The two doors are one choice, not a card among the forms. */
+.shell--roomy > .stack > .doors,
 .shell--roomy > .stack > p,
 .shell--roomy > .stack > .inbox,
 .shell--roomy > .stack > .loading,
@@ -4293,6 +4370,13 @@ body:has(.app) > #root {
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   grid-template-areas: 'main';
+  /*
+   * One screen, never panned sideways. The conversation's next question slides in from 24 px to
+   * the right, and for those 220 ms it reached past the edge of a phone and the whole page could
+   * scroll sideways (`docs/plan/CAVEATS.md` #73). `clip`, not `hidden`: it makes no scroll
+   * container, so nothing inside changes how it scrolls or sticks.
+   */
+  overflow-x: clip;
 }
 
 .app.app--door .main {
@@ -4463,6 +4547,108 @@ body:has(.app) > #root {
   margin: 0;
   font-size: var(--tp-text-xl);
   line-height: 1.2;
+}
+
+/*
+ * The logo's place on a form (`FormSettings.layout.logoSlot`, `components/Masthead.tsx`). Six
+ * named places, each laid out here — a phone and a wide screen each get what suits them, which a
+ * stored position never could (`docs/plan/CAVEATS.md` #33). A form with no slot gets none of this.
+ */
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+/* The logo at the start of a header bar, the title beside it, the corner control at the end. */
+.masthead--header-left .public__title {
+  flex: 1;
+}
+
+/* The logo centred above the title; the corner control keeps its corner. */
+.masthead--masthead-centred {
+  flex-direction: column;
+  text-align: center;
+}
+
+.masthead__corner {
+  align-self: flex-end;
+}
+
+.masthead--masthead-centred .brand-mark {
+  max-height: 64px;
+}
+
+/* Small and faint in the top corner: there, not competing with the title. */
+.masthead--corner-watermark {
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+
+.masthead__watermark {
+  opacity: 0.6;
+}
+
+.masthead__watermark .brand-mark {
+  max-height: 24px;
+}
+
+/* No logo in the header: it is at the foot, or at the top of the card. */
+.masthead--bare {
+  justify-content: flex-end;
+}
+
+.masthead--bare:empty {
+  display: none;
+}
+
+.masthead__card-top .brand-mark {
+  max-height: 48px;
+}
+
+/* A strip at the foot: the logo and the organisation's name. */
+.masthead-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding-block-start: calc(var(--tp-spacing-unit) * 2);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+}
+
+/* The page as a card, the logo at its top. */
+.masthead-page--card-top {
+  margin-block: calc(var(--tp-spacing-unit) * 3);
+  padding: calc(var(--tp-spacing-unit) * 3);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+/* A narrow rail beside the form on a wide screen; on a phone, the header like any other. */
+@media (min-width: 64rem) {
+  .masthead-page--sidebar-rail {
+    position: relative;
+  }
+
+  .masthead__rail {
+    position: absolute;
+    inset-block-start: calc(var(--tp-spacing-unit) * 3);
+    inset-inline-end: calc(100% + var(--tp-spacing-unit) * 3);
+    display: flex;
+    justify-content: flex-end;
+    inline-size: 8rem;
+  }
+
+  .masthead__rail .brand-mark {
+    max-height: none;
+    max-inline-size: 100%;
+  }
+
+  .masthead--sidebar-rail {
+    justify-content: flex-end;
+  }
 }
 
 /* ==========================================================================
@@ -5737,49 +5923,175 @@ body:has(> #root .shell--narrow) {
   text-decoration: underline;
 }
 
-/* --- The wizard ------------------------------------------------------------
+/* --- The guided conversation ---------------------------------------------------
  *
- * The default way of starting anything here. The options are the screen: large, quiet, and far
- * enough apart that a wrong press is a decision rather than a slip.
+ * `docs/plan/DESIGN-LANGUAGE.md`: one decision per screen — the trail, the question, its answers,
+ * "Or type it", then Back and the way out, always in the same places. Every size is on the ramp,
+ * every target at least 44 px, and the answers fit a 360 × 640 screen without scrolling.
  * ------------------------------------------------------------------------ */
 
-.wizard {
-  max-inline-size: 40rem;
-  margin-inline: auto;
-  padding-block: calc(var(--tp-spacing-unit) * 4);
-}
-
-.wizard__step {
-  margin: 0;
-  color: var(--tp-colour-accent-ink);
-  font-size: var(--tp-text-sm);
-  font-weight: var(--tp-type-label-weight);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.wizard__prompt {
-  margin: var(--tp-spacing-unit) 0 calc(var(--tp-spacing-unit) * 3);
-  font-size: var(--tp-text-2xl);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
-
-.wizard__options {
+/*
+ * `minmax(0, 1fr)`, not the default `auto` track: a grid item is as wide as its content by
+ * default, and the trail is one unbroken line — so a long trail pushed the whole screen wider than
+ * the phone, and the answers with it.
+ */
+.conversation {
   display: grid;
-  gap: var(--tp-spacing-unit);
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  inline-size: 100%;
+  max-inline-size: 36rem;
+  margin-inline: auto;
 }
 
 /*
- * A whole row, not a chip.
+ * One line, on every width: it scrolls sideways, newest end in view, rather than wrap.
  *
- * Each option carries a sentence of consequence under its label, so it needs the width to say it —
- * and a target this size is one nobody misses on a phone, which is where a volunteer will do this.
+ * `position: relative` so the list is what each crumb's visually hidden question is positioned
+ * against — and clipped by. Without it they were placed against the page, far out past the phone's
+ * edge where the list had scrolled them, and the whole page scrolled sideways by that much.
  */
-.wizard__option {
+.conversation__trail ol {
+  position: relative;
+  display: flex;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.conversation__trail li {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.conversation__crumb {
+  min-block-size: 44px;
+  padding-inline: var(--tp-spacing-unit);
+  border: 0;
+  border-radius: var(--tp-radius-pill);
+  background: transparent;
+  color: var(--tp-colour-muted);
+  font: inherit;
+  font-size: var(--tp-text-sm);
+  cursor: pointer;
+}
+
+.system .conversation__crumb:hover {
+  color: var(--tp-colour-text);
+  text-decoration: underline;
+}
+
+.conversation__crumb:focus-visible,
+.conversation__card:focus-visible,
+.conversation__step:focus-visible,
+.conversation__help-toggle:focus-visible,
+.conversation__chip:focus-visible,
+.conversation__send:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+/* Passed over: greyed, with its reason, and not a way back — there is nothing there. */
+.conversation__skipped {
+  padding-inline: var(--tp-spacing-unit);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
+  font-style: italic;
+  opacity: 0.75;
+}
+
+.conversation__node,
+.conversation__body {
   display: grid;
-  gap: 4px;
-  padding: calc(var(--tp-spacing-unit) * 2);
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+/* Moving on: the new node slides in from where it came; going back is the same, reversed. */
+.conversation__node--on {
+  animation: conversation-on var(--tp-motion-preview) var(--tp-ease-unfurl);
+}
+
+.conversation__node--back {
+  animation: conversation-back var(--tp-motion-preview) var(--tp-ease-unfurl);
+}
+
+@keyframes conversation-on {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@keyframes conversation-back {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conversation__node--on,
+  .conversation__node--back {
+    animation: none;
+  }
+}
+
+.conversation__ask {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tp-spacing-unit);
+}
+
+/* Huge, one sentence, and never truncated in any language (`CAVEATS.md` #36). */
+.conversation__question {
+  flex: 1;
+  margin: 0;
+  font-size: var(--tp-text-2xl);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  overflow-wrap: break-word;
+}
+
+.conversation__help-toggle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-weight: var(--tp-type-weight-bold);
+  cursor: pointer;
+}
+
+.conversation__help {
+  margin: 0;
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+}
+
+.conversation__answers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--tp-spacing-unit);
+}
+
+/* A whole answer, labelled by what it does; far enough from its neighbour to be a decision. */
+.conversation__card {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  min-block-size: 56px;
+  padding: calc(var(--tp-spacing-unit) * 1.25) calc(var(--tp-spacing-unit) * 2);
   border: var(--tp-border-width) solid var(--tp-colour-border);
   border-radius: var(--tp-radius-lg);
   background: var(--tp-colour-surface);
@@ -5787,42 +6099,208 @@ body:has(> #root .shell--narrow) {
   font: inherit;
   text-align: start;
   cursor: pointer;
-  transition:
-    border-color var(--tp-motion) var(--tp-ease),
-    transform var(--tp-motion) var(--tp-ease);
+  transition: border-color var(--tp-motion-fast) var(--tp-ease);
 }
 
-.system .wizard__option:hover {
+.system .conversation__card:hover:not(:disabled) {
   border-color: var(--tp-colour-primary);
-  transform: translateY(-1px);
 }
 
-.wizard__option:focus-visible {
-  outline: 2px solid var(--tp-focus);
-  outline-offset: 2px;
+.conversation__card[aria-pressed='true'] {
+  border-color: var(--tp-colour-primary);
+  box-shadow: inset 0 0 0 1px var(--tp-colour-primary);
 }
 
-.wizard__actions {
+.conversation__card:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.conversation__card .icon {
+  flex: none;
+  color: var(--tp-colour-accent-ink);
+}
+
+/* The key that picks it. Noise on a touch screen, where there is no keyboard to press it on. */
+.conversation__key {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 1.75em;
+  block-size: 1.75em;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-sm);
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (pointer: coarse) {
+  .conversation__key {
+    display: none;
+  }
+}
+
+.conversation__card-text {
+  display: grid;
+  gap: 2px;
+}
+
+.conversation__card-text strong {
+  font-size: var(--tp-text-lg);
+}
+
+.conversation__detail {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+}
+
+.conversation__stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.conversation__step {
+  display: grid;
+  place-items: center;
+  inline-size: 56px;
+  block-size: 56px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  cursor: pointer;
+}
+
+.conversation__step:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.conversation__number {
+  min-inline-size: 3ch;
+  font-size: var(--tp-text-3xl);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--tp-type-weight-bold);
+  text-align: center;
+}
+
+.conversation__primary {
+  display: flex;
+}
+
+.conversation__text {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.conversation__input {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font: inherit;
+}
+
+.conversation__text .conversation__input {
+  font-size: var(--tp-text-lg);
+}
+
+.conversation__examples,
+.conversation__maybe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.conversation__chip {
+  min-block-size: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-sm);
+  cursor: pointer;
+}
+
+/* "Or type it": one quiet box, under the answers it is an alternative to. */
+.conversation__type {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+}
+
+.conversation__type .conversation__input {
+  flex: 1;
+  min-inline-size: 0;
+  font-size: var(--tp-text-ui);
+  /* A text area, for a pasted list's lines: one line to start, growing with what is in it where
+     the browser can, never past a few lines before it scrolls. */
+  resize: none;
+  field-sizing: content;
+  max-block-size: calc(var(--tp-text-ui) * 8);
+  line-height: var(--tp-type-line-height);
+}
+
+/* What a sentence said that answered nothing: each phrase in the language's own quotes. */
+.conversation__left-over {
+  margin: 0;
+}
+
+.conversation__send {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  cursor: pointer;
+}
+
+.conversation__send:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* The transparency chip: what the typed words were read as, and the way to say otherwise. */
+.conversation__reading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--tp-spacing-unit);
-  margin-block-start: calc(var(--tp-spacing-unit) * 3);
-}
-
-/*
- * The advanced route sits with the other actions, not in a corner.
- *
- * `margin-inline-start: auto` puts it at the far end of the row: present, reachable, and clearly
- * not the thing being suggested. Hiding it behind a menu would tell experienced people the product
- * is not for them, and they are the ones who notice.
- */
-.wizard__skip {
-  margin-inline-start: auto;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  justify-self: start;
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
   color: var(--tp-colour-muted);
+  font-size: var(--tp-text-sm);
 }
 
-.wizard__summary {
+.conversation__notice {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border-inline-start: 3px solid var(--tp-colour-warning);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+.conversation__notice p {
+  margin: 0;
+}
+
+/* Learned phrases (S6): one row per phrase, its meaning under it, and Delete at the end. */
+.phrases {
   display: grid;
   gap: var(--tp-spacing-unit);
   margin: 0;
@@ -5830,19 +6308,379 @@ body:has(> #root .shell--narrow) {
   list-style: none;
 }
 
-.wizard__summary li {
+.phrases__row {
   display: flex;
   align-items: center;
-  gap: var(--tp-spacing-unit);
-  padding: calc(var(--tp-spacing-unit) * 1.5) calc(var(--tp-spacing-unit) * 2);
+  justify-content: space-between;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
   border: var(--tp-border-width) solid var(--tp-colour-border);
   border-radius: var(--tp-radius);
   background: var(--tp-colour-surface);
 }
 
-.wizard__summary .icon {
-  color: var(--tp-colour-success);
+.phrases__phrase {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.conversation__preview {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
+}
+
+/* Back and the way out, always here. "Build it myself" is present and clearly not suggested. */
+.conversation__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding-block-start: calc(var(--tp-spacing-unit) * 1.5);
+  border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.conversation__status {
+  margin-inline-start: auto;
+}
+
+.conversation__way-out {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.conversation__started-again {
+  max-inline-size: 36rem;
+  margin: 0 auto;
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+  font-size: var(--tp-text-ui);
+}
+
+@media (min-width: 720px) {
+  .conversation__question {
+    font-size: var(--tp-text-3xl);
+  }
+
+  .conversation__card-text strong {
+    font-size: var(--tp-text-xl);
+  }
+
+  .conversation__detail,
+  .conversation__help {
+    font-size: var(--tp-text-base);
+  }
+
+  .conversation__crumb,
+  .conversation__skipped,
+  .conversation__chip,
+  .conversation__reading {
+    font-size: var(--tp-text-ui);
+  }
+}
+
+/* --- The preview moment and inline editing ----------------------------------
+ *
+ * The real control, the one sentence under it, and — once it is clicked — the handles, each of
+ * which can only land on a value the form schema has (`InlineEdit/inline-edit.ts`). No handle
+ * offers a pixel, a radius or a colour; the samples below show named shapes and brand roles.
+ * ------------------------------------------------------------------------ */
+
+.preview-moment {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.preview-moment__frame {
+  cursor: pointer;
+}
+
+.preview-moment__page {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.preview-moment__badge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+}
+
+.preview-moment__by-hand {
+  padding: 2px var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  color: var(--tp-colour-accent-ink);
+  font-size: var(--tp-text-sm);
+}
+
+/* The sentence is the way in by keyboard and by touch: a real button, 44px tall. */
+.preview-moment__sentence {
+  justify-self: start;
+  min-block-size: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  text-align: start;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.preview-moment__sentence:focus-visible,
+.preview-moment__assumed summary:focus-visible,
+.conversation__why summary:focus-visible,
+.inline-edit__shape:focus-visible,
+.inline-edit__swatch:focus-visible,
+.inline-edit__step:focus-visible,
+.inline-edit__grip:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+/* "Why this guess" (S11) is read the way "What Loppa assumed" is: one press away, never hidden. */
+.preview-moment__assumed summary,
+.conversation__why summary {
+  display: flex;
+  align-items: center;
+  min-block-size: 44px;
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+  cursor: pointer;
+}
+
+.preview-moment__assumed ul,
+.conversation__why ul {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inline-edit {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+.inline-edit__group {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inline-edit__group legend {
+  margin-block-end: calc(var(--tp-spacing-unit) * 0.5);
+  padding: 0;
+  font-size: var(--tp-text-ui);
+  font-weight: var(--tp-type-label-weight);
+}
+
+.inline-edit__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.inline-edit__shape,
+.inline-edit__swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  min-block-size: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.25);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  cursor: pointer;
+}
+
+/* The chosen one, marked with the primary role's derived edge — held to 3:1 like every choice. */
+.inline-edit__shape[aria-pressed='true'],
+.inline-edit__swatch[aria-pressed='true'] {
+  border-color: var(--tp-colour-primary-edge);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary-edge);
+}
+
+/* A small drawing of each named shape: the shape, not a number. */
+.inline-edit__sample {
+  inline-size: 1.75rem;
+  block-size: 1rem;
+  border: 2px solid currentColor;
+}
+
+.inline-edit__sample--pill {
+  border-radius: var(--tp-radius-pill);
+}
+
+.inline-edit__sample--rounded {
+  border-radius: var(--tp-radius);
+}
+
+.inline-edit__sample--square {
+  border-radius: 0;
+}
+
+.inline-edit__sample--tab {
+  border-block-end-width: 0;
+  border-start-start-radius: var(--tp-radius);
+  border-start-end-radius: var(--tp-radius);
+}
+
+.inline-edit__sample--segmented {
+  border-radius: var(--tp-radius-pill);
+  background: linear-gradient(90deg, transparent 49%, currentColor 49% 51%, transparent 51%);
+}
+
+.inline-edit__sample--tile {
+  block-size: 1.25rem;
+  border-radius: var(--tp-radius);
+}
+
+/* A swatch shows the role's colour; it is the role that is stored, never the colour. */
+.inline-edit__chip {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+}
+
+.inline-edit__chip--primary {
+  background: var(--tp-colour-primary);
+}
+
+.inline-edit__chip--secondary {
+  background: var(--tp-colour-secondary);
+}
+
+.inline-edit__chip--accent {
+  background: var(--tp-colour-accent);
+}
+
+.inline-edit__stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.inline-edit__step,
+.inline-edit__grip {
+  display: grid;
   flex: none;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  cursor: pointer;
+}
+
+.inline-edit__step:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.inline-edit__grip {
+  border-color: transparent;
+  cursor: grab;
+  touch-action: none;
+}
+
+.inline-edit__answers {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inline-edit__answer {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.inline-edit__answer .inline-edit__words {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.inline-edit__done {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Reconciling: the person's version, and — on "Show both" — the conversation's beside it. */
+.reconcile {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.reconcile--both {
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+}
+
+.reconcile__side {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
+}
+
+/* The two doors: two large cards and nothing else, with the way out beneath them. */
+.doors {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.doors__title {
+  margin: 0;
+  font-size: var(--tp-text-xl);
+}
+
+.doors__cards {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.doors__door {
+  align-items: flex-start;
+  padding: calc(var(--tp-spacing-unit) * 2.5);
+}
+
+.doors__myself {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-width: 720px) {
+  .doors__cards {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* ==========================================================================
@@ -6202,4 +7040,285 @@ body:has(> #root .shell--narrow) {
 
 .nav-link__count {
   margin-inline-start: auto;
+}
+
+/* The review screen (S10, IMPORT-PIPELINE.md §8): the document beside the form it makes, each line
+   highlighted by how sure the reading is, linked to its item both ways. */
+.review {
+  width: min(100%, 1400px);
+  margin-inline: auto;
+  padding: calc(var(--tp-spacing-unit) * 2);
+}
+
+.review--choose {
+  width: min(100%, 720px);
+}
+
+.review__summary {
+  margin: 0;
+  font-size: var(--tp-text-xl);
+}
+
+.review__head p {
+  margin: 0;
+}
+
+.review__panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+.review-source,
+.review-draft {
+  max-height: 70vh;
+  overflow: auto;
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-surface);
+}
+
+@media (max-width: 900px) {
+  .review__panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .review-source {
+    max-height: 40vh;
+  }
+
+  .review-draft {
+    max-height: none;
+  }
+
+  /* Four buttons wrap to two rows on a phone: pinned, they would cover the items. */
+  .review__foot {
+    position: static;
+  }
+}
+
+.review-page {
+  position: relative;
+  margin-block-end: var(--tp-spacing-unit);
+  background: var(--tp-colour-background);
+}
+
+.review-page__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.review-page__lines {
+  position: absolute;
+  inset: 0;
+}
+
+.review-source__block {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 4);
+  margin-block-end: var(--tp-spacing-unit);
+}
+
+.review-line {
+  display: block;
+  padding: calc(var(--tp-spacing-unit) / 4) calc(var(--tp-spacing-unit) / 2);
+  border: 0;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Exactly the printed line's box: not the 44 px every other button has, or the line below would
+   cover this one and take its press. */
+.review-page__lines .review-line {
+  position: absolute;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.review-line:disabled {
+  color: var(--tp-colour-muted);
+  cursor: default;
+}
+
+.review-line--auto {
+  background: color-mix(in srgb, var(--tp-colour-success) 16%, transparent);
+}
+
+.review-line--flag {
+  background: color-mix(in srgb, var(--tp-colour-warning) 24%, transparent);
+}
+
+.review-line--review {
+  background: color-mix(in srgb, var(--tp-colour-danger) 24%, transparent);
+}
+
+.review-line--settled {
+  background: color-mix(in srgb, var(--tp-colour-primary) 14%, transparent);
+}
+
+.review-line--selected {
+  outline: 2px solid var(--tp-colour-primary);
+  outline-offset: 1px;
+}
+
+.review-draft__items {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-item {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-inline-start: 4px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-background);
+  cursor: pointer;
+}
+
+.review-item:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+.review-item--auto {
+  border-inline-start-color: var(--tp-colour-success);
+}
+
+.review-item--flag {
+  border-inline-start-color: var(--tp-colour-warning);
+}
+
+.review-item--review {
+  border-inline-start-color: var(--tp-colour-danger);
+}
+
+.review-item--settled {
+  border-inline-start-color: var(--tp-colour-primary);
+}
+
+.review-item--selected {
+  box-shadow: 0 0 0 2px var(--tp-colour-primary);
+}
+
+.review-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  align-items: baseline;
+  font-size: var(--tp-text-sm);
+}
+
+.review-item__kind {
+  color: var(--tp-colour-muted);
+}
+
+.review-item__bucket {
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.review-item__heading {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+.review-item__text {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.review-item__chips {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+}
+
+.review-item__chips p {
+  margin: 0;
+}
+
+.review-chip {
+  display: inline-flex;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  align-items: center;
+  min-height: var(--tp-control-height);
+  padding-inline: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.review-chip[aria-pressed='true'] {
+  border-color: var(--tp-colour-primary);
+  background: color-mix(in srgb, var(--tp-colour-primary) 12%, var(--tp-colour-background));
+}
+
+.review-chip__key {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-xs);
+}
+
+.review-item__actions {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+}
+
+.review-item__why {
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 2);
+}
+
+/* "Compared with your form": the document read again (S12c). */
+.review-changes {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.review-changes h2,
+.review-changes h3 {
+  margin: 0;
+  font-size: var(--tp-text-ui);
+}
+
+.review-changes ul {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  margin: calc(var(--tp-spacing-unit) / 2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-changes li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review__foot {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding-block: var(--tp-spacing-unit);
+  background: var(--tp-colour-background);
 }

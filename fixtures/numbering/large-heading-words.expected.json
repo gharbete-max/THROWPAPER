@@ -1,0 +1,23 @@
+{
+  "fixture": "large-heading-words",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        { "text": "ANMÄLAN TILL ÅRSMÖTET", "pageNo": 1, "columnIndex": 0, "role": "heading" },
+        {
+          "text": "Fyll i alla uppgifter nedan och lämna blanketten i receptionen.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Datum och tid: 12 juni kl. 18.00",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": []
+    }
+  }
+}

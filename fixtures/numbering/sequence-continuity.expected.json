@@ -1,0 +1,287 @@
+{
+  "fixture": "sequence-continuity",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Ett",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Två",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": { "raw": "3.", "family": "arabic", "style": "dot", "path": [3], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Tre",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l6"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Ett",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l7",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l7"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1.1",
+            "family": "arabic",
+            "style": "dot",
+            "path": [1, 1],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l6",
+          "label": "Ett och ett",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l8",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l8"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1.2",
+            "family": "arabic",
+            "style": "dot",
+            "path": [1, 2],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l6",
+          "label": "Ett och två",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l9",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l9"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Två",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l11",
+          "runId": "r-p1-l11",
+          "lineIds": ["p1-l11"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "i.",
+            "family": "roman-lower",
+            "style": "dot",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Första",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l12",
+          "runId": "r-p1-l11",
+          "lineIds": ["p1-l12"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "ii.",
+            "family": "roman-lower",
+            "style": "dot",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Andra",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l13",
+          "runId": "r-p1-l11",
+          "lineIds": ["p1-l13"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "iii.",
+            "family": "roman-lower",
+            "style": "dot",
+            "path": [3],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Tredje",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l15",
+          "runId": "r-p1-l15",
+          "lineIds": ["p1-l15"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "a)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Första",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l16",
+          "runId": "r-p1-l15",
+          "lineIds": ["p1-l16"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "b)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Andra",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l17",
+          "runId": "r-p1-l15",
+          "lineIds": ["p1-l17"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "c)",
+            "family": "alpha-lower",
+            "style": "paren",
+            "path": [3],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Tredje",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l19",
+          "runId": "r-p1-l19",
+          "lineIds": ["p1-l19"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Ett",
+          "verdict": "accept-flagged",
+          "flags": ["sequence-jump"],
+          "decidedBy": "D2"
+        },
+        {
+          "id": "i-p1-l20",
+          "runId": "r-p1-l19",
+          "lineIds": ["p1-l20"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Två",
+          "verdict": "accept-flagged",
+          "flags": ["sequence-jump"],
+          "decidedBy": "D2"
+        },
+        {
+          "id": "i-p1-l21",
+          "runId": "r-p1-l19",
+          "lineIds": ["p1-l21"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "12.1",
+            "family": "arabic",
+            "style": "dot",
+            "path": [12, 1],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": null,
+          "label": "Tolv och ett",
+          "verdict": "accept-flagged",
+          "flags": ["sequence-jump"],
+          "decidedBy": "D2"
+        },
+        {
+          "id": "i-p1-l22",
+          "runId": "r-p1-l19",
+          "lineIds": ["p1-l22"],
+          "detailLineIds": [],
+          "marker": { "raw": "3.", "family": "arabic", "style": "dot", "path": [3], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Tre",
+          "verdict": "accept-flagged",
+          "flags": ["sequence-jump"],
+          "decidedBy": "D2"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l1", "p1-l5", "p1-l10", "p1-l14", "p1-l18"],
+      "skippedLineIds": []
+    }
+  }
+}

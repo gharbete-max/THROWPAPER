@@ -1,0 +1,91 @@
+{
+  "source": "docs/plan/BELIEF.md, \"The questions\": every guess question is answered yes, no or not sure, so each language's ways of saying those three are written once here and given, when the built-in aliases load, to every question listed in `nodes` — the same entries one per question would be, without shipping them once for each. The card's own label is first; `pnpm builder:validate` holds the list to the graph.",
+  "answersVersion": 1,
+  "createdAt": "2026-09-29",
+  "nodes": [
+    "guess.absence",
+    "guess.anonymous",
+    "guess.behalf",
+    "guess.booking",
+    "guess.contact",
+    "guess.date",
+    "guess.invite",
+    "guess.job",
+    "guess.learn",
+    "guess.meeting",
+    "guess.membership",
+    "guess.news",
+    "guess.pay",
+    "guess.place",
+    "guess.price",
+    "guess.problem",
+    "guess.proposal",
+    "guess.reply",
+    "guess.research",
+    "guess.samples",
+    "guess.sessions",
+    "guess.signature"
+  ],
+  "ways": {
+    "en": {
+      "yes": ["Yes", "correct", "exactly", "yeah", "yep"],
+      "no": ["No", "nope", "not at all", "not really"],
+      "unsure": ["Not sure", "don't know", "maybe", "no idea", "unsure"]
+    },
+    "sv": {
+      "yes": ["Ja", "absolut", "det stämmer", "japp", "stämmer"],
+      "no": ["Nej", "inte alls", "nix", "nä"],
+      "unsure": ["Vet inte", "ingen aning", "kanske", "osäker", "vet ej"]
+    },
+    "da": {
+      "yes": ["Ja", "absolut", "det passer", "jep", "korrekt"],
+      "no": ["Nej", "nix", "næ", "slet ikke"],
+      "unsure": ["Ved ikke", "aner det ikke", "ingen anelse", "måske", "usikker"]
+    },
+    "nb": {
+      "yes": ["Ja", "absolutt", "det stemmer", "jepp", "stemmer"],
+      "no": ["Nei", "nix", "næ", "slett ikke"],
+      "unsure": ["Vet ikke", "aner ikke", "ingen anelse", "kanskje", "usikker"]
+    },
+    "fi": {
+      "yes": ["Kyllä", "joo", "juu", "pitää paikkansa", "totta"],
+      "no": ["Ei", "ei ole", "ei todellakaan", "eipä"],
+      "unsure": ["En tiedä", "ehkä", "en ole varma", "en osaa sanoa", "epävarma"]
+    },
+    "is": {
+      "yes": ["Já", "einmitt", "jú", "rétt", "það passar"],
+      "no": ["Nei", "alls ekki", "neibb"],
+      "unsure": ["Veit ekki", "hef ekki hugmynd", "kannski", "ég veit ekki", "óviss"]
+    },
+    "de": {
+      "yes": ["Ja", "genau", "jawohl", "richtig", "stimmt"],
+      "no": ["Nein", "eher nicht", "gar nicht", "nee"],
+      "unsure": ["Weiß nicht", "keine Ahnung", "unsicher", "vielleicht"]
+    },
+    "fr": {
+      "yes": ["Oui", "c’est ça", "exact", "ouais", "tout à fait"],
+      "no": ["Non", "nan", "pas du tout", "pas vraiment"],
+      "unsure": ["Je ne sais pas", "aucune idée", "je sais pas", "pas sûr", "peut-être"]
+    },
+    "es": {
+      "yes": ["Sí", "claro", "correcto", "efectivamente", "exacto"],
+      "no": ["No", "en absoluto", "nop", "para nada"],
+      "unsure": ["No lo sé", "ni idea", "no sé", "quizás", "tal vez"]
+    },
+    "zh": {
+      "yes": ["是", "对", "对的", "是的", "没错"],
+      "no": ["否", "不对", "不是", "没有"],
+      "unsure": ["不确定", "不清楚", "不知道", "也许", "说不准"]
+    },
+    "ja": {
+      "yes": ["はい", "うん", "ええ", "そうです", "その通り"],
+      "no": ["いいえ", "いや", "ちがう", "違います"],
+      "unsure": ["わからない", "たぶん", "不明", "分からない", "知らない"]
+    },
+    "ru": {
+      "yes": ["Да", "ага", "верно", "именно", "конечно"],
+      "no": ["Нет", "вовсе нет", "не совсем", "неа"],
+      "unsure": ["Не знаю", "возможно", "может быть", "не уверен", "не уверена"]
+    }
+  }
+}

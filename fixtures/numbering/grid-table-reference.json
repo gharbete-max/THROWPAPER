@@ -1,0 +1,345 @@
+{
+  "fixture": "grid-table-reference",
+  "caveats": ["grid-table-reference", "table-edge-rule"],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S9",
+  "summary": "A table with one checkbox per row is a list to tick, and it has no label of its own: the line above is another question. The question that points at \"the table below\", with no answer space of its own, is its label. Header cells over text columns (Session, Day) are not answer columns.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          { "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 1206, "bands": [1000] },
+          { "index": 1, "x0": 1000, "x1": 4900, "y0": 1435, "y1": 1566, "bands": [1100] },
+          { "index": 2, "x0": 5000, "x1": 6900, "y0": 1435, "y1": 1566, "bands": [5000] },
+          { "index": 3, "x0": 7000, "x1": 9000, "y0": 1435, "y1": 1566, "bands": [7000] },
+          { "index": 4, "x0": 1000, "x1": 9000, "y0": 1655, "y1": 2506, "bands": [1000] }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 6888, "y1": 1206 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1. Which sessions will you attend? Tick them in the table below.",
+                "words": [
+                  { "text": "1.", "start": 0, "box": { "x0": 1000, "y0": 895, "x1": 1184, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Which", "start": 3, "box": { "x0": 1276, "y0": 895, "x1": 1736, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "sessions", "start": 9, "box": { "x0": 1828, "y0": 895, "x1": 2564, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "will", "start": 18, "box": { "x0": 2656, "y0": 895, "x1": 3024, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "you", "start": 23, "box": { "x0": 3116, "y0": 895, "x1": 3392, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "attend?", "start": 27, "box": { "x0": 3484, "y0": 895, "x1": 4128, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Tick", "start": 35, "box": { "x0": 4220, "y0": 895, "x1": 4588, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "them", "start": 40, "box": { "x0": 4680, "y0": 895, "x1": 5048, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "in", "start": 45, "box": { "x0": 5140, "y0": 895, "x1": 5324, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "the", "start": 48, "box": { "x0": 5416, "y0": 895, "x1": 5692, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "table", "start": 52, "box": { "x0": 5784, "y0": 895, "x1": 6244, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "below.", "start": 58, "box": { "x0": 6336, "y0": 895, "x1": 6888, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 895, "x1": 6888, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "2. Dietary requirements: ____________________",
+                "words": [
+                  { "text": "2.", "start": 0, "box": { "x0": 1000, "y0": 1075, "x1": 1184, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Dietary", "start": 3, "box": { "x0": 1276, "y0": 1075, "x1": 1920, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "requirements:", "start": 11, "box": { "x0": 2012, "y0": 1075, "x1": 3208, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "____________________", "start": 25, "box": { "x0": 3300, "y0": 1075, "x1": 5140, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1075, "x1": 5140, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": true,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 1,
+            "role": "heading",
+            "box": { "x0": 1100, "y0": 1435, "x1": 1744, "y1": 1566 },
+            "lines": [
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 1,
+                "blockId": "p1-b2",
+                "text": "Session",
+                "words": [
+                  { "text": "Session", "start": 0, "box": { "x0": 1100, "y0": 1435, "x1": 1744, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 700, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1100, "y0": 1435, "x1": 1744, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b3",
+            "pageNo": 1,
+            "columnIndex": 2,
+            "role": "heading",
+            "box": { "x0": 5000, "y0": 1435, "x1": 5276, "y1": 1566 },
+            "lines": [
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 2,
+                "blockId": "p1-b3",
+                "text": "Day",
+                "words": [
+                  { "text": "Day", "start": 0, "box": { "x0": 5000, "y0": 1435, "x1": 5276, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 700, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 5000, "y0": 1435, "x1": 5276, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b4",
+            "pageNo": 1,
+            "columnIndex": 3,
+            "role": "heading",
+            "box": { "x0": 7000, "y0": 1435, "x1": 7552, "y1": 1566 },
+            "lines": [
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 3,
+                "blockId": "p1-b4",
+                "text": "Attend",
+                "words": [
+                  { "text": "Attend", "start": 0, "box": { "x0": 7000, "y0": 1435, "x1": 7552, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 700, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 7000, "y0": 1435, "x1": 7552, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": true,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b5",
+            "pageNo": 1,
+            "columnIndex": 4,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 1655, "x1": 7092, "y1": 2146 },
+            "lines": [
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 4,
+                "blockId": "p1-b5",
+                "text": "Warm-up and breathing Saturday ☐",
+                "words": [
+                  { "text": "Warm-up", "start": 0, "box": { "x0": 1000, "y0": 1655, "x1": 1644, "y1": 1786 }, "baseline": 1760, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "and", "start": 8, "box": { "x0": 1736, "y0": 1655, "x1": 2012, "y1": 1786 }, "baseline": 1760, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "breathing", "start": 12, "box": { "x0": 2104, "y0": 1655, "x1": 2932, "y1": 1786 }, "baseline": 1760, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Saturday", "start": 22, "box": { "x0": 5000, "y0": 1655, "x1": 5736, "y1": 1786 }, "baseline": 1760, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "☐", "start": 31, "box": { "x0": 7000, "y0": 1655, "x1": 7092, "y1": 1786 }, "baseline": 1760, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1655, "x1": 7092, "y1": 1786 },
+                "baseline": 1760,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 4,
+                "blockId": "p1-b5",
+                "text": "Sight-reading Saturday ☐",
+                "words": [
+                  { "text": "Sight-reading", "start": 0, "box": { "x0": 1000, "y0": 1835, "x1": 2196, "y1": 1966 }, "baseline": 1940, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Saturday", "start": 14, "box": { "x0": 5000, "y0": 1835, "x1": 5736, "y1": 1966 }, "baseline": 1940, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "☐", "start": 23, "box": { "x0": 7000, "y0": 1835, "x1": 7092, "y1": 1966 }, "baseline": 1940, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 1835, "x1": 7092, "y1": 1966 },
+                "baseline": 1940,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 4,
+                "blockId": "p1-b5",
+                "text": "Performance practice Sunday ☐",
+                "words": [
+                  { "text": "Performance", "start": 0, "box": { "x0": 1000, "y0": 2015, "x1": 2012, "y1": 2146 }, "baseline": 2120, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "practice", "start": 12, "box": { "x0": 2104, "y0": 2015, "x1": 2840, "y1": 2146 }, "baseline": 2120, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Sunday", "start": 21, "box": { "x0": 5000, "y0": 2015, "x1": 5552, "y1": 2146 }, "baseline": 2120, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "☐", "start": 28, "box": { "x0": 7000, "y0": 2015, "x1": 7092, "y1": 2146 }, "baseline": 2120, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2015, "x1": 7092, "y1": 2146 },
+                "baseline": 2120,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b6",
+            "pageNo": 1,
+            "columnIndex": 4,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 2375, "x1": 5876, "y1": 2506 },
+            "lines": [
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 4,
+                "blockId": "p1-b6",
+                "text": "Please return this form to the choir office by 1 May.",
+                "words": [
+                  { "text": "Please", "start": 0, "box": { "x0": 1000, "y0": 2375, "x1": 1552, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "return", "start": 7, "box": { "x0": 1644, "y0": 2375, "x1": 2196, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "this", "start": 14, "box": { "x0": 2288, "y0": 2375, "x1": 2656, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "form", "start": 19, "box": { "x0": 2748, "y0": 2375, "x1": 3116, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "to", "start": 24, "box": { "x0": 3208, "y0": 2375, "x1": 3392, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "the", "start": 27, "box": { "x0": 3484, "y0": 2375, "x1": 3760, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "choir", "start": 31, "box": { "x0": 3852, "y0": 2375, "x1": 4312, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "office", "start": 37, "box": { "x0": 4404, "y0": 2375, "x1": 4956, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "by", "start": 44, "box": { "x0": 5048, "y0": 2375, "x1": 5232, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "1", "start": 47, "box": { "x0": 5324, "y0": 2375, "x1": 5416, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "May.", "start": 49, "box": { "x0": 5508, "y0": 2375, "x1": 5876, "y1": 2506 }, "baseline": 2480, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2375, "x1": 5876, "y1": 2506 },
+                "baseline": 2480,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

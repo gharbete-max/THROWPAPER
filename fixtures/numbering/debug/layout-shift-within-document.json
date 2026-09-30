@@ -1,0 +1,17 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 2,
+  "irVersion": 1,
+  "inputSha256": "29b9c266b84623bb47c7340816244acc15a40f7e21c259086966f34d0d7dac1b",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":4,"y0":864,"y1":1926}},
+    {"id":"reassemble:p1-cut2","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":2,"right":2,"x0":1644,"x1":5200}},
+    {"id":"reassemble:p1-cut3","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":2,"right":2,"x0":1828,"x1":5200}},
+    {"id":"reassemble:p1-cut4","rule":"C4","verdict":"columns","subject":[],"evidence":{"columns":2,"rows":2}},
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":170}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2"],"evidence":{}},
+    {"id":"reassemble:p1-b3","rule":"B1","verdict":"body","subject":["p1-l3","p1-l4"],"evidence":{}},
+    {"id":"reassemble:p1-b4","rule":"B1","verdict":"body","subject":["p1-l5","p1-l6"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"sv","hits":3,"own":3,"runnerUp":0}}
+  ]
+}

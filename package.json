@@ -22,6 +22,8 @@
     "build": "pnpm -r run build",
     "verify": "pnpm run format:check && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
     "contract:check": "tsx scripts/contract-check.ts",
+    "builder:validate": "tsx scripts/builder-validate.ts",
+    "corpus:build": "tsx scripts/corpus/build.ts",
     "licence:check": "tsx scripts/licence-check.ts",
     "bundle:budget": "tsx scripts/bundle-budget.ts",
     "tokens:proof": "tsx scripts/proof/index.ts",
@@ -58,5 +60,10 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.70.0",
     "vitest": "^5.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "fast-uri@<3.1.7": "^3.1.7"
+    }
   }
 }

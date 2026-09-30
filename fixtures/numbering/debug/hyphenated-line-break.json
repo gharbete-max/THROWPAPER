@@ -1,0 +1,16 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 2,
+  "irVersion": 1,
+  "inputSha256": "79803409ffe41536c1861b1a9bd7f47a4e1effcfee4496b4986c14167adf8f51",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":6,"y0":895,"y1":2286}},
+    {"id":"reassemble:p1-l1-hyphen1","rule":"Y1","verdict":"dehyphenated","subject":["p1-l1"],"evidence":{"word":"registering"}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2"],"evidence":{}},
+    {"id":"reassemble:p1-l3-hyphen1","rule":"Y2","verdict":"joined-at-break","subject":["p1-l3"],"evidence":{"word":"e-post"}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l3","p1-l4"],"evidence":{}},
+    {"id":"reassemble:p1-l5-hyphen1","rule":"Y2","verdict":"joined-at-break","subject":["p1-l5"],"evidence":{"word":"Stockholm-Göteborg"}},
+    {"id":"reassemble:p1-b3","rule":"B1","verdict":"body","subject":["p1-l5","p1-l6"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"en","hits":5,"own":5,"runnerUp":5}}
+  ]
+}

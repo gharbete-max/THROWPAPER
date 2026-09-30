@@ -1,0 +1,64 @@
+{
+  "note": "The person moved 'Namn' above 'Adress till bostaden' by hand; the document reworded the address question in place. 'Namn' keeps its id (its text and ordinal are the document's), so its place is the person's; the address question is reworded, not moved, and only the rewording is asked. Weighing id matches more than wording matches would have asked to move the address question, which the document never moved.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-adress",
+      "family": "question",
+      "text": "Adress till bostaden",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-adress-ort",
+      "family": "question",
+      "text": "Adress till bostaden, ort"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-adress",
+        "by": "wording"
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [
+      1
+    ],
+    "gone": [],
+    "moved": []
+  }
+}

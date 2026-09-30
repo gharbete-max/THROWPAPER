@@ -1,0 +1,12 @@
+{
+  "stage": "classify",
+  "stageVersion": 2,
+  "irVersion": 1,
+  "inputSha256": "87dcc0d5d62a1834a66fa965ca334657fd15fc37fdc196c933655c664d41b366",
+  "decisions": [
+    {"id":"classify:p1-l8","rule":"K1","verdict":"short_text","subject":["p1-l8"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l10","rule":"K1","verdict":"phone","subject":["p1-l10"],"evidence":{"confidence":953,"features":"phoneWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l11","rule":"K1","verdict":"email","subject":["p1-l11"],"evidence":{"confidence":953,"features":"emailWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l12","rule":"K1","verdict":"short_text","subject":["p1-l12"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}}
+  ]
+}

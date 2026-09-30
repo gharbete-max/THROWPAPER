@@ -1,0 +1,15 @@
+{
+  "fixture": "prose-question",
+  "expect": {
+    "segment": {
+      "segments": [
+        { "kind": "question", "lineIds": ["p1-l1"], "label": "Har du några allergier?", "itemId": null, "answer": "unknown", "options": [], "details": [], "flags": [] },
+        { "kind": "question", "lineIds": ["p1-l2", "p1-l3", "p1-l4"], "label": "Vilken nivå har du?", "itemId": null, "answer": "choice", "options": ["Nybörjare", "Van"], "details": [], "flags": [] },
+        { "kind": "instruction", "lineIds": ["p1-l5"], "text": "Ta med följande:" },
+        { "kind": "instruction", "lineIds": ["p1-l6"], "text": "- Sovsäck" },
+        { "kind": "instruction", "lineIds": ["p1-l7"], "text": "- Ficklampa" },
+        { "kind": "instruction", "lineIds": ["p1-l8"], "text": "Tack för din anmälan." }
+      ]
+    }
+  }
+}

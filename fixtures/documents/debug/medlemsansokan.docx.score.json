@@ -1,0 +1,19 @@
+{
+  "stage": "score",
+  "stageVersion": 1,
+  "irVersion": 1,
+  "inputSha256": "1c4a88d8ae112ee32869667235653a67387416ad02e82da9d57a270b115d9a6c",
+  "decisions": [
+    {"id":"score:p1-l1","rule":"Q2","verdict":"auto","subject":["p1-l1"],"evidence":{"confidence":924,"heading":2500,"sum":2500}},
+    {"id":"score:p1-l2","rule":"Q2","verdict":"auto","subject":["p1-l2"],"evidence":{"confidence":924,"instruction":2500,"sum":2500}},
+    {"id":"score:p1-l3","rule":"Q1","verdict":"auto","subject":["p1-l3"],"evidence":{"answer":976,"bias":500,"blank":1500,"colon":500,"confidence":996,"required":"flag","sum":5500,"verdict":3000}},
+    {"id":"score:p1-l4","rule":"Q1","verdict":"auto","subject":["p1-l4"],"evidence":{"answer":971,"bias":500,"blank":1500,"colon":500,"confidence":996,"required":"flag","sum":5500,"verdict":3000}},
+    {"id":"score:p1-l5","rule":"Q1","verdict":"auto","subject":["p1-l5","p1-l6"],"evidence":{"answer":881,"bias":500,"blank":1500,"colon":500,"confidence":996,"required":"flag","sum":5500,"verdict":3000}},
+    {"id":"score:p1-l7","rule":"Q2","verdict":"auto","subject":["p1-l7"],"evidence":{"confidence":924,"heading":2500,"sum":2500}},
+    {"id":"score:p1-l8","rule":"Q1","verdict":"auto","subject":["p1-l8"],"evidence":{"answer":953,"bias":500,"blank":1500,"colon":500,"confidence":996,"required":"flag","sum":5500,"verdict":3000}},
+    {"id":"score:p1-l9","rule":"Q1","verdict":"auto","subject":["p1-l9"],"evidence":{"answer":953,"bias":500,"blank":1500,"colon":500,"confidence":996,"required":"flag","sum":5500,"verdict":3000}},
+    {"id":"score:p1-l10","rule":"Q1","verdict":"auto","subject":["p1-l10"],"evidence":{"answer":1000,"bias":500,"checkbox":1500,"confidence":995,"questionMark":300,"required":"flag","sum":5300,"verdict":3000}},
+    {"id":"score:p1-l11","rule":"Q1","verdict":"auto","subject":["p1-l11"],"evidence":{"answer":953,"bias":500,"blank":1500,"colon":500,"confidence":996,"required":"flag","sum":5500,"verdict":3000}},
+    {"id":"score:p1-l12","rule":"Q2","verdict":"auto","subject":["p1-l12"],"evidence":{"confidence":924,"instruction":2500,"sum":2500}}
+  ]
+}

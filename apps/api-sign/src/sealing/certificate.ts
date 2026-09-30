@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash, X509Certificate } from 'node:crypto';
 import * as asn1js from 'asn1js';
 import * as pkijs from 'pkijs';
 
@@ -124,10 +124,30 @@ export async function loadSealer(pair: PemPair): Promise<Sealer> {
   };
 }
 
+/**
+ * A positive serial in minimal DER. Masking the first byte to `0x7f` alone kept it positive but
+ * not minimal: a first byte of `0x00` before one below `0x80` is padding, which OpenSSL refuses
+ * outright ("illegal padding"). One certificate in 256 could not be read, and every seal made with
+ * it failed to verify. The top bits `01` put the first byte in `0x40`–`0x7f` — positive, never
+ * padding — and leave 126 random bits.
+ */
 function randomSerial(): ArrayBuffer {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
-  bytes[0] = bytes[0]! & 0x7f; // positive
+  bytes[0] = (bytes[0]! & 0x3f) | 0x40;
   return bytes.buffer;
+}
+
+/**
+ * Whether OpenSSL can read this certificate — which is what every validator of a seal made with it
+ * uses. Node's `X509Certificate` is OpenSSL's own parser, so this is the same judgement in-process.
+ */
+export function readableCertificate(certPem: string): boolean {
+  try {
+    new X509Certificate(certPem);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function pem(label: string, der: Uint8Array): string {

@@ -140,6 +140,12 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-motion-fast'] = '110ms';
   vars['--tp-motion'] = '180ms';
   vars['--tp-motion-slow'] = '320ms';
+  /**
+   * The guided builder's one movement: the next question arriving, and a preview changing
+   * because an answer did (`docs/plan/DESIGN-LANGUAGE.md`, "Motion"). Always on the
+   * `unfurl` curve below, and never at all under `prefers-reduced-motion`.
+   */
+  vars['--tp-motion-preview'] = '220ms';
 
   /*
    * The mark's own two curves, so the interface moves the way the thing in the corner moves.

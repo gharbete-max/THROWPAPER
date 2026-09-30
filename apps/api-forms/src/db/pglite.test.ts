@@ -77,6 +77,87 @@ describe('the embedded database', { timeout: 60_000 }, () => {
     }
   });
 
+  /**
+   * The guided builder's saved conversation (`builder_sessions`, migration 0019): one per form and
+   * person, and a save over a version it did not read is refused by the statement itself.
+   */
+  it('keeps a builder session per form and person, behind its version lock', async () => {
+    const local = await openLocalDatabase({ migrationsFolder });
+    try {
+      const { organisationId, formSlug } = await seedDemo(local.db);
+      const form = await local.repos.forms.findBySlug(organisationId, formSlug);
+      const [first, second] = await local.repos.users.list(organisationId);
+      const sessions = local.repos.builderSessions;
+      const key = { organisationId, formId: form!.id };
+      const session = { sessionVersion: 1, note: 'Välj mat — å ä ö' };
+
+      expect(await sessions.find(organisationId, form!.id, first!.id)).toBeNull();
+      const saved = await sessions.save({ ...key, userId: first!.id, session, expected: 0 });
+      expect(saved).toMatchObject({ version: 1, session });
+      expect(await sessions.save({ ...key, userId: first!.id, session, expected: 0 })).toBeNull();
+      expect(
+        await sessions.save({ ...key, userId: first!.id, session, expected: 1 }),
+      ).toMatchObject({ version: 2 });
+      expect(await sessions.save({ ...key, userId: first!.id, session, expected: 1 })).toBeNull();
+      expect((await sessions.find(organisationId, form!.id, first!.id))?.version).toBe(2);
+
+      // Someone else's conversation about the same form is their own.
+      expect(await sessions.find(organisationId, form!.id, second!.id)).toBeNull();
+      expect(
+        await sessions.save({ ...key, userId: second!.id, session, expected: 0 }),
+      ).toMatchObject({ version: 1 });
+    } finally {
+      await local.close();
+    }
+  });
+
+  /** The learned aliases (`builder_aliases`, migration 0020), S6. */
+  it('keeps learned aliases: one per way of saying it, counted, in the alias file’s order', async () => {
+    const local = await openLocalDatabase({ migrationsFolder });
+    try {
+      const { organisationId } = await seedDemo(local.db);
+
+      const aliases = local.repos.builderAliases;
+      const alias = (phrase: string, key: string, optionId: string) => ({
+        phrase,
+        key,
+        nodeId: 'choice.shape',
+        optionId,
+        locale: 'sv',
+        source: 'user-confirmed' as const,
+        createdAt: '2026-09-28',
+        count: 1,
+        notes: '',
+      });
+      await aliases.clear(organisationId);
+      const [stored] = await aliases.add(organisationId, [
+        alias('Blobbig å ä ö', 'blobbig å ä ö', 'pill'),
+      ]);
+      expect(stored).toMatchObject({ phrase: 'Blobbig å ä ö', createdAt: '2026-09-28', count: 1 });
+      // One way of saying something per language and question: the second is not stored.
+      expect(
+        await aliases.add(organisationId, [alias('BLOBBIG å ä ö', 'blobbig å ä ö', 'square')]),
+      ).toEqual([]);
+      expect((await aliases.bump(organisationId, stored!.id))?.count).toBe(2);
+      await aliases.add(organisationId, [
+        alias('Äpple', 'äpple', 'square'),
+        alias('Zebra', 'zebra', 'square'),
+      ]);
+      // The alias file's order: code points, so Ä comes after Z, whatever the database's collation.
+      expect((await aliases.list(organisationId)).map((a) => a.phrase)).toEqual([
+        'Blobbig å ä ö',
+        'Zebra',
+        'Äpple',
+      ]);
+      expect((await aliases.remove(organisationId, stored!.id))?.phrase).toBe('Blobbig å ä ö');
+      expect(await aliases.remove(organisationId, stored!.id)).toBeNull();
+      expect(await aliases.clear(organisationId)).toBe(2);
+      expect(await aliases.list(organisationId)).toEqual([]);
+    } finally {
+      await local.close();
+    }
+  });
+
   it('keeps what it wrote across a close and a reopen of the same directory', async () => {
     const dataDir = join(scratch, 'persist');
     const first = await openLocalDatabase({ dataDir, migrationsFolder });

@@ -29,12 +29,18 @@ export function FormPreview({
   locale,
   locales,
   selectedId,
+  note = true,
 }: {
   definition: FormDefinition;
   locale: string;
   locales: LocaleConfig;
   /** Highlighted so it is obvious which row in the list is which question on the page. */
   selectedId: string | null;
+  /**
+   * "Nothing here is saved", under the form. Off where the screen already says so once, above
+   * many previews: the review screen's items (S10).
+   */
+  note?: boolean;
 }) {
   const t = useT();
   const [values, setValues] = useState<SubmissionValues>({});
@@ -154,7 +160,7 @@ export function FormPreview({
       </div>
 
       {/* Said plainly, because an interactive preview invites the assumption that it saves. */}
-      <p className="small muted">{t('preview.note')}</p>
+      {note && <p className="small muted">{t('preview.note')}</p>}
     </div>
   );
 }

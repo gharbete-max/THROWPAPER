@@ -59,3 +59,69 @@ describe('the PDF reader and the OCR engine', () => {
     expect(offenders, `these would put ${name} in the entry chunk: ${offenders}`).toEqual([]);
   });
 });
+
+/**
+ * `CAVEATS.md` #43, `privacy`: a document never leaves the machine to be read, and what was read
+ * is never stored anywhere but where the author saves it.
+ *
+ * The readers — the Word unzipper and XML reader, the stages, the worker — live in the paper
+ * door and nowhere else, so they load only when somebody opens it: the editor's paper import
+ * (`paper/`) and, since S10, the review screen (`review/`). And none of the modules that hold a
+ * reading can reach the server. An import keeps only what the author presses a button for: the
+ * source file, sent by `ImportPaper` (ADR 0004), or the questions "Use these questions" adds to
+ * the draft, saved by `ReviewScreen`.
+ */
+describe('the document readers', () => {
+  const PAPER = join('screens', 'builder', 'paper');
+  const REVIEW = join('screens', 'builder', 'review');
+  const READERS = [
+    'docx.js',
+    'zip.js',
+    'xml.js',
+    'pipeline.js',
+    'reading.js',
+    'read-in-worker.js',
+    'import.worker',
+    'clipboard.js',
+  ];
+
+  it('are imported from the paper door only', () => {
+    const door = (path: string) =>
+      [PAPER, REVIEW].some((dir) => path.includes(`${dir}/`) || path.includes(`${dir}\\`));
+    const offenders = sourceFiles(ROOT)
+      .filter((path) => !door(path))
+      .filter((path) => {
+        const source = readFileSync(path, 'utf8');
+        return READERS.some((name) => source.includes(`paper/${name}`));
+      })
+      .map((path) => path.slice(ROOT.length));
+    expect(
+      offenders,
+      `these would load a document reader outside the paper door: ${offenders}`,
+    ).toEqual([]);
+  });
+
+  it('never talk to the server, and neither does what shows a reading', () => {
+    const quiet = [
+      'docx.ts',
+      'zip.ts',
+      'xml.ts',
+      'refusal.ts',
+      'pipeline.ts',
+      'reading.ts',
+      'read-in-worker.ts',
+      'import.worker.ts',
+      'clipboard.ts',
+      'ReadingView.tsx',
+    ];
+    for (const name of quiet) {
+      const source = readFileSync(join(ROOT, PAPER, name), 'utf8');
+      expect(source, name).not.toMatch(/lib\/api|fetch\(|XMLHttpRequest|sendBeacon/);
+    }
+    const review = ['review.ts', 'fields.ts', 'keys.ts', 'SourcePane.tsx', 'DraftPane.tsx'];
+    for (const name of review) {
+      const source = readFileSync(join(ROOT, REVIEW, name), 'utf8');
+      expect(source, name).not.toMatch(/lib\/api|fetch\(|XMLHttpRequest|sendBeacon/);
+    }
+  });
+});

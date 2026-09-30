@@ -1,0 +1,28 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in es. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "es",
+  "features": {
+    "nameWord": ["nombre", "apellido*", "nombre completo"],
+    "emailWord": ["correo electrónico", "correo", "email", "e-mail"],
+    "phoneWord": ["teléfono", "móvil", "celular", "tel"],
+    "addressWord": ["dirección", "domicilio", "dirección postal"],
+    "dateWord": ["fecha", "fecha de nacimiento"],
+    "timeWord": ["hora", "horario"],
+    "numberWord": ["número de", "cantidad", "edad", "cuántos", "cuántas"],
+    "currencyHint": ["importe", "precio", "€", "eur", "euros", "cuota"],
+    "personnummerWord": ["dni", "nie"],
+    "orgNrWord": ["cif", "nif"],
+    "signatureHint": ["firma"],
+    "fileHint": ["adjunt*", "subir"],
+    "consentHint": ["consiento", "consentimiento", "acepto", "rgpd", "gdpr"],
+    "commentWord": ["comentario*", "observaciones", "mensaje", "describa"],
+    "selectAllPhrase": ["varias respuestas", "marque todas"],
+    "repeatableHint": ["por persona", "cada participante"],
+    "required": ["obligatorio*"],
+    "optional": ["opcional"],
+    "maxWords": ["máx", "máximo", "como máximo", "hasta"],
+    "minWords": ["mín", "mínimo", "al menos"]
+  },
+  "formats": {}
+}

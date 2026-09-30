@@ -1,0 +1,84 @@
+{
+  "note": "A new question at the top, and the day question moved from first to last, past 'Namn', which kept its ordinal and so its id. The day question is matched by wording, two places from where it was, and is out of the document's order: asked, and moved after 'Namn'. The new question goes first.",
+  "form": [
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "q-epost",
+      "family": "question",
+      "text": "E-post"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-dag-3",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": null,
+        "by": null
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      },
+      {
+        "formId": "q-dag",
+        "by": "wording"
+      }
+    ],
+    "added": [
+      0
+    ],
+    "addBack": [],
+    "reworded": [],
+    "gone": [],
+    "moved": [
+      2
+    ]
+  },
+  "choices": {
+    "addBack": [],
+    "reword": [],
+    "remove": [],
+    "move": [
+      2
+    ]
+  },
+  "plan": {
+    "place": [
+      {
+        "kind": "add",
+        "index": 0,
+        "after": null
+      },
+      {
+        "kind": "move",
+        "formId": "q-dag",
+        "after": "q-namn"
+      }
+    ],
+    "reword": [],
+    "remove": []
+  }
+}

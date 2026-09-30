@@ -1,0 +1,42 @@
+{
+  "note": "Two questions in the form as like the document's as each other: the one with the lower ordinal is matched, the other is asked about as no longer in the document.",
+  "form": [
+    {
+      "id": "q-barn-1",
+      "family": "question",
+      "text": "Namn på barn 1",
+      "fromDocument": true
+    },
+    {
+      "id": "q-barn-2",
+      "family": "question",
+      "text": "Namn på barn 2",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "q-barn",
+      "family": "question",
+      "text": "Namn på barn 3"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "q-barn-1",
+        "by": "wording"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [
+      0
+    ],
+    "gone": [
+      "q-barn-2"
+    ],
+    "moved": []
+  }
+}
