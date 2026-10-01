@@ -287,7 +287,7 @@ jobs:
             echo "name=$tag" >> "$GITHUB_OUTPUT"
             echo "verify=--target=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           pattern: loppa-*
           merge-multiple: true
