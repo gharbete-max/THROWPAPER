@@ -293,6 +293,17 @@ unambiguous marker has only one reading. **Fixtures:** `sequence-continuity` (`c
      `sequence-jump` to `r.flags`. The whole run is demoted (D2). **Fixture:**
      `sequence-continuity` (1, 2, 12.1, 3).
 3. Otherwise (no run at this band):
+   - **R6c — a list resumes across a heading.** `S` is empty, the marker is not a bullet, and a
+     run `r` in `E` (the top-level runs the latest heading closed, R6a) has
+     `SAME_BAND(r.relX, x)` and a reading of `r.family` whose path is in `expectedNext(r)` at
+     `r`'s own depth: reopen `r` (push it on `S`) and APPEND. The evidence names the run resumed.
+     A form numbered straight on across its section headings is one list, unflagged, whatever
+     heads its sections; "1." after a heading still starts a new list (it is not expected), and a
+     skipped number still starts one flagged `starts-mid-sequence`. Placing any marker, by any
+     rule, empties `E`. (First written without it: every list after a heading was flagged
+     `starts-mid-sequence`, and a lone last question made a candidate — the corpus's
+     `innmelding`, `CAVEATS.md` #140.) **Fixtures:** `numbering-across-headings`,
+     `numbering-across-headings--skipped`.
    - **R3 — an indent to the left closes what is to its right.** Close every run with
      `(r.relX − x) × 50 > w`.
    - **R2 — an indent to the right nests.** If `S` is still non-empty, push a new run at
@@ -340,7 +351,8 @@ no open band — flagged `starts-mid-sequence`, or its sub-list joined to the wr
 In this order:
 
 1. **R6a — a heading resets every list.** The line is in a block whose role is `heading`: close
-   every run in `S`; the line is prose; `openItem = null`. (A heading line whose first word *is*
+   every run in `S`, keeping its top-level runs as `E` when there are any (a list R6c may resume;
+   a second heading straight after keeps the first's); the line is prose; `openItem = null`. (A heading line whose first word *is*
    a marker never gets here — it was placed in §6 like any other; numbered section headings are
    list items.) **Fixture:** `counter-reset-on-heading`.
 2. **V7 — continuation notices change nothing.** `probe(L.text)` is at most 60 code points and
@@ -473,6 +485,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | R5b | same band, other family, not first | appended; run flagged `scheme-inconsistent` | `scheme-change-same-indent` |
 | R6a | line in a `heading` block, no marker | all runs closed | `counter-reset-on-heading` |
 | R6b | prose line; close runs with `(r.relX − relX(L)) × 50 > w` | closed | `counter-reset-on-heading` |
+| R6c | no open run; not a bullet; the expected next of a run a heading closed, same band and family | the run resumed | `numbering-across-headings`, `numbering-across-headings--skipped` |
 | R7 | same band, same family, first value, not expected | new run flagged `restart-without-boundary` | `counter-reset-on-heading` |
 | R8 | no rule reads pageNo or columnIndex | lists continue across pages and columns | `page-break-continuation`, `two-column-order` |
 | R8b | first read line of a new column or page is a marker that continues an open run by family and number, ignoring indent | every open run's relX moves by the same amount, so that run sits at this line's indent | `column-break-indent` |

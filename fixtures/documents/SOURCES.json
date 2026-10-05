@@ -182,6 +182,30 @@
       }
     },
     {
+      "name": "innmelding",
+      "language": "nb",
+      "summary": "A Norwegian club registration numbered \"(1)\" to \"(6)\" straight on across three section headings, beside an amount in brackets in its prose; a fødselsnummer and an organisasjonsnummer; and \"Navn\" asked twice, once in each section.",
+      "features": [
+        "typed-numbering",
+        "parenthesised-number",
+        "numbering-across-headings",
+        "same-question-repeated",
+        "locale-specific-fields",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "innmelding.pdf",
+          "sha256": "1f0939958585bf135b5e74bafd105192ade387fdeb434360f651201fb16ef29c"
+        },
+        "docx": {
+          "path": "innmelding.docx",
+          "sha256": "3e50309cd36086d362f1bf42920415102f72ce5c968e33c77482b83499e87c87"
+        }
+      }
+    },
+    {
       "name": "inscription",
       "language": "fr",
       "summary": "A French registration with French typography: a no-break space before every colon and question mark, a number of people, and a yes/no question with checkboxes.",

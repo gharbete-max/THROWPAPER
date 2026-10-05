@@ -643,8 +643,8 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: seventeen documents, each a PDF and a Word file, and two of them scanned** —
-nine Swedish, two English, one each in Danish, Norwegian, Finnish, German, French and Spanish; one and two pages; running headers and page-number
+**What it holds today: eighteen documents, each a PDF and a Word file, and two of them scanned** —
+nine Swedish, two English, two Norwegian, one each in Danish, Finnish, German, French and Spanish; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -654,7 +654,9 @@ begins "12.1" (`rule-ballot`, held by P3a); and an inspection checklist numbered
 hand under its sections (`besiktning`); and a form with no numbers at all, as most are, its
 sections in capitals, dot leaders, a label whose blank is on the line under it, required hints and
 "(max 7)" in a question (`sommarlager`; like `lagerschema`, too little prose to be sure of its
-language: 18 stop words of 20). Scans of real paper are still owed.
+language: 18 stop words of 20); and a Norwegian registration numbered "(1)" to "(6)" straight on
+across its section headings (`innmelding`, held by R6c), with its fødselsnummer and
+organisasjonsnummer and a question asked again. Scans of real paper are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

@@ -35,7 +35,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 5;
+export const ENUMERATE_STAGE_VERSION = 6;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -236,6 +236,11 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   const consumed = new Set<string>();
   const decisions: Decision[] = [];
   let openItem: WorkItem | null = null;
+  /**
+   * R6c: the top-level runs the latest heading ended, until the next marker. The first marker after
+   * a heading may resume one of them; any other marker forgets them.
+   */
+  let endedByHeading: Run[] = [];
   /** §11: Word's lists by `numId`, and the latest item at each of their levels. */
   const wordRuns = new Map<number, Run>();
   const wordLevels = new Map<number, WorkItem[]>();
@@ -427,6 +432,8 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     match: MarkerMatch,
     labelLine: Line | null,
   ): { item: WorkItem; rule: string; evidence: Evidence } => {
+    const ended = endedByHeading;
+    endedByHeading = [];
     // R1 — continue a run.
     const next = continuing(match, line);
     if (next) {
@@ -460,6 +467,28 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
       }
       atBand.flags.add('sequence-jump');
       return { item: append(atBand, line, match, reading, labelLine), rule: 'R4', evidence: {} };
+    }
+
+    // R6c — a list resumes across a heading: the first marker after it is the next number a list
+    // the heading ended expects, at that list's indent and in its family. Never a bullet, which
+    // has no number to say it goes on.
+    if (stack.length === 0 && match.preferred.family !== 'bullet') {
+      for (let i = ended.length - 1; i >= 0; i -= 1) {
+        const run = ended[i]!;
+        if (!sameBand(run.relX, line.relX, line.width)) continue;
+        const expected = expectedNext(run);
+        const resumed = match.readings.find(
+          (r) =>
+            r.family !== 'bullet' &&
+            r.family === run.family &&
+            r.path.length === run.lastPath.length &&
+            expected.some((path) => samePath(path, r.path)),
+        );
+        if (!resumed) continue;
+        stack.push(run);
+        const item = append(run, line, match, resumed, labelLine);
+        return { item, rule: 'R6c', evidence: { resumes: run.id } };
+      }
     }
 
     // R3 — an indent to the left closes what is to its right.
@@ -544,6 +573,9 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     const id = line.ir.id;
     // R6a — a heading resets every list.
     if (line.block.role === 'heading') {
+      // Its top-level lists are remembered: the list may go on after it (R6c).
+      const ended = stack.filter((run) => run.parent === null && run.level === 1);
+      if (ended.length > 0) endedByHeading = ended;
       const closed = close(() => true);
       owners.set(id, { kind: 'prose' });
       openItem = null;
@@ -580,6 +612,7 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   // ------------------------------------------------------------------ §11 W1
   /** A paragraph Word numbers: Word's marker, level and list, as fact. */
   const placeWord = (line: Line, numbering: DocxNumbering): WorkItem => {
+    endedByHeading = [];
     const family = wordFamily(numbering.format);
     const style = wordStyle(numbering.rendered, family);
     const path = wordPath(numbering.rendered, family);

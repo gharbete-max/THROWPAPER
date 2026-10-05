@@ -1,0 +1,28 @@
+{
+  "document": "innmelding",
+  "locale": "nb",
+  "items": [
+    { "marker": "(1)", "label": "Navn: ______________________________" },
+    { "marker": "(2)", "label": "Fødselsnummer: ______________________" },
+    { "marker": "(3)", "label": "E-post: ____________________________" },
+    { "marker": "(4)", "label": "Navn: ______________________________" },
+    { "marker": "(5)", "label": "Telefon: __________________________" },
+    { "marker": "(6)", "label": "Organisasjonsnummer: ____________________" }
+  ],
+  "segments": [
+    { "kind": "heading", "text": "Innmelding i idrettslaget" },
+    {
+      "kind": "instruction",
+      "text": "Medlemskapet gjelder for ett kalenderår og fornyes automatisk hvis du ikke sier opp. Kontingenten er 1 200 kr for voksne (3 500 kr for hele familien) og betales innen 1. mars. Fyll ut skjemaet og lever det til kassereren, eller send det med post til klubbhuset. Ta kontakt med oss hvis noen av opplysningene endrer seg etter innmeldingen, slik at vi kan nå deg uten å lete."
+    },
+    { "kind": "heading", "text": "Medlem" },
+    { "kind": "question", "label": "Navn", "answer": "blank", "type": "short_text" },
+    { "kind": "question", "label": "Fødselsnummer", "answer": "blank", "type": "personnummer" },
+    { "kind": "question", "label": "E-post", "answer": "blank", "type": "email" },
+    { "kind": "heading", "text": "Foresatt" },
+    { "kind": "question", "label": "Navn", "answer": "blank", "type": "short_text", "flags": ["same-as-earlier"] },
+    { "kind": "question", "label": "Telefon", "answer": "blank", "type": "phone" },
+    { "kind": "heading", "text": "Bedrift" },
+    { "kind": "question", "label": "Organisasjonsnummer", "answer": "blank", "type": "orgnr" }
+  ]
+}

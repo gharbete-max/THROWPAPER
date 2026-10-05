@@ -507,3 +507,12 @@ when each slice ends.)*
   legend's candidate item, and the allergy question's type, short text, as `event-registration`
   already expects for its dietary line. Its language is `null`: 18 stop words of the 20 rule G1 asks
   for, kept rather than tuned. 17 documents.
+- **Corpus growth: numbering across headings (2026-10-05).** What: `innmelding` (Norwegian), numbered
+  "(1)" to "(6)" straight on across three section headings, with a fødselsnummer, an
+  organisasjonsnummer and "Navn" asked twice. Found: a heading ended the list (R6a), so every list
+  after one was flagged `starts-mid-sequence`, and "(6)", alone under its heading, became a mere
+  candidate (#140). New rule R6c: the first marker after a heading that is the next number of a
+  list the heading ended resumes it; "1." still starts a new list and a skipped number is still
+  flagged. Two numbering fixtures, written and failing first; a first version let a bullet resume a
+  bullet list, which `bullet-list` caught at once, so bullets never resume. Enumerate is at stage
+  version 6; every other snapshot moved only that line. 18 documents.

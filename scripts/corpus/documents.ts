@@ -543,4 +543,35 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'innmelding',
+    language: 'nb',
+    summary:
+      'A Norwegian club registration numbered "(1)" to "(6)" straight on across three section headings, beside an amount in brackets in its prose; a fødselsnummer and an organisasjonsnummer; and "Navn" asked twice, once in each section.',
+    features: [
+      'typed-numbering',
+      'parenthesised-number',
+      'numbering-across-headings',
+      'same-question-repeated',
+      'locale-specific-fields',
+      'locale',
+    ],
+    word: {
+      blocks: [
+        title('Innmelding i idrettslaget'),
+        para(
+          'Medlemskapet gjelder for ett kalenderår og fornyes automatisk hvis du ikke sier opp. Kontingenten er 1 200 kr for voksne (3 500 kr for hele familien) og betales innen 1. mars. Fyll ut skjemaet og lever det til kassereren, eller send det med post til klubbhuset. Ta kontakt med oss hvis noen av opplysningene endrer seg etter innmeldingen, slik at vi kan nå deg uten å lete.',
+        ),
+        heading('Medlem'),
+        para(`(1) Navn: ${blank(30)}`),
+        para(`(2) Fødselsnummer: ${blank(22)}`),
+        para(`(3) E-post: ${blank(28)}`),
+        heading('Foresatt'),
+        para(`(4) Navn: ${blank(30)}`),
+        para(`(5) Telefon: ${blank(26)}`),
+        heading('Bedrift'),
+        para(`(6) Organisasjonsnummer: ${blank(20)}`),
+      ],
+    },
+  },
 ];
