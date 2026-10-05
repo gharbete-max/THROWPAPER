@@ -21,6 +21,13 @@ test.afterAll(async () => {
 const GUIDED = /\/forms\/([0-9a-f-]{36})\/guided$/;
 const FRAME_MS = 16;
 const UNSHOWN_MS = 150;
+/**
+ * What the measurement of "not before 150 ms" cannot resolve. Chromium coarsens `performance.now()`
+ * to a tenth of a millisecond, and the animation's delay runs from a frame's timestamp, not from the
+ * moment the picture was put in the page: a run here saw it at 149.9 ms. A millisecond allows for
+ * the clock and nothing else — without the delay the picture is seen at 18 ms.
+ */
+const CLOCK_MS = 1;
 
 async function startFromQuestions(page: Page): Promise<string> {
   await page.goto('/forms');
@@ -152,7 +159,8 @@ test('a wait under 150 ms shows no waiting picture; a longer one shows it', asyn
     JSON.stringify(slow),
   ).toBe(true);
   for (const wait of slow) {
-    if (wait.shown !== null) expect(wait.shown - wait.mounted).toBeGreaterThanOrEqual(UNSHOWN_MS);
+    if (wait.shown !== null)
+      expect(wait.shown - wait.mounted).toBeGreaterThanOrEqual(UNSHOWN_MS - CLOCK_MS);
   }
 
   // Answered at once: every wait that ended inside 150 ms was never seen.
@@ -162,7 +170,10 @@ test('a wait under 150 ms shows no waiting picture; a longer one shows it', asyn
   const quick = await waitsOf(page);
   expect(quick.length, 'the page waited for something').toBeGreaterThan(0);
   for (const wait of quick) {
-    if (wait.gone !== null && wait.gone - wait.mounted < UNSHOWN_MS) expect(wait.shown).toBeNull();
-    if (wait.shown !== null) expect(wait.shown - wait.mounted).toBeGreaterThanOrEqual(UNSHOWN_MS);
+    if (wait.gone !== null && wait.gone - wait.mounted < UNSHOWN_MS - CLOCK_MS) {
+      expect(wait.shown).toBeNull();
+    }
+    if (wait.shown !== null)
+      expect(wait.shown - wait.mounted).toBeGreaterThanOrEqual(UNSHOWN_MS - CLOCK_MS);
   }
 });
