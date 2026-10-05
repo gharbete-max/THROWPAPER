@@ -510,4 +510,37 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'sommarlager',
+    language: 'sv',
+    summary:
+      'A form with no numbers at all, as most are: sections in capitals, dot leaders for blanks, a label whose blank is on the line under it, required hints ("(obligatoriskt)", "*"), a limit inside a question ("(max 7)") and a closing instruction.',
+    features: [
+      'unnumbered',
+      'heading-in-capitals',
+      'blank-line-leaders',
+      'label-and-field-split',
+      'required-inference',
+      'number-in-question-text',
+      'instruction-vs-question',
+    ],
+    word: {
+      blocks: [
+        title('Anmälan till sommarlägret'),
+        para(
+          'Lägret är för barn mellan åtta och tolv år och hålls vid sjön under första veckan i juli. Fyll i en blankett för varje barn och lämna den till kansliet senast den sista maj.',
+        ),
+        para('DELTAGARE'),
+        para(`Namn (obligatoriskt) ${'.'.repeat(40)}`),
+        para(`Födelsedatum ${'.'.repeat(40)}`),
+        para('Vårdnadshavarens e-post*:'),
+        para(blank(40)),
+        para(`Hur många nätter stannar barnet? (max 7) ${blank(8)}`),
+        para('MAT OCH ALLERGIER'),
+        para(`Allergier eller specialkost: ${blank(30)}`),
+        para('Läs lägrets regler på hemsidan innan du lämnar in anmälan.'),
+        small('* = måste fyllas i'),
+      ],
+    },
+  },
 ];

@@ -315,6 +315,31 @@
       }
     },
     {
+      "name": "sommarlager",
+      "language": "sv",
+      "summary": "A form with no numbers at all, as most are: sections in capitals, dot leaders for blanks, a label whose blank is on the line under it, required hints (\"(obligatoriskt)\", \"*\"), a limit inside a question (\"(max 7)\") and a closing instruction.",
+      "features": [
+        "unnumbered",
+        "heading-in-capitals",
+        "blank-line-leaders",
+        "label-and-field-split",
+        "required-inference",
+        "number-in-question-text",
+        "instruction-vs-question"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "sommarlager.pdf",
+          "sha256": "6ec4ba52fc9be609c0f63cd4d388930a5c6bbe52713280d827144971793827a1"
+        },
+        "docx": {
+          "path": "sommarlager.docx",
+          "sha256": "00106339830e94230ec8d40428b1558294c37b3dcb68e0142c0796536a40d114"
+        }
+      }
+    },
+    {
       "name": "tilmelding",
       "language": "da",
       "summary": "A short Danish form: ordinary prose, and a Word list numbered 1), 2), 3), 4).",

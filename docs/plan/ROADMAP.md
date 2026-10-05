@@ -499,3 +499,11 @@ when each slice ends.)*
   of short text, because Swedish and English had no remark word among the comment words (#139).
   Fixed, with a classify test that fails without the words; classify is at stage version 3, and
   every other classify snapshot moved only that line. 16 documents.
+- **Corpus growth: a form with no numbers (2026-10-05).** What: `sommarlager` (Swedish), unnumbered as
+  most forms are: sections in capitals (#23), dot leaders (#19), a label whose blank is on the line
+  under it (#24), "(obligatoriskt)" and "*" (#26), "(max 7)" inside a question (#29), a closing
+  instruction (#22) and a "* = måste fyllas i" legend, which stays a candidate as #47 says. All read
+  as designed. Two lines of the hand-written expectation were mine to correct, not the stages': the
+  legend's candidate item, and the allergy question's type, short text, as `event-registration`
+  already expects for its dietary line. Its language is `null`: 18 stop words of the 20 rule G1 asks
+  for, kept rather than tuned. 17 documents.

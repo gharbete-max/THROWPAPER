@@ -1,0 +1,13 @@
+{
+  "stage": "classify",
+  "stageVersion": 3,
+  "irVersion": 1,
+  "inputSha256": "d3723f3d2d6d418a1c1ae0e60b4de305856eeef3e18ce51c548e525c918fa7f2",
+  "decisions": [
+    {"id":"classify:p1-l5","rule":"K1","verdict":"short_text","subject":["p1-l5"],"evidence":{"confidence":976,"features":"nameWord required","margin":3700,"required":"yes","runnerUp":"long_text"}},
+    {"id":"classify:p1-l6","rule":"K1","verdict":"date","subject":["p1-l6"],"evidence":{"confidence":924,"features":"dateWord","margin":2500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l7","rule":"K1","verdict":"email","subject":["p1-l7","p1-l8"],"evidence":{"confidence":953,"features":"emailWord","margin":3000,"required":"yes","runnerUp":"short_text"}},
+    {"id":"classify:p1-l9","rule":"K1","verdict":"number","subject":["p1-l9"],"evidence":{"confidence":924,"features":"maxWords numberWord","margin":2500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l11","rule":"K1","verdict":"short_text","subject":["p1-l11"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}}
+  ]
+}
