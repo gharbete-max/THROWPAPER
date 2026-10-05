@@ -453,5 +453,15 @@ when each slice ends.)*
   was built, with an "As built" section; three sentences wrong since M0 corrected (the `Wizard`
   component never started mailings or invoice runs); this roadmap and `POLISH.md` brought to
   the end of S13. Why: the S13 row. Open: the owner's acceptance of ADRs 0017–0021, asked on
-  PR #147; the corpus's growth (11 documents of the brief's 60); photographs and scans through the
-  stages.
+  PR #147; the corpus's growth (now 14 documents of the brief's 60); photographs and scans through
+  the stages.
+- **Corpus growth (2026-10-05).** What: three documents, `fotosamtycke` (Swedish, two consents as
+  boxes to tick under their own heading), `inscription` (French, its typography's no-break spaces)
+  and `reserva-sala` (Spanish, answers as lines of one checkbox each). The expectations were written
+  by hand before the documents were read; there are now 14, in eight languages. Found:
+  - a paragraph whose last line happens to reach the edge swallowed the "1." under it (#133). Rule
+    P3c, with two numbering fixtures, one of them its boundary;
+  - a numbered question's checkbox answers stayed as its notes too, so an import showed them twice
+    (#134).
+
+  Enumerate is now at stage version 5 and segment at 2; every other snapshot changed only that line.

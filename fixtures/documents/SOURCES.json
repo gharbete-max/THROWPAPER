@@ -115,6 +115,29 @@
       }
     },
     {
+      "name": "fotosamtycke",
+      "language": "sv",
+      "summary": "A children's club permission form: numbered questions with blanks, then under a heading of their own two lines that are each one box to tick and a consent in its own words, and a signature.",
+      "features": [
+        "word-numbering",
+        "blanks",
+        "single-checkbox-line",
+        "consent-language",
+        "headings"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "fotosamtycke.pdf",
+          "sha256": "d3102ad5d44810ad463cbbb46c74c468f07204d4e38cb6d1d52bbc92ed51c6dd"
+        },
+        "docx": {
+          "path": "fotosamtycke.docx",
+          "sha256": "d2f0ab49aad5d4bb6b72b63cdafdf1ddc30c221c87eff78c8fb0ced0bb43ab5f"
+        }
+      }
+    },
+    {
       "name": "ilmoittautuminen",
       "language": "fi",
       "summary": "A short Finnish form: ordinary prose, and a Word list with a lettered sub-list.",
@@ -132,6 +155,29 @@
         "docx": {
           "path": "ilmoittautuminen.docx",
           "sha256": "b0e31037c8c72e34ff2f1ec21c3587eca2b10d6160940f67f78761a95a23d22b"
+        }
+      }
+    },
+    {
+      "name": "inscription",
+      "language": "fr",
+      "summary": "A French registration with French typography: a no-break space before every colon and question mark, a number of people, and a yes/no question with checkboxes.",
+      "features": [
+        "word-numbering",
+        "blanks",
+        "checkboxes",
+        "locale",
+        "french-punctuation"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "inscription.pdf",
+          "sha256": "a90e5b654b6e74430591bea578179f54caaf7a335c2eb340f25c4d8876349926"
+        },
+        "docx": {
+          "path": "inscription.docx",
+          "sha256": "29ab87dc718c3659ef7261b55227b8e70b60d1ee89f5bc23ec7207ac3e4a8c0d"
         }
       }
     },
@@ -197,6 +243,28 @@
         "docx": {
           "path": "pamelding.docx",
           "sha256": "2cbf1f3f90380b8363e6c1ef0bb3b8212b4e5552138c625bedc2aae1c3d93702"
+        }
+      }
+    },
+    {
+      "name": "reserva-sala",
+      "language": "es",
+      "summary": "A Spanish room booking: a question opened with \"¿\", a date, and a question whose answers are lines of one checkbox each, indented under it.",
+      "features": [
+        "word-numbering",
+        "blanks",
+        "checkbox-options",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "reserva-sala.pdf",
+          "sha256": "1ac9a8f830ac58afd2ab1ea8714b412bffa4bc3af75620debeb983a08cf12876"
+        },
+        "docx": {
+          "path": "reserva-sala.docx",
+          "sha256": "211d72231236f366c7048b1c2842e8c2af29412d9bcb91dafffb4c4ad85b5e8e"
         }
       }
     },

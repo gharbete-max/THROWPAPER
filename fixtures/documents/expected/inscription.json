@@ -1,0 +1,64 @@
+{
+  "document": "inscription",
+  "locale": "fr",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Nom : ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Adresse e-mail : ____________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Nombre de personnes : ____________"
+    },
+    {
+      "marker": "4.",
+      "label": "Restez-vous pour le repas ? ☐ Oui ☐ Non"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Inscription à la fête du quartier"
+    },
+    {
+      "kind": "instruction",
+      "text": "Si vous souhaitez participer à l'assemblée annuelle, veuillez remplir ce formulaire et nous le renvoyer avant vendredi. Nous devons savoir combien de personnes viendront, ce que vous souhaitez manger et si l'un de vous a des allergies. Il est important que toutes les informations soient exactes, sinon nous ne pourrons pas envoyer la convocation à temps. Veuillez écrire lisiblement et vérifier que vous avez répondu à toutes les questions avant de le rendre. Si quelque chose n'est pas clair, le secrétariat vous aidera volontiers pour votre inscription et pour tous les détails sur le lieu."
+    },
+    {
+      "kind": "question",
+      "label": "Nom",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Adresse e-mail",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Nombre de personnes",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "question",
+      "label": "Restez-vous pour le repas ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "instruction",
+      "text": "Merci, et à bientôt !"
+    }
+  ]
+}

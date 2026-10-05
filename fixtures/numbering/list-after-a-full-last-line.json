@@ -1,0 +1,794 @@
+{
+  "fixture": "list-after-a-full-last-line",
+  "caveats": [
+    "list-after-a-full-last-line"
+  ],
+  "stage": "enumerate",
+  "status": "green",
+  "turnsGreenIn": "S13",
+  "summary": "A paragraph's last line happens to reach the column's edge and ends a sentence; the next line, flush with it, is \"1. Name\". P3b would read it as the paragraph wrapping on, but a sentence that has ended does not run on into a list's first marker: it starts the list (P3c). Found in the corpus's fotosamtycke.pdf.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "x1": 9000,
+            "y0": 895,
+            "y1": 1566,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 895,
+              "x1": 8268,
+              "y1": 1566
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Fill in the form and hand it to the leader at the next meeting, so that we know",
+                "box": {
+                  "x0": 1000,
+                  "y0": 895,
+                  "x1": 8268,
+                  "y1": 1026
+                },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "Fill",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 895,
+                      "x1": 1368,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "in",
+                    "start": 5,
+                    "box": {
+                      "x0": 1460,
+                      "y0": 895,
+                      "x1": 1644,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "the",
+                    "start": 8,
+                    "box": {
+                      "x0": 1736,
+                      "y0": 895,
+                      "x1": 2012,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "form",
+                    "start": 12,
+                    "box": {
+                      "x0": 2104,
+                      "y0": 895,
+                      "x1": 2472,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "and",
+                    "start": 17,
+                    "box": {
+                      "x0": 2564,
+                      "y0": 895,
+                      "x1": 2840,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "hand",
+                    "start": 21,
+                    "box": {
+                      "x0": 2932,
+                      "y0": 895,
+                      "x1": 3300,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "it",
+                    "start": 26,
+                    "box": {
+                      "x0": 3392,
+                      "y0": 895,
+                      "x1": 3576,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "to",
+                    "start": 29,
+                    "box": {
+                      "x0": 3668,
+                      "y0": 895,
+                      "x1": 3852,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "the",
+                    "start": 32,
+                    "box": {
+                      "x0": 3944,
+                      "y0": 895,
+                      "x1": 4220,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "leader",
+                    "start": 36,
+                    "box": {
+                      "x0": 4312,
+                      "y0": 895,
+                      "x1": 4864,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "at",
+                    "start": 43,
+                    "box": {
+                      "x0": 4956,
+                      "y0": 895,
+                      "x1": 5140,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "the",
+                    "start": 46,
+                    "box": {
+                      "x0": 5232,
+                      "y0": 895,
+                      "x1": 5508,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "next",
+                    "start": 50,
+                    "box": {
+                      "x0": 5600,
+                      "y0": 895,
+                      "x1": 5968,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "meeting,",
+                    "start": 55,
+                    "box": {
+                      "x0": 6060,
+                      "y0": 895,
+                      "x1": 6796,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "so",
+                    "start": 64,
+                    "box": {
+                      "x0": 6888,
+                      "y0": 895,
+                      "x1": 7072,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "that",
+                    "start": 67,
+                    "box": {
+                      "x0": 7164,
+                      "y0": 895,
+                      "x1": 7532,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "we",
+                    "start": 72,
+                    "box": {
+                      "x0": 7624,
+                      "y0": 895,
+                      "x1": 7808,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "know",
+                    "start": 75,
+                    "box": {
+                      "x0": 7900,
+                      "y0": 895,
+                      "x1": 8268,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "who is coming. Write clearly, and check every answer before you hand it in now.",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1075,
+                  "x1": 8268,
+                  "y1": 1206
+                },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "who",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1075,
+                      "x1": 1276,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "is",
+                    "start": 4,
+                    "box": {
+                      "x0": 1368,
+                      "y0": 1075,
+                      "x1": 1552,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "coming.",
+                    "start": 7,
+                    "box": {
+                      "x0": 1644,
+                      "y0": 1075,
+                      "x1": 2288,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Write",
+                    "start": 15,
+                    "box": {
+                      "x0": 2380,
+                      "y0": 1075,
+                      "x1": 2840,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "clearly,",
+                    "start": 21,
+                    "box": {
+                      "x0": 2932,
+                      "y0": 1075,
+                      "x1": 3668,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "and",
+                    "start": 30,
+                    "box": {
+                      "x0": 3760,
+                      "y0": 1075,
+                      "x1": 4036,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "check",
+                    "start": 34,
+                    "box": {
+                      "x0": 4128,
+                      "y0": 1075,
+                      "x1": 4588,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "every",
+                    "start": 40,
+                    "box": {
+                      "x0": 4680,
+                      "y0": 1075,
+                      "x1": 5140,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "answer",
+                    "start": 46,
+                    "box": {
+                      "x0": 5232,
+                      "y0": 1075,
+                      "x1": 5784,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "before",
+                    "start": 53,
+                    "box": {
+                      "x0": 5876,
+                      "y0": 1075,
+                      "x1": 6428,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "you",
+                    "start": 60,
+                    "box": {
+                      "x0": 6520,
+                      "y0": 1075,
+                      "x1": 6796,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "hand",
+                    "start": 64,
+                    "box": {
+                      "x0": 6888,
+                      "y0": 1075,
+                      "x1": 7256,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "it",
+                    "start": 69,
+                    "box": {
+                      "x0": 7348,
+                      "y0": 1075,
+                      "x1": 7532,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "in",
+                    "start": 72,
+                    "box": {
+                      "x0": 7624,
+                      "y0": 1075,
+                      "x1": 7808,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "now.",
+                    "start": 75,
+                    "box": {
+                      "x0": 7900,
+                      "y0": 1075,
+                      "x1": 8268,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "1. Name: ______________________________",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1255,
+                  "x1": 4588,
+                  "y1": 1386
+                },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "1.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1255,
+                      "x1": 1184,
+                      "y1": 1386
+                    },
+                    "baseline": 1360,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Name:",
+                    "start": 3,
+                    "box": {
+                      "x0": 1276,
+                      "y0": 1255,
+                      "x1": 1736,
+                      "y1": 1386
+                    },
+                    "baseline": 1360,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "______________________________",
+                    "start": 9,
+                    "box": {
+                      "x0": 1828,
+                      "y0": 1255,
+                      "x1": 4588,
+                      "y1": 1386
+                    },
+                    "baseline": 1360,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "2. Phone: _____________________________",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1435,
+                  "x1": 4588,
+                  "y1": 1566
+                },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "2.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1435,
+                      "x1": 1184,
+                      "y1": 1566
+                    },
+                    "baseline": 1540,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Phone:",
+                    "start": 3,
+                    "box": {
+                      "x0": 1276,
+                      "y0": 1435,
+                      "x1": 1828,
+                      "y1": 1566
+                    },
+                    "baseline": 1540,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "_____________________________",
+                    "start": 10,
+                    "box": {
+                      "x0": 1920,
+                      "y0": 1435,
+                      "x1": 4588,
+                      "y1": 1566
+                    },
+                    "baseline": 1540,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

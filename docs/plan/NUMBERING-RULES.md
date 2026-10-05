@@ -166,6 +166,13 @@ Applies only when `L.source` is `text-layer` or `ocr` (docx and paste have no so
   an item's detail line, or prose) — **unless** `GRAMMAR(L)` matches, no veto fires, and one of its
   readings would be placed by R1 (it continues an open run at its band with an expected value), in
   which case P3 does not claim `L`. **Fixture:** `dotted-subnumber-mid-sentence--flush`.
+- **P3c — a sentence that has ended does not run on into a list.** P3b does not claim `L` either
+  when `P` is prose whose text ends a sentence (`.` `!` `?` `:` or their full-width forms, then
+  any closing quotes or brackets), `GRAMMAR(L)` matches, no veto fires, and one of its readings
+  starts a list (`isFirst(reading, null)`: `1`, `a`, `i`, a bullet). A paragraph whose last line
+  happens to reach the edge, then `1. Name`, starts the list there; `…the rules in section` then
+  `1. of the statutes` still wraps on. Added in S13, found by the corpus's `fotosamtycke.pdf`.
+  **Fixtures:** `list-after-a-full-last-line`, `list-after-a-full-last-line--mid-sentence`.
 - Otherwise P3 does not claim `L`.
 
 A line claimed by P3 joins exactly what `P` belongs to: appended to `item.lineIds` and to the
@@ -447,6 +454,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | P2 | block role ∈ {page-furniture, footnote, table} | skipped | `page-break-continuation` |
 | P3a | text-layer/ocr, same block, `WRAPPED(P)`, `SAME_BAND(relX(L), textX)` | label continuation | `dotted-subnumber-mid-sentence--wrapped` |
 | P3b | text-layer/ocr, same block, `WRAPPED(P)`, `relX(L) ≤ relX(P)` + 2%, not an R1 continuation | continuation | `dotted-subnumber-mid-sentence--flush` |
+| P3c | as P3b, but `P` is prose that ends a sentence and `L`'s marker starts a list | not a continuation: `L` is read as a marker line | `list-after-a-full-last-line`, `list-after-a-full-last-line--mid-sentence` |
 | P4 | marker is the whole line and the next line in the block is not a marker | label from next line; else rejected P4 | `marker-on-own-line` |
 | M1–M9 | §4 productions, in order | a marker | M1 `scenario-s4`; M2, M3, M8 `nordic-numbering`; M4 `dotted-subnumber-line-start`; M5 `parenthesised-number`; M6 `letter-vs-word`; M7 `sequence-continuity`; M9 `bullet-list` |
 | A1 | probe folds quotes, dashes, spaces, full width | matching only; output verbatim | `ligature-and-quote-repair--marker` |

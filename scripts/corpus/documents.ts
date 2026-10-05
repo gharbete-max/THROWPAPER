@@ -388,4 +388,71 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'fotosamtycke',
+    language: 'sv',
+    summary:
+      "A children's club permission form: numbered questions with blanks, then under a heading of their own two lines that are each one box to tick and a consent in its own words, and a signature.",
+    features: ['word-numbering', 'blanks', 'single-checkbox-line', 'consent-language', 'headings'],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Fotografering i barngruppen'),
+        para(
+          'Under terminen fotograferar ledarna ibland aktiviteterna i barngruppen. Bilderna visar vad barnen gör tillsammans, och vi vill gärna använda några av dem när vi berättar om verksamheten. Därför ber vi dig som är vårdnadshavare att fylla i blanketten och lämna den till ledaren vid nästa träff.',
+        ),
+        item(1, `Barnets namn: ${blank(26)}`),
+        item(1, `Vårdnadshavarens namn: ${blank(18)}`),
+        item(1, `Telefon: ${blank(30)}`),
+        heading('Samtycke'),
+        para(
+          '☐ Jag samtycker till att bilder där mitt barn syns publiceras på föreningens webbplats.',
+        ),
+        para('☐ Jag samtycker till att bilderna sparas i föreningens arkiv.'),
+        para(`Underskrift: ${blank(30)}`),
+      ],
+    },
+  },
+  {
+    name: 'inscription',
+    language: 'fr',
+    summary:
+      'A French registration with French typography: a no-break space before every colon and question mark, a number of people, and a yes/no question with checkboxes.',
+    features: ['word-numbering', 'blanks', 'checkboxes', 'locale', 'french-punctuation'],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Inscription à la fête du quartier'),
+        para(PROSE.fr),
+        item(1, `Nom\u00a0: ${blank(30)}`),
+        item(1, `Adresse e-mail\u00a0: ${blank(20)}`),
+        item(1, `Nombre de personnes\u00a0: ${blank(12)}`),
+        item(1, 'Restez-vous pour le repas\u00a0?   ☐ Oui   ☐ Non'),
+        small('Merci, et à bientôt\u00a0!'),
+      ],
+    },
+  },
+  {
+    name: 'reserva-sala',
+    language: 'es',
+    summary:
+      'A Spanish room booking: a question opened with "¿", a date, and a question whose answers are lines of one checkbox each, indented under it.',
+    features: ['word-numbering', 'blanks', 'checkbox-options', 'locale'],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Reserva de la sala de la asociación'),
+        para(
+          'Los socios pueden reservar las salas de la asociación para reuniones y celebraciones. Rellene el formulario y entréguelo en la secretaría al menos una semana antes de la fecha. Le confirmaremos la reserva por teléfono lo antes posible.',
+        ),
+        item(1, `Nombre: ${blank(30)}`),
+        item(1, `Teléfono: ${blank(28)}`),
+        item(1, `Fecha: ${blank(30)}`),
+        item(1, '¿Qué sala necesita?'),
+        para('☐ Sala grande', { indent: 567 }),
+        para('☐ Sala pequeña', { indent: 567 }),
+        para('☐ Cocina', { indent: 567 }),
+      ],
+    },
+  },
 ];

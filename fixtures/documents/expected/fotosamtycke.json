@@ -1,0 +1,68 @@
+{
+  "document": "fotosamtycke",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Barnets namn: __________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Vårdnadshavarens namn: __________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Telefon: ______________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Fotografering i barngruppen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Under terminen fotograferar ledarna ibland aktiviteterna i barngruppen. Bilderna visar vad barnen gör tillsammans, och vi vill gärna använda några av dem när vi berättar om verksamheten. Därför ber vi dig som är vårdnadshavare att fylla i blanketten och lämna den till ledaren vid nästa träff."
+    },
+    {
+      "kind": "question",
+      "label": "Barnets namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Vårdnadshavarens namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "heading",
+      "text": "Samtycke"
+    },
+    {
+      "kind": "question",
+      "label": "Jag samtycker till att bilder där mitt barn syns publiceras på föreningens webbplats.",
+      "answer": "boolean",
+      "type": "consent"
+    },
+    {
+      "kind": "question",
+      "label": "Jag samtycker till att bilderna sparas i föreningens arkiv.",
+      "answer": "boolean",
+      "type": "consent"
+    },
+    {
+      "kind": "question",
+      "label": "Underskrift",
+      "answer": "blank",
+      "type": "signature"
+    }
+  ]
+}

@@ -27,7 +27,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SEGMENT_STAGE_VERSION = 1;
+export const SEGMENT_STAGE_VERSION = 2;
 /** More options than this and the question is flagged (#30). */
 export const MAX_OPTIONS = 30;
 /** A label longer than this is prose to read, not a label (rules 1, 7, 8). */
@@ -669,13 +669,21 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     if (endsWithAny(text, '?:')) {
       const boxes = boxLinesAfter(last);
       if (boxes.length >= 2) {
+        // Stage 3 may have kept the boxes as the item's notes: as its options, they are not its
+        // notes too, or the question would show its answers twice (`CAVEATS.md` #134).
+        const boxIds = new Set(boxes.map((box) => box.ir.id));
+        const notes = item
+          ? item.detailLineIds
+              .filter((id) => !claimed.has(id) && !boxIds.has(id))
+              .map((id) => at(id).ir.text)
+          : [];
         const segment = question(
           [...ids, ...boxes.map((box) => box.ir.id)],
           labelOf(text),
           item?.id ?? null,
           'choice',
           boxes.map((box) => joinWords(box.ir.words.slice(1))),
-          item ? detailsOf(item) : [],
+          notes,
         );
         emit(segment);
         decide(line.ir.id, 'S5d', segment.lineIds, 'question:choice', { options: boxes.length });

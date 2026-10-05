@@ -188,7 +188,7 @@ and Spanish "Minimal" (#132).
 each of ADRs 0017–0021 has an "As built" section. That section says where the build went further
 or differently:
 - the fourth schema addition;
-- the corpus's eleven documents of sixty;
+- the corpus's documents, eleven of sixty then and fourteen now;
 - photographs not yet through the stages;
 - the session bound that replaced a transition budget.
 

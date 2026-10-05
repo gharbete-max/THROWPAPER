@@ -347,7 +347,9 @@ the answers under it:
   of at most 120 characters ending in `?`. *Fixture:* `prose-question`.
 - **Lines of one checkbox each under a question** (S5d) — two or more lines that each start with one
   box and then words, right after a line or item ending in `?` or `:`, **in its block**: a paragraph
-  break ends its answers. *Fixture:* `single-checkbox-line`.
+  break ends its answers. Lines taken as its options are never its notes as well, though stage 3
+  may have kept them as an item's detail lines (`CAVEATS.md` #134, the corpus's `reserva-sala`).
+  *Fixture:* `single-checkbox-line`.
 
 **Pass 3 — every line or item left**, first match wins:
 

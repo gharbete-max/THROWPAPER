@@ -35,7 +35,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 4;
+export const ENUMERATE_STAGE_VERSION = 5;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -119,6 +119,9 @@ const sameBand = (a: number, b: number, width: number) => Math.abs(a - b) * 50 <
 
 /** §2 `WRAPPED`: the line reaches 90% of its column: the layout wrapped it. */
 const wrapped = (line: Line) => (line.ir.box.x1 - line.columnX0) * 10 >= line.width * 9;
+
+/** §3 P3c: a line that ends a sentence — `.` `!` `?` `:`, or their full-width forms, then any closing quotes or brackets. */
+const endsSentence = (text: string) => /[.!?:。！？：][”’"')\]»]*$/u.test(text.trimEnd());
 
 const samePath = (a: readonly number[], b: readonly number[]) =>
   a.length === b.length && a.every((value, i) => value === b[i]);
@@ -507,6 +510,17 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     } else if (line.relX * 50 <= previous.relX * 50 + line.width) {
       const match = grammar(line.ir.words);
       if (match && !vetoOf(line, match) && continuing(match, line)) return false;
+      // P3c — a sentence that has ended does not run on into a list's first marker: prose whose
+      // last line happens to reach the edge, then "1. Name", starts the list.
+      if (
+        match &&
+        !vetoOf(line, match) &&
+        owner.kind === 'prose' &&
+        endsSentence(previous.ir.text) &&
+        match.readings.some((reading) => isFirst(reading, null))
+      ) {
+        return false;
+      }
       rule = 'P3b';
       evidence = { relX: line.relX, previousRelX: previous.relX, width: line.width };
     } else {

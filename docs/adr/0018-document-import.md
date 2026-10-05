@@ -80,8 +80,11 @@ Decisions 1–7 are built, with one part still to come:
 - **There is no grid field type.** An imported grid is one choice per row under a heading, as the
   brief allows until a grid has its own ADR.
 - **A consent read from a document** is drawn as a box to tick (S13), its words byte for byte (#28).
-- **The corpus holds 11 documents**, each as a PDF and a Word file, with their sources recorded.
-  That is short of the brief's 60; real forms with a licence to record are the owner's to supply.
+- **The corpus holds 14 documents**, each as a PDF and a Word file, with their sources recorded.
+  They are in Swedish, English, Danish, Norwegian, Finnish, German, French and Spanish. That is
+  short of the brief's 60; real forms with a licence to record are the owner's to supply. The
+  three added in S13 found two faults, both fixed with fixtures: a list's "1." swallowed by a full
+  last line (#133), and a question's options kept as its notes too (#134).
 
 ## Rejected alternatives
 
