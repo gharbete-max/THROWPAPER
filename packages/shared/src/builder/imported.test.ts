@@ -67,6 +67,7 @@ describe('importing the questions a document was read as', () => {
     c = answer(G, c, { kind: 'option', optionId: 'signup' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
+    c = answer(G, c, { kind: 'text', value: 'Sommarfest' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'option', optionId: 'later' }, { locale: 'sv-SE' });
     c = answer(G, c, { kind: 'text', value: 'Vilken dag?' }, { locale: 'sv-SE' });
     expect(importQuestions(G, c, two).state.sidecar.provenance).toBe('mixed');

@@ -89,7 +89,7 @@ export function GuidedBuilder() {
           client,
           BUILDER_GRAPH,
           id,
-          { version: stored.version, draft: form.draftDefinition },
+          { version: stored.version, draft: form.draftDefinition, title: form.title },
           setStatus,
         );
         setStatus('saved');

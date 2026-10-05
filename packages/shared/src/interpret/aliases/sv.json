@@ -922,7 +922,7 @@
       "notes": ""
     },
     {
-      "phrase": "Nej, man skriver ett svar",
+      "phrase": "Nej, inga knappar",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "sv",
@@ -930,6 +930,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "Nej, man skriver ett svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "fritext",
@@ -2328,6 +2338,156 @@
       "locale": "sv",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "En rad text",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en rad",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kort svar",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kort text",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "några ord",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Några meningar",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "flera rader",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kommentarer",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lång text",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "långt svar",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "En ruta att kryssa i",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "bock",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kryssa i",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kryssruta",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ruta",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "sv",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

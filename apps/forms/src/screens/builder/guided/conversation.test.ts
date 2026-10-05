@@ -53,6 +53,11 @@ function stepped(result: ReturnType<typeof choose> | ReturnType<typeof typed>): 
 
 const press = (c: Conversation, optionId: string) =>
   stepped(choose(G, c, { kind: 'option', optionId }, locales));
+/** Past the guess with two "Not sure" (S11), and the form named (S13): at the brand. */
+const pastTheGuess = (c: Conversation) =>
+  stepped(
+    choose(G, press(press(c, 'unsure'), 'unsure'), { kind: 'text', value: 'Sommarfest' }, locales),
+  );
 
 describe('starting', () => {
   it('begins a new conversation at the first question', () => {
@@ -101,7 +106,7 @@ describe('a step', () => {
     // The guess asks what tells it most (S11); two "Not sure" and it asks no more.
     expect(c.state.cursor).toBe('guess.date');
     c = press(press(c, 'unsure'), 'unsure');
-    expect(c.state.cursor).toBe('brand.start');
+    expect(c.state.cursor).toBe('flow.title');
     const [first, , last] = crumbs(G, c);
     expect(first).toMatchObject({
       step: 0,
@@ -120,6 +125,7 @@ describe('a step', () => {
     let c = press(start().conversation, 'signup');
     c = press(c, 'unsure');
     c = press(c, 'unsure');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Sommarfest' }, locales));
     c = press(c, 'later');
     c = stepped(choose(G, c, { kind: 'text', value: 'Vilken dag?' }, locales));
     expect(focusedField(c)).toMatchObject({ label: { 'sv-SE': 'Vilken dag?' } });
@@ -130,6 +136,7 @@ describe('a step', () => {
     let c = press(start().conversation, 'signup');
     c = press(c, 'unsure');
     c = press(c, 'unsure');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Sommarfest' }, locales));
     c = press(c, 'later');
     c = stepped(choose(G, c, { kind: 'text', value: 'Vilken dag?' }, locales));
     c = press(c, 'yes'); // required
@@ -148,6 +155,7 @@ describe('typing an answer', () => {
     let c = press(start().conversation, 'signup');
     c = press(c, 'unsure');
     c = press(c, 'unsure');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Sommarfest' }, locales));
     c = press(c, 'later');
     c = stepped(choose(G, c, { kind: 'text', value: 'Vilken dag?' }, locales));
     c = press(c, 'yes');
@@ -174,6 +182,7 @@ describe('typing an answer', () => {
     let c = press(start().conversation, 'signup');
     c = press(c, 'unsure');
     c = press(c, 'unsure');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Sommarfest' }, locales));
     c = press(c, 'later');
     c = stepped(choose(G, c, { kind: 'text', value: 'Vilken dag?' }, locales));
     return press(c, 'yes');
@@ -199,13 +208,13 @@ describe('typing an answer', () => {
 
   it('says what it could not use: words it did not read, and answers the conversation cannot take', () => {
     const result = typed(G, atButtons(), 'no buttons, pills', locales);
-    // "No buttons" moves on; there is no shape to give buttons nobody wants.
+    // "No buttons" moves on to how people answer; there is no shape to give buttons nobody wants.
     expect(result).toMatchObject({
       kind: 'stepped',
       readings: [{ nodeId: 'choice.buttons', optionId: 'no' }],
       unused: [{ text: 'pills', why: 'not-now' }],
     });
-    expect(stepped(result).state.cursor).toBe('flow.more');
+    expect(stepped(result).state.cursor).toBe('text.kind');
   });
 
   it('that is a list is the options, labels verbatim, in one step', () => {
@@ -292,11 +301,12 @@ describe('going back', () => {
     let c = press(start().conversation, 'signup');
     c = press(c, 'unsure');
     c = press(c, 'unsure');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Sommarfest' }, locales));
     c = press(c, 'later');
-    const [, , , brand] = crumbs(G, c);
+    const [, , , , brand] = crumbs(G, c);
     const back = backTo(c, brand!.step);
     expect(back.state.cursor).toBe('brand.start');
-    expect(back.log).toHaveLength(3);
+    expect(back.log).toHaveLength(4);
     // Focus goes back to the answer given there.
     expect(choiceAt(c, brand!.step)).toBe('later');
   });
@@ -307,6 +317,7 @@ describe('the live preview', () => {
     let c = press(start().conversation, 'signup');
     c = press(c, 'unsure');
     c = press(c, 'unsure');
+    c = stepped(choose(G, c, { kind: 'text', value: 'Sommarfest' }, locales));
     c = press(c, 'later');
     c = stepped(choose(G, c, { kind: 'text', value: 'Vilken dag?' }, locales));
     for (const id of ['yes', 'yes', 'one']) c = press(c, id);
@@ -326,7 +337,7 @@ describe('the live preview', () => {
 
 describe('the way out', () => {
   it('offers the group’s other questions, or the menu, and never where you are', () => {
-    const c = press(press(press(start().conversation, 'signup'), 'unsure'), 'unsure');
+    const c = pastTheGuess(press(start().conversation, 'signup'));
     expect(c.state.cursor).toBe('brand.start');
     const out = wayOut(G, c).map((o) => o.nodeId);
     expect(out).toEqual(['brand.quick', 'brand.logoSlot', 'brand.preview']);
@@ -337,9 +348,8 @@ describe('the way out', () => {
 describe('the colours (owner question 8)', () => {
   /** "Should this look like your organisation?" — yes, with no brand kit yet. */
   const toColours = (canChangeBrand: boolean) => {
-    let c = press(start(emptyDefinition, null, canChangeBrand).conversation, 'signup');
-    c = press(press(c, 'unsure'), 'unsure'); // past the guess (S11)
-    return press(c, 'yes');
+    const c = press(start(emptyDefinition, null, canChangeBrand).conversation, 'signup');
+    return press(pastTheGuess(c), 'yes');
   };
 
   it('are asked of an administrator', () => {
@@ -393,9 +403,17 @@ describe('the colours (owner question 8)', () => {
   });
 
   it('resumes with today’s facts: a role changed since decides what is asked from now on', () => {
-    const asAdmin = press(press(press(start().conversation, 'signup'), 'unsure'), 'unsure');
+    const asAdmin = pastTheGuess(press(start().conversation, 'signup'));
     const stored = JSON.parse(JSON.stringify(toSession(G, asAdmin))) as unknown;
-    const again = start(asAdmin.state.draft.definition, stored, false);
+    // The form as saved: its questions, and the name the conversation gave it.
+    const again = startConversation({
+      graph: G,
+      definition: asAdmin.state.draft.definition,
+      title: asAdmin.state.draft.title,
+      stored,
+      brandKitExists: false,
+      canChangeBrand: false,
+    });
     expect(again).toMatchObject({ kind: 'resumed', rebased: false });
     expect(again.conversation.log).toEqual(asAdmin.log);
     expect(again.conversation.state.pending).toMatchObject({ canChangeBrand: false });

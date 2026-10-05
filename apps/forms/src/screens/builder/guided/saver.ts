@@ -4,8 +4,9 @@ import type { FormDefinition } from '@tp/shared/forms';
 
 /**
  * Autosave for the conversation — `PREDICTIVE-BUILDER.md`, "Autosave": after every step, the
- * draft through the same `PUT /v1/forms/:id/draft` the editor uses, then the session through
- * `PUT /v1/forms/:id/builder-session` with the version it was read at.
+ * draft through the same `PUT /v1/forms/:id/draft` the editor uses, the form's name through the
+ * same `PATCH /v1/forms/:id` when the conversation changed it ("What is your form called?", S13),
+ * then the session through `PUT /v1/forms/:id/builder-session` with the version it was read at.
  *
  * - **In order, and only the latest.** Saves never overlap; steps taken while one is in flight are
  *   saved together, as the last of them, when it lands.
@@ -19,6 +20,7 @@ export type SaveStatus = 'saved' | 'saving' | 'failed' | 'conflict';
 
 export interface SaverApi {
   saveDraft(formId: string, definition: FormDefinition): Promise<unknown>;
+  updateForm(formId: string, patch: { title: Record<string, string> }): Promise<unknown>;
   saveBuilderSession(
     formId: string,
     version: number,
@@ -29,6 +31,7 @@ export interface SaverApi {
 export class Saver {
   private version: number;
   private savedDraft: FormDefinition;
+  private savedTitle: Record<string, string>;
   /** The newest step not yet saved. */
   private waiting: Conversation | null = null;
   /** The newest step whose save failed, for `retry`. */
@@ -40,11 +43,16 @@ export class Saver {
     private readonly api: SaverApi,
     private readonly graph: BuilderGraph,
     private readonly formId: string,
-    start: { readonly version: number; readonly draft: FormDefinition },
+    start: {
+      readonly version: number;
+      readonly draft: FormDefinition;
+      readonly title: Record<string, string>;
+    },
     private readonly onStatus: (status: SaveStatus) => void = () => {},
   ) {
     this.version = start.version;
     this.savedDraft = start.draft;
+    this.savedTitle = start.title;
   }
 
   /** Save this conversation, after whatever is saving now. Resolves when it has been tried. */
@@ -84,6 +92,13 @@ export class Saver {
         if (!jsonEqual(draft, this.savedDraft)) {
           await this.api.saveDraft(this.formId, draft);
           this.savedDraft = draft;
+        }
+        // Before the session, for the same reason as the draft: a session that describes a name
+        // the form does not have reads, on the next load, as the form changed elsewhere.
+        const title = conversation.state.draft.title;
+        if (!jsonEqual(title, this.savedTitle)) {
+          await this.api.updateForm(this.formId, { title });
+          this.savedTitle = title;
         }
         const saved = await this.api.saveBuilderSession(
           this.formId,

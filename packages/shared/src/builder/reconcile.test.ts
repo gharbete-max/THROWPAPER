@@ -38,6 +38,7 @@ function aChoice(): Conversation {
     option('signup'),
     option('unsure'),
     option('unsure'),
+    { kind: 'text', value: 'Sommarfest' } as Answer,
     option('later'),
     { kind: 'text', value: 'Mat' } as Answer,
     option('yes'),
@@ -103,8 +104,9 @@ describe('a step that would change a question changed by hand', () => {
 
   it('goes on building its proposal, and stops asking when it comes round to the person’s', () => {
     const { id, c } = setUp();
-    // "No, people type an answer", while the person's choice keeps its five options...
+    // "No buttons" and "A line of text", while the person's choice keeps its five options...
     let d = step(step(c, { kind: 'jump', to: 'choice.buttons' }), option('no'));
+    d = step(d, option('line'));
     expect(field(d, id).type).toBe('single_select');
     expect(d.state.sidecar.fields[id]?.proposal).toMatchObject({ type: 'short_text' });
     // ...and back to "Yes": the conversation's version is the person's again.

@@ -772,7 +772,7 @@
       "notes": ""
     },
     {
-      "phrase": "Nein, man tippt eine Antwort",
+      "phrase": "Nein, keine Schaltflächen",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "de",
@@ -780,6 +780,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "Nein, man tippt eine Antwort",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "freitext",
@@ -2018,6 +2028,156 @@
       "locale": "de",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Eine Textzeile",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ein paar wörter",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "eine zeile",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kurze antwort",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kurzer text",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ein paar Sätze",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kommentare",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lange antwort",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "langer text",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "mehrere zeilen",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ein Kästchen zum Ankreuzen",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ankreuzen",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "checkbox",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "häkchen",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kästchen",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "de",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

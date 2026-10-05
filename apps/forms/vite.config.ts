@@ -23,10 +23,16 @@ const API_ORIGIN = 'http://localhost:4001';
  * `/i` also captures `/invoices` — the app's own screen — and `/icon-192.png`. Written without it,
  * the Invoices page answered `{"statusCode":404,"message":"Route GET:/invoices not found"}` from
  * the API. `/i/` matches the token URLs and nothing the SPA owns.
+ *
+ * `/public/assets/` is an uploaded image — a logo, an option's picture — at the path the API gave
+ * it (`assetPath`), which the page uses as it is. Without it, every uploaded picture was a broken
+ * image here and in the e2e suite, and only there: in production the API serves the app as well.
+ * Found by acceptance S1, whose logo is one (`e2e/acceptance-s1.spec.ts`).
  */
 const DEV_PROXY = {
   '/api': { target: API_ORIGIN, rewrite: (p: string) => p.replace(/^\/api/, '') },
   '/i/': { target: API_ORIGIN },
+  '/public/assets/': { target: API_ORIGIN },
 };
 
 /**

@@ -430,6 +430,17 @@ describe('what needs the person’s eye', () => {
 });
 
 describe('the questions they become', () => {
+  it('draws a consent as one box to tick, its words byte for byte (#28, S13)', () => {
+    const text =
+      '☐ Jag samtycker till att Föreningen Exempel sparar mina personuppgifter enligt GDPR, i högst två år.';
+    const [field] = fieldsFrom(startReview(paste(text)).items);
+    expect(field).toMatchObject({
+      type: 'yes_no',
+      appearance: 'checkbox',
+      label: { 'sv-SE': text.slice(2) },
+    });
+  });
+
   it('maps each type the reading has to a field the form has, keeping every word', () => {
     expect(
       (['money', 'address', 'personnummer', 'orgnr', 'consent', 'grid', 'email'] as const).map(

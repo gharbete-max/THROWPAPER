@@ -702,7 +702,7 @@
       "notes": ""
     },
     {
-      "phrase": "いいえ、答えを書いてもらう",
+      "phrase": "いいえ、ボタンなし",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "ja",
@@ -710,6 +710,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "いいえ、答えを書いてもらう",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "テキスト",
@@ -1728,6 +1738,156 @@
       "locale": "ja",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "1行",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "1行のテキスト",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "一言",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "短いテキスト",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "短い回答",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "コメント",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "数行の文章",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "複数行",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "長いテキスト",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "長い回答",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "チェック",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "チェックを入れる欄",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "チェックボックス",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "チェック欄",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "レ点",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ja",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

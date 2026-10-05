@@ -18,10 +18,11 @@ describe('the S1 graph', () => {
     expect(JSON.parse(JSON.stringify(BUILDER_GRAPH))).toEqual(BUILDER_GRAPH);
   });
 
-  it('asks fifteen things, S11 twenty-three more for the guess, S12 two for the walk, and has one menu and one end', () => {
+  it('asks fifteen things, S11 twenty-three more for the guess, S12 two for the walk, S13 two more, and has one menu and one end', () => {
     const asking = nodes.filter((n) => n.kind !== 'menu' && n.kind !== 'end');
-    // S1's fifteen, S11's twenty-two guess questions and the preview of what "Right" added.
-    expect(asking).toHaveLength(15 + 22 + 1 + 2);
+    // S1's fifteen, S11's twenty-two guess questions and the preview of what "Right" added, S12's
+    // walk, and S13's form name and "How should people answer?".
+    expect(asking).toHaveLength(15 + 22 + 1 + 2 + 2);
     expect(asking.filter((n) => n.group === 'guess' && n.kind === 'question')).toHaveLength(22);
     expect(nodes.filter((n) => n.kind === 'menu').map((n) => n.id)).toEqual(['menu.top']);
     expect(nodes.filter((n) => n.kind === 'end').map((n) => n.id)).toEqual(['end']);

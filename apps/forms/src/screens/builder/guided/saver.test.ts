@@ -26,6 +26,11 @@ function server() {
       await wait();
       if (fail === 'down') throw new Error('offline');
     },
+    async updateForm(_id: string, patch: { title: Record<string, string> }) {
+      calls.push(`title ${Object.values(patch.title).join()}`);
+      await wait();
+      if (fail === 'down') throw new Error('offline');
+    },
     async saveBuilderSession(_id, read, session) {
       calls.push(`session v${read} log ${session.log.length}`);
       await wait();
@@ -55,13 +60,30 @@ function server() {
 
 function saverFor(s: ReturnType<typeof server>) {
   const statuses: SaveStatus[] = [];
-  const saver = new Saver(s.api, G, 'form-1', { version: 0, draft: emptyDefinition }, (status) =>
-    statuses.push(status),
+  const saver = new Saver(
+    s.api,
+    G,
+    'form-1',
+    { version: 0, draft: emptyDefinition, title: {} },
+    (status) => statuses.push(status),
   );
   return { saver, statuses };
 }
 
 describe('the saver', () => {
+  it("saves the form's name when the conversation gives it one, before the session, and once", async () => {
+    const s = server();
+    const { saver } = saverFor(s);
+    const guessed = next(next(next(first, 'signup'), 'unsure'), 'unsure');
+    const named = answer(G, guessed, { kind: 'text', value: 'Sommarfest' }, { locale: 'sv-SE' });
+    void saver.save(named);
+    await s.flush();
+    expect(s.calls).toEqual(['draft 1', 'title Sommarfest', 'session v0 log 4']);
+    void saver.save(next(named, 'later'));
+    await s.flush();
+    expect(s.calls.slice(3)).toEqual(['session v1 log 5']);
+  });
+
   it('saves the draft, then the session over the version it read', async () => {
     const s = server();
     const { saver, statuses } = saverFor(s);
@@ -77,15 +99,29 @@ describe('the saver', () => {
     const s = server();
     const { saver } = saverFor(s);
     const one = next(first, 'signup');
-    // Past the guess (S11) and the brand, to a question that writes a field.
-    const two = next(next(next(one, 'unsure'), 'unsure'), 'later');
+    // Past the guess (S11), the form's name (S13) and the brand, to a question that writes a field.
+    const named = answer(
+      G,
+      next(next(one, 'unsure'), 'unsure'),
+      { kind: 'text', value: 'Fest' },
+      {
+        locale: 'sv-SE',
+      },
+    );
+    const two = next(named, 'later');
     const three = answer(G, two, { kind: 'text', value: 'Dag?' }, { locale: 'sv-SE' });
     const saving = saver.save(one);
     void saver.save(two);
     void saver.save(three);
     await s.flush();
     await saving;
-    expect(s.calls).toEqual(['draft 1', 'session v0 log 1', 'draft 2', 'session v1 log 5']);
+    expect(s.calls).toEqual([
+      'draft 1',
+      'session v0 log 1',
+      'draft 2',
+      'title Fest',
+      'session v1 log 6',
+    ]);
   });
 
   it('does not save a draft that has not changed', async () => {

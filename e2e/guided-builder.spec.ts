@@ -47,6 +47,14 @@ async function notSureTwice(page: Page) {
     // Exactly: the trail's crumb for an answered question says "Not sure" too.
     await page.getByRole('button', { name: 'Not sure', exact: true }).click();
   }
+  await nameTheForm(page);
+}
+
+/** "What is your form called?" (S13): an example name, kept as it is. */
+async function nameTheForm(page: Page) {
+  await question(page, 'What is your form called?');
+  await page.getByRole('button', { name: 'Summer party', exact: true }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
 }
 
 async function draftOf(formId: string) {
@@ -171,11 +179,13 @@ test('not happy with the preview: edited in place, reverted, reconciled, and nev
     // Exactly "Not sure": the trail's crumb for the first says it too.
     ['Is it for something on a set date?', /^Not sure$/],
     ['Will people learn something there?', /^Not sure$/],
-    ['Should this look like your organisation?', /Decide later/],
   ] as const) {
     await question(page, ask);
     await page.getByRole('button', { name: pick }).click();
   }
+  await nameTheForm(page);
+  await question(page, 'Should this look like your organisation?');
+  await page.getByRole('button', { name: /Decide later/ }).click();
   await question(page, 'What do you want to ask?');
   await page.getByRole('button', { name: 'Which day suits you?' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
@@ -312,6 +322,7 @@ test.describe('on a small phone, by keyboard alone', () => {
     // Past the guess by its third answer, "Not sure" (S11).
     await step('Is it for something on a set date?', '3');
     await step('Will people learn something there?', '3');
+    await nameTheFormByKeys(page);
     await step('Should this look like your organisation?', '2');
     await question(page, 'What do you want to ask?');
     // Focus is in the box already; Enter answers.
@@ -462,12 +473,21 @@ test.describe('on a small phone, by keyboard alone', () => {
   });
 });
 
-/** Past the guess by keyboard: its third answer, "Not sure", twice. */
+/** Past the guess by keyboard: its third answer, "Not sure", twice; then the form's name. */
 async function pastTheGuessByKeys(page: Page) {
   for (const ask of ['Is it for something on a set date?', 'Will people learn something there?']) {
     await question(page, ask);
     await page.keyboard.press('3');
   }
+  await nameTheFormByKeys(page);
+}
+
+/** "What is your form called?" by keyboard: focus is in the box, the name typed, Enter. */
+async function nameTheFormByKeys(page: Page) {
+  await question(page, 'What is your form called?');
+  await expect(page.getByRole('textbox', { name: 'What is your form called?' })).toBeFocused();
+  await page.keyboard.type('Summer party');
+  await page.keyboard.press('Enter');
 }
 
 /** S6 — to "Do you want buttons?" about a new question, "Which day suits you?". */
@@ -663,9 +683,10 @@ test('the guess: a proxy form, why, and "Right" adds its questions (S11)', async
   await expect(page.getByRole('group', { name: 'Change it here' })).toBeVisible();
 
   await page.getByRole('button', { name: 'Continue' }).click();
+  // The form's name, then the brand: only the gaps are left, as the form has its questions.
+  await nameTheForm(page);
   await question(page, 'Should this look like your organisation?');
   await page.getByRole('button', { name: /Decide later/ }).click();
-  // Only the gaps are left: the form has its questions.
   await question(page, 'Add another question?');
 
   const { fields } = await draftOf(formId);

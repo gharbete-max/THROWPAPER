@@ -21,6 +21,7 @@ ADRs 0017–0021; the open questions for the owner are at the end. Slices and mi
 | `CAVEATS.md` | the ledger: every trap, its rule, its fixture |
 | `DESIGN-LANGUAGE.md` | one decision per screen, motion, voice, placement slots, layout shelf |
 | `ROADMAP.md` | M0–M6 mapped to slices S1–S13 |
+| `POLISH.md` | S13: acceptance S1 by clicking alone, the keyboard twins, the long and mirrored runs, the budget |
 
 ## Non-negotiables
 
@@ -304,7 +305,10 @@ own labels), a user produces a published form with: a heading, a logo, a require
 single-choice question with 4 options rendered as pills in the brand colour, an optional comments
 paragraph field, and a consent checkbox. Every question they were asked made sense to a
 non-technical person. *(The consent checkbox's text is typed by the person or chosen from their
-organisation's own authored texts; see "Wording Loppa does not write".)*
+organisation's own authored texts; see "Wording Loppa does not write".) Built in S13a
+(`POLISH.md`): the heading is the form's name ("What is your form called?"), the paragraph and the
+box come from "How should people answer?", and the box is a yes/no drawn as one checkbox that must
+be ticked when required; pressed in `e2e/acceptance-s1.spec.ts`, by pointer and by keyboard.*
 
 **S2 — The buttons chain.** The user answers "Do you want buttons?" → yes → "One answer or
 several?" → one → "How many options?" → 4 → "What shape?" → pill → "Where should they sit?" →

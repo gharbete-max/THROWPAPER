@@ -55,6 +55,7 @@ function conversation(): BuilderSession {
   // Past the guess (S11): two "Not sure" and it asks no more.
   c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
   c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale: 'sv-SE' });
+  c = answer(BUILDER_GRAPH, c, { kind: 'text', value: 'Sommarfest' }, { locale: 'sv-SE' });
   c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'later' }, { locale: 'sv-SE' });
   return toSession(BUILDER_GRAPH, c);
 }
@@ -97,6 +98,7 @@ describe('the builder session', () => {
       'flow.start',
       'guess.date',
       'guess.learn',
+      'flow.title',
       'brand.start',
     ]);
     expect(back.session).toEqual(session);

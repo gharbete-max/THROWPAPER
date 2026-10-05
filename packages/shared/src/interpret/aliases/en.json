@@ -1082,7 +1082,7 @@
       "notes": ""
     },
     {
-      "phrase": "No, people type an answer",
+      "phrase": "No buttons",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "en",
@@ -1090,6 +1090,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "No, people type an answer",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "free text",
@@ -1103,16 +1113,6 @@
     },
     {
       "phrase": "no",
-      "nodeId": "choice.buttons",
-      "optionId": "no",
-      "locale": "en",
-      "source": "built-in",
-      "createdAt": "2026-09-26",
-      "count": 0,
-      "notes": ""
-    },
-    {
-      "phrase": "no buttons",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "en",
@@ -2658,6 +2658,176 @@
       "locale": "en",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "A line of text",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "a few words",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "one line",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "short answer",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "short text",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "single line",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "A few sentences",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "comment box",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "long answer",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "long text",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "multiple lines",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "several lines",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "A box to tick",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "check box",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "checkbox",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tick box",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "tickbox",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "en",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

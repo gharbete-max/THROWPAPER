@@ -95,10 +95,13 @@ describe('"Right"', () => {
     expect(jsonEqual(replay(after.base, after.log), after.state)).toBe(true);
   });
 
-  it('shows what it added, then goes on with only the gaps: the brand, then "Add another?"', () => {
+  it('shows what it added, then goes on with only the gaps: its name, the brand, then "Add another?"', () => {
     expect(after.state.pending['seeded']).toBe('job-application');
     expect(after.state.cursor).toBe('guess.seeded');
     let c = answer(G, after, { kind: 'continue' }, { locale });
+    expect(c.state.cursor).toBe('flow.title');
+    c = answer(G, c, { kind: 'text', value: 'Sökes: kock' }, { locale });
+    expect(c.state.draft.title).toEqual({ [locale]: 'Sökes: kock' });
     expect(c.state.cursor).toBe('brand.start');
     c = answer(G, c, { kind: 'option', optionId: 'later' }, { locale });
     expect(c.state.cursor).toBe('flow.more');

@@ -1174,6 +1174,48 @@
         "optionId": "no",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "Nokkrar setningar",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T0"
+      },
+      "note": "S13, \"How should people answer?\": the card's own label"
+    },
+    {
+      "phrase": "langt svar takk",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "gátreitur",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "tick",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "bara ein lína",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "line",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "Nei, enga hnappa",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      },
+      "note": "the card's label since graph version 7"
     }
   ]
 }

@@ -113,6 +113,7 @@ export function ReviewScreen() {
         saver.current = new Saver(client, BUILDER_GRAPH, id, {
           version: stored.version,
           draft: form.draftDefinition,
+          title: form.title,
         });
         setConversation(started.conversation);
       })

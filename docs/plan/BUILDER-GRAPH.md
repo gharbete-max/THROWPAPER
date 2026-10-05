@@ -4,7 +4,8 @@
 **built in S1** (`packages/shared/src/builder/graph/`), the machine that walks it **in S2**
 (`packages/shared/src/builder/`, "The machine" below); answers ahead of their turn and graph
 version 3's slots **in S6**; the guess, graph version 5, **in S11** (`BELIEF.md`); the walk over
-an imported form, graph version 6, **in S12** (`CONVERGENCE.md`). Where this document and the code
+an imported form, graph version 6, **in S12** (`CONVERGENCE.md`); the form's name and "How should
+people answer?", graph version 7, **in S13** (`POLISH.md`). Where this document and the code
 disagree, the code is
 checked by tests and this document is the bug — fix it in the same change. Decisions: ADR 0020
 (graph as data) and ADR 0021 (JSON or typed TS, never YAML).
@@ -570,6 +571,8 @@ ones every graph has:
 | `choice.placement` | pick-one | Where should they sit? |
 | `choice.preview` | preview-moment | Here's how it looks. |
 | `flow.more` | question | Add another question? (the loop: Yes → `text.label`, No → `end`) |
+| `flow.title` | text-entry | What is your form called? (since S13) |
+| `text.kind` | question | How should people answer? (since S13, after "No buttons") |
 | `menu.top` | menu | the escape of last resort: every group as a card |
 | `end` | end | Your form is ready. |
 
@@ -605,6 +608,17 @@ answers to choose from" when it has none; every shape shows the question as butt
 `choice.preview` goes on to `import.next` while a walk has a question left, then to the brand if it
 is not decided. After the brand, a form with imported questions, like a seeded one, goes on to "Add
 another question?".
+
+Graph version 7 (S13, `POLISH.md`) makes acceptance S1 possible by clicking alone. `flow.title`
+("What is your form called?", a `text-entry` writing `draft.title`, with three example names) sits
+between the guess and the brand: `guess.confirm`'s last branch and `guess.seeded` go to it, and it
+goes on to `brand.start`, so the masthead the brand previews carries the form's real name; the
+saver writes it through `PATCH /v1/forms/:id` (`CAVEATS.md` #129). `choice.buttons`' "no" is now
+"No buttons" and goes to `text.kind` ("How should people answer?", group `text`, so a sentence at
+"Do you want buttons?" never answers it ahead of its turn): a line of text (`short_text`), a few
+sentences (`long_text`), or a box to tick (`yes_no` with the `checkbox` appearance, the consent
+presentation, its words the person's own); each card sets `pending.buttons` to false. A form read
+from a document is not asked its name: its walk goes to the brand as before.
 
 S2 changed three things the walk over the whole graph found (`CAVEATS.md` #62, #65):
 `text.required` asks only when there is a question (`when: 'has(focus)'`, skip reason

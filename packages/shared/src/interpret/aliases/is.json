@@ -752,7 +752,7 @@
       "notes": ""
     },
     {
-      "phrase": "Nei, fólk skrifar svar",
+      "phrase": "Nei, enga hnappa",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "is",
@@ -760,6 +760,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "Nei, fólk skrifar svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "engir hnappar",
@@ -1858,6 +1868,156 @@
       "locale": "is",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Ein lína af texta",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "ein lína",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "fáein orð",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stutt svar",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "stuttur texti",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Nokkrar setningar",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "athugasemdir",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "langt svar",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "langur texti",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "margar línur",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Kassi til að haka í",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "gátreitur",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "hak",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "haka við",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kassi",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "is",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

@@ -792,7 +792,7 @@
       "notes": ""
     },
     {
-      "phrase": "Нет, ответ пишут сами",
+      "phrase": "Нет, без кнопок",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "ru",
@@ -800,6 +800,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "Нет, ответ пишут сами",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "без кнопок",
@@ -1958,6 +1968,156 @@
       "locale": "ru",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Одна строка текста",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "короткий ответ",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "короткий текст",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "несколько слов",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "одна строка",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Несколько предложений",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "длинный ответ",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "длинный текст",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "комментарии",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "несколько строк",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Квадратик для галочки",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "галочка",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "отметить",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "флажок",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "чекбокс",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "ru",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

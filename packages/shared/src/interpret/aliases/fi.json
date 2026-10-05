@@ -802,7 +802,7 @@
       "notes": ""
     },
     {
-      "phrase": "Ei, vastaus kirjoitetaan",
+      "phrase": "Ei painikkeita",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "fi",
@@ -810,6 +810,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "Ei, vastaus kirjoitetaan",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "avoin vastaus",
@@ -823,16 +833,6 @@
     },
     {
       "phrase": "ei",
-      "nodeId": "choice.buttons",
-      "optionId": "no",
-      "locale": "fi",
-      "source": "built-in",
-      "createdAt": "2026-09-26",
-      "count": 0,
-      "notes": ""
-    },
-    {
-      "phrase": "ei painikkeita",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "fi",
@@ -1968,6 +1968,156 @@
       "locale": "fi",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Rivi tekstiä",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "lyhyt teksti",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lyhyt vastaus",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "muutama sana",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "yksi rivi",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Muutama lause",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "kommentit",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pitkä teksti",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "pitkä vastaus",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "useita rivejä",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Rastitettava ruutu",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "rasti",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ruksi",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "ruutu",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "valintaruutu",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fi",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

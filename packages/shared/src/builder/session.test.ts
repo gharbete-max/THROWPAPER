@@ -16,11 +16,20 @@ import { BuilderSession, fromSession, MAX_LOG_ENTRIES, toSession } from './sessi
 const G = BUILDER_GRAPH;
 const locale = 'sv-SE';
 const FIXTURE = new URL('../../../../fixtures/sessions/buttons-chain.json', import.meta.url);
+/**
+ * The same chain recorded by the build before graph version 7 (S13), which asks no name for the
+ * form and offers no "How should people answer?": kept as it was, so "replays in every later
+ * build" is held for a real earlier build, not only for the current one.
+ */
+const RECORDED_BEFORE = [
+  new URL('../../../../fixtures/sessions/buttons-chain-v6.json', import.meta.url),
+];
 
 const chain: Answer[] = [
   { kind: 'option', optionId: 'signup' },
   { kind: 'option', optionId: 'unsure' },
   { kind: 'option', optionId: 'unsure' },
+  { kind: 'text', value: 'Sommarfest' },
   { kind: 'option', optionId: 'later' },
   { kind: 'text', value: 'Vilken mat vill du ha?' },
   { kind: 'option', optionId: 'yes' },
@@ -56,6 +65,18 @@ describe('a saved session', () => {
     const file = JSON.parse(readFileSync(FIXTURE, 'utf8')) as { session: unknown; draft: unknown };
     expect(jsonEqual(fromSession(file.session).state.draft, file.draft)).toBe(true);
   });
+
+  it.each(RECORDED_BEFORE.map((url) => [url.pathname.split('/').at(-1)!, url] as const))(
+    'replays %s, recorded by an earlier graph, into the draft recorded with it',
+    (_name, url) => {
+      const file = JSON.parse(readFileSync(url, 'utf8')) as {
+        session: { graphVersion: number };
+        draft: unknown;
+      };
+      expect(file.session.graphVersion).toBeLessThan(G.graphVersion);
+      expect(jsonEqual(fromSession(file.session).state.draft, file.draft)).toBe(true);
+    },
+  );
 });
 
 describe('a session that cannot be trusted', () => {

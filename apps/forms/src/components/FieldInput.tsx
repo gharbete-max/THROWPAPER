@@ -263,6 +263,42 @@ export function FieldInput({
   const invalid = error ? true : undefined;
 
   /**
+   * A box to tick — the consent presentation (`docs/plan/POLISH.md`, S13a): one checkbox, its words
+   * beside it as its label, so pressing the words ticks the box. Ticked is yes, not ticked is no;
+   * a required one must be ticked (`validation.tick`). The words are the form's own, verbatim.
+   */
+  if (field.type === 'yes_no' && field.appearance === 'checkbox') {
+    return (
+      <div className="field">
+        <label className="field field--inline">
+          <input
+            type="checkbox"
+            required={required}
+            aria-describedby={describedBy}
+            aria-invalid={invalid}
+            checked={value === true}
+            onChange={(event) => onChange(field.key, event.target.checked)}
+          />
+          <span>
+            {label}
+            {required && ' *'}
+          </span>
+        </label>
+        {help && (
+          <span className="small muted" id={helpId}>
+            {help}
+          </span>
+        )}
+        {error && (
+          <span className="small status-down" id={errorId}>
+            {error}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  /**
    * Grouped choices are a `fieldset` with a `legend`, not a `label` wrapped round several
    * inputs. A label may only name one control; wrapping a group makes clicking the question text
    * silently tick the first option, and leaves a screen reader announcing the wrong thing.
@@ -473,7 +509,12 @@ function choiceGroup(
     };
   }
 
-  if (field.type === 'yes_no' && field.appearance !== 'dropdown') {
+  // A box to tick is one checkbox, not a group of two answers (`FieldInput`, above).
+  if (
+    field.type === 'yes_no' &&
+    field.appearance !== 'dropdown' &&
+    field.appearance !== 'checkbox'
+  ) {
     return {
       appearance: field.appearance,
       multiple: false,

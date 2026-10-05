@@ -74,7 +74,7 @@ const count = (html: string, needle: string) => html.split(needle).length - 1;
 
 /** The buttons chain up to the question named. */
 const untilCount = () =>
-  walk('signup', 'unsure', 'unsure', 'later', 'Which day?', 'yes', 'yes', 'one');
+  walk('signup', 'unsure', 'unsure', 'Sommarfest', 'later', 'Which day?', 'yes', 'yes', 'one');
 
 describe('a question', () => {
   const html = render(first);
@@ -112,7 +112,7 @@ describe('the trail', () => {
 
 describe('each kind of node', () => {
   it('a text answer: its own box and example chips, not "Or type it"', () => {
-    const at = walk('signup', 'unsure', 'unsure', 'later');
+    const at = walk('signup', 'unsure', 'unsure', 'Sommarfest', 'later');
     expect(at.state.cursor).toBe('text.label');
     const html = render(at);
     expect(html).toContain('aria-labelledby="conversation-question"');
@@ -138,12 +138,26 @@ describe('each kind of node', () => {
 
   it('the live preview: after the shape, and at the preview moment — not before', () => {
     expect(
-      render(walk('signup', 'unsure', 'unsure', 'later', 'Which day?', 'yes', 'yes', 'one', 4)),
+      render(
+        walk(
+          'signup',
+          'unsure',
+          'unsure',
+          'Sommarfest',
+          'later',
+          'Which day?',
+          'yes',
+          'yes',
+          'one',
+          4,
+        ),
+      ),
     ).not.toContain('conversation__preview');
     const placement = walk(
       'signup',
       'unsure',
       'unsure',
+      'Sommarfest',
       'later',
       'Which day?',
       'yes',
@@ -160,7 +174,18 @@ describe('each kind of node', () => {
   });
 
   it('the end: open it in the editor, or keep going', () => {
-    const at = walk('signup', 'unsure', 'unsure', 'later', 'Which day?', 'yes', 'no', 'no');
+    const at = walk(
+      'signup',
+      'unsure',
+      'unsure',
+      'Sommarfest',
+      'later',
+      'Which day?',
+      'yes',
+      'no',
+      'line',
+      'no',
+    );
     expect(G.nodes.find((n) => n.id === at.state.cursor)?.kind).toBe('end');
     const html = render(at);
     expect(html).toContain(en('wizard.open'));

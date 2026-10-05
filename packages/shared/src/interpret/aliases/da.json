@@ -822,7 +822,7 @@
       "notes": ""
     },
     {
-      "phrase": "Nej, man skriver et svar",
+      "phrase": "Nej, ingen knapper",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "da",
@@ -830,6 +830,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "Nej, man skriver et svar",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "fritekst",
@@ -2028,6 +2038,156 @@
       "locale": "da",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "En linje tekst",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "en linje",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "få ord",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kort svar",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kort tekst",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Et par sætninger",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "flere linjer",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "kommentarer",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "lang tekst",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "langt svar",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "En boks at sætte kryds i",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "afkrydsning",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "afkrydsningsboks",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "boks",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "sæt kryds",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "da",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

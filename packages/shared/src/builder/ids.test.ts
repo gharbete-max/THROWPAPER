@@ -62,6 +62,7 @@ describe('a question keeps its id', () => {
     c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'collect' }, { locale });
     c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale });
     c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'unsure' }, { locale });
+    c = answer(BUILDER_GRAPH, c, { kind: 'text', value: 'Sommarfest' }, { locale });
     c = answer(BUILDER_GRAPH, c, { kind: 'option', optionId: 'later' }, { locale });
     return answer(BUILDER_GRAPH, c, { kind: 'text', value: 'Allergier' }, { locale });
   };

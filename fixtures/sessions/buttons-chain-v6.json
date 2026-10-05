@@ -1,7 +1,7 @@
 {
   "session": {
     "sessionVersion": 1,
-    "graphVersion": 7,
+    "graphVersion": 6,
     "base": {
       "draft": {
         "definition": {
@@ -218,46 +218,13 @@
         },
         "patch": [],
         "inverse": [],
-        "to": "flow.title",
+        "to": "brand.start",
         "skipped": [
           {
             "nodeId": "guess.confirm",
             "reason": "guided.skip.nothingToGuess"
           }
         ],
-        "tier": null,
-        "source": "guided"
-      },
-      {
-        "nodeId": "flow.title",
-        "answer": {
-          "kind": "text",
-          "value": "Sommarfest"
-        },
-        "patch": [
-          {
-            "op": "set",
-            "at": [
-              "draft",
-              "title"
-            ],
-            "value": {
-              "sv-SE": "Sommarfest"
-            }
-          }
-        ],
-        "inverse": [
-          {
-            "op": "set",
-            "at": [
-              "draft",
-              "title"
-            ],
-            "value": {}
-          }
-        ],
-        "to": "brand.start",
-        "skipped": [],
         "tier": null,
         "source": "guided"
       },
@@ -1774,8 +1741,6 @@
         "identity": "off"
       }
     },
-    "title": {
-      "sv-SE": "Sommarfest"
-    }
+    "title": {}
   }
 }

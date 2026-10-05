@@ -1096,6 +1096,48 @@
         "optionId": "no",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "数行の文章",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T0"
+      },
+      "note": "S13, \"How should people answer?\": the card's own label"
+    },
+    {
+      "phrase": "長い回答がいい",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "チェックボックス",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "tick",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "短いテキストで",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "line",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "いいえ、ボタンなし",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      },
+      "note": "the card's label since graph version 7"
     }
   ]
 }

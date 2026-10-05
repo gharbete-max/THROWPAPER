@@ -732,7 +732,7 @@
       "notes": ""
     },
     {
-      "phrase": "不用，直接写出回答",
+      "phrase": "不用按钮",
       "nodeId": "choice.buttons",
       "optionId": "no",
       "locale": "zh",
@@ -740,6 +740,16 @@
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
+    },
+    {
+      "phrase": "不用，直接写出回答",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
     },
     {
       "phrase": "不要按钮",
@@ -1828,6 +1838,156 @@
       "locale": "zh",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一行",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一行文字",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "几个词",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "短文本",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "简短回答",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "几句话",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "多行",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "意见",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "较长回答",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "长文本",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "一个勾选框",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "勾选",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "勾选框",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "复选框",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "打勾",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "zh",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

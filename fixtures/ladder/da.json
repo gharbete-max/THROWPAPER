@@ -1182,6 +1182,48 @@
         "optionId": "no",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "Et par sætninger",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T0"
+      },
+      "note": "S13, \"How should people answer?\": the card's own label"
+    },
+    {
+      "phrase": "et langt svar tak",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "afkrydsningsboks",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "tick",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "bare en linje",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "line",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "Nej, ingen knapper",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      },
+      "note": "the card's label since graph version 7"
     }
   ]
 }

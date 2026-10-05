@@ -807,6 +807,16 @@
       "optionId": "no",
       "locale": "fr",
       "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
+    },
+    {
+      "phrase": "Non, pas de boutons",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "fr",
+      "source": "built-in",
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
@@ -2048,6 +2058,146 @@
       "locale": "fr",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Une ligne de texte",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "quelques mots",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "réponse courte",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texte court",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "une ligne",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Quelques phrases",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "commentaires",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "plusieurs lignes",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "réponse longue",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texte long",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Une case à cocher",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "case",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "coche",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "cocher",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "fr",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

@@ -187,7 +187,12 @@ export const SelectOption = z.object({
  */
 export const SINGLE_SELECT_APPEARANCES = ['dropdown', 'radio', 'buttons', 'cards'] as const;
 export const MULTI_SELECT_APPEARANCES = ['checkboxes', 'buttons', 'cards'] as const;
-export const YES_NO_APPEARANCES = ['dropdown', 'radio', 'buttons'] as const;
+/**
+ * `checkbox` is one box to tick, its label beside it: the consent presentation (`docs/plan/POLISH.md`,
+ * S13a). The one appearance that says something about the answer — a box not ticked has still been
+ * answered, so a required one must be ticked (`validate.ts`, `validation.tick`).
+ */
+export const YES_NO_APPEARANCES = ['dropdown', 'radio', 'buttons', 'checkbox'] as const;
 /** Stars for satisfaction, numbers for a scale somebody will do arithmetic on later. */
 export const RATING_APPEARANCES = ['star', 'number'] as const;
 

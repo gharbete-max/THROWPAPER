@@ -126,6 +126,7 @@ describe('the buttons chain (acceptance scenario S2)', () => {
     { kind: 'option', optionId: 'signup' },
     { kind: 'option', optionId: 'unsure' },
     { kind: 'option', optionId: 'unsure' },
+    { kind: 'text', value: 'Sommarfest' },
     { kind: 'option', optionId: 'later' },
     { kind: 'text', value: '  Vilken mat vill du ha?  ' },
     { kind: 'option', optionId: 'yes' },
@@ -166,6 +167,7 @@ describe('the buttons chain (acceptance scenario S2)', () => {
       // The guess asks what tells it most (S11); two "Not sure" and it asks no more.
       'guess.date',
       'guess.learn',
+      'flow.title',
       'brand.start',
       'text.label',
       'text.required',
@@ -191,6 +193,126 @@ describe('the buttons chain (acceptance scenario S2)', () => {
         .reduce((d, entry) => answer(G, d, entry.answer, { locale }), there);
       expect(jsonEqual(again, c)).toBe(true);
     }
+  });
+});
+
+/**
+ * Acceptance S1 by clicking alone (`docs/plan/POLISH.md`, S13a): the form's name, which is its
+ * heading; and after "No buttons", a line, a few sentences, or a box to tick.
+ */
+describe("the form's name, a paragraph and a box to tick (acceptance scenario S1)", () => {
+  const toTitle = () =>
+    (
+      [
+        { kind: 'option', optionId: 'signup' },
+        { kind: 'option', optionId: 'unsure' },
+        { kind: 'option', optionId: 'unsure' },
+      ] as Answer[]
+    ).reduce((c, a) => answer(G, c, a, { locale }), fresh());
+  /** A typed question, needed or not, with no buttons: "How should people answer?" next. */
+  const toKind = (label: string, required: 'yes' | 'no') =>
+    (
+      [
+        { kind: 'text', value: 'Sommarfest' },
+        { kind: 'option', optionId: 'later' },
+        { kind: 'text', value: label },
+        { kind: 'option', optionId: required },
+        { kind: 'option', optionId: 'no' },
+      ] as Answer[]
+    ).reduce((c, a) => answer(G, c, a, { locale }), toTitle());
+
+  it("asks the form's name after the guess, writes it in the language being written, and goes on to the brand", () => {
+    const c = toTitle();
+    expect(c.state.cursor).toBe('flow.title');
+    const named = answer(G, c, { kind: 'text', value: '  Sommarfest 2026 ' }, { locale });
+    expect(named.state.draft.title).toEqual({ [locale]: 'Sommarfest 2026' });
+    expect(named.state.cursor).toBe('brand.start');
+    expect(trail(named).at(-1)).toMatchObject({ nodeId: 'flow.title' });
+    // A name is needed: the box is not passed by empty.
+    expect(() => answer(G, c, { kind: 'text', value: '   ' }, { locale })).toThrow(
+      expect.objectContaining({ code: 'empty-answer' }),
+    );
+    expect(jsonEqual(back(named), c)).toBe(true);
+  });
+
+  it('asks how people answer once there are no buttons', () => {
+    const c = toKind('Synpunkter', 'no');
+    expect(c.state.cursor).toBe('text.kind');
+    expect(c.state.pending['buttons']).toBe(false);
+  });
+
+  it.each([
+    ['line', { type: 'short_text' }],
+    ['paragraph', { type: 'long_text' }],
+    ['tick', { type: 'yes_no', appearance: 'checkbox' }],
+  ] as const)(
+    '"%s" makes the question that answer, and asks if there is more',
+    (optionId, made) => {
+      const c = answer(G, toKind('Synpunkter', 'no'), { kind: 'option', optionId }, { locale });
+      const field = c.state.draft.definition.fields.at(-1)!;
+      expect(field).toMatchObject({ ...made, label: { [locale]: 'Synpunkter' }, required: false });
+      expect(c.state.cursor).toBe('flow.more');
+      expect(c.state.pending['buttons']).toBe(false);
+      expect(publishable(c)).toBe(true);
+      expect(jsonEqual(replay(c.base, c.log), c.state)).toBe(true);
+    },
+  );
+
+  it("makes a needed box to tick from the person's own words, verbatim", () => {
+    const words = 'Jag har läst och godkänner villkoren för Sommarfest 2026.';
+    const c = answer(G, toKind(words, 'yes'), { kind: 'option', optionId: 'tick' }, { locale });
+    expect(c.state.draft.definition.fields.at(-1)).toMatchObject({
+      type: 'yes_no',
+      appearance: 'checkbox',
+      required: true,
+      label: { [locale]: words },
+    });
+  });
+
+  it('builds the whole of S1: a name, a needed name field, four pills, a paragraph and a box', () => {
+    const c = (
+      [
+        { kind: 'text', value: 'Sommarfest' },
+        { kind: 'option', optionId: 'later' },
+        { kind: 'text', value: 'Vilken dag passar dig?' },
+        { kind: 'option', optionId: 'yes' },
+        { kind: 'option', optionId: 'yes' },
+        { kind: 'option', optionId: 'one' },
+        { kind: 'quantity', value: 4 },
+        { kind: 'option', optionId: 'pill' },
+        { kind: 'option', optionId: 'under-full' },
+        { kind: 'continue' },
+        { kind: 'option', optionId: 'yes' },
+        { kind: 'text', value: 'Synpunkter' },
+        { kind: 'option', optionId: 'no' },
+        { kind: 'option', optionId: 'no' },
+        { kind: 'option', optionId: 'paragraph' },
+        { kind: 'option', optionId: 'yes' },
+        { kind: 'text', value: 'Jag godkänner att mina svar sparas.' },
+        { kind: 'option', optionId: 'yes' },
+        { kind: 'option', optionId: 'no' },
+        { kind: 'option', optionId: 'tick' },
+        { kind: 'option', optionId: 'no' },
+      ] as Answer[]
+    ).reduce((c, a) => answer(G, c, a, { locale }), toTitle());
+    expect(c.state.cursor).toBe('end');
+    expect(c.state.draft.title).toEqual({ [locale]: 'Sommarfest' });
+    expect(
+      c.state.draft.definition.fields.map((f) => [
+        f.type,
+        'required' in f ? f.required : null,
+        'appearance' in f ? f.appearance : null,
+      ]),
+    ).toEqual([
+      ['short_text', true, null],
+      ['single_select', true, 'buttons'],
+      ['long_text', false, null],
+      ['yes_no', true, 'checkbox'],
+    ]);
+    const choice = c.state.draft.definition.fields[1]!;
+    expect(choice).toMatchObject({ style: { shape: 'pill', accent: 'primary' } });
+    expect('options' in choice ? choice.options : []).toHaveLength(4);
+    expect(publishable(c)).toBe(true);
   });
 });
 
@@ -304,6 +426,7 @@ describe('what a person writes', () => {
     let c = answer(G, fresh(), { kind: 'option', optionId: 'collect' }, { locale: 'en-GB' });
     c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'en-GB' });
     c = answer(G, c, { kind: 'option', optionId: 'unsure' }, { locale: 'en-GB' });
+    c = answer(G, c, { kind: 'text', value: 'Sommarfest' }, { locale: 'en-GB' });
     c = answer(G, c, { kind: 'option', optionId: 'later' }, { locale: 'en-GB' });
     c = answer(G, c, { kind: 'text', value: '\t  e-POST  ,  please!! \n' }, { locale: 'en-GB' });
     expect(c.state.draft.definition.fields[1]).toMatchObject({
@@ -317,6 +440,7 @@ describe('what a person writes', () => {
       { kind: 'option', optionId: 'signup' },
       { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'unsure' },
+      { kind: 'text', value: 'Sommarfest' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Mat' },
       { kind: 'option', optionId: 'no' },
@@ -327,10 +451,12 @@ describe('what a person writes', () => {
       c = answer(G, c, given, { locale });
     }
     const id = c.state.focus!;
-    // Out through the escape, "No, people type an answer", then back in with "Yes". (A hand edit
-    // on the way would make these proposals instead — `reconcile.test.ts`.)
+    // Out through the escape, "No buttons" and "A line of text", then back in with "Yes". (A hand
+    // edit on the way would make these proposals instead — `reconcile.test.ts`.)
     c = answer(G, c, { kind: 'jump', to: 'choice.buttons' }, { locale });
     c = answer(G, c, { kind: 'option', optionId: 'no' }, { locale });
+    expect(c.state.cursor).toBe('text.kind');
+    c = answer(G, c, { kind: 'option', optionId: 'line' }, { locale });
     expect(c.state.draft.definition.fields[1]).not.toHaveProperty('options');
     expect(c.state.sidecar.fields[id]?.setAside).toHaveProperty('options');
     c = answer(G, c, { kind: 'jump', to: 'menu.top' }, { locale });
@@ -364,6 +490,7 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
         { kind: 'option', optionId: 'signup' },
         { kind: 'option', optionId: 'unsure' },
         { kind: 'option', optionId: 'unsure' },
+        { kind: 'text', value: 'Sommarfest' },
         { kind: 'option', optionId: 'later' },
         { kind: 'text', value: 'Mat' },
         { kind: 'option', optionId: 'yes' },
@@ -379,6 +506,7 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
         { kind: 'option', optionId: 'signup' },
         { kind: 'option', optionId: 'unsure' },
         { kind: 'option', optionId: 'unsure' },
+        { kind: 'text', value: 'Sommarfest' },
         { kind: 'option', optionId: 'later' },
         { kind: 'text', value: 'Mat' },
         { kind: 'option', optionId: 'yes' },
@@ -394,6 +522,7 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
         { kind: 'option', optionId: 'signup' },
         { kind: 'option', optionId: 'unsure' },
         { kind: 'option', optionId: 'unsure' },
+        { kind: 'text', value: 'Sommarfest' },
         { kind: 'option', optionId: 'later' },
       ]),
       { kind: 'text', value: '   ' },
@@ -415,10 +544,12 @@ describe('what the machine refuses, leaving the conversation as it was', () => {
       { kind: 'option', optionId: 'signup' },
       { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'unsure' },
+      { kind: 'text', value: 'Sommarfest' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Mat' },
       { kind: 'option', optionId: 'yes' },
       { kind: 'option', optionId: 'no' },
+      { kind: 'option', optionId: 'line' },
       { kind: 'option', optionId: 'no' },
     ]);
     expect(end.state.cursor).toBe('end');
@@ -525,6 +656,7 @@ describe('replay needs no graph', () => {
       { kind: 'option', optionId: 'feedback' },
       { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'unsure' },
+      { kind: 'text', value: 'Sommarfest' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Vad tyckte du?' },
     ] as Answer[];

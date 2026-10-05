@@ -82,7 +82,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
-| **S13** Polish | twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date | e2e; budgets | all of the above | not started |
+| **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | in progress — S13a (acceptance S1) done, PR #147 |
 
 ## Log
 
@@ -423,3 +423,14 @@ when each slice ends.)*
   stage 9, acceptance "re-import asks before removing". Found on the way: a form made by hand had
   every addition put above what the person made (#127). Tests: `builder/reimport.test.ts`,
   `review/reimport.test.ts`, and two journeys in `e2e/reimport.spec.ts`. Next: S13.
+- **S13a, acceptance S1 by clicking alone (2026-10-05).** What: graph version 7 — "What is your
+  form called?" between the guess and the brand, and after "No buttons", "How should people
+  answer?" (a line, a few sentences, a box to tick); `yes_no` gains the `checkbox` appearance
+  (`packages/shared`), required meaning ticked (`validation.tick`); an imported consent is drawn as
+  that box; the saver writes the form's name. Thirteen guided messages and two more in twelve
+  catalogues, six cards' aliases and phrase rows in twelve languages. Why: S1 could not be met —
+  no name, no paragraph, no box (`POLISH.md`). Found on the way: a required box left unticked
+  passed (#128), the name would not have been saved (#129), and uploaded images were broken in
+  development and e2e (the preview server never proxied `/public/assets/`). Tests: the machine's
+  S1 chain, the validator's box, the saver's name, the version-6 recording replayed, and
+  `e2e/acceptance-s1.spec.ts` by pointer and by keyboard. Next: S13b.

@@ -99,7 +99,7 @@ export function validateSubmission(
     // A partial save (save-and-resume) keeps whatever has been entered without demanding the rest.
     if (empty) {
       if (!options.partial && 'required' in field && field.required) {
-        issues.push({ key: field.key, code: 'validation.required' });
+        issues.push({ key: field.key, code: requiredCode(field) });
       }
       values[field.key] = emptyValueFor(field.type);
       continue;
@@ -107,7 +107,9 @@ export function validateSubmission(
 
     const outcome = validateField(field, raw);
     if (outcome.issue) issues.push({ key: field.key, ...outcome.issue });
-    else values[field.key] = outcome.value;
+    else if (!options.partial && unticked(field, outcome.value)) {
+      issues.push({ key: field.key, code: 'validation.tick' });
+    } else values[field.key] = outcome.value;
   }
 
   // Answers for fields that are not in the definition are dropped rather than stored. A stray key
@@ -197,7 +199,7 @@ function validateGroup(
         if (!options.partial && 'required' in child && child.required) {
           issues.push({
             key: entryIssueKey(group.key, index, child.key),
-            code: 'validation.required',
+            code: requiredCode(child),
           });
         }
         entry[child.key] = emptyValueFor(child.type);
@@ -207,6 +209,8 @@ function validateGroup(
       const outcome = validateField(child as ScalarField, value);
       if (outcome.issue) {
         issues.push({ key: entryIssueKey(group.key, index, child.key), ...outcome.issue });
+      } else if (!options.partial && unticked(child, outcome.value)) {
+        issues.push({ key: entryIssueKey(group.key, index, child.key), code: 'validation.tick' });
       } else {
         entry[child.key] = outcome.value;
       }
@@ -397,6 +401,24 @@ function validateField(
 function assertHandled(field: never): { issue: Omit<ValidationIssue, 'key'> } {
   const type = (field as { type?: string }).type ?? 'unknown';
   throw new Error(`validateField has no case for field type "${type}"`);
+}
+
+/** A box to tick: a yes/no drawn as one checkbox (`definition.ts`, `YES_NO_APPEARANCES`). */
+function isBox(field: { readonly type: string }): boolean {
+  return field.type === 'yes_no' && (field as { appearance?: string }).appearance === 'checkbox';
+}
+
+/** What a required question with no answer is told: a box to tick is asked to be ticked. */
+function requiredCode(field: { readonly type: string }): string {
+  return isBox(field) ? 'validation.tick' : 'validation.required';
+}
+
+/**
+ * A required box left unticked. Not ticked is an answer — no — so it passes the emptiness check,
+ * and a required box is the one question where that answer is not enough (HTML's own meaning).
+ */
+function unticked(field: { readonly type: string }, value: unknown): boolean {
+  return isBox(field) && (field as { required?: boolean }).required === true && value === false;
 }
 
 function isEmpty(value: ScalarValue): boolean {

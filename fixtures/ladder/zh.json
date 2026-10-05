@@ -1126,6 +1126,48 @@
         "optionId": "no",
         "tier": "T0"
       }
+    },
+    {
+      "phrase": "几句话",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T0"
+      },
+      "note": "S13, \"How should people answer?\": the card's own label"
+    },
+    {
+      "phrase": "我要较长回答",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "复选框",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "tick",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "只要一行",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "line",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "不用按钮",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      },
+      "note": "the card's label since graph version 7"
     }
   ]
 }

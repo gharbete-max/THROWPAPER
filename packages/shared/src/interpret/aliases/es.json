@@ -827,6 +827,16 @@
       "optionId": "no",
       "locale": "es",
       "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label until graph version 7"
+    },
+    {
+      "phrase": "No, sin botones",
+      "nodeId": "choice.buttons",
+      "optionId": "no",
+      "locale": "es",
+      "source": "built-in",
       "createdAt": "2026-09-26",
       "count": 0,
       "notes": "the card's label"
@@ -2018,6 +2028,146 @@
       "locale": "es",
       "source": "built-in",
       "createdAt": "2026-09-30",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Una línea de texto",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "respuesta corta",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texto corto",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "una línea",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "unas palabras",
+      "nodeId": "text.kind",
+      "optionId": "line",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Unas frases",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "comentarios",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "respuesta larga",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "texto largo",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "varias líneas",
+      "nodeId": "text.kind",
+      "optionId": "paragraph",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "Una casilla para marcar",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": "the card's label"
+    },
+    {
+      "phrase": "casilla",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "casilla de verificación",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "marcar",
+      "nodeId": "text.kind",
+      "optionId": "tick",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

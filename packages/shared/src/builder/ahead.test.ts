@@ -40,6 +40,7 @@ function atButtons(): Conversation {
     option('signup'),
     option('unsure'),
     option('unsure'),
+    { kind: 'text', value: 'Sommarfest' } as const,
     option('later'),
     { kind: 'text', value: 'Vilken dag?' } as const,
     option('yes'),
@@ -121,9 +122,10 @@ describe('a sentence that answers several questions at once', () => {
       [given('choice.buttons', option('no')), given('choice.shape', option('pill'))],
       { locale },
     );
-    // "No buttons" moves on; a shape for buttons nobody wants is not a question any more.
+    // "No buttons" moves on to how people answer; a shape for buttons nobody wants is not a
+    // question any more.
     expect(refused).toEqual([null, 'not-now']);
-    expect(c.state.cursor).toBe('flow.more');
+    expect(c.state.cursor).toBe('text.kind');
     expect(focused(c)).toMatchObject({ type: 'short_text' });
   });
 

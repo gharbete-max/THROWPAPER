@@ -44,9 +44,14 @@ import type { BuilderGraph } from './schema.js';
  * question it walks goes through the chain every question goes through, which passes by what the
  * document decided. The choice chain also serves a question that is a choice before the
  * conversation met it, and a shape shows the question as buttons.
+ *
+ * **Version 7 (S13)** makes acceptance S1 possible by clicking alone (`docs/plan/POLISH.md`): "What
+ * is your form called?" between the guess and the brand, so the form has its heading and the
+ * masthead its name; and after "No buttons", "How should people answer?" — a line, a few sentences,
+ * or a box to tick, the last of which is a consent's presentation, its words the person's own.
  */
 export const BUILDER_GRAPH = {
-  graphVersion: 6,
+  graphVersion: 7,
   start: 'flow.start',
   // What the machine or the screen provides, not a patch: `guess.pMille` and `pending.seeded` are
   // the belief engine's (S11), `pending.toWalk` the walk's (S12), the rest the screen's at the start.
@@ -181,7 +186,7 @@ export const BUILDER_GRAPH = {
         else: [
           { when: 'has(pending.seeded)', to: 'guess.seeded' },
           { when: 'guess.pMille >= 800', to: 'guess.confirm' },
-          { when: 'true', to: 'brand.start' },
+          { when: 'true', to: 'flow.title' },
         ],
       },
       escape: 'menu.top',
@@ -197,7 +202,7 @@ export const BUILDER_GRAPH = {
       when: 'has(pending.seeded)',
       skip: 'guided.skip.nothingSeeded',
       preview: 'form.whole',
-      next: 'brand.start',
+      next: 'flow.title',
       escape: 'menu.top',
     },
     // The guess questions (S11, `docs/plan/BELIEF.md`). Each changes nothing in the form: its
@@ -1319,6 +1324,24 @@ export const BUILDER_GRAPH = {
         { id: 'unsure', label: 'guided.common.unsure', patch: [] },
       ],
     },
+    // The form's name: its heading on the page, and the masthead's in the brand's preview (S13).
+    // Reached once on the guided path; a form read from a document goes on to the brand as before.
+    {
+      id: 'flow.title',
+      group: 'flow',
+      kind: 'text-entry',
+      ask: 'guided.flow.title.ask',
+      help: 'guided.flow.title.help',
+      examples: [
+        'guided.flow.title.exampleParty',
+        'guided.flow.title.exampleCourse',
+        'guided.flow.title.exampleMeeting',
+      ],
+      required: true,
+      patch: [{ op: 'set', path: 'draft.title', value: { $answer: true } }],
+      next: 'brand.start',
+      escape: 'menu.top',
+    },
     {
       id: 'brand.start',
       group: 'brand',
@@ -1554,7 +1577,61 @@ export const BUILDER_GRAPH = {
             { op: 'set', path: 'pending.buttons', value: false },
             { op: 'set', path: 'draft.definition.fields[focus].type', value: 'short_text' },
           ],
-          next: 'flow.more',
+          next: 'text.kind',
+        },
+      ],
+    },
+    // What is typed, or ticked, as the answer (S13). In the text group, so a sentence at "Do you
+    // want buttons?" never answers it ahead of its turn: what it reads there is as it was. Each card
+    // says there are no buttons, so a later jump into the choice chain never shapes options the
+    // question no longer has.
+    {
+      id: 'text.kind',
+      group: 'text',
+      kind: 'question',
+      ask: 'guided.text.kind.ask',
+      help: 'guided.text.kind.help',
+      when: 'has(focus) && !decided(kind)',
+      skip: [
+        { when: '!has(focus)', skip: 'guided.skip.noQuestion' },
+        { when: 'true', skip: 'guided.skip.decided' },
+      ],
+      next: [
+        { when: 'pending.walking == true && has(pending.toWalk)', to: 'import.next' },
+        { when: 'pending.walking == true && !has(sidecar.brandDecided)', to: 'brand.start' },
+        { when: 'true', to: 'flow.more' },
+      ],
+      escape: 'menu.siblings(text)',
+      options: [
+        {
+          id: 'line',
+          label: 'guided.text.kind.line',
+          detail: 'guided.text.kind.lineDetail',
+          patch: [
+            { op: 'set', path: 'pending.buttons', value: false },
+            { op: 'set', path: 'draft.definition.fields[focus].type', value: 'short_text' },
+          ],
+        },
+        {
+          id: 'paragraph',
+          label: 'guided.text.kind.paragraph',
+          detail: 'guided.text.kind.paragraphDetail',
+          patch: [
+            { op: 'set', path: 'pending.buttons', value: false },
+            { op: 'set', path: 'draft.definition.fields[focus].type', value: 'long_text' },
+          ],
+        },
+        {
+          // The consent presentation: its words are the question's own, typed by the person
+          // (`CLAUDE.md` rule 8, ADR 0012). Required means it must be ticked.
+          id: 'tick',
+          label: 'guided.text.kind.tick',
+          detail: 'guided.text.kind.tickDetail',
+          patch: [
+            { op: 'set', path: 'pending.buttons', value: false },
+            { op: 'set', path: 'draft.definition.fields[focus].type', value: 'yes_no' },
+            { op: 'set', path: 'draft.definition.fields[focus].appearance', value: 'checkbox' },
+          ],
         },
       ],
     },

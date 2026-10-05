@@ -88,6 +88,7 @@ describe('what the conversation’s state hides', () => {
       { kind: 'option', optionId: 'signup' },
       { kind: 'option', optionId: 'unsure' },
       { kind: 'option', optionId: 'unsure' },
+      { kind: 'text', value: 'Sommarfest' },
       { kind: 'option', optionId: 'later' },
       { kind: 'text', value: 'Which day?' },
       { kind: 'option', optionId: 'yes' },

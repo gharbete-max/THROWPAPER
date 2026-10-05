@@ -302,10 +302,10 @@ describe('after "No"', () => {
     expect(after.state.cursor).toBe('guess.meeting');
   });
 
-  it('goes on to the brand when neither: five asked, and nothing sure enough', () => {
+  it("goes on to the form's name, then the brand, when neither: five asked, and nothing sure enough", () => {
     const after = no(walk('quote-request'));
     expect(after.state.guess!.pMille).toBeLessThan(GUESS_AT_MILLE);
-    expect(after.state.cursor).toBe('brand.start');
+    expect(after.state.cursor).toBe('flow.title');
   });
 });
 

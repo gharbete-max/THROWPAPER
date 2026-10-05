@@ -39,7 +39,7 @@ import { asks, type ReviewItem } from './review.js';
  * | money | a number with two decimals |
  * | address | long text (an address is several lines) |
  * | personnummer, organisation number | short text; the number's own check is S12's |
- * | consent | yes/no, as the wizard asks for a consent — its text kept byte for byte (#28) |
+ * | consent | yes/no, drawn as one box to tick (the consent presentation, S13) — its text kept byte for byte (#28) |
  * | grid | a choice per row under a heading of the grid's label: one of its columns ("Grid"), or any number ("Multiple choice"); a grid of one column is a list to tick, its column's header as help (`CAVEATS.md`, known unknowns: the grid fallback) |
  * | table | a repeating group, a question per column, as many entries as it printed rows |
  *
@@ -238,6 +238,7 @@ export function importOf(
         ...(help.length > 0 ? { helpText: words(help.join('\n')) } : {}),
         ...(options ? { options } : {}),
         ...(kind === 'money' ? { decimals: 2 } : {}),
+        ...(kind === 'consent' ? { appearance: 'checkbox' } : {}),
         ...anchored(placed.field),
         ...extra,
       }),
