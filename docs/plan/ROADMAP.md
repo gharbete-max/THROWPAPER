@@ -492,3 +492,10 @@ when each slice ends.)*
   wording was tuned until LibreOffice wrapped it there, then the expectation was written by hand.
   The stages read it to that expectation the first time: P3a keeps "12.1 of the rules…" as the
   label's own continuation, at the label's indent. The corpus holds 15 documents of the brief's 60.
+- **Corpus growth: dotted sub-numbering (2026-10-05).** What: `besiktning` (Swedish), an inspection
+  checklist numbered "1.1" to "2.3" by hand under its sections, the dotted sub-numbering the brief
+  asks several documents for. The stages read the numbering, the sections as headings and the yes/no
+  boxes to the hand-written expectation. One type was not: "Anmärkningar" (remarks) came out a line
+  of short text, because Swedish and English had no remark word among the comment words (#139).
+  Fixed, with a classify test that fails without the words; classify is at stage version 3, and
+  every other classify snapshot moved only that line. 16 documents.

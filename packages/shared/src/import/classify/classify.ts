@@ -33,7 +33,7 @@ import weights from './weights.json';
  * Bumped when the stage's output changes on purpose (the debug artifact records it). 2 (S10): each
  * classification carries its three likeliest kinds, `alternatives`, the review screen's chips.
  */
-export const CLASSIFY_STAGE_VERSION = 2;
+export const CLASSIFY_STAGE_VERSION = 3;
 
 const ALL_FEATURES: readonly Feature[] = [...WORD_FEATURES, ...SHAPE_FEATURES];
 const kindSchema = z.enum(KINDS);

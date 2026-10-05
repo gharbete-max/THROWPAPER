@@ -69,6 +69,29 @@
       }
     },
     {
+      "name": "besiktning",
+      "language": "sv",
+      "summary": "An inspection checklist with dotted sub-numbering typed into the text: sections \"1.\" and \"2.\", their points \"1.1\" to \"2.3\" indented under them, yes/no boxes, a remarks blank, and two more top-level points after the sections.",
+      "features": [
+        "typed-numbering",
+        "dotted-sub-numbering",
+        "checkboxes",
+        "blanks",
+        "inspection"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "besiktning.pdf",
+          "sha256": "44cec07e7126f345baaa62f148e8cdca9b9910c9c271d950aa3e3906c0788608"
+        },
+        "docx": {
+          "path": "besiktning.docx",
+          "sha256": "efe67f491bfdb57ad59ce0da936bef5592f027a3fe63876e24a9c56bb58ef14c"
+        }
+      }
+    },
+    {
       "name": "enkat-rutnat",
       "language": "sv",
       "summary": "A survey in two parts under headings: numbered questions with lettered answers, then a grid of yes / no / don't know checkboxes in a ruled table.",

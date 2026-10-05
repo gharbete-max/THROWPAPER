@@ -485,4 +485,29 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'besiktning',
+    language: 'sv',
+    summary:
+      'An inspection checklist with dotted sub-numbering typed into the text: sections "1." and "2.", their points "1.1" to "2.3" indented under them, yes/no boxes, a remarks blank, and two more top-level points after the sections.',
+    features: ['typed-numbering', 'dotted-sub-numbering', 'checkboxes', 'blanks', 'inspection'],
+    word: {
+      blocks: [
+        title('Besiktning av klubbstugan'),
+        para(
+          'Gå igenom stugan en gång om året, innan säsongen börjar, och fyll i protokollet. Det som inte fungerar skrivs upp under anmärkningar och lämnas till styrelsen, som ser till att det blir åtgärdat innan stugan hyrs ut igen.',
+        ),
+        para('1. Utvändigt'),
+        para('1.1 Är taket helt?   ☐ Ja   ☐ Nej', { indent: 567 }),
+        para('1.2 Är fönstren hela?   ☐ Ja   ☐ Nej', { indent: 567 }),
+        para('1.3 Går ytterdörren att låsa?   ☐ Ja   ☐ Nej', { indent: 567 }),
+        para('2. Invändigt'),
+        para('2.1 Fungerar elen?   ☐ Ja   ☐ Nej', { indent: 567 }),
+        para('2.2 Finns det fukt eller mögel?   ☐ Ja   ☐ Nej', { indent: 567 }),
+        para(`2.3 Anmärkningar: ${blank(24)}`, { indent: 567 }),
+        para(`3. Besiktigad av: ${blank(24)}`),
+        para(`4. Datum: ${blank(20)}`),
+      ],
+    },
+  },
 ];

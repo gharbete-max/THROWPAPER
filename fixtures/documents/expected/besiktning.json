@@ -1,0 +1,43 @@
+{
+  "document": "besiktning",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Utvändigt",
+      "items": [
+        { "marker": "1.1", "label": "Är taket helt? ☐ Ja ☐ Nej" },
+        { "marker": "1.2", "label": "Är fönstren hela? ☐ Ja ☐ Nej" },
+        { "marker": "1.3", "label": "Går ytterdörren att låsa? ☐ Ja ☐ Nej" }
+      ]
+    },
+    {
+      "marker": "2.",
+      "label": "Invändigt",
+      "items": [
+        { "marker": "2.1", "label": "Fungerar elen? ☐ Ja ☐ Nej" },
+        { "marker": "2.2", "label": "Finns det fukt eller mögel? ☐ Ja ☐ Nej" },
+        { "marker": "2.3", "label": "Anmärkningar: ________________________" }
+      ]
+    },
+    { "marker": "3.", "label": "Besiktigad av: ________________________" },
+    { "marker": "4.", "label": "Datum: ____________________" }
+  ],
+  "segments": [
+    { "kind": "heading", "text": "Besiktning av klubbstugan" },
+    {
+      "kind": "instruction",
+      "text": "Gå igenom stugan en gång om året, innan säsongen börjar, och fyll i protokollet. Det som inte fungerar skrivs upp under anmärkningar och lämnas till styrelsen, som ser till att det blir åtgärdat innan stugan hyrs ut igen."
+    },
+    { "kind": "heading", "text": "Utvändigt" },
+    { "kind": "question", "label": "Är taket helt?", "answer": "boolean", "type": "yes_no", "options": ["Ja", "Nej"] },
+    { "kind": "question", "label": "Är fönstren hela?", "answer": "boolean", "type": "yes_no", "options": ["Ja", "Nej"] },
+    { "kind": "question", "label": "Går ytterdörren att låsa?", "answer": "boolean", "type": "yes_no", "options": ["Ja", "Nej"] },
+    { "kind": "heading", "text": "Invändigt" },
+    { "kind": "question", "label": "Fungerar elen?", "answer": "boolean", "type": "yes_no", "options": ["Ja", "Nej"] },
+    { "kind": "question", "label": "Finns det fukt eller mögel?", "answer": "boolean", "type": "yes_no", "options": ["Ja", "Nej"] },
+    { "kind": "question", "label": "Anmärkningar", "answer": "blank", "type": "long_text" },
+    { "kind": "question", "label": "Besiktigad av", "answer": "blank", "type": "short_text" },
+    { "kind": "question", "label": "Datum", "answer": "blank", "type": "date" }
+  ]
+}

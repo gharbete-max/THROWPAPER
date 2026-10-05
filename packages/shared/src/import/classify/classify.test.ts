@@ -93,6 +93,17 @@ describe('stage 5, classify: every feature', () => {
     expect(found!.kind).toBe(kind);
   });
 
+  it('reads a remark as a comment, in Swedish and in English (the corpus’s `besiktning`)', () => {
+    // An inspection's "Anmärkningar" was a line of short text: a remark is a few sentences.
+    for (const [text, language] of [
+      ['Anmärkningar: ______', 'sv'],
+      ['Remarks: ______', 'en'],
+    ] as const) {
+      const [remark] = read(text, language).classified;
+      expect(remark, text).toMatchObject({ kind: 'long_text', features: ['commentWord'] });
+    }
+  });
+
   it('with no feature at all, guesses short text in the flag bucket (acceptance S4)', () => {
     const [one, two] = read('1. Question one\n2. Question two').classified;
     for (const c of [one!, two!]) {
