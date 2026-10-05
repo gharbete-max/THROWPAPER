@@ -4,7 +4,12 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { debugSnapshot, type RawDocument } from '@tp/shared/import';
+import {
+  debugSnapshot,
+  OCR_FLAG_BELOW,
+  parseRawDocument,
+  type RawDocument,
+} from '@tp/shared/import';
 import { readDocx } from './docx.js';
 import { openPdf, type Pdfjs } from './extract.js';
 import { readDocument } from './pipeline.js';
@@ -242,6 +247,161 @@ describe('the golden corpus', () => {
       ),
     );
     const snapshots = existsSync(DEBUG) ? readdirSync(DEBUG) : [];
+    expect(snapshots.filter((name) => !written.has(name))).toEqual([]);
+  });
+});
+
+/**
+ * The corpus's scans (S14, `docs/plan/SCANS.md` §5): corpus documents printed and scanned
+ * (`pnpm corpus:scan`), each kept as its picture and as the raw document Tesseract read from it,
+ * frozen. The test reads the frozen file through the same stages, against an expectation written
+ * from the document's own: what the paper says, changed only where OCR measurably changed it —
+ * each misread word named, and the blank lines, which OCR does not read as words.
+ */
+const SCANS = join(CORPUS, 'scans');
+interface ScanSources {
+  licence: string;
+  tool: string;
+  scans: Array<{
+    name: string;
+    from: string;
+    locale: string;
+    dpi: number;
+    skew: number;
+    files: Record<string, { path: string; sha256: string }>;
+  }>;
+}
+interface ScanExpectation extends Expectation {
+  scan: string;
+  /** Words OCR read wrongly, and whether stage 7's cap caught them (it can only if Tesseract was unsure). */
+  misread: Array<{ printed: string; read: string; caught: boolean }>;
+  /** Printed boxes OCR read as marks, which stage 1 wrote back as boxes (B1). */
+  boxes: number;
+}
+const scanSources = JSON.parse(readFileSync(join(SCANS, 'SOURCES.json'), 'utf8')) as ScanSources;
+const scanExpectation = (name: string) =>
+  JSON.parse(readFileSync(join(SCANS, 'expected', `${name}.json`), 'utf8')) as ScanExpectation;
+const frozen = (name: string) =>
+  parseRawDocument(JSON.parse(readFileSync(join(SCANS, `${name}.raw.json`), 'utf8')));
+const hashOf = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
+
+describe("the corpus's scans", () => {
+  it('lists every file it holds, by hash, each scanned from a corpus document', () => {
+    expect(scanSources.licence).toBe('CC0-1.0');
+    expect(scanSources.tool).toMatch(/^pdfjs-dist@\S+ \+ Tesseract \S+$/);
+    const listedFiles = scanSources.scans.flatMap((scan) =>
+      Object.values(scan.files).map((file) => file.path),
+    );
+    const onDisk = readdirSync(SCANS).filter((name) => /\.(png|pdf|raw\.json)$/.test(name));
+    expect([...listedFiles].sort()).toEqual([...onDisk].sort());
+    const documents = new Set(sources.documents.map((doc) => doc.files.pdf.path));
+    for (const scan of scanSources.scans) {
+      expect(documents.has(scan.from), scan.from).toBe(true);
+      for (const { path, sha256 } of Object.values(scan.files)) {
+        expect(hashOf(join(SCANS, path)), `${path} is not the file SOURCES.json lists`).toBe(
+          sha256,
+        );
+      }
+      // The raw document is of exactly this picture, read as a photograph.
+      const raw = frozen(scan.name);
+      expect(raw.source).toEqual({
+        kind: 'image',
+        extractor: scanSources.tool.slice(scanSources.tool.indexOf('+ ') + 2),
+        sha256: scan.files.png!.sha256,
+      });
+      expect(raw.pages.flatMap((page) => page.words).every((word) => word.source === 'ocr')).toBe(
+        true,
+      );
+    }
+  });
+
+  it('has an expectation for every scan, and none for a scan it lacks', () => {
+    const names = scanSources.scans.map((scan) => scan.name).sort();
+    const written = readdirSync(join(SCANS, 'expected'))
+      .filter((name) => name.endsWith('.json'))
+      .map((name) => name.slice(0, -'.json'.length))
+      .sort();
+    expect(written).toEqual(names);
+  });
+
+  for (const scan of scanSources.scans) {
+    it(`${scan.name}, scanned, is read as its expectation says`, () => {
+      const expected = scanExpectation(scan.name);
+      expect(expected.document).toBe(scan.name);
+      const raw = frozen(scan.name);
+      const reading = readDocument({ kind: 'raw', raw });
+      expect(listed(reading)).toStrictEqual(expected.items);
+      expect(reading.layout.locale).toBe(expected.locale);
+      expect(seen(reading)).toStrictEqual(expected.segments);
+
+      // B1: every box the paper has was read as a mark, and written back as a box, recorded (L2).
+      const words = raw.pages.flatMap((page) => page.words);
+      expect(words.filter((word) => word.repair?.kind === 'box-mark')).toHaveLength(expected.boxes);
+      const reassembled = reading.debug.find((debug) => debug.stage === 'reassemble')!;
+      expect(reassembled.decisions.filter((d) => d.rule === 'L2')).toHaveLength(expected.boxes);
+
+      // Each misread is in the words as read; stage 7 caps what holds it exactly when Tesseract
+      // was unsure of it — a misread it was sure of is the author's to see, beside the picture.
+      const lines = reading.layout.pages.flatMap((page) =>
+        page.blocks.flatMap((block) => block.lines),
+      );
+      for (const { read, caught } of expected.misread) {
+        const word = words.find((one) => one.text.replace(/[.,:;!?]+$/u, '') === read);
+        expect(word, read).toBeDefined();
+        expect(word!.ocrConfidence! < OCR_FLAG_BELOW, `${read} at ${word!.ocrConfidence}`).toBe(
+          caught,
+        );
+        const line = lines.find((one) => one.words.some((w) => w.text === word!.text))!;
+        const index = reading.segments.segments.findIndex((segment) =>
+          segment.lineIds.includes(line.id),
+        );
+        const scored = reading.scored.scored[index]!;
+        expect(scored.caps.length > 0, read).toBe(caught);
+        if (caught) expect(scored.bucket, read).not.toBe('auto');
+      }
+    });
+
+    it(`${scan.name}, scanned, keeps its debug artifacts`, async () => {
+      const reading = readDocument({ kind: 'raw', raw: frozen(scan.name) });
+      for (const debug of reading.debug) {
+        await expect(debugSnapshot(debug)).toMatchFileSnapshot(
+          join(SCANS, 'debug', `${scan.name}.${debug.stage}.json`),
+        );
+      }
+    });
+
+    if (scan.files.pdf) {
+      it(`${scan.name}.pdf, the scanned PDF, has no text: its page goes to OCR`, async () => {
+        const bytes = new Uint8Array(readFileSync(join(SCANS, scan.files.pdf!.path)));
+        const pdf = await openPdf(bytes.slice().buffer, 0, nodePdfjs);
+        const asked: number[] = [];
+        try {
+          expect((await pdf.raw()).pages[0]!.words).toEqual([]);
+          const raw = await pdf.raw({
+            ocr: (index) => {
+              asked.push(index);
+              return Promise.resolve({ width: 1, height: 1, engine: 'Tesseract', lines: [] });
+            },
+          });
+          expect(asked).toEqual([0]);
+          expect(raw.source.extractor).toMatch(/\+ Tesseract$/);
+        } finally {
+          await pdf.close();
+        }
+      });
+    }
+  }
+
+  it('keeps no debug snapshot that no scan writes', () => {
+    const written = new Set(
+      scanSources.scans.flatMap((scan) =>
+        ['reassemble', 'enumerate', 'segment', 'classify', 'score'].map(
+          (stage) => `${scan.name}.${stage}.json`,
+        ),
+      ),
+    );
+    const debug = join(SCANS, 'debug');
+    const snapshots = existsSync(debug) ? readdirSync(debug) : [];
     expect(snapshots.filter((name) => !written.has(name))).toEqual([]);
   });
 });

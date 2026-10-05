@@ -1,0 +1,1772 @@
+{
+  "irVersion": 1,
+  "source": {
+    "kind": "image",
+    "extractor": "Tesseract 5.1.0-288-g2a9c1",
+    "sha256": "fc3e3a0873f9df959556c307573d7517f6ece01b6f9626982777274b929cdb83"
+  },
+  "pages": [
+    {
+      "pageNo": 1,
+      "widthPt": 595,
+      "heightPt": 841,
+      "words": [
+        {
+          "text": "Medlemsansokan",
+          "box": {
+            "x0": 1028,
+            "y0": 701,
+            "x1": 3785,
+            "y1": 889
+          },
+          "baseline": 881,
+          "fontSize": 226,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 33,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Fyll",
+          "box": {
+            "x0": 1016,
+            "y0": 1120,
+            "x1": 1276,
+            "y1": 1240
+          },
+          "baseline": 1215,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "i",
+          "box": {
+            "x0": 1348,
+            "y0": 1120,
+            "x1": 1372,
+            "y1": 1218
+          },
+          "baseline": 1216,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 92,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "blanketten",
+          "box": {
+            "x0": 1445,
+            "y0": 1120,
+            "x1": 2273,
+            "y1": 1223
+          },
+          "baseline": 1220,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "och",
+          "box": {
+            "x0": 2340,
+            "y0": 1129,
+            "x1": 2624,
+            "y1": 1223
+          },
+          "baseline": 1224,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "lämna",
+          "box": {
+            "x0": 2696,
+            "y0": 1129,
+            "x1": 3186,
+            "y1": 1227
+          },
+          "baseline": 1227,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "den",
+          "box": {
+            "x0": 3247,
+            "y0": 1133,
+            "x1": 3537,
+            "y1": 1231
+          },
+          "baseline": 1230,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "till",
+          "box": {
+            "x0": 3597,
+            "y0": 1133,
+            "x1": 3761,
+            "y1": 1231
+          },
+          "baseline": 1231,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "kansliet",
+          "box": {
+            "x0": 3833,
+            "y0": 1137,
+            "x1": 4450,
+            "y1": 1236
+          },
+          "baseline": 1234,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "eller",
+          "box": {
+            "x0": 4510,
+            "y0": 1142,
+            "x1": 4849,
+            "y1": 1240
+          },
+          "baseline": 1238,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "skicka",
+          "box": {
+            "x0": 4903,
+            "y0": 1142,
+            "x1": 5411,
+            "y1": 1244
+          },
+          "baseline": 1241,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "den",
+          "box": {
+            "x0": 5472,
+            "y0": 1146,
+            "x1": 5762,
+            "y1": 1244
+          },
+          "baseline": 1244,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "med",
+          "box": {
+            "x0": 5834,
+            "y0": 1150,
+            "x1": 6173,
+            "y1": 1248
+          },
+          "baseline": 1246,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "post.",
+          "box": {
+            "x0": 6245,
+            "y0": 1163,
+            "x1": 6620,
+            "y1": 1274
+          },
+          "baseline": 1249,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Vi",
+          "box": {
+            "x0": 6687,
+            "y0": 1154,
+            "x1": 6838,
+            "y1": 1253
+          },
+          "baseline": 1251,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "behöver",
+          "box": {
+            "x0": 6911,
+            "y0": 1154,
+            "x1": 7563,
+            "y1": 1257
+          },
+          "baseline": 1254,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "alla",
+          "box": {
+            "x0": 7624,
+            "y0": 1159,
+            "x1": 7908,
+            "y1": 1257
+          },
+          "baseline": 1258,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "uppgifter",
+          "box": {
+            "x0": 7969,
+            "y0": 1163,
+            "x1": 8676,
+            "y1": 1287
+          },
+          "baseline": 1261,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "for",
+          "box": {
+            "x0": 8730,
+            "y0": 1167,
+            "x1": 8942,
+            "y1": 1265
+          },
+          "baseline": 1265,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "att",
+          "box": {
+            "x0": 1004,
+            "y0": 1295,
+            "x1": 1203,
+            "y1": 1381
+          },
+          "baseline": 1382,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "kunna",
+          "box": {
+            "x0": 1264,
+            "y0": 1287,
+            "x1": 1759,
+            "y1": 1385
+          },
+          "baseline": 1384,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "registrera",
+          "box": {
+            "x0": 1820,
+            "y0": 1291,
+            "x1": 2588,
+            "y1": 1415
+          },
+          "baseline": 1388,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "dig",
+          "box": {
+            "x0": 2648,
+            "y0": 1295,
+            "x1": 2878,
+            "y1": 1419
+          },
+          "baseline": 1392,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "som",
+          "box": {
+            "x0": 2944,
+            "y0": 1321,
+            "x1": 3277,
+            "y1": 1394
+          },
+          "baseline": 1394,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "medlem,",
+          "box": {
+            "x0": 3349,
+            "y0": 1300,
+            "x1": 4033,
+            "y1": 1415
+          },
+          "baseline": 1398,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "och",
+          "box": {
+            "x0": 4105,
+            "y0": 1304,
+            "x1": 4383,
+            "y1": 1402
+          },
+          "baseline": 1401,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "de",
+          "box": {
+            "x0": 4456,
+            "y0": 1304,
+            "x1": 4643,
+            "y1": 1402
+          },
+          "baseline": 1403,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "används",
+          "box": {
+            "x0": 4710,
+            "y0": 1308,
+            "x1": 5393,
+            "y1": 1407
+          },
+          "baseline": 1406,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "bara",
+          "box": {
+            "x0": 5466,
+            "y0": 1313,
+            "x1": 5822,
+            "y1": 1411
+          },
+          "baseline": 1410,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "för",
+          "box": {
+            "x0": 5877,
+            "y0": 1313,
+            "x1": 6088,
+            "y1": 1411
+          },
+          "baseline": 1412,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "föreningens",
+          "box": {
+            "x0": 6143,
+            "y0": 1317,
+            "x1": 7098,
+            "y1": 1441
+          },
+          "baseline": 1416,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "eget",
+          "box": {
+            "x0": 7164,
+            "y0": 1334,
+            "x1": 7515,
+            "y1": 1445
+          },
+          "baseline": 1420,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "register.",
+          "box": {
+            "x0": 7576,
+            "y0": 1325,
+            "x1": 8216,
+            "y1": 1449
+          },
+          "baseline": 1424,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Om",
+          "box": {
+            "x0": 8295,
+            "y0": 1334,
+            "x1": 8573,
+            "y1": 1428
+          },
+          "baseline": 1427,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "något",
+          "box": {
+            "x0": 1010,
+            "y0": 1437,
+            "x1": 1457,
+            "y1": 1573
+          },
+          "baseline": 1545,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "är",
+          "box": {
+            "x0": 1518,
+            "y0": 1458,
+            "x1": 1675,
+            "y1": 1548
+          },
+          "baseline": 1547,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "oklart",
+          "box": {
+            "x0": 1735,
+            "y0": 1454,
+            "x1": 2177,
+            "y1": 1552
+          },
+          "baseline": 1549,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "kan",
+          "box": {
+            "x0": 2237,
+            "y0": 1458,
+            "x1": 2515,
+            "y1": 1552
+          },
+          "baseline": 1552,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "du",
+          "box": {
+            "x0": 2582,
+            "y0": 1458,
+            "x1": 2769,
+            "y1": 1556
+          },
+          "baseline": 1554,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "vänligen",
+          "box": {
+            "x0": 2836,
+            "y0": 1462,
+            "x1": 3513,
+            "y1": 1586
+          },
+          "baseline": 1557,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "kontakta",
+          "box": {
+            "x0": 3585,
+            "y0": 1466,
+            "x1": 4268,
+            "y1": 1565
+          },
+          "baseline": 1562,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "kansliet,",
+          "box": {
+            "x0": 4335,
+            "y0": 1471,
+            "x1": 4982,
+            "y1": 1586
+          },
+          "baseline": 1567,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "så",
+          "box": {
+            "x0": 5054,
+            "y0": 1462,
+            "x1": 5242,
+            "y1": 1573
+          },
+          "baseline": 1570,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "hjälper",
+          "box": {
+            "x0": 5308,
+            "y0": 1475,
+            "x1": 5846,
+            "y1": 1599
+          },
+          "baseline": 1573,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "vi",
+          "box": {
+            "x0": 5907,
+            "y0": 1479,
+            "x1": 6022,
+            "y1": 1578
+          },
+          "baseline": 1575,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "dig.",
+          "box": {
+            "x0": 6094,
+            "y0": 1479,
+            "x1": 6366,
+            "y1": 1603
+          },
+          "baseline": 1577,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "1.",
+          "box": {
+            "x0": 1125,
+            "y0": 1667,
+            "x1": 1252,
+            "y1": 1761
+          },
+          "baseline": 1758,
+          "fontSize": 131,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 89,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Namn:",
+          "box": {
+            "x0": 1487,
+            "y0": 1672,
+            "x1": 2001,
+            "y1": 1766
+          },
+          "baseline": 1763,
+          "fontSize": 131,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 91,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "2.",
+          "box": {
+            "x0": 1119,
+            "y0": 1877,
+            "x1": 1245,
+            "y1": 1971
+          },
+          "baseline": 1971,
+          "fontSize": 122,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 90,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Personnummer:",
+          "box": {
+            "x0": 1481,
+            "y0": 1881,
+            "x1": 2763,
+            "y1": 1979
+          },
+          "baseline": 1976,
+          "fontSize": 122,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 90,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "3.",
+          "box": {
+            "x0": 1119,
+            "y0": 2091,
+            "x1": 1245,
+            "y1": 2185
+          },
+          "baseline": 2185,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 91,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Adress:",
+          "box": {
+            "x0": 1469,
+            "y0": 2091,
+            "x1": 2074,
+            "y1": 2189
+          },
+          "baseline": 2188,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 82,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Skriv",
+          "box": {
+            "x0": 1469,
+            "y0": 2304,
+            "x1": 1868,
+            "y1": 2398
+          },
+          "baseline": 2400,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "den",
+          "box": {
+            "x0": 1929,
+            "y0": 2304,
+            "x1": 2219,
+            "y1": 2403
+          },
+          "baseline": 2402,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "adress",
+          "box": {
+            "x0": 2291,
+            "y0": 2309,
+            "x1": 2830,
+            "y1": 2407
+          },
+          "baseline": 2405,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "dit",
+          "box": {
+            "x0": 2896,
+            "y0": 2313,
+            "x1": 3083,
+            "y1": 2407
+          },
+          "baseline": 2408,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "vi",
+          "box": {
+            "x0": 3138,
+            "y0": 2313,
+            "x1": 3259,
+            "y1": 2407
+          },
+          "baseline": 2410,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "ska",
+          "box": {
+            "x0": 3325,
+            "y0": 2313,
+            "x1": 3603,
+            "y1": 2411
+          },
+          "baseline": 2411,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "skicka",
+          "box": {
+            "x0": 3664,
+            "y0": 2317,
+            "x1": 4172,
+            "y1": 2416
+          },
+          "baseline": 2414,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "medlemskortet.",
+          "box": {
+            "x0": 4232,
+            "y0": 2322,
+            "x1": 5466,
+            "y1": 2424
+          },
+          "baseline": 2420,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 91,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "4.",
+          "box": {
+            "x0": 1106,
+            "y0": 2518,
+            "x1": 1239,
+            "y1": 2608
+          },
+          "baseline": 2608,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Kontaktuppgifter",
+          "box": {
+            "x0": 1475,
+            "y0": 2518,
+            "x1": 2799,
+            "y1": 2642
+          },
+          "baseline": 2616,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 60,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "a)",
+          "box": {
+            "x0": 1584,
+            "y0": 2728,
+            "x1": 1729,
+            "y1": 2852
+          },
+          "baseline": 2826,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Telefon:",
+          "box": {
+            "x0": 1941,
+            "y0": 2732,
+            "x1": 2588,
+            "y1": 2830
+          },
+          "baseline": 2829,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 92,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "b)",
+          "box": {
+            "x0": 1584,
+            "y0": 2941,
+            "x1": 1729,
+            "y1": 3061
+          },
+          "baseline": 3036,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "E-post:",
+          "box": {
+            "x0": 1947,
+            "y0": 2946,
+            "x1": 2497,
+            "y1": 3065
+          },
+          "baseline": 3038,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "5.",
+          "box": {
+            "x0": 1106,
+            "y0": 3155,
+            "x1": 1233,
+            "y1": 3249
+          },
+          "baseline": 3245,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 63,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Vill",
+          "box": {
+            "x0": 1457,
+            "y0": 3151,
+            "x1": 1687,
+            "y1": 3249
+          },
+          "baseline": 3248,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 87,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "du",
+          "box": {
+            "x0": 1759,
+            "y0": 3155,
+            "x1": 1941,
+            "y1": 3254
+          },
+          "baseline": 3250,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "ha",
+          "box": {
+            "x0": 2019,
+            "y0": 3155,
+            "x1": 2213,
+            "y1": 3254
+          },
+          "baseline": 3252,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "föreningens",
+          "box": {
+            "x0": 2267,
+            "y0": 3159,
+            "x1": 3222,
+            "y1": 3283
+          },
+          "baseline": 3256,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "nyhetsbrev?",
+          "box": {
+            "x0": 3289,
+            "y0": 3164,
+            "x1": 4281,
+            "y1": 3288
+          },
+          "baseline": 3263,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "☐",
+          "box": {
+            "x0": 4456,
+            "y0": 3172,
+            "x1": 4589,
+            "y1": 3266
+          },
+          "baseline": 3268,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 78,
+          "repair": {
+            "kind": "box-mark",
+            "raw": "["
+          },
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Ja",
+          "box": {
+            "x0": 4661,
+            "y0": 3177,
+            "x1": 4849,
+            "y1": 3271
+          },
+          "baseline": 3270,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 78,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "☐",
+          "box": {
+            "x0": 5024,
+            "y0": 3172,
+            "x1": 5157,
+            "y1": 3271
+          },
+          "baseline": 3272,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 68,
+          "repair": {
+            "kind": "box-mark",
+            "raw": "["
+          },
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Nej",
+          "box": {
+            "x0": 5236,
+            "y0": 3177,
+            "x1": 5484,
+            "y1": 3301
+          },
+          "baseline": 3274,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 85,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "6.",
+          "box": {
+            "x0": 1100,
+            "y0": 3365,
+            "x1": 1227,
+            "y1": 3459
+          },
+          "baseline": 3459,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 89,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Underskrift:",
+          "box": {
+            "x0": 1463,
+            "y0": 3365,
+            "x1": 2376,
+            "y1": 3467
+          },
+          "baseline": 3464,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Uppgifterna",
+          "box": {
+            "x0": 979,
+            "y0": 3570,
+            "x1": 1663,
+            "y1": 3660
+          },
+          "baseline": 3640,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "används",
+          "box": {
+            "x0": 1705,
+            "y0": 3574,
+            "x1": 2207,
+            "y1": 3647
+          },
+          "baseline": 3644,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "bara",
+          "box": {
+            "x0": 2255,
+            "y0": 3574,
+            "x1": 2515,
+            "y1": 3647
+          },
+          "baseline": 3646,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "för",
+          "box": {
+            "x0": 2557,
+            "y0": 3578,
+            "x1": 2709,
+            "y1": 3647
+          },
+          "baseline": 3647,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "föreningens",
+          "box": {
+            "x0": 2751,
+            "y0": 3578,
+            "x1": 3446,
+            "y1": 3668
+          },
+          "baseline": 3650,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "medlemsregister",
+          "box": {
+            "x0": 3495,
+            "y0": 3583,
+            "x1": 4480,
+            "y1": 3677
+          },
+          "baseline": 3655,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "och",
+          "box": {
+            "x0": 4522,
+            "y0": 3591,
+            "x1": 4722,
+            "y1": 3660
+          },
+          "baseline": 3658,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "lämnas",
+          "box": {
+            "x0": 4776,
+            "y0": 3591,
+            "x1": 5200,
+            "y1": 3664
+          },
+          "baseline": 3660,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "inte",
+          "box": {
+            "x0": 5248,
+            "y0": 3591,
+            "x1": 5447,
+            "y1": 3664
+          },
+          "baseline": 3662,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "ut.",
+          "box": {
+            "x0": 5502,
+            "y0": 3604,
+            "x1": 5629,
+            "y1": 3668
+          },
+          "baseline": 3664,
+          "fontSize": 90,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Sida",
+          "box": {
+            "x0": 907,
+            "y0": 9453,
+            "x1": 1270,
+            "y1": 9551
+          },
+          "baseline": 9548,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "1",
+          "box": {
+            "x0": 1330,
+            "y0": 9461,
+            "x1": 1415,
+            "y1": 9551
+          },
+          "baseline": 9549,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "av",
+          "box": {
+            "x0": 1481,
+            "y0": 9478,
+            "x1": 1669,
+            "y1": 9551
+          },
+          "baseline": 9550,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "1",
+          "box": {
+            "x0": 1735,
+            "y0": 9461,
+            "x1": 1814,
+            "y1": 9551
+          },
+          "baseline": 9551,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        }
+      ],
+      "rules": []
+    }
+  ]
+}

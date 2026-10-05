@@ -20,7 +20,7 @@ import { dirname, join } from 'node:path';
 const require = createRequire(join(import.meta.dirname, '..', 'apps', 'forms', 'package.json'));
 const OUT = join(import.meta.dirname, '..', 'apps', 'forms', 'public', 'ocr');
 
-/** The interface languages, as Tesseract names them. Keep in step with `ocr.ts`. */
+/** The interface languages, as Tesseract names them. Keep in step with `paper/ocr-words.ts`. */
 const LANGS = [
   'eng',
   'swe',

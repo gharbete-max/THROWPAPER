@@ -12,7 +12,15 @@ import { startConversation } from '../guided/conversation.js';
 import { Saver } from '../guided/saver.js';
 import { clipboardText } from '../paper/clipboard.js';
 import { isDocx, readDocx } from '../paper/docx.js';
-import { fieldBoxes, openPdf, TooManyPages, type PaperPdf } from '../paper/extract.js';
+import { fieldBoxes, openPdf, TooManyPages, type PageDrawer } from '../paper/extract.js';
+import {
+  openPageReader,
+  READ_LONG_SIDE,
+  ReadingPageTooSlow,
+  type PageReader,
+} from '../paper/ocr.js';
+import { photoDocument } from '../paper/ocr-words.js';
+import { isPhoto, openPhoto, PHOTO_TYPES } from '../paper/photo.js';
 import type { Reading } from '../paper/reading.js';
 import { NoWorker, ReadingTooSlow, readInWorker } from '../paper/read-in-worker.js';
 import { DocxRefused } from '../paper/refusal.js';
@@ -47,15 +55,14 @@ import { SourcePane } from './SourcePane.js';
  * "Start from paper" — the review screen, at `/forms/:id/import` (`IMPORT-PIPELINE.md` §8,
  * `PREDICTIVE-BUILDER.md`, "The two doors"). Never skipped.
  *
- * The author gives it a PDF or a Word document, or pastes text; the stages read it in their worker,
- * on this device. The review opens on one sentence — "I read 14 questions. 3 need your eye." — the
- * document on one side and the form it would make on the other, linked line by line. Nothing enters
- * the form until "Use these questions", which adds them through the conversation's machine as one
- * step Back undoes, saves, and goes on in the conversation (S12). What was read never leaves the
- * machine: only the questions the author added do, in the draft (`CAVEATS.md` #43).
- *
- * A photograph or a scanned page is not read here yet; the editor's paper import takes it as pages
- * to draw on (ADR 0004).
+ * The author gives it a PDF, a Word document or a photograph of a form, or pastes text; the stages
+ * read it in their worker, on this device. A photograph, and a PDF's pages that are a scan, are read
+ * word by word by OCR first, in a worker of its own (S14, `docs/plan/SCANS.md`). The review opens
+ * on one sentence — "I read 14 questions. 3 need your eye." — the document on one side and the
+ * form it would make on the other, linked line by line. Nothing enters the form until "Use these
+ * questions", which adds them through the conversation's machine as one step Back undoes, saves,
+ * and goes on in the conversation (S12). What was read never leaves the machine: only the
+ * questions the author added do, in the draft (`CAVEATS.md` #43).
  */
 export function ReviewScreen() {
   const { id } = useParams();
@@ -68,12 +75,15 @@ export function ReviewScreen() {
   const [failed, setFailed] = useState(false);
 
   const [phase, setPhase] = useState<'choose' | 'reading' | 'review' | 'using'>('choose');
+  /** The page OCR is reading, while it reads one: it takes seconds, not milliseconds. */
+  const [ocrPage, setOcrPage] = useState<{ page: number; count: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pasting, setPasting] = useState(false);
   const [pasted, setPasted] = useState('');
   const [read, setRead] = useState<{
     reading: Reading;
-    pdf: PaperPdf | null;
+    /** What draws its pages in the source pane: its PDF, or its photograph. */
+    pages: PageDrawer | null;
     /** A PDF's file and its own fields' widgets: what the form keeps to write answers back on (S12b). */
     paper: { file: File; pages: number; widgets: ReadonlyMap<string, PageBox> } | null;
   } | null>(null);
@@ -122,8 +132,9 @@ export function ReviewScreen() {
 
   useEffect(load, [load]);
 
-  // An open PDF holds its pages for the source pane; closed when another replaces it, or on leaving.
-  useEffect(() => () => void read?.pdf?.close(), [read]);
+  // An open PDF or photograph holds its pages for the source pane; closed when another replaces it,
+  // or on leaving.
+  useEffect(() => () => void read?.pages?.close(), [read]);
 
   function refused(cause: unknown) {
     setPhase('choose');
@@ -134,23 +145,25 @@ export function ReviewScreen() {
           ? t(`paper.docx.${cause.reason}`)
           : cause instanceof ReadingTooSlow
             ? t('paper.tooSlow')
-            : cause instanceof NoWorker
-              ? t('paper.noWorker')
-              : t('paper.notReadable'),
+            : cause instanceof ReadingPageTooSlow
+              ? t('review.ocrTooSlow')
+              : cause instanceof NoWorker
+                ? t('paper.noWorker')
+                : t('paper.notReadable'),
     );
   }
 
   function opened(
     reading: Reading,
-    pdf: PaperPdf | null,
+    pages: PageDrawer | null,
     paper: { file: File; pages: number; widgets: ReadonlyMap<string, PageBox> } | null = null,
   ) {
     if (!open.current) {
-      void pdf?.close();
+      void pages?.close();
       return;
     }
     const started = startReview(reading);
-    setRead({ reading, pdf, paper });
+    setRead({ reading, pages, paper });
     setReview(started);
     setChoices(noChoices);
     setSelectedId(started.items[0]?.id ?? null);
@@ -162,6 +175,17 @@ export function ReviewScreen() {
     if (!file) return;
     setPhase('reading');
     setError(null);
+    // One OCR worker for the whole document, started only when a page needs it.
+    let reader: PageReader | null = null;
+    const readByOcr = async (
+      picture: () => Promise<HTMLCanvasElement>,
+      page: number,
+      count: number,
+    ) => {
+      setOcrPage({ page, count });
+      reader ??= await openPageReader(contentLocale);
+      return reader.read(await picture());
+    };
     try {
       if (isDocx(file)) {
         const raw = await readDocx(await file.arrayBuffer());
@@ -170,7 +194,11 @@ export function ReviewScreen() {
         const pdf = await openPdf(await file.arrayBuffer(), 0);
         try {
           const boxes = fieldBoxes(pdf.fields, 0);
-          const raw = await pdf.raw();
+          // A page with no text layer is a scan: its words are read by OCR.
+          const raw = await pdf.raw({
+            ocr: (index) =>
+              readByOcr(() => pdf.picture(index, READ_LONG_SIDE), index + 1, pdf.pageCount),
+          });
           const widgets = new Map(
             boxes.map((box) => [box.name, { pageNo: box.pageNo, box: box.box }]),
           );
@@ -183,12 +211,29 @@ export function ReviewScreen() {
           await pdf.close();
           throw cause;
         }
+      } else if (isPhoto(file)) {
+        // One page, read as it is; the form keeps no paper of it (`SCANS.md` §3).
+        const photo = await openPhoto(file);
+        try {
+          const recognised = await readByOcr(
+            () => Promise.resolve(photo.picture(READ_LONG_SIDE)),
+            1,
+            1,
+          );
+          const raw = photoDocument(recognised, photo.sha256);
+          opened(await readInWorker({ kind: 'raw', raw }), photo);
+        } catch (cause) {
+          await photo.close();
+          throw cause;
+        }
       } else {
-        setPhase('choose');
-        setError(t('review.photo'));
+        refused(new Error(file.type));
       }
     } catch (cause) {
       refused(cause);
+    } finally {
+      setOcrPage(null);
+      await (reader as PageReader | null)?.close();
     }
   }
 
@@ -372,7 +417,7 @@ export function ReviewScreen() {
             <span>{t('review.choose.file')}</span>
             <input
               type="file"
-              accept={`application/pdf,${DOCX_TYPE},.docx`}
+              accept={`application/pdf,${DOCX_TYPE},.docx,${PHOTO_TYPES.join(',')}`}
               disabled={phase === 'reading'}
               onChange={(event) => void chooseFile(event.target.files?.[0])}
             />
@@ -420,7 +465,9 @@ export function ReviewScreen() {
           </div>
         )}
         <div role="status" className="small">
-          {phase === 'reading' && <span className="muted">{t('paper.reading')}</span>}
+          {phase === 'reading' && (
+            <span className="muted">{ocrPage ? t('review.ocr', ocrPage) : t('paper.reading')}</span>
+          )}
           {error && <span className="status-down">{error}</span>}
         </div>
         <p className="small muted">{t('review.photo')}</p>
@@ -491,7 +538,7 @@ export function ReviewScreen() {
         <div className="review__panes">
           <SourcePane
             layout={read.reading.layout}
-            pdf={read.pdf}
+            pages={read.pages}
             items={review.items}
             selectedId={selectedId}
             onSelect={setSelectedId}

@@ -521,6 +521,10 @@ export function reassemble(raw: RawDocument): StageResult<LayoutDocument> {
             if (word.repair?.kind === 'ligature') {
               decide(`${id}-w${i + 1}`, 'L1', 'ligature', [id], { raw: word.repair.raw });
             }
+            // Stage 1's, from the picture; recorded here, where every repair is.
+            if (word.repair?.kind === 'box-mark') {
+              decide(`${id}-w${i + 1}`, 'L2', 'box-mark', [id], { raw: word.repair.raw });
+            }
           });
           line.joins.forEach((join, i) => {
             const verdict =

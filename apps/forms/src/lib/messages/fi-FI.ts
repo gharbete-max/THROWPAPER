@@ -1286,12 +1286,16 @@ export const fiFI: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Värejä ei voitu tallentaa, eikä mitään muutettu. Yritä myöhemmin uudelleen.',
   'review.choose.explain':
-    'Valitse PDF tai Word-asiakirja tai liitä sen teksti. Loppa lukee sen täällä, tällä laitteella, ja näyttää, mitä se luki, ennen kuin mistään tulee kysymystä.',
+    'Valitse PDF, Word-asiakirja tai valokuva lomakkeesta tai liitä sen teksti. Loppa lukee sen täällä, tällä laitteella, ja näyttää, mitä se luki, ennen kuin mistään tulee kysymystä.',
   'review.choose.update':
     'Valitse asiakirja, josta lomakkeesi tehtiin, tai sen uusi versio, tai liitä sen teksti. Loppa vertaa sitä lomakkeeseesi: uusi lisätään, ja sinä valitset, mitä muulle tehdään.',
-  'review.choose.file': 'PDF tai Word-asiakirja',
+  'review.choose.file': 'PDF, Word-asiakirja tai valokuva',
   'review.photo':
-    'Valokuva tai skannattu sivu? Tuo se sivuina muokkaimeen, jossa piirrät sen kysymykset.',
+    'Valokuva luetaan parhaiten, kun se on otettu suoraan edestä, tasaisena ja hyvässä valossa. Jos haluat piirtää kysymykset sivulle itse, tuo se sivuina muokkaimeen.',
+  'review.ocr':
+    'Luetaan painettuja sanoja sivulta {page}/{count}. Valokuvan tai skannauksen lukeminen kestää kauemmin kuin tiedoston.',
+  'review.ocrTooSlow':
+    'Sivun lukeminen kesti yli minuutin, ja se keskeytettiin. Kokeile tarkempaa valokuvaa tai tuo se sivuina muokkaimeen ja piirrä kysymykset.',
   'review.toEditor': 'Avaa muokkain',
   'review.summary': 'plural:one Luin {count} kysymyksen. | other Luin {count} kysymystä.',
   'review.needEye': 'plural:one {count} kaipaa huomiotasi. | other {count} kaipaa huomiotasi.',

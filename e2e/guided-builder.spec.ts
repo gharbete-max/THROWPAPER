@@ -194,7 +194,7 @@ test('the paper door opens the review screen for a new form (S10)', async ({ pag
   await page.getByRole('button', { name: /Start from paper/ }).click();
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}\/import$/);
   created.push(page.url().split('/').at(-2)!);
-  await expect(page.getByLabel('PDF or Word document')).toBeAttached();
+  await expect(page.getByLabel('PDF, Word document or photograph', { exact: true })).toBeAttached();
   // A photograph still has the editor's paper import, open on arrival there.
   await page.getByRole('link', { name: 'Open the editor' }).click();
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);

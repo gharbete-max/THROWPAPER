@@ -1,0 +1,44 @@
+{
+  "licence": "CC0-1.0",
+  "tool": "pdfjs-dist@6.3.289 + Tesseract 5.1.0-288-g2a9c1",
+  "scans": [
+    {
+      "name": "fotosamtycke",
+      "from": "fotosamtycke.pdf",
+      "locale": "sv-SE",
+      "dpi": 200,
+      "skew": -0.4,
+      "files": {
+        "png": {
+          "path": "fotosamtycke.png",
+          "sha256": "6ffa6f6be9cac47900c37a396a137272e486bf6f18e0315a2ee1140f01bbe3f9"
+        },
+        "raw.json": {
+          "path": "fotosamtycke.raw.json",
+          "sha256": "95b862082911021a93d85bf8bca51616e4df618d681f39f613d11eedbadf5688"
+        },
+        "pdf": {
+          "path": "fotosamtycke.pdf",
+          "sha256": "4be8c6188af18e1a3d6f137d20c813ed326a30908718e780893de866428838f8"
+        }
+      }
+    },
+    {
+      "name": "medlemsansokan",
+      "from": "medlemsansokan.pdf",
+      "locale": "sv-SE",
+      "dpi": 200,
+      "skew": 0.5,
+      "files": {
+        "png": {
+          "path": "medlemsansokan.png",
+          "sha256": "fc3e3a0873f9df959556c307573d7517f6ece01b6f9626982777274b929cdb83"
+        },
+        "raw.json": {
+          "path": "medlemsansokan.raw.json",
+          "sha256": "683936fd4055813bd530bc6cba9b657b8d4525ebad317f39391b7747a7a98ed9"
+        }
+      }
+    }
+  ]
+}

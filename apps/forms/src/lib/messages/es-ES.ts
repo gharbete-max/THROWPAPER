@@ -1294,12 +1294,16 @@ export const esES: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'No se han podido guardar los colores y no se ha cambiado nada. Inténtalo más tarde.',
   'review.choose.explain':
-    'Elige un PDF o un documento de Word, o pega su texto. Loppa lo lee aquí, en este dispositivo, y te muestra lo que ha leído antes de que nada se convierta en una pregunta.',
+    'Elige un PDF, un documento de Word o una fotografía de un formulario, o pega su texto. Loppa lo lee aquí, en este dispositivo, y te muestra lo que ha leído antes de que nada se convierta en una pregunta.',
   'review.choose.update':
     'Elige el documento con el que se hizo tu formulario, o una versión nueva, o pega su texto. Loppa lo compara con tu formulario: lo nuevo se añade y tú eliges qué pasa con lo demás.',
-  'review.choose.file': 'PDF o documento de Word',
+  'review.choose.file': 'PDF, documento de Word o fotografía',
   'review.photo':
-    '¿Una fotografía o una página escaneada? Impórtala como páginas en el editor, donde dibujas sus preguntas.',
+    'Una fotografía se lee mejor tomada de frente, plana y con buena luz. Para dibujar tú las preguntas en una página, impórtala como páginas en el editor.',
+  'review.ocr':
+    'Leyendo las palabras impresas de la página {page} de {count}. Una fotografía o un escaneo tarda más que un archivo.',
+  'review.ocrTooSlow':
+    'Leer una página tardó más de un minuto y se detuvo. Prueba con una fotografía más nítida, o impórtala como páginas en el editor y dibuja allí las preguntas.',
   'review.toEditor': 'Abrir el editor',
   'review.summary': 'plural:one He leído {count} pregunta. | other He leído {count} preguntas.',
   'review.needEye':

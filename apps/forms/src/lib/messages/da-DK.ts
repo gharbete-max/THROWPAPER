@@ -1273,12 +1273,16 @@ export const daDK: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Farverne kunne ikke gemmes, og intet blev ændret. Prøv igen senere.',
   'review.choose.explain':
-    'Vælg en PDF eller et Word-dokument, eller indsæt teksten. Loppa læser det her, på denne enhed, og viser dig, hvad den læste, før noget bliver til et spørgsmål.',
+    'Vælg en PDF, et Word-dokument eller et fotografi af en formular, eller indsæt teksten. Loppa læser det her, på denne enhed, og viser dig, hvad den læste, før noget bliver til et spørgsmål.',
   'review.choose.update':
     'Vælg det dokument, din formular blev lavet ud fra, eller en ny version af det, eller indsæt teksten. Loppa sammenligner det med din formular: det nye tilføjes, og du vælger, hvad der sker med resten.',
-  'review.choose.file': 'PDF eller Word-dokument',
+  'review.choose.file': 'PDF, Word-dokument eller fotografi',
   'review.photo':
-    'Et fotografi eller en scannet side? Importér det som sider i editoren, hvor du tegner spørgsmålene ind.',
+    'Et fotografi læses bedst, når det er taget lige forfra, fladt og i godt lys. Vil du selv tegne spørgsmålene ind på en side, så importér det som sider i editoren.',
+  'review.ocr':
+    'Læser de trykte ord på side {page} af {count}. Et fotografi eller en scanning tager længere tid end en fil.',
+  'review.ocrTooSlow':
+    'En side tog mere end et minut at læse og blev stoppet. Prøv et skarpere fotografi, eller importér det som sider i editoren og tegn spørgsmålene ind.',
   'review.toEditor': 'Åbn editoren',
   'review.summary': 'plural:one Jeg læste {count} spørgsmål. | other Jeg læste {count} spørgsmål.',
   'review.needEye': 'plural:one {count} skal ses efter. | other {count} skal ses efter.',

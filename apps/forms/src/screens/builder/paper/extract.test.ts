@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { importAcroFields, type AcroField } from '@tp/shared/forms';
 import {
@@ -7,10 +9,14 @@ import {
   horizontalRules,
   labelNear,
   mergeWidgets,
+  openPdf,
   runWords,
+  SCANNED_RUNS,
   type Ops,
+  type Pdfjs,
   type Widget,
 } from './extract.js';
+import type { RecognisedWords } from './ocr-words.js';
 import { clampAnchor, result } from './PaperCanvas.js';
 
 /** A4 in PDF points. */
@@ -262,5 +268,134 @@ describe("a PDF's fields for the import's stages (CAVEATS #54)", () => {
     expect(boxes.map((box) => [box.name, box.multiline, box.label])).toEqual([
       ['kept', true, null],
     ]);
+  });
+});
+
+const require = createRequire(import.meta.url);
+async function nodePdfjs(): Promise<Pdfjs> {
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(
+    require.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs'),
+  ).href;
+  return pdfjs;
+}
+
+/**
+ * A PDF written by hand, an A4 page for each content stream, Helvetica as its font: enough to say
+ * how many text runs a page has, and nothing else.
+ */
+function pdfOf(...pages: string[]): ArrayBuffer {
+  const objects: string[] = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    `<< /Type /Pages /Kids [${pages.map((_, i) => `${4 + i * 2} 0 R`).join(' ')}] /Count ${pages.length} >>`,
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+  ];
+  for (const [i, content] of pages.entries()) {
+    objects.push(
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${5 + i * 2} 0 R >>`,
+      `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+    );
+  }
+  let body = '%PDF-1.4\n';
+  const offsets = objects.map((object, i) => {
+    const at = body.length;
+    body += `${i + 1} 0 obj\n${object}\nendobj\n`;
+    return at;
+  });
+  const xref = body.length;
+  body += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  body += offsets.map((at) => `${String(at).padStart(10, '0')} 00000 n \n`).join('');
+  body += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return new TextEncoder().encode(body).buffer as ArrayBuffer;
+}
+
+/** `count` text runs down the page, one a line. */
+const textRuns = (count: number) =>
+  Array.from(
+    { length: count },
+    (_, i) => `BT /F1 12 Tf 72 ${760 - i * 20} Td (Question ${i + 1}) Tj ET`,
+  ).join('\n');
+
+/** A photograph's worth of drawing and no text: a filled grey box. */
+const picture = '0.5 g 72 400 451 300 re f';
+
+const recognised: RecognisedWords = {
+  width: 1190,
+  height: 1684,
+  engine: 'Tesseract 5.5.0',
+  lines: [
+    {
+      baseline: { x0: 144, y0: 200, x1: 600, y1: 200 },
+      rowHeight: 30,
+      words: [
+        { text: 'Namn', confidence: 93.4, bbox: { x0: 144, y0: 176, x1: 230, y1: 202 } },
+        { text: 'Adress', confidence: 61.6, bbox: { x0: 250, y0: 176, x1: 360, y1: 202 } },
+      ],
+    },
+  ],
+};
+
+describe('a scanned page, read by OCR (S14)', () => {
+  it('reads a page with no text layer from the reader, and names it in the extractor', async () => {
+    const pdf = await openPdf(pdfOf(textRuns(SCANNED_RUNS), picture), 0, nodePdfjs);
+    const asked: number[] = [];
+    try {
+      const raw = await pdf.raw({
+        ocr: (pageIndex) => {
+          asked.push(pageIndex);
+          return Promise.resolve(recognised);
+        },
+      });
+      // Only the second page is a scan: the first has its three runs and is never sent to OCR.
+      expect(asked).toEqual([1]);
+      expect(raw.pages[0]!.words.every((word) => word.source === 'text-layer')).toBe(true);
+      expect(raw.pages[0]!.words.map((word) => word.text).slice(0, 2)).toEqual(['Question', '1']);
+      expect(raw.pages[1]!.words).toEqual([
+        expect.objectContaining({
+          text: 'Namn',
+          box: { x0: 1210, y0: 1045, x1: 1933, y1: 1200 },
+          baseline: 1188,
+          fontSize: 178,
+          ocrConfidence: 93,
+          source: 'ocr',
+        }),
+        expect.objectContaining({ text: 'Adress', ocrConfidence: 62, source: 'ocr' }),
+      ]);
+      expect(raw.pages[1]!.widthPt).toBe(595);
+      expect(raw.source.extractor).toMatch(/^pdfjs-dist@\S+ \+ Tesseract 5\.5\.0$/);
+    } finally {
+      await pdf.close();
+    }
+  });
+
+  it(`takes a page with fewer than ${SCANNED_RUNS} runs for a scan, and one with ${SCANNED_RUNS} for text`, async () => {
+    const pdf = await openPdf(
+      pdfOf(textRuns(SCANNED_RUNS - 1), textRuns(SCANNED_RUNS)),
+      0,
+      nodePdfjs,
+    );
+    const asked: number[] = [];
+    try {
+      await pdf.raw({
+        ocr: (pageIndex) => {
+          asked.push(pageIndex);
+          return Promise.resolve(recognised);
+        },
+      });
+      expect(asked).toEqual([0]);
+    } finally {
+      await pdf.close();
+    }
+  });
+
+  it('leaves a scanned page empty with no reader, and the extractor pdf.js alone', async () => {
+    const pdf = await openPdf(pdfOf(picture), 0, nodePdfjs);
+    try {
+      const raw = await pdf.raw();
+      expect(raw.pages[0]!.words).toEqual([]);
+      expect(raw.source.extractor).toMatch(/^pdfjs-dist@\S+$/);
+    } finally {
+      await pdf.close();
+    }
   });
 });

@@ -83,6 +83,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
+| **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
 
 ## Log
 
@@ -465,3 +466,20 @@ when each slice ends.)*
     (#134).
 
   Enumerate is now at stage version 5 and segment at 2; every other snapshot changed only that line.
+- **S14, photographs and scans (2026-10-05).** What: the review screen reads a photograph (PNG,
+  JPEG, WebP) and a scanned PDF's pages by Tesseract, in its own worker, on the device, then by
+  stages 2 to 7 like any document; "Reading page 1 of 1" while it reads, and 60 seconds a page. Two
+  of the corpus's documents are scanned (`pnpm corpus:scan`): their pictures, their frozen raw
+  documents and one scanned PDF. Why: the S14 row, owed since S9. Found on the way:
+  - a printed box comes back from OCR as "[", "0" or "[J", so boxes to tick were read as text
+    (#135). B1 writes a box-shaped mark back as ☐, and records what was read. Widening it to
+    letters broke "lämna", and the corpus's own scans caught that: letters stay out;
+  - a word Tesseract misreads and is sure of passes the cap (#136), and blanks are not read (#137):
+    both stated, with tests.
+
+  Tests: `ocr.test.ts` (B1 against recorded readings, the conversion exact), `extract.test.ts`
+  (hand-written PDFs: a page with fewer than three runs is read by OCR, one with three is not), the
+  scans in `corpus.test.ts`, and `e2e/scan.spec.ts`, which runs the real Tesseract in the browser
+  on the photograph and on the scanned PDF. Each part of B1 was shown to fail with it taken out.
+  Next: the corpus's growth, real scans among it. Open: the owner's acceptance of ADRs 0017–0021,
+  which S14 depends on most (ADR 0018 supersedes ADR 0004's "OCR never creates a field").

@@ -1292,12 +1292,16 @@ export const enGB = {
   'conversation.colours.failed':
     'The colours could not be saved, and nothing was changed. Try again later.',
   'review.choose.explain':
-    'Choose a PDF or a Word document, or paste its text. Loppa reads it here, on this device, and shows you what it read before anything becomes a question.',
+    'Choose a PDF, a Word document or a photograph of a form, or paste its text. Loppa reads it here, on this device, and shows you what it read before anything becomes a question.',
   'review.choose.update':
     'Choose the document your form was made from, or a new version of it, or paste its text. Loppa compares it with your form: what is new is added, and you choose what happens to the rest.',
-  'review.choose.file': 'PDF or Word document',
+  'review.choose.file': 'PDF, Word document or photograph',
   'review.photo':
-    'A photograph or a scanned page? Import it as pages in the editor, where you draw its questions.',
+    'A photograph reads best taken straight on, flat and in good light. To draw the questions on a page yourself, import it as pages in the editor.',
+  'review.ocr':
+    'Reading the printed words on page {page} of {count}. A photograph or a scan takes longer than a file.',
+  'review.ocrTooSlow':
+    'A page took more than a minute to read and was stopped. Try a sharper photograph, or import it as pages in the editor and draw its questions.',
   'review.toEditor': 'Open the editor',
   'review.summary': 'plural:one I read {count} question. | other I read {count} questions.',
   'review.needEye': 'plural:one {count} needs your eye. | other {count} need your eye.',

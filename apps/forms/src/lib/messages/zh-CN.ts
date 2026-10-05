@@ -1214,11 +1214,16 @@ export const zhCN: Record<MessageKey, string> = {
   'conversation.colours.done': '完成。你们组织的所有表单现在都使用这些颜色。',
   'conversation.colours.failed': '无法保存颜色，没有做任何更改。请稍后再试。',
   'review.choose.explain':
-    '选择一个 PDF 或 Word 文档，或粘贴其中的文本。Loppa 会在这里、在这台设备上读取它，并在任何内容成为问题之前，先给你看读取的结果。',
+    '选择一个 PDF、Word 文档或表格的照片，或粘贴其中的文本。Loppa 会在这里、在这台设备上读取它，并在任何内容成为问题之前，先给你看读取的结果。',
   'review.choose.update':
     '选择你的表单所依据的文档或其新版本，或粘贴其文本。Loppa 会将其与你的表单比较：新内容会被添加，其余内容由你决定如何处理。',
-  'review.choose.file': 'PDF 或 Word 文档',
-  'review.photo': '是照片或扫描的页面？请将其作为页面导入编辑器，在那里绘制其中的问题。',
+  'review.choose.file': 'PDF、Word 文档或照片',
+  'review.photo':
+    '照片从正面拍摄、纸张平整、光线充足时识别效果最好。如需自己在页面上绘制问题，请将其作为页面导入编辑器。',
+  'review.ocr':
+    '正在读取第 {page} 页（共 {count} 页）上的印刷文字。照片或扫描件比文件需要更长时间。',
+  'review.ocrTooSlow':
+    '读取一页用了超过一分钟，已停止。请尝试更清晰的照片，或将其作为页面导入编辑器并在其中绘制问题。',
   'review.toEditor': '打开编辑器',
   'review.summary': 'plural:other 共读取到 {count} 个问题。',
   'review.needEye': 'plural:other 有 {count} 项需要你确认。',

@@ -127,7 +127,7 @@ test('the document the form was made from, read again unchanged, changes nothing
   const formId = await startFromPaper(page);
   const source = linesPdf(['Anmalan', '1. Namn: ______________________________']);
   const choose = () =>
-    page.getByLabel('PDF or Word document').setInputFiles({
+    page.getByLabel('PDF, Word document or photograph', { exact: true }).setInputFiles({
       name: 'anmalan.pdf',
       mimeType: 'application/pdf',
       buffer: source,

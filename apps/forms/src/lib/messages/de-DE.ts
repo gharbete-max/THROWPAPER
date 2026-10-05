@@ -1320,12 +1320,16 @@ export const deDE: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Die Farben konnten nicht gespeichert werden, und nichts wurde geändert. Versuchen Sie es später noch einmal.',
   'review.choose.explain':
-    'Wählen Sie ein PDF oder ein Word-Dokument, oder fügen Sie den Text ein. Loppa liest es hier, auf diesem Gerät, und zeigt Ihnen, was es gelesen hat, bevor etwas zu einer Frage wird.',
+    'Wählen Sie ein PDF, ein Word-Dokument oder ein Foto eines Formulars, oder fügen Sie den Text ein. Loppa liest es hier, auf diesem Gerät, und zeigt Ihnen, was es gelesen hat, bevor etwas zu einer Frage wird.',
   'review.choose.update':
     'Wählen Sie das Dokument, aus dem Ihr Formular erstellt wurde, oder eine neue Fassung davon, oder fügen Sie seinen Text ein. Loppa vergleicht es mit Ihrem Formular: Neues wird hinzugefügt, und Sie entscheiden, was mit dem Rest geschieht.',
-  'review.choose.file': 'PDF oder Word-Dokument',
+  'review.choose.file': 'PDF, Word-Dokument oder Foto',
   'review.photo':
-    'Ein Foto oder eine gescannte Seite? Importieren Sie die Seiten in den Editor und zeichnen Sie dort die Fragen ein.',
+    'Ein Foto lässt sich am besten lesen, wenn es gerade von vorn, flach und bei gutem Licht aufgenommen ist. Um die Fragen selbst auf einer Seite einzuzeichnen, importieren Sie es als Seiten in den Editor.',
+  'review.ocr':
+    'Die gedruckten Wörter auf Seite {page} von {count} werden gelesen. Ein Foto oder ein Scan dauert länger als eine Datei.',
+  'review.ocrTooSlow':
+    'Das Lesen einer Seite hat länger als eine Minute gedauert und wurde abgebrochen. Versuchen Sie ein schärferes Foto, oder importieren Sie es als Seiten in den Editor und zeichnen Sie die Fragen ein.',
   'review.toEditor': 'Editor öffnen',
   'review.summary':
     'plural:one Ich habe {count} Frage gelesen. | other Ich habe {count} Fragen gelesen.',

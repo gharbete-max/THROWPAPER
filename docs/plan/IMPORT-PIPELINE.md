@@ -66,11 +66,20 @@ SHA-256 is taken before pdf.js opens it, because pdf.js may hand the buffer to i
 become questions with confidence 1000 and their widget rectangles are their paper anchors; the text
 layer still goes through the pipeline for headings, instructions and labels the fields lack.
 
-**Scanned PDF or photograph** (`paper/ocr.ts`, which exists). A PDF page with fewer than 3 text
-runs is treated as scanned: rendered (the existing `render`) and read by Tesseract in its worker,
-as a photograph is after the existing four-corner straightening (`warp.ts`, `detect.ts`). Words
-carry Tesseract's box and confidence (rounded to an integer 0–100). Language packs are the
-existing `tessLangs(locale)`.
+**Scanned PDF or photograph** (`paper/ocr.ts`, `paper/ocr-words.ts`, `paper/photo.ts`; built in
+S14, `SCANS.md`). A PDF page with fewer than 3 text runs is treated as scanned: drawn with its
+longer side 3 000 pixels (`picture`) and read by Tesseract, word by word, in its own worker, from
+this origin. A photograph (PNG, JPEG, WebP) is one page, turned as its file says, A4 wide at its own
+proportions, and read as it is: not straightened (the editor's four-corner straightening,
+`warp.ts`, stays the classic import's). Words carry Tesseract's box, the baseline under their
+middle, the line's height as their size, and their confidence rounded to an integer 0–100.
+Language packs are the existing `tessLangs(locale)`, in the author's working language. **B1, a
+printed box:** Tesseract has no box among its characters, so a box comes back as "[", "0" or
+"[J"; a bracket, bar or parenthesis (alone, or stuck to the word after it), or a zero or an O
+(alone), that is square and at least half its line high is written as ☐, the word recording
+`repair: { kind: 'box-mark', raw }`. Never a letter at a word's start: Tesseract's box for one
+can take in the next (`CAVEATS.md` #135). Each page has 60 seconds; past them the author is told
+and nothing is added.
 
 **DOCX** (`paper/docx.ts`, with `paper/zip.ts` and `paper/xml.ts`). No new dependency (ADR 0018):
 
@@ -241,6 +250,7 @@ Per page, in this order:
 | Rule | Step | Decides | Fixture or test |
 | --- | --- | --- | --- |
 | L1 | 1 | a ligature expanded | `ligature-and-quote-repair` |
+| L2 | 1 | a printed box OCR read as a mark: stage 1's B1, recorded | `ocr.test.ts` (B1), the corpus's scans |
 | C1 | 2 | a vertical gutter is a column: cut | `two-column-order`, `layout-shift-within-document`, `large-heading-words` |
 | C2 | 2 | a vertical gutter is not a column: kept together | `hanging-marker-gutter`, `answer-column-gutter` |
 | C3 | 2 | horizontal gaps: cut into rows | `layout-shift-within-document` |
@@ -437,7 +447,8 @@ and chips. Nothing is applied: stage 8 asks, and the label is never touched.
   an import Loppa can say "This looks like a membership form — right?" and seed only what is
   missing. It never replaces or reorders an imported question. (S11–S12.)
 - **Paper twin** (built in S12b: `import/anchors.ts`, `CONVERGENCE.md`). For a PDF (not DOCX or
-  paste, which have no page; a photograph is not read by the review screen yet), each question's
+  paste, which have no page, nor a photograph, which is not kept as paper: `SCANS.md`), each
+  question's
   `PaperAnchor` is the box it will be written into: its field's widget; else its blank runs after
   its own label (two questions on one line each have their own, #124); else its checkboxes; failing
   those, from the label's right edge to the column's right edge on the label's line. (A drawn rule
@@ -561,9 +572,8 @@ actions, counts), `fields.ts` (what each becomes) and `keys.ts`; the screen in `
   more — the draft may already hold the questions, and adding them again would add them twice.
   The form's editor shows what it holds. Nothing can be left, by Cancel, while the questions are
   being saved.
-- **Not yet here**: photographed and scanned pages (the review points to the editor's paper import);
-  the decided slots an import records, and the conversation walking only what is undecided (S12);
-  re-import (stage 9, S12).
+- **Not yet here**: straightening a crooked photograph before it is read (the editor's paper
+  import straightens one to draw on); more than one photograph as one document.
 
 ## Stage 9 — importing the same form again
 
@@ -632,13 +642,13 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today (S9): eleven documents, each a PDF and a Word file** — eight Swedish, one each in
-English, Danish, Norwegian, Finnish and German; one and two pages; running headers and page-number
+**What it holds today: fourteen documents, each a PDF and a Word file, and two of them scanned** —
+seven Swedish, one each in English, Danish, Norwegian, Finnish, German, French and Spanish; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
-wrapped line of prose. Scanned and photographed documents, and the exact §8.1.1 case, are still
-owed (S9 onward).
+wrapped line of prose; French typography's no-break spaces; consents as boxes to tick. The exact
+§8.1.1 case, and scans of real paper, are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;
@@ -664,6 +674,15 @@ owed (S9 onward).
   door's code — `openPdf` with Node's pdf.js, or `readDocx` — and runs stages 2 to 7 as the
   worker does, holding the reading to the items and the segments, with five debug snapshots a
   file.
+
+- **`scans/`** (S14, `pnpm corpus:scan`): a document's page printed and scanned — drawn by pdf.js
+  at 200 dots an inch, grey, turned half a degree — kept as its picture, as the raw document
+  Tesseract read from it (frozen: OCR is a measurement, like pdf.js), and for one as a PDF holding
+  only the picture. `scans/expected/<document>.json` is the document's own expectation, changed
+  only where OCR measurably changed it: each misread word named, with whether stage 7's cap caught
+  it, the blanks OCR does not read, and how many boxes B1 wrote back. `corpus.test.ts` reads the
+  frozen raw document through stages 2 to 7; `e2e/scan.spec.ts` gives the picture and the PDF to
+  the review screen, where the browser's Tesseract reads them.
 
 `fixtures/numbering/` (hand-authored IR, no PDF at all) stays what each rule is held to; the corpus
 is what the rules together are held to.

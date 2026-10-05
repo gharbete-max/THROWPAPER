@@ -330,7 +330,7 @@ test('a PDF: its own page, each line linked to its question both ways, merged an
 }) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   const formId = await startFromPaper(page);
-  await page.getByLabel('PDF or Word document').setInputFiles({
+  await page.getByLabel('PDF, Word document or photograph', { exact: true }).setInputFiles({
     name: 'medlemsansokan.pdf',
     mimeType: 'application/pdf',
     buffer: readFileSync(new URL('medlemsansokan.pdf', CORPUS)),
@@ -374,7 +374,7 @@ test('a Word file: a grid becomes one choice per row, under what the document pr
 }) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   const formId = await startFromPaper(page);
-  await page.getByLabel('PDF or Word document').setInputFiles({
+  await page.getByLabel('PDF, Word document or photograph', { exact: true }).setInputFiles({
     name: 'enkat-rutnat.docx',
     mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     buffer: readFileSync(new URL('enkat-rutnat.docx', CORPUS)),

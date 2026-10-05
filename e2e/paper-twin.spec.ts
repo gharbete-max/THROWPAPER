@@ -53,7 +53,7 @@ test('a PDF read into questions comes back filled in, as that paper (S12b)', asy
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}\/import$/);
   const formId = page.url().split('/').at(-2)!;
   forms.push(formId);
-  await page.getByLabel('PDF or Word document').setInputFiles({
+  await page.getByLabel('PDF, Word document or photograph', { exact: true }).setInputFiles({
     name: 'anmalan.pdf',
     mimeType: 'application/pdf',
     buffer: source,
@@ -154,7 +154,7 @@ test('a PDF that cannot be kept adds nothing, says so, and is one press from try
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}\/import$/);
   const formId = page.url().split('/').at(-2)!;
   forms.push(formId);
-  await page.getByLabel('PDF or Word document').setInputFiles({
+  await page.getByLabel('PDF, Word document or photograph', { exact: true }).setInputFiles({
     name: 'anmalan.pdf',
     mimeType: 'application/pdf',
     buffer: linesPdf(['1. Namn: ______________________________']),
@@ -214,7 +214,7 @@ test('a form already keeping all the documents it can adds the questions, and sa
     if (route.request().method() === 'POST') uploads += 1;
     return route.fallback();
   });
-  await page.getByLabel('PDF or Word document').setInputFiles({
+  await page.getByLabel('PDF, Word document or photograph', { exact: true }).setInputFiles({
     name: 'anmalan.pdf',
     mimeType: 'application/pdf',
     buffer: linesPdf(['1. Namn: ______________________________']),

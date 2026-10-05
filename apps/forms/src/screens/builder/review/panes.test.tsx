@@ -147,7 +147,7 @@ describe('the source pane', () => {
     const html = renderToStaticMarkup(
       <SourcePane
         layout={reading.layout}
-        pdf={null}
+        pages={null}
         items={start.items}
         selectedId={question.id}
         onSelect={() => {}}

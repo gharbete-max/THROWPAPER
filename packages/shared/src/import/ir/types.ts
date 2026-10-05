@@ -28,9 +28,13 @@ export type IrSource = 'text-layer' | 'ocr' | 'docx' | 'paste';
  * - `joined-at-break`: the same join, hyphen kept, because it belongs to the word ("e-" + "post"
  *   → "e-post", "Stockholm-" + "Göteborg" → "Stockholm-Göteborg").
  * - `ligature`: a presentation-form ligature expanded (U+FB00–U+FB06 only: ﬀ ﬁ ﬂ ﬃ ﬄ ﬅ ﬆ).
+ * - `box-mark`: a printed box that OCR read as a mark — a bracket, a bar, a parenthesis, or a zero
+ *   or an O alone — written as ☐. Tesseract has no box among its characters, so it reads one as
+ *   whatever is nearest. Decided in stage 1 from the mark's shape: square, and at least half the
+ *   line's height (`SCANS.md`, B1).
  */
 export interface Repair {
-  kind: 'dehyphenated' | 'joined-at-break' | 'ligature';
+  kind: 'dehyphenated' | 'joined-at-break' | 'ligature' | 'box-mark';
   /** The text exactly as extracted, before the repair; a line break inside it is "\n". */
   raw: string;
 }

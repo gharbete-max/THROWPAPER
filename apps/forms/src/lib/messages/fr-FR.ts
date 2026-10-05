@@ -1310,12 +1310,16 @@ export const frFR: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Les couleurs n’ont pas pu être enregistrées, et rien n’a changé. Réessayez plus tard.',
   'review.choose.explain':
-    'Choisissez un PDF ou un document Word, ou collez son texte. Loppa le lit ici, sur cet appareil, et vous montre ce qu’il a lu avant que quoi que ce soit ne devienne une question.',
+    'Choisissez un PDF, un document Word ou une photo d’un formulaire, ou collez son texte. Loppa le lit ici, sur cet appareil, et vous montre ce qu’il a lu avant que quoi que ce soit ne devienne une question.',
   'review.choose.update':
     'Choisissez le document à partir duquel votre formulaire a été créé, ou une nouvelle version, ou collez son texte. Loppa le compare à votre formulaire : ce qui est nouveau est ajouté, et vous choisissez ce qu’il advient du reste.',
-  'review.choose.file': 'PDF ou document Word',
+  'review.choose.file': 'PDF, document Word ou photo',
   'review.photo':
-    'Une photo ou une page numérisée ? Importez-la sous forme de pages dans l’éditeur, où vous tracez ses questions.',
+    'Une photo se lit mieux prise bien en face, à plat et sous une bonne lumière. Pour tracer vous-même les questions sur une page, importez-la sous forme de pages dans l’éditeur.',
+  'review.ocr':
+    'Lecture des mots imprimés de la page {page} sur {count}. Une photo ou un scan prend plus de temps qu’un fichier.',
+  'review.ocrTooSlow':
+    'La lecture d’une page a pris plus d’une minute et a été arrêtée. Essayez une photo plus nette, ou importez-la sous forme de pages dans l’éditeur et tracez-y les questions.',
   'review.toEditor': 'Ouvrir l’éditeur',
   'review.summary': 'plural:one J’ai lu {count} question. | other J’ai lu {count} questions.',
   'review.needEye':

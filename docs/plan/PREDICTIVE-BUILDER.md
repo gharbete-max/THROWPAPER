@@ -66,8 +66,9 @@ The first screen after **New form** has two large cards and nothing else:
   phone (the existing LAN scan). Loppa reads it locally (`IMPORT-PIPELINE.md`) and opens the
   **review screen**, which is never skipped. *As built (S10):* the door makes a blank form and
   opens its review at `/forms/:id/import`, for a PDF with a text layer, a Word file or pasted text.
-  A photographed page or a scan is not read there yet: the review points to the editor's paper
-  import (ADR 0004), where it becomes pages to draw on.
+  *Since S14* it reads a photographed page and a scanned PDF too, word by word by OCR, on this
+  device (`SCANS.md`); the editor's paper import (ADR 0004), where a page becomes boxes drawn by
+  hand, is unchanged beside it.
 - **Start from questions.** The guided conversation. Nothing is required first: the brand kit can
   be answered later, and every skipped answer is recorded as "use Loppa's default" so the draft is
   always complete. The door makes the form first — a blank draft titled "Untitled form", with a

@@ -72,9 +72,16 @@ Decisions 1–7 are built, with one part still to come:
   twin is born in the import (S12b). Re-import is stage 9 (S12c).
 - **Stage 1 reads three things today:** a PDF's text layer, and its own form fields over its text
   (#54); a Word file, by the platform alone, with Word's own numbering; and pasted text.
-- **Photographs and scans do not reach the stages yet.** Stage 7 already caps a word read by OCR,
-  but the review screen accepts PDF and Word only. Placing boxes over a photograph, ADR 0004's
-  path, is unchanged.
+- **Photographs and scans reach the stages since S14** (`SCANS.md`). A photograph, and a PDF page
+  with no text layer, are read word by word by Tesseract on the author's device, then by stages 2
+  to 7 like any document, and nothing becomes a question until the author has been through the
+  review. This is the part of this ADR that most depends on its acceptance: it is where OCR leads
+  to fields, the one sentence of ADR 0004 this ADR supersedes. What ADR 0004 protected holds: the
+  review is never skipped, a word Tesseract was unsure of caps its question below `auto`, and the
+  picture is beside every question read from it. One limit is stated rather than hidden: a word
+  Tesseract misreads *and is sure of* ("för" read "for", 96) passes the cap, and only the picture
+  beside it shows it (`CAVEATS.md` #136). Placing boxes over a photograph, ADR 0004's own path, is
+  unchanged.
 - **A form keeps at most twenty documents** (`Paper.sources`, #125). A document read into a form
   with no room adds its questions without their places on the paper, and says so first.
 - **There is no grid field type.** An imported grid is one choice per row under a heading, as the

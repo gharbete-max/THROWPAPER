@@ -1280,12 +1280,16 @@ export const isIS: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Ekki tókst að vista litina og engu var breytt. Reyndu aftur síðar.',
   'review.choose.explain':
-    'Veldu PDF-skjal eða Word-skjal, eða límdu inn textann. Loppa les það hér, á þessu tæki, og sýnir þér hvað hún las áður en nokkuð verður að spurningu.',
+    'Veldu PDF-skjal, Word-skjal eða ljósmynd af eyðublaði, eða límdu inn textann. Loppa les það hér, á þessu tæki, og sýnir þér hvað hún las áður en nokkuð verður að spurningu.',
   'review.choose.update':
     'Veldu skjalið sem eyðublaðið þitt var gert úr, eða nýja útgáfu af því, eða límdu inn textann. Loppa ber það saman við eyðublaðið þitt: því sem er nýtt er bætt við og þú velur hvað verður um afganginn.',
-  'review.choose.file': 'PDF- eða Word-skjal',
+  'review.choose.file': 'PDF-skjal, Word-skjal eða ljósmynd',
   'review.photo':
-    'Ljósmynd eða skönnuð síða? Flyttu hana inn sem síður í ritlinum, þar sem þú teiknar spurningarnar.',
+    'Ljósmynd les best ef hún er tekin beint framan á, slétt og í góðri birtu. Ef þú vilt teikna spurningarnar inn á síðu, flyttu hana inn sem síður í ritlinum.',
+  'review.ocr':
+    'Les prentuðu orðin á síðu {page} af {count}. Ljósmynd eða skönnun tekur lengri tíma en skrá.',
+  'review.ocrTooSlow':
+    'Það tók meira en mínútu að lesa síðu og lestrinum var hætt. Prófaðu skarpari ljósmynd, eða flyttu hana inn sem síður í ritlinum og teiknaðu spurningarnar.',
   'review.toEditor': 'Opna ritilinn',
   'review.summary': 'plural:one Ég las {count} spurningu. | other Ég las {count} spurningar.',
   'review.needEye':

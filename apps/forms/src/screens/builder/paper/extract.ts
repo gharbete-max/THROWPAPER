@@ -1,6 +1,8 @@
 import type { AcroField, PaperAnchor } from '@tp/shared/forms';
 import { MAX_PAPER_PAGES } from '@tp/shared/forms';
 import type { Box, FormFieldBox, RawDocument, RawPage, RawWord } from '@tp/shared/import';
+import { ocrWords, type RecognisedWords } from './ocr-words.js';
+import { toIu } from './units.js';
 
 /**
  * Reads a PDF in the browser: its pages as pictures, its form fields, its printed text.
@@ -34,8 +36,12 @@ export interface PaperPdf {
   fields: AcroField[];
   /** The printed words on a page, for suggesting labels. Empty on a scanned page. */
   text(page: number): Promise<TextRun[]>;
-  /** The whole document as stage 1's raw document: its words and its printed rules. */
-  raw(): Promise<RawDocument>;
+  /**
+   * The whole document as stage 1's raw document: its words and its printed rules. A scanned page
+   * — fewer than {@link SCANNED_RUNS} text runs — is read by `ocr` when one is given (S14,
+   * `docs/plan/SCANS.md`), and is empty without it.
+   */
+  raw(options?: { ocr?: (pageIndex: number) => Promise<RecognisedWords> }): Promise<RawDocument>;
   /**
    * Draws the page at `width` CSS pixels wide. Aborting `signal` cancels a drawing still under way,
    * and must come before the same canvas is drawn on again: pdf.js refuses a canvas in use, and the
@@ -47,8 +53,19 @@ export interface PaperPdf {
     canvas: HTMLCanvasElement,
     signal?: AbortSignal,
   ): Promise<void>;
+  /**
+   * The page as a picture to read by OCR: drawn with its longer side `longSide` pixels, whatever
+   * the screen's pixel ratio, on a canvas of its own.
+   */
+  picture(page: number, longSide: number): Promise<HTMLCanvasElement>;
   close(): Promise<void>;
 }
+
+/** Anything the review screen can draw pages of: a PDF, or a photograph (S14). */
+export type PageDrawer = Pick<PaperPdf, 'render' | 'close'>;
+
+/** A page with fewer text runs than this has no text layer worth the name: it is a scan (S14). */
+export const SCANNED_RUNS = 3;
 
 export class TooManyPages extends Error {
   constructor(public readonly pages: number) {
@@ -155,8 +172,9 @@ export async function openPdf(
         return [{ text: item.str, ...anchor }];
       });
     },
-    async raw() {
+    async raw(options = {}) {
       const pages: RawPage[] = [];
+      let engine: string | null = null;
       for (let index = 0; index < document.numPages; index += 1) {
         const page = await document.getPage(index + 1);
         const viewport = page.getViewport({ scale: 1 });
@@ -182,11 +200,15 @@ export async function openPdf(
             fontLook(font),
           );
         });
+        const runs = content.items.filter((item) => 'str' in item && item.str.trim() !== '');
+        const recognised =
+          runs.length < SCANNED_RUNS && options.ocr ? await options.ocr(index) : null;
+        if (recognised) engine ??= recognised.engine;
         pages.push({
           pageNo: index + 1,
           widthPt: Math.round(viewport.width),
           heightPt: Math.round(viewport.height),
-          words,
+          words: recognised ? ocrWords(recognised) : words,
           rules: horizontalRules(operators, pdfjs.OPS, viewport.transform, size),
         });
       }
@@ -194,7 +216,10 @@ export async function openPdf(
         irVersion: 1,
         source: {
           kind: 'pdf',
-          extractor: `pdfjs-dist@${pdfjs.version}`,
+          // A scanned page's words are Tesseract's: the extractor says both.
+          extractor: engine
+            ? `pdfjs-dist@${pdfjs.version} + ${engine}`
+            : `pdfjs-dist@${pdfjs.version}`,
           sha256: digest,
         },
         pages,
@@ -217,6 +242,18 @@ export async function openPdf(
       } finally {
         signal?.removeEventListener('abort', cancel);
       }
+    },
+    async picture(index, longSide) {
+      const page = await document.getPage(index + 1);
+      const natural = page.getViewport({ scale: 1 });
+      const viewport = page.getViewport({
+        scale: longSide / Math.max(natural.width, natural.height),
+      });
+      const canvas = globalThis.document.createElement('canvas');
+      canvas.width = Math.round(viewport.width);
+      canvas.height = Math.round(viewport.height);
+      await page.render({ canvas, viewport, intent: 'print' }).promise;
+      return canvas;
     },
     close: () => document.loadingTask.destroy(),
   };
@@ -413,9 +450,6 @@ export interface ViewportRun {
   size: number;
 }
 
-const toIu = (value: number, extent: number) =>
-  Math.min(10_000, Math.max(0, Math.round((value / extent) * 10_000)));
-
 /**
  * A pdf.js run as words (`CAVEATS.md` #58): pdf.js gives runs, not words, and no per-glyph
  * advances without a much slower path. The run is split at whitespace, and its width is shared
@@ -589,7 +623,7 @@ export function horizontalRules(
   return rules;
 }
 
-async function sha256(bytes: ArrayBuffer): Promise<string> {
+export async function sha256(bytes: ArrayBuffer): Promise<string> {
   const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
   return [...digest].map((b) => b.toString(16).padStart(2, '0')).join('');
 }

@@ -1275,12 +1275,16 @@ export const svSE: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Färgerna kunde inte sparas, och inget ändrades. Försök igen senare.',
   'review.choose.explain':
-    'Välj en PDF eller ett Word-dokument, eller klistra in texten. Loppa läser det här, på den här enheten, och visar dig vad den läste innan något blir en fråga.',
+    'Välj en PDF, ett Word-dokument eller ett fotografi av en blankett, eller klistra in texten. Loppa läser det här, på den här enheten, och visar dig vad den läste innan något blir en fråga.',
   'review.choose.update':
     'Välj dokumentet som ditt formulär gjordes av, eller en ny version av det, eller klistra in texten. Loppa jämför det med ditt formulär: det som är nytt läggs till, och du väljer vad som händer med resten.',
-  'review.choose.file': 'PDF eller Word-dokument',
+  'review.choose.file': 'PDF, Word-dokument eller fotografi',
   'review.photo':
-    'Ett fotografi eller en skannad sida? Importera det som sidor i redigeraren, där du ritar in frågorna.',
+    'Ett fotografi läses bäst om det är taget rakt framifrån, plant och i bra ljus. Vill du rita in frågorna på en sida själv, importera det som sidor i redigeraren.',
+  'review.ocr':
+    'Läser de tryckta orden på sida {page} av {count}. Ett fotografi eller en skanning tar längre tid än en fil.',
+  'review.ocrTooSlow':
+    'En sida tog mer än en minut att läsa och avbröts. Prova ett skarpare fotografi, eller importera det som sidor i redigeraren och rita in frågorna.',
   'review.toEditor': 'Öppna redigeraren',
   'review.summary': 'plural:one Jag läste {count} fråga. | other Jag läste {count} frågor.',
   'review.needEye': 'plural:one {count} behöver ses över. | other {count} behöver ses över.',

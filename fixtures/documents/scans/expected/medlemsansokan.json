@@ -1,0 +1,124 @@
+{
+  "document": "medlemsansokan",
+  "scan": "medlemsansokan.raw.json",
+  "locale": "sv",
+  "misread": [
+    {
+      "printed": "Medlemsansökan",
+      "read": "Medlemsansokan",
+      "caught": true
+    },
+    {
+      "printed": "för",
+      "read": "for",
+      "caught": false
+    }
+  ],
+  "boxes": 2,
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Namn:"
+    },
+    {
+      "marker": "2.",
+      "label": "Personnummer:"
+    },
+    {
+      "marker": "3.",
+      "label": "Adress:",
+      "details": [
+        "Skriv den adress dit vi ska skicka medlemskortet."
+      ]
+    },
+    {
+      "marker": "4.",
+      "label": "Kontaktuppgifter",
+      "items": [
+        {
+          "marker": "a)",
+          "label": "Telefon:"
+        },
+        {
+          "marker": "b)",
+          "label": "E-post:"
+        }
+      ]
+    },
+    {
+      "marker": "5.",
+      "label": "Vill du ha föreningens nyhetsbrev? ☐ Ja ☐ Nej"
+    },
+    {
+      "marker": "6.",
+      "label": "Underskrift:"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Medlemsansokan"
+    },
+    {
+      "kind": "instruction",
+      "text": "Fyll i blanketten och lämna den till kansliet eller skicka den med post. Vi behöver alla uppgifter for att kunna registrera dig som medlem, och de används bara för föreningens eget register. Om något är oklart kan du vänligen kontakta kansliet, så hjälper vi dig."
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "unknown",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Personnummer",
+      "answer": "unknown",
+      "type": "personnummer"
+    },
+    {
+      "kind": "question",
+      "label": "Adress",
+      "answer": "unknown",
+      "type": "address",
+      "details": [
+        "Skriv den adress dit vi ska skicka medlemskortet."
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "Kontaktuppgifter"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "unknown",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "E-post",
+      "answer": "unknown",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Vill du ha föreningens nyhetsbrev?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Underskrift",
+      "answer": "unknown",
+      "type": "signature"
+    },
+    {
+      "kind": "instruction",
+      "text": "Uppgifterna används bara för föreningens medlemsregister och lämnas inte ut."
+    }
+  ]
+}

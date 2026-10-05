@@ -30,7 +30,10 @@ const source = z.enum(['text-layer', 'ocr', 'docx', 'paste']);
 const fontWeight = z.union([z.literal(400), z.literal(700)]);
 
 const repair: z.ZodType<Repair> = z
-  .object({ kind: z.enum(['dehyphenated', 'joined-at-break', 'ligature']), raw: z.string() })
+  .object({
+    kind: z.enum(['dehyphenated', 'joined-at-break', 'ligature', 'box-mark']),
+    raw: z.string(),
+  })
   .strict();
 
 const docxNumbering: z.ZodType<DocxNumbering> = z

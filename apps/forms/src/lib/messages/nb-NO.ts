@@ -1271,12 +1271,16 @@ export const nbNO: Record<MessageKey, string> = {
   'conversation.colours.failed':
     'Fargene kunne ikke lagres, og ingenting ble endret. Prøv igjen senere.',
   'review.choose.explain':
-    'Velg en PDF eller et Word-dokument, eller lim inn teksten. Loppa leser det her, på denne enheten, og viser deg hva den leste før noe blir til et spørsmål.',
+    'Velg en PDF, et Word-dokument eller et fotografi av et skjema, eller lim inn teksten. Loppa leser det her, på denne enheten, og viser deg hva den leste før noe blir til et spørsmål.',
   'review.choose.update':
     'Velg dokumentet skjemaet ditt ble laget av, eller en ny versjon av det, eller lim inn teksten. Loppa sammenligner det med skjemaet ditt: det som er nytt, legges til, og du velger hva som skjer med resten.',
-  'review.choose.file': 'PDF eller Word-dokument',
+  'review.choose.file': 'PDF, Word-dokument eller fotografi',
   'review.photo':
-    'Et fotografi eller en skannet side? Importer det som sider i editoren, der du tegner inn spørsmålene.',
+    'Et fotografi leses best når det er tatt rett forfra, flatt og i godt lys. Vil du tegne inn spørsmålene på en side selv, importer det som sider i editoren.',
+  'review.ocr':
+    'Leser de trykte ordene på side {page} av {count}. Et fotografi eller en skanning tar lengre tid enn en fil.',
+  'review.ocrTooSlow':
+    'En side tok mer enn ett minutt å lese og ble stoppet. Prøv et skarpere fotografi, eller importer det som sider i editoren og tegn inn spørsmålene.',
   'review.toEditor': 'Åpne editoren',
   'review.summary': 'plural:one Jeg leste {count} spørsmål. | other Jeg leste {count} spørsmål.',
   'review.needEye': 'plural:one {count} må ses på. | other {count} må ses på.',

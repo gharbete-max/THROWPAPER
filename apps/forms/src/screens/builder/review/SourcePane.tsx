@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { IrLine, LayoutDocument } from '@tp/shared/import';
 import { useT } from '../../../lib/i18n.js';
-import type { PaperPdf } from '../paper/extract.js';
+import type { PageDrawer } from '../paper/extract.js';
 import type { ReviewItem } from './review.js';
 
 /**
  * The document, as it was read — `IMPORT-PIPELINE.md` §8, "the document on the left, with every
  * read span highlighted by bucket". A PDF is its own pages, each line a box over the page where it
- * was printed; a Word file or a paste, which have no pages to show, are their lines in reading
- * order. Pressing a line selects the item it was read into, and the selected item's lines are
+ * was printed, and a photograph is its picture with the same boxes over it (S14); a Word file or a
+ * paste, which have no pages to show, are their lines in reading order. Pressing a line selects the item it was read into, and the selected item's lines are
  * marked here: the link is `lineIds`, both ways.
  *
  * The lines are buttons for the pointer only (`tabIndex={-1}`): by keyboard, the items on the
@@ -16,13 +16,14 @@ import type { ReviewItem } from './review.js';
  */
 export function SourcePane({
   layout,
-  pdf,
+  pages,
   items,
   selectedId,
   onSelect,
 }: {
   layout: LayoutDocument;
-  pdf: PaperPdf | null;
+  /** What draws the document's pages: its PDF, or its photograph. */
+  pages: PageDrawer | null;
   items: readonly ReviewItem[];
   selectedId: string | null;
   onSelect: (itemId: string) => void;
@@ -63,7 +64,7 @@ export function SourcePane({
         disabled={!item}
         onClick={() => item && onSelect(item.id)}
       >
-        {pdf ? <span className="visually-hidden">{line.text}</span> : line.text}
+        {pages ? <span className="visually-hidden">{line.text}</span> : line.text}
       </button>
     );
   };
@@ -71,8 +72,8 @@ export function SourcePane({
   return (
     <section className="review-source" aria-label={t('review.source')} ref={pane}>
       {layout.pages.map((page, index) =>
-        pdf ? (
-          <PdfPage key={page.pageNo} pdf={pdf} index={index}>
+        pages ? (
+          <DrawnPage key={page.pageNo} pages={pages} index={index}>
             {page.blocks.flatMap((block) =>
               block.lines.map((line) =>
                 lineButton(line, {
@@ -83,7 +84,7 @@ export function SourcePane({
                 }),
               ),
             )}
-          </PdfPage>
+          </DrawnPage>
         ) : (
           <div key={page.pageNo} className="review-source__text">
             {page.blocks.map((block) => (
@@ -98,13 +99,13 @@ export function SourcePane({
   );
 }
 
-/** One PDF page, drawn at the width it is given, with the lines laid over it. */
-function PdfPage({
-  pdf,
+/** One page, drawn at the width it is given, with the lines laid over it. */
+function DrawnPage({
+  pages,
   index,
   children,
 }: {
-  pdf: PaperPdf;
+  pages: PageDrawer;
   index: number;
   children: React.ReactNode;
 }) {
@@ -128,9 +129,9 @@ function PdfPage({
     // A page still drawing when its document is closed (another one read, or the screen left)
     // fails its render: nothing is waiting for that picture any more.
     const drawing = new AbortController();
-    pdf.render(index, width, canvas.current, drawing.signal).catch(() => {});
+    pages.render(index, width, canvas.current, drawing.signal).catch(() => {});
     return () => drawing.abort();
-  }, [pdf, index, width]);
+  }, [pages, index, width]);
 
   return (
     <div className="review-page" ref={frame}>
