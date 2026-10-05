@@ -1,0 +1,62 @@
+{
+  "document": "rule-ballot",
+  "locale": "en",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Your name: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Do you approve the change to the yearly membership fee that the board proposes in section 12.1 of the rules, to take effect from January? ☐ Yes ☐ No"
+    },
+    {
+      "marker": "3.",
+      "label": "Do you approve the new paragraph 4.2 on the use of the boats? ☐ Yes ☐ No"
+    },
+    {
+      "marker": "4.",
+      "label": "Signature: __________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Ballot on the Rule Changes"
+    },
+    {
+      "kind": "instruction",
+      "text": "At the autumn meeting the board proposed two changes to the rules of the club. Every member may vote, once, by filling in this ballot and handing it to the secretary. Ballots that arrive after the closing date are not counted."
+    },
+    {
+      "kind": "question",
+      "label": "Your name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Do you approve the change to the yearly membership fee that the board proposes in section 12.1 of the rules, to take effect from January?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": ["Yes", "No"]
+    },
+    {
+      "kind": "question",
+      "label": "Do you approve the new paragraph 4.2 on the use of the boats?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": ["Yes", "No"]
+    },
+    {
+      "kind": "question",
+      "label": "Signature",
+      "answer": "blank",
+      "type": "signature"
+    },
+    {
+      "kind": "instruction",
+      "text": "Ballots close on 30 November."
+    }
+  ]
+}

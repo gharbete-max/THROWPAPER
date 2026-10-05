@@ -1,0 +1,12 @@
+{
+  "stage": "classify",
+  "stageVersion": 2,
+  "irVersion": 1,
+  "inputSha256": "db3301899ec3eab8d69e3771ca763bbb55bd7d814835c1a29c9c19783259050d",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"short_text","subject":["p1-l3"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l4","rule":"K1","verdict":"yes_no","subject":["p1-l4"],"evidence":{"confidence":1000,"features":"answerBoolean booleanPair currencyHint","margin":9000,"required":"unknown","runnerUp":"consent"}},
+    {"id":"classify:p1-l5","rule":"K1","verdict":"yes_no","subject":["p1-l5"],"evidence":{"confidence":1000,"features":"answerBoolean booleanPair","margin":9000,"required":"unknown","runnerUp":"consent"}},
+    {"id":"classify:p1-l6","rule":"K1","verdict":"signature","subject":["p1-l6"],"evidence":{"confidence":953,"features":"signatureHint","margin":3000,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

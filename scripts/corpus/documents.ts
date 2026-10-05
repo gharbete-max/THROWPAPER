@@ -455,4 +455,34 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'rule-ballot',
+    language: 'en',
+    summary:
+      'A ballot whose second question wraps so that its next printed line begins "12.1" — the exact numbering trap of the brief (§8.1.1) in its hardest form — and whose third mentions "paragraph 4.2" mid-line.',
+    features: [
+      'word-numbering',
+      'dotted-subnumber-wrapped-line-start',
+      'decimal-not-marker',
+      'checkboxes',
+      'blanks',
+    ],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Ballot on the Rule Changes'),
+        para(
+          'At the autumn meeting the board proposed two changes to the rules of the club. Every member may vote, once, by filling in this ballot and handing it to the secretary. Ballots that arrive after the closing date are not counted.',
+        ),
+        item(1, `Your name: ${blank(30)}`),
+        item(
+          1,
+          'Do you approve the change to the yearly membership fee that the board proposes in section 12.1 of the rules, to take effect from January?   ☐ Yes   ☐ No',
+        ),
+        item(1, 'Do you approve the new paragraph 4.2 on the use of the boats?   ☐ Yes   ☐ No'),
+        item(1, `Signature: ${blank(26)}`),
+        small('Ballots close on 30 November.'),
+      ],
+    },
+  },
 ];

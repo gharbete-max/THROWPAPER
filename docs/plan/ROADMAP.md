@@ -486,3 +486,9 @@ when each slice ends.)*
   on the photograph and on the scanned PDF. Each part of B1 was shown to fail with it taken out.
   Next: the corpus's growth, real scans among it. Open: the owner's acceptance of ADRs 0017–0021,
   which S14 depends on most (ADR 0018 supersedes ADR 0004's "OCR never creates a field").
+- **Corpus growth: the exact §8.1.1 case (2026-10-05).** What: `rule-ballot` (English), a ballot
+  whose second question wraps so that its next printed line begins "12.1", the brief's first
+  numbering trap in its hardest form, and whose third mentions "paragraph 4.2" mid-line. The
+  wording was tuned until LibreOffice wrapped it there, then the expectation was written by hand.
+  The stages read it to that expectation the first time: P3a keeps "12.1 of the rules…" as the
+  label's own continuation, at the label's indent. The corpus holds 15 documents of the brief's 60.

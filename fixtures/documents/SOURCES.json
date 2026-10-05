@@ -269,6 +269,29 @@
       }
     },
     {
+      "name": "rule-ballot",
+      "language": "en",
+      "summary": "A ballot whose second question wraps so that its next printed line begins \"12.1\" — the exact numbering trap of the brief (§8.1.1) in its hardest form — and whose third mentions \"paragraph 4.2\" mid-line.",
+      "features": [
+        "word-numbering",
+        "dotted-subnumber-wrapped-line-start",
+        "decimal-not-marker",
+        "checkboxes",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "rule-ballot.pdf",
+          "sha256": "044b2b6f1f12af946be73519cd163abab1d3dc8969d77bd1e975bc1af722baa6"
+        },
+        "docx": {
+          "path": "rule-ballot.docx",
+          "sha256": "1db13ed105f4517c6f0d817d8d731902a22fab3b7e708a050a9cfb02bc551a41"
+        }
+      }
+    },
+    {
       "name": "tilmelding",
       "language": "da",
       "summary": "A short Danish form: ordinary prose, and a Word list numbered 1), 2), 3), 4).",

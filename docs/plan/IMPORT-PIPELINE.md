@@ -643,13 +643,14 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: fourteen documents, each a PDF and a Word file, and two of them scanned** —
-seven Swedish, one each in English, Danish, Norwegian, Finnish, German, French and Spanish; one and two pages; running headers and page-number
+**What it holds today: fifteen documents, each a PDF and a Word file, and two of them scanned** —
+seven Swedish, two English, one each in Danish, Norwegian, Finnish, German, French and Spanish; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
-wrapped line of prose; French typography's no-break spaces; consents as boxes to tick. The exact
-§8.1.1 case, and scans of real paper, are still owed.
+wrapped line of prose; French typography's no-break spaces; consents as boxes to tick; and the
+exact §8.1.1 case in its hardest form, a numbered question that wraps so that its next printed line
+begins "12.1" (`rule-ballot`, held by P3a). Scans of real paper are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;
