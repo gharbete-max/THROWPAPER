@@ -298,7 +298,7 @@ fixtures/        numbering/  ir/  documents/ (the corpus)  sessions/ (recorded c
 ## Acceptance scenarios
 
 The definition of done; the team demos exactly these, and each is a Playwright journey with a
-keyboard-only twin (S13).
+keyboard-only twin (S13: `POLISH.md` lists where each lives).
 
 **S1 — Click-through only.** From an empty workspace, clicking only (no typing except the form's
 own labels), a user produces a published form with: a heading, a logo, a required name field, a

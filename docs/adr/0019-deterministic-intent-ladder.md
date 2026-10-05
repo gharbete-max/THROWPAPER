@@ -1,6 +1,7 @@
 # ADR 0019 — Reading free text and guessing templates by rules, in integers
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25
+**Status:** proposed — the direction is the owner's brief of 2026-09-25; built in S3, S6 and S11
+(PR #147, "As built" below); awaiting the owner's acceptance
 **Date:** 2026-09-25
 **Narrows:** ADR 0013 (AI assistance) — the builder and the importer do not use it
 
@@ -63,6 +64,26 @@ Node and the desktop's Electron — rarely, which is the worst kind of rarely.
   press is recoverable, a confident misreading is not.
 - Chinese and Japanese are tokenised as character bigrams; the fuzzy tiers mean little there, and
   the menus carry more of the load.
+
+## As built (S13, 2026-10-05)
+
+All five decisions are built as written:
+- **The ladder, T0–T8**, in twelve languages (S3, S6). Every card's label is among its aliases. The
+  phrase tables run every row, and must-not-resolve rows sit beside them.
+- **No floating point in a decision:**
+  - `interpret/ln.ts`, an integer logarithm;
+  - `interpret/exp.ts`, an integer exponential;
+  - `interpret/sigmoid.json`, 321 values from −8 000 to +8 000 millinats in steps of 50.
+- **The guess** (S11, `docs/plan/BELIEF.md`): a belief over 25 recipes (the 23 templates and the two
+  rule 8 keeps structure-only), shown at 800 per mille.
+
+Three things are worth knowing:
+- **The ladder's budget is a count of comparisons, not a clock.** A pathological input spends it and
+  asks, the same way on every machine (`CAVEATS.md` #42). The clocks are only in tests.
+- **The guess questions' yes, no and not sure are written once per language** (`aliases/answers.json`),
+  not once per question.
+- **Graph version 7's "How should people answer?" is in the text group** (S13), so a sentence at
+  "Do you want buttons?" reads exactly what it did before; no phrase-table row moved.
 
 ## Rejected alternatives
 

@@ -1,6 +1,7 @@
 # ADR 0021 — Data files are JSON or typed TypeScript, never YAML
 
-**Status:** proposed — the rule is the owner's brief of 2026-09-25 (§13)
+**Status:** proposed — the rule is the owner's brief of 2026-09-25 (§13); followed throughout S1–S13
+(PR #147, "As built" below); awaiting the owner's acceptance
 **Date:** 2026-09-25
 
 ## Context
@@ -19,7 +20,8 @@ Nothing in application code parses YAML.
 
 1. **Data files are JSON, or typed TypeScript data.** The graph is typed TS (`nodes.ts`,
    `satisfies BuilderGraph`, proven JSON-serialisable by a test). Aliases, recipe scores, weights,
-   lexicons, gazetteers and the generated index are JSON.
+   lexicons and gazetteers are JSON. (There is no generated index: S3 computes the logarithm in
+   integers instead — ADR 0019.)
 2. **No YAML in application code, and never a YAML parser as a dependency** — direct, or imported
    from a transitive package. Prettier's YAML formatting is a development tool and is not imported.
 3. **JSON data follows house rules:**
@@ -44,6 +46,21 @@ Nothing in application code parses YAML.
 - JSON has no comments. Where a data file needs explanation, it goes in a `notes` field or in the
   document that specifies the file.
 - `CLAUDE.md` carries the rule, so a later session does not reintroduce YAML.
+
+## As built (S13, 2026-10-05)
+
+The rule held. The data files are JSON, each with a test that its bytes are exactly what its entries
+format to:
+- the aliases in twelve languages, and the guess questions' shared answers;
+- `belief/recipes.json`;
+- the classifier's `weights.json` and lexicons;
+- the gazetteers;
+- `sigmoid.json`;
+- the phrase tables, the numbering, re-import and session fixtures.
+
+No `package.json` lists a YAML parser. An organisation's learned aliases live in its database, are
+exported and imported as `aliases.json`, and are refused whole, with their first problem, when they
+are wrong.
 
 ## Rejected alternatives
 

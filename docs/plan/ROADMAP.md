@@ -82,7 +82,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
-| **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | in progress — S13a (acceptance S1), S13b (twins, long and mirrored) and S13c (budget, twelve languages) done; S13d (the ADRs) next, PR #147 |
+| **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 
 ## Log
 
@@ -449,3 +449,9 @@ when each slice ends.)*
 
   Tests: the twins, `e2e/budget.spec.ts`, `graph/budget.test.ts`, "twelve languages, each its own".
   Each of the new checks was shown to fail with its fix taken out. Next: S13d.
+- **S13d, the roadmap and the ADRs (2026-10-05).** What: each of ADRs 0017–0021 read against what
+  was built, with an "As built" section; three sentences wrong since M0 corrected (the `Wizard`
+  component never started mailings or invoice runs); this roadmap and `POLISH.md` brought to
+  the end of S13. Why: the S13 row. Open: the owner's acceptance of ADRs 0017–0021, asked on
+  PR #147; the corpus's growth (11 documents of the brief's 60); photographs and scans through the
+  stages.

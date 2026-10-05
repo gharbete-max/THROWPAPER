@@ -106,11 +106,11 @@ The acceptance journeys and their twins as they stand:
 
 | | Pointer | Keyboard alone |
 | --- | --- | --- |
-| S1 | S13a | S13a |
+| S1 | `acceptance-s1.spec.ts` (S13a) | `acceptance-s1.spec.ts` (S13a) |
 | S2 | `guided-builder.spec.ts` (the buttons chain) | `guided-builder.spec.ts` (on a small phone) |
-| S3 | `guided-builder.spec.ts` (not happy with the preview) | **S13b** |
+| S3 | `guided-builder.spec.ts` (not happy with the preview) | `guided-builder.spec.ts` (S13b) |
 | S4 | `review.spec.ts` | `review.spec.ts` |
-| S5 | `review.spec.ts` | **S13b** |
+| S5 | `review.spec.ts` | `review.spec.ts` (S13b) |
 | S6 | `review.spec.ts` | `review.spec.ts` |
 
 A twin moves focus only with Tab (a helper presses it until the control it wants has focus, and
@@ -183,3 +183,15 @@ Each check was shown to fail when broken:
 
 The catalogue check found three strings left in English: Danish "Brand" (fire) and "Download PDF",
 and Spanish "Minimal" (#132).
+
+**S13d.** `ROADMAP.md`, `PREDICTIVE-BUILDER.md` and `BUILDER-GRAPH.md` are brought up to date, and
+each of ADRs 0017–0021 has an "As built" section. That section says where the build went further
+or differently:
+- the fourth schema addition;
+- the corpus's eleven documents of sixty;
+- photographs not yet through the stages;
+- the session bound that replaced a transition budget.
+
+Three sentences that had been wrong since M0 are corrected in place: the `Wizard` component never
+started mailings or invoice runs (ADRs 0006, 0017 and 0020). The ADRs stay *proposed*, and PR #147
+asks the owner to accept them.

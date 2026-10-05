@@ -1,7 +1,8 @@
 # ADR 0017 — The guided builder: a conversation that patches a real draft
 
 **Status:** proposed — the direction is the owner's brief of 2026-09-25; §14 of that brief (the
-questions in `docs/plan/PREDICTIVE-BUILDER.md`) is open
+questions in `docs/plan/PREDICTIVE-BUILDER.md`) was decided on 2026-09-29; built in S1–S13 (PR
+#147, "As built" below); awaiting the owner's acceptance
 **Date:** 2026-09-25
 **Amends:** ADR 0006 (the form wizard's questions are replaced; `tree.ts` stays for other surfaces)
 **Depends on:** ADR 0019 (deterministic reading of free text), ADR 0020 (the graph as data),
@@ -61,10 +62,32 @@ fields once and then hand over to the editor.
 - `apps/api-forms` gains one table and two routes. They are Forms' own and are documented by
   their Zod schemas, not in `docs/CONTRACT.md`, which is the inter-product contract.
 - The form wizard's questions (`forms/wizard.ts`) stop being the "new form" start once S4 ships;
-  `wizardAnswers` on `POST /v1/forms` keeps working (`CAVEATS.md` #56). The generic `Wizard`
-  component and `tree.ts` stay for mailings and invoice runs.
+  `wizardAnswers` on `POST /v1/forms` keeps working (`CAVEATS.md` #56). `tree.ts` stays for it.
+  (Corrected in S13: this said the generic `Wizard` component stayed "for mailings and invoice
+  runs". Its only use was New form, and it went with S4.)
 - Two undo systems exist side by side: the editor's snapshot history (unchanged) and the
   conversation's patch log. Both are needed: snapshots cannot be replayed or explained.
+
+## As built (S13, 2026-10-05)
+
+All ten decisions are built as written (`docs/plan/ROADMAP.md`, S1–S13). The build went further,
+or differently, in five places:
+
+- **Four schema additions, not three.** S13 added the yes/no `checkbox` appearance: one box to
+  tick, the consent presentation the brief names. It is the one appearance that says something
+  about the answer. A box that is not ticked has still been answered, so a required box must be
+  ticked (`validation.tick`, `CAVEATS.md` #128). Old definitions parse unchanged, and
+  `schemaVersion` is still 1.
+- **The colours are the organisation's** (owner question 8). "Which colours should your form use?"
+  is asked only of an administrator, and changes the brand kit only once confirmed.
+- **The two doors converge** (S12, `CONVERGENCE.md`):
+  - A form read from a document goes on in the same conversation, which asks only what the document
+    left open (`decided()` slots, acceptance S6).
+  - Importing the same form again is one step of the same log (`reimport`), undone by Back.
+- **Graph version 7** (S13, `POLISH.md`) names the form and asks how people answer, so acceptance S1
+  is met by clicking alone. The autosave writes the form's name as well as its questions (#129).
+- **The guess** is as decided: 25 recipes, shown at 800 per mille, Right / Sort of / No, after at
+  most five questions, each chosen for what it tells.
 
 ## Rejected alternatives
 

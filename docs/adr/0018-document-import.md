@@ -1,6 +1,7 @@
 # ADR 0018 — Document import: rules may propose questions, a person confirms every one
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25
+**Status:** proposed — the direction is the owner's brief of 2026-09-25; built in S1b and S7–S13
+(PR #147, "As built" below); awaiting the owner's acceptance
 **Date:** 2026-09-25
 **Supersedes in part:** ADR 0004 — its rule that OCR and layout "never create a field"
 **Depends on:** ADR 0019 (deterministic rules), ADR 0021 (JSON data), `docs/plan/LAYOUT-IR.md`
@@ -61,6 +62,26 @@ the document and the draft side by side before anything enters the form.
 - A document's text leaves nothing behind on the server except, when a paper twin is kept, the
   file itself in the organisation's own store — deletable, and on the purge list that
   `LAUNCH-CHECKLIST.md` already tracks.
+
+## As built (S13, 2026-10-05)
+
+Decisions 1–7 are built, with one part still to come:
+
+- **Stages 2–7 run in the paper door's worker** (S7–S9): reassemble, enumerate, segment, classify,
+  map and score, each with its debug artifact. The review is stage 8 (S10), never skipped. The paper
+  twin is born in the import (S12b). Re-import is stage 9 (S12c).
+- **Stage 1 reads three things today:** a PDF's text layer, and its own form fields over its text
+  (#54); a Word file, by the platform alone, with Word's own numbering; and pasted text.
+- **Photographs and scans do not reach the stages yet.** Stage 7 already caps a word read by OCR,
+  but the review screen accepts PDF and Word only. Placing boxes over a photograph, ADR 0004's
+  path, is unchanged.
+- **A form keeps at most twenty documents** (`Paper.sources`, #125). A document read into a form
+  with no room adds its questions without their places on the paper, and says so first.
+- **There is no grid field type.** An imported grid is one choice per row under a heading, as the
+  brief allows until a grid has its own ADR.
+- **A consent read from a document** is drawn as a box to tick (S13), its words byte for byte (#28).
+- **The corpus holds 11 documents**, each as a PDF and a Word file, with their sources recorded.
+  That is short of the brief's 60; real forms with a licence to record are the owner's to supply.
 
 ## Rejected alternatives
 

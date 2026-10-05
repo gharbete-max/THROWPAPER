@@ -1,6 +1,7 @@
 # ADR 0020 — The conversation is a validated graph of data
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25
+**Status:** proposed — the direction is the owner's brief of 2026-09-25; built in S1, S2 and every
+slice since, now graph version 7 (PR #147, "As built" below); awaiting the owner's acceptance
 **Date:** 2026-09-25
 **Amends:** ADR 0006 — keeps its facets for choosing what a form is; adds ordered chains for
 configuring one question; restates its four-press promise as a bound on chains
@@ -47,12 +48,30 @@ build-time validator — and allows guarded cycles (the "add another question?" 
 
 ## Consequences
 
-- ADR 0006 gains a note pointing here. `wizard/tree.ts` and its tests are unchanged: the generic
-  `Wizard` still starts mailings and invoice runs.
+- ADR 0006 gains a note pointing here. `wizard/tree.ts` and its tests are unchanged: `POST
+  /v1/forms` still resolves `wizardAnswers` with them. (Corrected in S13: this said the generic
+  `Wizard` still started mailings and invoice runs. Nothing but New form used it, and it went with
+  S4.)
 - Adding a question to the conversation is adding data and twelve translations, and the validator
   says what is missing.
 - Components get simpler and dumber by design; the machine (S2) owns every transition.
 - Graph versions change over time; logs store resolved patches, so old sessions replay unchanged.
+
+## As built (S13, 2026-10-05)
+
+Decisions 1–5 are built. The graph is at version 7: 44 nodes, every string in twelve catalogues.
+`pnpm builder:validate` checks rules G0–G14, the aliases among them. G14, added in S6, says a node
+that settles a slot must be passed by when the slot is decided. The versions, in order: S5's shapes
+and logo slot, S6's slots, owner question 8's colours, S11's guess, S12's walk, and S13's form name
+and "How should people answer?". Each is described at the top of `nodes.ts`. A session recorded
+against an earlier version replays, and the version-6 recording is kept and replayed to prove it.
+
+Decision 6 was built differently. There is no budget of 500 transitions per session. Instead:
+- a step's walk past the nodes it skips is bounded by the size of the graph, and refuses to go
+  round;
+- a saved session holds at most 2 000 steps (`MAX_LOG_ENTRIES`).
+
+The protection is the same: a validator bug becomes an error, not a hang.
 
 ## Rejected alternatives
 
