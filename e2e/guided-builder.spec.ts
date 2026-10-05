@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { db, signInAs } from './support.js';
 
 /**
@@ -36,6 +36,39 @@ async function startFromQuestions(page: Page): Promise<string> {
 
 const question = (page: Page, text: string) =>
   expect(page.getByRole('heading', { level: 1, name: text })).toBeVisible();
+
+/**
+ * Moves focus with Tab alone — Shift+Tab when the target is above, as a person would — until
+ * `target` has it, and fails rather than loop.
+ */
+async function tabTo(page: Page, target: Locator, max = 120) {
+  await expect(target).toBeVisible();
+  for (let presses = 0; presses < max; presses += 1) {
+    const where = await target.evaluate((el) => {
+      const at = document.activeElement;
+      if (el === at) return 'here';
+      if (!at || at === document.body) return 'after';
+      return at.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING ? 'after' : 'before';
+    });
+    if (where === 'here') return;
+    await page.keyboard.press(where === 'after' ? 'Tab' : 'Shift+Tab');
+  }
+  throw new Error(`Tab never reached ${target.toString()}`);
+}
+
+/** "New form", then "Start from questions", each reached by Tab and pressed with Enter. */
+async function startFromQuestionsByKeys(page: Page): Promise<string> {
+  await page.goto('/forms');
+  await tabTo(page, page.getByRole('button', { name: 'New form' }).first());
+  await page.keyboard.press('Enter');
+  await tabTo(page, page.getByRole('button', { name: /Start from questions/ }));
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(GUIDED);
+  const formId = GUIDED.exec(page.url())![1]!;
+  created.push(formId);
+  await question(page, 'What is this form for?');
+  return formId;
+}
 
 /**
  * Past the guess (S11): after "Signing people up" the engine asks what tells it most — first
@@ -284,6 +317,83 @@ test('not happy with the preview: edited in place, reverted, reconciled, and nev
   );
 });
 
+test('acceptance S3 by keyboard alone: edited in place, reverted, and asked before anything is written over', async ({
+  page,
+}) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromQuestionsByKeys(page);
+  await page.keyboard.press('1');
+  await pastTheGuessByKeys(page);
+  await question(page, 'Should this look like your organisation?');
+  await page.keyboard.press('2');
+  await question(page, 'What do you want to ask?');
+  await page.keyboard.type('Which day suits you?');
+  await page.keyboard.press('Enter');
+  for (const ask of [
+    'Must everyone answer this?',
+    'Do you want buttons?',
+    'One answer or several?',
+  ]) {
+    await question(page, ask);
+    await page.keyboard.press('1');
+  }
+  await question(page, 'How many options?');
+  await page.keyboard.press('Tab');
+  await page.keyboard.type('3');
+  await page.keyboard.press('Enter');
+  await question(page, 'What shape?');
+  await page.keyboard.press('1');
+  await question(page, 'Where should they sit?');
+
+  // E opens inline editing, and every gesture in it has a key: the shape, the size and the colour
+  // are buttons; an answer's words are its box; a drag is Move up and Move down (#44).
+  const control = page.locator('.preview-moment__frame fieldset.choice');
+  await expect(control).toHaveClass(/choice--shape-pill/);
+  await page.keyboard.press('e');
+  const panel = page.getByRole('group', { name: 'Change it here' });
+  await expect(panel).toBeVisible();
+  const press = async (target: Locator) => {
+    await tabTo(page, target);
+    await page.keyboard.press('Enter');
+  };
+  await press(panel.getByRole('button', { name: 'Joined in one bar' }));
+  await expect(control).toHaveClass(/choice--shape-segmented/);
+  await press(panel.getByRole('button', { name: 'Larger' }));
+  await expect(control).toHaveClass(/choice--size-large/);
+  await press(panel.getByRole('button', { name: 'Accent' }));
+  await expect(control).toHaveClass(/choice--accent-accent/);
+
+  await tabTo(page, panel.getByLabel('Answer 1'));
+  await page.keyboard.press('ControlOrMeta+A');
+  await page.keyboard.type('Saturday');
+  await page.keyboard.press('Enter');
+  await expect(control).toContainText('Saturday');
+  await press(panel.getByRole('button', { name: 'Move down' }).first());
+  await expect(control.locator('.choice__option').nth(1)).toContainText('Saturday');
+  await press(panel.getByRole('button', { name: 'Move down' }).nth(1));
+  await expect(control.locator('.choice__option').nth(2)).toContainText('Saturday');
+
+  // Changed by hand, with its way back — and the way back undone by Back.
+  await expect(page.getByText('changed by hand', { exact: true })).toBeVisible();
+  await press(page.getByRole('button', { name: 'Revert to guided' }));
+  await expect(control).toHaveClass(/choice--shape-pill/);
+  await expect(page.getByText('changed by hand', { exact: true })).toHaveCount(0);
+  await press(page.getByRole('button', { name: 'Back' }));
+  await expect(control).toHaveClass(/choice--shape-segmented/);
+  await expect(page.getByText('changed by hand', { exact: true })).toBeVisible();
+
+  // The next answer would change the question: asked, never written over.
+  await question(page, 'Where should they sit?');
+  await press(page.getByRole('button', { name: /Under the question, full width/ }));
+  await question(page, 'You changed this by hand. Keep your version, or use the guided one?');
+  await press(page.getByRole('button', { name: 'Keep mine' }));
+  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
+  await expect
+    .poll(async () => (await draftOf(formId)).fields[1])
+    .toMatchObject({ style: { shape: 'segmented', size: 'large', accent: 'accent' } });
+  expect((await draftOf(formId)).fields[1]!.options).toHaveLength(3);
+});
+
 test.describe('on a small phone, by keyboard alone', () => {
   test.use({ viewport: { width: 360, height: 640 } });
 
@@ -301,7 +411,7 @@ test.describe('on a small phone, by keyboard alone', () => {
         wide: document.documentElement.scrollWidth > window.innerWidth,
       };
     });
-    const heading = await page.getByRole('heading', { level: 1 }).textContent();
+    const heading = await page.locator('#conversation-question').textContent();
     expect(wide, `"${heading}" is wider than the screen`).toBe(false);
     expect(bottom, `the answers to "${heading}" end below the first screen`).toBeLessThanOrEqual(
       floor,
@@ -375,6 +485,216 @@ test.describe('on a small phone, by keyboard alone', () => {
     await answersFit(page);
     await page.keyboard.press('1');
     await expect(page.getByRole('button', { name: 'Continue' })).toBeFocused();
+  });
+
+  /**
+   * `CAVEATS.md` #36 (`rtl-and-long-strings`), `docs/plan/POLISH.md` S13b: the whole flow, once in
+   * German — the longest of the twelve catalogues — and once mirrored, right to left. At every
+   * question: nothing wider than the phone, every answer on the first screen, and no words cut —
+   * no element that clips what overflows it holding more than it shows, nothing off either edge.
+   */
+  test.describe('long and mirrored (#36)', () => {
+    /** Words that do not fit where they are: clipped by their box, or off the screen. */
+    async function nothingCut(page: Page) {
+      const cut = await page.evaluate(() => {
+        const found: string[] = [];
+        for (const el of Array.from(document.querySelectorAll<HTMLElement>('main *'))) {
+          const own = Array.from(el.childNodes)
+            .filter((node) => node.nodeType === Node.TEXT_NODE)
+            .map((node) => node.textContent?.trim() ?? '')
+            .join(' ')
+            .trim();
+          if (own === '') continue;
+          const style = getComputedStyle(el);
+          const box = el.getBoundingClientRect();
+          // Hidden, or the one-pixel box words for a screen reader live in.
+          if (style.visibility === 'hidden' || box.width <= 2 || box.height <= 2) continue;
+          const clipsAcross =
+            /hidden|clip/.test(style.overflowX) || style.textOverflow === 'ellipsis';
+          const clipsBelow = /hidden|clip/.test(style.overflowY);
+          if (clipsAcross && el.scrollWidth > el.clientWidth + 1) found.push(`cut across: ${own}`);
+          if (clipsBelow && el.scrollHeight > el.clientHeight + 1) found.push(`cut below: ${own}`);
+          // Inside a strip that scrolls sideways — the trail — words out of view are scrolled to,
+          // not cut: the strip itself must be on the screen.
+          let scroller: HTMLElement | null = el.parentElement;
+          while (scroller && !/auto|scroll/.test(getComputedStyle(scroller).overflowX)) {
+            scroller = scroller.parentElement;
+          }
+          const edges = (scroller ?? el).getBoundingClientRect();
+          if (edges.right > innerWidth + 1 || edges.left < -1) found.push(`off the screen: ${own}`);
+        }
+        return found;
+      });
+      const heading = await page.locator('#conversation-question').textContent();
+      expect(cut, `at "${heading}"`).toEqual([]);
+    }
+
+    /**
+     * Right to left: each card reads from its right — its key first, then its words, which start
+     * at the right of the space they have.
+     */
+    async function mirrored(page: Page) {
+      const wrong = await page.evaluate(() =>
+        Array.from(document.querySelectorAll<HTMLElement>('[data-answer]')).flatMap((card) => {
+          const words = card.querySelector('strong');
+          const space = card.querySelector('.conversation__card-text') ?? words?.parentElement;
+          if (!words || !space) return [];
+          const range = document.createRange();
+          range.selectNodeContents(words);
+          const text = range.getBoundingClientRect();
+          const room = space.getBoundingClientRect();
+          const key = card.querySelector('.conversation__key')?.getBoundingClientRect();
+          const fromRight = room.right - text.right <= text.left - room.left + 1;
+          const keyFirst = !key || key.left >= text.right - 1;
+          return getComputedStyle(card).direction === 'rtl' && fromRight && keyFirst
+            ? []
+            : [words.textContent];
+        }),
+      );
+      expect(wrong).toEqual([]);
+    }
+
+    /**
+     * The chain, by keys, checked at every question: the purpose, the guess, the name, the brand
+     * and the logo, a question with buttons — its inline editing open — and one for comments.
+     */
+    async function wholeFlow(
+      page: Page,
+      words: { name: string; ask: string; more: string },
+      check?: (page: Page) => Promise<void>,
+    ) {
+      // The question's own heading: a preview of the form has the form's.
+      const heading = page.locator('#conversation-question');
+      const at = async (checked = true) => {
+        // At rest: the next question slides in, and is measured once it has arrived.
+        await page.waitForFunction(() =>
+          document
+            .getAnimations()
+            .every(
+              (animation) =>
+                animation.playState !== 'running' ||
+                animation.effect?.getTiming().iterations === Infinity,
+            ),
+        );
+        await answersFit(page);
+        await nothingCut(page);
+        if (check && checked) await check(page);
+      };
+      const step = async (key: string, checked = true) => {
+        await at(checked);
+        const before = await heading.textContent();
+        await page.keyboard.press(key);
+        await expect(heading).not.toHaveText(before ?? '');
+      };
+      const type = async (text: string) => {
+        await at(false);
+        const before = await heading.textContent();
+        await page.keyboard.type(text);
+        await page.keyboard.press('Enter');
+        await expect(heading).not.toHaveText(before ?? '');
+      };
+      await step('1'); // what it is for
+      await step('3'); // the guess, not sure
+      await step('3');
+      await type(words.name);
+      await step('1'); // the organisation's look
+      await step('1'); // the logo's place
+      await step('Enter', false); // the masthead previewed: Continue
+      await type(words.ask);
+      await step('1'); // needed
+      await step('1'); // buttons
+      await step('1'); // one answer
+      await at(false); // how many: a number, no cards
+      await page.keyboard.press('Tab');
+      await page.keyboard.type('4');
+      await page.keyboard.press('Enter');
+      await step('1'); // the shape
+      // The inline editing panel, the densest thing in the flow, open at "Where should they sit?":
+      // nothing in it cut, though it pushes the answers down. Then the placement, by Tab and Enter,
+      // as focus may be in the panel's box for the question's words.
+      await page.keyboard.press('e');
+      await expect(page.locator('.inline-edit')).toBeVisible();
+      await nothingCut(page);
+      if (check) await check(page);
+      const placing = await heading.textContent();
+      await tabTo(page, page.locator('[data-answer="0"]'));
+      await page.keyboard.press('Enter');
+      await expect(heading).not.toHaveText(placing ?? '');
+      await step('Enter', false); // the preview: Continue
+      await step('1'); // another question
+      await type(words.more);
+      await step('2'); // optional
+      await step('2'); // no buttons
+      await step('2'); // a few sentences
+      await step('2'); // that's everything
+      await at();
+    }
+
+    test('in German, the longest of the twelve', async ({ page }) => {
+      await signInAs(page, sql, 'admin@example.com', 'de-DE');
+      await page.goto('/forms');
+      await page.getByRole('button', { name: 'Neues Formular' }).first().click();
+      await page.getByRole('button', { name: /Mit Fragen beginnen/ }).click();
+      await expect(page).toHaveURL(GUIDED);
+      created.push(GUIDED.exec(page.url())![1]!);
+      await wholeFlow(page, {
+        name: 'Sommerfest des Fördervereins',
+        ask: 'Welcher Tag passt Ihnen am besten?',
+        more: 'Anmerkungen und Wünsche',
+      });
+    });
+
+    /**
+     * The next question arrives from where the page reads on: frozen at its first frame, it sits
+     * to the right of its place on an English page, and to the left on a mirrored one.
+     */
+    test('the next question arrives from where the page reads on', async ({ browser }) => {
+      const arrivesFrom = async (mirror: boolean) => {
+        const page = await browser.newPage({ viewport: { width: 360, height: 640 } });
+        if (mirror) {
+          await page.addInitScript(() => {
+            document.addEventListener('DOMContentLoaded', () =>
+              document.documentElement.setAttribute('dir', 'rtl'),
+            );
+          });
+        }
+        await signInAs(page, sql, 'admin@example.com', 'en-GB');
+        await startFromQuestions(page);
+        const x = await page.evaluate(async () => {
+          document.querySelector<HTMLElement>('[data-answer="0"]')!.click();
+          await new Promise((done) => requestAnimationFrame(done));
+          const node = document.querySelector('.conversation__node--on');
+          const arriving = node?.getAnimations()[0];
+          if (!node || !arriving) return null;
+          arriving.pause();
+          arriving.currentTime = 0;
+          const offset = new DOMMatrix(getComputedStyle(node).transform).m41;
+          arriving.finish();
+          return offset;
+        });
+        await page.close();
+        return x;
+      };
+      expect(await arrivesFrom(false)).toBeGreaterThan(0);
+      expect(await arrivesFrom(true)).toBeLessThan(0);
+    });
+
+    test('mirrored, right to left', async ({ page }) => {
+      // Once the page's own markup is parsed, so its `<html>` is the one mirrored.
+      await page.addInitScript(() => {
+        document.addEventListener('DOMContentLoaded', () =>
+          document.documentElement.setAttribute('dir', 'rtl'),
+        );
+      });
+      await signInAs(page, sql, 'admin@example.com', 'en-GB');
+      await startFromQuestions(page);
+      expect(await page.evaluate(() => getComputedStyle(document.body).direction)).toBe('rtl');
+      await wholeFlow(
+        page,
+        { name: 'Summer party', ask: 'Which day suits you?', more: 'Comments' },
+        mirrored,
+      );
+    });
   });
 
   /**

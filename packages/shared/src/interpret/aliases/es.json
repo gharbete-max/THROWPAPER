@@ -422,7 +422,7 @@
       "notes": ""
     },
     {
-      "phrase": "Minimal",
+      "phrase": "Minimalista",
       "nodeId": "brand.quick",
       "optionId": "minimal",
       "locale": "es",
@@ -448,6 +448,16 @@
       "locale": "es",
       "source": "built-in",
       "createdAt": "2026-09-26",
+      "count": 0,
+      "notes": ""
+    },
+    {
+      "phrase": "minimal",
+      "nodeId": "brand.quick",
+      "optionId": "minimal",
+      "locale": "es",
+      "source": "built-in",
+      "createdAt": "2026-10-05",
       "count": 0,
       "notes": ""
     },

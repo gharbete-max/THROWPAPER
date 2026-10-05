@@ -2233,6 +2233,21 @@ input[type='range'] {
   align-items: center;
   gap: calc(var(--tp-spacing-unit) * 1.5);
   color: var(--tp-colour-primary);
+  /*
+   * No spinner under 150 ms (CAVEATS #42): unseen until the wait has lasted that long, then there
+   * at once. A delay rather than a timer, so a wait that ends sooner never paints it. Opacity, not
+   * visibility: its words are announced from the start (`role="status"`).
+   */
+  animation: loading-appear 1ms linear var(--tp-wait-unshown) both;
+}
+
+@keyframes loading-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Still, not absent: the same picture with the ball resting in the palm. */
@@ -6012,7 +6027,19 @@ body:has(> #root .shell--narrow) {
   gap: calc(var(--tp-spacing-unit) * 2);
 }
 
-/* Moving on: the new node slides in from where it came; going back is the same, reversed. */
+/*
+ * Moving on: the new node slides in from where it came; going back is the same, reversed. "Where
+ * it came from" is the way the page reads: from the right in a left-to-right language, from the
+ * left in a mirrored one (`CAVEATS.md` #36).
+ */
+.conversation {
+  --conversation-onward: 1;
+}
+
+[dir='rtl'] .conversation {
+  --conversation-onward: -1;
+}
+
 .conversation__node--on {
   animation: conversation-on var(--tp-motion-preview) var(--tp-ease-unfurl);
 }
@@ -6024,14 +6051,14 @@ body:has(> #root .shell--narrow) {
 @keyframes conversation-on {
   from {
     opacity: 0;
-    transform: translateX(24px);
+    transform: translateX(calc(24px * var(--conversation-onward)));
   }
 }
 
 @keyframes conversation-back {
   from {
     opacity: 0;
-    transform: translateX(-24px);
+    transform: translateX(calc(-24px * var(--conversation-onward)));
   }
 }
 
@@ -6048,14 +6075,21 @@ body:has(> #root .shell--narrow) {
   gap: var(--tp-spacing-unit);
 }
 
-/* Huge, one sentence, and never truncated in any language (`CAVEATS.md` #36). */
+/*
+ * Huge, one sentence, and never truncated in any language (`CAVEATS.md` #36). `break-word` was not
+ * enough: a flex item is never narrower than its longest word, so German's "Wie viele
+ * Auswahlmöglichkeiten?" pushed its own question mark, and the help beside it, off a phone. Allowed
+ * to shrink, hyphenated where the browser knows the language, and broken anywhere as a last resort.
+ */
 .conversation__question {
   flex: 1;
+  min-width: 0;
   margin: 0;
   font-size: var(--tp-text-2xl);
   line-height: 1.15;
   letter-spacing: -0.015em;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 .conversation__help-toggle {

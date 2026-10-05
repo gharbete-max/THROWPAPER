@@ -153,3 +153,33 @@ Swedish says "Utseende".
 acceptance table's twins), `BUILDER-GRAPH.md` (version 7), and each of ADRs 0017–0021 read against
 what was built, with a "Since this was written" note where the build went further or differently.
 They stay *proposed*: accepting them is the owner's, and the PR asks.
+
+## As built
+
+**S13a** (`8f64b08`) as planned, and it found three things: a required box left unticked passed
+(`CAVEATS.md` #128); the form's name would not have been saved (#129); and every uploaded image was
+broken in development and in e2e, since the preview server never proxied `/public/assets/`.
+
+**S13b.** The twins for S3 and S5 are built. S3's opens inline editing with E and does every
+gesture by key: the shape, size and colour buttons, an answer renamed in its box, Move down twice
+for the drag, "Revert to guided", Back, and "Keep mine" at the reconciliation. S5's starts from
+"New form" by Tab and Enter, types the paste and moves through the review with the arrows; S4's
+twin now starts the same way. The long and mirrored runs (#36) found two real faults. German's "Wie
+viele Auswahlmöglichkeiten?" pushed its own question mark off a phone (#130). On a mirrored page,
+the next question slid in from the side the reader had passed (#131). A third test freezes the
+arrival at its first frame and checks its side in both directions. Every check that would catch
+these was shown to fail with its fix taken out.
+
+**S13c.** The budget, as measured here with the e2e servers running:
+- An answer's next question is on the page in a median of 8 ms over the buttons chain.
+- The slowest press is the first, about 33 ms: the guess chooses its first question while the
+  page's code is still cold.
+- The graph loads in 12–30 ms.
+- The waiting picture's delay is a token, `--tp-wait-unshown` (`packages/tokens`).
+
+Each check was shown to fail when broken:
+- the render budget, set to half a millisecond;
+- the waiting picture, without its delay (it was then seen 18 ms after it was put up).
+
+The catalogue check found three strings left in English: Danish "Brand" (fire) and "Download PDF",
+and Spanish "Minimal" (#132).

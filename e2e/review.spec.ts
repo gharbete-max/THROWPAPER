@@ -6,8 +6,8 @@ import { db, signInAs } from './support.js';
  * The review screen — `docs/plan/IMPORT-PIPELINE.md` §8, slice S10 — pressed. "Start from paper" on
  * a new form, a document read on this device, "I read 14 questions. 3 need your eye.", the chips,
  * merge and Undo, and "Use these questions" adding exactly what was reviewed to the form, as one
- * step in its conversation. Acceptance S4 and S5 (`PREDICTIVE-BUILDER.md`) by pointer, and S4 again
- * by keyboard alone.
+ * step in its conversation. Acceptance S4 and S5 (`PREDICTIVE-BUILDER.md`) by pointer, and each
+ * again by keyboard alone, from "New form" on.
  */
 const sql = db();
 const created: string[] = [];
@@ -93,17 +93,37 @@ test('acceptance S4: two numbered questions pasted, a guessed type changed, then
   ]);
 });
 
-test('acceptance S4 by keyboard alone', async ({ page }) => {
-  await signInAs(page, sql, 'admin@example.com', 'en-GB');
-  const formId = await startFromPaper(page);
+/** "New form", then "Start from paper", each reached by Tab and pressed with Enter. */
+async function startFromPaperByKeys(page: Page): Promise<string> {
+  await page.goto('/forms');
+  await tabTo(page, page.getByRole('button', { name: 'New form' }).first());
+  await page.keyboard.press('Enter');
+  await tabTo(page, page.getByRole('button', { name: /Start from paper/ }));
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(REVIEW);
+  const formId = REVIEW.exec(page.url())![1]!;
+  created.push(formId);
+  await expect(page.getByRole('heading', { level: 1, name: 'Start from paper' })).toBeVisible();
+  return formId;
+}
+
+/** "Paste text instead", the lines typed with Enter between them, and "Read the text". */
+async function pasteByKeys(page: Page, lines: readonly string[]) {
   await tabTo(page, page.getByRole('button', { name: 'Paste text instead' }));
   await page.keyboard.press('Enter');
   await tabTo(page, page.getByLabel('Text from your document'));
-  await page.keyboard.type('1. Question one');
-  await page.keyboard.press('Enter');
-  await page.keyboard.type('2. Question two');
+  for (const [i, line] of lines.entries()) {
+    if (i > 0) await page.keyboard.press('Enter');
+    await page.keyboard.type(line);
+  }
   await tabTo(page, page.getByRole('button', { name: 'Read the text' }));
   await page.keyboard.press('Enter');
+}
+
+test('acceptance S4 by keyboard alone', async ({ page }) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromPaperByKeys(page);
+  await pasteByKeys(page, ['1. Question one', '2. Question two']);
 
   await expect(summary(page)).toHaveText('I read 2 questions. Nothing needs your eye.');
   // The first item is selected and focused; ↓ moves, 2 picks its second chip, ↑ and Enter accept.
@@ -132,6 +152,25 @@ test('acceptance S5: "12.1" inside a question neither starts one nor splits one'
   await paste(page, '1. A thing 12.1 mentions blabla\n2. Something else');
   await expect(summary(page)).toHaveText(/^I read 2 questions\./);
   await page.getByRole('button', { name: 'Add 2 questions' }).click();
+  await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
+  expect(labels(await draftOf(formId))).toEqual(['A thing 12.1 mentions blabla', 'Something else']);
+});
+
+test('acceptance S5 by keyboard alone', async ({ page }) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  const formId = await startFromPaperByKeys(page);
+  await pasteByKeys(page, ['1. A thing 12.1 mentions blabla', '2. Something else']);
+
+  await expect(summary(page)).toHaveText(/^I read 2 questions\./);
+  // Two items and nothing between them: ↓ goes from the first, "12.1" inside it, to the second.
+  await expect(page.locator('.review-item')).toHaveCount(2);
+  const first = item(page, 'A thing 12.1 mentions blabla');
+  await expect(first).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(item(page, 'Something else')).toBeFocused();
+
+  await tabTo(page, page.getByRole('button', { name: 'Add 2 questions' }));
+  await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}/guided$`));
   expect(labels(await draftOf(formId))).toEqual(['A thing 12.1 mentions blabla', 'Something else']);
 });

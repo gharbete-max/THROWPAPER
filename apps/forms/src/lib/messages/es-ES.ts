@@ -392,7 +392,7 @@ export const esES: Record<MessageKey, string> = {
 
   'theme.default': 'Predeterminado',
   'theme.midnight': 'Medianoche',
-  'theme.minimal': 'Minimal',
+  'theme.minimal': 'Minimalista',
   'theme.garden': 'Jardín',
   'theme.bold': 'Intenso',
 
@@ -1138,7 +1138,7 @@ export const esES: Record<MessageKey, string> = {
   'guided.brand.start.later': 'Decidir más tarde',
   'guided.brand.quick.ask': '¿Qué colores debe usar tu formulario?',
   'guided.brand.quick.help': 'Puedes cambiarlos cuando quieras.',
-  'guided.brand.quick.minimal': 'Minimal',
+  'guided.brand.quick.minimal': 'Minimalista',
   'guided.brand.quick.garden': 'Jardín',
   'guided.brand.quick.bold': 'Intenso',
   'guided.brand.quick.midnight': 'Medianoche',

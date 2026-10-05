@@ -336,7 +336,7 @@ export const daDK: Record<MessageKey, string> = {
   'submissions.column.status': 'Status',
 
   'nav.checkin': 'Check-in',
-  'nav.brand': 'Brand',
+  'nav.brand': 'Udseende',
 
   'problem.duplicate-key': 'Feltnøglen "{key}" bruges mere end én gang.',
   'problem.no-answerable-fields': 'Formularen indsamler endnu ingen svar.',
@@ -513,7 +513,7 @@ export const daDK: Record<MessageKey, string> = {
   'templates.blankHint': 'Start fra ingenting.',
   'templates.fields': 'felter',
 
-  'brand.title': 'Brand',
+  'brand.title': 'Udseende',
   'brand.intro':
     'Farver og form til alt, organisationen sender ud. Formularer, PDF-filer og e-mail læser det samme sæt.',
   'brand.readOnly': 'Kun administratorer kan ændre brandet.',
@@ -697,7 +697,7 @@ export const daDK: Record<MessageKey, string> = {
   'public.document.preparing': 'Dokumentet klargøres…',
   'public.document.ready': 'Dit dokument er klar',
   'public.document.unavailable': 'Dit dokument er ikke tilgængeligt lige nu',
-  'public.document.download': 'Download PDF',
+  'public.document.download': 'Hent PDF',
   'public.document.open': 'Åbn',
   'public.document.email': 'Send det på mail',
   'public.document.failed': 'PDF’en kunne ikke laves lige nu. Dine svar er gemt.',

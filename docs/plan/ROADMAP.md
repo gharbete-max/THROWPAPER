@@ -82,7 +82,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S10** Review screen | `review/`, highlight linking, chips, merge/split/just text, "Use these questions" | e2e for S4 and S5 | `apps/forms`, `packages/shared` (the import step, classify's top three, `sideEffects`) | **done** — in review, PR #147 |
 | **S11** Belief engine | `belief/recipes.json`, integer log-odds, entropy-driven next node, three-state guess, seeding (structure only for rule-8 templates) | belief determinism; "why" lists the three strongest answers; seeding never adds operative wording | `packages/shared`, `apps/forms` | **done** — in review, PR #147 |
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
-| **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | in progress — S13a (acceptance S1) done, PR #147 |
+| **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | in progress — S13a (acceptance S1), S13b (twins, long and mirrored) and S13c (budget, twelve languages) done; S13d (the ADRs) next, PR #147 |
 
 ## Log
 
@@ -434,3 +434,18 @@ when each slice ends.)*
   development and e2e (the preview server never proxied `/public/assets/`). Tests: the machine's
   S1 chain, the validator's box, the saver's name, the version-6 recording replayed, and
   `e2e/acceptance-s1.spec.ts` by pointer and by keyboard. Next: S13b.
+- **S13b and S13c, the twins, long and mirrored runs, the budget, twelve languages (2026-10-05).**
+  What:
+  - keyboard-only twins for acceptance S3 and S5, from "New form" on;
+  - a German and a mirrored run of the whole flow at phone width (#36);
+  - the graph's load, an answer's render, and no waiting picture under 150 ms (#42) — a new token,
+    `--tp-wait-unshown`, in `packages/tokens`;
+  - a check that no catalogue leaves a string in English unless it says why.
+
+  Why: the S13 row. Found on the way:
+  - a long German word pushed its question off a phone (#130);
+  - on a mirrored page, the next question slid in from behind (#131);
+  - three strings were left in English, among them Danish "Brand", which means fire (#132).
+
+  Tests: the twins, `e2e/budget.spec.ts`, `graph/budget.test.ts`, "twelve languages, each its own".
+  Each of the new checks was shown to fail with its fix taken out. Next: S13d.
