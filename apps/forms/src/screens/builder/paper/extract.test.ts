@@ -281,10 +281,11 @@ async function nodePdfjs(): Promise<Pdfjs> {
 }
 
 /**
- * A PDF written by hand, an A4 page for each content stream, Helvetica as its font: enough to say
- * how many text runs a page has, and nothing else.
+ * A PDF written by hand, an A4 page for each content stream, Helvetica as its font and a 2×2 grey
+ * image as `/Scan`: enough to say how many text runs a page has, and whether it paints a picture.
  */
 function pdfOf(...pages: string[]): ArrayBuffer {
+  const image = 4 + pages.length * 2;
   const objects: string[] = [
     '<< /Type /Catalog /Pages 2 0 R >>',
     `<< /Type /Pages /Kids [${pages.map((_, i) => `${4 + i * 2} 0 R`).join(' ')}] /Count ${pages.length} >>`,
@@ -292,10 +293,13 @@ function pdfOf(...pages: string[]): ArrayBuffer {
   ];
   for (const [i, content] of pages.entries()) {
     objects.push(
-      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${5 + i * 2} 0 R >>`,
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> /XObject << /Scan ${image} 0 R >> >> /Contents ${5 + i * 2} 0 R >>`,
       `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
     );
   }
+  objects.push(
+    '<< /Type /XObject /Subtype /Image /Width 2 /Height 2 /ColorSpace /DeviceGray /BitsPerComponent 8 /Length 4 >>\nstream\nAAAA\nendstream',
+  );
   let body = '%PDF-1.4\n';
   const offsets = objects.map((object, i) => {
     const at = body.length;
@@ -316,8 +320,10 @@ const textRuns = (count: number) =>
     (_, i) => `BT /F1 12 Tf 72 ${760 - i * 20} Td (Question ${i + 1}) Tj ET`,
   ).join('\n');
 
-/** A photograph's worth of drawing and no text: a filled grey box. */
-const picture = '0.5 g 72 400 451 300 re f';
+/** A scanned page's drawing: its picture over the whole page. */
+const picture = 'q 595 0 0 842 0 0 cm /Scan Do Q';
+/** A page with no picture: a filled box, drawn, not painted from an image. */
+const drawn = '0.5 g 72 400 451 300 re f';
 
 const recognised: RecognisedWords = {
   width: 1190,
@@ -368,9 +374,9 @@ describe('a scanned page, read by OCR (S14)', () => {
     }
   });
 
-  it(`takes a page with fewer than ${SCANNED_RUNS} runs for a scan, and one with ${SCANNED_RUNS} for text`, async () => {
+  it(`takes a picture with fewer than ${SCANNED_RUNS} runs for a scan, and one with ${SCANNED_RUNS} for text`, async () => {
     const pdf = await openPdf(
-      pdfOf(textRuns(SCANNED_RUNS - 1), textRuns(SCANNED_RUNS)),
+      pdfOf(`${picture}\n${textRuns(SCANNED_RUNS - 1)}`, `${picture}\n${textRuns(SCANNED_RUNS)}`),
       0,
       nodePdfjs,
     );
@@ -383,6 +389,25 @@ describe('a scanned page, read by OCR (S14)', () => {
         },
       });
       expect(asked).toEqual([0]);
+    } finally {
+      await pdf.close();
+    }
+  });
+
+  it('never takes a page with no picture for a scan, however little text it has', async () => {
+    // "1. Namn: ____" alone is a form, and its text layer is exact: never read again by OCR.
+    const pdf = await openPdf(pdfOf(textRuns(1), drawn, ''), 0, nodePdfjs);
+    const asked: number[] = [];
+    try {
+      const raw = await pdf.raw({
+        ocr: (pageIndex) => {
+          asked.push(pageIndex);
+          return Promise.resolve(recognised);
+        },
+      });
+      expect(asked).toEqual([]);
+      expect(raw.pages[0]!.words.map((word) => word.text)).toEqual(['Question', '1']);
+      expect(raw.source.extractor).toMatch(/^pdfjs-dist@\S+$/);
     } finally {
       await pdf.close();
     }

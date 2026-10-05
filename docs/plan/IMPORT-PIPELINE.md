@@ -67,8 +67,9 @@ become questions with confidence 1000 and their widget rectangles are their pape
 layer still goes through the pipeline for headings, instructions and labels the fields lack.
 
 **Scanned PDF or photograph** (`paper/ocr.ts`, `paper/ocr-words.ts`, `paper/photo.ts`; built in
-S14, `SCANS.md`). A PDF page with fewer than 3 text runs is treated as scanned: drawn with its
-longer side 3 000 pixels (`picture`) and read by Tesseract, word by word, in its own worker, from
+S14, `SCANS.md`). A PDF page that paints a picture and has fewer than 3 text runs is treated as
+scanned — a page with no picture never is, however little text it has (`CAVEATS.md` #138): drawn
+with its longer side 3 000 pixels (`picture`) and read by Tesseract, word by word, in its own worker, from
 this origin. A photograph (PNG, JPEG, WebP) is one page, turned as its file says, A4 wide at its own
 proportions, and read as it is: not straightened (the editor's four-corner straightening,
 `warp.ts`, stays the classic import's). Words carry Tesseract's box, the baseline under their

@@ -97,6 +97,11 @@ As planned, with these differences, each found by building it:
   `recognisedFrom`, used by the browser and by `scripts/corpus/scan.ts` alike; `ocrWords` turns
   that into stage 1's words. The raw document's `extractor` names the engine Tesseract reports
   ("Tesseract 5.1.0-…"), since `tesseract.js` exports no version of its own.
+- **What a scanned page is.** Not "fewer than 3 text runs" alone: the full e2e run found a PDF of
+  one line of real text, "1. Namn: ____", read again by OCR, its exact text replaced by a less
+  sure reading that then needed the author's eye (`CAVEATS.md` #138). A scan is a picture: a page
+  is scanned when it paints an image (an image mask among them, as a black-and-white scan is
+  usually stored) *and* has fewer than 3 text runs.
 - **The size a page is read at.** Not "twice its width": a scanned page is drawn with its longer
   side 3 000 pixels (`READ_LONG_SIDE`, A4 at about 250 dots an inch, where Tesseract reads print
   best), and a photograph is read at that size at most, never made larger.
@@ -132,6 +137,6 @@ As planned, with these differences, each found by building it:
 | What | Where |
 | --- | --- |
 | `ocrWords`: boxes, baselines, confidences, exactly; B1 against recorded readings, with its near misses (a digit zero, a small o, "Om", "[sic]", "lämna") | `paper/ocr.test.ts`, `fixtures/ocr/box-marks.json` |
-| A page with fewer than 3 runs is read by the OCR reader, one with 3 is not; without a reader a scan stays empty | `paper/extract.test.ts`, on PDFs written by hand |
+| A picture with fewer than 3 runs is read by the OCR reader, one with 3 is not, and a page with no picture never is; without a reader a scan stays empty | `paper/extract.test.ts`, on PDFs written by hand |
 | A scan's stages against its expectation; its boxes, its misreads and their caps; the scanned PDF's page goes to OCR | `paper/corpus.test.ts`, `fixtures/documents/scans/` |
 | A photograph and a scanned PDF read in the browser by the real Tesseract, their questions on the review screen, added | `e2e/scan.spec.ts` |

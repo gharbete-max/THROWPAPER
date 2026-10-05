@@ -38,8 +38,8 @@ export interface PaperPdf {
   text(page: number): Promise<TextRun[]>;
   /**
    * The whole document as stage 1's raw document: its words and its printed rules. A scanned page
-   * — fewer than {@link SCANNED_RUNS} text runs — is read by `ocr` when one is given (S14,
-   * `docs/plan/SCANS.md`), and is empty without it.
+   * — a picture, with fewer than {@link SCANNED_RUNS} text runs — is read by `ocr` when one is
+   * given (S14, `docs/plan/SCANS.md`), and is empty without it.
    */
   raw(options?: { ocr?: (pageIndex: number) => Promise<RecognisedWords> }): Promise<RawDocument>;
   /**
@@ -64,8 +64,25 @@ export interface PaperPdf {
 /** Anything the review screen can draw pages of: a PDF, or a photograph (S14). */
 export type PageDrawer = Pick<PaperPdf, 'render' | 'close'>;
 
-/** A page with fewer text runs than this has no text layer worth the name: it is a scan (S14). */
+/**
+ * A page that paints a picture and has fewer text runs than this is a scan (S14): a scanner may
+ * stamp a line or two of text on its picture, never a page's worth. A page with no picture is never
+ * one, however little text it has: "1. Namn: ____" alone is a form, and its text is exact.
+ */
 export const SCANNED_RUNS = 3;
+
+/**
+ * Whether a page's drawing paints an image: any of pdf.js's image operators, an image mask among
+ * them, since a black-and-white scan is usually stored as one.
+ */
+export function paintsAPicture(fnArray: readonly number[], ops: Record<string, number>): boolean {
+  const painting = new Set(
+    Object.entries(ops)
+      .filter(([name]) => /^paint.*Image/iu.test(name))
+      .map(([, code]) => code),
+  );
+  return fnArray.some((fn) => painting.has(fn));
+}
 
 export class TooManyPages extends Error {
   constructor(public readonly pages: number) {
@@ -201,8 +218,10 @@ export async function openPdf(
           );
         });
         const runs = content.items.filter((item) => 'str' in item && item.str.trim() !== '');
-        const recognised =
-          runs.length < SCANNED_RUNS && options.ocr ? await options.ocr(index) : null;
+        const scanned =
+          runs.length < SCANNED_RUNS &&
+          paintsAPicture(operators.fnArray, pdfjs.OPS as unknown as Record<string, number>);
+        const recognised = scanned && options.ocr ? await options.ocr(index) : null;
         if (recognised) engine ??= recognised.engine;
         pages.push({
           pageNo: index + 1,

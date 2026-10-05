@@ -475,7 +475,10 @@ when each slice ends.)*
     (#135). B1 writes a box-shaped mark back as ☐, and records what was read. Widening it to
     letters broke "lämna", and the corpus's own scans caught that: letters stay out;
   - a word Tesseract misreads and is sure of passes the cap (#136), and blanks are not read (#137):
-    both stated, with tests.
+    both stated, with tests;
+  - "fewer than three text runs" alone took a PDF of one line of real text for a scan, and read it
+    again by OCR (#138), found by the full e2e run: a scan is now a picture with fewer than three
+    runs.
 
   Tests: `ocr.test.ts` (B1 against recorded readings, the conversion exact), `extract.test.ts`
   (hand-written PDFs: a page with fewer than three runs is read by OCR, one with three is not), the
