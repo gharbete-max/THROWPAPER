@@ -1,0 +1,94 @@
+{
+  "about": "Skills copied from their upstream repositories at a pinned commit, so every session has them from the checkout with nothing to install. scripts/skills.test.ts holds each folder to its hash. To update one: copy it again from a newer commit, apply the patches below, and record the commit and the hash the test prints. CLAUDE.md wins wherever a skill disagrees with it.",
+  "upstreams": [
+    {
+      "repository": "https://github.com/DietrichGebert/ponytail",
+      "commit": "552acd5efd0aeae2583a12efe39373d2f076f25e",
+      "copied": "2026-10-06",
+      "licence": "MIT",
+      "licenceFiles": ["licenses/ponytail.LICENSE"],
+      "skills": [
+        {
+          "name": "ponytail",
+          "from": "skills/ponytail",
+          "leftOut": [],
+          "patches": [],
+          "tree": "e78aa95f543f3e59a04c5d3f55deab1be887a7b1fe46c449cfda5c570a87d14a"
+        },
+        {
+          "name": "ponytail-audit",
+          "from": "skills/ponytail-audit",
+          "leftOut": [],
+          "patches": [],
+          "tree": "2231a3d173337a750e38fd0c6ed42f438eff6d096562c6a6084534a3470eaa52"
+        },
+        {
+          "name": "ponytail-debt",
+          "from": "skills/ponytail-debt",
+          "leftOut": [],
+          "patches": [],
+          "tree": "675d990bfecec81c6e8b0d381b8c80360cbfadbdf25e0219047fd274f3236baf"
+        },
+        {
+          "name": "ponytail-gain",
+          "from": "skills/ponytail-gain",
+          "leftOut": [],
+          "patches": [],
+          "tree": "8a678a4c80f4def95c0a23d744b9ff771807a64f76a319e04ff130096e023ef6"
+        },
+        {
+          "name": "ponytail-help",
+          "from": "skills/ponytail-help",
+          "leftOut": [],
+          "patches": [],
+          "tree": "537b11b30217f4e7666e16d1b73cdb759c3c6820749ae6e5f13ad072098dbe23"
+        },
+        {
+          "name": "ponytail-review",
+          "from": "skills/ponytail-review",
+          "leftOut": [],
+          "patches": [],
+          "tree": "b3890b9e62def19f31df00dad5a2984ac00d4264b5d60cfd33282e557b211b4f"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/pbakaus/impeccable",
+      "commit": "cf3d2fa07d3ad1814ac5fbbbb5b2043b795eaef1",
+      "copied": "2026-10-06",
+      "licence": "Apache-2.0",
+      "licenceFiles": ["licenses/impeccable.LICENSE", "licenses/impeccable.NOTICE.md"],
+      "skills": [
+        {
+          "name": "impeccable",
+          "from": ".claude/skills/impeccable",
+          "leftOut": [],
+          "patches": [],
+          "firstUse": "scripts/impeccable downloads its engine, version 0.1.11 (scripts/VERSION), from the upstream's GitHub release into ~/.impeccable on first use, and runs it only if it matches the release's .sha256. On 2026-10-06 the linux-x64 engine was 0221607e1f535af937ea267c347b1f90233b85dc2563cbd2eeefdf42e0e5c594. Without the engine the skill reads DESIGN.md itself.",
+          "tree": "3d174a6b6e7d33104763d7d91d5ea2bce853974197601d3cad918112c6a11f3c"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "477bcb28c9812b385cb51a4605ddf30d7b2266e2",
+      "copied": "2026-10-06",
+      "licence": "MIT",
+      "licenceFiles": ["licenses/ui-ux-pro-max.LICENSE"],
+      "skills": [
+        {
+          "name": "ui-ux-pro-max",
+          "from": ".claude/skills/ui-ux-pro-max",
+          "leftOut": [
+            "scripts/tests/ (the upstream's own tests)",
+            "scripts/validate_data.py (the upstream's check of its data files)"
+          ],
+          "patches": [
+            "SKILL.md: ${CLAUDE_PLUGIN_ROOT}/.claude/skills/ui-ux-pro-max becomes ${CLAUDE_SKILL_DIR}, in all 11 commands. Claude Code fills in CLAUDE_PLUGIN_ROOT only for a plugin; in a project skill it stays as written and the path is wrong."
+          ],
+          "tree": "43bf34fa5bc605250df6a69d6376cdd56201eb1f6392adcc12d767b58d6fe4cb"
+        }
+      ]
+    }
+  ]
+}
