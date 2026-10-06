@@ -1,5 +1,5 @@
 {
-  "$comment": "The golden corpus (docs/plan/IMPORT-PIPELINE.md). Written for Loppa and dedicated to the public domain; built by `pnpm corpus:build`, never edited by hand.",
+  "$comment": "The golden corpus (docs/plan/IMPORT-PIPELINE.md). The documents written for Loppa are dedicated to the public domain (the licence below), built by `pnpm corpus:build`, never edited by hand; a real one (origin \"real\") carries its own licence and source, and is never built.",
   "licence": "CC0-1.0",
   "tool": "LibreOffice 24.2.7.2",
   "documents": [

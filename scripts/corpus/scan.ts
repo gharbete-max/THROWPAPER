@@ -20,6 +20,12 @@
  * printed box, or a word that could be taken for one, as Tesseract gave them — the scanned PDFs'
  * pages drawn as the review screen draws them — for B1's own tests (`ocr.test.ts`).
  *
+ * A picture of real paper (`image` in `scans/SOURCES.json`) is not drawn here: its entry, with its
+ * licence, its source and the picture's hash as it was downloaded, is written by hand, and the
+ * picture is read exactly as the review screen reads a photograph — made no larger, its longer side
+ * at most `READ_LONG_SIDE` — and frozen as `<name>.raw.json`, its box marks the lines where B1 finds
+ * a box.
+ *
  * Not part of `verify`: the tests read the committed files. Needs the language data in
  * `apps/forms/public/ocr/lang`, which `scripts/ocr-assets.ts` puts there (run first, here).
  */
@@ -29,6 +35,7 @@ import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
+  ocrWords,
   photoDocument,
   READ_LONG_SIDE,
   recognisedFrom,
@@ -37,6 +44,7 @@ import {
   type TesseractPage,
 } from '../../apps/forms/src/screens/builder/paper/ocr-words.js';
 import '../ocr-assets.js';
+import { scanSources } from './sources.js';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const CORPUS = join(ROOT, 'fixtures', 'documents');
@@ -81,9 +89,19 @@ const SCANS: Scan[] = [
   },
 ];
 
+mkdirSync(OUT, { recursive: true });
+const manifestPath = join(OUT, 'SOURCES.json');
+const manifest = scanSources.parse(JSON.parse(readFileSync(manifestPath, 'utf8')));
+type Manifest = typeof manifest;
+
 const only = process.argv.slice(2);
-const scans = only.length ? SCANS.filter((scan) => only.includes(scan.name)) : SCANS;
-if (scans.length === 0) throw new Error(`No scan is called ${only.join(', ')}.`);
+const chosen = (name: string) => only.length === 0 || only.includes(name);
+const scans = SCANS.filter((scan) => chosen(scan.name));
+const real = manifest.scans.filter(
+  (scan): scan is Extract<Manifest['scans'][number], { image: string }> =>
+    'image' in scan && chosen(scan.name),
+);
+if (scans.length + real.length === 0) throw new Error(`No scan is called ${only.join(', ')}.`);
 
 type Pdfjs = typeof import('pdfjs-dist/legacy/build/pdf.mjs');
 const pdfjs = (await import(
@@ -115,6 +133,13 @@ interface NodeCanvas {
 interface CanvasFactory {
   create(width: number, height: number): { canvas: NodeCanvas; context: CanvasRenderingContext2D };
 }
+/** `@napi-rs/canvas`, which pdf.js draws with in Node, as far as this uses it. */
+const { createCanvas, loadImage } = createRequire(
+  require.resolve('pdfjs-dist/legacy/build/pdf.mjs'),
+)('@napi-rs/canvas') as {
+  createCanvas(width: number, height: number): NodeCanvas;
+  loadImage(bytes: Buffer): Promise<CanvasImageSource & { width: number; height: number }>;
+};
 
 const sha256 = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
 
@@ -159,11 +184,16 @@ async function drawnForOcr(bytes: Uint8Array) {
   }
 }
 
+type Line = RecognisedWords['lines'][number];
 const recorded: Array<Omit<RecognisedWords, 'lines'> & { from: string; lines: unknown[] }> = [];
-function record(from: string, recognised: RecognisedWords, match: RegExp) {
+function record(
+  from: string,
+  recognised: RecognisedWords,
+  keep: (line: Line, text: string) => boolean,
+) {
   const lines = recognised.lines
     .map((line) => ({ text: line.words.map((word) => word.text).join(' '), ...line }))
-    .filter((line) => match.test(line.text));
+    .filter((line) => keep(line, line.text));
   const { width, height, engine } = recognised;
   recorded.push({ from, width, height, engine, lines });
 }
@@ -252,25 +282,20 @@ function scannedPdf(jpeg: Buffer, pixels: { width: number; height: number }, wid
   );
 }
 
-mkdirSync(OUT, { recursive: true });
-const manifestPath = join(OUT, 'SOURCES.json');
-interface Manifest {
-  licence: string;
-  tool: string;
-  scans: Array<{
-    name: string;
-    from: string;
-    locale: string;
-    dpi: number;
-    skew: number;
-    files: Record<string, { path: string; sha256: string }>;
-  }>;
-}
-let manifest: Manifest;
-try {
-  manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Manifest;
-} catch {
-  manifest = { licence: 'CC0-1.0', tool: '', scans: [] };
+/**
+ * A photograph drawn as the review screen draws one to read (`openPhoto`'s `picture`): its longer
+ * side at most `READ_LONG_SIDE` pixels, never made larger.
+ * ponytail: a file's EXIF orientation is not applied, as the browser applies it: only a picture
+ * stored upright is added (a real one is never re-saved); read the tag here when one is not.
+ */
+async function photographed(bytes: Buffer) {
+  const image = await loadImage(bytes);
+  const scale = Math.min(1, READ_LONG_SIDE / Math.max(image.width, image.height));
+  const width = Math.max(1, Math.round(image.width * scale));
+  const height = Math.max(1, Math.round((width * image.height) / image.width));
+  const canvas = createCanvas(width, height);
+  canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+  return { png: canvas.toBuffer('image/png'), width, height };
 }
 
 for (const scan of scans) {
@@ -278,7 +303,7 @@ for (const scan of scans) {
   const png = canvas.toBuffer('image/png');
   const recognised = await read(png, { width, height }, scan.locale);
   const raw = photoDocument(recognised, sha256(png));
-  record(`documents/scans/${scan.name}.png`, recognised, scan.record);
+  record(`documents/scans/${scan.name}.png`, recognised, (_, text) => scan.record.test(text));
   const files: Manifest['scans'][number]['files'] = {};
   const keep = (path: string, bytes: Uint8Array) => {
     writeFileSync(join(OUT, path), bytes);
@@ -293,7 +318,7 @@ for (const scan of scans) {
     record(
       `documents/scans/${scan.name}.pdf, its page drawn ${READ_LONG_SIDE} pixels on its longer side, as the review screen draws a scanned page`,
       await read(drawn.png, drawn, scan.locale),
-      scan.record,
+      (_, text) => scan.record.test(text),
     );
   }
   const entry = {
@@ -313,6 +338,31 @@ for (const scan of scans) {
     `${scan.name}: ${words.length} words, least sure ${Math.min(...words.map((w) => w.ocrConfidence ?? 100))}`,
   );
 }
+
+/** The lines where B1 finds a box: a real picture's box marks, with no pattern written for it. */
+const boxed = (recognised: RecognisedWords) => (line: Line) =>
+  ocrWords({ ...recognised, lines: [line] }).some((word) => word.repair?.kind === 'box-mark');
+
+for (const scan of real) {
+  const picture = Object.values(scan.files).find((file) => file.path === scan.image)!;
+  const bytes = readFileSync(join(OUT, scan.image));
+  if (sha256(bytes) !== picture.sha256)
+    throw new Error(
+      `${scan.image} is not the picture SOURCES.json lists: never change a real one.`,
+    );
+  const { png, width, height } = await photographed(bytes);
+  const recognised = await read(png, { width, height }, scan.locale);
+  const raw = photoDocument(recognised, picture.sha256);
+  record(`documents/scans/${scan.image}`, recognised, boxed(recognised));
+  const frozen = Buffer.from(`${JSON.stringify(raw, null, 2)}\n`);
+  writeFileSync(join(OUT, `${scan.name}.raw.json`), frozen);
+  scan.files['raw.json'] = { path: `${scan.name}.raw.json`, sha256: sha256(frozen) };
+  const words = raw.pages[0]?.words ?? [];
+  console.log(
+    `${scan.name}: ${words.length} words, least sure ${Math.min(...words.map((w) => w.ocrConfidence ?? 100))}`,
+  );
+}
+
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 if (only.length) {
   console.log(`${RECORDED} left as it was: it is written from every scan, not some.`);
