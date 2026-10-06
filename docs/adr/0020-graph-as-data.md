@@ -1,7 +1,7 @@
 # ADR 0020 — The conversation is a validated graph of data
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25; built in S1, S2 and every
-slice since, now graph version 7 (PR #147, "As built" below); awaiting the owner's acceptance
+**Status:** accepted 2026-10-06 by the owner's delegation ("Make all the decisions, pick the path that seems most logical", given in the session that built it, after every slice was built and green) — proposed 2026-09-25 from the owner's brief; built in S1, S2 and every
+slice since, now graph version 7 (PR #147, "As built" below)
 **Date:** 2026-09-25
 **Amends:** ADR 0006 — keeps its facets for choosing what a form is; adds ordered chains for
 configuring one question; restates its four-press promise as a bound on chains

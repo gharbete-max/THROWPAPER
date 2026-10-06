@@ -122,8 +122,8 @@ demos — keep it current with the schema.
 
 The owner's brief is `docs/plan/BRIEF.md`; the plan is the rest of `docs/plan/` (start at
 `PREDICTIVE-BUILDER.md`), and where the two disagree the plan wins and the brief is fixed. The
-decisions are ADRs 0017–0021.
-Until those ADRs are accepted they are proposals, and ADR 0004 still governs the paper importer.
+decisions are ADRs 0017–0021, accepted on 2026-10-06. ADR 0018 supersedes only ADR 0004's "never
+creates a field"; ADR 0004 still governs the editor's classic paper import (boxes drawn by hand).
 
 - **Six non-negotiables.** (1) No AI, no LLM, no ML service, no network call at runtime: rules,
   weights and thresholds a person can read and a test can freeze; same bytes in, same JSON out, on

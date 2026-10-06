@@ -1,8 +1,8 @@
 # ADR 0017 — The guided builder: a conversation that patches a real draft
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25; §14 of that brief (the
-questions in `docs/plan/PREDICTIVE-BUILDER.md`) was decided on 2026-09-29; built in S1–S13 (PR
-#147, "As built" below); awaiting the owner's acceptance
+**Status:** accepted 2026-10-06 by the owner's delegation ("Make all the decisions, pick the path that seems most logical", given in the session that built it, after every slice was built and green) — proposed 2026-09-25 from the owner's brief; §14 of that brief (the
+questions in `docs/plan/PREDICTIVE-BUILDER.md`) was decided on 2026-09-29; built in S1–S14 (PR
+#147, "As built" below)
 **Date:** 2026-09-25
 **Amends:** ADR 0006 (the form wizard's questions are replaced; `tree.ts` stays for other surfaces)
 **Depends on:** ADR 0019 (deterministic reading of free text), ADR 0020 (the graph as data),

@@ -1,6 +1,8 @@
 # Roadmap — the predictive builder and document import
 
-**Status:** proposed 2026-09-25; the mission is `BRIEF.md` (revision 3). This is the plan's own roadmap; the product's is
+**Status:** proposed 2026-09-25; S1–S14 built (PR #147) and its ADRs 0017–0021 accepted on
+2026-10-06; the corpus's growth to sixty (S15, below) is what remains. The mission is `BRIEF.md`
+(revision 3). This is the plan's own roadmap; the product's is
 `docs/ROADMAP.md` (Track A / Track B), which points here. Updated at the end of every slice: the
 status column, new caveats in `CAVEATS.md`, and the slice's five-line summary under "Log".
 
@@ -84,6 +86,31 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 | **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
+| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | planned — batch 1 next |
+
+## S15 — The corpus to sixty
+
+The brief asks for at least sixty documents (PDF and DOCX), at least ten Swedish, some scanned,
+some in two columns, several with tables, checkbox grids and dotted sub-numbering, one with the
+exact §8.1.1 case, and clean minimal ones. After S14 there are 19, in eight languages, and two of
+them scanned; every requirement but the count is met. Each document is made for Loppa by a real
+word processor (`pnpm corpus:build`, CC0), and is held to an expectation written by hand from what
+it says before it is first read. Where the reading differs, the difference is examined: either the
+expectation was wrong (said so in the commit) or the import is, and a fault is fixed with a
+fixture, written and failing first, in the same commit. A threshold is never moved to make a
+document pass.
+
+| Batch | Documents | What they are there for |
+| --- | --- | --- |
+| 1 | 6 | The four languages with none yet: Icelandic, Russian, Japanese (full-width "１．" and "（１）", and circled ①②③), Chinese ("一、" sections, "□是 □否") |
+| 2 | 8 | §8.1 on real pages: letter against word ("A. Andersson"), a scheme change at one indent, a jump in a sequence, a single-item list, "(1)" against "(3 500 kr)", "1 ." with a space, an ordinal mid-line ("den 3:e"), roman numerals |
+| 3 | 7 | §8.2: a two-column newsletter with a form at its end, a page that changes from one column to two, a table of participants with a header row, more than 30 options (#30), three pages under a repeated header, a label with its blank below, a landscape page |
+| 4 | 8 | §8.3 in other languages: required hints ("required", "Pflichtfeld", "obligatoire"), consent in English, German and French, Danish, Finnish and Icelandic personal and organisation numbers, numbers inside questions, instructions that read like questions |
+| 5 | 12 | Clean, minimal forms of the product's own kinds in every language: a measurement record, an inspection report, an incident report, a booking, a feedback survey, a volunteer sign-up, a renewal, an RSVP |
+
+Two more scans (`pnpm corpus:scan`), of an English and a German document, go with batch 5. Each
+batch is one commit, with its gates and the import e2e specs; #147's description says what each
+found.
 
 ## Log
 
@@ -532,3 +559,8 @@ when each slice ends.)*
   Three reassemble fixtures, each written and failing first and each shown to fail with its rule
   taken out. Reassemble is at stage version 3 and enumerate at 7; every other snapshot moved only
   those lines. 19 documents.
+- **ADRs 0017–0021 accepted (2026-10-06).** The owner delegated every remaining decision ("Make all
+  the decisions, pick the path that seems most logical"). With S1–S14 built and green, the five
+  ADRs were accepted under that delegation; ADR 0004 is marked superseded in part (ADR 0018) and
+  ADR 0006 amended (ADRs 0017, 0020); `CLAUDE.md`, `PREDICTIVE-BUILDER.md` and `docs/ROADMAP.md`
+  say so. PR #147 leaves draft. What remains of the plan is S15, the corpus to sixty.

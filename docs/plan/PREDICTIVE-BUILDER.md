@@ -403,8 +403,8 @@ permission of 2026-09-25, so the brief and this plan now agree.
 
 `BRIEF.md` §14. **Decided on 2026-09-29**: the owner asked for "the most logical route for each
 question in relation to the project", so each answer below is the recommendation this plan made,
-now a decision; any of them is the owner's to overturn. ADRs 0017–0021 stay *proposed* until the
-owner accepts them (S13 asks).
+now a decision; any of them is the owner's to overturn. ADRs 0017–0021 were accepted on
+2026-10-06, by the same delegation ("Make all the decisions"), once S1–S14 were built and green.
 
 1. **Which package owns `builder/`, `import/`, `interpret/`, and which app hosts the UI?**
    *Decided:* `@tp/shared` (subpath exports), and `apps/forms` (the desktop hosts the same bundle).

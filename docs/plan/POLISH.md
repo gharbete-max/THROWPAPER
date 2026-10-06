@@ -195,3 +195,7 @@ or differently:
 Three sentences that had been wrong since M0 are corrected in place: the `Wizard` component never
 started mailings or invoice runs (ADRs 0006, 0017 and 0020). The ADRs stay *proposed*, and PR #147
 asks the owner to accept them.
+
+**Since (2026-10-06):** the owner delegated every remaining decision ("Make all the decisions, pick
+the path that seems most logical"), and ADRs 0017–0021 were accepted under it, with ADR 0004 noted
+as superseded in part and ADR 0006 as amended.

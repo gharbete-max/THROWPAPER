@@ -1,7 +1,7 @@
 # ADR 0021 — Data files are JSON or typed TypeScript, never YAML
 
-**Status:** proposed — the rule is the owner's brief of 2026-09-25 (§13); followed throughout S1–S13
-(PR #147, "As built" below); awaiting the owner's acceptance
+**Status:** accepted 2026-10-06 by the owner's delegation ("Make all the decisions, pick the path that seems most logical", given in the session that built it, after every slice was built and green) — proposed 2026-09-25 from the owner's brief (§13); followed throughout
+S1–S14 (PR #147, "As built" below)
 **Date:** 2026-09-25
 
 ## Context

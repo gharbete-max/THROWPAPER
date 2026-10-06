@@ -1,7 +1,7 @@
 # ADR 0019 — Reading free text and guessing templates by rules, in integers
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25; built in S3, S6 and S11
-(PR #147, "As built" below); awaiting the owner's acceptance
+**Status:** accepted 2026-10-06 by the owner's delegation ("Make all the decisions, pick the path that seems most logical", given in the session that built it, after every slice was built and green) — proposed 2026-09-25 from the owner's brief; built in S3, S6 and S11
+(PR #147, "As built" below)
 **Date:** 2026-09-25
 **Narrows:** ADR 0013 (AI assistance) — the builder and the importer do not use it
 

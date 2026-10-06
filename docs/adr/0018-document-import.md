@@ -1,7 +1,7 @@
 # ADR 0018 — Document import: rules may propose questions, a person confirms every one
 
-**Status:** proposed — the direction is the owner's brief of 2026-09-25; built in S1b and S7–S13
-(PR #147, "As built" below); awaiting the owner's acceptance
+**Status:** accepted 2026-10-06 by the owner's delegation ("Make all the decisions, pick the path that seems most logical", given in the session that built it, after every slice was built and green) — proposed 2026-09-25 from the owner's brief; built in S1b and S7–S14
+(PR #147, "As built" below)
 **Date:** 2026-09-25
 **Supersedes in part:** ADR 0004 — its rule that OCR and layout "never create a field"
 **Depends on:** ADR 0019 (deterministic rules), ADR 0021 (JSON data), `docs/plan/LAYOUT-IR.md`
