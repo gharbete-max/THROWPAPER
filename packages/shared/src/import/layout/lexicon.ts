@@ -109,6 +109,12 @@ export function distinctiveStopwords(language: LayoutLanguage): ReadonlySet<stri
 export const LOCALE_MIN_HITS = 20;
 /** and at least this many of its own, and twice the runner-up's own — enough to tell it apart. */
 export const LOCALE_MIN_OWN = 5;
+/**
+ * G1c (#161): with less prose than that, a form, its own words must be at least this many times
+ * the runner-up's. In the sixty corpus documents no language other than the document's own reached
+ * more than two words of its own once the shared words were listed for both (#162).
+ */
+export const LOCALE_FORM_MARGIN = 4;
 
 /**
  * Tokens as §2.11 counts them: NFKC, lower case; a Chinese or Japanese character is a token of its
@@ -125,6 +131,8 @@ export function localeTokens(text: string): string[] {
 export interface LocaleCount {
   /** The language, or null when §2.11 is not sure. */
   locale: LayoutLanguage | null;
+  /** The rule that was sure: G1 on prose, G1c on a form; null when neither was. */
+  rule: 'G1' | 'G1c' | null;
   /** The language with the most words of its own (the first in order of equals), and its counts. */
   best: LayoutLanguage | null;
   /** Its stop words, shared ones included. */
@@ -140,6 +148,9 @@ export interface LocaleCount {
  * its own to tell it from its neighbours: at least 5, and twice the runner-up's. Swedish, Danish
  * and Norwegian share most of their commonest words, so counting shared words for all three, as
  * §2.11 was first written, made every Scandinavian document a near tie.
+ *
+ * G1c (#161): a form has labels, not prose, and seldom twenty stop words — but five words only
+ * its language uses, at four times the runner-up's, tell it apart without them.
  */
 export function documentLocale(texts: readonly string[]): LocaleCount {
   const hits = new Map<LayoutLanguage, number>();
@@ -168,8 +179,52 @@ export function documentLocale(texts: readonly string[]): LocaleCount {
     }
   }
   const total = best ? (hits.get(best) ?? 0) : 0;
-  const sure = total >= LOCALE_MIN_HITS && top >= LOCALE_MIN_OWN && top >= runnerUp * 2;
-  return { locale: sure ? best : null, best, hits: total, own: top, runnerUp };
+  const rule =
+    top < LOCALE_MIN_OWN
+      ? null
+      : total >= LOCALE_MIN_HITS && top >= runnerUp * 2
+        ? 'G1'
+        : top >= runnerUp * LOCALE_FORM_MARGIN
+          ? 'G1c'
+          : null;
+  return { locale: rule ? best : null, rule, best, hits: total, own: top, runnerUp };
+}
+
+/** G1d: at least this many letters only one language writes — more than a name or two carries. */
+export const LETTERS_MIN = 5;
+
+/**
+ * Letters only one of the twelve writes. French is left out: Swedish writes "2 st à 50 kr" and
+ * English "café", so no French letter is French alone.
+ */
+const OWN_LETTERS: readonly (readonly [LayoutLanguage, RegExp])[] = [
+  ['is', /[ðþ]/gu],
+  ['de', /ß/gu],
+  ['es', /[ñ¿¡]/gu],
+];
+
+export interface LetterCount {
+  /** The language the letters tell, or null when G1d does not decide. */
+  locale: LayoutLanguage | null;
+  /** Its letters in the text. */
+  letters: number;
+}
+
+/**
+ * G1d (#163): the language a letter tells, when its stop words are too few for G1 and G1c. Only
+ * Icelandic writes ð and þ, only German ß, only Spanish ñ, ¿ and ¡. A name carries one or two, so
+ * the letters must number five, of one language alone, and the stop words must lean no other way:
+ * the language leads them, or there are none.
+ */
+export function letterLocale(texts: readonly string[], count: LocaleCount): LetterCount {
+  const text = texts.join('\n').normalize('NFKC').toLowerCase();
+  const found = OWN_LETTERS.map(
+    ([language, letters]) => [language, text.match(letters)?.length ?? 0] as const,
+  ).filter(([, n]) => n >= LETTERS_MIN);
+  if (found.length !== 1) return { locale: null, letters: 0 };
+  const [language, letters] = found[0]!;
+  const leads = count.own === 0 || (count.best === language && count.own > count.runnerUp);
+  return leads ? { locale: language, letters } : { locale: null, letters: 0 };
 }
 
 /** G1b: at least this many letters in a script one language owns, and more than half of all. */

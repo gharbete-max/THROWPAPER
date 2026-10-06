@@ -2,7 +2,7 @@
   "stage": "segment",
   "stageVersion": 7,
   "irVersion": 1,
-  "inputSha256": "f5a6e2397f530a4269b2c9a561ee4185941430dfac62ef86c6ff049d300ba2e4",
+  "inputSha256": "717f7124c311bf8c08ca3c2121c434e5bbbbc44a4900d0faf8d3ce91af20cb58",
   "decisions": [
     {"id":"segment:p1-l1","rule":"S1","verdict":"heading","subject":["p1-l1"],"evidence":{"lines":1}},
     {"id":"segment:p1-l2","rule":"S8","verdict":"instruction","subject":["p1-l2"],"evidence":{"lines":1}},

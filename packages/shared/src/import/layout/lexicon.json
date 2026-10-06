@@ -1,5 +1,5 @@
 {
-  "source": "Written for Loppa (IMPORT-PIPELINE.md §2.6 and §2.11). Page-number keys are in their folded form: NFKC, lower case, every digit run as #, whitespace collapsed. Conjunctions are the words a suspended compound's hyphen stands before (för- och efternamn, Ein- und Ausgang, pre- and post-war), in lower case. Stop words are frequent function words of each language, chosen so the language's own words outnumber its neighbours' on ordinary prose; Chinese and Japanese are read a character at a time, so theirs are single characters and Japanese's are kana.",
+  "source": "Written for Loppa (IMPORT-PIPELINE.md §2.6 and §2.11). Page-number keys are in their folded form: NFKC, lower case, every digit run as #, whitespace collapsed. Conjunctions are the words a suspended compound's hyphen stands before (för- och efternamn, Ein- und Ausgang, pre- and post-war), in lower case. Stop words are frequent function words of each language, chosen so the language's own words outnumber its neighbours' on ordinary prose; Chinese and Japanese are read a character at a time, so theirs are single characters and Japanese's are kana. A word as common in one language as in another is listed for both, so it tells neither apart: \"ja\" is \"and\" in Finnish and \"yes\" in Swedish, Danish, Norwegian and German, where forms print it beside every box; \"no\" is English as well as Spanish; \"bli\" Swedish as well as Norwegian; \"um\" German as well as Icelandic; and \"in\" German and Swedish as well as English (CAVEATS #162).",
   "lexiconVersion": 1,
   "pageNumbers": {
     "all": ["#", "# / #", "#/#", "- # -", "– # –", "— # —", "[#]", "(#)", "# (#)"],
@@ -89,7 +89,8 @@
       "blive",
       "gøre",
       "bedes",
-      "tak"
+      "tak",
+      "ja"
     ],
     "de": [
       "der",
@@ -129,7 +130,10 @@
       "was",
       "alle",
       "ihre",
-      "diese"
+      "diese",
+      "ja",
+      "um",
+      "in"
     ],
     "en": [
       "the",
@@ -169,7 +173,8 @@
       "how",
       "what",
       "there",
-      "our"
+      "our",
+      "no"
     ],
     "es": [
       "el",
@@ -405,7 +410,8 @@
       "gjøre",
       "takk",
       "enn",
-      "slik"
+      "slik",
+      "ja"
     ],
     "ru": [
       "и",
@@ -495,7 +501,10 @@
       "ni",
       "vilken",
       "mig",
-      "sig"
+      "sig",
+      "ja",
+      "bli",
+      "in"
     ],
     "zh": [
       "的",

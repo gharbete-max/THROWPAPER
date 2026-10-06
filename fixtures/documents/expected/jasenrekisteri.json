@@ -1,6 +1,6 @@
 {
   "document": "jasenrekisteri",
-  "locale": null,
+  "locale": "fi",
   "items": [],
   "segments": [
     {
@@ -29,7 +29,7 @@
       "type": "personnummer",
       "format": {
         "name": "fi-hetu",
-        "apply": false
+        "apply": true
       }
     },
     {
@@ -46,7 +46,7 @@
       "type": "orgnr",
       "format": {
         "name": "fi-ytunnus",
-        "apply": false
+        "apply": true
       }
     },
     {

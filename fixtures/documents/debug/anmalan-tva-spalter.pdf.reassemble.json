@@ -1,6 +1,6 @@
 {
   "stage": "reassemble",
-  "stageVersion": 6,
+  "stageVersion": 7,
   "irVersion": 1,
   "inputSha256": "e436d8c95bf00ac1b011f9f72b3067c52aa90cad6aa7cb62fb5d61117a1ac71a",
   "decisions": [
@@ -17,6 +17,6 @@
     {"id":"reassemble:p1-b4","rule":"B1","verdict":"body","subject":["p1-l9","p1-l10","p1-l11","p1-l12","p1-l13"],"evidence":{}},
     {"id":"reassemble:p1-b5","rule":"B1","verdict":"body","subject":["p1-l14","p1-l15"],"evidence":{}},
     {"id":"reassemble:p1-b6","rule":"F2","verdict":"page-furniture","subject":["p1-l16"],"evidence":{"margin":"bottom","pages":1}},
-    {"id":"reassemble:locale","rule":"G1","verdict":"sv","subject":[],"evidence":{"best":"sv","hits":30,"own":12,"runnerUp":1}}
+    {"id":"reassemble:locale","rule":"G1","verdict":"sv","subject":[],"evidence":{"best":"sv","hits":31,"own":12,"runnerUp":0}}
   ]
 }

@@ -2,12 +2,12 @@
   "stage": "classify",
   "stageVersion": 4,
   "irVersion": 1,
-  "inputSha256": "d2fff5f7e1b8b268f26c3f896c84b6fec98a04d0305c961db87bb1f3dc8da240",
+  "inputSha256": "cb0fd26797084e57ad1d1de70f4da005ea4d01683cc3f3f8d85f14e388457b47",
   "decisions": [
     {"id":"classify:p1-l4","rule":"K1","verdict":"short_text","subject":["p1-l4"],"evidence":{"confidence":976,"features":"nameWord required","margin":3700,"required":"yes","runnerUp":"long_text"}},
-    {"id":"classify:p1-l5","rule":"K1","verdict":"personnummer","subject":["p1-l5"],"evidence":{"confidence":971,"features":"personnummerWord","format":"fi-hetu (chip)","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l5","rule":"K1","verdict":"personnummer","subject":["p1-l5"],"evidence":{"confidence":971,"features":"personnummerWord","format":"fi-hetu","margin":3500,"required":"unknown","runnerUp":"short_text"}},
     {"id":"classify:p1-l6","rule":"K1","verdict":"email","subject":["p1-l6"],"evidence":{"confidence":953,"features":"emailWord optional","margin":3000,"required":"no","runnerUp":"short_text"}},
-    {"id":"classify:p1-l7","rule":"K1","verdict":"orgnr","subject":["p1-l7"],"evidence":{"confidence":971,"features":"orgNrWord","format":"fi-ytunnus (chip)","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l7","rule":"K1","verdict":"orgnr","subject":["p1-l7"],"evidence":{"confidence":971,"features":"orgNrWord","format":"fi-ytunnus","margin":3500,"required":"unknown","runnerUp":"short_text"}},
     {"id":"classify:p1-l8","rule":"K1","verdict":"number","subject":["p1-l8"],"evidence":{"confidence":924,"features":"maxWords numberWord","margin":2500,"required":"unknown","runnerUp":"short_text"}}
   ]
 }

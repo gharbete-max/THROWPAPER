@@ -264,6 +264,24 @@ Per page, in this order:
     whatever its stop words: a short Russian or Chinese form has too little prose for G1, but no
     other of the twelve could have written it. Latin-script languages share their letters, so G1
     alone decides them. *Test:* `layout/reassemble.test.ts` ("G1b").
+    **G1c — a form's own words** (#161): a form has labels, not prose, and seldom twenty stop
+    words; in the sixty corpus documents the floor left nineteen without a language and never once
+    prevented a wrong one. With less prose, the language is the document's when it has at least
+    **5 words of its own** and at least **four times** the runner-up's (`LOCALE_FORM_MARGIN`).
+    **Shared words** (#162): a word as common in one language as in another is listed for both,
+    so it tells neither apart — "ja" is "and" in Finnish but "yes" in Swedish, Danish, Norwegian
+    and German, printed beside every box of a checklist; "no" is English as well as Spanish, "bli"
+    Swedish as well as Norwegian, "um" German as well as Icelandic, "in" German and Swedish as well
+    as English. Once they were, no other language reached more than two words of its own in any
+    corpus document; before, a Swedish checklist of five Ja/Nej questions counted five Finnish
+    words. **G1d — letters one language writes** (#163): when G1 and G1c are not sure, at least
+    **5** letters only one of the twelve writes — ð and þ (Icelandic), ß (German), ñ, ¿ and ¡
+    (Spanish) — decide, if the stop words lean no other way (the language leads them, or there are
+    none). A name carries one or two. French letters are left out: Swedish writes "2 st à 50 kr"
+    and English "café". What stays `null`: Danish and Norwegian forms, whose function words are
+    nearly the same, and short Finnish forms that say "ja" more than anything else Finnish. A
+    `null` document is read with every language's words, so it is slower to be sure, never wrong.
+    *Test:* `layout/reassemble.test.ts` ("G1c", "another writes", "G1d").
 12. **Touching words** (measured only, L3, S15, #143): two words of a line with no more than a
     tenth of an em between them are one word, as they are printed — a run broken by a change of
     font ("1" in a Latin font, "．姓名：" in a Chinese one), a full stop pdf.js gives on its own
@@ -298,6 +316,8 @@ Per page, in this order:
 | B1t | 5 | a Word table is one block until its rows start again | `layout/reassemble.test.ts` ("one block however") |
 | G1 | 11 | the document's language | `layout/reassemble.test.ts` (a paragraph in each language) |
 | G1b | 11 | the document's language, by a script only it writes | `layout/reassemble.test.ts` ("G1b") |
+| G1c | 11 | a form's language, by five words of its own at four times the runner-up | `layout/reassemble.test.ts` ("G1c") |
+| G1d | 11 | the document's language, by five letters only it writes, when its words agree | `layout/reassemble.test.ts` ("G1d") |
 
 ## Stage 3 — enumerate
 
@@ -765,8 +785,9 @@ inspection (`vernerunde`), a volunteer sign-up (`talkoolaiset`), a renewal (`ren
 RSVP (`confirmacion`), an equipment loan (`utlan`), an application (`zayavka`), a facility booking
 (`shisetsu`) and an equipment inspection record (`jiancha`). The scans are of `medlemsansokan` and
 `fotosamtycke` (S14) and, since batch 5, of the English `membership` and the German `erste-hilfe`.
-Nineteen documents are, like `sommarlager`, too short for G1 to be sure of their language. Scans of
-real paper are still owed.
+Eight documents carry no language since G1c and G1d (#161–#163): three Danish and three Norwegian
+forms, whose function words are nearly the same, and two short Finnish forms; before them,
+nineteen did.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

@@ -676,3 +676,19 @@ when each slice ends.)*
   paper with a licence to record; and one calibration to decide, G1's floor of 20 stop words, under
   which 19 of the 60 documents carry no language (Finnish above all: `jasenrekisteri` has 13 words
   that are Finnish alone). With S15, every slice of the plan is built.
+- **The language of a form, decided (2026-10-06).** The owner handed the calibration over: "make
+  the decision that seems most logical to have properly fixed long run". Measured first, on all
+  sixty documents: G1's floor of twenty stop words never once prevented a wrong language — no
+  document had one — and withheld nineteen right ones, `kursangebot` with 18 German words of its
+  own against none. Lowering the number alone would have been wrong: "ja", Finnish for "and", is
+  "yes" on every Scandinavian and German checklist, and `besiktning` already counted five
+  "Finnish" words. So, each with a test written and failing first, and failing again with its rule
+  taken out (#161–#163): words two languages both write often are listed for both (#162); a form
+  is known by five words of its own at four times the runner-up's, without the prose floor (G1c,
+  #161); and ð þ, ß, ñ ¿ ¡ decide when the words agree (G1d, #163). Both numbers are pinned from
+  either side: a margin of 3 or 5 fails a test, as do 4 or 6 letters. Eleven documents now have
+  their language and none a wrong one; the Finnish and Icelandic identity numbers in three of them
+  are applied, not offered. Eight stay unknown: Danish and Norwegian forms, whose function words
+  are nearly the same, and two short Finnish ones. Reassemble is at stage version 7; every other
+  snapshot changed only that line, the words counted, or — in those eleven documents alone — the
+  input hashes after it.

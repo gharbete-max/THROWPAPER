@@ -94,7 +94,7 @@ Decisions 1–7 are built, with one part still to come:
   languages; batch 5, twelve clean forms of the product's kinds and two more scans). All are made
   for Loppa; real forms with a licence to record, and scans of real paper, are the owner's to
   supply. Every document found what it was made to find, and the faults it found were fixed with
-  fixtures, each written and failing first (`CAVEATS.md` #133–#134, #139–#160).
+  fixtures, each written and failing first (`CAVEATS.md` #133–#134, #139–#163).
 
 ## Rejected alternatives
 
