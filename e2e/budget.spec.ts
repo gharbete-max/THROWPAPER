@@ -22,10 +22,9 @@ const GUIDED = /\/forms\/([0-9a-f-]{36})\/guided$/;
 const FRAME_MS = 16;
 const UNSHOWN_MS = 150;
 /**
- * What the measurement of "not before 150 ms" cannot resolve. Chromium coarsens `performance.now()`
- * to a tenth of a millisecond, and the animation's delay runs from a frame's timestamp, not from the
- * moment the picture was put in the page: a run here saw it at 149.9 ms. A millisecond allows for
- * the clock and nothing else — without the delay the picture is seen at 18 ms.
+ * What the measurement of "not before 150 ms" cannot resolve: Chromium coarsens a frame's timestamp
+ * to a tenth of a millisecond, and the animation's start is not coarsened. A millisecond allows for
+ * the clock and nothing else — without the delay the picture is drawn in the frame it starts in.
  */
 const CLOCK_MS = 1;
 
@@ -98,20 +97,38 @@ test('the next question is on the page within a frame of the answer (16 ms)', as
 });
 
 /**
- * Every waiting picture the page puts up, from the moment it is in the page (a mutation, exact) to
- * the first frame it can be seen (sampled each frame), and when it goes.
+ * Every waiting picture the page puts up: when it is seen in the page (a mutation), the frame its
+ * animation starts in, the first frame that draws it (sampled each frame), and when it goes.
+ *
+ * The 150 ms is counted in frames, as the picture's CSS delay counts it: from the frame the waiting
+ * page is first drawn in to the frame that draws the picture. Both are frame timestamps on one
+ * clock. The mutation is not a start: its observer runs only when the script that put the picture
+ * in has finished, and the frame the picture starts in can have begun while that script ran — a run
+ * here saw the animation start 3.7 ms before the mutation and the picture drawn 150.0 ms after the
+ * start, 146.3 ms after the mutation.
  */
 async function watchTheWaits(page: Page) {
   await page.addInitScript(() => {
-    type Wait = { mounted: number; shown: number | null; gone: number | null };
+    type Wait = {
+      mounted: number;
+      start: number | null;
+      shown: number | null;
+      gone: number | null;
+    };
     const waits: Wait[] = [];
     const seen = new Map<Element, Wait>();
     (window as unknown as { __waits: Wait[] }).__waits = waits;
     const note = (el: Element) => {
       if (seen.has(el)) return;
-      const wait = { mounted: performance.now(), shown: null, gone: null };
+      const wait = { mounted: performance.now(), start: null, shown: null, gone: null };
       seen.set(el, wait);
       waits.push(wait);
+    };
+    const startOf = (el: Element) => {
+      const appear = el
+        .getAnimations()
+        .find((animation) => (animation as CSSAnimation).animationName === 'loading-appear');
+      return typeof appear?.startTime === 'number' ? appear.startTime : null;
     };
     new MutationObserver(() => {
       document.querySelectorAll('.loading').forEach(note);
@@ -120,11 +137,11 @@ async function watchTheWaits(page: Page) {
           wait.gone = performance.now();
         }
     }).observe(document, { subtree: true, childList: true });
-    const frame = () => {
+    const frame = (now: number) => {
       for (const [el, wait] of seen) {
-        if (wait.shown === null && el.isConnected && Number(getComputedStyle(el).opacity) > 0) {
-          wait.shown = performance.now();
-        }
+        if (!el.isConnected) continue;
+        wait.start ??= startOf(el);
+        if (wait.shown === null && Number(getComputedStyle(el).opacity) > 0) wait.shown = now;
       }
       requestAnimationFrame(frame);
     };
@@ -132,7 +149,9 @@ async function watchTheWaits(page: Page) {
   });
 }
 
-type Wait = { mounted: number; shown: number | null; gone: number | null };
+type Wait = { mounted: number; start: number | null; shown: number | null; gone: number | null };
+/** The frame a wait's picture starts in, or — with no animation at all — when it was seen. */
+const startOf = (wait: Wait) => wait.start ?? wait.mounted;
 const waitsOf = (page: Page) =>
   page.evaluate(() => (window as unknown as { __waits: Wait[] }).__waits);
 
@@ -160,20 +179,24 @@ test('a wait under 150 ms shows no waiting picture; a longer one shows it', asyn
   ).toBe(true);
   for (const wait of slow) {
     if (wait.shown !== null)
-      expect(wait.shown - wait.mounted).toBeGreaterThanOrEqual(UNSHOWN_MS - CLOCK_MS);
+      expect(wait.shown - startOf(wait), JSON.stringify(wait)).toBeGreaterThanOrEqual(
+        UNSHOWN_MS - CLOCK_MS,
+      );
   }
 
-  // Answered at once: every wait that ended inside 150 ms was never seen.
+  // Answered at once: every wait that ended inside 150 ms of its first frame was never seen.
   await page.unroute('**/v1/forms/*/builder-session');
   await page.goto(`/forms/${formId}/guided`);
   await expect(page.getByRole('heading', { level: 1, name: /set date/ })).toBeVisible();
   const quick = await waitsOf(page);
   expect(quick.length, 'the page waited for something').toBeGreaterThan(0);
   for (const wait of quick) {
-    if (wait.gone !== null && wait.gone - wait.mounted < UNSHOWN_MS - CLOCK_MS) {
-      expect(wait.shown).toBeNull();
+    if (wait.gone !== null && wait.gone - startOf(wait) < UNSHOWN_MS - CLOCK_MS) {
+      expect(wait.shown, JSON.stringify(wait)).toBeNull();
     }
     if (wait.shown !== null)
-      expect(wait.shown - wait.mounted).toBeGreaterThanOrEqual(UNSHOWN_MS - CLOCK_MS);
+      expect(wait.shown - startOf(wait), JSON.stringify(wait)).toBeGreaterThanOrEqual(
+        UNSHOWN_MS - CLOCK_MS,
+      );
   }
 });
