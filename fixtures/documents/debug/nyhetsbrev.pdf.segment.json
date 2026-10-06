@@ -1,6 +1,6 @@
 {
   "stage": "segment",
-  "stageVersion": 5,
+  "stageVersion": 6,
   "irVersion": 1,
   "inputSha256": "a42c8b562311850cdc90bb43f1c1e494dcdfde10fd39d50e35b0a6a56272d2c6",
   "decisions": [

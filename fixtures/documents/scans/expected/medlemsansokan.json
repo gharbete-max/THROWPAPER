@@ -73,7 +73,11 @@
       "kind": "question",
       "label": "Personnummer",
       "answer": "unknown",
-      "type": "personnummer"
+      "type": "personnummer",
+      "format": {
+        "name": "se-personnummer",
+        "apply": true
+      }
     },
     {
       "kind": "question",

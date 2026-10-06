@@ -1,0 +1,13 @@
+{
+  "stage": "classify",
+  "stageVersion": 3,
+  "irVersion": 1,
+  "inputSha256": "c89a6263cb9e700660ce1c0a0c3fd59276703cd812bce8e54e7821f1f97c3733",
+  "decisions": [
+    {"id":"classify:p1-l8","rule":"K1","verdict":"short_text","subject":["p1-l8"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l9","rule":"K1","verdict":"address","subject":["p1-l9"],"evidence":{"confidence":881,"features":"addressWord","margin":2000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l10","rule":"K1","verdict":"personnummer","subject":["p1-l10"],"evidence":{"confidence":971,"features":"personnummerWord","format":"dk-cpr","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l11","rule":"K1","verdict":"orgnr","subject":["p1-l11"],"evidence":{"confidence":971,"features":"orgNrWord","format":"dk-cvr","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l12","rule":"K1","verdict":"signature","subject":["p1-l12"],"evidence":{"confidence":953,"features":"signatureHint","margin":3000,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

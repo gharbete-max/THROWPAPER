@@ -28,7 +28,8 @@
       "kind": "question",
       "label": "Namn (obligatoriskt)",
       "answer": "blank",
-      "type": "short_text"
+      "type": "short_text",
+      "required": "yes"
     },
     {
       "kind": "question",
@@ -40,13 +41,20 @@
       "kind": "question",
       "label": "Vårdnadshavarens e-post*",
       "answer": "blank",
-      "type": "email"
+      "type": "email",
+      "required": "yes"
     },
     {
       "kind": "question",
       "label": "Hur många nätter stannar barnet? (max 7)",
       "answer": "blank",
-      "type": "number"
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 7
+        }
+      ]
     },
     {
       "kind": "heading",

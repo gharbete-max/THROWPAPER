@@ -222,8 +222,9 @@ Per page, in this order:
    after it (`noRoomFor`: a ragged line before a long compound ends short of 90%, #141), followed
    by a line that starts with a letter: join the next line's first word onto it. The hyphen is **removed** (Y1, `dehyphenated`)
    when the next word starts lower-case and the fragment before the hyphen has at least 3 letters
-   ("regis-" + "tering"); otherwise it is **kept** (Y2, `joined-at-break`: "e-" + "post",
-   "Stockholm-" + "Göteborg"). **Before a conjunction nothing is joined** (Y3): "för-" / "och
+   ("regis-" + "tering") and is no abbreviation; otherwise it is **kept** (Y2, `joined-at-break`:
+   "e-" + "post", "Stockholm-" + "Göteborg", and after two capitals or more "CPR-" + "nummer" —
+   S15, #155, `hyphen-after-abbreviation`). **Before a conjunction nothing is joined** (Y3): "för-" / "och
    efternamn" is a suspended compound, "för- och efternamn", and joining it wrote "föroch" (the
    conjunctions of the twelve languages are in `layout/lexicon.json`). Nothing is joined across a
    block, into furniture, or across a page. The joined word keeps the first part's box; the raw
@@ -413,7 +414,10 @@ the answers under it:
    godkänner …", "Har du allergier? ☐"): a question ticked or not, the words its label.
    *Fixtures:* `checkbox-grid`, `single-checkbox-line`.
 4. **Choice** (S5) — two or more boxes each followed by words: those words are the options.
-   Boxes with no words to name them and no header: a question of unknown answer.
+   Boxes with no words to name them and no header: a question of unknown answer. A box's words run
+   on as a paragraph does (S15, #154, `box-label-wraps`): a box line that reaches its column's edge
+   goes on in the lines of text after it in its block, at the block's pitch, so a consent that
+   wraps keeps the end of its sentence.
 5. **Labelled blank** (S6) — a blank run (at least 3 `_`, or at least 4 leader dots with `…` as
    three). **Two or more label-and-blank pairs on a line** are one question each, flagged
    `split-line`, and text after a line's only blank stays in its label ("Födelsedatum ____
@@ -436,6 +440,11 @@ the answers under it:
    `?` and a note in brackets ("… gäster? (max 8)"); or at most 60 ending in `:` that does not
    introduce bullets. (First written as "prose without a blank, checkbox or trailing colon is an
    instruction", which made "Har du några allergier?" text to read.) *Fixture:* `prose-question`.
+   **But a bold one answered under it is a heading** (S1d, S15, #156): a sentence that asks, set in
+   bold, with nothing to answer in, followed by a sentence that ends — "¿Puedo llevar a mi perro?"
+   and "Sí, siempre que vaya atado …" — is the heading of a note, as a list of notes sets it. A
+   plain question, or one with room, boxes or another question after it, is still a question.
+   *Fixture:* `bold-question-answered`.
 8. **Instruction** (S8) — anything else: a paragraph. On a measured page, the next line goes on with
    the paragraph when it is at the block's line pitch (its lower quartile of gaps; a paragraph's own
    spacing is more than a tenth larger) and the line before did not end a sentence short of the
@@ -698,10 +707,10 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: forty documents, each a PDF and a Word file, and two of them scanned** —
-thirteen Swedish, five English, four Norwegian, three each in Danish and German, two each in
-Finnish, French, Spanish, Japanese and Chinese, one each in Icelandic and Russian; one to three
-pages, and one landscape; running headers and page-number
+**What it holds today: forty-eight documents, each a PDF and a Word file, and two of them
+scanned** — fourteen Swedish, six English, four each in Danish, German and Norwegian, three each in
+Finnish, French and Spanish, two each in Icelandic, Japanese and Chinese, one in Russian; one to
+three pages, and one landscape; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -734,8 +743,17 @@ end (`nyhetsbrev`); a page that turns from one column to two, its numbers going 
 headings and the column break (`conference`); a ruled Word table of six numbered rows to fill in
 (`deltakere`); one question with 32 answers, a box to a line (`kursangebot`, #30); three pages
 under a repeated header (`enquete`); labels over the blank lines they name, once without a colon
-(`ansogning`); and a landscape page (`landscape`). Seven of them are, like `sommarlager`, too short
-for G1 to be sure of their language. Scans of real paper are still owed.
+(`ansogning`); and a landscape page (`landscape`); and §8.3's semantic traps in other languages
+(S15, batch 4): required and optional hints in English, German, French, Finnish and Icelandic
+("(required)", "*", "(Pflichtfeld)", "(freiwillig)", "(obligatoire)", "(pakollinen)", "(skylda)");
+consents in English, German, French and Icelandic; Danish, Finnish and Icelandic personal and
+organisation numbers, applied where the document's language is known and offered where it is not;
+limits inside questions, "(max 4)", "(höchstens 3)", "(au plus 4)", "(minst 7, högst 12)", and a
+number that is no limit; and text that reads like a question — a question answered in the same
+sentence, and bold questions answered under them (`membership`, `erste-hilfe`, `adhesion`,
+`indmeldelse`, `jasenrekisteri`, `felagaskra`, `turnering`, `excursion`). Nine of them are, like
+`sommarlager`, too short for G1 to be sure of their language. Scans of real paper are still
+owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;
@@ -751,7 +769,9 @@ for G1 to be sure of their language. Scans of real paper are still owed.
   the lines under an item that belong to it (J1), and the document's language — and, since S9,
   `segments`: every part of it a person would list, its headings, its text and its questions, each
   question with what answers it and the type they would give it, grids with their rows and
-  columns. Long paragraphs are copied from the spec, so they are verbatim; every kind, label, type
+  columns — and, since S15, what stage 5 says beyond the type wherever it says it: `required`
+  (yes or no, #26), the national number's `format` and whether it is applied or only offered (#27),
+  and `chips` such as "max 8" (#29). Long paragraphs are copied from the spec, so they are verbatim; every kind, label, type
   and option is decided by hand. The PDF and the Word file of a document are held to the same
   expectation, so they agree. The language is `null` where the document has too little prose for
   §2.11 to be sure (`lagerschema`).

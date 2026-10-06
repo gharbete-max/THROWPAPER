@@ -59,7 +59,11 @@
       "kind": "question",
       "label": "Personnummer",
       "answer": "blank",
-      "type": "personnummer"
+      "type": "personnummer",
+      "format": {
+        "name": "se-personnummer",
+        "apply": true
+      }
     },
     {
       "kind": "question",

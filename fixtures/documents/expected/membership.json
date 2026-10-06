@@ -1,0 +1,72 @@
+{
+  "document": "membership",
+  "locale": "en",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Club Membership"
+    },
+    {
+      "kind": "instruction",
+      "text": "Welcome to the club. To become a member, fill in this form and hand it to the secretary at any club evening, or post it to the address on the back. We use your details only to run the club, and you can ask us to remove them at any time."
+    },
+    {
+      "kind": "question",
+      "label": "Full name (required)",
+      "answer": "blank",
+      "type": "short_text",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Email address *",
+      "answer": "blank",
+      "type": "email",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Phone number (optional)",
+      "answer": "blank",
+      "type": "phone",
+      "required": "no"
+    },
+    {
+      "kind": "question",
+      "label": "How many family members will join with you? (max 4)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "Why do we ask for your date of birth?"
+    },
+    {
+      "kind": "instruction",
+      "text": "Members under 18 pay a lower fee, so we need to know your age group."
+    },
+    {
+      "kind": "question",
+      "label": "Date of birth",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "I agree that the club may keep my details in its membership register.",
+      "answer": "boolean",
+      "type": "consent"
+    },
+    {
+      "kind": "instruction",
+      "text": "We never share your details with anyone outside the club."
+    }
+  ]
+}

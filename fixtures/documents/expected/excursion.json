@@ -1,0 +1,53 @@
+{
+  "document": "excursion",
+  "locale": "es",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Excursión a la sierra"
+    },
+    {
+      "kind": "instruction",
+      "text": "El club organiza una excursión a la sierra el último domingo de octubre. Saldremos a las ocho de la mañana desde la plaza del pueblo y volveremos por la tarde. Para apuntarse, rellene esta hoja y entréguela en la secretaría antes del jueves."
+    },
+    {
+      "kind": "heading",
+      "text": "¿Puedo llevar a mi perro?"
+    },
+    {
+      "kind": "instruction",
+      "text": "Sí, siempre que vaya atado durante todo el recorrido."
+    },
+    {
+      "kind": "heading",
+      "text": "¿Hay aparcamiento en la salida?"
+    },
+    {
+      "kind": "instruction",
+      "text": "Sí, junto a la estación de autobuses, y es gratuito."
+    },
+    {
+      "kind": "question",
+      "label": "Nombre",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "¿Tiene alguna alergia o necesidad especial?",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "¿Necesita transporte desde el pueblo?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Sí",
+        "No"
+      ]
+    }
+  ]
+}

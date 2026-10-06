@@ -4,6 +4,29 @@
   "tool": "LibreOffice 24.2.7.2",
   "documents": [
     {
+      "name": "adhesion",
+      "language": "fr",
+      "summary": "A French membership slip marked \"(obligatoire)\" and \"(facultatif)\", with \"(au plus 4)\" in a question, a line that asks and answers itself (\"Vous avez une question ? Écrivez-nous …\"), and a consent beginning \"J'accepte\".",
+      "features": [
+        "required-inference",
+        "number-in-question-text",
+        "instruction-vs-question",
+        "consent",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "adhesion.pdf",
+          "sha256": "6ef9590a86c4ca3f1f78c6ae4642f1431be2c413e9e3b2c0ea5224008a4f1128"
+        },
+        "docx": {
+          "path": "adhesion.docx",
+          "sha256": "5e9b357623a8813448b5ef798b84141209807d14b1c1f3d6ae42b29dab6ddf4f"
+        }
+      }
+    },
+    {
       "name": "ankeeto",
       "language": "ja",
       "summary": "A Japanese survey numbered with circled numbers glued to their words (\"①年代\"), single choices of three boxes, and an \"その他\" (anything else) blank.",
@@ -280,6 +303,29 @@
       }
     },
     {
+      "name": "erste-hilfe",
+      "language": "de",
+      "summary": "A German course sign-up marked \"(Pflichtfeld)\" and \"(freiwillig)\", with \"(höchstens 3)\" in a question, a sentence that asks and then answers itself (\"Haben Sie Fragen? Dann rufen Sie …\"), and a consent under the GDPR.",
+      "features": [
+        "required-inference",
+        "number-in-question-text",
+        "instruction-vs-question",
+        "consent",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "erste-hilfe.pdf",
+          "sha256": "02eb807721fda3d035b50b5042f80e83c7bec8620308892dc7309162e2d7b776"
+        },
+        "docx": {
+          "path": "erste-hilfe.docx",
+          "sha256": "6e5c8959ed25b397cdcb441a7b1edc07ac3ecc47d67c7bf2a0c8d7dcf355aafb"
+        }
+      }
+    },
+    {
       "name": "event-registration",
       "language": "en",
       "summary": "Two pages under a running header, in English: sections numbered I. and II. by Word, numbered questions under each, and (a)–(d) answers under one of them; a ruled table of sessions follows.",
@@ -300,6 +346,53 @@
         "docx": {
           "path": "event-registration.docx",
           "sha256": "6670622a149fafd6418781e869ce36ee547daf608aad5d800efddfaf517bedb4"
+        }
+      }
+    },
+    {
+      "name": "excursion",
+      "language": "es",
+      "summary": "A Spanish outing whose notes are questions set in bold and answered under them (\"¿Puedo llevar a mi perro?\") — text to read, not fields — above a form with a question of its own to answer.",
+      "features": [
+        "instruction-vs-question",
+        "faq",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "excursion.pdf",
+          "sha256": "caa3b73fb0325d1ecf59b00f1140a927b09c751a93fdd30e183deef91d7ce377"
+        },
+        "docx": {
+          "path": "excursion.docx",
+          "sha256": "8dff0f21318d90cd0cf60e4dbf2d59cbb4928d73f93dfea7327d55ec3a093c97"
+        }
+      }
+    },
+    {
+      "name": "felagaskra",
+      "language": "is",
+      "summary": "An Icelandic register form asking for a person's kennitala and a company's, the second by the longer phrase \"Kennitala fyrirtækis\", marked \"(skylda)\", with a consent beginning \"Ég samþykki\", under enough prose for its language to be known.",
+      "features": [
+        "locale-specific-fields",
+        "personnummer",
+        "orgnr",
+        "required-inference",
+        "consent",
+        "locale",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "felagaskra.pdf",
+          "sha256": "4a883e55b8d5e7457f5c3a59a49def8eb96f71e69ef34da912b46a9abc9faae2"
+        },
+        "docx": {
+          "path": "felagaskra.docx",
+          "sha256": "9055eefff007c51d861132469e74978f3022c17aec535858bace81d9c1db0fcb"
         }
       }
     },
@@ -419,6 +512,29 @@
       }
     },
     {
+      "name": "indmeldelse",
+      "language": "da",
+      "summary": "A Danish membership form asking for a CPR-nummer and, for associations and firms, a CVR-nummer, under an introduction long enough for its language to be known — so both checks are applied, not only offered (#27).",
+      "features": [
+        "locale-specific-fields",
+        "personnummer",
+        "orgnr",
+        "locale",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "indmeldelse.pdf",
+          "sha256": "58c28f83634ba76bba64a14507595f21216f29e867ac5ce46f9e4f00f4f496eb"
+        },
+        "docx": {
+          "path": "indmeldelse.docx",
+          "sha256": "218aa3a96f70615c8b568942b1f2301b094ef7aeb43725c11ec528ac1aa56a6a"
+        }
+      }
+    },
+    {
       "name": "innmelding",
       "language": "nb",
       "summary": "A Norwegian club registration numbered \"(1)\" to \"(6)\" straight on across three section headings, beside an amount in brackets in its prose; a fødselsnummer and an organisasjonsnummer; and \"Navn\" asked twice, once in each section.",
@@ -462,6 +578,31 @@
         "docx": {
           "path": "inscription.docx",
           "sha256": "29ab87dc718c3659ef7261b55227b8e70b60d1ee89f5bc23ec7207ac3e4a8c0d"
+        }
+      }
+    },
+    {
+      "name": "jasenrekisteri",
+      "language": "fi",
+      "summary": "A Finnish register update asking for a henkilötunnus and a Y-tunnus, with \"(pakollinen)\", \"(vapaaehtoinen)\" and \"(enintään 6)\" in its labels, under enough prose for its language to be known. Its language is not guessed — 16 stop words of G1's 20, though 13 of them are Finnish alone — so its checks are offered, not applied.",
+      "features": [
+        "locale-specific-fields",
+        "personnummer",
+        "orgnr",
+        "required-inference",
+        "number-in-question-text",
+        "locale",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "jasenrekisteri.pdf",
+          "sha256": "9881b01cd6bff0be2b10c0f34dec6d6396193a81c92d3cea63248ae0e2f74f2f"
+        },
+        "docx": {
+          "path": "jasenrekisteri.docx",
+          "sha256": "1e788a8a32e692e28744579904fd00ca95d06940571a2f2a1a255327a83fc9e8"
         }
       }
     },
@@ -552,6 +693,29 @@
         "docx": {
           "path": "medlemsansokan.docx",
           "sha256": "ee8ffa3f40412ddf2cb57585d6e293bc3287db1616f1963974e4f1d1ab8e9e36"
+        }
+      }
+    },
+    {
+      "name": "membership",
+      "language": "en",
+      "summary": "An English membership form with \"(required)\", \"*\" and \"(optional)\" hints, a limit inside a question (\"(max 4)\"), a bold question that a short answer follows — a heading of the notes, not a field — and a consent to tick.",
+      "features": [
+        "required-inference",
+        "number-in-question-text",
+        "instruction-vs-question",
+        "consent",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "membership.pdf",
+          "sha256": "5b5e612de567081e53c639dbb870494caffca6b3638b7495f95d7e4d27b4581e"
+        },
+        "docx": {
+          "path": "membership.docx",
+          "sha256": "dd4095e1208acce7739f0c5bce34143ee4fe266d6559995cd74f3fb6e2120b0c"
         }
       }
     },
@@ -873,6 +1037,28 @@
         "docx": {
           "path": "tilmelding.docx",
           "sha256": "a16d2e83788bf85e3ca8dc5bdfb5e62d075e3d4b91e8a10f4439a643028765b5"
+        }
+      }
+    },
+    {
+      "name": "turnering",
+      "language": "sv",
+      "summary": "A Swedish tournament entry whose questions carry their limits — \"(högst 3)\", \"(minst 7, högst 12)\", \"(minst 10 år)\" — and one whose number is no limit at all (\"under de senaste 5 åren\"). Its language is not guessed: 16 stop words of G1's 20.",
+      "features": [
+        "number-in-question-text",
+        "min-max-chips",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "turnering.pdf",
+          "sha256": "f1893d8d122bf2656ec65305163dab662d3c642481aa5ab554a39f86f25170c3"
+        },
+        "docx": {
+          "path": "turnering.docx",
+          "sha256": "d80aa3535b9eb22d94df4bb8d89a9aba9116ff7924c2bccda6fc26c88eafcae0"
         }
       }
     },

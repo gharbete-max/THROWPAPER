@@ -42,7 +42,11 @@
       "kind": "question",
       "label": "Kennitala",
       "answer": "blank",
-      "type": "personnummer"
+      "type": "personnummer",
+      "format": {
+        "name": "is-kennitala",
+        "apply": false
+      }
     },
     {
       "kind": "question",

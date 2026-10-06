@@ -43,7 +43,7 @@ import { columnRegions, type CutDecision, type Region } from './xycut.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const REASSEMBLE_STAGE_VERSION = 5;
+export const REASSEMBLE_STAGE_VERSION = 6;
 
 /** §2.1: the presentation-form ligatures, and what each is. */
 const LIGATURES: Readonly<Record<string, string>> = {
@@ -352,7 +352,12 @@ function dehyphenate(block: Block, rect: Box): void {
       line.joins.push({ rule: 'Y3', raw: `${last.text}\n${first.text}`, word: last.text });
       continue;
     }
-    const drop = /^\p{Ll}/u.test(first.text) && [...fragment].length >= 3;
+    // A hyphen after an abbreviation is the word's own, as after "e-": "CPR-nummer" (#155).
+    const abbreviation =
+      [...fragment].length >= 2 &&
+      fragment === fragment.toUpperCase() &&
+      fragment !== fragment.toLowerCase();
+    const drop = /^\p{Ll}/u.test(first.text) && [...fragment].length >= 3 && !abbreviation;
     const raw = `${last.repair?.raw ?? last.text}\n${first.repair?.raw ?? first.text}`;
     const text = drop ? `${last.text.slice(0, -1)}${first.text}` : `${last.text}${first.text}`;
     const joined: Word = {

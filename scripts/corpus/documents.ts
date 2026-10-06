@@ -35,6 +35,9 @@ export interface CorpusDocument {
 
 const blank = (n: number) => '_'.repeat(n);
 
+/** A paragraph set in bold, as a question in a list of notes is. */
+const strong = (text: string): Block => ({ kind: 'p', runs: [{ text, bold: true }] });
+
 /** Paragraphs of ordinary prose, enough to fill part of a page. */
 const filler = (sentences: string[]): Block[] => sentences.map((sentence) => para(sentence));
 
@@ -1214,6 +1217,224 @@ export const CORPUS: CorpusDocument[] = [
           [6000, 2000, 2000, 2000],
         ),
         para(`4.\tComments: ${blank(40)}`),
+      ],
+    },
+  },
+  // ── S15 batch 4: §8.3's semantic traps — required hints, consent, national numbers, numbers in
+  // questions, and text that reads like a question — in the other languages.
+  {
+    name: 'membership',
+    language: 'en',
+    summary:
+      'An English membership form with "(required)", "*" and "(optional)" hints, a limit inside a question ("(max 4)"), a bold question that a short answer follows — a heading of the notes, not a field — and a consent to tick.',
+    features: [
+      'required-inference',
+      'number-in-question-text',
+      'instruction-vs-question',
+      'consent',
+      'blanks',
+    ],
+    word: {
+      blocks: [
+        title('Club Membership'),
+        para(
+          'Welcome to the club. To become a member, fill in this form and hand it to the secretary at any club evening, or post it to the address on the back. We use your details only to run the club, and you can ask us to remove them at any time.',
+        ),
+        para(`Full name (required): ${blank(24)}`),
+        para(`Email address *: ${blank(24)}`),
+        para(`Phone number (optional): ${blank(20)}`),
+        para(`How many family members will join with you? (max 4) ${blank(6)}`),
+        strong('Why do we ask for your date of birth?'),
+        para('Members under 18 pay a lower fee, so we need to know your age group.'),
+        para(`Date of birth: ${blank(16)}`),
+        para('☐ I agree that the club may keep my details in its membership register.'),
+        small('We never share your details with anyone outside the club.'),
+      ],
+    },
+  },
+  {
+    name: 'erste-hilfe',
+    language: 'de',
+    summary:
+      'A German course sign-up marked "(Pflichtfeld)" and "(freiwillig)", with "(höchstens 3)" in a question, a sentence that asks and then answers itself ("Haben Sie Fragen? Dann rufen Sie …"), and a consent under the GDPR.',
+    features: [
+      'required-inference',
+      'number-in-question-text',
+      'instruction-vs-question',
+      'consent',
+      'blanks',
+    ],
+    word: {
+      blocks: [
+        title('Anmeldung zum Erste-Hilfe-Kurs'),
+        para(
+          'Der Verein bietet im Frühjahr wieder einen Erste-Hilfe-Kurs für Mitglieder und ihre Angehörigen an. Der Kurs findet an einem Samstag im Vereinsheim statt, und die Teilnahme ist für Mitglieder kostenlos. Bitte füllen Sie das Formular aus und geben Sie es bis Ende März beim Vorstand ab.',
+        ),
+        para(`Vor- und Nachname (Pflichtfeld): ${blank(20)}`),
+        para(`E-Mail (Pflichtfeld): ${blank(24)}`),
+        para(`Telefon (freiwillig): ${blank(22)}`),
+        para(`Wie viele Personen melden Sie an? (höchstens 3) ${blank(6)}`),
+        para('Haben Sie Fragen? Dann rufen Sie uns gern im Vereinsheim an.'),
+        para(
+          '☐ Ich bin damit einverstanden, dass meine Angaben gemäß DSGVO für die Kursverwaltung gespeichert werden.',
+        ),
+      ],
+    },
+  },
+  {
+    name: 'adhesion',
+    language: 'fr',
+    summary:
+      'A French membership slip marked "(obligatoire)" and "(facultatif)", with "(au plus 4)" in a question, a line that asks and answers itself ("Vous avez une question ? Écrivez-nous …"), and a consent beginning "J\'accepte".',
+    features: [
+      'required-inference',
+      'number-in-question-text',
+      'instruction-vs-question',
+      'consent',
+      'blanks',
+    ],
+    word: {
+      blocks: [
+        title("Bulletin d'adhésion"),
+        para(
+          "Pour adhérer à l'association, remplissez ce bulletin et remettez-le au trésorier avec votre cotisation. Les informations que vous nous donnez servent uniquement à la gestion des adhésions et ne sont jamais transmises à des tiers. Vous pouvez demander à tout moment qu'elles soient effacées.",
+        ),
+        para(`Nom et prénom (obligatoire) : ${blank(20)}`),
+        para(`Courriel (obligatoire) : ${blank(24)}`),
+        para(`Téléphone (facultatif) : ${blank(22)}`),
+        para(`Nombre de places réservées pour la fête (au plus 4) : ${blank(6)}`),
+        para("Vous avez une question ? Écrivez-nous à l'adresse du club."),
+        para(
+          "☐ J'accepte que l'association conserve mes données personnelles pour la gestion des adhésions.",
+        ),
+      ],
+    },
+  },
+  {
+    name: 'indmeldelse',
+    language: 'da',
+    summary:
+      'A Danish membership form asking for a CPR-nummer and, for associations and firms, a CVR-nummer, under an introduction long enough for its language to be known — so both checks are applied, not only offered (#27).',
+    features: ['locale-specific-fields', 'personnummer', 'orgnr', 'locale', 'blanks'],
+    word: {
+      blocks: [
+        title('Indmeldelse i foreningen'),
+        para(
+          'Vi bedes om at registrere alle medlemmer hos kommunen, og derfor har vi brug for dit CPR-nummer. Udfyld venligst skemaet med dine egne oplysninger og aflever det i klubhuset, når du har tid. Vores kasserer gemmer oplysningerne i et aflåst skab, og vi giver dem aldrig videre til nogen uden for foreningen.',
+        ),
+        para(
+          'Har du spørgsmål om, hvad vi bruger oplysningerne til, så kontakt gerne bestyrelsen. Melder du en forening eller et firma ind, skal du også skrive dets CVR-nummer. Tak for hjælpen.',
+        ),
+        para(`Navn: ${blank(30)}`),
+        para(`Adresse: ${blank(28)}`),
+        para(`CPR-nummer: ${blank(16)}`),
+        para(`CVR-nummer (kun for foreninger og firmaer): ${blank(10)}`),
+        para(`Underskrift: ${blank(26)}`),
+      ],
+    },
+  },
+  {
+    name: 'jasenrekisteri',
+    language: 'fi',
+    summary:
+      'A Finnish register update asking for a henkilötunnus and a Y-tunnus, with "(pakollinen)", "(vapaaehtoinen)" and "(enintään 6)" in its labels, under enough prose for its language to be known. Its language is not guessed — 16 stop words of G1\'s 20, though 13 of them are Finnish alone — so its checks are offered, not applied.',
+    features: [
+      'locale-specific-fields',
+      'personnummer',
+      'orgnr',
+      'required-inference',
+      'number-in-question-text',
+      'locale',
+      'blanks',
+    ],
+    word: {
+      blocks: [
+        title('Jäsenrekisterin päivitys'),
+        para(
+          'Seuran jäsenrekisteri on päivitettävä joka vuosi, ja siksi pyydämme kaikkia jäseniä täyttämään tämän lomakkeen. Tarvitsemme henkilötunnuksen, kun haemme avustusta kaupungilta, mutta emme luovuta sitä kenellekään muulle. Jos edustat yhdistystä tai yritystä, kirjoita myös sen Y-tunnus.',
+        ),
+        para(
+          'Palauta lomake hallitukselle ennen kevätkokousta, niin ehdimme käsitellä sen ajoissa. Jos sinulla on kysyttävää, voit soittaa sihteerille tai kysyä asiasta seuraavassa kokouksessa. Kiitos, että autat meitä pitämään rekisterin ajan tasalla.',
+        ),
+        para(`Nimi (pakollinen): ${blank(26)}`),
+        para(`Henkilötunnus: ${blank(20)}`),
+        para(`Sähköposti (vapaaehtoinen): ${blank(18)}`),
+        para(`Y-tunnus (vain yhdistykset ja yritykset): ${blank(10)}`),
+        para(`Kuinka monta lasta perheessänne on? (enintään 6) ${blank(6)}`),
+      ],
+    },
+  },
+  {
+    name: 'felagaskra',
+    language: 'is',
+    summary:
+      'An Icelandic register form asking for a person\'s kennitala and a company\'s, the second by the longer phrase "Kennitala fyrirtækis", marked "(skylda)", with a consent beginning "Ég samþykki", under enough prose for its language to be known.',
+    features: [
+      'locale-specific-fields',
+      'personnummer',
+      'orgnr',
+      'required-inference',
+      'consent',
+      'locale',
+      'blanks',
+    ],
+    word: {
+      blocks: [
+        title('Skráning í félagaskrá'),
+        para(
+          'Félagið heldur skrá yfir alla félagsmenn og þarf að fá kennitölu hvers og eins til að geta sent greiðsluseðla. Vinsamlegast fylltu út eyðublaðið og skilaðu því til gjaldkera fyrir aðalfund. Við notum upplýsingarnar aðeins í starfi félagsins og látum þær ekki af hendi.',
+        ),
+        para(
+          'Ef þú ert að skrá fyrirtæki eða annað félag, skrifaðu þá kennitölu þess í reitinn fyrir neðan. Hafðu samband við stjórnina ef eitthvað er óljóst, og við svörum eins fljótt og við getum. Takk fyrir að vera með okkur.',
+        ),
+        para(`Nafn (skylda): ${blank(28)}`),
+        para(`Kennitala: ${blank(20)}`),
+        para(`Kennitala fyrirtækis: ${blank(16)}`),
+        para(`Netfang: ${blank(28)}`),
+        para('☐ Ég samþykki að félagið geymi upplýsingarnar mínar í félagaskránni.'),
+      ],
+    },
+  },
+  {
+    name: 'turnering',
+    language: 'sv',
+    summary:
+      'A Swedish tournament entry whose questions carry their limits — "(högst 3)", "(minst 7, högst 12)", "(minst 10 år)" — and one whose number is no limit at all ("under de senaste 5 åren"). Its language is not guessed: 16 stop words of G1\'s 20.',
+    features: ['number-in-question-text', 'min-max-chips', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Anmälan till fotbollsturneringen'),
+        para(
+          'Turneringen spelas på klubbens gräsplaner den första helgen i juni. Varje förening får anmäla flera lag, och alla lag spelar minst tre matcher. Anmälan ska vara inne hos tävlingsledningen senast den 1 maj, och avgiften betalas när lagen har lottats.',
+        ),
+        para(`Föreningens namn: ${blank(26)}`),
+        para(`Hur många lag anmäler ni? (högst 3) ${blank(6)}`),
+        para(`Antal spelare per lag (minst 7, högst 12): ${blank(6)}`),
+        para(`Yngsta spelarens ålder (minst 10 år): ${blank(6)}`),
+        para('Har ni deltagit i turneringen under de senaste 5 åren?   ☐ Ja   ☐ Nej'),
+        para(`Kontaktperson och telefon: ${blank(20)}`),
+      ],
+    },
+  },
+  {
+    name: 'excursion',
+    language: 'es',
+    summary:
+      'A Spanish outing whose notes are questions set in bold and answered under them ("¿Puedo llevar a mi perro?") — text to read, not fields — above a form with a question of its own to answer.',
+    features: ['instruction-vs-question', 'faq', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Excursión a la sierra'),
+        para(
+          'El club organiza una excursión a la sierra el último domingo de octubre. Saldremos a las ocho de la mañana desde la plaza del pueblo y volveremos por la tarde. Para apuntarse, rellene esta hoja y entréguela en la secretaría antes del jueves.',
+        ),
+        strong('¿Puedo llevar a mi perro?'),
+        para('Sí, siempre que vaya atado durante todo el recorrido.'),
+        strong('¿Hay aparcamiento en la salida?'),
+        para('Sí, junto a la estación de autobuses, y es gratuito.'),
+        para(`Nombre: ${blank(30)}`),
+        para(`¿Tiene alguna alergia o necesidad especial? ${blank(16)}`),
+        para('¿Necesita transporte desde el pueblo?   ☐ Sí   ☐ No'),
       ],
     },
   },

@@ -27,7 +27,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SEGMENT_STAGE_VERSION = 5;
+export const SEGMENT_STAGE_VERSION = 6;
 /** More options than this and the question is flagged (#30). */
 export const MAX_OPTIONS = 30;
 /** A label longer than this is prose to read, not a label (rules 1, 7, 8). */
@@ -837,7 +837,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     // A detail line or a continuation line whose item was not claimed is read on its own.
     const asItem = item && item.lineIds[0] === id && free(item.lineIds) ? item : null;
     let ids = asItem ? asItem.lineIds.filter((x) => !claimed.has(x)) : [id];
-    const words = asItem
+    let words = asItem
       ? asItem.lineIds.flatMap((x) => textWords(at(x)))
       : boxesApart(line.ir.words);
     let text = asItem ? asItem.label : line.ir.text;
@@ -889,6 +889,27 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     const details = asItem ? detailsOf(asItem) : [];
     const withDetails = (lineIds: string[]) =>
       asItem ? [...lineIds, ...asItem.detailLineIds.filter((x) => !claimed.has(x))] : lineIds;
+
+    // A box's words run on as a paragraph does (#154): a box line that reaches its column's edge
+    // goes on in the lines of text after it in its block, at the block's pitch. (An item's lines
+    // are joined by stage 3 already.)
+    if (!asItem && boxes.length > 0) {
+      for (let last = line; measured(last) && wrapped(last);) {
+        const following = lines[last.order + 1];
+        if (
+          !following ||
+          following.block.id !== line.block.id ||
+          claimed.has(following.ir.id) ||
+          !isProse(following.ir.id) ||
+          answerSpace(following) ||
+          (following.ir.baseline - last.ir.baseline) * 10 > pitchOf(line.block) * 11
+        )
+          break;
+        ids = [...ids, following.ir.id];
+        words = [...words, ...boxesApart(following.ir.words)];
+        last = following;
+      }
+    }
 
     // Rules 4 and 5: checkboxes.
     if (boxes.length > 0) {
@@ -1069,6 +1090,26 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     const introducesBullets = nextItem?.marker.family === 'bullet';
     // "Hur många gäster? (max 8)": a note in brackets after the question mark still asks.
     const asks = ASKS.test(text);
+    // S1d (#156): a bold sentence that asks, with nothing to answer in, followed by a sentence
+    // that ends — "¿Puedo llevar a mi perro?" and "Sí, siempre que vaya atado." — is the heading
+    // of the note that answers it, not a field. Without the bold, or with room, boxes or another
+    // question after it, it is a question.
+    const after = lines[last.order + 1];
+    if (
+      asks &&
+      ids.every((x) => at(x).ir.fontWeight === 700) &&
+      after &&
+      after.role === 'body' &&
+      !claimed.has(after.ir.id) &&
+      isProse(after.ir.id) &&
+      !answerSpace(after) &&
+      !ASKS.test(after.ir.text) &&
+      endsWithAny(after.ir.text, '.!')
+    ) {
+      emit({ kind: 'heading', lineIds: ids, text });
+      decide(id, 'S1d', ids, 'heading', { answeredBy: after.ir.id });
+      continue;
+    }
     if (
       (length <= LABEL_MAX && asks) ||
       (length <= COLON_LABEL_MAX && halfWidth(text).endsWith(':') && !introducesBullets)

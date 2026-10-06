@@ -1,0 +1,13 @@
+{
+  "stage": "classify",
+  "stageVersion": 3,
+  "irVersion": 1,
+  "inputSha256": "9c59381972fe35548c2646a0fc13253876420f53b1ba65f4690613775a9079c1",
+  "decisions": [
+    {"id":"classify:p1-l8","rule":"K1","verdict":"short_text","subject":["p1-l8"],"evidence":{"confidence":976,"features":"nameWord required","margin":3700,"required":"yes","runnerUp":"long_text"}},
+    {"id":"classify:p1-l9","rule":"K1","verdict":"personnummer","subject":["p1-l9"],"evidence":{"confidence":971,"features":"personnummerWord","format":"fi-hetu (chip)","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l10","rule":"K1","verdict":"email","subject":["p1-l10"],"evidence":{"confidence":953,"features":"emailWord optional","margin":3000,"required":"no","runnerUp":"short_text"}},
+    {"id":"classify:p1-l11","rule":"K1","verdict":"orgnr","subject":["p1-l11"],"evidence":{"confidence":971,"features":"orgNrWord","format":"fi-ytunnus (chip)","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l12","rule":"K1","verdict":"number","subject":["p1-l12"],"evidence":{"confidence":924,"features":"maxWords numberWord","margin":2500,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

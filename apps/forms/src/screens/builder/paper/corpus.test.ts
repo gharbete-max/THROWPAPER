@@ -81,6 +81,12 @@ interface Seen {
   columns?: string[];
   rowCount?: number;
   flags?: string[];
+  /** Stage 5's reading of a question, when it says more than "unknown" (§8.3, #26). */
+  required?: 'yes' | 'no';
+  /** A national number's check, applied or only offered (#27). */
+  format?: { name: string; apply: boolean };
+  /** "max 8" and the like, offered, never applied (#29). */
+  chips?: { name: string; value: number | null }[];
 }
 interface Expectation {
   document: string;
@@ -139,9 +145,22 @@ function listed({ lists, layout }: Reading): Listed[] {
   return under(null);
 }
 
-/** Stage 4's segments, with stage 5's type for each question, as the expectations write them. */
+/**
+ * Stage 4's segments, with stage 5's type for each question, as the expectations write them — and,
+ * where stage 5 says anything, whether it must be answered, its format and its chips.
+ */
 function seen({ segments, classified }: Reading): Seen[] {
   const types = new Map(classified.classified.map((c) => [c.segmentIndex, c.kind]));
+  const read = new Map(classified.classified.map((c) => [c.segmentIndex, c]));
+  const semantics = (index: number): Pick<Seen, 'required' | 'format' | 'chips'> => {
+    const c = read.get(index);
+    if (!c) return {};
+    return {
+      ...(c.required === 'unknown' ? {} : { required: c.required }),
+      ...(c.format ? { format: { name: c.format.name, apply: c.format.apply } } : {}),
+      ...(c.chips.length ? { chips: c.chips.map(({ name, value }) => ({ name, value })) } : {}),
+    };
+  };
   return segments.segments.map((segment, index): Seen => {
     const type = types.get(index);
     switch (segment.kind) {
@@ -158,6 +177,7 @@ function seen({ segments, classified }: Reading): Seen[] {
           ...(segment.options.length ? { options: segment.options } : {}),
           ...(segment.details.length ? { details: segment.details } : {}),
           ...(segment.flags.length ? { flags: segment.flags } : {}),
+          ...semantics(index),
         };
       case 'grid':
         return {

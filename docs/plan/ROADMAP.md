@@ -86,7 +86,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 | **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
-| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batches 1 to 3 done (40 documents), batch 4 next |
+| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batches 1 to 4 done (48 documents), batch 5 next |
 
 ## S15 — The corpus to sixty
 
@@ -629,3 +629,24 @@ when each slice ends.)*
   nothing to go on, flagged for the person to change. Reassemble and segment are at stage version
   5; every other snapshot moved only those lines and S6b's new `colon` evidence, input hashes
   unchanged. 40 documents. Next: batch 4.
+- **S15 batch 4, §8.3 in other languages (2026-10-06).** What: eight documents — `membership` (en),
+  `erste-hilfe` (de), `adhesion` (fr), `indmeldelse` (da), `jasenrekisteri` (fi), `felagaskra`
+  (is), `turnering` (sv), `excursion` (es) — for required and optional hints, consents, national
+  numbers, limits inside questions and text that reads like a question. First, the corpus test
+  learnt to hold what stage 5 says beyond the type: `required`, `format` (applied or offered) and
+  `chips`. Five older documents carry one (`baoming`, `innmelding`, `medlemsansokan`, `skraning`,
+  `sommarlager`); each value was checked against its label and is right. Found, each with a fixture
+  written and failing first and failing with its rule out:
+  - a consent whose words wrap in the PDF lost the end of its sentence to an instruction of its
+    own (#154): a box line that reaches its column's edge goes on in the lines of text after it;
+  - "CPR-" and "nummer" across a line break were joined as "CPRnummer" (#155): a hyphen after an
+    abbreviation is the word's own, as after "e-";
+  - bold questions answered under them, a list of notes, were fields to fill in (#156): S1d.
+
+  My expectations were wrong for two documents, `jasenrekisteri` and `turnering`: G1 is not sure of
+  their language at 16 stop words of 20, so the Finnish checks are offered, not applied. One
+  observation for the owner, not acted on: Finnish has few stop words, and its document carries 13
+  that are Finnish alone against 2 of any other language; G1's floor of 20 is the only thing
+  short. Moving it after seeing a document fail is what the rules forbid, so it waits for a
+  calibration of its own. Reassemble and segment are at stage version 6; every other snapshot moved
+  only those lines, input hashes unchanged. 48 documents. Next: batch 5.

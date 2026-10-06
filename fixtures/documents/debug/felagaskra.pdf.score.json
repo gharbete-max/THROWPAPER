@@ -1,0 +1,16 @@
+{
+  "stage": "score",
+  "stageVersion": 2,
+  "irVersion": 1,
+  "inputSha256": "2de10c8048b60c78ae5050ebd48f734252cbb419470070776fb025cdf7976056",
+  "decisions": [
+    {"id":"score:p1-l1","rule":"Q2","verdict":"auto","subject":["p1-l1"],"evidence":{"confidence":924,"heading":2500,"sum":2500}},
+    {"id":"score:p1-l2","rule":"Q2","verdict":"auto","subject":["p1-l2","p1-l3","p1-l4"],"evidence":{"confidence":924,"instruction":2500,"sum":2500}},
+    {"id":"score:p1-l5","rule":"Q2","verdict":"auto","subject":["p1-l5","p1-l6","p1-l7"],"evidence":{"confidence":924,"instruction":2500,"sum":2500}},
+    {"id":"score:p1-l8","rule":"Q1","verdict":"auto","subject":["p1-l8"],"evidence":{"answer":976,"bias":500,"blank":1500,"colon":500,"confidence":924,"required":"auto","sum":2500}},
+    {"id":"score:p1-l9","rule":"Q1","verdict":"auto","subject":["p1-l9"],"evidence":{"answer":971,"bias":500,"blank":1500,"colon":500,"confidence":924,"required":"flag","sum":2500}},
+    {"id":"score:p1-l10","rule":"Q1","verdict":"auto","subject":["p1-l10"],"evidence":{"answer":971,"bias":500,"blank":1500,"colon":500,"confidence":924,"required":"flag","sum":2500}},
+    {"id":"score:p1-l11","rule":"Q1","verdict":"auto","subject":["p1-l11"],"evidence":{"answer":953,"bias":500,"blank":1500,"colon":500,"confidence":924,"required":"flag","sum":2500}},
+    {"id":"score:p1-l12","rule":"Q1","verdict":"auto","subject":["p1-l12"],"evidence":{"answer":953,"bias":500,"checkbox":1500,"confidence":881,"required":"flag","sum":2000}}
+  ]
+}

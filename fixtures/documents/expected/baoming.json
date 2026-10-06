@@ -44,7 +44,13 @@
       "kind": "question",
       "label": "参加人数（最多8人）",
       "answer": "blank",
-      "type": "number"
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 8
+        }
+      ]
     },
     {
       "kind": "question",

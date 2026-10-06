@@ -1,6 +1,6 @@
 {
   "stage": "reassemble",
-  "stageVersion": 5,
+  "stageVersion": 6,
   "irVersion": 1,
   "inputSha256": "093971042e32fbccdf9aa58a0cf5f4d9da4e5975aecd1c5ba2acb1cc97ec3df9",
   "decisions": [

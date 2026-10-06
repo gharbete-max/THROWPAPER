@@ -1,0 +1,58 @@
+{
+  "document": "adhesion",
+  "locale": "fr",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Bulletin d'adhésion"
+    },
+    {
+      "kind": "instruction",
+      "text": "Pour adhérer à l'association, remplissez ce bulletin et remettez-le au trésorier avec votre cotisation. Les informations que vous nous donnez servent uniquement à la gestion des adhésions et ne sont jamais transmises à des tiers. Vous pouvez demander à tout moment qu'elles soient effacées."
+    },
+    {
+      "kind": "question",
+      "label": "Nom et prénom (obligatoire)",
+      "answer": "blank",
+      "type": "short_text",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Courriel (obligatoire)",
+      "answer": "blank",
+      "type": "email",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Téléphone (facultatif)",
+      "answer": "blank",
+      "type": "phone",
+      "required": "no"
+    },
+    {
+      "kind": "question",
+      "label": "Nombre de places réservées pour la fête (au plus 4)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "text": "Vous avez une question ? Écrivez-nous à l'adresse du club."
+    },
+    {
+      "kind": "question",
+      "label": "J'accepte que l'association conserve mes données personnelles pour la gestion des adhésions.",
+      "answer": "boolean",
+      "type": "consent"
+    }
+  ]
+}
