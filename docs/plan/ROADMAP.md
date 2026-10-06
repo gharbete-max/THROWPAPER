@@ -86,7 +86,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 | **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
-| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batches 1 and 2 done (33 documents), batch 3 next |
+| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batches 1 to 3 done (40 documents), batch 4 next |
 
 ## S15 — The corpus to sixty
 
@@ -607,3 +607,25 @@ when each slice ends.)*
 
   Segment is at stage version 4; every other snapshot moved only that line and S7's new `room`
   evidence, its input hashes unchanged. 33 documents. Next: batch 3.
+- **S15 batch 3, §8.2's layout traps (2026-10-06).** What: seven documents — `nyhetsbrev` (sv, a
+  two-column newsletter with a form after it), `conference` (en, one column to two, numbers on
+  across headings and the column break), `deltakere` (nb, a ruled table of numbered rows to fill
+  in), `kursangebot` (de, 32 answers a box to a line), `enquete` (fr, three pages under a repeated
+  header), `ansogning` (da, labels over their blank lines), `landscape` (en, a landscape page,
+  which needed `landscape` in the Word writer). Three read as written, the landscape page among
+  them. Found, each with a fixture or test written and failing first and failing with its rule out:
+  - a question with a note in brackets, "…besuchen? (Mehrfachnennungen möglich)", did not claim
+    the 32 box lines under it, so it was 33 questions (#150): S5d asks what §4.7 asks;
+  - a label with no colon over its blank lines was text, the blanks a question with no label
+    (#151): S6b takes a label that is short and does not end a sentence, as a grid's label is;
+  - the Word reader stacks every cell, empty ones too, so a table of empty rows came apart a row
+    to a block (#152, B1t: a Word table is one block until its rows start again), and its
+    numbered rows were nine lines of text where the PDF read a table (#153, S3c: S3 from the
+    cells).
+
+  My expectations were wrong in five places: three languages G1 cannot be sure of (`ansogning`,
+  `deltakere`, `kursangebot`), and two open questions I typed long text that carry no word for it
+  ("Que faudrait-il améliorer ?", "Weitere Wünsche") — short text is the classifier's guess with
+  nothing to go on, flagged for the person to change. Reassemble and segment are at stage version
+  5; every other snapshot moved only those lines and S6b's new `colon` evidence, input hashes
+  unchanged. 40 documents. Next: batch 4.

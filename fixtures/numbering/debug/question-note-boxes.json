@@ -1,0 +1,10 @@
+{
+  "stage": "segment",
+  "stageVersion": 5,
+  "irVersion": 1,
+  "inputSha256": "05c12c645468b3b32e9ec6f470cbed89a7b8fe2a425a28936f1218b99487537c",
+  "decisions": [
+    {"id":"segment:p1-l1","rule":"S5d","verdict":"question:choice","subject":["p1-l1","p1-l2","p1-l3","p1-l4"],"evidence":{"options":3}},
+    {"id":"segment:p1-l5","rule":"S8","verdict":"instruction","subject":["p1-l5"],"evidence":{"lines":1}}
+  ]
+}

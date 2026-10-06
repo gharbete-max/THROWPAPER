@@ -1,0 +1,78 @@
+{
+  "document": "nyhetsbrev",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Namn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Antal personer: ____________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Vill du hjälpa till med festen? ☐ Ja ☐ Nej"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Föreningsbladet hösten 2026"
+    },
+    {
+      "kind": "heading",
+      "text": "Ordföranden har ordet"
+    },
+    {
+      "kind": "instruction",
+      "text": "Sommaren har varit full av aktiviteter, och styrelsen vill tacka alla som har ställt upp som ledare och funktionärer. Utan er hade vi inte kunnat genomföra lägret, seglingarna eller midsommarfesten."
+    },
+    {
+      "kind": "instruction",
+      "text": "Nu börjar höstens arbete. Vi har fått bidrag från kommunen till nya flytvästar, och i oktober målar vi om klubbhuset. Alla som vill hjälpa till är välkomna en lördag förmiddag."
+    },
+    {
+      "kind": "heading",
+      "text": "Höstens aktiviteter"
+    },
+    {
+      "kind": "instruction",
+      "text": "Varje tisdag kväll träffas vi i klubbhuset för fika och planering. Den sista helgen i september har vi upptagning av båtarna, och då behöver vi många händer."
+    },
+    {
+      "kind": "instruction",
+      "text": "I november firar föreningen sitt femtioårsjubileum med en fest för medlemmar och tidigare medlemmar. Anmäl dig på blanketten nedan, så att vi vet hur många vi blir."
+    },
+    {
+      "kind": "heading",
+      "text": "Anmälan till jubileumsfesten"
+    },
+    {
+      "kind": "instruction",
+      "text": "Lämna blanketten till kansliet senast den 1 oktober."
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Antal personer",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "question",
+      "label": "Vill du hjälpa till med festen?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    }
+  ]
+}

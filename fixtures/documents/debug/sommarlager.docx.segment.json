@@ -1,6 +1,6 @@
 {
   "stage": "segment",
-  "stageVersion": 4,
+  "stageVersion": 5,
   "irVersion": 1,
   "inputSha256": "e72e9381234d86f37a50f4d2e67c7ca13efb5c4e6da520e7c448135f000d1bf1",
   "decisions": [
@@ -9,7 +9,7 @@
     {"id":"segment:p1-l3","rule":"S1b","verdict":"heading","subject":["p1-l3"],"evidence":{}},
     {"id":"segment:p1-l4","rule":"S6","verdict":"question:blank","subject":["p1-l4"],"evidence":{"room":0}},
     {"id":"segment:p1-l5","rule":"S6","verdict":"question:blank","subject":["p1-l5"],"evidence":{"room":0}},
-    {"id":"segment:p1-l6","rule":"S6b","verdict":"question:blank","subject":["p1-l6","p1-l7"],"evidence":{"room":1}},
+    {"id":"segment:p1-l6","rule":"S6b","verdict":"question:blank","subject":["p1-l6","p1-l7"],"evidence":{"colon":true,"room":1}},
     {"id":"segment:p1-l8","rule":"S6","verdict":"question:blank","subject":["p1-l8"],"evidence":{"room":0}},
     {"id":"segment:p1-l9","rule":"S1b","verdict":"heading","subject":["p1-l9"],"evidence":{}},
     {"id":"segment:p1-l10","rule":"S6","verdict":"question:blank","subject":["p1-l10"],"evidence":{"room":0}},

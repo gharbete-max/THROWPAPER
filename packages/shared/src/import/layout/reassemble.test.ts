@@ -371,6 +371,29 @@ describe('§2.7–§2.9 roles', () => {
     expect(out.pages[0]!.columns[0]).toMatchObject({ x0: 1000, x1: 9000 });
   });
 
+  // #152: the Word reader stacks every cell, empty ones too, so a table of empty rows is far apart.
+  it('keeps a Word table in one block however far apart its rows are, until its rows start again', () => {
+    const cell = (text: string, baseline: number, paragraph: number, row: number, col: number) =>
+      word(text, 1000, baseline, { source: 'docx', paragraph, cell: { row, col } });
+    const words = [
+      word('Deltakere', 1000, 1000, { source: 'docx', paragraph: 0 }),
+      cell('Navn', 1180, 1, 0, 1),
+      cell('Telefon', 1360, 2, 0, 2),
+      cell('1', 1540, 3, 1, 0),
+      cell('2', 2260, 6, 2, 0), // two empty cells stacked between
+      cell('3', 2980, 9, 3, 0),
+      // A second table straight after: its rows start again.
+      cell('Dag', 3160, 12, 0, 0),
+      cell('Tid', 3340, 13, 0, 1),
+    ];
+    const blocks = reassemble(doc([words], [], 'docx')).output.pages[0]!.blocks;
+    expect(blocks.map((b) => [b.role, b.lines.map((l) => l.text).join(' ')])).toEqual([
+      ['body', 'Deltakere'],
+      ['table', 'Navn Telefon 1 2 3'],
+      ['table', 'Dag Tid'],
+    ]);
+  });
+
   it('keeps a synthetic paragraph in its own order, even where its words are pinned together', () => {
     const pinned = (text: string) =>
       word(text, 0, 1000, {

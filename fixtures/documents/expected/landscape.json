@@ -1,0 +1,75 @@
+{
+  "document": "landscape",
+  "locale": "en",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Plot number: ________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Holder: ______________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Date of inspection: ________________"
+    },
+    {
+      "marker": "4.",
+      "label": "Comments: ________________________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Allotment Inspection"
+    },
+    {
+      "kind": "instruction",
+      "text": "The committee walks round the allotments twice a year. Fill in one sheet for each plot, and hand them to the secretary on the day. A plot that is not kept in order is given a written warning, and its holder a month to put it right."
+    },
+    {
+      "kind": "question",
+      "label": "Plot number",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Holder",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Date of inspection",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "instruction",
+      "text": "Tick one box on each row."
+    },
+    {
+      "kind": "grid",
+      "label": null,
+      "rows": [
+        "Paths and edges",
+        "Beds and crops",
+        "Shed and water butt"
+      ],
+      "columns": [
+        "Good",
+        "Fair",
+        "Poor"
+      ],
+      "type": "grid"
+    },
+    {
+      "kind": "question",
+      "label": "Comments",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

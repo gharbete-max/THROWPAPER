@@ -1,0 +1,437 @@
+{
+  "fixture": "question-note-boxes",
+  "caveats": [
+    "question-note-boxes"
+  ],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S15",
+  "summary": "A question with a note in brackets after its question mark, \"Welche Kurse würden Sie besuchen? (Mehrfachnennungen möglich)\", claims the lines of one box each under it as its options (S5d), as \"?\" alone does: one question with three answers, not three questions of a box each. §4.7 already reads such a line as asking.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "y0": 895,
+            "x1": 9000,
+            "y1": 1926,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 895,
+              "x1": 6612,
+              "y1": 1566
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Welche Kurse würden Sie besuchen? (Mehrfachnennungen möglich)",
+                "words": [
+                  {
+                    "text": "Welche",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 895,
+                      "x1": 1552,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Kurse",
+                    "start": 7,
+                    "box": {
+                      "x0": 1644,
+                      "y0": 895,
+                      "x1": 2104,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "würden",
+                    "start": 13,
+                    "box": {
+                      "x0": 2196,
+                      "y0": 895,
+                      "x1": 2748,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Sie",
+                    "start": 20,
+                    "box": {
+                      "x0": 2840,
+                      "y0": 895,
+                      "x1": 3116,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "besuchen?",
+                    "start": 24,
+                    "box": {
+                      "x0": 3208,
+                      "y0": 895,
+                      "x1": 4036,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "(Mehrfachnennungen",
+                    "start": 34,
+                    "box": {
+                      "x0": 4128,
+                      "y0": 895,
+                      "x1": 5784,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "möglich)",
+                    "start": 53,
+                    "box": {
+                      "x0": 5876,
+                      "y0": 895,
+                      "x1": 6612,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 895,
+                  "x1": 6612,
+                  "y1": 1026
+                },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "☐ Fotografie",
+                "words": [
+                  {
+                    "text": "☐",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1075,
+                      "x1": 1092,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Fotografie",
+                    "start": 2,
+                    "box": {
+                      "x0": 1184,
+                      "y0": 1075,
+                      "x1": 2104,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1075,
+                  "x1": 2104,
+                  "y1": 1206
+                },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "☐ Kochen",
+                "words": [
+                  {
+                    "text": "☐",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1255,
+                      "x1": 1092,
+                      "y1": 1386
+                    },
+                    "baseline": 1360,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Kochen",
+                    "start": 2,
+                    "box": {
+                      "x0": 1184,
+                      "y0": 1255,
+                      "x1": 1736,
+                      "y1": 1386
+                    },
+                    "baseline": 1360,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1255,
+                  "x1": 1736,
+                  "y1": 1386
+                },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "☐ Yoga",
+                "words": [
+                  {
+                    "text": "☐",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1435,
+                      "x1": 1092,
+                      "y1": 1566
+                    },
+                    "baseline": 1540,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Yoga",
+                    "start": 2,
+                    "box": {
+                      "x0": 1184,
+                      "y0": 1435,
+                      "x1": 1552,
+                      "y1": 1566
+                    },
+                    "baseline": 1540,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1435,
+                  "x1": 1552,
+                  "y1": 1566
+                },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 1795,
+              "x1": 1552,
+              "y1": 1926
+            },
+            "lines": [
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "Danke!",
+                "words": [
+                  {
+                    "text": "Danke!",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1795,
+                      "x1": 1552,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1795,
+                  "x1": 1552,
+                  "y1": 1926
+                },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

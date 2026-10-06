@@ -1,0 +1,12 @@
+{
+  "stage": "classify",
+  "stageVersion": 3,
+  "irVersion": 1,
+  "inputSha256": "3a2ca1333487808c0daddec7ee831b23edb78dd2a6950705c47cfbfab3b3ca42",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"short_text","subject":["p1-l3","p1-l4"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l5","rule":"K1","verdict":"address","subject":["p1-l5","p1-l6"],"evidence":{"confidence":881,"features":"addressWord","margin":2000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l7","rule":"K1","verdict":"email","subject":["p1-l7","p1-l8"],"evidence":{"confidence":953,"features":"emailWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l9","rule":"K1","verdict":"long_text","subject":["p1-l9","p1-l10","p1-l11"],"evidence":{"confidence":858,"features":"multiLineBlank","margin":1800,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

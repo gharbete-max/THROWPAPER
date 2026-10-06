@@ -967,4 +967,254 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  // ── S15 batch 3: §8.2's layout traps.
+  {
+    name: 'nyhetsbrev',
+    language: 'sv',
+    summary:
+      'A newsletter set in two columns, with headings inside the columns, and a form across the whole page at its end: the columns are read left then right, and the form after them.',
+    features: ['two-column-newsletter', 'columns-inside-flow', 'headings', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Föreningsbladet hösten 2026'),
+        columns(2, [
+          heading('Ordföranden har ordet'),
+          para(
+            'Sommaren har varit full av aktiviteter, och styrelsen vill tacka alla som har ställt upp som ledare och funktionärer. Utan er hade vi inte kunnat genomföra lägret, seglingarna eller midsommarfesten.',
+          ),
+          para(
+            'Nu börjar höstens arbete. Vi har fått bidrag från kommunen till nya flytvästar, och i oktober målar vi om klubbhuset. Alla som vill hjälpa till är välkomna en lördag förmiddag.',
+          ),
+          heading('Höstens aktiviteter'),
+          para(
+            'Varje tisdag kväll träffas vi i klubbhuset för fika och planering. Den sista helgen i september har vi upptagning av båtarna, och då behöver vi många händer.',
+          ),
+          para(
+            'I november firar föreningen sitt femtioårsjubileum med en fest för medlemmar och tidigare medlemmar. Anmäl dig på blanketten nedan, så att vi vet hur många vi blir.',
+          ),
+        ]),
+        heading('Anmälan till jubileumsfesten'),
+        para('Lämna blanketten till kansliet senast den 1 oktober.'),
+        para(`1. Namn: ${blank(30)}`),
+        para(`2. Antal personer: ${blank(20)}`),
+        para('3. Vill du hjälpa till med festen?   ☐ Ja   ☐ Nej'),
+      ],
+    },
+  },
+  {
+    name: 'conference',
+    language: 'en',
+    summary:
+      'A registration that changes from one column to two halfway down the page: three numbered questions across the page, then two columns under their own headings, the numbers going on from 4 to 7 across the headings and the column break.',
+    features: [
+      'typed-numbering',
+      'one-column-to-two',
+      'column-break-continuation',
+      'numbering-across-headings',
+      'blanks',
+      'checkboxes',
+    ],
+    word: {
+      blocks: [
+        title('Conference Registration'),
+        para(
+          'The regional meeting of the federation is held in the town hall on the second weekend of May. Please fill in this form so that we can plan the rooms, the meals and the travel, and send it to the secretary by the end of March.',
+        ),
+        para(`1. Name: ${blank(30)}`),
+        para(`2. Organisation: ${blank(24)}`),
+        para(`3. Email: ${blank(30)}`),
+        columns(2, [
+          heading('Accommodation'),
+          para('4. Do you need a hotel room?   ☐ Yes   ☐ No'),
+          para(`5. Number of nights: ${blank(8)}`),
+          heading('Travel'),
+          para('6. Will you come by train?   ☐ Yes   ☐ No'),
+          para(`7. Arrival time: ${blank(12)}`),
+        ]),
+      ],
+    },
+  },
+  {
+    name: 'deltakere',
+    language: 'nb',
+    summary:
+      'A team entry whose participants go in a ruled Word table: a header row of three names over six numbered rows left empty to fill in, between two labelled blanks. Its language is not guessed: none of its common words is Norwegian alone, and G1 needs five.',
+    features: ['ruled-table', 'table-of-rows', 'header-row', 'numbered-rows', 'blanks'],
+    word: {
+      blocks: [
+        title('Påmelding av lag'),
+        para(
+          'Hvert lag kan ha opptil seks deltakere, og alle må være medlemmer av klubben. Skriv inn deltakerne i tabellen og lever skjemaet til sekretariatet før fristen. Laget får startnummer når påmeldingen er godkjent.',
+        ),
+        para(`Lagets navn: ${blank(30)}`),
+        para('Deltakere'),
+        table(
+          [
+            ['', 'Navn', 'Fødselsdato', 'Telefon'],
+            ['1', '', '', ''],
+            ['2', '', '', ''],
+            ['3', '', '', ''],
+            ['4', '', '', ''],
+            ['5', '', '', ''],
+            ['6', '', '', ''],
+          ],
+          [600, 4000, 2400, 2600],
+        ),
+        para(`Lagleder: ${blank(30)}`),
+      ],
+    },
+  },
+  {
+    name: 'kursangebot',
+    language: 'de',
+    summary:
+      'A course survey whose one question has 32 answers, one box to a line: one question flagged "many-options" (#30), not 32 questions. Its language is not guessed: 18 stop words of G1\'s 20 — the course names are not prose.',
+    features: ['many-options', 'checkbox-lines', 'blanks'],
+    word: {
+      blocks: [
+        title('Umfrage zum Kursangebot'),
+        para(
+          'Die Volkshochschule plant das Programm für das nächste Jahr und möchte wissen, welche Kurse Sie interessieren. Sie können so viele Kurse ankreuzen, wie Sie möchten. Die Umfrage ist anonym, und wir werten sie nur für die Planung aus.',
+        ),
+        para('Welche Kurse würden Sie besuchen? (Mehrfachnennungen möglich)'),
+        para('☐ Aquarellmalerei'),
+        para('☐ Bogenschießen'),
+        para('☐ Brotbacken'),
+        para('☐ Buchbinden'),
+        para('☐ Chorgesang'),
+        para('☐ Computerkurs'),
+        para('☐ Drechseln'),
+        para('☐ Englisch'),
+        para('☐ Erste Hilfe'),
+        para('☐ Fotografie'),
+        para('☐ Französisch'),
+        para('☐ Gitarre'),
+        para('☐ Gärtnern'),
+        para('☐ Häkeln'),
+        para('☐ Italienisch'),
+        para('☐ Jonglieren'),
+        para('☐ Kalligrafie'),
+        para('☐ Klavier'),
+        para('☐ Kochen'),
+        para('☐ Nähen'),
+        para('☐ Ölmalerei'),
+        para('☐ Origami'),
+        para('☐ Pilates'),
+        para('☐ Russisch'),
+        para('☐ Schach'),
+        para('☐ Schreinern'),
+        para('☐ Schwimmen'),
+        para('☐ Spanisch'),
+        para('☐ Stricken'),
+        para('☐ Tanzen'),
+        para('☐ Töpfern'),
+        para('☐ Yoga'),
+        para(`Weitere Wünsche: ${blank(30)}`),
+      ],
+    },
+  },
+  {
+    name: 'enquete',
+    language: 'fr',
+    summary:
+      "A members' survey over three pages under a repeated header and a page-number footer, its questions numbered on from 1 to 12 across both page breaks.",
+    features: [
+      'three-pages',
+      'repeated-header',
+      'footer-page-number',
+      'page-break-continuation',
+      'typed-numbering',
+      'blanks',
+      'checkboxes',
+    ],
+    word: {
+      header: 'Association des Amis du Port · Enquête 2026',
+      footer: 'Page {PAGE} sur {NUMPAGES}',
+      blocks: [
+        title('Enquête auprès des adhérents'),
+        ...filler([
+          "Chaque année, le bureau de l'association demande aux adhérents ce qu'ils pensent des activités, des horaires et de la vie du club. Vos réponses nous aident à préparer la saison prochaine et à mieux répondre à vos attentes.",
+          'Le questionnaire est anonyme. Il faut environ dix minutes pour le remplir. Vous pouvez le déposer dans la boîte aux lettres du club ou le remettre à un membre du bureau avant la fin du mois.',
+        ]),
+        para(
+          "1. Depuis combien d'années êtes-vous adhérent ?   ☐ Moins de 2 ans   ☐ De 2 à 5 ans   ☐ Plus de 5 ans",
+        ),
+        para('2. Participez-vous aux sorties en mer ?   ☐ Oui   ☐ Non'),
+        para('3. Participez-vous aux réunions du jeudi ?   ☐ Oui   ☐ Non'),
+        para(`4. Quelle activité préférez-vous ? ${blank(24)}`),
+        para('5. Les horaires du club vous conviennent-ils ?   ☐ Oui   ☐ Non', {
+          pageBreakBefore: true,
+        }),
+        para("6. Êtes-vous satisfait de l'accueil au club ?   ☐ Oui   ☐ Non"),
+        para(`7. Que faudrait-il améliorer ? ${blank(26)}`),
+        para('8. Seriez-vous prêt à aider lors des fêtes ?   ☐ Oui   ☐ Non'),
+        para("9. Souhaitez-vous recevoir la lettre d'information ?   ☐ Oui   ☐ Non"),
+        para(`10. Votre âge : ${blank(10)}`, { pageBreakBefore: true }),
+        para(`11. Votre commune : ${blank(24)}`),
+        para(`12. Autres remarques : ${blank(26)}`),
+        para('Merci beaucoup de votre participation !'),
+      ],
+    },
+  },
+  {
+    name: 'ansogning',
+    language: 'da',
+    summary:
+      'A Danish application whose every label stands on its own line with its blank on the line under it — with a colon, and once without one. Its language is not guessed: none of its common words is Danish alone, and G1 needs five.',
+    features: ['label-and-field-split', 'blank-line-below', 'blanks'],
+    word: {
+      blocks: [
+        title('Ansøgning om plads i kolonihaven'),
+        para(
+          'Foreningen har et begrænset antal haver, og der er venteliste. Udfyld ansøgningen og send den til bestyrelsen. Vi skriver til dig, når der bliver en have ledig, og du har en måned til at sige ja eller nej. Husk at give besked, hvis du flytter.',
+        ),
+        para('Fulde navn:'),
+        para(blank(40)),
+        para('Adresse:'),
+        para(blank(40)),
+        para('E-mail:'),
+        para(blank(40)),
+        para('Hvorfor ønsker du en have'),
+        para(blank(40)),
+        para(blank(40)),
+      ],
+    },
+  },
+  {
+    name: 'landscape',
+    language: 'en',
+    summary:
+      'A form on a landscape page, wider than it is high: numbered questions, a hanging tab, and a grid of boxes, measured on a page whose width and height swap their usual roles.',
+    features: [
+      'landscape',
+      'typed-numbering',
+      'hanging-tab',
+      'checkbox-grid',
+      'ruled-table',
+      'blanks',
+    ],
+    word: {
+      landscape: true,
+      blocks: [
+        title('Allotment Inspection'),
+        para(
+          'The committee walks round the allotments twice a year. Fill in one sheet for each plot, and hand them to the secretary on the day. A plot that is not kept in order is given a written warning, and its holder a month to put it right.',
+        ),
+        para(`1.\tPlot number: ${blank(16)}`),
+        para(`2.\tHolder: ${blank(30)}`),
+        para(`3.\tDate of inspection: ${blank(16)}`),
+        para('Tick one box on each row.'),
+        table(
+          [
+            ['', 'Good', 'Fair', 'Poor'],
+            ['Paths and edges', '☐', '☐', '☐'],
+            ['Beds and crops', '☐', '☐', '☐'],
+            ['Shed and water butt', '☐', '☐', '☐'],
+          ],
+          [6000, 2000, 2000, 2000],
+        ),
+        para(`4.\tComments: ${blank(40)}`),
+      ],
+    },
+  },
 ];

@@ -1,0 +1,102 @@
+{
+  "document": "conference",
+  "locale": "en",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Name: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Organisation: ________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Email: ______________________________"
+    },
+    {
+      "marker": "4.",
+      "label": "Do you need a hotel room? ☐ Yes ☐ No"
+    },
+    {
+      "marker": "5.",
+      "label": "Number of nights: ________"
+    },
+    {
+      "marker": "6.",
+      "label": "Will you come by train? ☐ Yes ☐ No"
+    },
+    {
+      "marker": "7.",
+      "label": "Arrival time: ____________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Conference Registration"
+    },
+    {
+      "kind": "instruction",
+      "text": "The regional meeting of the federation is held in the town hall on the second weekend of May. Please fill in this form so that we can plan the rooms, the meals and the travel, and send it to the secretary by the end of March."
+    },
+    {
+      "kind": "question",
+      "label": "Name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Organisation",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Email",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "heading",
+      "text": "Accommodation"
+    },
+    {
+      "kind": "question",
+      "label": "Do you need a hotel room?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Number of nights",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "heading",
+      "text": "Travel"
+    },
+    {
+      "kind": "question",
+      "label": "Will you come by train?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Arrival time",
+      "answer": "blank",
+      "type": "time"
+    }
+  ]
+}

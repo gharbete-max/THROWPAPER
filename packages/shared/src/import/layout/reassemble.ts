@@ -43,7 +43,7 @@ import { columnRegions, type CutDecision, type Region } from './xycut.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const REASSEMBLE_STAGE_VERSION = 4;
+export const REASSEMBLE_STAGE_VERSION = 5;
 
 /** §2.1: the presentation-form ligatures, and what each is. */
 const LIGATURES: Readonly<Record<string, string>> = {
@@ -280,6 +280,10 @@ function lowerQuartile(values: readonly number[]): number {
  * The pitch is the lower quartile of the gaps between consecutive baselines. The median, as §2.5
  * was first written, is a paragraph gap on a form of short sections — a heading, two items, a
  * heading — and every heading then joined the list under it (`short-sections`).
+ *
+ * A Word table is one block, whatever the gaps, until its rows start again (B1t, #152): Word said
+ * its cells are one table, and the gaps are the reader's — it stacks every cell, an empty one too,
+ * so a table of rows left empty to fill in came apart a row to a block.
  */
 function blocksOf(lines: readonly Line[]): Block[] {
   const baselines = lines.map(lineBaseline);
@@ -292,11 +296,17 @@ function blocksOf(lines: readonly Line[]): Block[] {
   lines.forEach((line, i) => {
     const previous = lines[i - 1];
     const block = blocks.at(-1);
+    const before = previous?.words[0]?.cell;
+    const cell = line.words[0]?.cell;
+    const tables = line.source === 'docx' && !!before && !!cell;
+    const sameTable = tables && cell.row >= before.row;
     const together =
       !!previous &&
       !!block &&
-      ((baselines[i] ?? 0) - (baselines[i - 1] ?? 0)) * 2 <= pitch * 3 &&
-      fontsAgree(lineFontSize(previous), lineFontSize(line)) &&
+      (!tables || sameTable) &&
+      (sameTable ||
+        (((baselines[i] ?? 0) - (baselines[i - 1] ?? 0)) * 2 <= pitch * 3 &&
+          fontsAgree(lineFontSize(previous), lineFontSize(line)))) &&
       !!previous.furniture === !!line.furniture &&
       !!previous.words[0]?.cell === !!line.words[0]?.cell &&
       previous.source === line.source;

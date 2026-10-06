@@ -43,6 +43,8 @@ export interface WordDocument {
   header?: string;
   /** `{PAGE}` and `{NUMPAGES}` become Word's fields. */
   footer?: string;
+  /** A4 turned on its side: every section's page is wider than it is high. */
+  landscape?: boolean;
   blocks: Block[];
 }
 
@@ -78,11 +80,14 @@ function fieldText(text: string): string {
     .join('');
 }
 
-const PAGE =
-  '<w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/>';
+const MARGINS =
+  '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/>';
+/** A4, upright or on its side. */
+const page = (landscape: boolean) =>
+  `${landscape ? '<w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/>' : '<w:pgSz w:w="11906" w:h="16838"/>'}${MARGINS}`;
 
-function sectPr(columns: number, first: boolean, refs: string): string {
-  return `<w:sectPr>${refs}<w:type w:val="${first ? 'nextPage' : 'continuous'}"/>${PAGE}<w:cols w:num="${columns}" w:space="567"/></w:sectPr>`;
+function sectPr(columns: number, first: boolean, refs: string, landscape: boolean): string {
+  return `<w:sectPr>${refs}<w:type w:val="${first ? 'nextPage' : 'continuous'}"/>${page(landscape)}<w:cols w:num="${columns}" w:space="567"/></w:sectPr>`;
 }
 
 function paragraphXml(block: Extract<Block, { kind: 'p' }>, sect = ''): string {
@@ -123,12 +128,12 @@ function tableXml(block: Extract<Block, { kind: 'table' }>): string {
 }
 
 /** The body: a section ends at every change of column count, as Word writes it. */
-function bodyXml(blocks: Block[], refs: string): string {
+function bodyXml(blocks: Block[], refs: string, landscape: boolean): string {
   const out: string[] = [];
   let first = true;
   const close = (columns: number) => {
     // A section's properties ride on its last paragraph.
-    out.push(`<w:p><w:pPr>${sectPr(columns, first, refs)}</w:pPr></w:p>`);
+    out.push(`<w:p><w:pPr>${sectPr(columns, first, refs, landscape)}</w:pPr></w:p>`);
     first = false;
   };
   for (const block of blocks) {
@@ -143,7 +148,7 @@ function bodyXml(blocks: Block[], refs: string): string {
       close(block.count);
     }
   }
-  out.push(sectPr(1, first, refs));
+  out.push(sectPr(1, first, refs, landscape));
   return out.join('');
 }
 
@@ -230,7 +235,7 @@ export function wordDocument(doc: WordDocument): Uint8Array {
     },
     {
       name: 'word/document.xml',
-      data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="${W}" xmlns:r="${R}"><w:body>${bodyXml(doc.blocks, refs)}</w:body></w:document>`,
+      data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="${W}" xmlns:r="${R}"><w:body>${bodyXml(doc.blocks, refs, doc.landscape ?? false)}</w:body></w:document>`,
     },
     { name: 'word/styles.xml', data: STYLES },
     { name: 'word/numbering.xml', data: numberingXml(doc.lists ?? []) },

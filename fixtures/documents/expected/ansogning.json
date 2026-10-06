@@ -1,0 +1,39 @@
+{
+  "document": "ansogning",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Ansøgning om plads i kolonihaven"
+    },
+    {
+      "kind": "instruction",
+      "text": "Foreningen har et begrænset antal haver, og der er venteliste. Udfyld ansøgningen og send den til bestyrelsen. Vi skriver til dig, når der bliver en have ledig, og du har en måned til at sige ja eller nej. Husk at give besked, hvis du flytter."
+    },
+    {
+      "kind": "question",
+      "label": "Fulde navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Adresse",
+      "answer": "blank",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "E-mail",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Hvorfor ønsker du en have",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

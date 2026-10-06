@@ -94,6 +94,27 @@
       }
     },
     {
+      "name": "ansogning",
+      "language": "da",
+      "summary": "A Danish application whose every label stands on its own line with its blank on the line under it — with a colon, and once without one. Its language is not guessed: none of its common words is Danish alone, and G1 needs five.",
+      "features": [
+        "label-and-field-split",
+        "blank-line-below",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "ansogning.pdf",
+          "sha256": "1b7d2d4c46bf281f7263c23dbd04c031b92c06015ebc033ca36c322c2153cff6"
+        },
+        "docx": {
+          "path": "ansogning.docx",
+          "sha256": "e1ca7a73606daf9f4319609b4b6a5affac5883fc367d55969f210cb63cee3fd1"
+        }
+      }
+    },
+    {
       "name": "arsmote-anmalan",
       "language": "sv",
       "summary": "Two pages under a running header and a page-number footer: a long introduction, and a numbered list that starts on page 1 and ends on page 2, one of its paragraphs mentioning point 12.1 mid-sentence.",
@@ -165,6 +186,53 @@
       }
     },
     {
+      "name": "conference",
+      "language": "en",
+      "summary": "A registration that changes from one column to two halfway down the page: three numbered questions across the page, then two columns under their own headings, the numbers going on from 4 to 7 across the headings and the column break.",
+      "features": [
+        "typed-numbering",
+        "one-column-to-two",
+        "column-break-continuation",
+        "numbering-across-headings",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "conference.pdf",
+          "sha256": "732ca916a1247fd95e7d752280c9b03ad028d24ede08528a6d22da1032e9b323"
+        },
+        "docx": {
+          "path": "conference.docx",
+          "sha256": "a23473a7d75132f9d3278725dc85b3c02d090d03ef41666326fd71043ec489c1"
+        }
+      }
+    },
+    {
+      "name": "deltakere",
+      "language": "nb",
+      "summary": "A team entry whose participants go in a ruled Word table: a header row of three names over six numbered rows left empty to fill in, between two labelled blanks. Its language is not guessed: none of its common words is Norwegian alone, and G1 needs five.",
+      "features": [
+        "ruled-table",
+        "table-of-rows",
+        "header-row",
+        "numbered-rows",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "deltakere.pdf",
+          "sha256": "f7c3c7a6ffda50e03b72fc3eafbc0bad5f4d31dec337836e730a560779212303"
+        },
+        "docx": {
+          "path": "deltakere.docx",
+          "sha256": "ef4684d49725e9ea6e8c7c4025648269023060fab6f2dd9460856045c811e040"
+        }
+      }
+    },
+    {
       "name": "enkat-rutnat",
       "language": "sv",
       "summary": "A survey in two parts under headings: numbered questions with lettered answers, then a grid of yes / no / don't know checkboxes in a ruled table.",
@@ -183,6 +251,31 @@
         "docx": {
           "path": "enkat-rutnat.docx",
           "sha256": "0f74fc716eee1ef61faf85506117dc97ba2e55e42d83b3958e397d2b1725a3e5"
+        }
+      }
+    },
+    {
+      "name": "enquete",
+      "language": "fr",
+      "summary": "A members' survey over three pages under a repeated header and a page-number footer, its questions numbered on from 1 to 12 across both page breaks.",
+      "features": [
+        "three-pages",
+        "repeated-header",
+        "footer-page-number",
+        "page-break-continuation",
+        "typed-numbering",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "enquete.pdf",
+          "sha256": "951f3770726aa5ec2ba54f93a00b9238436bcbe35afe684f2857ddbec82954cb"
+        },
+        "docx": {
+          "path": "enquete.docx",
+          "sha256": "688329bb8b6f08972f110a6a45acd9d790e6fcabbc14d43a5d3f734ef8a07956"
         }
       }
     },
@@ -373,6 +466,27 @@
       }
     },
     {
+      "name": "kursangebot",
+      "language": "de",
+      "summary": "A course survey whose one question has 32 answers, one box to a line: one question flagged \"many-options\" (#30), not 32 questions. Its language is not guessed: 18 stop words of G1's 20 — the course names are not prose.",
+      "features": [
+        "many-options",
+        "checkbox-lines",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "kursangebot.pdf",
+          "sha256": "259039aaa955acec54ec1147ae845328c7c28f8d14f977dce1d4276c272f97a4"
+        },
+        "docx": {
+          "path": "kursangebot.docx",
+          "sha256": "508fee631f0af64c1b8723bafe3aa6da765cf90620770e1d8aa2df7bbd07119d"
+        }
+      }
+    },
+    {
       "name": "lagerschema",
       "language": "sv",
       "summary": "A ruled table of plain text — times, activities, places — with a header row, between an introduction and two numbered questions: read across each row, never down the columns.",
@@ -391,6 +505,30 @@
         "docx": {
           "path": "lagerschema.docx",
           "sha256": "fb9b0a5c6ca1ee877889c1f3d3cf89f47b4df5ae695468cfc3ea71078ead48c1"
+        }
+      }
+    },
+    {
+      "name": "landscape",
+      "language": "en",
+      "summary": "A form on a landscape page, wider than it is high: numbered questions, a hanging tab, and a grid of boxes, measured on a page whose width and height swap their usual roles.",
+      "features": [
+        "landscape",
+        "typed-numbering",
+        "hanging-tab",
+        "checkbox-grid",
+        "ruled-table",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "landscape.pdf",
+          "sha256": "d66f352d47c28af9fff6fa6c0f8853f85de2718e5ad14d0b8b8f15ee1c6133bf"
+        },
+        "docx": {
+          "path": "landscape.docx",
+          "sha256": "aab365b374f68404b4415c7a86982c9374266eb39d1b01a1de50daf8f51f284f"
         }
       }
     },
@@ -439,6 +577,29 @@
         "docx": {
           "path": "moushikomi.docx",
           "sha256": "0859da96d2635c3e46481cc479dbc36e7313f2c2204bf8d047fb146baa41dfae"
+        }
+      }
+    },
+    {
+      "name": "nyhetsbrev",
+      "language": "sv",
+      "summary": "A newsletter set in two columns, with headings inside the columns, and a form across the whole page at its end: the columns are read left then right, and the form after them.",
+      "features": [
+        "two-column-newsletter",
+        "columns-inside-flow",
+        "headings",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "nyhetsbrev.pdf",
+          "sha256": "7926e33667e21d33395632a2d73cffeb89c02b11fed9565fb1b1f82698ff83fd"
+        },
+        "docx": {
+          "path": "nyhetsbrev.docx",
+          "sha256": "950c121b0fd888d171e204c9f5b82f2e7360ad11da62d94b1eb509a151562621"
         }
       }
     },

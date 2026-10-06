@@ -210,7 +210,10 @@ Per page, in this order:
    outside it, nor one source with another. The pitch is the **lower quartile** of the gaps between
    consecutive baselines. (First written as the median, which on a form of short sections — a
    heading, two items, a heading — is a paragraph gap, and then every heading joined the list under
-   it.) *Fixture:* `headings-and-footnote`.
+   it.) *Fixture:* `headings-and-footnote`. **A Word table is one block** whatever the gaps, until
+   its rows start again (B1t, S15, #152): Word said its cells are one table, and the gaps are the
+   reader's, which stacks every cell, an empty one too — a table of rows left empty to fill in came
+   apart a row to a block. *Test:* `layout/reassemble.test.ts` ("one block however").
 6. **Hyphenation** (measured only), inside a block. A lone hyphen at a line's end that touches the
    word before it — within a tenth of an em — is that word's own (a soft hyphen a Word user typed,
    printed where the line breaks, which pdf.js may give as a text item of its own: "med" and "-");
@@ -291,6 +294,7 @@ Per page, in this order:
 | T1 | 8 | a table (DOCX) | `layout/reassemble.test.ts` |
 | H1–H3 | 9 | a heading | `layout-shift-within-document`, `headings-and-footnote` |
 | B1 | 9 | body | every fixture |
+| B1t | 5 | a Word table is one block until its rows start again | `layout/reassemble.test.ts` ("one block however") |
 | G1 | 11 | the document's language | `layout/reassemble.test.ts` (a paragraph in each language) |
 | G1b | 11 | the document's language, by a script only it writes | `layout/reassemble.test.ts` ("G1b") |
 
@@ -347,9 +351,13 @@ columns to three section headings — `grid-header-cells`, #99.)
 - **Table** (S3) — at least two consecutive lines that are only a row number (1, 2, 3 … in order)
   or only a blank, under a header of at least two cells at least 4 em apart with no answer space:
   `repeating-rows`, the cells as `columns`. The rows are found first, because a line of words is
-  not a header until rows follow. *Fixture:* `table-rows`. (`labelled-fields` is in the type and
-  not yet produced: a Word table's empty cells are not in IR version 1, so its rows cannot be
-  counted.)
+  not a header until rows follow. *Fixture:* `table-rows`.
+- **A Word table of rows to fill in** (S3c, S15, #153) — the same from the cells: a header row of two
+  cells or more over rows that hold nothing but their number, 1, 2, 3 … in order. The PDF of the
+  corpus's `deltakere` read as a table by S3 and its Word file as nine lines of text. *Fixture:*
+  `docx-table-numbered-rows`. (`labelled-fields` is in the type and not yet produced, and a Word
+  table whose rows are empty and unnumbered is still not a table: IR version 1 keeps no empty cell,
+  so its rows cannot be counted.)
 - **A table of text** (S3t, S3tc) — a header row of two or more cells on one baseline, in regions
   side by side, none of them a list item, set in bold or over ruled rows; under it, rows of cells
   until a line that spans the header's width. Each row, header included, is one instruction read
@@ -384,7 +392,9 @@ the answers under it:
 - **Options under a sentence that asks** (S5c) — lettered or bulleted items right after a prose line
   of at most 120 characters ending in `?`. *Fixture:* `prose-question`.
 - **Lines of one checkbox each under a question** (S5d) — two or more lines that each start with one
-  box and then words, right after a line or item ending in `?` or `:`, **in its block**: a paragraph
+  box and then words, right after a line or item ending in `?` or `:` — or in `?` and a note in
+  brackets, as §4.7 reads a question (#150, `question-note-boxes`, the corpus's `kursangebot`) —
+  **in its block**: a paragraph
   break ends its answers. Lines taken as its options are never its notes as well, though stage 3
   may have kept them as an item's detail lines (`CAVEATS.md` #134, the corpus's `reserva-sala`).
   *Fixture:* `single-checkbox-line`.
@@ -410,7 +420,9 @@ the answers under it:
    (ÅÅÅÅ-MM-DD)") (S6c, `two-blanks-one-line`). A printed answer line (`ruleBelow`) is a blank too
    (S6d). **Lines of nothing but a blank directly under** a question, in its block, are more room
    for its answer — and under a label ending in `:` make it one (S6b, #24,
-   `label-colon-blank-below`).
+   `label-colon-blank-below`), as they do under a label with no colon that is short and does not
+   end a sentence, the test a grid's label meets (#151, `label-without-colon`, the corpus's
+   `ansogning`).
 6. **Item** (S7) — any other item from stage 3, accepted, flagged or candidate: a question of
    unknown answer (stage 7 scores the verdict). Lines of nothing but a blank under it are its
    answer's room, and make its answer a blank, as #24 has them under a label (S15, #149,
@@ -686,9 +698,10 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: thirty-three documents, each a PDF and a Word file, and two of them
-scanned** — twelve Swedish, three English, three Norwegian, two each in Danish, Finnish, German,
-Spanish, Japanese and Chinese, one each in French, Icelandic and Russian; one and two pages; running headers and page-number
+**What it holds today: forty documents, each a PDF and a Word file, and two of them scanned** —
+thirteen Swedish, five English, four Norwegian, three each in Danish and German, two each in
+Finnish, French, Spanish, Japanese and Chinese, one each in Icelandic and Russian; one to three
+pages, and one landscape; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -715,9 +728,14 @@ numbered form (`fullmakt`, D4); answers numbered "i." to "iii." at the questions
 line with a tab and a blank and one a sentence (`generalforsamling`, D3); "(1)" to "(5)" around a
 note that opens "(3 500 kroner" (`reisestotte`); "1 . Nimi" under a line that opens "15.
 toukokuuta" (`talkoot`, M8 and V3); prizes that open "1:a", "2:a", "3:e" (`orientering`); and
-sections "I." to "V." with their questions numbered from "1." again (`socio`, R5a and R10). Four of
-them are, like `sommarlager`, too short for G1 to be sure of their language. Scans of real paper
-are still owed.
+sections "I." to "V." with their questions numbered from "1." again (`socio`, R5a and R10); and
+§8.2's layout traps (S15, batch 3): a newsletter in two columns with a form across the page at its
+end (`nyhetsbrev`); a page that turns from one column to two, its numbers going on across the
+headings and the column break (`conference`); a ruled Word table of six numbered rows to fill in
+(`deltakere`); one question with 32 answers, a box to a line (`kursangebot`, #30); three pages
+under a repeated header (`enquete`); labels over the blank lines they name, once without a colon
+(`ansogning`); and a landscape page (`landscape`). Seven of them are, like `sommarlager`, too short
+for G1 to be sure of their language. Scans of real paper are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

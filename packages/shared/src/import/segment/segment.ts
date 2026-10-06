@@ -27,7 +27,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SEGMENT_STAGE_VERSION = 4;
+export const SEGMENT_STAGE_VERSION = 5;
 /** More options than this and the question is flagged (#30). */
 export const MAX_OPTIONS = 30;
 /** A label longer than this is prose to read, not a label (rules 1, 7, 8). */
@@ -596,6 +596,56 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     }
   }
 
+  // 1f. Word tables of rows to fill in (S3c, #153): a header row of two cells or more, and rows
+  // that hold nothing but their number, 1, 2, 3 … in order — S3 from the cells, which say what
+  // geometry has to find. A table whose rows are empty, unnumbered, has no lines to count them by
+  // (IR version 1 keeps no empty cell), and is left to the line rules.
+  for (const block of doc.pages.flatMap((page) => page.blocks)) {
+    if (block.role !== 'table') continue;
+    const cellLines = block.lines.filter((line) => line.cell !== null && !claimed.has(line.id));
+    if (cellLines.length === 0) continue;
+    const rows = new Map<number, IrLine[]>();
+    for (const line of cellLines)
+      rows.set(line.cell!.row, [...(rows.get(line.cell!.row) ?? []), line]);
+    const order = [...rows.keys()].sort((a, b) => a - b);
+    const headerCells = new Map<number, IrLine[]>();
+    for (const line of rows.get(order[0]!)!)
+      headerCells.set(line.cell!.col, [...(headerCells.get(line.cell!.col) ?? []), line]);
+    const columns = [...headerCells.entries()]
+      .sort(([a], [b]) => a - b)
+      .map(([, cell]) => joinLines(cell.map((line) => line.text)));
+    const body = order.slice(1).map((row) => rows.get(row)!);
+    const numbered = body.every(
+      (row, k) =>
+        row.length === 1 &&
+        /^\d{1,3}[.)]?$/u.test(row[0]!.text) &&
+        Number.parseInt(row[0]!.text, 10) === k + 1,
+    );
+    const plainHeader = [...headerCells.values()]
+      .flat()
+      .every((line) => !line.hints.blankRun && line.hints.checkboxes === 0);
+    if (body.length < 2 || columns.length < 2 || !numbered || !plainHeader) continue;
+    const first = at(cellLines[0]!.id);
+    for (const line of cellLines) edges.add(line.id);
+    const label = labelFor(first);
+    const table: TableSegment = {
+      kind: 'table',
+      lineIds: sorted([...label.lineIds, ...cellLines.map((line) => line.id)]),
+      label: label.label,
+      itemId: label.itemId,
+      columns,
+      rowCount: body.length,
+      shape: 'repeating-rows',
+      flags: label.flags,
+    };
+    emit(table);
+    decide(first.ir.id, 'S3c', table.lineIds, 'table', {
+      rows: body.length,
+      columns: columns.length,
+      label: label.rule,
+    });
+  }
+
   // ── Pass 2: items with items under them ───────────────────────────────────────────────────────
 
   const optionLike = (item: Item) =>
@@ -713,8 +763,9 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
         continue;
       }
     }
-    // 2d. Lines of one checkbox each under a question (§4.4).
-    if (endsWithAny(text, '?:')) {
+    // 2d. Lines of one checkbox each under a question (§4.4) — one that asks as §4.7 reads it: a
+    // note in brackets after its question mark asks too (#150).
+    if (endsWithAny(text, '?:') || ASKS.test(text)) {
       const boxes = boxLinesAfter(last);
       if (boxes.length >= 2) {
         // Stage 3 may have kept the boxes as the item's notes: as its options, they are not its
@@ -941,8 +992,11 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
       decide(id, rule, segment.lineIds, 'question:blank', { room: room.length });
       continue;
     }
-    // #24: a label ending in ":" and, under it in its block, a line of nothing but a blank.
-    if (halfWidth(text.trim()).endsWith(':') && room.length > 0) {
+    // #24: a label ending in ":" and, under it in its block, a line of nothing but a blank — or a
+    // label with no colon, short and not ending a sentence, the test a grid's label meets (#151).
+    const colon = halfWidth(text.trim()).endsWith(':');
+    const labelLike = [...text].length <= LABEL_MAX && hasLetter(text) && !endsWithAny(text, '.!');
+    if ((colon || labelLike) && room.length > 0) {
       const segment = question(
         withDetails([...ids, ...room]),
         labelOf(text),
@@ -952,7 +1006,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
         details,
       );
       emit(segment);
-      decide(id, 'S6b', segment.lineIds, 'question:blank', { room: room.length });
+      decide(id, 'S6b', segment.lineIds, 'question:blank', { room: room.length, colon });
       continue;
     }
 

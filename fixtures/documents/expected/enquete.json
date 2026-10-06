@@ -1,0 +1,173 @@
+{
+  "document": "enquete",
+  "locale": "fr",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Depuis combien d'années êtes-vous adhérent ? ☐ Moins de 2 ans ☐ De 2 à 5 ans ☐ Plus de 5 ans"
+    },
+    {
+      "marker": "2.",
+      "label": "Participez-vous aux sorties en mer ? ☐ Oui ☐ Non"
+    },
+    {
+      "marker": "3.",
+      "label": "Participez-vous aux réunions du jeudi ? ☐ Oui ☐ Non"
+    },
+    {
+      "marker": "4.",
+      "label": "Quelle activité préférez-vous ? ________________________"
+    },
+    {
+      "marker": "5.",
+      "label": "Les horaires du club vous conviennent-ils ? ☐ Oui ☐ Non"
+    },
+    {
+      "marker": "6.",
+      "label": "Êtes-vous satisfait de l'accueil au club ? ☐ Oui ☐ Non"
+    },
+    {
+      "marker": "7.",
+      "label": "Que faudrait-il améliorer ? __________________________"
+    },
+    {
+      "marker": "8.",
+      "label": "Seriez-vous prêt à aider lors des fêtes ? ☐ Oui ☐ Non"
+    },
+    {
+      "marker": "9.",
+      "label": "Souhaitez-vous recevoir la lettre d'information ? ☐ Oui ☐ Non"
+    },
+    {
+      "marker": "10.",
+      "label": "Votre âge : __________"
+    },
+    {
+      "marker": "11.",
+      "label": "Votre commune : ________________________"
+    },
+    {
+      "marker": "12.",
+      "label": "Autres remarques : __________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Enquête auprès des adhérents"
+    },
+    {
+      "kind": "instruction",
+      "text": "Chaque année, le bureau de l'association demande aux adhérents ce qu'ils pensent des activités, des horaires et de la vie du club. Vos réponses nous aident à préparer la saison prochaine et à mieux répondre à vos attentes."
+    },
+    {
+      "kind": "instruction",
+      "text": "Le questionnaire est anonyme. Il faut environ dix minutes pour le remplir. Vous pouvez le déposer dans la boîte aux lettres du club ou le remettre à un membre du bureau avant la fin du mois."
+    },
+    {
+      "kind": "question",
+      "label": "Depuis combien d'années êtes-vous adhérent ?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Moins de 2 ans",
+        "De 2 à 5 ans",
+        "Plus de 5 ans"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Participez-vous aux sorties en mer ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Participez-vous aux réunions du jeudi ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Quelle activité préférez-vous ?",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Les horaires du club vous conviennent-ils ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Êtes-vous satisfait de l'accueil au club ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Que faudrait-il améliorer ?",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Seriez-vous prêt à aider lors des fêtes ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Souhaitez-vous recevoir la lettre d'information ?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Oui",
+        "Non"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Votre âge",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "question",
+      "label": "Votre commune",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Autres remarques",
+      "answer": "blank",
+      "type": "long_text"
+    },
+    {
+      "kind": "instruction",
+      "text": "Merci beaucoup de votre participation !"
+    }
+  ]
+}
