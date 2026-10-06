@@ -1,0 +1,93 @@
+{
+  "document": "volunteer",
+  "locale": "en",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Full name: ____________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Email address: _________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Which shift can you take?",
+      "items": [
+        {
+          "marker": "i.",
+          "label": "Saturday morning"
+        },
+        {
+          "marker": "ii.",
+          "label": "Saturday afternoon"
+        },
+        {
+          "marker": "iii.",
+          "label": "Sunday morning"
+        }
+      ]
+    },
+    {
+      "marker": "4.",
+      "label": "Phone number: __________________________"
+    },
+    {
+      "marker": "5.",
+      "label": "Have you volunteered with us before? ☐ Yes ☐ No"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Volunteer Sign-up"
+    },
+    {
+      "kind": "instruction",
+      "text": "The summer festival needs about forty volunteers to run the stalls, the car park and the information tent. If you can give us a few hours, please fill in this form and hand it in at the club house, or send a photo of it to the festival committee."
+    },
+    {
+      "kind": "question",
+      "label": "Full name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Email address",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Which shift can you take?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Saturday morning",
+        "Saturday afternoon",
+        "Sunday morning"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Phone number",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Have you volunteered with us before?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "kind": "instruction",
+      "text": "Thank you! We will be in touch about a week before the festival."
+    }
+  ]
+}

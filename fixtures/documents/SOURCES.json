@@ -234,6 +234,51 @@
       }
     },
     {
+      "name": "fullmakt",
+      "language": "sv",
+      "summary": "A proxy form whose second paragraph begins with an initial, \"A. Andersson är stämmans ordförande\", which is a person and not a list (D4), above a numbered form with lettered answers indented under one question.",
+      "features": [
+        "typed-numbering",
+        "letter-vs-word",
+        "letter-options",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "fullmakt.pdf",
+          "sha256": "bc7d1e860ea5c3f02d269c00a9bed219f497bbfd43334d4ad629438db2bc1838"
+        },
+        "docx": {
+          "path": "fullmakt.docx",
+          "sha256": "b07fc9af7627ee1259b846c9d5355a0943d840c53bdea283ab1460c20a428864"
+        }
+      }
+    },
+    {
+      "name": "generalforsamling",
+      "language": "da",
+      "summary": "Two lists of one item each: \"1.\" with a tab and a blank, which a person would call a form line (D3 accepts it), and, after a heading, \"1.\" before a sentence with nothing to fill in, which may be a list or not (D3: a candidate). Stage 4 keeps the second a question, for the review to ask whether it is a note or a prompt (#149). Its language is not guessed: none of its common words is Danish alone, and G1 needs five.",
+      "features": [
+        "typed-numbering",
+        "single-item-list",
+        "hanging-tab",
+        "blanks",
+        "headings"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "generalforsamling.pdf",
+          "sha256": "af3c8904410d52e91be014f5673442ec47d333fed75973ee49ee496f2d5aa908"
+        },
+        "docx": {
+          "path": "generalforsamling.docx",
+          "sha256": "725ea7ba5792f038d703b3057ac26e71474a860d93a223bf1ef927695d663d46"
+        }
+      }
+    },
+    {
       "name": "huiyuan",
       "language": "zh",
       "summary": "A Chinese membership form: sections headed \"一、\" and \"二、\", questions numbered \"1．\" to \"5．\" straight on across them and glued to their words, full-width colons, and a yes or no with \"是\" and \"否\".",
@@ -398,6 +443,29 @@
       }
     },
     {
+      "name": "orientering",
+      "language": "sv",
+      "summary": "A club championship whose prizes are three lines that open with Swedish ordinals, \"1:a\", \"2:a\", \"3:e\", which look like a list and are not, and whose introduction says \"den 3:e september\" mid-line; the form under it is numbered \"1)\". Its language is not guessed: 14 stop words of G1's 20.",
+      "features": [
+        "typed-numbering",
+        "ordinal-not-marker",
+        "headings",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "orientering.pdf",
+          "sha256": "1383dea1d00af10a954f2df5c36efa35674da1eef11c7671ffd26a5898b93289"
+        },
+        "docx": {
+          "path": "orientering.docx",
+          "sha256": "982aea82f1a92f514dbce5c23de9d29b5869f8e845f283079e1d944910a6a9a4"
+        }
+      }
+    },
+    {
       "name": "pamelding",
       "language": "nb",
       "summary": "A short Norwegian form: ordinary prose, and numbers typed into the text.",
@@ -414,6 +482,29 @@
         "docx": {
           "path": "pamelding.docx",
           "sha256": "2cbf1f3f90380b8363e6c1ef0bb3b8212b4e5552138c625bedc2aae1c3d93702"
+        }
+      }
+    },
+    {
+      "name": "reisestotte",
+      "language": "nb",
+      "summary": "A Norwegian application numbered \"(1)\" to \"(5)\", with a note between two items that opens \"(3 500 kroner …\": a bracket and a number that are not a marker, and a list that goes on after it. Its language is not guessed: two words only Norwegian has, of the five G1 needs.",
+      "features": [
+        "typed-numbering",
+        "parenthesised-number",
+        "amount-in-brackets",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "reisestotte.pdf",
+          "sha256": "4a258b3b886dbaf5e7e6be0f34b0fe6fa4739663c1887c18713818803e6ad73e"
+        },
+        "docx": {
+          "path": "reisestotte.docx",
+          "sha256": "c9c66a42e0e7e6698eb54b7e86b720c0b2aaf68de59fc1ea04c9fb8f0961eead"
         }
       }
     },
@@ -486,6 +577,30 @@
       }
     },
     {
+      "name": "socio",
+      "language": "es",
+      "summary": "A Spanish membership application in five sections numbered \"I.\" to \"V.\" — the last of them a \"V.\" that could be a letter (R10) — each with its questions numbered from \"1.\" again at the same indent (R5a).",
+      "features": [
+        "typed-numbering",
+        "roman-sections",
+        "letter-or-roman",
+        "blanks",
+        "checkboxes",
+        "consent"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "socio.pdf",
+          "sha256": "f606abba34813b0b13c2e99f3754880f8b33e8e6816875b2899c79293ab130f7"
+        },
+        "docx": {
+          "path": "socio.docx",
+          "sha256": "6c454f464017271817ddc0e60e4f90f56742153eda03a4957b076958a04f667d"
+        }
+      }
+    },
+    {
       "name": "sommarlager",
       "language": "sv",
       "summary": "A form with no numbers at all, as most are: sections in capitals, dot leaders for blanks, a label whose blank is on the line under it, required hints (\"(obligatoriskt)\", \"*\"), a limit inside a question (\"(max 7)\") and a closing instruction.",
@@ -511,6 +626,28 @@
       }
     },
     {
+      "name": "sommerfest",
+      "language": "de",
+      "summary": "A German sign-up whose numbers jump from 3 to 5, as when a question is deleted and the rest are not renumbered: one list, flagged \"sequence-jump\" (R4).",
+      "features": [
+        "typed-numbering",
+        "sequence-jump",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "sommerfest.pdf",
+          "sha256": "b476b5a293379591a79b0d673239cc8b0fd49d616ae19eb71455d59f9c9149bb"
+        },
+        "docx": {
+          "path": "sommerfest.docx",
+          "sha256": "d1746ebe8aedd36f375a6a9e71cd2ce21a7ce572d7604f7c322dc34ddbca5c5e"
+        }
+      }
+    },
+    {
       "name": "stamma",
       "language": "sv",
       "summary": "A notice of the annual meeting whose lines break inside words: a soft hyphen Word users type into long words (\"med­lemsregistret\"), printed as a hyphen where the line breaks, and the hyphen of \"e-postadress\" at a line end, in prose and in a question that wraps.",
@@ -531,6 +668,29 @@
         "docx": {
           "path": "stamma.docx",
           "sha256": "d7b00429723001c42354553cf236da809a4104e90788b025c34cdbc1977638f8"
+        }
+      }
+    },
+    {
+      "name": "talkoot",
+      "language": "fi",
+      "summary": "A Finnish sign-up typed with a space before each number's dot (\"1 . Nimi\"), under a line that opens with a date, \"15. toukokuuta\", which is no marker (V3). Its language is not guessed: 10 stop words of G1's 20.",
+      "features": [
+        "typed-numbering",
+        "spaced-dot",
+        "ordinal-date",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "talkoot.pdf",
+          "sha256": "c05fbc60b14a4dec949cda527d69729b74dff3ceab5028e25cc86fec89e87d6d"
+        },
+        "docx": {
+          "path": "talkoot.docx",
+          "sha256": "cc5fb6d0325252647eeb3f4fbcb8b87ccca20b9e2a3ccd91fc6fcf6490f78bff"
         }
       }
     },
@@ -574,6 +734,29 @@
         "docx": {
           "path": "typade-nummer.docx",
           "sha256": "45be74de92ccf94cf463b45a449956a6b38b5e658e0a2c19b58d5664f6bfdb96"
+        }
+      }
+    },
+    {
+      "name": "volunteer",
+      "language": "en",
+      "summary": "A volunteer sign-up whose third question has its answers numbered \"i.\", \"ii.\", \"iii.\" at the same indent as the questions — a scheme change that restarts and so nests (R5a) — and whose numbers then go on with \"4.\".",
+      "features": [
+        "typed-numbering",
+        "scheme-change-same-indent",
+        "roman-options",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "volunteer.pdf",
+          "sha256": "07863932d5fe3c766d9e8edaa1400399d29b48022241951808929bef2dd26c3c"
+        },
+        "docx": {
+          "path": "volunteer.docx",
+          "sha256": "2110fd8d4f1ef103bbd417ba8824318262ea1d18ba66bd708d6009e8e8d8d3f1"
         }
       }
     }

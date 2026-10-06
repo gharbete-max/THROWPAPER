@@ -1,0 +1,93 @@
+{
+  "document": "fullmakt",
+  "locale": "sv",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Medlemmens namn: ________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Medlemsnummer: __________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Ombudets namn: __________________________"
+    },
+    {
+      "marker": "4.",
+      "label": "Hur ska ombudet rösta i frågan om stadgeändringen?",
+      "items": [
+        {
+          "marker": "A.",
+          "label": "Ja till ändringen"
+        },
+        {
+          "marker": "B.",
+          "label": "Nej till ändringen"
+        },
+        {
+          "marker": "C.",
+          "label": "Ombudet avgör själv"
+        }
+      ]
+    },
+    {
+      "marker": "5.",
+      "label": "Underskrift: ____________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Fullmakt till föreningsstämman"
+    },
+    {
+      "kind": "instruction",
+      "text": "Den som inte kan komma till stämman kan låta en annan medlem rösta i sitt ställe. Fyll i fullmakten och lämna den till ordföranden innan stämman börjar. En medlem får bara företräda en annan medlem, och fullmakten gäller bara vid den här stämman."
+    },
+    {
+      "kind": "instruction",
+      "text": "A. Andersson är stämmans ordförande och tar emot alla fullmakter."
+    },
+    {
+      "kind": "question",
+      "label": "Medlemmens namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Medlemsnummer",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Ombudets namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Hur ska ombudet rösta i frågan om stadgeändringen?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Ja till ändringen",
+        "Nej till ändringen",
+        "Ombudet avgör själv"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Underskrift",
+      "answer": "blank",
+      "type": "signature"
+    },
+    {
+      "kind": "instruction",
+      "text": "Fullmakten är giltig bara om den är undertecknad av medlemmen själv."
+    }
+  ]
+}

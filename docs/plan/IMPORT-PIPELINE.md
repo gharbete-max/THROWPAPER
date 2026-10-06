@@ -412,7 +412,13 @@ the answers under it:
    for its answer — and under a label ending in `:` make it one (S6b, #24,
    `label-colon-blank-below`).
 6. **Item** (S7) — any other item from stage 3, accepted, flagged or candidate: a question of
-   unknown answer (stage 7 scores the verdict). A **bullet with no answer space** is an instruction
+   unknown answer (stage 7 scores the verdict). Lines of nothing but a blank under it are its
+   answer's room, and make its answer a blank, as #24 has them under a label (S15, #149,
+   `room-under-an-item`). A candidate stays a question however it ends: a numbered sentence with
+   nothing to fill in is as often a prompt ("1. Berätta om …", "１．ご意見…ご記入いただけますと幸いです")
+   as a note ("1. Forslag skal sendes skriftligt til formanden."), and nothing on the page tells
+   them apart, so its low score has the review ask. (Tried in S15 as "a candidate sentence ending
+   in `.` is text"; it made both prompts text.) A **bullet with no answer space** is an instruction
    (S8c).
 7. **A sentence that asks** (S7b) — a prose paragraph of at most 120 characters ending in `?`, or
    `?` and a note in brackets ("… gäster? (max 8)"); or at most 60 ending in `:` that does not
@@ -680,9 +686,9 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: twenty-five documents, each a PDF and a Word file, and two of them scanned** —
-ten Swedish, two English, two Norwegian, two Japanese, two Chinese, one each in Danish, Finnish,
-German, French, Spanish, Icelandic and Russian; one and two pages; running headers and page-number
+**What it holds today: thirty-three documents, each a PDF and a Word file, and two of them
+scanned** — twelve Swedish, three English, three Norwegian, two each in Danish, Finnish, German,
+Spanish, Japanese and Chinese, one each in French, Icelandic and Russian; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -701,8 +707,17 @@ Chinese ones — numbers glued to their words ("１．氏名", "①年代", "1�
 full-width blanks, colons and question marks, boxes set against their options ("□はい"), "一、"
 sections, and a number among Chinese words set a quarter of an em apart ("最多8人") — and an
 Icelandic membership form whose language is, rightly, not guessed: 14 stop words of 20, in the Latin
-script the others share (`anketa`, `moushikomi`, `ankeeto`, `huiyuan`, `baoming`, `skraning`). Scans
-of real paper are still owed.
+script the others share (`anketa`, `moushikomi`, `ankeeto`, `huiyuan`, `baoming`, `skraning`); and
+§8.1's numbering traps on real pages, typed into the text so the rules read them in the Word file as
+well as the PDF (S15, batch 2): a paragraph that opens with an initial, "A. Andersson är …", above a
+numbered form (`fullmakt`, D4); answers numbered "i." to "iii." at the questions' own indent
+(`volunteer`, R5a); numbers that jump from 3 to 5 (`sommerfest`, R4); two lists of one, one a form
+line with a tab and a blank and one a sentence (`generalforsamling`, D3); "(1)" to "(5)" around a
+note that opens "(3 500 kroner" (`reisestotte`); "1 . Nimi" under a line that opens "15.
+toukokuuta" (`talkoot`, M8 and V3); prizes that open "1:a", "2:a", "3:e" (`orientering`); and
+sections "I." to "V." with their questions numbered from "1." again (`socio`, R5a and R10). Four of
+them are, like `sommarlager`, too short for G1 to be sure of their language. Scans of real paper
+are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

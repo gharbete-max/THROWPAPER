@@ -1,0 +1,74 @@
+{
+  "document": "talkoot",
+  "locale": null,
+  "items": [
+    {
+      "marker": "1 .",
+      "label": "Nimi: ______________________________"
+    },
+    {
+      "marker": "2 .",
+      "label": "Puhelin: ____________________________"
+    },
+    {
+      "marker": "3 .",
+      "label": "Sähköposti: __________________________"
+    },
+    {
+      "marker": "4 .",
+      "label": "Tarvitsetko lounaan? ☐ Kyllä ☐ Ei"
+    },
+    {
+      "marker": "5 .",
+      "label": "Lisätietoja: __________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Ilmoittautuminen kevättalkoisiin"
+    },
+    {
+      "kind": "instruction",
+      "text": "Kevättalkoissa siivoamme seuran rannan ja laiturit kesää varten. Talkoot pidetään lauantaina, ja työt aloitetaan aamulla kello yhdeksän. Kaikki jäsenet ovat tervetulleita, myös lapset, ja seura tarjoaa talkooväelle kahvia ja lounaan. Täytä lomake ja palauta se hallituksen jäsenelle."
+    },
+    {
+      "kind": "instruction",
+      "text": "15. toukokuuta mennessä ilmoittautuneille varataan lounas."
+    },
+    {
+      "kind": "question",
+      "label": "Nimi",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Puhelin",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Sähköposti",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Tarvitsetko lounaan?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Kyllä",
+        "Ei"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Lisätietoja",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

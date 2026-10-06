@@ -607,7 +607,7 @@ export const CORPUS: CorpusDocument[] = [
     name: 'skraning',
     language: 'is',
     summary:
-      'An Icelandic membership form: Word numbering, a kennitala, an e-mail and a phone number, and a yes or no with "Já" and "Nei".',
+      'An Icelandic membership form: Word numbering, a kennitala, an e-mail and a phone number, and a yes or no with "Já" and "Nei". Its language is not guessed: a form this short has 14 of G1\'s 20 stop words, and Icelandic writes the Latin script the others share, so G1b does not decide it either (#145).',
     features: ['word-numbering', 'blanks', 'checkboxes', 'locale', 'locale-specific-fields'],
     word: {
       lists: [{ id: 1, levels: [['decimal', '%1.']] }],
@@ -756,6 +756,214 @@ export const CORPUS: CorpusDocument[] = [
         para(`2、手机号码：${blank(16)}`),
         para(`3、参加人数（最多8人）：${blank(8)}`),
         para(`4、备注：${blank(24)}`),
+      ],
+    },
+  },
+  // ── S15 batch 2: §8.1's numbering traps on real pages, typed into the text so the rules read
+  // them in the Word file as well as the PDF.
+  {
+    name: 'fullmakt',
+    language: 'sv',
+    summary:
+      'A proxy form whose second paragraph begins with an initial, "A. Andersson är stämmans ordförande", which is a person and not a list (D4), above a numbered form with lettered answers indented under one question.',
+    features: ['typed-numbering', 'letter-vs-word', 'letter-options', 'blanks'],
+    word: {
+      blocks: [
+        title('Fullmakt till föreningsstämman'),
+        para(
+          'Den som inte kan komma till stämman kan låta en annan medlem rösta i sitt ställe. Fyll i fullmakten och lämna den till ordföranden innan stämman börjar. En medlem får bara företräda en annan medlem, och fullmakten gäller bara vid den här stämman.',
+        ),
+        para('A. Andersson är stämmans ordförande och tar emot alla fullmakter.'),
+        para(`1. Medlemmens namn: ${blank(24)}`),
+        para(`2. Medlemsnummer: ${blank(26)}`),
+        para(`3. Ombudets namn: ${blank(26)}`),
+        para('4. Hur ska ombudet rösta i frågan om stadgeändringen?'),
+        para('A. Ja till ändringen', { indent: 567 }),
+        para('B. Nej till ändringen', { indent: 567 }),
+        para('C. Ombudet avgör själv', { indent: 567 }),
+        para(`5. Underskrift: ${blank(28)}`),
+        small('Fullmakten är giltig bara om den är undertecknad av medlemmen själv.'),
+      ],
+    },
+  },
+  {
+    name: 'volunteer',
+    language: 'en',
+    summary:
+      'A volunteer sign-up whose third question has its answers numbered "i.", "ii.", "iii." at the same indent as the questions — a scheme change that restarts and so nests (R5a) — and whose numbers then go on with "4.".',
+    features: [
+      'typed-numbering',
+      'scheme-change-same-indent',
+      'roman-options',
+      'blanks',
+      'checkboxes',
+    ],
+    word: {
+      blocks: [
+        title('Volunteer Sign-up'),
+        para(
+          'The summer festival needs about forty volunteers to run the stalls, the car park and the information tent. If you can give us a few hours, please fill in this form and hand it in at the club house, or send a photo of it to the festival committee.',
+        ),
+        para(`1. Full name: ${blank(28)}`),
+        para(`2. Email address: ${blank(25)}`),
+        para('3. Which shift can you take?'),
+        para('i. Saturday morning'),
+        para('ii. Saturday afternoon'),
+        para('iii. Sunday morning'),
+        para(`4. Phone number: ${blank(26)}`),
+        para('5. Have you volunteered with us before?   ☐ Yes   ☐ No'),
+        small('Thank you! We will be in touch about a week before the festival.'),
+      ],
+    },
+  },
+  {
+    name: 'sommerfest',
+    language: 'de',
+    summary:
+      'A German sign-up whose numbers jump from 3 to 5, as when a question is deleted and the rest are not renumbered: one list, flagged "sequence-jump" (R4).',
+    features: ['typed-numbering', 'sequence-jump', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Anmeldung zum Sommerfest'),
+        para(
+          'Wie in jedem Jahr feiert der Verein im Juli sein Sommerfest auf dem Platz hinter dem Vereinsheim. Damit wir genug Essen und Getränke einkaufen können, bitten wir alle Mitglieder, sich mit diesem Formular anzumelden. Gäste sind herzlich willkommen, wenn sie mit einem Mitglied kommen.',
+        ),
+        para(`1. Name: ${blank(30)}`),
+        para(`2. Telefon: ${blank(28)}`),
+        para(`3. Anzahl der Personen: ${blank(16)}`),
+        para('5. Bringen Sie einen Kuchen mit?   ☐ Ja   ☐ Nein'),
+        para(`6. Unterschrift: ${blank(26)}`),
+        small('Bitte geben Sie das Formular bis zum 15. Juni beim Vorstand ab.'),
+      ],
+    },
+  },
+  {
+    name: 'generalforsamling',
+    language: 'da',
+    summary:
+      'Two lists of one item each: "1." with a tab and a blank, which a person would call a form line (D3 accepts it), and, after a heading, "1." before a sentence with nothing to fill in, which may be a list or not (D3: a candidate). Stage 4 keeps the second a question, for the review to ask whether it is a note or a prompt (#149). Its language is not guessed: none of its common words is Danish alone, and G1 needs five.',
+    features: ['typed-numbering', 'single-item-list', 'hanging-tab', 'blanks', 'headings'],
+    word: {
+      blocks: [
+        title('Tilmelding til generalforsamlingen'),
+        para(
+          'Generalforsamlingen holdes i klubhuset torsdag den 20. marts klokken 19. Alle medlemmer har adgang og stemmeret, men vi beder dig tilmelde dig, så vi ved, hvor mange stole og kopper kaffe der skal stilles frem. Aflever sedlen i postkassen ved døren.',
+        ),
+        para(`1.\tNavn: ${blank(30)}`),
+        heading('Forslag'),
+        para(
+          'Har du et forslag, som du gerne vil have behandlet på generalforsamlingen, skal det være bestyrelsen i hænde senest en uge før mødet.',
+        ),
+        para('1. Forslag skal sendes skriftligt til formanden.'),
+      ],
+    },
+  },
+  {
+    name: 'reisestotte',
+    language: 'nb',
+    summary:
+      'A Norwegian application numbered "(1)" to "(5)", with a note between two items that opens "(3 500 kroner …": a bracket and a number that are not a marker, and a list that goes on after it. Its language is not guessed: two words only Norwegian has, of the five G1 needs.',
+    features: [
+      'typed-numbering',
+      'parenthesised-number',
+      'amount-in-brackets',
+      'blanks',
+      'checkboxes',
+    ],
+    word: {
+      blocks: [
+        title('Søknad om reisestøtte'),
+        para(
+          'Klubben har satt av penger til å hjelpe medlemmer som skal delta i mesterskap langt hjemmefra. Fyll ut skjemaet og send det til kassereren før du reiser. Vi behandler søknadene etter hvert som de kommer inn, og du får svar i løpet av to uker.',
+        ),
+        para(`(1) Navn: ${blank(30)}`),
+        para(`(2) E-post: ${blank(28)}`),
+        para(`(3) Beløp du søker om: ${blank(18)}`),
+        para('(3 500 kroner er det meste vi kan dekke for hver søker.)'),
+        para(`(4) Kontonummer: ${blank(24)}`),
+        para('(5) Har du søkt om støtte fra oss før?   ☐ Ja   ☐ Nei'),
+      ],
+    },
+  },
+  {
+    name: 'talkoot',
+    language: 'fi',
+    summary:
+      'A Finnish sign-up typed with a space before each number\'s dot ("1 . Nimi"), under a line that opens with a date, "15. toukokuuta", which is no marker (V3). Its language is not guessed: 10 stop words of G1\'s 20.',
+    features: ['typed-numbering', 'spaced-dot', 'ordinal-date', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Ilmoittautuminen kevättalkoisiin'),
+        para(
+          'Kevättalkoissa siivoamme seuran rannan ja laiturit kesää varten. Talkoot pidetään lauantaina, ja työt aloitetaan aamulla kello yhdeksän. Kaikki jäsenet ovat tervetulleita, myös lapset, ja seura tarjoaa talkooväelle kahvia ja lounaan. Täytä lomake ja palauta se hallituksen jäsenelle.',
+        ),
+        para('15. toukokuuta mennessä ilmoittautuneille varataan lounas.'),
+        para(`1 . Nimi: ${blank(30)}`),
+        para(`2 . Puhelin: ${blank(28)}`),
+        para(`3 . Sähköposti: ${blank(26)}`),
+        para('4 . Tarvitsetko lounaan?   ☐ Kyllä   ☐ Ei'),
+        para(`5 . Lisätietoja: ${blank(26)}`),
+      ],
+    },
+  },
+  {
+    name: 'orientering',
+    language: 'sv',
+    summary:
+      'A club championship whose prizes are three lines that open with Swedish ordinals, "1:a", "2:a", "3:e", which look like a list and are not, and whose introduction says "den 3:e september" mid-line; the form under it is numbered "1)". Its language is not guessed: 14 stop words of G1\'s 20.',
+    features: ['typed-numbering', 'ordinal-not-marker', 'headings', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Anmälan till klubbmästerskapet i orientering'),
+        para(
+          'Klubbmästerskapet avgörs söndagen den 3:e september i Hagaskogen. Första start går klockan tio, och den som hellre vill springa en kortare bana kan anmäla sig till den öppna klassen. Anmälan lämnas till tävlingsledaren senast en vecka före tävlingen.',
+        ),
+        heading('Priser'),
+        para('1:a pris i varje klass är ett presentkort på 500 kronor.'),
+        para('2:a pris är en ny kompass.'),
+        para('3:e pris är en pannlampa.'),
+        heading('Anmälan'),
+        para(`1) Namn: ${blank(30)}`),
+        para(`2) Födelseår: ${blank(26)}`),
+        para('3) Klass   ☐ Herrar   ☐ Damer   ☐ Öppen'),
+        para(`4) Övrigt: ${blank(30)}`),
+      ],
+    },
+  },
+  {
+    name: 'socio',
+    language: 'es',
+    summary:
+      'A Spanish membership application in five sections numbered "I." to "V." — the last of them a "V." that could be a letter (R10) — each with its questions numbered from "1." again at the same indent (R5a).',
+    features: [
+      'typed-numbering',
+      'roman-sections',
+      'letter-or-roman',
+      'blanks',
+      'checkboxes',
+      'consent',
+    ],
+    word: {
+      blocks: [
+        title('Solicitud de alta como socio'),
+        para(
+          'Para hacerse socio del club basta con rellenar esta solicitud y entregarla en la secretaría, que está abierta de lunes a viernes por la tarde. La junta directiva estudia las solicitudes una vez al mes y le comunicará su decisión por correo electrónico.',
+        ),
+        para('I. Datos personales'),
+        para(`1. Nombre y apellidos: ${blank(20)}`),
+        para(`2. Fecha de nacimiento: ${blank(20)}`),
+        para('II. Contacto'),
+        para(`1. Teléfono: ${blank(28)}`),
+        para(`2. Correo electrónico: ${blank(20)}`),
+        para('III. Cuota'),
+        para('1. ¿Qué cuota elige?   ☐ Individual   ☐ Familiar   ☐ Juvenil'),
+        para('2. ¿Cómo quiere pagar?   ☐ Domiciliación   ☐ Transferencia'),
+        para('IV. Autorización'),
+        para('1. ☐ Acepto el uso de mis datos para la gestión del club.'),
+        para('2. ☐ Deseo recibir el boletín de noticias.'),
+        para('V. Firma'),
+        para(`1. Firma del solicitante: ${blank(20)}`),
+        para(`2. Fecha: ${blank(28)}`),
       ],
     },
   },

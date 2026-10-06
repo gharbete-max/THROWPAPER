@@ -1,0 +1,175 @@
+{
+  "document": "socio",
+  "locale": "es",
+  "items": [
+    {
+      "marker": "I.",
+      "label": "Datos personales",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Nombre y apellidos: ____________________"
+        },
+        {
+          "marker": "2.",
+          "label": "Fecha de nacimiento: ____________________"
+        }
+      ]
+    },
+    {
+      "marker": "II.",
+      "label": "Contacto",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Teléfono: ____________________________"
+        },
+        {
+          "marker": "2.",
+          "label": "Correo electrónico: ____________________"
+        }
+      ]
+    },
+    {
+      "marker": "III.",
+      "label": "Cuota",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "¿Qué cuota elige? ☐ Individual ☐ Familiar ☐ Juvenil"
+        },
+        {
+          "marker": "2.",
+          "label": "¿Cómo quiere pagar? ☐ Domiciliación ☐ Transferencia"
+        }
+      ]
+    },
+    {
+      "marker": "IV.",
+      "label": "Autorización",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "☐ Acepto el uso de mis datos para la gestión del club."
+        },
+        {
+          "marker": "2.",
+          "label": "☐ Deseo recibir el boletín de noticias."
+        }
+      ]
+    },
+    {
+      "marker": "V.",
+      "label": "Firma",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Firma del solicitante: ____________________"
+        },
+        {
+          "marker": "2.",
+          "label": "Fecha: ____________________________"
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Solicitud de alta como socio"
+    },
+    {
+      "kind": "instruction",
+      "text": "Para hacerse socio del club basta con rellenar esta solicitud y entregarla en la secretaría, que está abierta de lunes a viernes por la tarde. La junta directiva estudia las solicitudes una vez al mes y le comunicará su decisión por correo electrónico."
+    },
+    {
+      "kind": "heading",
+      "text": "Datos personales"
+    },
+    {
+      "kind": "question",
+      "label": "Nombre y apellidos",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Fecha de nacimiento",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "heading",
+      "text": "Contacto"
+    },
+    {
+      "kind": "question",
+      "label": "Teléfono",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Correo electrónico",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "heading",
+      "text": "Cuota"
+    },
+    {
+      "kind": "question",
+      "label": "¿Qué cuota elige?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Individual",
+        "Familiar",
+        "Juvenil"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "¿Cómo quiere pagar?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Domiciliación",
+        "Transferencia"
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "Autorización"
+    },
+    {
+      "kind": "question",
+      "label": "Acepto el uso de mis datos para la gestión del club.",
+      "answer": "boolean",
+      "type": "consent"
+    },
+    {
+      "kind": "question",
+      "label": "Deseo recibir el boletín de noticias.",
+      "answer": "boolean",
+      "type": "yes_no"
+    },
+    {
+      "kind": "heading",
+      "text": "Firma"
+    },
+    {
+      "kind": "question",
+      "label": "Firma del solicitante",
+      "answer": "blank",
+      "type": "signature"
+    },
+    {
+      "kind": "question",
+      "label": "Fecha",
+      "answer": "blank",
+      "type": "date"
+    }
+  ]
+}

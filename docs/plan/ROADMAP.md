@@ -86,7 +86,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 | **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
-| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batch 1 done (25 documents), batch 2 next |
+| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batches 1 and 2 done (33 documents), batch 3 next |
 
 ## S15 — The corpus to sixty
 
@@ -586,3 +586,24 @@ when each slice ends.)*
   Icelandic's expectation was wrong and now says so: its language is not guessed (14 stop words of
   20, Latin script). Stage versions: reassemble 4, enumerate 8, segment 3, score 2; every other
   snapshot moved only those lines, its input hashes unchanged. 25 documents. Next: batch 2.
+- **S15 batch 2, §8.1 on real pages (2026-10-06).** What: eight documents with the numbering typed
+  into the text, so the rules read the Word file as well as the PDF — `fullmakt` (sv, an initial
+  opening a paragraph, D4), `volunteer` (en, "i." to "iii." at the questions' indent, R5a),
+  `sommerfest` (de, 3 to 5, R4), `generalforsamling` (da, two lists of one, D3), `reisestotte`
+  (nb, "(3 500 kroner" between "(3)" and "(4)"), `talkoot` (fi, "1 ." and "15. toukokuuta", M8
+  and V3), `orientering` (sv, "1:a", "2:a", "3:e"), `socio` (es, "I." to "V.", R5a and R10). Every
+  list came out as written, in both formats. What differed:
+  - four of my expectations named a language G1 cannot be sure of — 14 and 10 stop words of 20, two
+    Norwegian-only words of five, and a Danish text none of whose common words is Danish alone. The
+    rule is right to say `null`, and they now say so;
+  - the second list of one in `generalforsamling`, "1. Forslag skal sendes skriftligt til
+    formanden.", is a question. I had expected text. A first rule to make a candidate sentence
+    text ("S8d") turned two prompts into text as well — "1. Berätta om vad du har gjort …" and
+    batch 1's "１．ご意見…ご記入いただけますと幸いです" — so it was withdrawn: nothing on the page
+    tells a note from a prompt, and the candidate's low score has the review ask;
+  - writing that rule's fixture found a fault (#149): lines of blank under a numbered prompt were a
+    second question with no label. They are now its answer's room, as #24 has them under a label.
+    Fixture `room-under-an-item`, written and failing first, and shown to fail with the rule out.
+
+  Segment is at stage version 4; every other snapshot moved only that line and S7's new `room`
+  evidence, its input hashes unchanged. 33 documents. Next: batch 3.

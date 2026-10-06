@@ -1,0 +1,1047 @@
+{
+  "fixture": "room-under-an-item",
+  "caveats": [
+    "room-under-an-item"
+  ],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S15",
+  "summary": "Lines of nothing but a blank under a numbered prompt, \"1. Beskriv ditt förslag.\", are its answer's room, as #24 has them under a label ending in \":\": one question, its answer a blank, never a second question with no label (S7, #149). A numbered line with nothing to fill in stays a question however it ends — a list of one, \"1. Förslag ska skickas skriftligt till ordföranden.\", is a candidate, and stage 4 does not guess whether it is a note or a prompt (\"1. Berätta om …\"): its low score has the review ask. A list of two prompts, and a candidate that asks, are questions too.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "y0": 864,
+            "x1": 9000,
+            "y1": 4666,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 864,
+              "x1": 1833,
+              "y1": 1034
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Förslag",
+                "words": [
+                  {
+                    "text": "Förslag",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 864,
+                      "x1": 1833,
+                      "y1": 1034
+                    },
+                    "baseline": 1000,
+                    "fontSize": 170,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 864,
+                  "x1": 1833,
+                  "y1": 1034
+                },
+                "baseline": 1000,
+                "fontSize": 170,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 1295,
+              "x1": 5360,
+              "y1": 1426
+            },
+            "lines": [
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "1. Förslag ska skickas skriftligt till ordföranden.",
+                "words": [
+                  {
+                    "text": "1.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1295,
+                      "x1": 1183,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Förslag",
+                    "start": 3,
+                    "box": {
+                      "x0": 1222,
+                      "y0": 1295,
+                      "x1": 1864,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "ska",
+                    "start": 11,
+                    "box": {
+                      "x0": 1903,
+                      "y0": 1295,
+                      "x1": 2178,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "skickas",
+                    "start": 15,
+                    "box": {
+                      "x0": 2217,
+                      "y0": 1295,
+                      "x1": 2859,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "skriftligt",
+                    "start": 23,
+                    "box": {
+                      "x0": 2898,
+                      "y0": 1295,
+                      "x1": 3815,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "till",
+                    "start": 34,
+                    "box": {
+                      "x0": 3854,
+                      "y0": 1295,
+                      "x1": 4221,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "ordföranden.",
+                    "start": 39,
+                    "box": {
+                      "x0": 4260,
+                      "y0": 1295,
+                      "x1": 5360,
+                      "y1": 1426
+                    },
+                    "baseline": 1400,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1295,
+                  "x1": 5360,
+                  "y1": 1426
+                },
+                "baseline": 1400,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b3",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 1764,
+              "x1": 2190,
+              "y1": 1934
+            },
+            "lines": [
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b3",
+                "text": "Erfarenhet",
+                "words": [
+                  {
+                    "text": "Erfarenhet",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1764,
+                      "x1": 2190,
+                      "y1": 1934
+                    },
+                    "baseline": 1900,
+                    "fontSize": 170,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1764,
+                  "x1": 2190,
+                  "y1": 1934
+                },
+                "baseline": 1900,
+                "fontSize": 170,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b4",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 2195,
+              "x1": 3893,
+              "y1": 2506
+            },
+            "lines": [
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "1. Beskriv kort din erfarenhet.",
+                "words": [
+                  {
+                    "text": "1.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2195,
+                      "x1": 1183,
+                      "y1": 2326
+                    },
+                    "baseline": 2300,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Beskriv",
+                    "start": 3,
+                    "box": {
+                      "x0": 1222,
+                      "y0": 2195,
+                      "x1": 1864,
+                      "y1": 2326
+                    },
+                    "baseline": 2300,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "kort",
+                    "start": 11,
+                    "box": {
+                      "x0": 1903,
+                      "y0": 2195,
+                      "x1": 2270,
+                      "y1": 2326
+                    },
+                    "baseline": 2300,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "din",
+                    "start": 16,
+                    "box": {
+                      "x0": 2309,
+                      "y0": 2195,
+                      "x1": 2584,
+                      "y1": 2326
+                    },
+                    "baseline": 2300,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "erfarenhet.",
+                    "start": 20,
+                    "box": {
+                      "x0": 2623,
+                      "y0": 2195,
+                      "x1": 3632,
+                      "y1": 2326
+                    },
+                    "baseline": 2300,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 2195,
+                  "x1": 3632,
+                  "y1": 2326
+                },
+                "baseline": 2300,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "2. Berätta varför du vill vara med.",
+                "words": [
+                  {
+                    "text": "2.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2375,
+                      "x1": 1183,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Berätta",
+                    "start": 3,
+                    "box": {
+                      "x0": 1222,
+                      "y0": 2375,
+                      "x1": 1864,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "varför",
+                    "start": 11,
+                    "box": {
+                      "x0": 1903,
+                      "y0": 2375,
+                      "x1": 2453,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "du",
+                    "start": 18,
+                    "box": {
+                      "x0": 2492,
+                      "y0": 2375,
+                      "x1": 2675,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "vill",
+                    "start": 21,
+                    "box": {
+                      "x0": 2714,
+                      "y0": 2375,
+                      "x1": 3081,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "vara",
+                    "start": 26,
+                    "box": {
+                      "x0": 3120,
+                      "y0": 2375,
+                      "x1": 3487,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "med.",
+                    "start": 31,
+                    "box": {
+                      "x0": 3526,
+                      "y0": 2375,
+                      "x1": 3893,
+                      "y1": 2506
+                    },
+                    "baseline": 2480,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 2375,
+                  "x1": 3893,
+                  "y1": 2506
+                },
+                "baseline": 2480,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b5",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 2844,
+              "x1": 1714,
+              "y1": 3014
+            },
+            "lines": [
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b5",
+                "text": "Gäster",
+                "words": [
+                  {
+                    "text": "Gäster",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2844,
+                      "x1": 1714,
+                      "y1": 3014
+                    },
+                    "baseline": 2980,
+                    "fontSize": 170,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 2844,
+                  "x1": 1714,
+                  "y1": 3014
+                },
+                "baseline": 2980,
+                "fontSize": 170,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b6",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 3275,
+              "x1": 3526,
+              "y1": 3406
+            },
+            "lines": [
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b6",
+                "text": "1. Hur många gäster tar du med?",
+                "words": [
+                  {
+                    "text": "1.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3275,
+                      "x1": 1183,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Hur",
+                    "start": 3,
+                    "box": {
+                      "x0": 1222,
+                      "y0": 3275,
+                      "x1": 1497,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "många",
+                    "start": 7,
+                    "box": {
+                      "x0": 1536,
+                      "y0": 3275,
+                      "x1": 1995,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "gäster",
+                    "start": 13,
+                    "box": {
+                      "x0": 2034,
+                      "y0": 3275,
+                      "x1": 2584,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "tar",
+                    "start": 20,
+                    "box": {
+                      "x0": 2623,
+                      "y0": 3275,
+                      "x1": 2898,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "du",
+                    "start": 24,
+                    "box": {
+                      "x0": 2937,
+                      "y0": 3275,
+                      "x1": 3120,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "med?",
+                    "start": 27,
+                    "box": {
+                      "x0": 3159,
+                      "y0": 3275,
+                      "x1": 3526,
+                      "y1": 3406
+                    },
+                    "baseline": 3380,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 3275,
+                  "x1": 3526,
+                  "y1": 3406
+                },
+                "baseline": 3380,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b7",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 3744,
+              "x1": 2309,
+              "y1": 3914
+            },
+            "lines": [
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b7",
+                "text": "Beskrivning",
+                "words": [
+                  {
+                    "text": "Beskrivning",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3744,
+                      "x1": 2309,
+                      "y1": 3914
+                    },
+                    "baseline": 3880,
+                    "fontSize": 170,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 3744,
+                  "x1": 2309,
+                  "y1": 3914
+                },
+                "baseline": 3880,
+                "fontSize": 170,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b8",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 4175,
+              "x1": 3751,
+              "y1": 4666
+            },
+            "lines": [
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "1. Beskriv ditt förslag.",
+                "words": [
+                  {
+                    "text": "1.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4175,
+                      "x1": 1183,
+                      "y1": 4306
+                    },
+                    "baseline": 4280,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Beskriv",
+                    "start": 3,
+                    "box": {
+                      "x0": 1222,
+                      "y0": 4175,
+                      "x1": 1864,
+                      "y1": 4306
+                    },
+                    "baseline": 4280,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "ditt",
+                    "start": 11,
+                    "box": {
+                      "x0": 1903,
+                      "y0": 4175,
+                      "x1": 2270,
+                      "y1": 4306
+                    },
+                    "baseline": 4280,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "förslag.",
+                    "start": 16,
+                    "box": {
+                      "x0": 2309,
+                      "y0": 4175,
+                      "x1": 3043,
+                      "y1": 4306
+                    },
+                    "baseline": 4280,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 4175,
+                  "x1": 3043,
+                  "y1": 4306
+                },
+                "baseline": 4280,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l10",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "______________________________",
+                "words": [
+                  {
+                    "text": "______________________________",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4355,
+                      "x1": 3751,
+                      "y1": 4486
+                    },
+                    "baseline": 4460,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 4355,
+                  "x1": 3751,
+                  "y1": 4486
+                },
+                "baseline": 4460,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l11",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "______________________________",
+                "words": [
+                  {
+                    "text": "______________________________",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4535,
+                      "x1": 3751,
+                      "y1": 4666
+                    },
+                    "baseline": 4640,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 4535,
+                  "x1": 3751,
+                  "y1": 4666
+                },
+                "baseline": 4640,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "stage": "segment",
-  "stageVersion": 3,
+  "stageVersion": 4,
   "irVersion": 1,
   "inputSha256": "6bc51fc10854b463243e2b5a12473ed922b2859cf8514866ecd839fb427e237a",
   "decisions": [
@@ -9,6 +9,6 @@
     {"id":"segment:p1-l7","rule":"S1c","verdict":"heading","subject":["p1-l7"],"evidence":{"children":2}},
     {"id":"segment:p1-l8","rule":"S6","verdict":"question:blank","subject":["p1-l8"],"evidence":{"room":0}},
     {"id":"segment:p1-l9","rule":"S6","verdict":"question:blank","subject":["p1-l9"],"evidence":{"room":0}},
-    {"id":"segment:p1-l10","rule":"S7","verdict":"question:unknown","subject":["p1-l10"],"evidence":{"verdict":"accept"}}
+    {"id":"segment:p1-l10","rule":"S7","verdict":"question:unknown","subject":["p1-l10"],"evidence":{"room":0,"verdict":"accept"}}
   ]
 }

@@ -27,7 +27,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SEGMENT_STAGE_VERSION = 3;
+export const SEGMENT_STAGE_VERSION = 4;
 /** More options than this and the question is flagged (#30). */
 export const MAX_OPTIONS = 30;
 /** A label longer than this is prose to read, not a label (rules 1, 7, 8). */
@@ -956,16 +956,30 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
       continue;
     }
 
-    // Rule 7: any other item is a question — but a bullet with nothing to answer is text.
+    // Rule 7: any other item is a question — but a bullet with nothing to answer is text. A
+    // candidate is a question too, however it ends: a numbered sentence with nothing to fill in is
+    // as often a prompt ("1. Berätta om …") as a note, and its low score has the review ask (#149).
     if (asItem) {
       if (asItem.marker.family === 'bullet') {
         emit({ kind: 'instruction', lineIds: ids, text: joinLines(ids.map((x) => at(x).ir.text)) });
         decide(id, 'S8c', ids, 'instruction');
         continue;
       }
-      const segment = question(withDetails(ids), labelOf(text), itemId, 'unknown', [], details);
+      // Lines of nothing but a blank under it are its answer's room, as under a label (#24, #149).
+      const answer = room.length > 0 ? 'blank' : 'unknown';
+      const segment = question(
+        withDetails([...ids, ...room]),
+        labelOf(text),
+        itemId,
+        answer,
+        [],
+        details,
+      );
       emit(segment);
-      decide(id, 'S7', segment.lineIds, 'question:unknown', { verdict: asItem.verdict });
+      decide(id, 'S7', segment.lineIds, `question:${answer}`, {
+        verdict: asItem.verdict,
+        room: room.length,
+      });
       continue;
     }
 

@@ -1,0 +1,19 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "89718936f924a865ebb5e72830bf5800b34f64cb9460d82939d84a79c164a939",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l3","rule":"P3b","verdict":"prose","subject":["p1-l3","p1-l2"],"evidence":{"previousRelX":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l4","rule":"P3b","verdict":"prose","subject":["p1-l4","p1-l3"],"evidence":{"previousRelX":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l5","rule":"R2","verdict":"item","subject":["p1-l5"],"evidence":{"closed":0,"family":"arabic","level":1,"path":"1","production":"M1","raw":"1.","relX":0,"run":"r-p1-l5","width":8092}},
+    {"id":"enumerate:p1-l6","rule":"R6a","verdict":"prose","subject":["p1-l6"],"evidence":{"closed":1}},
+    {"id":"enumerate:p1-l7","rule":"R6b","verdict":"prose","subject":["p1-l7"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l8","rule":"P3b","verdict":"prose","subject":["p1-l8","p1-l7"],"evidence":{"previousRelX":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l9","rule":"R2","verdict":"item","subject":["p1-l9"],"evidence":{"closed":0,"family":"arabic","level":1,"path":"1","production":"M1","raw":"1.","relX":0,"run":"r-p1-l9","width":8092}},
+    {"id":"enumerate:i-p1-l5","rule":"D3","verdict":"accept","subject":["i-p1-l5"],"evidence":{"band":true,"field":true,"flags":"","run":"r-p1-l5"}},
+    {"id":"enumerate:i-p1-l9","rule":"D3","verdict":"candidate","subject":["i-p1-l9"],"evidence":{"band":false,"field":false,"flags":"single-item","run":"r-p1-l9"}}
+  ]
+}
