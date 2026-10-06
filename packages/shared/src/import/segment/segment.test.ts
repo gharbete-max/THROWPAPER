@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { canonicalJson } from '../debug.js';
 import { enumerate } from '../enumerate/enumerate.js';
-import type { LayoutDocument } from '../ir/types.js';
+import type { LayoutDocument, RawDocument, RawWord } from '../ir/types.js';
+import { reassemble } from '../layout/reassemble.js';
 import { pasteDocument } from '../paste.js';
 import { isBooleanPair, isMetaLine, mentionsTable } from './lexicon.js';
 import { MAX_OPTIONS, segment } from './segment.js';
@@ -182,5 +183,123 @@ describe('stage 4, segment', () => {
     const [q] = questions(segmentsOf('3.  Öhrqvists  minnesfond — gåva (kr): ____'));
     // The paste layout joins words with one space; nothing else is touched.
     expect(q!.label).toBe('Öhrqvists minnesfond — gåva (kr)');
+  });
+});
+
+/** A line of a measured page: one word per space-separated piece, 131 iu a character. */
+function measuredLine(text: string, baseline: number): RawWord[] {
+  const out: RawWord[] = [];
+  let x = 1000;
+  for (const piece of text.split(' ')) {
+    const width = 131 * [...piece].length;
+    out.push({
+      text: piece,
+      box: { x0: x, y0: baseline - 105, x1: x + width, y1: baseline + 26 },
+      baseline,
+      fontSize: 131,
+      fontWeight: 400,
+      italic: false,
+      ocrConfidence: null,
+      repair: null,
+      source: 'text-layer',
+      paragraph: null,
+      docxNumbering: null,
+      cell: null,
+    });
+    x += width + 131;
+  }
+  return out;
+}
+
+const measuredSegments = (lines: string[]) => {
+  let baseline = 1000;
+  const words = lines.flatMap((text) => {
+    if (text === '') {
+      baseline += 180;
+      return [];
+    }
+    const line = measuredLine(text, baseline);
+    baseline += 180;
+    return line;
+  });
+  const raw: RawDocument = {
+    irVersion: 1,
+    source: { kind: 'pdf', extractor: 'test', sha256: null },
+    pages: [{ pageNo: 1, widthPt: 595, heightPt: 842, words, rules: [] }],
+  };
+  return read(reassemble(raw).output).output.segments;
+};
+
+describe('Chinese and Japanese (#147)', () => {
+  it('joins a wrapped paragraph with no space between two of their characters', () => {
+    const [paragraph] = measuredSegments([
+      'このたびは夏季講習会にお申し込みいただき、ありがとうございます。必要事項をご記入のうえ、',
+      '事務局までご提出ください。',
+    ]);
+    expect(paragraph).toMatchObject({
+      kind: 'instruction',
+      text: 'このたびは夏季講習会にお申し込みいただき、ありがとうございます。必要事項をご記入のうえ、事務局までご提出ください。',
+    });
+    // Between Latin words the space stays.
+    const [latin] = measuredSegments([
+      'Fyll i blanketten och lämna den till kansliet senast den sista maj, tack så mycket för',
+      'hjälpen med detta.',
+    ]);
+    expect(latin).toMatchObject({ text: expect.stringContaining('för hjälpen') });
+    // A line that ends its sentence with "。" short of the margin ends the paragraph.
+    const ended = measuredSegments(['ご記入ください。', 'ありがとうございました。']);
+    expect(ended.map((s) => s.kind === 'instruction' && s.text)).toEqual([
+      'ご記入ください。',
+      'ありがとうございました。',
+    ]);
+  });
+
+  it('reads a glued marker’s label, full-width blanks and colons, and boxes glued to their words', () => {
+    const segments = measuredSegments([
+      '１．氏名：＿＿＿＿＿＿',
+      '２．電話番号：＿＿＿＿＿＿',
+      '３．懇親会に参加しますか。 □はい □いいえ',
+      '４．是否需要发票？ □是 □否',
+    ]);
+    expect(
+      questions(segments).map(({ label, answer, options }) => ({ label, answer, options })),
+    ).toEqual([
+      { label: '氏名', answer: 'blank', options: [] },
+      { label: '電話番号', answer: 'blank', options: [] },
+      { label: '懇親会に参加しますか。', answer: 'boolean', options: ['はい', 'いいえ'] },
+      { label: '是否需要发票？', answer: 'boolean', options: ['是', '否'] },
+    ]);
+  });
+
+  it('joins an item’s wrapped label as it joins a paragraph', () => {
+    const [item] = measuredSegments([
+      '１．ご意見・ご要望がございましたら、こちらの欄にご自由にご記入いただけますと大変幸いです。今後の講習会の運営の参考にさせて',
+      'いただきます。',
+    ]);
+    expect(item).toMatchObject({
+      kind: 'question',
+      label:
+        'ご意見・ご要望がございましたら、こちらの欄にご自由にご記入いただけますと大変幸いです。今後の講習会の運営の参考にさせていただきます。',
+      lineIds: ['p1-l1', 'p1-l2'],
+    });
+  });
+
+  it('asks with a full-width question mark, and takes a blank under a full-width colon', () => {
+    const segments = measuredSegments([
+      '参加人数？（最多8人）',
+      '',
+      '',
+      '备注：',
+      '＿＿＿＿＿＿＿＿',
+      '',
+      '',
+      '联系人：',
+    ]);
+    expect(segments).toMatchObject([
+      { kind: 'question', label: '参加人数？（最多8人）', answer: 'unknown' },
+      { kind: 'question', label: '备注', answer: 'blank', lineIds: ['p1-l2', 'p1-l3'] },
+      // A short label with its colon, and nothing under it, still asks.
+      { kind: 'question', label: '联系人', answer: 'unknown' },
+    ]);
   });
 });

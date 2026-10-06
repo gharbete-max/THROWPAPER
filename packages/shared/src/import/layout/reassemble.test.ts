@@ -426,6 +426,54 @@ describe('§2.11 the document language', () => {
     ]);
     expect(reassemble(doc(pages)).output.locale).toBeNull();
   });
+
+  // #145: a short form has too few stop words for G1, but its script can have only one writer.
+  const form = (lines: string[]) =>
+    reassemble(doc([lines.flatMap((text, i) => line(text, 1000, 1000 + 360 * i))]));
+  const localeDecision = (result: ReturnType<typeof reassemble>) =>
+    result.debug.decisions.find((d) => d.id === 'reassemble:locale');
+
+  it('G1b: is known from a script only one of the languages writes', () => {
+    const russian = form(['Фамилия и имя', 'Дата рождения', 'Телефон', 'Электронная почта']);
+    expect(russian.output.locale).toBe('ru');
+    expect(localeDecision(russian)).toMatchObject({
+      rule: 'G1b',
+      verdict: 'ru',
+      evidence: { script: 'Cyrillic', inScript: 46, letters: 46 },
+    });
+    expect(
+      form([
+        '一、基本信息',
+        '1．姓名：',
+        '2．出生日期',
+        '3．手机号码',
+        '4．电子邮箱',
+        '5．是否需要发票？',
+      ]).output.locale,
+    ).toBe('zh');
+    // Japanese writes Han too: one kana is enough to tell it from Chinese.
+    expect(
+      form(['氏名：', '電話番号：', 'メールアドレス：', '懇親会に参加しますか。']).output.locale,
+    ).toBe('ja');
+  });
+
+  it('G1b: needs twenty letters in the script, and most of the letters read', () => {
+    expect(form(['Фамилия', 'Телефон']).output.locale).toBeNull();
+    // Nineteen Han letters: one short.
+    expect(
+      form(['一、基本信息', '1．姓名：', '2．出生日期', '3．手机号码', '4．电子邮箱']).output
+        .locale,
+    ).toBeNull();
+    // A Swedish form with one Russian name in it is not Russian.
+    const mixed = form(['Namn och adress för den som anmäler', 'Kontaktperson: Дмитрий Иванович']);
+    expect(mixed.output.locale).toBeNull();
+    expect(localeDecision(mixed)?.rule).toBe('G1');
+    // Latin letters are shared by most of the twelve, so a short Latin-script form stays G1's.
+    expect(
+      form(['Nafn', 'Kennitala', 'Netfang', 'Sími', 'Viltu fá fréttabréf félagsins?']).output
+        .locale,
+    ).toBeNull();
+  });
 });
 
 describe('Word numbering read with the rest (§11 of NUMBERING-RULES)', () => {

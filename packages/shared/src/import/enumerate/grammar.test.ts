@@ -44,6 +44,16 @@ describe('the productions, in their order', () => {
     ['xxxviii. Namn', 'M7', 'roman-lower dot [38]'], // seven letters: the longest numeral 1–39
     ['c) Namn', 'M6', 'alpha-lower paren [3]'],
     ['B. Namn', 'M6', 'alpha-upper dot [2]'],
+    ['① 年代', 'M10', 'arabic circled [1]'],
+    ['⑳年代', 'M10', 'arabic circled [20]'],
+    ['①Name', 'M10', 'arabic circled [1]'], // a circled number glues to anything
+    ['1、 姓名', 'M11', 'arabic ideographic [1]'],
+    ['１．氏名：', 'M12', 'arabic dot [1]'],
+    ['12．氏名', 'M12', 'arabic dot [12]'],
+    ['3）メール', 'M12', 'arabic paren [3]'],
+    ['（２）电话', 'M12', 'arabic enclosed [2]'],
+    ['1、姓名', 'M12', 'arabic ideographic [1]'],
+    ['⒈氏名', 'M12', 'arabic dot [1]'], // one code point, NFKC "1."
   ])('%s is %s, %s', (line, production, reading) => {
     const match = read(line);
     expect(match?.production).toBe(production);
@@ -56,8 +66,24 @@ describe('the productions, in their order', () => {
     expect(read('1. Namn')).toMatchObject({ raw: '1.', wordCount: 1 });
   });
 
+  it('says how much of its word a glued marker takes, and nothing for a whole-word one', () => {
+    const glued = (line: string) => grammar(words(line))?.glued;
+    expect(glued('１．氏名')).toBe(2);
+    expect(glued('（２）电话')).toBe(3);
+    expect(glued('12．氏名')).toBe(3);
+    expect(glued('①年代')).toBe(1);
+    expect(glued('① 年代')).toBeUndefined();
+    expect(glued('1、 姓名')).toBeUndefined();
+    expect(grammar(words('１．氏名'))?.raw).toBe('１．');
+  });
+
   it.each([
-    ['1.Namn', 'glued: the whole first word must be the marker'],
+    ['1.Namn', 'glued to a Latin letter: only a Chinese or Japanese character glues'],
+    ['3.5million', 'a decimal'],
+    ['1.5倍', 'a digit after the dot: a decimal, glued or not'],
+    ['(c)メール', 'a letter: M12 glues numbers only'],
+    ['1000．氏名', 'four digits'],
+    ['㉑ 年代', 'past ⑳'],
     ['1000. Namn', 'four digits'],
     ['12.100 Namn', 'a sub-component of three digits'],
     ['1.2.3.4.5 Namn', 'five components'],
@@ -82,6 +108,8 @@ describe('the productions, in their order', () => {
   it('matches a marker that is the whole line: whether it has a label is P4, not the grammar', () => {
     expect(read('1.')?.production).toBe('M1');
     expect(read('1 .')).toMatchObject({ production: 'M8', wordCount: 2 });
+    expect(read('1、')?.production).toBe('M11');
+    expect(read('①')?.production).toBe('M10');
   });
 
   it('matches nothing on an empty line', () => {

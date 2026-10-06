@@ -1,0 +1,56 @@
+{
+  "document": "baoming",
+  "locale": "zh",
+  "items": [
+    {
+      "marker": "1、",
+      "label": "姓名：____________________"
+    },
+    {
+      "marker": "2、",
+      "label": "手机号码：________________"
+    },
+    {
+      "marker": "3、",
+      "label": "参加人数（最多8人）：________"
+    },
+    {
+      "marker": "4、",
+      "label": "备注：________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "活动报名表"
+    },
+    {
+      "kind": "instruction",
+      "text": "本次活动面向全体会员，名额有限，请尽早报名。报名表填写完毕后，请交给活动负责人。如有疑问，请与秘书处联系。"
+    },
+    {
+      "kind": "question",
+      "label": "姓名",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "手机号码",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "参加人数（最多8人）",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "question",
+      "label": "备注",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

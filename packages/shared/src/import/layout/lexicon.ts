@@ -171,3 +171,44 @@ export function documentLocale(texts: readonly string[]): LocaleCount {
   const sure = total >= LOCALE_MIN_HITS && top >= LOCALE_MIN_OWN && top >= runnerUp * 2;
   return { locale: sure ? best : null, best, hits: total, own: top, runnerUp };
 }
+
+/** G1b: at least this many letters in a script one language owns, and more than half of all. */
+export const SCRIPT_MIN_LETTERS = 20;
+
+export interface ScriptCount {
+  /** The language whose script the letters are in, or null when G1b does not decide. */
+  locale: LayoutLanguage | null;
+  /** The script, as Unicode names it ('Han' with kana counts as Japanese). */
+  script: 'Cyrillic' | 'Japanese' | 'Han' | null;
+  /** The letters in that script, and every letter read. */
+  inScript: number;
+  letters: number;
+}
+
+/**
+ * G1b (#145): the language a script tells, whatever the stop words. Of the twelve, only Russian
+ * writes Cyrillic, only Japanese writes kana, and Chinese writes Han with no kana at all — so a
+ * short form in one of them, too short for §2.11's twenty stop words, is still known. Latin is
+ * shared, so it tells nothing. NFKC first, as `localeTokens` does: a full-width Latin letter is Latin.
+ */
+export function scriptLocale(texts: readonly string[]): ScriptCount {
+  let letters = 0;
+  let cyrillic = 0;
+  let kana = 0;
+  let han = 0;
+  for (const text of texts) {
+    for (const char of text.normalize('NFKC')) {
+      if (!/\p{L}/u.test(char)) continue;
+      letters += 1;
+      if (/\p{Script=Cyrillic}/u.test(char)) cyrillic += 1;
+      else if (/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(char)) kana += 1;
+      else if (/\p{Script=Han}/u.test(char)) han += 1;
+    }
+  }
+  const owns = (n: number) => n >= SCRIPT_MIN_LETTERS && n * 2 > letters;
+  if (owns(cyrillic)) return { locale: 'ru', script: 'Cyrillic', inScript: cyrillic, letters };
+  if (kana > 0 && owns(kana + han))
+    return { locale: 'ja', script: 'Japanese', inScript: kana + han, letters };
+  if (kana === 0 && owns(han)) return { locale: 'zh', script: 'Han', inScript: han, letters };
+  return { locale: null, script: null, inScript: 0, letters };
+}

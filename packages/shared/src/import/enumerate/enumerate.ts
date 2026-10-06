@@ -1,5 +1,6 @@
 import { inputSha256, type Decision, type Evidence, type StageResult } from '../debug.js';
 import { IrError } from '../ir/validate.js';
+import { joinLines } from '../layout/hints.js';
 import type {
   BlockRole,
   DocxNumbering,
@@ -35,7 +36,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 7;
+export const ENUMERATE_STAGE_VERSION = 8;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -127,6 +128,31 @@ const samePath = (a: readonly number[], b: readonly number[]) =>
   a.length === b.length && a.every((value, i) => value === b[i]);
 
 const pathText = (path: readonly number[]) => path.join('.');
+
+/**
+ * Where the label starts: the word after the marker, or, when the marker is glued (M10, M12), the
+ * rest of the marker's own word — at the label's share of that word's box, by character. Null when
+ * the marker is the whole line.
+ */
+function labelStart(
+  line: Line,
+  match: Pick<MarkerMatch, 'wordCount' | 'glued'>,
+): { text: string; start: number; x0: number } | null {
+  const words = line.ir.words;
+  if (match.glued !== undefined) {
+    const word = words[0]!;
+    const chars = [...word.text].length;
+    const markerChars = [...word.text.slice(0, match.glued)].length;
+    const share = Math.trunc(((word.box.x1 - word.box.x0) * markerChars) / chars);
+    return {
+      text: word.text.slice(match.glued),
+      start: word.start + match.glued,
+      x0: word.box.x0 + share,
+    };
+  }
+  const word = words[match.wordCount];
+  return word ? { text: word.text, start: word.start, x0: word.box.x0 } : null;
+}
 
 // ------------------------------------------------------------------ §11 Word's own numbering
 /** `w:numFmt` → family. Word's other counting formats (full width, CJK, ordinal words) count. */
@@ -283,7 +309,7 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   const vetoOf = (line: Line, match: MarkerMatch): RejectRule | null => {
     const reading = match.preferred; // a match with two readings is a letter, never arabic
     const arabic = reading.family === 'arabic';
-    const F = line.ir.words[match.wordCount];
+    const F = labelStart(line, match);
     const f = F ? gazetteerForm(F.text) : null;
     if (match.production === 'M4' && F && /^\p{Ll}/u.test(F.text)) return 'V1';
     if (arabic && f !== null && isUnitWord(f)) return 'V2';
@@ -354,14 +380,13 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
           )
         : undefined;
 
-    const words = line.ir.words;
-    const firstLabelWord = words[match.wordCount];
+    const firstLabelWord = labelStart(line, match);
     const lineIds = [line.ir.id];
     let label: string;
     let textX: number;
     if (firstLabelWord) {
       label = line.ir.text.slice(firstLabelWord.start);
-      textX = firstLabelWord.box.x0 - line.columnX0;
+      textX = firstLabelWord.x0 - line.columnX0;
     } else if (labelLine) {
       label = labelLine.ir.text;
       textX = labelLine.relX;
@@ -381,6 +406,7 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
         style: reading.style,
         path: [...reading.path],
         wordCount: match.wordCount,
+        ...(match.glued === undefined ? {} : { glued: match.glued }),
       },
       lineIds,
       detailLineIds: [],
@@ -570,7 +596,7 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     owners.set(id, owner);
     if (owner.kind === 'label') {
       owner.item.lineIds.push(id);
-      owner.item.label += ` ${line.ir.text}`;
+      owner.item.label = joinLines([owner.item.label, line.ir.text]);
     } else if (owner.kind === 'detail') {
       owner.item.detailLineIds.push(id);
     }
@@ -708,13 +734,13 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     }
 
     const next = line.siblings[line.indexInBlock + 1];
-    const wholeLine = line.ir.words.length === match.wordCount;
+    const wholeLine = labelStart(line, match) === null;
     const labelLine = wholeLine && next && !grammar(next.ir.words) ? next : null;
     const rule = vetoOf(line, match) ?? (wholeLine && !labelLine ? 'P4' : null);
     if (rule) {
       rejected.push({ lineId: id, raw: match.raw, rule });
       const handled = nonMarker(line);
-      const firstLabelWord = line.ir.words[match.wordCount]?.text;
+      const firstLabelWord = labelStart(line, match)?.text;
       decide(id, rule, 'rejected', {
         production: match.production,
         raw: match.raw,
@@ -757,8 +783,13 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
     const { words, fontSize, indentBand } = item.line.ir;
     const markerEnd = words[item.marker.wordCount - 1];
     const textStart = words[item.marker.wordCount];
-    // HANGING_GAP (§2): at least one em between the marker and its text — a tab, not a space.
-    const hanging = !!markerEnd && !!textStart && textStart.box.x0 - markerEnd.box.x1 >= fontSize;
+    // HANGING_GAP (§2): at least one em between the marker and its text — a tab, not a space. A
+    // glued marker has none: its text starts inside its word.
+    const hanging =
+      item.marker.glued === undefined &&
+      !!markerEnd &&
+      !!textStart &&
+      textStart.box.x0 - markerEnd.box.x1 >= fontSize;
     return hanging || indentBand >= 1;
   };
   /** D3's "its path extends its parent's path": an arabic sub-item of an arabic item. */

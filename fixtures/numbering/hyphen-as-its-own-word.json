@@ -1,7 +1,8 @@
 {
   "fixture": "hyphen-as-its-own-word",
   "caveats": [
-    "hyphen-split-from-its-word"
+    "hyphen-split-from-its-word",
+    "touching-runs"
   ],
   "stage": "reassemble",
   "status": "green",

@@ -18,8 +18,14 @@ import type {
   Repair,
 } from '../ir/types.js';
 import { IrError } from '../ir/validate.js';
-import { textHints } from './hints.js';
-import { documentLocale, furnitureKey, isConjunction, isPageNumberKey } from './lexicon.js';
+import { endsWithCjk, startsWithCjk, textHints } from './hints.js';
+import {
+  documentLocale,
+  furnitureKey,
+  isConjunction,
+  isPageNumberKey,
+  scriptLocale,
+} from './lexicon.js';
 import { columnRegions, type CutDecision, type Region } from './xycut.js';
 
 /**
@@ -37,7 +43,7 @@ import { columnRegions, type CutDecision, type Region } from './xycut.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const REASSEMBLE_STAGE_VERSION = 3;
+export const REASSEMBLE_STAGE_VERSION = 4;
 
 /** §2.1: the presentation-form ligatures, and what each is. */
 const LIGATURES: Readonly<Record<string, string>> = {
@@ -89,6 +95,8 @@ interface Line {
   furniture: { rule: 'F1' | 'F2'; margin: 'top' | 'bottom'; pages: number } | null;
   /** Hyphen joins made at its end, for the debug artifact. */
   readonly joins: { rule: 'Y1' | 'Y2' | 'Y3'; raw: string; word: string }[];
+  /** Words made of touching parts (L3, L3b), for the debug artifact. */
+  readonly touching: { word: string; parts: string[]; rule: 'L3' | 'L3b' }[];
 }
 
 interface Block {
@@ -159,14 +167,76 @@ function measuredLines(words: readonly Word[]): Line[] {
       synthetic: false,
       furniture: null,
       joins: [],
+      touching: [],
     };
     lines.push(line);
     open.set(word.source, { line, anchor: word.baseline });
   }
   for (const line of lines) {
     line.words.sort((a, b) => a.box.x0 - b.box.x0 || byOrder(a, b));
+    joinTouching(line);
   }
   return lines;
+}
+
+/**
+ * L3 — touching words are one word (§2.12, #143): two neighbours no more than a tenth of an em
+ * apart are printed as one. pdf.js gives a text item per run, and a run ends where the font changes
+ * — "1" in a Latin font, "．姓名：" in a Chinese one — or where it gives a full stop, or a soft
+ * hyphen printed at a line's end (#141), on its own. A word after a space never touches: a space is
+ * a quarter of an em.
+ *
+ * L3b (#148): Chinese and Japanese put no space between words, and a typesetter sets a number among
+ * them a quarter of an em apart (JIS X 4051's, Word's and LibreOffice's "autospace") — "最多", "8",
+ * "人）：" — so digits next to a Chinese or Japanese character, no more than a third of an em apart,
+ * are one word with it. Letters keep their spaces: "氏名 Name" is two words on a bilingual form.
+ */
+function joinTouching(line: Line): void {
+  const words: Word[] = [];
+  let parts: string[] = [];
+  let rule: 'L3' | 'L3b' = 'L3';
+  for (const word of line.words) {
+    const previous = words.at(-1);
+    const gap = previous ? word.box.x0 - previous.box.x1 : 0;
+    const touches = !!previous && gap * 10 <= word.fontSize;
+    const autospace =
+      !!previous &&
+      !touches &&
+      gap * 3 <= word.fontSize &&
+      ((endsWithCjk(previous.text) && /^\d/u.test(word.text)) ||
+        (/\d$/u.test(previous.text) && startsWithCjk(word.text)));
+    if (!previous || (!touches && !autospace)) {
+      if (parts.length > 1) line.touching.push({ word: previous!.text, parts, rule });
+      words.push(word);
+      parts = [word.text];
+      rule = 'L3';
+      continue;
+    }
+    if (autospace) rule = 'L3b';
+    // The word is set in what most of its letters are set in.
+    const heavier = [...word.text].length > [...previous.text].length ? word : previous;
+    words[words.length - 1] = {
+      ...previous,
+      text: `${previous.text}${word.text}`,
+      box: unionBox([previous.box, word.box]),
+      fontWeight: heavier.fontWeight,
+      italic: heavier.italic,
+      ocrConfidence:
+        previous.ocrConfidence === null || word.ocrConfidence === null
+          ? (previous.ocrConfidence ?? word.ocrConfidence)
+          : Math.min(previous.ocrConfidence, word.ocrConfidence),
+      repair:
+        previous.repair || word.repair
+          ? {
+              kind: (previous.repair ?? word.repair)!.kind,
+              raw: `${previous.repair?.raw ?? previous.text}${word.repair?.raw ?? word.text}`,
+            }
+          : null,
+    };
+    parts.push(word.text);
+  }
+  if (parts.length > 1) line.touching.push({ word: words.at(-1)!.text, parts, rule });
+  line.words = words;
 }
 
 /** Synthetic words into lines: one paragraph is one line, in the source's own order. */
@@ -176,7 +246,14 @@ function syntheticLines(words: readonly Word[]): Line[] {
     const key = `${word.source}:${word.paragraph ?? `w${word.order}`}`;
     let line = byParagraph.get(key);
     if (!line) {
-      line = { words: [], source: word.source, synthetic: true, furniture: null, joins: [] };
+      line = {
+        words: [],
+        source: word.source,
+        synthetic: true,
+        furniture: null,
+        joins: [],
+        touching: [],
+      };
       byParagraph.set(key, line);
     }
     line.words.push(word);
@@ -255,7 +332,6 @@ function dehyphenate(block: Block, rect: Box): void {
   for (let i = 0; i + 1 < block.lines.length; i += 1) {
     const line = block.lines[i]!;
     const next = block.lines[i + 1]!;
-    if (!line.synthetic) ownHyphen(line);
     const last = line.words.at(-1);
     const first = next.words[0];
     if (!last || !first || line.synthetic) continue;
@@ -286,24 +362,6 @@ function dehyphenate(block: Block, rect: Box): void {
       i -= 1; // this line may join the one after the emptied line too
     }
   }
-}
-
-/**
- * A lone hyphen at a line's end that touches the word before it — within a tenth of an em — is
- * that word's own: a soft hyphen a Word user typed, printed where the line breaks, which pdf.js may
- * give as a text item of its own ("med" and "-"). A dash after a space is punctuation, and stays
- * a word of its own (#141).
- */
-function ownHyphen(line: Line): void {
-  const hyphen = line.words.at(-1);
-  const word = line.words.at(-2);
-  if (!hyphen || !word || !/^[-\u2010]$/u.test(hyphen.text) || !/\p{L}$/u.test(word.text)) return;
-  if ((hyphen.box.x0 - word.box.x1) * 10 > hyphen.fontSize) return;
-  line.words.splice(-2, 2, {
-    ...word,
-    text: `${word.text}${hyphen.text}`,
-    box: unionBox([word.box, hyphen.box]),
-  });
 }
 
 // ------------------------------------------------------------------ §2.6 page furniture
@@ -556,6 +614,12 @@ export function reassemble(raw: RawDocument): StageResult<LayoutDocument> {
               decide(`${id}-w${i + 1}`, 'L2', 'box-mark', [id], { raw: word.repair.raw });
             }
           });
+          line.touching.forEach((touched, i) => {
+            decide(`${id}-touch${i + 1}`, touched.rule, 'touching', [id], {
+              word: touched.word,
+              parts: touched.parts.join(' + '),
+            });
+          });
           line.joins.forEach((join, i) => {
             const verdict =
               join.rule === 'Y1'
@@ -617,15 +681,26 @@ export function reassemble(raw: RawDocument): StageResult<LayoutDocument> {
       .flatMap((block) => block.lines.map((line) => line.text)),
   );
   const locale = documentLocale(read);
-  decide('locale', 'G1', locale.locale ?? 'unknown', [], {
+  const evidence = {
     best: locale.best ?? '',
     hits: locale.hits,
     own: locale.own,
     runnerUp: locale.runnerUp,
-  });
+  };
+  // G1b (#145): a script only one of the twelve writes decides, whatever the stop words.
+  const script = scriptLocale(read);
+  const documentLanguage = script.locale ?? locale.locale;
+  if (script.locale)
+    decide('locale', 'G1b', script.locale, [], {
+      script: script.script ?? '',
+      inScript: script.inScript,
+      letters: script.letters,
+      ...evidence,
+    });
+  else decide('locale', 'G1', locale.locale ?? 'unknown', [], evidence);
 
   return {
-    output: { irVersion: 1, source: raw.source, locale: locale.locale, pages: irPages },
+    output: { irVersion: 1, source: raw.source, locale: documentLanguage, pages: irPages },
     debug: {
       stage: 'reassemble',
       stageVersion: REASSEMBLE_STAGE_VERSION,

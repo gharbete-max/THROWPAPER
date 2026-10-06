@@ -1,0 +1,70 @@
+{
+  "document": "moushikomi",
+  "locale": "ja",
+  "items": [
+    {
+      "marker": "１．",
+      "label": "氏名：＿＿＿＿＿＿＿＿＿＿＿＿"
+    },
+    {
+      "marker": "２．",
+      "label": "電話番号：＿＿＿＿＿＿＿＿＿＿"
+    },
+    {
+      "marker": "３．",
+      "label": "メールアドレス：＿＿＿＿＿＿＿＿"
+    },
+    {
+      "marker": "４．",
+      "label": "懇親会に参加しますか。 □はい □いいえ"
+    },
+    {
+      "marker": "５．",
+      "label": "ご意見：＿＿＿＿＿＿＿＿＿＿＿＿"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "夏季講習会参加申込書"
+    },
+    {
+      "kind": "instruction",
+      "text": "このたびは夏季講習会にお申し込みいただき、ありがとうございます。必要事項をご記入のうえ、事務局までご提出ください。ご記入いただいた個人情報は、講習会の運営以外には使用しません。"
+    },
+    {
+      "kind": "question",
+      "label": "氏名",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "電話番号",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "メールアドレス",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "懇親会に参加しますか。",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "はい",
+        "いいえ"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "ご意見",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

@@ -4,6 +4,54 @@
   "tool": "LibreOffice 24.2.7.2",
   "documents": [
     {
+      "name": "ankeeto",
+      "language": "ja",
+      "summary": "A Japanese survey numbered with circled numbers glued to their words (\"①年代\"), single choices of three boxes, and an \"その他\" (anything else) blank.",
+      "features": [
+        "typed-numbering",
+        "glued-marker",
+        "circled-numbers",
+        "checkboxes",
+        "blanks",
+        "locale",
+        "cjk"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "ankeeto.pdf",
+          "sha256": "5185e3a2b7edbf35cae4c428956d6f8384887df8d2e6c425a3641a1bfad05372"
+        },
+        "docx": {
+          "path": "ankeeto.docx",
+          "sha256": "1eea57dd6e06008e919f8686205af9e41f004e9aee036b0eac9416323db0e5fc"
+        }
+      }
+    },
+    {
+      "name": "anketa",
+      "language": "ru",
+      "summary": "A Russian conference questionnaire in Cyrillic: Word numbering, a date of birth, a phone and an e-mail, a yes or no with \"Да\" and \"Нет\", and a comment.",
+      "features": [
+        "word-numbering",
+        "blanks",
+        "checkboxes",
+        "locale",
+        "cyrillic"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "anketa.pdf",
+          "sha256": "29b0b66c45dea6ad41baa815aec5b32ddff509589f1a63e6a2a3b2a647ddcb2f"
+        },
+        "docx": {
+          "path": "anketa.docx",
+          "sha256": "70d50123a9d556e4897c59f2df55b2ecdbf4243f6532f30696965f4646f1f36c"
+        }
+      }
+    },
+    {
       "name": "anmalan-tva-spalter",
       "language": "sv",
       "summary": "A numbered list set in two columns in the middle of the page, with full-width text above and below and only ordinary spacing between: read down the left column, then the right.",
@@ -65,6 +113,31 @@
         "docx": {
           "path": "arsmote-anmalan.docx",
           "sha256": "688758f4046ff4ae631c7f0aeb3924a942841ab2ac56ea14cce02e57a8677804"
+        }
+      }
+    },
+    {
+      "name": "baoming",
+      "language": "zh",
+      "summary": "A Chinese event sign-up numbered with the ideographic comma (\"1、姓名\"), a limit inside a question (\"（最多8人）\") and a remarks blank.",
+      "features": [
+        "typed-numbering",
+        "glued-marker",
+        "ideographic-comma",
+        "number-in-question-text",
+        "blanks",
+        "locale",
+        "cjk"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "baoming.pdf",
+          "sha256": "f7330d50be2b949012ece43c68cbc6e890525e8e14c9eda6265b5c75d1cad8e0"
+        },
+        "docx": {
+          "path": "baoming.docx",
+          "sha256": "253f59c91231d836a65ea715eb677c1612ef863c4e9b6d911ada7f45914f8967"
         }
       }
     },
@@ -157,6 +230,32 @@
         "docx": {
           "path": "fotosamtycke.docx",
           "sha256": "d2f0ab49aad5d4bb6b72b63cdafdf1ddc30c221c87eff78c8fb0ced0bb43ab5f"
+        }
+      }
+    },
+    {
+      "name": "huiyuan",
+      "language": "zh",
+      "summary": "A Chinese membership form: sections headed \"一、\" and \"二、\", questions numbered \"1．\" to \"5．\" straight on across them and glued to their words, full-width colons, and a yes or no with \"是\" and \"否\".",
+      "features": [
+        "typed-numbering",
+        "glued-marker",
+        "full-width",
+        "numbering-across-headings",
+        "blanks",
+        "checkboxes",
+        "locale",
+        "cjk"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "huiyuan.pdf",
+          "sha256": "86adb35c4374efc4ce33aba0ceea6c4a99ce9359f8e7a4cde5d6035e2c6ca031"
+        },
+        "docx": {
+          "path": "huiyuan.docx",
+          "sha256": "d112f1f75a73d2010f791b3f250dc5cb2c66fc986de5d050e43c838627e3127d"
         }
       }
     },
@@ -274,6 +373,31 @@
       }
     },
     {
+      "name": "moushikomi",
+      "language": "ja",
+      "summary": "A Japanese application written as Japanese is typeset: full-width numbers glued to their words (\"１．氏名\"), full-width colons and blanks (\"：＿＿＿\"), and a yes or no with \"はい\" and \"いいえ\".",
+      "features": [
+        "typed-numbering",
+        "glued-marker",
+        "full-width",
+        "blanks",
+        "checkboxes",
+        "locale",
+        "cjk"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "moushikomi.pdf",
+          "sha256": "bdca95caa335e95d75ce49fa59ad923b60e0e573470aa0d94c555d77e100da8e"
+        },
+        "docx": {
+          "path": "moushikomi.docx",
+          "sha256": "0859da96d2635c3e46481cc479dbc36e7313f2c2204bf8d047fb146baa41dfae"
+        }
+      }
+    },
+    {
       "name": "pamelding",
       "language": "nb",
       "summary": "A short Norwegian form: ordinary prose, and numbers typed into the text.",
@@ -335,6 +459,29 @@
         "docx": {
           "path": "rule-ballot.docx",
           "sha256": "1db13ed105f4517c6f0d817d8d731902a22fab3b7e708a050a9cfb02bc551a41"
+        }
+      }
+    },
+    {
+      "name": "skraning",
+      "language": "is",
+      "summary": "An Icelandic membership form: Word numbering, a kennitala, an e-mail and a phone number, and a yes or no with \"Já\" and \"Nei\". Its language is not guessed: a form this short has 14 of G1's 20 stop words, and Icelandic writes the Latin script the others share, so G1b does not decide it either (#145).",
+      "features": [
+        "word-numbering",
+        "blanks",
+        "checkboxes",
+        "locale",
+        "locale-specific-fields"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "skraning.pdf",
+          "sha256": "ff66345bed8540eca9439f5152d49a4df3da5f6906899348afc725a7d798e7d7"
+        },
+        "docx": {
+          "path": "skraning.docx",
+          "sha256": "57fb39e2c0eb1ab99e53d5fe0a7a0f9de6a8698657cde1037074e65312144b7b"
         }
       }
     },

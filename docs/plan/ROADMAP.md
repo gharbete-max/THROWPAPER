@@ -86,7 +86,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 | **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
-| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | planned — batch 1 next |
+| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batch 1 done (25 documents), batch 2 next |
 
 ## S15 — The corpus to sixty
 
@@ -564,3 +564,25 @@ when each slice ends.)*
   ADRs were accepted under that delegation; ADR 0004 is marked superseded in part (ADR 0018) and
   ADR 0006 amended (ADRs 0017, 0020); `CLAUDE.md`, `PREDICTIVE-BUILDER.md` and `docs/ROADMAP.md`
   say so. PR #147 leaves draft. What remains of the plan is S15, the corpus to sixty.
+- **S15 batch 1, four languages more (2026-10-06).** What: six documents — `skraning` (Icelandic),
+  `anketa` (Russian), `moushikomi` and `ankeeto` (Japanese), `huiyuan` and `baoming` (Chinese) —
+  each written by hand from what it says before it was first read. Russian and Icelandic read as
+  written; no Chinese or Japanese list had ever been read. Found, each with a fixture or a test
+  written and failing first and shown to fail with its rule taken out:
+  - pdf.js gives a run per font, so "1" and "．姓名：" were two words, and a full stop on its own
+    was a word (#143): L3, words no more than a tenth of an em apart are one, as printed (it
+    takes in #141's lone hyphen, which now needs no rule of its own);
+  - a number among Chinese words is set a quarter of an em apart, so the PDF read "最多 8 人" where
+    the Word copy read "最多8人" (#148): L3b, digits next to a Chinese or Japanese character within
+    a third of an em are one word with it; letters keep their spaces;
+  - "＿＿＿", "：" and "？" are full width, and none was a blank, a colon or a question (#144);
+  - a short Russian or Chinese form has too few stop words for G1 (#145): G1b, a script only one of
+    the twelve writes decides, at twenty letters and most of them;
+  - "１．氏名", "①年代", "1、姓名", "（２）电话": no space after the number, and the grammar wanted
+    the whole first word (#146): M10, M11 and M12, glued markers whose label starts inside the word;
+  - a wrapped paragraph was joined with a space, and "□はい" was no box (#147): `joinLines`, and a
+    box at the start of a word is split from it.
+
+  Icelandic's expectation was wrong and now says so: its language is not guessed (14 stop words of
+  20, Latin script). Stage versions: reassemble 4, enumerate 8, segment 3, score 2; every other
+  snapshot moved only those lines, its input hashes unchanged. 25 documents. Next: batch 2.

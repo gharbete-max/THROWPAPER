@@ -89,6 +89,36 @@ describe('stage 7, score and bucket', () => {
     ]);
   });
 
+  it('#146, #147: a glued marker’s word is its label’s too, and "？" asks as "?" does', () => {
+    const doc = pasteDocument('1．姓名：＿＿＿＿\n2．是否需要发票？');
+    // A scan that read the first word, marker and label in one, at 41.
+    const scanned: LayoutDocument = {
+      ...doc,
+      source: { ...doc.source, kind: 'image' },
+      pages: doc.pages.map((page) => ({
+        ...page,
+        blocks: page.blocks.map((block) => ({
+          ...block,
+          lines: block.lines.map((line) => ({
+            ...line,
+            source: 'ocr' as const,
+            ocrConfidence: line.text.startsWith('1') ? 41 : 99,
+            words: line.words.map((word) => ({
+              ...word,
+              ocrConfidence: line.text.startsWith('1') ? 41 : 99,
+            })),
+          })),
+        })),
+      })),
+    };
+    const [name, invoice] = readLayout(scanned).scored.scored;
+    expect(name!.caps).toEqual([{ rule: 'ocr', bucketAtMost: 'review', lowest: 41 }]);
+    expect(invoice!.contributions.questionMark).toBeGreaterThan(0);
+    // "。" ends a sentence as "." does: a short one is text to read, not "is this a question?".
+    const [thanks] = readLayout(pasteDocument('ご協力ありがとうございました。')).scored.scored;
+    expect(Object.keys(thanks!.contributions)).toEqual(['instruction']);
+  });
+
   it('runs every stage once, in order, and gives the same bytes twice', () => {
     const doc = pasteDocument('Anmälan\n\n1. Namn: ____\n2. Kommer du? ☐ Ja ☐ Nej\nTack!');
     const once = readLayout(doc);

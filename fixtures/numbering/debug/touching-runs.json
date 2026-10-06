@@ -1,0 +1,13 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 4,
+  "irVersion": 1,
+  "inputSha256": "eb85323465d69169a479cfc60e15e86a8323b93b569b9b75ea00cb2f42f6a9e8",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":3,"y0":895,"y1":1746}},
+    {"id":"reassemble:p1-l1-touch1","rule":"L3","verdict":"touching","subject":["p1-l1"],"evidence":{"parts":"1 + ．姓名：","word":"1．姓名："}},
+    {"id":"reassemble:p1-l2-touch1","rule":"L3","verdict":"touching","subject":["p1-l2"],"evidence":{"parts":"このたびはお申し込みいただき + 、","word":"このたびはお申し込みいただき、"}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2","p1-l3"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"ja","hits":9,"own":9,"runnerUp":0}}
+  ]
+}

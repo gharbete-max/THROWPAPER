@@ -1,7 +1,7 @@
 import { inputsSha256, type Decision, type Evidence, type StageResult } from '../debug.js';
 import type { EnumerateResult, Family, Item } from '../enumerate/types.js';
 import type { BlockRole, IrBlock, IrColumn, IrLine, IrWord, LayoutDocument } from '../ir/types.js';
-import { isBlankWord, isCheckboxWord } from '../layout/hints.js';
+import { halfWidth, isBlankWord, isCheckboxWord, joinLines } from '../layout/hints.js';
 import { folded, isBooleanPair, isMetaLine, mentionsTable } from './lexicon.js';
 import type {
   Answer,
@@ -27,7 +27,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SEGMENT_STAGE_VERSION = 2;
+export const SEGMENT_STAGE_VERSION = 3;
 /** More options than this and the question is flagged (#30). */
 export const MAX_OPTIONS = 30;
 /** A label longer than this is prose to read, not a label (rules 1, 7, 8). */
@@ -64,36 +64,77 @@ interface Part {
 const dotCount = (run: string) => [...run].reduce((n, c) => n + (c === '…' ? 3 : 1), 0);
 const BLANKISH = /_{3,}|[.…]{2,}/gu;
 
-/** Text split at its blank runs: ≥ 3 underscores, or ≥ 4 leader dots (a "…" counts three). */
+/**
+ * Text split at its blank runs: ≥ 3 underscores, or ≥ 4 leader dots (a "…" counts three). Found in
+ * the text with its full-width forms read as ASCII ("＿＿＿", #144), which keeps every position, and
+ * cut from the text as it is.
+ */
 function partsOf(text: string): Part[] {
   const parts: Part[] = [];
   let at = 0;
-  for (const match of text.matchAll(BLANKISH)) {
+  for (const match of halfWidth(text).matchAll(BLANKISH)) {
     const run = match[0];
     if (!run.startsWith('_') && dotCount(run) < 4) continue;
+    const end = match.index + run.length;
     if (match.index > at) parts.push({ blank: false, text: text.slice(at, match.index) });
-    parts.push({ blank: true, text: run });
-    at = match.index + run.length;
+    parts.push({ blank: true, text: text.slice(match.index, end) });
+    at = end;
   }
   if (at < text.length) parts.push({ blank: false, text: text.slice(at) });
   return parts;
 }
 
-/** Text with its blank runs taken out, spaces closed up, and one trailing colon removed (§4.6). */
+/**
+ * Text with its blank runs taken out, spaces closed up, and one trailing colon removed (§4.6) — "："
+ * as well as ":" (#144).
+ */
 function labelOf(text: string): string {
-  const joined = partsOf(text)
-    .filter((part) => !part.blank)
-    .map((part) => part.text.trim())
-    .filter(Boolean)
-    .join(' ');
-  return (joined.endsWith(':') ? joined.slice(0, -1) : joined).trim();
+  const joined = joinLines(
+    partsOf(text)
+      .filter((part) => !part.blank)
+      .map((part) => part.text.trim())
+      .filter(Boolean),
+  );
+  return (halfWidth(joined).endsWith(':') ? joined.slice(0, -1) : joined).trim();
 }
 
 const hasLetter = (text: string) => /\p{L}/u.test(text);
-const endsWithAny = (text: string, marks: string) => marks.includes(text.trim().slice(-1));
+/** The mark a text ends with, a full-width or ideographic one read as its ASCII form (#144). */
+const lastMark = (text: string) => {
+  const mark = text.trim().slice(-1);
+  return mark === '。' ? '.' : mark === '！' ? '!' : halfWidth(mark);
+};
+const endsWithAny = (text: string, marks: string) => marks.includes(lastMark(text));
+/** A short sentence that asks — "?" or "？", then perhaps a note in brackets: "(max 8)", "（最多8人）". */
+const ASKS = /[?？](?:\s*[(（][^()（）]*[)）])?$/u;
 
 /** Words are verbatim; a line's words joined by one space are its text. */
 const joinWords = (words: readonly IrWord[]) => words.map((word) => word.text).join(' ');
+
+/** Part of a word, between two UTF-16 offsets, its box that part's share of the word's by character. */
+function pieceOf(word: IrWord, from: number, to: number): IrWord {
+  const chars = [...word.text].length;
+  const width = word.box.x1 - word.box.x0;
+  const x = (offset: number) =>
+    word.box.x0 + Math.trunc((width * [...word.text.slice(0, offset)].length) / chars);
+  return {
+    ...word,
+    text: word.text.slice(from, to),
+    start: word.start + from,
+    box: { ...word.box, x0: x(from), x1: x(to) },
+  };
+}
+
+/**
+ * Words as stage 4 reads boxes in them: a box glyph at the start of a word is a word of its own,
+ * and the rest another — Chinese and Japanese set a box against its option, "□はい" (#147).
+ */
+const boxesApart = (words: readonly IrWord[]): IrWord[] =>
+  words.flatMap((word) =>
+    word.text.length > 1 && isCheckboxWord(word.text[0]!)
+      ? [pieceOf(word, 0, 1), pieceOf(word, 1, word.text.length)]
+      : [word],
+  );
 
 export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResult<SegmentResult> {
   const decisions: Decision[] = [];
@@ -156,11 +197,18 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
   const onlyRowNumber = (line: Line) =>
     line.ir.words.length === 1 && /^\d{1,3}[.)]?$/u.test(line.ir.words[0]!.text);
 
-  /** An item's words after its marker, line by line; a line's words, for a line. */
+  /**
+   * An item's words after its marker, line by line; a line's words, for a line. A glued marker's
+   * label starts inside its word (M10, M12): that word's rest is the first.
+   */
   const textWords = (line: Line): IrWord[] => {
     const item = itemOfLine.get(line.ir.id);
-    if (!item || item.lineIds[0] !== line.ir.id) return line.ir.words;
-    return line.ir.words.slice(item.marker.wordCount);
+    const words = line.ir.words;
+    if (!item || item.lineIds[0] !== line.ir.id) return boxesApart(words);
+    const glued = item.marker.glued;
+    if (glued === undefined) return boxesApart(words.slice(item.marker.wordCount));
+    const first = words[0]!;
+    return boxesApart([pieceOf(first, glued, first.text.length), ...words.slice(1)]);
   };
 
   // ── Pass 1: structures ────────────────────────────────────────────────────────────────────────
@@ -410,7 +458,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     const rowNumbers = [...rowsOf.keys()].sort((a, b) => a - b);
     const headerRow = rowsOf.get(rowNumbers[0]!)!;
     const body = rowNumbers.slice(1).map((row) => rowsOf.get(row)!);
-    const text = (cell: IrLine[]) => cell.map((line) => line.text).join(' ');
+    const text = (cell: IrLine[]) => joinLines(cell.map((line) => line.text));
     const isBoxCell = (cell: IrLine[]) => cell.length === 1 && isCheckboxWord(cell[0]!.text);
     const boxCols = (row: Map<number, IrLine[]>) =>
       [...row.entries()]
@@ -594,7 +642,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     const run: Line[] = [];
     for (let i = line.order + 1; i < lines.length; i += 1) {
       const next = lines[i]!;
-      const words = next.ir.words;
+      const words = boxesApart(next.ir.words);
       // Within the question's block: a paragraph break ends its answers (`single-checkbox-line`).
       const single =
         !claimed.has(next.ir.id) &&
@@ -682,7 +730,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
           labelOf(text),
           item?.id ?? null,
           'choice',
-          boxes.map((box) => joinWords(box.ir.words.slice(1))),
+          boxes.map((box) => joinWords(boxesApart(box.ir.words).slice(1))),
           notes,
         );
         emit(segment);
@@ -738,7 +786,9 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     // A detail line or a continuation line whose item was not claimed is read on its own.
     const asItem = item && item.lineIds[0] === id && free(item.lineIds) ? item : null;
     let ids = asItem ? asItem.lineIds.filter((x) => !claimed.has(x)) : [id];
-    const words = asItem ? asItem.lineIds.flatMap((x) => textWords(at(x))) : line.ir.words;
+    const words = asItem
+      ? asItem.lineIds.flatMap((x) => textWords(at(x)))
+      : boxesApart(line.ir.words);
     let text = asItem ? asItem.label : line.ir.text;
     const unitLines = ids.map(at);
     const space = unitLines.some(answerSpace);
@@ -750,7 +800,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
       const heading = line.block.lines
         .map((l) => l.id)
         .filter((x) => !claimed.has(x) && (!itemOfLine.has(x) || x === id));
-      const headingText = asItem ? asItem.label : heading.map((x) => at(x).ir.text).join(' ');
+      const headingText = asItem ? asItem.label : joinLines(heading.map((x) => at(x).ir.text));
       const headingIds = asItem ? ids : heading;
       emit({ kind: 'heading', lineIds: sorted(headingIds), text: headingText });
       decide(id, 'S1', headingIds, 'heading', { lines: headingIds.length });
@@ -758,7 +808,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     }
     if (line.role === 'footnote') {
       const note = line.block.lines.map((l) => l.id).filter((x) => !claimed.has(x));
-      emit({ kind: 'instruction', lineIds: note, text: note.map((x) => at(x).ir.text).join(' ') });
+      emit({ kind: 'instruction', lineIds: note, text: joinLines(note.map((x) => at(x).ir.text)) });
       decide(id, 'S8b', note, 'instruction', { lines: note.length });
       continue;
     }
@@ -892,7 +942,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
       continue;
     }
     // #24: a label ending in ":" and, under it in its block, a line of nothing but a blank.
-    if (text.trim().endsWith(':') && room.length > 0) {
+    if (halfWidth(text.trim()).endsWith(':') && room.length > 0) {
       const segment = question(
         withDetails([...ids, ...room]),
         labelOf(text),
@@ -909,7 +959,7 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     // Rule 7: any other item is a question — but a bullet with nothing to answer is text.
     if (asItem) {
       if (asItem.marker.family === 'bullet') {
-        emit({ kind: 'instruction', lineIds: ids, text: ids.map((x) => at(x).ir.text).join(' ') });
+        emit({ kind: 'instruction', lineIds: ids, text: joinLines(ids.map((x) => at(x).ir.text)) });
         decide(id, 'S8c', ids, 'instruction');
         continue;
       }
@@ -938,22 +988,22 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
         break;
       const gap = following.ir.baseline - last.ir.baseline;
       const pitch = pitchOf(line.block);
-      const ended = !wrapped(last) && /[.!?:]$/u.test(last.ir.text);
+      const ended = !wrapped(last) && /[.!?:。！？：]$/u.test(last.ir.text);
       if (gap * 10 > pitch * 11 || ended) break;
       ids = [...ids, following.ir.id];
       last = following;
     }
-    text = ids.map((x) => at(x).ir.text).join(' ');
+    text = joinLines(ids.map((x) => at(x).ir.text));
     const length = [...text].length;
 
     // §4.7: a short sentence that asks, or a short label with its colon, is a question.
     const nextItem = lines[last.order + 1] && itemOfLine.get(lines[last.order + 1]!.ir.id);
     const introducesBullets = nextItem?.marker.family === 'bullet';
     // "Hur många gäster? (max 8)": a note in brackets after the question mark still asks.
-    const asks = /\?(?:\s*\([^()]*\))?$/u.test(text);
+    const asks = ASKS.test(text);
     if (
       (length <= LABEL_MAX && asks) ||
-      (length <= COLON_LABEL_MAX && text.endsWith(':') && !introducesBullets)
+      (length <= COLON_LABEL_MAX && halfWidth(text).endsWith(':') && !introducesBullets)
     ) {
       const segment = question(ids, labelOf(text), null, 'unknown');
       emit(segment);

@@ -1,6 +1,6 @@
 {
   "stage": "enumerate",
-  "stageVersion": 7,
+  "stageVersion": 8,
   "irVersion": 1,
   "inputSha256": "5829349ca3786d36a2235c369c23d6b2b70a394dfb6ebbb2af89d22c82f3c7c3",
   "decisions": [

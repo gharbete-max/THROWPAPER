@@ -1,0 +1,966 @@
+{
+  "fixture": "cjk-glued-markers",
+  "caveats": [
+    "cjk-glued-markers"
+  ],
+  "stage": "enumerate",
+  "status": "green",
+  "turnsGreenIn": "S15",
+  "summary": "Chinese and Japanese put no space after a number: \"１．氏名\", \"①年代\", \"1、姓名\", \"（１）电话\" are markers glued to their labels (M12, M10, M11), and each list is read with its labels starting after the marker. A number glued to anything but a Chinese or Japanese character is no marker: \"3.5million\", \"1.5倍\" (a digit after the dot) and \"1.Namn\" stay prose.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "x1": 9000,
+            "y0": 895,
+            "y1": 5166,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 895,
+              "x1": 2703,
+              "y1": 1386
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "１．氏名：＿＿＿＿＿＿",
+                "box": {
+                  "x0": 1000,
+                  "y0": 895,
+                  "x1": 2441,
+                  "y1": 1026
+                },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "１．氏名：＿＿＿＿＿＿",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 895,
+                      "x1": 2441,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "２．電話番号：＿＿＿＿＿＿",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1075,
+                  "x1": 2703,
+                  "y1": 1206
+                },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "２．電話番号：＿＿＿＿＿＿",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1075,
+                      "x1": 2703,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "３．メール：＿＿＿＿＿＿",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1255,
+                  "x1": 2572,
+                  "y1": 1386
+                },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "３．メール：＿＿＿＿＿＿",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1255,
+                      "x1": 2572,
+                      "y1": 1386
+                    },
+                    "baseline": 1360,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 1615,
+              "x1": 1655,
+              "y1": 1746
+            },
+            "lines": [
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "アンケート",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1615,
+                  "x1": 1655,
+                  "y1": 1746
+                },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "アンケート",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1615,
+                      "x1": 1655,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b3",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 1975,
+              "x1": 2285,
+              "y1": 2286
+            },
+            "lines": [
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b3",
+                "text": "①年代：＿＿＿＿＿＿",
+                "box": {
+                  "x0": 1000,
+                  "y0": 1975,
+                  "x1": 2271,
+                  "y1": 2106
+                },
+                "baseline": 2080,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "①年代：＿＿＿＿＿＿",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1975,
+                      "x1": 2271,
+                      "y1": 2106
+                    },
+                    "baseline": 2080,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b3",
+                "text": "②性別：□男性 □女性",
+                "box": {
+                  "x0": 1000,
+                  "y0": 2155,
+                  "x1": 2285,
+                  "y1": 2286
+                },
+                "baseline": 2260,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 2,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "②性別：□男性",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2155,
+                      "x1": 1839,
+                      "y1": 2286
+                    },
+                    "baseline": 2260,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "□女性",
+                    "start": 8,
+                    "box": {
+                      "x0": 1931,
+                      "y0": 2155,
+                      "x1": 2285,
+                      "y1": 2286
+                    },
+                    "baseline": 2260,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b4",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 2515,
+              "x1": 1262,
+              "y1": 2646
+            },
+            "lines": [
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b4",
+                "text": "报名",
+                "box": {
+                  "x0": 1000,
+                  "y0": 2515,
+                  "x1": 1262,
+                  "y1": 2646
+                },
+                "baseline": 2620,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "报名",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2515,
+                      "x1": 1262,
+                      "y1": 2646
+                    },
+                    "baseline": 2620,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b5",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 2875,
+              "x1": 2168,
+              "y1": 3186
+            },
+            "lines": [
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b5",
+                "text": "1、姓名：______",
+                "box": {
+                  "x0": 1000,
+                  "y0": 2875,
+                  "x1": 2168,
+                  "y1": 3006
+                },
+                "baseline": 2980,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "1、姓名：______",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2875,
+                      "x1": 2168,
+                      "y1": 3006
+                    },
+                    "baseline": 2980,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b5",
+                "text": "2、备注：______",
+                "box": {
+                  "x0": 1000,
+                  "y0": 3055,
+                  "x1": 2168,
+                  "y1": 3186
+                },
+                "baseline": 3160,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "2、备注：______",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3055,
+                      "x1": 2168,
+                      "y1": 3186
+                    },
+                    "baseline": 3160,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b6",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 3415,
+              "x1": 1262,
+              "y1": 3546
+            },
+            "lines": [
+              {
+                "id": "p1-l10",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b6",
+                "text": "其他",
+                "box": {
+                  "x0": 1000,
+                  "y0": 3415,
+                  "x1": 1262,
+                  "y1": 3546
+                },
+                "baseline": 3520,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "其他",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3415,
+                      "x1": 1262,
+                      "y1": 3546
+                    },
+                    "baseline": 3520,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b7",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 3775,
+              "x1": 2338,
+              "y1": 4086
+            },
+            "lines": [
+              {
+                "id": "p1-l11",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b7",
+                "text": "（１）电话：______",
+                "box": {
+                  "x0": 1000,
+                  "y0": 3775,
+                  "x1": 2338,
+                  "y1": 3906
+                },
+                "baseline": 3880,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "（１）电话：______",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3775,
+                      "x1": 2338,
+                      "y1": 3906
+                    },
+                    "baseline": 3880,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l12",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b7",
+                "text": "（２）邮箱：______",
+                "box": {
+                  "x0": 1000,
+                  "y0": 3955,
+                  "x1": 2338,
+                  "y1": 4086
+                },
+                "baseline": 4060,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": true,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "（２）邮箱：______",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3955,
+                      "x1": 2338,
+                      "y1": 4086
+                    },
+                    "baseline": 4060,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b8",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "heading",
+            "box": {
+              "x0": 1000,
+              "y0": 4315,
+              "x1": 1460,
+              "y1": 4446
+            },
+            "lines": [
+              {
+                "id": "p1-l13",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b8",
+                "text": "NOTES",
+                "box": {
+                  "x0": 1000,
+                  "y0": 4315,
+                  "x1": 1460,
+                  "y1": 4446
+                },
+                "baseline": 4420,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "NOTES",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4315,
+                      "x1": 1460,
+                      "y1": 4446
+                    },
+                    "baseline": 4420,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "p1-b9",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 4675,
+              "x1": 3116,
+              "y1": 5166
+            },
+            "lines": [
+              {
+                "id": "p1-l14",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b9",
+                "text": "3.5million people came.",
+                "box": {
+                  "x0": 1000,
+                  "y0": 4675,
+                  "x1": 3116,
+                  "y1": 4806
+                },
+                "baseline": 4780,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "3.5million",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4675,
+                      "x1": 1920,
+                      "y1": 4806
+                    },
+                    "baseline": 4780,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "people",
+                    "start": 11,
+                    "box": {
+                      "x0": 2012,
+                      "y0": 4675,
+                      "x1": 2564,
+                      "y1": 4806
+                    },
+                    "baseline": 4780,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "came.",
+                    "start": 18,
+                    "box": {
+                      "x0": 2656,
+                      "y0": 4675,
+                      "x1": 3116,
+                      "y1": 4806
+                    },
+                    "baseline": 4780,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l15",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b9",
+                "text": "1.5倍になりました。",
+                "box": {
+                  "x0": 1000,
+                  "y0": 4855,
+                  "x1": 2324,
+                  "y1": 4986
+                },
+                "baseline": 4960,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "1.5倍になりました。",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4855,
+                      "x1": 2324,
+                      "y1": 4986
+                    },
+                    "baseline": 4960,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              },
+              {
+                "id": "p1-l16",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b9",
+                "text": "1.Namn och adress",
+                "box": {
+                  "x0": 1000,
+                  "y0": 5035,
+                  "x1": 2564,
+                  "y1": 5166
+                },
+                "baseline": 5140,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null,
+                "words": [
+                  {
+                    "text": "1.Namn",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 5035,
+                      "x1": 1552,
+                      "y1": 5166
+                    },
+                    "baseline": 5140,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "och",
+                    "start": 7,
+                    "box": {
+                      "x0": 1644,
+                      "y0": 5035,
+                      "x1": 1920,
+                      "y1": 5166
+                    },
+                    "baseline": 5140,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "adress",
+                    "start": 11,
+                    "box": {
+                      "x0": 2012,
+                      "y0": 5035,
+                      "x1": 2564,
+                      "y1": 5166
+                    },
+                    "baseline": 5140,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

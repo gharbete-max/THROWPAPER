@@ -603,4 +603,160 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'skraning',
+    language: 'is',
+    summary:
+      'An Icelandic membership form: Word numbering, a kennitala, an e-mail and a phone number, and a yes or no with "Já" and "Nei".',
+    features: ['word-numbering', 'blanks', 'checkboxes', 'locale', 'locale-specific-fields'],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Skráning í félagið'),
+        para(
+          'Allir sem vilja ganga í félagið eru velkomnir. Fylltu út eyðublaðið og skilaðu því til gjaldkera eða sendu það í pósti. Við notum upplýsingarnar aðeins fyrir félagaskrána og látum þær ekki af hendi.',
+        ),
+        item(1, `Nafn: ${blank(30)}`),
+        item(1, `Kennitala: ${blank(24)}`),
+        item(1, `Netfang: ${blank(26)}`),
+        item(1, `Sími: ${blank(28)}`),
+        item(1, 'Viltu fá fréttabréf félagsins?   ☐ Já   ☐ Nei'),
+      ],
+    },
+  },
+  {
+    name: 'anketa',
+    language: 'ru',
+    summary:
+      'A Russian conference questionnaire in Cyrillic: Word numbering, a date of birth, a phone and an e-mail, a yes or no with "Да" and "Нет", and a comment.',
+    features: ['word-numbering', 'blanks', 'checkboxes', 'locale', 'cyrillic'],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Анкета участника конференции'),
+        para(
+          'Просим заполнить анкету и отправить её организаторам до первого мая. Мы используем ваши данные только для подготовки конференции и не передаём их третьим лицам.',
+        ),
+        item(1, `Фамилия и имя: ${blank(26)}`),
+        item(1, `Дата рождения: ${blank(24)}`),
+        item(1, `Телефон: ${blank(28)}`),
+        item(1, `Электронная почта: ${blank(22)}`),
+        item(1, 'Нужна ли вам гостиница?   ☐ Да   ☐ Нет'),
+        item(1, `Комментарий: ${blank(28)}`),
+      ],
+    },
+  },
+  {
+    name: 'moushikomi',
+    language: 'ja',
+    summary:
+      'A Japanese application written as Japanese is typeset: full-width numbers glued to their words ("１．氏名"), full-width colons and blanks ("：＿＿＿"), and a yes or no with "はい" and "いいえ".',
+    features: [
+      'typed-numbering',
+      'glued-marker',
+      'full-width',
+      'blanks',
+      'checkboxes',
+      'locale',
+      'cjk',
+    ],
+    word: {
+      blocks: [
+        title('夏季講習会参加申込書'),
+        para(
+          'このたびは夏季講習会にお申し込みいただき、ありがとうございます。必要事項をご記入のうえ、事務局までご提出ください。ご記入いただいた個人情報は、講習会の運営以外には使用しません。',
+        ),
+        para('１．氏名：＿＿＿＿＿＿＿＿＿＿＿＿'),
+        para('２．電話番号：＿＿＿＿＿＿＿＿＿＿'),
+        para('３．メールアドレス：＿＿＿＿＿＿＿＿'),
+        para('４．懇親会に参加しますか。　□はい　□いいえ'),
+        para('５．ご意見：＿＿＿＿＿＿＿＿＿＿＿＿'),
+      ],
+    },
+  },
+  {
+    name: 'ankeeto',
+    language: 'ja',
+    summary:
+      'A Japanese survey numbered with circled numbers glued to their words ("①年代"), single choices of three boxes, and an "その他" (anything else) blank.',
+    features: [
+      'typed-numbering',
+      'glued-marker',
+      'circled-numbers',
+      'checkboxes',
+      'blanks',
+      'locale',
+      'cjk',
+    ],
+    word: {
+      blocks: [
+        title('利用者アンケート'),
+        para(
+          'いつも当館をご利用いただき、ありがとうございます。サービス向上のため、以下のアンケートにご協力ください。回答は統計的に処理し、個人が特定されることはありません。',
+        ),
+        para('①年代：＿＿＿＿＿＿＿＿'),
+        para('②性別：　□男性　□女性　□回答しない'),
+        para('③満足度：　□満足　□普通　□不満'),
+        para('④その他：＿＿＿＿＿＿＿＿＿＿＿＿'),
+      ],
+    },
+  },
+  {
+    name: 'huiyuan',
+    language: 'zh',
+    summary:
+      'A Chinese membership form: sections headed "一、" and "二、", questions numbered "1．" to "5．" straight on across them and glued to their words, full-width colons, and a yes or no with "是" and "否".',
+    features: [
+      'typed-numbering',
+      'glued-marker',
+      'full-width',
+      'numbering-across-headings',
+      'blanks',
+      'checkboxes',
+      'locale',
+      'cjk',
+    ],
+    word: {
+      blocks: [
+        title('会员登记表'),
+        para(
+          '欢迎加入我们的协会。请认真填写以下信息，并在月底之前交到秘书处。我们只会将这些信息用于会员管理，不会提供给任何第三方。',
+        ),
+        heading('一、基本信息'),
+        para(`1．姓名：${blank(20)}`),
+        para(`2．出生日期：${blank(16)}`),
+        heading('二、联系方式'),
+        para(`3．手机号码：${blank(16)}`),
+        para(`4．电子邮箱：${blank(16)}`),
+        para('5．是否需要发票？　□是　□否'),
+      ],
+    },
+  },
+  {
+    name: 'baoming',
+    language: 'zh',
+    summary:
+      'A Chinese event sign-up numbered with the ideographic comma ("1、姓名"), a limit inside a question ("（最多8人）") and a remarks blank.',
+    features: [
+      'typed-numbering',
+      'glued-marker',
+      'ideographic-comma',
+      'number-in-question-text',
+      'blanks',
+      'locale',
+      'cjk',
+    ],
+    word: {
+      blocks: [
+        title('活动报名表'),
+        para(
+          '本次活动面向全体会员，名额有限，请尽早报名。报名表填写完毕后，请交给活动负责人。如有疑问，请与秘书处联系。',
+        ),
+        para(`1、姓名：${blank(20)}`),
+        para(`2、手机号码：${blank(16)}`),
+        para(`3、参加人数（最多8人）：${blank(8)}`),
+        para(`4、备注：${blank(24)}`),
+      ],
+    },
+  },
 ];

@@ -24,7 +24,7 @@ import type { Segment, SegmentResult } from '../segment/types.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SCORE_STAGE_VERSION = 1;
+export const SCORE_STAGE_VERSION = 2;
 
 export type Bucket = 'auto' | 'flag' | 'review';
 /** A confidence at or above this is `auto`; at or above `FLAG_AT`, `flag`; below, `review`. */
@@ -92,7 +92,13 @@ export function score(
     ),
   );
   const items = new Map(lists.items.map((item) => [item.id, item]));
-  const markerWords = new Map(lists.items.map((item) => [item.lineIds[0]!, item.marker.wordCount]));
+  // A glued marker's word is its label's too (M10, M12): its confidence counts.
+  const markerWords = new Map(
+    lists.items.map((item) => [
+      item.lineIds[0]!,
+      item.marker.glued === undefined ? item.marker.wordCount : 0,
+    ]),
+  );
   const byIndex = new Map(classified.classified.map((c) => [c.segmentIndex, c]));
   const decisions: Decision[] = [];
   const scored: ScoredSegment[] = [];
@@ -124,12 +130,12 @@ export function score(
         if (blank) add('blank', S.evidence.blank);
         if (box) add('checkbox', S.evidence.checkbox);
         if (own.some((l) => l.hints.endsWithColon)) add('colon', S.evidence.colon);
-        if (/\?(?:\s*\([^()]*\))?$/u.test(segment.label))
+        if (/[?？](?:\s*[(（][^()（）]*[)）])?$/u.test(segment.label))
           add('questionMark', S.evidence.questionMark);
       }
       for (const flag of segment.flags) add(`flag:${flag}`, S.flags[flag]);
     } else if (segment.kind === 'instruction') {
-      const long = [...segment.text].length > 120 || /[.!]$/u.test(segment.text);
+      const long = [...segment.text].length > 120 || /[.!。！]$/u.test(segment.text);
       add(
         long ? 'instruction' : 'shortInstruction',
         long ? S.text.instruction : S.text.shortInstruction,

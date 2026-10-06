@@ -253,12 +253,31 @@ Per page, in this order:
     character at a time. (First written as "20 hits and twice the runner-up's", counting every
     word for every language that lists it: Swedish, Danish and Norwegian share most of their
     commonest words, so every Scandinavian document came out a near tie and `null`.) Used to keep
-    a Swedish validator off a Norwegian document (`CAVEATS.md` #27).
+    a Swedish validator off a Norwegian document (`CAVEATS.md` #27). **G1b — a script one language
+    owns** (S15, #145): when at least 20 of the letters a reader reads, and more than half of them,
+    are in a script only one of the twelve languages writes — Cyrillic (Russian), hiragana or
+    katakana (Japanese), or Han with no kana at all (Chinese) — the document is in that language,
+    whatever its stop words: a short Russian or Chinese form has too little prose for G1, but no
+    other of the twelve could have written it. Latin-script languages share their letters, so G1
+    alone decides them. *Test:* `layout/reassemble.test.ts` ("G1b").
+12. **Touching words** (measured only, L3, S15, #143): two words of a line with no more than a
+    tenth of an em between them are one word, as they are printed — a run broken by a change of
+    font ("1" in a Latin font, "．姓名：" in a Chinese one), a full stop pdf.js gives on its own
+    ("しません" and "。"), a soft hyphen printed where a line breaks ("med" and "-", #141). A word
+    after a space never touches. *Fixtures:* `touching-runs`, `hyphen-as-its-own-word`.
+    **L3b — a number among Chinese or Japanese words** (S15, #148): those languages put no space
+    between words, and a typesetter sets a number among them a quarter of an em apart (JIS X
+    4051's, Word's and LibreOffice's "autospace"), so the PDF of "最多8人" read "最多 8 人" where
+    the Word copy of the same form read "最多8人". Digits next to a Chinese or Japanese character,
+    no more than a third of an em apart, are one word with it. Letters keep their spaces — "氏名
+    Name" is two words on a bilingual form — and so does a wider gap. *Fixture:* `cjk-autospace`.
 
 | Rule | Step | Decides | Fixture or test |
 | --- | --- | --- | --- |
 | L1 | 1 | a ligature expanded | `ligature-and-quote-repair` |
 | L2 | 1 | a printed box OCR read as a mark: stage 1's B1, recorded | `ocr.test.ts` (B1), the corpus's scans |
+| L3 | 12 | touching words are one word | `touching-runs`, `hyphen-as-its-own-word` |
+| L3b | 12 | a number among Chinese or Japanese words is one word with them | `cjk-autospace` |
 | C1 | 2 | a vertical gutter is a column: cut | `two-column-order`, `layout-shift-within-document`, `large-heading-words` |
 | C2 | 2 | a vertical gutter is not a column: kept together | `hanging-marker-gutter`, `answer-column-gutter` |
 | C3 | 2 | horizontal gaps: cut into rows | `layout-shift-within-document` |
@@ -273,6 +292,7 @@ Per page, in this order:
 | H1–H3 | 9 | a heading | `layout-shift-within-document`, `headings-and-footnote` |
 | B1 | 9 | body | every fixture |
 | G1 | 11 | the document's language | `layout/reassemble.test.ts` (a paragraph in each language) |
+| G1b | 11 | the document's language, by a script only it writes | `layout/reassemble.test.ts` ("G1b") |
 
 ## Stage 3 — enumerate
 
@@ -406,6 +426,14 @@ the answers under it:
    whenever a last line was long — `arsmote-anmalan`.) One tap on the review screen makes it a
    question (#22).
 
+**Chinese and Japanese** (S15, #147): a line's words and an item's words after its marker are
+read with a box glyph glued to its word split off ("□はい" is a box, then "はい"), and a glued
+marker's label starts inside its word (`NUMBERING-RULES.md` M12). Full-width forms count as their
+ASCII ones wherever stage 4 reads punctuation: "＿＿＿" is a blank (`layout/hints.ts`), "：" a
+closing colon and "？" a question mark (with its note in "（）"), and "。" ends a sentence as "." does.
+Lines of a paragraph, a heading or an item's label are joined with one space, except between two
+Chinese or Japanese characters, where the page has none (`joinLines`, stages 3 and 4).
+
 Afterwards, over the whole document: the same label as an earlier question is flagged
 `same-as-earlier`, never merged (#25); more than 30 options, `many-options` (#30).
 
@@ -487,13 +515,15 @@ has a confidence in per mille and a bucket:
 - **A segment's own confidence** is `sigmoid(Σ named contributions)` in millinats, each from
   `classify/weights.json` (`score`): a bias of 500; stage 3's verdict (`accept` +1500,
   `accept-flagged` +300, `candidate` −1500; a Word numbering fact +3000); the evidence on its lines
-  (a blank or rule +1500, a checkbox +1500, a colon +500, a question mark +300, a grid or table
+  (a blank or rule +1500, a checkbox +1500, a colon +500, a question mark +300 — full-width or not,
+  as stage 4 reads them (#144) — a grid or table
   +3000); its flags (`many-options` −2500, `label-by-reference` −800, `same-as-earlier` and
   `split-line` −300). Headings, meta and long instructions +2500; an instruction under 120
-  characters that does not end in `.` or `!`, +800 — "is this a question?".
+  characters that does not end in `.` or `!` (or `。` `！`), +800 — "is this a question?".
 - **A question's bucket** is the lower of its own and its kind's (stage 5), then the caps.
 - **The OCR cap** (#20): the lowest OCR confidence among its words — not its marker, blanks or
-  boxes — below 60 caps it at `review`, 60–84 at `flag`. The text is never changed: "Adr3ss" and a
+  boxes, though a glued marker's word is its label's too and counts (M12) — below 60 caps it at
+  `review`, 60–84 at `flag`. The text is never changed: "Adr3ss" and a
   proper noun reach the screen exactly as read. *Fixture:* `ocr-noise-budget`.
 - **Required is its own decision** (#26): a hint is 953; no hint is 701, and at most `flag`
   whatever the weights say. It does **not** lower the question's bucket. (First written as a cap on
@@ -650,8 +680,9 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: nineteen documents, each a PDF and a Word file, and two of them scanned** —
-ten Swedish, two English, two Norwegian, one each in Danish, Finnish, German, French and Spanish; one and two pages; running headers and page-number
+**What it holds today: twenty-five documents, each a PDF and a Word file, and two of them scanned** —
+ten Swedish, two English, two Norwegian, two Japanese, two Chinese, one each in Danish, Finnish,
+German, French, Spanish, Icelandic and Russian; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -664,8 +695,14 @@ sections in capitals, dot leaders, a label whose blank is on the line under it, 
 language: 18 stop words of 20); and a Norwegian registration numbered "(1)" to "(6)" straight on
 across its section headings (`innmelding`, held by R6c), with its fødselsnummer and
 organisasjonsnummer and a question asked again; and a notice whose lines break inside words, at a
-soft hyphen and at the hyphen of "e-postadress" in a question that wraps (`stamma`). Scans of real
-paper are still owed.
+soft hyphen and at the hyphen of "e-postadress" in a question that wraps (`stamma`); and, in the
+scripts the others do not share (S15, batch 1), a Russian questionnaire, two Japanese forms and two
+Chinese ones — numbers glued to their words ("１．氏名", "①年代", "1、姓名", "（１）电话"),
+full-width blanks, colons and question marks, boxes set against their options ("□はい"), "一、"
+sections, and a number among Chinese words set a quarter of an em apart ("最多8人") — and an
+Icelandic membership form whose language is, rightly, not guessed: 14 stop words of 20, in the Latin
+script the others share (`anketa`, `moushikomi`, `ankeeto`, `huiyuan`, `baoming`, `skraning`). Scans
+of real paper are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

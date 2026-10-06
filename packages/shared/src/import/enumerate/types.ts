@@ -4,7 +4,16 @@
 
 export type Family =
   'arabic' | 'roman-lower' | 'roman-upper' | 'alpha-lower' | 'alpha-upper' | 'bullet';
-export type Style = 'dot' | 'paren' | 'colon' | 'enclosed' | 'spaced-dot' | 'spaced-dash' | 'glyph';
+export type Style =
+  | 'dot'
+  | 'paren'
+  | 'colon'
+  | 'enclosed'
+  | 'spaced-dot'
+  | 'spaced-dash'
+  | 'glyph'
+  | 'circled'
+  | 'ideographic';
 export type Verdict = 'accept' | 'accept-flagged' | 'candidate' | 'inline-text';
 export type Flag =
   | 'orphan-subnumber'
@@ -27,6 +36,11 @@ export interface Marker {
    * rest — and 0 for Word's own numbering (§11), which Word draws and the text does not contain.
    */
   wordCount: 0 | 1 | 2;
+  /**
+   * A glued marker (M10, M12): how many UTF-16 units of the first word's text the marker takes,
+   * its label starting inside that word — "１．氏名", "①年代". Absent when the marker is whole words.
+   */
+  glued?: number;
 }
 
 export interface Item {
@@ -42,7 +56,10 @@ export interface Item {
   /** 1 = outermost. */
   level: number;
   parentId: string | null;
-  /** Verbatim text after the marker; continuation lines appended with one space each. */
+  /**
+   * Verbatim text after the marker; continuation lines appended with one space each — none between
+   * two Chinese or Japanese characters (`joinLines`).
+   */
   label: string;
   verdict: Exclude<Verdict, 'inline-text'>;
   /** Sorted ascending (code-point order), no duplicates. */

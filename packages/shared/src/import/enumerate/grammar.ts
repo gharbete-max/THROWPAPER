@@ -7,7 +7,8 @@ import type { Family, Style } from './types.js';
  * token that would match anywhere later in the line is never tested and stays in the label.
  */
 
-export type Production = 'M1' | 'M2' | 'M3' | 'M4' | 'M5' | 'M6' | 'M7' | 'M8' | 'M9';
+export type Production =
+  'M1' | 'M2' | 'M3' | 'M4' | 'M5' | 'M6' | 'M7' | 'M8' | 'M9' | 'M10' | 'M11' | 'M12';
 
 /** One way to read a marker. A lone i, v or x has two (R10); every other marker has one. */
 export interface Reading {
@@ -21,6 +22,8 @@ export interface MarkerMatch {
   /** Verbatim: the first word, or the first two joined by one space. */
   readonly raw: string;
   readonly wordCount: 1 | 2;
+  /** M10, M12: the UTF-16 units of the first word the marker takes; its label is the rest. */
+  readonly glued?: number;
   /** Roman first, then alpha, where there are two (R10's order for "a reading"). */
   readonly readings: readonly Reading[];
   /** R10's "preferred reading": roman for i and I, alpha for v, x, V and X. */
@@ -69,7 +72,21 @@ const NUMBERED: readonly (readonly [Production, RegExp, Style])[] = [
   ['M1', /^(\d{1,3})\.$/, 'dot'],
   ['M2', /^(\d{1,3})\)$/, 'paren'],
   ['M3', /^(\d{1,3}):$/, 'colon'],
+  ['M11', /^(\d{1,3})、$/, 'ideographic'],
 ];
+/** M12: the markers Chinese and Japanese glue to their words, by the production they are. */
+const GLUABLE: readonly (readonly [RegExp, Style])[] = [
+  [/^(\d{1,3})\.$/, 'dot'],
+  [/^(\d{1,3})\)$/, 'paren'],
+  [/^\((\d{1,3})\)$/, 'enclosed'],
+  [/^(\d{1,3})、$/, 'ideographic'],
+];
+/** The longest of them, "(123)", in UTF-16 units. */
+const GLUABLE_MAX = 5;
+const CJK = /^[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u;
+/** M10: ① to ⑳. NFKC folds them to plain digits, so they are read before `probe`. */
+const CIRCLED_FIRST = 0x2460;
+const CIRCLED_LAST = 0x2473;
 const ENCLOSED = /^\((\d{1,3}|[a-z]|[A-Z]|[ivx]{2,7}|[IVX]{2,7})\)$/;
 const ROMAN_MARKER = /^([ivx]{2,7}|[IVX]{2,7})([.)])$/;
 const LETTER = /^([a-zA-Z])([.)])$/;
@@ -120,6 +137,21 @@ export function grammar(words: readonly { readonly text: string }[]): MarkerMatc
   // M9 — a bullet glyph.
   if (BULLETS.has(w1)) return one('M9', { family: 'bullet', style: 'glyph', path: [] });
 
+  // M10 — a circled number, alone or glued to whatever follows: it is never part of a word.
+  const circled = first.text.codePointAt(0) ?? 0;
+  if (circled >= CIRCLED_FIRST && circled <= CIRCLED_LAST) {
+    const reading = arabic('circled', [circled - CIRCLED_FIRST + 1]);
+    const glued = first.text.length > 1;
+    return {
+      production: 'M10',
+      raw: glued ? first.text.slice(0, 1) : first.text,
+      wordCount: 1,
+      ...(glued ? { glued: 1 } : {}),
+      readings: [reading],
+      preferred: reading,
+    };
+  }
+
   // M8 — "1 ." or "1 -": a number, then a lone dot or dash as its own word.
   if (second && DIGITS.test(w1) && (w2 === '.' || w2 === '-')) {
     const reading = arabic(w2 === '.' ? 'spaced-dot' : 'spaced-dash', [Number(w1)]);
@@ -162,5 +194,32 @@ export function grammar(words: readonly { readonly text: string }[]): MarkerMatc
   const letter = LETTER.exec(w1);
   if (letter) return letters('M6', letter[1] ?? '', letter[2] === '.' ? 'dot' : 'paren');
 
+  return glued(first.text);
+}
+
+/**
+ * M12: a number marker glued to the Chinese or Japanese word it numbers — "１．氏名", "1、姓名",
+ * "（２）电话", "⒈氏名". The shortest start of the word that is an M1, M2, M5 (number) or M11 marker, when the
+ * character after it is Han, hiragana or katakana. "1.5倍" (a digit after the dot), "3.5million"
+ * and "1.Namn" are none: only a Chinese or Japanese character glues.
+ */
+function glued(text: string): MarkerMatch | null {
+  for (let units = 1; units <= GLUABLE_MAX && units < text.length; units += 1) {
+    if (!CJK.test(text.slice(units))) continue;
+    const head = probe(text.slice(0, units));
+    for (const [pattern, style] of GLUABLE) {
+      const number = pattern.exec(head)?.[1];
+      if (number === undefined) continue;
+      const reading: Reading = { family: 'arabic', style, path: [Number(number)] };
+      return {
+        production: 'M12',
+        raw: text.slice(0, units),
+        wordCount: 1,
+        glued: units,
+        readings: [reading],
+        preferred: reading,
+      };
+    }
+  }
   return null;
 }

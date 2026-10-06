@@ -29,7 +29,10 @@ which the literal reading fails); and "whole word" was undefined for the continu
 
 ```ts
 export type Family = 'arabic' | 'roman-lower' | 'roman-upper' | 'alpha-lower' | 'alpha-upper' | 'bullet';
-export type Style = 'dot' | 'paren' | 'colon' | 'enclosed' | 'spaced-dot' | 'spaced-dash' | 'glyph';
+export type Style =
+  | 'dot' | 'paren' | 'colon' | 'enclosed' | 'spaced-dot' | 'spaced-dash' | 'glyph'
+  | 'circled'      // ①–⑳ (M10)
+  | 'ideographic'; // "1、" (M11)
 export type Verdict = 'accept' | 'accept-flagged' | 'candidate' | 'inline-text';
 export type Flag =
   | 'orphan-subnumber'
@@ -55,6 +58,11 @@ export interface Marker {
    * rest, 0 for Word's own numbering (§11), which is not in the line's text.
    */
   wordCount: 0 | 1 | 2;
+  /**
+   * A glued marker (M10, M12): how many UTF-16 units of the first word's text the marker takes; the
+   * label starts inside that word. Absent for every other marker.
+   */
+  glued?: number;
 }
 
 export interface Item {
@@ -111,7 +119,7 @@ decided (`column.x1 − column.x0`); `relX(L) = L.box.x0 − column.x0` for the 
 | --- | --- | --- |
 | `SAME_BAND(a, b)` | `\|a − b\| × 50 ≤ w` | two relX values are the same indent: within 2% of the column width |
 | `WRAPPED(P)` | `(P.box.x1 − column.x0) × 10 ≥ w × 9` | line P reaches 90% of the column width: it was wrapped by the layout |
-| `HANGING_GAP(L)` | `words[k].box.x0 − words[k−1].box.x1 ≥ L.fontSize`, k = marker word count | at least one em between the marker and its text: a tab, not a space |
+| `HANGING_GAP(L)` | `words[k].box.x0 − words[k−1].box.x1 ≥ L.fontSize`, k = marker word count; never for a glued marker | at least one em between the marker and its text: a tab, not a space |
 | `MAX_ARABIC` | 199 | a first component above this is not a list number |
 | `MAX_SUB` | 99 | a later component of a dotted path has at most two digits |
 | `MAX_DEPTH` | 4 | a dotted path has at most four components |
@@ -185,12 +193,13 @@ when P3d applies, whose join is its own evidence of the wrap.
 - Otherwise P3 does not claim `L`.
 
 A line claimed by P3 joins exactly what `P` belongs to: appended to `item.lineIds` and to the
-label (one space, then `L.text`) if `P` is part of a label; appended to `detailLineIds` if `P` is a
+label (one space, then `L.text` — no space between two Chinese or Japanese characters, #147) if `P`
+is part of a label; appended to `detailLineIds` if `P` is a
 detail line; prose if `P` is prose.
 
 ### P4 — a marker needs a label
 
-If the marker occupies every word of the line (`words.length == wordCount`), the label is the
+If the marker occupies every word of the line (`words.length == wordCount`, and not glued), the label is the
 **next line in the same block**, provided that line exists and `GRAMMAR` does not match it; it is
 consumed (added to `lineIds`; the label is its whole `text`). Otherwise the line goes to `rejected`
 with rule `P4`. Checked after the vetoes. **Fixture:** `marker-on-own-line`.
@@ -218,9 +227,20 @@ productions are tried **in this order**; the first match wins:
 | M5 | `W1` matches `^\((\d{1,3}\|[a-z]\|[A-Z]\|[ivx]{2,7}\|[IVX]{2,7})\)$` | by content | enclosed | by content | 1 |
 | M7 | `W1` matches `^([ivx]{2,7}\|[IVX]{2,7})[.)]$` and is a canonical roman numeral 1–39 | roman-lower / roman-upper | dot / paren | `[value]` | 1 |
 | M6 | `W1` matches `^[a-zA-Z][.)]$` | alpha (and roman, see R10) | dot / paren | `[letter index]` | 1 |
+| M10 | `words[0].text` is one circled number ①–⑳, alone or glued to what follows | arabic | circled | `[n]` | 1 |
+| M11 | `W1` matches `^\d{1,3}、$` (the ideographic comma Chinese numbers with) | arabic | ideographic | `[n]` | 1 |
+| M12 | `W1` begins with an M1, M2, M5 (number) or M11 marker and the next character is Chinese or Japanese (Han, hiragana, katakana) | as that production | as that production | `[n]` | 1, `glued` |
 
 - A match additionally requires that nothing in `W1` is left over: the whole first word is the
-  marker. `1.Namn` is one word and matches nothing (`CAVEATS.md`, known unknowns: `glued-marker`).
+  marker — except M10 and M12, the **glued** markers, whose label begins inside the first word
+  (`glued`: how many UTF-16 units of `words[0].text` the marker takes). Chinese and Japanese put no
+  space between a number and its words — "１．氏名", "（２）电话", "①年代", "1、姓名" — so in those
+  languages a glued marker is the ordinary marker (S15, the corpus's `moushikomi`, `ankeeto`,
+  `huiyuan`, `baoming`; `CAVEATS.md` #146). Only a Chinese or Japanese character after the marker
+  glues it, so `1.Namn` and `3.5million` still match nothing (`glued-marker` stays a known unknown
+  for Latin text), and `1.5倍` (a digit after the dot) is no marker. A circled number is never part
+  of a word, so M10 glues to anything. The label starts after the marker; `textX` is the label's
+  share of the word's box, by character. **Fixture:** `cjk-glued-markers`.
 - "By content" for M5: digits → arabic `[n]`; one letter → as M6 (with R10's two readings for i, v,
   x); two or more roman letters → as M7, and no match if not canonical or above 39.
 - A canonical roman numeral is one produced by the standard subtractive form (`iv`, not `iiii`).
@@ -237,12 +257,14 @@ productions are tried **in this order**; the first match wins:
   `ligature-and-quote-repair--marker`.
 
 The marker's `raw` is the first word's `text` verbatim (spaced styles: the first two words' texts
-joined by one space). The label starts at `words[wordCount].start` and runs to the end of the line.
+joined by one space). The label starts at `words[wordCount].start` — a glued marker's at
+`words[0].start + glued` — and runs to the end of the line.
 
 ## 5. Vetoes
 
 A matched marker is rejected (verdict `inline-text`, recorded in `rejected`) by the **first** of
-these that fires. `F` is the first label word (`words[wordCount]`), `f` is `probe(F.text)` lower-cased
+these that fires. `F` is the first label word (`words[wordCount]`; for a glued marker, the rest of
+`words[0]`), `f` is `probe(F.text)` lower-cased
 with trailing `. , ; : ! ? )` removed. Vetoes that name `F` do not fire when there is no `F`.
 
 | Id | Fires when | Why | Fixture |
