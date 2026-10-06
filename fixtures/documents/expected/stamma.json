@@ -1,0 +1,33 @@
+{
+  "document": "stamma",
+  "locale": "sv",
+  "items": [
+    { "marker": "1.", "label": "Namn: ______________________________" },
+    { "marker": "2.", "label": "Kommer du till stämman? ☐ Ja ☐ Nej" },
+    {
+      "marker": "3.",
+      "label": "Om du inte kan komma till stämman men vill läsa protokollet när det är klart, till vilken e-postadress ska vi skicka det? ____________________"
+    }
+  ],
+  "segments": [
+    { "kind": "heading", "text": "Kallelse till föreningsstämman" },
+    {
+      "kind": "instruction",
+      "text": "Styrelsen kallar alla medlemmar till den ordinarie föreningsstämman i klubbstugan. Den som vill ha handlingarna i förväg får dem till sin e-postadress, och den som saknar en adress i medlemsregistret kan hämta dem på kansliet under veckan före stämman."
+    },
+    { "kind": "question", "label": "Namn", "answer": "blank", "type": "short_text" },
+    {
+      "kind": "question",
+      "label": "Kommer du till stämman?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": ["Ja", "Nej"]
+    },
+    {
+      "kind": "question",
+      "label": "Om du inte kan komma till stämman men vill läsa protokollet när det är klart, till vilken e-postadress ska vi skicka det?",
+      "answer": "blank",
+      "type": "email"
+    }
+  ]
+}

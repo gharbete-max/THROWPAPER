@@ -35,7 +35,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const ENUMERATE_STAGE_VERSION = 6;
+export const ENUMERATE_STAGE_VERSION = 7;
 
 /** MAX_ARABIC (§2): a first component above this is not a list number (V4). */
 export const MAX_ARABIC = 199;
@@ -528,12 +528,22 @@ export function enumerate(doc: LayoutDocument): StageResult<EnumerateResult> {
   const continuation = (line: Line): boolean => {
     if (line.ir.source !== 'text-layer' && line.ir.source !== 'ocr') return false;
     const previous = line.siblings[line.indexInBlock - 1];
-    if (!previous || !wrapped(previous)) return false;
+    if (!previous) return false;
+    // P3d — a word broken across the line break: stage 2 joined its halves onto the line above
+    // (Y1, Y2), so this line begins inside that line's last word and goes on with it, whatever
+    // its indent now that the word's second half has moved up, and however full the line above
+    // looks (#142). The join is the evidence that the line wrapped.
+    const broken = previous.ir.words.at(-1)?.repair?.kind;
+    const brokenWord = broken === 'dehyphenated' || broken === 'joined-at-break';
+    if (!brokenWord && !wrapped(previous)) return false;
     const owner = ownerOf(previous);
 
-    let rule: 'P3a' | 'P3b';
+    let rule: 'P3a' | 'P3b' | 'P3d';
     let evidence: Evidence;
-    if (owner.kind === 'label' && sameBand(line.relX, owner.item.textX, line.width)) {
+    if (brokenWord) {
+      rule = 'P3d';
+      evidence = { word: previous.ir.words.at(-1)!.text };
+    } else if (owner.kind === 'label' && sameBand(line.relX, owner.item.textX, line.width)) {
       rule = 'P3a';
       evidence = { relX: line.relX, textX: owner.item.textX, width: line.width };
     } else if (line.relX * 50 <= previous.relX * 50 + line.width) {

@@ -364,6 +364,30 @@
       }
     },
     {
+      "name": "stamma",
+      "language": "sv",
+      "summary": "A notice of the annual meeting whose lines break inside words: a soft hyphen Word users type into long words (\"med­lemsregistret\"), printed as a hyphen where the line breaks, and the hyphen of \"e-postadress\" at a line end, in prose and in a question that wraps.",
+      "features": [
+        "word-numbering",
+        "hyphenated-line-break",
+        "soft-hyphen",
+        "wrapped-label",
+        "checkboxes",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "stamma.pdf",
+          "sha256": "0160264999dff8f3677087bd11aa29a341941a7f298fb4bd847c5ef8fc760af6"
+        },
+        "docx": {
+          "path": "stamma.docx",
+          "sha256": "d7b00429723001c42354553cf236da809a4104e90788b025c34cdbc1977638f8"
+        }
+      }
+    },
+    {
       "name": "tilmelding",
       "language": "da",
       "summary": "A short Danish form: ordinary prose, and a Word list numbered 1), 2), 3), 4).",

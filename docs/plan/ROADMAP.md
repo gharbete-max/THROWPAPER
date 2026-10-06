@@ -516,3 +516,19 @@ when each slice ends.)*
   flagged. Two numbering fixtures, written and failing first; a first version let a bullet resume a
   bullet list, which `bullet-list` caught at once, so bullets never resume. Enumerate is at stage
   version 6; every other snapshot moved only that line. 18 documents.
+- **Corpus growth: words broken across lines (2026-10-06).** What: `stamma` (Swedish), a notice
+  whose prose breaks at a soft hyphen ("med-" / "lemsregistret") and whose question wraps at the
+  hyphen of "e-postadress". Its wording was tuned until LibreOffice broke there, then the
+  expectation was written by hand. The Word file read to it; the PDF found three faults:
+  - pdf.js gave the soft hyphen as a text item of its own, so nothing was joined (#141): a lone
+    hyphen touching the word before it is that word's own;
+  - that line ended at 89% of the column, short of `WRAPPED`'s 90%, before a long compound (#141):
+    a hyphen join also counts a line as wrapped when the next word could not have fitted;
+  - after the join moved "postadress" up, the question's next line began right of its indent and
+    was read as prose, losing the rest of the question (#142): P3d, a line that begins inside a
+    word broken across the break continues the line above. A first version widened the line's box
+    instead, which the IR's own validator refused: a line's box is its words'.
+
+  Three reassemble fixtures, each written and failing first and each shown to fail with its rule
+  taken out. Reassemble is at stage version 3 and enumerate at 7; every other snapshot moved only
+  those lines. 19 documents.

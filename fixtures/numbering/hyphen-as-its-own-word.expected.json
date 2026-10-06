@@ -1,0 +1,40 @@
+{
+  "fixture": "hyphen-as-its-own-word",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "Den som inte har någon adress i det gamla eller i det nya registret för alla medlemmar",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "kan hämta handlingarna på kansliet.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Stämman hålls i klubbstugan. Plats och tid för nästa möte står på tavlan i hallen -",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "se även hemsidan.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": [
+        {
+          "word": "medlemmar",
+          "kind": "dehyphenated",
+          "raw": "med-\nlemmar"
+        }
+      ]
+    }
+  }
+}

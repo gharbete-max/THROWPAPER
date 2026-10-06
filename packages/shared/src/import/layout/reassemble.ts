@@ -37,7 +37,7 @@ import { columnRegions, type CutDecision, type Region } from './xycut.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const REASSEMBLE_STAGE_VERSION = 2;
+export const REASSEMBLE_STAGE_VERSION = 3;
 
 /** §2.1: the presentation-form ligatures, and what each is. */
 const LIGATURES: Readonly<Record<string, string>> = {
@@ -235,8 +235,18 @@ const wrapped = (line: Line, rect: Box) =>
   (lineBox(line).x1 - rect.x0) * 10 >= (rect.x1 - rect.x0) * 9;
 
 /**
+ * Whether the next line's first word could not have fitted after this line: the line broke where it
+ * did because the word did not fit. Exact where `wrapped`'s 90% is a rule of thumb, which a long
+ * word defeats: a Swedish compound is a seventh of a line, and a ragged line before one ends short
+ * of 90% (#141).
+ */
+const noRoomFor = (word: Word, line: Line, rect: Box) =>
+  lineBox(line).x1 + (word.box.x1 - word.box.x0) > rect.x1;
+
+/**
  * A wrapped line ending in a hyphen after a letter, followed in its block by a line starting with
- * a letter: the next line's first word is joined on. The hyphen goes (Y1) when the continuation is
+ * a letter: the next line's first word is joined on. Wrapped is `wrapped`, or the next line's first
+ * word would not have fitted after it (`noRoomFor`). The hyphen goes (Y1) when the continuation is
  * lower-case and the fragment has at least three letters, and stays (Y2) otherwise. No dictionary.
  * Before a conjunction nothing is joined (Y3): "för-" / "och efternamn" is a suspended compound,
  * "för- och efternamn", and joining it would write "föroch".
@@ -245,11 +255,13 @@ function dehyphenate(block: Block, rect: Box): void {
   for (let i = 0; i + 1 < block.lines.length; i += 1) {
     const line = block.lines[i]!;
     const next = block.lines[i + 1]!;
+    if (!line.synthetic) ownHyphen(line);
     const last = line.words.at(-1);
     const first = next.words[0];
     if (!last || !first || line.synthetic) continue;
     const fragment = /(\p{L}+)-$/u.exec(last.text)?.[1];
-    if (!fragment || !/^\p{L}/u.test(first.text) || !wrapped(line, rect)) continue;
+    if (!fragment || !/^\p{L}/u.test(first.text)) continue;
+    if (!wrapped(line, rect) && !noRoomFor(first, line, rect)) continue;
     if (isConjunction(first.text)) {
       line.joins.push({ rule: 'Y3', raw: `${last.text}\n${first.text}`, word: last.text });
       continue;
@@ -274,6 +286,24 @@ function dehyphenate(block: Block, rect: Box): void {
       i -= 1; // this line may join the one after the emptied line too
     }
   }
+}
+
+/**
+ * A lone hyphen at a line's end that touches the word before it — within a tenth of an em — is
+ * that word's own: a soft hyphen a Word user typed, printed where the line breaks, which pdf.js may
+ * give as a text item of its own ("med" and "-"). A dash after a space is punctuation, and stays
+ * a word of its own (#141).
+ */
+function ownHyphen(line: Line): void {
+  const hyphen = line.words.at(-1);
+  const word = line.words.at(-2);
+  if (!hyphen || !word || !/^[-\u2010]$/u.test(hyphen.text) || !/\p{L}$/u.test(word.text)) return;
+  if ((hyphen.box.x0 - word.box.x1) * 10 > hyphen.fontSize) return;
+  line.words.splice(-2, 2, {
+    ...word,
+    text: `${word.text}${hyphen.text}`,
+    box: unionBox([word.box, hyphen.box]),
+  });
 }
 
 // ------------------------------------------------------------------ §2.6 page furniture

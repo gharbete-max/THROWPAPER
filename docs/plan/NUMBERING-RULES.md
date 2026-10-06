@@ -155,8 +155,17 @@ have no effect on any run. **Fixture:** `page-break-continuation`.
 ### P3 — a soft-wrapped line is never a marker line
 
 Applies only when `L.source` is `text-layer` or `ocr` (docx and paste have no soft wraps —
-`LAYOUT-IR.md`), when `L` has a predecessor `P` in the **same block**, and when `WRAPPED(P)`.
+`LAYOUT-IR.md`), when `L` has a predecessor `P` in the **same block**, and when `WRAPPED(P)` — or
+when P3d applies, whose join is its own evidence of the wrap.
 
+- **P3d — a word broken across the break.** `P`'s last word carries a `dehyphenated` or
+  `joined-at-break` repair: stage 2 joined the two halves of a word printed across this very break
+  (Y1, Y2), so `L` begins inside that word and continues whatever `P` belongs to, whatever its
+  indent — which moved right when the word's second half moved up — and however full `P` looks.
+  `GRAMMAR` is not run on `L`. Tried first. (Without it, a question wrapping at "e-" /
+  "postadress ska vi skicka det? ____" lost everything after "e-postadress": the line now began
+  at "ska", right of the label's indent, and was read as prose — the corpus's `stamma`,
+  `CAVEATS.md` #142.) **Fixture:** `hyphen-join-keeps-line-start`.
 - **P3a — hanging text.** If `P` belongs to an item's label (its marker line or a continuation)
   and `SAME_BAND(relX(L), textX(item))`, `L` continues that label. `GRAMMAR` is not run on `L`.
   `textX(item)` is the relX of the first label word on the marker line (for a P4 item, of the
@@ -464,6 +473,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 | --- | --- | --- | --- |
 | P1 | only `words[0]` (and `words[1]` for M8) are tested | mid-line tokens stay in the label | `dotted-subnumber-mid-sentence` |
 | P2 | block role ∈ {page-furniture, footnote, table} | skipped | `page-break-continuation` |
+| P3d | text-layer/ocr, same block, `P`'s last word joined across the break (Y1, Y2) | continuation of what `P` belongs to | `hyphen-join-keeps-line-start` |
 | P3a | text-layer/ocr, same block, `WRAPPED(P)`, `SAME_BAND(relX(L), textX)` | label continuation | `dotted-subnumber-mid-sentence--wrapped` |
 | P3b | text-layer/ocr, same block, `WRAPPED(P)`, `relX(L) ≤ relX(P)` + 2%, not an R1 continuation | continuation | `dotted-subnumber-mid-sentence--flush` |
 | P3c | as P3b, but `P` is prose that ends a sentence and `L`'s marker starts a list | not a continuation: `L` is read as a marker line | `list-after-a-full-last-line`, `list-after-a-full-last-line--mid-sentence` |

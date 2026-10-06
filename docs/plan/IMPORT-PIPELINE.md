@@ -211,9 +211,13 @@ Per page, in this order:
    consecutive baselines. (First written as the median, which on a form of short sections — a
    heading, two items, a heading — is a paragraph gap, and then every heading joined the list under
    it.) *Fixture:* `headings-and-footnote`.
-6. **Hyphenation** (measured only), inside a block. A line whose last word ends in `-` after a
-   letter, that is `WRAPPED` (`NUMBERING-RULES.md` §2), followed by a line that starts with a
-   letter: join the next line's first word onto it. The hyphen is **removed** (Y1, `dehyphenated`)
+6. **Hyphenation** (measured only), inside a block. A lone hyphen at a line's end that touches the
+   word before it — within a tenth of an em — is that word's own (a soft hyphen a Word user typed,
+   printed where the line breaks, which pdf.js may give as a text item of its own: "med" and "-");
+   a dash after a space is punctuation (#141). A line whose last word ends in `-` after a letter,
+   that is `WRAPPED` (`NUMBERING-RULES.md` §2) **or** before a next word too long to have fitted
+   after it (`noRoomFor`: a ragged line before a long compound ends short of 90%, #141), followed
+   by a line that starts with a letter: join the next line's first word onto it. The hyphen is **removed** (Y1, `dehyphenated`)
    when the next word starts lower-case and the fragment before the hyphen has at least 3 letters
    ("regis-" + "tering"); otherwise it is **kept** (Y2, `joined-at-break`: "e-" + "post",
    "Stockholm-" + "Göteborg"). **Before a conjunction nothing is joined** (Y3): "för-" / "och
@@ -221,7 +225,10 @@ Per page, in this order:
    conjunctions of the twelve languages are in `layout/lexicon.json`). Nothing is joined across a
    block, into furniture, or across a page. The joined word keeps the first part's box; the raw
    text is on the word. No dictionary is consulted, so the rule cannot "fix" a word it does not
-   know. *Fixtures:* `hyphenated-line-break`, `hyphen-not-across-boundary`.
+   know. Stage 3 reads the line the word's second half moved up from as the continuation of the
+   line above, whatever its indent (P3d, #142). *Fixtures:* `hyphenated-line-break`,
+   `hyphen-not-across-boundary`, `hyphen-as-its-own-word`, `hyphen-before-a-long-word`,
+   `hyphen-join-keeps-line-start`.
 7. **Footnotes** (measured only). A block in the page's last region, starting in the bottom
    quarter of the page (`y0 ≥ 7500`), whose font size is at most 85% of the page's body median,
    and whose first word starts with a digit, a superscript digit, `*`, `†` or `‡`, or is set at
@@ -643,8 +650,8 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: eighteen documents, each a PDF and a Word file, and two of them scanned** —
-nine Swedish, two English, two Norwegian, one each in Danish, Finnish, German, French and Spanish; one and two pages; running headers and page-number
+**What it holds today: nineteen documents, each a PDF and a Word file, and two of them scanned** —
+ten Swedish, two English, two Norwegian, one each in Danish, Finnish, German, French and Spanish; one and two pages; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -656,7 +663,9 @@ sections in capitals, dot leaders, a label whose blank is on the line under it, 
 "(max 7)" in a question (`sommarlager`; like `lagerschema`, too little prose to be sure of its
 language: 18 stop words of 20); and a Norwegian registration numbered "(1)" to "(6)" straight on
 across its section headings (`innmelding`, held by R6c), with its fødselsnummer and
-organisasjonsnummer and a question asked again. Scans of real paper are still owed.
+organisasjonsnummer and a question asked again; and a notice whose lines break inside words, at a
+soft hyphen and at the hyphen of "e-postadress" in a question that wraps (`stamma`). Scans of real
+paper are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

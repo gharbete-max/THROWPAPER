@@ -574,4 +574,33 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  {
+    name: 'stamma',
+    language: 'sv',
+    summary:
+      'A notice of the annual meeting whose lines break inside words: a soft hyphen Word users type into long words ("med\u00ADlemsregistret"), printed as a hyphen where the line breaks, and the hyphen of "e-postadress" at a line end, in prose and in a question that wraps.',
+    features: [
+      'word-numbering',
+      'hyphenated-line-break',
+      'soft-hyphen',
+      'wrapped-label',
+      'checkboxes',
+      'blanks',
+    ],
+    word: {
+      lists: [{ id: 1, levels: [['decimal', '%1.']] }],
+      blocks: [
+        title('Kallelse till föreningsstämman'),
+        para(
+          'Styrelsen kallar alla medlemmar till den ordinarie föreningsstämman i klubbstugan. Den som vill ha handlingarna i förväg får dem till sin e-postadress, och den som saknar en adress i med\u00ADlemsregistret kan hämta dem på kansliet under veckan före stämman.',
+        ),
+        item(1, `Namn: ${blank(30)}`),
+        item(1, 'Kommer du till stämman?   ☐ Ja   ☐ Nej'),
+        item(
+          1,
+          `Om du inte kan komma till stämman men vill läsa protokollet när det är klart, till vilken e-postadress ska vi skicka det? ${blank(20)}`,
+        ),
+      ],
+    },
+  },
 ];
