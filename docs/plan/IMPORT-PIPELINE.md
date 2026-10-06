@@ -349,6 +349,11 @@ columns to three section headings — `grid-header-cells`, #99.)
 - **A Word table's grid** (S2c) — from the cells, not geometry: row 0 names the columns (its empty
   cell is absent, as Word gives it), each later row is its text cells and one checkbox per column.
   *Fixture:* `grid-from-cells`.
+- **A Word table is one table across page breaks** (S15, #157): S2c, S3tc and S3c read a Word table
+  as its table blocks, a block whose rows carry on from the table before it — nothing but page
+  furniture between — read with it. The Word reader stacks every cell, empty ones too, so even a
+  short table can run past the reader's page (the corpus's `matprotokoll`), and a long one crosses
+  pages in Word itself. *Fixture:* `docx-table-across-pages`.
 - **Table** (S3) — at least two consecutive lines that are only a row number (1, 2, 3 … in order)
   or only a blank, under a header of at least two cells at least 4 em apart with no answer space:
   `repeating-rows`, the cells as `columns`. The rows are found first, because a line of words is
@@ -448,7 +453,8 @@ the answers under it:
 8. **Instruction** (S8) — anything else: a paragraph. On a measured page, the next line goes on with
    the paragraph when it is at the block's line pitch (its lower quartile of gaps; a paragraph's own
    spacing is more than a tenth larger) and the line before did not end a sentence short of the
-   margin; a Word or pasted line is a paragraph of its own. (First written as "the line before
+   margin — a question with a note in brackets ends one, as §4.7 reads it asking (S15, #159,
+   `question-note-ends`: on a scan, where OCR reads no blank, it ran on into the next question); a Word or pasted line is a paragraph of its own. (First written as "the line before
    reached the margin", which cut a paragraph wherever a long word wrapped early and joined two
    whenever a last line was long — `arsmote-anmalan`.) One tap on the review screen makes it a
    question (#22).
@@ -707,10 +713,10 @@ Loppa may redistribute — made for the corpus, or published under terms that al
 origin and licence recorded in `fixtures/documents/SOURCES.json`; the repository may be public
 (ADR 0015), and a form someone sent us is not ours to publish.
 
-**What it holds today: forty-eight documents, each a PDF and a Word file, and two of them
-scanned** — fourteen Swedish, six English, four each in Danish, German and Norwegian, three each in
-Finnish, French and Spanish, two each in Icelandic, Japanese and Chinese, one in Russian; one to
-three pages, and one landscape; running headers and page-number
+**What it holds today: sixty documents, each a PDF and a Word file, and four of them scanned**
+— fifteen Swedish, seven English, five each in Danish, German and Norwegian, four each in Finnish,
+French and Spanish, three each in Icelandic, Japanese and Chinese, two in Russian; one to three
+pages, and one landscape; running headers and page-number
 footers; a list that crosses a page; a two-column list inside the flow of the page; a checkbox grid
 and a table of text cells, and a ruled table of text alone (`lagerschema`, S9); Word's own numbering at three levels, and numbers typed into the text
 ("1)", "1 -", "A."); a label that wraps; a note under an item; "punkt 12.1" at the start of a
@@ -751,9 +757,16 @@ organisation numbers, applied where the document's language is known and offered
 limits inside questions, "(max 4)", "(höchstens 3)", "(au plus 4)", "(minst 7, högst 12)", and a
 number that is no limit; and text that reads like a question — a question answered in the same
 sentence, and bold questions answered under them (`membership`, `erste-hilfe`, `adhesion`,
-`indmeldelse`, `jasenrekisteri`, `felagaskra`, `turnering`, `excursion`). Nine of them are, like
-`sommarlager`, too short for G1 to be sure of their language. Scans of real paper are still
-owed.
+`indmeldelse`, `jasenrekisteri`, `felagaskra`, `turnering`, `excursion`); and clean, minimal forms
+of the product's own kinds, one in each language (S15, batch 5): a measurement record whose Word
+table of numbered rows crosses the reader's page break (`matprotokoll`), an incident report
+(`incident`), a room booking (`raumbuchung`), a course evaluation (`evaluering`), a safety
+inspection (`vernerunde`), a volunteer sign-up (`talkoolaiset`), a renewal (`renouvellement`), an
+RSVP (`confirmacion`), an equipment loan (`utlan`), an application (`zayavka`), a facility booking
+(`shisetsu`) and an equipment inspection record (`jiancha`). The scans are of `medlemsansokan` and
+`fotosamtycke` (S14) and, since batch 5, of the English `membership` and the German `erste-hilfe`.
+Nineteen documents are, like `sommarlager`, too short for G1 to be sure of their language. Scans of
+real paper are still owed.
 
 - **Made for Loppa, by a real word processor.** Each document is a few readable lines in
   `scripts/corpus/documents.ts`, written as a Word file by `scripts/corpus/word.ts`;

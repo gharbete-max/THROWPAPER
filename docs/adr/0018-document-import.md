@@ -87,14 +87,14 @@ Decisions 1–7 are built, with one part still to come:
 - **There is no grid field type.** An imported grid is one choice per row under a heading, as the
   brief allows until a grid has its own ADR.
 - **A consent read from a document** is drawn as a box to tick (S13), its words byte for byte (#28).
-- **The corpus holds 48 documents**, each as a PDF and a Word file, with their sources recorded,
-  in all twelve languages (S15: batch 1 added Icelandic, Russian, Japanese and Chinese; batch 2,
-  §8.1's numbering traps on real pages; batch 3, §8.2's layout traps, a landscape page among
-  them; batch 4, §8.3's semantic traps in other languages). That is
-  short of the brief's 60, and S15 is taking it there in four more batches made for Loppa; real
-  forms with a licence to record are the owner's to supply. The
-  three added in S13 found two faults, both fixed with fixtures: a list's "1." swallowed by a full
-  last line (#133), and a question's options kept as its notes too (#134).
+- **The corpus holds 60 documents**, the brief's number, each as a PDF and a Word file, with their
+  sources recorded, in all twelve languages, and four of them scanned (S15: batch 1 added
+  Icelandic, Russian, Japanese and Chinese; batch 2, §8.1's numbering traps on real pages; batch 3,
+  §8.2's layout traps, a landscape page among them; batch 4, §8.3's semantic traps in other
+  languages; batch 5, twelve clean forms of the product's kinds and two more scans). All are made
+  for Loppa; real forms with a licence to record, and scans of real paper, are the owner's to
+  supply. Every document found what it was made to find, and the faults it found were fixed with
+  fixtures, each written and failing first (`CAVEATS.md` #133–#134, #139–#160).
 
 ## Rejected alternatives
 

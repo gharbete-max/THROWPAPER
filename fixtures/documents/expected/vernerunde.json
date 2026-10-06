@@ -1,0 +1,48 @@
+{
+  "document": "vernerunde",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Vernerunde i klubbhuset"
+    },
+    {
+      "kind": "instruction",
+      "text": "Vernerunden gjøres hver høst og vår av to personer fra styret. Gå gjennom huset, kryss av for hvert punkt, og skriv avvik under merknader. Skjemaet leveres til styreleder etter runden."
+    },
+    {
+      "kind": "grid",
+      "label": null,
+      "rows": [
+        "Rømningsveier er frie",
+        "Brannslukkere er kontrollert",
+        "Nødlys virker",
+        "Førstehjelpsskrinet er fullt"
+      ],
+      "columns": [
+        "OK",
+        "Avvik"
+      ],
+      "type": "grid"
+    },
+    {
+      "kind": "question",
+      "label": "Kontrollert av",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Dato",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Merknader",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

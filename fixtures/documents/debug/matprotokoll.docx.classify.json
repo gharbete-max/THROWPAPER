@@ -1,0 +1,11 @@
+{
+  "stage": "classify",
+  "stageVersion": 4,
+  "irVersion": 1,
+  "inputSha256": "8de860a24e426a1ecee2d08593edc8b624ec5d1d4825b8105a4225e44397f770",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"short_text","subject":["p1-l3"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l4","rule":"K1","verdict":"repeating_group","subject":["p1-l4","p1-l5","p1-l6","p1-l7","p1-l8","p1-l9","p1-l10","p1-l11","p1-l12","p1-l13","p1-l14","p1-l15","p2-l1"],"evidence":{"confidence":998,"features":"tableRows","margin":6000,"required":"unknown","runnerUp":"none"}},
+    {"id":"classify:p2-l2","rule":"K1","verdict":"short_text","subject":["p2-l2"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}}
+  ]
+}

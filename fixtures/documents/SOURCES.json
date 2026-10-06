@@ -233,6 +233,28 @@
       }
     },
     {
+      "name": "confirmacion",
+      "language": "es",
+      "summary": "A Spanish RSVP: a name, a yes or no to the dinner, a number of guests with its limit, and allergies. Its language is not guessed: 17 stop words of G1's 20.",
+      "features": [
+        "rsvp",
+        "number-in-question-text",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "confirmacion.pdf",
+          "sha256": "01531c91002bc7ea60f80fb85f4faf5b173ff1f64039a8c79a22d21e9a604003"
+        },
+        "docx": {
+          "path": "confirmacion.docx",
+          "sha256": "2d4303d6ae56763cf5cd6cb48500080003827f4e57086418f329037fc9a9fe82"
+        }
+      }
+    },
+    {
       "name": "deltakere",
       "language": "nb",
       "summary": "A team entry whose participants go in a ruled Word table: a header row of three names over six numbered rows left empty to fill in, between two labelled blanks. Its language is not guessed: none of its common words is Norwegian alone, and G1 needs five.",
@@ -322,6 +344,29 @@
         "docx": {
           "path": "erste-hilfe.docx",
           "sha256": "6e5c8959ed25b397cdcb441a7b1edc07ac3ecc47d67c7bf2a0c8d7dcf355aafb"
+        }
+      }
+    },
+    {
+      "name": "evaluering",
+      "language": "da",
+      "summary": "A course evaluation: a grid of three rows to rate in a ruled Word table, a yes or no, and comments. Its language is not guessed: 14 stop words of G1's 20, 3 of them Danish alone.",
+      "features": [
+        "feedback-survey",
+        "checkbox-grid",
+        "ruled-table",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "evaluering.pdf",
+          "sha256": "34686c4e52c87f107fe64a5ba83660ad8ddf638188cfa272b2c77075aa4ba078"
+        },
+        "docx": {
+          "path": "evaluering.docx",
+          "sha256": "e3fd783abd25aaaadc050ae997b463532f204e7454f8697490729a7483ad6e08"
         }
       }
     },
@@ -512,6 +557,28 @@
       }
     },
     {
+      "name": "incident",
+      "language": "en",
+      "summary": "An incident report: date, time and place, a description on the lines under its label, a yes or no, and the name and signature of the person reporting.",
+      "features": [
+        "incident-report",
+        "label-and-field-split",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "incident.pdf",
+          "sha256": "c29390148d601f5727a37cb5ccf7f85944349b702dddcd4ce4c4ceceea605e76"
+        },
+        "docx": {
+          "path": "incident.docx",
+          "sha256": "bdf032acf52fdac089ba9a04f2a279ef23db28310ce3326a887fed6db3b0ab24"
+        }
+      }
+    },
+    {
       "name": "indmeldelse",
       "language": "da",
       "summary": "A Danish membership form asking for a CPR-nummer and, for associations and firms, a CVR-nummer, under an introduction long enough for its language to be known — so both checks are applied, not only offered (#27).",
@@ -607,6 +674,30 @@
       }
     },
     {
+      "name": "jiancha",
+      "language": "zh",
+      "summary": "A Chinese equipment inspection record: the date and the inspector, two yes-or-no checks set with boxes against their answers, and remarks.",
+      "features": [
+        "inspection-report",
+        "full-width",
+        "blanks",
+        "checkboxes",
+        "locale",
+        "cjk"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "jiancha.pdf",
+          "sha256": "8f02b2eaac272e310cd7d1a68b38c4a2fe62d4b7a2b5cf8b6bbf2eaa1fafdb8b"
+        },
+        "docx": {
+          "path": "jiancha.docx",
+          "sha256": "cd354abc40346a615214108d8b8cbd36897ec702c86022e183f2a1415bf1c51a"
+        }
+      }
+    },
+    {
       "name": "kursangebot",
       "language": "de",
       "summary": "A course survey whose one question has 32 answers, one box to a line: one question flagged \"many-options\" (#30), not 32 questions. Its language is not guessed: 18 stop words of G1's 20 — the course names are not prose.",
@@ -670,6 +761,29 @@
         "docx": {
           "path": "landscape.docx",
           "sha256": "aab365b374f68404b4415c7a86982c9374266eb39d1b01a1de50daf8f51f284f"
+        }
+      }
+    },
+    {
+      "name": "matprotokoll",
+      "language": "sv",
+      "summary": "A measurement record: a ruled Word table of seven numbered rows under a header of five columns (date, time, two temperatures, signature), between two labelled blanks.",
+      "features": [
+        "measurement-record",
+        "ruled-table",
+        "table-of-rows",
+        "numbered-rows",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "matprotokoll.pdf",
+          "sha256": "6ced0f4c2c97eb9eacfcf20b1aeba762a22ae6d7e16c4e293f707187ea9bf7af"
+        },
+        "docx": {
+          "path": "matprotokoll.docx",
+          "sha256": "79757d93cbe790b267f87517fc3fa6fcae92bacf23bceb316d5df9f1f38a34b7"
         }
       }
     },
@@ -811,6 +925,29 @@
       }
     },
     {
+      "name": "raumbuchung",
+      "language": "de",
+      "summary": "A room booking: a name, a phone number, a date, a time from and to on one line, a number of guests with its limit, and the room as a choice of three. Its language is not guessed: 17 stop words of G1's 20.",
+      "features": [
+        "booking",
+        "two-blanks-one-line",
+        "number-in-question-text",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "raumbuchung.pdf",
+          "sha256": "2328196960fe8f1a8a5386dc2a7757a2542fa6e8272f8c6ad9d9cb6ae41b1b17"
+        },
+        "docx": {
+          "path": "raumbuchung.docx",
+          "sha256": "c919f02c97ff06fe4e389b6d064e3c66db33edcb5f82f512bd60ef59dc5cbc4b"
+        }
+      }
+    },
+    {
       "name": "reisestotte",
       "language": "nb",
       "summary": "A Norwegian application numbered \"(1)\" to \"(5)\", with a note between two items that opens \"(3 500 kroner …\": a bracket and a number that are not a marker, and a list that goes on after it. Its language is not guessed: two words only Norwegian has, of the five G1 needs.",
@@ -830,6 +967,28 @@
         "docx": {
           "path": "reisestotte.docx",
           "sha256": "c9c66a42e0e7e6698eb54b7e86b720c0b2aaf68de59fc1ea04c9fb8f0961eead"
+        }
+      }
+    },
+    {
+      "name": "renouvellement",
+      "language": "fr",
+      "summary": "A French membership renewal: name, member number, the amount of the fee, the way of paying as a choice of three, a date and a signature. Its language is not guessed: 19 stop words of G1's 20.",
+      "features": [
+        "renewal",
+        "money",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "renouvellement.pdf",
+          "sha256": "7f151db8b1311aee2e92185aaddd0b4be7d7f7bee28ed22a26a074c818e1774c"
+        },
+        "docx": {
+          "path": "renouvellement.docx",
+          "sha256": "2c7a0993080b2d609971dcfd4e70a0463add363ae1235ef15235582bafac0179"
         }
       }
     },
@@ -875,6 +1034,29 @@
         "docx": {
           "path": "rule-ballot.docx",
           "sha256": "1db13ed105f4517c6f0d817d8d731902a22fab3b7e708a050a9cfb02bc551a41"
+        }
+      }
+    },
+    {
+      "name": "shisetsu",
+      "language": "ja",
+      "summary": "A Japanese facility booking with no numbers: labels with full-width colons over full-width blanks — name, phone, date, number of people, remarks.",
+      "features": [
+        "booking",
+        "full-width",
+        "blanks",
+        "locale",
+        "cjk"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "shisetsu.pdf",
+          "sha256": "5b90f8ae5ebd8888de3123cd71ae7585cdd5f5628672b19306dd595e20d1895b"
+        },
+        "docx": {
+          "path": "shisetsu.docx",
+          "sha256": "cc7c5ef48143896403b21ce45b911fc0c4e515e2abe94dcb50cd36c19f494cfa"
         }
       }
     },
@@ -997,6 +1179,27 @@
       }
     },
     {
+      "name": "talkoolaiset",
+      "language": "fi",
+      "summary": "A Finnish volunteer sign-up: name, phone, e-mail, when one can help as a choice of two, and further information. Its language is not guessed: 4 stop words of G1's 20.",
+      "features": [
+        "volunteer-sign-up",
+        "blanks",
+        "checkboxes"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "talkoolaiset.pdf",
+          "sha256": "d6f3120c4536de3e60638cdc76347018d4b93ecd3a2dd789f14c5bd42e3f1f05"
+        },
+        "docx": {
+          "path": "talkoolaiset.docx",
+          "sha256": "e3ddb0030be674581c97f796922e97b47fac724c510aaff124d4ad3dbc43491e"
+        }
+      }
+    },
+    {
       "name": "talkoot",
       "language": "fi",
       "summary": "A Finnish sign-up typed with a space before each number's dot (\"1 . Nimi\"), under a line that opens with a date, \"15. toukokuuta\", which is no marker (V3). Its language is not guessed: 10 stop words of G1's 20.",
@@ -1085,6 +1288,50 @@
       }
     },
     {
+      "name": "utlan",
+      "language": "is",
+      "summary": "An Icelandic equipment loan: name, kennitala, what is borrowed, the dates out and back, and a signature. Its language is not guessed: 7 stop words of G1's 20, so its kennitala check is offered, not applied.",
+      "features": [
+        "booking",
+        "equipment-loan",
+        "personnummer",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "utlan.pdf",
+          "sha256": "5c9fc0bf94802e00e2f7b591e7e45f4af9e2bc1ee0497c4bc0aadc13cd9423fd"
+        },
+        "docx": {
+          "path": "utlan.docx",
+          "sha256": "43ad5cf9c98dc885b5a97e75cb7a95e28aa904362fd62680e50af13d2740e5c0"
+        }
+      }
+    },
+    {
+      "name": "vernerunde",
+      "language": "nb",
+      "summary": "A safety inspection: a checklist of four things in a ruled Word table, each OK or not, then who checked it, when, and remarks. Its language is not guessed: 13 stop words of G1's 20, 2 of them Norwegian alone.",
+      "features": [
+        "inspection-report",
+        "checkbox-grid",
+        "ruled-table",
+        "blanks"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "vernerunde.pdf",
+          "sha256": "2d2a47bc0769e156fc7b6aab8051afc22bbf09b4df17b93e285ca077fc77ac49"
+        },
+        "docx": {
+          "path": "vernerunde.docx",
+          "sha256": "45cfb2747a8bd59198616c63d36aec09c0f166701e886d3e733066093324b3dc"
+        }
+      }
+    },
+    {
       "name": "volunteer",
       "language": "en",
       "summary": "A volunteer sign-up whose third question has its answers numbered \"i.\", \"ii.\", \"iii.\" at the same indent as the questions — a scheme change that restarts and so nests (R5a) — and whose numbers then go on with \"4.\".",
@@ -1104,6 +1351,28 @@
         "docx": {
           "path": "volunteer.docx",
           "sha256": "2110fd8d4f1ef103bbd417ba8824318262ea1d18ba66bd708d6009e8e8d8d3f1"
+        }
+      }
+    },
+    {
+      "name": "zayavka",
+      "language": "ru",
+      "summary": "A Russian application to take part: full name, phone, e-mail, a convenient time as a choice of three, and a comment.",
+      "features": [
+        "volunteer-sign-up",
+        "blanks",
+        "checkboxes",
+        "locale"
+      ],
+      "spec": "scripts/corpus/documents.ts",
+      "files": {
+        "pdf": {
+          "path": "zayavka.pdf",
+          "sha256": "9d8c3e70a4598d30ad36481ce23415181c930575c201cc41a6eac04a613641e6"
+        },
+        "docx": {
+          "path": "zayavka.docx",
+          "sha256": "ab805370dd5da32d6272a8923169de8f791228c574620788125f8c1340db75cb"
         }
       }
     }

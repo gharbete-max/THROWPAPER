@@ -1,0 +1,49 @@
+{
+  "document": "confirmacion",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Confirmación de asistencia"
+    },
+    {
+      "kind": "instruction",
+      "text": "Con motivo del aniversario del club celebraremos una cena el sábado 14 de noviembre. Le rogamos que nos confirme su asistencia antes del 1 de noviembre para poder reservar las mesas."
+    },
+    {
+      "kind": "question",
+      "label": "Nombre",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "¿Asistirá a la cena?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Sí",
+        "No"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Número de acompañantes (máximo 2)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Alergias o dieta especial",
+      "answer": "blank",
+      "type": "short_text"
+    }
+  ]
+}

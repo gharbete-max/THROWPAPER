@@ -113,7 +113,8 @@ As planned, with these differences, each found by building it:
   read (`repair: { kind: 'box-mark', raw }`, a `packages/shared` change; stage 2 records it as L2),
   when:
   - it was read as a bracket, bar or parenthesis, alone or stuck to the word after it, or as a
-    zero or an O standing alone;
+    zero, an O or "DO" standing alone (the German scan of S15 gave "DO", the box's sides read as
+    two letters, #160 — as a word, two capitals are wider than tall and fail the next test);
   - it is square within a fifth either way;
   - it is at least half its line high.
 

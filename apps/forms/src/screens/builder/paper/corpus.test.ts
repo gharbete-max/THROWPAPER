@@ -376,8 +376,22 @@ describe("the corpus's scans", () => {
           segment.lineIds.includes(line.id),
         );
         const scored = reading.scored.scored[index]!;
-        expect(scored.caps.length > 0, read).toBe(caught);
-        if (caught) expect(scored.bucket, read).not.toBe('auto');
+        const sure = word!.ocrConfidence!;
+        if (caught) {
+          // Unsure of it: what holds it is capped, at its confidence or lower.
+          expect(
+            scored.caps.some((cap) => cap.lowest <= sure),
+            read,
+          ).toBe(true);
+          expect(scored.bucket, read).not.toBe('auto');
+        } else {
+          // Sure of it: it caps nothing. A cap there is another word's of the same paragraph,
+          // less sure than this one (the German scan's "kostenlos." at 68 beside "fur" at 90).
+          expect(
+            scored.caps.every((cap) => cap.lowest < sure),
+            read,
+          ).toBe(true);
+        }
       }
     });
 

@@ -163,6 +163,9 @@ describe('stage 5, classify: the words of twelve languages', () => {
     ['is', 'Heimilisfang: ____', 'address'],
     ['ja', 'メールアドレス: ____', 'email'],
     ['ja', '電話番号: ____', 'phone'],
+    // A date named by what happens on it: 利用日, 記入日, 申込日, 提出日 (#158, the corpus's `shisetsu`).
+    ['ja', '利用日: ____', 'date'],
+    ['ja', '申込日: ____', 'date'],
     ['nb', 'E-postadresse: ____', 'email'],
     ['nb', 'Fødselsdato: ____', 'date'],
     ['ru', 'Электронная почта: ____', 'email'],

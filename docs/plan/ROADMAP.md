@@ -86,7 +86,7 @@ screen — one `pnpm test:e2e` run, with the exact commands and results pasted i
 | **S12** Convergence, paper twin, re-import | `decided()` slots from import, anchors from the IR, `definition.paper` from an import, stage 9 | e2e for S6; a filled response as its paper; re-import asks before removing | `packages/shared`, `apps/forms`, `apps/api-forms` | done, in review — S12a (the walk, acceptance S6), S12b (the paper twin), S12c (re-import, in two commits), PR #147 (`CONVERGENCE.md`) |
 | **S13** Polish | acceptance S1 by clicking alone (graph version 7), twelve-language completeness, keyboard-only e2e twins for S1–S6, pseudo-RTL, the performance budget, this roadmap and the ADRs brought up to date (`POLISH.md`) | e2e; budgets | all of the above | **done** — in review, PR #147 (`POLISH.md`); the ADRs await the owner's acceptance |
 | **S14** Photographs and scans | a scanned PDF's pages and a photograph read word by word by Tesseract on the device, through stages 2–7 and the review screen; B1, a printed box read as a mark; the corpus's scans (`SCANS.md`) | `ocr.test.ts`, `extract.test.ts`, the scans in `corpus.test.ts`, `e2e/scan.spec.ts` with the real Tesseract | `apps/forms`, `packages/shared` (the `box-mark` repair), `fixtures/`, `scripts/corpus/` | **done** — in review, PR #147 (`SCANS.md`) |
-| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | in progress — batches 1 to 4 done (48 documents), batch 5 next |
+| **S15** The corpus to sixty | the golden corpus from 19 documents to at least 60 (`BRIEF.md`, "Golden corpus"; `IMPORT-PIPELINE.md`), in five batches, below | each document's hand-written expectation in `corpus.test.ts`; a fixture for every fault found, in the same commit | `scripts/corpus/`, `fixtures/documents/`, and whatever a fault touches | done — 60 documents in all twelve languages, four of them scanned; faults #139–#160 fixed with fixtures |
 
 ## S15 — The corpus to sixty
 
@@ -650,3 +650,29 @@ when each slice ends.)*
   short. Moving it after seeing a document fail is what the rules forbid, so it waits for a
   calibration of its own. Reassemble and segment are at stage version 6; every other snapshot moved
   only those lines, input hashes unchanged. 48 documents. Next: batch 5.
+- **S15 batch 5, and S15 done (2026-10-06).** What: twelve clean, minimal forms of the product's
+  own kinds, one in each language — `matprotokoll` (sv, a measurement record), `incident` (en),
+  `raumbuchung` (de, a booking), `evaluering` (da, a course evaluation), `vernerunde` (nb, a safety
+  inspection), `talkoolaiset` (fi, a volunteer sign-up), `renouvellement` (fr, a renewal),
+  `confirmacion` (es, an RSVP), `utlan` (is, an equipment loan), `zayavka` (ru, an application),
+  `shisetsu` (ja, a facility booking), `jiancha` (zh, an equipment inspection) — and two more
+  scans, of the English `membership` and the German `erste-hilfe`. Nine read as written. Found,
+  each with a fixture or test written and failing first and failing with its rule out:
+  - the measurement record's last row fell on the Word reader's next page and was lost (#157): a
+    Word table is one table across page breaks, for grids, tables of text and rows to fill in;
+  - "利用日" (the date of use) was short text (#158): four Japanese date words more;
+  - on the English scan, where OCR reads no blank, a question ending "(max 4)" ran on into the
+    question under it (#159): a question with a note in brackets ends its sentence;
+  - the German scan's consent box came back as "DO" (#160): B1 takes it, in a square.
+
+  The corpus test's check of a misread was sharpened: a misread Tesseract was sure of caps nothing,
+  though another word of its paragraph may. My expectation for `raumbuchung` named a language G1
+  cannot be sure of (17 stop words of 20). Segment is at stage version 7 and classify at 4; every
+  other snapshot moved only those lines, input hashes unchanged.
+
+  **S15 is done: 60 documents**, the brief's number, in all twelve languages, four of them
+  scanned, every one held to an expectation written by hand before it was first read. Batches 1–5
+  found faults #143–#160 and fixed each with a fixture. For the owner: real forms and scans of real
+  paper with a licence to record; and one calibration to decide, G1's floor of 20 stop words, under
+  which 19 of the 60 documents carry no language (Finnish above all: `jasenrekisteri` has 13 words
+  that are Finnish alone). With S15, every slice of the plan is built.

@@ -27,7 +27,7 @@ import type {
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const SEGMENT_STAGE_VERSION = 6;
+export const SEGMENT_STAGE_VERSION = 7;
 /** More options than this and the question is flagged (#30). */
 export const MAX_OPTIONS = 30;
 /** A label longer than this is prose to read, not a label (rules 1, 7, 8). */
@@ -443,11 +443,36 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
     i = rows[rows.length - 1]!.order;
   }
 
+  /**
+   * Word's tables, each as its cell lines in reading order: a table block whose rows carry on from
+   * the table before it — its first row after that one's last, with nothing but page furniture
+   * between — is the same table, across the reader's page breaks (#157). The Word reader stacks every
+   * cell, empty ones too, so even a short table can run past its page, and a long one crosses pages
+   * in Word itself.
+   */
+  const wordTables: IrLine[][] = [];
+  {
+    let open: { lines: IrLine[]; lastRow: number } | null = null;
+    for (const block of doc.pages.flatMap((page) => page.blocks)) {
+      if (block.role === 'page-furniture') continue;
+      const cells = block.role === 'table' ? block.lines.filter((line) => line.cell !== null) : [];
+      if (cells.length === 0) {
+        open = null;
+        continue;
+      }
+      const rows = cells.map((line) => line.cell!.row);
+      if (!open || Math.min(...rows) <= open.lastRow) {
+        open = { lines: [], lastRow: -1 };
+        wordTables.push(open.lines);
+      }
+      open.lines.push(...cells);
+      open.lastRow = Math.max(open.lastRow, ...rows);
+    }
+  }
+
   // 1c. Word tables (`w:tbl`): the cells say what geometry would have to guess.
-  for (const block of doc.pages.flatMap((page) => page.blocks)) {
-    if (block.role !== 'table') continue;
-    const cellLines = block.lines.filter((line) => line.cell !== null);
-    if (cellLines.length === 0 || !free(cellLines.map((line) => line.id))) continue;
+  for (const cellLines of wordTables) {
+    if (!free(cellLines.map((line) => line.id))) continue;
     const rowsOf = new Map<number, Map<number, IrLine[]>>();
     for (const line of cellLines) {
       const { row, col } = line.cell!;
@@ -577,9 +602,8 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
   }
 
   // 1e. Word tables of text: the same, from the cells — each row, its cells in order.
-  for (const block of doc.pages.flatMap((page) => page.blocks)) {
-    if (block.role !== 'table') continue;
-    const cellLines = block.lines.filter((line) => line.cell !== null && !claimed.has(line.id));
+  for (const table of wordTables) {
+    const cellLines = table.filter((line) => !claimed.has(line.id));
     if (cellLines.length === 0 || !cellLines.every((line) => plainCells(at(line.id)))) continue;
     const rows = new Map<number, IrLine[]>();
     for (const line of cellLines)
@@ -600,9 +624,8 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
   // that hold nothing but their number, 1, 2, 3 … in order — S3 from the cells, which say what
   // geometry has to find. A table whose rows are empty, unnumbered, has no lines to count them by
   // (IR version 1 keeps no empty cell), and is left to the line rules.
-  for (const block of doc.pages.flatMap((page) => page.blocks)) {
-    if (block.role !== 'table') continue;
-    const cellLines = block.lines.filter((line) => line.cell !== null && !claimed.has(line.id));
+  for (const wordTable of wordTables) {
+    const cellLines = wordTable.filter((line) => !claimed.has(line.id));
     if (cellLines.length === 0) continue;
     const rows = new Map<number, IrLine[]>();
     for (const line of cellLines)
@@ -1077,7 +1100,9 @@ export function segment(doc: LayoutDocument, lists: EnumerateResult): StageResul
         break;
       const gap = following.ir.baseline - last.ir.baseline;
       const pitch = pitchOf(line.block);
-      const ended = !wrapped(last) && /[.!?:。！？：]$/u.test(last.ir.text);
+      // A question with a note in brackets ends too, as §4.7 reads it asking (#159).
+      const ended =
+        !wrapped(last) && (/[.!?:。！？：]$/u.test(last.ir.text) || ASKS.test(last.ir.text));
       if (gap * 10 > pitch * 11 || ended) break;
       ids = [...ids, following.ir.id];
       last = following;

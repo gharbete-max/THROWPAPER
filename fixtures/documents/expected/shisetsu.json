@@ -1,0 +1,45 @@
+{
+  "document": "shisetsu",
+  "locale": "ja",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "施設利用申込書"
+    },
+    {
+      "kind": "instruction",
+      "text": "集会室の利用を希望される方は、以下の事項をご記入のうえ、利用日の一週間前までに事務局へ提出してください。"
+    },
+    {
+      "kind": "question",
+      "label": "氏名",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "電話番号",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "利用日",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "利用人数",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "question",
+      "label": "備考",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "b3e9ea81268566e8532dc50ab6346e4bf6cca34c9e46d68904b561571cae29e6",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":15,"y0":706,"y1":4200}},
+    {"id":"reassemble:p1-cut2","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":1,"right":6,"x0":2044,"x1":3065}},
+    {"id":"reassemble:p1-cut3","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":1,"right":5,"x0":3341,"x1":4240}},
+    {"id":"reassemble:p1-cut4","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":2,"right":3,"x0":4909,"x1":5668}},
+    {"id":"reassemble:p1-cut5","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":2,"right":1,"x0":6439,"x1":7096}},
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3","p1-l4","p1-l5","p1-l6"],"evidence":{}},
+    {"id":"reassemble:p1-b3","rule":"H2","verdict":"heading","subject":["p1-l7"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b4","rule":"H2","verdict":"heading","subject":["p1-l8"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b5","rule":"H2","verdict":"heading","subject":["p1-l9"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b6","rule":"H2","verdict":"heading","subject":["p1-l10"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b7","rule":"H2","verdict":"heading","subject":["p1-l11"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b8","rule":"B1","verdict":"body","subject":["p1-l12","p1-l13","p1-l14","p1-l15","p1-l16","p1-l17","p1-l18"],"evidence":{}},
+    {"id":"reassemble:p1-b9","rule":"B1","verdict":"body","subject":["p1-l19"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"sv","subject":[],"evidence":{"best":"sv","hits":20,"own":14,"runnerUp":0}}
+  ]
+}

@@ -1438,4 +1438,270 @@ export const CORPUS: CorpusDocument[] = [
       ],
     },
   },
+  // ── S15 batch 5: clean, minimal forms of the product's own kinds, one in each language.
+  {
+    name: 'matprotokoll',
+    language: 'sv',
+    summary:
+      'A measurement record: a ruled Word table of seven numbered rows under a header of five columns (date, time, two temperatures, signature), between two labelled blanks.',
+    features: ['measurement-record', 'ruled-table', 'table-of-rows', 'numbered-rows', 'blanks'],
+    word: {
+      blocks: [
+        title('Mätprotokoll för kyl och frys'),
+        para(
+          'Temperaturen i kylen och frysen ska mätas och skrivas upp varje dag. Kylen ska hålla högst åtta grader och frysen minst arton minusgrader. Om något värde är fel ska det skrivas under avvikelser, och den som har mätt ska alltid skriva sin signatur på raden.',
+        ),
+        para(`Avdelning: ${blank(30)}`),
+        para('Mätningar'),
+        table(
+          [
+            ['', 'Datum', 'Tid', 'Kyl (°C)', 'Frys (°C)', 'Signatur'],
+            ...['1', '2', '3', '4', '5', '6', '7'].map((n) => [n, '', '', '', '', '']),
+          ],
+          [500, 1900, 1400, 1700, 1700, 2400],
+        ),
+        para(`Avvikelser och åtgärder: ${blank(20)}`),
+      ],
+    },
+  },
+  {
+    name: 'incident',
+    language: 'en',
+    summary:
+      'An incident report: date, time and place, a description on the lines under its label, a yes or no, and the name and signature of the person reporting.',
+    features: ['incident-report', 'label-and-field-split', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Incident Report'),
+        para(
+          'Use this form to report any accident, injury or near miss on club premises, however small. Fill it in as soon as you can after the incident, while you still remember what happened, and give it to a member of the committee.',
+        ),
+        para(`Date of the incident: ${blank(16)}`),
+        para(`Time: ${blank(12)}`),
+        para(`Where did it happen? ${blank(24)}`),
+        para('What happened?'),
+        para(blank(48)),
+        para(blank(48)),
+        para('Was anyone hurt?   ☐ Yes   ☐ No'),
+        para(`Your name: ${blank(30)}`),
+        para(`Signature: ${blank(30)}`),
+      ],
+    },
+  },
+  {
+    name: 'raumbuchung',
+    language: 'de',
+    summary:
+      "A room booking: a name, a phone number, a date, a time from and to on one line, a number of guests with its limit, and the room as a choice of three. Its language is not guessed: 17 stop words of G1's 20.",
+    features: ['booking', 'two-blanks-one-line', 'number-in-question-text', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Buchung eines Raumes im Vereinsheim'),
+        para(
+          'Mitglieder können die Räume des Vereinsheims für private Feiern und Treffen buchen. Bitte füllen Sie das Formular aus und geben Sie es spätestens zwei Wochen vor dem gewünschten Termin beim Hausverwalter ab. Die Buchung gilt erst, wenn sie bestätigt wurde.',
+        ),
+        para(`Name: ${blank(30)}`),
+        para(`Telefon: ${blank(28)}`),
+        para(`Datum: ${blank(16)}`),
+        para(`Uhrzeit von ${blank(8)} bis ${blank(8)}`),
+        para(`Anzahl der Gäste (höchstens 40): ${blank(8)}`),
+        para('Raum:   ☐ Saal   ☐ Küche   ☐ Gruppenraum'),
+      ],
+    },
+  },
+  {
+    name: 'evaluering',
+    language: 'da',
+    summary:
+      "A course evaluation: a grid of three rows to rate in a ruled Word table, a yes or no, and comments. Its language is not guessed: 14 stop words of G1's 20, 3 of them Danish alone.",
+    features: ['feedback-survey', 'checkbox-grid', 'ruled-table', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Evaluering af kurset'),
+        para(
+          'Tak fordi du deltog i kurset. Vi vil gerne høre, hvad du synes, så vi kan gøre det bedre næste gang. Sæt et kryds i hver række, og skriv gerne en kommentar. Evalueringen er anonym.',
+        ),
+        table(
+          [
+            ['', 'Godt', 'Middel', 'Dårligt'],
+            ['Indholdet', '☐', '☐', '☐'],
+            ['Underviseren', '☐', '☐', '☐'],
+            ['Lokalerne', '☐', '☐', '☐'],
+          ],
+          [4400, 1500, 1500, 1500],
+        ),
+        para('Vil du anbefale kurset til andre?   ☐ Ja   ☐ Nej'),
+        para(`Kommentarer: ${blank(34)}`),
+      ],
+    },
+  },
+  {
+    name: 'vernerunde',
+    language: 'nb',
+    summary:
+      "A safety inspection: a checklist of four things in a ruled Word table, each OK or not, then who checked it, when, and remarks. Its language is not guessed: 13 stop words of G1's 20, 2 of them Norwegian alone.",
+    features: ['inspection-report', 'checkbox-grid', 'ruled-table', 'blanks'],
+    word: {
+      blocks: [
+        title('Vernerunde i klubbhuset'),
+        para(
+          'Vernerunden gjøres hver høst og vår av to personer fra styret. Gå gjennom huset, kryss av for hvert punkt, og skriv avvik under merknader. Skjemaet leveres til styreleder etter runden.',
+        ),
+        table(
+          [
+            ['', 'OK', 'Avvik'],
+            ['Rømningsveier er frie', '☐', '☐'],
+            ['Brannslukkere er kontrollert', '☐', '☐'],
+            ['Nødlys virker', '☐', '☐'],
+            ['Førstehjelpsskrinet er fullt', '☐', '☐'],
+          ],
+          [5600, 1600, 1600],
+        ),
+        para(`Kontrollert av: ${blank(26)}`),
+        para(`Dato: ${blank(16)}`),
+        para(`Merknader: ${blank(30)}`),
+      ],
+    },
+  },
+  {
+    name: 'talkoolaiset',
+    language: 'fi',
+    summary:
+      "A Finnish volunteer sign-up: name, phone, e-mail, when one can help as a choice of two, and further information. Its language is not guessed: 4 stop words of G1's 20.",
+    features: ['volunteer-sign-up', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Ilmoittaudu talkoolaiseksi'),
+        para(
+          'Seura tarvitsee talkoolaisia kesän tapahtumiin. Jos voit auttaa, täytä lomake ja palauta se toimistoon. Otamme sinuun yhteyttä ennen tapahtumaa.',
+        ),
+        para(`Nimi: ${blank(30)}`),
+        para(`Puhelin: ${blank(26)}`),
+        para(`Sähköposti: ${blank(24)}`),
+        para('Milloin voit auttaa?   ☐ Arkisin   ☐ Viikonloppuisin'),
+        para(`Lisätietoja: ${blank(28)}`),
+      ],
+    },
+  },
+  {
+    name: 'renouvellement',
+    language: 'fr',
+    summary:
+      "A French membership renewal: name, member number, the amount of the fee, the way of paying as a choice of three, a date and a signature. Its language is not guessed: 19 stop words of G1's 20.",
+    features: ['renewal', 'money', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title("Renouvellement de l'adhésion"),
+        para(
+          "Votre adhésion arrive à échéance à la fin de l'année. Pour la renouveler, remplissez ce formulaire et joignez votre paiement. Le montant de la cotisation est le même que l'an dernier.",
+        ),
+        para(`Nom et prénom : ${blank(26)}`),
+        para(`Numéro d'adhérent : ${blank(16)}`),
+        para(`Montant de la cotisation : ${blank(12)}`),
+        para('Mode de paiement :   ☐ Chèque   ☐ Virement   ☐ Espèces'),
+        para(`Date : ${blank(16)}`),
+        para(`Signature : ${blank(26)}`),
+      ],
+    },
+  },
+  {
+    name: 'confirmacion',
+    language: 'es',
+    summary:
+      "A Spanish RSVP: a name, a yes or no to the dinner, a number of guests with its limit, and allergies. Its language is not guessed: 17 stop words of G1's 20.",
+    features: ['rsvp', 'number-in-question-text', 'blanks', 'checkboxes'],
+    word: {
+      blocks: [
+        title('Confirmación de asistencia'),
+        para(
+          'Con motivo del aniversario del club celebraremos una cena el sábado 14 de noviembre. Le rogamos que nos confirme su asistencia antes del 1 de noviembre para poder reservar las mesas.',
+        ),
+        para(`Nombre: ${blank(30)}`),
+        para('¿Asistirá a la cena?   ☐ Sí   ☐ No'),
+        para(`Número de acompañantes (máximo 2): ${blank(6)}`),
+        para(`Alergias o dieta especial: ${blank(20)}`),
+      ],
+    },
+  },
+  {
+    name: 'utlan',
+    language: 'is',
+    summary:
+      "An Icelandic equipment loan: name, kennitala, what is borrowed, the dates out and back, and a signature. Its language is not guessed: 7 stop words of G1's 20, so its kennitala check is offered, not applied.",
+    features: ['booking', 'equipment-loan', 'personnummer', 'blanks'],
+    word: {
+      blocks: [
+        title('Útlán á búnaði'),
+        para(
+          'Félagsmenn geta fengið lánaðan búnað félagsins, til dæmis tjöld, prímusa og kort. Skráðu útlánið á þetta eyðublað og skilaðu búnaðinum hreinum á réttum degi.',
+        ),
+        para(`Nafn: ${blank(30)}`),
+        para(`Kennitala: ${blank(20)}`),
+        para(`Búnaður: ${blank(30)}`),
+        para(`Dagsetning útláns: ${blank(14)}`),
+        para(`Dagsetning skila: ${blank(14)}`),
+        para(`Undirskrift: ${blank(26)}`),
+      ],
+    },
+  },
+  {
+    name: 'zayavka',
+    language: 'ru',
+    summary:
+      'A Russian application to take part: full name, phone, e-mail, a convenient time as a choice of three, and a comment.',
+    features: ['volunteer-sign-up', 'blanks', 'checkboxes', 'locale'],
+    word: {
+      blocks: [
+        title('Заявка на участие'),
+        para(
+          'Чтобы принять участие в мастер-классе, заполните заявку и передайте её администратору клуба. Мы свяжемся с вами и подтвердим время занятия.',
+        ),
+        para(`ФИО: ${blank(30)}`),
+        para(`Телефон: ${blank(26)}`),
+        para(`Электронная почта: ${blank(20)}`),
+        para('Удобное время:   ☐ Утро   ☐ День   ☐ Вечер'),
+        para(`Комментарий: ${blank(26)}`),
+      ],
+    },
+  },
+  {
+    name: 'shisetsu',
+    language: 'ja',
+    summary:
+      'A Japanese facility booking with no numbers: labels with full-width colons over full-width blanks — name, phone, date, number of people, remarks.',
+    features: ['booking', 'full-width', 'blanks', 'locale', 'cjk'],
+    word: {
+      blocks: [
+        title('施設利用申込書'),
+        para(
+          '集会室の利用を希望される方は、以下の事項をご記入のうえ、利用日の一週間前までに事務局へ提出してください。',
+        ),
+        para(`氏名：${'＿'.repeat(14)}`),
+        para(`電話番号：${'＿'.repeat(12)}`),
+        para(`利用日：${'＿'.repeat(12)}`),
+        para(`利用人数：${'＿'.repeat(8)}`),
+        para(`備考：${'＿'.repeat(16)}`),
+      ],
+    },
+  },
+  {
+    name: 'jiancha',
+    language: 'zh',
+    summary:
+      'A Chinese equipment inspection record: the date and the inspector, two yes-or-no checks set with boxes against their answers, and remarks.',
+    features: ['inspection-report', 'full-width', 'blanks', 'checkboxes', 'locale', 'cjk'],
+    word: {
+      blocks: [
+        title('设备检查记录'),
+        para(
+          '每月第一周由值班人员检查一次消防设备，并在本表上记录检查结果。发现问题时，请在备注中写明并及时报告。',
+        ),
+        para(`检查日期：${blank(16)}`),
+        para(`检查人：${blank(16)}`),
+        para('灭火器是否正常？　□是　□否'),
+        para('应急灯是否正常？　□是　□否'),
+        para(`备注：${blank(24)}`),
+      ],
+    },
+  },
 ];

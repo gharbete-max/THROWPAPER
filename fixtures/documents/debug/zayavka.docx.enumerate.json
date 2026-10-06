@@ -1,0 +1,15 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "949fbe748da3d77be681b3ef990ad14737abfbe1ed84be77737a3fa05f34d3ce",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l3","rule":"R6b","verdict":"prose","subject":["p1-l3"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l4","rule":"R6b","verdict":"prose","subject":["p1-l4"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l5","rule":"R6b","verdict":"prose","subject":["p1-l5"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l6","rule":"R6b","verdict":"prose","subject":["p1-l6"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l7","rule":"R6b","verdict":"prose","subject":["p1-l7"],"evidence":{"closed":0,"relX":0,"width":9000}}
+  ]
+}

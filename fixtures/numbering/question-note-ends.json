@@ -1,0 +1,461 @@
+{
+  "fixture": "question-note-ends",
+  "caveats": [
+    "question-note-ends"
+  ],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S15",
+  "summary": "A question with a note in brackets after its question mark ends its sentence, as \"?\" alone does: on a scan, where OCR reads no blank, \"Hur många gäster tar du med? (max 4)\" did not stop the paragraph, and ran on into the question under it (#159, the corpus's scanned `membership`). §4.7 already reads such a line as asking; the paragraph rule now reads it as ending.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "image",
+      "extractor": "fixture: synthetic geometry, read as a scan (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "y0": 895,
+            "x1": 9000,
+            "y1": 1466,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 895,
+              "x1": 4496,
+              "y1": 1466
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Hur många gäster tar du med? (max 4)",
+                "words": [
+                  {
+                    "text": "Hur",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 895,
+                      "x1": 1276,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "många",
+                    "start": 4,
+                    "box": {
+                      "x0": 1368,
+                      "y0": 895,
+                      "x1": 1828,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "gäster",
+                    "start": 10,
+                    "box": {
+                      "x0": 1920,
+                      "y0": 895,
+                      "x1": 2472,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "tar",
+                    "start": 17,
+                    "box": {
+                      "x0": 2564,
+                      "y0": 895,
+                      "x1": 2840,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "du",
+                    "start": 21,
+                    "box": {
+                      "x0": 2932,
+                      "y0": 895,
+                      "x1": 3116,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "med?",
+                    "start": 24,
+                    "box": {
+                      "x0": 3208,
+                      "y0": 895,
+                      "x1": 3576,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "(max",
+                    "start": 29,
+                    "box": {
+                      "x0": 3668,
+                      "y0": 895,
+                      "x1": 4036,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "4)",
+                    "start": 34,
+                    "box": {
+                      "x0": 4128,
+                      "y0": 895,
+                      "x1": 4312,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 895,
+                  "x1": 4312,
+                  "y1": 1026
+                },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "ocr",
+                "ocrConfidence": 96,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Varför frågar vi efter ditt födelseår?",
+                "words": [
+                  {
+                    "text": "Varför",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1115,
+                      "x1": 1552,
+                      "y1": 1246
+                    },
+                    "baseline": 1220,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "frågar",
+                    "start": 7,
+                    "box": {
+                      "x0": 1644,
+                      "y0": 1115,
+                      "x1": 2196,
+                      "y1": 1246
+                    },
+                    "baseline": 1220,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "vi",
+                    "start": 14,
+                    "box": {
+                      "x0": 2288,
+                      "y0": 1115,
+                      "x1": 2472,
+                      "y1": 1246
+                    },
+                    "baseline": 1220,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "efter",
+                    "start": 17,
+                    "box": {
+                      "x0": 2564,
+                      "y0": 1115,
+                      "x1": 3024,
+                      "y1": 1246
+                    },
+                    "baseline": 1220,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "ditt",
+                    "start": 23,
+                    "box": {
+                      "x0": 3116,
+                      "y0": 1115,
+                      "x1": 3484,
+                      "y1": 1246
+                    },
+                    "baseline": 1220,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "födelseår?",
+                    "start": 28,
+                    "box": {
+                      "x0": 3576,
+                      "y0": 1115,
+                      "x1": 4496,
+                      "y1": 1246
+                    },
+                    "baseline": 1220,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1115,
+                  "x1": 4496,
+                  "y1": 1246
+                },
+                "baseline": 1220,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "ocr",
+                "ocrConfidence": 96,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Vi bjuder på kaffe efter mötet.",
+                "words": [
+                  {
+                    "text": "Vi",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1335,
+                      "x1": 1184,
+                      "y1": 1466
+                    },
+                    "baseline": 1440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "bjuder",
+                    "start": 3,
+                    "box": {
+                      "x0": 1276,
+                      "y0": 1335,
+                      "x1": 1828,
+                      "y1": 1466
+                    },
+                    "baseline": 1440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "på",
+                    "start": 10,
+                    "box": {
+                      "x0": 1920,
+                      "y0": 1335,
+                      "x1": 2104,
+                      "y1": 1466
+                    },
+                    "baseline": 1440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "kaffe",
+                    "start": 13,
+                    "box": {
+                      "x0": 2196,
+                      "y0": 1335,
+                      "x1": 2656,
+                      "y1": 1466
+                    },
+                    "baseline": 1440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "efter",
+                    "start": 19,
+                    "box": {
+                      "x0": 2748,
+                      "y0": 1335,
+                      "x1": 3208,
+                      "y1": 1466
+                    },
+                    "baseline": 1440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  },
+                  {
+                    "text": "mötet.",
+                    "start": 25,
+                    "box": {
+                      "x0": 3300,
+                      "y0": 1335,
+                      "x1": 3852,
+                      "y1": 1466
+                    },
+                    "baseline": 1440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": 96,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1335,
+                  "x1": 3852,
+                  "y1": 1466
+                },
+                "baseline": 1440,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "ocr",
+                "ocrConfidence": 96,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

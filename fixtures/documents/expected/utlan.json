@@ -1,0 +1,55 @@
+{
+  "document": "utlan",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Útlán á búnaði"
+    },
+    {
+      "kind": "instruction",
+      "text": "Félagsmenn geta fengið lánaðan búnað félagsins, til dæmis tjöld, prímusa og kort. Skráðu útlánið á þetta eyðublað og skilaðu búnaðinum hreinum á réttum degi."
+    },
+    {
+      "kind": "question",
+      "label": "Nafn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Kennitala",
+      "answer": "blank",
+      "type": "personnummer",
+      "format": {
+        "name": "is-kennitala",
+        "apply": false
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Búnaður",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Dagsetning útláns",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Dagsetning skila",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Undirskrift",
+      "answer": "blank",
+      "type": "signature"
+    }
+  ]
+}

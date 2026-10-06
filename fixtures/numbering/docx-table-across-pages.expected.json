@@ -1,0 +1,58 @@
+{
+  "fixture": "docx-table-across-pages",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "table",
+          "lineIds": [
+            "p1-l1",
+            "p1-l2",
+            "p1-l3",
+            "p1-l4",
+            "p1-l5",
+            "p2-l1"
+          ],
+          "label": "Mätningar",
+          "itemId": null,
+          "columns": [
+            "Datum",
+            "Tid"
+          ],
+          "rowCount": 3,
+          "shape": "repeating-rows",
+          "flags": []
+        },
+        {
+          "kind": "grid",
+          "lineIds": [
+            "p2-l2",
+            "p2-l3",
+            "p2-l4",
+            "p2-l5",
+            "p2-l6",
+            "p2-l7",
+            "p2-l8",
+            "p2-l9",
+            "p2-l10",
+            "p3-l1",
+            "p3-l2",
+            "p3-l3"
+          ],
+          "label": "Hur nöjd var du med festen?",
+          "itemId": null,
+          "rows": [
+            "Maten",
+            "Lokalen",
+            "Musiken"
+          ],
+          "columns": [
+            "Bra",
+            "Dålig"
+          ],
+          "flags": []
+        }
+      ]
+    }
+  }
+}

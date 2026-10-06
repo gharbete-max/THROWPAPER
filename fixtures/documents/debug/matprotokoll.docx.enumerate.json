@@ -1,0 +1,25 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "73f09bbe27a68368db9e7bb55e7d7683c5f9b9dc25fdc7076b52b07f3626cf06",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l3","rule":"R6b","verdict":"prose","subject":["p1-l3"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l4","rule":"R6b","verdict":"prose","subject":["p1-l4"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l5","rule":"P2","verdict":"skipped","subject":["p1-l5"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l6","rule":"P2","verdict":"skipped","subject":["p1-l6"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l7","rule":"P2","verdict":"skipped","subject":["p1-l7"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l8","rule":"P2","verdict":"skipped","subject":["p1-l8"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l9","rule":"P2","verdict":"skipped","subject":["p1-l9"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l10","rule":"P2","verdict":"skipped","subject":["p1-l10"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l11","rule":"P2","verdict":"skipped","subject":["p1-l11"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l12","rule":"P2","verdict":"skipped","subject":["p1-l12"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l13","rule":"P2","verdict":"skipped","subject":["p1-l13"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l14","rule":"P2","verdict":"skipped","subject":["p1-l14"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l15","rule":"P2","verdict":"skipped","subject":["p1-l15"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p2-l1","rule":"P2","verdict":"skipped","subject":["p2-l1"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p2-l2","rule":"R6b","verdict":"prose","subject":["p2-l2"],"evidence":{"closed":0,"relX":0,"width":8000}}
+  ]
+}

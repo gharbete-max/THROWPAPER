@@ -109,15 +109,19 @@ export const BOX = [...CHECKBOX_GLYPHS][0]!;
 
 /**
  * What Tesseract reads a printed square box as, having none among its characters (`SCANS.md`, B1).
- * Seen in the corpus's scans: "[", "0", and "[J", the box's left side and its right read as two.
+ * Seen in the corpus's scans: "[", "0", and "[J", the box's left side and its right read as two, and
+ * "DO", the same two sides read as letters (#160).
  * Punctuation that is never square as printed — a bracket, a bar, a parenthesis — read in a square
  * is not itself, alone or stuck to the word after it ("[Ja"). A zero or an O only alone: either may
  * begin a word. Never a letter at the start of a word: Tesseract's box for one character of a word
  * can take in the next ("lä" in "lämna" came back as one square "l").
  */
 const MARKS = ['[', ']', '|', '(', ')'];
-/** Read alone as a word. */
-const READ_AS_BOX_ALONE = new Set([...MARKS, '0', 'O']);
+/**
+ * Read alone as a word. "DO" only as a word of its own, and only square: as a word, two capitals
+ * are wider than they are tall, so "DO NOT" stays itself.
+ */
+const READ_AS_BOX_ALONE = new Set([...MARKS, '0', 'O', 'DO']);
 /** Read stuck to the word after it. */
 const READ_AS_BOX_FIRST = new Set([...MARKS, ...CHECKBOX_GLYPHS]);
 const isGlyph = (text: string) => [...text].length === 1 && CHECKBOX_GLYPHS.includes(text);

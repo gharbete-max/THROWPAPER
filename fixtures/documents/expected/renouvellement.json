@@ -1,0 +1,56 @@
+{
+  "document": "renouvellement",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Renouvellement de l'adhésion"
+    },
+    {
+      "kind": "instruction",
+      "text": "Votre adhésion arrive à échéance à la fin de l'année. Pour la renouveler, remplissez ce formulaire et joignez votre paiement. Le montant de la cotisation est le même que l'an dernier."
+    },
+    {
+      "kind": "question",
+      "label": "Nom et prénom",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Numéro d'adhérent",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Montant de la cotisation",
+      "answer": "blank",
+      "type": "money"
+    },
+    {
+      "kind": "question",
+      "label": "Mode de paiement",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Chèque",
+        "Virement",
+        "Espèces"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Date",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Signature",
+      "answer": "blank",
+      "type": "signature"
+    }
+  ]
+}

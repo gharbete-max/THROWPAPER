@@ -1,0 +1,61 @@
+{
+  "document": "incident",
+  "locale": "en",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Incident Report"
+    },
+    {
+      "kind": "instruction",
+      "text": "Use this form to report any accident, injury or near miss on club premises, however small. Fill it in as soon as you can after the incident, while you still remember what happened, and give it to a member of the committee."
+    },
+    {
+      "kind": "question",
+      "label": "Date of the incident",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Time",
+      "answer": "blank",
+      "type": "time"
+    },
+    {
+      "kind": "question",
+      "label": "Where did it happen?",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "What happened?",
+      "answer": "blank",
+      "type": "long_text"
+    },
+    {
+      "kind": "question",
+      "label": "Was anyone hurt?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Your name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Signature",
+      "answer": "blank",
+      "type": "signature"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "document": "matprotokoll",
+  "locale": "sv",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Mätprotokoll för kyl och frys"
+    },
+    {
+      "kind": "instruction",
+      "text": "Temperaturen i kylen och frysen ska mätas och skrivas upp varje dag. Kylen ska hålla högst åtta grader och frysen minst arton minusgrader. Om något värde är fel ska det skrivas under avvikelser, och den som har mätt ska alltid skriva sin signatur på raden."
+    },
+    {
+      "kind": "question",
+      "label": "Avdelning",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "table",
+      "label": "Mätningar",
+      "columns": [
+        "Datum",
+        "Tid",
+        "Kyl (°C)",
+        "Frys (°C)",
+        "Signatur"
+      ],
+      "rowCount": 7,
+      "type": "repeating_group"
+    },
+    {
+      "kind": "question",
+      "label": "Avvikelser och åtgärder",
+      "answer": "blank",
+      "type": "short_text"
+    }
+  ]
+}

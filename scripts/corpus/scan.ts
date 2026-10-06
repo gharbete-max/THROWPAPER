@@ -70,6 +70,15 @@ const SCANS: Scan[] = [
     record: /nyhetsbrev|Namn:|lämna/u,
   },
   { name: 'fotosamtycke', locale: 'sv-SE', skew: -0.4, pdf: true, record: /samtycker|lämna/u },
+  // S15: an English and a German document, each with a consent to tick.
+  { name: 'membership', locale: 'en-GB', skew: 0.3, pdf: false, record: /agree|Full name/u },
+  {
+    name: 'erste-hilfe',
+    locale: 'de-DE',
+    skew: -0.6,
+    pdf: false,
+    record: /einverstanden|Pflichtfeld/u,
+  },
 ];
 
 const only = process.argv.slice(2);

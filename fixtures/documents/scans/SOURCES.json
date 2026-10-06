@@ -3,6 +3,23 @@
   "tool": "pdfjs-dist@6.3.289 + Tesseract 5.1.0-288-g2a9c1",
   "scans": [
     {
+      "name": "erste-hilfe",
+      "from": "erste-hilfe.pdf",
+      "locale": "de-DE",
+      "dpi": 200,
+      "skew": -0.6,
+      "files": {
+        "png": {
+          "path": "erste-hilfe.png",
+          "sha256": "cf789d4b2c27d4054b8f7576e6fbd2142f877428b711d7582f9666f7189368ad"
+        },
+        "raw.json": {
+          "path": "erste-hilfe.raw.json",
+          "sha256": "f0026f90ad4962ae1baaec7c565af598c008bb606a26dded75956c4c8cdf5d4f"
+        }
+      }
+    },
+    {
       "name": "fotosamtycke",
       "from": "fotosamtycke.pdf",
       "locale": "sv-SE",
@@ -37,6 +54,23 @@
         "raw.json": {
           "path": "medlemsansokan.raw.json",
           "sha256": "683936fd4055813bd530bc6cba9b657b8d4525ebad317f39391b7747a7a98ed9"
+        }
+      }
+    },
+    {
+      "name": "membership",
+      "from": "membership.pdf",
+      "locale": "en-GB",
+      "dpi": 200,
+      "skew": 0.3,
+      "files": {
+        "png": {
+          "path": "membership.png",
+          "sha256": "bf12b9ea5848a8482d5c5dc73ef87a27eb85d3bf062563388c7e60622f0a3e34"
+        },
+        "raw.json": {
+          "path": "membership.raw.json",
+          "sha256": "dc6a1056ed2a95b45e2191d8b30b37f561cd51819f7c8eda1e180d961ba30cf6"
         }
       }
     }

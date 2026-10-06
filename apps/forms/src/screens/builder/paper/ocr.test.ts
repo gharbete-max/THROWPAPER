@@ -161,6 +161,20 @@ describe('a printed box read by OCR (B1)', () => {
     ]);
   });
 
+  // #160: the German scan's consent box came back as the two letters "DO", square and unsure.
+  it('is a box when its sides were read as the letters D and O, in a square', () => {
+    const lines = page(/erste-hilfe/, /einverstanden/);
+    expect(lines.lines.map((line) => line.text.split(' ')[0])).toEqual(['DO']);
+    const words = ocrWords(lines);
+    expect(words[0]).toMatchObject({ text: BOX, repair: { kind: 'box-mark', raw: 'DO' } });
+    expect(words[1]!.text).toBe('Ich');
+    // "DO" as a word is wider than it is tall: in a line of capitals it stays itself.
+    const word = lines.lines[0]!.words[0]!;
+    const wide = { ...word.bbox, x1: word.bbox.x0 + (word.bbox.y1 - word.bbox.y0) * 2 };
+    const capitals = { ...lines.lines[0]!, words: [{ ...word, bbox: wide }] };
+    expect(texts({ ...lines, lines: [capitals] })).toEqual(['DO']);
+  });
+
   it('leaves what is not the shape of a box', () => {
     // "1." is square, but it is two characters, and neither alone is a box.
     expect(texts(page(/medlemsansokan/, /Namn/))).toEqual(['1.', 'Namn:']);
