@@ -1,0 +1,16 @@
+{
+  "stage": "segment",
+  "stageVersion": 7,
+  "irVersion": 1,
+  "inputSha256": "464239831d327212a6a3d8bfdaf6c5a54dbf3cae256bdeea96adeb3694be134e",
+  "decisions": [
+    {"id":"segment:p1-l1","rule":"S1","verdict":"heading","subject":["p1-l1"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l2","rule":"S8","verdict":"instruction","subject":["p1-l2"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l3","rule":"S6","verdict":"question:blank","subject":["p1-l3"],"evidence":{"room":0}},
+    {"id":"segment:p1-l4","rule":"S6","verdict":"question:blank","subject":["p1-l4"],"evidence":{"room":0}},
+    {"id":"segment:p1-l5","rule":"S6","verdict":"question:blank","subject":["p1-l5"],"evidence":{"room":0}},
+    {"id":"segment:p1-l6","rule":"S6","verdict":"question:blank","subject":["p1-l6"],"evidence":{"room":0}},
+    {"id":"segment:p1-l7","rule":"S4","verdict":"question:boolean","subject":["p1-l7"],"evidence":{"options":2}},
+    {"id":"segment:p1-l8","rule":"S6","verdict":"question:blank","subject":["p1-l8"],"evidence":{"room":0}}
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in en. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "en",
+  "features": {
+    "nameWord": [
+      "name",
+      "full name",
+      "first name",
+      "last name",
+      "surname",
+      "forename",
+      "given name"
+    ],
+    "emailWord": ["email", "e-mail", "email address", "e-mail address"],
+    "phoneWord": [
+      "phone",
+      "telephone",
+      "mobile",
+      "phone number",
+      "mobile number",
+      "telephone number",
+      "tel",
+      "cell"
+    ],
+    "addressWord": ["address", "postal address", "home address", "street address"],
+    "dateWord": ["date", "date of birth", "birthday", "dob"],
+    "timeWord": ["time", "arrival time", "departure time"],
+    "numberWord": ["number of", "how many", "age", "quantity"],
+    "currencyHint": ["amount", "price", "fee", "cost", "£", "$", "€", "usd", "gbp", "eur"],
+    "personnummerWord": [
+      "social security number",
+      "national identity number",
+      "personal identity number"
+    ],
+    "orgNrWord": [
+      "company number",
+      "organisation number",
+      "organization number",
+      "company registration number"
+    ],
+    "signatureHint": ["signature", "sign here", "signed"],
+    "fileHint": ["attach*", "upload", "attachment"],
+    "consentHint": ["consent*", "i agree", "i accept", "gdpr", "i confirm"],
+    "commentWord": [
+      "comment*",
+      "remark*",
+      "other information",
+      "anything else",
+      "message",
+      "describe",
+      "additional information",
+      "notes"
+    ],
+    "selectAllPhrase": ["select all", "tick all", "all that apply", "more than one", "one or more"],
+    "repeatableHint": ["per person", "each participant", "for each", "per participant"],
+    "required": ["required", "mandatory", "compulsory", "must be completed"],
+    "optional": ["optional", "not required"],
+    "maxWords": ["max", "maximum", "at most", "up to", "no more than"],
+    "minWords": ["min", "minimum", "at least"]
+  },
+  "formats": {}
+}

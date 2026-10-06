@@ -9,6 +9,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -237,6 +238,83 @@ export const formShares = pgTable(
     uniqueIndex('form_shares_form_user_idx').on(table.formId, table.userId),
     /** "Shared with me" reads this way round. */
     index('form_shares_user_idx').on(table.userId),
+  ],
+);
+
+/**
+ * The guided builder's conversation about a form: one per form and author
+ * (`docs/plan/PREDICTIVE-BUILDER.md`, "The conversation"). Where it started and every step since —
+ * the resolved changes and their inverses — so a refresh, or a desktop restart, returns to the same
+ * question with the same trail. The builder's own working state: never published, never exported,
+ * and the draft itself still saves through `forms.draft_definition`.
+ *
+ * One JSON document, validated by `BuilderSession` in `@tp/shared/builder` on the way in; the
+ * rows are the author's and go with the form, the person, or the organisation.
+ *
+ * `version` is an optimistic lock. A save names the version it read, and a second tab that read an
+ * older one is refused rather than quietly overwriting the first one's answers.
+ */
+export const builderSessions = pgTable(
+  'builder_sessions',
+  {
+    formId: uuid('form_id')
+      .notNull()
+      .references(() => forms.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    session: jsonb('session').$type<Record<string, unknown>>().notNull(),
+    version: integer('version').notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.formId, table.userId] }),
+    check('builder_sessions_version_positive', sql`${table.version} > 0`),
+  ],
+);
+
+/**
+ * The organisation's learned aliases — ways its people say an answer that Loppa did not know,
+ * each remembered only because someone pressed "Remember" on that exact phrase
+ * (`docs/plan/INTENT-LADDER.md`, "Aliases"; S6). Built-in aliases ship with the code and are never
+ * stored here.
+ *
+ * `key` is the phrase as the ladder compares it (`keyOf`): one row per way of saying something, per
+ * language and question, so a phrase can never mean two answers of one question. `created_on` is a
+ * date and nothing more, and no column says who remembered it: a phrase can contain a name, and the
+ * row is the organisation's, not the person's. An administrator lists, deletes and exports them.
+ */
+export const builderAliases = pgTable(
+  'builder_aliases',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    phrase: text('phrase').notNull(),
+    key: text('key').notNull(),
+    nodeId: text('node_id').notNull(),
+    optionId: text('option_id').notNull(),
+    /** A primary language subtag: `sv`, `en`, `zh`. */
+    locale: text('locale').notNull(),
+    source: text('source').notNull(),
+    createdOn: date('created_on', { mode: 'string' }).notNull(),
+    /** How many times it was remembered: orders the administrator's list, nothing else. */
+    count: integer('count').notNull().default(1),
+    notes: text('notes').notNull().default(''),
+  },
+  (table) => [
+    uniqueIndex('builder_aliases_said_idx').on(
+      table.organisationId,
+      table.locale,
+      table.nodeId,
+      table.key,
+    ),
+    check('builder_aliases_source', sql`${table.source} in ('user-confirmed', 'imported')`),
+    check('builder_aliases_count_positive', sql`${table.count} > 0`),
   ],
 );
 

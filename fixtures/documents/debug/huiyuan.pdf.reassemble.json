@@ -1,0 +1,21 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "5f0bdbfc3ea4b58f788f2b439d403bace7594077f4fd2d28983825120f605a59",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":10,"y0":734,"y1":3652}},
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3"],"evidence":{}},
+    {"id":"reassemble:p1-b3","rule":"H1","verdict":"heading","subject":["p1-l4"],"evidence":{"body":131,"lines":1,"size":166}},
+    {"id":"reassemble:p1-l5-touch1","rule":"L3","verdict":"touching","subject":["p1-l5"],"evidence":{"parts":"1 + ．姓名： + ____________________","word":"1．姓名：____________________"}},
+    {"id":"reassemble:p1-l6-touch1","rule":"L3","verdict":"touching","subject":["p1-l6"],"evidence":{"parts":"2 + ．出生日期： + ________________","word":"2．出生日期：________________"}},
+    {"id":"reassemble:p1-b4","rule":"B1","verdict":"body","subject":["p1-l5","p1-l6"],"evidence":{}},
+    {"id":"reassemble:p1-b5","rule":"H1","verdict":"heading","subject":["p1-l7"],"evidence":{"body":131,"lines":1,"size":166}},
+    {"id":"reassemble:p1-l8-touch1","rule":"L3","verdict":"touching","subject":["p1-l8"],"evidence":{"parts":"3 + ．手机号码： + ________________","word":"3．手机号码：________________"}},
+    {"id":"reassemble:p1-l9-touch1","rule":"L3","verdict":"touching","subject":["p1-l9"],"evidence":{"parts":"4 + ．电子邮箱： + ________________","word":"4．电子邮箱：________________"}},
+    {"id":"reassemble:p1-l10-touch1","rule":"L3","verdict":"touching","subject":["p1-l10"],"evidence":{"parts":"5 + ．是否需要发票？","word":"5．是否需要发票？"}},
+    {"id":"reassemble:p1-b6","rule":"B1","verdict":"body","subject":["p1-l8","p1-l9","p1-l10"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1b","verdict":"zh","subject":[],"evidence":{"best":"zh","hits":12,"inScript":91,"letters":91,"own":12,"runnerUp":0,"script":"Han"}}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "stage": "classify",
+  "stageVersion": 4,
+  "irVersion": 1,
+  "inputSha256": "6121f8da77795452433b32557e9fdcf74d9cbe3c7a11db3c80bb0c21c706a22b",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"grid","subject":["p1-l3","p1-l4","p1-l5","p1-l6","p1-l7","p1-l8","p1-l9","p1-l10","p1-l11","p1-l12","p1-l13","p1-l14","p1-l15","p1-l16"],"evidence":{"confidence":1000,"features":"gridAlignment","margin":11500,"required":"unknown","runnerUp":"multi_select"}},
+    {"id":"classify:p1-l17","rule":"K1","verdict":"short_text","subject":["p1-l17"],"evidence":{"confidence":769,"features":"","margin":1200,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l18","rule":"K1","verdict":"date","subject":["p1-l18"],"evidence":{"confidence":924,"features":"dateWord","margin":2500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l19","rule":"K1","verdict":"long_text","subject":["p1-l19"],"evidence":{"confidence":909,"features":"commentWord","margin":2300,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

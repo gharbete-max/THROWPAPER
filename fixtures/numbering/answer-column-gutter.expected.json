@@ -1,0 +1,31 @@
+{
+  "fixture": "answer-column-gutter",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        { "text": "Namn: ____________________", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "Adress: ____________________", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        {
+          "text": "Postnummer och ort: ____________________",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Deltar du på middagen? ☐ Ja ☐ Nej",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Behöver du parkering? ☐ Ja ☐ Nej",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": []
+    },
+    "enumerateSummary": []
+  }
+}

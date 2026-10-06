@@ -1,0 +1,14 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "c8dd0e9f3be580ea25aeb2fb343f8f6947b804ed5497a08d6154657ba02674bb",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":4,"y0":895,"y1":1926}},
+    {"id":"reassemble:p1-l1-hyphen1","rule":"Y2","verdict":"joined-at-break","subject":["p1-l1"],"evidence":{"word":"CPR-nummer,"}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2"],"evidence":{}},
+    {"id":"reassemble:p1-l3-hyphen1","rule":"Y1","verdict":"dehyphenated","subject":["p1-l3"],"evidence":{"word":"medlemmer"}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l3","p1-l4"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"da","hits":11,"own":1,"runnerUp":0}}
+  ]
+}

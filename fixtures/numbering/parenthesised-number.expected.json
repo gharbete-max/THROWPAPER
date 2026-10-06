@@ -1,0 +1,88 @@
+{
+  "fixture": "parenthesised-number",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "(1)",
+            "family": "arabic",
+            "style": "enclosed",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "(2)",
+            "family": "arabic",
+            "style": "enclosed",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Adress",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l6"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "(a)",
+            "family": "alpha-lower",
+            "style": "enclosed",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Ja tack",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l7",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l7"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "(b)",
+            "family": "alpha-lower",
+            "style": "enclosed",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Nej tack",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l3", "p1-l4", "p1-l5"],
+      "skippedLineIds": []
+    }
+  }
+}

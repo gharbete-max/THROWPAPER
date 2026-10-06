@@ -1,0 +1,1173 @@
+{
+  "language": "zh",
+  "locale": "zh-CN",
+  "source": "docs/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. Chinese is read as character bigrams, which T3 never compares fuzzily, so there are no T3 rows. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
+  "rows": [
+    {
+      "phrase": "可以选多个",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T0"
+      },
+      "note": "the card's own label"
+    },
+    {
+      "phrase": "胶囊形",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "并排",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不要按钮",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "稍后决定",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不用了，就这些",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "必填",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "报名登记",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "深色",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "左上角，标题旁边",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "header-left",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "圆角",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "rounded",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "tile",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tile",
+        "tier": "T0"
+      },
+      "note": "an option id"
+    },
+    {
+      "phrase": "我要按钮",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "按钮谢谢",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "按钮不错",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      },
+      "note": "不错 is 'nice': 不 alone is not a negator"
+    },
+    {
+      "phrase": "不需要按钮",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "按钮不需要",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      },
+      "note": "in Chinese and Japanese the negator may stand on either side"
+    },
+    {
+      "phrase": "这个不是必须的吧",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "这个必填",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "这个选填",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "角落里",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "黑色的",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "并排显示",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "就这些了",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "no",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "跳过标志",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "later",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "使用标志",
+      "nodeId": "brand.start",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "只选一个吧",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "one",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "我希望这些按钮看起来像胶囊一样",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "pill",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "我们要办一个课程，大家需要提前报名",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "signup",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "这个问题每个人应该可以选多个答案",
+      "nodeId": "choice.answers",
+      "expect": {
+        "optionId": "many",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "把选项并排放在一起方便大家快速浏览",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "row",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "标志应该低调地放在页面的角落里",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "optionId": "corner-watermark",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "深色的风格很适合我们的晚会",
+      "nodeId": "brand.quick",
+      "expect": {
+        "optionId": "midnight",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "我觉得这个问题对大家来说完全是选填的",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "no",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "把它们放在问题下方排成长长的一列",
+      "nodeId": "choice.placement",
+      "expect": {
+        "optionId": "under-full",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "我们只是想了解大家对这次活动的看法",
+      "nodeId": "flow.start",
+      "expect": {
+        "optionId": "feedback",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "在这之后我还想再加一个问题",
+      "nodeId": "flow.more",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "每个参加者提交之前都必须回答这个问题",
+      "nodeId": "text.required",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "选项应该做成大的图块并且带图片",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tile",
+        "tier": "T2"
+      }
+    },
+    {
+      "phrase": "4",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "四",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "十二",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 12,
+        "tier": "T4"
+      },
+      "note": "十 composes: 十二 is 12"
+    },
+    {
+      "phrase": "四个",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "我要四个选项",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 4,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "两个",
+      "nodeId": "choice.count",
+      "expect": {
+        "value": 2,
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "3500 欧元",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "3500",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "€12.50",
+      "pattern": "currency",
+      "expect": {
+        "value": {
+          "amount": "12.50",
+          "currency": "EUR"
+        },
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "2026年5月1日",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "2026/5/1",
+      "pattern": "date",
+      "expect": {
+        "value": "2026-05-01",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "邮箱 wang@example.cn",
+      "pattern": "email",
+      "expect": {
+        "value": "wang@example.cn",
+        "tier": "T4"
+      }
+    },
+    {
+      "phrase": "一些",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "几个",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "很多",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "vague"
+      }
+    },
+    {
+      "phrase": "3或4",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "四十",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      }
+    },
+    {
+      "phrase": "不要四个",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "不是胶囊",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "不是只选一个",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "negated"
+      }
+    },
+    {
+      "phrase": "香蕉",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "nothing"
+      }
+    },
+    {
+      "phrase": "一个或多个",
+      "nodeId": "choice.answers",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "角落顶部",
+      "nodeId": "brand.logoSlot",
+      "expect": {
+        "ask": "ambiguous"
+      }
+    },
+    {
+      "phrase": "欢迎参加",
+      "nodeId": "text.label",
+      "expect": {
+        "ask": "not-readable"
+      }
+    },
+    {
+      "phrase": "2026年2月30日",
+      "pattern": "date",
+      "expect": {
+        "none": true
+      }
+    },
+    {
+      "phrase": "选项卡",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "tab",
+        "tier": "T0"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "请合并为一条",
+      "nodeId": "choice.shape",
+      "expect": {
+        "optionId": "segmented",
+        "tier": "T1"
+      },
+      "note": "S5: the tab and segmented shapes"
+    },
+    {
+      "phrase": "三个按钮，药丸形，并排",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "the demo sentence: four answers, each its own step"
+    },
+    {
+      "phrase": "四个按钮",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "one clause, two answers"
+    },
+    {
+      "phrase": "按钮，单选",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "5个按钮并排",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.buttons",
+            "optionId": "yes"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 5
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "three answers in one clause"
+    },
+    {
+      "phrase": "多选和标签页",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "many"
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tab"
+          }
+        ],
+        "tier": "T5"
+      },
+      "note": "cut at the conjunction"
+    },
+    {
+      "phrase": "单选，三个",
+      "nodeId": "choice.answers",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.answers",
+            "optionId": "one"
+          },
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "四个，方形",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 4
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "square"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "三个，圆角，xyzzy",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.shape",
+            "optionId": "rounded"
+          }
+        ],
+        "unused": [
+          "xyzzy"
+        ],
+        "tier": "T5"
+      },
+      "note": "a clause that answers nothing is shown back"
+    },
+    {
+      "phrase": "三个，药丸形，方形，并排",
+      "nodeId": "choice.count",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.count",
+            "value": 3
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "unused": [
+          "药丸形",
+          "方形"
+        ],
+        "tier": "T5"
+      },
+      "note": "two shapes contradict: the shape is left to ask"
+    },
+    {
+      "phrase": "药丸形，并排",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "pill"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "row"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "带图片和问题下方",
+      "nodeId": "choice.shape",
+      "expect": {
+        "fill": [
+          {
+            "nodeId": "choice.shape",
+            "optionId": "tile"
+          },
+          {
+            "nodeId": "choice.placement",
+            "optionId": "under-full"
+          }
+        ],
+        "tier": "T5"
+      }
+    },
+    {
+      "phrase": "红色，绿色，蓝色",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "红色",
+          "绿色",
+          "蓝色"
+        ],
+        "tier": "T6"
+      },
+      "note": "labels verbatim, the count the list’s"
+    },
+    {
+      "phrase": "小；中；大",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "小",
+          "中",
+          "大"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "苹果\n香蕉\n橙子",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "苹果",
+          "香蕉",
+          "橙子"
+        ],
+        "tier": "T6"
+      },
+      "note": "one line, one option"
+    },
+    {
+      "phrase": "1. 红色\n2. 绿色\n3. 蓝色",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "红色",
+          "绿色",
+          "蓝色"
+        ],
+        "tier": "T6"
+      },
+      "note": "a numbered list: the markers are not the labels"
+    },
+    {
+      "phrase": "• 小\n• 大",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "小",
+          "大"
+        ],
+        "tier": "T6"
+      },
+      "note": "a bulleted list"
+    },
+    {
+      "phrase": "a) 苹果\nb) 香蕉",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "苹果",
+          "香蕉"
+        ],
+        "tier": "T6"
+      },
+      "note": "lettered"
+    },
+    {
+      "phrase": "红色，绿色",
+      "nodeId": "choice.answers",
+      "expect": {
+        "list": [
+          "红色",
+          "绿色"
+        ],
+        "at": "choice.count",
+        "tier": "T6"
+      },
+      "note": "the options, for the question ahead that takes them"
+    },
+    {
+      "phrase": "苹果，香蕉，橙子，葡萄，西瓜",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "苹果",
+          "香蕉",
+          "橙子",
+          "葡萄",
+          "西瓜"
+        ],
+        "tier": "T6"
+      }
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L"
+        ],
+        "tier": "T6"
+      },
+      "note": "twelve, the most allowed"
+    },
+    {
+      "phrase": "3.50元；4.50元",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "3.50元",
+          "4.50元"
+        ],
+        "tier": "T6"
+      },
+      "note": "a semicolon lets an item keep its comma"
+    },
+    {
+      "phrase": "药丸形",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "pill"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "并排",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "四个",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.count",
+          "value": 4
+        },
+        "tier": "T7"
+      },
+      "note": "a number, for the question that counts"
+    },
+    {
+      "phrase": "多选",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.answers",
+          "optionId": "many"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "标签页",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "方形",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "square"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "问题下方",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "并排",
+      "nodeId": "choice.shape",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "问题下方",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "under-full"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "带图片",
+      "nodeId": "choice.answers",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tile"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "标签页",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.shape",
+          "optionId": "tab"
+        },
+        "tier": "T7"
+      }
+    },
+    {
+      "phrase": "药丸形，方形",
+      "nodeId": "choice.shape",
+      "expect": {
+        "ask": "ambiguous"
+      },
+      "note": "two shapes"
+    },
+    {
+      "phrase": "A, B, C, D, E, F, G, H, I, J, K, L, M",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "out-of-range"
+      },
+      "note": "thirteen: more than a question may have, and never cut"
+    },
+    {
+      "phrase": "药丸形，方形",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing",
+        "elsewhere": [
+          "choice.shape"
+        ]
+      },
+      "note": "two shapes, not two options: offered, never guessed"
+    },
+    {
+      "phrase": "星期一，星期二，星期三",
+      "nodeId": "choice.count",
+      "expect": {
+        "list": [
+          "星期一",
+          "星期二",
+          "星期三"
+        ],
+        "tier": "T6"
+      },
+      "note": "a numeral inside a word is part of the word: 星期二 is Tuesday, not 2"
+    },
+    {
+      "phrase": "排成一行",
+      "nodeId": "choice.count",
+      "expect": {
+        "guess": {
+          "nodeId": "choice.placement",
+          "optionId": "row"
+        },
+        "tier": "T7"
+      },
+      "note": "一行 is a row, not the number 1"
+    },
+    {
+      "phrase": "十分好",
+      "nodeId": "choice.count",
+      "expect": {
+        "ask": "nothing"
+      },
+      "note": "十分 is \"very\", not ten"
+    },
+    {
+      "phrase": "是",
+      "nodeId": "guess.date",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      },
+      "note": "a guess question's yes, its card's own label (S11)"
+    },
+    {
+      "phrase": "否",
+      "nodeId": "guess.signature",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不知道",
+      "nodeId": "guess.pay",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      },
+      "note": "\"not sure\" is an answer that says nothing, never a no"
+    },
+    {
+      "phrase": "不确定",
+      "nodeId": "guess.research",
+      "expect": {
+        "optionId": "unsure",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "对",
+      "nodeId": "guess.meeting",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "是，一次一个",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不用了",
+      "nodeId": "import.walk",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "下一个",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "yes",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "不，到此为止",
+      "nodeId": "import.next",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "几句话",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T0"
+      },
+      "note": "S13, \"How should people answer?\": the card's own label"
+    },
+    {
+      "phrase": "我要较长回答",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "paragraph",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "复选框",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "tick",
+        "tier": "T0"
+      }
+    },
+    {
+      "phrase": "只要一行",
+      "nodeId": "text.kind",
+      "expect": {
+        "optionId": "line",
+        "tier": "T1"
+      }
+    },
+    {
+      "phrase": "不用按钮",
+      "nodeId": "choice.buttons",
+      "expect": {
+        "optionId": "no",
+        "tier": "T0"
+      },
+      "note": "the card's label since graph version 7"
+    }
+  ]
+}

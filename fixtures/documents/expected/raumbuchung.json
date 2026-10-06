@@ -1,0 +1,74 @@
+{
+  "document": "raumbuchung",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Buchung eines Raumes im Vereinsheim"
+    },
+    {
+      "kind": "instruction",
+      "text": "Mitglieder können die Räume des Vereinsheims für private Feiern und Treffen buchen. Bitte füllen Sie das Formular aus und geben Sie es spätestens zwei Wochen vor dem gewünschten Termin beim Hausverwalter ab. Die Buchung gilt erst, wenn sie bestätigt wurde."
+    },
+    {
+      "kind": "question",
+      "label": "Name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Datum",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Uhrzeit von",
+      "answer": "blank",
+      "type": "time",
+      "flags": [
+        "split-line"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "bis",
+      "answer": "blank",
+      "type": "short_text",
+      "flags": [
+        "split-line"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Anzahl der Gäste (höchstens 40)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 40
+        }
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Raum",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Saal",
+        "Küche",
+        "Gruppenraum"
+      ]
+    }
+  ]
+}

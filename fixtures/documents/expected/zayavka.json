@@ -1,0 +1,50 @@
+{
+  "document": "zayavka",
+  "locale": "ru",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Заявка на участие"
+    },
+    {
+      "kind": "instruction",
+      "text": "Чтобы принять участие в мастер-классе, заполните заявку и передайте её администратору клуба. Мы свяжемся с вами и подтвердим время занятия."
+    },
+    {
+      "kind": "question",
+      "label": "ФИО",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Телефон",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Электронная почта",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Удобное время",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Утро",
+        "День",
+        "Вечер"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Комментарий",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

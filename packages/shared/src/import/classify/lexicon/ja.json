@@ -1,0 +1,28 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in ja. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "ja",
+  "features": {
+    "nameWord": ["氏名", "名前", "お名前"],
+    "emailWord": ["メールアドレス", "メール", "電子メール"],
+    "phoneWord": ["電話番号", "電話", "携帯"],
+    "addressWord": ["住所", "所在地"],
+    "dateWord": ["日付", "生年月日", "年月日", "利用日", "記入日", "申込日", "提出日"],
+    "timeWord": ["時間", "時刻"],
+    "numberWord": ["人数", "数量", "年齢", "何名"],
+    "currencyHint": ["金額", "料金", "円", "価格"],
+    "personnummerWord": ["マイナンバー", "個人番号"],
+    "orgNrWord": ["法人番号"],
+    "signatureHint": ["署名", "サイン"],
+    "fileHint": ["添付", "アップロード"],
+    "consentHint": ["同意", "承諾"],
+    "commentWord": ["備考", "ご意見", "メッセージ", "その他"],
+    "selectAllPhrase": ["複数回答", "複数選択"],
+    "repeatableHint": ["一人につき", "参加者ごと"],
+    "required": ["必須"],
+    "optional": ["任意"],
+    "maxWords": ["最大", "最多"],
+    "minWords": ["最低", "最小"]
+  },
+  "formats": {}
+}

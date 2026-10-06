@@ -1,0 +1,64 @@
+{
+  "document": "kursangebot",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Umfrage zum Kursangebot"
+    },
+    {
+      "kind": "instruction",
+      "text": "Die Volkshochschule plant das Programm für das nächste Jahr und möchte wissen, welche Kurse Sie interessieren. Sie können so viele Kurse ankreuzen, wie Sie möchten. Die Umfrage ist anonym, und wir werten sie nur für die Planung aus."
+    },
+    {
+      "kind": "question",
+      "label": "Welche Kurse würden Sie besuchen? (Mehrfachnennungen möglich)",
+      "answer": "choice",
+      "type": "multi_select",
+      "options": [
+        "Aquarellmalerei",
+        "Bogenschießen",
+        "Brotbacken",
+        "Buchbinden",
+        "Chorgesang",
+        "Computerkurs",
+        "Drechseln",
+        "Englisch",
+        "Erste Hilfe",
+        "Fotografie",
+        "Französisch",
+        "Gitarre",
+        "Gärtnern",
+        "Häkeln",
+        "Italienisch",
+        "Jonglieren",
+        "Kalligrafie",
+        "Klavier",
+        "Kochen",
+        "Nähen",
+        "Ölmalerei",
+        "Origami",
+        "Pilates",
+        "Russisch",
+        "Schach",
+        "Schreinern",
+        "Schwimmen",
+        "Spanisch",
+        "Stricken",
+        "Tanzen",
+        "Töpfern",
+        "Yoga"
+      ],
+      "flags": [
+        "many-options"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Weitere Wünsche",
+      "answer": "blank",
+      "type": "short_text"
+    }
+  ]
+}

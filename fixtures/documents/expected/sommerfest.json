@@ -1,0 +1,94 @@
+{
+  "document": "sommerfest",
+  "locale": "de",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Name: ______________________________",
+      "verdict": "accept-flagged",
+      "flags": [
+        "sequence-jump"
+      ]
+    },
+    {
+      "marker": "2.",
+      "label": "Telefon: ____________________________",
+      "verdict": "accept-flagged",
+      "flags": [
+        "sequence-jump"
+      ]
+    },
+    {
+      "marker": "3.",
+      "label": "Anzahl der Personen: ________________",
+      "verdict": "accept-flagged",
+      "flags": [
+        "sequence-jump"
+      ]
+    },
+    {
+      "marker": "5.",
+      "label": "Bringen Sie einen Kuchen mit? ☐ Ja ☐ Nein",
+      "verdict": "accept-flagged",
+      "flags": [
+        "sequence-jump"
+      ]
+    },
+    {
+      "marker": "6.",
+      "label": "Unterschrift: __________________________",
+      "verdict": "accept-flagged",
+      "flags": [
+        "sequence-jump"
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmeldung zum Sommerfest"
+    },
+    {
+      "kind": "instruction",
+      "text": "Wie in jedem Jahr feiert der Verein im Juli sein Sommerfest auf dem Platz hinter dem Vereinsheim. Damit wir genug Essen und Getränke einkaufen können, bitten wir alle Mitglieder, sich mit diesem Formular anzumelden. Gäste sind herzlich willkommen, wenn sie mit einem Mitglied kommen."
+    },
+    {
+      "kind": "question",
+      "label": "Name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Anzahl der Personen",
+      "answer": "blank",
+      "type": "number"
+    },
+    {
+      "kind": "question",
+      "label": "Bringen Sie einen Kuchen mit?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nein"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Unterschrift",
+      "answer": "blank",
+      "type": "signature"
+    },
+    {
+      "kind": "instruction",
+      "text": "Bitte geben Sie das Formular bis zum 15. Juni beim Vorstand ab."
+    }
+  ]
+}

@@ -78,6 +78,11 @@ deliberately rather than squeezing in beside a segment.
 **A14.** Hardening: rate limits, bot protection, permissions matrix, GDPR export and erasure,
 backup and restore rehearsal, load test of the grid and bulk PDF generation.
 
+**A5+ — the predictive builder and document import (built 2026-09-25 to 2026-10-06, PR #147).** A
+guided, click-through conversation as the way into A5's builder, and paper, Word, pasted text, a
+scan or a photograph turned into a reviewed draft. Planned in `docs/plan/` with its own milestones
+(`docs/plan/ROADMAP.md`); its decisions are ADRs 0017–0021, accepted on 2026-10-06.
+
 **A15.** Field styling and media.
 
 *A15a — choice appearance. Done.* `single_select` renders as a dropdown, radio buttons, buttons or

@@ -1,0 +1,27 @@
+{
+  "fixture": "layout-shift-within-document",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        { "text": "ANMÄLAN TILL ÅRSMÖTET", "pageNo": 1, "columnIndex": 0, "role": "heading" },
+        {
+          "text": "Fyll i alla uppgifter nedan och lämna blanketten i receptionen senast fredag.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "1. Namn", "pageNo": 1, "columnIndex": 1, "role": "body" },
+        { "text": "2. Adress", "pageNo": 1, "columnIndex": 1, "role": "body" },
+        { "text": "3. Telefon", "pageNo": 1, "columnIndex": 2, "role": "body" },
+        { "text": "4. E-post", "pageNo": 1, "columnIndex": 2, "role": "body" }
+      ],
+      "repairs": []
+    },
+    "enumerateSummary": [
+      { "raw": "1.", "label": "Namn", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Adress", "level": 1, "verdict": "accept" },
+      { "raw": "3.", "label": "Telefon", "level": 1, "verdict": "accept" },
+      { "raw": "4.", "label": "E-post", "level": 1, "verdict": "accept" }
+    ]
+  }
+}

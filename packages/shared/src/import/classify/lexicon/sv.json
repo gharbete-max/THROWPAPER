@@ -1,0 +1,76 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in sv. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "sv",
+  "features": {
+    "nameWord": ["namn", "förnamn", "efternamn", "*namn", "för- och efternamn", "namnet"],
+    "emailWord": [
+      "e-post",
+      "epost",
+      "e-postadress",
+      "epostadress",
+      "mejl",
+      "mejladress",
+      "mail",
+      "mailadress",
+      "e-mail",
+      "e-mailadress",
+      "e-postadressen"
+    ],
+    "phoneWord": ["telefon*", "*telefon", "tel", "tfn", "mobil*", "mobilnr", "telefonnumret"],
+    "addressWord": ["adress", "*adress", "gatuadress", "utdelningsadress", "adressen"],
+    "dateWord": ["datum", "*datum", "födelsedag", "datumet"],
+    "timeWord": ["tid", "klockslag", "tidpunkt", "ankomsttid", "avresetid", "starttid"],
+    "numberWord": ["antal", "hur många", "ålder"],
+    "currencyHint": [
+      "kr",
+      "kronor",
+      "sek",
+      "belopp",
+      "summa",
+      "avgift",
+      "pris",
+      "moms",
+      "€",
+      "eur",
+      "beloppet"
+    ],
+    "personnummerWord": ["personnummer", "personnr", "pers.nr", "samordningsnummer"],
+    "orgNrWord": ["organisationsnummer", "org.nr", "orgnr", "org nr"],
+    "signatureHint": ["underskrift", "*underskrift", "namnteckning", "signatur"],
+    "fileHint": ["bifoga*", "ladda upp", "bilaga", "bilagor"],
+    "consentHint": ["samtycke*", "samtycker", "godkänner", "gdpr", "intygar"],
+    "commentWord": [
+      "övrigt",
+      "kommentar*",
+      "anmärkning*",
+      "meddelande",
+      "övriga upplysningar",
+      "beskriv*",
+      "motivering"
+    ],
+    "selectAllPhrase": [
+      "flera svar",
+      "välj en eller flera",
+      "kryssa i alla",
+      "alla som passar",
+      "flera alternativ"
+    ],
+    "repeatableHint": ["per person", "varje deltagare", "för varje", "per deltagare"],
+    "required": ["obligatorisk*", "måste fyllas i", "ska fyllas i", "krävs"],
+    "optional": [
+      "frivillig*",
+      "valfri*",
+      "ej obligatorisk",
+      "inte obligatorisk",
+      "ej obligatoriskt",
+      "inte obligatoriskt"
+    ],
+    "maxWords": ["max", "högst", "maximalt", "upp till"],
+    "minWords": ["min", "minst"]
+  },
+  "formats": {
+    "personnummerWord": "se-personnummer",
+    "orgNrWord": "se-orgnr"
+  }
+}

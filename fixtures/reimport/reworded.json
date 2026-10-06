@@ -1,0 +1,94 @@
+{
+  "note": "One question reworded in place ('du' to 'ni'): Dice 34/40 of their bigrams, at least 4/5, at the same ordinal. Asked; the person takes the document's wording.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon"
+    },
+    {
+      "id": "q-dag-ni",
+      "family": "question",
+      "text": "Vilken dag kommer ni?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      },
+      {
+        "formId": "q-telefon",
+        "by": "id"
+      },
+      {
+        "formId": "q-dag",
+        "by": "wording"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [
+      3
+    ],
+    "gone": [],
+    "moved": []
+  },
+  "choices": {
+    "addBack": [],
+    "reword": [
+      3
+    ],
+    "remove": [],
+    "move": []
+  },
+  "plan": {
+    "place": [],
+    "reword": [
+      3
+    ],
+    "remove": []
+  }
+}

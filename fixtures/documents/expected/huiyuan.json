@@ -1,0 +1,78 @@
+{
+  "document": "huiyuan",
+  "locale": "zh",
+  "items": [
+    {
+      "marker": "1．",
+      "label": "姓名：____________________"
+    },
+    {
+      "marker": "2．",
+      "label": "出生日期：________________"
+    },
+    {
+      "marker": "3．",
+      "label": "手机号码：________________"
+    },
+    {
+      "marker": "4．",
+      "label": "电子邮箱：________________"
+    },
+    {
+      "marker": "5．",
+      "label": "是否需要发票？ □是 □否"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "会员登记表"
+    },
+    {
+      "kind": "instruction",
+      "text": "欢迎加入我们的协会。请认真填写以下信息，并在月底之前交到秘书处。我们只会将这些信息用于会员管理，不会提供给任何第三方。"
+    },
+    {
+      "kind": "heading",
+      "text": "一、基本信息"
+    },
+    {
+      "kind": "question",
+      "label": "姓名",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "出生日期",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "heading",
+      "text": "二、联系方式"
+    },
+    {
+      "kind": "question",
+      "label": "手机号码",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "电子邮箱",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "是否需要发票？",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "是",
+        "否"
+      ]
+    }
+  ]
+}

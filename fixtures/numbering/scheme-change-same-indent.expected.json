@@ -1,0 +1,160 @@
+{
+  "fixture": "scheme-change-same-indent",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Ett",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Två",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "3.", "family": "arabic", "style": "dot", "path": [3], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Tre",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l4",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "i.",
+            "family": "roman-lower",
+            "style": "dot",
+            "path": [1],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l3",
+          "label": "Första",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l5",
+          "runId": "r-p1-l4",
+          "lineIds": ["p1-l5"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "ii.",
+            "family": "roman-lower",
+            "style": "dot",
+            "path": [2],
+            "wordCount": 1
+          },
+          "level": 2,
+          "parentId": "i-p1-l3",
+          "label": "Andra",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l6"],
+          "detailLineIds": [],
+          "marker": { "raw": "4.", "family": "arabic", "style": "dot", "path": [4], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Fyra",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l8",
+          "runId": "r-p1-l8",
+          "lineIds": ["p1-l8"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Ett",
+          "verdict": "accept-flagged",
+          "flags": ["scheme-inconsistent"],
+          "decidedBy": "D2"
+        },
+        {
+          "id": "i-p1-l9",
+          "runId": "r-p1-l8",
+          "lineIds": ["p1-l9"],
+          "detailLineIds": [],
+          "marker": { "raw": "2.", "family": "arabic", "style": "dot", "path": [2], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Två",
+          "verdict": "accept-flagged",
+          "flags": ["scheme-inconsistent"],
+          "decidedBy": "D2"
+        },
+        {
+          "id": "i-p1-l10",
+          "runId": "r-p1-l8",
+          "lineIds": ["p1-l10"],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "iii.",
+            "family": "roman-lower",
+            "style": "dot",
+            "path": [3],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Tre",
+          "verdict": "accept-flagged",
+          "flags": ["scheme-inconsistent"],
+          "decidedBy": "D2"
+        },
+        {
+          "id": "i-p1-l11",
+          "runId": "r-p1-l8",
+          "lineIds": ["p1-l11"],
+          "detailLineIds": [],
+          "marker": { "raw": "4.", "family": "arabic", "style": "dot", "path": [4], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Fyra",
+          "verdict": "accept-flagged",
+          "flags": ["scheme-inconsistent"],
+          "decidedBy": "D2"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l7"],
+      "skippedLineIds": []
+    }
+  }
+}

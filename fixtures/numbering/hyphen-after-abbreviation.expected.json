@@ -1,0 +1,45 @@
+{
+  "fixture": "hyphen-after-abbreviation",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "Vi har brug for dit navn, din adresse, din e-mail og dit telefonnummer samt dit CPR-nummer,",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "før du kan blive medlem.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Skriv tydeligt med blokbogstaver, så bestyrelsen nemt kan læse navnene på alle medlemmer",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "i husstanden.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": [
+        {
+          "word": "CPR-nummer,",
+          "kind": "joined-at-break",
+          "raw": "CPR-\nnummer,"
+        },
+        {
+          "word": "medlemmer",
+          "kind": "dehyphenated",
+          "raw": "medlem-\nmer"
+        }
+      ]
+    }
+  }
+}

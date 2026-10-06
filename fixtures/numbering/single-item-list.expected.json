@@ -1,0 +1,51 @@
+{
+  "fixture": "single-item-list",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l2",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn: ______________",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D3"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l4",
+          "lineIds": ["p1-l4"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "candidate",
+          "flags": ["single-item"],
+          "decidedBy": "D3"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l6",
+          "lineIds": ["p1-l6"],
+          "detailLineIds": [],
+          "marker": { "raw": "1.", "family": "arabic", "style": "dot", "path": [1], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Namn",
+          "verdict": "candidate",
+          "flags": ["single-item"],
+          "decidedBy": "D3"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l1", "p1-l3", "p1-l5"],
+      "skippedLineIds": []
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "document": "event-registration",
+  "locale": "en",
+  "items": [
+    {
+      "marker": "I.",
+      "label": "About you",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Full name: ______________________________"
+        },
+        {
+          "marker": "2.",
+          "label": "Email address: __________________________"
+        },
+        {
+          "marker": "3.",
+          "label": "Voice part",
+          "items": [
+            {
+              "marker": "(a)",
+              "label": "Soprano"
+            },
+            {
+              "marker": "(b)",
+              "label": "Alto"
+            },
+            {
+              "marker": "(c)",
+              "label": "Tenor"
+            },
+            {
+              "marker": "(d)",
+              "label": "Bass"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "marker": "II.",
+      "label": "Workshops",
+      "items": [
+        {
+          "marker": "1.",
+          "label": "Which sessions will you attend? Tick them in the table below."
+        },
+        {
+          "marker": "2.",
+          "label": "Dietary requirements: ____________________"
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Summer Workshop Registration"
+    },
+    {
+      "kind": "instruction",
+      "text": "Thank you for your interest in the summer workshop. Please fill in this form and return it to the choir office by 1 May. We need to know which voice part you sing and which sessions you would like to attend, so that we can plan the rooms and the music. If you have any questions, the office will be happy to help."
+    },
+    {
+      "kind": "heading",
+      "text": "About you"
+    },
+    {
+      "kind": "question",
+      "label": "Full name",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Email address",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Voice part",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Soprano",
+        "Alto",
+        "Tenor",
+        "Bass"
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "Workshops"
+    },
+    {
+      "kind": "grid",
+      "label": "Which sessions will you attend? Tick them in the table below.",
+      "rows": [
+        "Warm-up and breathing Saturday",
+        "Sight-reading Saturday",
+        "Performance practice Sunday"
+      ],
+      "columns": [
+        "Attend"
+      ],
+      "type": "multi_select",
+      "flags": [
+        "label-by-reference"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Dietary requirements",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "instruction",
+      "text": "Please return this form to the choir office by 1 May."
+    }
+  ]
+}

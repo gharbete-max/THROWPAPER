@@ -1,0 +1,21 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "9115589fdf583782a3f18420ba2d7a3ace8aa2fa7b36cb22dae18fc9e1be8833",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l3","rule":"P3b","verdict":"prose","subject":["p1-l3","p1-l2"],"evidence":{"previousRelX":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l4","rule":"R2","verdict":"item","subject":["p1-l4"],"evidence":{"closed":0,"family":"arabic","level":1,"path":"1","production":"M1","raw":"1.","relX":119,"run":"r-p1-l4","width":8092}},
+    {"id":"enumerate:p1-l5","rule":"R1","verdict":"item","subject":["p1-l5"],"evidence":{"family":"arabic","level":1,"path":"2","production":"M1","raw":"2.","relX":119,"run":"r-p1-l4","width":8092}},
+    {"id":"enumerate:p1-l6","rule":"R1","verdict":"item","subject":["p1-l6"],"evidence":{"family":"arabic","level":1,"path":"3","production":"M1","raw":"3.","relX":119,"run":"r-p1-l4","width":8092}},
+    {"id":"enumerate:p1-l7","rule":"R1","verdict":"item","subject":["p1-l7"],"evidence":{"family":"arabic","level":1,"path":"4","production":"M1","raw":"4.","relX":119,"run":"r-p1-l4","width":8092}},
+    {"id":"enumerate:p1-l8","rule":"R1","verdict":"item","subject":["p1-l8"],"evidence":{"family":"arabic","level":1,"path":"5","production":"M1","raw":"5.","relX":119,"run":"r-p1-l4","width":8092}},
+    {"id":"enumerate:i-p1-l4","rule":"D1","verdict":"accept","subject":["i-p1-l4"],"evidence":{"flags":"","run":"r-p1-l4","runItems":5}},
+    {"id":"enumerate:i-p1-l5","rule":"D1","verdict":"accept","subject":["i-p1-l5"],"evidence":{"flags":"","run":"r-p1-l4","runItems":5}},
+    {"id":"enumerate:i-p1-l6","rule":"D1","verdict":"accept","subject":["i-p1-l6"],"evidence":{"flags":"","run":"r-p1-l4","runItems":5}},
+    {"id":"enumerate:i-p1-l7","rule":"D1","verdict":"accept","subject":["i-p1-l7"],"evidence":{"flags":"","run":"r-p1-l4","runItems":5}},
+    {"id":"enumerate:i-p1-l8","rule":"D1","verdict":"accept","subject":["i-p1-l8"],"evidence":{"flags":"","run":"r-p1-l4","runItems":5}}
+  ]
+}

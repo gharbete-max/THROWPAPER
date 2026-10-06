@@ -1,0 +1,93 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5 and §7. Integer millinats. A kind's score is its bias plus the weight of each of its features the question has; the best of the kinds its answer allows wins, and its confidence is sigmoid(best - runner-up) from interpret/sigmoid.json. With no feature at all, short_text beats long_text by 1200 millinats: confidence 769, the flag bucket - 'I guessed the answer type'. The score section is stage 7: a question's own confidence is sigmoid of the sum of its contributions, then the caps.",
+  "weightsVersion": 1,
+  "candidates": {
+    "blank": [
+      "short_text",
+      "long_text",
+      "number",
+      "money",
+      "date",
+      "time",
+      "email",
+      "phone",
+      "address",
+      "personnummer",
+      "orgnr",
+      "file",
+      "signature"
+    ],
+    "unknown": [
+      "short_text",
+      "long_text",
+      "number",
+      "money",
+      "date",
+      "time",
+      "email",
+      "phone",
+      "address",
+      "personnummer",
+      "orgnr",
+      "file",
+      "signature"
+    ],
+    "boolean": ["yes_no", "consent"],
+    "choice": ["single_select", "multi_select"],
+    "grid": ["grid", "multi_select"],
+    "table": ["repeating_group"]
+  },
+  "kinds": {
+    "short_text": { "bias": 0, "features": { "nameWord": 2500 } },
+    "long_text": {
+      "bias": -1200,
+      "features": { "commentWord": 3500, "multiLineBlank": 3000, "longPromptNoBlank": 1500 }
+    },
+    "number": { "bias": -3000, "features": { "numberWord": 5500 } },
+    "money": { "bias": -3500, "features": { "currencyHint": 6000 } },
+    "date": { "bias": -3000, "features": { "dateWord": 5500, "datePattern": 5500 } },
+    "time": { "bias": -3500, "features": { "timeWord": 5000, "timeSlotPattern": 4500 } },
+    "email": { "bias": -3000, "features": { "emailWord": 6000 } },
+    "phone": { "bias": -3000, "features": { "phoneWord": 6000 } },
+    "address": { "bias": -3000, "features": { "addressWord": 5000 } },
+    "personnummer": { "bias": -3500, "features": { "personnummerWord": 7000 } },
+    "orgnr": { "bias": -3500, "features": { "orgNrWord": 7000 } },
+    "file": { "bias": -4000, "features": { "fileHint": 6500 } },
+    "signature": { "bias": -4000, "features": { "signatureHint": 7000 } },
+    "yes_no": {
+      "bias": -5000,
+      "features": { "booleanPair": 9000, "singleCheckbox": 7000, "answerBoolean": 500 }
+    },
+    "consent": {
+      "bias": -5000,
+      "features": { "consentHint": 7000, "singleCheckbox": 3000, "answerBoolean": 500 }
+    },
+    "single_select": { "bias": -5000, "features": { "answerChoice": 8000 } },
+    "multi_select": {
+      "bias": -5500,
+      "features": { "answerChoice": 8000, "selectAllPhrase": 2000, "gridSingleColumn": 12000 }
+    },
+    "grid": { "bias": -8000, "features": { "gridAlignment": 14000 } },
+    "repeating_group": { "bias": -8000, "features": { "tableRows": 14000 } }
+  },
+  "score": {
+    "bias": 500,
+    "verdict": { "accept": 1500, "accept-flagged": 300, "candidate": -1500, "W1": 3000 },
+    "evidence": {
+      "blank": 1500,
+      "checkbox": 1500,
+      "colon": 500,
+      "questionMark": 300,
+      "grid": 3000,
+      "table": 3000
+    },
+    "flags": {
+      "label-by-reference": -800,
+      "many-options": -2500,
+      "same-as-earlier": -300,
+      "split-line": -300
+    },
+    "text": { "heading": 2500, "meta": 2500, "instruction": 2500, "shortInstruction": 800 },
+    "required": { "hint": 3000, "none": 850 }
+  }
+}

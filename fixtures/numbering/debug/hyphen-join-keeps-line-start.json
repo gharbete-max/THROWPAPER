@@ -1,0 +1,12 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "bb0ba3f2274c84a885dae7e89a1e648264a207188c1d71511af67c9ebd2959e0",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":3,"y0":895,"y1":1386}},
+    {"id":"reassemble:p1-l2-hyphen1","rule":"Y2","verdict":"joined-at-break","subject":["p1-l2"],"evidence":{"word":"e-postadress"}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2","p1-l3"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"sv","hits":10,"own":5,"runnerUp":0}}
+  ]
+}

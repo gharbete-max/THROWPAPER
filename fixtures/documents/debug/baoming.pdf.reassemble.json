@@ -1,0 +1,16 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "319161b2c6a72f4c625bb2786efdf9cb04f2c51d87ed8ec4cc2b7cca9fb5a0b2",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":7,"y0":734,"y1":2491}},
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-l4-touch1","rule":"L3","verdict":"touching","subject":["p1-l4"],"evidence":{"parts":"1 + 、姓名： + ____________________","word":"1、姓名：____________________"}},
+    {"id":"reassemble:p1-l5-touch1","rule":"L3","verdict":"touching","subject":["p1-l5"],"evidence":{"parts":"2 + 、手机号码： + ________________","word":"2、手机号码：________________"}},
+    {"id":"reassemble:p1-l6-touch1","rule":"L3b","verdict":"touching","subject":["p1-l6"],"evidence":{"parts":"3 + 、参加人数（最多 + 8 + 人）： + ________","word":"3、参加人数（最多8人）：________"}},
+    {"id":"reassemble:p1-l7-touch1","rule":"L3","verdict":"touching","subject":["p1-l7"],"evidence":{"parts":"4 + 、备注： + ________________________","word":"4、备注：________________________"}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3","p1-l4","p1-l5","p1-l6","p1-l7"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1b","verdict":"zh","subject":[],"evidence":{"best":"zh","hits":4,"inScript":66,"letters":66,"own":4,"runnerUp":0,"script":"Han"}}
+  ]
+}

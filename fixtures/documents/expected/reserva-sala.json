@@ -1,0 +1,66 @@
+{
+  "document": "reserva-sala",
+  "locale": "es",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Nombre: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Teléfono: ____________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Fecha: ______________________________"
+    },
+    {
+      "marker": "4.",
+      "label": "¿Qué sala necesita?",
+      "details": [
+        "☐ Sala grande",
+        "☐ Sala pequeña",
+        "☐ Cocina"
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Reserva de la sala de la asociación"
+    },
+    {
+      "kind": "instruction",
+      "text": "Los socios pueden reservar las salas de la asociación para reuniones y celebraciones. Rellene el formulario y entréguelo en la secretaría al menos una semana antes de la fecha. Le confirmaremos la reserva por teléfono lo antes posible."
+    },
+    {
+      "kind": "question",
+      "label": "Nombre",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Teléfono",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Fecha",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "¿Qué sala necesita?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Sala grande",
+        "Sala pequeña",
+        "Cocina"
+      ]
+    }
+  ]
+}

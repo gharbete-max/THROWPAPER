@@ -1,0 +1,60 @@
+{
+  "document": "lagerschema",
+  "locale": null,
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Namn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Förälders telefon: ____________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Schema för sommarlägret"
+    },
+    {
+      "kind": "instruction",
+      "text": "Här är schemat för lägrets första dag. Tiderna kan ändras om vädret är dåligt, och då säger ledarna till i god tid."
+    },
+    {
+      "kind": "instruction",
+      "text": "Tid Aktivitet Plats"
+    },
+    {
+      "kind": "instruction",
+      "text": "09.00 Frukost och samling Matsalen"
+    },
+    {
+      "kind": "instruction",
+      "text": "10.30 Kanotpaddling på sjön Bryggan"
+    },
+    {
+      "kind": "instruction",
+      "text": "13.00 Lunch Matsalen"
+    },
+    {
+      "kind": "instruction",
+      "text": "15.00 Tipspromenad i skogen Stora ängen"
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Förälders telefon",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "instruction",
+      "text": "Lämna blanketten till din ledare senast den 1 juni."
+    }
+  ]
+}

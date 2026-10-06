@@ -1,0 +1,11 @@
+{
+  "stage": "classify",
+  "stageVersion": 4,
+  "irVersion": 1,
+  "inputSha256": "a0cf4c9cc6bb125e66bc0d1926ce3ad8bcf83f2152ce980e2a64784706474a8b",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"grid","subject":["p1-l3","p1-l4","p1-l5","p1-l6","p1-l7","p1-l8","p1-l9","p1-l10","p1-l11","p1-l12","p1-l13","p1-l14","p1-l15","p1-l16","p1-l17"],"evidence":{"confidence":1000,"features":"gridAlignment","margin":11500,"required":"unknown","runnerUp":"multi_select"}},
+    {"id":"classify:p1-l18","rule":"K1","verdict":"yes_no","subject":["p1-l18"],"evidence":{"confidence":1000,"features":"answerBoolean booleanPair","margin":9000,"required":"unknown","runnerUp":"consent"}},
+    {"id":"classify:p1-l19","rule":"K1","verdict":"long_text","subject":["p1-l19"],"evidence":{"confidence":909,"features":"commentWord","margin":2300,"required":"unknown","runnerUp":"short_text"}}
+  ]
+}

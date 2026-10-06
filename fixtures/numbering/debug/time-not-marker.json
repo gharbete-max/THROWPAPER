@@ -1,0 +1,21 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "226a8802fe4224e90aec5b8229ceab145bab9a232fbbbbe9bbe2abfab9c52180",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6b","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0,"relX":0,"width":8000}},
+    {"id":"enumerate:p1-l2","rule":"V6","verdict":"rejected","subject":["p1-l2"],"evidence":{"next":"Frukost","production":"M4","raw":"09.00","then":"R6b"}},
+    {"id":"enumerate:p1-l3","rule":"V6","verdict":"rejected","subject":["p1-l3"],"evidence":{"next":"Kanotpaddling","production":"M4","raw":"10.30","then":"R6b"}},
+    {"id":"enumerate:p1-l4","rule":"V6","verdict":"rejected","subject":["p1-l4"],"evidence":{"next":"Lunch","production":"M4","raw":"13.00","then":"R6b"}},
+    {"id":"enumerate:p1-l5","rule":"V6","verdict":"rejected","subject":["p1-l5"],"evidence":{"next":"Samling","production":"M4","raw":"9.05","then":"R6b"}},
+    {"id":"enumerate:p1-l6","rule":"R2","verdict":"item","subject":["p1-l6"],"evidence":{"closed":0,"family":"arabic","level":1,"path":"1","production":"M1","raw":"1.","relX":0,"run":"r-p1-l6","width":8000}},
+    {"id":"enumerate:p1-l7","rule":"R1","verdict":"item","subject":["p1-l7"],"evidence":{"family":"arabic","level":2,"path":"1.1","production":"M4","raw":"1.1","relX":0,"run":"r-p1-l6","width":8000}},
+    {"id":"enumerate:p1-l8","rule":"R1","verdict":"item","subject":["p1-l8"],"evidence":{"family":"arabic","level":2,"path":"1.2","production":"M4","raw":"1.2","relX":0,"run":"r-p1-l6","width":8000}},
+    {"id":"enumerate:p1-l9","rule":"R1","verdict":"item","subject":["p1-l9"],"evidence":{"family":"arabic","level":1,"path":"2","production":"M1","raw":"2.","relX":0,"run":"r-p1-l6","width":8000}},
+    {"id":"enumerate:i-p1-l6","rule":"D1","verdict":"accept","subject":["i-p1-l6"],"evidence":{"flags":"","run":"r-p1-l6","runItems":4}},
+    {"id":"enumerate:i-p1-l7","rule":"D1","verdict":"accept","subject":["i-p1-l7"],"evidence":{"flags":"","run":"r-p1-l6","runItems":4}},
+    {"id":"enumerate:i-p1-l8","rule":"D1","verdict":"accept","subject":["i-p1-l8"],"evidence":{"flags":"","run":"r-p1-l6","runItems":4}},
+    {"id":"enumerate:i-p1-l9","rule":"D1","verdict":"accept","subject":["i-p1-l9"],"evidence":{"flags":"","run":"r-p1-l6","runItems":4}}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "fixture": "list-after-a-full-last-line--mid-sentence",
+  "expect": {
+    "enumerate": {
+      "items": [],
+      "rejected": [],
+      "proseLineIds": [
+        "p1-l1",
+        "p1-l2"
+      ],
+      "skippedLineIds": []
+    }
+  }
+}

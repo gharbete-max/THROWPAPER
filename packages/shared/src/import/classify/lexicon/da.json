@@ -1,0 +1,31 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in da. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "da",
+  "features": {
+    "nameWord": ["navn", "fornavn", "efternavn", "*navn", "navnet"],
+    "emailWord": ["e-mail", "email", "mail", "e-mailadresse", "mailadresse", "emailadresse"],
+    "phoneWord": ["telefon*", "*telefon", "tlf", "mobil*"],
+    "addressWord": ["adresse", "*adresse", "adressen"],
+    "dateWord": ["dato", "*dato", "fødselsdag", "datoen"],
+    "timeWord": ["tid", "klokkeslæt", "tidspunkt"],
+    "numberWord": ["antal", "hvor mange", "alder"],
+    "currencyHint": ["kr", "kroner", "dkk", "beløb", "pris", "gebyr", "moms", "beløbet"],
+    "personnummerWord": ["cpr", "cpr-nummer", "cpr-nr", "personnummer"],
+    "orgNrWord": ["cvr", "cvr-nummer", "cvr-nr"],
+    "signatureHint": ["underskrift", "*underskrift", "signatur"],
+    "fileHint": ["vedhæft*", "upload", "bilag"],
+    "consentHint": ["samtykke*", "accepterer", "gdpr"],
+    "commentWord": ["bemærkning*", "kommentar*", "øvrigt", "besked", "beskriv*"],
+    "selectAllPhrase": ["flere svar", "sæt kryds ved alle"],
+    "repeatableHint": ["per person", "hver deltager"],
+    "required": ["obligatorisk*", "skal udfyldes"],
+    "optional": ["frivillig*", "valgfri*"],
+    "maxWords": ["max", "maks", "højst", "op til"],
+    "minWords": ["min", "mindst"]
+  },
+  "formats": {
+    "personnummerWord": "dk-cpr",
+    "orgNrWord": "dk-cvr"
+  }
+}

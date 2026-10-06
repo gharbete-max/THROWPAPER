@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
+import { compareAliases } from '@tp/shared/interpret';
 import type {
   AuditEntryInput,
   CheckInRecord,
@@ -21,6 +22,8 @@ import type {
   LedgerAccountRecord,
   FormVersionRecord,
   BrandKitRecord,
+  BuilderAliasRecord,
+  BuilderSessionRecord,
   JobRecord,
   LoginTokenRecord,
   MessageRecord,
@@ -56,6 +59,8 @@ export interface MemoryState {
   uploads: UploadRecord[];
   jobs: JobRecord[];
   brandKits: BrandKitRecord[];
+  builderSessions: BuilderSessionRecord[];
+  builderAliases: (BuilderAliasRecord & { key: string })[];
   sendingDomains: SendingDomainRecord[];
   signingRequests: SigningRequestRecord[];
   messages: MessageRecord[];
@@ -119,6 +124,8 @@ export function createMemoryRepositories(
     uploads: seed.uploads ?? [],
     jobs: seed.jobs ?? [],
     brandKits: seed.brandKits ?? [],
+    builderSessions: seed.builderSessions ?? [],
+    builderAliases: seed.builderAliases ?? [],
     sendingDomains: seed.sendingDomains ?? [],
     signingRequests: seed.signingRequests ?? [],
     messages: seed.messages ?? [],
@@ -882,6 +889,84 @@ export function createMemoryRepositories(
       clear: async (organisationId) => {
         const index = state.brandKits.findIndex((k) => k.organisationId === organisationId);
         if (index !== -1) state.brandKits.splice(index, 1);
+      },
+    },
+
+    builderSessions: {
+      find: async (organisationId, formId, userId) => {
+        const found = state.builderSessions.find(
+          (s) => s.organisationId === organisationId && s.formId === formId && s.userId === userId,
+        );
+        return found ? { ...found, session: structuredClone(found.session) } : null;
+      },
+      save: async ({ organisationId, formId, userId, session, expected }) => {
+        const index = state.builderSessions.findIndex(
+          (s) => s.organisationId === organisationId && s.formId === formId && s.userId === userId,
+        );
+        const current = index === -1 ? 0 : state.builderSessions[index]!.version;
+        if (current !== expected) return null;
+        const record: BuilderSessionRecord = {
+          organisationId,
+          formId,
+          userId,
+          session: structuredClone(session),
+          version: expected + 1,
+          updatedAt: clock(),
+        };
+        if (index === -1) state.builderSessions.push(record);
+        else state.builderSessions[index] = record;
+        return { ...record, session: structuredClone(record.session) };
+      },
+    },
+
+    builderAliases: {
+      list: async (organisationId) =>
+        state.builderAliases
+          .filter((a) => a.organisationId === organisationId)
+          .sort(compareAliases)
+          .map(({ key: _key, ...record }) => ({ ...record })),
+      add: async (organisationId, entries) => {
+        const added: BuilderAliasRecord[] = [];
+        for (const entry of entries) {
+          const said = state.builderAliases.some(
+            (a) =>
+              a.organisationId === organisationId &&
+              a.locale === entry.locale &&
+              a.nodeId === entry.nodeId &&
+              a.key === entry.key,
+          );
+          if (said) continue;
+          const record = { ...entry, id: randomUUID(), organisationId };
+          state.builderAliases.push(record);
+          const { key: _key, ...stored } = record;
+          added.push(stored);
+        }
+        return added;
+      },
+      bump: async (organisationId, id) => {
+        const found = state.builderAliases.find(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        if (!found) return null;
+        found.count += 1;
+        const { key: _key, ...record } = found;
+        return { ...record };
+      },
+      remove: async (organisationId, id) => {
+        const index = state.builderAliases.findIndex(
+          (a) => a.organisationId === organisationId && a.id === id,
+        );
+        if (index === -1) return null;
+        const [removed] = state.builderAliases.splice(index, 1);
+        const { key: _key, ...record } = removed!;
+        return record;
+      },
+      clear: async (organisationId) => {
+        const before = state.builderAliases.length;
+        state.builderAliases = state.builderAliases.filter(
+          (a) => a.organisationId !== organisationId,
+        );
+        return before - state.builderAliases.length;
       },
     },
 

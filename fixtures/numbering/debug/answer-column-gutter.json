@@ -1,0 +1,16 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "3fbd9f18d4be3da4331f18d6d1a6314cf4adabd2a225c8110acfb822fbeb78f0",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":5,"y0":895,"y1":1926}},
+    {"id":"reassemble:p1-cut2","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":1,"why":"answers","x0":1460,"x1":3000}},
+    {"id":"reassemble:p1-cut3","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":1,"why":"answers","x0":1644,"x1":3000}},
+    {"id":"reassemble:p1-cut4","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":4,"right":4,"why":"answers","x0":3024,"x1":4000}},
+    {"id":"reassemble:p1-cut5","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":3,"right":4,"why":"answers","x0":2932,"x1":4000}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2","p1-l3"],"evidence":{}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l4","p1-l5"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"fi","hits":2,"own":2,"runnerUp":1}}
+  ]
+}

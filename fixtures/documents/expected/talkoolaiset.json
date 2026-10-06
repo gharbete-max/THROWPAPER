@@ -1,0 +1,49 @@
+{
+  "document": "talkoolaiset",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Ilmoittaudu talkoolaiseksi"
+    },
+    {
+      "kind": "instruction",
+      "text": "Seura tarvitsee talkoolaisia kesän tapahtumiin. Jos voit auttaa, täytä lomake ja palauta se toimistoon. Otamme sinuun yhteyttä ennen tapahtumaa."
+    },
+    {
+      "kind": "question",
+      "label": "Nimi",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Puhelin",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Sähköposti",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Milloin voit auttaa?",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Arkisin",
+        "Viikonloppuisin"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Lisätietoja",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

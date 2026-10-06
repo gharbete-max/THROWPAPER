@@ -1,0 +1,36 @@
+{
+  "fixture": "label-without-colon",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l1",
+            "p1-l2",
+            "p1-l3"
+          ],
+          "label": "Hvorfor ønsker du en have",
+          "answer": "blank",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l4",
+            "p1-l5"
+          ],
+          "label": "Telefon",
+          "answer": "blank",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        }
+      ]
+    }
+  }
+}

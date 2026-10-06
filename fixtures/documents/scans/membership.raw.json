@@ -1,0 +1,2358 @@
+{
+  "irVersion": 1,
+  "source": {
+    "kind": "image",
+    "extractor": "Tesseract 5.1.0-288-g2a9c1",
+    "sha256": "bf12b9ea5848a8482d5c5dc73ef87a27eb85d3bf062563388c7e60622f0a3e34"
+  },
+  "pages": [
+    {
+      "pageNo": 1,
+      "widthPt": 595,
+      "heightPt": 841,
+      "words": [
+        {
+          "text": "Club",
+          "box": {
+            "x0": 998,
+            "y0": 710,
+            "x1": 1717,
+            "y1": 885
+          },
+          "baseline": 882,
+          "fontSize": 222,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Membership",
+          "box": {
+            "x0": 1844,
+            "y0": 714,
+            "x1": 3785,
+            "y1": 941
+          },
+          "baseline": 886,
+          "fontSize": 222,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Welcome",
+          "box": {
+            "x0": 985,
+            "y0": 1129,
+            "x1": 1747,
+            "y1": 1227
+          },
+          "baseline": 1228,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "to",
+          "box": {
+            "x0": 1808,
+            "y0": 1142,
+            "x1": 1953,
+            "y1": 1227
+          },
+          "baseline": 1230,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 2013,
+            "y0": 1133,
+            "x1": 2255,
+            "y1": 1231
+          },
+          "baseline": 1231,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "club.",
+          "box": {
+            "x0": 2322,
+            "y0": 1133,
+            "x1": 2690,
+            "y1": 1231
+          },
+          "baseline": 1232,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "To",
+          "box": {
+            "x0": 2763,
+            "y0": 1142,
+            "x1": 2963,
+            "y1": 1231
+          },
+          "baseline": 1233,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "become",
+          "box": {
+            "x0": 3035,
+            "y0": 1137,
+            "x1": 3670,
+            "y1": 1236
+          },
+          "baseline": 1235,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "a",
+          "box": {
+            "x0": 3736,
+            "y0": 1163,
+            "x1": 3833,
+            "y1": 1236
+          },
+          "baseline": 1236,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "member,",
+          "box": {
+            "x0": 3900,
+            "y0": 1142,
+            "x1": 4601,
+            "y1": 1257
+          },
+          "baseline": 1237,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "fill",
+          "box": {
+            "x0": 4667,
+            "y0": 1142,
+            "x1": 4831,
+            "y1": 1240
+          },
+          "baseline": 1239,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 89,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "in",
+          "box": {
+            "x0": 4903,
+            "y0": 1142,
+            "x1": 5024,
+            "y1": 1240
+          },
+          "baseline": 1240,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 89,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "this",
+          "box": {
+            "x0": 5091,
+            "y0": 1142,
+            "x1": 5369,
+            "y1": 1240
+          },
+          "baseline": 1241,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "form",
+          "box": {
+            "x0": 5429,
+            "y0": 1146,
+            "x1": 5780,
+            "y1": 1244
+          },
+          "baseline": 1242,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "and",
+          "box": {
+            "x0": 5852,
+            "y0": 1146,
+            "x1": 6143,
+            "y1": 1244
+          },
+          "baseline": 1243,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "hand",
+          "box": {
+            "x0": 6215,
+            "y0": 1146,
+            "x1": 6602,
+            "y1": 1244
+          },
+          "baseline": 1244,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "it",
+          "box": {
+            "x0": 6675,
+            "y0": 1150,
+            "x1": 6759,
+            "y1": 1248
+          },
+          "baseline": 1245,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "to",
+          "box": {
+            "x0": 6814,
+            "y0": 1163,
+            "x1": 6959,
+            "y1": 1248
+          },
+          "baseline": 1246,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 7019,
+            "y0": 1150,
+            "x1": 7261,
+            "y1": 1248
+          },
+          "baseline": 1247,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "secretary",
+          "box": {
+            "x0": 7328,
+            "y0": 1163,
+            "x1": 8077,
+            "y1": 1278
+          },
+          "baseline": 1248,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "at",
+          "box": {
+            "x0": 8138,
+            "y0": 1167,
+            "x1": 8289,
+            "y1": 1253
+          },
+          "baseline": 1250,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "any",
+          "box": {
+            "x0": 8343,
+            "y0": 1180,
+            "x1": 8634,
+            "y1": 1278
+          },
+          "baseline": 1251,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "club",
+          "box": {
+            "x0": 8694,
+            "y0": 1159,
+            "x1": 9021,
+            "y1": 1253
+          },
+          "baseline": 1252,
+          "fontSize": 115,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "evening,",
+          "box": {
+            "x0": 985,
+            "y0": 1295,
+            "x1": 1663,
+            "y1": 1419
+          },
+          "baseline": 1391,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "or",
+          "box": {
+            "x0": 1735,
+            "y0": 1321,
+            "x1": 1892,
+            "y1": 1394
+          },
+          "baseline": 1393,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "post",
+          "box": {
+            "x0": 1959,
+            "y0": 1308,
+            "x1": 2291,
+            "y1": 1419
+          },
+          "baseline": 1394,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 94,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "it",
+          "box": {
+            "x0": 2358,
+            "y0": 1300,
+            "x1": 2437,
+            "y1": 1394
+          },
+          "baseline": 1395,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 94,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "to",
+          "box": {
+            "x0": 2491,
+            "y0": 1308,
+            "x1": 2636,
+            "y1": 1398
+          },
+          "baseline": 1396,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 2696,
+            "y0": 1300,
+            "x1": 2944,
+            "y1": 1398
+          },
+          "baseline": 1397,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "address",
+          "box": {
+            "x0": 3011,
+            "y0": 1300,
+            "x1": 3652,
+            "y1": 1402
+          },
+          "baseline": 1399,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "on",
+          "box": {
+            "x0": 3718,
+            "y0": 1330,
+            "x1": 3906,
+            "y1": 1402
+          },
+          "baseline": 1400,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 3966,
+            "y0": 1304,
+            "x1": 4214,
+            "y1": 1402
+          },
+          "baseline": 1401,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "back.",
+          "box": {
+            "x0": 4287,
+            "y0": 1304,
+            "x1": 4698,
+            "y1": 1402
+          },
+          "baseline": 1403,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "We",
+          "box": {
+            "x0": 4770,
+            "y0": 1313,
+            "x1": 5036,
+            "y1": 1407
+          },
+          "baseline": 1405,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "use",
+          "box": {
+            "x0": 5103,
+            "y0": 1334,
+            "x1": 5387,
+            "y1": 1407
+          },
+          "baseline": 1406,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "your",
+          "box": {
+            "x0": 5447,
+            "y0": 1334,
+            "x1": 5804,
+            "y1": 1432
+          },
+          "baseline": 1407,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "details",
+          "box": {
+            "x0": 5859,
+            "y0": 1313,
+            "x1": 6385,
+            "y1": 1411
+          },
+          "baseline": 1409,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "only",
+          "box": {
+            "x0": 6445,
+            "y0": 1313,
+            "x1": 6778,
+            "y1": 1437
+          },
+          "baseline": 1411,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "to",
+          "box": {
+            "x0": 6832,
+            "y0": 1325,
+            "x1": 6977,
+            "y1": 1415
+          },
+          "baseline": 1412,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "run",
+          "box": {
+            "x0": 7044,
+            "y0": 1342,
+            "x1": 7291,
+            "y1": 1415
+          },
+          "baseline": 1413,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 7352,
+            "y0": 1317,
+            "x1": 7600,
+            "y1": 1415
+          },
+          "baseline": 1415,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "club,",
+          "box": {
+            "x0": 7666,
+            "y0": 1317,
+            "x1": 8035,
+            "y1": 1432
+          },
+          "baseline": 1416,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "and",
+          "box": {
+            "x0": 8108,
+            "y0": 1321,
+            "x1": 8398,
+            "y1": 1419
+          },
+          "baseline": 1417,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "you",
+          "box": {
+            "x0": 8464,
+            "y0": 1347,
+            "x1": 8748,
+            "y1": 1445
+          },
+          "baseline": 1419,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "can",
+          "box": {
+            "x0": 985,
+            "y0": 1484,
+            "x1": 1264,
+            "y1": 1556
+          },
+          "baseline": 1557,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "ask",
+          "box": {
+            "x0": 1336,
+            "y0": 1462,
+            "x1": 1614,
+            "y1": 1556
+          },
+          "baseline": 1558,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "us",
+          "box": {
+            "x0": 1681,
+            "y0": 1488,
+            "x1": 1856,
+            "y1": 1556
+          },
+          "baseline": 1558,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "to",
+          "box": {
+            "x0": 1917,
+            "y0": 1471,
+            "x1": 2062,
+            "y1": 1560
+          },
+          "baseline": 1559,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "remove",
+          "box": {
+            "x0": 2128,
+            "y0": 1488,
+            "x1": 2727,
+            "y1": 1560
+          },
+          "baseline": 1560,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "them",
+          "box": {
+            "x0": 2787,
+            "y0": 1466,
+            "x1": 3186,
+            "y1": 1565
+          },
+          "baseline": 1562,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "at",
+          "box": {
+            "x0": 3253,
+            "y0": 1479,
+            "x1": 3398,
+            "y1": 1565
+          },
+          "baseline": 1562,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "any",
+          "box": {
+            "x0": 3458,
+            "y0": 1492,
+            "x1": 3748,
+            "y1": 1590
+          },
+          "baseline": 1563,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "time.",
+          "box": {
+            "x0": 3803,
+            "y0": 1471,
+            "x1": 4184,
+            "y1": 1565
+          },
+          "baseline": 1564,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Full",
+          "box": {
+            "x0": 992,
+            "y0": 1672,
+            "x1": 1264,
+            "y1": 1770
+          },
+          "baseline": 1770,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "name",
+          "box": {
+            "x0": 1336,
+            "y0": 1697,
+            "x1": 1784,
+            "y1": 1770
+          },
+          "baseline": 1771,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "(required):",
+          "box": {
+            "x0": 1850,
+            "y0": 1676,
+            "x1": 2678,
+            "y1": 1800
+          },
+          "baseline": 1773,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Email",
+          "box": {
+            "x0": 992,
+            "y0": 1885,
+            "x1": 1427,
+            "y1": 1984
+          },
+          "baseline": 1980,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "address",
+          "box": {
+            "x0": 1499,
+            "y0": 1885,
+            "x1": 2140,
+            "y1": 1984
+          },
+          "baseline": 1982,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 93,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "*:",
+          "box": {
+            "x0": 2201,
+            "y0": 1894,
+            "x1": 2304,
+            "y1": 1984
+          },
+          "baseline": 1984,
+          "fontSize": 126,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 92,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Phone",
+          "box": {
+            "x0": 992,
+            "y0": 2099,
+            "x1": 1499,
+            "y1": 2193
+          },
+          "baseline": 2194,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "number",
+          "box": {
+            "x0": 1572,
+            "y0": 2099,
+            "x1": 2183,
+            "y1": 2198
+          },
+          "baseline": 2195,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "(optional):",
+          "box": {
+            "x0": 2249,
+            "y0": 2103,
+            "x1": 3041,
+            "y1": 2227
+          },
+          "baseline": 2197,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "How",
+          "box": {
+            "x0": 985,
+            "y0": 2313,
+            "x1": 1342,
+            "y1": 2407
+          },
+          "baseline": 2408,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "many",
+          "box": {
+            "x0": 1403,
+            "y0": 2334,
+            "x1": 1844,
+            "y1": 2433
+          },
+          "baseline": 2409,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "family",
+          "box": {
+            "x0": 1898,
+            "y0": 2313,
+            "x1": 2376,
+            "y1": 2437
+          },
+          "baseline": 2410,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "members",
+          "box": {
+            "x0": 2443,
+            "y0": 2317,
+            "x1": 3192,
+            "y1": 2416
+          },
+          "baseline": 2412,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "will",
+          "box": {
+            "x0": 3253,
+            "y0": 2317,
+            "x1": 3495,
+            "y1": 2416
+          },
+          "baseline": 2414,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 91,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "join",
+          "box": {
+            "x0": 3555,
+            "y0": 2317,
+            "x1": 3833,
+            "y1": 2441
+          },
+          "baseline": 2415,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "with",
+          "box": {
+            "x0": 3900,
+            "y0": 2322,
+            "x1": 4214,
+            "y1": 2416
+          },
+          "baseline": 2416,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "you?",
+          "box": {
+            "x0": 4281,
+            "y0": 2326,
+            "x1": 4674,
+            "y1": 2445
+          },
+          "baseline": 2417,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "(max",
+          "box": {
+            "x0": 4740,
+            "y0": 2326,
+            "x1": 5133,
+            "y1": 2445
+          },
+          "baseline": 2419,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "4)",
+          "box": {
+            "x0": 5193,
+            "y0": 2326,
+            "x1": 5345,
+            "y1": 2450
+          },
+          "baseline": 2420,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Why",
+          "box": {
+            "x0": 973,
+            "y0": 2522,
+            "x1": 1360,
+            "y1": 2646
+          },
+          "baseline": 2617,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "do",
+          "box": {
+            "x0": 1421,
+            "y0": 2522,
+            "x1": 1632,
+            "y1": 2621
+          },
+          "baseline": 2619,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "we",
+          "box": {
+            "x0": 1693,
+            "y0": 2548,
+            "x1": 1929,
+            "y1": 2621
+          },
+          "baseline": 2620,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "ask",
+          "box": {
+            "x0": 1989,
+            "y0": 2527,
+            "x1": 2291,
+            "y1": 2621
+          },
+          "baseline": 2621,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "for",
+          "box": {
+            "x0": 2346,
+            "y0": 2527,
+            "x1": 2588,
+            "y1": 2625
+          },
+          "baseline": 2622,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "your",
+          "box": {
+            "x0": 2648,
+            "y0": 2552,
+            "x1": 3041,
+            "y1": 2651
+          },
+          "baseline": 2624,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "date",
+          "box": {
+            "x0": 3102,
+            "y0": 2531,
+            "x1": 3464,
+            "y1": 2629
+          },
+          "baseline": 2626,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "of",
+          "box": {
+            "x0": 3531,
+            "y0": 2531,
+            "x1": 3700,
+            "y1": 2629
+          },
+          "baseline": 2627,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 97,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "birth?",
+          "box": {
+            "x0": 3761,
+            "y0": 2531,
+            "x1": 4262,
+            "y1": 2629
+          },
+          "baseline": 2628,
+          "fontSize": 128,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Members",
+          "box": {
+            "x0": 985,
+            "y0": 2736,
+            "x1": 1735,
+            "y1": 2835
+          },
+          "baseline": 2832,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "under",
+          "box": {
+            "x0": 1802,
+            "y0": 2740,
+            "x1": 2261,
+            "y1": 2835
+          },
+          "baseline": 2834,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "18",
+          "box": {
+            "x0": 2328,
+            "y0": 2745,
+            "x1": 2515,
+            "y1": 2835
+          },
+          "baseline": 2835,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 97,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "pay",
+          "box": {
+            "x0": 2582,
+            "y0": 2766,
+            "x1": 2866,
+            "y1": 2864
+          },
+          "baseline": 2837,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "a",
+          "box": {
+            "x0": 2926,
+            "y0": 2766,
+            "x1": 3023,
+            "y1": 2839
+          },
+          "baseline": 2837,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "lower",
+          "box": {
+            "x0": 3083,
+            "y0": 2740,
+            "x1": 3513,
+            "y1": 2839
+          },
+          "baseline": 2839,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "fee,",
+          "box": {
+            "x0": 3567,
+            "y0": 2745,
+            "x1": 3857,
+            "y1": 2856
+          },
+          "baseline": 2840,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "so",
+          "box": {
+            "x0": 3930,
+            "y0": 2770,
+            "x1": 4111,
+            "y1": 2843
+          },
+          "baseline": 2841,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "we",
+          "box": {
+            "x0": 4172,
+            "y0": 2770,
+            "x1": 4401,
+            "y1": 2843
+          },
+          "baseline": 2842,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "need",
+          "box": {
+            "x0": 4474,
+            "y0": 2749,
+            "x1": 4861,
+            "y1": 2847
+          },
+          "baseline": 2844,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "to",
+          "box": {
+            "x0": 4921,
+            "y0": 2758,
+            "x1": 5067,
+            "y1": 2847
+          },
+          "baseline": 2845,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "know",
+          "box": {
+            "x0": 5139,
+            "y0": 2749,
+            "x1": 5556,
+            "y1": 2847
+          },
+          "baseline": 2846,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "your",
+          "box": {
+            "x0": 5611,
+            "y0": 2775,
+            "x1": 5967,
+            "y1": 2873
+          },
+          "baseline": 2848,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "age",
+          "box": {
+            "x0": 6028,
+            "y0": 2779,
+            "x1": 6318,
+            "y1": 2877
+          },
+          "baseline": 2849,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "group.",
+          "box": {
+            "x0": 6385,
+            "y0": 2779,
+            "x1": 6886,
+            "y1": 2877
+          },
+          "baseline": 2851,
+          "fontSize": 120,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "Date",
+          "box": {
+            "x0": 979,
+            "y0": 2950,
+            "x1": 1348,
+            "y1": 3044
+          },
+          "baseline": 3044,
+          "fontSize": 121,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "of",
+          "box": {
+            "x0": 1415,
+            "y0": 2950,
+            "x1": 1566,
+            "y1": 3044
+          },
+          "baseline": 3044,
+          "fontSize": 121,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "birth:",
+          "box": {
+            "x0": 1626,
+            "y0": 2950,
+            "x1": 2007,
+            "y1": 3048
+          },
+          "baseline": 3044,
+          "fontSize": 121,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "☐",
+          "box": {
+            "x0": 979,
+            "y0": 3159,
+            "x1": 1119,
+            "y1": 3258
+          },
+          "baseline": 3258,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 75,
+          "repair": {
+            "kind": "box-mark",
+            "raw": "[J"
+          },
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "I",
+          "box": {
+            "x0": 1197,
+            "y0": 3164,
+            "x1": 1221,
+            "y1": 3258
+          },
+          "baseline": 3258,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 83,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "agree",
+          "box": {
+            "x0": 1294,
+            "y0": 3185,
+            "x1": 1747,
+            "y1": 3283
+          },
+          "baseline": 3259,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 83,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "that",
+          "box": {
+            "x0": 1814,
+            "y0": 3164,
+            "x1": 2116,
+            "y1": 3262
+          },
+          "baseline": 3261,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 2170,
+            "y0": 3164,
+            "x1": 2418,
+            "y1": 3262
+          },
+          "baseline": 3262,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "club",
+          "box": {
+            "x0": 2485,
+            "y0": 3164,
+            "x1": 2805,
+            "y1": 3262
+          },
+          "baseline": 3263,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "may",
+          "box": {
+            "x0": 2878,
+            "y0": 3189,
+            "x1": 3210,
+            "y1": 3288
+          },
+          "baseline": 3264,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "keep",
+          "box": {
+            "x0": 3277,
+            "y0": 3168,
+            "x1": 3658,
+            "y1": 3292
+          },
+          "baseline": 3265,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "my",
+          "box": {
+            "x0": 3730,
+            "y0": 3194,
+            "x1": 3960,
+            "y1": 3292
+          },
+          "baseline": 3266,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "details",
+          "box": {
+            "x0": 4021,
+            "y0": 3172,
+            "x1": 4541,
+            "y1": 3271
+          },
+          "baseline": 3268,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "in",
+          "box": {
+            "x0": 4613,
+            "y0": 3172,
+            "x1": 4734,
+            "y1": 3271
+          },
+          "baseline": 3269,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 92,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "its",
+          "box": {
+            "x0": 4807,
+            "y0": 3172,
+            "x1": 4976,
+            "y1": 3271
+          },
+          "baseline": 3269,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "membership",
+          "box": {
+            "x0": 5042,
+            "y0": 3177,
+            "x1": 6040,
+            "y1": 3301
+          },
+          "baseline": 3271,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "register.",
+          "box": {
+            "x0": 6112,
+            "y0": 3181,
+            "x1": 6747,
+            "y1": 3301
+          },
+          "baseline": 3274,
+          "fontSize": 124,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "We",
+          "box": {
+            "x0": 967,
+            "y0": 3369,
+            "x1": 1161,
+            "y1": 3437
+          },
+          "baseline": 3438,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "never",
+          "box": {
+            "x0": 1215,
+            "y0": 3382,
+            "x1": 1542,
+            "y1": 3437
+          },
+          "baseline": 3438,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "share",
+          "box": {
+            "x0": 1584,
+            "y0": 3365,
+            "x1": 1904,
+            "y1": 3437
+          },
+          "baseline": 3439,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "your",
+          "box": {
+            "x0": 1953,
+            "y0": 3386,
+            "x1": 2207,
+            "y1": 3459
+          },
+          "baseline": 3440,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "details",
+          "box": {
+            "x0": 2255,
+            "y0": 3369,
+            "x1": 2630,
+            "y1": 3442
+          },
+          "baseline": 3441,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "with",
+          "box": {
+            "x0": 2672,
+            "y0": 3369,
+            "x1": 2902,
+            "y1": 3442
+          },
+          "baseline": 3442,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "anyone",
+          "box": {
+            "x0": 2956,
+            "y0": 3390,
+            "x1": 3386,
+            "y1": 3463
+          },
+          "baseline": 3443,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "outside",
+          "box": {
+            "x0": 3434,
+            "y0": 3373,
+            "x1": 3857,
+            "y1": 3446
+          },
+          "baseline": 3444,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "the",
+          "box": {
+            "x0": 3900,
+            "y0": 3373,
+            "x1": 4081,
+            "y1": 3446
+          },
+          "baseline": 3445,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 96,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        },
+        {
+          "text": "club.",
+          "box": {
+            "x0": 4129,
+            "y0": 3378,
+            "x1": 4395,
+            "y1": 3446
+          },
+          "baseline": 3446,
+          "fontSize": 94,
+          "fontWeight": 400,
+          "italic": false,
+          "ocrConfidence": 95,
+          "repair": null,
+          "source": "ocr",
+          "paragraph": null,
+          "docxNumbering": null,
+          "cell": null
+        }
+      ],
+      "rules": []
+    }
+  ]
+}

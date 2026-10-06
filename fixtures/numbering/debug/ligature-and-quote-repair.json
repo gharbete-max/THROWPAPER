@@ -1,0 +1,13 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "bf76053e6bfae5854a56bb5731e4d77aa132366f908cc42d1340b9a0202184d2",
+  "decisions": [
+    {"id":"reassemble:p1-l1-w2","rule":"L1","verdict":"ligature","subject":["p1-l1"],"evidence":{"raw":"ﬁrst"}},
+    {"id":"reassemble:p1-l1-w3","rule":"L1","verdict":"ligature","subject":["p1-l1"],"evidence":{"raw":"“Oﬃce”"}},
+    {"id":"reassemble:p1-l1-w6","rule":"L1","verdict":"ligature","subject":["p1-l1"],"evidence":{"raw":"ﬂexible."}},
+    {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"en","hits":2,"own":2,"runnerUp":0}}
+  ]
+}

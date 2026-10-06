@@ -1,0 +1,11 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "3e578b0fffe85e00868089016d0a7554297ad3e765906d9e4b49461ef34b5373",
+  "decisions": [
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3","p1-l4","p1-l5","p1-l6"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1b","verdict":"ja","subject":[],"evidence":{"best":"ja","hits":38,"inScript":104,"letters":107,"own":38,"runnerUp":2,"script":"Japanese"}}
+  ]
+}

@@ -12,12 +12,15 @@ import { messages } from '../lib/messages/all.js';
  * (`confirmationTo`, `admissionCard`), so the screen states only what was actually queued.
  */
 const SOURCE = readFileSync(new URL('./PublicForm.tsx', import.meta.url), 'utf8');
+const MASTHEAD = readFileSync(new URL('../components/Masthead.tsx', import.meta.url), 'utf8');
 
 describe('the confirmation screen', () => {
   it('keeps the form title as the heading after sending', () => {
-    // The title used to be gated on `phase !== 'done'`.
+    // The title used to be gated on `phase !== 'done'`. It is handed to the masthead whatever
+    // the phase, and the masthead makes it the page's heading.
     expect(SOURCE).not.toMatch(/formTitle && phase !== 'done'/);
-    expect(SOURCE).toMatch(/\{formTitle && <h1 className="public__title">/);
+    expect(SOURCE).toMatch(/<Masthead[^>]*\btitle=\{formTitle\}/);
+    expect(MASTHEAD).toMatch(/title \? <h1 className="public__title">\{title\}<\/h1>/);
   });
 
   it('says what is coming from what the server said it queued', () => {

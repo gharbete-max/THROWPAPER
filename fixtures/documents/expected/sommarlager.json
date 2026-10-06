@@ -1,0 +1,78 @@
+{
+  "document": "sommarlager",
+  "locale": null,
+  "items": [
+    {
+      "marker": "*",
+      "label": "= måste fyllas i",
+      "verdict": "candidate",
+      "flags": [
+        "single-item"
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmälan till sommarlägret"
+    },
+    {
+      "kind": "instruction",
+      "text": "Lägret är för barn mellan åtta och tolv år och hålls vid sjön under första veckan i juli. Fyll i en blankett för varje barn och lämna den till kansliet senast den sista maj."
+    },
+    {
+      "kind": "heading",
+      "text": "DELTAGARE"
+    },
+    {
+      "kind": "question",
+      "label": "Namn (obligatoriskt)",
+      "answer": "blank",
+      "type": "short_text",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Födelsedatum",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "Vårdnadshavarens e-post*",
+      "answer": "blank",
+      "type": "email",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Hur många nätter stannar barnet? (max 7)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "MAT OCH ALLERGIER"
+    },
+    {
+      "kind": "question",
+      "label": "Allergier eller specialkost",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "instruction",
+      "text": "Läs lägrets regler på hemsidan innan du lämnar in anmälan."
+    },
+    {
+      "kind": "instruction",
+      "text": "* = måste fyllas i"
+    }
+  ]
+}

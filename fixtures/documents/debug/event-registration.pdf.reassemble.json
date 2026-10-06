@@ -1,0 +1,31 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "1316eaddbb16c7e07b1fab2a0444541c0fee049db52df995fb84ebdb78f8e92f",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":15,"y0":354,"y1":9599}},
+    {"id":"reassemble:p2-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":10,"y0":354,"y1":9599}},
+    {"id":"reassemble:p2-cut2","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":1,"right":2,"x0":1757,"x1":4913}},
+    {"id":"reassemble:p2-cut3","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":1,"right":1,"x0":5252,"x1":6760}},
+    {"id":"reassemble:p2-cut4","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":3,"right":2,"why":"answers","x0":2989,"x1":4913}},
+    {"id":"reassemble:p2-cut5","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":4,"right":1,"why":"answers","x0":5652,"x1":6760}},
+    {"id":"reassemble:p2-cut6","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":2,"why":"answers","x0":2148,"x1":4913}},
+    {"id":"reassemble:p2-cut7","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":2,"right":1,"why":"answers","x0":5652,"x1":6760}},
+    {"id":"reassemble:p2-cut8","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":2,"right":2,"why":"answers","x0":2804,"x1":4913}},
+    {"id":"reassemble:p2-cut9","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":3,"right":1,"why":"answers","x0":5539,"x1":6760}},
+    {"id":"reassemble:p1-b1","rule":"F1","verdict":"page-furniture","subject":["p1-l1"],"evidence":{"margin":"top","pages":2}},
+    {"id":"reassemble:p1-b2","rule":"H1","verdict":"heading","subject":["p1-l2"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-b3","rule":"B1","verdict":"body","subject":["p1-l3","p1-l4","p1-l5","p1-l6","p1-l7","p1-l8","p1-l9","p1-l10","p1-l11","p1-l12","p1-l13","p1-l14"],"evidence":{}},
+    {"id":"reassemble:p1-b4","rule":"F2","verdict":"page-furniture","subject":["p1-l15"],"evidence":{"margin":"bottom","pages":2}},
+    {"id":"reassemble:p2-b1","rule":"F1","verdict":"page-furniture","subject":["p2-l1"],"evidence":{"margin":"top","pages":2}},
+    {"id":"reassemble:p2-b2","rule":"B1","verdict":"body","subject":["p2-l2","p2-l3","p2-l4"],"evidence":{}},
+    {"id":"reassemble:p2-b3","rule":"H2","verdict":"heading","subject":["p2-l5"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p2-b4","rule":"H2","verdict":"heading","subject":["p2-l6"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p2-b5","rule":"H2","verdict":"heading","subject":["p2-l7"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p2-b6","rule":"B1","verdict":"body","subject":["p2-l8","p2-l9","p2-l10"],"evidence":{}},
+    {"id":"reassemble:p2-b7","rule":"B1","verdict":"body","subject":["p2-l11"],"evidence":{}},
+    {"id":"reassemble:p2-b8","rule":"F2","verdict":"page-furniture","subject":["p2-l12"],"evidence":{"margin":"bottom","pages":2}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"en","subject":[],"evidence":{"best":"en","hits":46,"own":45,"runnerUp":0}}
+  ]
+}

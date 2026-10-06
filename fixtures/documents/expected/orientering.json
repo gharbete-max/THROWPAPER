@@ -1,0 +1,81 @@
+{
+  "document": "orientering",
+  "locale": null,
+  "items": [
+    {
+      "marker": "1)",
+      "label": "Namn: ______________________________"
+    },
+    {
+      "marker": "2)",
+      "label": "Födelseår: __________________________"
+    },
+    {
+      "marker": "3)",
+      "label": "Klass ☐ Herrar ☐ Damer ☐ Öppen"
+    },
+    {
+      "marker": "4)",
+      "label": "Övrigt: ______________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmälan till klubbmästerskapet i orientering"
+    },
+    {
+      "kind": "instruction",
+      "text": "Klubbmästerskapet avgörs söndagen den 3:e september i Hagaskogen. Första start går klockan tio, och den som hellre vill springa en kortare bana kan anmäla sig till den öppna klassen. Anmälan lämnas till tävlingsledaren senast en vecka före tävlingen."
+    },
+    {
+      "kind": "heading",
+      "text": "Priser"
+    },
+    {
+      "kind": "instruction",
+      "text": "1:a pris i varje klass är ett presentkort på 500 kronor."
+    },
+    {
+      "kind": "instruction",
+      "text": "2:a pris är en ny kompass."
+    },
+    {
+      "kind": "instruction",
+      "text": "3:e pris är en pannlampa."
+    },
+    {
+      "kind": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "kind": "question",
+      "label": "Namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Födelseår",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Klass",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "Herrar",
+        "Damer",
+        "Öppen"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Övrigt",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

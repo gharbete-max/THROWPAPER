@@ -1,0 +1,77 @@
+{
+  "note": "The same document, over a form the person changed: a label reworded and two questions reordered by hand. Every field matches by id, so each difference is the person's, and nothing is asked.",
+  "form": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Ditt namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-anmalan",
+      "family": "heading",
+      "text": "Anmälan"
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon"
+    },
+    {
+      "id": "q-dag",
+      "family": "question",
+      "text": "Vilken dag kommer du?"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-anmalan",
+        "by": "id"
+      },
+      {
+        "formId": "q-namn",
+        "by": "id"
+      },
+      {
+        "formId": "q-telefon",
+        "by": "id"
+      },
+      {
+        "formId": "q-dag",
+        "by": "id"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [],
+    "gone": [],
+    "moved": []
+  }
+}

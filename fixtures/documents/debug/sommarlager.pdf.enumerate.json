@@ -1,0 +1,22 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "d1239082c199de1113a99a69f4df855b6c593c9d480bdd89f9e50049b91ee3e1",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l3","rule":"P3b","verdict":"prose","subject":["p1-l3","p1-l2"],"evidence":{"previousRelX":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l4","rule":"R6b","verdict":"prose","subject":["p1-l4"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l5","rule":"R6b","verdict":"prose","subject":["p1-l5"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l6","rule":"R6b","verdict":"prose","subject":["p1-l6"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l7","rule":"R6b","verdict":"prose","subject":["p1-l7"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l8","rule":"R6b","verdict":"prose","subject":["p1-l8"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l9","rule":"R6b","verdict":"prose","subject":["p1-l9"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l10","rule":"R6b","verdict":"prose","subject":["p1-l10"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l11","rule":"R6b","verdict":"prose","subject":["p1-l11"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l12","rule":"R6b","verdict":"prose","subject":["p1-l12"],"evidence":{"closed":0,"relX":0,"width":8092}},
+    {"id":"enumerate:p1-l13","rule":"R2","verdict":"item","subject":["p1-l13"],"evidence":{"closed":0,"family":"bullet","level":1,"path":"","production":"M9","raw":"*","relX":0,"run":"r-p1-l13","width":8092}},
+    {"id":"enumerate:i-p1-l13","rule":"D3","verdict":"candidate","subject":["i-p1-l13"],"evidence":{"band":false,"field":false,"flags":"single-item","run":"r-p1-l13"}}
+  ]
+}

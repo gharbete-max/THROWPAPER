@@ -1,0 +1,25 @@
+{
+  "stage": "segment",
+  "stageVersion": 7,
+  "irVersion": 1,
+  "inputSha256": "ffc8e38d922c49d0472f385c4a4581907ca8772c2ee3594763a3ee43672eec82",
+  "decisions": [
+    {"id":"segment:p1-l1","rule":"S1","verdict":"heading","subject":["p1-l1"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l2","rule":"S8","verdict":"instruction","subject":["p1-l2"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l3","rule":"S1c","verdict":"heading","subject":["p1-l3"],"evidence":{"children":2}},
+    {"id":"segment:p1-l4","rule":"S6","verdict":"question:blank","subject":["p1-l4"],"evidence":{"room":0}},
+    {"id":"segment:p1-l5","rule":"S6","verdict":"question:blank","subject":["p1-l5"],"evidence":{"room":0}},
+    {"id":"segment:p1-l6","rule":"S1c","verdict":"heading","subject":["p1-l6"],"evidence":{"children":2}},
+    {"id":"segment:p1-l7","rule":"S6","verdict":"question:blank","subject":["p1-l7"],"evidence":{"room":0}},
+    {"id":"segment:p1-l8","rule":"S6","verdict":"question:blank","subject":["p1-l8"],"evidence":{"room":0}},
+    {"id":"segment:p1-l9","rule":"S1c","verdict":"heading","subject":["p1-l9"],"evidence":{"children":2}},
+    {"id":"segment:p1-l10","rule":"S5","verdict":"question:choice","subject":["p1-l10"],"evidence":{"options":3}},
+    {"id":"segment:p1-l11","rule":"S5","verdict":"question:choice","subject":["p1-l11"],"evidence":{"options":2}},
+    {"id":"segment:p1-l12","rule":"S1c","verdict":"heading","subject":["p1-l12"],"evidence":{"children":2}},
+    {"id":"segment:p1-l13","rule":"S4b","verdict":"question:boolean","subject":["p1-l13"],"evidence":{"box":"first"}},
+    {"id":"segment:p1-l14","rule":"S4b","verdict":"question:boolean","subject":["p1-l14"],"evidence":{"box":"first"}},
+    {"id":"segment:p1-l15","rule":"S1c","verdict":"heading","subject":["p1-l15"],"evidence":{"children":2}},
+    {"id":"segment:p1-l16","rule":"S6","verdict":"question:blank","subject":["p1-l16"],"evidence":{"room":0}},
+    {"id":"segment:p1-l17","rule":"S6","verdict":"question:blank","subject":["p1-l17"],"evidence":{"room":0}}
+  ]
+}

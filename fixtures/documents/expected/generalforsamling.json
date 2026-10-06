@@ -1,0 +1,48 @@
+{
+  "document": "generalforsamling",
+  "locale": null,
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Navn: ______________________________"
+    },
+    {
+      "marker": "1.",
+      "label": "Forslag skal sendes skriftligt til formanden.",
+      "verdict": "candidate",
+      "flags": [
+        "single-item"
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Tilmelding til generalforsamlingen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Generalforsamlingen holdes i klubhuset torsdag den 20. marts klokken 19. Alle medlemmer har adgang og stemmeret, men vi beder dig tilmelde dig, så vi ved, hvor mange stole og kopper kaffe der skal stilles frem. Aflever sedlen i postkassen ved døren."
+    },
+    {
+      "kind": "question",
+      "label": "Navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "heading",
+      "text": "Forslag"
+    },
+    {
+      "kind": "instruction",
+      "text": "Har du et forslag, som du gerne vil have behandlet på generalforsamlingen, skal det være bestyrelsen i hænde senest en uge før mødet."
+    },
+    {
+      "kind": "question",
+      "label": "Forslag skal sendes skriftligt til formanden.",
+      "answer": "unknown",
+      "type": "short_text"
+    }
+  ]
+}

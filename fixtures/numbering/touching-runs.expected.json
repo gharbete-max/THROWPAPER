@@ -1,0 +1,28 @@
+{
+  "fixture": "touching-runs",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "1．姓名： ____________________",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "このたびはお申し込みいただき、",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Nom : ____________",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": []
+    }
+  }
+}

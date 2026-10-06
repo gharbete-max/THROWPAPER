@@ -1,0 +1,74 @@
+{
+  "document": "skraning",
+  "locale": null,
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Nafn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Kennitala: ________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Netfang: __________________________"
+    },
+    {
+      "marker": "4.",
+      "label": "Sími: ____________________________"
+    },
+    {
+      "marker": "5.",
+      "label": "Viltu fá fréttabréf félagsins? ☐ Já ☐ Nei"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Skráning í félagið"
+    },
+    {
+      "kind": "instruction",
+      "text": "Allir sem vilja ganga í félagið eru velkomnir. Fylltu út eyðublaðið og skilaðu því til gjaldkera eða sendu það í pósti. Við notum upplýsingarnar aðeins fyrir félagaskrána og látum þær ekki af hendi."
+    },
+    {
+      "kind": "question",
+      "label": "Nafn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Kennitala",
+      "answer": "blank",
+      "type": "personnummer",
+      "format": {
+        "name": "is-kennitala",
+        "apply": false
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Netfang",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Sími",
+      "answer": "blank",
+      "type": "phone"
+    },
+    {
+      "kind": "question",
+      "label": "Viltu fá fréttabréf félagsins?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Já",
+        "Nei"
+      ]
+    }
+  ]
+}

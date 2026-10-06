@@ -1,0 +1,31 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in nb. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "nb",
+  "features": {
+    "nameWord": ["navn", "fornavn", "etternavn", "*navn", "navnet"],
+    "emailWord": ["e-post", "epost", "e-postadresse", "epostadresse", "e-mail", "mail"],
+    "phoneWord": ["telefon*", "*telefon", "tlf", "mobil*"],
+    "addressWord": ["adresse", "*adresse", "adressen"],
+    "dateWord": ["dato", "*dato", "datoen"],
+    "timeWord": ["tid", "klokkeslett", "tidspunkt"],
+    "numberWord": ["antall", "hvor mange", "alder"],
+    "currencyHint": ["kr", "kroner", "nok", "beløp", "pris", "gebyr", "mva", "beløpet"],
+    "personnummerWord": ["fødselsnummer", "fødselsnr", "fnr", "personnummer"],
+    "orgNrWord": ["organisasjonsnummer", "org.nr", "orgnr"],
+    "signatureHint": ["underskrift", "*underskrift", "signatur"],
+    "fileHint": ["vedlegg*", "last opp"],
+    "consentHint": ["samtykke*", "godtar", "gdpr"],
+    "commentWord": ["kommentar*", "merknad*", "annet", "melding", "beskriv*"],
+    "selectAllPhrase": ["flere svar", "kryss av for alle"],
+    "repeatableHint": ["per person", "hver deltaker"],
+    "required": ["obligatorisk*", "påkrevd", "må fylles ut"],
+    "optional": ["valgfri*", "frivillig*"],
+    "maxWords": ["maks", "maksimalt", "høyst", "opp til"],
+    "minWords": ["min", "minst"]
+  },
+  "formats": {
+    "personnummerWord": "no-fodselsnummer",
+    "orgNrWord": "no-orgnr"
+  }
+}

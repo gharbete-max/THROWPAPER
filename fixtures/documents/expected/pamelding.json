@@ -1,0 +1,46 @@
+{
+  "document": "pamelding",
+  "locale": "nb",
+  "items": [
+    {
+      "marker": "1.",
+      "label": "Navn: ______________________________"
+    },
+    {
+      "marker": "2.",
+      "label": "Adresse: ___________________________"
+    },
+    {
+      "marker": "3.",
+      "label": "Telefon: ___________________________"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Påmelding til årsmøtet"
+    },
+    {
+      "kind": "instruction",
+      "text": "Hvis du vil delta på årsmøtet, må du fylle ut skjemaet og sende det til oss innen fredag. Vi trenger å vite hvor mange av dere som kommer, hva dere ønsker å spise, og om noen av dere har allergier. Det er viktig at alle opplysningene er riktige, ellers rekker vi ikke å sende innkallingen ut i tide. Skriv tydelig, og sjekk at du har svart på alt før du leverer det. Hvis noe er uklart, ta vennligst kontakt med sekretariatet, så hjelper vi deg gjennom det. Skjemaet blir lagret hos oss, og ingen utenom styret får se det uten at du har gitt oss lov. Mellom punktene ble det tidligere holdt pauser, og det blir det også i år, så du kan snakke med meg eller med dem som har ansvar for maten etter møtet."
+    },
+    {
+      "kind": "question",
+      "label": "Navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Adresse",
+      "answer": "blank",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon",
+      "answer": "blank",
+      "type": "phone"
+    }
+  ]
+}

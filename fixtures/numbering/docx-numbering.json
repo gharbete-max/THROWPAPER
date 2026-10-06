@@ -1,0 +1,309 @@
+{
+  "fixture": "docx-numbering",
+  "caveats": ["docx-numbering"],
+  "stage": "enumerate",
+  "status": "green",
+  "turnsGreenIn": "S7",
+  "summary": "A Word document whose lists are Word's own: the numbers are in numbering.xml, not in the text. Each numbered paragraph is an item with Word's marker, level ilvl + 1 and run numId, and its whole text is the label, even where the text itself begins \"3.5\"; a plain paragraph at an item's text indent is its detail. A number typed into a paragraph Word does not number goes through the rules like any other line.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "docx",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          { "index": 0, "x0": 1000, "x1": 9000, "y0": 895, "y1": 2646, "bands": [1000, 1605, 2210] }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": { "x0": 1000, "y0": 895, "x1": 5009, "y1": 2646 },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Namn",
+                "words": [
+                  { "text": "Namn", "start": 0, "box": { "x0": 1605, "y0": 895, "x1": 1973, "y1": 1026 }, "baseline": 1000, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 895, "x1": 1973, "y1": 1026 },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": { "numId": 1, "ilvl": 0, "rendered": "1.", "format": "decimal" }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Kontaktuppgifter",
+                "words": [
+                  { "text": "Kontaktuppgifter", "start": 0, "box": { "x0": 1605, "y0": 1075, "x1": 3077, "y1": 1206 }, "baseline": 1180, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 1075, "x1": 3077, "y1": 1206 },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": { "numId": 1, "ilvl": 0, "rendered": "2.", "format": "decimal" }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Telefon",
+                "words": [
+                  { "text": "Telefon", "start": 0, "box": { "x0": 2210, "y0": 1255, "x1": 2854, "y1": 1386 }, "baseline": 1360, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 2210, "y0": 1255, "x1": 2854, "y1": 1386 },
+                "baseline": 1360,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 2,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": {
+                    "numId": 1,
+                    "ilvl": 1,
+                    "rendered": "a)",
+                    "format": "lowerLetter"
+                  }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "E-post",
+                "words": [
+                  { "text": "E-post", "start": 0, "box": { "x0": 2210, "y0": 1435, "x1": 2762, "y1": 1566 }, "baseline": 1540, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 2210, "y0": 1435, "x1": 2762, "y1": 1566 },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 2,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": {
+                    "numId": 1,
+                    "ilvl": 1,
+                    "rendered": "b)",
+                    "format": "lowerLetter"
+                  }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "3.5 miljoner kronor – är det rimligt?",
+                "words": [
+                  { "text": "3.5", "start": 0, "box": { "x0": 1605, "y0": 1615, "x1": 1881, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "miljoner", "start": 4, "box": { "x0": 1973, "y0": 1615, "x1": 2709, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "kronor", "start": 13, "box": { "x0": 2801, "y0": 1615, "x1": 3353, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "–", "start": 20, "box": { "x0": 3445, "y0": 1615, "x1": 3537, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "är", "start": 22, "box": { "x0": 3629, "y0": 1615, "x1": 3813, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "det", "start": 25, "box": { "x0": 3905, "y0": 1615, "x1": 4181, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "rimligt?", "start": 29, "box": { "x0": 4273, "y0": 1615, "x1": 5009, "y1": 1746 }, "baseline": 1720, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 1615, "x1": 5009, "y1": 1746 },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": { "numId": 1, "ilvl": 0, "rendered": "3.", "format": "decimal" }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Svara med ja eller nej.",
+                "words": [
+                  { "text": "Svara", "start": 0, "box": { "x0": 1605, "y0": 1795, "x1": 2065, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "med", "start": 6, "box": { "x0": 2157, "y0": 1795, "x1": 2433, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "ja", "start": 10, "box": { "x0": 2525, "y0": 1795, "x1": 2709, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "eller", "start": 13, "box": { "x0": 2801, "y0": 1795, "x1": 3261, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "nej.", "start": 19, "box": { "x0": 3353, "y0": 1795, "x1": 3721, "y1": 1926 }, "baseline": 1900, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 1795, "x1": 3721, "y1": 1926 },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Kaffe",
+                "words": [
+                  { "text": "Kaffe", "start": 0, "box": { "x0": 1605, "y0": 1975, "x1": 2065, "y1": 2106 }, "baseline": 2080, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 1975, "x1": 2065, "y1": 2106 },
+                "baseline": 2080,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": { "numId": 2, "ilvl": 0, "rendered": "•", "format": "bullet" }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Te",
+                "words": [
+                  { "text": "Te", "start": 0, "box": { "x0": 1605, "y0": 2155, "x1": 1789, "y1": 2286 }, "baseline": 2260, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 2155, "x1": 1789, "y1": 2286 },
+                "baseline": 2260,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": { "numId": 2, "ilvl": 0, "rendered": "•", "format": "bullet" }
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "4. Övrigt",
+                "words": [
+                  { "text": "4.", "start": 0, "box": { "x0": 1000, "y0": 2335, "x1": 1184, "y1": 2466 }, "baseline": 2440, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null },
+                  { "text": "Övrigt", "start": 3, "box": { "x0": 1276, "y0": 2335, "x1": 1828, "y1": 2466 }, "baseline": 2440, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1000, "y0": 2335, "x1": 1828, "y1": 2466 },
+                "baseline": 2440,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l10",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Underskrift",
+                "words": [
+                  { "text": "Underskrift", "start": 0, "box": { "x0": 1605, "y0": 2515, "x1": 2617, "y1": 2646 }, "baseline": 2620, "fontSize": 131, "fontWeight": 400, "italic": false, "ocrConfidence": null, "repair": null }
+                ],
+                "box": { "x0": 1605, "y0": 2515, "x1": 2617, "y1": 2646 },
+                "baseline": 2620,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 1,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": { "numId": 3, "ilvl": 0, "rendered": "1.", "format": "decimal" }
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

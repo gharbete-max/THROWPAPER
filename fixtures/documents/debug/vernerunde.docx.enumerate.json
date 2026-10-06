@@ -1,0 +1,27 @@
+{
+  "stage": "enumerate",
+  "stageVersion": 8,
+  "irVersion": 1,
+  "inputSha256": "4a6f1a1198d8d0dfdd2c993b6a1338da8921072b01ac32ba32852db766fe0101",
+  "decisions": [
+    {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
+    {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l3","rule":"P2","verdict":"skipped","subject":["p1-l3"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l4","rule":"P2","verdict":"skipped","subject":["p1-l4"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l5","rule":"P2","verdict":"skipped","subject":["p1-l5"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l6","rule":"P2","verdict":"skipped","subject":["p1-l6"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l7","rule":"P2","verdict":"skipped","subject":["p1-l7"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l8","rule":"P2","verdict":"skipped","subject":["p1-l8"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l9","rule":"P2","verdict":"skipped","subject":["p1-l9"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l10","rule":"P2","verdict":"skipped","subject":["p1-l10"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l11","rule":"P2","verdict":"skipped","subject":["p1-l11"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l12","rule":"P2","verdict":"skipped","subject":["p1-l12"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l13","rule":"P2","verdict":"skipped","subject":["p1-l13"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l14","rule":"P2","verdict":"skipped","subject":["p1-l14"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l15","rule":"P2","verdict":"skipped","subject":["p1-l15"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l16","rule":"P2","verdict":"skipped","subject":["p1-l16"],"evidence":{"role":"table"}},
+    {"id":"enumerate:p1-l17","rule":"R6b","verdict":"prose","subject":["p1-l17"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l18","rule":"R6b","verdict":"prose","subject":["p1-l18"],"evidence":{"closed":0,"relX":0,"width":9000}},
+    {"id":"enumerate:p1-l19","rule":"R6b","verdict":"prose","subject":["p1-l19"],"evidence":{"closed":0,"relX":0,"width":9000}}
+  ]
+}

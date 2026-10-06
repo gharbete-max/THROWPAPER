@@ -1,0 +1,57 @@
+{
+  "document": "indmeldelse",
+  "locale": "da",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Indmeldelse i foreningen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Vi bedes om at registrere alle medlemmer hos kommunen, og derfor har vi brug for dit CPR-nummer. Udfyld venligst skemaet med dine egne oplysninger og aflever det i klubhuset, når du har tid. Vores kasserer gemmer oplysningerne i et aflåst skab, og vi giver dem aldrig videre til nogen uden for foreningen."
+    },
+    {
+      "kind": "instruction",
+      "text": "Har du spørgsmål om, hvad vi bruger oplysningerne til, så kontakt gerne bestyrelsen. Melder du en forening eller et firma ind, skal du også skrive dets CVR-nummer. Tak for hjælpen."
+    },
+    {
+      "kind": "question",
+      "label": "Navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Adresse",
+      "answer": "blank",
+      "type": "address"
+    },
+    {
+      "kind": "question",
+      "label": "CPR-nummer",
+      "answer": "blank",
+      "type": "personnummer",
+      "format": {
+        "name": "dk-cpr",
+        "apply": true
+      }
+    },
+    {
+      "kind": "question",
+      "label": "CVR-nummer (kun for foreninger og firmaer)",
+      "answer": "blank",
+      "type": "orgnr",
+      "format": {
+        "name": "dk-cvr",
+        "apply": true
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Underskrift",
+      "answer": "blank",
+      "type": "signature"
+    }
+  ]
+}

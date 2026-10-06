@@ -1,6 +1,22 @@
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { importAcroFields, type AcroField } from '@tp/shared/forms';
-import { anchorFor, labelNear, mergeWidgets, type Widget } from './extract.js';
+import {
+  fieldBoxes,
+  anchorFor,
+  fontLook,
+  horizontalRules,
+  labelNear,
+  mergeWidgets,
+  openPdf,
+  runWords,
+  SCANNED_RUNS,
+  type Ops,
+  type Pdfjs,
+  type Widget,
+} from './extract.js';
+import type { RecognisedWords } from './ocr-words.js';
 import { clampAnchor, result } from './PaperCanvas.js';
 
 /** A4 in PDF points. */
@@ -115,5 +131,296 @@ describe('a label for a drawn box', () => {
 
   it('and nothing at all when nothing is near', () => {
     expect(labelNear({ x: 0.5, y: 0.8, w: 0.2, h: 0.05 }, runs)).toBeUndefined();
+  });
+});
+
+describe('the text layer as words (CAVEATS #58)', () => {
+  const regular = { fontWeight: 400 as const, italic: false };
+
+  it('splits a run at its spaces and shares its width out by character', () => {
+    // "1. Namn" is 7 characters over 119 points: 17 a character.
+    const words = runWords(
+      { text: '1. Namn', x0: 59.5, x1: 178.5, baseline: 84.2, size: 11 },
+      PAGE,
+      regular,
+    );
+    expect(words.map((w) => [w.text, w.box.x0, w.box.x1])).toEqual([
+      ['1.', 1000, 1571],
+      ['Namn', 1857, 3000],
+    ]);
+    // 11 pt on A4 is 131 iu; the baseline at 84.2 of 842 points is 1000.
+    expect(words[0]).toMatchObject({ baseline: 1000, fontSize: 131, source: 'text-layer' });
+    expect(words[0]!.box).toMatchObject({ y0: 895, y1: 1026 });
+  });
+
+  it('keeps runs of spaces, tabs and a leading space out of the words, and drops nothing else', () => {
+    const words = runWords(
+      { text: ' a\t\tbc  d ', x0: 0, x1: 100, baseline: 100, size: 10 },
+      PAGE,
+      regular,
+    );
+    expect(words.map((w) => w.text)).toEqual(['a', 'bc', 'd']);
+    expect(
+      runWords({ text: '   ', x0: 0, x1: 10, baseline: 100, size: 10 }, PAGE, regular),
+    ).toEqual([]);
+  });
+
+  it('reads bold from the font, by its flags or its name', () => {
+    expect(fontLook({ name: 'ABCDEF+Calibri-Bold' }).fontWeight).toBe(700);
+    expect(fontLook({ name: 'Arial-BlackItalic' })).toEqual({ fontWeight: 700, italic: true });
+    expect(fontLook({ name: 'Helvetica', bold: true }).fontWeight).toBe(700);
+    expect(fontLook({ name: 'Times-Roman' })).toEqual({ fontWeight: 400, italic: false });
+    expect(fontLook(undefined).fontWeight).toBe(400);
+  });
+});
+
+describe('printed rules from the drawing operations', () => {
+  // pdf.js's codes, as far as this reads them; the real ones come from `OPS` at runtime.
+  const OPS: Ops = {
+    save: 10,
+    restore: 11,
+    transform: 12,
+    constructPath: 91,
+    paintFormXObjectBegin: 74,
+    paintFormXObjectEnd: 75,
+    stroke: 20,
+    closeStroke: 21,
+    fill: 22,
+    eoFill: 23,
+    fillStroke: 24,
+    eoFillStroke: 25,
+    closeFillStroke: 26,
+    closeEOFillStroke: 27,
+  };
+  // A4 at scale 1: y flipped, as pdf.js's viewport transform does it.
+  const VIEWPORT = [1, 0, 0, -1, 0, 842];
+  const path = (paint: number, ...segments: number[]) => [
+    paint,
+    [Float32Array.from(segments)],
+    null,
+  ];
+  const rulesOf = (fnArray: number[], argsArray: unknown[]) =>
+    horizontalRules({ fnArray, argsArray }, OPS, VIEWPORT, PAGE);
+
+  it('finds a stroked answer line and the edges of a filled box, in iu', () => {
+    const line = path(OPS.stroke, 0, 100, 742, 1, 400, 742);
+    const box = path(OPS.fill, 0, 100, 500, 1, 400, 500, 1, 400, 520, 1, 100, 520, 4);
+    expect(rulesOf([OPS.constructPath, OPS.constructPath], [line, box])).toEqual([
+      { x0: 1681, y0: 1188, x1: 6723, y1: 1188 },
+      { x0: 1681, y0: 4062, x1: 6723, y1: 4062 },
+      { x0: 1681, y0: 3824, x1: 6723, y1: 3824 },
+    ]);
+  });
+
+  it('ignores a path that is not painted, a short or slanted segment, and curves', () => {
+    const clip = path(99, 0, 100, 742, 1, 400, 742);
+    const short = path(OPS.stroke, 0, 100, 742, 1, 120, 742);
+    const slanted = path(OPS.stroke, 0, 100, 742, 1, 400, 700);
+    const curve = path(OPS.stroke, 0, 100, 742, 2, 200, 742, 300, 742, 400, 742);
+    const f = OPS.constructPath;
+    expect(rulesOf([f, f, f, f], [clip, short, slanted, curve])).toEqual([]);
+  });
+
+  it('follows the transformation matrix, and restores it', () => {
+    const scaled = [OPS.save, OPS.transform, OPS.constructPath, OPS.restore, OPS.constructPath];
+    const line = path(OPS.stroke, 0, 50, 421, 1, 200, 421);
+    const rules = rulesOf(scaled, [null, [2, 0, 0, 1, 0, 0], line, null, line]);
+    expect(rules.map((r) => [r.x0, r.x1])).toEqual([
+      [1681, 6723],
+      [840, 3361],
+    ]);
+  });
+});
+
+describe("a PDF's fields for the import's stages (CAVEATS #54)", () => {
+  const field = (over: Partial<AcroField>): AcroField => ({
+    name: 'f',
+    type: 'text',
+    paper: { page: 3, x: 0.5, y: 0.25, w: 0.3, h: 0.02 },
+    ...over,
+  });
+
+  it('puts each widget in layout units, on its page counted within this PDF', () => {
+    expect(fieldBoxes([field({ name: 'namn', label: 'Namn' })], 2)).toEqual([
+      {
+        name: 'namn',
+        label: 'Namn',
+        type: 'text',
+        multiline: false,
+        multiSelect: false,
+        pageNo: 2,
+        box: { x0: 5000, y0: 2500, x1: 8000, y1: 2700 },
+      },
+    ]);
+  });
+
+  it('leaves out what asks nothing, and what has nowhere to be', () => {
+    const boxes = fieldBoxes(
+      [
+        field({ name: 'send', type: 'button' }),
+        field({ name: 'total', readOnly: true }),
+        field({ name: 'secret', hidden: true }),
+        field({ name: 'nowhere', paper: undefined }),
+        field({ name: 'kept', multiline: true }),
+      ],
+      0,
+    );
+    expect(boxes.map((box) => [box.name, box.multiline, box.label])).toEqual([
+      ['kept', true, null],
+    ]);
+  });
+});
+
+const require = createRequire(import.meta.url);
+async function nodePdfjs(): Promise<Pdfjs> {
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(
+    require.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs'),
+  ).href;
+  return pdfjs;
+}
+
+/**
+ * A PDF written by hand, an A4 page for each content stream, Helvetica as its font and a 2×2 grey
+ * image as `/Scan`: enough to say how many text runs a page has, and whether it paints a picture.
+ */
+function pdfOf(...pages: string[]): ArrayBuffer {
+  const image = 4 + pages.length * 2;
+  const objects: string[] = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    `<< /Type /Pages /Kids [${pages.map((_, i) => `${4 + i * 2} 0 R`).join(' ')}] /Count ${pages.length} >>`,
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+  ];
+  for (const [i, content] of pages.entries()) {
+    objects.push(
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> /XObject << /Scan ${image} 0 R >> >> /Contents ${5 + i * 2} 0 R >>`,
+      `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+    );
+  }
+  objects.push(
+    '<< /Type /XObject /Subtype /Image /Width 2 /Height 2 /ColorSpace /DeviceGray /BitsPerComponent 8 /Length 4 >>\nstream\nAAAA\nendstream',
+  );
+  let body = '%PDF-1.4\n';
+  const offsets = objects.map((object, i) => {
+    const at = body.length;
+    body += `${i + 1} 0 obj\n${object}\nendobj\n`;
+    return at;
+  });
+  const xref = body.length;
+  body += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  body += offsets.map((at) => `${String(at).padStart(10, '0')} 00000 n \n`).join('');
+  body += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return new TextEncoder().encode(body).buffer as ArrayBuffer;
+}
+
+/** `count` text runs down the page, one a line. */
+const textRuns = (count: number) =>
+  Array.from(
+    { length: count },
+    (_, i) => `BT /F1 12 Tf 72 ${760 - i * 20} Td (Question ${i + 1}) Tj ET`,
+  ).join('\n');
+
+/** A scanned page's drawing: its picture over the whole page. */
+const picture = 'q 595 0 0 842 0 0 cm /Scan Do Q';
+/** A page with no picture: a filled box, drawn, not painted from an image. */
+const drawn = '0.5 g 72 400 451 300 re f';
+
+const recognised: RecognisedWords = {
+  width: 1190,
+  height: 1684,
+  engine: 'Tesseract 5.5.0',
+  lines: [
+    {
+      baseline: { x0: 144, y0: 200, x1: 600, y1: 200 },
+      rowHeight: 30,
+      words: [
+        { text: 'Namn', confidence: 93.4, bbox: { x0: 144, y0: 176, x1: 230, y1: 202 } },
+        { text: 'Adress', confidence: 61.6, bbox: { x0: 250, y0: 176, x1: 360, y1: 202 } },
+      ],
+    },
+  ],
+};
+
+describe('a scanned page, read by OCR (S14)', () => {
+  it('reads a page with no text layer from the reader, and names it in the extractor', async () => {
+    const pdf = await openPdf(pdfOf(textRuns(SCANNED_RUNS), picture), 0, nodePdfjs);
+    const asked: number[] = [];
+    try {
+      const raw = await pdf.raw({
+        ocr: (pageIndex) => {
+          asked.push(pageIndex);
+          return Promise.resolve(recognised);
+        },
+      });
+      // Only the second page is a scan: the first has its three runs and is never sent to OCR.
+      expect(asked).toEqual([1]);
+      expect(raw.pages[0]!.words.every((word) => word.source === 'text-layer')).toBe(true);
+      expect(raw.pages[0]!.words.map((word) => word.text).slice(0, 2)).toEqual(['Question', '1']);
+      expect(raw.pages[1]!.words).toEqual([
+        expect.objectContaining({
+          text: 'Namn',
+          box: { x0: 1210, y0: 1045, x1: 1933, y1: 1200 },
+          baseline: 1188,
+          fontSize: 178,
+          ocrConfidence: 93,
+          source: 'ocr',
+        }),
+        expect.objectContaining({ text: 'Adress', ocrConfidence: 62, source: 'ocr' }),
+      ]);
+      expect(raw.pages[1]!.widthPt).toBe(595);
+      expect(raw.source.extractor).toMatch(/^pdfjs-dist@\S+ \+ Tesseract 5\.5\.0$/);
+    } finally {
+      await pdf.close();
+    }
+  });
+
+  it(`takes a picture with fewer than ${SCANNED_RUNS} runs for a scan, and one with ${SCANNED_RUNS} for text`, async () => {
+    const pdf = await openPdf(
+      pdfOf(`${picture}\n${textRuns(SCANNED_RUNS - 1)}`, `${picture}\n${textRuns(SCANNED_RUNS)}`),
+      0,
+      nodePdfjs,
+    );
+    const asked: number[] = [];
+    try {
+      await pdf.raw({
+        ocr: (pageIndex) => {
+          asked.push(pageIndex);
+          return Promise.resolve(recognised);
+        },
+      });
+      expect(asked).toEqual([0]);
+    } finally {
+      await pdf.close();
+    }
+  });
+
+  it('never takes a page with no picture for a scan, however little text it has', async () => {
+    // "1. Namn: ____" alone is a form, and its text layer is exact: never read again by OCR.
+    const pdf = await openPdf(pdfOf(textRuns(1), drawn, ''), 0, nodePdfjs);
+    const asked: number[] = [];
+    try {
+      const raw = await pdf.raw({
+        ocr: (pageIndex) => {
+          asked.push(pageIndex);
+          return Promise.resolve(recognised);
+        },
+      });
+      expect(asked).toEqual([]);
+      expect(raw.pages[0]!.words.map((word) => word.text)).toEqual(['Question', '1']);
+      expect(raw.source.extractor).toMatch(/^pdfjs-dist@\S+$/);
+    } finally {
+      await pdf.close();
+    }
+  });
+
+  it('leaves a scanned page empty with no reader, and the extractor pdf.js alone', async () => {
+    const pdf = await openPdf(pdfOf(picture), 0, nodePdfjs);
+    try {
+      const raw = await pdf.raw();
+      expect(raw.pages[0]!.words).toEqual([]);
+      expect(raw.source.extractor).toMatch(/^pdfjs-dist@\S+$/);
+    } finally {
+      await pdf.close();
+    }
   });
 });

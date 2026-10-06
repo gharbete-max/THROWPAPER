@@ -1,0 +1,600 @@
+{
+  "fixture": "box-label-wraps",
+  "caveats": [
+    "box-label-wraps"
+  ],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S15",
+  "summary": "A box whose words run to the column's edge goes on in the next line of its block, as a paragraph does: \"☐ Jag godkänner att föreningen sparar mina uppgifter i medlemsregistret enligt EU:s\" and \"dataskyddsförordning.\" are one consent (#154), as the Word copy of the same text, one paragraph, already was. A box line that ends short of the edge keeps to itself: the sentence after it is text.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "pdf",
+      "extractor": "fixture: synthetic geometry (LAYOUT-IR.md)",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "y0": 895,
+            "x1": 9000,
+            "y1": 1926,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 895,
+              "x1": 8636,
+              "y1": 1206
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "☐ Jag godkänner att föreningen sparar mina uppgifter i medlemsregistret enligt EU:s",
+                "words": [
+                  {
+                    "text": "☐",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 895,
+                      "x1": 1092,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Jag",
+                    "start": 2,
+                    "box": {
+                      "x0": 1184,
+                      "y0": 895,
+                      "x1": 1460,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "godkänner",
+                    "start": 6,
+                    "box": {
+                      "x0": 1552,
+                      "y0": 895,
+                      "x1": 2380,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "att",
+                    "start": 16,
+                    "box": {
+                      "x0": 2472,
+                      "y0": 895,
+                      "x1": 2748,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "föreningen",
+                    "start": 20,
+                    "box": {
+                      "x0": 2840,
+                      "y0": 895,
+                      "x1": 3760,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "sparar",
+                    "start": 31,
+                    "box": {
+                      "x0": 3852,
+                      "y0": 895,
+                      "x1": 4404,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "mina",
+                    "start": 38,
+                    "box": {
+                      "x0": 4496,
+                      "y0": 895,
+                      "x1": 4864,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "uppgifter",
+                    "start": 43,
+                    "box": {
+                      "x0": 4956,
+                      "y0": 895,
+                      "x1": 5784,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "i",
+                    "start": 53,
+                    "box": {
+                      "x0": 5876,
+                      "y0": 895,
+                      "x1": 5968,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "medlemsregistret",
+                    "start": 55,
+                    "box": {
+                      "x0": 6060,
+                      "y0": 895,
+                      "x1": 7532,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "enligt",
+                    "start": 72,
+                    "box": {
+                      "x0": 7624,
+                      "y0": 895,
+                      "x1": 8176,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "EU:s",
+                    "start": 79,
+                    "box": {
+                      "x0": 8268,
+                      "y0": 895,
+                      "x1": 8636,
+                      "y1": 1026
+                    },
+                    "baseline": 1000,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 895,
+                  "x1": 8636,
+                  "y1": 1026
+                },
+                "baseline": 1000,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "dataskyddsförordning.",
+                "words": [
+                  {
+                    "text": "dataskyddsförordning.",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1075,
+                      "x1": 2932,
+                      "y1": 1206
+                    },
+                    "baseline": 1180,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1075,
+                  "x1": 2932,
+                  "y1": 1206
+                },
+                "baseline": 1180,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 1615,
+              "x1": 4220,
+              "y1": 1926
+            },
+            "lines": [
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "☐ Ja, jag vill ha nyhetsbrevet.",
+                "words": [
+                  {
+                    "text": "☐",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1615,
+                      "x1": 1092,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "Ja,",
+                    "start": 2,
+                    "box": {
+                      "x0": 1184,
+                      "y0": 1615,
+                      "x1": 1460,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "jag",
+                    "start": 6,
+                    "box": {
+                      "x0": 1552,
+                      "y0": 1615,
+                      "x1": 1828,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "vill",
+                    "start": 10,
+                    "box": {
+                      "x0": 1920,
+                      "y0": 1615,
+                      "x1": 2288,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "ha",
+                    "start": 15,
+                    "box": {
+                      "x0": 2380,
+                      "y0": 1615,
+                      "x1": 2564,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "nyhetsbrevet.",
+                    "start": 18,
+                    "box": {
+                      "x0": 2656,
+                      "y0": 1615,
+                      "x1": 3852,
+                      "y1": 1746
+                    },
+                    "baseline": 1720,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1615,
+                  "x1": 3852,
+                  "y1": 1746
+                },
+                "baseline": 1720,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 1,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "Vi skickar det fyra gånger om året.",
+                "words": [
+                  {
+                    "text": "Vi",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1795,
+                      "x1": 1184,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "skickar",
+                    "start": 3,
+                    "box": {
+                      "x0": 1276,
+                      "y0": 1795,
+                      "x1": 1920,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "det",
+                    "start": 11,
+                    "box": {
+                      "x0": 2012,
+                      "y0": 1795,
+                      "x1": 2288,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "fyra",
+                    "start": 15,
+                    "box": {
+                      "x0": 2380,
+                      "y0": 1795,
+                      "x1": 2748,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "gånger",
+                    "start": 20,
+                    "box": {
+                      "x0": 2840,
+                      "y0": 1795,
+                      "x1": 3392,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "om",
+                    "start": 27,
+                    "box": {
+                      "x0": 3484,
+                      "y0": 1795,
+                      "x1": 3668,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  },
+                  {
+                    "text": "året.",
+                    "start": 30,
+                    "box": {
+                      "x0": 3760,
+                      "y0": 1795,
+                      "x1": 4220,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1795,
+                  "x1": 4220,
+                  "y1": 1926
+                },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "text-layer",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "stage": "classify",
+  "stageVersion": 4,
+  "irVersion": 1,
+  "inputSha256": "e85a45cd925cd88449aae835727e83480acb34ca6496d8eb59836a4e817f4c4c",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"short_text","subject":["p1-l3"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l4","rule":"K1","verdict":"personnummer","subject":["p1-l4"],"evidence":{"confidence":971,"features":"personnummerWord","format":"is-kennitala (chip)","margin":3500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l5","rule":"K1","verdict":"email","subject":["p1-l5"],"evidence":{"confidence":953,"features":"emailWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l6","rule":"K1","verdict":"phone","subject":["p1-l6"],"evidence":{"confidence":953,"features":"phoneWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l7","rule":"K1","verdict":"yes_no","subject":["p1-l7"],"evidence":{"confidence":1000,"features":"answerBoolean booleanPair","margin":9000,"required":"unknown","runnerUp":"consent"}}
+  ]
+}

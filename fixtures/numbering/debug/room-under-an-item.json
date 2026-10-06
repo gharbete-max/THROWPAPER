@@ -1,0 +1,17 @@
+{
+  "stage": "segment",
+  "stageVersion": 7,
+  "irVersion": 1,
+  "inputSha256": "4d03bb6e3637430098099311cdc0723479fc17e44a911b11e74605569ba769d0",
+  "decisions": [
+    {"id":"segment:p1-l1","rule":"S1","verdict":"heading","subject":["p1-l1"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l2","rule":"S7","verdict":"question:unknown","subject":["p1-l2"],"evidence":{"room":0,"verdict":"candidate"}},
+    {"id":"segment:p1-l3","rule":"S1","verdict":"heading","subject":["p1-l3"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l4","rule":"S7","verdict":"question:unknown","subject":["p1-l4"],"evidence":{"room":0,"verdict":"accept"}},
+    {"id":"segment:p1-l5","rule":"S7","verdict":"question:unknown","subject":["p1-l5"],"evidence":{"room":0,"verdict":"accept"}},
+    {"id":"segment:p1-l6","rule":"S1","verdict":"heading","subject":["p1-l6"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l7","rule":"S7","verdict":"question:unknown","subject":["p1-l7"],"evidence":{"room":0,"verdict":"candidate"}},
+    {"id":"segment:p1-l8","rule":"S1","verdict":"heading","subject":["p1-l8"],"evidence":{"lines":1}},
+    {"id":"segment:p1-l9","rule":"S7","verdict":"question:blank","subject":["p1-l9","p1-l10","p1-l11"],"evidence":{"room":2,"verdict":"candidate"}}
+  ]
+}

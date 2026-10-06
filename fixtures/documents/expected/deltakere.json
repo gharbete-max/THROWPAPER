@@ -1,0 +1,38 @@
+{
+  "document": "deltakere",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Påmelding av lag"
+    },
+    {
+      "kind": "instruction",
+      "text": "Hvert lag kan ha opptil seks deltakere, og alle må være medlemmer av klubben. Skriv inn deltakerne i tabellen og lever skjemaet til sekretariatet før fristen. Laget får startnummer når påmeldingen er godkjent."
+    },
+    {
+      "kind": "question",
+      "label": "Lagets navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "table",
+      "label": "Deltakere",
+      "columns": [
+        "Navn",
+        "Fødselsdato",
+        "Telefon"
+      ],
+      "rowCount": 6,
+      "type": "repeating_group"
+    },
+    {
+      "kind": "question",
+      "label": "Lagleder",
+      "answer": "blank",
+      "type": "short_text"
+    }
+  ]
+}

@@ -71,3 +71,18 @@ describe('choice style classes', () => {
     expect(stylesheet).toMatch(/\.choice__option \{[^}]*min-height: 44px/);
   });
 });
+
+describe('the joined shapes', () => {
+  /**
+   * `CAVEATS.md` #78: "Joined in one bar" stacked in one column kept its rounded ends at the sides,
+   * so the bar read as rounded pieces. Stacked, its ends are the top of the first answer and the
+   * bottom of the last.
+   */
+  it('puts a stacked bar’s ends at its top and bottom', () => {
+    const stacked = '.choice--buttons.choice--shape-segmented.choice--columns-1 .choice__option';
+    const first = rules(stylesheet).find(([selector]) => selector === `${stacked}:first-child`);
+    const last = rules(stylesheet).find(([selector]) => selector === `${stacked}:last-child`);
+    expect(first?.[1]).toMatch(/border-radius:\s*var\([^)]+\)\s+var\([^)]+\)\s+0\s+0/);
+    expect(last?.[1]).toMatch(/border-radius:\s*0\s+0\s+var\([^)]+\)\s+var\([^)]+\)/);
+  });
+});

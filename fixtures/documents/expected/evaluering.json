@@ -1,0 +1,46 @@
+{
+  "document": "evaluering",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Evaluering af kurset"
+    },
+    {
+      "kind": "instruction",
+      "text": "Tak fordi du deltog i kurset. Vi vil gerne høre, hvad du synes, så vi kan gøre det bedre næste gang. Sæt et kryds i hver række, og skriv gerne en kommentar. Evalueringen er anonym."
+    },
+    {
+      "kind": "grid",
+      "label": null,
+      "rows": [
+        "Indholdet",
+        "Underviseren",
+        "Lokalerne"
+      ],
+      "columns": [
+        "Godt",
+        "Middel",
+        "Dårligt"
+      ],
+      "type": "grid"
+    },
+    {
+      "kind": "question",
+      "label": "Vil du anbefale kurset til andre?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Kommentarer",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

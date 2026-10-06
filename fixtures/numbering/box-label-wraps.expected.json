@@ -1,0 +1,41 @@
+{
+  "fixture": "box-label-wraps",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l1",
+            "p1-l2"
+          ],
+          "label": "Jag godkänner att föreningen sparar mina uppgifter i medlemsregistret enligt EU:s dataskyddsförordning.",
+          "answer": "boolean",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l3"
+          ],
+          "label": "Ja, jag vill ha nyhetsbrevet.",
+          "answer": "boolean",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "instruction",
+          "lineIds": [
+            "p1-l4"
+          ],
+          "text": "Vi skickar det fyra gånger om året."
+        }
+      ]
+    }
+  }
+}

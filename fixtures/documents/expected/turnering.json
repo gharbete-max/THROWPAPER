@@ -1,0 +1,77 @@
+{
+  "document": "turnering",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmälan till fotbollsturneringen"
+    },
+    {
+      "kind": "instruction",
+      "text": "Turneringen spelas på klubbens gräsplaner den första helgen i juni. Varje förening får anmäla flera lag, och alla lag spelar minst tre matcher. Anmälan ska vara inne hos tävlingsledningen senast den 1 maj, och avgiften betalas när lagen har lottats."
+    },
+    {
+      "kind": "question",
+      "label": "Föreningens namn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Hur många lag anmäler ni? (högst 3)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Antal spelare per lag (minst 7, högst 12)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "min",
+          "value": 7
+        },
+        {
+          "name": "max",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Yngsta spelarens ålder (minst 10 år)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "min",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Har ni deltagit i turneringen under de senaste 5 åren?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nej"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "Kontaktperson och telefon",
+      "answer": "blank",
+      "type": "phone"
+    }
+  ]
+}

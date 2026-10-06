@@ -1,0 +1,89 @@
+# ADR 0020 — The conversation is a validated graph of data
+
+**Status:** accepted 2026-10-06 by the owner's delegation ("Make all the decisions, pick the path that seems most logical", given in the session that built it, after every slice was built and green) — proposed 2026-09-25 from the owner's brief; built in S1, S2 and every
+slice since, now graph version 7 (PR #147, "As built" below)
+**Date:** 2026-09-25
+**Amends:** ADR 0006 — keeps its facets for choosing what a form is; adds ordered chains for
+configuring one question; restates its four-press promise as a bound on chains
+
+## Context
+
+The guided builder (ADR 0017) asks a sequence of questions whose order sometimes matters and
+sometimes does not. "How many options?" means nothing before "Do you want buttons?"; "Does it need
+payment?" and "Does it need a signature?" are independent.
+
+ADR 0006 (accepted) removed `next` from the wizard for exactly the second case — "making one of
+them come second was an invention nobody decided on" — and replaced it with facets selected by a
+sector, which also made cycles impossible. It recorded that a promise was lost with the path
+enumeration ("at most four presses") and restated it as a bound.
+
+The brief asks for a directed graph with `next`, `when` guards, declarative patches, scores, and a
+build-time validator — and allows guarded cycles (the "add another question?" loop).
+
+## Decision
+
+1. **The conversation is data**: one TypeScript module of plain data (`builder/graph/nodes.ts`,
+   `satisfies BuilderGraph`, proven JSON-serialisable by a test), rendered by components that never
+   decide what comes next. The schema, the node kinds, and the `when` / `patch` / `score` semantics
+   are `docs/plan/BUILDER-GRAPH.md`.
+2. **Both of ADR 0006's shapes, each where it is right.** The purpose question (`flow.start`) and
+   the feature menu keep facet semantics: independent, answerable in any order, reached through
+   menus. **Ordered `next` exists only inside a feature's chain** (buttons → one or several → how
+   many → shape → placement), where the order is the meaning.
+3. **`when` guards are a small, total language** parsed by hand into an AST: paths, comparisons,
+   `&&` `||` `!`, and four functions (`answered`, `decided`, `count`, `has`). No `eval`, no
+   `Function`, no arithmetic, bounded length and depth; every guard carries a plain-language reason
+   shown when its node is skipped.
+4. **The validator** (`pnpm builder:validate`, also a test inside `pnpm verify`) rejects: unknown
+   references, unreachable nodes, nodes without a way out, missing or empty translations in any of
+   the twelve locales, patches on paths the schema does not have, cycles that turn without the
+   person steering them or have no exit, option counts outside 2–4 (or 2–8 for choosers), unparsable
+   guards, unknown templates in scores, questions over nine words or with banned words, and
+   operative wording in example chips.
+5. **ADR 0006's four-press promise, restated again:** from the start of any feature, the longest
+   chain without a guard to a preview or the end is at most **six** nodes (rule G11), and the first
+   answer of the whole conversation already yields a publishable draft.
+6. **Cycles** are allowed only when steered by an answer and with an exit (G6); a step budget in
+   the machine (500 transitions per session) turns a validator bug into an error instead of a hang.
+
+## Consequences
+
+- ADR 0006 gains a note pointing here. `wizard/tree.ts` and its tests are unchanged: `POST
+  /v1/forms` still resolves `wizardAnswers` with them. (Corrected in S13: this said the generic
+  `Wizard` still started mailings and invoice runs. Nothing but New form used it, and it went with
+  S4.)
+- Adding a question to the conversation is adding data and twelve translations, and the validator
+  says what is missing.
+- Components get simpler and dumber by design; the machine (S2) owns every transition.
+- Graph versions change over time; logs store resolved patches, so old sessions replay unchanged.
+
+## As built (S13, 2026-10-05)
+
+Decisions 1–5 are built. The graph is at version 7: 44 nodes, every string in twelve catalogues.
+`pnpm builder:validate` checks rules G0–G14, the aliases among them. G14, added in S6, says a node
+that settles a slot must be passed by when the slot is decided. The versions, in order: S5's shapes
+and logo slot, S6's slots, owner question 8's colours, S11's guess, S12's walk, and S13's form name
+and "How should people answer?". Each is described at the top of `nodes.ts`. A session recorded
+against an earlier version replays, and the version-6 recording is kept and replayed to prove it.
+
+Decision 6 was built differently. There is no budget of 500 transitions per session. Instead:
+- a step's walk past the nodes it skips is bounded by the size of the graph, and refuses to go
+  round;
+- a saved session holds at most 2 000 steps (`MAX_LOG_ENTRIES`).
+
+The protection is the same: a validator bug becomes an error, not a hang.
+
+## Rejected alternatives
+
+- **Let an LLM decide the next question.** Rejected: a conversation whose next step is generated
+  cannot be validated for dead ends or replayed from a log (determinism, testability), would need a
+  network on the offline desktop (parity), and would send what people are building to a provider
+  (privacy, cost).
+- **A statechart library (XState and the like).** Rejected: a dependency (ADR 0021's rule and
+  `CAVEATS.md` #41), and its guards and actions are functions — code in the data — which is what
+  this decision exists to keep out.
+- **YAML or JSON as the source format.** Rejected for now in favour of typed TypeScript data: YAML
+  needs a parser dependency (ADR 0021); JSON has no comments and no type checking at the point of
+  writing. The serialisability test keeps JSON available if a server ever has to deliver the graph.
+- **Conditionals in components.** Rejected: the graph could no longer be validated or walked by a
+  test, and "why was I asked this?" would have no answer.

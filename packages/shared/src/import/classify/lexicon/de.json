@@ -1,0 +1,35 @@
+{
+  "source": "docs/plan/IMPORT-PIPELINE.md §5: the words by which a label says what its answer is, in de. Lower-case, compared after NFKC as whole words or phrases; an entry ending in * matches the start of a word (telefon* → telefonnummer), one starting with * its end (*adress → postadress). Chinese and Japanese entries are matched by character pairs. formats: the validation a personnummer or organisation-number word proposes, applied only on a document detected as this language (CAVEATS #27).",
+  "lexiconVersion": 1,
+  "language": "de",
+  "features": {
+    "nameWord": ["name", "vorname", "nachname", "familienname", "*name"],
+    "emailWord": ["e-mail", "email", "e-mail-adresse", "e-mailadresse", "emailadresse", "mail"],
+    "phoneWord": ["telefon*", "*telefon", "tel", "handy", "mobil*", "rufnummer"],
+    "addressWord": ["anschrift", "*anschrift", "adresse", "*adresse"],
+    "dateWord": ["datum", "*datum", "geburtstag"],
+    "timeWord": ["uhrzeit", "zeit"],
+    "numberWord": ["anzahl", "wie viele", "alter"],
+    "currencyHint": ["betrag", "preis", "gebühr", "€", "eur", "euro", "summe", "mwst"],
+    "personnummerWord": [],
+    "orgNrWord": ["handelsregisternummer"],
+    "signatureHint": ["unterschrift", "*unterschrift"],
+    "fileHint": ["anhang", "hochladen", "beifügen", "anhängen"],
+    "consentHint": ["einwillig*", "zustimm*", "ich stimme", "dsgvo", "gdpr", "ich akzeptiere"],
+    "commentWord": [
+      "bemerkung*",
+      "anmerkung*",
+      "kommentar*",
+      "sonstiges",
+      "nachricht",
+      "beschreib*"
+    ],
+    "selectAllPhrase": ["mehrfachnennung*", "mehrere antworten"],
+    "repeatableHint": ["pro person", "je teilnehmer"],
+    "required": ["pflicht*", "erforderlich", "muss ausgefüllt"],
+    "optional": ["optional", "freiwillig*"],
+    "maxWords": ["max", "maximal", "höchstens", "bis zu"],
+    "minWords": ["min", "mindestens"]
+  },
+  "formats": {}
+}

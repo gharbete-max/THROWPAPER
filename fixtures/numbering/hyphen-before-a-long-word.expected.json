@@ -1,0 +1,46 @@
+{
+  "fixture": "hyphen-before-a-long-word",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "Föreningen har nu fått sina nya stadgar och dessa gäller från och med den första januari.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Alla som vill delta i stämman behöver göra en anmälan och en registreringsavgiftsbetalning",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "före den sista mars.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Skriv din e-",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "postadress nedan.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": [
+        {
+          "word": "registreringsavgiftsbetalning",
+          "kind": "dehyphenated",
+          "raw": "regist-\nreringsavgiftsbetalning"
+        }
+      ]
+    }
+  }
+}

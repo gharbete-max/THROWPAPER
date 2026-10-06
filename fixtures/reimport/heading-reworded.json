@@ -1,0 +1,64 @@
+{
+  "note": "The heading reworded: its id changed, so the section of every question under it changed, and theirs did too. The heading is matched by its wording (Dice 40/45) and asked about; the questions by their wording, unchanged, nothing asked. A heading never matches a question.",
+  "form": [
+    {
+      "id": "h-arsmote",
+      "family": "heading",
+      "text": "Anmälan till årsmötet",
+      "fromDocument": true
+    },
+    {
+      "id": "q-namn",
+      "family": "question",
+      "text": "Namn",
+      "fromDocument": true
+    },
+    {
+      "id": "q-telefon",
+      "family": "question",
+      "text": "Telefon",
+      "fromDocument": true
+    }
+  ],
+  "retired": [],
+  "document": [
+    {
+      "id": "h-arsmote-2027",
+      "family": "heading",
+      "text": "Anmälan till årsmötet 2027"
+    },
+    {
+      "id": "q-namn-s",
+      "family": "question",
+      "text": "Namn"
+    },
+    {
+      "id": "q-telefon-s",
+      "family": "question",
+      "text": "Telefon"
+    }
+  ],
+  "expect": {
+    "matches": [
+      {
+        "formId": "h-arsmote",
+        "by": "wording"
+      },
+      {
+        "formId": "q-namn",
+        "by": "wording"
+      },
+      {
+        "formId": "q-telefon",
+        "by": "wording"
+      }
+    ],
+    "added": [],
+    "addBack": [],
+    "reworded": [
+      0
+    ],
+    "gone": [],
+    "moved": []
+  }
+}

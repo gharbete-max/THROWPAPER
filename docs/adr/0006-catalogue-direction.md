@@ -3,6 +3,14 @@
 **Status:** accepted 2026-09-22 — the direction is the owner's, decided on paper the same day
 **Date:** 2026-09-22
 
+> **Amended (2026-10-06):** ADR 0020, accepted that day, keeps this ADR's facets for choosing what
+> a form is, and adds ordered, guarded chains *inside* a feature (buttons → how many → shape), where
+> the order is the meaning. The four-press promise is restated for chains as rule G11 there. ADR
+> 0017, accepted the same day, replaces the form wizard's questions with the guided builder; `wizard/tree.ts`
+> and `forms/wizard.ts` stay because `POST /v1/forms` still resolves `wizardAnswers` for clients
+> that send them. (Corrected in S13: this note said they stayed "for mailings and invoice runs";
+> nothing else ever used the wizard, and its component went with S4.)
+
 The product is to cover forms across verticals — real estate, AGM/EGM, small business, trades, and
 misc events — through an Akinator-style flow: *what business are you in* (including **none**, which
 is what covers misc events), then a multi-select matrix of what the form should contain, then a

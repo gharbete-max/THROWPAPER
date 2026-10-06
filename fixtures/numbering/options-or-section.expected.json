@@ -1,0 +1,15 @@
+{
+  "fixture": "options-or-section",
+  "expect": {
+    "segment": {
+      "segments": [
+        { "kind": "question", "lineIds": ["p1-l1", "p1-l2", "p1-l3"], "label": "Hur ofta deltar du?", "itemId": "i-p1-l1", "answer": "choice", "options": ["Varje vecka", "Varje månad"], "details": [], "flags": [] },
+        { "kind": "question", "lineIds": ["p1-l4", "p1-l5", "p1-l6"], "label": "Röststämma", "itemId": "i-p1-l4", "answer": "choice", "options": ["Sopran", "Alt"], "details": [], "flags": [] },
+        { "kind": "heading", "lineIds": ["p1-l7"], "text": "Kontaktuppgifter" },
+        { "kind": "question", "lineIds": ["p1-l8"], "label": "Telefon", "itemId": "i-p1-l8", "answer": "blank", "options": [], "details": [], "flags": [] },
+        { "kind": "question", "lineIds": ["p1-l9"], "label": "E-post", "itemId": "i-p1-l9", "answer": "blank", "options": [], "details": [], "flags": [] },
+        { "kind": "question", "lineIds": ["p1-l10"], "label": "Vill du hjälpa till?", "itemId": "i-p1-l10", "answer": "unknown", "options": [], "details": [], "flags": [] }
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "fixture": "bullet-list",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l1"],
+          "detailLineIds": [],
+          "marker": { "raw": "•", "family": "bullet", "style": "glyph", "path": [], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Kaffe",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l2"],
+          "detailLineIds": [],
+          "marker": { "raw": "•", "family": "bullet", "style": "glyph", "path": [], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Te",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l1",
+          "lineIds": ["p1-l3"],
+          "detailLineIds": [],
+          "marker": { "raw": "-", "family": "bullet", "style": "glyph", "path": [], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Vatten",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l5",
+          "runId": "r-p1-l5",
+          "lineIds": ["p1-l5"],
+          "detailLineIds": [],
+          "marker": { "raw": "*", "family": "bullet", "style": "glyph", "path": [], "wordCount": 1 },
+          "level": 1,
+          "parentId": null,
+          "label": "Obligatoriskt fält",
+          "verdict": "candidate",
+          "flags": ["single-item"],
+          "decidedBy": "D3"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": ["p1-l4"],
+      "skippedLineIds": []
+    }
+  }
+}

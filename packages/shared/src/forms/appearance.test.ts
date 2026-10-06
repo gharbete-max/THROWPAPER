@@ -222,3 +222,102 @@ describe('choice style', () => {
     expect(validateSubmission(definition, { meal: 'sushi' }).issues).not.toEqual([]);
   });
 });
+
+/**
+ * A yes/no drawn as one box to tick — the consent presentation (`docs/plan/POLISH.md`, S13a). The
+ * one appearance that says something about the answer: a box that is not ticked has still been
+ * answered, so "required" can only mean "ticked", as it does for a required checkbox in HTML.
+ */
+describe('a box to tick', () => {
+  const definitionOf = (required: boolean, appearance = 'checkbox') =>
+    FormDefinition.parse({
+      schemaVersion: 1,
+      fields: [{ id: 'f1', key: 'agree', type: 'yes_no', label: {}, required, appearance }],
+      settings: {},
+    });
+
+  it('is a yes/no appearance', () => {
+    expect(YES_NO_APPEARANCES).toContain('checkbox');
+    expect(() =>
+      Field.parse({
+        id: 'f',
+        key: 'k',
+        type: 'single_select',
+        label: {},
+        options: [{ value: 'a', label: {} }],
+        appearance: 'checkbox',
+      }),
+    ).toThrow();
+  });
+
+  it('stores ticked as yes and not ticked as no', () => {
+    const optional = definitionOf(false);
+    expect(validateSubmission(optional, { agree: true })).toMatchObject({
+      ok: true,
+      values: { agree: true },
+    });
+    expect(validateSubmission(optional, { agree: false })).toMatchObject({
+      ok: true,
+      values: { agree: false },
+    });
+    expect(validateSubmission(optional, {}).ok).toBe(true);
+  });
+
+  it('when required, must be ticked — not ticked, or never touched, is asked for by name', () => {
+    const required = definitionOf(true);
+    expect(validateSubmission(required, { agree: true }).ok).toBe(true);
+    for (const input of [{ agree: false }, { agree: 'false' }, {}]) {
+      expect(validateSubmission(required, input).issues).toEqual([
+        { key: 'agree', code: 'validation.tick' },
+      ]);
+    }
+  });
+
+  it('keeps an unticked box in a saved draft, as every other unfinished answer is kept', () => {
+    expect(
+      validateSubmission(definitionOf(true), { agree: false }, { partial: true }),
+    ).toMatchObject({ ok: true, values: { agree: false } });
+  });
+
+  it('changes nothing for a yes/no drawn any other way: no is an answer there', () => {
+    for (const appearance of ['dropdown', 'radio', 'buttons']) {
+      const required = definitionOf(true, appearance);
+      expect(validateSubmission(required, { agree: false })).toMatchObject({
+        ok: true,
+        values: { agree: false },
+      });
+      expect(validateSubmission(required, {}).issues).toEqual([
+        { key: 'agree', code: 'validation.required' },
+      ]);
+    }
+  });
+
+  it('is held to the same rule inside a repeating group', () => {
+    const definition = FormDefinition.parse({
+      schemaVersion: 1,
+      fields: [
+        {
+          id: 'g',
+          key: 'people',
+          type: 'repeating_group',
+          label: {},
+          max: 5,
+          fields: [
+            {
+              id: 'g1',
+              key: 'agree',
+              type: 'yes_no',
+              label: {},
+              required: true,
+              appearance: 'checkbox',
+            },
+          ],
+        },
+      ],
+      settings: {},
+    });
+    const issues = validateSubmission(definition, { people: [{ agree: false }, {}] }).issues;
+    expect(issues.map((issue) => issue.code)).toEqual(['validation.tick', 'validation.tick']);
+    expect(validateSubmission(definition, { people: [{ agree: true }] }).ok).toBe(true);
+  });
+});

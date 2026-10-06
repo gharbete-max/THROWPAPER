@@ -1,0 +1,74 @@
+{
+  "document": "reisestotte",
+  "locale": null,
+  "items": [
+    {
+      "marker": "(1)",
+      "label": "Navn: ______________________________"
+    },
+    {
+      "marker": "(2)",
+      "label": "E-post: ____________________________"
+    },
+    {
+      "marker": "(3)",
+      "label": "Beløp du søker om: __________________"
+    },
+    {
+      "marker": "(4)",
+      "label": "Kontonummer: ________________________"
+    },
+    {
+      "marker": "(5)",
+      "label": "Har du søkt om støtte fra oss før? ☐ Ja ☐ Nei"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Søknad om reisestøtte"
+    },
+    {
+      "kind": "instruction",
+      "text": "Klubben har satt av penger til å hjelpe medlemmer som skal delta i mesterskap langt hjemmefra. Fyll ut skjemaet og send det til kassereren før du reiser. Vi behandler søknadene etter hvert som de kommer inn, og du får svar i løpet av to uker."
+    },
+    {
+      "kind": "question",
+      "label": "Navn",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "E-post",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Beløp du søker om",
+      "answer": "blank",
+      "type": "money"
+    },
+    {
+      "kind": "instruction",
+      "text": "(3 500 kroner er det meste vi kan dekke for hver søker.)"
+    },
+    {
+      "kind": "question",
+      "label": "Kontonummer",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "Har du søkt om støtte fra oss før?",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "Ja",
+        "Nei"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "fixture": "list-after-a-full-last-line",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l3",
+          "lineIds": [
+            "p1-l3"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              1
+            ],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Name: ______________________________",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l4",
+          "runId": "r-p1-l3",
+          "lineIds": [
+            "p1-l4"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "2.",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              2
+            ],
+            "wordCount": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "Phone: _____________________________",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": [
+        "p1-l1",
+        "p1-l2"
+      ],
+      "skippedLineIds": []
+    }
+  }
+}

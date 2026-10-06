@@ -1,0 +1,48 @@
+{
+  "fixture": "hyphen-join-keeps-line-start",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "1. Namn: ____________________________",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "2. Om du inte kan komma till stämman men gärna vill läsa protokollet, till vilken e-postadress",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "ska vi skicka det? ____________________",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": [
+        {
+          "word": "e-postadress",
+          "kind": "joined-at-break",
+          "raw": "e-\npostadress"
+        }
+      ]
+    },
+    "enumerateSummary": [
+      {
+        "raw": "1.",
+        "label": "Namn: ____________________________",
+        "level": 1,
+        "verdict": "accept"
+      },
+      {
+        "raw": "2.",
+        "label": "Om du inte kan komma till stämman men gärna vill läsa protokollet, till vilken e-postadress ska vi skicka det? ____________________",
+        "level": 1,
+        "verdict": "accept"
+      }
+    ]
+  }
+}

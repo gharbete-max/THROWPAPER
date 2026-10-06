@@ -140,6 +140,18 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-motion-fast'] = '110ms';
   vars['--tp-motion'] = '180ms';
   vars['--tp-motion-slow'] = '320ms';
+  /**
+   * The guided builder's one movement: the next question arriving, and a preview changing
+   * because an answer did (`docs/plan/DESIGN-LANGUAGE.md`, "Motion"). Always on the
+   * `unfurl` curve below, and never at all under `prefers-reduced-motion`.
+   */
+  vars['--tp-motion-preview'] = '220ms';
+  /**
+   * How long a wait goes unshown (`CAVEATS.md` #42: no spinner under 150 ms). A wait shorter than
+   * this shows nothing at all, so a quick load never flashes a picture nobody had time to read. A
+   * delay, not a movement: it holds under `prefers-reduced-motion` too.
+   */
+  vars['--tp-wait-unshown'] = '150ms';
 
   /*
    * The mark's own two curves, so the interface moves the way the thing in the corner moves.

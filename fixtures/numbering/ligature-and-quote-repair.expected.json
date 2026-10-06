@@ -1,0 +1,20 @@
+{
+  "fixture": "ligature-and-quote-repair",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "The first “Office” hours are flexible.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": [
+        { "word": "first", "kind": "ligature", "raw": "ﬁrst" },
+        { "word": "“Office”", "kind": "ligature", "raw": "“Oﬃce”" },
+        { "word": "flexible.", "kind": "ligature", "raw": "ﬂexible." }
+      ]
+    }
+  }
+}

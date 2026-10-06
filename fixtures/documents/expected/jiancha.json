@@ -1,0 +1,53 @@
+{
+  "document": "jiancha",
+  "locale": "zh",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "设备检查记录"
+    },
+    {
+      "kind": "instruction",
+      "text": "每月第一周由值班人员检查一次消防设备，并在本表上记录检查结果。发现问题时，请在备注中写明并及时报告。"
+    },
+    {
+      "kind": "question",
+      "label": "检查日期",
+      "answer": "blank",
+      "type": "date"
+    },
+    {
+      "kind": "question",
+      "label": "检查人",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "灭火器是否正常？",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "是",
+        "否"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "应急灯是否正常？",
+      "answer": "boolean",
+      "type": "yes_no",
+      "options": [
+        "是",
+        "否"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "备注",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

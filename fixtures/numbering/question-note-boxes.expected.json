@@ -1,0 +1,35 @@
+{
+  "fixture": "question-note-boxes",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l1",
+            "p1-l2",
+            "p1-l3",
+            "p1-l4"
+          ],
+          "label": "Welche Kurse würden Sie besuchen? (Mehrfachnennungen möglich)",
+          "answer": "choice",
+          "itemId": null,
+          "options": [
+            "Fotografie",
+            "Kochen",
+            "Yoga"
+          ],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "instruction",
+          "lineIds": [
+            "p1-l5"
+          ],
+          "text": "Danke!"
+        }
+      ]
+    }
+  }
+}

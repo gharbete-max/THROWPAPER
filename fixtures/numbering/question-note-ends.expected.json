@@ -1,0 +1,40 @@
+{
+  "fixture": "question-note-ends",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l1"
+          ],
+          "label": "Hur många gäster tar du med? (max 4)",
+          "answer": "unknown",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l2"
+          ],
+          "label": "Varför frågar vi efter ditt födelseår?",
+          "answer": "unknown",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "instruction",
+          "lineIds": [
+            "p1-l3"
+          ],
+          "text": "Vi bjuder på kaffe efter mötet."
+        }
+      ]
+    }
+  }
+}

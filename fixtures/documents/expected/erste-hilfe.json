@@ -1,0 +1,58 @@
+{
+  "document": "erste-hilfe",
+  "locale": "de",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Anmeldung zum Erste-Hilfe-Kurs"
+    },
+    {
+      "kind": "instruction",
+      "text": "Der Verein bietet im Frühjahr wieder einen Erste-Hilfe-Kurs für Mitglieder und ihre Angehörigen an. Der Kurs findet an einem Samstag im Vereinsheim statt, und die Teilnahme ist für Mitglieder kostenlos. Bitte füllen Sie das Formular aus und geben Sie es bis Ende März beim Vorstand ab."
+    },
+    {
+      "kind": "question",
+      "label": "Vor- und Nachname (Pflichtfeld)",
+      "answer": "blank",
+      "type": "short_text",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "E-Mail (Pflichtfeld)",
+      "answer": "blank",
+      "type": "email",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Telefon (freiwillig)",
+      "answer": "blank",
+      "type": "phone",
+      "required": "no"
+    },
+    {
+      "kind": "question",
+      "label": "Wie viele Personen melden Sie an? (höchstens 3)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "text": "Haben Sie Fragen? Dann rufen Sie uns gern im Vereinsheim an."
+    },
+    {
+      "kind": "question",
+      "label": "Ich bin damit einverstanden, dass meine Angaben gemäß DSGVO für die Kursverwaltung gespeichert werden.",
+      "answer": "boolean",
+      "type": "consent"
+    }
+  ]
+}

@@ -85,7 +85,7 @@ export async function signInAs(
    * Chromium reports `en-US` — so assertions written against Swedish labels silently looked for
    * text that was never on the page.
    */
-  locale: 'sv-SE' | 'en-GB' = 'sv-SE',
+  locale: 'sv-SE' | 'en-GB' | 'de-DE' = 'sv-SE',
 ): Promise<void> {
   const secret = await plantRefreshToken(sql, email);
 

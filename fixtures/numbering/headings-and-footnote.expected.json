@@ -1,0 +1,28 @@
+{
+  "fixture": "headings-and-footnote",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        { "text": "PERSONUPPGIFTER", "pageNo": 1, "columnIndex": 0, "role": "heading" },
+        { "text": "1. Namn", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "2. Adress", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "Övriga frågor", "pageNo": 1, "columnIndex": 0, "role": "heading" },
+        { "text": "1. Allergier", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        { "text": "2. Övrigt", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        {
+          "text": "* Uppgifterna används bara för anmälan till årsmötet.",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "footnote"
+        }
+      ],
+      "repairs": []
+    },
+    "enumerateSummary": [
+      { "raw": "1.", "label": "Namn", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Adress", "level": 1, "verdict": "accept" },
+      { "raw": "1.", "label": "Allergier", "level": 1, "verdict": "accept" },
+      { "raw": "2.", "label": "Övrigt", "level": 1, "verdict": "accept" }
+    ]
+  }
+}

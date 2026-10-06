@@ -3,8 +3,11 @@ import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from
 import type { Db } from '../types.js';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
+import { compareAliases } from '@tp/shared/interpret';
 import {
   brandKits,
+  builderAliases,
+  builderSessions,
   auditLog,
   checkIns,
   events,
@@ -30,6 +33,8 @@ import {
 } from '../schema.js';
 import type {
   BrandKitRecord,
+  BuilderAliasRecord,
+  BuilderSessionRecord,
   CheckInRecord,
   EventCreate,
   EventRecord,
@@ -1091,6 +1096,108 @@ export function createDrizzleRepositories(db: Db): Repositories {
       },
     },
 
+    builderSessions: {
+      find: async (organisationId, formId, userId) =>
+        first(
+          await db
+            .select()
+            .from(builderSessions)
+            .where(
+              and(
+                eq(builderSessions.organisationId, organisationId),
+                eq(builderSessions.formId, formId),
+                eq(builderSessions.userId, userId),
+              ),
+            )
+            .limit(1),
+        ) as BuilderSessionRecord | null,
+
+      /**
+       * The version check is the statement's own condition, so two saves racing cannot both win:
+       * the first insert takes the primary key and the second does nothing; of two updates from
+       * the same version, the second finds the version already moved on.
+       */
+      save: async ({ organisationId, formId, userId, session, expected }) => {
+        if (expected === 0) {
+          const rows = await db
+            .insert(builderSessions)
+            .values({ organisationId, formId, userId, session, version: 1, updatedAt: new Date() })
+            .onConflictDoNothing()
+            .returning();
+          return first(rows) as BuilderSessionRecord | null;
+        }
+        const rows = await db
+          .update(builderSessions)
+          .set({ session, version: expected + 1, updatedAt: new Date() })
+          .where(
+            and(
+              eq(builderSessions.organisationId, organisationId),
+              eq(builderSessions.formId, formId),
+              eq(builderSessions.userId, userId),
+              eq(builderSessions.version, expected),
+            ),
+          )
+          .returning();
+        return first(rows) as BuilderSessionRecord | null;
+      },
+    },
+
+    builderAliases: {
+      list: async (organisationId) =>
+        (
+          await db
+            .select()
+            .from(builderAliases)
+            .where(eq(builderAliases.organisationId, organisationId))
+        )
+          .map(aliasRecord)
+          .sort(compareAliases),
+
+      /** The unique index is the lock: a phrase remembered twice at once is stored once. */
+      add: async (organisationId, entries) => {
+        if (entries.length === 0) return [];
+        const rows = await db
+          .insert(builderAliases)
+          .values(
+            entries.map(({ createdAt, ...entry }) => ({
+              ...entry,
+              createdOn: createdAt,
+              organisationId,
+            })),
+          )
+          .onConflictDoNothing()
+          .returning();
+        return rows.map(aliasRecord).sort(compareAliases);
+      },
+
+      bump: async (organisationId, id) => {
+        const rows = await db
+          .update(builderAliases)
+          .set({ count: sql`${builderAliases.count} + 1` })
+          .where(and(eq(builderAliases.organisationId, organisationId), eq(builderAliases.id, id)))
+          .returning();
+        const row = first(rows);
+        return row ? aliasRecord(row) : null;
+      },
+
+      remove: async (organisationId, id) => {
+        const rows = await db
+          .delete(builderAliases)
+          .where(and(eq(builderAliases.organisationId, organisationId), eq(builderAliases.id, id)))
+          .returning();
+        const row = first(rows);
+        return row ? aliasRecord(row) : null;
+      },
+
+      clear: async (organisationId) =>
+        (
+          await db
+            .delete(builderAliases)
+            .where(eq(builderAliases.organisationId, organisationId))
+            .returning({ id: builderAliases.id })
+        ).length,
+    },
+
     signingRequests: {
       create: async (input) => {
         const [row] = await db.insert(signingRequests).values(input).returning();
@@ -1604,4 +1711,10 @@ async function withLines(db: Db, rows: Array<typeof invoices.$inferSelect>) {
   }
 
   return rows.map((row) => ({ ...row, lines: byInvoice.get(row.id) ?? [] }));
+}
+
+/** A `builder_aliases` row as the repository returns it: the date is `createdAt`, the key stays. */
+function aliasRecord(row: typeof builderAliases.$inferSelect): BuilderAliasRecord {
+  const { key: _key, createdOn, source, ...rest } = row;
+  return { ...rest, createdAt: createdOn, source: source as BuilderAliasRecord['source'] };
 }

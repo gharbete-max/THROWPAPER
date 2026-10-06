@@ -1,0 +1,66 @@
+{
+  "document": "ankeeto",
+  "locale": "ja",
+  "items": [
+    {
+      "marker": "①",
+      "label": "年代：＿＿＿＿＿＿＿＿"
+    },
+    {
+      "marker": "②",
+      "label": "性別： □男性 □女性 □回答しない"
+    },
+    {
+      "marker": "③",
+      "label": "満足度： □満足 □普通 □不満"
+    },
+    {
+      "marker": "④",
+      "label": "その他：＿＿＿＿＿＿＿＿＿＿＿＿"
+    }
+  ],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "利用者アンケート"
+    },
+    {
+      "kind": "instruction",
+      "text": "いつも当館をご利用いただき、ありがとうございます。サービス向上のため、以下のアンケートにご協力ください。回答は統計的に処理し、個人が特定されることはありません。"
+    },
+    {
+      "kind": "question",
+      "label": "年代",
+      "answer": "blank",
+      "type": "short_text"
+    },
+    {
+      "kind": "question",
+      "label": "性別",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "男性",
+        "女性",
+        "回答しない"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "満足度",
+      "answer": "choice",
+      "type": "single_select",
+      "options": [
+        "満足",
+        "普通",
+        "不満"
+      ]
+    },
+    {
+      "kind": "question",
+      "label": "その他",
+      "answer": "blank",
+      "type": "long_text"
+    }
+  ]
+}

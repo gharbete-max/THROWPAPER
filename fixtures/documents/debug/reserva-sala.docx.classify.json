@@ -1,0 +1,12 @@
+{
+  "stage": "classify",
+  "stageVersion": 4,
+  "irVersion": 1,
+  "inputSha256": "a91ee0141a5870b538a6d45e749c70958d566dc997b0875d6bf7c8b8c56e8f35",
+  "decisions": [
+    {"id":"classify:p1-l3","rule":"K1","verdict":"short_text","subject":["p1-l3"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
+    {"id":"classify:p1-l4","rule":"K1","verdict":"phone","subject":["p1-l4"],"evidence":{"confidence":953,"features":"phoneWord","margin":3000,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l5","rule":"K1","verdict":"date","subject":["p1-l5"],"evidence":{"confidence":924,"features":"dateWord","margin":2500,"required":"unknown","runnerUp":"short_text"}},
+    {"id":"classify:p1-l6","rule":"K1","verdict":"single_select","subject":["p1-l6","p1-l7","p1-l8","p1-l9"],"evidence":{"confidence":622,"features":"answerChoice","margin":500,"required":"unknown","runnerUp":"multi_select"}}
+  ]
+}

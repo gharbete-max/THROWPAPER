@@ -1,0 +1,58 @@
+{
+  "document": "felagaskra",
+  "locale": "is",
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Skráning í félagaskrá"
+    },
+    {
+      "kind": "instruction",
+      "text": "Félagið heldur skrá yfir alla félagsmenn og þarf að fá kennitölu hvers og eins til að geta sent greiðsluseðla. Vinsamlegast fylltu út eyðublaðið og skilaðu því til gjaldkera fyrir aðalfund. Við notum upplýsingarnar aðeins í starfi félagsins og látum þær ekki af hendi."
+    },
+    {
+      "kind": "instruction",
+      "text": "Ef þú ert að skrá fyrirtæki eða annað félag, skrifaðu þá kennitölu þess í reitinn fyrir neðan. Hafðu samband við stjórnina ef eitthvað er óljóst, og við svörum eins fljótt og við getum. Takk fyrir að vera með okkur."
+    },
+    {
+      "kind": "question",
+      "label": "Nafn (skylda)",
+      "answer": "blank",
+      "type": "short_text",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Kennitala",
+      "answer": "blank",
+      "type": "personnummer",
+      "format": {
+        "name": "is-kennitala",
+        "apply": true
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Kennitala fyrirtækis",
+      "answer": "blank",
+      "type": "orgnr",
+      "format": {
+        "name": "is-kennitala",
+        "apply": true
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Netfang",
+      "answer": "blank",
+      "type": "email"
+    },
+    {
+      "kind": "question",
+      "label": "Ég samþykki að félagið geymi upplýsingarnar mínar í félagaskránni.",
+      "answer": "boolean",
+      "type": "consent"
+    }
+  ]
+}

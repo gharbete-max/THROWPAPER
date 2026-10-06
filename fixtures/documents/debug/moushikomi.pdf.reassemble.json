@@ -1,0 +1,14 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "16199c110b0b852104b949d784dad4fcac9c20541556780c596642cb3d983f61",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":8,"y0":734,"y1":2732}},
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-l2-touch1","rule":"L3","verdict":"touching","subject":["p1-l2"],"evidence":{"parts":"このたびは夏季講習会にお申し込みいただき、ありがとうございます。必要事項をご記入のうえ + 、","word":"このたびは夏季講習会にお申し込みいただき、ありがとうございます。必要事項をご記入のうえ、"}},
+    {"id":"reassemble:p1-l3-touch1","rule":"L3","verdict":"touching","subject":["p1-l3"],"evidence":{"parts":"事務局までご提出ください。ご記入いただいた個人情報は、講習会の運営以外には使用しません + 。","word":"事務局までご提出ください。ご記入いただいた個人情報は、講習会の運営以外には使用しません。"}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3","p1-l4","p1-l5","p1-l6","p1-l7","p1-l8"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1b","verdict":"ja","subject":[],"evidence":{"best":"ja","hits":50,"inScript":122,"letters":123,"own":50,"runnerUp":0,"script":"Japanese"}}
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "fixture": "label-colon-blank-below",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "question",
+          "lineIds": ["p1-l1"],
+          "label": "Namn",
+          "itemId": null,
+          "answer": "blank",
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": ["p1-l2", "p1-l3"],
+          "label": "E-post",
+          "itemId": null,
+          "answer": "blank",
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": ["p1-l4"],
+          "label": "Telefon",
+          "itemId": null,
+          "answer": "unknown",
+          "options": [],
+          "details": [],
+          "flags": []
+        }
+      ]
+    }
+  }
+}

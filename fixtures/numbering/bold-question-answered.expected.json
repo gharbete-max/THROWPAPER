@@ -1,0 +1,79 @@
+{
+  "fixture": "bold-question-answered",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "heading",
+          "lineIds": [
+            "p1-l1"
+          ],
+          "text": "Kan jag ta med min hund?"
+        },
+        {
+          "kind": "instruction",
+          "lineIds": [
+            "p1-l2"
+          ],
+          "text": "Ja, om den är kopplad hela tiden."
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l3",
+            "p1-l4"
+          ],
+          "label": "Har du några allergier?",
+          "answer": "blank",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l5"
+          ],
+          "label": "Får jag parkera vid klubbhuset?",
+          "answer": "unknown",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "instruction",
+          "lineIds": [
+            "p1-l6"
+          ],
+          "text": "Ja, parkeringen är gratis."
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l7"
+          ],
+          "label": "Kommer du på middagen?",
+          "answer": "unknown",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l8"
+          ],
+          "label": "Vill du ha vegetarisk mat?",
+          "answer": "unknown",
+          "itemId": null,
+          "options": [],
+          "details": [],
+          "flags": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "fixture": "hyphen-not-across-boundary",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "Alla som vill vara med på årsmötet ska före mötet fylla i blanketten med både för-",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "och efternamn i fälten nedan och dessutom skriva sin adress så att kallelsen kommer",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "fram i tid.", "pageNo": 1, "columnIndex": 0, "role": "body" },
+        {
+          "text": "Blanketten lämnas i receptionen eller skickas med post, och den som anmäler sig sent",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "får betala en förhöjd avgift som läggs ovanpå den vanliga, ordinarie anmälnings-",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "Sida 1 av 2", "pageNo": 1, "columnIndex": 0, "role": "page-furniture" },
+        {
+          "text": "avgiften, som betalas senast den 1 maj.",
+          "pageNo": 2,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        { "text": "Sida 2 av 2", "pageNo": 2, "columnIndex": 0, "role": "page-furniture" }
+      ],
+      "repairs": []
+    }
+  }
+}

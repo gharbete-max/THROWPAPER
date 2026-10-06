@@ -1,0 +1,99 @@
+{
+  "fixture": "room-under-an-item",
+  "expect": {
+    "segment": {
+      "segments": [
+        {
+          "kind": "heading",
+          "lineIds": [
+            "p1-l1"
+          ],
+          "text": "Förslag"
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l2"
+          ],
+          "label": "Förslag ska skickas skriftligt till ordföranden.",
+          "answer": "unknown",
+          "itemId": "i-p1-l2",
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "heading",
+          "lineIds": [
+            "p1-l3"
+          ],
+          "text": "Erfarenhet"
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l4"
+          ],
+          "label": "Beskriv kort din erfarenhet.",
+          "answer": "unknown",
+          "itemId": "i-p1-l4",
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l5"
+          ],
+          "label": "Berätta varför du vill vara med.",
+          "answer": "unknown",
+          "itemId": "i-p1-l5",
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "heading",
+          "lineIds": [
+            "p1-l6"
+          ],
+          "text": "Gäster"
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l7"
+          ],
+          "label": "Hur många gäster tar du med?",
+          "answer": "unknown",
+          "itemId": "i-p1-l7",
+          "options": [],
+          "details": [],
+          "flags": []
+        },
+        {
+          "kind": "heading",
+          "lineIds": [
+            "p1-l8"
+          ],
+          "text": "Beskrivning"
+        },
+        {
+          "kind": "question",
+          "lineIds": [
+            "p1-l9",
+            "p1-l10",
+            "p1-l11"
+          ],
+          "label": "Beskriv ditt förslag.",
+          "answer": "blank",
+          "itemId": "i-p1-l9",
+          "options": [],
+          "details": [],
+          "flags": []
+        }
+      ]
+    }
+  }
+}

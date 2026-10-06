@@ -1,0 +1,65 @@
+{
+  "document": "jasenrekisteri",
+  "locale": null,
+  "items": [],
+  "segments": [
+    {
+      "kind": "heading",
+      "text": "Jäsenrekisterin päivitys"
+    },
+    {
+      "kind": "instruction",
+      "text": "Seuran jäsenrekisteri on päivitettävä joka vuosi, ja siksi pyydämme kaikkia jäseniä täyttämään tämän lomakkeen. Tarvitsemme henkilötunnuksen, kun haemme avustusta kaupungilta, mutta emme luovuta sitä kenellekään muulle. Jos edustat yhdistystä tai yritystä, kirjoita myös sen Y-tunnus."
+    },
+    {
+      "kind": "instruction",
+      "text": "Palauta lomake hallitukselle ennen kevätkokousta, niin ehdimme käsitellä sen ajoissa. Jos sinulla on kysyttävää, voit soittaa sihteerille tai kysyä asiasta seuraavassa kokouksessa. Kiitos, että autat meitä pitämään rekisterin ajan tasalla."
+    },
+    {
+      "kind": "question",
+      "label": "Nimi (pakollinen)",
+      "answer": "blank",
+      "type": "short_text",
+      "required": "yes"
+    },
+    {
+      "kind": "question",
+      "label": "Henkilötunnus",
+      "answer": "blank",
+      "type": "personnummer",
+      "format": {
+        "name": "fi-hetu",
+        "apply": false
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Sähköposti (vapaaehtoinen)",
+      "answer": "blank",
+      "type": "email",
+      "required": "no"
+    },
+    {
+      "kind": "question",
+      "label": "Y-tunnus (vain yhdistykset ja yritykset)",
+      "answer": "blank",
+      "type": "orgnr",
+      "format": {
+        "name": "fi-ytunnus",
+        "apply": false
+      }
+    },
+    {
+      "kind": "question",
+      "label": "Kuinka monta lasta perheessänne on? (enintään 6)",
+      "answer": "blank",
+      "type": "number",
+      "chips": [
+        {
+          "name": "max",
+          "value": 6
+        }
+      ]
+    }
+  ]
+}

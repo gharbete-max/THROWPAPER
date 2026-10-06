@@ -473,14 +473,16 @@ export function FieldProperties({ field, definition, onChange }: Props) {
 
 /**
  * A choice field whose appearance draws its own options. A dropdown is the browser's `select`,
- * which has no shape, size or columns to style, so it is offered nothing.
+ * which has no shape, size or columns to style, so it is offered nothing; nor is a box to tick,
+ * which is the browser's own checkbox and has no options to draw.
  */
 function styleable(
   field: Field,
 ): field is Extract<Field, { type: 'single_select' | 'multi_select' | 'yes_no' }> {
   return (
     (field.type === 'single_select' || field.type === 'multi_select' || field.type === 'yes_no') &&
-    field.appearance !== 'dropdown'
+    field.appearance !== 'dropdown' &&
+    field.appearance !== 'checkbox'
   );
 }
 

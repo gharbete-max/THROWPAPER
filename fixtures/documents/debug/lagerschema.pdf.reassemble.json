@@ -1,0 +1,29 @@
+{
+  "stage": "reassemble",
+  "stageVersion": 6,
+  "irVersion": 1,
+  "inputSha256": "f936636cd800f732985011a3a11099d46327111f0d22a0a9f07a6e630510ab90",
+  "decisions": [
+    {"id":"reassemble:p1-cut1","rule":"C3","verdict":"cut","subject":[],"evidence":{"rows":11,"y0":706,"y1":3379}},
+    {"id":"reassemble:p1-cut2","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":2,"right":1,"x0":3121,"x1":5752}},
+    {"id":"reassemble:p1-cut3","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":1,"right":1,"x0":1326,"x1":2392}},
+    {"id":"reassemble:p1-cut4","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":4,"right":1,"x0":4045,"x1":5752}},
+    {"id":"reassemble:p1-cut5","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":3,"why":"markers","x0":1511,"x1":2392}},
+    {"id":"reassemble:p1-cut6","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":4,"right":1,"x0":4220,"x1":5752}},
+    {"id":"reassemble:p1-cut7","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":3,"why":"markers","x0":1511,"x1":2392}},
+    {"id":"reassemble:p1-cut8","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":2,"right":1,"x0":2895,"x1":5752}},
+    {"id":"reassemble:p1-cut9","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":1,"why":"markers","x0":1511,"x1":2392}},
+    {"id":"reassemble:p1-cut10","rule":"C1","verdict":"cut","subject":[],"evidence":{"left":4,"right":2,"x0":4312,"x1":5752}},
+    {"id":"reassemble:p1-cut11","rule":"C2","verdict":"kept","subject":[],"evidence":{"left":1,"right":3,"why":"markers","x0":1511,"x1":2392}},
+    {"id":"reassemble:p1-cut12","rule":"C4","verdict":"columns","subject":[],"evidence":{"columns":2,"rows":4}},
+    {"id":"reassemble:p1-b1","rule":"H1","verdict":"heading","subject":["p1-l1"],"evidence":{"body":131,"lines":1,"size":238}},
+    {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3"],"evidence":{}},
+    {"id":"reassemble:p1-b3","rule":"H2","verdict":"heading","subject":["p1-l4"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b4","rule":"H2","verdict":"heading","subject":["p1-l5"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b5","rule":"H2","verdict":"heading","subject":["p1-l6"],"evidence":{"body":131,"lines":1,"size":131}},
+    {"id":"reassemble:p1-b6","rule":"B1","verdict":"body","subject":["p1-l7","p1-l8","p1-l9","p1-l10"],"evidence":{}},
+    {"id":"reassemble:p1-b7","rule":"B1","verdict":"body","subject":["p1-l11","p1-l12","p1-l13","p1-l14"],"evidence":{}},
+    {"id":"reassemble:p1-b8","rule":"B1","verdict":"body","subject":["p1-l15","p1-l16","p1-l17"],"evidence":{}},
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"sv","hits":13,"own":9,"runnerUp":0}}
+  ]
+}

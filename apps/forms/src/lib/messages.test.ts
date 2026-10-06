@@ -11,6 +11,7 @@ import { THEME_PRESET_IDS } from '@tp/tokens';
 import { LOCALE_CODES } from '@tp/i18n';
 import { TRANSLATED_LOCALES } from './messages/index.js';
 import { messages } from './messages/all.js';
+import type { MessageKey } from './messages/en-GB.js';
 import { PALETTE_GROUPS } from '../screens/builder/field-defaults.js';
 
 /**
@@ -173,5 +174,196 @@ describe('translations for schema-driven strings', () => {
     // If this is ever empty the regex has drifted from the source and the test proves nothing.
     expect(codes.length).toBeGreaterThan(10);
     expect([...new Set(codes)].filter((code) => !messages[code])).toEqual([]);
+  });
+});
+
+/**
+ * A string left in English. A missing key is a compile error and an empty one fails above; what
+ * nothing caught was a translation that is the English, copied — it compiles, it renders, and it
+ * reads as finished (`docs/plan/POLISH.md`, S13c). A translation may equal the English only where
+ * it says nothing in any language (placeholders, punctuation, digits), where it is a name or a
+ * format that is the same everywhere, or where this list says the language really uses that word.
+ * A new entry is a translator's decision, made here where a reviewer sees it.
+ */
+describe('twelve languages, each its own', () => {
+  /** The same in every language: the product's name, a file format, a URL's start, a code's shape. */
+  const EVERYWHERE: readonly MessageKey[] = [
+    'app.name',
+    'invoices.pdf',
+    'url.placeholder',
+    'checkin.referencePlaceholder',
+  ];
+  /** Words each language uses as English does: cognates and loanwords, each one looked at. */
+  const SAME_WORD: Readonly<Record<string, readonly MessageKey[]>> = {
+    'sv-SE': [
+      'event.status',
+      'forms.version',
+      'appearance.system',
+      'submissions.column.status',
+      'theme.minimal',
+      'rules.pattern',
+      'palette.text',
+      'palette.layout',
+      'brand.colour.accent',
+      'brand.colour.text',
+      'brand.previewOptionA',
+      'attendance.column.status',
+      'signing.status',
+      'signing.declarationVersion',
+      'guided.brand.quick.minimal',
+    ],
+    'da-DK': [
+      'event.status',
+      'forms.access.admin',
+      'users.role.admin',
+      'forms.version',
+      'fieldType.link',
+      'field.shapeKind.ellipse',
+      'appearance.system',
+      'submissions.column.reference',
+      'submissions.column.status',
+      'nav.checkin',
+      'brand.themeSampleButton',
+      'theme.minimal',
+      'rules.pattern',
+      'palette.layout',
+      'brand.logo',
+      'brand.colour.accent',
+      'brand.previewOptionA',
+      'checkin.title',
+      'checkin.reference',
+      'attendance.column.reference',
+      'attendance.column.status',
+      'signing.status',
+      'signing.declarationVersion',
+      'guided.brand.quick.minimal',
+      'conversation.send',
+    ],
+    'nb-NO': [
+      'event.status',
+      'forms.access.admin',
+      'users.role.admin',
+      'field.shapeKind.ellipse',
+      'appearance.system',
+      'submissions.column.status',
+      'brand.themeSampleButton',
+      'theme.minimal',
+      'rules.pattern',
+      'brand.logo',
+      'brand.previewOptionA',
+      'attendance.column.status',
+      'signing.status',
+      'guided.brand.quick.minimal',
+      'conversation.send',
+    ],
+    'fi-FI': ['brand.logo'],
+    'is-IS': [],
+    'fr-FR': [
+      'events.capacity',
+      'event.description',
+      'invoices.total',
+      'forms.version',
+      'builder.history',
+      'field.options',
+      'fieldType.date',
+      'fieldType.signature',
+      'fieldType.section_break',
+      'fieldType.image',
+      'field.shapeKind.rectangle',
+      'field.shapeKind.ellipse',
+      'brand.themeSampleLabel',
+      'theme.minimal',
+      'file.accept.image',
+      'visibility.count',
+      'visibility.field',
+      'rules.pattern',
+      'nav.sections',
+      'field.defaultOption',
+      'brand.logo',
+      'brand.colour.accent',
+      'brand.colour.surface',
+      'brand.hint.success',
+      'brand.previewOptionA',
+      'submissions.document',
+      'paper.pages',
+      'paper.page',
+      'signing.document',
+      'signing.declarationVersion',
+      'signing.environment',
+      'camera.page',
+      'outgoing.showText',
+      'conversation.import.said',
+      'guided.brand.quick.minimal',
+      'review.kind.question',
+    ],
+    'de-DE': [
+      'event.name',
+      'event.status',
+      'forms.access.admin',
+      'users.role.admin',
+      'users.addName',
+      'forms.version',
+      'fieldType.link',
+      'field.shapeKind.ellipse',
+      'appearance.system',
+      'submissions.column.status',
+      'nav.checkin',
+      'theme.minimal',
+      'rules.pattern',
+      'field.defaultOption',
+      'palette.text',
+      'palette.layout',
+      'brand.logo',
+      'brand.colour.text',
+      'brand.previewField',
+      'brand.previewOptionA',
+      'checkin.title',
+      'attendance.column.name',
+      'attendance.column.status',
+      'signing.partyName',
+      'signing.status',
+      'signing.declarationVersion',
+      'guided.brand.quick.minimal',
+    ],
+    'es-ES': [
+      'invoices.total',
+      'brand.colour.danger',
+      'public.no',
+      'signing.realMode',
+      'guided.common.no',
+      'guided.guess.no',
+      'conversation.guess.no',
+    ],
+    'zh-CN': [],
+    'ja-JP': [],
+    'ru-RU': [],
+  };
+  /** Says nothing in any language: placeholders, punctuation, digits and spaces only. */
+  const neutral = (text: string) => !/\p{L}/u.test(text.replace(/\{[^}]*\}/gu, ''));
+
+  it.each(LOCALE_CODES.filter((locale) => locale !== 'en-GB'))(
+    '%s leaves nothing in English that it does not mean to',
+    (locale) => {
+      const allowed = new Set<string>([...EVERYWHERE, ...(SAME_WORD[locale] ?? [])]);
+      const copied = Object.entries(messages)
+        .filter(([key, value]) => {
+          const english = value['en-GB']!;
+          return value[locale] === english && !neutral(english) && !allowed.has(key);
+        })
+        .map(([key, value]) => `${key}: ${value['en-GB']}`);
+      expect(copied).toEqual([]);
+    },
+  );
+
+  it('lists only words that really are the same, so the list cannot go stale', () => {
+    const stale = Object.entries(SAME_WORD).flatMap(([locale, keys]) =>
+      keys
+        .filter((key) => messages[key]?.[locale] !== messages[key]?.['en-GB'])
+        .map((key) => `${locale} ${key}`),
+    );
+    expect(stale).toEqual([]);
+    expect(Object.keys(SAME_WORD).sort()).toEqual(
+      LOCALE_CODES.filter((locale) => locale !== 'en-GB').sort(),
+    );
   });
 });

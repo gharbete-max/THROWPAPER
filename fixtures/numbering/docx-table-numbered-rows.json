@@ -1,0 +1,545 @@
+{
+  "fixture": "docx-table-numbered-rows",
+  "caveats": [
+    "docx-table-numbered-rows"
+  ],
+  "stage": "segment",
+  "status": "green",
+  "turnsGreenIn": "S15",
+  "summary": "A Word table whose first row names its columns and whose other rows hold nothing but their number, 1 to 6, is a table of rows to fill in (S3c), as S3 reads the same table on a PDF's page: its columns the header's cells, its row count the numbered rows. Word's cells give what geometry has to find. Before, it was nine lines of text. The cells are the corpus document deltakere's own.",
+  "input": {
+    "irVersion": 1,
+    "source": {
+      "kind": "docx",
+      "extractor": "fixture: the cells of the corpus document deltakere.docx",
+      "sha256": null
+    },
+    "locale": null,
+    "pages": [
+      {
+        "pageNo": 1,
+        "widthPt": 595,
+        "heightPt": 842,
+        "columns": [
+          {
+            "index": 0,
+            "x0": 1000,
+            "y0": 1435,
+            "x1": 9000,
+            "y1": 6066,
+            "bands": [
+              1000
+            ]
+          }
+        ],
+        "blocks": [
+          {
+            "id": "p1-b1",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "body",
+            "box": {
+              "x0": 1000,
+              "y0": 1435,
+              "x1": 1828,
+              "y1": 1566
+            },
+            "lines": [
+              {
+                "id": "p1-l1",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b1",
+                "text": "Deltakere",
+                "words": [
+                  {
+                    "text": "Deltakere",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1435,
+                      "x1": 1828,
+                      "y1": 1566
+                    },
+                    "baseline": 1540,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1435,
+                  "x1": 1828,
+                  "y1": 1566
+                },
+                "baseline": 1540,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": null
+              }
+            ]
+          },
+          {
+            "id": "p1-b2",
+            "pageNo": 1,
+            "columnIndex": 0,
+            "role": "table",
+            "box": {
+              "x0": 1000,
+              "y0": 1795,
+              "x1": 2012,
+              "y1": 6066
+            },
+            "lines": [
+              {
+                "id": "p1-l2",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "Navn",
+                "words": [
+                  {
+                    "text": "Navn",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1795,
+                      "x1": 1368,
+                      "y1": 1926
+                    },
+                    "baseline": 1900,
+                    "fontSize": 131,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1795,
+                  "x1": 1368,
+                  "y1": 1926
+                },
+                "baseline": 1900,
+                "fontSize": 131,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 0,
+                  "col": 1
+                }
+              },
+              {
+                "id": "p1-l3",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "Fødselsdato",
+                "words": [
+                  {
+                    "text": "Fødselsdato",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 1975,
+                      "x1": 2012,
+                      "y1": 2106
+                    },
+                    "baseline": 2080,
+                    "fontSize": 131,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 1975,
+                  "x1": 2012,
+                  "y1": 2106
+                },
+                "baseline": 2080,
+                "fontSize": 131,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 0,
+                  "col": 2
+                }
+              },
+              {
+                "id": "p1-l4",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "Telefon",
+                "words": [
+                  {
+                    "text": "Telefon",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2155,
+                      "x1": 1644,
+                      "y1": 2286
+                    },
+                    "baseline": 2260,
+                    "fontSize": 131,
+                    "fontWeight": 700,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 2155,
+                  "x1": 1644,
+                  "y1": 2286
+                },
+                "baseline": 2260,
+                "fontSize": 131,
+                "fontWeight": 700,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 0,
+                  "col": 3
+                }
+              },
+              {
+                "id": "p1-l5",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "1",
+                "words": [
+                  {
+                    "text": "1",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 2335,
+                      "x1": 1092,
+                      "y1": 2466
+                    },
+                    "baseline": 2440,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 2335,
+                  "x1": 1092,
+                  "y1": 2466
+                },
+                "baseline": 2440,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 1,
+                  "col": 0
+                }
+              },
+              {
+                "id": "p1-l6",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "2",
+                "words": [
+                  {
+                    "text": "2",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3055,
+                      "x1": 1092,
+                      "y1": 3186
+                    },
+                    "baseline": 3160,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 3055,
+                  "x1": 1092,
+                  "y1": 3186
+                },
+                "baseline": 3160,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 2,
+                  "col": 0
+                }
+              },
+              {
+                "id": "p1-l7",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "3",
+                "words": [
+                  {
+                    "text": "3",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 3775,
+                      "x1": 1092,
+                      "y1": 3906
+                    },
+                    "baseline": 3880,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 3775,
+                  "x1": 1092,
+                  "y1": 3906
+                },
+                "baseline": 3880,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 3,
+                  "col": 0
+                }
+              },
+              {
+                "id": "p1-l8",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "4",
+                "words": [
+                  {
+                    "text": "4",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 4495,
+                      "x1": 1092,
+                      "y1": 4626
+                    },
+                    "baseline": 4600,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 4495,
+                  "x1": 1092,
+                  "y1": 4626
+                },
+                "baseline": 4600,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 4,
+                  "col": 0
+                }
+              },
+              {
+                "id": "p1-l9",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "5",
+                "words": [
+                  {
+                    "text": "5",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 5215,
+                      "x1": 1092,
+                      "y1": 5346
+                    },
+                    "baseline": 5320,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 5215,
+                  "x1": 1092,
+                  "y1": 5346
+                },
+                "baseline": 5320,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 5,
+                  "col": 0
+                }
+              },
+              {
+                "id": "p1-l10",
+                "pageNo": 1,
+                "columnIndex": 0,
+                "blockId": "p1-b2",
+                "text": "6",
+                "words": [
+                  {
+                    "text": "6",
+                    "start": 0,
+                    "box": {
+                      "x0": 1000,
+                      "y0": 5935,
+                      "x1": 1092,
+                      "y1": 6066
+                    },
+                    "baseline": 6040,
+                    "fontSize": 131,
+                    "fontWeight": 400,
+                    "italic": false,
+                    "ocrConfidence": null,
+                    "repair": null
+                  }
+                ],
+                "box": {
+                  "x0": 1000,
+                  "y0": 5935,
+                  "x1": 1092,
+                  "y1": 6066
+                },
+                "baseline": 6040,
+                "fontSize": 131,
+                "fontWeight": 400,
+                "indentBand": 0,
+                "source": "docx",
+                "ocrConfidence": null,
+                "hints": {
+                  "blankRun": false,
+                  "checkboxes": 0,
+                  "endsWithColon": false,
+                  "ruleBelow": false,
+                  "docxNumbering": null
+                },
+                "cell": {
+                  "row": 6,
+                  "col": 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

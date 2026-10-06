@@ -8,7 +8,9 @@ specs into this file.
 apps/forms      Product A — forms, inspections, measurements, reports
 apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
-                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set
+                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
+                keeps each author's guided-builder conversation (builder_sessions) and the
+                organisation's learned phrases (builder_aliases)
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
@@ -29,7 +31,27 @@ packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
 packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
                 — see its own src/index.ts
 packages/calc   Calculation errors and propagation, exact money, the ledger
-packages/shared Types and Zod schemas, including the CONTRACT schemas
+packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's
+                conversation graph, its `when` language, its validator, and the machine that walks
+                it — answers as undoable changes, answers ahead of their turn, replay, stable
+                question ids, the saved session, reconciliation that never writes over a hand edit,
+                questions read from a document added as one step, with the PDF they were read from,
+                walked for what it left open, and brought up to date when it is read again, and the
+                guess — a belief over 25 recipes in integer log-odds, the question that tells it
+                most, and the template's questions "Right" adds, structure only for the two rule 8
+                keeps out (@tp/shared/builder); document import's Layout IR with its validator,
+                pasted text as a layout document, stage 2 (columns, lines, hyphenation, blocks, page
+                furniture, headings, the document's language), stage 3 (the list-marker detector,
+                with Word's own numbering), stage 4 (headings, instructions and questions with what
+                answers them, grids, tables), stage 5 (each question's likely type, by integer
+                weights over word lists in twelve languages, with its three likeliest), stage 7
+                (confidence and bucket, the OCR cap), a PDF's own form fields over its text, and all
+                of them in one call, each with its debug artifact; the paper twin's boxes, where
+                each question's answer and each option's tick go on the page it was read from; and
+                stage 9's comparison of a form with its document read again (@tp/shared/import);
+                free text read by rules — normalisation, word lists and built-in aliases in twelve
+                languages, the rules for learned ones, the ladder T0–T8, the committed sigmoid
+                table, and an integer logarithm and exponential (@tp/shared/interpret)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
@@ -72,6 +94,9 @@ pnpm verify         # format + typecheck + lint + test + build across the worksp
 pnpm db:migrate     pnpm db:seed
 pnpm contract:check # validates all three backends against docs/CONTRACT.md schemas
 pnpm licence:check  # every installed dependency is permissive (docs/adr/0015)
+pnpm bundle:budget  # after a build: Forms' entry, stylesheet and total, gzipped. CI runs it; verify does not
+pnpm builder:validate # the guided builder's graph against rules G0–G14, with all twelve catalogues, and its built-in aliases
+pnpm corpus:build   # the import corpus's PDF and Word files from scripts/corpus/documents.ts, by LibreOffice (soffice)
 pnpm test:e2e
 ```
 
@@ -92,6 +117,38 @@ demos — keep it current with the schema.
 - Batch your questions rather than asking one at a time.
 - If a change touches `packages/` or `docs/CONTRACT.md`, say so explicitly — the other track
   depends on it.
+
+## Guided Builder & Import
+
+The owner's brief is `docs/plan/BRIEF.md`; the plan is the rest of `docs/plan/` (start at
+`PREDICTIVE-BUILDER.md`), and where the two disagree the plan wins and the brief is fixed. The
+decisions are ADRs 0017–0021, accepted on 2026-10-06. ADR 0018 supersedes only ADR 0004's "never
+creates a field"; ADR 0004 still governs the editor's classic paper import (boxes drawn by hand).
+
+- **Six non-negotiables.** (1) No AI, no LLM, no ML service, no network call at runtime: rules,
+  weights and thresholds a person can read and a test can freeze; same bytes in, same JSON out, on
+  every machine. (2) The guided path is primary: a form can be built and published by clicking
+  alone; free text is optional. (3) Never a dead end, never a silent guess: below threshold, ask.
+  (4) Never destroy user text or edits: imported wording is verbatim, hand edits are overrides the
+  guided flow never overwrites. (5) The core is pure and headless. (6) The plan lands before the
+  code at scale.
+- **The purity boundary.** `packages/shared/src/{builder,interpret,import}/` import no React, no
+  DOM, no `node:*`, and call no `Date.now`, `Math.random`, `Math.exp`, `Math.log` or `Math.pow` in a
+  decision: integers, per mille, millinats, committed tables. Bytes are touched only in
+  `apps/forms/src/screens/builder/paper/`.
+- **i18n.** Every graph string is a `guided.*` key in all twelve catalogues in
+  `apps/forms/src/lib/messages/` — never a literal. `pnpm builder:validate` fails on a missing one.
+- **Data formats: JSON or typed TS, never YAML** (ADR 0021). No YAML parser as a dependency, ever.
+  Provenance in fields, not comments; stable key order; schema-validated on load; a reset-to-defaults
+  path for anything a user can edit.
+- **The caveat ledger is test-first.** Every row of `docs/plan/CAVEATS.md` names its test; a
+  §8.1/§8.2 row names a fixture in `fixtures/numbering/`, and `scripts/caveat-fixtures.test.ts`
+  fails if it is missing. Write the fixture before the code that makes it pass. A fixture whose
+  `status` is `green` is run through its stage there — output compared whole, debug artifact
+  against `fixtures/numbering/debug/` — so marking one green is a claim the test checks.
+- **A behaviour change to the ladder or the import heuristics needs a fixture in the same
+  commit** — a phrase-table row, a numbering fixture, a corpus document. No exceptions: a changed
+  threshold with no fixture is an unreviewed guess.
 
 ## Never mistake a proxy for the thing
 

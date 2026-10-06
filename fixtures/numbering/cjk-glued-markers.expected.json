@@ -1,0 +1,236 @@
+{
+  "fixture": "cjk-glued-markers",
+  "expect": {
+    "enumerate": {
+      "items": [
+        {
+          "id": "i-p1-l1",
+          "runId": "r-p1-l1",
+          "lineIds": [
+            "p1-l1"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "１．",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              1
+            ],
+            "wordCount": 1,
+            "glued": 2
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "氏名：＿＿＿＿＿＿",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l2",
+          "runId": "r-p1-l1",
+          "lineIds": [
+            "p1-l2"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "２．",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              2
+            ],
+            "wordCount": 1,
+            "glued": 2
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "電話番号：＿＿＿＿＿＿",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l3",
+          "runId": "r-p1-l1",
+          "lineIds": [
+            "p1-l3"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "３．",
+            "family": "arabic",
+            "style": "dot",
+            "path": [
+              3
+            ],
+            "wordCount": 1,
+            "glued": 2
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "メール：＿＿＿＿＿＿",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l5",
+          "runId": "r-p1-l5",
+          "lineIds": [
+            "p1-l5"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "①",
+            "family": "arabic",
+            "style": "circled",
+            "path": [
+              1
+            ],
+            "wordCount": 1,
+            "glued": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "年代：＿＿＿＿＿＿",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l6",
+          "runId": "r-p1-l5",
+          "lineIds": [
+            "p1-l6"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "②",
+            "family": "arabic",
+            "style": "circled",
+            "path": [
+              2
+            ],
+            "wordCount": 1,
+            "glued": 1
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "性別：□男性 □女性",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l8",
+          "runId": "r-p1-l8",
+          "lineIds": [
+            "p1-l8"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "1、",
+            "family": "arabic",
+            "style": "ideographic",
+            "path": [
+              1
+            ],
+            "wordCount": 1,
+            "glued": 2
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "姓名：______",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l9",
+          "runId": "r-p1-l8",
+          "lineIds": [
+            "p1-l9"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "2、",
+            "family": "arabic",
+            "style": "ideographic",
+            "path": [
+              2
+            ],
+            "wordCount": 1,
+            "glued": 2
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "备注：______",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l11",
+          "runId": "r-p1-l11",
+          "lineIds": [
+            "p1-l11"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "（１）",
+            "family": "arabic",
+            "style": "enclosed",
+            "path": [
+              1
+            ],
+            "wordCount": 1,
+            "glued": 3
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "电话：______",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        },
+        {
+          "id": "i-p1-l12",
+          "runId": "r-p1-l11",
+          "lineIds": [
+            "p1-l12"
+          ],
+          "detailLineIds": [],
+          "marker": {
+            "raw": "（２）",
+            "family": "arabic",
+            "style": "enclosed",
+            "path": [
+              2
+            ],
+            "wordCount": 1,
+            "glued": 3
+          },
+          "level": 1,
+          "parentId": null,
+          "label": "邮箱：______",
+          "verdict": "accept",
+          "flags": [],
+          "decidedBy": "D1"
+        }
+      ],
+      "rejected": [],
+      "proseLineIds": [
+        "p1-l4",
+        "p1-l7",
+        "p1-l10",
+        "p1-l13",
+        "p1-l14",
+        "p1-l15",
+        "p1-l16"
+      ],
+      "skippedLineIds": []
+    }
+  }
+}

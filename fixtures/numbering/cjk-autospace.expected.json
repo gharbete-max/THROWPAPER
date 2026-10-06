@@ -1,0 +1,40 @@
+{
+  "fixture": "cjk-autospace",
+  "expect": {
+    "reassemble": {
+      "lines": [
+        {
+          "text": "参加人数（最多8人）：________",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "会期は3日間です。",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "请填写 Email 地址",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "Rum 8",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        },
+        {
+          "text": "最多 8 人",
+          "pageNo": 1,
+          "columnIndex": 0,
+          "role": "body"
+        }
+      ],
+      "repairs": []
+    }
+  }
+}
