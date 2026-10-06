@@ -24,6 +24,7 @@ import {
   furnitureKey,
   isConjunction,
   isPageNumberKey,
+  letterLocale,
   scriptLocale,
 } from './lexicon.js';
 import { columnRegions, type CutDecision, type Region } from './xycut.js';
@@ -43,7 +44,7 @@ import { columnRegions, type CutDecision, type Region } from './xycut.js';
  */
 
 /** Bumped when the stage's output changes on purpose (the debug artifact records it). */
-export const REASSEMBLE_STAGE_VERSION = 6;
+export const REASSEMBLE_STAGE_VERSION = 7;
 
 /** §2.1: the presentation-form ligatures, and what each is. */
 const LIGATURES: Readonly<Record<string, string>> = {
@@ -704,7 +705,9 @@ export function reassemble(raw: RawDocument): StageResult<LayoutDocument> {
   };
   // G1b (#145): a script only one of the twelve writes decides, whatever the stop words.
   const script = scriptLocale(read);
-  const documentLanguage = script.locale ?? locale.locale;
+  // G1d (#163): letters only one of them writes, when the stop words are too few but agree.
+  const letters = script.locale || locale.locale ? null : letterLocale(read, locale);
+  const documentLanguage = script.locale ?? locale.locale ?? letters?.locale ?? null;
   if (script.locale)
     decide('locale', 'G1b', script.locale, [], {
       script: script.script ?? '',
@@ -712,7 +715,9 @@ export function reassemble(raw: RawDocument): StageResult<LayoutDocument> {
       letters: script.letters,
       ...evidence,
     });
-  else decide('locale', 'G1', locale.locale ?? 'unknown', [], evidence);
+  else if (letters?.locale)
+    decide('locale', 'G1d', letters.locale, [], { letters: letters.letters, ...evidence });
+  else decide('locale', locale.rule ?? 'G1', locale.locale ?? 'unknown', [], evidence);
 
   return {
     output: { irVersion: 1, source: raw.source, locale: documentLanguage, pages: irPages },

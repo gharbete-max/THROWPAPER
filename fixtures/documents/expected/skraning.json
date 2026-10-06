@@ -1,6 +1,6 @@
 {
   "document": "skraning",
-  "locale": null,
+  "locale": "is",
   "items": [
     {
       "marker": "1.",
@@ -45,7 +45,7 @@
       "type": "personnummer",
       "format": {
         "name": "is-kennitala",
-        "apply": false
+        "apply": true
       }
     },
     {

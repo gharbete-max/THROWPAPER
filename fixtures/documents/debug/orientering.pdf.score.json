@@ -2,7 +2,7 @@
   "stage": "score",
   "stageVersion": 2,
   "irVersion": 1,
-  "inputSha256": "7dec1be45ebaaee6488f8dc1abacd9870ba18bf8f484a54e864aed26143b79c4",
+  "inputSha256": "cc8f7ecb5484de7ccdbf0267459cad4373e809fd5a90bab05ebf30e88a054fb1",
   "decisions": [
     {"id":"score:p1-l1","rule":"Q2","verdict":"auto","subject":["p1-l1"],"evidence":{"confidence":924,"heading":2500,"sum":2500}},
     {"id":"score:p1-l2","rule":"Q2","verdict":"auto","subject":["p1-l2","p1-l3","p1-l4"],"evidence":{"confidence":924,"instruction":2500,"sum":2500}},

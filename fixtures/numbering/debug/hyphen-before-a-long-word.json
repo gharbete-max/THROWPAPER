@@ -1,6 +1,6 @@
 {
   "stage": "reassemble",
-  "stageVersion": 6,
+  "stageVersion": 7,
   "irVersion": 1,
   "inputSha256": "6f72fbb07eba73fa31c5e65bb029e39f3f13c728b32a08a7c1ad93f1c6b61160",
   "decisions": [
@@ -8,6 +8,6 @@
     {"id":"reassemble:p1-l2-hyphen1","rule":"Y1","verdict":"dehyphenated","subject":["p1-l2"],"evidence":{"word":"registreringsavgiftsbetalning"}},
     {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2","p1-l3"],"evidence":{}},
     {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l4","p1-l5"],"evidence":{}},
-    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"sv","hits":12,"own":7,"runnerUp":0}}
+    {"id":"reassemble:locale","rule":"G1c","verdict":"sv","subject":[],"evidence":{"best":"sv","hits":12,"own":7,"runnerUp":0}}
   ]
 }

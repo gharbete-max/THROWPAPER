@@ -1,6 +1,6 @@
 {
   "stage": "reassemble",
-  "stageVersion": 6,
+  "stageVersion": 7,
   "irVersion": 1,
   "inputSha256": "b727906c1143ee71ca4d93bdff4498ff937b5669ace470713edb9e6377a8d801",
   "decisions": [
@@ -9,6 +9,6 @@
     {"id":"reassemble:p1-l1-hyphen1","rule":"Y1","verdict":"dehyphenated","subject":["p1-l1"],"evidence":{"word":"medlemmar"}},
     {"id":"reassemble:p1-b1","rule":"B1","verdict":"body","subject":["p1-l1","p1-l2"],"evidence":{}},
     {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l3","p1-l4"],"evidence":{}},
-    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"sv","hits":15,"own":6,"runnerUp":0}}
+    {"id":"reassemble:locale","rule":"G1c","verdict":"sv","subject":[],"evidence":{"best":"sv","hits":15,"own":6,"runnerUp":0}}
   ]
 }

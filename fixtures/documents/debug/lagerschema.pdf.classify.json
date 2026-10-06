@@ -2,7 +2,7 @@
   "stage": "classify",
   "stageVersion": 4,
   "irVersion": 1,
-  "inputSha256": "74c1044a4e21de9c5feb17640fdfc43d05c6adc273dcde47d91849a263ec1895",
+  "inputSha256": "0ccb5a5106a6069cc7abd2adbc7b16a5808135224873e050f69dffdbd4e96f2f",
   "decisions": [
     {"id":"classify:p1-l15","rule":"K1","verdict":"short_text","subject":["p1-l15"],"evidence":{"confidence":976,"features":"nameWord","margin":3700,"required":"unknown","runnerUp":"long_text"}},
     {"id":"classify:p1-l16","rule":"K1","verdict":"phone","subject":["p1-l16"],"evidence":{"confidence":953,"features":"phoneWord","margin":3000,"required":"unknown","runnerUp":"short_text"}}

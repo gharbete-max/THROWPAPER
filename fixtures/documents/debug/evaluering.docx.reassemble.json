@@ -1,6 +1,6 @@
 {
   "stage": "reassemble",
-  "stageVersion": 6,
+  "stageVersion": 7,
   "irVersion": 1,
   "inputSha256": "0c38a57e75ab4a2a658337194cd56c75b7c8970eed2a9fba7e30b38a9a6b02f5",
   "decisions": [
@@ -8,6 +8,6 @@
     {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2"],"evidence":{}},
     {"id":"reassemble:p1-b3","rule":"T1","verdict":"table","subject":["p1-l3","p1-l4","p1-l5","p1-l6","p1-l7","p1-l8","p1-l9","p1-l10","p1-l11","p1-l12","p1-l13","p1-l14","p1-l15","p1-l16","p1-l17"],"evidence":{}},
     {"id":"reassemble:p1-b4","rule":"B1","verdict":"body","subject":["p1-l18","p1-l19"],"evidence":{}},
-    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"da","hits":14,"own":3,"runnerUp":1}}
+    {"id":"reassemble:locale","rule":"G1","verdict":"unknown","subject":[],"evidence":{"best":"da","hits":15,"own":3,"runnerUp":1}}
   ]
 }

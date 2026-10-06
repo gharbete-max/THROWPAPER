@@ -1,6 +1,6 @@
 {
   "stage": "reassemble",
-  "stageVersion": 6,
+  "stageVersion": 7,
   "irVersion": 1,
   "inputSha256": "aff4886a53c3c2c4de7b27d38267acac6f1b4acb4125b72bbd9b9dd97d11a72d",
   "decisions": [
@@ -9,6 +9,6 @@
     {"id":"reassemble:p1-l12-w1","rule":"L2","verdict":"box-mark","subject":["p1-l12"],"evidence":{"raw":"[J"}},
     {"id":"reassemble:p1-b2","rule":"B1","verdict":"body","subject":["p1-l2","p1-l3","p1-l4","p1-l5","p1-l6","p1-l7","p1-l8","p1-l9","p1-l10","p1-l11","p1-l12"],"evidence":{}},
     {"id":"reassemble:p1-b3","rule":"B1","verdict":"body","subject":["p1-l13"],"evidence":{}},
-    {"id":"reassemble:locale","rule":"G1","verdict":"en","subject":[],"evidence":{"best":"en","hits":44,"own":40,"runnerUp":0}}
+    {"id":"reassemble:locale","rule":"G1","verdict":"en","subject":[],"evidence":{"best":"en","hits":44,"own":38,"runnerUp":0}}
   ]
 }

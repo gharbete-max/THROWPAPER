@@ -2,7 +2,7 @@
   "stage": "classify",
   "stageVersion": 4,
   "irVersion": 1,
-  "inputSha256": "d3723f3d2d6d418a1c1ae0e60b4de305856eeef3e18ce51c548e525c918fa7f2",
+  "inputSha256": "ddb41432ed593e7d220c676d65f3a21cc752158f15fa7087ba702f2fab83dc87",
   "decisions": [
     {"id":"classify:p1-l5","rule":"K1","verdict":"short_text","subject":["p1-l5"],"evidence":{"confidence":976,"features":"nameWord required","margin":3700,"required":"yes","runnerUp":"long_text"}},
     {"id":"classify:p1-l6","rule":"K1","verdict":"date","subject":["p1-l6"],"evidence":{"confidence":924,"features":"dateWord","margin":2500,"required":"unknown","runnerUp":"short_text"}},

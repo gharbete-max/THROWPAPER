@@ -6,6 +6,7 @@ import { layoutProblems } from '../ir/validate.js';
 import { IrError } from '../ir/validate.js';
 import { isBlankWord, isCheckboxWord, textHints } from './hints.js';
 import {
+  distinctiveStopwords,
   documentLocale,
   furnitureKey,
   isConjunction,
@@ -496,6 +497,75 @@ describe('§2.11 the document language', () => {
       form(['Nafn', 'Kennitala', 'Netfang', 'Sími', 'Viltu fá fréttabréf félagsins?']).output
         .locale,
     ).toBeNull();
+  });
+
+  // #161: a form has little prose, so twenty stop words is a test written for paragraphs.
+  it('G1c: knows a short form by words only its language uses, four times the runner-up', () => {
+    const swedish = form([
+      'Anmälan till sommarlägret',
+      'Vilken vecka vill du åka?',
+      'Vad vill du göra här?',
+      'Måste någon hämta dig?',
+    ]);
+    expect(swedish.output.locale).toBe('sv');
+    expect(localeDecision(swedish)).toMatchObject({
+      rule: 'G1c',
+      verdict: 'sv',
+      evidence: { best: 'sv', own: 6, runnerUp: 0 },
+    });
+    // Eight of its own words against two of another's is four times; seven is not, so not sure.
+    const camp = ['Anmälan till lägret', 'Vilken vecka?', 'Vad och när?', 'Name of the camper'];
+    expect(form([...camp, 'Måste någon hämta här?']).output.locale).toBe('sv');
+    expect(form([...camp, 'Måste någon hämta?']).output.locale).toBeNull();
+  });
+
+  // #162: a word as common in one language as in another tells neither apart.
+  it('counts no word for one language that another writes as often', () => {
+    const yesNo = (question: string, yes: string, no: string) => [question, yes, no];
+    // A Swedish checklist of Ja and Nej is not Finnish, where "ja" means "and".
+    const checklist = form(
+      ['Brandsläckare', 'Nödutgång', 'Första hjälpen', 'Utrymningsplan', 'Larm'].flatMap((q) =>
+        yesNo(q, 'Ja', 'Nej'),
+      ),
+    );
+    expect(checklist.output.locale).toBeNull();
+    // An English form of Yes and No is not Spanish, where "no" is a word of its own.
+    const english = form(
+      ['Parking', 'Dietary needs', 'Wheelchair access', 'Childcare', 'Photos'].flatMap((q) =>
+        yesNo(q, 'Yes', 'No'),
+      ),
+    );
+    expect(english.output.locale).toBeNull();
+    for (const word of ['ja', 'no', 'bli', 'um', 'in'])
+      for (const language of LAYOUT_LANGUAGES)
+        expect(distinctiveStopwords(language).has(word), `${word} in ${language}`).toBe(false);
+  });
+
+  // #163: a letter only one of the twelve writes, when its stop words are too few.
+  it('G1d: knows Icelandic by ð and þ, German by ß, Spanish by ñ ¿ ¡, when the words agree', () => {
+    const icelandic = form([
+      'Útlán á búnaði',
+      'Hvað er fengið að láni?',
+      'Skilað þann',
+      'Undirskrift',
+    ]);
+    expect(icelandic.output.locale).toBe('is');
+    expect(localeDecision(icelandic)).toMatchObject({
+      rule: 'G1d',
+      verdict: 'is',
+      evidence: { letters: 6 },
+    });
+    expect(form(['Anmeldung', 'Straße', 'Größe', 'Fußball', 'Gruß', 'weiß']).output.locale).toBe(
+      'de',
+    );
+    expect(form(['Señas', 'Año', 'Niño o niña', '¿Asistirá?']).output.locale).toBe('es');
+    // Icelandic names on a Swedish form leave it Swedish, or unknown: never Icelandic.
+    expect(
+      form(['Namn: Þórður Guðmundsdóttir', 'Förälder: Sigurður Þórðarson', 'Vad och när?']).output
+        .locale,
+    ).toBeNull();
+    // Four letters are a name or two, not a language.
+    expect(form(['Skilað þann', 'Hvað?', 'Fæðingardagur']).output.locale).toBeNull();
   });
 });
 

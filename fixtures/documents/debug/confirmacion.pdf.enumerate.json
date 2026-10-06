@@ -2,7 +2,7 @@
   "stage": "enumerate",
   "stageVersion": 8,
   "irVersion": 1,
-  "inputSha256": "f237bbccfa50d5058a2c1a8f5b2d1b485f0a2e1b077f329297c4506c72d884ee",
+  "inputSha256": "f779d35b5327c068ae5a2d1ae05aef63768d45f1882625e82fef6405b0a2fcd9",
   "decisions": [
     {"id":"enumerate:p1-l1","rule":"R6a","verdict":"prose","subject":["p1-l1"],"evidence":{"closed":0}},
     {"id":"enumerate:p1-l2","rule":"R6b","verdict":"prose","subject":["p1-l2"],"evidence":{"closed":0,"relX":0,"width":8092}},
