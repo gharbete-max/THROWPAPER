@@ -176,3 +176,18 @@ The same shape one layer up, and the reason this section exists before any agent
 - e2e is a **shared, unshareable** resource: one Postgres, fixed ports, and `restart.spec.ts` alone
   takes 1.5 minutes. **At most one `pnpm test:e2e` at a time**, ever. Two concurrent runs produce
   flake that looks exactly like a real regression.
+
+## Skills in the checkout
+
+`.claude/skills/` holds `ponytail` (with `ponytail-review`, `-audit`, `-debt`, `-gain` and `-help`),
+`impeccable` and `ui-ux-pro-max`, copied at pinned commits so every session has them from the
+checkout with nothing to install. `.claude/skills/SOURCES.json` records where each came from, its
+licence and its one patch, and `scripts/skills.test.ts` holds each folder to its hash.
+
+- **They advise; this file decides.** Where a skill disagrees with this file — ponytail's "no
+  fixtures", a design skill's taste against `DESIGN.md` and `docs/plan/DESIGN-LANGUAGE.md` — this
+  file wins.
+- **Never update one in place** (`npx impeccable update`, a hand edit): copy it again from its
+  upstream commit, apply the recorded patch, and record the new commit and hash.
+- `impeccable` fetches its engine binary on first use (see `SOURCES.json`); without the network it
+  reads `DESIGN.md` itself. Give it a target, e.g. `--target apps/forms`.
