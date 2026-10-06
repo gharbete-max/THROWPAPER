@@ -22,7 +22,7 @@
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@fastify/rate-limit": "^11.2.0",
-    "@fastify/static": "^10.1.4",
+    "@fastify/static": "^10.1.5",
     "@signpdf/placeholder-pdf-lib": "^3.3.0",
     "@signpdf/signpdf": "^3.3.0",
     "@signpdf/utils": "^3.3.0",
@@ -32,7 +32,7 @@
     "@tp/tokens": "workspace:^",
     "asn1js": "^3.0.10",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "^0.45.3",
     "fastify": "^5.12.5",
     "fastify-type-provider-zod": "^4.0.2",
     "pdf-lib": "^1.17.1",
@@ -41,7 +41,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.10",
+    "drizzle-kit": "^0.31.11",
     "tsup": "^8.3.5"
   }
 }
