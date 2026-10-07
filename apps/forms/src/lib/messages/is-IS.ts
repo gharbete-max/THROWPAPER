@@ -1405,4 +1405,18 @@ export const isIS: Record<MessageKey, string> = {
   'conversation.showMe': 'Sýndu mér',
   'conversation.rebased':
     'Eyðublaðinu var breytt í ritlinum. Breytingarnar þínar haldast, og spurningarnar halda áfram þar sem þú varst.',
+  'room.back': 'Aftur í herbergið',
+  'room.documents': 'Skjöl',
+  'room.spreadsheets': 'Töflureiknar',
+  'room.presentation': 'Kynningar og skipulag',
+  'room.notBuilt': 'Ekki smíðað enn',
+  'room.scan': 'Skanna',
+  'room.sign': 'Undirrita',
+  'room.send': 'Senda',
+  'room.centre': 'Samantekt og þýðing',
+  'room.centreLater': 'Ekki á þessari tölvu enn',
+  'room.centreNone': 'Ekki í þessari útgáfu',
+  'room.pause': 'Gera hlé á hreyfingunni',
+  'room.play': 'Setja hreyfinguna af stað',
+  'room.opened': '{name} er opið',
 };

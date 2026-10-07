@@ -40,7 +40,8 @@ never truncated, in any language (`CAVEATS.md` #36).
 
 ## Motion
 
-Motion explains where something went; it never decorates.
+Motion explains where something went; it never decorates. One exception, the owner's: the room's
+catchers float (ADR 0022). The float can be paused, and it stands still under reduced motion.
 
 | What | Duration | Curve |
 | --- | --- | --- |

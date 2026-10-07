@@ -120,6 +120,13 @@ Optional, only if the product needs them — propose before building:
 - A **print/PDF mark** — `-flat.svg` converted to CMYK-safe values. Raise it;
   I have not specified CMYK.
 
+Added by the product, 2026-10-07 (ADR 0022): the app now requests one state
+the bundle does not cover — the mark **opened into four**, when a catcher in
+the room opens onto its four parts. Until a designed state exists, the app
+draws it from `mark-geometry.ts`'s top-down facets, its pockets parting on
+`unfurl`, in the room's stronger gold and platinum. A designed opened state
+replaces that drawing; nothing else in the app depends on it.
+
 ---
 
 ## 4. Two standing problems — do not paper over

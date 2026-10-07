@@ -43,8 +43,9 @@ change at any time (`DOCUMENTS.md` §9).
    - Each catcher's name is always written, so colour is never the only signal.
    - `DESIGN.md` and `docs/plan/DESIGN-LANGUAGE.md` gain these exceptions in the owner's words.
 5. **The motion is CSS and inline SVG.**
-   - A pausable float, a view-transition zoom (a cut where unsupported) and the catcher opening
-     from `mark-geometry.ts`'s facets.
+   - A pausable float, a zoom that grows the opened catcher out of the pressed one (transform only,
+     after spike S2 measured a view transition's snapshot holding frames for 66–100 ms), and the
+     catcher opening from `mark-geometry.ts`'s facets.
    - No animation library, and no frame gap over 25 ms when measured.
    - Nothing moves under `prefers-reduced-motion`. A click, a key or Escape always lands.
 6. **Documents' four parts are links to the screens that do the work.**
@@ -53,9 +54,9 @@ change at any time (`DOCUMENTS.md` §9).
    - Sign.
    - Send.
    - Each screen carries a way back to the room.
-   - A corner menu in the room holds only what belongs to no catcher: sign-out, language and theme.
-     Users, Brand and the To send count stay inside Documents, so the room shows no catcher's
-     state.
+   - A corner of the room holds only what belongs to no catcher: language and sign-out. Users,
+     Brand and the To send count stay inside Documents, so the room shows no catcher's state.
+     Theme stays in the parts it changes, because the room is always dark grey.
 7. **The centre is summary and translation, decided separately.** A local, offline model that
    summarises and translates in all twelve of Loppa's languages is ADR 0023, written with the
    measurements of spike S1. Until it exists, the centre says plainly that the summary is not on

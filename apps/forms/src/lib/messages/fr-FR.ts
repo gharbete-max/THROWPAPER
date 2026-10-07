@@ -1436,4 +1436,18 @@ export const frFR: Record<MessageKey, string> = {
   'conversation.showMe': 'Montrez-moi',
   'conversation.rebased':
     'Ce formulaire a été modifié dans l’éditeur. Vos modifications sont conservées, et les questions reprennent là où vous en étiez.',
+  'room.back': 'Retour à la pièce',
+  'room.documents': 'Documents',
+  'room.spreadsheets': 'Tableurs',
+  'room.presentation': 'Présentation et planification',
+  'room.notBuilt': 'Pas encore construit',
+  'room.scan': 'Numériser',
+  'room.sign': 'Signer',
+  'room.send': 'Envoyer',
+  'room.centre': 'Résumé et traduction',
+  'room.centreLater': 'Pas encore sur cet ordinateur',
+  'room.centreNone': 'Pas dans cette édition',
+  'room.pause': 'Mettre le mouvement en pause',
+  'room.play': 'Relancer le mouvement',
+  'room.opened': '{name} est ouvert',
 };

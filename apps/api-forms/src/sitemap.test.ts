@@ -91,12 +91,21 @@ describe('robots.txt', () => {
    * a client-rendered route does — so to a crawler they are a dozen pages of identical empty
    * markup.
    */
-  it.each(['/login', '/events', '/forms', '/responses', '/users', '/invoices', '/brand', '/v1/'])(
-    'keeps a crawler out of %s',
-    (path) => {
-      expect(robots).toContain(`Disallow: ${path}`);
-    },
-  );
+  it.each([
+    '/login',
+    '/events',
+    '/forms',
+    '/responses',
+    '/users',
+    '/invoices',
+    '/brand',
+    '/room',
+    '/signing',
+    '/outgoing',
+    '/v1/',
+  ])('keeps a crawler out of %s', (path) => {
+    expect(robots).toContain(`Disallow: ${path}`);
+  });
 
   /**
    * The one that must not be there. A published form is a customer's public registration page, and
@@ -122,12 +131,21 @@ describe('robots.txt', () => {
  * Built from the same list, so the two cannot drift apart and say different things about a path.
  */
 describe('refusing to be indexed', () => {
-  it.each(['/login', '/events', '/forms', '/responses', '/users', '/invoices', '/brand'])(
-    'marks %s private',
-    (path) => {
-      expect(isPrivatePath(path)).toBe(true);
-    },
-  );
+  it.each([
+    '/login',
+    '/events',
+    '/forms',
+    '/responses',
+    '/users',
+    '/invoices',
+    '/brand',
+    '/room',
+    '/room/documents',
+    '/signing',
+    '/outgoing',
+  ])('marks %s private', (path) => {
+    expect(isPrivatePath(path)).toBe(true);
+  });
 
   /** Prefix matching, the same rule `robots.txt` uses. */
   it.each(['/events/some-id/check-in', '/forms/abc/submissions', '/users/123'])(

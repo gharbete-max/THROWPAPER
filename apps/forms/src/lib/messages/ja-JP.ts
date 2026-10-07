@@ -1398,4 +1398,18 @@ export const jaJP: Record<MessageKey, string> = {
   'conversation.showMe': '見せて',
   'conversation.rebased':
     'このフォームはエディターで変更されました。変更は保持され、質問は前回の続きから進みます。',
+  'room.back': '部屋に戻る',
+  'room.documents': '文書',
+  'room.spreadsheets': 'スプレッドシート',
+  'room.presentation': 'プレゼンテーションと計画',
+  'room.notBuilt': 'まだ作られていません',
+  'room.scan': 'スキャン',
+  'room.sign': '署名',
+  'room.send': '送信',
+  'room.centre': '要約と翻訳',
+  'room.centreLater': 'このコンピューターにはまだありません',
+  'room.centreNone': 'この版にはありません',
+  'room.pause': '動きを止める',
+  'room.play': '動きを再開する',
+  'room.opened': '{name}を開きました',
 };

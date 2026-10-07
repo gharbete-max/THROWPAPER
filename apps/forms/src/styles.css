@@ -4264,6 +4264,9 @@ body:has(.app) > #root {
   display: flex;
   align-items: center;
   min-block-size: 2.5rem;
+  /* A link back to the room (ADR 0022) that still reads as the mark. */
+  color: inherit;
+  text-decoration: none;
 }
 
 .sidebar__sections {
@@ -4326,6 +4329,8 @@ body:has(.app) > #root {
 .topline__mark {
   display: none;
   margin-inline-end: auto;
+  color: inherit;
+  text-decoration: none;
 }
 
 /* --- The work -------------------------------------------------------------- */
@@ -5758,6 +5763,8 @@ body:has(> #root .shell--narrow) {
  * The rule for all of it: motion that tells you something, never motion that decorates. A card
  * lifting says it is the thing under the pointer. A row arriving says the list changed. Nothing
  * here loops, and nothing here delays a person by more than the time it takes them to move a hand.
+ * The one loop in the app is the room's float (ADR 0022, at the end of this file): the owner's
+ * catchers float, a person can pause them, and they stand still under reduced motion.
  * ------------------------------------------------------------------------ */
 
 /*
@@ -7355,4 +7362,457 @@ body:has(> #root .shell--narrow) {
   gap: var(--tp-spacing-unit);
   padding-block: var(--tp-spacing-unit);
   background: var(--tp-colour-background);
+}
+
+/* --- The room (ADR 0022) ---------------------------------------------------
+ *
+ * Where a signed-in person arrives: an empty dark grey room with three cootie catchers floating in
+ * it, each over one of Loppa's own colours made stronger. It is the one screen that is not paper on
+ * a light page, so `DESIGN.md`'s rules gain it as an exception in the owner's words: its own grey,
+ * a colour beneath each catcher, and a float that can be paused and is still under reduced motion.
+ *
+ * The colours are `--tp-room-*`, fixed tokens from `packages/tokens/src/room.ts` that `Room.tsx`
+ * sets on the room alone. Only `transform` and `opacity` move, on the brand's own curves.
+ */
+.room {
+  min-block-size: 100dvh;
+  display: grid;
+  /* `minmax(0, …)`, or the bar's widest row sets the page's width on a phone. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  background: var(--tp-room-grey);
+  color: var(--tp-room-ink);
+}
+
+.room__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5) calc(var(--tp-spacing-unit) * 2);
+}
+
+.room__bar .wordmark {
+  min-inline-size: 0;
+}
+
+.room__bar .wordmark strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room__session {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.room__who {
+  color: var(--tp-room-quiet);
+}
+
+.room__floor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  /* A glow is wider than its catcher; it may not push the page sideways. */
+  overflow: hidden;
+}
+
+.room__catchers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 4vw, 4rem);
+  inline-size: min(100%, 60rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catcher {
+  --catcher-size: clamp(5rem, 22vw, 11rem);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  padding: calc(var(--tp-spacing-unit) * 2) var(--tp-spacing-unit);
+  border-radius: var(--tp-radius-lg);
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.catcher--gold {
+  --catcher-hue: var(--tp-room-gold);
+}
+
+.catcher--platinum {
+  --catcher-hue: var(--tp-room-platinum);
+}
+
+.catcher--bronze {
+  --catcher-hue: var(--tp-room-bronze);
+}
+
+/* The colour beneath: a pool of light on the floor that dims as the catcher rises out of it. */
+.catcher__glow {
+  position: absolute;
+  inset-block-start: calc(var(--tp-spacing-unit) * 2 + var(--catcher-size) * 0.7);
+  inline-size: calc(var(--catcher-size) * 1.4);
+  aspect-ratio: 3;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--catcher-hue) 75%, transparent),
+    transparent
+  );
+  animation: room-glow 3.6s var(--tp-ease-chomp) infinite alternate;
+}
+
+.catcher__art {
+  position: relative;
+  inline-size: var(--catcher-size);
+  animation: room-float 3.6s var(--tp-ease-chomp) infinite alternate;
+}
+
+.catcher__art .mark {
+  inline-size: 100%;
+}
+
+.catcher__name {
+  position: relative;
+  margin-block-start: calc(var(--tp-spacing-unit) * 1.5);
+  font-size: var(--tp-text-lg);
+  font-weight: var(--tp-type-weight-bold);
+  line-height: 1.2;
+}
+
+.catcher__note {
+  color: var(--tp-room-quiet);
+}
+
+/* A placeholder floats like the others and is plainly not ready: dimmer, and it says so. */
+.catcher--idle .catcher__art {
+  opacity: 0.55;
+}
+
+.room__catchers > li:nth-child(2) :is(.catcher__art, .catcher__glow) {
+  animation-delay: -1.2s;
+}
+
+.room__catchers > li:nth-child(3) :is(.catcher__art, .catcher__glow) {
+  animation-delay: -2.4s;
+}
+
+.room--still :is(.catcher__art, .catcher__glow) {
+  animation-play-state: paused;
+}
+
+.catcher--documents {
+  transition: background-color var(--tp-motion) var(--tp-ease);
+}
+
+.catcher--documents:hover {
+  background: color-mix(in srgb, var(--tp-room-shade) 70%, transparent);
+}
+
+.catcher--documents:hover .catcher__name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.catcher--documents:focus-visible {
+  outline: 2px solid var(--tp-room-gold);
+  outline-offset: 4px;
+}
+
+.room__pause {
+  color: var(--tp-room-quiet);
+}
+
+@keyframes room-float {
+  to {
+    transform: translateY(-0.6rem);
+  }
+}
+
+@keyframes room-glow {
+  to {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+}
+
+/* --- The opened catcher --- */
+
+.room__open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  inline-size: 100%;
+}
+
+.room__back {
+  align-self: flex-start;
+}
+
+.room__title {
+  margin: 0;
+  font-size: var(--tp-text-2xl);
+}
+
+/*
+ * The four parts sit on the four pockets, and the centre in the middle: Forms on the north pocket,
+ * Scan east, Sign south, Send west. The top and bottom rows span the width, so a long word on
+ * Forms or Sign has the room its pocket has.
+ */
+.room__opened {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    'forms forms forms'
+    'send centre scan'
+    'sign sign sign';
+  place-items: center;
+  inline-size: min(100%, 34rem, 62dvh);
+  aspect-ratio: 1;
+}
+
+.rosette {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.rosette__heart {
+  fill: var(--tp-room-shade);
+}
+
+.rosette__facet--face {
+  fill: var(--tp-room-gold);
+}
+
+.rosette__facet--fold {
+  fill: color-mix(in srgb, var(--tp-room-gold) 70%, var(--tp-room-shade));
+}
+
+.rosette__facet--warm {
+  fill: var(--tp-room-platinum);
+}
+
+.rosette__facet--glow {
+  fill: color-mix(in srgb, var(--tp-room-platinum) 70%, var(--tp-room-shade));
+}
+
+/* The pockets part from the centre, which is how the paper opens, as the zoom (`Room.tsx`) lands. */
+.rosette__pocket {
+  animation: rosette-part 600ms var(--tp-ease-unfurl) 300ms backwards;
+}
+
+.rosette__pocket--north {
+  transform: translateY(-14px);
+}
+
+.rosette__pocket--east {
+  transform: translateX(14px);
+}
+
+.rosette__pocket--south {
+  transform: translateY(14px);
+}
+
+.rosette__pocket--west {
+  transform: translateX(-14px);
+}
+
+@keyframes rosette-part {
+  from {
+    transform: none;
+  }
+}
+
+.room__part {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.75);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-room-shade);
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--tp-room-shade) 70%, transparent);
+  color: var(--tp-room-ink);
+  font-weight: var(--tp-type-weight-bold);
+  text-decoration: none;
+  animation: room-arrive 320ms var(--tp-ease) 450ms backwards;
+}
+
+.room__part--forms {
+  grid-area: forms;
+}
+
+.room__part--scan {
+  grid-area: scan;
+}
+
+.room__part--sign {
+  grid-area: sign;
+}
+
+.room__part--send {
+  grid-area: send;
+}
+
+/* Each part's icon wears its pocket's metal: gold north and south, platinum east and west. */
+:is(.room__part--forms, .room__part--sign) .icon {
+  color: var(--tp-room-gold);
+}
+
+:is(.room__part--scan, .room__part--send) .icon {
+  color: var(--tp-room-platinum);
+}
+
+a.room__part {
+  transition: background-color var(--tp-motion-fast) var(--tp-ease);
+}
+
+a.room__part:hover {
+  background: color-mix(in srgb, var(--tp-room-shade) 80%, var(--tp-room-ink));
+}
+
+a.room__part:focus-visible {
+  outline: 2px solid var(--tp-room-gold);
+  outline-offset: 3px;
+}
+
+.room__part--idle {
+  color: var(--tp-room-quiet);
+  font-weight: inherit;
+}
+
+.room__partNote {
+  display: block;
+}
+
+.room__centre {
+  position: relative;
+  grid-area: centre;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: var(--tp-spacing-unit);
+  border-radius: var(--tp-radius);
+  background: var(--tp-room-shade);
+  font-size: var(--tp-text-sm);
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  animation: room-arrive 320ms var(--tp-ease) 550ms backwards;
+}
+
+.room__centre span {
+  color: var(--tp-room-quiet);
+}
+
+@keyframes room-arrive {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * A phone. Three catchers abreast left each name about eighty pixels, which broke "Dokumente" in
+ * two. So Documents, the one that is built, takes the first row, and the two placeholders share
+ * the second. The opened catcher stops putting each part on its pocket, where Scan and Send had a
+ * third of 360px each, and stacks: the opened mark, the four parts two by two, then the centre.
+ */
+@media (max-width: 40rem) {
+  .room__who {
+    display: none;
+  }
+
+  /* The organisation's name gives way before the language or Sign out does; the mark stays. */
+  .room__bar .wordmark strong {
+    display: none;
+  }
+
+  .room__catchers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--tp-spacing-unit);
+  }
+
+  .room__catchers > li:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .catcher {
+    --catcher-size: 6rem;
+  }
+
+  .room__catchers > li:first-child .catcher {
+    --catcher-size: 8rem;
+  }
+
+  .room__opened {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-template-areas:
+      'rosette rosette'
+      'forms scan'
+      'send sign'
+      'centre centre';
+    gap: var(--tp-spacing-unit);
+    aspect-ratio: auto;
+  }
+
+  .rosette {
+    position: static;
+    grid-area: rosette;
+    inline-size: min(52vw, 12rem);
+    block-size: auto;
+  }
+
+  .room__part {
+    justify-self: stretch;
+    justify-content: center;
+    min-block-size: 3.5rem;
+    border-radius: var(--tp-radius-lg);
+    text-align: center;
+  }
+
+  .room__centre {
+    justify-self: stretch;
+  }
+}
+
+/*
+ * Under reduced motion nothing in the room moves: the catchers stand still, the pockets are
+ * already parted, and there is nothing to pause. The global switch shortens animations to almost
+ * nothing, which for an infinite alternating float would be a jitter, so these are named off.
+ * `Room.tsx` skips the zoom, which is script, itself.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .room__pause {
+    display: none;
+  }
+
+  :is(.catcher__art, .catcher__glow, .rosette__pocket, .room__part, .room__centre) {
+    animation: none;
+  }
 }

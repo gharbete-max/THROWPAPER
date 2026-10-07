@@ -1408,4 +1408,18 @@ export const fiFI: Record<MessageKey, string> = {
   'conversation.showMe': 'Näytä',
   'conversation.rebased':
     'Lomaketta muutettiin muokkaimessa. Muutoksesi säilyvät, ja kysymykset jatkuvat siitä, mihin jäit.',
+  'room.back': 'Takaisin huoneeseen',
+  'room.documents': 'Asiakirjat',
+  'room.spreadsheets': 'Laskentataulukot',
+  'room.presentation': 'Esitykset ja suunnittelu',
+  'room.notBuilt': 'Ei vielä rakennettu',
+  'room.scan': 'Skannaa',
+  'room.sign': 'Allekirjoita',
+  'room.send': 'Lähetä',
+  'room.centre': 'Tiivistelmä ja käännös',
+  'room.centreLater': 'Ei vielä tällä tietokoneella',
+  'room.centreNone': 'Ei tässä versiossa',
+  'room.pause': 'Pysäytä liike',
+  'room.play': 'Käynnistä liike',
+  'room.opened': '{name} on auki',
 };

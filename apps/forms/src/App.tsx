@@ -1,5 +1,6 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
+import { Suspense, lazy, useEffect, useState, type CSSProperties } from 'react';
+import { roomCssVariables } from '@tp/tokens';
+import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
@@ -61,6 +62,8 @@ const Users = lazy(() => import('./screens/Users.js').then((m) => ({ default: m.
 const Invoices = lazy(() => import('./screens/Invoices.js').then((m) => ({ default: m.Invoices })));
 const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
 const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
+/** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
+const Room = lazy(() => import('./screens/Room.js').then((m) => ({ default: m.Room })));
 const UserWorkspace = lazy(() =>
   import('./screens/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
@@ -194,6 +197,9 @@ function useWaitingCount(enabled: boolean, path: string): number {
   return count;
 }
 
+/** The room's own grey while its screen loads, so the light page never flashes in between. */
+const ROOM_STYLE = roomCssVariables() as CSSProperties;
+
 /** Everything behind the bearer token. */
 function Shell() {
   const t = useT();
@@ -213,6 +219,18 @@ function Shell() {
   }
 
   if (!user) return <Navigate to="/login" replace />;
+
+  /*
+   * The room is its own world: full screen, dark grey, no rail and no session row (ADR 0022). It
+   * carries its own corner controls, so none of the shell's chrome is drawn around it.
+   */
+  if (/^\/room(\/documents)?$/.test(location.pathname)) {
+    return (
+      <Suspense fallback={<main className="room" style={ROOM_STYLE} />}>
+        <Room />
+      </Suspense>
+    );
+  }
 
   /**
    * How wide the content column gets, which depends on what kind of screen it is.
@@ -283,14 +301,15 @@ function Shell() {
            * `.topline` picks up the mark.
            */}
           <nav className="sidebar" aria-label={t('nav.sections')}>
-            <div className="sidebar__mark">
+            {/* The way back to the room from every part (ADR 0022), where a logo usually leads home. */}
+            <Link className="sidebar__mark" to="/room" aria-label={t('room.back')}>
               {brand.logoLight ? (
                 <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
               ) : (
                 // The mark stands in for a customer logo until they upload one of their own.
                 <Wordmark name={organisation?.name ?? t('app.name')} />
               )}
-            </div>
+            </Link>
 
             <div className="sidebar__sections">
               <NavSection to="/events" icon="events" label={t('nav.events')} />
@@ -321,9 +340,9 @@ function Shell() {
       */}
           {/* A `header`, so the session row — and Sign out in particular — is inside a landmark. */}
           <header className="topline">
-            <div className="topline__mark">
+            <Link className="topline__mark" to="/room" aria-label={t('room.back')}>
               <Wordmark name={organisation?.name ?? t('app.name')} />
-            </div>
+            </Link>
 
             {/*
           The palette is invisible until pressed, so it needs somewhere to say it exists. Shown
@@ -371,7 +390,7 @@ function Shell() {
             seven separate ones would only mean seven copies of the same fallback. */}
           <Suspense fallback={<Loading />}>
             <Routes>
-              <Route path="/" element={<Navigate to="/events" replace />} />
+              <Route path="/" element={<Navigate to="/room" replace />} />
               <Route path="/events" element={<Events />} />
               <Route path="/events/new" element={<EventForm />} />
               <Route path="/events/:id" element={<EventForm />} />
@@ -398,7 +417,7 @@ function Shell() {
                   </Suspense>
                 }
               />
-              <Route path="*" element={<Navigate to="/events" replace />} />
+              <Route path="*" element={<Navigate to="/room" replace />} />
             </Routes>
           </Suspense>
         </div>

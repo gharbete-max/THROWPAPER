@@ -1,5 +1,6 @@
 /**
- * The house mark, and the only place it is drawn in the interface.
+ * The house mark, and the only place its resting pose is drawn in the interface. (The room's
+ * opened catcher is drawn from the geometry instead; see `screens/Room.tsx`.)
  *
  * ## Why this is a picture and not the geometry
  *

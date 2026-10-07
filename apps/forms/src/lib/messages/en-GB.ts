@@ -1413,6 +1413,20 @@ export const enGB = {
   'conversation.showMe': 'Show me',
   'conversation.rebased':
     'This form was changed in the editor. Your changes are kept, and the questions carry on from where you were.',
+  'room.back': 'Back to the room',
+  'room.documents': 'Documents',
+  'room.spreadsheets': 'Spreadsheets',
+  'room.presentation': 'Presentation & planning',
+  'room.notBuilt': 'Not built yet',
+  'room.scan': 'Scan',
+  'room.sign': 'Sign',
+  'room.send': 'Send',
+  'room.centre': 'Summary and translation',
+  'room.centreLater': 'Not on this computer yet',
+  'room.centreNone': 'Not in this edition',
+  'room.pause': 'Pause the motion',
+  'room.play': 'Play the motion',
+  'room.opened': '{name} is open',
 } as const;
 
 /**

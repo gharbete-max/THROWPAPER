@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { pickText } from '@tp/i18n';
 import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../lib/api.js';
@@ -41,7 +41,11 @@ export function Forms() {
    * editor with the same draft.
    */
   const navigate = useNavigate();
-  const [creating, setCreating] = useState<null | 'doors' | 'manual'>(null);
+  /* `?new` arrives with the doors open: the room's Scan part lands on the paper door (ADR 0022). */
+  const [params] = useSearchParams();
+  const [creating, setCreating] = useState<null | 'doors' | 'manual'>(() =>
+    params.has('new') ? 'doors' : null,
+  );
   const [opening, setOpening] = useState(false);
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
