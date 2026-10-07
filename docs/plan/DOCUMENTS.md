@@ -46,6 +46,9 @@ edition if it stays.
   - the Shell's `/` and `*` routes in `App.tsx`;
   - `Login.tsx`'s `window.location.assign('/events')`.
 - The room is full screen, with no rail: it joins `App.tsx`'s door regex.
+  - That also unmounts `<Intro />` in the room. Until the owner decides arrival (§9), the room
+    marks the intro as seen when it first opens. The intro, which plays the 1.1 MB chomp loop,
+    then never plays over a part one click later.
 - `/room`, `/signing` and `/outgoing` join `sitemap.ts`'s disallowed list.
 
 **The look.**
@@ -62,7 +65,7 @@ edition if it stays.
   - The contrast guard in `packages/tokens` gains a test: each colour at 3:1 or more against the
     room's grey.
 - Each catcher's name is always shown as text, so colour is never the only signal.
-- Each catcher is the existing mark still (`Mark.tsx`, 24 KB), floating over its colour.
+- Each catcher is the existing mark still (`Mark.tsx` rendering `mark-angled-256.png`, 24 KB), floating over its colour.
 
 **The motion.** CSS and inline SVG only, with no animation library. Only `transform` and `opacity`
 animate.
@@ -125,10 +128,14 @@ exists, reshaped where it must be.
     builds an unsaved submission in memory and writes no row.
   - **Publish is the editor's main button, and the guided flow ends at "Publish it now"** →
     Download, Sign and Send come first, and Publish becomes "Share to collect".
-  - **The doors exist only in `/forms`' state, and `openBlank` is private** → export it, and give
-    the doors a URL, so the Forms part opens on "Akinator" or "manual".
+  - **The doors exist only in `/forms`' state.** `openBlank` is a closure inside `Forms` and opens
+    only the guided and paper doors. Manual mode's `create()` returns to the list without opening
+    the editor. → Lift create-and-open into a shared helper, let manual mode open `/forms/:id`
+    once it has created the form, and give each door a URL, so the Forms part opens on "Akinator"
+    or "manual".
   - **Nothing fills an existing PDF's own fields** → write them with `pdf-lib`'s form API in the
-    Forms server, under the PDF guard, with no import and no submission.
+    Forms server, under the PDF guard, with no import and no submission. Nothing in the
+    repository writes a PDF's own fields today.
     - `fillPaper` is not that. It draws a Loppa form's answers as an overlay on the paper the form
       was imported from (`documents/paper.ts`), so it needs that import first.
     - A PDF with no fields of its own is filled that way: imported, then the overlay. It gains the
@@ -147,14 +154,19 @@ exists, reshaped where it must be.
     `bundle-split.test.ts` and CAVEATS #43 hold. It takes a file, a drop, the camera or the phone,
     and ends in *keep as PDF*, *arrange pages*, *make a form*, *sign* or *send*. `pagesToPdf` moves
     out of `signing/` behind a download route.
-  - **The page basics do not exist** (no merge, split, rotate, reorder or delete code anywhere) →
-    page work with `pdf-lib` (MIT, already in `api-forms`), in the Forms server, desktop first.
-    - Untrusted PDFs are parsed under a guard like `api-sign`'s `pdf-guard.ts` (a worker with a
-      time and memory budget).
-    - `pdf-lib` in the browser would cost the bundle about a whole budget's headroom, so it stays
-      on the server.
-    - On the hosted edition this means the server parses a stranger's PDF, which ADR 0018 and
-      `extract.ts` avoid for import. That is decided when the hosted edition comes (§9).
+  - **The page basics do not exist as features**: nothing lets a person merge, split, turn,
+    reorder or delete pages. The only page code is `fillPaper`'s concatenation of a form's paper
+    sources (`copyPages`) and `pagesToPdf`'s photos into one PDF. → Page work with `pdf-lib` (MIT,
+    already in `api-forms`), in the Forms server, desktop first.
+    - Untrusted PDFs first pass Forms' own guard, `apps/api-forms/src/uploads/pdf-guard.ts`
+      (`checkPdf`: a worker with a 5 s and 256 MB budget, already run on every paper upload).
+      Page work touches only bytes that passed it.
+    - `pdf-lib` in the browser is about 206 KB gzipped, some fifteen times the 13.6 KB of
+      headroom, so it stays on the server.
+    - On the hosted edition the server already opens a stranger's PDF with `pdf-lib`: a paper
+      upload's `checkPdf`, `fillPaper`, a PDF sent for signing. Page work adds editing it there.
+      ADR 0018 and `extract.ts` keep only reading its text off the server. Whether hosted page
+      work is allowed is decided when the hosted edition comes (§9).
   - **The review screen has no camera, phone or drop** although the door promises "a phone scan
     becomes the form" → mount `CameraScan` and `PhoneScan` there, and accept a dropped file.
   - **`phone-scan.ts` imports `QR_DARK` from the admission module** → move the constant (needed
@@ -263,8 +275,9 @@ Icelandic, Japanese, Norwegian Bokmål, Russian, Swedish and Chinese (`apps/form
 - A JSON weights manifest (licence, URL, retrieval date, SHA-256; Zod, ADR 0021) is held by a
   test, because `licence:check` sees npm packages only.
 - The model file is checked against the manifest before it is used.
-- The setting lives in Forms' settings, in twelve catalogues, not in the desktop panel, which is in
-  English and Swedish only.
+- The setting is a new Forms screen, in twelve catalogues; Forms has no settings screen today.
+  The desktop panel's existing AI section (Off / Online / Cloud, English and Swedish only, ADR
+  0016) gives way to it or points at it.
 
 **Decisions.**
 - **ADR 0023 — a local summary and translation model** supersedes ADR 0013 (proposed).

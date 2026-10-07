@@ -116,7 +116,8 @@ change:
 - **Offline first** on the desktop (ADR 0016). The owner asked for the summary model to run
   locally and offline.
 - **The bundle budget** (`pnpm bundle:budget`) still holds for Forms' web build. It does not measure
-  the desktop download (about 206 MB zipped today, ADR 0016) or a summary model.
+  the desktop download (211.5 MB zipped on Windows at `eea1774`, `docs/plan/DOCUMENTS.md` §8; ADR
+  0016 estimated about 206 MB) or a summary model.
 
 ## 10. Open, and the owner's to decide
 
