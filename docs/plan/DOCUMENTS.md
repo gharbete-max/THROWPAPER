@@ -1,8 +1,10 @@
 # The room, and finishing the Documents catcher — the plan
 
-**Status:** proposed 2026-10-07, for the owner. No code is written until the owner accepts this
-plan (phase 0). **What** Loppa is lives in `docs/VISION.md`; this file is **how** the Documents
-catcher gets built and finished.
+**Status:** accepted 2026-10-07. The owner answered two of §9's questions: the room's colours are
+Loppa's own, made stronger, and the centre summarises and translates in all twelve languages. The
+owner accepted the rest with its defaults ("Let's go!"). Every default in §1 stands until the
+owner says otherwise. **What** Loppa is lives in `docs/VISION.md`; this file is **how** the
+Documents catcher gets built and finished.
 
 **Measured at** `eea1774`, whose app code is `main`'s at `5ede4ba`. Six read-only mappers, two
 independent drafts and an adversarial critic produced it. Their measurements are quoted here; claims
@@ -10,8 +12,9 @@ they could not verify are marked UNVERIFIED.
 
 ## 1. Defaults this plan takes, unless the owner says otherwise
 
-Each is a recommendation for an item that `VISION.md` §10 leaves open. §9 puts them to the owner in
-one list. Phase 0 changes this list, not the phases.
+Each is a default for an item that `VISION.md` §10 leaves open. The owner accepted them with the
+plan; §9 says which the owner answered and which stand as defaults. A later answer changes this
+list, not the phases.
 
 | Open item | Default |
 | --- | --- |
@@ -19,17 +22,23 @@ one list. Phase 0 changes this list, not the phases.
 | Where the editing basics live | **Scan** holds the page work: put files together, take pages out or split them, turn, reorder and delete pages, and make one PDF from photos and scans. **Forms** holds filling: fill in a PDF's own fields or a Loppa form, and keep it as a PDF without publishing. |
 | Word | **Input only for now.** A Word file is read into a form, or summarised. It is not written or converted to PDF yet. |
 | Scan's output | **Either a PDF to keep or a form**, chosen after reading. |
-| Sign | **Both ways that already exist:** the person signs on this device, or others sign by a link. |
+| Sign | **On the desktop, the person signs on this device.** Others sign by a link only where Sign is online: the hosted edition, or a desktop connected to an online Sign. The desktop's own Sign serves its links on this computer only (ADR 0016). |
 | Collecting answers | **Kept as a secondary choice in Forms ("Share to collect").** Download, Sign and Send come first, and Publish stops being the main button. |
 | The placeholders | **Inert and honest.** They float, are named, and say "Not built yet". They are not focusable and offer no button that does nothing. |
-| The room's look | **The room alone is dark grey**, with each tool keeping today's look once its catcher opens. There is a hue only beneath each catcher. The exact colours are §9's first question. |
+| The room's look | **The room alone is dark grey**: a new grey token, not the derived dark's near-black. **Beneath each catcher is one of Loppa's own colours, made stronger** so it stands out against the grey (the owner's answer): gold beneath Documents, platinum beneath Spreadsheets, bronze beneath Presentation & planning. Each tool keeps today's look once its catcher opens, and the colours stay in the room. |
 | Earlier features | **Behind one switch, off by default:** events, registrations, check-in, attendance, the inbox, invoices and the ledger. Their code, tables and tests stay, and e2e runs with the switch on. Mailer is parked. Nothing is deleted. |
-| The summary model | **Qwen3-1.7B** (Apache-2.0, about 1.1–1.3 GB at 4-bit, UNVERIFIED), thinking off. It is a separate model file, downloaded once on request from Loppa's GitHub release or opened from disk, and never inside the installer. |
+| The centre | **Summary and translation in all twelve of Loppa's languages** (the owner's answer), by one model: **Qwen3-1.7B** (Apache-2.0, about 1.1–1.3 GB at 4-bit, UNVERIFIED), thinking off. It is a separate model file, downloaded once on request from Loppa's GitHub release or opened from disk, and never inside the installer. |
+| What the centre reads of a form | **Both:** a blank form's labels and a filled form's answers. |
+| Contracts, consents, declarations and clinical forms | **Quoted, never reworded or translated.** For these the centre picks passages and quotes them in the original language (rule 8, ADR 0012). |
+| How the centre is shown | **Beside the document**, labelled as generated, never stored, and never written into the document. |
+| Changing a document's text | **Not among the basics.** The basics change pages and fill fields; a Word file's text is not edited. |
+| Invoices | **Behind the earlier-features switch**, neither Send's nor Spreadsheets' until the owner places them. |
 | Bundle | **The 1 000 KB total stands.** Each phase pays its own cost, and a cut pass buys headroom where it does not fit. |
 
 ## 2. The room
 
-**Where it lives.** It lives in `apps/forms` at **`/room`**, on both editions.
+**Where it lives.** It lives in `apps/forms` at **`/room`**: on the desktop first, and on the hosted
+edition if it stays.
 - `/` cannot be the room. On a server, `/` is the marketing site (`site/routes.ts`). The desktop
   ships no `dist-server`, so a hard load of `/` there client-renders the site too.
 - These now go to `/room` instead of `/events`:
@@ -40,14 +49,20 @@ one list. Phase 0 changes this list, not the phases.
 - `/room`, `/signing` and `/outgoing` join `sitemap.ts`'s disallowed list.
 
 **The look.**
-- The room uses the derived dark theme scoped to it, `toCssBlock(toDark(tokens), '.room')`, or a
-  new dark grey token if the owner wants grey rather than near-black.
-- The three hues are new fixed Loppa tokens in `packages/tokens` (**a `packages/` change**). They
-  are distinct from `danger`, `success` and `warning`, used nowhere outside the room, and
-  contrast-checked.
-- Each catcher's name is always shown as text, because red and green are the pair colour-blind
-  people confuse.
-- Each catcher is the existing mark still (`Mark.tsx`, 24 KB), floating over its hue.
+- The room is dark grey, the owner's word: a new grey token scoped to `.room`, not the derived
+  dark's near-black (`#0e0e10`). Its exact value is set in phase 2.
+- The three colours beneath the catchers are **Loppa's own, made stronger**: new fixed tokens in
+  `packages/tokens` (**a `packages/` change**), used nowhere outside the room and never for status.
+  - **Why stronger.** Measured against a dark grey of `#2a2a2e`:
+    - gold's face (`#cea85c`) reads at 6.38:1;
+    - platinum's face (`#c6cad1`) at 8.69:1;
+    - bronze (`#8f6b3a`) at 2.95:1, under the 3:1 a shape needs, so it is lifted.
+  - Gold and platinum are 1.36:1 apart, so they differ by warmth rather than lightness. Making them
+    stronger pushes gold warmer and platinum cooler.
+  - The contrast guard in `packages/tokens` gains a test: each colour at 3:1 or more against the
+    room's grey.
+- Each catcher's name is always shown as text, so colour is never the only signal.
+- Each catcher is the existing mark still (`Mark.tsx`, 24 KB), floating over its colour.
 
 **The motion.** CSS and inline SVG only, with no animation library. Only `transform` and `opacity`
 animate.
@@ -59,7 +74,7 @@ animate.
   `--tp-ease-unfurl`. It only adds exports, so `mark-consistency.test.ts` holds.
   - The mark therefore changes pose as it opens: from the three-quarter still to the top-down
     facets. The brand bundle has no "opened into four" state (`docs/brand/USAGE.md`: "Nothing in
-    the app requests a mark or motion state that isn't covered"), so who draws it is §9.
+    the app requests a mark or motion state that isn't covered"), so code draws it unless the brand designer does (§9).
 
 **Access.**
 - Under reduced motion there are stills, no float, no zoom and an instant open. That needs an
@@ -73,23 +88,24 @@ animate.
   until there is a second one.
 
 **Getting around.**
-- A small corner menu in the room holds sign-out, language, theme, Users, Brand and the To send
-  count.
+- A small corner menu in the room holds only what belongs to no catcher: sign-out, language and
+  theme. Users, Brand and the To send count stay inside Documents, so the room shows no catcher's
+  state.
 - Every part's screen carries a way back to the room.
 - The sidebar stays inside the parts as it is, minus whatever the switch hides.
 
 **Amendments the owner words**, landing with phase 2:
 - `DESIGN.md`:
-  - the sixth-hue rule gains the room's three hues;
-  - "never used for anything but status" gains "the catcher hues never reuse a status value";
-  - "Dark mode is derived, never authored" gains the room's dark;
-  - "Don't add gradients as decoration" gains the hue beneath each catcher;
+  - the sixth-hue rule ("gold, gold's tiers, and the greys — nothing else") gains the room's
+    stronger gold, platinum and bronze, in the room only;
+  - "Dark mode is derived, never authored" gains the room's grey;
+  - "Don't add gradients as decoration" gains the colour beneath each catcher;
   - "A grid frame: a 15rem rail…" gains "except the room";
   - its description of Loppa follows `VISION.md`.
 - `docs/plan/DESIGN-LANGUAGE.md`'s "it never decorates", and `styles.css`'s "Nothing here loops",
   gain the room's float, which can be paused and stays still under reduced motion.
 - `docs/brand/USAGE.md` gains the opened state.
-- **ADR 0022 — the room** (proposed in phase 0) records all of this.
+- **ADR 0022 — the room** (accepted in phase 0) records all of this.
 
 ## 3. The four parts
 
@@ -111,8 +127,12 @@ exists, reshaped where it must be.
     Download, Sign and Send come first, and Publish becomes "Share to collect".
   - **The doors exist only in `/forms`' state, and `openBlank` is private** → export it, and give
     the doors a URL, so the Forms part opens on "Akinator" or "manual".
-  - **Filling an existing PDF's own fields and keeping it** → the paper twin already fills a PDF
-    (`fillPaper`). It gains the author as the one filling it, with no submission.
+  - **Nothing fills an existing PDF's own fields** → write them with `pdf-lib`'s form API in the
+    Forms server, under the PDF guard, with no import and no submission.
+    - `fillPaper` is not that. It draws a Loppa form's answers as an overlay on the paper the form
+      was imported from (`documents/paper.ts`), so it needs that import first.
+    - A PDF with no fields of its own is filled that way: imported, then the overlay. It gains the
+      author as the one filling it, with no submission.
 
 ### Scan — bring it in, and the page basics
 
@@ -134,7 +154,7 @@ exists, reshaped where it must be.
     - `pdf-lib` in the browser would cost the bundle about a whole budget's headroom, so it stays
       on the server.
     - On the hosted edition this means the server parses a stranger's PDF, which ADR 0018 and
-      `extract.ts` avoid for import; §9 asks.
+      `extract.ts` avoid for import. That is decided when the hosted edition comes (§9).
   - **The review screen has no camera, phone or drop** although the door promises "a phone scan
     becomes the form" → mount `CameraScan` and `PhoneScan` there, and accept a dropped file.
   - **`phone-scan.ts` imports `QR_DARK` from the admission module** → move the constant (needed
@@ -156,7 +176,7 @@ exists, reshaped where it must be.
   - **The signer page and the audit page are English and Swedish only** → their interface strings
     in all twelve languages. Operative wording is translated by a person (rule 8, ADR 0012).
   - **ADR 0009 requires Sign to run standalone, which is unmet**, and routes Sign's invitations
-    through Mailer → §9 asks whether "finished" includes that, or whether 0009 is amended.
+    through Mailer → by default "finished" does not include it (§9), and ADR 0009 is amended in phase 6.
   - **Remote signers from the desktop and a real eID** are not in the defaults (§9).
 
 ### Send
@@ -168,16 +188,25 @@ exists, reshaped where it must be.
   - the outbox as the test mode.
 - **Gaps → fixes:**
   - **Nothing sends "this document to this person"** → one route and one screen.
-    - Any part's PDF, recipients, a subject and a note go through a confirmation (rule 7) and into
-      To send.
+    - Any part's PDF, or a PDF or Word file sent as it was brought in, with recipients, a subject
+      and a note, goes through a confirmation (rule 7) and into To send.
     - On the desktop the message opens as a draft in the person's own mail program.
     - Nothing leaves without their press.
   - **The hosted edition has no To send.** Hosted Send comes with the hosted edition (§9).
 
-## 4. The centre: Summary
+## 4. The centre: summary and translation
 
 Built in the **later session** that can reach the model (see the hand-over at the end); everything
-before it is built without the network.
+before it is built without the network. Until then the centre says plainly that the summary is not
+on this computer yet. On an edition that has no summary, it says that instead.
+
+**Languages.** All twelve that Loppa has: Danish, German, English, Spanish, Finnish, French,
+Icelandic, Japanese, Norwegian Bokmål, Russian, Swedish and Chinese (`apps/forms/src/lib/messages/`).
+- It summarises a document in its own language or in the person's.
+- It translates between any two of the twelve, **if it fits**: the same model, no second one.
+- S1 measures each language on its own. Small models are weakest in the smallest languages, and
+  Icelandic is the likeliest to fall short (UNVERIFIED). A language that fails S1's bar offers no
+  summary or translation in it, and says why, rather than a poor one.
 
 **Model.**
 - **Default:** Qwen3-1.7B (Apache-2.0).
@@ -206,20 +235,26 @@ before it is built without the network.
 - **Blank form:** its labels.
 - **Filled form:** `flattenAnswers`.
 - **Long documents:** split into chunks that fit the model. S1 reports time and peak RAM per page
-  count. A 2-page summary is estimated at 20–45 s on a laptop CPU (UNVERIFIED).
+  count. A 2-page summary is estimated at 20–45 s on a laptop CPU (UNVERIFIED). A translation is
+  as long as its source, so it is slower than a summary and shown page by page as it is written.
 
 **What it may and may not do.**
-- It may write a draft summary of the person's own open document, shown beside it, labelled as
-  generated, and not stored.
+- It may write a draft summary or translation of the person's own open document, shown beside
+  it, labelled as generated (a translation as a machine translation), and not stored.
 - It may not:
   - write into, or attach itself to, a document, form, envelope or message;
   - feed any builder or import decision;
   - live in `packages/shared/src/{builder,interpret,import}`;
   - make a network call;
   - write legal, clinical, tax or safety-critical wording (rule 8, ADR 0012).
-- Consent text that the import's classify stage finds is quoted, not paraphrased. The plan already
-  promises imported consent text is "never summarised or shortened". Contracts and declarations
-  are §9.
+- **Contracts, consents, declarations and clinical forms are quoted, never reworded or
+  translated** (the accepted default). The centre picks their passages and shows them in the
+  original language. ADR 0012 counts a machine translation of a declaration as generated legal
+  wording, and the plan already promises imported consent text is "never summarised or
+  shortened".
+  - The import's classify stage finds consent text today. Recognising a contract, a declaration or
+    a clinical form needs word lists of its own: rule-based, with fixtures, in
+    `packages/shared/src/import`, never the model.
 - **CAVEATS #43 is test-first:** `bundle-split.test.ts` forbids `fetch` in anything that holds a
   reading. Sending a reading's text to a loopback route changes that row and its test first, and
   the hosted edition never registers the route.
@@ -232,7 +267,7 @@ before it is built without the network.
   English and Swedish only.
 
 **Decisions.**
-- **ADR 0023 — a local summary model** supersedes ADR 0013 (proposed).
+- **ADR 0023 — a local summary and translation model** supersedes ADR 0013 (proposed).
 - It amends ADR 0016 (an "On this computer" AI mode, the native module, the model file), ADR 0015
   (licences for model weights) and ADR 0012.
 - `CLAUDE.md`'s non-negotiable (1), `docs/plan/BRIEF.md` and `PREDICTIVE-BUILDER.md` ("No AI is
@@ -284,15 +319,15 @@ and pays for what it adds.
 
 | Phase | What | Exit |
 | --- | --- | --- |
-| **0 — Decisions** | The owner answers §9, accepts this plan and `VISION.md`, and ADR 0022 is drafted. | This PR merged. No code. |
+| **0 — Decisions** | The owner answers §9 and accepts this plan and `VISION.md` (done: "Let's go!"), and ADR 0022 is accepted. | This PR merged. No code. |
 | **1 — Spikes** (throwaway, nothing merged) | **S2 motion:** three floating catchers, the zoom and the open, traced on a 4× CPU-throttled run. **S3 the part gaps:** a draft PDF with no submission; page work under the PDF guard, including encrypted and already-signed PDFs; one document queued in To send and opened as a draft. | S2: no frame gap over 25 ms (headless Chromium's clock jitters past 16.7 ms on an idle page), reduced motion and the pause proven, and the room's CSS within 4 KB. S3: each proven, or turned into an owner question. |
-| **2 — The room** | `/room`, the hue tokens, the placeholders, the corner menu, ADR 0022 accepted, the `DESIGN.md` amendments. The four parts link to today's screens, and the centre says the summary is not on this computer yet. | `room.spec`: keyboard, reduced motion, 360 × 640, German length, mirrored. The placeholder guard test (no href, handler, import or focus). `bundle:budget` green. Sign-in lands on the room. |
-| **3 — Forms** | The draft PDF, filling a PDF and keeping it, Download, Sign and Send before "Share to collect", the doors by URL. | An e2e builds a form Akinator-style and one in manual mode, and downloads each as a PDF, with no submission and no published version. |
-| **4 — Scan** | The Scan screen, the page basics, keep as PDF, camera, phone and drop on the review screen. | e2e for phone scan → PDF, PDFs put together and pages turned → PDF, and drop → form. CAVEATS #43 holds. |
-| **5 — Send** | "Send this document" with a confirmation and the outbox test mode. | An e2e: any part's PDF reaches To send with its attachment, and nothing leaves without the press. |
+| **2 — The room** | `/room`, the grey and the three stronger colours as tokens, the placeholders, the corner menu, the `DESIGN.md` amendments. The four parts link to today's screens, and the centre says the summary is not on this computer yet. | `room.spec`: keyboard, reduced motion, 360 × 640, German length, mirrored. The placeholder guard test (no href, handler, import or focus). The contrast test (each colour at 3:1 or more on the grey). `bundle:budget` green. Sign-in lands on the room. |
+| **3 — Forms** | The draft PDF, filling a PDF's own fields and a Loppa form and keeping each as a PDF, Download, Sign and Send before "Share to collect", the doors by URL. | An e2e builds a form Akinator-style and one in manual mode, fills each and downloads it as a PDF, and fills an existing PDF's own fields and keeps it, all with no submission and no published version. |
+| **4 — Scan** | The Scan screen, the page basics, keep as PDF, camera, phone and drop on the review screen. | e2e for phone scan → PDF; PDFs put together, pages taken out, split, turned, reordered and deleted → PDF; and drop → form. CAVEATS #43 holds. |
+| **5 — Send** | "Send this document" with a confirmation and the outbox test mode. | An e2e: any part's PDF, and a Word file as it was brought in, reaches To send with its attachment, and nothing leaves without the press. |
 | **6 — Sign** | Hand-off from the other parts, cancel (CONTRACT §5, `packages/`), the signed copy through Send, and the signer and audit pages in twelve languages. | e2e: form → PDF → signed → sealed copy queued to the signers, plus a cancel. `contract:check` green. |
 | **7 — The earlier features** | The switch (§5 B), if the owner approves it. | The old e2e suite passes with the switch on, and the room shows none of it with the switch off. |
-| **8 — Summary** (later session) | S1: models × runtimes on an 8 GB Windows laptop and a Mac, over corpus and prose documents in several languages. Then ADR 0023, the manifest, the setting and the summary pane. | The owner's time limit is met. CI runs a fake summariser. The weights test is green. The packaged app passes a smoke test on both platforms. |
+| **8 — Summary and translation** (later session) | S1: models × runtimes on an 8 GB Windows laptop and a Mac, over corpus and prose documents in each of the twelve languages, summarising and translating. Then ADR 0023, the manifest, the setting, the word lists for operative text, and the pane. | Each language passes S1's bar or says it has no summary. The owner's time limit is met. CI runs a fake summariser. The weights test is green. The packaged app passes a smoke test on both platforms. |
 | **9 — The Documents demo** | A seed and desktop demo built around Documents: an imported PDF form, a Word form, a filled PDF, an arranged PDF, a message in To send. | A person who collects nothing can scan → arrange → fill → sign → send → summarise by clicking alone on the desktop. |
 
 **What the demo seed cannot hold:** a signing request. `signing_requests.envelope_id` is NOT NULL,
@@ -308,12 +343,12 @@ session, best after phase 4 as Scan's out-of-sample test, and its prose document
 
 - **New:**
   - this plan;
-  - ADR 0022, the room (phase 0, accepted in phase 2);
+  - ADR 0022, the room (accepted in phase 0);
   - ADR 0023, the summary (phase 8).
 - **Amended:**
   - ADR 0016 (phases 2 and 8);
   - ADRs 0015 and 0012 (phase 8);
-  - ADR 0009 (phase 6, if the owner keeps Sign inside Documents without its standalone mode);
+  - ADR 0009 (phase 6: Sign inside Documents, without its standalone mode, by default);
   - ADR 0011 (phase 7, invoices).
 - **Rewritten, each in the phase that contradicts it:**
   - `CLAUDE.md`'s framing and package descriptions;
@@ -342,8 +377,8 @@ At `eea1774`, gzipped:
   - the full e2e suite: 92 tests in 8.7 minutes;
   - the Windows desktop zip: 211.5 MB (Electron about 370 MB of the 494 MB unpacked);
   - the macOS zip: 440.5 MB.
-- **Where the headroom goes:** the room, the Scan, Send and Summary screens and their words in
-  twelve catalogues must fit in 13.6 KB. A word costs about 20 bytes in each catalogue.
+- **Where the headroom goes:** the room, the Scan and Send screens, the centre's pane and their
+  words in twelve catalogues must fit in 13.6 KB. A word costs about 20 bytes in each catalogue.
   - Spike S2 measures the room.
   - Each phase reports its delta.
   - If a phase does not fit, a cut pass comes first: dead CSS, unread catalogue keys, duplicate
@@ -351,35 +386,46 @@ At `eea1774`, gzipped:
 - **Outside every budget:** the mark's chomp loop is 1,094 KB of the 1,319 KB a cold signed-in
   load downloads. A smaller loop from the brand bundle would save more than any code cut.
 
-## 9. Questions for the owner
+## 9. The owner's answers, and what stands as a default
 
-Each has a default in §1; answer only where it is wrong.
+**Answered on 2026-10-07:**
+- **The room's colours:** Loppa's own, made stronger so they stand out against the grey, in place
+  of red, green and yellow.
+- **The centre's languages:** all twelve that Loppa has, and translation too if it fits: "a
+  summary/translation tool".
 
-1. **The room's colours:** the exact dark grey (the derived dark is near-black, `#0e0e10` with
-   cards at `#1c1c1e`), red, green and yellow. May the yellow be Loppa's gold? What does a
-   white-labelled customer see?
-2. **Where editing lives:** page work in Scan and filling in Forms?
-3. **Word:** input only for now, or Word → PDF too (a faithful conversion needs a Word layout
-   engine; a rough one does not)?
-4. **Desktop first**, with hosted after and no summary there? On hosted, may the server do the
-   page work on a person's PDF?
-5. **The earlier features:** hide them behind one switch (B), keep them in the rail (A), or
-   another way? Park Mailer?
-6. **Sign for "finished":** are standalone Sign (ADR 0009), remote signers from the desktop, or a
-   real eID part of it?
-7. **The summary:**
-   - May it summarise contracts, declarations and consents, quoting them, or must it refuse them?
-   - Which languages must it handle?
-   - How long may a 2-page and a 20-page summary take on an ordinary 8 GB laptop?
-   - Qwen3-1.7B as the default?
-   - A separate model file rather than the installer?
-8. **The opening animation:** may code draw the opened catcher from the existing geometry, or
-   should the brand designer make the "opened into four" state?
-9. **Arrival:** does the once-only intro become the spawn into the room?
-10. **The guided builder's opening question** ("What is this form for?", and its 25 collection
-    recipes): keep it for now, or have it rewritten for documents in your words?
-11. **The marketing site at `/`** still sells events, the door and the ledger. Reword it in your
-    words, or hide those pages?
+**Accepted with their defaults** ("Let's go!"). Each is in §1 or §4, and the owner may change any
+of them at any time:
+1. **The room:** the exact grey; which colour sits beneath which catcher; whether the colours carry
+   into a tool once it opens; what a white-labelled customer sees.
+2. **The placeholders:** inert, saying "Not built yet".
+3. **Where editing lives:** page work in Scan, filling in Forms. Editing a document's text is not
+   a basic.
+4. **Word:** input only for now. A faithful Word → PDF conversion needs a Word layout engine; a
+   rough one does not.
+5. **Scan's output:** a PDF to keep or a form, chosen after reading.
+6. **Sign:** the person signs on the desktop; others sign by a link where Sign is online.
+   Standalone Sign (ADR 0009), remote signers from the desktop and a real eID are not part of
+   "finished".
+7. **Collecting answers:** "Share to collect", a secondary choice in Forms.
+8. **The edition:** desktop first, then hosted with no summary. Whether the hosted server may do
+   the page work on a person's PDF is decided when the hosted edition comes.
+9. **The earlier features:** behind one switch (§5 B), with invoices among them; Mailer parked.
+10. **The centre:**
+    - Qwen3-1.7B, as a separate model file;
+    - a form's labels and its answers both;
+    - contracts, consents, declarations and clinical forms quoted, never reworded or translated;
+    - shown beside the document, labelled, never stored.
+    - The time a 2-page and a 20-page summary may take on an 8 GB laptop is the owner's, measured
+      in S1.
+11. **The opening animation:** drawn by code from the existing geometry, unless the brand designer
+    makes the "opened into four" state.
+12. **Arrival:** whether the once-only intro becomes the spawn into the room is decided in phase 2,
+    with the room in front of the owner.
+13. **The guided builder's opening question** ("What is this form for?", and its 25 collection
+    recipes): kept for now.
+14. **The marketing site at `/`:** still sells events, the door and the ledger. It is reworded only
+    in the owner's words.
 
 ## Hand-over: the later session with network access
 

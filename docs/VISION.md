@@ -2,11 +2,11 @@
 
 **The owner's, 2026-10-07.** Written down from the owner's own words in the session that re-planned
 Loppa ("I think we need to start over planning wise"); they are quoted verbatim at the end, with the
-one proposal of the session's that the owner confirmed. Where any other document disagrees — the
+session's words they answered. Where any other document disagrees — the
 README, `START-HERE.md`, the specs, `DESIGN.md`, older plans — this one wins until that document is
 brought in line (the second-last section lists them). This file says what Loppa is. The plan for
-building it is `docs/plan/DOCUMENTS.md`, which takes a default for each open question below and
-puts them to the owner; the room's decisions are ADR 0022.
+building it is `docs/plan/DOCUMENTS.md`, which the owner accepted ("Let's go!"); the room's
+decisions are ADR 0022.
 
 Sections 1–8 are the owner's. Section 9 is the repository's rules that still apply, so they are
 marked as the repository's, not the owner's.
@@ -21,13 +21,15 @@ collect forms or data in the first place.
 ## 2. The room
 
 You arrive in an **empty dark grey room**. Three cootie catchers — paper fortune tellers, Loppa's
-mark — float in it, each with its own hue beneath it:
+mark — float in it, each with its own hue beneath it. The hues are **Loppa's own colours, made a
+little stronger** so they stand out against the dark grey (the owner first named red, green and
+yellow, then replaced them with Loppa's colours):
 
-| Catcher | Hue beneath it | Now |
-| --- | --- | --- |
-| **Documents** — PDF, Word and forms | red | built first, and finished before anything else |
-| **Spreadsheets** | green | a floating, animated placeholder |
-| **Presentation & planning** | yellow | a floating, animated placeholder |
+| Catcher | Now |
+| --- | --- |
+| **Documents** — PDF, Word and forms | built first, and finished before anything else |
+| **Spreadsheets** | a floating, animated placeholder |
+| **Presentation & planning** | a floating, animated placeholder |
 
 Pressing a catcher **zooms in on it and opens it**, revealing **four parts** around **a centre**.
 The two placeholders will have the same kind of opening later; they are not built now.
@@ -52,8 +54,10 @@ PDF, Word and forms: scanning them, editing them and sending them. Its four part
 
 Its centre:
 
-- **Summary** — an open-source AI model, such as one from the Qwen or DeepSeek families, run
-  **locally and offline**, **only large enough to properly summarise documents, PDFs and forms**.
+- **Summary and translation** — an open-source AI model, such as one from the Qwen or DeepSeek
+  families, run **locally and offline**, **only large enough to properly summarise documents, PDFs
+  and forms**, in **all the languages Loppa has so far** (twelve), and, if it fits, translating
+  them too: "a summary/translation tool".
 
 **Editing is the basics, not Acrobat.** Everything is boiled down to the most-used features. The
 basics the session proposed and the owner confirmed ("Now you get it!") are: putting files
@@ -102,7 +106,8 @@ change:
 - **Nothing sends or deletes without a confirmation**, and everything outbound has a test mode
   (`CLAUDE.md` rule 7).
 - **No generated legal, clinical, tax or safety-critical wording** (rule 8, extended to AI by ADR
-  0012, proposed). It applies to the summary; how it applies is open below.
+  0012, proposed). It applies to the summary and the translation: ADR 0012 counts a machine
+  translation of a declaration as generated legal wording. How it applies is open below.
 - **The guided builder and the import stay rule-based and deterministic** (`CLAUDE.md`, ADRs
   0017–0021). The model lives in the centre, where the owner put it; it never decides anything in
   the builder or the import, and never runs inside `packages/shared/src/{builder,interpret,import}`.
@@ -115,12 +120,11 @@ change:
 
 ## 10. Open, and the owner's to decide
 
-Not assumed here; `docs/plan/DOCUMENTS.md` §1 takes a default for each and §9 puts them to the
-owner:
+Not assumed here. `docs/plan/DOCUMENTS.md` §1 takes a default for each, and the owner accepted the
+plan with those defaults ("Let's go!"). Each stands until the owner says otherwise; §9 there lists
+them:
 
-- **The room's look:** the exact grey, red, green and yellow; whether they stay in the room or carry
-  into a tool once a catcher opens (which decides whether `DESIGN.md` is amended for the room alone
-  or for the whole product).
+- **The room's look:** the exact grey, and which of Loppa's colours sits beneath which catcher.
 - **The placeholders:** what pressing one does.
 - **Editing:** which of the four parts holds the page and file basics (none of Forms, Scan, Sign or
   Send is an editor today); whether basic editing includes changing a document's text, especially a
@@ -133,11 +137,11 @@ owner:
   device; the signer's page has no sender screens of its own.
 - **Collecting answers:** how prominent sharing a form for others to fill in stays inside Forms,
   given that it is optional.
-- **The summary:** which model (Qwen and DeepSeek were examples) and whether its weights' licence
-  passes ADR 0015; its size and how it reaches a machine (in the installer, or downloaded once); which
-  of the twelve languages it must summarise; whether "forms" means the form or the answers given to
-  it; whether it may summarise a contract, a consent, a declaration or a clinical form at all (rule
-  8, ADR 0012, and the plan's "consent text is never summarised"); and how it is shown (labelled as
+- **The summary and translation:** which model (Qwen and DeepSeek were examples) and whether its
+  weights' licence passes ADR 0015; its size and how it reaches a machine (in the installer, or
+  downloaded once); whether "forms" means the form or the answers given to it; whether it may
+  summarise or translate a contract, a consent, a declaration or a clinical form at all (rule 8, ADR
+  0012, and the plan's "consent text is never summarised"); and how it is shown (labelled as
   generated and never written into the document, as ADR 0013 proposes).
 - **Where:** the desktop app, the hosted web edition, or both — and, if the web edition stays,
   whether it has a summary at all, since a model on Loppa's server would not be the person's own
@@ -157,10 +161,10 @@ Brought in line as the work touches them; until then, this file wins:
 - `CLAUDE.md` — "three independent products" are Forms, Mailer and Sign; `apps/forms` is "forms,
   inspections, measurements, reports".
 - `README.md` — "Forms, registrations and email".
-- `DESIGN.md` — the palette is gold and greys only ("the sixth-hue rule"); its red and green are
-  reserved for status; dark mode is derived and never authored; no decorative gradients; and it
-  describes Loppa as a form builder with events, a door and a ledger, plus Mailer. The room's red,
-  green and yellow hues, its dark grey and its floating catchers need the owner's amendment there.
+- `DESIGN.md` — dark mode is derived and never authored; no decorative gradients; and it describes
+  Loppa as a form builder with events, a door and a ledger, plus Mailer. The room's dark grey and
+  the hue beneath each catcher need the owner's amendment there. (Its palette, gold and greys only,
+  no longer conflicts: the hues are Loppa's own colours.)
 - `docs/plan/DESIGN-LANGUAGE.md` — "Motion explains where something went; it never decorates." The
   room's floating catchers need the owner's amendment there too.
 - `docs/START-HERE.md` — says it wins over every other plan; it describes the earlier v0.1.
@@ -233,3 +237,18 @@ left out):
 > Then ai model summary in middle as before.
 >
 > I think our vision starts to align, so make sure to write it down.
+
+The session's questions on the plan, two of which the owner's next message answered (excerpt):
+
+> 1. **Room colours:** the dark grey […]; the exact red, green and yellow (may the yellow be Loppa's
+>    gold?); what a white-labelled customer sees. […]
+> 7. **Summary:** it quotes contracts and consents rather than rewording them; Qwen3-1.7B as a
+>    separate model file; tell me the languages it must handle and how long it may take.
+
+> Red green yellow can be removed and replaced with loppas colors but maybe exaggerated to make
+> sure it's a little bit contrast?
+>
+> Summary, all languages we have so far really. With some potential for translation as well if
+> possible to fit in. So it's a summary/translation tool.
+>
+> We are getting more aligned as we go on. Let's go!
