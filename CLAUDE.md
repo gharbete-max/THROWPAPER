@@ -1,7 +1,12 @@
 # CLAUDE.md
 
+**Read `docs/VISION.md` first.** It is the owner's vision of what Loppa is (2026-10-07): a room of
+three independent catchers — Documents, Spreadsheets, Presentation & planning — with Documents built
+first. Where this file's product framing below disagrees with it, the vision wins until this file
+is brought in line.
+
 Monorepo containing **three independent products** plus the packages they share. Read
-`docs/CONTRACT.md` first, then the spec for whichever product you are working on. Do not paste
+`docs/CONTRACT.md` next, then the spec for whichever product you are working on. Do not paste
 specs into this file.
 
 ```
