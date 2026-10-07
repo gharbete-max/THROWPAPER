@@ -5,7 +5,8 @@ Loppa ("I think we need to start over planning wise"); they are quoted verbatim 
 one proposal of the session's that the owner confirmed. Where any other document disagrees — the
 README, `START-HERE.md`, the specs, `DESIGN.md`, older plans — this one wins until that document is
 brought in line (the second-last section lists them). This file says what Loppa is. The plan for
-building it is separate and is not written yet; it will put the open questions below to the owner.
+building it is `docs/plan/DOCUMENTS.md`, which takes a default for each open question below and
+puts them to the owner; the room's decisions are ADR 0022.
 
 Sections 1–8 are the owner's. Section 9 is the repository's rules that still apply, so they are
 marked as the repository's, not the owner's.
@@ -114,7 +115,8 @@ change:
 
 ## 10. Open, and the owner's to decide
 
-Not assumed here; the new plan puts these to the owner:
+Not assumed here; `docs/plan/DOCUMENTS.md` §1 takes a default for each and §9 puts them to the
+owner:
 
 - **The room's look:** the exact grey, red, green and yellow; whether they stay in the room or carry
   into a tool once a catcher opens (which decides whether `DESIGN.md` is amended for the room alone
