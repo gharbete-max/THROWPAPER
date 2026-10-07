@@ -10,6 +10,11 @@ import {
   parseRawDocument,
   type RawDocument,
 } from '@tp/shared/import';
+import {
+  corpusSources,
+  scanSources as scanManifest,
+  type CorpusDocument,
+} from '../../../../../../scripts/corpus/sources.js';
 import { readDocx } from './docx.js';
 import { openPdf, type Pdfjs } from './extract.js';
 import { readDocument } from './pipeline.js';
@@ -25,9 +30,10 @@ import type { Reading } from './reading.js';
  * order, nested as they are nested, with their wording verbatim — and the document's language, and
  * (since S9) every part of it a person would list: its headings, its text, and its questions with
  * what answers them and the type they would give them. The PDF and the Word file of a document are
- * held to the same expectation, so they agree. Each stage's
- * debug artifact is a snapshot besides (`fixtures/documents/debug/`), so a change to any decision is
- * a diff to review, not only a change to the items.
+ * held to the same expectation, so they agree; a real document, found rather than written here, is
+ * read in the formats it was found in, under its own licence (`scripts/corpus/sources.ts`). Each
+ * stage's debug artifact is a snapshot besides (`fixtures/documents/debug/`), so a change to any
+ * decision is a diff to review, not only a change to the items.
  */
 
 const ROOT = new URL('../../../../../../', import.meta.url).pathname.replace(
@@ -37,22 +43,13 @@ const ROOT = new URL('../../../../../../', import.meta.url).pathname.replace(
 const CORPUS = join(ROOT, 'fixtures', 'documents');
 const EXPECTED = join(CORPUS, 'expected');
 const DEBUG = join(CORPUS, 'debug');
-const FORMATS = ['pdf', 'docx'] as const;
-type Format = (typeof FORMATS)[number];
-
-interface Source {
-  name: string;
-  language: string;
-  summary: string;
-  features: string[];
-  spec: string;
-  files: Record<Format, { path: string; sha256: string }>;
-}
-interface Sources {
-  licence: string;
-  tool: string;
-  documents: Source[];
-}
+type Format = 'pdf' | 'docx';
+/** The formats a document has: both for one made here, what it was found in for a real one. */
+const formats = (doc: CorpusDocument) => Object.keys(doc.files) as Format[];
+/** A real document's licence has its text in the corpus, once; a permission is in its entry. */
+const licenceText = (licence: string) =>
+  licence === 'permission' || existsSync(join(CORPUS, 'licences', `${licence}.txt`));
+const hashOf = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
 
 /** An item as a person lists it: its marker, its words, what is written under it, and its items. */
 interface Listed {
@@ -95,7 +92,7 @@ interface Expectation {
   segments: Seen[];
 }
 
-const sources = JSON.parse(readFileSync(join(CORPUS, 'SOURCES.json'), 'utf8')) as Sources;
+const sources = corpusSources.parse(JSON.parse(readFileSync(join(CORPUS, 'SOURCES.json'), 'utf8')));
 const expectation = (name: string) =>
   JSON.parse(readFileSync(join(EXPECTED, `${name}.json`), 'utf8')) as Expectation;
 
@@ -202,25 +199,21 @@ function seen({ segments, classified }: Reading): Seen[] {
 }
 
 describe('the golden corpus', () => {
-  it('lists every file it holds, by hash, under its licence', () => {
-    expect(sources.licence).toBe('CC0-1.0');
-    expect(sources.tool).toMatch(/^LibreOffice \d+\.\d+/);
+  it('lists every file it holds, by hash, each real one under its own licence', () => {
     const listedFiles = sources.documents.flatMap((doc) =>
-      FORMATS.map((format) => doc.files[format].path),
+      Object.values(doc.files).map((file) => file.path),
     );
     const onDisk = readdirSync(CORPUS).filter((name) => /\.(pdf|docx)$/.test(name));
     expect([...listedFiles].sort()).toEqual([...onDisk].sort());
     for (const doc of sources.documents) {
-      expect(doc.summary.length, doc.name).toBeGreaterThan(20);
-      expect(doc.features.length, doc.name).toBeGreaterThan(0);
-      for (const format of FORMATS) {
-        const { path, sha256 } = doc.files[format];
+      for (const format of formats(doc)) {
+        const { path, sha256 } = doc.files[format]!;
         expect(path).toBe(`${doc.name}.${format}`);
-        const actual = createHash('sha256')
-          .update(readFileSync(join(CORPUS, path)))
-          .digest('hex');
-        expect(actual, `${path} is not the file SOURCES.json lists`).toBe(sha256);
+        expect(hashOf(join(CORPUS, path)), `${path} is not the file SOURCES.json lists`).toBe(
+          sha256,
+        );
       }
+      if ('origin' in doc) expect(licenceText(doc.licence), doc.licence).toBe(true);
     }
   });
 
@@ -235,7 +228,7 @@ describe('the golden corpus', () => {
   });
 
   for (const doc of sources.documents) {
-    for (const format of FORMATS) {
+    for (const format of formats(doc)) {
       it(`${doc.name}.${format} is read as its expectation says`, async () => {
         const expected = expectation(doc.name);
         const raw = await stageOne(
@@ -259,7 +252,7 @@ describe('the golden corpus', () => {
   it('keeps no debug snapshot that no document writes', () => {
     const written = new Set(
       sources.documents.flatMap((doc) =>
-        FORMATS.flatMap((format) =>
+        formats(doc).flatMap((format) =>
           ['reassemble', 'enumerate', 'segment', 'classify', 'score'].map(
             (stage) => `${doc.name}.${format}.${stage}.json`,
           ),
@@ -273,24 +266,13 @@ describe('the golden corpus', () => {
 
 /**
  * The corpus's scans (S14, `docs/plan/SCANS.md` §5): corpus documents printed and scanned
- * (`pnpm corpus:scan`), each kept as its picture and as the raw document Tesseract read from it,
- * frozen. The test reads the frozen file through the same stages, against an expectation written
- * from the document's own: what the paper says, changed only where OCR measurably changed it —
- * each misread word named, and the blank lines, which OCR does not read as words.
+ * (`pnpm corpus:scan`), and pictures of real paper kept as they were found, each kept as its
+ * picture and as the raw document Tesseract read from it, frozen. The test reads the frozen file
+ * through the same stages, against an expectation written from the document's own: what the paper
+ * says, changed only where OCR measurably changed it — each misread word named, and the blank
+ * lines, which OCR does not read as words.
  */
 const SCANS = join(CORPUS, 'scans');
-interface ScanSources {
-  licence: string;
-  tool: string;
-  scans: Array<{
-    name: string;
-    from: string;
-    locale: string;
-    dpi: number;
-    skew: number;
-    files: Record<string, { path: string; sha256: string }>;
-  }>;
-}
 interface ScanExpectation extends Expectation {
   scan: string;
   /** Words OCR read wrongly, and whether stage 7's cap caught them (it can only if Tesseract was unsure). */
@@ -298,25 +280,26 @@ interface ScanExpectation extends Expectation {
   /** Printed boxes OCR read as marks, which stage 1 wrote back as boxes (B1). */
   boxes: number;
 }
-const scanSources = JSON.parse(readFileSync(join(SCANS, 'SOURCES.json'), 'utf8')) as ScanSources;
+const scanSources = scanManifest.parse(
+  JSON.parse(readFileSync(join(SCANS, 'SOURCES.json'), 'utf8')),
+);
 const scanExpectation = (name: string) =>
   JSON.parse(readFileSync(join(SCANS, 'expected', `${name}.json`), 'utf8')) as ScanExpectation;
 const frozen = (name: string) =>
   parseRawDocument(JSON.parse(readFileSync(join(SCANS, `${name}.raw.json`), 'utf8')));
-const hashOf = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
 
 describe("the corpus's scans", () => {
-  it('lists every file it holds, by hash, each scanned from a corpus document', () => {
-    expect(scanSources.licence).toBe('CC0-1.0');
-    expect(scanSources.tool).toMatch(/^pdfjs-dist@\S+ \+ Tesseract \S+$/);
+  it('lists every file it holds, by hash, each scanned from a corpus document or real paper', () => {
     const listedFiles = scanSources.scans.flatMap((scan) =>
       Object.values(scan.files).map((file) => file.path),
     );
-    const onDisk = readdirSync(SCANS).filter((name) => /\.(png|pdf|raw\.json)$/.test(name));
+    const onDisk = readdirSync(SCANS).filter((name) => /\.(png|jpe?g|pdf|raw\.json)$/.test(name));
     expect([...listedFiles].sort()).toEqual([...onDisk].sort());
-    const documents = new Set(sources.documents.map((doc) => doc.files.pdf.path));
+    const documents = new Set(sources.documents.map((doc) => doc.files.pdf?.path));
     for (const scan of scanSources.scans) {
-      expect(documents.has(scan.from), scan.from).toBe(true);
+      if ('from' in scan) expect(documents.has(scan.from), scan.from).toBe(true);
+      else expect(licenceText(scan.licence), scan.licence).toBe(true);
+      const picture = 'from' in scan ? scan.files.png!.path : scan.image;
       for (const { path, sha256 } of Object.values(scan.files)) {
         expect(hashOf(join(SCANS, path)), `${path} is not the file SOURCES.json lists`).toBe(
           sha256,
@@ -327,7 +310,7 @@ describe("the corpus's scans", () => {
       expect(raw.source).toEqual({
         kind: 'image',
         extractor: scanSources.tool.slice(scanSources.tool.indexOf('+ ') + 2),
-        sha256: scan.files.png!.sha256,
+        sha256: hashOf(join(SCANS, picture)),
       });
       expect(raw.pages.flatMap((page) => page.words).every((word) => word.source === 'ocr')).toBe(
         true,

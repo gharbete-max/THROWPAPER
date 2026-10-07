@@ -794,10 +794,29 @@ nineteen did.
   `pnpm corpus:build` has LibreOffice read it and write the corpus PDF, and re-save it as the
   corpus Word file. So the files the tests read are a third party's — its fonts, kerning, list
   numbering, fields and section breaks — and never Loppa's own writer's. They are CC0.
+- **Real documents, found and not written here** (`origin: "real"`): forms nobody here wrote — real
+  typesetting, real Word habits, real paper — the out-of-sample test. **Each carries its own
+  licence, not CC0**: one that lets it be kept in a repository that may be public (`CC-BY-4.0`,
+  `OGL-UK-3.0`, `PD-USGov`, `PD-US-expired`, `PD-old-70`, `CC0-1.0`), verified on its source page
+  before it is downloaded, with that page's URL, the day it was retrieved and whom to credit
+  (`source: { url, retrieved, attribution }`). Its text is in `licences/<licence>.txt`, once, and
+  every entry under it refers to it by its id. It is stored exactly as downloaded, at most 1.5 MB
+  and six pages, its SHA-256 recorded; a page cut is recorded in its summary. It has only the
+  formats it was found in (the keys of its `files`), and `pnpm corpus:build` never builds or
+  rewrites it, and refuses a spec with its name. Its expectation is written by hand from its
+  rendered pages before the pipeline first reads it, as every other is; where the reading differs,
+  the difference is a fault fixed with a fixture, or the expectation was wrong and the roadmap says
+  so — never a moved threshold.
+- **A customer's form**, later: only a **blank** one, never one filled in, and only with written
+  permission to redistribute it. The permission is the licence: `licence: "permission"`, with
+  `permission: { from, date, scope }` in the entry, and no `licences/` text. The same
+  expectation-first process applies.
 - **`SOURCES.json`** lists each document: its language, what it is there to test, its features,
-  its spec, and each file's SHA-256, with the tool that wrote them. A file that differs from its
-  hash fails the test; a rebuild is a reviewed change (LibreOffice stamps the time into a PDF, so
-  rebuild only when a spec changes).
+  its spec or its licence and source, and each file's SHA-256, with the tool that wrote the made
+  ones. Everything that reads it reads it through Zod (`scripts/corpus/sources.ts`, ADR 0021), so a
+  real document with no licence, URL, retrieval date or hash is refused before it is read. A file
+  that differs from its hash fails the test; a rebuild is a reviewed change (LibreOffice stamps the
+  time into a PDF, so rebuild only when a spec changes).
 - **`expected/<document>.json`, written by hand before the document was first run**: the numbered
   items a person reading it would list, in reading order, nested as they are nested, verbatim, with
   the lines under an item that belong to it (J1), and the document's language — and, since S9,
@@ -821,7 +840,11 @@ nineteen did.
   Tesseract read from it (frozen: OCR is a measurement, like pdf.js), and for one as a PDF holding
   only the picture. `scans/expected/<document>.json` is the document's own expectation, changed
   only where OCR measurably changed it: each misread word named, with whether stage 7's cap caught
-  it, the blanks OCR does not read, and how many boxes B1 wrote back. `corpus.test.ts` reads the
+  it, the blanks OCR does not read, and how many boxes B1 wrote back. A **picture of real paper**
+  (`image` in `scans/SOURCES.json`, with its licence and source as a real document has them) is
+  kept exactly as found; `pnpm corpus:scan` reads it as the review screen reads a photograph and
+  freezes what Tesseract read, its box marks the lines where B1 finds a box, appended to
+  `fixtures/ocr/box-marks.json` after the made scans' own, which stay byte for byte as they were. `corpus.test.ts` reads the
   frozen raw document through stages 2 to 7; `e2e/scan.spec.ts` gives the picture and the PDF to
   the review screen, where the browser's Tesseract reads them.
 

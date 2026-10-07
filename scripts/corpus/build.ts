@@ -8,6 +8,9 @@
  * bytes (LibreOffice stamps the time) — rebuild only when a spec changes, and re-check the
  * expectations by hand when you do.
  *
+ * A real document (`origin: "real"` in `SOURCES.json`) was found, not written here: the build keeps
+ * its entry as it is, never writes its files, and refuses a spec that has its name (`keptBy`).
+ *
  * Needs `soffice` on the PATH (LibreOffice 24.2 or later). Not part of `verify`: the tests read the
  * committed files and need nothing installed.
  */
@@ -18,12 +21,19 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { CORPUS } from './documents.js';
+import { corpusSources, keptBy } from './sources.js';
 import { wordDocument } from './word.js';
 
 const OUT = resolve(import.meta.dirname, '../../fixtures/documents');
 const only = process.argv.slice(2);
 const documents = only.length ? CORPUS.filter((doc) => only.includes(doc.name)) : CORPUS;
 if (documents.length === 0) throw new Error(`No corpus document is called ${only.join(', ')}.`);
+const manifest = join(OUT, 'SOURCES.json');
+const kept = keptBy(
+  corpusSources.parse(JSON.parse(readFileSync(manifest, 'utf8'))).documents,
+  documents.map((doc) => doc.name),
+  only.length > 0,
+);
 
 const work = mkdtempSync(join(tmpdir(), 'loppa-corpus-'));
 const soffice = (...args: string[]) =>
@@ -57,10 +67,6 @@ try {
 
   mkdirSync(OUT, { recursive: true });
   const sha256 = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
-  const manifest = join(OUT, 'SOURCES.json');
-  const previous = only.length
-    ? (JSON.parse(readFileSync(manifest, 'utf8')) as { documents: { name: string }[] }).documents
-    : [];
   const built = documents.map((doc) => {
     const files = Object.fromEntries(
       (['pdf', 'docx'] as const).map((format) => {
@@ -78,16 +84,13 @@ try {
       files,
     };
   });
-  const names = new Set(built.map((doc) => doc.name));
-  const all = [...previous.filter((doc) => !names.has(doc.name)), ...built].sort((a, b) =>
-    a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
-  );
+  const all = [...kept, ...built].sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   writeFileSync(
     manifest,
     `${JSON.stringify(
       {
         $comment:
-          'The golden corpus (docs/plan/IMPORT-PIPELINE.md). Written for Loppa and dedicated to the public domain; built by `pnpm corpus:build`, never edited by hand.',
+          'The golden corpus (docs/plan/IMPORT-PIPELINE.md). The documents written for Loppa are dedicated to the public domain (the licence below), built by `pnpm corpus:build`, never edited by hand; a real one (origin "real") carries its own licence and source, and is never built.',
         licence: 'CC0-1.0',
         tool,
         documents: all,
