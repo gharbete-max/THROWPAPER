@@ -42,7 +42,9 @@
  * ## One source, three consumers
  *
  * `Mark.tsx` renders these, `scripts/generate-icons.ts` bakes them into the favicon and the
- * launcher icons, and the opening animation in `styles.css` turns about the axes derived here. The
+ * launcher icons, and the opening animation in `styles.css` turns about the axes derived here.
+ * The room's opened catcher (`screens/Room.tsx`) draws `FACETS` top-down and parts the pockets,
+ * which is the one opened state the app asks for (ADR 0022). The
  * script runs in node and cannot import a component, so the numbers live here for all of them to
  * read. `mark-consistency.test.ts` is what notices if they ever stop agreeing.
  */

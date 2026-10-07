@@ -1,6 +1,6 @@
 ---
 name: Loppa
-description: Forms, registrations and the door, for organisations that have to get it right.
+description: A lightweight helper in the office — three tools in one room, Documents first.
 colors:
   primary: '#cea85c'
   secondary: '#8f6b3a'
@@ -98,10 +98,13 @@ components:
 
 ## Overview
 
-Two products share these tokens: **Loppa**, a form builder with events, a door and a ledger,
-and **Mailer**, its email counterpart. The audience is membership secretaries, event organisers
-and association treasurers — people who have to get a registration right the first time, in front
-of an audience, often at a door in bad weather.
+**Loppa is a lightweight helper in the office** (`docs/VISION.md`, the owner's): you arrive in a
+room where three tools float as cootie catchers. Documents — PDF, Word and forms: scanning, filling,
+signing and sending them — is built first; Spreadsheets and Presentation & planning come later.
+What this file describes was written for the product Loppa grew out of: a form builder with events,
+a door and a ledger, and **Mailer**, its email counterpart, for membership secretaries, event
+organisers and association treasurers — people who have to get a registration right the first
+time, in front of an audience, often at a door in bad weather.
 
 That audience sets the whole direction. The interface is warm rather than corporate, quiet rather
 than expressive, and it never asks somebody to work out what a control does. Where taste and
@@ -157,6 +160,15 @@ The exception is **status**, and it is deliberate. `success`, `warning` and `dan
 colours and should not be — an error in gold on a page whose buttons are gold is an error nobody
 reads as one, and the palette has no red or green to lend. They stay conventional, they are never
 used for anything but status, and per the rule below they are never the only signal.
+
+**The room is the one screen with colours of its own** (ADR 0022). The owner's words: "an empty
+dark grey room", with a colour beneath each catcher that is Loppa's own, "exaggerated to make sure
+it's a little bit contrast". So the room is a cool dark grey, `#2a2b30`, and beneath the catchers
+are gold, platinum and bronze made stronger: `#ebbd4e`, `#d3dae6` and `#bc7f3a`. They stay inside
+the sixth-hue rule's families — bronze is gold's crease, platinum is a grey — and they are fixed
+tokens (`packages/tokens/src/room.ts`), not brand-kit colours. They never mean a status, nothing
+outside the room uses them, and each reads at 3:1 or more on the grey (`room.test.ts`). Each
+catcher's name is always written beneath it, so colour is never the only signal.
 
 Transparency is not a sixth colour. Hover fills, pressed states and overlays are the ink or the
 gold at reduced alpha, which is why gold's sheen tier does not appear in the token table: a tint
@@ -222,6 +234,8 @@ choosing it can fix.
 becomes a dark tint of the brand's own ink so a warm palette stays warm, surfaces sit _above_ the
 page rather than below it, and brand colours are lifted in HSL so they keep their hue. Mixing
 toward white was tried and turned the brand colour into a dead grey. Never write a second palette.
+The room's grey is the one authored dark, because the owner named it; the controls inside the room
+still take the derived dark.
 
 With a near-black ink there is nothing to tint: **an ink that is already a night page is the night
 page.** Tinting `#0e0e10` further walked it to `#050505`, collapsed the card onto the page (1.01:1)
@@ -268,7 +282,8 @@ anybody wants. Both places share one stack — they had drifted to two.
 
 ## Layout
 
-A grid frame: a 15rem rail, a session row, and a scrolling column of work. **Navigation is
+A grid frame: a 15rem rail, a session row, and a scrolling column of work — everywhere except the
+room, which is full screen with no rail and carries its own corner controls. **Navigation is
 vertical.** A horizontal bar was tried and could not hold the product's sections plus the account
 controls on one line at 1440px — a vertical list cannot wrap however many sections are added.
 
@@ -349,10 +364,11 @@ Borders are `1px` of `border` on every boundary. Inputs and buttons are `44px` t
 **Don't**
 
 - Don't hard-code a colour, size or font. The one exception is the QR code's black.
-- Don't author a dark palette. It is derived.
+- Don't author a dark palette. It is derived. The room's grey is the owner's one exception.
 - Don't use `accent` as text. Use `accent-ink`.
 - Don't put glass on anything without page behind it.
 - Don't animate anything that must be readable without JavaScript, and never gate content on a
   class that JavaScript adds.
 - Don't add gradients as decoration. The only two in the product are on `body`, and they exist to
-  give `backdrop-filter` something to work with: blur over one flat colour returns that colour.
+  give `backdrop-filter` something to work with: blur over one flat colour returns that colour. The
+  third is the owner's: the pool of colour beneath each catcher in the room (ADR 0022).

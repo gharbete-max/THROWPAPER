@@ -1449,4 +1449,18 @@ export const deDE: Record<MessageKey, string> = {
   'conversation.showMe': 'Zeig es mir',
   'conversation.rebased':
     'Dieses Formular wurde im Editor geändert. Ihre Änderungen bleiben erhalten, und die Fragen gehen dort weiter, wo Sie waren.',
+  'room.back': 'Zurück in den Raum',
+  'room.documents': 'Dokumente',
+  'room.spreadsheets': 'Tabellen',
+  'room.presentation': 'Präsentation & Planung',
+  'room.notBuilt': 'Noch nicht gebaut',
+  'room.scan': 'Scannen',
+  'room.sign': 'Unterschreiben',
+  'room.send': 'Senden',
+  'room.centre': 'Zusammenfassung und Übersetzung',
+  'room.centreLater': 'Noch nicht auf diesem Computer',
+  'room.centreNone': 'Nicht in dieser Ausgabe',
+  'room.pause': 'Bewegung anhalten',
+  'room.play': 'Bewegung abspielen',
+  'room.opened': '{name} ist geöffnet',
 };

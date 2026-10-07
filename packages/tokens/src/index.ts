@@ -32,6 +32,9 @@ export { toNativeTokens, type NativeTokens } from './compile-native.js';
 
 export { pxValue, px, spacing, typeScale } from './units.js';
 
+/** The room's fixed colours: a dark grey, and Loppa's own colours made stronger (ADR 0022). */
+export { ROOM, ROOM_HUES, roomCssVariables, type RoomHue } from './room.js';
+
 /** Ready-made looks, every one of which passes the contrast check — see `presets.test.ts`. */
 export { THEME_PRESETS, THEME_PRESET_IDS, type ThemePreset } from './presets.js';
 

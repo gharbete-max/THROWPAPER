@@ -1435,4 +1435,18 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.showMe': 'Показать',
   'conversation.rebased':
     'Форма была изменена в редакторе. Ваши изменения сохранены, и вопросы продолжаются с того места, где вы остановились.',
+  'room.back': 'Обратно в комнату',
+  'room.documents': 'Документы',
+  'room.spreadsheets': 'Таблицы',
+  'room.presentation': 'Презентации и планирование',
+  'room.notBuilt': 'Ещё не готово',
+  'room.scan': 'Сканировать',
+  'room.sign': 'Подписать',
+  'room.send': 'Отправить',
+  'room.centre': 'Сводка и перевод',
+  'room.centreLater': 'Пока нет на этом компьютере',
+  'room.centreNone': 'Нет в этой версии',
+  'room.pause': 'Остановить движение',
+  'room.play': 'Возобновить движение',
+  'room.opened': 'Открыто: {name}',
 };

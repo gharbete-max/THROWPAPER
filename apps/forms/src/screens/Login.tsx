@@ -64,7 +64,7 @@ export function Login() {
                     .then((pair) => {
                       setSession(pair);
                       // Full reload so the session provider picks the tokens up cleanly.
-                      window.location.assign('/events');
+                      window.location.assign('/room');
                     })
                     // It swallowed this: press the button, nothing moves, no message, forever.
                     .catch(() => setDemo('failed'));

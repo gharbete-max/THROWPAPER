@@ -70,18 +70,22 @@ edition if it stays.
 **The motion.** CSS and inline SVG only, with no animation library. Only `transform` and `opacity`
 animate.
 - **Float:** a staggered CSS bob. The 1.1 MB chomp loop never plays in the room.
-- **Zoom:** `document.startViewTransition` with `flushSync`. React Router's `viewTransition` needs
-  its data mode, which the app does not use. Where the browser has no view transitions, the zoom
-  is a cut.
-- **Open:** an inline SVG of `mark-geometry.ts`'s top-down facets, turning on their hinges on
-  `--tp-ease-unfurl`. It only adds exports, so `mark-consistency.test.ts` holds.
+- **Zoom:** the opened catcher grows out of the pressed one, and shrinks back into it on close: a
+  transform from the pressed element's measured box, on `--tp-ease-unfurl` (Web Animations).
+  - **As built.** The first build used `document.startViewTransition`, and spike S2 rejected it:
+    the browser's snapshot held frames for 66 ms at full speed and 100 ms at 4× CPU throttle. With
+    the transform zoom, open and close kept every frame at 16.8 ms, at full speed and at 4×.
+- **Open:** an inline SVG of `mark-geometry.ts`'s top-down facets, whose four pockets part from
+  the centre on `--tp-ease-unfurl` as the zoom lands. It only adds exports, so
+  `mark-consistency.test.ts` holds.
   - The mark therefore changes pose as it opens: from the three-quarter still to the top-down
     facets. The brand bundle has no "opened into four" state (`docs/brand/USAGE.md`: "Nothing in
     the app requests a mark or motion state that isn't covered"), so code draws it unless the brand designer does (§9).
 
 **Access.**
-- Under reduced motion there are stills, no float, no zoom and an instant open. That needs an
-  explicit rule for `::view-transition-*`, which the global switch does not reach.
+- Under reduced motion there are stills, no float, no zoom and an instant open. The float needs
+  an explicit `animation: none`: the global switch shortens an infinite alternating animation to
+  almost nothing, which would be a jitter. The zoom is script, and `Room.tsx` skips it.
 - A visible pause control for the float (WCAG 2.2.2).
 - Targets are at least 44 px, and every string is in all twelve catalogues.
 - Opening moves focus to the first part, Escape returns to the room, and a polite live region
@@ -91,11 +95,20 @@ animate.
   until there is a second one.
 
 **Getting around.**
-- A small corner menu in the room holds only what belongs to no catcher: sign-out, language and
-  theme. Users, Brand and the To send count stay inside Documents, so the room shows no catcher's
-  state.
-- Every part's screen carries a way back to the room.
+- A small corner of the room holds only what belongs to no catcher: language and sign-out. Users,
+  Brand and the To send count stay inside Documents, so the room shows no catcher's state.
+  - As built, theme stays out of the room too. The room is always dark grey, so a theme switch
+    there would visibly do nothing; it stays in the session row of the parts it changes.
+- Every part's screen carries a way back to the room: the mark at the head of the rail (and of
+  the session row on a phone) is a link to it, named "Back to the room".
 - The sidebar stays inside the parts as it is, minus whatever the switch hides.
+- **As built in phase 2**, the parts link to today's screens: Forms to `/forms`; Scan to
+  `/forms?new`, which opens the doors on the paper door; Sign to `/signing`; Send to To send on
+  the desktop. The server edition has no Send yet, and its Send and centre say "Not in this
+  edition" rather than offering either. Phases 3 to 5 give each part its own screen.
+- **On a phone** the opened catcher stops putting each part on its pocket, where Scan and Send
+  had a third of 360 px each, and stacks: the opened mark, the four parts two by two, then the
+  centre. The closed room gives Documents the first row and the placeholders the second.
 
 **Amendments the owner words**, landing with phase 2:
 - `DESIGN.md`:
@@ -333,8 +346,8 @@ and pays for what it adds.
 | Phase | What | Exit |
 | --- | --- | --- |
 | **0 — Decisions** | The owner answers §9 and accepts this plan and `VISION.md` (done: "Let's go!"), and ADR 0022 is accepted. | This PR merged. No code. |
-| **1 — Spikes** (throwaway, nothing merged) | **S2 motion:** three floating catchers, the zoom and the open, traced on a 4× CPU-throttled run. **S3 the part gaps:** a draft PDF with no submission; page work under the PDF guard, including encrypted and already-signed PDFs; one document queued in To send and opened as a draft. | S2: no frame gap over 25 ms (headless Chromium's clock jitters past 16.7 ms on an idle page), reduced motion and the pause proven, and the room's CSS within 4 KB. S3: each proven, or turned into an owner question. |
-| **2 — The room** | `/room`, the grey and the three stronger colours as tokens, the placeholders, the corner menu, the `DESIGN.md` amendments. The four parts link to today's screens, and the centre says the summary is not on this computer yet. | `room.spec`: keyboard, reduced motion, 360 × 640, German length, mirrored. The placeholder guard test (no href, handler, import or focus). The contrast test (each colour at 3:1 or more on the grey). `bundle:budget` green. Sign-in lands on the room. |
+| **1 — Spikes** (throwaway, nothing merged) | **S2 motion:** three floating catchers, the zoom and the open, traced on a 4× CPU-throttled run. **S3 the part gaps:** a draft PDF with no submission; page work under the PDF guard, including encrypted and already-signed PDFs; one document queued in To send and opened as a draft. | S2: no frame gap over 25 ms (headless Chromium's clock jitters past 16.7 ms on an idle page), reduced motion and the pause proven, and the room's CSS within 4 KB. **Done inside phase 2**, on the built app: the float, the zoom and the close kept every frame at 16.8 ms at full speed. At 4×, three runs showed two single frames of 33 ms, each at a different step: one in the float and one in a close. The room's CSS is 1.2 KB. S3: each proven, or turned into an owner question. |
+| **2 — The room** | `/room`, the grey and the three stronger colours as tokens, the placeholders, the corner menu, the `DESIGN.md` amendments. The four parts link to today's screens, and the centre says the summary is not on this computer yet. | `room.spec`: keyboard, reduced motion, 360 × 640, German length. (No catalogue is right to left, so there is nothing to mirror yet.) The placeholder guard test (no href, handler, import or focus). The contrast test (each colour at 3:1 or more on the grey). `bundle:budget` green. Sign-in lands on the room. |
 | **3 — Forms** | The draft PDF, filling a PDF's own fields and a Loppa form and keeping each as a PDF, Download, Sign and Send before "Share to collect", the doors by URL. | An e2e builds a form Akinator-style and one in manual mode, fills each and downloads it as a PDF, and fills an existing PDF's own fields and keeps it, all with no submission and no published version. |
 | **4 — Scan** | The Scan screen, the page basics, keep as PDF, camera, phone and drop on the review screen. | e2e for phone scan → PDF; PDFs put together, pages taken out, split, turned, reordered and deleted → PDF; and drop → form. CAVEATS #43 holds. |
 | **5 — Send** | "Send this document" with a confirmation and the outbox test mode. | An e2e: any part's PDF, and a Word file as it was brought in, reaches To send with its attachment, and nothing leaves without the press. |
@@ -385,6 +398,11 @@ At `eea1774`, gzipped:
 | Entry | 6.7 KB | 12 KB | 5.3 KB |
 | Stylesheet | 16.0 KB | 20 KB | 4.0 KB |
 | Total | 986.4 KB | 1 000 KB | 13.6 KB |
+
+**After phase 2, the room:** the entry is unchanged at 6.7 KB. The stylesheet is 17.2 KB (+1.2 KB,
+2.8 KB left), and the total is 992.2 KB (+5.8 KB, 7.8 KB left). That is the room's chunk (2.3 KB),
+its CSS, and its fourteen words in twelve catalogues (about 170 bytes each). Phases 3 to 5 will
+likely need the cut pass below first.
 
 - **The rest of the build:**
   - the full e2e suite: 92 tests in 8.7 minutes;

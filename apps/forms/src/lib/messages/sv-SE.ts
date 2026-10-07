@@ -1397,4 +1397,18 @@ export const svSE: Record<MessageKey, string> = {
   'conversation.showMe': 'Visa mig',
   'conversation.rebased':
     'Formuläret har ändrats i redigeraren. Dina ändringar behålls, och frågorna fortsätter där du var.',
+  'room.back': 'Tillbaka till rummet',
+  'room.documents': 'Dokument',
+  'room.spreadsheets': 'Kalkylark',
+  'room.presentation': 'Presentation & planering',
+  'room.notBuilt': 'Inte byggt än',
+  'room.scan': 'Skanna',
+  'room.sign': 'Signera',
+  'room.send': 'Skicka',
+  'room.centre': 'Sammanfattning och översättning',
+  'room.centreLater': 'Inte på den här datorn än',
+  'room.centreNone': 'Inte i den här utgåvan',
+  'room.pause': 'Pausa rörelsen',
+  'room.play': 'Starta rörelsen',
+  'room.opened': '{name} är öppet',
 };

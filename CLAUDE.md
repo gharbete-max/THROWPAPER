@@ -10,7 +10,9 @@ Monorepo containing **three independent products** plus the packages they share.
 specs into this file.
 
 ```
-apps/forms      Product A — forms, inspections, measurements, reports
+apps/forms      Product A — forms, inspections, measurements, reports. Also the room (/room),
+                where a signed-in person arrives: three catchers, Documents opening onto its
+                four parts (ADR 0022)
 apps/mailer     Product B — email campaigns
 apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
                 token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
@@ -31,7 +33,7 @@ apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by sid
                 no mail by itself by default: messages wait in To send and open as drafts in the
                 person's own mail program (SMTP / Outlook / Apple Mail sending is under Advanced)
 packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
-                / native tokens. Owns the contrast guard
+                / native tokens. Owns the contrast guard, and the room's fixed colours (ADR 0022)
 packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
 packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
                 — see its own src/index.ts

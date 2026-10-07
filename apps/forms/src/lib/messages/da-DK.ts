@@ -1395,4 +1395,18 @@ export const daDK: Record<MessageKey, string> = {
   'conversation.showMe': 'Vis mig',
   'conversation.rebased':
     'Formularen er ændret i editoren. Dine ændringer bevares, og spørgsmålene fortsætter, hvor du var.',
+  'room.back': 'Tilbage til rummet',
+  'room.documents': 'Dokumenter',
+  'room.spreadsheets': 'Regneark',
+  'room.presentation': 'Præsentation og planlægning',
+  'room.notBuilt': 'Ikke bygget endnu',
+  'room.scan': 'Scanne',
+  'room.sign': 'Underskrive',
+  'room.send': 'Sende',
+  'room.centre': 'Resumé og oversættelse',
+  'room.centreLater': 'Ikke på denne computer endnu',
+  'room.centreNone': 'Ikke i denne udgave',
+  'room.pause': 'Sæt bevægelsen på pause',
+  'room.play': 'Start bevægelsen',
+  'room.opened': '{name} er åben',
 };

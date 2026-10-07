@@ -85,6 +85,10 @@ const DISALLOWED = [
   '/users',
   '/invoices',
   '/brand',
+  // The room and the screens its parts open that are not in the list above (ADR 0022).
+  '/room',
+  '/signing',
+  '/outgoing',
 ];
 
 /**

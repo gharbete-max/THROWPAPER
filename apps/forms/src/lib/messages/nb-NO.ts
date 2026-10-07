@@ -1392,4 +1392,18 @@ export const nbNO: Record<MessageKey, string> = {
   'conversation.showMe': 'Vis meg',
   'conversation.rebased':
     'Skjemaet er endret i editoren. Endringene dine beholdes, og spørsmålene fortsetter der du var.',
+  'room.back': 'Tilbake til rommet',
+  'room.documents': 'Dokumenter',
+  'room.spreadsheets': 'Regneark',
+  'room.presentation': 'Presentasjon og planlegging',
+  'room.notBuilt': 'Ikke bygget ennå',
+  'room.scan': 'Skanne',
+  'room.sign': 'Signere',
+  'room.send': 'Sende',
+  'room.centre': 'Sammendrag og oversettelse',
+  'room.centreLater': 'Ikke på denne datamaskinen ennå',
+  'room.centreNone': 'Ikke i denne utgaven',
+  'room.pause': 'Sett bevegelsen på pause',
+  'room.play': 'Start bevegelsen',
+  'room.opened': '{name} er åpen',
 };

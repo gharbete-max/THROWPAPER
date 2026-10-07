@@ -1418,4 +1418,18 @@ export const esES: Record<MessageKey, string> = {
   'conversation.showMe': 'Muéstramelo',
   'conversation.rebased':
     'Este formulario se cambió en el editor. Tus cambios se mantienen y las preguntas siguen donde estabas.',
+  'room.back': 'Volver a la sala',
+  'room.documents': 'Documentos',
+  'room.spreadsheets': 'Hojas de cálculo',
+  'room.presentation': 'Presentación y planificación',
+  'room.notBuilt': 'Aún no construido',
+  'room.scan': 'Escanear',
+  'room.sign': 'Firmar',
+  'room.send': 'Enviar',
+  'room.centre': 'Resumen y traducción',
+  'room.centreLater': 'Aún no está en este ordenador',
+  'room.centreNone': 'No está en esta edición',
+  'room.pause': 'Pausar el movimiento',
+  'room.play': 'Reanudar el movimiento',
+  'room.opened': '{name} está abierto',
 };
