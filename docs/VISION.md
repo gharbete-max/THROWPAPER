@@ -1,19 +1,23 @@
 # Loppa — the vision
 
-**The owner's, 2026-10-07.** Written down from the owner's own words in the session that
-re-planned Loppa; they are quoted verbatim at the end. Where any other document disagrees — the
+**The owner's, 2026-10-07.** Written down from the owner's own words in the session that re-planned
+Loppa ("I think we need to start over planning wise"); they are quoted verbatim at the end, with the
+one proposal of the session's that the owner confirmed. Where any other document disagrees — the
 README, `START-HERE.md`, the specs, `DESIGN.md`, older plans — this one wins until that document is
-brought in line (the last section lists them). The plan for building it is separate; this file
-says what Loppa is.
+brought in line (the second-last section lists them). This file says what Loppa is. The plan for
+building it is separate and is not written yet; it will put the open questions below to the owner.
 
-## In one paragraph
+Sections 1–8 are the owner's. Section 9 is the repository's rules that still apply, so they are
+marked as the repository's, not the owner's.
 
-Loppa is a **lightweight helper for office work**. It is not Acrobat, not Excel and not
-PowerPoint: it does the few things people do most with documents, spreadsheets and
-presentations, simply and offline first. It does not have to collect forms or data in the first
-place.
+## 1. In one paragraph
 
-## The room
+Loppa is a **lightweight helper in the office**. For documents it is **not Acrobat**: the
+functionality is boiled down to the basic, most-used features. Its other two tools help with an
+office program — Excel, and presentations — rather than replace it. Loppa does not necessarily
+collect forms or data in the first place.
+
+## 2. The room
 
 You arrive in an **empty dark grey room**. Three cootie catchers — paper fortune tellers, Loppa's
 mark — float in it, each with its own hue beneath it:
@@ -27,111 +31,146 @@ mark — float in it, each with its own hue beneath it:
 Pressing a catcher **zooms in on it and opens it**, revealing **four parts** around **a centre**.
 The two placeholders will have the same kind of opening later; they are not built now.
 
-## Three independent tools
+## 3. Three independent tools
 
 The three catchers act independently of each other. They do not affect each other and do not link
-to each other in any way. Each is its own tool: one can be used, changed or broken without the
-other two noticing. (This is `CLAUDE.md` rule 1, one level up: today's Forms and Sign products both
-live inside the Documents catcher, and still talk only over `docs/CONTRACT.md`.)
+to each other in any way. This is stricter than `CLAUDE.md` rule 1, which lets products talk over
+`docs/CONTRACT.md`: the catchers share no contract at all. Inside the Documents catcher, today's
+Forms and Sign products still talk to each other only over `docs/CONTRACT.md`.
 
-## Documents — the first catcher
+## 4. Documents — the first catcher
 
-Its four parts:
+PDF, Word and forms: scanning them, editing them and sending them. Its four parts:
 
 | Part | What it is |
 | --- | --- |
 | **Forms** | Build a form, either **Akinator style** — the guided builder, one question at a time, by clicking — or in **manual mode**, the classic editor. |
 | **Scan** | Bring paper and files in: a PDF, a Word file, a photo, a phone scan. |
-| **Sign** | Sign a document, typed or drawn, and seal it. |
+| **Sign** | Sign a document. |
 | **Send** | Send the document to someone by mail. |
 
 Its centre:
 
-- **Summary** — a small open-source AI model (the Qwen or DeepSeek families), run **locally and
-  offline** on the person's own machine, **only large enough to properly summarise documents,
-  PDFs and forms**.
+- **Summary** — an open-source AI model, such as one from the Qwen or DeepSeek families, run
+  **locally and offline**, **only large enough to properly summarise documents, PDFs and forms**.
 
-**Editing means the basics, not Acrobat.** Everything is boiled down to the most-used features, so
-Loppa stays a lightweight helper: the everyday page and file work people do with a PDF (putting
-files together, taking pages out, turning, ordering and removing pages), filling in a document and
-keeping it as a PDF, turning photos and scans into a PDF, signing it and sending it. A general
-editor that changes a document's printed text is not Loppa (ADR 0004 already says so).
+**Editing is the basics, not Acrobat.** Everything is boiled down to the most-used features. The
+basics the session proposed and the owner confirmed ("Now you get it!") are: putting files
+together; taking pages out or splitting them; turning, reordering or deleting pages; filling in a
+PDF's own fields or a Loppa form and keeping it as a PDF, without publishing anything; turning
+photos and scans into one PDF; signing it; and sending it. A full Acrobat-style editor is not
+Loppa.
 
-**Collecting answers is optional.** A form can still be shared for other people to fill in, but
-Loppa does not have to collect anything: a person can build, scan, fill, sign and send their own
-documents and never publish a form.
+**Collecting answers is optional** ("we do not collect the forms or data necessarily in the first
+place"). A person can build, scan, fill, sign and send their own documents and never publish a form.
 
-## Spreadsheets — placeholder
+## 5. Spreadsheets — placeholder
 
-Later: a tool that helps with Excel — a "cheat code" library full of scripts and macros for the
-things Excel does not have. Not built now.
+Where **data and reports** belong. Later: mainly a tool that helps with Excel — a "cheat code"
+library full of scripts and macros for the things Excel does not have. Not built now.
 
-## Presentation & planning — placeholder
+## 6. Presentation & planning — placeholder
 
-Later: a tool that helps with presentations (PPTX and the like), group planning, and slide-based
-offline editing and work. Not built now.
+What the earlier **events and planning** becomes. Later: a tool that helps with presentations
+(PPTX and the like), group planning, and slide-based offline editing and work. Not built now.
 
-## The order of work
+## 7. The order of work
 
-Focus on what is built and being built until the Documents catcher is **completely finished**. The
-placeholders float and are clearly not built yet; nothing more is made for them until Documents is
-done.
+Start over planning-wise. Then focus on what is built and being built until the Documents catcher
+is **completely finished**. The placeholders float and are clearly not built yet; nothing more is
+made for them until Documents is done.
 
-## What carries over
+## 8. What carries over
 
-Much of what is built is reused as it is:
+There are a lot of resources to move around, and in general they are still usable. They move into
+the Documents catcher's parts, reshaped where they need it:
 
 - the **guided builder** (the "Akinator form creator") and the **classic editor** → Forms;
-- the **document import** — PDF, Word, paste, photographs and scans read by OCR on the device, the
-  phone relay → Scan;
-- **Loppa Sign** — typed or drawn signatures, the sealed PDF and its audit page → Sign;
-- **the mail paths** — drafts in the person's own mail program on the desktop ("To send"), and the
-  mail providers → Send.
+- the **scanner for PDFs and documents** — the document import (PDF, Word, paste, photographs and
+  scans read by OCR on the device, the phone relay) and the camera scan → Scan;
+- the **signing feature** — Loppa Sign: typed or drawn signatures, the sealed PDF and its audit
+  page → Sign;
+- the **function to mail it out** — Forms' own mail paths: drafts in the person's own mail program
+  on the desktop ("To send") and the mail providers → Send.
 
-Events, registrations, the check-in door, invoices and the ledger were built for the earlier idea
-of Loppa and are not part of the Documents catcher. Nothing of them is deleted without the owner's
-word.
+## 9. Repository rules that still apply
 
-## What stays true
+Not the owner's words in this session; the repository's own rules, which the vision does not
+change:
 
-- **Offline first**, and the person's documents stay theirs.
 - **Nothing sends or deletes without a confirmation**, and everything outbound has a test mode
   (`CLAUDE.md` rule 7).
-- **No generated legal, clinical, tax or safety wording** (rule 8). The summary is a draft summary
-  of the person's own document, labelled as one, and never written into the document.
-- **The guided builder and the import stay rule-based and deterministic.** The model lives only in
-  the centre; it never decides anything in the builder or the import, and never runs inside
-  `packages/shared/src/{builder,interpret,import}`.
-- **Lightweight.** A small download and a fast start: the bundle budget stands.
+- **No generated legal, clinical, tax or safety-critical wording** (rule 8, extended to AI by ADR
+  0012, proposed). It applies to the summary; how it applies is open below.
+- **The guided builder and the import stay rule-based and deterministic** (`CLAUDE.md`, ADRs
+  0017–0021). The model lives in the centre, where the owner put it; it never decides anything in
+  the builder or the import, and never runs inside `packages/shared/src/{builder,interpret,import}`.
+- **Only permissive licences come in** (ADR 0015: MIT, BSD, Apache-2.0, ISC). `pnpm licence:check`
+  sees npm packages only, so a model's weights need a check of their own.
+- **Offline first** on the desktop (ADR 0016). The owner asked for the summary model to run
+  locally and offline.
+- **The bundle budget** (`pnpm bundle:budget`) still holds for Forms' web build. It does not measure
+  the desktop download (about 206 MB zipped today, ADR 0016) or a summary model.
 
-## Open, and the owner's to decide
+## 10. Open, and the owner's to decide
 
-These are asked in the plan, not assumed here:
+Not assumed here; the new plan puts these to the owner:
 
-- the exact shade of the room's grey, and the exact red, green and yellow;
-- what pressing a placeholder does;
-- whether a Word file can also become a PDF (a faithful conversion needs a Word layout engine;
-  a rough one does not);
-- the summary model's size, and how it reaches a machine (in the installer, or downloaded once);
-- whether sharing a form for others to fill in stays in Forms;
-- what happens to events, registrations, check-in, invoices and the ledger;
-- the desktop app, the hosted web edition, or both.
+- **The room's look:** the exact grey, red, green and yellow; whether they stay in the room or carry
+  into a tool once a catcher opens (which decides whether `DESIGN.md` is amended for the room alone
+  or for the whole product).
+- **The placeholders:** what pressing one does.
+- **Editing:** which of the four parts holds the page and file basics (none of Forms, Scan, Sign or
+  Send is an editor today); whether basic editing includes changing a document's text, especially a
+  Word file's; whether a Word file can become a PDF (a faithful conversion needs a Word layout
+  engine; a rough one does not).
+- **Scan:** whether what it reads becomes a PDF to keep (the camera scan Sign seals), a form's
+  questions (the document import), or either.
+- **Sign:** the person signing their own document, asking others to sign by a link, or both.
+  Today the Signing screen sends a PDF for signing by link and opens the signing page on this
+  device; the signer's page has no sender screens of its own.
+- **Collecting answers:** how prominent sharing a form for others to fill in stays inside Forms,
+  given that it is optional.
+- **The summary:** which model (Qwen and DeepSeek were examples) and whether its weights' licence
+  passes ADR 0015; its size and how it reaches a machine (in the installer, or downloaded once); which
+  of the twelve languages it must summarise; whether "forms" means the form or the answers given to
+  it; whether it may summarise a contract, a consent, a declaration or a clinical form at all (rule
+  8, ADR 0012, and the plan's "consent text is never summarised"); and how it is shown (labelled as
+  generated and never written into the document, as ADR 0013 proposes).
+- **Where:** the desktop app, the hosted web edition, or both — and, if the web edition stays,
+  whether it has a summary at all, since a model on Loppa's server would not be the person's own
+  machine.
+- **What was built for the earlier idea:** whether the code for events, registrations, the check-in
+  door and attendance (the earlier "events and planning", now Presentation & planning) and the
+  ledger (data, now Spreadsheets) is kept, hidden, moved into those catchers when they are built,
+  or retired — nothing is deleted without the owner's word; whether invoices (PDFs rendered from
+  data and mailed, ADR 0011) belong to Documents' Send or to Spreadsheets; and whether **Mailer**
+  (the email-campaign product of `SPEC-mailer.md`, of which only a stub is built) lives on beside
+  Send or is dropped.
 
-## Older documents that still say otherwise
+## 11. Older documents that still say otherwise
 
 Brought in line as the work touches them; until then, this file wins:
 
 - `CLAUDE.md` — "three independent products" are Forms, Mailer and Sign; `apps/forms` is "forms,
   inspections, measurements, reports".
 - `README.md` — "Forms, registrations and email".
-- `DESIGN.md` — the palette allows gold and greys only ("the sixth-hue rule"), the product is light
-  by default, no decorative gradients or looping motion; the room's red, green and yellow hues, its
-  dark grey and its floating catchers need the owner's amendment there.
+- `DESIGN.md` — the palette is gold and greys only ("the sixth-hue rule"); its red and green are
+  reserved for status; dark mode is derived and never authored; no decorative gradients; and it
+  describes Loppa as a form builder with events, a door and a ledger, plus Mailer. The room's red,
+  green and yellow hues, its dark grey and its floating catchers need the owner's amendment there.
+- `docs/plan/DESIGN-LANGUAGE.md` — "Motion explains where something went; it never decorates." The
+  room's floating catchers need the owner's amendment there too.
 - `docs/START-HERE.md` — says it wins over every other plan; it describes the earlier v0.1.
 - `docs/SPEC-forms.md`, `docs/SPEC-mailer.md`, `docs/ROADMAP.md`, `docs/MODULE-STATUS.md` — the
   earlier products and their order.
-- `CLAUDE.md`'s guided-builder non-negotiable "No AI, no LLM" — still true of the builder and the
+- `CLAUDE.md`'s guided-builder non-negotiable "No AI, no LLM", and "No AI is involved anywhere" in
+  `docs/plan/BRIEF.md` and `docs/plan/PREDICTIVE-BUILDER.md` — still true of the builder and the
   import, and only there.
+- `docs/adr/0013-ai-data-processing.md` (proposed), with ADR 0016's "connect online" and "work in
+  cloud" AI settings — AI as a server-side provider in a hosted region, opt-in, summarising
+  responses; the owner's summary is a model run locally and offline that summarises documents, PDFs
+  and forms. ADR 0012 still bounds what any AI may write.
 
 ## The owner's words, verbatim
 
@@ -169,6 +208,23 @@ Brought in line as the work touches them; until then, this file wins:
 
 > Not acrobat is correct all the functionality should be boiled down to basics, mostly used
 > features so loppa is a light weight helper in office.
+
+The session's proposal, which the owner's next message answered (excerpt; "[…]" marks what is
+left out):
+
+> Agreed. ADR 0004's "not Acrobat" stays, and "edit" in the Documents catcher means the few things
+> office people do most with a PDF or Word file, not a full editor. I'll write that in as a
+> decision rather than a question. Concretely:
+>
+> - **Pages:** merge files, pull out or split pages, turn, reorder or delete them.
+> - **Filling:** fill in a PDF's own fields, or a Loppa form, and save it as a PDF without
+>   publishing anything.
+> - **Scanning:** photos or scans become one PDF.
+> - **Signing and sending:** sign it, then send it.
+>
+> […] Whether a Word file should also become a PDF is the one item I'll still ask you about. A
+> rough conversion is possible; a faithful one would need a Word layout engine, which is heavier
+> than "lightweight helper".
 
 > Now you get it! And the form builder is there too with Akinator style and manual mode.
 >
