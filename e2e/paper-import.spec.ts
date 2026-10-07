@@ -36,7 +36,8 @@ async function openPaperDoor(page: Page) {
   const secret = await plantLoginToken(sql, 'admin@example.com');
   await page.addInitScript(() => window.localStorage.setItem('tp.locale', 'sv-SE'));
   await page.goto(`/auth/callback?token=${secret}`);
-  await expect(page.getByRole('heading', { name: 'Evenemang' })).toBeVisible();
+  // Signing in lands in the room (ADR 0022).
+  await expect(page.getByRole('link', { name: 'Dokument' })).toBeVisible();
 
   await page.goto('/forms');
   await page.getByRole('button', { name: 'Nytt formulär' }).first().click();
