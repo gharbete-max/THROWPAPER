@@ -19,7 +19,7 @@ import { resolveFormAccess } from '../forms/access.js';
 import { SignRefused, SignUnavailable, type SignClient } from '../signing/client.js';
 import { createHash } from 'node:crypto';
 import { PageTooLarge, pagesToPdf } from '../signing/scan.js';
-import { queueInvitations } from '../signing/invitations.js';
+import { queueInvitations, queueSignedCopies } from '../signing/invitations.js';
 
 const IdParam = z.object({ id: z.string().uuid() });
 const errors = {
@@ -375,7 +375,11 @@ export function registerSigningRoutes(
         }
       }
       const party = record.parties.find((p) => p.id === params.partyId);
-      if (!party?.email || (party.status !== 'invited' && party.status !== 'viewed')) {
+      if (
+        record.status !== 'sent' ||
+        !party?.email ||
+        (party.status !== 'invited' && party.status !== 'viewed')
+      ) {
         return reply.code(409).send({
           error: { code: 'not-their-turn', message: 'This signer cannot be reminded now' },
         });
@@ -388,6 +392,87 @@ export function registerSigningRoutes(
         after: { partyId: party.id },
       });
       return reply.send(view(reminded));
+    },
+  });
+
+  /**
+   * Withdraw a request (CONTRACT §5.7). Irreversible, so the screen asks first (rule 7); Sign
+   * appends the event and every signer's link stops working. Invitations still waiting in the
+   * queue are skipped by their handler once the status here says cancelled.
+   */
+  app.post('/v1/signing/requests/:id/cancel', {
+    preHandler: authenticated,
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['signing'],
+      params: IdParam,
+      response: { 200: formSchemas.SigningRequestView, ...errors },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth!;
+      const record = await visible(auth, IdParam.parse(request.params).id);
+      if (!record)
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      if (!deps.sign) return unavailable(reply);
+      let cancelled;
+      try {
+        const status = await deps.sign.cancel(record.envelopeId);
+        cancelled = await deps.repos.signingRequests.saveStatus(record.id, {
+          status: status.status,
+          parties: record.parties.map((party) => ({
+            ...party,
+            status: status.parties.find((p) => p.id === party.id)?.status ?? party.status,
+          })),
+        });
+      } catch (error) {
+        return failed(reply, error);
+      }
+      await recordAudit(deps.repos, request, {
+        action: 'signing.cancelled',
+        entityType: 'signing_request',
+        entityId: record.id,
+        after: { envelopeId: record.envelopeId },
+      });
+      return reply.send(view(cancelled ?? record));
+    },
+  });
+
+  /**
+   * Send the sealed copy to every signer with an address. A deliberate, confirmed press; this
+   * only queues the mail, and the configured provider does the rest (on the desktop, To send).
+   */
+  app.post('/v1/signing/requests/:id/send-signed', {
+    preHandler: authenticated,
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['signing'],
+      params: IdParam,
+      response: { 200: formSchemas.SigningRequestView, ...errors },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth!;
+      let record = await visible(auth, IdParam.parse(request.params).id);
+      if (!record)
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      if (!deps.sign) return unavailable(reply);
+      try {
+        record = await refresh(deps.sign, deps.repos, record);
+      } catch (error) {
+        return failed(reply, error);
+      }
+      if (record.status !== 'completed') {
+        return reply
+          .code(409)
+          .send({ error: { code: 'not-completed', message: 'Not everyone has signed yet' } });
+      }
+      const queued = await queueSignedCopies(deps.repos, record);
+      await recordAudit(deps.repos, request, {
+        action: 'signing.copy-sent',
+        entityType: 'signing_request',
+        entityId: record.id,
+        after: { queued: queued.parties.filter((p) => p.signedCopyQueuedAt).length },
+      });
+      return reply.send(view(queued));
     },
   });
 

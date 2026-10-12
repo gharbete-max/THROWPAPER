@@ -5,6 +5,7 @@ import { and, asc, desc, eq, isNull, or } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { api } from '@tp/shared';
+import type { Envelope } from '@tp/signing';
 import {
   CreateEnvelopeRequest,
   CreateEnvelopeResponse,
@@ -236,6 +237,36 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
     },
   });
 
+  /**
+   * §5.7 — the sender withdraws an envelope. Appended to the trail like any event, so every link
+   * refuses from then on (`finished`) and the hook tells the caller. Asking again for one already
+   * cancelled answers the same; one that completed, expired or was declined cannot be undone.
+   */
+  typed.post('/v1/envelopes/:id/cancel', {
+    onRequest: authenticate,
+    schema: {
+      tags: ['envelopes'],
+      params: z.object({ id: z.string().uuid() }),
+      response: { 200: EnvelopeStatusResponse, 409: api.ErrorResponse, ...errors },
+    },
+    handler: async (request, reply) => {
+      const who = callers.get(request)!;
+      const now = deps.now();
+      const answer = await withEnvelope(deps, request.params.id, now, async (loaded, append) => {
+        if (loaded.organisationId !== who.organisationId) return null;
+        if (loaded.envelope.status !== 'cancelled') {
+          const refused = await append({ type: 'cancelled', at: now.toISOString() });
+          if (refused) return refused;
+        }
+        return statusOf(loaded.envelope);
+      });
+      if (!answer) return fail(reply, 404, 'not-found', 'Not found');
+      if (typeof answer === 'string')
+        return fail(reply, 409, answer, 'It can no longer be cancelled');
+      return reply.send(answer);
+    },
+  });
+
   /** §5.5 — the latest version of every declaration this organisation may use. */
   typed.get('/v1/declarations', {
     onRequest: authenticate,
@@ -376,4 +407,17 @@ function declarationView(row: typeof declarations.$inferSelect): DeclarationView
 
 export function fail(reply: FastifyReply, status: number, code: string, message: string) {
   return reply.code(status).send({ error: { code, message } });
+}
+
+function statusOf(envelope: Envelope) {
+  return {
+    envelopeId: envelope.id,
+    status: envelope.status,
+    environment: envelope.environment,
+    documentSha256: envelope.documentSha256,
+    parties: envelope.parties.map((party) => ({
+      ...party,
+      status: envelope.partyStatus[party.id] ?? 'waiting',
+    })),
+  };
 }

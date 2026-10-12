@@ -75,7 +75,12 @@ import { MAX_IMAGE_BYTES, checkImage } from './uploads/image.js';
 import { imageSize, isNearSquare } from './uploads/image-size.js';
 import { registerDemoRoutes, type DemoOptions } from './routes/demo.js';
 import { MAIL_SEND_JOB, createMailSendHandler } from './mail/send-job.js';
-import { SIGNING_INVITE_JOB, createSigningInviteHandler } from './signing/invitations.js';
+import {
+  SIGNING_COPY_JOB,
+  SIGNING_INVITE_JOB,
+  createSigningCopyHandler,
+  createSigningInviteHandler,
+} from './signing/invitations.js';
 import { createOutboxMailProvider, createSmtpMailProvider } from './mail/smtp.js';
 import { createSesMailProvider } from './mail/ses.js';
 import type { TxtResolver } from './mail/domain-verification.js';
@@ -473,12 +478,21 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     operatorAddress: options.operatorAddress ?? process.env['MAIL_OPERATOR'] ?? null,
   };
 
+  const signing =
+    options.signing !== undefined
+      ? options.signing
+      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
+        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
+        : null;
+  // One client for both: sending documents for signing, and the optional e-ID step (§5.6).
+  const signClient = signing ? createSignClient(signing, options.signFetch) : null;
   const worker = createWorker({
     repos,
     handlers: {
       [ADMISSION_BULK_JOB]: createAdmissionBulkHandler(admission),
       [MAIL_SEND_JOB]: createMailSendHandler(mailDeps),
       [SIGNING_INVITE_JOB]: createSigningInviteHandler({ repos, provider: mail }),
+      [SIGNING_COPY_JOB]: createSigningCopyHandler({ repos, provider: mail, sign: signClient }),
     },
     // `err`, the key pino serializes an Error under. Under any other key an Error is `{}` in the
     // log: every failed job read "job failed" with no reason (`job-failure-log.test.ts`).
@@ -552,14 +566,6 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         ? (process.env['CONTACT_TO'] ?? null)
         : options.contactAddress,
   });
-  const signing =
-    options.signing !== undefined
-      ? options.signing
-      : process.env['SIGN_API_URL'] && process.env['SIGN_SERVICE_TOKEN']
-        ? { apiUrl: process.env['SIGN_API_URL'], serviceToken: process.env['SIGN_SERVICE_TOKEN'] }
-        : null;
-  // One client for both: sending documents for signing, and the optional e-ID step (§5.6).
-  const signClient = signing ? createSignClient(signing, options.signFetch) : null;
   registerPublicFormRoutes(app, {
     repos,
     mail,

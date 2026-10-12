@@ -112,6 +112,15 @@ export const CONTRACT_ENDPOINTS = [
     response: EnvelopeStatusResponse,
   },
   {
+    id: 'envelopes.cancel',
+    method: 'POST',
+    path: '/v1/envelopes/:id/cancel',
+    servedBy: 'signwork',
+    section: '5.7',
+    request: null,
+    response: EnvelopeStatusResponse,
+  },
+  {
     id: 'envelopes.sealed',
     method: 'GET',
     path: '/v1/envelopes/:id/sealed',
