@@ -260,7 +260,7 @@ test('acceptance S1: a published form, by clicking alone', async ({ page, browse
   // ── Published, with its confirmation ──────────────────────────────────────────────────────
   await page.getByRole('button', { name: /Open it in the editor/ }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
-  await page.getByRole('button', { name: 'Publish' }).first().click();
+  await page.getByRole('button', { name: 'Share to collect' }).first().click();
   const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });
   const published = page.getByText(/Version 1/).first();
   await expect(anyway.or(published).first()).toBeVisible({ timeout: 15_000 });
@@ -374,7 +374,7 @@ test('acceptance S1 by keyboard alone', async ({ page, browser }) => {
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
 
   // ── Published: Tab to Publish, Enter, and Enter on the confirmation if it asks ────────────
-  await tabTo(page, page.getByRole('button', { name: 'Publish' }).first());
+  await tabTo(page, page.getByRole('button', { name: 'Share to collect' }).first());
   await page.keyboard.press('Enter');
   const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });
   const published = page.getByText(/Version 1/).first();

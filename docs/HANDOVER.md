@@ -56,6 +56,16 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
 - **Phase 1a (arrange pages):** built and tested end to end: `POST /v1/pdf/arrange`,
   `apps/forms/src/screens/Scan.tsx` at `/scan`. PDFs only, reordering by buttons. Next in Phase 1:
   photos and the camera into the same screen, then 1b (PDF text) and 1c (Word to PDF).
+- **Forms (phase 2 of the order below, built 2026-10-13):** a form's draft is a PDF with no
+  submission and no published version (`POST /v1/forms/:id/draft.pdf`, blank or with the author's
+  answers; `buildDraftDocument` in `documents/finished-service.ts`); a PDF's own fields are listed
+  and filled (`POST /v1/pdf/fields`, `/v1/pdf/fill`, `pdf/fill.ts`, under the same encrypted and
+  signed guard as arrange via `openChecked`). Screens: `FillIn.tsx` at `/forms/:id/fill` and
+  `/forms/pdf`. The editor's header leads with Download PDF, Fill in, Sign (`/signing`) and Send
+  (`/outgoing`, desktop); "Share to collect" is the quiet publish. Doors have addresses:
+  `/forms?new=questions|paper|manual`, and a form made by hand opens in the editor. Limit: a PDF's
+  own fields take the standard fonts' letters only; Cyrillic and CJK need an embedded font (ADR 0015).
+  `e2e/forms-draft-fill.spec.ts` holds it, asking the database for no submission and no version.
 - **Bundle:** the total is 999.95 KB and its budget was raised to 1 015 for this phase
   (`scripts/bundle-budget.ts` says why). Every later phase reports its delta against that.
 

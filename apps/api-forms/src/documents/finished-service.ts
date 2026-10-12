@@ -1,5 +1,7 @@
 import { forms as formSchemas } from '@tp/shared';
+import { answerableChildren } from '@tp/shared/forms';
 import type {
+  FormRecord,
   OrganisationRecord,
   Repositories,
   SubmissionRecord,
@@ -51,6 +53,86 @@ export async function buildFinishedDocument(
       submission,
       definition: definition.data,
       filenames: new Map(uploads.map((upload) => [upload.storageKey, upload.filename])),
+    },
+  );
+}
+
+/**
+ * The answers a draft may carry: text, numbers, choices. Not the keys of uploaded files or
+ * signatures, which name something in the store and which a request body must not be able to point
+ * at. (A drawn signature belongs to Sign.)
+ */
+export function plainValues(
+  definition: formSchemas.FormDefinition,
+  values: Record<string, unknown>,
+): Record<string, unknown> {
+  const plain = (type: string) => type !== 'signature' && type !== 'file';
+  const out: Record<string, unknown> = {};
+  for (const field of definition.fields) {
+    if (!(field.key in values)) continue;
+    if (field.type === 'repeating_group') {
+      const entries = values[field.key];
+      if (!Array.isArray(entries)) continue;
+      const allowed = new Set(
+        answerableChildren(field)
+          .filter((child) => plain(child.type))
+          .map((child) => child.key),
+      );
+      out[field.key] = entries.map((entry) =>
+        Object.fromEntries(
+          Object.entries(entry && typeof entry === 'object' ? entry : {}).filter(([key]) =>
+            allowed.has(key),
+          ),
+        ),
+      );
+    } else if (plain(field.type)) {
+      out[field.key] = values[field.key];
+    }
+  }
+  return out;
+}
+
+/**
+ * A form's **draft** as a PDF, blank or filled in by whoever is authoring it. Nothing is written:
+ * the submission here exists only in memory, to go through the renderer that makes every
+ * finished document, and the form's published version is not asked about. `null` when the draft
+ * is not a readable definition.
+ */
+export async function buildDraftDocument(
+  deps: FinishedServiceDeps,
+  organisation: OrganisationRecord,
+  form: FormRecord,
+  input: { locale: string; values: Record<string, unknown> },
+): Promise<FinishedDocument | null> {
+  const definition = formSchemas.FormDefinition.safeParse(form.draftDefinition);
+  if (!definition.success) return null;
+  const { tokens } = await resolveTokens(deps.repos, organisation.id);
+  const now = new Date();
+  return renderFinishedDocument(
+    { renderer: deps.renderer, uploadStore: deps.uploadStore, tokens },
+    {
+      organisation,
+      formTitle: form.title,
+      draft: true,
+      definition: definition.data,
+      submission: {
+        id: '',
+        organisationId: organisation.id,
+        formId: form.id,
+        formVersionId: '',
+        eventId: null,
+        reference: '',
+        status: 'partial',
+        locale: input.locale,
+        email: null,
+        data: plainValues(definition.data, input.values),
+        resumeTokenHash: null,
+        resumeExpiresAt: null,
+        submittedAt: null,
+        revokedAt: null,
+        createdAt: now,
+        updatedAt: now,
+      },
     },
   );
 }

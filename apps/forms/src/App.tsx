@@ -60,6 +60,8 @@ const FormResponses = lazy(() =>
 const Inbox = lazy(() => import('./screens/Inbox.js').then((m) => ({ default: m.Inbox })));
 const Users = lazy(() => import('./screens/Users.js').then((m) => ({ default: m.Users })));
 const Invoices = lazy(() => import('./screens/Invoices.js').then((m) => ({ default: m.Invoices })));
+const FillForm = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillForm })));
+const FillPdf = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillPdf })));
 const Scan = lazy(() => import('./screens/Scan.js').then((m) => ({ default: m.Scan })));
 const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
 const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
@@ -409,6 +411,8 @@ function Shell() {
               <Route path="/forms/:id/guided" element={<GuidedBuilder />} />
               <Route path="/forms/:id/import" element={<ReviewScreen />} />
               <Route path="/forms/phrases" element={<LearnedPhrases />} />
+              <Route path="/forms/pdf" element={<FillPdf />} />
+              <Route path="/forms/:id/fill" element={<FillForm />} />
               <Route path="/forms/:id" element={<FormBuilder />} />
               <Route path="/events/:id/attendance" element={<EventReport />} />
               <Route

@@ -11,7 +11,7 @@ import type { AdmissionDeps } from '../documents/admission-service.js';
 import { ADMISSION_BULK_JOB, renderAdmissionPdf } from '../documents/admission-service.js';
 import type { DocumentStore } from '../documents/store.js';
 import { fillPaper } from '../documents/paper.js';
-import { buildFinishedDocument } from '../documents/finished-service.js';
+import { buildDraftDocument, buildFinishedDocument } from '../documents/finished-service.js';
 import { contentDisposition } from '../documents/filename.js';
 import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { forms as formSchemas } from '@tp/shared';
@@ -24,6 +24,13 @@ const errorResponses = {
   404: api.ErrorResponse,
   409: api.ErrorResponse,
 } as const;
+
+const DraftBody = z
+  .object({
+    locale: z.string().max(20).optional(),
+    values: z.record(z.unknown()).optional(),
+  })
+  .default({});
 
 const JobResponse = z.object({
   id: z.string().uuid(),
@@ -138,6 +145,60 @@ export function registerDocumentRoutes(
         .header('content-disposition', contentDisposition(finished.filename))
         .header('cache-control', 'no-store, private')
         .send(finished.pdf);
+    },
+  });
+
+  /**
+   * A form's **draft** as a PDF — blank, or with the author's own answers in it (`values`) — for
+   * the person to keep, sign or send. It needs no published version and writes no submission:
+   * the form is the person's own document here, not a thing they collect answers with.
+   */
+  app.post('/v1/forms/:id/draft.pdf', {
+    preHandler: authenticated,
+    schema: {
+      tags: ['documents'],
+      params: IdParam,
+      body: DraftBody,
+      response: { ...errorResponses },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth;
+      if (!auth) return unauthenticated(reply);
+      const { id } = IdParam.parse(request.params);
+      const body = DraftBody.parse(request.body ?? {});
+
+      const found = await resolveFormAccess(deps.repos, auth, id);
+      if (!found) return notFound(reply);
+
+      const org = auth.organisation;
+      const locale =
+        body.locale && org.supportedLocales.includes(body.locale) ? body.locale : org.defaultLocale;
+      const draft = await buildDraftDocument(
+        { repos: deps.repos, renderer: deps.admission.renderer, uploadStore: deps.uploadStore },
+        org,
+        found.form,
+        { locale, values: body.values ?? {} },
+      );
+      if (!draft) {
+        return reply.code(409).send({
+          error: {
+            code: 'unreadable-draft',
+            message: 'The form’s draft cannot be made into a PDF',
+          },
+        });
+      }
+
+      await recordAudit(deps.repos, request, {
+        action: 'document.draft',
+        entityType: 'form',
+        entityId: id,
+      });
+
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', contentDisposition(draft.filename))
+        .header('cache-control', 'no-store, private')
+        .send(draft.pdf);
     },
   });
 

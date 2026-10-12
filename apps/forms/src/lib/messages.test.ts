@@ -213,6 +213,8 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'da-DK': [
+      'draft.download',
+      'draft.send',
       'event.status',
       'forms.access.admin',
       'users.role.admin',
@@ -240,6 +242,7 @@ describe('twelve languages, each its own', () => {
       'conversation.send',
     ],
     'nb-NO': [
+      'draft.send',
       'event.status',
       'forms.access.admin',
       'users.role.admin',

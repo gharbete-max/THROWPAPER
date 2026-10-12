@@ -1443,4 +1443,23 @@ export const nbNO: Record<MessageKey, string> = {
     'Sporede endringer (tillegg beholdes, slettinger utelates): {count}',
   'scan.word.drop.field': 'Felt (vises slik de sist ble lagret i Word, oppdateres ikke): {count}',
   'scan.word.drop.image': 'Bilder som ikke kunne tas med: {count}',
+  'draft.download': 'Last ned PDF',
+  'draft.working': 'Lager PDF-en…',
+  'draft.fill': 'Fyll ut',
+  'draft.sign': 'Signer',
+  'draft.send': 'Send',
+  'draft.share': 'Del for å samle inn svar',
+  'draft.failed': 'PDF-en kunne ikke lages. Prøv igjen.',
+  'fill.formIntro':
+    'Fyll ut skjemaet her og behold det som PDF. Ingenting sendes, lagres eller publiseres.',
+  'fill.pdfHeading': 'Fyll ut en PDF',
+  'fill.pdfIntro':
+    'Velg en PDF som har egne felt, fyll dem ut her og behold resultatet. Ingenting sendes, lagres eller publiseres.',
+  'fill.choose': 'Velg en PDF',
+  'fill.keep': 'Behold som PDF',
+  'fill.noFields': 'Denne PDF-en har ingen egne felt å fylle ut.',
+  'fill.signed': 'Denne PDF-en har en digital signatur. Når du fyller den ut, fjernes signaturen.',
+  'fill.signedConfirm': 'Fjern signaturen og fyll ut',
+  'fill.unencodable': 'En bokstav du skrev kan ikke tegnes med PDF-ens egen skrifttype.',
+  'fill.back': 'Tilbake til skjemaet',
 };

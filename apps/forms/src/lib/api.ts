@@ -53,6 +53,14 @@ export interface AttendeeRow {
   broughtBy: string | null;
 }
 
+/** One field a PDF carries of its own, as `GET /v1/pdf/fields` describes it. */
+export interface PdfField {
+  name: string;
+  kind: 'text' | 'checkbox' | 'choice';
+  options?: string[];
+  value: string | boolean;
+}
+
 /**
  * Typed client for the Loppa API.
  *
@@ -196,12 +204,17 @@ async function requestBlob(path: string, retry = true): Promise<Blob> {
  * Sends a multipart body and gets bytes back — a PDF made from the files sent. Like `requestBlob`
  * it keeps the server's own error code, so a screen can say which file was the trouble.
  */
-async function postForBlob(path: string, body: FormData | string, retry = true): Promise<Blob> {
+async function postForBlob(path: string, body: FormData | object, retry = true): Promise<Blob> {
   const headers = new Headers();
   if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
-  if (typeof body === 'string') headers.set('content-type', 'application/json');
+  const json = !(body instanceof FormData);
+  if (json) headers.set('content-type', 'application/json');
 
-  const response = await fetch(`${BASE}${path}`, { method: 'POST', headers, body });
+  const response = await fetch(`${BASE}${path}`, {
+    method: 'POST',
+    headers,
+    body: json ? JSON.stringify(body) : body,
+  });
   if (response.status === 401 && retry && (await refreshOnce())) {
     return postForBlob(path, body, false);
   }
@@ -304,8 +317,34 @@ export const client = {
   },
 
   /** A Word document, roughly, as a PDF: the blocks `readWordBlocks` kept (`pdf/word.ts`). */
-  wordToPdf: (document: api.WordPdfRequest) =>
-    postForBlob('/v1/pdf/word', JSON.stringify(document)),
+  wordToPdf: (document: api.WordPdfRequest) => postForBlob('/v1/pdf/word', document),
+
+  /**
+   * The fields a PDF carries of its own (`POST /v1/pdf/fields`). A signed PDF is a 409 `signed`
+   * until `acceptSignatureLoss` says the person has agreed to lose the signature.
+   */
+  pdfFields: async (file: File, acceptSignatureLoss = false) => {
+    const body = new FormData();
+    body.append('file', file);
+    if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
+    return request<{ fields: PdfField[] }>('/v1/pdf/fields', { method: 'POST', body });
+  },
+
+  /** The PDF with its own fields written (`POST /v1/pdf/fill`). Nothing is stored. */
+  fillPdf: (file: File, values: Record<string, string | boolean>, acceptSignatureLoss = false) => {
+    const body = new FormData();
+    body.append('file', file);
+    body.set('values', JSON.stringify(values));
+    if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
+    return postForBlob('/v1/pdf/fill', body);
+  },
+
+  /**
+   * A form's draft as a PDF, blank or with the answers given: no submission and no published
+   * version are involved (`POST /v1/forms/:id/draft.pdf`).
+   */
+  draftPdf: (formId: string, locale: string, values: Record<string, unknown> = {}) =>
+    postForBlob(`/v1/forms/${formId}/draft.pdf`, { locale, values }),
 
   /** A submission written back onto the paper its form was made from. */
   submissionPaper: (submissionId: string) =>

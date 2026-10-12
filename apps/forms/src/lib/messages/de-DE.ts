@@ -1501,4 +1501,25 @@ export const deDE: Record<MessageKey, string> = {
     'Nachverfolgte Änderungen (Einfügungen bleiben, Löschungen entfallen): {count}',
   'scan.word.drop.field': 'Felder (wie zuletzt in Word gespeichert, nicht aktualisiert): {count}',
   'scan.word.drop.image': 'Bilder, die nicht übernommen werden konnten: {count}',
+  'draft.download': 'PDF herunterladen',
+  'draft.working': 'PDF wird erstellt…',
+  'draft.fill': 'Ausfüllen',
+  'draft.sign': 'Unterschreiben',
+  'draft.send': 'Senden',
+  'draft.share': 'Zum Sammeln teilen',
+  'draft.failed': 'Die PDF konnte nicht erstellt werden. Versuchen Sie es erneut.',
+  'fill.formIntro':
+    'Füllen Sie das Formular hier aus und behalten Sie es als PDF. Nichts wird gesendet, gespeichert oder veröffentlicht.',
+  'fill.pdfHeading': 'Eine PDF ausfüllen',
+  'fill.pdfIntro':
+    'Wählen Sie eine PDF mit eigenen Feldern, füllen Sie sie hier aus und behalten Sie das Ergebnis. Nichts wird gesendet, gespeichert oder veröffentlicht.',
+  'fill.choose': 'PDF wählen',
+  'fill.keep': 'Als PDF behalten',
+  'fill.noFields': 'Diese PDF hat keine eigenen Felder zum Ausfüllen.',
+  'fill.signed':
+    'Diese PDF trägt eine digitale Signatur. Beim Ausfüllen wird die Signatur entfernt.',
+  'fill.signedConfirm': 'Signatur entfernen und ausfüllen',
+  'fill.unencodable':
+    'Ein eingegebener Buchstabe kann mit der eigenen Schrift dieser PDF nicht gezeichnet werden.',
+  'fill.back': 'Zurück zum Formular',
 };

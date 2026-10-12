@@ -53,6 +53,12 @@ export interface FinishedInput {
   definition: FormDefinition;
   /** Original filenames of attached files, by storage key. */
   filenames?: ReadonlyMap<string, string>;
+  /**
+   * The form as the author's own document, not a record that anyone sent anything: no "Sent" or
+   * reference, no closing line saying the answers went to the organisation, and a question left
+   * unanswered is a ruled blank to write in rather than "Not answered". Nothing is stored.
+   */
+  draft?: boolean;
 }
 
 export interface FinishedDocument {
@@ -278,7 +284,7 @@ export async function renderFinishedDocument(
   const html = await finishedHtml(deps, input, title, locales);
   const pdf = await deps.renderer.render(html, {
     header: input.organisation.name,
-    footer: `${title} · ${input.submission.reference}`,
+    footer: input.draft ? title : `${title} · ${input.submission.reference}`,
   });
   return { pdf, filename };
 }
@@ -303,9 +309,11 @@ export async function finishedHtml(
     sentAt,
   );
 
+  // A blank draft is the whole form to write on: a question that a condition would hide is there.
+  const everything = input.draft === true && Object.keys(values).length === 0;
   const rows: string[] = [];
   for (const field of definition.fields) {
-    if (!isVisible(field, values)) continue;
+    if (!everything && !isVisible(field, values)) continue;
     if (field.type === 'section_break') {
       rows.push(`<h2 class="section">${escapeHtml(text(field.label))}</h2>`);
       continue;
@@ -313,7 +321,7 @@ export async function finishedHtml(
     if (field.type === 'repeating_group') {
       const entries = Array.isArray(values[field.key]) ? (values[field.key] as unknown[]) : [];
       rows.push(`<h2 class="section">${escapeHtml(text(field.label))}</h2>`);
-      if (entries.length === 0) {
+      if (entries.length === 0 && !input.draft) {
         rows.push(`<p class="unanswered">${escapeHtml(words.unanswered)}</p>`);
       }
       for (const [index, entry] of entries.entries()) {
@@ -341,7 +349,7 @@ export async function finishedHtml(
 <html lang="${escapeHtml(locale)}">
 <head>
 <meta charset="utf-8" />
-<title>${escapeHtml(title)} — ${escapeHtml(submission.reference)}</title>
+<title>${escapeHtml(title)}${input.draft ? '' : ` — ${escapeHtml(submission.reference)}`}</title>
 <meta name="author" content="${escapeHtml(input.organisation.name)}" />
 <style>
 ${toPrintCss(tokens)}
@@ -356,6 +364,7 @@ h2.section { margin-top: 24px; font-size: 16px; }
 section.entry { margin: 8px 0 0 0; padding: 4px 0 8px 12px; border-left: 2px solid ${colour.border}; break-inside: avoid; }
 section.entry h3 { font-size: 13px; margin: 8px 0 0 0; }
 .unanswered { color: ${colour.muted}; font-style: italic; }
+.blank { display: block; height: 1.8em; border-bottom: ${tokens.borderWidth} solid ${colour.border}; }
 .signature { display: block; max-width: 280px; max-height: 110px; margin-top: 4px; }
 .signature svg { width: 280px; height: 110px; }
 .closing { margin-top: 32px; font-size: 11px; color: ${colour.muted}; }
@@ -363,13 +372,17 @@ section.entry h3 { font-size: 13px; margin: 8px 0 0 0; }
 </head>
 <body>
 <h1>${escapeHtml(title)}</h1>
-<dl class="meta">
+${
+  input.draft
+    ? ''
+    : `<dl class="meta">
   <div><dt>${escapeHtml(words.submitted)}</dt><dd>${escapeHtml(when)}</dd></div>
   <div><dt>${escapeHtml(words.reference)}</dt><dd>${escapeHtml(submission.reference)}</dd></div>
   ${identityHtml(submission, words)}
-</dl>
+</dl>`
+}
 ${rows.join('\n')}
-<p class="closing">${escapeHtml(words.sentTo.replace('{organisation}', input.organisation.name))}</p>
+${input.draft ? '' : `<p class="closing">${escapeHtml(words.sentTo.replace('{organisation}', input.organisation.name))}</p>`}
 </body>
 </html>
 `;
@@ -403,7 +416,10 @@ async function row(
 ): Promise<string> {
   const label = 'label' in field ? text(field.label as Record<string, string>) : field.key;
   const answer = await answerHtml(deps, field, raw, text, words, locale, input);
-  return `<dt>${escapeHtml(label)}</dt><dd>${answer ?? `<span class="unanswered">${escapeHtml(words.unanswered)}</span>`}</dd>`;
+  const empty = input.draft
+    ? '<span class="blank"></span>'
+    : `<span class="unanswered">${escapeHtml(words.unanswered)}</span>`;
+  return `<dt>${escapeHtml(label)}</dt><dd>${answer ?? empty}</dd>`;
 }
 
 /** The answer, as HTML that is already escaped. `null` when nothing was answered. */
