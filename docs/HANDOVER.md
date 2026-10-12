@@ -90,12 +90,34 @@ One phase per branch, plan mode first. Each phase reports its bundle delta.
 - The owner cannot test by hand; Playwright is the acceptance channel.
 - The dev machine is Windows: `&` in npm scripts does not background. Use `pnpm --parallel`.
 
-## Still open for the owner
+## Open questions, answered by Claude's reasoning (2026-10-12; the owner may overturn any)
 
-- Whether OCR models (~45 MB) may become an optional download.
-- The room's exact grey and which of Loppa's colours sits under which catcher (`DOCUMENTS.md` §9).
-- Whether the hosted web edition stays, and whether it gets any summary.
-- Which of Word's features the rough conversion must keep (tables, images, headers).
+The owner asked for the remaining questions to be answered by logic. Each answer says why.
+
+1. **OCR models stay in the installer for now.** They are about 25 MB of the ~211 MB Windows zip
+   (`apps/forms/public/ocr/lang`, twelve languages), and offline-first means a first scan must
+   work with no network. Splitting them needs a download mechanism the summary model needs anyway,
+   so decide again after Phase 7 has built one. A cut that needs no new mechanism: the build
+   copies three tesseract cores (`scripts/ocr-assets.ts`, ~2.9 MB wasm each plus ~3.9 MB of glue);
+   the desktop's Chromium supports the newest, so measure whether shipping one is safe.
+2. **The room's look is already decided and built.** Dark grey `#2a2b30`; gold under Documents,
+   platinum under Spreadsheets, bronze under Presentation & planning, each lifted to at least 3:1
+   (`packages/tokens/src/room.ts`, ADR 0022, held by `room.test.ts`). Keep it. A colour change is
+   a token edit.
+3. **The hosted web edition stays as it is and gets nothing new.** The desktop is where "local,
+   private, no account" is true, so Documents is finished there first. The hosted edition gets no
+   summary (a model on Loppa's server is not the person's machine) and no page work or redaction on
+   strangers' PDFs. Revisit after Phase 7.
+4. **The rough Word to PDF keeps:** headings, paragraphs, bold and italic, lists (Word's own
+   numbering is already read), tables, images, and page breaks. It drops, with a visible note
+   naming each: headers and footers, text boxes, footnotes, tracked changes, and fields. It is
+   labelled "layout may differ from Word" on the screen and in the file's name.
+5. **Campaigns wait until after Sign hand-off** (order above): invoicing needs batch send, not
+   campaigns, and campaigns bring unsubscribe and consent wording, which a human must write
+   (rule 8).
+
+Still the owner's, because only the owner can supply them: the legal and hosting rows of
+`LAUNCH-CHECKLIST.md`, and any wording a rule 8 template needs.
 
 ## Where things are
 

@@ -430,6 +430,9 @@ defaults below where they differ):
   are built inside Send, after Sign hand-off.
 - **The centre (default 10):** one model, Qwen3-4B-Instruct-2507, desktop only, downloaded on
   request; Qwen3-1.7B is dropped.
+- **Also decided by reasoning, same date** (`docs/HANDOVER.md`): OCR models stay in the installer;
+  the room's look stands as built; the hosted edition gets nothing new and no summary; the rough
+  Word conversion's kept and dropped parts are listed there.
 
 **Answered on 2026-10-07:**
 - **The room's colours:** Loppa's own, made stronger so they stand out against the grey, in place

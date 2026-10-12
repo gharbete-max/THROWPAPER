@@ -1,6 +1,13 @@
 # ADR 0011 — Loppa renders and sends money documents; it does not do the accounting
 
 **Status:** proposed — with one conflict in `main` that only the owner can resolve
+
+> **Update 2026-10-12.** The owner has resolved the conflict: the double-entry ledger belongs to
+> the later, separate Spreadsheets catcher and is not part of Documents. Invoices, standing
+> charges and payment references stay in Documents. Nothing is deleted; the ledger code stays
+> where it is, out of the room, until its catcher exists. The status below is still "proposed"
+> until the owner accepts it as written; `invoicing` should first own its `MinorAmount` type
+> (today imported from `packages/shared/src/ledger/api.ts`).
 **Date:** 2026-09-23
 
 ## Context
