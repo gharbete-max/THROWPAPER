@@ -119,8 +119,29 @@ describe('POST /v1/pdf/arrange', () => {
     expect(agreed.statusCode).toBe(200);
   });
 
+  it('takes a photograph as a page, and refuses one that claims too many pixels', async () => {
+    // A JPEG that is only a header (1600 x 1200), and a PNG header claiming 40000 x 40000.
+    const sof = [0xff, 0xc0, 0x00, 0x11, 0x08, 0x04, 0xb0, 0x06, 0x40];
+    const components = [0x03, 0x01, 0x22, 0x00, 0x02, 0x11, 0x01, 0x03, 0x11, 0x01];
+    const photo = new Uint8Array([0xff, 0xd8, ...sof, ...components, 0xff, 0xd9]);
+    const plan = '[{"file":0,"page":0},{"file":1,"page":0}]';
+    const ok = await arrange([photo, await pdfOf(1)], { plan });
+    expect(ok.statusCode).toBe(200);
+    expect((await widths(ok)).map(Math.round)).toEqual([842, 100]);
+
+    const bomb = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==',
+      'base64',
+    );
+    bomb.writeUInt32BE(40000, 16);
+    bomb.writeUInt32BE(40000, 20);
+    const refused = await arrange([new Uint8Array(bomb)], { plan: '[{"file":0,"page":0}]' });
+    expect(refused.statusCode).toBe(400);
+    expect(refused.json().error.code).toBe('image-too-large');
+  });
+
   it('does not take more files than the limit', async () => {
-    const files = await Promise.all(Array.from({ length: 15 }, () => pdfOf(1)));
+    const files = await Promise.all(Array.from({ length: 45 }, () => pdfOf(1)));
     const response = await arrange(files, { plan: '[{"file":0,"page":0}]' });
     expect(response.statusCode).toBe(413);
     expect(response.json().error.code).toBe('too-many-files');

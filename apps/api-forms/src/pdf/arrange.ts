@@ -1,5 +1,6 @@
-import { degrees, EncryptedPDFError, PDFDocument } from 'pdf-lib';
+import { degrees, EncryptedPDFError, PDFDocument, type PDFImage } from 'pdf-lib';
 import { checkPdf } from '../uploads/pdf-guard.js';
+import { imageSize } from '../uploads/image-size.js';
 
 /**
  * Page work on PDFs, as one operation.
@@ -8,14 +9,26 @@ import { checkPdf } from '../uploads/pdf-guard.js';
  * list of (source file, page, turn). Pages named are kept, in that order; pages not named are
  * deleted; a page may be named twice. Nothing here is stored and no row is written.
  *
+ * A source may also be a photograph (JPEG or PNG): one page, `page: 0`, laid out on A4 like a
+ * scanned page (`signing/scan.ts`). A JPEG is embedded as it is, never re-encoded; the turn its
+ * EXIF orientation asks for becomes the page's turn. The browser shrinks and converts anything
+ * else (WebP, HEIC, giant photos) before sending. Nothing is kept.
+ *
  * Every input is parsed once by `checkPdf` (a worker with a deadline) before this thread opens it,
  * because pdf-lib inflates a whole PDF when it loads one (`uploads/pdf-guard.ts`).
  */
 
-export const MAX_FILES = 10;
+export const MAX_FILES = 40;
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 /** Steps in a plan, which is also the page count of the output. */
 export const MAX_STEPS = 500;
+/**
+ * The most pixels a photograph may claim, read from its header before anything decodes it. A phone
+ * photo is 12 to 50 MP, but the screen shrinks to 2400 px on the long side (under 6 MP) before
+ * sending, so this only has to stop a hand-made request: pdf-lib decodes a PNG into 4 bytes a
+ * pixel, so 24 MP is about 100 MB of memory.
+ */
+export const MAX_IMAGE_PIXELS = 24_000_000;
 
 export interface ArrangeStep {
   /** Index into the files, from 0. */
@@ -34,6 +47,7 @@ export type ArrangeRefusalCode =
   | 'bad-rotation'
   | 'unreadable'
   | 'too-costly'
+  | 'image-too-large'
   | 'encrypted'
   | 'signed';
 
@@ -74,9 +88,20 @@ export async function arrangePdf(
   // Only the files the plan uses are opened.
   const used = [...new Set(plan.map((step) => step.file))];
   const sources = new Map<number, PDFDocument>();
+  const images = new Set<number>();
   for (const index of used) {
     const bytes = files[index]!;
     const view = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const format = imageFormat(view);
+    if (format) {
+      const size = imageSize(view, format);
+      if (!size || size.width < 1 || size.height < 1) throw new ArrangeRefusal('unreadable', index);
+      if (size.width * size.height > MAX_IMAGE_PIXELS) {
+        throw new ArrangeRefusal('image-too-large', index);
+      }
+      images.add(index);
+      continue;
+    }
     if (view.includes(ENCRYPTION_MARKER)) throw new ArrangeRefusal('encrypted', index);
     const checked = await checkPdf(bytes);
     if (!checked.ok) {
@@ -99,14 +124,45 @@ export async function arrangePdf(
   }
 
   for (const step of plan) {
-    const count = sources.get(step.file)!.getPageCount();
+    const count = images.has(step.file) ? 1 : sources.get(step.file)!.getPageCount();
     if (!Number.isInteger(step.page) || step.page < 0 || step.page >= count) {
       throw new ArrangeRefusal('no-such-page', step.file);
     }
   }
 
   const out = await PDFDocument.create();
+  const photos = new Map<number, { image: PDFImage; turn: number }>();
+  for (const index of images) {
+    const bytes = files[index]!;
+    const jpeg =
+      imageFormat(Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength)) === 'jpeg';
+    try {
+      photos.set(index, {
+        image: await (jpeg ? out.embedJpg(bytes) : out.embedPng(bytes)),
+        turn: jpeg ? exifTurn(bytes) : 0,
+      });
+    } catch {
+      throw new ArrangeRefusal('unreadable', index);
+    }
+  }
   for (const step of plan) {
+    const photo = photos.get(step.file);
+    if (photo) {
+      // The raw picture on an A4 of its own shape; the page's turn shows it the right way up.
+      const { image } = photo;
+      const [width, height] =
+        image.width > image.height ? [A4.long, A4.short] : [A4.short, A4.long];
+      const scale = Math.min(width / image.width, height / image.height);
+      const drawn = { width: image.width * scale, height: image.height * scale };
+      const page = out.addPage([width, height]);
+      page.drawImage(image, {
+        x: (width - drawn.width) / 2,
+        y: (height - drawn.height) / 2,
+        ...drawn,
+      });
+      page.setRotation(degrees((photo.turn + (step.rotate ?? 0)) % 360));
+      continue;
+    }
     const [copy] = await out.copyPages(sources.get(step.file)!, [step.page]);
     if (step.rotate) {
       copy!.setRotation(degrees((copy!.getRotation().angle + step.rotate) % 360));
@@ -114,4 +170,45 @@ export async function arrangePdf(
     out.addPage(copy!);
   }
   return out.save();
+}
+
+/** A4 in points. */
+const A4 = { short: 595.28, long: 841.89 };
+
+/** JPEG and PNG by their first bytes; the declared type is the caller's word and proves nothing. */
+function imageFormat(bytes: Buffer): 'jpeg' | 'png' | null {
+  if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'jpeg';
+  if (bytes.subarray(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47]))) return 'png';
+  return null;
+}
+
+/**
+ * The clockwise turn a JPEG's EXIF orientation asks for, read from its APP1 segment; 0 if none.
+ * ponytail: mirrored values (2, 4, 5, 7) get their turn only; a mirror needs a re-encode. Rare.
+ */
+function exifTurn(bytes: Uint8Array): number {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let at = 2;
+  while (at + 4 < view.byteLength && view.getUint8(at) === 0xff) {
+    const marker = view.getUint8(at + 1);
+    const length = view.getUint16(at + 2);
+    if (marker === 0xda || length < 2) break; // image data begins, or malformed
+    if (marker === 0xe1 && length >= 16 && view.getUint32(at + 4) === 0x45786966) {
+      const tiff = at + 10;
+      const little = view.getUint16(tiff) === 0x4949;
+      const ifd = tiff + view.getUint32(tiff + 4, little);
+      if (ifd + 2 > view.byteLength) return 0;
+      const entries = view.getUint16(ifd, little);
+      for (let i = 0; i < entries && ifd + 14 + i * 12 <= view.byteLength; i += 1) {
+        const entry = ifd + 2 + i * 12;
+        if (view.getUint16(entry, little) === 0x0112) {
+          const turns: Record<number, number> = { 3: 180, 5: 270, 6: 90, 7: 90, 8: 270 };
+          return turns[view.getUint16(entry + 8, little)] ?? 0;
+        }
+      }
+      return 0;
+    }
+    at += 2 + length;
+  }
+  return 0;
 }

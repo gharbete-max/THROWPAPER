@@ -5,9 +5,11 @@ import { saveBlob } from '../lib/email-handoff.js';
 import { useT } from '../lib/i18n.js';
 import { useToast } from '../lib/toast.js';
 import { useConfirm } from '../components/Confirm.js';
+import { CameraScan } from '../components/CameraScan.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { Icon } from '../components/Icon.js';
 import { openPdf, type PaperPdf } from './builder/paper/extract.js';
+import { isPhoto, preparePhoto } from './scan-photo.js';
 import {
   movePage,
   pagesOfFile,
@@ -18,11 +20,14 @@ import {
 } from './scan-plan.js';
 
 /** The server's limits (`api-forms/src/pdf/arrange.ts`), so the screen can say so before sending. */
-const MAX_FILES = 10;
+const MAX_FILES = 40;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
 
+/** A file's pages as the screen draws them: a PDF by pdf.js, a photograph as itself. */
+type Source = { pdf: PaperPdf } | { url: string };
+
 /**
- * Arrange pages: PDFs put together, pages taken out, turned and put in order, then made into one
+ * Arrange pages: PDFs and photographs (from disk, the camera or a phone) put together, pages taken out, turned and put in order, then made into one
  * PDF to download. The server does the work (`POST /v1/pdf/arrange`) and keeps nothing; the pages
  * shown here are drawn in this browser from the files the person chose.
  */
@@ -31,46 +36,67 @@ export function Scan() {
   const toast = useToast();
   const confirm = useConfirm();
   const [files, setFiles] = useState<File[]>([]);
-  const [pdfs, setPdfs] = useState<PaperPdf[]>([]);
+  const [sources, setSources] = useState<Source[]>([]);
+  const [camera, setCamera] = useState(false);
   const [pages, setPages] = useState<ScanPage[]>([]);
   const [busy, setBusy] = useState(false);
   const picker = useRef<HTMLInputElement>(null);
 
   // The drawings are released when the screen goes.
-  const open = useRef<PaperPdf[]>([]);
-  open.current = pdfs;
+  const open = useRef<Source[]>([]);
+  open.current = sources;
   useEffect(
     () => () => {
-      for (const pdf of open.current) void pdf.close();
+      for (const source of open.current) {
+        if ('pdf' in source) void source.pdf.close();
+        else URL.revokeObjectURL(source.url);
+      }
     },
     [],
   );
 
-  function say(key: ReturnType<typeof errorKey>) {
+  function say(key: ReturnType<typeof errorKey> | 'scan.error.notSupported') {
     toast.show(t(key), 'error');
   }
 
   async function add(chosen: File[]) {
-    const pdfFiles = chosen.filter(
-      (file) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name),
+    if (chosen.length === 0) return;
+    const wanted = chosen.filter(
+      (file) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name) || isPhoto(file),
     );
-    if (pdfFiles.length === 0) return;
-    if (files.length + pdfFiles.length > MAX_FILES) return say('scan.error.tooMany');
-    if (pdfFiles.some((file) => file.size > MAX_FILE_BYTES)) return say('scan.error.tooLarge');
+    if (wanted.length < chosen.length) say('scan.error.notSupported');
+    if (wanted.length === 0) return;
+    if (files.length + wanted.length > MAX_FILES) return say('scan.error.tooMany');
+    if (wanted.some((file) => file.size > MAX_FILE_BYTES)) return say('scan.error.tooLarge');
 
-    const opened: PaperPdf[] = [];
+    const sent: File[] = [];
+    const opened: Source[] = [];
     try {
-      for (const file of pdfFiles) opened.push(await openPdf(await file.arrayBuffer()));
+      for (const file of wanted) {
+        if (isPhoto(file)) {
+          const photo = await preparePhoto(file);
+          sent.push(photo);
+          opened.push({ url: URL.createObjectURL(photo) });
+        } else {
+          sent.push(file);
+          opened.push({ pdf: await openPdf(await file.arrayBuffer()) });
+        }
+      }
     } catch {
-      for (const pdf of opened) void pdf.close();
+      for (const source of opened) {
+        if ('pdf' in source) void source.pdf.close();
+        else URL.revokeObjectURL(source.url);
+      }
       return say('scan.error.unreadable');
     }
     const first = files.length;
-    setFiles((current) => [...current, ...pdfFiles]);
-    setPdfs((current) => [...current, ...opened]);
+    setFiles((current) => [...current, ...sent]);
+    setSources((current) => [...current, ...opened]);
     setPages((current) => [
       ...current,
-      ...opened.flatMap((pdf, index) => pagesOfFile(first + index, pdf.pageCount)),
+      ...opened.flatMap((source, index) =>
+        pagesOfFile(first + index, 'pdf' in source ? source.pdf.pageCount : 1),
+      ),
     ]);
   }
 
@@ -115,7 +141,7 @@ export function Scan() {
         <input
           ref={picker}
           type="file"
-          accept="application/pdf,.pdf"
+          accept="application/pdf,.pdf,image/jpeg,image/png,image/webp,image/heic,image/heif"
           multiple
           hidden
           data-testid="scan-files"
@@ -126,6 +152,9 @@ export function Scan() {
         />
         <button type="button" className="button" onClick={() => picker.current?.click()}>
           <Icon name="upload" /> {t('scan.add')}
+        </button>
+        <button type="button" className="button" onClick={() => setCamera(true)}>
+          <Icon name="image" /> {t('scan.camera')}
         </button>
         {pages.length > 0 ? (
           <>
@@ -142,13 +171,23 @@ export function Scan() {
         </Link>
       </div>
 
+      {camera ? (
+        <CameraScan
+          onCancel={() => setCamera(false)}
+          onDone={(taken) => {
+            setCamera(false);
+            void add(taken);
+          }}
+        />
+      ) : null}
+
       {pages.length === 0 ? (
         <EmptyState icon="upload" title={t('scan.empty')} />
       ) : (
         <ol className="scan__pages" aria-label={t('scan.heading')}>
           {pages.map((page, position) => (
             <li key={page.id} className="scan__page">
-              <Thumb pdf={pdfs[page.file]!} index={page.page} turn={page.turn} />
+              <Thumb source={sources[page.file]!} index={page.page} turn={page.turn} />
               <span className="small">{t('scan.page', { n: position + 1 })}</span>
               <span className="scan__actions">
                 <PageButton
@@ -208,18 +247,24 @@ function PageButton({
 }
 
 /** A page as a small picture, turned by CSS as far as the person has turned it. */
-function Thumb({ pdf, index, turn }: { pdf: PaperPdf; index: number; turn: number }) {
+function Thumb({ source, index, turn }: { source: Source; index: number; turn: number }) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const pdf = 'pdf' in source ? source.pdf : null;
   useEffect(() => {
     const element = canvas.current;
-    if (!element) return;
+    if (!element || !pdf) return;
     const drawing = new AbortController();
     pdf.render(index, 140, element, drawing.signal).catch(() => {});
     return () => drawing.abort();
   }, [pdf, index]);
+  const style = { transform: `rotate(${turn}deg)` };
   return (
     <span className="scan__thumb">
-      <canvas ref={canvas} className="scan__canvas" style={{ transform: `rotate(${turn}deg)` }} />
+      {'url' in source ? (
+        <img src={source.url} alt="" className="scan__canvas" style={style} />
+      ) : (
+        <canvas ref={canvas} className="scan__canvas" style={style} />
+      )}
     </span>
   );
 }
@@ -232,6 +277,7 @@ function errorKey(error: unknown) {
       return 'scan.error.encrypted' as const;
     case 'unreadable':
     case 'too-costly':
+    case 'image-too-large':
       return 'scan.error.unreadable' as const;
     case 'too-large':
       return 'scan.error.tooLarge' as const;
