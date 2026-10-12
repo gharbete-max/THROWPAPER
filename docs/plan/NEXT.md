@@ -6,7 +6,9 @@ Order and decisions: `docs/HANDOVER.md`. Context: `docs/plan/DOCUMENTS.md`.
 
 ## Getting the summary model
 
-**Not downloaded yet.** From this container `huggingface.co` is refused by the network policy
+**Not downloaded yet.** The owner has the file at
+`C:\Users\gusta\projects\THROWPAPER\Qwen3-4B-Instruct-2507-Q4_K_M.gguf` on their PC; this
+cloud session cannot read that path, and it is not in the repository. From this container `huggingface.co` is refused by the network policy
 (HTTP 403 from the gateway, logged as a policy denial; re-tried 2026-10-12). No tool reaches the
 owner's PC. The Hugging Face connector in this session reads model cards and file listings only, so
 it cannot carry a 2.5 GB file.
@@ -32,7 +34,11 @@ it cannot carry a 2.5 GB file.
    only apply to a new session on this branch.
 2. On the owner's PC: download the Q4_K_M file, compute its SHA-256, and attach it to a pre-release
    of this repository tagged `model-qwen3-4b-instruct-2507-q4km`, with the hash and the source
-   repository in the description. The file never goes into git.
+   repository in the description. The file never goes into git (`*.gguf` is ignored).
+   **GitHub allows under 2 GiB per release file and this file is 2.33 GiB**, so it must go up as
+   two parts (for example with 7-Zip's split volumes or `split -b 1200m`), each with its own SHA-256
+   and the whole file's, and be joined again (`copy /b a+b out` on Windows). The earlier note in
+   `DOCUMENTS.md` that a release file may be up to 2 GiB is right, and this file is over it.
 
 When it is in hand: record the SHA-256 and source in the weights manifest (JSON, ADR 0021) before
 anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.

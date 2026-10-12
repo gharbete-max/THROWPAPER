@@ -38,3 +38,7 @@ apps/desktop/release/
 
 # Graphify output (docs/HANDOVER.md § Code graph): generated, 8 MB, rebuilt in seconds
 graphify-out/
+
+# Model weights never go into git (docs/plan/NEXT.md, ADR 0015)
+*.gguf
+*.safetensors
