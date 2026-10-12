@@ -1,0 +1,104 @@
+# The next two phases, planned (2026-10-12)
+
+Planning only, written from reading the code at `52ecc79`. Where a point is a design guess rather
+than something read in the code, it says **unverified** and the phase's first step settles it.
+Order and decisions: `docs/HANDOVER.md`. Context: `docs/plan/DOCUMENTS.md`.
+
+## Getting the summary model (not possible from this session as it stands)
+
+- This session has no tool that reaches the owner's PC. Only a cloud container.
+- `huggingface.co` is refused by the container's network policy (HTTP 403 from the proxy at the
+  time of writing), so the model cannot be fetched here either.
+- **Two ways, either is enough:**
+  1. In the cloud environment's settings, add `huggingface.co` (and the hosts it redirects file
+     downloads to; the 403 message of the first failing download names them) under allowed domains.
+  2. On the owner's PC: download the 4-bit GGUF of Qwen3-4B-Instruct-2507, compute its SHA-256, and
+     attach it to a pre-release of this repository tagged `model-qwen3-4b-instruct-2507-q4km`,
+     with the hash and the model card's licence line in the release description. The file never
+     goes into git.
+- Which GGUF repository to use (the model's own or a quantiser's) is **unverified**: read the model
+  card for the file name, size and licence before downloading.
+- Nothing in Phases 0–6 needs the model. Only Phase 7 does.
+
+## Phase 0 — alignment and headroom (small, one branch)
+
+1. **Invoicing owns its money type.** `MinorAmount` is defined in
+   `packages/shared/src/ledger/api.ts:22` and imported by `invoicing/api.ts` and
+   `invoicing/charges.ts` (and used throughout the ledger's own schemas). Move the definition to
+   `packages/shared/src/invoicing/` (or a neutral `money.ts` beside it), have the ledger import it
+   from there, and re-export nothing new. Touches `packages/`; say so in the PR.
+   Done when: `grep -n "ledger" packages/shared/src/invoicing/*.ts` finds no import, and
+   `typecheck`, `test`, `contract:check` pass unchanged.
+2. **ADR 0011** — the owner accepts it as updated, then its status line changes. Not Claude's call.
+3. **Bundle cut pass.** Total is 992.3 of 1000 KB gzipped. Candidates to measure first, none yet
+   proven: dead CSS in `apps/forms/src/styles.css`; catalogue keys no code reads
+   (`apps/forms/src/lib/message-usage.test.ts` already checks one direction); the three
+   tesseract cores in `scripts/ocr-assets.ts` (only matters for installers, not the web budget).
+   Done when: `pnpm bundle:budget` total is under 985 KB with no feature removed.
+4. **CLAUDE.md "Demo data"** still lists tables that do not exist; correct it to what `seedDemo`
+   writes, and add what Phase 1 will need (a two-page PDF for page work).
+
+## Phase 1 — Scan and page basics, PDF text, Word to PDF
+
+### 1a. Page basics — one primitive
+
+Merge, split, extract, rotate, reorder and delete are all the same operation: *output = an ordered
+list of (source file, page, rotation)*. Build that one thing.
+
+- **Route** (new, `apps/api-forms/src/routes/`): `POST /v1/pdf/arrange`, multipart: up to N PDFs
+  plus a JSON list `[{file, page, rotate}]`; returns one PDF. A "split" is several calls or a
+  zip of them (**unverified**: choose when the screen is designed; one call returning one PDF is
+  enough for the first slice).
+- **Safety.** Every input first passes `checkPdf` (`apps/api-forms/src/uploads/pdf-guard.ts`: a
+  worker with a 5 s and 256 MB budget). Encrypted PDFs are refused with a plain message.
+  Already-signed PDFs: arranging breaks the signature, so the screen says so before it proceeds
+  (a confirmation, rule 7).
+- **Implementation.** `pdf-lib` `copyPages` + `setRotation`; `paper.ts` already uses `copyPages`.
+  Limits: total pages and bytes capped; the numbers are decided with a test, not guessed.
+- **Screen.** One Scan screen under `apps/forms/src/screens/builder/paper/` (`bundle-split.test.ts`
+  and CAVEATS #43 hold the reading code there), page thumbnails from the existing `pdfjs-dist`
+  chunk, drag to reorder with `@dnd-kit` (already a dependency), buttons to rotate and delete.
+  Camera, phone scan and drop come from the existing `CameraScan` / `PhoneScan` components.
+  `pagesToPdf` moves out of `apps/api-forms/src/signing/scan.ts` behind a download route.
+- **Tests first:** a fixture PDF of 3 pages with distinct text per page; assert order, rotation and
+  page count of the output by reading it back with pdf-lib; an encrypted PDF and a pdf bomb
+  (`apps/api-forms/src/test-pdf-bomb.ts` exists) are refused; one e2e through the screen.
+
+### 1b. PDF text (add, cover, replace, redact)
+
+- **Add / cover / replace.** `POST /v1/pdf/edit` with ops `{page, x, y, text, size}` and
+  `{page, rect, fill}`. Replace = cover then add. Fonts: pdf-lib's standard fonts cover Latin; the
+  Cyrillic, Japanese and Chinese catalogue languages need an embedded font. **Unverified:** which
+  font, its licence (ADR 0015 applies) and its size; measure before promising all twelve.
+- **True redaction.** Painting a black box leaves the text underneath copyable. Design: the page
+  to redact is rendered to an image in the browser (pdfjs, already present) with the boxes burnt in,
+  and that image replaces the page; the page then has no text layer. The cost is that the redacted
+  page is no longer searchable, which the screen says. **Unverified** design; the test is the
+  proof: extract the text of the output with pdfjs and assert the redacted string is absent.
+- Redaction and edits never touch a signed PDF without the same confirmation as 1a.
+
+### 1c. Word to PDF (rough)
+
+- Reader exists: `readDocx` in `apps/forms/src/screens/builder/paper/docx.ts:627`, returning a
+  `RawDocument`. It runs in the browser, and `apps/api-forms` may not import from `apps/forms`
+  (rule 1). So the client reads the `.docx` and sends the parsed document to a route that renders
+  it with the existing PDF renderers (`documents/render.ts`, Playwright on a server, Electron's
+  `printToPDF` on the desktop).
+- **First step, unverified:** read what `RawDocument` keeps. If it drops tables, images or bold
+  and italic, the reader is extended first, with fixtures from `scripts/corpus/documents.ts`.
+- Kept and dropped parts, and the label, are in `docs/HANDOVER.md` (open question 4).
+- Done when: a corpus `.docx` with a heading, a list, a table and an image comes out as a PDF whose
+  extracted text contains each, and the dropped-parts note appears for one that has a footer.
+
+### Phase 1 acceptance, together
+
+`pnpm run format:check|typecheck|lint|test|build`, `bundle:budget`, `contract:check`,
+`licence:check` each green on their own; one foreground `pnpm test:e2e` read from its log. Report
+the bundle delta (page work is server-side, the screen is a lazy chunk). New user-facing words in
+all twelve catalogues. No new dependency without asking; a font is the likeliest ask.
+
+## Later phases, one line each
+
+2 Forms (draft PDF without a submission, fill a PDF's own fields). 3 Send (single, then batch;
+confirmation first). 4 Invoice scan (OCR then rules, check-digit on the payment reference). 5 Sign
+hand-off and cancel. 6 Campaigns. 7 Summary (needs the model above). Details: `HANDOVER.md`.
