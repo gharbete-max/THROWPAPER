@@ -10,6 +10,7 @@ import { EmptyState } from '../components/EmptyState.js';
 import { Icon } from '../components/Icon.js';
 import { openPdf, type PaperPdf } from './builder/paper/extract.js';
 import { isPhoto, preparePhoto } from './scan-photo.js';
+import { fromWord, WordToPdf } from './WordToPdf.js';
 import {
   movePage,
   pagesOfFile,
@@ -105,7 +106,8 @@ export function Scan() {
     setBusy(true);
     try {
       const blob = await client.arrangePdf(request.files, request.plan, acceptSignatureLoss);
-      saveBlob(blob, 'loppa.pdf');
+      // A PDF made from a Word file keeps "layout may differ from Word" in its name.
+      saveBlob(blob, files.find((file) => fromWord.has(file))?.name ?? 'loppa.pdf');
     } catch (error) {
       if (error instanceof ApiError && error.code === 'signed') {
         // Asked before anything is changed: the new PDF cannot carry the old signature.
@@ -180,6 +182,7 @@ export function Scan() {
           }}
         />
       ) : null}
+      <WordToPdf onPdf={(pdf) => void add([pdf])} />
 
       {pages.length === 0 ? (
         <EmptyState icon="upload" title={t('scan.empty')} />

@@ -1448,4 +1448,16 @@ export const fiFI: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Enintään 500 sivua.',
   'scan.error.failed': 'PDF-tiedostoa ei voitu luoda. Yritä uudelleen.',
   'scan.toForm': 'Luo sen sijaan lomake asiakirjasta',
+  'scan.word.add': 'Lisää Word-tiedosto',
+  'scan.word.label': 'Ulkoasu voi poiketa Wordista',
+  'scan.word.working': 'Muunnetaan…',
+  'scan.word.dropped': 'PDF:stä jätetty pois:',
+  'scan.word.drop.headerFooter': 'Ylä- ja alatunnisteet: {count}',
+  'scan.word.drop.textBox': 'Tekstiruudut: {count}',
+  'scan.word.drop.footnote': 'Alaviitteet ja loppuviitteet: {count}',
+  'scan.word.drop.trackedChange':
+    'Muutosten seuranta (lisäykset säilytetään, poistot jätetään pois): {count}',
+  'scan.word.drop.field':
+    'Kentät (näytetään Wordiin viimeksi tallennettuina, ei päivitetä): {count}',
+  'scan.word.drop.image': 'Kuvat, joita ei voitu sisällyttää: {count}',
 };

@@ -1432,4 +1432,15 @@ export const nbNO: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Høyst 500 sider.',
   'scan.error.failed': 'PDF-en kunne ikke lages. Prøv igjen.',
   'scan.toForm': 'Lag et skjema av et dokument i stedet',
+  'scan.word.add': 'Legg til en Word-fil',
+  'scan.word.label': 'Utformingen kan avvike fra Word',
+  'scan.word.working': 'Konverterer…',
+  'scan.word.dropped': 'Utelatt fra PDF-en:',
+  'scan.word.drop.headerFooter': 'Topptekster og bunntekster: {count}',
+  'scan.word.drop.textBox': 'Tekstbokser: {count}',
+  'scan.word.drop.footnote': 'Fotnoter og sluttnoter: {count}',
+  'scan.word.drop.trackedChange':
+    'Sporede endringer (tillegg beholdes, slettinger utelates): {count}',
+  'scan.word.drop.field': 'Felt (vises slik de sist ble lagret i Word, oppdateres ikke): {count}',
+  'scan.word.drop.image': 'Bilder som ikke kunne tas med: {count}',
 };

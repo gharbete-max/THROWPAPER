@@ -1435,4 +1435,15 @@ export const daDK: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Højst 500 sider.',
   'scan.error.failed': "PDF'en kunne ikke laves. Prøv igen.",
   'scan.toForm': 'Lav en formular ud fra et dokument i stedet',
+  'scan.word.add': 'Tilføj en Word-fil',
+  'scan.word.label': 'Layoutet kan afvige fra Word',
+  'scan.word.working': 'Konverterer…',
+  'scan.word.dropped': 'Udeladt fra PDF’en:',
+  'scan.word.drop.headerFooter': 'Sidehoveder og sidefødder: {count}',
+  'scan.word.drop.textBox': 'Tekstbokse: {count}',
+  'scan.word.drop.footnote': 'Fodnoter og slutnoter: {count}',
+  'scan.word.drop.trackedChange':
+    'Sporede ændringer (indsættelser bevares, sletninger udelades): {count}',
+  'scan.word.drop.field': 'Felter (vises som sidst gemt i Word, opdateres ikke): {count}',
+  'scan.word.drop.image': 'Billeder, der ikke kunne medtages: {count}',
 };

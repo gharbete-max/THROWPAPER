@@ -1477,4 +1477,16 @@ export const frFR: Record<MessageKey, string> = {
   'scan.error.tooManyPages': '500 pages au maximum.',
   'scan.error.failed': 'Le PDF n’a pas pu être créé. Réessayez.',
   'scan.toForm': 'Créer plutôt un formulaire à partir d’un document',
+  'scan.word.add': 'Ajouter un fichier Word',
+  'scan.word.label': 'La mise en page peut différer de Word',
+  'scan.word.working': 'Conversion…',
+  'scan.word.dropped': 'Absent du PDF :',
+  'scan.word.drop.headerFooter': 'En-têtes et pieds de page : {count}',
+  'scan.word.drop.textBox': 'Zones de texte : {count}',
+  'scan.word.drop.footnote': 'Notes de bas de page et de fin : {count}',
+  'scan.word.drop.trackedChange':
+    'Modifications suivies (insertions conservées, suppressions omises) : {count}',
+  'scan.word.drop.field':
+    'Champs (affichés tels qu’enregistrés dans Word, non mis à jour) : {count}',
+  'scan.word.drop.image': 'Images qui n’ont pas pu être incluses : {count}',
 };

@@ -160,3 +160,38 @@ describe('POST /v1/pdf/arrange', () => {
     expect(await harness.repos.audit.list(adminUser.organisationId)).toEqual(before);
   });
 });
+
+describe('POST /v1/pdf/word', () => {
+  const send = (payload: unknown, token: string | null = operatorToken) =>
+    harness.app.inject({
+      method: 'POST',
+      url: '/v1/pdf/word',
+      headers: token === null ? {} : bearer(token),
+      payload: payload as never,
+    });
+  const blocks = [{ kind: 'paragraph', runs: [{ text: '<script>x</script> Hej', bold: true }] }];
+
+  it('lays the blocks out, escaped, and returns a PDF to any signed-in person', async () => {
+    const response = await send({ blocks, lang: 'sv-SE' });
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['content-type']).toBe('application/pdf');
+    expect(response.headers['cache-control']).toBe('no-store');
+    const html = harness.renderer.rendered.at(-1) ?? '';
+    expect(html).toContain('<html lang="sv-SE">');
+    expect(html).toContain('<strong>&lt;script&gt;x&lt;/script&gt; Hej</strong>');
+    expect(html).not.toContain('<script>x');
+  });
+
+  it('is not open to somebody who is not signed in', async () => {
+    expect((await send({ blocks }, null)).statusCode).toBe(401);
+  });
+
+  it('refuses a body that is not blocks, an unknown kind, or a picture that is not a PNG, JPEG or GIF', async () => {
+    expect((await send({})).statusCode).toBe(400);
+    expect((await send({ blocks: [] })).statusCode).toBe(400);
+    expect((await send({ blocks: [{ kind: 'script', src: 'x' }] })).statusCode).toBe(400);
+    const svg = { kind: 'image', mime: 'image/svg+xml', data: 'AAAA' };
+    expect((await send({ blocks: [svg] })).statusCode).toBe(400);
+    expect((await send({ blocks, lang: '"><script>' })).statusCode).toBe(400);
+  });
+});

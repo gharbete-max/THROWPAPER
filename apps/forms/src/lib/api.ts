@@ -196,9 +196,10 @@ async function requestBlob(path: string, retry = true): Promise<Blob> {
  * Sends a multipart body and gets bytes back — a PDF made from the files sent. Like `requestBlob`
  * it keeps the server's own error code, so a screen can say which file was the trouble.
  */
-async function postForBlob(path: string, body: FormData, retry = true): Promise<Blob> {
+async function postForBlob(path: string, body: FormData | string, retry = true): Promise<Blob> {
   const headers = new Headers();
   if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
+  if (typeof body === 'string') headers.set('content-type', 'application/json');
 
   const response = await fetch(`${BASE}${path}`, { method: 'POST', headers, body });
   if (response.status === 401 && retry && (await refreshOnce())) {
@@ -301,6 +302,10 @@ export const client = {
     if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
     return postForBlob('/v1/pdf/arrange', body);
   },
+
+  /** A Word document, roughly, as a PDF: the blocks `readWordBlocks` kept (`pdf/word.ts`). */
+  wordToPdf: (document: api.WordPdfRequest) =>
+    postForBlob('/v1/pdf/word', JSON.stringify(document)),
 
   /** A submission written back onto the paper its form was made from. */
   submissionPaper: (submissionId: string) =>
