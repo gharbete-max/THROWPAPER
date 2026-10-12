@@ -5,15 +5,18 @@ three independent catchers — Documents, Spreadsheets, Presentation & planning 
 first. Where this file's product framing below disagrees with it, the vision wins until this file
 is brought in line.
 
-Monorepo containing **three independent products** plus the packages they share. Read
-`docs/CONTRACT.md` next, then the spec for whichever product you are working on. Do not paste
-specs into this file.
+**Then `docs/HANDOVER.md`** — the current state, the order of work and the owner's decisions of
+2026-10-12. Monorepo whose code is three apps plus the packages they share (Forms, Sign, and a
+Mailer stub), which together serve the Documents catcher. Read `docs/CONTRACT.md` next, then the
+spec for whichever app you are working on. Do not paste specs into this file.
 
 ```
-apps/forms      Product A — forms, inspections, measurements, reports. Also the room (/room),
-                where a signed-in person arrives: three catchers, Documents opening onto its
-                four parts (ADR 0022)
-apps/mailer     Product B — email campaigns
+apps/forms      Product A — the Documents catcher's screens: forms, scan, sign, send, invoices.
+                Also the room (/room), where a signed-in person arrives: three catchers,
+                Documents opening onto its four parts (ADR 0022). Events, the door and the ledger
+                are earlier work that stays in place, out of the room, until the catchers they
+                belong to (Presentation & planning; Spreadsheets) exist — never deleted unasked
+apps/mailer     A stub. The mail work is built inside Documents' Send part (docs/HANDOVER.md)
 apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
                 token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
                 keeps each author's guided-builder conversation (builder_sessions) and the
@@ -132,7 +135,8 @@ The owner's brief is `docs/plan/BRIEF.md`; the plan is the rest of `docs/plan/` 
 decisions are ADRs 0017–0021, accepted on 2026-10-06. ADR 0018 supersedes only ADR 0004's "never
 creates a field"; ADR 0004 still governs the editor's classic paper import (boxes drawn by hand).
 
-- **Six non-negotiables.** (1) No AI, no LLM, no ML service, no network call at runtime: rules,
+- **Six non-negotiables.** (1) In the builder and the import: no AI, no LLM, no ML service, no network call at runtime
+  (the local summary model lives in the Documents centre and never decides anything here, VISION §9): rules,
   weights and thresholds a person can read and a test can freeze; same bytes in, same JSON out, on
   every machine. (2) The guided path is primary: a form can be built and published by clicking
   alone; free text is optional. (3) Never a dead end, never a silent guess: below threshold, ask.

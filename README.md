@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  Forms, registrations and email — for organisations that have to get it right.
+  A lightweight helper for office documents — forms, scans, signing and sending — that works on your own computer.
 </p>
 
 ---

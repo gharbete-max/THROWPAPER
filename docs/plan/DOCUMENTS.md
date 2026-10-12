@@ -419,6 +419,18 @@ likely need the cut pass below first.
 
 ## 9. The owner's answers, and what stands as a default
 
+**Amended 2026-10-12** (the owner's answers, recorded in `docs/HANDOVER.md`, which wins over the
+defaults below where they differ):
+- **Editing (default 3):** editing a PDF's text is in, in two tiers (add, cover and replace by
+  overlay; true redaction), and a Word file's text is edited inside the `.docx`.
+- **Word (default 4):** Word to PDF is in as a rough, labelled conversion built on the existing
+  reader and renderers. A faithful one stays out.
+- **The earlier features (default 9):** the ledger belongs to the later Spreadsheets catcher and
+  events and check-in to Presentation & planning; invoices stay in Documents. Mailer's campaigns
+  are built inside Send, after Sign hand-off.
+- **The centre (default 10):** one model, Qwen3-4B-Instruct-2507, desktop only, downloaded on
+  request; Qwen3-1.7B is dropped.
+
 **Answered on 2026-10-07:**
 - **The room's colours:** Loppa's own, made stronger so they stand out against the grey, in place
   of red, green and yellow.

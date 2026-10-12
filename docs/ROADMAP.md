@@ -1,5 +1,9 @@
 # Roadmap — two parallel tracks
 
+> **Superseded in part (2026-10-12).** The two tracks and the "form and email site" framing are the earlier product. `docs/VISION.md` and `docs/HANDOVER.md` win where they
+> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+
+
 ## What this is, before the phases
 
 Stated by the owner on 2026-09-01: this launches as a **form and email site**. The general form

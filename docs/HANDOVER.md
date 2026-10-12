@@ -1,217 +1,104 @@
 # Handover
 
-For a fresh session picking this up. Read `CLAUDE.md` first, then `LAUNCH-CHECKLIST.md`, then
-`docs/adr/0001-theming-layers.md`. Do not paste specs into `CLAUDE.md`.
+Written 2026-10-12 at `bb82bfd`, after an audit that ran every gate. The previous handover (the
+"signing first" prompt and the Forms-only desktop) is in git history at that commit; it described
+the earlier product. Read `CLAUDE.md`, then `docs/VISION.md`, then this file, then the section of
+`docs/plan/DOCUMENTS.md` for the phase you take.
 
-## Paste-ready prompt for the next session
+## What Loppa is
 
-```
-You are continuing work on THROWPAPER (product name: Loppa) — a pnpm monorepo. Read CLAUDE.md
-first (its "Never mistake a proxy for the thing" section before anything else), then
-docs/MODULE-STATUS.md, then LAUNCH-CHECKLIST.md, then docs/PROGRESS.md from § Phase 0 to the
-end. Do not re-derive anything HANDOVER marks as established.
+A lightweight, local-first office helper. `docs/VISION.md` is the owner's words. Three independent
+catchers in a dark room; only **Documents** is being built, and it must be finished before
+anything else. Its four parts are Forms, Scan, Sign and Send, with a summary and translation
+centre. Editing is the basics, not Acrobat.
 
-State: fetch and read it rather than trusting this paragraph — `git fetch` and `gh pr list`
-first, because local main is routinely behind. Phases 0–2 and S3–S8 are merged: main is green,
-the magic link lands, the wizard is facets (ADR 0006), the demo brand kit is seeded and passes
-the contrast guard, and every engineering-ready row in LAUNCH-CHECKLIST.md is closed. The current
-test and e2e counts are in the latest PROGRESS entry; this prompt deliberately does not repeat
-them, because a number written here goes stale by the next phase and a fresh session then reads a
-correct result as a failure.
+## Baseline at `bb82bfd` (re-measure after any `git switch`)
 
-The gate: `pnpm verify` and `pnpm contract:check` exit 0, and `pnpm test:e2e` genuinely runs —
-it exits 2 on a skip, and a green verify is not a green e2e. Start the portable Postgres first
-(PROGRESS § L0 has the command). Kill the preview servers on 4173 and 4001 between a red run and
-a green one: `vite preview` serves a build and a reused server will pass a reverted fix. Use a
-single-token `--grep`; `run-e2e.ts` runs with `shell: true` and splits a multi-word pattern into
-nothing. Capture a run's output to a file before re-running it, or a flake cannot be named.
+| Command | Result |
+| --- | --- |
+| `format:check`, `typecheck`, `lint`, `build` | exit 0 |
+| `pnpm test` (Postgres up) | 254 files, 6523 tests passed |
+| `bundle:budget` | entry 6.7 / 12 KB, CSS 17.2 / 20, total **992.3 / 1000** gzipped |
+| `contract:check` | 9 of 15 implemented, the rest deferred |
+| `licence:check`, `builder:validate` | passed (874 packages; 44 nodes, 12 catalogues) |
+| `pnpm test:e2e` | **not run** in the audit. A green `verify` is not a green e2e. |
 
-Rules that bite: one task per branch, plan mode first; every fix gets a discriminating test shown
-failing first; never mass-rename internal identifiers (CLAUDE.md rule 9); no new dependencies
-without asking (majors: ADR 0005, re-review 2026-12-22); no legal/clinical/tax/safety wording
-(rule 8); a brand colour never paints text or a boundary unchecked — reach for the derived tokens
-(--tp-colour-heading, --tp-colour-accent-ink, --tp-colour-accent-on-ink, --tp-focus,
---tp-button-*, and --tp-colour-{primary,secondary,accent}-edge for a chosen state's border).
-Gold is a FILL, bronze is the brand where it is read, every value comes from docs/brand. Measure contrast on the surface the finding was made on: a public form wears the demo
-kit (navy, primary == text), the marketing site wears the shipped gold. Design first, then one
-ponytail pass; never both in one.
+Run the gates one at a time; `pnpm verify` is a serial chain and hides what follows its first
+failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS) are quoted from
+`DOCUMENTS.md` §8 and were not re-measured.
 
-What is left, and whose it is:
-1. The owner's, not yours to invent — LAUNCH-CHECKLIST.md §1 (legal entity, hosting and region,
-   retention), §3, the door's not-found remedy sentence, whether a name lookup lives inside the
-   door, and whether site and app headings should agree on the ink or on --tp-colour-heading.
-2. ~~The door's recent arrivals vanish on reload~~ — done in #128: the server keeps each operator's last five.
-3. The plan is docs/ROADMAP.md, and the owner's latest decision in it wins: **signing first**,
-   approved 2026-09-23. Signing is a third product (apps/sign + apps/api-sign, ADR 0009); Loppa is
-   proprietary and nothing is copied from GPL/AGPL code (ADR 0015). P1a and P1b are done
-   (PROGRESS § P1a, § P1b); P1c-1 is done (Sign's database, the append-only hash-chained trail, §5.1–5.2); P1c-2 is done
-   (PAdES sealing with an audit page, §5.3); P1c-4a is done (the signer's page, typed or drawn,
-   and Sign on PGlite); P1c-3 is done (Forms' Signing screen sends a PDF over §5, §5.4 hooks);
-   the desktop now hosts Sign offline (PROGRESS § D-Sign, ADR 0016 amended); an admin writes the
-   organisation's declarations in the product (CONTRACT §5.5); a phone scans into the desktop by
-   QR code (PROGRESS § Scanning with a phone); P1c-4b is done (signers invited by email); every
-   form now ends in a finished PDF with download/email handoff and an optional e-ID step (§5.6,
-   no provider until one is chosen), and desktop releases publish from a `desktop-v*` tag, or
-   by running the Desktop workflow by hand on main with "release" ticked, which tags the commit
-   from apps/desktop's version (PROGRESS § Product-ready pass). Mailer B2
-   now lives inside P3. Decisions in docs/EXPANSION.md § 5.
-   Not scheduled, so not yours to start: ADR 0008 (Reports as packages/reports — MODULE-STATUS §5
-   has the nine importers, if it is ever picked up) and handwriting OCR (ADR 0007, which the
-   roadmap names as out of every approved phase). An earlier version of this list put both of
-   them first, from a brief the 2026-09-23 decision overtook.
-4. The wizard's verticals (content, per ADR 0006). Trades and law stay blocked until a human
-   authors their wording.
-5. Loppa desktop, Windows and macOS (apps/desktop, ADR 0016) — D1 is built: Forms offline on
-   PGlite; mail to an .eml outbox, SMTP, Outlook or Apple Mail; PDFs from Electron's own
-   Chromium; installers from the Desktop workflow. Owner's direction: offline first, then
-   hostable (D4 next). Certificates and distribution are in LAUNCH-CHECKLIST.md §6.
-```
+## Decisions of 2026-10-12 (the owner's)
 
-## State
+1. **Send includes campaigns** (`SPEC-mailer.md`), built inside Documents, after Sign hand-off.
+   First comes batch send: one personalised PDF per recipient from a list, for monthly invoices.
+2. **Editing includes a PDF's text**, in two tiers: add a text box, cover an area, replace text by
+   covering and writing over it; and true redaction that removes the text underneath. A Word
+   file's text is edited inside the `.docx`. CJK and Cyrillic text needs an embedded font; measure
+   its size before promising all twelve languages.
+3. **Word to PDF is in**, as a rough, labelled conversion built on the existing reader
+   (`paper/docx.ts`) and the existing PDF renderers. A faithful conversion stays out.
+4. **Ledger** goes to the later Spreadsheets catcher; **events and check-in** to Presentation &
+   planning. Nothing is deleted; they stay in place, out of the room, until then. **Invoices stay
+   in Documents.** `MinorAmount` is imported from `packages/shared/src/ledger/api.ts` by
+   `invoicing/api.ts` and `charges.ts`; give invoicing its own type before the ledger moves.
+5. **Invoice scan:** optical reading (on-device tesseract) then deterministic rules for amount,
+   due date, bank number and payment reference, checked by the reference's check digit, asking
+   when unsure. Not to be confused with the Swedish "OCR number" in `invoicing/ocr.ts`.
+6. **Summary and translation:** one model, Qwen3-4B-Instruct-2507, desktop only, downloaded on
+   request, never in the installer. Apache-2.0 and the ~2.5 GB size are from secondary sources:
+   confirm on the model card first. Contracts, consents, declarations and clinical forms are
+   quoted, never reworded or translated (rule 8, ADR 0012).
+7. **Order** was left to Claude: below.
 
-**`docs/PROGRESS.md` is the record of what shipped and when. This section does not restate it.**
-It previously did, in parallel, and the two drifted — `origin/main` was described as "at S2's
-merge" with the palette "open as a pull request" after the palette had merged. One log, one place.
+## Order of work
 
-- **Where to look:** `docs/PROGRESS.md` § L0 … § P0 for the phases; § Phase 0 for the four-module
-  scorecard and § Phase 1 for the gate repair. `docs/MODULE-STATUS.md` for what each of the four
-  modules actually is, measured with the command behind every number.
-- **The gate, and what it is worth:** `pnpm verify` and `pnpm contract:check` together are the
-  definition of done — but a green `verify` is **not** a green `e2e`; `verify` does not run the
-  suite. Run `pnpm test:e2e` and read the count. See `CLAUDE.md` § Never mistake a proxy for the
-  thing before trusting any of the three.
-- Pre-launch brief phases: **0 (audit) and 1 (security) complete** (`PRE-LAUNCH-AUDIT.md`);
-  **2 (EU/Swedish legal) blocked on the owner** (§1.1 of `LAUNCH-CHECKLIST.md`); **3 (restyle)
-  complete**; 4 (polish and SEO) not started.
-- `LAUNCH-CHECKLIST.md` is the single list of what is still temporary, unconfigured or
-  unconfirmed. Delete rows as they close; never tick them.
-- The owner cannot test by hand (decision 2026-09-22): the simulated user (S3) is the
-  acceptance channel; "ready" is the v0.1 done-means list executed by Playwright.
+One phase per branch, plan mode first. Each phase reports its bundle delta.
 
-## The palette: what is authoritative, and where
-
-The migration is **done and merged** (P0, PR #108). This is the record of where each thing now
-lives, because the README's promise of "a separate PR series" is what this replaces.
-
-| Artefact | Status | What it is |
+| # | Phase | Done when |
 | --- | --- | --- |
-| `docs/brand/` | **Source of truth for the identity** | The bundle the mark, the metals and the measured WCAG table come from. Rasters are in Git LFS. Nothing derives *from* the app back into here. |
-| `packages/tokens/src/default-tokens.json` | **Authoritative for the product** | Every colour the app renders derives from this. Gold `#cea85c`, bronze `#8f6b3a`, paper `#fafaf8`, platinum `#e9ebee`, ink `#0e0e10`, plus graphite and pewter. |
-| `packages/tokens/src/loppa.test.ts` | **The guard** | Pins the shipped default to the brand bundle's measured table, so a future palette change fails CI instead of shipping. |
-| `packages/tokens/src/locked.test.ts` | Historical | The seafoam/coral round survives here as one of the hostile customer kits the mechanism is held against. It is no longer anybody's palette. |
-| `DESIGN.md` | **Argues the decision** | Why two metals, how the button re-derives, what the paper answers. |
-| `apps/forms/src/styles.css` | Consumes | Reads the compiled variables. A literal colour here is a bug — `CLAUDE.md` rule 4. |
+| 0 | Docs aligned (this change). Then `MinorAmount` into invoicing, ADR 0011 accepted, a cut pass for bundle headroom. | Gates green; budget total under 985 KB. |
+| 1 | **Scan and page basics:** merge, split, rotate, reorder, delete; photos to one PDF; PDF text tier; Word to PDF (rough). | e2e for each; encrypted and already-signed PDFs tested under `uploads/pdf-guard.ts`. |
+| 2 | Forms: draft PDF without publishing; fill a PDF's own fields; "Share to collect" demoted; doors by URL. | An e2e builds a form both ways and downloads it as a PDF. |
+| 3 | Send: one document, then batch send. Confirmation first, outbox as test mode. | Nothing leaves without the press. |
+| 4 | Invoice scan (decision 5). | Fixtures for each field; wrong or missing references ask. |
+| 5 | Sign hand-off and cancel route (`CONTRACT` §5, so `packages/` change). | `contract:check` green. |
+| 6 | Campaigns. | Plain email, no open or click tracking, confirmation and test mode. |
+| 7 | Summary: the spike (12 languages; speed and peak RAM on an 8 GB laptop; a native speaker rates each summary), then ADR 0023, manifest, pane. | Measured table committed first. Can start any time the network allows. |
 
-**The constraint that does not move.** Gold is **2.14:1 on white** — by design, not by oversight.
-A filled button keeps the brand and takes its *label and boundary from the ink*. Text on a light
-surface takes the **bronze tier `#8F6B3A` (4.64:1)**, never the face gold. A brand colour never
-paints text or a boundary unchecked, and `packages/tokens` owns the contrast guard that enforces
-it — it is a mechanism, not a convention.
+## Rules that bite
 
-**What is left**, and it is small: the four rows in `LAUNCH-CHECKLIST.md` §2.4 that the site
-critique measured on the gold palette. Two are P1 — a filled button with no hover state anywhere
-in the product, and a quiet button whose hover edge is gold at 2.14:1. Neither is new with the
-palette; both were measured for the first time on it.
+- Page work stays on the server with `pdf-lib`: in the browser it costs about 206 KB gzipped
+  against 7.7 KB of headroom. Untrusted PDFs pass `uploads/pdf-guard.ts` first.
+- Redaction must remove the text, not paint over it, and needs a test that extracts text after.
+- `packages/shared/src/{builder,interpret,import}` stay pure and deterministic. The model never
+  runs there.
+- Invoice arithmetic is exact (bigint minor units). A VAT rate is only ever one a human typed.
+- A behaviour change to the ladder or import heuristics needs a fixture in the same commit.
+- At most one `pnpm test:e2e` at a time; the suite takes minutes. Kill stale preview servers on
+  4173 and 4001 between runs.
+- No new dependency without asking; `pnpm licence:check` must stay green; model weights need
+  their own licence check.
+- Internal names stay `throwpaper` / `@tp/*`. Never mass-rename.
 
-## House rules that bite
+## Still true from the earlier handover
 
-- One phase per branch; commit per item. `pnpm verify` before calling anything done.
-- **Evidence, not claims:** a diff, a passing test, or tool output. Never a TODO.
-- Ask before adding a dependency, changing the data model, or changing legal copy.
-- `CLAUDE.md` rule 8: never generate legal, clinical, tax or safety-critical wording. The proxy
-  template shows the pattern — ship structure, leave the operative sentence as an explicit
-  bracketed placeholder.
-- Windows dev machine. **`&` in npm scripts does not background** (cmd.exe treats it as a
-  sequential separator); use `pnpm --parallel`.
-- **Verify a test discriminates:** stash the fix, confirm it fails, restore. A test that only
-  passes after a fix proves nothing on its own.
+- The app sets no cookies and has no analytics or external origins; fonts are self-hosted.
+- Gold `#cea85c` is a fill, never text. Text on light takes bronze `#8f6b3a`. Use the derived
+  tokens in `packages/tokens/src/derive.ts`; `loppa.test.ts` and `locked.test.ts` are the guard.
+- `LAUNCH-CHECKLIST.md` is the list of what the owner must still decide (legal entity, hosting
+  region, retention). Do not invent those.
+- The owner cannot test by hand; Playwright is the acceptance channel.
+- The dev machine is Windows: `&` in npm scripts does not background. Use `pnpm --parallel`.
 
-## Blocked on the owner — Phase 2 cannot start without these
+## Still open for the owner
 
-Registered company name, organisationsnummer and address; contact and privacy-request addresses;
-**database and application hosting provider + region** (undecided since the demo phase; blocks the
-privacy page and is the only open third-country-transfer question); retention periods per data
-type; whether the product sells to consumers; headcount and turnover for the EAA microenterprise
-exemption; whether a DPO exists; domain and canonical host; whether `api-mailer` will send
-marketing email.
+- Whether OCR models (~45 MB) may become an optional download.
+- The room's exact grey and which of Loppa's colours sits under which catcher (`DOCUMENTS.md` §9).
+- Whether the hosted web edition stays, and whether it gets any summary.
+- Which of Word's features the rough conversion must keep (tables, images, headers).
 
-## Facts already established — do not re-derive
+## Where things are
 
-- The app sets **no cookies**, has no analytics, no external origins, and self-hosts fonts
-  byte-inlined. **No cookie banner is required as the software stands** — that stops being true
-  the moment analytics is added, so §2.2 and Phase 4's analytics item must be decided together.
-- **No cross-organisation IDOR:** all 40 routes were traced to the query behind them.
-- Auth is magic-link only. There are no passwords, so "MFA" means a second factor on the link.
-- `LEGAL-REVIEW.md` already lists 22 pending business facts, rendered as visible amber markers on
-  the five policy pages. Extend that file rather than duplicating it.
-- Fonts: Inter is self-hosted via Fontsource (`@fontsource/inter`, latin subsets precached); the
-  CSP still permits no external origins. The transfer answer is still "none".
-- Internal identifiers stay `throwpaper` (paths, packages, tables, routes) by the owner's explicit
-  instruction; only user-facing text says Loppa.
-- The owner dislikes dark teal and the flat mark; a pastel that cannot carry text becomes the ink
-  (`headingInk`), never a darkened pastel.
-
-## Next unblocked work
-
-In the paste-ready prompt above, under "What is left, and whose it is". It used to be restated here
-as a numbered list and the two drifted — this list still said S3–S5 were upcoming after all three
-had merged.
-
----
-
-## The catalogue direction — now `docs/adr/0006-catalogue-direction.md`
-
-One wizard across verticals, by **composing blocks** rather than retrieving one form from a
-library. The decision, the argument against the "will not scale to millions" objection, what
-survives in `packages/shared/src/wizard/tree.ts` (`contributes` and `keyOf`), what changes
-(`next` becomes a sector-selected facet set), what is lost (`everyPath()`, and the four-press
-promise that has to be restated rather than quietly dropped), the rule-8 position on trades and
-law, and the DSA obligations community sharing would bring — all of it is in the ADR.
-
-Two things from it that belong in front of whoever picks this up:
-
-- The model change is a **breaking change to a shared package**. It is its own phase.
-- **Community sharing is an owner decision, not an engineering one.** Public UGC flips the Phase 0
-  DSA conclusion, which held *because* there is no public UGC.
-
-## What Phase 3 landed, and how to work inside it
-
-The planning notes that used to sit here are superseded by the code and by
-`docs/adr/0001-theming-layers.md`. The short version:
-
-- **Palette** is Loppa's: gold `#cea85c` (fills), bronze `#8f6b3a` (links, focus, the read
-  accent), paper `#fafaf8`, platinum `#e9ebee`, ink `#0e0e10`, graphite, pewter — every value from
-  `docs/brand/tokens-loppa.css`, held there by `packages/tokens/src/loppa.test.ts`. Dark is derived
-  and floors at the ink (`#0e0e10`). The Midnight/Saddle palette survives only as the seeded
-  "Demo AB" kit (S5 replaces it); the seafoam/coral round survives only as a hostile kit.
-- **Derived tokens** are the mechanism, not the stylesheet: `focusRing`, `buttonSurface`,
-  `headingInk`, `accentInk` (and its inverted twin `--tp-colour-accent-on-ink`) in
-  `packages/tokens/src/derive.ts`. `locked.test.ts` proves the LOCKED list against six hostile
-  kits in both schemes; if you add a guarantee, add it there and verify it by deleting the
-  derivation once.
-- **The `.system` boundary still governs.** Ours: shell, sign-in, marketing site. Theirs: the
-  published form, invoice, admission card, email. The Loppa intro now lives inside the shell
-  only — it once leaked over customers' forms; do not move it back up.
-- **The marketing site ships no JavaScript in production.** Anything interactive there is CSS
-  (`:checked` for the hero pause) or a plain `<form method="post">` (the contact page). A React
-  effect in `site/` works in dev and is dead on the live page.
-- **The mark** is the brand bundle's gold-and-platinum render (`public/mark-angled-256.png`,
-  `mark-loop-256.webp`, `mark-poster-256.png`), produced from `docs/brand/animation` and
-  `docs/brand/still` by `scripts/brand/blacken-shadow.py` (Pillow; `py -3` on this machine),
-  which turns the bundle's warm-grey baked shadow black so it darkens on the dark page. There is
-  no 512 loop until the bundle renders one. The favicon and launcher icons are still drawn from
-  the geometry by `pnpm icons` on a gold tile; cutting them over to
-  `docs/brand/vector/loppa-mark-flat.svg` is an asset task.
-- **Client mode** is server-first: `client-identity.ts` inlines the palette and meta tags so the
-  sign-in screen is the customer's from the first byte; `brand.tsx` reads them and never paints
-  over a server-painted page until the real kit arrives.
-- **Critique method** that worked: `/impeccable critique` with A and B as isolated sub-agents, B
-  measuring in a real browser at 1280/375 × light/dark. Both snapshots are in
-  `.impeccable/critique/`; the trend is 18 → 22 → 23 → 25 → 23 / 32 on the site and
-  21 → 23 → 23 → 26 → 26 / 40 in the shell. When the desktop browser pane misbehaves — it does —
-  B can drive a headless Playwright browser instead and inject `detect.js` from
-  `impeccable live-server --background`; there is then no [Human] overlay tab, and the report
-  must say so.
-
-Do not run `impeccable` and `ponytail` in the same pass — they pull in opposite directions. Design
-first, then a single ponytail pass to remove what turned out to be dead.
+`docs/plan/DOCUMENTS.md` (the plan), `docs/adr/` (0022 the room, 0016 desktop, 0011 invoices),
+`docs/CONTRACT.md` (Forms to Sign), `docs/MODULE-STATUS.md` (stale; do not trust its numbers).
+`docs/PROGRESS.md` is a 3,500-line log: search it, never read it whole.

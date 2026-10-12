@@ -1,5 +1,9 @@
 # Start here
 
+> **Superseded in part (2026-10-12).** This describes the earlier v0.1 and no longer "wins over every other plan". `docs/VISION.md` and `docs/HANDOVER.md` win where they
+> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+
+
 The other documents describe a destination. This one describes the first six weeks. If the two
 ever disagree, this one wins.
 

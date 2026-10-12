@@ -1,5 +1,9 @@
 # Forms — forms, inspections, measurements and reports
 
+> **Superseded in part (2026-10-12).** §1 frames Forms as inspections, measurements and reports; Forms is now one part of Documents. `docs/VISION.md` and `docs/HANDOVER.md` win where they
+> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+
+
 Read `SPEC-shared.md` first; this document assumes the grid, tokens, i18n and calc packages.
 
 ## 0. Parameters
