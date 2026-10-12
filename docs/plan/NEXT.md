@@ -22,21 +22,28 @@ Order and decisions: `docs/HANDOVER.md`. Context: `docs/plan/DOCUMENTS.md`.
 
 ## Phase 0 — alignment and headroom (small, one branch)
 
-1. **Invoicing owns its money type.** `MinorAmount` is defined in
+1. **Invoicing owns its money type — done.** `MinorAmount` is defined in
    `packages/shared/src/ledger/api.ts:22` and imported by `invoicing/api.ts` and
    `invoicing/charges.ts` (and used throughout the ledger's own schemas). Move the definition to
    `packages/shared/src/invoicing/` (or a neutral `money.ts` beside it), have the ledger import it
    from there, and re-export nothing new. Touches `packages/`; say so in the PR.
-   Done when: `grep -n "ledger" packages/shared/src/invoicing/*.ts` finds no import, and
+   Verified: no invoicing file imports from `ledger`; shared tests (2928) and
    `typecheck`, `test`, `contract:check` pass unchanged.
 2. **ADR 0011** — the owner accepts it as updated, then its status line changes. Not Claude's call.
-3. **Bundle cut pass.** Total is 992.3 of 1000 KB gzipped. Candidates to measure first, none yet
-   proven: dead CSS in `apps/forms/src/styles.css`; catalogue keys no code reads
-   (`apps/forms/src/lib/message-usage.test.ts` already checks one direction); the three
-   tesseract cores in `scripts/ocr-assets.ts` (only matters for installers, not the web budget).
-   Done when: `pnpm bundle:budget` total is under 985 KB with no feature removed.
-4. **CLAUDE.md "Demo data"** still lists tables that do not exist; correct it to what `seedDemo`
-   writes, and add what Phase 1 will need (a two-page PDF for page work).
+3. **Bundle cut pass — measured 2026-10-12 at `bb82bfd`, nothing cut.** The 992.3 KB total is
+   every lazily loaded `.js`/`.css` chunk in `apps/forms/dist/assets` (`scripts/bundle-budget.ts`),
+   not what a visitor downloads. Largest, gzipped: pdfjs 159.9 KB, the editor's `index` 114.9,
+   `mount` 85.0, the import worker 49.6, built-in aliases 42.5, the spreadsheet export `saver` 42.0,
+   `Logo` 25.8, twelve locale catalogues 19.4–23.5 each (about 245 in all), stylesheet 17.0.
+   Catalogue keys are already checked in both directions by `message-usage.test.ts`, so there is no
+   unused-key saving to take. **No saving of the ~7 KB wanted exists without removing a feature**,
+   so none was made and the budget was not raised. Candidates, each a decision rather than a tidy-up:
+   the spreadsheet export (`saver`, which belongs to the later Spreadsheets catcher), the events and
+   door screens when they move out of Forms, and the ledger and events routes' screens. Revisit with
+   Phase 1's real delta in hand, and raise the budget in `scripts/bundle-budget.ts` with a reason if
+   a feature earns it.
+4. **CLAUDE.md "Demo data"** — done: it now names the Documents-shaped target. Phase 1 still needs
+   a two-page PDF fixture for page work.
 
 ## Phase 1 — Scan and page basics, PDF text, Word to PDF
 

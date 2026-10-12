@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LocalisedText, Uuid } from '../api/common.js';
-import { MinorAmount } from '../ledger/api.js';
+import { MinorAmount } from '../api/common.js';
 import type { InvoiceLine } from './api.js';
 
 /**
