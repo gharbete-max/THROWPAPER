@@ -128,6 +128,26 @@ The owner asked for the remaining questions to be answered by logic. Each answer
 Still the owner's, because only the owner can supply them: the legal and hosting rows of
 `LAUNCH-CHECKLIST.md`, and any wording a rule 8 template needs.
 
+## Code graph (Graphify)
+
+Installed 2026-10-12 for asking "who calls this / what does this touch" without reading files. It
+is a dev tool, not a dependency: Python, outside `package.json`, nothing in the app or the build.
+
+- **Install:** `python3 -m venv ~/.gfy && ~/.gfy/bin/pip install graphifyy==0.9.87` (the package
+  name has two y's; others called graphify* are not the project). Metadata read on PyPI:
+  repository `Graphify-Labs/graphify`, MIT per its site (the package's licence field is empty,
+  so confirm before relying on it).
+- **Build, no model and no network:** `graphify update . --no-cluster`, then
+  `graphify cluster-only . --no-label --no-viz`. Measured at `546df74`: 16 s, 8,787 nodes, 21,476
+  edges, 340 communities, in `graphify-out/` (git-ignored). Query with `graphify explain "name"` and
+  `graphify path "A" "B" [--undirected]`.
+- **Not run:** `graphify install` (it writes a skill, a `CLAUDE.md` entry and tool hooks into the
+  project) and anything that labels communities with a model. Both change instructions or call out;
+  do them only if the owner wants.
+- **Limits seen:** SQL files are skipped (a parser is missing), 100 TypeScript files produced no
+  symbols (mostly tests and config), and a graph says what imports or calls what, never whether the
+  code is right: read the file before editing it.
+
 ## Where things are
 
 `docs/plan/NEXT.md` (Phases 0 and 1 planned in detail, and how to get the model),
