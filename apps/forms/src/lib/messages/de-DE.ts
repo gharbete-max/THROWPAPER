@@ -1463,4 +1463,28 @@ export const deDE: Record<MessageKey, string> = {
   'room.pause': 'Bewegung anhalten',
   'room.play': 'Bewegung abspielen',
   'room.opened': '{name} ist geöffnet',
+  'scan.heading': 'Seiten ordnen',
+  'scan.intro':
+    'PDFs zusammenfügen, Seiten entfernen, drehen und in die richtige Reihenfolge bringen. Nichts wird gespeichert: Die neue PDF wird zum Herunterladen erstellt.',
+  'scan.add': 'PDFs hinzufügen',
+  'scan.empty': 'Fügen Sie eine oder mehrere PDFs hinzu, um zu beginnen.',
+  'scan.page': 'Seite {n}',
+  'scan.count': '{count} Seiten',
+  'scan.earlier': 'Weiter nach vorn',
+  'scan.later': 'Weiter nach hinten',
+  'scan.turn': 'Drehen',
+  'scan.remove': 'Seite entfernen',
+  'scan.download': 'PDF erstellen',
+  'scan.working': 'PDF wird erstellt …',
+  'scan.signed':
+    'Eine hinzugefügte Datei ist digital signiert. Wenn Sie ihre Seiten neu anordnen, wird die Signatur entfernt.',
+  'scan.signedConfirm': 'Signatur entfernen und PDF erstellen',
+  'scan.error.encrypted':
+    'Eine Datei ist mit einem Passwort geschützt. Entfernen Sie zuerst den Schutz.',
+  'scan.error.unreadable': 'Eine Datei ist keine PDF, die sich öffnen lässt.',
+  'scan.error.tooLarge': 'Eine Datei ist größer als 25 MB.',
+  'scan.error.tooMany': 'Höchstens 10 Dateien auf einmal.',
+  'scan.error.tooManyPages': 'Höchstens 500 Seiten.',
+  'scan.error.failed': 'Die PDF konnte nicht erstellt werden. Versuchen Sie es erneut.',
+  'scan.toForm': 'Stattdessen aus einem Dokument ein Formular erstellen',
 };

@@ -26,3 +26,25 @@ export const ErrorResponse = z.object({
   }),
 });
 export type ErrorResponse = z.infer<typeof ErrorResponse>;
+
+/**
+ * An amount of money over HTTP, shared by invoicing and the ledger.
+ *
+ * ## Amounts travel as strings
+ *
+ * JSON has no integer type — it has `number`, which is a double, which cannot hold every value a
+ * `bigint` can. `JSON.stringify` refuses a bigint outright rather than silently truncating it,
+ * which is the correct behaviour and also means the wire format has to decide something.
+ *
+ * So an amount crosses the wire as a **decimal string of minor units**: `"12500"`, not `12500`
+ * and not `125.00`. Minor units because that is what is stored and what balances; a string
+ * because it is the only JSON type that survives arbitrary precision intact; and no decimal point
+ * because the currency decides where one goes and putting it in early invites somebody to parse
+ * it as a float on the way past.
+ *
+ * The regex is deliberately narrow. Anything that is not an optionally-signed run of digits is
+ * refused rather than coerced.
+ */
+export const MinorAmount = z
+  .string()
+  .regex(/^-?\d+$/, 'An amount is a whole number of minor units, as a string');

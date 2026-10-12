@@ -7079,6 +7079,58 @@ body:has(> #root .shell--narrow) {
   overflow-wrap: anywhere;
 }
 
+/* Arrange pages (Scan): the pages of the PDFs the person added, as a wrapping row of small cards. */
+.scan__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.scan__pages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.scan__page {
+  display: grid;
+  justify-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+/* A square the page turns inside, so a landscape or turned page never overlaps its neighbours. */
+.scan__thumb {
+  display: grid;
+  place-items: center;
+  width: 9rem;
+  height: 9rem;
+  overflow: hidden;
+}
+
+.scan__canvas {
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan__canvas {
+    transition: none;
+  }
+}
+
+.scan__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
 .nav-link__count {
   margin-inline-start: auto;
 }

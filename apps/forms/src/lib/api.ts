@@ -192,6 +192,31 @@ async function requestBlob(path: string, retry = true): Promise<Blob> {
   return response.blob();
 }
 
+/**
+ * Sends a multipart body and gets bytes back — a PDF made from the files sent. Like `requestBlob`
+ * it keeps the server's own error code, so a screen can say which file was the trouble.
+ */
+async function postForBlob(path: string, body: FormData, retry = true): Promise<Blob> {
+  const headers = new Headers();
+  if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
+
+  const response = await fetch(`${BASE}${path}`, { method: 'POST', headers, body });
+  if (response.status === 401 && retry && (await refreshOnce())) {
+    return postForBlob(path, body, false);
+  }
+  if (!response.ok) {
+    const parsed: unknown = await response.json().catch(() => null);
+    const error = (parsed as { error?: { code?: string; message?: string } } | null)?.error;
+    throw new ApiError(
+      response.status,
+      error?.code ?? 'failed',
+      error?.message ?? 'The request failed',
+      error ?? {},
+    );
+  }
+  return response.blob();
+}
+
 export const client = {
   /** Whether this server is a demo. Drives the banner and the sign-in shortcut. */
   health: () =>
@@ -260,6 +285,22 @@ export const client = {
   },
 
   paper: (formId: string, key: string) => requestBlob(`/v1/forms/${formId}/paper/${key}`),
+
+  /**
+   * Pages of PDFs put together, turned and put in order (`POST /v1/pdf/arrange`). Pages count from
+   * 0; `files` are the uploads in the order sent, and the plan's `file` indexes them.
+   */
+  arrangePdf: (
+    files: readonly File[],
+    plan: ReadonlyArray<{ file: number; page: number; rotate: number }>,
+    acceptSignatureLoss = false,
+  ) => {
+    const body = new FormData();
+    for (const file of files) body.append('file', file);
+    body.set('plan', JSON.stringify(plan));
+    if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
+    return postForBlob('/v1/pdf/arrange', body);
+  },
 
   /** A submission written back onto the paper its form was made from. */
   submissionPaper: (submissionId: string) =>

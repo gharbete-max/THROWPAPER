@@ -1,27 +1,9 @@
 import { z } from 'zod';
-import { LocalisedText, Uuid } from '../api/common.js';
+import { LocalisedText, MinorAmount, Uuid } from '../api/common.js';
 
 /**
- * The ledger over HTTP.
- *
- * ## Amounts travel as strings
- *
- * JSON has no integer type — it has `number`, which is a double, which cannot hold every value a
- * `bigint` can. `JSON.stringify` refuses a bigint outright rather than silently truncating it,
- * which is the correct behaviour and also means the wire format has to decide something.
- *
- * So an amount crosses the wire as a **decimal string of minor units**: `"12500"`, not `12500`
- * and not `125.00`. Minor units because that is what is stored and what balances; a string
- * because it is the only JSON type that survives arbitrary precision intact; and no decimal point
- * because the currency decides where one goes and putting it in early invites somebody to parse
- * it as a float on the way past.
- *
- * The regex is deliberately narrow. Anything that is not an optionally-signed run of digits is
- * refused rather than coerced.
+ * The ledger over HTTP. Amounts are `MinorAmount`s (`../api/common.ts`).
  */
-export const MinorAmount = z
-  .string()
-  .regex(/^-?\d+$/, 'An amount is a whole number of minor units, as a string');
 
 export const ACCOUNT_TYPES = ['asset', 'liability', 'equity', 'income', 'expense'] as const;
 export const AccountType = z.enum(ACCOUNT_TYPES);

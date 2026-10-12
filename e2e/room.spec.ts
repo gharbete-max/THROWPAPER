@@ -120,8 +120,11 @@ test('the parts lead to the screens that do the work, and every screen leads bac
 
   await page.goto('/room/documents');
   await page.getByRole('link', { name: 'Scan' }).click();
+  await expect(page).toHaveURL(/\/scan$/);
+  await expect(page.getByRole('heading', { name: 'Arrange pages' })).toBeVisible();
+  // The paper door is one step on: Scan offers to make a form from a document instead.
+  await page.getByRole('link', { name: 'Make a form from a document instead' }).click();
   await expect(page).toHaveURL(/\/forms\?new$/);
-  // Scan lands with the doors open, on the paper door.
   await expect(page.getByRole('button', { name: /Start from paper/ })).toBeVisible();
 
   await page.goto('/room/documents');

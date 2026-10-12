@@ -1427,6 +1427,29 @@ export const enGB = {
   'room.pause': 'Pause the motion',
   'room.play': 'Play the motion',
   'room.opened': '{name} is open',
+  'scan.heading': 'Arrange pages',
+  'scan.intro':
+    'Put PDFs together, take pages out, turn them and put them in order. Nothing is kept: the new PDF is made for you to download.',
+  'scan.add': 'Add PDFs',
+  'scan.empty': 'Add one or more PDFs to begin.',
+  'scan.page': 'Page {n}',
+  'scan.count': '{count} pages',
+  'scan.earlier': 'Move earlier',
+  'scan.later': 'Move later',
+  'scan.turn': 'Turn',
+  'scan.remove': 'Remove page',
+  'scan.download': 'Make the PDF',
+  'scan.working': 'Making the PDF…',
+  'scan.signed':
+    'A file you added is digitally signed. Rearranging its pages removes the signature.',
+  'scan.signedConfirm': 'Remove the signature and make the PDF',
+  'scan.error.encrypted': 'A file is protected with a password. Remove the protection first.',
+  'scan.error.unreadable': 'A file is not a PDF that can be opened.',
+  'scan.error.tooLarge': 'A file is larger than 25 MB.',
+  'scan.error.tooMany': 'Up to 10 files at once.',
+  'scan.error.tooManyPages': 'At most 500 pages.',
+  'scan.error.failed': 'The PDF could not be made. Try again.',
+  'scan.toForm': 'Make a form from a document instead',
 } as const;
 
 /**

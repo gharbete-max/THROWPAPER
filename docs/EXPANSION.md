@@ -1,5 +1,9 @@
 # Expansion — Phase 0: gap analysis, contract proposal, open questions
 
+> **Superseded in part (2026-10-12).** Its approvals stand as history; the order of work is now `docs/HANDOVER.md`. `docs/VISION.md` and `docs/HANDOVER.md` win where they
+> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+
+
 **Status:** approved 2026-09-23 — the owner's answers are in §5. No feature code has been written.
 **Measured at:** `63963ea` (`main`, 2026-09-23). Any `git switch` invalidates the file references
 below (`CLAUDE.md` § Never mistake a proxy for the thing).

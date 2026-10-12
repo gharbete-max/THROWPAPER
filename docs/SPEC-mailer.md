@@ -1,5 +1,9 @@
 # Mailer — customised and recurring email
 
+> **Superseded in part (2026-10-12).** Mailer is no longer a separate product: its campaigns are built inside Documents' Send part, after Sign hand-off. `docs/VISION.md` and `docs/HANDOVER.md` win where they
+> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+
+
 Read `SPEC-shared.md` first. This product stands alone: a customer can buy it with no forms
 product at all, importing audiences from CSV. Its integration with Forms is the contract in
 `CONTRACT.md` and nothing more.

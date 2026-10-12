@@ -1,5 +1,9 @@
 # Module status — measured, not remembered
 
+> **Superseded in part (2026-10-12).** Measured 2026-09-22 at `f030000`; its red-`verify` finding is stale (green at `bb82bfd`). `docs/VISION.md` and `docs/HANDOVER.md` win where they
+> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+
+
 **Commit measured:** `f0300002a1677d224b1bd5f4bb2af6cf8046c513` (`origin/main`, branch
 `claude/ground-truth`)
 **Measured:** 2026-09-22

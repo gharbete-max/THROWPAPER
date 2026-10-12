@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Email, LocalisedText, Uuid } from '../api/common.js';
-import { MinorAmount } from '../ledger/api.js';
+import { MinorAmount } from '../api/common.js';
 
 /**
  * Invoices, over HTTP.
@@ -18,7 +18,7 @@ import { MinorAmount } from '../ledger/api.js';
  *
  * ## Amounts
  *
- * Minor units, as decimal strings, exactly as the ledger does it: `"895000"` is 8 950,00 kr. JSON
+ * Minor units, as decimal strings, exactly as `MinorAmount` (`../api/common.ts`) defines it: `"895000"` is 8 950,00 kr. JSON
  * has no integer type, `bigint` will not serialise, and a float cannot hold a krona amount
  * reliably. `CLAUDE.md` rule 5 is not a style preference here — an invoice that is one öre out is
  * an invoice a tenant queries.
