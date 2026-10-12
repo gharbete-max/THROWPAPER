@@ -27,7 +27,7 @@ list, not the phases.
 | The placeholders | **Inert and honest.** They float, are named, and say "Not built yet". They are not focusable and offer no button that does nothing. |
 | The room's look | **The room alone is dark grey**: a new grey token, not the derived dark's near-black. **Beneath each catcher is one of Loppa's own colours, made stronger** so it stands out against the grey (the owner's answer): gold beneath Documents, platinum beneath Spreadsheets, bronze beneath Presentation & planning. Each tool keeps today's look once its catcher opens, and the colours stay in the room. |
 | Earlier features | **Behind one switch, off by default:** events, registrations, check-in, attendance, the inbox, invoices and the ledger. Their code, tables and tests stay, and e2e runs with the switch on. Mailer is parked. Nothing is deleted. |
-| The centre | **Summary and translation in all twelve of Loppa's languages** (the owner's answer), by one model: **Qwen3-1.7B** (Apache-2.0, about 1.1–1.3 GB at 4-bit, UNVERIFIED), thinking off. It is a separate model file, downloaded once on request from Loppa's GitHub release or opened from disk, and never inside the installer. |
+| The centre | **Summary and translation in all twelve of Loppa's languages** (the owner's answer), by one model: **Qwen3-4B-Instruct-2507** (Apache-2.0, Q4_K_M, 2,497,281,120 bytes, non-thinking; the owner's decision of 2026-10-13: only the slower, more accurate model). It is a separate model file, downloaded once on request from Loppa's GitHub release or opened from disk, and never inside the installer. |
 | What the centre reads of a form | **Both:** a blank form's labels and a filled form's answers. |
 | Contracts, consents, declarations and clinical forms | **Quoted, never reworded or translated.** For these the centre picks passages and quotes them in the original language (rule 8, ADR 0012). |
 | How the centre is shown | **Beside the document**, labelled as generated, never stored, and never written into the document. |
@@ -234,11 +234,8 @@ Icelandic, Japanese, Norwegian Bokmål, Russian, Swedish and Chinese (`apps/form
   summary or translation in it, and says why, rather than a poor one.
 
 **Model.**
-- **Default:** Qwen3-1.7B (Apache-2.0).
-- **Alternatives:**
-  - Qwen3-0.6B (about 0.4 GB, weaker);
-  - Qwen3-4B (about 2.5 GB, slower);
-  - DeepSeek-R1-Distill-Qwen-1.5B (MIT; it writes long reasoning before answering).
+- **The model:** Qwen3-4B-Instruct-2507, Q4_K_M (Apache-2.0). The owner chose it alone on 2026-10-13;
+  the smaller Qwen3 sizes and DeepSeek-R1-Distill are not carried.
 - **Excluded by licence:** Qwen2.5-3B and 72B, and models under the DeepSeek or Llama licences.
 - All sizes and licences come from secondary sources (UNVERIFIED) until the model cards are read.
 
@@ -458,7 +455,7 @@ of them at any time:
    the page work on a person's PDF is decided when the hosted edition comes.
 9. **The earlier features:** behind one switch (§5 B), with invoices among them; Mailer parked.
 10. **The centre:**
-    - Qwen3-1.7B, as a separate model file;
+    - Qwen3-4B-Instruct-2507, as a separate model file;
     - a form's labels and its answers both;
     - contracts, consents, declarations and clinical forms quoted, never reworded or translated;
     - shown beside the document, labelled, never stored.
@@ -485,7 +482,8 @@ of them at any time:
   - `creativecommons.org`.
 - **Or upload the files instead.**
   - The model goes to a pre-release on this repository's GitHub releases, tagged
-    `model-qwen3-1.7b-q4km`, with its SHA-256 from the Hugging Face page in the description.
-    GitHub release files may be up to 2 GiB each.
+    `model-qwen3-4b-instruct-2507-q4km`, with its SHA-256 in the description. The file is 2.33 GiB
+    and GitHub release files must stay under 2 GiB, so it goes up as two parts, each with its own
+    SHA-256 and the whole file's (`3605803b…c67e597`), joined with `copy /b`.
   - Real documents go through `fixtures/documents/SOURCES.json`'s harness (#154), each under its
     own verified licence.
