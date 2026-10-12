@@ -4,21 +4,38 @@ Planning only, written from reading the code at `52ecc79`. Where a point is a de
 than something read in the code, it says **unverified** and the phase's first step settles it.
 Order and decisions: `docs/HANDOVER.md`. Context: `docs/plan/DOCUMENTS.md`.
 
-## Getting the summary model (not possible from this session as it stands)
+## Getting the summary model
 
-- This session has no tool that reaches the owner's PC. Only a cloud container.
-- `huggingface.co` is refused by the container's network policy (HTTP 403 from the proxy at the
-  time of writing), so the model cannot be fetched here either.
-- **Two ways, either is enough:**
-  1. In the cloud environment's settings, add `huggingface.co` (and the hosts it redirects file
-     downloads to; the 403 message of the first failing download names them) under allowed domains.
-  2. On the owner's PC: download the 4-bit GGUF of Qwen3-4B-Instruct-2507, compute its SHA-256, and
-     attach it to a pre-release of this repository tagged `model-qwen3-4b-instruct-2507-q4km`,
-     with the hash and the model card's licence line in the release description. The file never
-     goes into git.
-- Which GGUF repository to use (the model's own or a quantiser's) is **unverified**: read the model
-  card for the file name, size and licence before downloading.
-- Nothing in Phases 0–6 needs the model. Only Phase 7 does.
+**Not downloaded yet.** From this container `huggingface.co` is refused by the network policy
+(HTTP 403 from the gateway, logged as a policy denial; re-tried 2026-10-12). No tool reaches the
+owner's PC. The Hugging Face connector in this session reads model cards and file listings only, so
+it cannot carry a 2.5 GB file.
+
+**Verified 2026-10-12 through the connector (not from memory or third parties):**
+
+- `Qwen/Qwen3-4B-Instruct-2507`: licence **apache-2.0** (Hub metadata, and a `LICENSE` file in the
+  repository), 4,022.5 M parameters, architecture qwen3, safetensors weights of about 8 GB
+  (bfloat16). Qwen publishes no GGUF of it (`Qwen/Qwen3-4B-Instruct-2507-GGUF` does not exist).
+- GGUF quantisations are community ones. `unsloth/Qwen3-4B-Instruct-2507-GGUF` (1.3 M downloads,
+  tagged apache-2.0, base model linked to the official one) has
+  `Qwen3-4B-Instruct-2507-Q4_K_M.gguf`, **2,497,281,120 bytes** (about 2.33 GiB). So does
+  `lmstudio-community/` (2,497,280,448 bytes; no licence tag) and `bartowski/`; `ggml-org/` has
+  Q8_0 only.
+- **Not known:** the file's SHA-256 (the connector does not show it), whether a quantiser's repack
+  changes behaviour for the twelve languages (that is what the spike measures), and how the model
+  runs on an 8 GB laptop.
+
+**Two ways to get the file, either is enough:**
+
+1. In the cloud environment's settings (title-bar menu, Edit, Network access) add
+   `huggingface.co` under allowed domains, plus any host a failed download names. The setting may
+   only apply to a new session on this branch.
+2. On the owner's PC: download the Q4_K_M file, compute its SHA-256, and attach it to a pre-release
+   of this repository tagged `model-qwen3-4b-instruct-2507-q4km`, with the hash and the source
+   repository in the description. The file never goes into git.
+
+When it is in hand: record the SHA-256 and source in the weights manifest (JSON, ADR 0021) before
+anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.
 
 ## Phase 0 — alignment and headroom (small, one branch)
 
