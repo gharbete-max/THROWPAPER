@@ -13,7 +13,8 @@ spec for whichever app you are working on. Do not paste specs into this file.
 ```
 apps/forms      Product A — the Documents catcher's screens: forms, scan, sign, send, invoices.
                 Also the room (/room), where a signed-in person arrives: three catchers,
-                Documents opening onto its four parts (ADR 0022). Events, the door and the ledger
+                Documents opening onto its four parts (ADR 0022); /scan arranges pages of PDFs.
+                Events, the door and the ledger
                 are earlier work that stays in place, out of the room, until the catchers they
                 belong to (Presentation & planning; Spreadsheets) exist — never deleted unasked
 apps/mailer     A stub. The mail work is built inside Documents' Send part (docs/HANDOVER.md)
@@ -21,6 +22,8 @@ apps/api-forms  Product A backend. A finished PDF of every submission (responden
                 token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
                 keeps each author's guided-builder conversation (builder_sessions) and the
                 organisation's learned phrases (builder_aliases)
+                Page work on PDFs: POST /v1/pdf/arrange puts files together, takes pages out,
+                turns and reorders them, keeping nothing (`src/pdf/arrange.ts`, under the PDF guard)
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet

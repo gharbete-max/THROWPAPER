@@ -57,6 +57,12 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * second copy for engines without workers, which no supported browser is. The editor's own chunk,
  * which every author opening a form downloads, went from 42.7 to 29.4.
  *
+ * Arrange pages (`docs/plan/NEXT.md`, Phase 1a) took the total from 992.3 to 999.95 KB: a lazily
+ * loaded screen of about 3 KB and its 21 words in twelve catalogues (about 4.6 KB). That left 0.05
+ * KB under 1 000, so the total was raised to 1 015 to keep headroom for the PDF-text and Word
+ * phases that follow. A cut pass found no saving of that size without removing a feature
+ * (`docs/plan/NEXT.md` Phase 0, item 3).
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -69,7 +75,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 1000,
+  total: 1015,
 } as const;
 
 function gzippedKb(path: string): number {

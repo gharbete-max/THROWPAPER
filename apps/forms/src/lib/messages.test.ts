@@ -259,6 +259,8 @@ describe('twelve languages, each its own', () => {
     'fi-FI': ['brand.logo'],
     'is-IS': [],
     'fr-FR': [
+      'scan.page',
+      'scan.count',
       'room.documents',
       'events.capacity',
       'event.description',

@@ -185,7 +185,7 @@ export function Room() {
             <div className="room__opened">
               <Rosette ref={rosette} />
               <Part area="forms" icon="forms" to="/forms" label={t('nav.forms')} ref={firstPart} />
-              <Part area="scan" icon="upload" to="/forms?new" label={t('room.scan')} />
+              <Part area="scan" icon="upload" to="/scan" label={t('room.scan')} />
               <Part area="sign" icon="signature" to="/signing" label={t('room.sign')} />
               <Part
                 area="send"

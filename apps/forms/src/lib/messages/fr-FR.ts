@@ -1450,4 +1450,28 @@ export const frFR: Record<MessageKey, string> = {
   'room.pause': 'Mettre le mouvement en pause',
   'room.play': 'Relancer le mouvement',
   'room.opened': '{name} est ouvert',
+  'scan.heading': 'Organiser les pages',
+  'scan.intro':
+    'Assemblez des PDF, retirez des pages, faites-les pivoter et mettez-les dans l’ordre. Rien n’est conservé : le nouveau PDF est créé pour que vous le téléchargiez.',
+  'scan.add': 'Ajouter des PDF',
+  'scan.empty': 'Ajoutez un ou plusieurs PDF pour commencer.',
+  'scan.page': 'Page {n}',
+  'scan.count': '{count} pages',
+  'scan.earlier': 'Déplacer plus tôt',
+  'scan.later': 'Déplacer plus tard',
+  'scan.turn': 'Pivoter',
+  'scan.remove': 'Retirer la page',
+  'scan.download': 'Créer le PDF',
+  'scan.working': 'Création du PDF…',
+  'scan.signed':
+    'Un fichier ajouté est signé numériquement. Réorganiser ses pages supprime la signature.',
+  'scan.signedConfirm': 'Supprimer la signature et créer le PDF',
+  'scan.error.encrypted':
+    'Un fichier est protégé par un mot de passe. Retirez d’abord la protection.',
+  'scan.error.unreadable': 'Un fichier n’est pas un PDF qui peut être ouvert.',
+  'scan.error.tooLarge': 'Un fichier dépasse 25 Mo.',
+  'scan.error.tooMany': '10 fichiers au maximum à la fois.',
+  'scan.error.tooManyPages': '500 pages au maximum.',
+  'scan.error.failed': 'Le PDF n’a pas pu être créé. Réessayez.',
+  'scan.toForm': 'Créer plutôt un formulaire à partir d’un document',
 };

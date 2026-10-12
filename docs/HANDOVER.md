@@ -39,8 +39,8 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
    (`paper/docx.ts`) and the existing PDF renderers. A faithful conversion stays out.
 4. **Ledger** goes to the later Spreadsheets catcher; **events and check-in** to Presentation &
    planning. Nothing is deleted; they stay in place, out of the room, until then. **Invoices stay
-   in Documents.** `MinorAmount` is imported from `packages/shared/src/ledger/api.ts` by
-   `invoicing/api.ts` and `charges.ts`; give invoicing its own type before the ledger moves.
+   in Documents.** `MinorAmount` now lives in `packages/shared/src/api/common.ts`, so invoicing
+   no longer imports the ledger and the ledger can move without it.
 5. **Invoice scan:** optical reading (on-device tesseract) then deterministic rules for amount,
    due date, bank number and payment reference, checked by the reference's check digit, asking
    when unsure. Not to be confused with the Swedish "OCR number" in `invoicing/ocr.ts`.
@@ -49,6 +49,15 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
    confirm on the model card first. Contracts, consents, declarations and clinical forms are
    quoted, never reworded or translated (rule 8, ADR 0012).
 7. **Order** was left to Claude: below.
+
+## Where the work stands (2026-10-12)
+
+- **Phase 0:** done, except the owner's acceptance of ADR 0011 (`docs/plan/NEXT.md`).
+- **Phase 1a (arrange pages):** built and tested end to end: `POST /v1/pdf/arrange`,
+  `apps/forms/src/screens/Scan.tsx` at `/scan`. PDFs only, reordering by buttons. Next in Phase 1:
+  photos and the camera into the same screen, then 1b (PDF text) and 1c (Word to PDF).
+- **Bundle:** the total is 999.95 KB and its budget was raised to 1 015 for this phase
+  (`scripts/bundle-budget.ts` says why). Every later phase reports its delta against that.
 
 ## Order of work
 

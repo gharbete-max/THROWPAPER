@@ -67,6 +67,7 @@ import { registerSendingDomainRoutes } from './routes/sending-domains.js';
 import { registerCheckInRoutes } from './routes/checkin.js';
 import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
+import { registerPdfRoutes } from './routes/pdf.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
 import { sweepExpiredUploads } from './uploads/lifecycle.js';
@@ -610,6 +611,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         process.env['ASSET_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'assets'),
     });
   registerUploadRoutes(app, { repos, guard, assets, uploadStore });
+  registerPdfRoutes(app, { guard });
   if (options.outgoing) {
     registerOutgoingRoutes(app, {
       repos,
