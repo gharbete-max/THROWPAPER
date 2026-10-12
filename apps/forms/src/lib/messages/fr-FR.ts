@@ -1452,9 +1452,10 @@ export const frFR: Record<MessageKey, string> = {
   'room.opened': '{name} est ouvert',
   'scan.heading': 'Organiser les pages',
   'scan.intro':
-    'Assemblez des PDF, retirez des pages, faites-les pivoter et mettez-les dans l’ordre. Rien n’est conservé : le nouveau PDF est créé pour que vous le téléchargiez.',
-  'scan.add': 'Ajouter des PDF',
-  'scan.empty': 'Ajoutez un ou plusieurs PDF pour commencer.',
+    'Assemblez des PDF et des photos, retirez des pages, faites-les pivoter et mettez-les dans l’ordre. Rien n’est conservé : le nouveau PDF est créé pour que vous le téléchargiez.',
+  'scan.add': 'Ajouter des PDF ou des photos',
+  'scan.camera': 'Prendre des photos',
+  'scan.empty': 'Ajoutez des PDF ou des photos pour commencer.',
   'scan.page': 'Page {n}',
   'scan.count': '{count} pages',
   'scan.earlier': 'Déplacer plus tôt',
@@ -1468,9 +1469,11 @@ export const frFR: Record<MessageKey, string> = {
   'scan.signedConfirm': 'Supprimer la signature et créer le PDF',
   'scan.error.encrypted':
     'Un fichier est protégé par un mot de passe. Retirez d’abord la protection.',
-  'scan.error.unreadable': 'Un fichier n’est pas un PDF qui peut être ouvert.',
+  'scan.error.unreadable': 'Un fichier n’est ni un PDF ni une photo qui peut être ouverte.',
+  'scan.error.notSupported':
+    'Seuls les fichiers PDF, JPEG, PNG et WebP peuvent être ajoutés. Ce navigateur ne peut pas ouvrir une photo HEIC.',
   'scan.error.tooLarge': 'Un fichier dépasse 25 Mo.',
-  'scan.error.tooMany': '10 fichiers au maximum à la fois.',
+  'scan.error.tooMany': '40 fichiers au maximum à la fois.',
   'scan.error.tooManyPages': '500 pages au maximum.',
   'scan.error.failed': 'Le PDF n’a pas pu être créé. Réessayez.',
   'scan.toForm': 'Créer plutôt un formulaire à partir d’un document',

@@ -35,6 +35,7 @@ const STATUS: Record<ArrangeRefusalCode, 400 | 409> = {
   'bad-rotation': 400,
   unreadable: 400,
   'too-costly': 400,
+  'image-too-large': 400,
   encrypted: 400,
   signed: 409,
 };
@@ -45,15 +46,16 @@ const MESSAGE: Record<ArrangeRefusalCode, string> = {
   'no-such-file': 'The plan names a file that was not sent',
   'no-such-page': 'The plan names a page the file does not have',
   'bad-rotation': 'A page can be turned by 0, 90, 180 or 270 degrees',
-  unreadable: 'A file is not a PDF that can be opened',
+  unreadable: 'A file is not a PDF or photograph that can be opened',
   'too-costly': 'A file is too costly to open',
+  'image-too-large': 'A photograph has more pixels than a page can use',
   encrypted: 'A file is protected with a password or encryption',
   signed: 'A file carries a digital signature, which rearranging its pages removes',
 };
 
 export function registerPdfRoutes(app: FastifyInstance, deps: { guard: AuthGuardDeps }): void {
   /**
-   * Put PDFs together, take pages out, turn or reorder them: one ordered list of pages in, one PDF
+   * Put PDFs and photographs together, take pages out, turn or reorder them: one ordered list of pages in, one PDF
    * out (`pdf/arrange.ts`). Any signed-in person; nothing is stored and nothing is audited, because
    * the bytes are returned to whoever sent them and kept nowhere.
    *
@@ -123,7 +125,10 @@ export function registerPdfRoutes(app: FastifyInstance, deps: { guard: AuthGuard
       }
       if (files.length === 0) {
         return reply.code(400).send({
-          error: { code: 'no-file', message: 'Send at least one PDF as multipart form data' },
+          error: {
+            code: 'no-file',
+            message: 'Send at least one PDF or photograph as multipart form data',
+          },
         });
       }
       let plan: z.infer<typeof Plan>;
