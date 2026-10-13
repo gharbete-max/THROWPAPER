@@ -316,6 +316,39 @@ export const client = {
     return postForBlob('/v1/pdf/arrange', body);
   },
 
+  /** What a send does on this server (a test, To send, or the real thing) and its caps. */
+  sendMode: () => request<api.SendModeResponse>('/v1/send/mode'),
+
+  /** One document to some people (`POST /v1/send/document`). Queues; sends nothing itself. */
+  sendDocument: (input: {
+    file: File;
+    to: readonly string[];
+    subject: string;
+    message: string;
+    key: string;
+    testTo?: string;
+  }) => {
+    const body = new FormData();
+    body.append('file', input.file);
+    body.set('to', JSON.stringify(input.to));
+    body.set('subject', input.subject);
+    body.set('message', input.message);
+    body.set('key', input.key);
+    body.set('confirmed', 'true');
+    if (input.testTo) body.set('testTo', input.testTo);
+    return request<api.SendQueued>('/v1/send/document', { method: 'POST', body });
+  },
+
+  /** One recipient's PDF of a batch, to look at. Nothing is queued. */
+  previewBatch: (body: api.BatchPreviewRequest) => postForBlob('/v1/send/batch/preview', body),
+
+  /** One personalised PDF per row (`POST /v1/send/batch`), after the confirmation. */
+  sendBatch: (body: api.SendBatchRequest) =>
+    request<api.SendQueued>('/v1/send/batch', { method: 'POST', body: JSON.stringify(body) }),
+
+  sendStatus: (ids: readonly string[]) =>
+    request<api.SendStatusResponse>(`/v1/send/status?ids=${ids.join(',')}`),
+
   /** A Word document, roughly, as a PDF: the blocks `readWordBlocks` kept (`pdf/word.ts`). */
   wordToPdf: (document: api.WordPdfRequest) => postForBlob('/v1/pdf/word', document),
 

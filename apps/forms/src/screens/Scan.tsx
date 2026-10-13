@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState, type DragEvent } from 'rea
 import { Link, useNavigate } from 'react-router';
 import { ApiError, client } from '../lib/api.js';
 import { saveBlob } from '../lib/email-handoff.js';
+import { sendWith } from '../lib/send-handoff.js';
 import { signingWith } from '../lib/sign-handoff.js';
 import { useT } from '../lib/i18n.js';
 import { useToast } from '../lib/toast.js';
@@ -107,12 +108,12 @@ export function Scan() {
   }
 
   /**
-   * `then` is what happens to the made PDF: saved to disk, handed on to Signing, or (a function)
-   * given to the caller, as the editing step is.
+   * `then` is what happens to the made PDF: saved to disk, handed on to Signing or Send, or (a
+   * function) given to the caller, as the editing step is.
    */
   async function make(
     acceptSignatureLoss = false,
-    then: 'download' | 'sign' | ((blob: Blob) => void) = 'download',
+    then: 'download' | 'sign' | 'send' | ((blob: Blob) => void) = 'download',
   ) {
     const request = requestOf(pages, files);
     setBusy(true);
@@ -120,9 +121,10 @@ export function Scan() {
       const blob = await client.arrangePdf(request.files, request.plan, acceptSignatureLoss);
       // A PDF made from a Word file keeps "layout may differ from Word" in its name.
       const name = files.find((file) => fromWord.has(file))?.name ?? 'loppa.pdf';
+      const made = new File([blob], name, { type: 'application/pdf' });
       if (typeof then === 'function') then(blob);
-      else if (then === 'sign')
-        navigate(...signingWith(new File([blob], name, { type: 'application/pdf' })));
+      else if (then === 'sign') navigate(...signingWith(made));
+      else if (then === 'send') navigate(...sendWith(made));
       else saveBlob(blob, name);
     } catch (error) {
       if (error instanceof ApiError && error.code === 'signed') {
@@ -198,6 +200,14 @@ export function Scan() {
               onClick={() => void make(false, 'sign')}
             >
               <Icon name="signature" /> {t('scan.sign')}
+            </button>
+            <button
+              type="button"
+              className="button button--quiet"
+              disabled={busy}
+              onClick={() => void make(false, 'send')}
+            >
+              <Icon name="email" /> {t('scan.send')}
             </button>
           </>
         ) : null}

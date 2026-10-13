@@ -69,6 +69,8 @@ import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
 import { registerPdfRoutes } from './routes/pdf.js';
 import { registerPdfEditRoutes } from './routes/pdf-edit.js';
+import { registerSendRoutes } from './routes/send.js';
+import { SEND_JOB, createSendHandler } from './send/service.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
 import { sweepExpiredUploads } from './uploads/lifecycle.js';
@@ -494,6 +496,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       [MAIL_SEND_JOB]: createMailSendHandler(mailDeps),
       [SIGNING_INVITE_JOB]: createSigningInviteHandler({ repos, provider: mail }),
       [SIGNING_COPY_JOB]: createSigningCopyHandler({ repos, provider: mail, sign: signClient }),
+      [SEND_JOB]: createSendHandler({ repos, provider: mail, store, renderer }),
     },
     // `err`, the key pino serializes an Error under. Under any other key an Error is `{}` in the
     // log: every failed job read "job failed" with no reason (`job-failure-log.test.ts`).
@@ -620,6 +623,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerUploadRoutes(app, { repos, guard, assets, uploadStore });
   registerPdfRoutes(app, { guard, renderer });
   registerPdfEditRoutes(app, { guard });
+  registerSendRoutes(app, { repos, guard, store, renderer, providerName: mail.name });
   if (options.outgoing) {
     registerOutgoingRoutes(app, {
       repos,

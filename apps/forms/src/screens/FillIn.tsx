@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { pickText } from '@tp/i18n';
 import type { FormResponse } from '@tp/shared/forms';
 import { ApiError, client, type PdfField } from '../lib/api.js';
 import { saveBlob } from '../lib/email-handoff.js';
+import { sendWith } from '../lib/send-handoff.js';
 import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { useToast } from '../lib/toast.js';
@@ -46,6 +47,7 @@ export function FillForm() {
   const [failed, setFailed] = useState(false);
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id) return;
@@ -59,10 +61,13 @@ export function FillForm() {
   if (!form || !id) return <Loading />;
   const title = pickText(locales, form.title, locale).value || form.slug;
 
-  async function keep() {
+  async function keep(then: 'save' | 'send' = 'save') {
     setBusy(true);
     try {
-      saveBlob(await client.draftPdf(id!, locale, values), `${title}.pdf`);
+      const blob = await client.draftPdf(id!, locale, values);
+      if (then === 'send') {
+        navigate(...sendWith(new File([blob], `${title}.pdf`, { type: 'application/pdf' })));
+      } else saveBlob(blob, `${title}.pdf`);
     } catch (error) {
       toast.show(t(errorKey(error)), 'error');
     } finally {
@@ -91,6 +96,14 @@ export function FillForm() {
         <button type="button" className="button" disabled={busy} onClick={() => void keep()}>
           <Icon name="download" /> {busy ? t('draft.working') : t('fill.keep')}
         </button>
+        <button
+          type="button"
+          className="button button--quiet"
+          disabled={busy}
+          onClick={() => void keep('send')}
+        >
+          <Icon name="email" /> {t('scan.send')}
+        </button>
       </div>
     </section>
   );
@@ -109,6 +122,7 @@ export function FillPdf() {
   const [signatureLoss, setSignatureLoss] = useState(false);
   const [empty, setEmpty] = useState(false);
   const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
 
   async function open(chosen: File, accept = false): Promise<void> {
     setEmpty(false);
@@ -136,7 +150,7 @@ export function FillPdf() {
     }
   }
 
-  async function keep() {
+  async function keep(then: 'save' | 'send' = 'save') {
     if (!file || !fields) return;
     // Only what the person changed: a list box's several choices are not sent back as one string.
     const changed = Object.fromEntries(
@@ -146,7 +160,10 @@ export function FillPdf() {
     );
     setBusy(true);
     try {
-      saveBlob(await client.fillPdf(file, changed, signatureLoss), file.name);
+      const blob = await client.fillPdf(file, changed, signatureLoss);
+      if (then === 'send')
+        navigate(...sendWith(new File([blob], file.name, { type: 'application/pdf' })));
+      else saveBlob(blob, file.name);
     } catch (error) {
       toast.show(t(errorKey(error)), 'error');
     } finally {
@@ -227,6 +244,14 @@ export function FillPdf() {
           <div className="row">
             <button type="submit" className="button" disabled={busy}>
               <Icon name="download" /> {busy ? t('draft.working') : t('fill.keep')}
+            </button>
+            <button
+              type="button"
+              className="button button--quiet"
+              disabled={busy}
+              onClick={() => void keep('send')}
+            >
+              <Icon name="email" /> {t('scan.send')}
             </button>
           </div>
         </form>

@@ -188,13 +188,7 @@ export function Room() {
               <Part area="forms" icon="forms" to="/forms" label={t('nav.forms')} ref={firstPart} />
               <Part area="scan" icon="upload" to="/scan" label={t('room.scan')} />
               <Part area="sign" icon="signature" to="/signing" label={t('room.sign')} />
-              <Part
-                area="send"
-                icon="email"
-                to={edition === 'desktop' ? '/outgoing' : null}
-                label={t('room.send')}
-                note={edition === 'server' ? t('room.centreNone') : null}
-              />
+              <Part area="send" icon="email" to="/send" label={t('room.send')} />
               {edition === 'desktop' && modelBridge() ? (
                 <Link className="room__centre" to="/summary">
                   <strong>{t('room.centre')}</strong>
