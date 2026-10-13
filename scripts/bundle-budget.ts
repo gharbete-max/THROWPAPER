@@ -71,6 +71,11 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * visitor downloads: the entry (12 KB) and stylesheet (20 KB) caps, which are what a visitor
  * pays, are unchanged.
  *
+ * The summary centre (+32 KB), invoice scan (+26 KB), PDF text and redaction (+10 KB) and Send
+ * landed together and the total reached about 1 072 KB of 1 080 with Send still to come. It is
+ * raised to 1 150 KB, the last raise this plan intends: the catalogues alone are about 280 KB
+ * (twelve languages), and a visitor downloads one of them plus the screens they open.
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -83,7 +88,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 1080,
+  total: 1150,
 } as const;
 
 function gzippedKb(path: string): number {
