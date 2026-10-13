@@ -140,7 +140,10 @@ The owner asked for the remaining questions to be answered by logic. Each answer
    platinum under Spreadsheets, bronze under Presentation & planning, each lifted to at least 3:1
    (`packages/tokens/src/room.ts`, ADR 0022, held by `room.test.ts`). Keep it. A colour change is
    a token edit.
-3. **The hosted web edition stays as it is and gets nothing new.** The desktop is where "local,
+3. **The hosted web edition stays as it is and gets nothing new.** *(Amended 2026-10-14: Send works on the
+   hosted edition too, through the mail provider, because that path is provider-agnostic and its test
+   providers are harmless; the summary stays desktop-only. Page work on strangers' PDFs is still not
+   offered on hosted without the owner's say.)* The desktop is where "local,
    private, no account" is true, so Documents is finished there first. The hosted edition gets no
    summary (a model on Loppa's server is not the person's machine) and no page work or redaction on
    strangers' PDFs. Revisit after Phase 7.

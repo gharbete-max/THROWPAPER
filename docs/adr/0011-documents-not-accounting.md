@@ -1,6 +1,6 @@
 # ADR 0011 — Loppa renders and sends money documents; it does not do the accounting
 
-**Status:** proposed — with one conflict in `main` that only the owner can resolve
+**Status:** accepted 2026-10-14 (the conflict below was resolved by the owner on 2026-10-12; `invoicing` now owns its `MinorAmount`, in `packages/shared/src/api/common.ts`)
 
 > **Update 2026-10-12.** The owner has resolved the conflict: the double-entry ledger belongs to
 > the later, separate Spreadsheets catcher and is not part of Documents. Invoices, standing
