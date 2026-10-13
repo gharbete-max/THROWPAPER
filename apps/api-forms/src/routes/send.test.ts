@@ -17,7 +17,7 @@ afterEach(async () => {
   await harness.close();
 });
 
-const KEY = '5f0c1f46-3a39-4b3c-a8f2-0a6e0a3b3c11';
+const KEY = crypto.randomUUID();
 const PDF = Buffer.from('%PDF-1.7 the document as it was');
 const DOCX = Buffer.concat([Buffer.from('PK\x03\x04'), Buffer.from('word file')]);
 
