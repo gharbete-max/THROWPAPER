@@ -3,6 +3,8 @@ import type { FastifyInstance } from 'fastify';
 import { api } from '@tp/shared';
 import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
+import type { PdfRenderer } from '../documents/render.js';
+import { wordToPdf } from '../pdf/word.js';
 import {
   arrangePdf,
   ArrangeRefusal,
@@ -53,7 +55,34 @@ const MESSAGE: Record<ArrangeRefusalCode, string> = {
   signed: 'A file carries a digital signature, which rearranging its pages removes',
 };
 
-export function registerPdfRoutes(app: FastifyInstance, deps: { guard: AuthGuardDeps }): void {
+export function registerPdfRoutes(
+  app: FastifyInstance,
+  deps: { guard: AuthGuardDeps; renderer: PdfRenderer },
+): void {
+  /**
+   * A Word document, roughly, as a PDF (`pdf/word.ts`). The browser read the `.docx` and sends the
+   * blocks it kept; nothing is stored. Any signed-in person.
+   */
+  app.post('/v1/pdf/word', {
+    preHandler: requireAuth(deps.guard),
+    // Eight MB of pictures is ~11 MB of base64, and the text beside them.
+    bodyLimit: 16 * 1024 * 1024,
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['pdf'],
+      body: api.WordPdfRequest,
+      response: { 400: api.ErrorResponse, 401: api.ErrorResponse, 413: api.ErrorResponse },
+    },
+    handler: async (request, reply) => {
+      const pdf = await wordToPdf(deps.renderer, api.WordPdfRequest.parse(request.body));
+      return reply
+        .header('content-type', 'application/pdf')
+        .header('content-disposition', 'attachment; filename="loppa.pdf"')
+        .header('cache-control', 'no-store')
+        .send(pdf);
+    },
+  });
+
   /**
    * Put PDFs and photographs together, take pages out, turn or reorder them: one ordered list of pages in, one PDF
    * out (`pdf/arrange.ts`). Any signed-in person; nothing is stored and nothing is audited, because

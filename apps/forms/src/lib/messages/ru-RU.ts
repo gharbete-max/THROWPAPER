@@ -1475,4 +1475,15 @@ export const ruRU: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Не более 500 страниц.',
   'scan.error.failed': 'Не удалось создать PDF. Повторите попытку.',
   'scan.toForm': 'Вместо этого создать форму из документа',
+  'scan.word.add': 'Добавить файл Word',
+  'scan.word.label': 'Оформление может отличаться от Word',
+  'scan.word.working': 'Преобразование…',
+  'scan.word.dropped': 'Не вошло в PDF:',
+  'scan.word.drop.headerFooter': 'Колонтитулы: {count}',
+  'scan.word.drop.textBox': 'Надписи: {count}',
+  'scan.word.drop.footnote': 'Сноски и концевые сноски: {count}',
+  'scan.word.drop.trackedChange': 'Исправления (вставки сохранены, удалённое опущено): {count}',
+  'scan.word.drop.field':
+    'Поля (показаны как при последнем сохранении в Word, не обновляются): {count}',
+  'scan.word.drop.image': 'Изображения, которые не удалось включить: {count}',
 };

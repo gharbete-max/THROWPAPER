@@ -1453,6 +1453,16 @@ export const enGB = {
   'scan.error.tooManyPages': 'At most 500 pages.',
   'scan.error.failed': 'The PDF could not be made. Try again.',
   'scan.toForm': 'Make a form from a document instead',
+  'scan.word.add': 'Add a Word file',
+  'scan.word.label': 'Layout may differ from Word',
+  'scan.word.working': 'Converting…',
+  'scan.word.dropped': 'Left out of the PDF:',
+  'scan.word.drop.headerFooter': 'Headers and footers: {count}',
+  'scan.word.drop.textBox': 'Text boxes: {count}',
+  'scan.word.drop.footnote': 'Footnotes and endnotes: {count}',
+  'scan.word.drop.trackedChange': 'Tracked changes (insertions kept, deletions left out): {count}',
+  'scan.word.drop.field': 'Fields (shown as last saved in Word, not updated): {count}',
+  'scan.word.drop.image': 'Pictures that could not be included: {count}',
 } as const;
 
 /**

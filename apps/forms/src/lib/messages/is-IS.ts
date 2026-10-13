@@ -1445,4 +1445,16 @@ export const isIS: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Mest 500 síður.',
   'scan.error.failed': 'Ekki tókst að búa til PDF-skjalið. Reyndu aftur.',
   'scan.toForm': 'Búa frekar til eyðublað úr skjali',
+  'scan.word.add': 'Bæta við Word-skrá',
+  'scan.word.label': 'Útlit getur verið frábrugðið Word',
+  'scan.word.working': 'Breyti…',
+  'scan.word.dropped': 'Sleppt úr PDF-skjalinu:',
+  'scan.word.drop.headerFooter': 'Hausar og fætur: {count}',
+  'scan.word.drop.textBox': 'Textareitir: {count}',
+  'scan.word.drop.footnote': 'Neðanmálsgreinar og aftanmálsgreinar: {count}',
+  'scan.word.drop.trackedChange':
+    'Breytingar í rakningu (innsetningar haldast, eyðingum sleppt): {count}',
+  'scan.word.drop.field':
+    'Reitir (sýndir eins og þeir voru síðast vistaðir í Word, ekki uppfærðir): {count}',
+  'scan.word.drop.image': 'Myndir sem ekki var hægt að hafa með: {count}',
 };

@@ -100,13 +100,13 @@ interface Style {
   look: RunLook;
 }
 
-interface Styles {
+export interface Styles {
   readonly byId: ReadonlyMap<string, Style>;
   readonly defaultParagraph?: string;
   readonly defaults: RunLook;
 }
 
-function readStyles(root: XmlElement | undefined): Styles {
+export function readStyles(root: XmlElement | undefined): Styles {
   const byId = new Map<string, Style>();
   let defaultParagraph: string | undefined;
   for (const style of root ? childrenNamed(root, 'w:style') : []) {
@@ -154,7 +154,7 @@ interface Level {
   indent?: Indent;
 }
 
-interface Numbering {
+export interface Numbering {
   readonly abstracts: ReadonlyMap<string, { levels: Map<number, Level>; styleLink?: string }>;
   readonly nums: ReadonlyMap<
     number,
@@ -173,7 +173,7 @@ function levelOf(lvl: XmlElement): Level {
   };
 }
 
-function readNumbering(root: XmlElement | undefined): Numbering {
+export function readNumbering(root: XmlElement | undefined): Numbering {
   const abstracts = new Map<string, { levels: Map<number, Level>; styleLink?: string }>();
   const nums = new Map<
     number,
@@ -316,7 +316,7 @@ function unsymbol(text: string): string {
 }
 
 /** Word's counters, kept as Word keeps them: by abstract list, restarted by a list's overrides. */
-class Counters {
+export class Counters {
   private readonly counts = new Map<string, (number | undefined)[]>();
   private readonly used = new Set<number>();
 
@@ -385,7 +385,7 @@ class Counters {
 }
 
 // ------------------------------------------------------------------ paragraphs
-interface Piece {
+export interface Piece {
   text: string;
   look: RunLook;
 }
@@ -466,7 +466,7 @@ function piecesOf(paragraph: XmlElement, base: RunLook): Piece[] {
   return pieces;
 }
 
-interface Paragraph {
+export interface Paragraph {
   pieces: Piece[];
   numbering: DocxNumbering | null;
   /** In twips from the text area's left edge: where the first word starts. */
@@ -475,7 +475,7 @@ interface Paragraph {
   pageBreakBefore: boolean;
 }
 
-function paragraphOf(
+export function paragraphOf(
   p: XmlElement,
   styles: Styles,
   counters: Counters,
@@ -595,17 +595,14 @@ function wordsOf(
 }
 
 // ------------------------------------------------------------------ the adapter
-async function part(zip: Zip, name: string): Promise<XmlElement | undefined> {
+export async function part(zip: Zip, name: string): Promise<XmlElement | undefined> {
   const bytes = await zip.read(name);
   if (!bytes) return undefined;
   return parseXml(new TextDecoder('utf-8').decode(bytes));
 }
 
-/** A relationship's target, from a `.rels` part, resolved against `base` ("word/"). */
-function target(rels: XmlElement | undefined, type: string, base: string): string | undefined {
-  const relationship = (rels ? childrenNamed(rels, 'Relationship') : []).find((r) =>
-    (r.attrs['Type'] ?? '').endsWith(`/${type}`),
-  );
+/** A relationship's part name, resolved against `base` ("word/"); undefined when external. */
+export function targetOf(relationship: XmlElement | undefined, base: string): string | undefined {
   const to = relationship?.attrs['Target'];
   if (!to || relationship?.attrs['TargetMode'] === 'External') return undefined;
   if (to.startsWith('/')) return to.slice(1);
@@ -616,6 +613,16 @@ function target(rels: XmlElement | undefined, type: string, base: string): strin
     else if (piece !== '.' && piece !== '') out.push(piece);
   }
   return out.join('/');
+}
+
+/** A relationship's target, from a `.rels` part, resolved against `base` ("word/"). */
+function target(rels: XmlElement | undefined, type: string, base: string): string | undefined {
+  return targetOf(
+    (rels ? childrenNamed(rels, 'Relationship') : []).find((r) =>
+      (r.attrs['Type'] ?? '').endsWith(`/${type}`),
+    ),
+    base,
+  );
 }
 
 async function sha256(bytes: Uint8Array): Promise<string> {

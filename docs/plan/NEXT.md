@@ -127,6 +127,15 @@ list of (source file, page, rotation)*. Build that one thing.
 - Kept and dropped parts, and the label, are in `docs/HANDOVER.md` (open question 4).
 - Done when: a corpus `.docx` with a heading, a list, a table and an image comes out as a PDF whose
   extracted text contains each, and the dropped-parts note appears for one that has a footer.
+- **Built.** `RawDocument` is a line-per-paragraph layout view and keeps no tables, pictures or
+  headings, so a sibling reader, `paper/docx-blocks.ts`, reuses `docx.ts`'s styles, numbering and
+  runs and returns blocks (`packages/shared/src/api/word-pdf.ts`) plus a `dropped` count per kind.
+  `POST /v1/pdf/word` (`api-forms/src/pdf/word.ts`) lays them out in the house print stylesheet.
+  The Scan screen's `WordToPdf` adds the result to the page list; the label is on the screen and
+  in the download's name. Pictures: PNG, JPEG, GIF only (4 MB each, 8 MB in all); others are
+  counted as left out. Fonts: Inter (Latin) is embedded; Cyrillic and CJK use the host's fonts
+  (Segoe UI and Yu Gothic on Windows; the Playwright image's on a server), not embedded.
+  Tested end to end in `scripts/corpus/word-to-pdf.test.ts` and `e2e/word-to-pdf.spec.ts`.
 
 ### Phase 1 acceptance, together
 

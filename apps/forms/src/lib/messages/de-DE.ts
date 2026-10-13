@@ -1490,4 +1490,15 @@ export const deDE: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Höchstens 500 Seiten.',
   'scan.error.failed': 'Die PDF konnte nicht erstellt werden. Versuchen Sie es erneut.',
   'scan.toForm': 'Stattdessen aus einem Dokument ein Formular erstellen',
+  'scan.word.add': 'Word-Datei hinzufügen',
+  'scan.word.label': 'Das Layout kann von Word abweichen',
+  'scan.word.working': 'Wird umgewandelt…',
+  'scan.word.dropped': 'In der PDF-Datei weggelassen:',
+  'scan.word.drop.headerFooter': 'Kopf- und Fußzeilen: {count}',
+  'scan.word.drop.textBox': 'Textfelder: {count}',
+  'scan.word.drop.footnote': 'Fuß- und Endnoten: {count}',
+  'scan.word.drop.trackedChange':
+    'Nachverfolgte Änderungen (Einfügungen bleiben, Löschungen entfallen): {count}',
+  'scan.word.drop.field': 'Felder (wie zuletzt in Word gespeichert, nicht aktualisiert): {count}',
+  'scan.word.drop.image': 'Bilder, die nicht übernommen werden konnten: {count}',
 };

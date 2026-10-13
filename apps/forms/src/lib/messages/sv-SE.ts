@@ -1437,4 +1437,15 @@ export const svSE: Record<MessageKey, string> = {
   'scan.error.tooManyPages': 'Högst 500 sidor.',
   'scan.error.failed': 'PDF:en kunde inte skapas. Försök igen.',
   'scan.toForm': 'Gör ett formulär av ett dokument i stället',
+  'scan.word.add': 'Lägg till en Word-fil',
+  'scan.word.label': 'Layouten kan skilja sig från Word',
+  'scan.word.working': 'Konverterar…',
+  'scan.word.dropped': 'Utelämnat i PDF:en:',
+  'scan.word.drop.headerFooter': 'Sidhuvuden och sidfötter: {count}',
+  'scan.word.drop.textBox': 'Textrutor: {count}',
+  'scan.word.drop.footnote': 'Fotnoter och slutnoter: {count}',
+  'scan.word.drop.trackedChange':
+    'Spårade ändringar (tillägg finns kvar, borttaget utelämnas): {count}',
+  'scan.word.drop.field': 'Fält (visas som senast sparat i Word, uppdateras inte): {count}',
+  'scan.word.drop.image': 'Bilder som inte kunde tas med: {count}',
 };

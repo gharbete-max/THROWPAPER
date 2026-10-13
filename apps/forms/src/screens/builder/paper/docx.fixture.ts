@@ -98,12 +98,12 @@ const CONTENT_TYPES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/></Types>`;
 const ROOT_RELS = `<?xml version="1.0" encoding="UTF-8"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
-const DOCUMENT_RELS = `<?xml version="1.0" encoding="UTF-8"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>`;
+const documentRels = (more: string) => `<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${more}</Relationships>`;
 
 /** `<w:document>` around a body's worth of XML. */
-export function documentXml(body: string): string {
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="${WORDML}"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/></w:sectPr></w:body></w:document>`;
+export function documentXml(body: string, sectPr = ''): string {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="${WORDML}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"><w:body>${body}<w:sectPr>${sectPr}<w:pgSz w:w="11906" w:h="16838"/></w:sectPr></w:body></w:document>`;
 }
 
 /** A paragraph of one run; `pPr` and `rPr` are inner XML. */
@@ -152,13 +152,17 @@ export function docxBytes(parts: {
   body: string;
   styles?: string;
   numbering?: string;
+  /** More `<Relationship>` elements for the document part (pictures, headers, footers). */
+  relationships?: string;
+  /** Inner XML of the body's `w:sectPr`, before its page size. */
+  sectPr?: string;
   extra?: readonly ZipEntry[];
 }): Uint8Array {
   return zipBytes([
     { name: '[Content_Types].xml', data: CONTENT_TYPES },
     { name: '_rels/.rels', data: ROOT_RELS },
-    { name: 'word/_rels/document.xml.rels', data: DOCUMENT_RELS },
-    { name: 'word/document.xml', data: documentXml(parts.body) },
+    { name: 'word/_rels/document.xml.rels', data: documentRels(parts.relationships ?? '') },
+    { name: 'word/document.xml', data: documentXml(parts.body, parts.sectPr) },
     ...(parts.styles === undefined ? [] : [{ name: 'word/styles.xml', data: parts.styles }]),
     ...(parts.numbering === undefined
       ? []

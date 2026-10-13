@@ -611,7 +611,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
         process.env['ASSET_DIR'] ?? join(process.env['DOCUMENT_DIR'] ?? '.documents', 'assets'),
     });
   registerUploadRoutes(app, { repos, guard, assets, uploadStore });
-  registerPdfRoutes(app, { guard });
+  registerPdfRoutes(app, { guard, renderer });
   if (options.outgoing) {
     registerOutgoingRoutes(app, {
       repos,
