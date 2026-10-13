@@ -42,15 +42,11 @@ async function openPaperDoor(page: Page) {
   await page.goto('/forms');
   await page.getByRole('button', { name: 'Nytt formulär' }).first().click();
   await page.getByRole('button', { name: /Bygga själv/ }).click();
-  // A blank form, named, then opened in the editor from its card.
+  // A blank form, named, then opened in the editor.
   const stamp = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   await page.getByLabel('Titel', { exact: true }).fill(`Blankett från papper ${stamp}`);
   await page.getByLabel('Länkadress').fill(`papper-${stamp}`);
   await page.getByRole('button', { name: 'Skapa' }).click();
-  await page
-    .locator('.card', { hasText: `Blankett från papper ${stamp}` })
-    .getByRole('link', { name: 'Redigera formulär' })
-    .click();
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
   created.push(page.url().split('/').pop()!);
   await page.getByRole('button', { name: 'Från papper' }).click();
