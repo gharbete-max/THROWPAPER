@@ -973,7 +973,7 @@ export const svSE: Record<MessageKey, string> = {
   'signing.cancelConfirmYes': 'Ja, avbryt',
   'signing.sendSigned': 'Skicka den signerade kopian',
   'signing.sendSignedConfirm':
-    'Skicka den signerade kopian av ”{document}” till {count} undertecknare? Den går samma väg som övriga mejl: på en dator väntar den under Att skicka.',
+    'Skicka den signerade kopian av ”{document}” till {count} undertecknare?',
   'signing.sendSignedConfirmYes': 'Skicka den signerade kopian',
   'signing.copyQueued': 'Signerad kopia lagd i kön',
   'signing.handoff': 'PDF klar: {name}',

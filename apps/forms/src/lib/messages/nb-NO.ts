@@ -972,8 +972,7 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.cancelConfirm': 'Avbryte «{document}»? Ingen kan signere det lenger.',
   'signing.cancelConfirmYes': 'Ja, avbryt',
   'signing.sendSigned': 'Send den signerte kopien',
-  'signing.sendSignedConfirm':
-    'Sende den signerte kopien av «{document}» til {count} signatarer? Den følger samme vei som andre e-poster: på en datamaskin venter den under Til sending.',
+  'signing.sendSignedConfirm': 'Sende den signerte kopien av «{document}» til {count} signatarer?',
   'signing.sendSignedConfirmYes': 'Send den signerte kopien',
   'signing.copyQueued': 'Signert kopi lagt i køen',
   'signing.handoff': 'PDF klar: {name}',

@@ -980,7 +980,7 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.cancelConfirmYes': 'Kyllä, peruuta',
   'signing.sendSigned': 'Lähetä allekirjoitettu kopio',
   'signing.sendSignedConfirm':
-    'Lähetetäänkö asiakirjan ”{document}” allekirjoitettu kopio {count} allekirjoittajalle? Se kulkee kuten muutkin sähköpostit: tietokoneella se odottaa kohdassa Lähetettävät.',
+    'Lähetetäänkö asiakirjan ”{document}” allekirjoitettu kopio {count} allekirjoittajalle?',
   'signing.sendSignedConfirmYes': 'Lähetä allekirjoitettu kopio',
   'signing.copyQueued': 'Allekirjoitettu kopio jonossa',
   'signing.handoff': 'PDF valmis: {name}',

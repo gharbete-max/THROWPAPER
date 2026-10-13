@@ -995,8 +995,7 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.cancelConfirm': 'Отменить «{document}»? Подписать его больше никто не сможет.',
   'signing.cancelConfirmYes': 'Да, отменить',
   'signing.sendSigned': 'Отправить подписанную копию',
-  'signing.sendSignedConfirm':
-    'Отправить подписанную копию «{document}» {count} подписантам? Она идёт тем же путём, что и остальные письма: на компьютере ждёт в разделе «К отправке».',
+  'signing.sendSignedConfirm': 'Отправить подписанную копию «{document}» {count} подписантам?',
   'signing.sendSignedConfirmYes': 'Отправить подписанную копию',
   'signing.copyQueued': 'Подписанная копия в очереди',
   'signing.handoff': 'PDF готов: {name}',

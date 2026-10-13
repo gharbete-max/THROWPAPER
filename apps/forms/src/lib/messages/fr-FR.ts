@@ -997,8 +997,7 @@ export const frFR: Record<MessageKey, string> = {
   'signing.cancelConfirm': 'Annuler « {document} » ? Personne ne pourra plus le signer.',
   'signing.cancelConfirmYes': 'Oui, annuler',
   'signing.sendSigned': 'Envoyer la copie signée',
-  'signing.sendSignedConfirm':
-    'Envoyer la copie signée de « {document} » à {count} signataires ? Elle suit le même chemin que les autres e-mails : sur un ordinateur, elle attend dans À envoyer.',
+  'signing.sendSignedConfirm': 'Envoyer la copie signée de « {document} » à {count} signataires ?',
   'signing.sendSignedConfirmYes': 'Envoyer la copie signée',
   'signing.copyQueued': 'Copie signée en file d’envoi',
   'signing.handoff': 'PDF prêt : {name}',

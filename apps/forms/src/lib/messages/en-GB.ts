@@ -990,8 +990,7 @@ export const enGB = {
   'signing.cancelConfirm': 'Cancel “{document}”? Nobody will be able to sign it any more.',
   'signing.cancelConfirmYes': 'Yes, cancel it',
   'signing.sendSigned': 'Send the signed copy',
-  'signing.sendSignedConfirm':
-    'Send the signed copy of “{document}” to {count} signers? It goes the same way as the other email: on a desktop it waits in To send.',
+  'signing.sendSignedConfirm': 'Send the signed copy of “{document}” to {count} signers?',
   'signing.sendSignedConfirmYes': 'Send the signed copy',
   'signing.copyQueued': 'Signed copy queued',
   'signing.handoff': 'PDF ready: {name}',

@@ -974,8 +974,7 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.cancelConfirm': '「{document}」を取り消しますか？以後、誰も署名できなくなります。',
   'signing.cancelConfirmYes': 'はい、取り消す',
   'signing.sendSigned': '署名済みの写しを送る',
-  'signing.sendSignedConfirm':
-    '「{document}」の署名済みの写しを {count} 人の署名者に送りますか？ほかのメールと同じ経路で、パソコンでは「送信待ち」に入ります。',
+  'signing.sendSignedConfirm': '「{document}」の署名済みの写しを {count} 人の署名者に送りますか？',
   'signing.sendSignedConfirmYes': '署名済みの写しを送る',
   'signing.copyQueued': '署名済みの写しを送信キューに追加済み',
   'signing.handoff': 'PDF の準備完了: {name}',

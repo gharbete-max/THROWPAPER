@@ -976,8 +976,7 @@ export const isIS: Record<MessageKey, string> = {
   'signing.cancelConfirm': 'Hætta við „{document}“? Enginn getur undirritað það lengur.',
   'signing.cancelConfirmYes': 'Já, hætta við',
   'signing.sendSigned': 'Senda undirritaða afritið',
-  'signing.sendSignedConfirm':
-    'Senda undirritað afrit af „{document}“ til {count} undirritara? Það fer sömu leið og annar tölvupóstur: í tölvu bíður það undir Til sendingar.',
+  'signing.sendSignedConfirm': 'Senda undirritað afrit af „{document}“ til {count} undirritara?',
   'signing.sendSignedConfirmYes': 'Senda undirritaða afritið',
   'signing.copyQueued': 'Undirritað afrit í biðröð',
   'signing.handoff': 'PDF tilbúið: {name}',

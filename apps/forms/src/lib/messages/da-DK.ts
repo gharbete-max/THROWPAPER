@@ -972,7 +972,7 @@ export const daDK: Record<MessageKey, string> = {
   'signing.cancelConfirmYes': 'Ja, annuller',
   'signing.sendSigned': 'Send den underskrevne kopi',
   'signing.sendSignedConfirm':
-    'Send den underskrevne kopi af “{document}” til {count} underskrivere? Den følger samme vej som andre e-mails: på en computer venter den i Til afsendelse.',
+    'Send den underskrevne kopi af “{document}” til {count} underskrivere?',
   'signing.sendSignedConfirmYes': 'Send den underskrevne kopi',
   'signing.copyQueued': 'Underskrevet kopi lagt i kø',
   'signing.handoff': 'PDF klar: {name}',

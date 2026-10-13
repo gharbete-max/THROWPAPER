@@ -929,8 +929,7 @@ export const zhCN: Record<MessageKey, string> = {
   'signing.cancelConfirm': '取消“{document}”？之后任何人都无法再签署。',
   'signing.cancelConfirmYes': '是，取消',
   'signing.sendSigned': '发送已签署的副本',
-  'signing.sendSignedConfirm':
-    '把“{document}”的已签署副本发送给 {count} 位签署人？它与其他邮件走同一条路径：在电脑上会先放在“待发送”中。',
+  'signing.sendSignedConfirm': '把“{document}”的已签署副本发送给 {count} 位签署人？',
   'signing.sendSignedConfirmYes': '发送已签署的副本',
   'signing.copyQueued': '已签署的副本已排队',
   'signing.handoff': 'PDF 已就绪：{name}',

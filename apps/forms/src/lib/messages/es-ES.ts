@@ -987,8 +987,7 @@ export const esES: Record<MessageKey, string> = {
   'signing.cancelConfirm': '¿Cancelar «{document}»? Nadie podrá firmarlo ya.',
   'signing.cancelConfirmYes': 'Sí, cancelar',
   'signing.sendSigned': 'Enviar la copia firmada',
-  'signing.sendSignedConfirm':
-    '¿Enviar la copia firmada de «{document}» a {count} firmantes? Sigue el mismo camino que los demás correos: en un ordenador espera en Por enviar.',
+  'signing.sendSignedConfirm': '¿Enviar la copia firmada de «{document}» a {count} firmantes?',
   'signing.sendSignedConfirmYes': 'Enviar la copia firmada',
   'signing.copyQueued': 'Copia firmada en cola',
   'signing.handoff': 'PDF listo: {name}',

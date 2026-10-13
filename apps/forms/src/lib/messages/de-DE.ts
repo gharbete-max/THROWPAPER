@@ -1003,7 +1003,7 @@ export const deDE: Record<MessageKey, string> = {
   'signing.cancelConfirmYes': 'Ja, abbrechen',
   'signing.sendSigned': 'Unterschriebene Kopie senden',
   'signing.sendSignedConfirm':
-    'Die unterschriebene Kopie von „{document}“ an {count} Unterzeichnende senden? Sie nimmt denselben Weg wie die übrigen E-Mails: Auf einem Computer wartet sie unter Zu senden.',
+    'Die unterschriebene Kopie von „{document}“ an {count} Unterzeichnende senden?',
   'signing.sendSignedConfirmYes': 'Unterschriebene Kopie senden',
   'signing.copyQueued': 'Unterschriebene Kopie eingereiht',
   'signing.handoff': 'PDF bereit: {name}',
