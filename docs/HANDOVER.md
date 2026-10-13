@@ -176,5 +176,5 @@ is a dev tool, not a dependency: Python, outside `package.json`, nothing in the 
 
 `docs/plan/NEXT.md` (Phases 0 and 1 planned in detail, and how to get the model),
 `docs/plan/DOCUMENTS.md` (the plan), `docs/adr/` (0022 the room, 0016 desktop, 0011 invoices),
-`docs/CONTRACT.md` (Forms to Sign), `docs/MODULE-STATUS.md` (stale; do not trust its numbers).
+`docs/CONTRACT.md` (Forms to Sign), `docs/MODULE-STATUS.md` (re-measured at `2669716` at its top; the rest is history).
 `docs/PROGRESS.md` is a 3,500-line log: search it, never read it whole.

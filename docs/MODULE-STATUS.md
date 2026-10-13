@@ -1,7 +1,62 @@
 # Module status — measured, not remembered
 
-> **Superseded in part (2026-10-12).** Measured 2026-09-22 at `f030000`; its red-`verify` finding is stale (green at `bb82bfd`). `docs/VISION.md` and `docs/HANDOVER.md` win where they
-> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+> **Superseded in part.** The re-measurement just below is current; everything after the line
+> "Earlier measurement" was measured 2026-09-22 at `f030000` and is history (its red-`verify`
+> finding is stale, and its module list is the earlier product). `docs/VISION.md` and
+> `docs/HANDOVER.md` win where they disagree. Nothing here is deleted without the owner's word.
+
+## Re-measured at `2669716` (`origin/main`, 2026-10-13)
+
+Windows 11, portable Postgres 16 running, run from a worktree. A row says **not measured** when it
+was not run. Counts are over `git ls-files`, excluding `*.test.*` for source files.
+
+### Gates (each run on its own)
+
+| Command | Result |
+| --- | --- |
+| `pnpm run format:check` | exit 0 |
+| `pnpm run typecheck` | exit 0 |
+| `pnpm run lint` | exit 0, 2 `exhaustive-deps` warnings (`LanguagePicker.tsx`, `FormBuilder.tsx`) |
+| `pnpm run test` | 283 files, **6937 passed, 1 failed**, plus 1 unhandled error. Both look Windows-only and were not reproduced elsewhere: `mail/queue.test.ts` expects file mode 0o600 and got 0o666 (Windows has no POSIX modes), and a snapshot save built the path `C:\C:\Users\…\fixtures\sessions`. CI runs Linux; whether CI is green for the same commit is UNVERIFIED (its run was in progress) |
+| `pnpm run build` | **exit 1 on this machine**, in `apps/desktop`'s `scripts/build.ts`: `npm install` failed with `EALLOWSCRIPTS` (npm 11.19 rejects `--allow-scripts` in a project-scoped install). The Forms build before it completed (`bundle:budget` read its `dist`). Whether CI's build passes is UNVERIFIED here |
+| `pnpm run bundle:budget` | entry 6.7 / 12 KB, stylesheet 17.7 / 20, total **1081.6 / 1150** gzipped |
+| `pnpm run contract:check` | passed, contract version 3: **10 of 16 implemented**; the 6 deferred are the Mailer exchanges (§1.1–1.4, §2.1–2.2); §5.7 cancel is implemented |
+| `pnpm run licence:check` | exit 0 |
+| `pnpm run builder:validate` | passed: 44 nodes, 12 catalogues, rules G0–G14, 6455 aliases in 12 languages |
+| `pnpm run test:e2e` | **not measured** (the suite takes minutes and needs the shared ports; a green `verify` is not a green e2e) |
+| `pnpm verify` as one chain | **not measured**; `build`, its last step, failed here |
+
+### Counts
+
+| What | Count |
+| --- | --- |
+| `apps/forms` | 178 source files, 53,862 lines, 81 test files; 57 screen files under `src/screens` |
+| `apps/api-forms` | 108 source files, 24,489 lines, 85 test files; 114 route handlers (`app.get/post/put/patch/delete`); 21 SQL migrations; 28 `pgTable`s |
+| `apps/api-sign` | 37 source files, 3,466 lines, 10 test files; 5 SQL migrations; 6 `pgTable`s |
+| `apps/sign` | 7 source files, 555 lines, 1 test file |
+| `apps/desktop` | 28 source files, 3,558 lines, 10 test files |
+| `apps/mailer`, `apps/api-mailer` | 3 + 5 source files, 74 + 51 lines, 0 tests: still a stub |
+| `packages/shared` | 128 source files, 29,466 lines, 70 test files |
+| `packages/tokens` | 13 source files, 1,763 lines, 12 test files |
+| `packages/i18n`, `calc`, `signing`, `ui` | 7 / 4 / 5 / 2 source files; 319 / 346 / 384 / 9 lines |
+| Test and spec files, whole repository | 316 (33 are Playwright specs under `e2e/`) |
+| ADRs | 21 files in `docs/adr/` |
+
+### What was not measured
+
+Playwright results; line or branch coverage; the desktop installers' sizes (HANDOVER quotes 211.5 MB
+zipped on Windows and 440.5 MB on macOS from `DOCUMENTS.md` §8, not re-measured); the packaged app's
+smoke test; any run on macOS; the summary model's speed or quality beyond what ADR 0023 reports. Table
+counts are from source, not from a migrated database.
+
+### What the earlier module list became
+
+The four modules below (Forms, Mailer, Reports, Capture) are the earlier product's shape. Today's
+shape is `docs/VISION.md`'s: Documents' four parts (Forms, Scan, Sign, Send) and a centre. The
+plan no longer names Reports or Capture as modules: invoices stay in Documents (`HANDOVER.md`
+decision 4) and the paper import and camera scan are carried into Scan (`VISION.md` §8). Mailer is still the skeleton described below.
+
+## Earlier measurement (2026-09-22, history)
 
 
 **Commit measured:** `f0300002a1677d224b1bd5f4bb2af6cf8046c513` (`origin/main`, branch

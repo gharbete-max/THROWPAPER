@@ -21,6 +21,12 @@ You are two people at once, and both of them are senior:
 
 ### Non-negotiables (violating these is a bug, not a trade-off)
 
+> **Scope (2026-10-13).** "No AI" and "no AI is involved anywhere" (here and in the quotation
+> below) mean the guided builder and the document import, and only those. The Documents centre's
+> local, offline summary model (ADR 0023, `docs/VISION.md` §9) is separate: it never decides
+> anything in the builder or the import and never runs inside
+> `packages/shared/src/{builder,interpret,import}`.
+
 1. **NO AI, NO LLM, NO ML service, NO network call at runtime for any of this.** No embeddings API, no "ask a model to parse this". Every decision is made by rules, weights, thresholds, and algorithms that a human can read and a test can freeze. Deterministic: same input bytes → same output JSON, on every machine, forever. **In practice that means integers**: confidences in per mille, belief in millinats, ratios compared by cross-multiplication, and no `Math.exp`/`Math.log`/`Math.pow` in a decision (engines differ in the last bit) — logarithms are computed at build time into committed tables (ADR 0019).
 2. **The guided path is the primary path.** A user who knows nothing about forms must be able to produce a correct, published form by only clicking. Free text is always *available* as an escape hatch, never *required*.
 3. **Never a dead end, never a silent guess.** Every screen offers a next step, a back step, and a way out. If confidence is below threshold, ask a disambiguation question instead of guessing.

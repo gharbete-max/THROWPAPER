@@ -102,8 +102,8 @@ components:
 room where three tools float as cootie catchers. Documents — PDF, Word and forms: scanning, filling,
 signing and sending them — is built first; Spreadsheets and Presentation & planning come later.
 What this file describes was written for the product Loppa grew out of: a form builder with events,
-a door and a ledger, and **Mailer**, its email counterpart, for membership secretaries, event
-organisers and association treasurers — people who have to get a registration right the first
+a door and a ledger, and **Mailer**, its email counterpart (today a stub; the mail work is built
+inside Documents' Send), for membership secretaries, event organisers and association treasurers — people who have to get a registration right the first
 time, in front of an audience, often at a door in bad weather.
 
 That audience sets the whole direction. The interface is warm rather than corporate, quiet rather
@@ -150,7 +150,8 @@ folds away from the light. Then there is paper (`#fafaf8`) and ink (`#0e0e10`), 
 one grey, graphite (`#4a4e55`).
 
 **The sixth-hue rule, restated for a metal palette: gold, gold's tiers, and the greys — nothing
-else.** Platinum _is_ a grey, which is what makes this palette narrower than the last: seafoam and
+else** (apart from status below, and the room's stronger gold, platinum and bronze, which are the
+same families and live in the room only). Platinum _is_ a grey, which is what makes this palette narrower than the last: seafoam and
 coral were two hue families that had to be kept from dominating each other; gold is the only hue
 on the page and everything else is neutral, so there is nothing to balance. `muted` and `border`
 are therefore the platinum ramp and graphite, not a warmed grey — a khaki border would be gold

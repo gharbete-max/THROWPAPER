@@ -1,6 +1,8 @@
 # ADR 0013 — AI assistance: provider-agnostic, EU by default, opt-in, drafts only
 
-**Status:** proposed — the provider is the owner's choice (`LAUNCH-CHECKLIST.md` §6)
+**Status:** superseded by ADR 0023 (a local, offline summary and translation model, on the person's
+own computer, chosen by the owner on 2026-10-13). Was: proposed — the provider is the owner's choice
+(`LAUNCH-CHECKLIST.md` §6). Nothing below was built: no `AiProvider` exists. Kept as written.
 **Date:** 2026-09-23
 
 > **Proposed narrowing (2026-09-25):** the owner's brief for the guided builder and document import

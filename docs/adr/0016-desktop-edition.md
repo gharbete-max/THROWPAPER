@@ -157,6 +157,10 @@ Loppa.exe / Loppa.app (Electron)
 
 ### AI and signing: off/local, connect online, work in cloud (placeholder)
 
+> **Amended by ADR 0023.** ADR 0013, which the AI row below defers to, is superseded. The AI radios
+> were replaced by a note pointing at Documents, then Summary and translation (see the amendment
+> near the end of this ADR). The signing row is unchanged. Kept below as written.
+
 Each is a three-way choice in Settings, stored in `workspace\settings.json`:
 
 | | Off / local (default) | Connect online | Work in cloud (placeholder) |

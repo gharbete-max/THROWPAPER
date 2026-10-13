@@ -157,7 +157,10 @@ them:
 
 ## 11. Older documents that still say otherwise
 
-Brought in line as the work touches them; until then, this file wins:
+Brought in line as the work touches them; until then, this file wins. **Status at `2669716`
+(2026-10-13):** every item below has been brought in line or carries a banner or scope note. Still
+open elsewhere: the marketing site's copy (the owner's words) and ADR 0011's "proposed" status
+(the owner's to accept). The list is kept as it was written:
 
 - `CLAUDE.md` — "three independent products" are Forms, Mailer and Sign; `apps/forms` is "forms,
   inspections, measurements, reports".

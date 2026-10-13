@@ -4,6 +4,14 @@ Planning only, written from reading the code at `52ecc79`. Where a point is a de
 than something read in the code, it says **unverified** and the phase's first step settles it.
 Order and decisions: `docs/HANDOVER.md`. Context: `docs/plan/DOCUMENTS.md`.
 
+**Status at `2669716` (2026-10-13), measured against `main`:** Phase 1 (1a, 1b, 1c, photos) is
+built. Of Phase 0, items 1 and 4 are done; items 2 (ADR 0011 acceptance, the owner's) and 3 (no
+cut was made; the budget was raised instead, to 1 150 KB) are not. Of the later phases, Forms, Invoice
+scan, Sign hand-off and cancel, and the Summary centre are built; Send is open as PR #169; Campaigns
+are not started. The model is **still not cut as a release**: the weights manifest says
+`unpublished`, so the centre runs only from a file opened from disk. See `docs/ROADMAP.md` for the
+table and `docs/HANDOVER.md` for the order.
+
 ## Getting the summary model
 
 **Not downloaded yet.** The owner has the file at
@@ -49,8 +57,10 @@ anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.
    `packages/shared/src/ledger/api.ts` to `packages/shared/src/api/common.ts`, which both import.
    No invoicing file imports from `ledger`; shared tests, `typecheck` and `contract:check` pass
    unchanged. Touched `packages/`.
-2. **ADR 0011** — the owner accepts it as updated, then its status line changes. Not Claude's call.
-3. **Bundle cut pass — measured 2026-10-12 at `bb82bfd`, nothing cut.** The 992.3 KB total is
+2. **ADR 0011 — not done.** The owner accepts it as updated, then its status line changes. Not
+   Claude's call; it still says "proposed".
+3. **Bundle cut pass — not done (measured 2026-10-12 at `bb82bfd`, nothing cut; the budget was
+   raised later instead, see `scripts/bundle-budget.ts`).** The 992.3 KB total is
    every lazily loaded `.js`/`.css` chunk in `apps/forms/dist/assets` (`scripts/bundle-budget.ts`),
    not what a visitor downloads. Largest, gzipped: pdfjs 159.9 KB, the editor's `index` 114.9,
    `mount` 85.0, the import worker 49.6, built-in aliases 42.5, the spreadsheet export `saver` 42.0,
@@ -62,8 +72,9 @@ anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.
    door screens when they move out of Forms, and the ledger and events routes' screens. Revisit with
    Phase 1's real delta in hand, and raise the budget in `scripts/bundle-budget.ts` with a reason if
    a feature earns it.
-4. **CLAUDE.md "Demo data"** — done: it now names the Documents-shaped target. Phase 1 still needs
-   a two-page PDF fixture for page work.
+4. **CLAUDE.md "Demo data"** — done: it names the Documents-shaped target. The two-page PDF fixture
+   exists in the page-work tests (`apps/api-forms/src/pdf/*.test.ts`); the demo seed itself still
+   holds no PDF, Word or To-send content (not done).
 
 ## Phase 1 — Scan and page basics, PDF text, Word to PDF
 
@@ -72,8 +83,8 @@ anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.
 Built as designed: `apps/api-forms/src/pdf/arrange.ts`, `routes/pdf.ts` (`POST /v1/pdf/arrange`),
 the screen `apps/forms/src/screens/Scan.tsx` at `/scan` (reached from the room's Scan part), its
 list logic `scan-plan.ts`, `e2e/arrange-pages.spec.ts`. Differences from the design below: reorder
-is by earlier/later buttons, not drag; PDFs only (photos and the camera are the next increment);
-`pagesToPdf` has not moved. Encrypted PDFs are caught by their `/Encrypt` marker before the guard
+is by earlier/later buttons, not drag; PDFs only when first built (photos, the camera and phone
+scans were added after, #160); `pagesToPdf` has not moved (it is still in `apps/api-forms/src/signing/scan.ts`). Encrypted PDFs are caught by their `/Encrypt` marker before the guard
 (which opens with `ignoreEncryption`), signed ones by `/ByteRange`, and the screen asks before
 removing a signature. The bundle total went from 992.3 to 999.95 KB, so its budget was raised to
 1 015 (see `scripts/bundle-budget.ts`).
@@ -133,7 +144,7 @@ with a plain message). The bundle total went from about 1001.4 to 1011.2 KB (bud
   proof: extract the text of the output with pdfjs and assert the redacted string is absent.
 - Redaction and edits never touch a signed PDF without the same confirmation as 1a.
 
-### 1c. Word to PDF (rough)
+### 1c. Word to PDF (rough) - built (2026-10-13, #162)
 
 - Reader exists: `readDocx` in `apps/forms/src/screens/builder/paper/docx.ts:627`, returning a
   `RawDocument`. It runs in the browser, and `apps/api-forms` may not import from `apps/forms`
@@ -164,6 +175,8 @@ all twelve catalogues. No new dependency without asking; a font is the likeliest
 
 ## Later phases, one line each
 
-2 Forms (draft PDF without a submission, fill a PDF's own fields). 3 Send (single, then batch;
-confirmation first). 4 Invoice scan (OCR then rules, check-digit on the payment reference). 5 Sign
-hand-off and cancel. 6 Campaigns. 7 Summary (needs the model above). Details: `HANDOVER.md`.
+2 Forms (draft PDF without a submission, fill a PDF's own fields) - **built**. 3 Send (single, then
+batch; confirmation first) - **not on `main`**, PR #169 open. 4 Invoice scan (OCR then rules,
+check-digit on the payment reference) - **built**. 5 Sign hand-off and cancel - **built**. 6
+Campaigns - **not started**. 7 Summary (needs the model above) - **centre built, model release not
+cut**. Details: `HANDOVER.md`.

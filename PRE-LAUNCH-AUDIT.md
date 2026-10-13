@@ -30,15 +30,15 @@ set. Where something could not be determined from the repository it says so rath
 
 ### Things that are absent, which is itself the finding
 
-| Thing                                 | Status          | Evidence                                                              |
-| ------------------------------------- | --------------- | --------------------------------------------------------------------- |
-| Analytics / telemetry                 | **None**        | no analytics package; no external origin in client                    |
-| Cookies                               | **None at all** | no `document.cookie`, no cookie plugin registered; `LEGAL-REVIEW.md`  |
-| Payment provider                      | **None**        | no Stripe/Klarna/Swish anywhere                                       |
-| Third-party embeds / iframes          | **None**        | —                                                                     |
-| External script, style or font origin | **None**        | grep for `https?://` in client source returns nothing but `localhost` |
-| AI features                           | **None**        | no `openai`/`anthropic`/`llm`/chatbot references                      |
-| Browser-exposed env vars (`VITE_*`)   | **None**        | no `import.meta.env` usage                                            |
+| Thing                                 | Status                                                                                                                                        | Evidence                                                                                                                                                   |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Analytics / telemetry                 | **None**                                                                                                                                      | no analytics package; no external origin in client                                                                                                         |
+| Cookies                               | **None at all**                                                                                                                               | no `document.cookie`, no cookie plugin registered; `LEGAL-REVIEW.md`                                                                                       |
+| Payment provider                      | **None**                                                                                                                                      | no Stripe/Klarna/Swish anywhere                                                                                                                            |
+| Third-party embeds / iframes          | **None**                                                                                                                                      | —                                                                                                                                                          |
+| External script, style or font origin | **None**                                                                                                                                      | grep for `https?://` in client source returns nothing but `localhost`                                                                                      |
+| AI features                           | **None** at `a17dffc`. **Since:** a local, offline, opt-in model on the desktop (ADR 0023); no provider, no network call for the model's work | no `openai`/`anthropic` references in `apps` or `packages` at `2669716`; `node-llama-cpp` is in `apps/desktop/package.json`. Wording for counsel to decide |
+| Browser-exposed env vars (`VITE_*`)   | **None**                                                                                                                                      | no `import.meta.env` usage                                                                                                                                 |
 
 **Fonts are self-hosted and byte-inlined.** `packages/tokens/src/fonts.ts` reads
 `@fontsource/inter` `.woff2` files from `node_modules` and emits `@font-face` with the bytes as a
@@ -90,11 +90,12 @@ open question is the database and application host, which is undecided — see b
 | User-generated content?                  | **Yes, but not a UGC platform.** Operators author forms; respondents submit answers and files. Content is not published to other users, so there is no public feed to moderate.                                            | routes; `submissions`, `formUploads`               |
 | Physical-location business?              | **Cannot determine.**                                                                                                                                                                                                      | —                                                  |
 | Under 10 employees / under €2m turnover? | **Cannot determine.**                                                                                                                                                                                                      | —                                                  |
-| AI features exposed to users?            | **No.**                                                                                                                                                                                                                    | grep                                               |
+| AI features exposed to users?            | **No at `a17dffc`; yes since 2026-10-13, on the desktop only:** a summary and translation model the person runs on their own computer, offline, once they opt in (ADR 0023). The hosted edition has none.                  | grep; `docs/adr/0023-local-summary-model.md`       |
 | Marketing email?                         | **Cannot determine.** `apps/api-forms` sends transactional mail only (magic links, confirmations, invoices). `apps/api-mailer` is a campaign product whose use is a business decision.                                     | `apps/api-forms/src/mail/`                         |
 
 **Consequences of the above, if the answers hold:** DSA does not apply (no public UGC). AI Act
-does not apply (no AI). NIS2 almost certainly does not apply. Distansavtalslagen,
+did not apply when there was no AI; **whether it applies to the local summary model is for counsel
+to decide (not assessed here)**. NIS2 almost certainly does not apply. Distansavtalslagen,
 prisinformationslagen and GPSR apply **only if** you sell to consumers, which is unanswered.
 
 ---

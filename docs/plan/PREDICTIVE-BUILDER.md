@@ -2,6 +2,11 @@
 
 > Building a form in Loppa is a conversation, not a canvas. The user is walked through a short, warm sequence of questions — "Do you want buttons? Yes → multiple choice? → How many? → Which shape? → Here's how it looks. Not quite? Click it to change it." Every answer is a patch applied to a working draft, so nothing is ever a dead state: the form exists and is publishable from the first answer. At any point the user can leave the conversation by dropping a PDF, Word file, or phone scan into the window and Loppa reads it, decides what is a question and what is prose, shows what it read with its unsure parts clearly flagged, and hands over a draft. From there the conversation resumes — but only about what is still undecided. No AI is involved anywhere: forms are not rocket science, and every decision here can be predetermined, written down as a rule, and tested.
 
+**Scope of "no AI" (2026-10-13).** "No AI is involved anywhere" above, and the first rule below,
+mean the guided builder and the document import, and only those. The Documents centre's local,
+offline summary model (ADR 0023, `docs/VISION.md` §9) is separate: it never decides anything here
+and never runs inside `packages/shared/src/{builder,interpret,import}`.
+
 **Status:** plan, proposed 2026-09-25, from the owner's brief ("Loppa: Guided (Akinator-style) Form
 Builder + Document-To-Form Import"), now kept in the repository as `BRIEF.md` (revision 3). Nothing here is built yet. The decisions it depends on are
 ADRs 0017–0021; the open questions for the owner are at the end. Slices and milestones are in
@@ -357,8 +362,8 @@ permission of 2026-09-25, so the brief and this plan now agree.
    where order is the point ("How many?" is meaningless before "buttons?"). ADR 0006's four-press
    promise is restated as a validator bound.
 3. **ADR 0013 (proposed) plans an AI provider** for form-from-description and form-from-page. →
-   ADR 0019 does both deterministically; ADR 0013 is narrowed to what is left (summaries), still
-   the owner's decision, and nothing here depends on it.
+   ADR 0019 does both deterministically; ADR 0013 was narrowed to summaries and is now superseded
+   by ADR 0023 (a local model in the Documents centre). Nothing here depends on either.
 4. **`FormDraft` as a new model** → the existing `FormDefinition` plus a sidecar (above).
 5. **Kinds that are not field types** → the mapping above; one new type (grid) waits for its ADR.
 6. **"Any new endpoint goes into `docs/CONTRACT.md`" (`CAVEATS.md` #40)** — `CONTRACT.md` is the
