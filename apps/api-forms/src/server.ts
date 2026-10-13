@@ -71,6 +71,9 @@ import { registerPdfRoutes } from './routes/pdf.js';
 import { registerPdfEditRoutes } from './routes/pdf-edit.js';
 import { registerSendRoutes } from './routes/send.js';
 import { SEND_JOB, createSendHandler } from './send/service.js';
+import { CAMPAIGN_JOB, createCampaignHandler } from './send/campaign.js';
+import { deriveUnsubscribeKey } from './send/unsubscribe.js';
+import { registerCampaignRoutes } from './routes/campaign.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
 import { sweepExpiredUploads } from './uploads/lifecycle.js';
@@ -497,6 +500,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       [SIGNING_INVITE_JOB]: createSigningInviteHandler({ repos, provider: mail }),
       [SIGNING_COPY_JOB]: createSigningCopyHandler({ repos, provider: mail, sign: signClient }),
       [SEND_JOB]: createSendHandler({ repos, provider: mail, store, renderer }),
+      [CAMPAIGN_JOB]: createCampaignHandler({ repos, provider: mail }),
     },
     // `err`, the key pino serializes an Error under. Under any other key an Error is `{}` in the
     // log: every failed job read "job failed" with no reason (`job-failure-log.test.ts`).
@@ -624,6 +628,13 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
   registerPdfRoutes(app, { guard, renderer });
   registerPdfEditRoutes(app, { guard });
   registerSendRoutes(app, { repos, guard, store, renderer, providerName: mail.name });
+  registerCampaignRoutes(app, {
+    repos,
+    guard,
+    providerName: mail.name,
+    unsubscribeKey: deriveUnsubscribeKey(documentSigningSecret),
+    publicApiUrl: `${appUrl.replace(/\/$/, '')}/api`,
+  });
   if (options.outgoing) {
     registerOutgoingRoutes(app, {
       repos,

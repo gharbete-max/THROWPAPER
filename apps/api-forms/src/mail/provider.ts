@@ -20,6 +20,12 @@ export interface OutboundMail {
   text: string;
   html?: string;
   attachments?: MailAttachment[];
+  /**
+   * Extra headers, for a campaign's `List-Unsubscribe` and `List-Unsubscribe-Post`. Names are
+   * limited to letters and hyphens and values to one line (`buildMimeMessage`); the desktop's
+   * To send queue keeps none, because the person's own mail program writes the message there.
+   */
+  headers?: Record<string, string>;
   /** Retries must not double-send. Mirrors the contract's requirement in docs/CONTRACT.md §1.1. */
   idempotencyKey?: string;
 }

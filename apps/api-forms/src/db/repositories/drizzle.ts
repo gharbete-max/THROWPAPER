@@ -26,6 +26,7 @@ import {
   messages,
   organisations,
   sendingDomains,
+  campaignSuppressions,
   signingRequests,
   submissions,
   refreshTokens,
@@ -52,6 +53,7 @@ import type {
   MessageRecord,
   Repositories,
   SendingDomainRecord,
+  CampaignSuppressionRecord,
   SigningRequestRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
@@ -1291,6 +1293,63 @@ export function createDrizzleRepositories(db: Db): Repositories {
           .where(eq(sendingDomains.id, id))
           .returning();
         return (row as SendingDomainRecord | undefined) ?? null;
+      },
+    },
+
+    campaignSuppressions: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(campaignSuppressions)
+          .where(eq(campaignSuppressions.organisationId, organisationId))
+          .orderBy(campaignSuppressions.email)) as CampaignSuppressionRecord[],
+      among: async (organisationId, emails) => {
+        const wanted = [...new Set(emails.map((e) => e.trim().toLowerCase()))];
+        if (wanted.length === 0) return [];
+        const rows = await db
+          .select({ email: campaignSuppressions.email })
+          .from(campaignSuppressions)
+          .where(
+            and(
+              eq(campaignSuppressions.organisationId, organisationId),
+              inArray(campaignSuppressions.email, wanted),
+            ),
+          );
+        return rows.map((row) => row.email);
+      },
+      /** The primary key is the lock: added twice at once is stored once, with the first reason. */
+      add: async (organisationId, email, reason) => {
+        const address = email.trim().toLowerCase();
+        await db
+          .insert(campaignSuppressions)
+          .values({ organisationId, email: address, reason })
+          .onConflictDoNothing();
+        const row = first(
+          await db
+            .select()
+            .from(campaignSuppressions)
+            .where(
+              and(
+                eq(campaignSuppressions.organisationId, organisationId),
+                eq(campaignSuppressions.email, address),
+              ),
+            )
+            .limit(1),
+        );
+        if (!row) throw new Error('suppression insert returned no row');
+        return row as CampaignSuppressionRecord;
+      },
+      remove: async (organisationId, email) => {
+        const rows = await db
+          .delete(campaignSuppressions)
+          .where(
+            and(
+              eq(campaignSuppressions.organisationId, organisationId),
+              eq(campaignSuppressions.email, email.trim().toLowerCase()),
+            ),
+          )
+          .returning();
+        return rows.length > 0;
       },
     },
 

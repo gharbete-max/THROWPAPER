@@ -1768,4 +1768,35 @@ export const svSE: Record<MessageKey, string> = {
   'batch.previewTitle': 'Förhandsgranskning av PDF:en till {name}',
   'batch.toConfirm': 'Fortsätt till bekräftelse',
   'batch.confirm.heading': 'plural:one Skicka {count} dokument? | other Skicka {count} dokument?',
+  'send.tab.campaign': 'Ett mejl till en lista',
+  'send.state.skipped': 'Inte skickat: finns på spärrlistan',
+  'campaign.step.list': 'Lista',
+  'campaign.step.write': 'Skriv',
+  'campaign.step.preview': 'Förhandsgranska',
+  'campaign.step.confirm': 'Bekräfta',
+  'campaign.list.intro':
+    'Klistra in en lista eller välj en CSV-fil. Högst {count} personer åt gången. Varje rad får ett mejl i ren text.',
+  'campaign.cap': 'En kampanj går till högst {count} personer. Dela upp listan.',
+  'campaign.audience':
+    'plural:one {count} person får det här mejlet | other {count} personer får det här mejlet',
+  'campaign.body': 'Meddelande',
+  'campaign.fieldsHint':
+    'Fält du kan använda i ämne, meddelande och sidfot: {fields}. Efter ett lodstreck kan du ange en reserv för rader där listan saknar värde, som {example}.',
+  'campaign.footer': 'Sidfot (text du skriver själv)',
+  'campaign.footerHint':
+    'Det här skriver du själv: vem som skickar och varifrån, varför personen får mejlet och hur man slutar få det. Skriv {link} där varje persons avregistreringslänk ska stå. Loppa lägger inte till någon egen text.',
+  'campaign.noTracking': 'Bara ren text. Inget i mejlet spårar öppningar eller klick.',
+  'campaign.problem.footerMissing': 'Skriv sidfoten. En kampanj skickas inte utan en.',
+  'campaign.problem.footerNoLink':
+    'Sidfoten måste innehålla {link}, där varje persons avregistreringslänk ska stå.',
+  'campaign.problem.unknownField': 'Texten använder ett fält som inte finns. Fält: {fields}',
+  'campaign.previewLink': '[personens egen avregistreringslänk]',
+  'campaign.previewOf': 'Mejlet till {name}',
+  'campaign.testToMe': 'Skicka ett test till mig',
+  'campaign.testQueued': 'Ett test köades till {email}. Det är markerat som test.',
+  'campaign.confirm.heading':
+    'plural:one Skicka till {count} person? | other Skicka till {count} personer?',
+  'campaign.leftOut':
+    'plural:one {count} adress utelämnas eftersom den har avregistrerat sig eller studsat. | other {count} adresser utelämnas eftersom de har avregistrerat sig eller studsat.',
+  'campaign.leftOut.done': 'Utelämnade (avregistrerade eller studsade): {list}',
 };

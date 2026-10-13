@@ -1781,4 +1781,35 @@ export const fiFI: Record<MessageKey, string> = {
   'batch.toConfirm': 'Jatka vahvistukseen',
   'batch.confirm.heading':
     'plural:one Lähetetäänkö {count} asiakirja? | other Lähetetäänkö {count} asiakirjaa?',
+  'send.tab.campaign': 'Sähköposti luettelon henkilöille',
+  'send.state.skipped': 'Ei lähetetty: osoite on estolistalla',
+  'campaign.step.list': 'Luettelo',
+  'campaign.step.write': 'Kirjoita',
+  'campaign.step.preview': 'Esikatsele',
+  'campaign.step.confirm': 'Vahvista',
+  'campaign.list.intro':
+    'Liitä luettelo tai valitse CSV-tiedosto. Enintään {count} henkilöä kerrallaan. Jokainen rivi saa yhden pelkkää tekstiä olevan viestin.',
+  'campaign.cap': 'Kampanja lähtee enintään {count} henkilölle. Jaa luettelo osiin.',
+  'campaign.audience':
+    'plural:one {count} henkilö saa tämän viestin | other {count} henkilöä saa tämän viestin',
+  'campaign.body': 'Viesti',
+  'campaign.fieldsHint':
+    'Kentät, joita voit käyttää otsikossa, viestissä ja alatunnisteessa: {fields}. Pystyviivan jälkeen voit antaa varalla käytettävän arvon riveille, joilla luettelossa ei ole arvoa, esimerkiksi {example}.',
+  'campaign.footer': 'Alatunniste (itse kirjoittamasi teksti)',
+  'campaign.footerHint':
+    'Kirjoitat tämän itse: kuka lähettää ja mistä, miksi vastaanottaja saa viestin ja miten viestien saaminen lopetetaan. Kirjoita {link} kohtaan, johon kunkin henkilön peruutuslinkki tulee. Loppa ei lisää omaa tekstiä.',
+  'campaign.noTracking': 'Vain pelkkää tekstiä. Viestissä ei seurata avauksia tai klikkauksia.',
+  'campaign.problem.footerMissing': 'Kirjoita alatunniste. Kampanjaa ei lähetetä ilman sitä.',
+  'campaign.problem.footerNoLink':
+    'Alatunnisteessa on oltava {link}, johon kunkin henkilön peruutuslinkki tulee.',
+  'campaign.problem.unknownField': 'Teksti käyttää kenttää, jota ei ole. Kentät: {fields}',
+  'campaign.previewLink': '[henkilön oma peruutuslinkki]',
+  'campaign.previewOf': 'Viesti henkilölle {name}',
+  'campaign.testToMe': 'Lähetä minulle testi',
+  'campaign.testQueued': 'Testi on asetettu jonoon osoitteeseen {email}. Se on merkitty testiksi.',
+  'campaign.confirm.heading':
+    'plural:one Lähetetäänkö {count} henkilölle? | other Lähetetäänkö {count} henkilölle?',
+  'campaign.leftOut':
+    'plural:one {count} osoite jätetään pois, koska se on perunut tilauksen tai palautunut. | other {count} osoitetta jätetään pois, koska ne ovat perunut tilauksen tai palautuneet.',
+  'campaign.leftOut.done': 'Jätetty pois (tilaus peruttu tai palautunut): {list}',
 };

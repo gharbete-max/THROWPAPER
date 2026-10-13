@@ -12,6 +12,9 @@ import { Delivery, ModeNote, useSendMode } from './send-parts.js';
 
 // The list screen is the larger half and only some people open it.
 const SendBatch = lazy(() => import('./SendBatch.js').then((m) => ({ default: m.SendBatch })));
+const SendCampaign = lazy(() =>
+  import('./SendCampaign.js').then((m) => ({ default: m.SendCampaign })),
+);
 
 /**
  * Send — a document, by mail, to someone (Documents, "Send"). Two ways in: one document to some
@@ -23,7 +26,7 @@ const SendBatch = lazy(() => import('./SendBatch.js').then((m) => ({ default: m.
  */
 export function Send() {
   const t = useT();
-  const [which, setWhich] = useState<'one' | 'batch'>('one');
+  const [which, setWhich] = useState<'one' | 'batch' | 'campaign'>('one');
 
   return (
     <section className="stack">
@@ -32,7 +35,7 @@ export function Send() {
         <p className="muted small">{t('send.intro')}</p>
       </header>
       <div className="row" role="radiogroup" aria-label={t('send.heading')}>
-        {(['one', 'batch'] as const).map((choice) => (
+        {(['one', 'batch', 'campaign'] as const).map((choice) => (
           <button
             key={choice}
             type="button"
@@ -49,7 +52,7 @@ export function Send() {
         <SendOne />
       ) : (
         <Suspense fallback={<Loading />}>
-          <SendBatch />
+          {which === 'batch' ? <SendBatch /> : <SendCampaign />}
         </Suspense>
       )}
     </section>

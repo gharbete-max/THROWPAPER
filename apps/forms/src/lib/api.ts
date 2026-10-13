@@ -346,6 +346,20 @@ export const client = {
   sendBatch: (body: api.SendBatchRequest) =>
     request<api.SendQueued>('/v1/send/batch', { method: 'POST', body: JSON.stringify(body) }),
 
+  /** One plain email to each row of a list (`POST /v1/send/campaign`), after the confirmation. */
+  sendCampaign: (body: api.SendCampaignRequest) =>
+    request<api.CampaignQueued>('/v1/send/campaign', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  /** Which of these addresses a campaign would leave out (the organisation's suppression list). */
+  campaignAudience: (emails: readonly string[]) =>
+    request<api.CampaignAudienceResponse>('/v1/send/campaign/audience', {
+      method: 'POST',
+      body: JSON.stringify({ emails }),
+    }),
+
   sendStatus: (ids: readonly string[]) =>
     request<api.SendStatusResponse>(`/v1/send/status?ids=${ids.join(',')}`),
 

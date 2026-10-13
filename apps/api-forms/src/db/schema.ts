@@ -511,6 +511,28 @@ export const sendingDomains = pgTable(
 );
 
 /**
+ * Addresses a campaign never goes to: unsubscribed, bounced, or put here by hand.
+ *
+ * Scope is the table's name. This list is read by campaigns (`send/campaign.ts`) and by nothing
+ * else — a signing invitation, a one-off document and a registration confirmation are somebody's
+ * own business with the recipient, not a campaign, and an unsubscribe from the one must not
+ * silently stop the others (`SPEC-mailer.md` §3).
+ */
+export const campaignSuppressions = pgTable(
+  'campaign_suppressions',
+  {
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    /** Lower-case, trimmed. */
+    email: text('email').notNull(),
+    reason: text('reason').$type<'unsubscribed' | 'bounced' | 'manual'>().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.organisationId, table.email] })],
+);
+
+/**
  * Every message the system has sent — `SPEC-mailer.md` §5: "a per-recipient log of exactly what
  * was rendered and sent". Delivery events (B11) attach to these rows.
  */

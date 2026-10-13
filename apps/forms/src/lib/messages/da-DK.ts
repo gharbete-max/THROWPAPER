@@ -1764,4 +1764,35 @@ export const daDK: Record<MessageKey, string> = {
   'batch.previewTitle': 'Eksempel på PDF til {name}',
   'batch.toConfirm': 'Fortsæt til bekræftelse',
   'batch.confirm.heading': 'plural:one Send {count} dokument? | other Send {count} dokumenter?',
+  'send.tab.campaign': 'En mail til en liste',
+  'send.state.skipped': 'Ikke sendt: står på spærrelisten',
+  'campaign.step.list': 'Liste',
+  'campaign.step.write': 'Skriv',
+  'campaign.step.preview': 'Forhåndsvis',
+  'campaign.step.confirm': 'Bekræft',
+  'campaign.list.intro':
+    'Indsæt en liste, eller vælg en CSV-fil. Op til {count} personer ad gangen. Hver række får én mail i ren tekst.',
+  'campaign.cap': 'En kampagne går til højst {count} personer. Del listen op.',
+  'campaign.audience':
+    'plural:one {count} person får denne mail | other {count} personer får denne mail',
+  'campaign.body': 'Besked',
+  'campaign.fieldsHint':
+    'Felter du kan bruge i emne, besked og sidefod: {fields}. Efter en lodret streg kan du angive en reserve til rækker, hvor listen intet har, fx {example}.',
+  'campaign.footer': 'Sidefod (tekst du selv skriver)',
+  'campaign.footerHint':
+    'Det skriver du selv: hvem der sender og hvorfra, hvorfor personen får mailen, og hvordan man holder op med at få den. Skriv {link} dér, hvor hver persons afmeldingslink skal stå. Loppa tilføjer ingen tekst selv.',
+  'campaign.noTracking': 'Kun ren tekst. Intet i mailen sporer åbninger eller klik.',
+  'campaign.problem.footerMissing': 'Skriv sidefoden. En kampagne sendes ikke uden.',
+  'campaign.problem.footerNoLink':
+    'Sidefoden skal indeholde {link}, hvor hver persons afmeldingslink skal stå.',
+  'campaign.problem.unknownField': 'Teksten bruger et felt, der ikke findes. Felter: {fields}',
+  'campaign.previewLink': '[personens eget afmeldingslink]',
+  'campaign.previewOf': 'Mailen til {name}',
+  'campaign.testToMe': 'Send mig en test',
+  'campaign.testQueued': 'En test er sat i kø til {email}. Den er markeret som test.',
+  'campaign.confirm.heading':
+    'plural:one Send til {count} person? | other Send til {count} personer?',
+  'campaign.leftOut':
+    'plural:one {count} adresse udelades, fordi den har afmeldt sig eller er returneret. | other {count} adresser udelades, fordi de har afmeldt sig eller er returneret.',
+  'campaign.leftOut.done': 'Udeladt (afmeldt eller returneret): {list}',
 };

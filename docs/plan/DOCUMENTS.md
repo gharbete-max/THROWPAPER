@@ -225,7 +225,20 @@ exists, reshaped where it must be.
   - **As built:** `/send` (one document, or one personalised PDF each from a list), the hand-off
     `lib/send-handoff.ts` from Scan and Forms (Signing queues its own copy), `POST /v1/send/*`, a
     cap of 200 per batch, idempotent on a key, a confirmation naming recipients, subject and
-    attachment, and per-recipient status. No tracking, no campaigns.
+    attachment, and per-recipient status. No tracking.
+  - **Campaigns, as built** (inside Send, not a separate Mailer): one plain-text email to a list
+    (the batch list and its column mapping), `{{name | fallback}}` fields, an audience count, each
+    person's own message to read, a test to yourself, a hard cap of 500 and a confirmation, as
+    `send.campaign` jobs idempotent on `key:address`. No open or click tracking: no HTML part, no
+    pixel, no rewritten link (a test asserts it). A per-organisation suppression list
+    (`campaign_suppressions`) is read by campaigns and nothing else, so a campaign unsubscribe does
+    not stop a signing invitation or a one-off document. Each message carries `List-Unsubscribe` and
+    `List-Unsubscribe-Post`; the link opens a page that asks and, on the button (or a mail
+    program's one click), records it. **The footer is the sender's own wording** (who sends, why
+    this person got it, the unsubscribe sentence): the screen and the server refuse to send until it
+    is typed and holds `{{unsubscribe}}`, and the product writes none of it (rule 8, HANDOVER
+    question 5 stays open for a human to supply templates). Not built: the Mailer spec's segments,
+    schedules, approval, bounce webhooks and preference centre.
 
 ## 4. The centre: summary and translation
 

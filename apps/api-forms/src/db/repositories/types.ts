@@ -495,6 +495,27 @@ export interface SendingDomainRepository {
   ): Promise<SendingDomainRecord | null>;
 }
 
+export interface CampaignSuppressionRecord {
+  organisationId: string;
+  email: string;
+  reason: 'unsubscribed' | 'bounced' | 'manual';
+  createdAt: Date;
+}
+
+/** Addresses campaigns skip (`schema.ts`). Addresses are kept trimmed and lower-case. */
+export interface CampaignSuppressionRepository {
+  list(organisationId: string): Promise<CampaignSuppressionRecord[]>;
+  /** Which of these addresses are suppressed, lower-case. */
+  among(organisationId: string, emails: readonly string[]): Promise<string[]>;
+  /** Idempotent: an address already on the list keeps its first reason. */
+  add(
+    organisationId: string,
+    email: string,
+    reason: CampaignSuppressionRecord['reason'],
+  ): Promise<CampaignSuppressionRecord>;
+  remove(organisationId: string, email: string): Promise<boolean>;
+}
+
 export interface MessageRecord {
   id: string;
   organisationId: string;
@@ -770,6 +791,7 @@ export interface Repositories {
   builderSessions: BuilderSessionRepository;
   builderAliases: BuilderAliasRepository;
   sendingDomains: SendingDomainRepository;
+  campaignSuppressions: CampaignSuppressionRepository;
   messages: MessageRepository;
   audit: AuditRepository;
   ledger: LedgerRepository;

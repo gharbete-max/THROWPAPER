@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import type { Db } from './types.js';
 import {
   brandKits,
+  campaignSuppressions,
   events,
   formShares,
   formVersions,
@@ -217,6 +218,16 @@ export async function seedDemo(db: Db): Promise<{ organisationId: string; formSl
     .insert(brandKits)
     .values({ organisationId: organisation.id, tokens: DEMO_BRAND })
     .onConflictDoUpdate({ target: brandKits.organisationId, set: { tokens: DEMO_BRAND } });
+
+  // One address that has asked not to get campaigns, so a demo shows an audience being cut.
+  await db
+    .insert(campaignSuppressions)
+    .values({
+      organisationId: organisation.id,
+      email: 'avanmald@example.com',
+      reason: 'unsubscribed',
+    })
+    .onConflictDoNothing();
 
   return { organisationId: organisation.id, formSlug: DEMO_FORM_SLUG };
 }

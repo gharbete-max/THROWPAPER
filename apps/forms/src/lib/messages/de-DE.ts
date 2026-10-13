@@ -1830,4 +1830,38 @@ export const deDE: Record<MessageKey, string> = {
   'batch.previewTitle': 'Vorschau des PDFs für {name}',
   'batch.toConfirm': 'Weiter zur Bestätigung',
   'batch.confirm.heading': 'plural:one {count} Dokument senden? | other {count} Dokumente senden?',
+  'send.tab.campaign': 'Eine E-Mail an eine Liste',
+  'send.state.skipped': 'Nicht gesendet: steht auf der Sperrliste',
+  'campaign.step.list': 'Liste',
+  'campaign.step.write': 'Schreiben',
+  'campaign.step.preview': 'Vorschau',
+  'campaign.step.confirm': 'Bestätigen',
+  'campaign.list.intro':
+    'Fügen Sie eine Liste ein oder wählen Sie eine CSV-Datei. Höchstens {count} Personen auf einmal. Jede Zeile erhält eine E-Mail in reinem Text.',
+  'campaign.cap': 'Eine Kampagne geht an höchstens {count} Personen. Teilen Sie die Liste auf.',
+  'campaign.audience':
+    'plural:one {count} Person erhält diese E-Mail | other {count} Personen erhalten diese E-Mail',
+  'campaign.body': 'Nachricht',
+  'campaign.fieldsHint':
+    'Felder für Betreff, Nachricht und Fußzeile: {fields}. Nach einem senkrechten Strich können Sie einen Ersatzwert für Zeilen angeben, in denen die Liste nichts enthält, zum Beispiel {example}.',
+  'campaign.footer': 'Fußzeile (Text, den Sie selbst angeben)',
+  'campaign.footerHint':
+    'Diesen Text schreiben Sie selbst: wer sendet und von wo, warum die Person die E-Mail erhält und wie sie keine mehr erhält. Setzen Sie {link} dorthin, wo der Abmeldelink jeder Person stehen soll. Loppa fügt keinen eigenen Text hinzu.',
+  'campaign.noTracking': 'Nur reiner Text. Nichts in der E-Mail verfolgt Öffnungen oder Klicks.',
+  'campaign.problem.footerMissing':
+    'Schreiben Sie die Fußzeile. Ohne sie wird keine Kampagne gesendet.',
+  'campaign.problem.footerNoLink':
+    'Die Fußzeile muss {link} enthalten, dort steht der Abmeldelink jeder Person.',
+  'campaign.problem.unknownField':
+    'Der Text verwendet ein Feld, das es nicht gibt. Felder: {fields}',
+  'campaign.previewLink': '[persönlicher Abmeldelink dieser Person]',
+  'campaign.previewOf': 'Die E-Mail an {name}',
+  'campaign.testToMe': 'Test an mich senden',
+  'campaign.testQueued':
+    'Ein Test an {email} wurde in die Warteschlange gestellt. Er ist als Test gekennzeichnet.',
+  'campaign.confirm.heading':
+    'plural:one An {count} Person senden? | other An {count} Personen senden?',
+  'campaign.leftOut':
+    'plural:one {count} Adresse wird ausgelassen, weil sie sich abgemeldet hat oder unzustellbar war. | other {count} Adressen werden ausgelassen, weil sie sich abgemeldet haben oder unzustellbar waren.',
+  'campaign.leftOut.done': 'Ausgelassen (abgemeldet oder unzustellbar): {list}',
 };

@@ -75,6 +75,9 @@ export function buildMimeMessage(mail: OutboundMail & { from: string }): string 
     // Encoded, because a Swedish subject line is not ASCII and a raw one arrives as mojibake.
     `Subject: ${encodeHeader(oneLine(mail.subject))}`,
     'MIME-Version: 1.0',
+    ...Object.entries(mail.headers ?? {})
+      .filter(([name]) => /^[A-Za-z][A-Za-z-]*$/.test(name))
+      .map(([name, value]) => `${name}: ${oneLine(value)}`),
   ];
 
   const alternative = [
