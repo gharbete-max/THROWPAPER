@@ -86,7 +86,7 @@ async function expectUncollected(formId: string) {
 async function expectDemotedPublish(page: Page) {
   const order = await page.evaluate(() => {
     const at = (text: string) =>
-      [...document.querySelectorAll<HTMLElement>('header .button')].find(
+      Array.from(document.querySelectorAll<HTMLElement>('header .button')).find(
         (el) => el.textContent?.trim() === text,
       )!;
     const [download, fill, sign, share] = [
