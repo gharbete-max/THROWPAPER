@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { Db } from './types.js';
 import {
   brandKits,
@@ -17,6 +17,7 @@ import {
   DEMO_ADMIN_EMAIL,
   DEMO_BRAND,
   DEMO_DEFINITION,
+  DEMO_DOCUMENT_FORMS,
   DEMO_FORM_SLUG,
   DEMO_OPERATOR_EMAIL,
 } from '../demo/dataset.js';
@@ -204,6 +205,30 @@ export async function seedDemo(db: Db): Promise<{ organisationId: string; formSl
     );
 
     await db.insert(submissions).values(rows);
+  }
+
+  /*
+   * Documents: the imported PDF form and the Word form. Outside the block above so a database
+   * seeded before they existed gets them too; keyed on the slug, so a second run adds nothing.
+   * No signing request is seeded: `signing_requests.envelope_id` is NOT NULL and the envelope
+   * lives in Sign's own database, which this seed does not write (rule 1).
+   */
+  for (const demoForm of DEMO_DOCUMENT_FORMS) {
+    const [present] = await db
+      .select({ id: forms.id })
+      .from(forms)
+      .where(and(eq(forms.organisationId, organisation.id), eq(forms.slug, demoForm.slug)))
+      .limit(1);
+    if (present) continue;
+    await db.insert(forms).values({
+      organisationId: organisation.id,
+      eventId: null,
+      slug: demoForm.slug,
+      title: { ...demoForm.title },
+      status: 'draft',
+      draftDefinition: structuredClone(demoForm.definition) as formSchemas.FormDefinition,
+      ownerUserId: adminId,
+    });
   }
 
   /*

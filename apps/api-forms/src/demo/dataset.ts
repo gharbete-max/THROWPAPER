@@ -132,6 +132,73 @@ const MEALS = ['standard', 'veg', 'gluten'];
  */
 const GUEST_NAMES = ['Ingrid', 'Jonas', 'Karin', 'Lars', 'Maja', 'Nils'];
 
+/**
+ * Two forms that stand for documents brought in, so Forms has them from the first minute: a
+ * membership slip read out of a PDF and an inspection form read out of a Word file. The files they
+ * came from are `fixtures/documents/medlemsansokan.{pdf,docx}` and `besiktning.{pdf,docx}` (the
+ * golden corpus, invented content); the definitions are written out here because the packaged
+ * desktop carries no fixtures directory. Drafts, with no submissions: nothing is collected.
+ */
+const textField = (id: string, sv: string, en: string, required = false) =>
+  ({
+    id,
+    key: id,
+    type: 'short_text',
+    label: { 'sv-SE': sv, 'en-GB': en },
+    required,
+    width: 'full',
+  }) as const;
+
+const yesNoField = (id: string, sv: string, en: string) =>
+  ({
+    id,
+    key: id,
+    type: 'yes_no',
+    appearance: 'radio',
+    label: { 'sv-SE': sv, 'en-GB': en },
+    required: false,
+    width: 'full',
+  }) as const;
+
+const documentFormDefinition = (
+  fields: readonly formSchemas.FormDefinition['fields'][number][],
+): formSchemas.FormDefinition => ({
+  schemaVersion: 1,
+  fields: [...fields],
+  settings: formSchemas.emptyDefinition.settings,
+});
+
+export const DEMO_DOCUMENT_FORMS = [
+  {
+    slug: 'medlemsansokan-pdf',
+    title: { 'sv-SE': 'Medlemsansökan (från PDF)', 'en-GB': 'Membership application (from a PDF)' },
+    definition: documentFormDefinition([
+      textField('namn', 'Namn', 'Name', true),
+      textField('adress', 'Adress', 'Address'),
+      textField('telefon', 'Telefon', 'Phone'),
+      textField('epost', 'E-post', 'Email'),
+      yesNoField('nyhetsbrev', 'Vill du ha föreningens nyhetsbrev?', 'Do you want the newsletter?'),
+    ]),
+  },
+  {
+    slug: 'besiktning-word',
+    title: { 'sv-SE': 'Besiktning (från Word)', 'en-GB': 'Inspection (from a Word file)' },
+    definition: documentFormDefinition([
+      textField('objekt', 'Objekt', 'Item', true),
+      textField('plats', 'Plats', 'Place'),
+      yesNoField('godkand', 'Godkänd?', 'Approved?'),
+      {
+        id: 'anmarkning',
+        key: 'anmarkning',
+        type: 'long_text',
+        label: { 'sv-SE': 'Anmärkning', 'en-GB': 'Remark' },
+        required: false,
+        width: 'full',
+      },
+    ]),
+  },
+] as const;
+
 export const DEMO_DEFINITION: formSchemas.FormDefinition = {
   schemaVersion: 1,
   fields: [
@@ -648,6 +715,23 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
         createdAt: now,
         updatedAt: now,
       },
+      ...DEMO_DOCUMENT_FORMS.map((demoForm) => ({
+        id: randomUUID(),
+        organisationId,
+        eventId: null,
+        slug: demoForm.slug,
+        title: { ...demoForm.title },
+        status: 'draft' as const,
+        draftDefinition: structuredClone(demoForm.definition) as formSchemas.FormDefinition,
+        publishedVersionId: null,
+        publishedVersion: null,
+        opensAt: null,
+        closesAt: null,
+        ownerUserId: adminId,
+        deletedAt: null,
+        createdAt: now,
+        updatedAt: now,
+      })),
     ],
 
     formShares: [

@@ -73,8 +73,8 @@ anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.
    Phase 1's real delta in hand, and raise the budget in `scripts/bundle-budget.ts` with a reason if
    a feature earns it.
 4. **CLAUDE.md "Demo data"** — done: it names the Documents-shaped target. The two-page PDF fixture
-   exists in the page-work tests (`apps/api-forms/src/pdf/*.test.ts`); the demo seed itself still
-   holds no PDF, Word or To-send content (not done).
+   exists in the page-work tests (`apps/api-forms/src/pdf/*.test.ts`); phase 9 added the demo fixtures (`fixtures/demo/`),
+   two forms standing for an imported PDF and a Word file, and a To-send message on the desktop.
 
 ## Phase 1 — Scan and page basics, PDF text, Word to PDF
 

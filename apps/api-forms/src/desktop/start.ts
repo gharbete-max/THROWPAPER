@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { buildServer } from '../server.js';
 import { openLocalDatabase, type LocalDatabase } from '../db/pglite.js';
 import { seedDemo } from '../db/seed-demo.js';
+import { demoToSend } from '../demo/documents.js';
 import { createLocalDocumentStore } from '../documents/store.js';
 import { createLocalAssetStore } from '../uploads/store.js';
 import { createLocalUploadStore } from '../uploads/private-store.js';
@@ -277,6 +278,8 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     async loadDemo() {
       if (await isSetUp()) return false;
       await seedDemo(local.db);
+      // Desktop only: To send is the desktop's mail. One message waits there, unopened.
+      await createOutgoingStore(paths.toSend).add(await demoToSend());
       return true;
     },
     signInLink: () => mintLocalSignInLink(local.repos, url),
