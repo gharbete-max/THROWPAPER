@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type DragEvent } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type DragEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ApiError, client } from '../lib/api.js';
 import { saveBlob } from '../lib/email-handoff.js';
@@ -20,6 +20,8 @@ import {
   turnPage,
   type ScanPage,
 } from './scan-plan.js';
+
+const ScanEdit = lazy(() => import('./scan-edit/ScanEdit.js'));
 
 /** The server's limits (`api-forms/src/pdf/arrange.ts`), so the screen can say so before sending. */
 const MAX_FILES = 40;
@@ -43,6 +45,7 @@ export function Scan() {
   const [camera, setCamera] = useState(false);
   const [pages, setPages] = useState<ScanPage[]>([]);
   const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState<{ blob: Blob; page: number } | null>(null);
   const picker = useRef<HTMLInputElement>(null);
 
   // The drawings are released when the screen goes.
@@ -103,15 +106,22 @@ export function Scan() {
     ]);
   }
 
-  /** `then` is what happens to the made PDF: saved to disk, or handed on to Signing. */
-  async function make(acceptSignatureLoss = false, then: 'download' | 'sign' = 'download') {
+  /**
+   * `then` is what happens to the made PDF: saved to disk, handed on to Signing, or (a function)
+   * given to the caller, as the editing step is.
+   */
+  async function make(
+    acceptSignatureLoss = false,
+    then: 'download' | 'sign' | ((blob: Blob) => void) = 'download',
+  ) {
     const request = requestOf(pages, files);
     setBusy(true);
     try {
       const blob = await client.arrangePdf(request.files, request.plan, acceptSignatureLoss);
       // A PDF made from a Word file keeps "layout may differ from Word" in its name.
       const name = files.find((file) => fromWord.has(file))?.name ?? 'loppa.pdf';
-      if (then === 'sign')
+      if (typeof then === 'function') then(blob);
+      else if (then === 'sign')
         navigate(...signingWith(new File([blob], name, { type: 'application/pdf' })));
       else saveBlob(blob, name);
     } catch (error) {
@@ -131,6 +141,15 @@ export function Scan() {
     } finally {
       setBusy(false);
     }
+  }
+
+  /** The edited PDF is now the only file: its pages are the list. */
+  async function replaceAll(file: File) {
+    const pdf = await openPdf(await file.arrayBuffer());
+    for (const old of sources) if ('pdf' in old) void old.pdf.close();
+    setFiles([file]);
+    setSources([{ pdf }]);
+    setPages(pagesOfFile(0, pdf.pageCount));
   }
 
   function onDrop(event: DragEvent) {
@@ -225,6 +244,12 @@ export function Scan() {
                   onClick={() => setPages(turnPage(pages, page.id))}
                 />
                 <PageButton
+                  label={t('scan.edit')}
+                  icon="edit"
+                  disabled={busy}
+                  onClick={() => void make(false, (blob) => setEditing({ blob, page: position }))}
+                />
+                <PageButton
                   label={t('scan.remove')}
                   icon="trash"
                   onClick={() => setPages(removePage(pages, page.id))}
@@ -234,6 +259,19 @@ export function Scan() {
           ))}
         </ol>
       )}
+      {editing ? (
+        <Suspense fallback={null}>
+          <ScanEdit
+            blob={editing.blob}
+            page={editing.page}
+            onCancel={() => setEditing(null)}
+            onDone={(file) => {
+              setEditing(null);
+              void replaceAll(file);
+            }}
+          />
+        </Suspense>
+      ) : null}
     </section>
   );
 }
@@ -245,7 +283,7 @@ function PageButton({
   onClick,
 }: {
   label: string;
-  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash';
+  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit';
   disabled?: boolean;
   onClick: () => void;
 }) {

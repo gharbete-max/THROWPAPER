@@ -102,7 +102,25 @@ list of (source file, page, rotation)*. Build that one thing.
   page count of the output by reading it back with pdf-lib; an encrypted PDF and a pdf bomb
   (`apps/api-forms/src/test-pdf-bomb.ts` exists) are refused; one e2e through the screen.
 
-### 1b. PDF text (add, cover, replace, redact)
+### 1b. PDF text (add, cover, replace, redact) - built (2026-10-13)
+
+Built: `POST /v1/pdf/edit` and `POST /v1/pdf/redact` (`apps/api-forms/src/pdf/edit.ts`,
+`text-fonts.ts`, `routes/pdf-edit.ts`); the screen is `apps/forms/src/screens/scan-edit/ScanEdit.tsx`
+(a lazy chunk), opened by a button on each page of Scan, which first makes the arranged PDF and then
+replaces the list with the edited one. Fonts, measured: Helvetica (not embedded) prints every letter
+of da de en es fi fr is nb sv; Inter's Cyrillic subset (already a dependency, 10 KB) prints ru, with
+digits and punctuation from Helvetica; Noto Sans JP (1.6 MB, vendored under OFL) prints ja (all 6 355
+JIS X 0208 kanji, kana, full-width punctuation); Noto Sans SC (1.6 MB, vendored) prints zh (5 717 of
+the 6 768 GB 2312 hanzi; the rest are refused by name). Only the glyphs used are embedded (a few KB)
+and a CJK file is read only when a character needs it. New dependency: `@pdf-lib/fontkit` (MIT):
+pdf-lib cannot embed a font without it. Fonts are woff, not woff2: fontkit throws asynchronously
+when it subsets a woff2. Redaction rasterises the page in the browser at 2 px a point, burns the
+boxes in, and the server builds a new document from copies of the other pages, so nothing the old
+page reached (text, fonts, bookmarks, metadata) travels; a leaf-count check refuses a PDF where a
+page rides along anyway. The desktop build does not carry the two CJK files yet (it refuses CJK text
+with a plain message). The bundle total went from about 1001.4 to 1011.2 KB (budget 1 015).
+
+### 1b. As designed
 
 - **Add / cover / replace.** `POST /v1/pdf/edit` with ops `{page, x, y, text, size}` and
   `{page, rect, fill}`. Replace = cover then add. Fonts: pdf-lib's standard fonts cover Latin; the

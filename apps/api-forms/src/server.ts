@@ -68,6 +68,7 @@ import { registerCheckInRoutes } from './routes/checkin.js';
 import { registerBrandKitRoutes } from './routes/brand-kit.js';
 import { registerUploadRoutes } from './routes/uploads.js';
 import { registerPdfRoutes } from './routes/pdf.js';
+import { registerPdfEditRoutes } from './routes/pdf-edit.js';
 import { createLocalAssetStore, type AssetStore } from './uploads/store.js';
 import { createLocalUploadStore, type PrivateUploadStore } from './uploads/private-store.js';
 import { sweepExpiredUploads } from './uploads/lifecycle.js';
@@ -618,6 +619,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     });
   registerUploadRoutes(app, { repos, guard, assets, uploadStore });
   registerPdfRoutes(app, { guard, renderer });
+  registerPdfEditRoutes(app, { guard });
   if (options.outgoing) {
     registerOutgoingRoutes(app, {
       repos,

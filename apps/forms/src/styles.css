@@ -7884,4 +7884,61 @@ a.room__centre:focus-visible {
   margin: 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+/* --- Scan: edit one page (add text, cover, redact) ---------------------------------------------
+ * The page is drawn at a fixed size and marks sit on top of it in percentages of the page, so they
+ * stay put when the canvas shrinks on a phone. Marks are previews: a cover shows its own paper or
+ * ink colour (PDF content, set inline), text is outlined so it can be told from the page.
+ */
+.scan-edit__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .scan-edit__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scan-edit__page {
+  position: relative;
+  max-inline-size: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.scan-edit__canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.scan-edit__mark {
+  position: absolute;
+  pointer-events: none;
+  outline: 1px dashed var(--tp-colour-primary);
+}
+
+.scan-edit__mark--text {
+  white-space: pre;
+  line-height: 1;
+  transform: translateY(-80%);
+  color: var(--tp-colour-text);
+}
+
+.scan-edit__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  border: 0;
+  padding: 0;
+}
+
+.scan-edit__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
