@@ -330,33 +330,7 @@ function Settings({
         <fieldset>
           <legend>{t.aiHeading}</legend>
           <p className="note">{t.aiLead}</p>
-          {(['off', 'online', 'cloud'] as const).map((mode) => (
-            <Choice
-              key={mode}
-              name="ai"
-              value={mode}
-              checked={settings.ai.mode === mode}
-              onChange={() => patch({ ai: { ...settings.ai, mode } })}
-            >
-              {mode === 'off' ? t.aiOff : mode === 'online' ? t.aiOnline : t.aiCloud}
-            </Choice>
-          ))}
-          {settings.ai.mode === 'online' ? (
-            <>
-              <label>
-                {t.aiEndpoint}
-                <input
-                  type="url"
-                  value={settings.ai.endpoint ?? ''}
-                  onChange={(event) =>
-                    patch({ ai: { ...settings.ai, endpoint: event.target.value || undefined } })
-                  }
-                />
-              </label>
-              <p className="note">{t.placeholderNote}</p>
-            </>
-          ) : null}
-          {settings.ai.mode === 'cloud' ? <p className="note">{t.cloudNote}</p> : null}
+          <p className="note">{t.aiWhere}</p>
         </fieldset>
 
         <fieldset>

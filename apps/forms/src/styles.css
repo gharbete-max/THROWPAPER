@@ -7778,6 +7778,16 @@ a.room__part:focus-visible {
   animation: room-arrive 320ms var(--tp-ease) 550ms backwards;
 }
 
+a.room__centre {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.room__centre:hover,
+a.room__centre:focus-visible {
+  outline: var(--tp-border-width) solid var(--tp-room-quiet);
+}
+
 .room__centre span {
   color: var(--tp-room-quiet);
 }
@@ -7867,4 +7877,11 @@ a.room__part:focus-visible {
   :is(.catcher__art, .catcher__glow, .rosette__pocket, .room__part, .room__centre) {
     animation: none;
   }
+}
+
+/* Summary and translation (the room's centre): text is shown as written, line breaks kept. */
+.summary__text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

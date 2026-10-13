@@ -1431,6 +1431,103 @@ export const fiFI: Record<MessageKey, string> = {
   'room.pause': 'Pysäytä liike',
   'room.play': 'Käynnistä liike',
   'room.opened': '{name} on auki',
+  'room.centreOpen': 'Avaa se',
+  'summary.intro':
+    'Luonnos avoinna olevan asiakirjan tiivistelmästä tai käännöksestä, tehty tällä tietokoneella. Se näytetään alkuperäisen vieressä, merkittynä tuotetuksi, eikä sitä koskaan tallenneta.',
+  'summary.settingsToggle': 'Mallin asetukset',
+  'summary.modelHeading': 'Malli',
+  'summary.modelWhat':
+    'Kielimalli, jonka koko on {size}, toimii tällä tietokoneella ilman verkkoa. Asiakirjasi eivät koskaan poistu sieltä. Malli ladataan kerran, vain pyynnöstäsi, ja sen voi poistaa uudelleen.',
+  'summary.state.ready': 'Malli on valmis.',
+  'summary.state.location': 'Tiedosto: {path}',
+  'summary.memory.low':
+    'Tällä tietokoneella on {free} Gt vapaata muistia, ja malli tarvitsee noin {need} Gt. Sulje muut ohjelmat ja yritä uudelleen.',
+  'summary.get': 'Hae malli',
+  'summary.getConfirm':
+    'Tämä lataa {size} Loppan julkaisusta GitHubista kahdessa osassa ja tarkistaa ne. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
+  'summary.getConfirmYes': 'Lataa',
+  'summary.getOff':
+    'Lataus ei ole vielä saatavilla: mallia ei ole julkaistu. Voit sen sijaan avata mallitiedoston levyltä.',
+  'summary.open': 'Avaa mallitiedosto levyltä',
+  'summary.remove': 'Poista malli',
+  'summary.removeConfirm':
+    'Poistetaanko malli tältä tietokoneelta? Voit hakea sen myöhemmin uudelleen.',
+  'summary.removeConfirmYes': 'Poista',
+  'summary.cancel': 'Peruuta',
+  'summary.progress.download': 'Ladataan osaa {part}/{parts}: {done}/{total} Mt',
+  'summary.progress.join': 'Yhdistetään osia: {done}/{total} Mt',
+  'summary.progress.verify': 'Tarkistetaan tiedostoa: {done}/{total} Mt',
+  'summary.problem.not-installed': 'Mallia ei ole tällä tietokoneella.',
+  'summary.problem.damaged':
+    'Tiedosto ei vastaa julkaistua mallia, eikä sitä käytetty. Mitään ei poistettu.',
+  'summary.problem.too-little-memory':
+    'Vapaata muistia on liian vähän mallin lataamiseen. Sulje muut ohjelmat ja yritä uudelleen.',
+  'summary.problem.cannot-start': 'Mallia ei voitu käynnistää tällä tietokoneella.',
+  'summary.problem.download-unavailable': 'Lataus ei ole vielä saatavilla.',
+  'summary.problem.download-failed':
+    'Lataus epäonnistui tai ei täsmännyt. Mitään ei säilytetty. Yritä uudelleen.',
+  'summary.problem.not-a-model-file':
+    'Tuo tiedosto ei ole Loppan käyttämä malli. Sitä ei käytetty.',
+  'summary.problem.busy': 'Jotain muuta on kesken. Odota, että se valmistuu.',
+  'summary.problem.too-long': 'Teksti on liian pitkä käsiteltäväksi kerralla. Käytä sen osaa.',
+  'summary.problem.language-refused': 'Tätä kieltä ei tarjota.',
+  'summary.problem.quote-only': 'Tämä teksti lainataan, sitä ei kirjoiteta uudelleen.',
+  'summary.problem.cancelled': 'Pysäytetty.',
+  'summary.problem.repetition': 'Malli alkoi toistaa itseään ja pysäytettiin.',
+  'summary.problem.failed': 'Jokin meni pieleen. Mitään ei muutettu.',
+  'summary.source.heading': 'Mitä luetaan',
+  'summary.source.paste': 'Liitetty teksti',
+  'summary.source.file': 'PDF- tai tekstitiedosto',
+  'summary.source.form': 'Lomakkeen kysymykset',
+  'summary.source.answers': 'Täytetyn lomakkeen vastaukset',
+  'summary.paste.label': 'Liitä teksti tähän',
+  'summary.file.choose': 'Valitse tiedosto',
+  'summary.file.reading': 'Luetaan sivua {done}/{total}…',
+  'summary.file.empty': 'Siitä ei löytynyt tekstiä.',
+  'summary.form.pick': 'Lomake',
+  'summary.form.none': 'Lomakkeita ei ole vielä.',
+  'summary.answers.pick': 'Vastaus',
+  'summary.answers.none': 'Tällä lomakkeella ei ole vielä vastauksia.',
+  'summary.original': 'Alkuperäinen',
+  'summary.task.heading': 'Mitä tehdään',
+  'summary.task.summarise': 'Tiivistä',
+  'summary.task.translate': 'Käännä',
+  'summary.language': 'Kielelle',
+  'summary.is.summary':
+    'Islannin kirjoittamista ei tarjota: testeissä malli kirjoitti sitä huonosti. Valitse toinen kieli.',
+  'summary.is.translate':
+    'Islanniksi kääntämistä ei tarjota: testeissä malli tuotti rikkinäisiä lauseita.',
+  'summary.ru.names': 'Nimet venäjäksi voivat muuttua. Tarkista ne alkuperäisestä.',
+  'summary.quoteOnly.notice':
+    'Tämä näyttää sopimukselta, suostumukselta, vakuutukselta tai lääketieteelliseltä lomakkeelta. Sitä ei tiivistetä eikä käännetä, koska uudelleenmuotoilu voisi muuttaa sen merkitystä. Ensin luettavat kohdat näytetään täsmälleen kirjoitetussa muodossaan, alkuperäisellä kielellä.',
+  'summary.quoteOnly.caveat':
+    'Valinta on lukemisen apu ja voi jättää jotain pois. Lue koko asiakirja ennen kuin hyväksyt sen.',
+  'summary.quoteOnly.run': 'Osoita ensin luettavat kohdat',
+  'summary.start': 'Aloita',
+  'summary.stop': 'Pysäytä',
+  'summary.step.loading': 'Käynnistetään mallia…',
+  'summary.step.reading': 'Luetaan osaa {done}/{total}…',
+  'summary.step.combining': 'Yhdistetään muistiinpanoja {done}/{total}…',
+  'summary.step.writing': 'Kirjoitetaan…',
+  'summary.step.translating': 'Käännetään osaa {done}/{total}…',
+  'summary.expect':
+    'Sivu kestää nopealla tietokoneella noin puoli minuuttia ja kannettavalla useita minuutteja. Pidempi teksti kestää kauemmin. Voit pysäyttää milloin tahansa.',
+  'summary.result.summary': 'Tiivistelmä — tuotettu tällä tietokoneella',
+  'summary.result.translation': 'Konekäännös — luonnos',
+  'summary.result.passages': 'Ensin luettavat kohdat',
+  'summary.result.note':
+    'Mallin tuottama tällä tietokoneella. Se voi olla väärin. Sitä ei tallenneta eikä kirjoiteta mihinkään asiakirjaan, lomakkeeseen tai viestiin.',
+  'summary.result.digest':
+    'Pitkä teksti tiivistetään yhdellä kohdalla jokaista osaa kohti. Se on tiivistelmä, ei pöytäkirja.',
+  'summary.result.time': 'Kesti {seconds} sekuntia.',
+  'summary.copy': 'Kopioi',
+  'summary.copied': 'Kopioitu',
+  'summary.warn.added':
+    'Tuloksessa olevat luvut, joita alkuperäisessä ei ole: {numbers}. Tarkista ne.',
+  'summary.warn.missing': 'Alkuperäisen luvut, jotka puuttuvat tuloksesta: {numbers}.',
+  'summary.warn.repetition':
+    'Malli alkoi toistaa itseään ja pysäytettiin. Suhtaudu tulokseen varoen.',
+  'summary.passage': 'Kohta {n}',
   'scan.heading': 'Järjestä sivut',
   'scan.intro':
     'Yhdistä PDF-tiedostoja ja valokuvia, poista sivuja, käännä niitä ja järjestä ne. Mitään ei tallenneta: uusi PDF luodaan ladattavaksesi.',

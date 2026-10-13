@@ -63,6 +63,7 @@ const Invoices = lazy(() => import('./screens/Invoices.js').then((m) => ({ defau
 const FillForm = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillForm })));
 const FillPdf = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillPdf })));
 const Scan = lazy(() => import('./screens/Scan.js').then((m) => ({ default: m.Scan })));
+const Summary = lazy(() => import('./screens/Summary.js').then((m) => ({ default: m.Summary })));
 const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
 const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
@@ -401,6 +402,7 @@ function Shell() {
               <Route path="/responses" element={<Inbox />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/scan" element={<Scan />} />
+              <Route path="/summary" element={<Summary />} />
               <Route path="/signing" element={<Signing />} />
               <Route path="/outgoing" element={<Outgoing />} />
               <Route path="/users" element={<Users />} />

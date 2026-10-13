@@ -1414,6 +1414,102 @@ export const nbNO: Record<MessageKey, string> = {
   'room.pause': 'Sett bevegelsen på pause',
   'room.play': 'Start bevegelsen',
   'room.opened': '{name} er åpen',
+  'room.centreOpen': 'Åpne den',
+  'summary.intro':
+    'Et utkast til sammendrag eller oversettelse av et dokument du har åpent, laget på denne datamaskinen. Det vises ved siden av originalen, merket som generert, og lagres aldri.',
+  'summary.settingsToggle': 'Modellinnstillinger',
+  'summary.modelHeading': 'Modellen',
+  'summary.modelWhat':
+    'En språkmodell på {size} kjører på denne datamaskinen, uten nett. Dokumentene dine forlater den aldri. Den lastes ned én gang, bare når du ber om det, og du kan fjerne den igjen.',
+  'summary.state.ready': 'Modellen er klar.',
+  'summary.state.location': 'Fil: {path}',
+  'summary.memory.low':
+    'Denne datamaskinen har {free} GB ledig minne, og modellen trenger omtrent {need} GB. Lukk andre programmer og prøv igjen.',
+  'summary.get': 'Hent modellen',
+  'summary.getConfirm':
+    'Dette laster ned {size} fra Loppas utgivelse på GitHub, i to deler, og kontrollerer dem. Det tar så mye diskplass. Dokumentene dine sendes ingen steder. Fortsette?',
+  'summary.getConfirmYes': 'Last ned',
+  'summary.getOff':
+    'Nedlastingen er ikke tilgjengelig ennå: modellen er ikke publisert. Du kan åpne en modellfil fra disken i stedet.',
+  'summary.open': 'Åpne en modellfil fra disken',
+  'summary.remove': 'Fjern modellen',
+  'summary.removeConfirm': 'Fjerne modellen fra denne datamaskinen? Du kan hente den igjen senere.',
+  'summary.removeConfirmYes': 'Fjern',
+  'summary.cancel': 'Avbryt',
+  'summary.progress.download': 'Laster ned del {part} av {parts}: {done} av {total} MB',
+  'summary.progress.join': 'Setter sammen delene: {done} av {total} MB',
+  'summary.progress.verify': 'Kontrollerer filen: {done} av {total} MB',
+  'summary.problem.not-installed': 'Modellen er ikke på denne datamaskinen.',
+  'summary.problem.damaged':
+    'Filen stemmer ikke med den publiserte modellen og ble ikke brukt. Ingenting er slettet.',
+  'summary.problem.too-little-memory':
+    'Det er for lite ledig minne til å laste modellen. Lukk andre programmer og prøv igjen.',
+  'summary.problem.cannot-start': 'Modellen kunne ikke starte på denne datamaskinen.',
+  'summary.problem.download-unavailable': 'Nedlastingen er ikke tilgjengelig ennå.',
+  'summary.problem.download-failed':
+    'Nedlastingen mislyktes eller stemte ikke. Ingenting ble beholdt. Prøv igjen.',
+  'summary.problem.not-a-model-file':
+    'Den filen er ikke modellen Loppa bruker. Den ble ikke brukt.',
+  'summary.problem.busy': 'Noe annet pågår. Vent til det er ferdig.',
+  'summary.problem.too-long': 'Teksten er for lang til å behandles på én gang. Bruk en del av den.',
+  'summary.problem.language-refused': 'Det språket tilbys ikke.',
+  'summary.problem.quote-only': 'Denne teksten siteres, den skrives ikke om.',
+  'summary.problem.cancelled': 'Stoppet.',
+  'summary.problem.repetition': 'Modellen begynte å gjenta seg selv og ble stoppet.',
+  'summary.problem.failed': 'Noe gikk galt. Ingenting er endret.',
+  'summary.source.heading': 'Hva skal leses',
+  'summary.source.paste': 'Limt inn tekst',
+  'summary.source.file': 'En PDF- eller tekstfil',
+  'summary.source.form': 'Spørsmålene i et skjema',
+  'summary.source.answers': 'Svarene i et utfylt skjema',
+  'summary.paste.label': 'Lim inn teksten her',
+  'summary.file.choose': 'Velg en fil',
+  'summary.file.reading': 'Leser side {done} av {total}…',
+  'summary.file.empty': 'Fant ingen tekst i den.',
+  'summary.form.pick': 'Skjema',
+  'summary.form.none': 'Det finnes ingen skjemaer ennå.',
+  'summary.answers.pick': 'Svar',
+  'summary.answers.none': 'Dette skjemaet har ingen svar ennå.',
+  'summary.original': 'Originalen',
+  'summary.task.heading': 'Hva skal gjøres',
+  'summary.task.summarise': 'Sammenfatt',
+  'summary.task.translate': 'Oversett',
+  'summary.language': 'Til',
+  'summary.is.summary':
+    'Å skrive islandsk tilbys ikke: i testene skrev modellen det dårlig. Velg et annet språk.',
+  'summary.is.translate':
+    'Å oversette til islandsk tilbys ikke: i testene ga modellen ødelagte setninger.',
+  'summary.ru.names': 'Navn på russisk kan bli endret. Kontroller dem mot originalen.',
+  'summary.quoteOnly.notice':
+    'Dette ligner en avtale, et samtykke, en erklæring eller et medisinsk skjema. Det sammenfattes eller oversettes ikke, fordi en omskriving kan endre hva det betyr. Avsnittene det er verdt å lese først vises nøyaktig slik de er skrevet, på originalspråket.',
+  'summary.quoteOnly.caveat':
+    'Utvalget er en lesehjelp og kan overse noe. Les hele dokumentet før du godtar det.',
+  'summary.quoteOnly.run': 'Pek ut avsnittene som skal leses først',
+  'summary.start': 'Sett i gang',
+  'summary.stop': 'Stopp',
+  'summary.step.loading': 'Starter modellen…',
+  'summary.step.reading': 'Leser del {done} av {total}…',
+  'summary.step.combining': 'Setter sammen notater {done} av {total}…',
+  'summary.step.writing': 'Skriver…',
+  'summary.step.translating': 'Oversetter del {done} av {total}…',
+  'summary.expect':
+    'En side tar omtrent et halvt minutt på en rask datamaskin og flere minutter på en bærbar. En lengre tekst tar lengre tid. Du kan stoppe når som helst.',
+  'summary.result.summary': 'Sammendrag — generert på denne datamaskinen',
+  'summary.result.translation': 'Maskinoversettelse — utkast',
+  'summary.result.passages': 'Avsnitt som skal leses først',
+  'summary.result.note':
+    'Generert av en modell på denne datamaskinen. Den kan ta feil. Det lagres ikke og skrives ikke inn i noe dokument, skjema eller noen melding.',
+  'summary.result.digest':
+    'En lang tekst sammenfattes med ett punkt for hver del. Det er et utdrag, ikke en journal.',
+  'summary.result.time': 'Tok {seconds} sekunder.',
+  'summary.copy': 'Kopier',
+  'summary.copied': 'Kopiert',
+  'summary.warn.added':
+    'Tall i resultatet som ikke finnes i originalen: {numbers}. Kontroller dem.',
+  'summary.warn.missing': 'Tall i originalen som mangler i resultatet: {numbers}.',
+  'summary.warn.repetition':
+    'Modellen begynte å gjenta seg selv og ble stoppet. Bruk resultatet med forsiktighet.',
+  'summary.passage': 'Avsnitt {n}',
   'scan.heading': 'Ordne sider',
   'scan.intro':
     'Sett sammen PDF-filer og bilder, fjern sider, drei dem og legg dem i rekkefølge. Ingenting lagres: den nye PDF-en lages slik at du kan laste den ned.',

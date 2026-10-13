@@ -64,12 +64,11 @@ const EN = {
   mailConfirm:
     'I understand that confirmations will be sent to real people from this computer, from the account chosen above.',
 
-  aiHeading: 'AI assistance',
-  aiLead: 'Off unless you turn it on. Nothing is sent anywhere while it is off.',
-  aiOff: 'Off',
-  aiOnline: 'Connect online — to an AI service I choose',
-  aiCloud: 'Work in cloud (placeholder)',
-  aiEndpoint: 'Service address',
+  aiHeading: 'Summary and translation',
+  aiLead:
+    'They run on this computer, offline, with a model file you get once and can remove. Nothing is sent anywhere.',
+  aiWhere: 'Set it up in Loppa under Documents, then Summary and translation.',
+  menuOpenModel: 'Open the model file',
 
   signingHeading: 'Signing',
   signingLead:
@@ -152,12 +151,11 @@ const SV: typeof EN = {
   mailConfirm:
     'Jag förstår att bekräftelser skickas till riktiga mottagare från den här datorn, från kontot som valts ovan.',
 
-  aiHeading: 'AI-stöd',
-  aiLead: 'Avstängt tills du slår på det. Ingenting skickas någonstans medan det är avstängt.',
-  aiOff: 'Av',
-  aiOnline: 'Anslut online — till en AI-tjänst jag väljer',
-  aiCloud: 'Arbeta i molnet (platshållare)',
-  aiEndpoint: 'Tjänstens adress',
+  aiHeading: 'Sammanfattning och översättning',
+  aiLead:
+    'De körs på den här datorn, utan nätverk, med en modellfil som du hämtar en gång och kan ta bort. Ingenting skickas någonstans.',
+  aiWhere: 'Ställ in det i Loppa under Dokument, sedan Sammanfattning och översättning.',
+  menuOpenModel: 'Öppna modellfilen',
 
   signingHeading: 'Signering',
   signingLead:

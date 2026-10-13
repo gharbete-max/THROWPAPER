@@ -19,6 +19,7 @@ import {
   safeStorage,
   session,
   shell,
+  utilityProcess,
   type MenuItemConstructorOptions,
 } from 'electron';
 import {
@@ -32,6 +33,9 @@ import type { LocalSign } from '@tp/api-sign/local';
 import { startForms, startSign } from './host.js';
 import { CHANNELS, type PanelView, type Result, type SettingsForm } from '../bridge.js';
 import { fill, messagesFor } from '../messages.js';
+import { MODEL_CHANNELS } from '../model/channels.js';
+import { registerModelIpc } from '../model/ipc.js';
+import { createShellModelService } from '../model/shell.js';
 import { createElectronPdfRenderer } from './pdf.js';
 import { applySettingsForm, toPanelSettings } from './settings-form.js';
 import {
@@ -55,6 +59,26 @@ const resources = app.isPackaged ? process.resourcesPath : here;
 const dataDir = join(app.getPath('userData'), 'workspace');
 
 const { lang, t } = messagesFor([app.getLocale(), ...app.getPreferredSystemLanguages()]);
+
+/**
+ * The summary and translation model (ADR 0023): a worker process of its own, started only when a
+ * job is asked for, and a narrow IPC to the Forms window. Nothing here runs at start-up.
+ */
+const model = createShellModelService({
+  fork: (modulePath) => utilityProcess.fork(modulePath, [], { serviceName: 'Loppa model' }),
+  chooseFile: async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      title: t.menuOpenModel,
+      properties: ['openFile'],
+      filters: [{ name: 'GGUF', extensions: ['gguf'] }],
+    });
+    return canceled ? null : (filePaths[0] ?? null);
+  },
+  userData: app.getPath('userData'),
+  resources,
+  emit: (event) => mainWindow?.webContents.send(MODEL_CHANNELS.event, event),
+  env: process.env,
+});
 
 let server: DesktopServer | null = null;
 /**
@@ -177,7 +201,13 @@ async function openMainWindow(): Promise<void> {
     height: 860,
     title: t.appName,
     show: false,
-    webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false },
+    webPreferences: {
+      // `window.loppaModel`, for the summary centre and nothing else (`model/preload.ts`).
+      preload: join(here, 'model-preload.cjs'),
+      contextIsolation: true,
+      sandbox: true,
+      nodeIntegration: false,
+    },
   });
   mainWindow.once('ready-to-show', () => mainWindow?.show());
   mainWindow.on('closed', () => {
@@ -300,6 +330,7 @@ async function replacePanelWithMain(): Promise<void> {
 }
 
 function registerIpc(): void {
+  registerModelIpc(ipcMain, model, () => ourOrigins());
   const fail = (error: unknown): Result => ({ ok: false, error: (error as Error).message });
   const refused: Result = { ok: false, error: 'not-the-panel' };
 
@@ -402,7 +433,9 @@ if (!app.requestSingleInstanceLock()) {
     if (closing) return;
     closing = true;
     event.preventDefault();
-    void Promise.allSettled([server?.close(), sign?.close()]).finally(() => app.quit());
+    void Promise.allSettled([server?.close(), sign?.close(), model.close()]).finally(() =>
+      app.quit(),
+    );
   });
 
   void app.whenReady().then(async () => {

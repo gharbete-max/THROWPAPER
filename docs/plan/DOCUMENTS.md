@@ -221,9 +221,9 @@ exists, reshaped where it must be.
 
 ## 4. The centre: summary and translation
 
-Built in the **later session** that can reach the model (see the hand-over at the end); everything
-before it is built without the network. Until then the centre says plainly that the summary is not
-on this computer yet. On an edition that has no summary, it says that instead.
+**Built (phase 8, ADR 0023 "As built").** On the desktop the centre is the summary and translation pane;
+where the model is not on the computer it says so and offers to get it. On an edition that has no summary,
+it says "Not in this edition". The text below is the plan it was built from.
 
 **Languages.** All twelve that Loppa has: Danish, German, English, Spanish, Finnish, French,
 Icelandic, Japanese, Norwegian Bokmål, Russian, Swedish and Chinese (`apps/forms/src/lib/messages/`).

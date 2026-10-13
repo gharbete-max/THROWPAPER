@@ -1427,6 +1427,102 @@ export const isIS: Record<MessageKey, string> = {
   'room.pause': 'Gera hlé á hreyfingunni',
   'room.play': 'Setja hreyfinguna af stað',
   'room.opened': '{name} er opið',
+  'room.centreOpen': 'Opna það',
+  'summary.intro':
+    'Uppkast að samantekt eða þýðingu á skjali sem þú hefur opið, gert á þessari tölvu. Það birtist við hlið frumtextans, merkt sem útbúið af vél, og er aldrei vistað.',
+  'summary.settingsToggle': 'Stillingar líkansins',
+  'summary.modelHeading': 'Líkanið',
+  'summary.modelWhat':
+    'Mállíkan, {size} að stærð, keyrir á þessari tölvu án nettengingar. Skjölin þín fara aldrei af henni. Það er sótt einu sinni, aðeins þegar þú biður um það, og þú getur fjarlægt það aftur.',
+  'summary.state.ready': 'Líkanið er tilbúið.',
+  'summary.state.location': 'Skrá: {path}',
+  'summary.memory.low':
+    'Þessi tölva hefur {free} GB af lausu minni og líkanið þarf um {need} GB. Lokaðu öðrum forritum og reyndu aftur.',
+  'summary.get': 'Sækja líkanið',
+  'summary.getConfirm':
+    'Þetta sækir {size} úr útgáfu Loppa á GitHub, í tveimur hlutum, og athugar þá. Það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt. Halda áfram?',
+  'summary.getConfirmYes': 'Sækja',
+  'summary.getOff':
+    'Niðurhalið er ekki tiltækt enn: líkanið hefur ekki verið gefið út. Þú getur opnað líkanskrá af disknum í staðinn.',
+  'summary.open': 'Opna líkanskrá af disknum',
+  'summary.remove': 'Fjarlægja líkanið',
+  'summary.removeConfirm': 'Fjarlægja líkanið af þessari tölvu? Þú getur sótt það aftur síðar.',
+  'summary.removeConfirmYes': 'Fjarlægja',
+  'summary.cancel': 'Hætta við',
+  'summary.progress.download': 'Sæki hluta {part} af {parts}: {done} af {total} MB',
+  'summary.progress.join': 'Set hlutana saman: {done} af {total} MB',
+  'summary.progress.verify': 'Athuga skrána: {done} af {total} MB',
+  'summary.problem.not-installed': 'Líkanið er ekki á þessari tölvu.',
+  'summary.problem.damaged':
+    'Skráin passar ekki við útgefna líkanið og var ekki notuð. Engu var eytt.',
+  'summary.problem.too-little-memory':
+    'Of lítið laust minni er til að hlaða líkaninu. Lokaðu öðrum forritum og reyndu aftur.',
+  'summary.problem.cannot-start': 'Líkanið gat ekki ræst á þessari tölvu.',
+  'summary.problem.download-unavailable': 'Niðurhalið er ekki tiltækt enn.',
+  'summary.problem.download-failed':
+    'Niðurhalið mistókst eða passaði ekki. Engu var haldið. Reyndu aftur.',
+  'summary.problem.not-a-model-file':
+    'Þessi skrá er ekki líkanið sem Loppa notar. Hún var ekki notuð.',
+  'summary.problem.busy': 'Annað er í gangi. Bíddu þar til því lýkur.',
+  'summary.problem.too-long': 'Textinn er of langur til að vinna í einu lagi. Notaðu hluta hans.',
+  'summary.problem.language-refused': 'Þetta tungumál er ekki í boði.',
+  'summary.problem.quote-only': 'Þessi texti er birtur orðrétt, honum er ekki umorðað.',
+  'summary.problem.cancelled': 'Stöðvað.',
+  'summary.problem.repetition': 'Líkanið byrjaði að endurtaka sig og var stöðvað.',
+  'summary.problem.failed': 'Eitthvað fór úrskeiðis. Engu var breytt.',
+  'summary.source.heading': 'Hvað á að lesa',
+  'summary.source.paste': 'Límdur texti',
+  'summary.source.file': 'PDF- eða textaskrá',
+  'summary.source.form': 'Spurningar eyðublaðs',
+  'summary.source.answers': 'Svör útfylltra eyðublaðs',
+  'summary.paste.label': 'Límdu textann hér',
+  'summary.file.choose': 'Velja skrá',
+  'summary.file.reading': 'Les blaðsíðu {done} af {total}…',
+  'summary.file.empty': 'Enginn texti fannst í henni.',
+  'summary.form.pick': 'Eyðublað',
+  'summary.form.none': 'Engin eyðublöð eru til enn.',
+  'summary.answers.pick': 'Svar',
+  'summary.answers.none': 'Þetta eyðublað hefur engin svör enn.',
+  'summary.original': 'Frumtextinn',
+  'summary.task.heading': 'Hvað á að gera',
+  'summary.task.summarise': 'Taka saman',
+  'summary.task.translate': 'Þýða',
+  'summary.language': 'Á',
+  'summary.is.summary':
+    'Ekki er boðið upp á að skrifa íslensku: í prófunum skrifaði líkanið hana illa. Veldu annað tungumál.',
+  'summary.is.translate':
+    'Ekki er boðið upp á þýðingu á íslensku: í prófunum bjó líkanið til brotnar setningar.',
+  'summary.ru.names': 'Nöfnum á rússnesku getur verið breytt. Berðu þau saman við frumtextann.',
+  'summary.quoteOnly.notice':
+    'Þetta líkist samningi, samþykki, yfirlýsingu eða læknisfræðilegu eyðublaði. Það er hvorki tekið saman né þýtt, því umorðun gæti breytt merkingunni. Kaflarnir sem vert er að lesa fyrst eru sýndir nákvæmlega eins og þeir eru skrifaðir, á frummálinu.',
+  'summary.quoteOnly.caveat':
+    'Valið er lestrarhjálp og getur misst af einhverju. Lestu allt skjalið áður en þú samþykkir það.',
+  'summary.quoteOnly.run': 'Benda á kafla til að lesa fyrst',
+  'summary.start': 'Byrja',
+  'summary.stop': 'Stöðva',
+  'summary.step.loading': 'Ræsi líkanið…',
+  'summary.step.reading': 'Les hluta {done} af {total}…',
+  'summary.step.combining': 'Sameina athugasemdir {done} af {total}…',
+  'summary.step.writing': 'Skrifa…',
+  'summary.step.translating': 'Þýði hluta {done} af {total}…',
+  'summary.expect':
+    'Blaðsíða tekur um hálfa mínútu á hraðvirkri tölvu og nokkrar mínútur á fartölvu. Lengri texti tekur lengri tíma. Þú getur stöðvað hvenær sem er.',
+  'summary.result.summary': 'Samantekt — útbúin á þessari tölvu',
+  'summary.result.translation': 'Vélþýðing — uppkast',
+  'summary.result.passages': 'Kaflar til að lesa fyrst',
+  'summary.result.note':
+    'Útbúið af líkani á þessari tölvu. Það getur verið rangt. Það er ekki vistað og ekki skrifað í neitt skjal, eyðublað eða skilaboð.',
+  'summary.result.digest':
+    'Langur texti er tekinn saman með einum lið fyrir hvern hluta. Þetta er ágrip, ekki bókun.',
+  'summary.result.time': 'Tók {seconds} sekúndur.',
+  'summary.copy': 'Afrita',
+  'summary.copied': 'Afritað',
+  'summary.warn.added':
+    'Tölur í niðurstöðunni sem eru ekki í frumtextanum: {numbers}. Athugaðu þær.',
+  'summary.warn.missing': 'Tölur í frumtextanum sem vantar í niðurstöðuna: {numbers}.',
+  'summary.warn.repetition':
+    'Líkanið byrjaði að endurtaka sig og var stöðvað. Farðu varlega með niðurstöðuna.',
+  'summary.passage': 'Kafli {n}',
   'scan.heading': 'Raða síðum',
   'scan.intro':
     'Settu PDF-skjöl og ljósmyndir saman, fjarlægðu síður, snúðu þeim og raðaðu þeim. Ekkert er vistað: nýja PDF-skjalið er búið til svo þú getir sótt það.',

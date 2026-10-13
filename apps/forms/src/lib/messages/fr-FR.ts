@@ -1458,6 +1458,104 @@ export const frFR: Record<MessageKey, string> = {
   'room.pause': 'Mettre le mouvement en pause',
   'room.play': 'Relancer le mouvement',
   'room.opened': '{name} est ouvert',
+  'room.centreOpen': 'L’ouvrir',
+  'summary.intro':
+    'Un brouillon de résumé ou de traduction d’un document ouvert, fait sur cet ordinateur. Il s’affiche à côté de l’original, marqué comme généré, et n’est jamais enregistré.',
+  'summary.settingsToggle': 'Réglages du modèle',
+  'summary.modelHeading': 'Le modèle',
+  'summary.modelWhat':
+    'Un modèle de langage de {size} fonctionne sur cet ordinateur, hors ligne. Vos documents ne le quittent jamais. Il est téléchargé une fois, seulement à votre demande, et vous pouvez le supprimer.',
+  'summary.state.ready': 'Le modèle est prêt.',
+  'summary.state.location': 'Fichier : {path}',
+  'summary.memory.low':
+    'Cet ordinateur a {free} Go de mémoire libre et le modèle a besoin d’environ {need} Go. Fermez d’autres programmes et réessayez.',
+  'summary.get': 'Obtenir le modèle',
+  'summary.getConfirm':
+    'Ceci télécharge {size} depuis la publication de Loppa sur GitHub, en deux parties, et les vérifie. Cela occupe autant d’espace disque. Vos documents ne sont envoyés nulle part. Continuer ?',
+  'summary.getConfirmYes': 'Télécharger',
+  'summary.getOff':
+    'Le téléchargement n’est pas encore disponible : le modèle n’est pas publié. Vous pouvez ouvrir un fichier de modèle depuis le disque.',
+  'summary.open': 'Ouvrir un fichier de modèle depuis le disque',
+  'summary.remove': 'Supprimer le modèle',
+  'summary.removeConfirm':
+    'Supprimer le modèle de cet ordinateur ? Vous pourrez le récupérer plus tard.',
+  'summary.removeConfirmYes': 'Supprimer',
+  'summary.cancel': 'Annuler',
+  'summary.progress.download':
+    'Téléchargement de la partie {part} sur {parts} : {done} sur {total} Mo',
+  'summary.progress.join': 'Assemblage des parties : {done} sur {total} Mo',
+  'summary.progress.verify': 'Vérification du fichier : {done} sur {total} Mo',
+  'summary.problem.not-installed': 'Le modèle n’est pas sur cet ordinateur.',
+  'summary.problem.damaged':
+    'Le fichier ne correspond pas au modèle publié et n’a pas été utilisé. Rien n’a été supprimé.',
+  'summary.problem.too-little-memory':
+    'Il y a trop peu de mémoire libre pour charger le modèle. Fermez d’autres programmes et réessayez.',
+  'summary.problem.cannot-start': 'Le modèle n’a pas pu démarrer sur cet ordinateur.',
+  'summary.problem.download-unavailable': 'Le téléchargement n’est pas encore disponible.',
+  'summary.problem.download-failed':
+    'Le téléchargement a échoué ou ne correspondait pas. Rien n’a été conservé. Réessayez.',
+  'summary.problem.not-a-model-file':
+    'Ce fichier n’est pas le modèle que Loppa utilise. Il n’a pas été utilisé.',
+  'summary.problem.busy': 'Autre chose est en cours. Attendez la fin.',
+  'summary.problem.too-long':
+    'Ce texte est trop long pour être traité d’un coup. Utilisez-en une partie.',
+  'summary.problem.language-refused': 'Cette langue n’est pas proposée.',
+  'summary.problem.quote-only': 'Ce texte est cité, pas reformulé.',
+  'summary.problem.cancelled': 'Arrêté.',
+  'summary.problem.repetition': 'Le modèle a commencé à se répéter et a été arrêté.',
+  'summary.problem.failed': 'Une erreur s’est produite. Rien n’a été modifié.',
+  'summary.source.heading': 'Quoi lire',
+  'summary.source.paste': 'Texte collé',
+  'summary.source.file': 'Un fichier PDF ou texte',
+  'summary.source.form': 'Les questions d’un formulaire',
+  'summary.source.answers': 'Les réponses d’un formulaire rempli',
+  'summary.paste.label': 'Collez le texte ici',
+  'summary.file.choose': 'Choisir un fichier',
+  'summary.file.reading': 'Lecture de la page {done} sur {total}…',
+  'summary.file.empty': 'Aucun texte n’y a été trouvé.',
+  'summary.form.pick': 'Formulaire',
+  'summary.form.none': 'Il n’y a pas encore de formulaires.',
+  'summary.answers.pick': 'Réponse',
+  'summary.answers.none': 'Ce formulaire n’a pas encore de réponses.',
+  'summary.original': 'L’original',
+  'summary.task.heading': 'Que faire',
+  'summary.task.summarise': 'Résumer',
+  'summary.task.translate': 'Traduire',
+  'summary.language': 'Vers',
+  'summary.is.summary':
+    'Écrire en islandais n’est pas proposé : lors des essais, le modèle l’écrivait mal. Choisissez une autre langue.',
+  'summary.is.translate':
+    'Traduire vers l’islandais n’est pas proposé : lors des essais, le modèle produisait des phrases cassées.',
+  'summary.ru.names': 'Les noms en russe peuvent être modifiés. Vérifiez-les avec l’original.',
+  'summary.quoteOnly.notice':
+    'Ceci ressemble à un contrat, un consentement, une déclaration ou un formulaire médical. Il n’est ni résumé ni traduit, car une reformulation pourrait changer son sens. Les passages à lire en premier sont affichés exactement tels qu’ils sont écrits, dans la langue d’origine.',
+  'summary.quoteOnly.caveat':
+    'Ce choix est une aide à la lecture et peut oublier quelque chose. Lisez tout le document avant de l’accepter.',
+  'summary.quoteOnly.run': 'Repérer les passages à lire en premier',
+  'summary.start': 'Démarrer',
+  'summary.stop': 'Arrêter',
+  'summary.step.loading': 'Démarrage du modèle…',
+  'summary.step.reading': 'Lecture de la partie {done} sur {total}…',
+  'summary.step.combining': 'Assemblage des notes {done} sur {total}…',
+  'summary.step.writing': 'Rédaction…',
+  'summary.step.translating': 'Traduction de la partie {done} sur {total}…',
+  'summary.expect':
+    'Une page prend environ une demi-minute sur un ordinateur rapide et plusieurs minutes sur un portable. Un texte plus long prend plus de temps. Vous pouvez arrêter à tout moment.',
+  'summary.result.summary': 'Résumé — généré sur cet ordinateur',
+  'summary.result.translation': 'Traduction automatique — brouillon',
+  'summary.result.passages': 'Passages à lire en premier',
+  'summary.result.note':
+    'Généré par un modèle sur cet ordinateur. Il peut se tromper. Il n’est pas enregistré ni écrit dans un document, un formulaire ou un message.',
+  'summary.result.digest':
+    'Un long texte est résumé avec un point par partie. C’est un condensé, pas un compte rendu.',
+  'summary.result.time': 'A pris {seconds} secondes.',
+  'summary.copy': 'Copier',
+  'summary.copied': 'Copié',
+  'summary.warn.added': 'Nombres du résultat absents de l’original : {numbers}. Vérifiez-les.',
+  'summary.warn.missing': 'Nombres de l’original absents du résultat : {numbers}.',
+  'summary.warn.repetition':
+    'Le modèle a commencé à se répéter et a été arrêté. Prenez le résultat avec prudence.',
+  'summary.passage': 'Extrait {n}',
   'scan.heading': 'Organiser les pages',
   'scan.intro':
     'Assemblez des PDF et des photos, retirez des pages, faites-les pivoter et mettez-les dans l’ordre. Rien n’est conservé : le nouveau PDF est créé pour que vous le téléchargiez.',
