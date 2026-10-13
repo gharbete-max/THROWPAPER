@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { client } from '../lib/api.js';
 import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
@@ -32,7 +32,17 @@ const nameSafe = (text: string) =>
  * every time, that the layout may differ from Word, and names each kind of part the PDF leaves out
  * with how many there were. The label is in the file's name too, so it travels with the PDF.
  */
-export function WordToPdf({ onPdf }: { onPdf: (file: File) => void }) {
+export function WordToPdf({
+  onPdf,
+  incoming = [],
+  onTaken,
+}: {
+  onPdf: (file: File) => void;
+  /** Word files dropped or chosen elsewhere on the screen, to convert one after another. */
+  incoming?: File[];
+  /** Called once `incoming` has been taken up, so the screen can empty it. */
+  onTaken?: () => void;
+}) {
   const t = useT();
   const toast = useToast();
   const { contentLocale } = useSession();
@@ -64,6 +74,16 @@ export function WordToPdf({ onPdf }: { onPdf: (file: File) => void }) {
       setBusy(false);
     }
   }
+
+  useEffect(() => {
+    if (incoming.length === 0) return;
+    onTaken?.();
+    void (async () => {
+      for (const file of incoming) await convert(file);
+    })();
+    // Each batch is taken up once, when it arrives.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [incoming]);
 
   return (
     <div className="stack stack--tight" data-testid="scan-word">

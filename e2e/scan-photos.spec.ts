@@ -86,6 +86,7 @@ async function open(page: Page) {
 async function download(page: Page) {
   const saving = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const saved = await (await saving).path();
   const out = await PDFDocument.load(await readFile(saved));
   return out

@@ -111,6 +111,7 @@ test('edit: text is added and covered, a line is redacted, and the download has 
 
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const { all, pages } = await everything(await (await download).path());
   expect(pages).toBe(2);
   expect(all).not.toContain('SECRETWORD');
