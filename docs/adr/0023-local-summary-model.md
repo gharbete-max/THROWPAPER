@@ -1,7 +1,7 @@
 # ADR 0023 — A local summary and translation model: one model, on the desktop, downloaded once
 
-**Status:** proposed — the owner chose the model on 2026-10-13; this ADR records what spike S1 measured
-and what follows from it
+**Status:** accepted — the owner chose the model on 2026-10-13; this ADR records what spike S1 measured
+and what follows from it. Built in Documents phase 8 ("As built" below)
 **Date:** 2026-10-13
 **Supersedes:** ADR 0013 (AI assistance: provider-agnostic, EU by default, opt-in, drafts only)
 **Amends:** ADR 0016 (an "On this computer" mode, a native module, a model file), ADR 0015 (licences for
@@ -162,3 +162,25 @@ disk, status, the size and "this stays on this computer". The desktop panel's AI
 - **Translating contracts and declarations "carefully".** ADR 0012 counts it as generated legal wording.
 - **Letting the model quote.** A paraphrase of a consent is a different consent. The model selects; the
   app quotes.
+## As built (phase 8, 2026-10-13)
+
+- **Manifest** `packages/shared/src/summary/weights/*.json`, Zod in `packages/shared/src/summary/manifest.ts`,
+  held by a test; the two part URLs and the source revision are marked `unpublished:` / `unpinned:` until
+  the release is cut, and the download is off with that reason until then. "Open from disk" works now.
+- **Pipeline** `apps/desktop/src/model/pipeline.ts` (settings and prompts from the spike), engine seam
+  `engine.ts`, real engine `llama-engine.ts`, in-memory `fake-engine.ts` for CI and e2e, worker `worker.ts`,
+  main-side `service.ts` (verify before first use each session, free-memory check, idle release, cancel).
+  Streaming SHA-256 and the two-part download are in `weights.ts`.
+- **Quoting.** `packages/shared/src/import/quoted/` recognises contracts, consents, declarations and clinical
+  forms by word lists in twelve languages (two different terms needed; errs towards quoting). The pipeline
+  refuses to reword or translate such text even if the window asks. `summary/passages.ts` selects and quotes by
+  offset. `summary-boundary.test.ts` keeps the model out of `builder`, `interpret` and `import`.
+- **Pane** `apps/forms/src/screens/Summary.tsx` at `/summary`, a lazy chunk, linked from the room's centre only
+  where `window.loppaModel` exists. Sources: pasted text, a PDF (existing pdf.js and OCR paths) or text file, a
+  form's questions, a filled form's answers. Words in twelve catalogues.
+- **Changed from the proposal:** the bridge is an IPC in a preload and not an HTTP route (no `fetch`);
+  the runtime ships as an extra resource and not through `asarUnpack`.
+- **Measured on the real file** (this computer, CPU, 8 threads): verify 1.7 s, load 2.2 s, 3.3 GB resident,
+  one page 20–25 s, ten pages 142 s, one-page translation 39 s. The spike's numbers hold in the app's pipeline.
+  Still unmeasured: a real 8 GB laptop, a Mac, a packaged build, native-speaker quality.
+- **Found:** the reduce step's token cap cut the ten-page summary mid-sentence; it now scales with the parts.

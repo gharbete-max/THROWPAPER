@@ -1,0 +1,462 @@
+{
+  "categories": {
+    "clinical": {
+      "da": [
+        "allergi*",
+        "behandling*",
+        "blodtryk",
+        "diagnose*",
+        "dosering*",
+        "medicin*",
+        "patient*",
+        "recept*",
+        "sygehistorie",
+        "symptom*"
+      ],
+      "de": [
+        "allergie*",
+        "anamnese",
+        "behandlung*",
+        "blutdruck",
+        "diagnose*",
+        "dosierung*",
+        "krankengeschichte",
+        "medikament*",
+        "patient*",
+        "rezept*",
+        "symptom*"
+      ],
+      "en": [
+        "allergies",
+        "blood pressure",
+        "clinical",
+        "diagnosis",
+        "dosage",
+        "medical history",
+        "medication",
+        "patient",
+        "prescription",
+        "symptoms",
+        "treatment"
+      ],
+      "es": [
+        "alergia*",
+        "diagnóstico*",
+        "dosis",
+        "historial médico",
+        "medicación",
+        "medicamento*",
+        "paciente*",
+        "presión arterial",
+        "receta*",
+        "síntomas",
+        "tratamiento*"
+      ],
+      "fi": [
+        "allergia*",
+        "annostus*",
+        "diagnoosi*",
+        "hoito*",
+        "lääke*",
+        "lääkitys*",
+        "oire*",
+        "potilas*",
+        "resepti*",
+        "sairaushistoria",
+        "verenpaine*"
+      ],
+      "fr": [
+        "allergie*",
+        "antécédents médicaux",
+        "diagnostic*",
+        "médicament*",
+        "ordonnance*",
+        "patient*",
+        "posologie",
+        "symptôme*",
+        "tension artérielle",
+        "traitement*"
+      ],
+      "is": [
+        "blóðþrýsting*",
+        "einkenni",
+        "greining*",
+        "lyf*",
+        "lyfseðil*",
+        "meðferð*",
+        "ofnæmi*",
+        "sjúklings*",
+        "sjúklingur*",
+        "sjúkrasaga",
+        "skammt*"
+      ],
+      "ja": ["アレルギー", "処方", "患者", "既往歴", "治療", "用量", "症状", "薬", "血圧", "診断"],
+      "nb": [
+        "allergi*",
+        "behandling*",
+        "blodtrykk",
+        "diagnose*",
+        "dosering*",
+        "medisin*",
+        "pasient*",
+        "resept*",
+        "sykehistorie",
+        "symptom*"
+      ],
+      "ru": [
+        "аллерги*",
+        "анамнез*",
+        "давлени*",
+        "диагноз*",
+        "дозировк*",
+        "лекарств*",
+        "лечени*",
+        "пациент*",
+        "рецепт*",
+        "симптом*"
+      ],
+      "sv": [
+        "allergi*",
+        "behandling*",
+        "blodtryck",
+        "diagnos*",
+        "dosering*",
+        "läkemedel",
+        "medicin*",
+        "patient*",
+        "recept",
+        "sjukdomshistoria",
+        "symtom*"
+      ],
+      "zh": ["剂量", "处方", "患者", "治疗", "病史", "症状", "药物", "血压", "诊断", "过敏"]
+    },
+    "consent": {
+      "da": [
+        "den registrerede",
+        "jeg giver samtykke",
+        "personoplysninger",
+        "samtykke*",
+        "tilbagekalde*",
+        "tilladelse"
+      ],
+      "de": [
+        "betroffene person",
+        "einverständnis*",
+        "einwilligung*",
+        "ich stimme zu",
+        "ich willige ein",
+        "personenbezogene daten",
+        "widerrufen",
+        "zustimmung*"
+      ],
+      "en": [
+        "consent",
+        "data subject",
+        "i agree",
+        "i authorise",
+        "i authorize",
+        "i consent",
+        "personal data",
+        "withdraw my consent"
+      ],
+      "es": [
+        "autorizo",
+        "consentimiento",
+        "consiento",
+        "datos personales",
+        "doy mi consentimiento",
+        "interesado",
+        "revocar*"
+      ],
+      "fi": [
+        "henkilötieto*",
+        "peruut*",
+        "rekisteröidyn",
+        "rekisteröity",
+        "suostumuks*",
+        "suostumus*",
+        "suostun"
+      ],
+      "fr": [
+        "consentement",
+        "données personnelles",
+        "j'accepte",
+        "j'autorise",
+        "je consens",
+        "personne concernée",
+        "retirer mon consentement"
+      ],
+      "is": [
+        "afturkalla*",
+        "heimild*",
+        "persónuupplýsing*",
+        "samþykki*",
+        "skráðs einstaklings",
+        "ég samþykki"
+      ],
+      "ja": ["個人情報", "同意", "撤回", "本人", "許可"],
+      "nb": [
+        "den registrerte",
+        "jeg samtykker",
+        "personopplysninger",
+        "samtykke*",
+        "tillatelse",
+        "trekke tilbake"
+      ],
+      "ru": [
+        "отозвать",
+        "персональные данные",
+        "персональных данных",
+        "разрешаю",
+        "согласен",
+        "согласие",
+        "согласна",
+        "субъект персональных данных"
+      ],
+      "sv": [
+        "jag godkänner",
+        "jag samtycker",
+        "personuppgifter",
+        "registrerade",
+        "samtycke*",
+        "återkalla*"
+      ],
+      "zh": ["个人信息", "个人数据", "同意", "授权", "撤回", "许可"]
+    },
+    "contract": {
+      "da": [
+        "aftale*",
+        "ansvar",
+        "erstatning*",
+        "gældende ret",
+        "lejer",
+        "opsigelse*",
+        "parterne",
+        "udlejer",
+        "vilkår*"
+      ],
+      "de": [
+        "anwendbares recht",
+        "bedingungen",
+        "die parteien",
+        "gerichtsstand*",
+        "haftung*",
+        "kündigung*",
+        "mieter",
+        "schadensersatz*",
+        "vermieter",
+        "vertrag*",
+        "vertragspartei*"
+      ],
+      "en": [
+        "agreement",
+        "breach",
+        "governing law",
+        "hereby",
+        "indemnif*",
+        "jurisdiction",
+        "liability",
+        "terminat*",
+        "terms and conditions",
+        "the parties",
+        "whereas"
+      ],
+      "es": [
+        "arrendador*",
+        "arrendatario*",
+        "condiciones",
+        "contrato*",
+        "indemnizaci*",
+        "jurisdicción",
+        "las partes",
+        "legislación aplicable",
+        "rescisión",
+        "responsabilidad"
+      ],
+      "fi": [
+        "ehdot",
+        "irtisanomi*",
+        "osapuol*",
+        "sopimus*",
+        "sovellettava laki",
+        "tuomioistuin*",
+        "vahingonkorvaus*",
+        "vastuu*",
+        "vuokralainen",
+        "vuokranantaja"
+      ],
+      "fr": [
+        "bailleur",
+        "conditions générales",
+        "contrat*",
+        "dommages-intérêts",
+        "droit applicable",
+        "juridiction*",
+        "les parties",
+        "locataire",
+        "responsabilité",
+        "résiliation"
+      ],
+      "is": [
+        "aðilar*",
+        "gildandi lög",
+        "leigusali*",
+        "leigutaki*",
+        "lögsögu*",
+        "samning*",
+        "skaðabætur*",
+        "skilmála*",
+        "uppsögn*",
+        "ábyrgð*"
+      ],
+      "ja": ["借主", "契約", "当事者", "損害賠償", "準拠法", "管轄", "解除", "責任", "貸主"],
+      "nb": [
+        "ansvar",
+        "avtale*",
+        "erstatning*",
+        "gjeldende rett",
+        "leietaker",
+        "oppsigelse*",
+        "partene",
+        "utleier",
+        "vilkår*"
+      ],
+      "ru": [
+        "арендатор*",
+        "арендодател*",
+        "возмещени*",
+        "договор*",
+        "ответственност*",
+        "применимое право",
+        "расторжени*",
+        "стороны",
+        "условия",
+        "юрисдикци*"
+      ],
+      "sv": [
+        "ansvar",
+        "avtal*",
+        "hyresgäst*",
+        "hyresvärd*",
+        "parterna",
+        "skadestånd*",
+        "tillämplig lag",
+        "uppsägning*",
+        "villkor*"
+      ],
+      "zh": [
+        "出租人",
+        "协议",
+        "双方",
+        "合同",
+        "承租人",
+        "条款",
+        "管辖",
+        "解除",
+        "责任",
+        "赔偿",
+        "适用法律"
+      ]
+    },
+    "declaration": {
+      "da": [
+        "attesterer",
+        "efter min bedste overbevisning",
+        "erklæring",
+        "jeg bekræfter",
+        "jeg erklærer",
+        "tro og love",
+        "undertegnede"
+      ],
+      "de": [
+        "eidesstattlich*",
+        "erklärung",
+        "ich bestätige",
+        "ich erkläre",
+        "ich versichere",
+        "nach bestem wissen",
+        "unterzeichnete*"
+      ],
+      "en": [
+        "declaration",
+        "hereby certify",
+        "i certify",
+        "i confirm that",
+        "i declare",
+        "sworn",
+        "to the best of my knowledge",
+        "true and correct",
+        "undersigned"
+      ],
+      "es": [
+        "bajo juramento",
+        "certifico",
+        "declaración",
+        "declaro",
+        "el abajo firmante",
+        "la abajo firmante",
+        "según mi leal saber"
+      ],
+      "fi": [
+        "allekirjoittaneen",
+        "allekirjoittanut",
+        "parhaan tietoni mukaan",
+        "vahvistan",
+        "vakuutan",
+        "vakuutus",
+        "vannon"
+      ],
+      "fr": [
+        "atteste",
+        "déclaration",
+        "je certifie",
+        "je déclare",
+        "la soussignée",
+        "le soussigné",
+        "sur l'honneur",
+        "à ma connaissance"
+      ],
+      "is": [
+        "drengskap*",
+        "eftir bestu vitund",
+        "undirritaður",
+        "undirrituð",
+        "yfirlýsing*",
+        "ég lýsi",
+        "ég staðfesti",
+        "ég votta"
+      ],
+      "ja": ["宣言", "宣誓", "申告", "相違ありません", "署名者", "証明", "誓約"],
+      "nb": [
+        "bekrefter",
+        "erklæring",
+        "etter min beste overbevisning",
+        "forsikrer",
+        "jeg erklærer",
+        "tro og love",
+        "undertegnede"
+      ],
+      "ru": [
+        "декларация",
+        "заявление",
+        "заявляю",
+        "клянусь",
+        "нижеподписавш*",
+        "по моим сведениям",
+        "подтверждаю"
+      ],
+      "sv": [
+        "enligt min bästa kunskap",
+        "försäkran",
+        "intygar",
+        "jag förklarar",
+        "jag försäkrar",
+        "tro och heder",
+        "undertecknad*"
+      ],
+      "zh": ["保证", "兹声明", "兹证明", "声明", "宣誓", "承诺", "据我所知", "签署人"]
+    }
+  },
+  "source": "Written for this file, 2026-10-13: words that mark a text as a contract, a consent, a declaration or a clinical form, in the twelve languages. Detection terms only, not wording a document may use. A trailing * matches the start of a word.",
+  "version": 1
+}

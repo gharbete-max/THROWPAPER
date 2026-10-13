@@ -125,3 +125,48 @@ describe('the document readers', () => {
     }
   });
 });
+
+/**
+ * `CAVEATS.md` #43 again, for the summary centre (ADR 0023, `docs/plan/DOCUMENTS.md` section 4).
+ *
+ * The centre holds a reading's text and sends it to a model — on this computer, through the
+ * desktop shell's `window.loppaModel`. That is not `fetch`, and this test is what keeps it from
+ * becoming one: nothing that holds the text may reach the server, and nothing may store it. The one
+ * file of the centre that talks to the server, `FormSource.tsx`, only brings a form's words *in*.
+ * The centre is a lazy chunk, and the hosted edition has no bridge to call.
+ */
+describe('the summary centre', () => {
+  const HOLDS_TEXT = [
+    'screens/Summary.tsx',
+    'screens/summary/Setup.tsx',
+    'screens/summary/job.ts',
+    'screens/summary/text.ts',
+    'lib/model-bridge.ts',
+  ];
+
+  it.each(HOLDS_TEXT)('%s never talks to the server and never stores a text', (name) => {
+    const source = readFileSync(join(ROOT, name), 'utf8');
+    expect(source).not.toMatch(
+      /lib\/api|fetch\(|XMLHttpRequest|sendBeacon|WebSocket|localStorage|sessionStorage|indexedDB|document\.cookie/,
+    );
+  });
+
+  it('is only loaded on demand, and only Summary.tsx reaches into its folder', () => {
+    const app = readFileSync(join(ROOT, 'App.tsx'), 'utf8');
+    expect(app).toMatch(/lazy\(\(\) => import\('\.\/screens\/Summary\.js'\)/);
+    expect(app).not.toMatch(/^import .*screens\/Summary/m);
+    const offenders = sourceFiles(ROOT)
+      .filter((path) => !path.includes(join('screens', 'summary')) && !path.endsWith('Summary.tsx'))
+      .filter((path) => /screens\/summary\//.test(readFileSync(path, 'utf8')))
+      .map((path) => path.slice(ROOT.length));
+    expect(offenders).toEqual([]);
+  });
+
+  it('is the only place that reaches for the bridge', () => {
+    const offenders = sourceFiles(ROOT)
+      .filter((path) => !path.endsWith('model-bridge.ts'))
+      .filter((path) => readFileSync(path, 'utf8').includes('window.loppaModel'))
+      .map((path) => path.slice(ROOT.length));
+    expect(offenders).toEqual([]);
+  });
+});

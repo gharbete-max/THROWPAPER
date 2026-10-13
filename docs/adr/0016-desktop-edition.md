@@ -309,3 +309,28 @@ only thing that knows both are there.
    which D1 deliberately does not have.
 5. ~~macOS?~~ Decided and built. What is left is an **Apple Developer ID** to notarise (the same
    account as ADR 0014's iOS builds), so Gatekeeper stops asking.
+
+## Amended (2026-10-13): the summary model, the app's first native module
+
+ADR 0023 puts a language model on the desktop (Documents phase 8). What changes here:
+
+- **A native module.** `node-llama-cpp` (MIT) ships prebuilt N-API binaries. It runs in an Electron
+  `utilityProcess` with `gpu: false, build: 'never'`, started only when a job is asked for and ended
+  ten minutes after the last. It is installed by `scripts/build.ts` into `.stage/model/` and shipped as
+  an **extra resource** (plain files beside the asar, like `web` and `drizzle`), so no asar redirection
+  is involved. `asarUnpack` is therefore unchanged. The CUDA, CUDA-extension and Vulkan packages and the
+  35 MB source bundle are pruned and filtered out (`electron-builder.yml`); in a scratch install the
+  runtime went from 683 MB to 53 MB, and the model loaded from it.
+- **Fuses.** `runAsNode: false` stays. A utility process is not `ELECTRON_RUN_AS_NODE`.
+  **Unverified in a packaged build** (none could be made here): that a utility process started from
+  `resources/model/worker.mjs` is allowed by `onlyLoadAppFromAsar`, and that macOS signing covers the
+  binaries under `resources/model`. The packaged smoke test is the first thing to run.
+- **A bridge for the main window.** The main window had none (rule 3: a web app over HTTP). It now has
+  one narrow preload, `window.loppaModel` (status, install, open from disk, remove, start, cancel,
+  events), answered only for the Forms origin (`src/model/ipc.ts`). The text of a document travels by
+  this IPC and not by `fetch`, which is why CAVEATS #43 holds. The hosted edition has no such preload.
+- **AI section.** The panel's Off / Online / Cloud radios (placeholders that nothing called) are
+  replaced by a note pointing at Documents, then Summary and translation. The stored `ai` setting is
+  left in the settings schema, unread. Online and Cloud modes need a new ADR if they are ever wanted.
+- **The model file** lives in `<userData>/models/`, or stays where the person opened it from.
+  `LOPPA_FAKE_MODEL=1` swaps in a fake engine for CI and demos.

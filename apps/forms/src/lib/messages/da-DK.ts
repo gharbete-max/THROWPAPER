@@ -1418,6 +1418,103 @@ export const daDK: Record<MessageKey, string> = {
   'room.pause': 'Sæt bevægelsen på pause',
   'room.play': 'Start bevægelsen',
   'room.opened': '{name} er åben',
+  'room.centreOpen': 'Åbn den',
+  'summary.intro':
+    'Et udkast til resumé eller oversættelse af et dokument, du har åbent, lavet på denne computer. Det vises ved siden af originalen, mærket som genereret, og gemmes aldrig.',
+  'summary.settingsToggle': 'Modelindstillinger',
+  'summary.modelHeading': 'Modellen',
+  'summary.modelWhat':
+    'En sprogmodel på {size} kører på denne computer, uden netværk. Dine dokumenter forlader den aldrig. Den hentes én gang, kun når du beder om det, og du kan fjerne den igen.',
+  'summary.state.ready': 'Modellen er klar.',
+  'summary.state.location': 'Fil: {path}',
+  'summary.memory.low':
+    'Denne computer har {free} GB ledig hukommelse, og modellen skal bruge ca. {need} GB. Luk andre programmer, og prøv igen.',
+  'summary.get': 'Hent modellen',
+  'summary.getConfirm':
+    'Dette henter {size} fra Loppas udgivelse på GitHub i to dele og kontrollerer dem. Det fylder så meget på disken. Dine dokumenter sendes ingen steder hen. Fortsæt?',
+  'summary.getConfirmYes': 'Hent',
+  'summary.getOff':
+    'Hentningen er ikke tilgængelig endnu: modellen er ikke udgivet. Du kan åbne en modelfil fra disken i stedet.',
+  'summary.open': 'Åbn en modelfil fra disken',
+  'summary.remove': 'Fjern modellen',
+  'summary.removeConfirm': 'Fjern modellen fra denne computer? Du kan hente den igen senere.',
+  'summary.removeConfirmYes': 'Fjern',
+  'summary.cancel': 'Annuller',
+  'summary.progress.download': 'Henter del {part} af {parts}: {done} af {total} MB',
+  'summary.progress.join': 'Samler delene: {done} af {total} MB',
+  'summary.progress.verify': 'Kontrollerer filen: {done} af {total} MB',
+  'summary.problem.not-installed': 'Modellen er ikke på denne computer.',
+  'summary.problem.damaged':
+    'Filen svarer ikke til den udgivne model og blev ikke brugt. Intet er slettet.',
+  'summary.problem.too-little-memory':
+    'Der er for lidt ledig hukommelse til at indlæse modellen. Luk andre programmer, og prøv igen.',
+  'summary.problem.cannot-start': 'Modellen kunne ikke starte på denne computer.',
+  'summary.problem.download-unavailable': 'Hentningen er ikke tilgængelig endnu.',
+  'summary.problem.download-failed':
+    'Hentningen mislykkedes eller passede ikke. Intet blev gemt. Prøv igen.',
+  'summary.problem.not-a-model-file':
+    'Den fil er ikke den model, Loppa bruger. Den blev ikke brugt.',
+  'summary.problem.busy': 'Noget andet er i gang. Vent, til det er færdigt.',
+  'summary.problem.too-long':
+    'Teksten er for lang til at blive behandlet på én gang. Brug en del af den.',
+  'summary.problem.language-refused': 'Det sprog tilbydes ikke.',
+  'summary.problem.quote-only': 'Denne tekst citeres, den omskrives ikke.',
+  'summary.problem.cancelled': 'Stoppet.',
+  'summary.problem.repetition': 'Modellen begyndte at gentage sig selv og blev stoppet.',
+  'summary.problem.failed': 'Noget gik galt. Intet er ændret.',
+  'summary.source.heading': 'Hvad skal læses',
+  'summary.source.paste': 'Indsat tekst',
+  'summary.source.file': 'En PDF- eller tekstfil',
+  'summary.source.form': 'En formulars spørgsmål',
+  'summary.source.answers': 'Et udfyldt formulars svar',
+  'summary.paste.label': 'Indsæt teksten her',
+  'summary.file.choose': 'Vælg en fil',
+  'summary.file.reading': 'Læser side {done} af {total}…',
+  'summary.file.empty': 'Der blev ikke fundet tekst i den.',
+  'summary.form.pick': 'Formular',
+  'summary.form.none': 'Der er ingen formularer endnu.',
+  'summary.answers.pick': 'Svar',
+  'summary.answers.none': 'Denne formular har ingen svar endnu.',
+  'summary.original': 'Originalen',
+  'summary.task.heading': 'Hvad skal gøres',
+  'summary.task.summarise': 'Resumér',
+  'summary.task.translate': 'Oversæt',
+  'summary.language': 'Til',
+  'summary.is.summary':
+    'At skrive islandsk tilbydes ikke: i test skrev modellen det dårligt. Vælg et andet sprog.',
+  'summary.is.translate':
+    'At oversætte til islandsk tilbydes ikke: i test lavede modellen ødelagte sætninger.',
+  'summary.ru.names': 'Navne på russisk kan blive ændret. Kontrollér dem mod originalen.',
+  'summary.quoteOnly.notice':
+    'Dette ligner en kontrakt, et samtykke, en erklæring eller en medicinsk formular. Det resumeres eller oversættes ikke, fordi en omskrivning kan ændre, hvad det betyder. De afsnit, der er værd at læse først, vises nøjagtigt, som de er skrevet, på originalsproget.',
+  'summary.quoteOnly.caveat':
+    'Udvalget er en læsehjælp og kan overse noget. Læs hele dokumentet, før du accepterer det.',
+  'summary.quoteOnly.run': 'Udpeg de afsnit, der skal læses først',
+  'summary.start': 'Gå i gang',
+  'summary.stop': 'Stands',
+  'summary.step.loading': 'Starter modellen…',
+  'summary.step.reading': 'Læser del {done} af {total}…',
+  'summary.step.combining': 'Samler noter {done} af {total}…',
+  'summary.step.writing': 'Skriver…',
+  'summary.step.translating': 'Oversætter del {done} af {total}…',
+  'summary.expect':
+    'En side tager omkring et halvt minut på en hurtig computer og flere minutter på en bærbar. En længere tekst tager længere tid. Du kan stoppe når som helst.',
+  'summary.result.summary': 'Resumé — genereret på denne computer',
+  'summary.result.translation': 'Maskinoversættelse — udkast',
+  'summary.result.passages': 'Afsnit, der skal læses først',
+  'summary.result.note':
+    'Genereret af en model på denne computer. Den kan tage fejl. Det gemmes ikke og skrives ikke ind i noget dokument, formular eller nogen besked.',
+  'summary.result.digest':
+    'En lang tekst resumeres med ét punkt for hver del. Det er et uddrag, ikke en journal.',
+  'summary.result.time': 'Tog {seconds} sekunder.',
+  'summary.copy': 'Kopiér',
+  'summary.copied': 'Kopieret',
+  'summary.warn.added':
+    'Tal i resultatet, som ikke findes i originalen: {numbers}. Kontrollér dem.',
+  'summary.warn.missing': 'Tal i originalen, der mangler i resultatet: {numbers}.',
+  'summary.warn.repetition':
+    'Modellen begyndte at gentage sig selv og blev stoppet. Brug resultatet med forsigtighed.',
+  'summary.passage': 'Afsnit {n}',
   'scan.heading': 'Ordn sider',
   'scan.intro':
     'Sæt PDF-filer og fotos sammen, fjern sider, drej dem og sæt dem i rækkefølge. Intet gemmes: den nye PDF laves, så du kan hente den.',

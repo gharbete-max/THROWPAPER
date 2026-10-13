@@ -16,7 +16,9 @@
     "./wizard": "./src/wizard/index.ts",
     "./builder": "./src/builder/index.ts",
     "./import": "./src/import/index.ts",
-    "./interpret": "./src/interpret/index.ts"
+    "./interpret": "./src/interpret/index.ts",
+    "./summary": "./src/summary/index.ts",
+    "./quoted": "./src/import/quoted/quoted.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

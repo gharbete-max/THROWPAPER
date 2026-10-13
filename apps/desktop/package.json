@@ -14,22 +14,24 @@
   },
   "dependencies": {
     "@tp/api-forms": "workspace:*",
+    "@tp/api-sign": "workspace:*",
     "@tp/i18n": "workspace:*",
+    "@tp/shared": "workspace:*",
     "@tp/tokens": "workspace:*",
     "@tp/ui": "workspace:*",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "@tp/api-sign": "workspace:*"
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@tp/forms": "workspace:*",
+    "@tp/sign": "workspace:*",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.3.4",
     "electron": "^44.4.5",
     "electron-builder": "^26",
     "esbuild": "^0.28.2",
-    "vite": "^6.0.7",
-    "@tp/sign": "workspace:*"
+    "node-llama-cpp": "3.22.1",
+    "vite": "^6.0.7"
   }
 }

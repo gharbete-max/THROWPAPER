@@ -1472,6 +1472,104 @@ export const deDE: Record<MessageKey, string> = {
   'room.pause': 'Bewegung anhalten',
   'room.play': 'Bewegung abspielen',
   'room.opened': '{name} ist geöffnet',
+  'room.centreOpen': 'Öffnen',
+  'summary.intro':
+    'Ein Entwurf einer Zusammenfassung oder Übersetzung eines geöffneten Dokuments, erstellt auf diesem Computer. Er wird neben dem Original angezeigt, als erzeugt gekennzeichnet und nie gespeichert.',
+  'summary.settingsToggle': 'Modell-Einstellungen',
+  'summary.modelHeading': 'Das Modell',
+  'summary.modelWhat':
+    'Ein Sprachmodell von {size} läuft auf diesem Computer, ohne Netzwerk. Ihre Dokumente verlassen ihn nie. Es wird einmal heruntergeladen, nur auf Ihren Wunsch, und kann wieder entfernt werden.',
+  'summary.state.ready': 'Das Modell ist bereit.',
+  'summary.state.location': 'Datei: {path}',
+  'summary.memory.low':
+    'Dieser Computer hat {free} GB freien Speicher, das Modell braucht etwa {need} GB. Schließen Sie andere Programme und versuchen Sie es erneut.',
+  'summary.get': 'Modell herunterladen',
+  'summary.getConfirm':
+    'Dies lädt {size} aus dem Loppa-Release auf GitHub in zwei Teilen herunter und prüft sie. Es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
+  'summary.getConfirmYes': 'Herunterladen',
+  'summary.getOff':
+    'Der Download ist noch nicht verfügbar: Das Modell ist nicht veröffentlicht. Sie können stattdessen eine Modelldatei von der Festplatte öffnen.',
+  'summary.open': 'Modelldatei von der Festplatte öffnen',
+  'summary.remove': 'Modell entfernen',
+  'summary.removeConfirm':
+    'Das Modell von diesem Computer entfernen? Sie können es später erneut laden.',
+  'summary.removeConfirmYes': 'Entfernen',
+  'summary.cancel': 'Abbrechen',
+  'summary.progress.download': 'Teil {part} von {parts} wird geladen: {done} von {total} MB',
+  'summary.progress.join': 'Die Teile werden zusammengefügt: {done} von {total} MB',
+  'summary.progress.verify': 'Die Datei wird geprüft: {done} von {total} MB',
+  'summary.problem.not-installed': 'Das Modell ist nicht auf diesem Computer.',
+  'summary.problem.damaged':
+    'Die Datei stimmt nicht mit dem veröffentlichten Modell überein und wurde nicht verwendet. Es wurde nichts gelöscht.',
+  'summary.problem.too-little-memory':
+    'Es ist zu wenig freier Speicher vorhanden, um das Modell zu laden. Schließen Sie andere Programme und versuchen Sie es erneut.',
+  'summary.problem.cannot-start': 'Das Modell konnte auf diesem Computer nicht gestartet werden.',
+  'summary.problem.download-unavailable': 'Der Download ist noch nicht verfügbar.',
+  'summary.problem.download-failed':
+    'Der Download ist fehlgeschlagen oder stimmte nicht überein. Nichts wurde behalten. Versuchen Sie es erneut.',
+  'summary.problem.not-a-model-file':
+    'Diese Datei ist nicht das Modell, das Loppa verwendet. Sie wurde nicht verwendet.',
+  'summary.problem.busy': 'Es läuft gerade etwas anderes. Warten Sie, bis es fertig ist.',
+  'summary.problem.too-long':
+    'Dieser Text ist zu lang, um ihn auf einmal zu verarbeiten. Verwenden Sie einen Teil davon.',
+  'summary.problem.language-refused': 'Diese Sprache wird nicht angeboten.',
+  'summary.problem.quote-only': 'Dieser Text wird zitiert, nicht umformuliert.',
+  'summary.problem.cancelled': 'Angehalten.',
+  'summary.problem.repetition': 'Das Modell begann sich zu wiederholen und wurde angehalten.',
+  'summary.problem.failed': 'Etwas ist schiefgegangen. Nichts wurde geändert.',
+  'summary.source.heading': 'Was gelesen werden soll',
+  'summary.source.paste': 'Eingefügter Text',
+  'summary.source.file': 'Eine PDF- oder Textdatei',
+  'summary.source.form': 'Die Fragen eines Formulars',
+  'summary.source.answers': 'Die Antworten eines ausgefüllten Formulars',
+  'summary.paste.label': 'Text hier einfügen',
+  'summary.file.choose': 'Datei wählen',
+  'summary.file.reading': 'Seite {done} von {total} wird gelesen…',
+  'summary.file.empty': 'Es wurde kein Text darin gefunden.',
+  'summary.form.pick': 'Formular',
+  'summary.form.none': 'Es gibt noch keine Formulare.',
+  'summary.answers.pick': 'Antwort',
+  'summary.answers.none': 'Dieses Formular hat noch keine Antworten.',
+  'summary.original': 'Das Original',
+  'summary.task.heading': 'Was getan werden soll',
+  'summary.task.summarise': 'Zusammenfassen',
+  'summary.task.translate': 'Übersetzen',
+  'summary.language': 'In',
+  'summary.is.summary':
+    'Isländisch zu schreiben wird nicht angeboten: In Tests schrieb das Modell es schlecht. Wählen Sie eine andere Sprache.',
+  'summary.is.translate':
+    'Das Übersetzen ins Isländische wird nicht angeboten: In Tests erzeugte das Modell fehlerhafte Sätze.',
+  'summary.ru.names': 'Namen im Russischen können verändert werden. Prüfen Sie sie am Original.',
+  'summary.quoteOnly.notice':
+    'Das liest sich wie ein Vertrag, eine Einwilligung, eine Erklärung oder ein medizinisches Formular. Es wird nicht zusammengefasst oder übersetzt, weil eine Umformulierung die Bedeutung ändern könnte. Die Abschnitte, die man zuerst lesen sollte, werden genau so gezeigt, wie sie geschrieben sind, in der Originalsprache.',
+  'summary.quoteOnly.caveat':
+    'Die Auswahl ist eine Lesehilfe und kann etwas übersehen. Lesen Sie das ganze Dokument, bevor Sie zustimmen.',
+  'summary.quoteOnly.run': 'Abschnitte zum Zuerstlesen heraussuchen',
+  'summary.start': 'Beginnen',
+  'summary.stop': 'Anhalten',
+  'summary.step.loading': 'Das Modell wird gestartet…',
+  'summary.step.reading': 'Teil {done} von {total} wird gelesen…',
+  'summary.step.combining': 'Notizen {done} von {total} werden zusammengeführt…',
+  'summary.step.writing': 'Wird geschrieben…',
+  'summary.step.translating': 'Teil {done} von {total} wird übersetzt…',
+  'summary.expect':
+    'Eine Seite dauert auf einem schnellen Computer etwa eine halbe Minute, auf einem Laptop mehrere Minuten. Ein längerer Text dauert länger. Sie können jederzeit anhalten.',
+  'summary.result.summary': 'Zusammenfassung — auf diesem Computer erzeugt',
+  'summary.result.translation': 'Maschinelle Übersetzung — Entwurf',
+  'summary.result.passages': 'Abschnitte zum Zuerstlesen',
+  'summary.result.note':
+    'Von einem Modell auf diesem Computer erzeugt. Es kann falsch sein. Es wird nicht gespeichert und nicht in ein Dokument, Formular oder eine Nachricht geschrieben.',
+  'summary.result.digest':
+    'Ein langer Text wird mit einem Punkt je Teil zusammengefasst. Das ist ein Überblick, kein Protokoll.',
+  'summary.result.time': 'Dauerte {seconds} Sekunden.',
+  'summary.copy': 'Kopieren',
+  'summary.copied': 'Kopiert',
+  'summary.warn.added':
+    'Zahlen im Ergebnis, die im Original nicht vorkommen: {numbers}. Bitte prüfen.',
+  'summary.warn.missing': 'Zahlen im Original, die im Ergebnis fehlen: {numbers}.',
+  'summary.warn.repetition':
+    'Das Modell begann sich zu wiederholen und wurde angehalten. Behandeln Sie das Ergebnis mit Vorsicht.',
+  'summary.passage': 'Abschnitt {n}',
   'scan.heading': 'Seiten ordnen',
   'scan.intro':
     'PDFs und Fotos zusammenfügen, Seiten entfernen, drehen und in die richtige Reihenfolge bringen. Nichts wird gespeichert: Die neue PDF wird zum Herunterladen erstellt.',

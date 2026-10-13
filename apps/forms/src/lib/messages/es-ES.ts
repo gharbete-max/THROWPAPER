@@ -1440,6 +1440,102 @@ export const esES: Record<MessageKey, string> = {
   'room.pause': 'Pausar el movimiento',
   'room.play': 'Reanudar el movimiento',
   'room.opened': '{name} está abierto',
+  'room.centreOpen': 'Abrirlo',
+  'summary.intro':
+    'Un borrador de resumen o traducción de un documento que tienes abierto, hecho en este equipo. Se muestra junto al original, marcado como generado, y nunca se guarda.',
+  'summary.settingsToggle': 'Ajustes del modelo',
+  'summary.modelHeading': 'El modelo',
+  'summary.modelWhat':
+    'Un modelo de lenguaje de {size} funciona en este equipo, sin conexión. Tus documentos nunca salen de él. Se descarga una vez, solo cuando lo pides, y puedes quitarlo de nuevo.',
+  'summary.state.ready': 'El modelo está listo.',
+  'summary.state.location': 'Archivo: {path}',
+  'summary.memory.low':
+    'Este equipo tiene {free} GB de memoria libre y el modelo necesita unos {need} GB. Cierra otros programas e inténtalo de nuevo.',
+  'summary.get': 'Obtener el modelo',
+  'summary.getConfirm':
+    'Esto descarga {size} de la versión de Loppa en GitHub, en dos partes, y las comprueba. Ocupa ese espacio en el disco. Tus documentos no se envían a ninguna parte. ¿Continuar?',
+  'summary.getConfirmYes': 'Descargar',
+  'summary.getOff':
+    'La descarga aún no está disponible: el modelo no se ha publicado. Puedes abrir un archivo de modelo desde el disco.',
+  'summary.open': 'Abrir un archivo de modelo desde el disco',
+  'summary.remove': 'Quitar el modelo',
+  'summary.removeConfirm': '¿Quitar el modelo de este equipo? Podrás obtenerlo de nuevo más tarde.',
+  'summary.removeConfirmYes': 'Quitar',
+  'summary.cancel': 'Cancelar',
+  'summary.progress.download': 'Descargando la parte {part} de {parts}: {done} de {total} MB',
+  'summary.progress.join': 'Uniendo las partes: {done} de {total} MB',
+  'summary.progress.verify': 'Comprobando el archivo: {done} de {total} MB',
+  'summary.problem.not-installed': 'El modelo no está en este equipo.',
+  'summary.problem.damaged':
+    'El archivo no coincide con el modelo publicado y no se usó. No se ha borrado nada.',
+  'summary.problem.too-little-memory':
+    'Hay muy poca memoria libre para cargar el modelo. Cierra otros programas e inténtalo de nuevo.',
+  'summary.problem.cannot-start': 'El modelo no pudo iniciarse en este equipo.',
+  'summary.problem.download-unavailable': 'La descarga aún no está disponible.',
+  'summary.problem.download-failed':
+    'La descarga falló o no coincidía. No se guardó nada. Inténtalo de nuevo.',
+  'summary.problem.not-a-model-file': 'Ese archivo no es el modelo que usa Loppa. No se usó.',
+  'summary.problem.busy': 'Se está haciendo otra cosa. Espera a que termine.',
+  'summary.problem.too-long':
+    'Este texto es demasiado largo para tratarlo de una vez. Usa una parte.',
+  'summary.problem.language-refused': 'Ese idioma no se ofrece.',
+  'summary.problem.quote-only': 'Este texto se cita, no se reformula.',
+  'summary.problem.cancelled': 'Detenido.',
+  'summary.problem.repetition': 'El modelo empezó a repetirse y se detuvo.',
+  'summary.problem.failed': 'Algo salió mal. No se cambió nada.',
+  'summary.source.heading': 'Qué leer',
+  'summary.source.paste': 'Texto pegado',
+  'summary.source.file': 'Un archivo PDF o de texto',
+  'summary.source.form': 'Las preguntas de un formulario',
+  'summary.source.answers': 'Las respuestas de un formulario rellenado',
+  'summary.paste.label': 'Pega el texto aquí',
+  'summary.file.choose': 'Elegir un archivo',
+  'summary.file.reading': 'Leyendo la página {done} de {total}…',
+  'summary.file.empty': 'No se encontró texto en él.',
+  'summary.form.pick': 'Formulario',
+  'summary.form.none': 'Todavía no hay formularios.',
+  'summary.answers.pick': 'Respuesta',
+  'summary.answers.none': 'Este formulario aún no tiene respuestas.',
+  'summary.original': 'El original',
+  'summary.task.heading': 'Qué hacer',
+  'summary.task.summarise': 'Resumir',
+  'summary.task.translate': 'Traducir',
+  'summary.language': 'A',
+  'summary.is.summary':
+    'Escribir en islandés no se ofrece: en las pruebas el modelo lo escribía mal. Elige otro idioma.',
+  'summary.is.translate':
+    'Traducir al islandés no se ofrece: en las pruebas el modelo produjo frases rotas.',
+  'summary.ru.names': 'Los nombres en ruso pueden cambiar. Compruébalos con el original.',
+  'summary.quoteOnly.notice':
+    'Esto parece un contrato, un consentimiento, una declaración o un formulario clínico. No se resume ni se traduce, porque reformularlo podría cambiar su significado. Los pasajes que conviene leer primero se muestran tal como están escritos, en el idioma original.',
+  'summary.quoteOnly.caveat':
+    'La selección es una ayuda de lectura y puede pasar algo por alto. Lee el documento entero antes de aceptarlo.',
+  'summary.quoteOnly.run': 'Señalar los pasajes que leer primero',
+  'summary.start': 'Empezar',
+  'summary.stop': 'Detener',
+  'summary.step.loading': 'Iniciando el modelo…',
+  'summary.step.reading': 'Leyendo la parte {done} de {total}…',
+  'summary.step.combining': 'Reuniendo notas {done} de {total}…',
+  'summary.step.writing': 'Escribiendo…',
+  'summary.step.translating': 'Traduciendo la parte {done} de {total}…',
+  'summary.expect':
+    'Una página tarda unos treinta segundos en un equipo rápido y varios minutos en un portátil. Un texto más largo tarda más. Puedes detenerlo en cualquier momento.',
+  'summary.result.summary': 'Resumen — generado en este equipo',
+  'summary.result.translation': 'Traducción automática — borrador',
+  'summary.result.passages': 'Pasajes que leer primero',
+  'summary.result.note':
+    'Generado por un modelo en este equipo. Puede ser incorrecto. No se guarda ni se escribe en ningún documento, formulario o mensaje.',
+  'summary.result.digest':
+    'Un texto largo se resume con un punto por cada parte. Es un resumen, no un registro.',
+  'summary.result.time': 'Tardó {seconds} segundos.',
+  'summary.copy': 'Copiar',
+  'summary.copied': 'Copiado',
+  'summary.warn.added':
+    'Números del resultado que no están en el original: {numbers}. Compruébalos.',
+  'summary.warn.missing': 'Números del original que faltan en el resultado: {numbers}.',
+  'summary.warn.repetition':
+    'El modelo empezó a repetirse y se detuvo. Trata el resultado con cuidado.',
+  'summary.passage': 'Pasaje {n}',
   'scan.heading': 'Ordenar páginas',
   'scan.intro':
     'Une PDF y fotos, quita páginas, gíralas y colócalas en orden. No se guarda nada: el nuevo PDF se crea para que lo descargues.',

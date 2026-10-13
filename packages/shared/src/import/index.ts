@@ -88,3 +88,5 @@ export type {
   Placement,
 } from './reimport.js';
 export type { LayoutReading } from './pipeline.js';
+export { QUOTED_CATEGORIES, QUOTED_LEXICON, TERMS_NEEDED, mustQuote } from './quoted/quoted.js';
+export type { QuotedCategory, QuotedVerdict } from './quoted/quoted.js';

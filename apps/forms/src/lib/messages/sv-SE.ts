@@ -1420,6 +1420,103 @@ export const svSE: Record<MessageKey, string> = {
   'room.pause': 'Pausa rörelsen',
   'room.play': 'Starta rörelsen',
   'room.opened': '{name} är öppet',
+  'room.centreOpen': 'Öppna den',
+  'summary.intro':
+    'Ett utkast till sammanfattning eller översättning av ett dokument du har öppet, gjort på den här datorn. Det visas bredvid originalet, märkt som genererat, och sparas aldrig.',
+  'summary.settingsToggle': 'Modellinställningar',
+  'summary.modelHeading': 'Modellen',
+  'summary.modelWhat':
+    'En språkmodell på {size} körs på den här datorn, utan nätverk. Dina dokument lämnar den aldrig. Den hämtas en gång, bara när du ber om det, och du kan ta bort den igen.',
+  'summary.state.ready': 'Modellen är redo.',
+  'summary.state.location': 'Fil: {path}',
+  'summary.memory.low':
+    'Den här datorn har {free} GB ledigt minne och modellen behöver ungefär {need} GB. Stäng andra program och försök igen.',
+  'summary.get': 'Hämta modellen',
+  'summary.getConfirm':
+    'Det här hämtar {size} från Loppas utgåva på GitHub, i två delar, och kontrollerar dem. Det tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
+  'summary.getConfirmYes': 'Hämta',
+  'summary.getOff':
+    'Hämtningen är inte tillgänglig än: modellen är inte publicerad. Du kan öppna en modellfil från disken i stället.',
+  'summary.open': 'Öppna en modellfil från disken',
+  'summary.remove': 'Ta bort modellen',
+  'summary.removeConfirm': 'Ta bort modellen från den här datorn? Du kan hämta den igen senare.',
+  'summary.removeConfirmYes': 'Ta bort',
+  'summary.cancel': 'Avbryt',
+  'summary.progress.download': 'Hämtar del {part} av {parts}: {done} av {total} MB',
+  'summary.progress.join': 'Sätter ihop delarna: {done} av {total} MB',
+  'summary.progress.verify': 'Kontrollerar filen: {done} av {total} MB',
+  'summary.problem.not-installed': 'Modellen finns inte på den här datorn.',
+  'summary.problem.damaged':
+    'Filen stämmer inte med den publicerade modellen och användes inte. Ingenting har raderats.',
+  'summary.problem.too-little-memory':
+    'Det finns för lite ledigt minne för att läsa in modellen. Stäng andra program och försök igen.',
+  'summary.problem.cannot-start': 'Modellen kunde inte starta på den här datorn.',
+  'summary.problem.download-unavailable': 'Hämtningen är inte tillgänglig än.',
+  'summary.problem.download-failed':
+    'Hämtningen misslyckades eller stämde inte. Ingenting sparades. Försök igen.',
+  'summary.problem.not-a-model-file':
+    'Den filen är inte modellen som Loppa använder. Den användes inte.',
+  'summary.problem.busy': 'Något annat pågår. Vänta tills det är klart.',
+  'summary.problem.too-long':
+    'Texten är för lång för att hanteras på en gång. Använd en del av den.',
+  'summary.problem.language-refused': 'Det språket erbjuds inte.',
+  'summary.problem.quote-only': 'Den här texten citeras, den skrivs inte om.',
+  'summary.problem.cancelled': 'Stoppad.',
+  'summary.problem.repetition': 'Modellen började upprepa sig och stoppades.',
+  'summary.problem.failed': 'Något gick fel. Ingenting ändrades.',
+  'summary.source.heading': 'Vad ska läsas',
+  'summary.source.paste': 'Inklistrad text',
+  'summary.source.file': 'En PDF- eller textfil',
+  'summary.source.form': 'Ett formulärs frågor',
+  'summary.source.answers': 'Ett ifyllt formulärs svar',
+  'summary.paste.label': 'Klistra in texten här',
+  'summary.file.choose': 'Välj en fil',
+  'summary.file.reading': 'Läser sida {done} av {total}…',
+  'summary.file.empty': 'Ingen text hittades i den.',
+  'summary.form.pick': 'Formulär',
+  'summary.form.none': 'Det finns inga formulär än.',
+  'summary.answers.pick': 'Svar',
+  'summary.answers.none': 'Det här formuläret har inga svar än.',
+  'summary.original': 'Originalet',
+  'summary.task.heading': 'Vad ska göras',
+  'summary.task.summarise': 'Sammanfatta',
+  'summary.task.translate': 'Översätt',
+  'summary.language': 'Till',
+  'summary.is.summary':
+    'Att skriva isländska erbjuds inte: i testerna skrev modellen den dåligt. Välj ett annat språk.',
+  'summary.is.translate':
+    'Att översätta till isländska erbjuds inte: i testerna gav modellen trasiga meningar.',
+  'summary.ru.names': 'Namn på ryska kan ändras. Kontrollera dem mot originalet.',
+  'summary.quoteOnly.notice':
+    'Det här liknar ett avtal, ett samtycke, en försäkran eller ett medicinskt formulär. Det sammanfattas eller översätts inte, eftersom en omskrivning kan ändra vad det betyder. Avsnitten som är värda att läsa först visas exakt som de är skrivna, på originalspråket.',
+  'summary.quoteOnly.caveat':
+    'Urvalet är ett läshjälpmedel och kan missa något. Läs hela dokumentet innan du godkänner det.',
+  'summary.quoteOnly.run': 'Peka ut avsnitten att läsa först',
+  'summary.start': 'Starta',
+  'summary.stop': 'Stoppa',
+  'summary.step.loading': 'Startar modellen…',
+  'summary.step.reading': 'Läser del {done} av {total}…',
+  'summary.step.combining': 'Sammanställer anteckningar {done} av {total}…',
+  'summary.step.writing': 'Skriver…',
+  'summary.step.translating': 'Översätter del {done} av {total}…',
+  'summary.expect':
+    'En sida tar ungefär en halv minut på en snabb dator och flera minuter på en bärbar. En längre text tar längre tid. Du kan stoppa när som helst.',
+  'summary.result.summary': 'Sammanfattning — genererad på den här datorn',
+  'summary.result.translation': 'Maskinöversättning — utkast',
+  'summary.result.passages': 'Avsnitt att läsa först',
+  'summary.result.note':
+    'Genererad av en modell på den här datorn. Den kan ha fel. Den sparas inte och skrivs inte in i något dokument, formulär eller meddelande.',
+  'summary.result.digest':
+    'En lång text sammanfattas med en punkt för varje del. Det är ett sammandrag, inte en journal.',
+  'summary.result.time': 'Tog {seconds} sekunder.',
+  'summary.copy': 'Kopiera',
+  'summary.copied': 'Kopierat',
+  'summary.warn.added':
+    'Siffror i resultatet som inte finns i originalet: {numbers}. Kontrollera dem.',
+  'summary.warn.missing': 'Siffror i originalet som saknas i resultatet: {numbers}.',
+  'summary.warn.repetition':
+    'Modellen började upprepa sig och stoppades. Behandla resultatet med försiktighet.',
+  'summary.passage': 'Avsnitt {n}',
   'scan.heading': 'Ordna sidor',
   'scan.intro':
     'Slå ihop PDF-filer och foton, ta bort sidor, vänd dem och lägg dem i ordning. Inget sparas: den nya PDF:en görs för att du ska ladda ner den.',

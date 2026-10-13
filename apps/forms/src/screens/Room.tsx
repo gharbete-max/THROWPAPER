@@ -14,6 +14,7 @@ import { useSession } from '../lib/session.js';
 import { useBrand } from '../lib/brand.js';
 import { useT } from '../lib/i18n.js';
 import { useEdition } from '../lib/edition.js';
+import { modelBridge } from '../lib/model-bridge.js';
 import { rememberIntroSeen, useReducedMotion } from '../lib/motion.js';
 import { Mark } from '../components/Mark.js';
 import { Icon, type IconName } from '../components/Icon.js';
@@ -194,14 +195,21 @@ export function Room() {
                 label={t('room.send')}
                 note={edition === 'server' ? t('room.centreNone') : null}
               />
-              <p className="room__centre">
-                <strong>{t('room.centre')}</strong>
-                {edition !== null && (
-                  <span>
-                    {edition === 'desktop' ? t('room.centreLater') : t('room.centreNone')}
-                  </span>
-                )}
-              </p>
+              {edition === 'desktop' && modelBridge() ? (
+                <Link className="room__centre" to="/summary">
+                  <strong>{t('room.centre')}</strong>
+                  <span>{t('room.centreOpen')}</span>
+                </Link>
+              ) : (
+                <p className="room__centre">
+                  <strong>{t('room.centre')}</strong>
+                  {edition !== null && (
+                    <span>
+                      {edition === 'desktop' ? t('room.centreLater') : t('room.centreNone')}
+                    </span>
+                  )}
+                </p>
+              )}
             </div>
           </section>
         ) : (

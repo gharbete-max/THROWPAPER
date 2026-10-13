@@ -16,3 +16,17 @@ in full.
 | ------- | ------- | ----------- | ---- | -------- |
 
 None yet.
+
+## Model weights (not in this repository)
+
+The summary and translation model is **never copied into this repository or the installer**
+(`*.gguf` is ignored). It is downloaded on the person's request, or opened from disk, and checked
+against `packages/shared/src/summary/weights/qwen3-4b-instruct-2507-q4_k_m.json`
+(ADR 0023, ADR 0015). Recorded here so the licence has a home that `licence:check` does not read.
+
+| Model                                                                                    | Licence                                                                             | Source                                                                             | SHA-256                                                            |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `qwen3-4b-instruct-2507-q4_k_m` (Qwen3-4B-Instruct-2507, Q4_K_M quantisation by Unsloth) | Apache-2.0 (<https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/blob/main/LICENSE>) | <https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF>, retrieved 2026-10-13 | `3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597` |
+
+The runtime, `node-llama-cpp` (MIT) and llama.cpp inside it (MIT), is an npm dependency and is
+checked by `licence:check` like the rest.
