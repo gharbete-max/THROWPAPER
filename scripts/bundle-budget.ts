@@ -76,6 +76,9 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * raised to 1 150 KB, the last raise this plan intends: the catalogues alone are about 280 KB
  * (twelve languages), and a visitor downloads one of them plus the screens they open.
  *
+ * The improvement plan (`docs/plan/IMPROVEMENTS.md`: scan filters, the digital copy, flow, send, sign)
+ * raises the total to 1 250 KB for the same reason; the entry and stylesheet caps do not move.
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -88,7 +91,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 1150,
+  total: 1250,
 } as const;
 
 function gzippedKb(path: string): number {
