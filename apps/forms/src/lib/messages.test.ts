@@ -192,6 +192,10 @@ describe('twelve languages, each its own', () => {
     'invoices.pdf',
     'url.placeholder',
     'checkin.referencePlaceholder',
+    // The names of the payment systems an invoice is paid through.
+    'invoiceScan.method.bankgiro',
+    'invoiceScan.method.plusgiro',
+    'invoiceScan.method.iban',
   ];
   /** Words each language uses as English does: cognates and loanwords, each one looked at. */
   const SAME_WORD: Readonly<Record<string, readonly MessageKey[]>> = {
@@ -215,6 +219,9 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'da-DK': [
+      'invoiceScan.json',
+      'invoiceScan.csv',
+      'invoiceScan.note.reference',
       'draft.download',
       'draft.send',
       'event.status',
@@ -307,6 +314,7 @@ describe('twelve languages, each its own', () => {
     'de-DE': [
       'scanEdit.text',
       'scanEdit.item.text',
+      'invoiceScan.optional',
       'event.name',
       'event.status',
       'forms.access.admin',
