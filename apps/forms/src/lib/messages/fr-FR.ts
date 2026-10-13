@@ -1845,4 +1845,23 @@ export const frFR: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adresse est écartée car elle s’est désabonnée ou a rebondi. | other {count} adresses sont écartées car elles se sont désabonnées ou ont rebondi.',
   'campaign.leftOut.done': 'Écartées (désabonnées ou rebondies) : {list}',
+  'suppress.open': 'Liste « ne pas écrire »',
+  'suppress.close': 'Retour à l’envoi',
+  'suppress.heading': 'Ne pas écrire',
+  'suppress.scope':
+    'Cette liste n’arrête que les envois groupés (un e-mail à une liste). Elle n’arrête ni les documents envoyés à l’unité ni les invitations à signer.',
+  'suppress.empty': 'Aucune adresse sur la liste.',
+  'suppress.col.email': 'Adresse',
+  'suppress.col.date': 'Ajoutée',
+  'suppress.col.reason': 'Motif',
+  'suppress.reason.unsubscribed': 'Désabonnée',
+  'suppress.reason.bounced': 'Rebondie',
+  'suppress.reason.manual': 'Ajoutée à la main',
+  'suppress.add.label': 'Adresse à ajouter',
+  'suppress.add': 'Ajouter',
+  'suppress.invalid': 'Ce n’est pas une adresse e-mail valide.',
+  'suppress.remove': 'Retirer {email}',
+  'suppress.removeConfirm':
+    'Retirer {email} de la liste ? Les envois pourront de nouveau atteindre cette adresse.',
+  'suppress.failed': 'La liste n’a pas pu être modifiée. Réessayez.',
 };
