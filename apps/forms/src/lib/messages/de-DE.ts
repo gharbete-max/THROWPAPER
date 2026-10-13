@@ -998,6 +998,15 @@ export const deDE: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Eine E-Mail mit Unterschriftslink an {count} Unterzeichnende senden, sobald sie an der Reihe sind? Wer keine Adresse hat, bekommt nichts – kopieren Sie deren Link stattdessen.',
   'signing.inviteConfirmYes': 'Senden und mailen',
+  'signing.cancelRequest': 'Anfrage abbrechen',
+  'signing.cancelConfirm': '„{document}“ abbrechen? Niemand kann es dann noch unterschreiben.',
+  'signing.cancelConfirmYes': 'Ja, abbrechen',
+  'signing.sendSigned': 'Unterschriebene Kopie senden',
+  'signing.sendSignedConfirm':
+    'Die unterschriebene Kopie von „{document}“ an {count} Unterzeichnende senden? Sie nimmt denselben Weg wie die übrigen E-Mails: Auf einem Computer wartet sie unter Zu senden.',
+  'signing.sendSignedConfirmYes': 'Unterschriebene Kopie senden',
+  'signing.copyQueued': 'Unterschriebene Kopie eingereiht',
+  'signing.handoff': 'PDF bereit: {name}',
   'signing.remind': 'Erinnerung senden',
   'signing.remindConfirm': '{name} ({email}) den Unterschriftslink erneut mailen?',
   'signing.emailed': 'Per E-Mail gesendet',
@@ -1522,4 +1531,5 @@ export const deDE: Record<MessageKey, string> = {
   'fill.unencodable':
     'Ein eingegebener Buchstabe kann mit der eigenen Schrift dieser PDF nicht gezeichnet werden.',
   'fill.back': 'Zurück zum Formular',
+  'scan.sign': 'Dieses PDF unterschreiben',
 };

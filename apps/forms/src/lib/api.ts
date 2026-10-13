@@ -432,6 +432,14 @@ export const client = {
       `/v1/signing/requests/${id}/parties/${encodeURIComponent(partyId)}/remind`,
       { method: 'POST' },
     ),
+  cancelSigningRequest: (id: string) =>
+    request<formSchemas.SigningRequestView>(`/v1/signing/requests/${id}/cancel`, {
+      method: 'POST',
+    }),
+  sendSignedCopy: (id: string) =>
+    request<formSchemas.SigningRequestView>(`/v1/signing/requests/${id}/send-signed`, {
+      method: 'POST',
+    }),
   signedPdf: (id: string) => requestBlob(`/v1/signing/requests/${id}/sealed.pdf`),
   /** The invoice as the tenant receives it, fetched with the session rather than their link. */
   invoicePdf: (id: string) => requestBlob(`/v1/invoices/${id}/pdf`),

@@ -968,6 +968,15 @@ export const svSE: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Skicka ett mejl med signeringslänk till {count} undertecknare när det blir deras tur? Den som saknar adress får inget – kopiera deras länk i stället.',
   'signing.inviteConfirmYes': 'Skicka och mejla',
+  'signing.cancelRequest': 'Avbryt förfrågan',
+  'signing.cancelConfirm': 'Avbryta ”{document}”? Ingen kan signera det längre.',
+  'signing.cancelConfirmYes': 'Ja, avbryt',
+  'signing.sendSigned': 'Skicka den signerade kopian',
+  'signing.sendSignedConfirm':
+    'Skicka den signerade kopian av ”{document}” till {count} undertecknare? Den går samma väg som övriga mejl: på en dator väntar den under Att skicka.',
+  'signing.sendSignedConfirmYes': 'Skicka den signerade kopian',
+  'signing.copyQueued': 'Signerad kopia lagd i kön',
+  'signing.handoff': 'PDF klar: {name}',
   'signing.remind': 'Skicka påminnelse',
   'signing.remindConfirm': 'Mejla {name} ({email}) signeringslänken igen?',
   'signing.emailed': 'Mejlad',
@@ -1467,4 +1476,5 @@ export const svSE: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Ta bort signaturen och fyll i',
   'fill.unencodable': 'En bokstav du skrev kan inte ritas med PDF:ens eget typsnitt.',
   'fill.back': 'Tillbaka till formuläret',
+  'scan.sign': 'Signera den här PDF:en',
 };

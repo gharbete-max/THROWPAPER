@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type DragEvent } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ApiError, client } from '../lib/api.js';
 import { saveBlob } from '../lib/email-handoff.js';
+import { signingWith } from '../lib/sign-handoff.js';
 import { useT } from '../lib/i18n.js';
 import { useToast } from '../lib/toast.js';
 import { useConfirm } from '../components/Confirm.js';
@@ -36,6 +37,7 @@ export function Scan() {
   const t = useT();
   const toast = useToast();
   const confirm = useConfirm();
+  const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
   const [sources, setSources] = useState<Source[]>([]);
   const [camera, setCamera] = useState(false);
@@ -101,13 +103,17 @@ export function Scan() {
     ]);
   }
 
-  async function make(acceptSignatureLoss = false) {
+  /** `then` is what happens to the made PDF: saved to disk, or handed on to Signing. */
+  async function make(acceptSignatureLoss = false, then: 'download' | 'sign' = 'download') {
     const request = requestOf(pages, files);
     setBusy(true);
     try {
       const blob = await client.arrangePdf(request.files, request.plan, acceptSignatureLoss);
       // A PDF made from a Word file keeps "layout may differ from Word" in its name.
-      saveBlob(blob, files.find((file) => fromWord.has(file))?.name ?? 'loppa.pdf');
+      const name = files.find((file) => fromWord.has(file))?.name ?? 'loppa.pdf';
+      if (then === 'sign')
+        navigate(...signingWith(new File([blob], name, { type: 'application/pdf' })));
+      else saveBlob(blob, name);
     } catch (error) {
       if (error instanceof ApiError && error.code === 'signed') {
         // Asked before anything is changed: the new PDF cannot carry the old signature.
@@ -117,7 +123,7 @@ export function Scan() {
         });
         if (agreed) {
           setBusy(false);
-          return make(true);
+          return make(true, then);
         }
       } else {
         say(errorKey(error));
@@ -165,6 +171,14 @@ export function Scan() {
             </span>
             <button type="button" className="button" disabled={busy} onClick={() => void make()}>
               <Icon name="download" /> {busy ? t('scan.working') : t('scan.download')}
+            </button>
+            <button
+              type="button"
+              className="button button--quiet"
+              disabled={busy}
+              onClick={() => void make(false, 'sign')}
+            >
+              <Icon name="signature" /> {t('scan.sign')}
             </button>
           </>
         ) : null}

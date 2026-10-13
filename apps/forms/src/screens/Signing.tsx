@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useSearchParams } from 'react-router';
+import { useLocation, useSearchParams } from 'react-router';
 import { localeLabel } from '@tp/i18n';
 import type { forms as formSchemas } from '@tp/shared';
 import { client } from '../lib/api.js';
@@ -17,6 +17,8 @@ import { CropPhoto, WHOLE_PICTURE } from './builder/paper/CropPhoto.js';
 import { isUsable, straightenFile, type Corners } from './builder/paper/warp.js';
 import { detectPage } from './builder/paper/detect.js';
 import { SigningDeclarations } from './SigningDeclarations.js';
+import { documentNameOf, pdfFromState } from '../lib/sign-handoff.js';
+import { useToast } from '../lib/toast.js';
 
 type Party = { name: string; email: string; locale: string };
 type Declaration = formSchemas.SigningDeclarationList['declarations'][number];
@@ -37,7 +39,9 @@ export function Signing() {
   const [params] = useSearchParams();
   const paper = params.get('paper');
   const reference = params.get('reference') ?? '';
-  const [composing, setComposing] = useState(paper !== null);
+  // Arriving from another part (Scan, Forms) with its PDF already chosen.
+  const handoff = pdfFromState(useLocation().state);
+  const [composing, setComposing] = useState(paper !== null || handoff !== null);
   const [declarations, setDeclarations] = useState<Declaration[]>([]);
   const [showDeclarations, setShowDeclarations] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -132,6 +136,7 @@ export function Signing() {
       {composing && (
         <Compose
           paper={paper ? { submissionId: paper, reference } : null}
+          handoff={handoff}
           declarations={declarations}
           onCancel={() => setComposing(false)}
           onSent={(created) => {
@@ -178,6 +183,7 @@ function Row({
   const t = useT();
   const edition = useEdition();
   const confirm = useConfirm();
+  const toast = useToast();
   const [busy, setBusy] = useState(false);
   const known = ['draft', 'sent', 'completed', 'declined', 'expired', 'cancelled'];
   const statusKey = known.includes(request.status) ? request.status : 'sent';
@@ -204,6 +210,41 @@ function Row({
     setBusy(true);
     try {
       onChange(await client.remindSigner(request.id, party.id));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Withdraw it: irreversible, so asked first (rule 7). Every signer's link stops working. */
+  async function cancelRequest() {
+    const ok = await confirm(t('signing.cancelConfirm', { document: request.documentName }), {
+      confirmLabel: t('signing.cancelConfirmYes'),
+      danger: true,
+    });
+    if (!ok) return;
+    setBusy(true);
+    try {
+      onChange(await client.cancelSigningRequest(request.id));
+    } catch {
+      toast.show(t('signing.failed'), 'error');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Queue the sealed PDF for the signers — it leaves only by the usual mail path (rule 7). */
+  async function sendSigned() {
+    const count = request.parties.filter((party) => party.email).length;
+    const ok = await confirm(
+      t('signing.sendSignedConfirm', { document: request.documentName, count }),
+      { danger: false, confirmLabel: t('signing.sendSignedConfirmYes') },
+    );
+    if (!ok) return;
+    setBusy(true);
+    try {
+      onChange(await client.sendSignedCopy(request.id));
+    } catch {
+      toast.show(t('signing.failed'), 'error');
     } finally {
       setBusy(false);
     }
@@ -289,11 +330,38 @@ function Row({
           >
             {t('signing.refresh')}
           </button>
-          {request.status === 'completed' && (
-            <button type="button" className="button small" disabled={busy} onClick={download}>
-              <Icon name="file" />
-              {t('signing.downloadSigned')}
+          {request.status === 'sent' && (
+            <button
+              type="button"
+              className="button button--quiet small"
+              disabled={busy}
+              onClick={() => void cancelRequest()}
+            >
+              {t('signing.cancelRequest')}
             </button>
+          )}
+          {request.status === 'completed' && (
+            <>
+              <button type="button" className="button small" disabled={busy} onClick={download}>
+                <Icon name="file" />
+                {t('signing.downloadSigned')}
+              </button>
+              {request.parties.some((party) => party.email) && (
+                <button
+                  type="button"
+                  className="button button--quiet small"
+                  disabled={busy}
+                  onClick={() => void sendSigned()}
+                >
+                  {t('signing.sendSigned')}
+                </button>
+              )}
+              {request.parties.some((party) => party.signedCopyQueuedAt) && (
+                <span className="small muted" data-testid="signing-copy-queued">
+                  {t('signing.copyQueued')}
+                </span>
+              )}
+            </>
           )}
         </span>
       </td>
@@ -313,12 +381,15 @@ async function base64(file: File): Promise<string> {
 
 function Compose({
   paper,
+  handoff,
   declarations,
   onCancel,
   onSent,
 }: {
   /** A paper form's submission, sent as its filled-in PDF instead of an uploaded file. */
   paper: { submissionId: string; reference: string } | null;
+  /** A PDF another part chose; it stands in for the file picker until a person picks another. */
+  handoff: File | null;
   declarations: Declaration[];
   onCancel: () => void;
   onSent: (created: formSchemas.SigningRequestView) => void;
@@ -328,13 +399,13 @@ function Compose({
   const linksAreLocal = useSignersLinksAreLocal();
   const { locale, locales } = useSession();
   const languages = locales.supported.length ? locales.supported : [locale];
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(handoff);
   // A document can also be paper, scanned here with the camera: one photo per page, each
   // straightened on the corners the person places (the same handles as a form from paper).
   const [via, setVia] = useState<'file' | 'camera'>('file');
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState<{ file: File; corners: Corners }[]>([]);
-  const [documentName, setDocumentName] = useState('');
+  const [documentName, setDocumentName] = useState(handoff ? documentNameOf(handoff) : '');
 
   /** Pages from a camera, a phone or a scanner, each starting on the page's own corners if found. */
   async function addPages(pages: File[]) {
@@ -495,6 +566,11 @@ function Compose({
                   setFile(first ?? null);
                 }}
               />
+              {file && handoff && file === handoff ? (
+                <span className="small" data-testid="signing-handoff">
+                  {t('signing.handoff', { name: handoff.name })}
+                </span>
+              ) : null}
               <span className="small muted">{t('signing.fileHint')}</span>
             </label>
           ) : scanning ? (

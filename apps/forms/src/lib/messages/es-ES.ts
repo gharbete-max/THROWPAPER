@@ -983,6 +983,15 @@ export const esES: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     '¿Enviar un correo con el enlace de firma a {count} firmantes cuando les toque? Quien no tenga dirección no recibe nada: copia su enlace.',
   'signing.inviteConfirmYes': 'Enviar y mandar correo',
+  'signing.cancelRequest': 'Cancelar la solicitud',
+  'signing.cancelConfirm': '¿Cancelar «{document}»? Nadie podrá firmarlo ya.',
+  'signing.cancelConfirmYes': 'Sí, cancelar',
+  'signing.sendSigned': 'Enviar la copia firmada',
+  'signing.sendSignedConfirm':
+    '¿Enviar la copia firmada de «{document}» a {count} firmantes? Sigue el mismo camino que los demás correos: en un ordenador espera en Por enviar.',
+  'signing.sendSignedConfirmYes': 'Enviar la copia firmada',
+  'signing.copyQueued': 'Copia firmada en cola',
+  'signing.handoff': 'PDF listo: {name}',
   'signing.remind': 'Enviar recordatorio',
   'signing.remindConfirm': '¿Volver a enviar el enlace de firma a {name} ({email})?',
   'signing.emailed': 'Enviado por correo',
@@ -1490,4 +1499,5 @@ export const esES: Record<MessageKey, string> = {
   'fill.unencodable':
     'Una letra que escribiste no se puede dibujar con la fuente propia de este PDF.',
   'fill.back': 'Volver al formulario',
+  'scan.sign': 'Firmar este PDF',
 };

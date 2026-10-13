@@ -993,6 +993,15 @@ export const frFR: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Envoyer un e-mail avec un lien de signature à {count} signataires quand vient leur tour ? Ceux sans adresse ne reçoivent rien : copiez plutôt leur lien.',
   'signing.inviteConfirmYes': 'Envoyer et e-mailer',
+  'signing.cancelRequest': 'Annuler la demande',
+  'signing.cancelConfirm': 'Annuler « {document} » ? Personne ne pourra plus le signer.',
+  'signing.cancelConfirmYes': 'Oui, annuler',
+  'signing.sendSigned': 'Envoyer la copie signée',
+  'signing.sendSignedConfirm':
+    'Envoyer la copie signée de « {document} » à {count} signataires ? Elle suit le même chemin que les autres e-mails : sur un ordinateur, elle attend dans À envoyer.',
+  'signing.sendSignedConfirmYes': 'Envoyer la copie signée',
+  'signing.copyQueued': 'Copie signée en file d’envoi',
+  'signing.handoff': 'PDF prêt : {name}',
   'signing.remind': 'Envoyer un rappel',
   'signing.remindConfirm': 'Renvoyer le lien de signature à {name} ({email}) par e-mail ?',
   'signing.emailed': 'Envoyé par e-mail',
@@ -1508,4 +1517,5 @@ export const frFR: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Supprimer la signature et remplir',
   'fill.unencodable': 'Une lettre saisie ne peut pas être dessinée avec la police propre à ce PDF.',
   'fill.back': 'Retour au formulaire',
+  'scan.sign': 'Signer ce PDF',
 };
