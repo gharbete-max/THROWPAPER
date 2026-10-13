@@ -25,6 +25,10 @@ updates:
     # otherwise reopen every Monday. Each names the prerequisite that has to be taken on purpose
     # first; remove the entry when it has been.
     ignore:
+      # 6.4.x changes how the golden corpus PDFs are read (the clock-drift and verify snapshots differ);
+      # pinned at 6.3.289 until the corpus expectations are reviewed against it on purpose.
+      - dependency-name: 'pdfjs-dist'
+        versions: ['>=6.4.0']
       # 6.x requires Vite 7; the SSR site, the PWA plugin and the e2e preview are built on Vite 6.
       - dependency-name: '@vitejs/plugin-react'
         update-types: ['version-update:semver-major']
