@@ -196,6 +196,8 @@ describe('twelve languages, each its own', () => {
   /** Words each language uses as English does: cognates and loanwords, each one looked at. */
   const SAME_WORD: Readonly<Record<string, readonly MessageKey[]>> = {
     'sv-SE': [
+      'scanEdit.text',
+      'scanEdit.item.text',
       'event.status',
       'forms.version',
       'appearance.system',
@@ -303,6 +305,8 @@ describe('twelve languages, each its own', () => {
       'review.kind.question',
     ],
     'de-DE': [
+      'scanEdit.text',
+      'scanEdit.item.text',
       'event.name',
       'event.status',
       'forms.access.admin',

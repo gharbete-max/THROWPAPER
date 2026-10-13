@@ -1630,4 +1630,40 @@ export const deDE: Record<MessageKey, string> = {
     'Ein eingegebener Buchstabe kann mit der eigenen Schrift dieser PDF nicht gezeichnet werden.',
   'fill.back': 'Zurück zum Formular',
   'scan.sign': 'Dieses PDF unterschreiben',
+  'scan.edit': 'Text bearbeiten oder schwärzen',
+  'scanEdit.heading': 'Seite {n} bearbeiten',
+  'scanEdit.modeLabel': 'Was möchten Sie tun',
+  'scanEdit.mode.text': 'Text hinzufügen',
+  'scanEdit.mode.cover': 'Abdecken',
+  'scanEdit.mode.redact': 'Schwärzen',
+  'scanEdit.hint.text':
+    'Klicken Sie auf die Seite, um den Text zu platzieren, oder geben Sie die Position ein.',
+  'scanEdit.hint.box':
+    'Ziehen Sie auf der Seite ein Feld auf, oder geben Sie Position und Größe ein.',
+  'scanEdit.coverNote':
+    'Abdecken übermalt die Seite nur. Der Text darunter bleibt in der Datei; mit Schwärzen wird er entfernt.',
+  'scanEdit.redactNote':
+    'Schwärzen macht die ganze Seite zu einem Bild. Der Text unter den Feldern wird endgültig entfernt, aber die Seite ist nicht mehr durchsuchbar und nichts lässt sich daraus kopieren.',
+  'scanEdit.text': 'Text',
+  'scanEdit.size': 'Größe (Punkt)',
+  'scanEdit.x': 'Von links (Punkt)',
+  'scanEdit.y': 'Von oben (Punkt)',
+  'scanEdit.width': 'Breite (Punkt)',
+  'scanEdit.height': 'Höhe (Punkt)',
+  'scanEdit.fill': 'Farbe',
+  'scanEdit.add': 'Zur Seite hinzufügen',
+  'scanEdit.pending': 'Auszuführende Änderungen',
+  'scanEdit.none': 'Noch keine Änderungen.',
+  'scanEdit.item.text': 'Text: {text}',
+  'scanEdit.remove': 'Entfernen',
+  'scanEdit.redactConfirm':
+    'Seite {n} in ein Bild mit diesen geschwärzten Feldern umwandeln? Der Text darunter wird entfernt; das lässt sich nicht rückgängig machen.',
+  'scanEdit.apply': 'Anwenden',
+  'scanEdit.applying': 'Wird bearbeitet…',
+  'scanEdit.error.glyphs':
+    'Diese Zeichen können nicht gedruckt werden: {chars}. Entfernen Sie sie.',
+  'scanEdit.error.font': 'Dieser Server hat keine Schrift für: {chars}.',
+  'scanEdit.error.bad': 'Eine Änderung ist ungültig. Prüfen Sie die Zahlen und den Text.',
+  'scanEdit.error.unsafe':
+    'Diese PDF-Datei lässt sich nicht vollständig schwärzen, daher wurde nichts geändert.',
 };

@@ -346,6 +346,29 @@ export const client = {
   draftPdf: (formId: string, locale: string, values: Record<string, unknown> = {}) =>
     postForBlob(`/v1/forms/${formId}/draft.pdf`, { locale, values }),
 
+  /** Text added to and covers painted on a PDF (`POST /v1/pdf/edit`); positions are PDF points. */
+  editPdf: (file: Blob, ops: readonly object[], acceptSignatureLoss = false) => {
+    const body = new FormData();
+    body.append('file', file, 'loppa.pdf');
+    body.set('ops', JSON.stringify(ops));
+    if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
+    return postForBlob('/v1/pdf/edit', body);
+  },
+
+  /** Pages replaced by pictures with the redaction boxes burnt in (`POST /v1/pdf/redact`). */
+  redactPdf: (
+    file: Blob,
+    redactions: ReadonlyArray<{ page: number; image: Blob }>,
+    acceptSignatureLoss = false,
+  ) => {
+    const body = new FormData();
+    body.append('file', file, 'loppa.pdf');
+    for (const { image } of redactions) body.append('file', image, 'page.png');
+    body.set('pages', JSON.stringify(redactions.map((r) => r.page)));
+    if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
+    return postForBlob('/v1/pdf/redact', body);
+  },
+
   /** A submission written back onto the paper its form was made from. */
   submissionPaper: (submissionId: string) =>
     requestBlob(`/v1/submissions/${submissionId}/paper.pdf`),

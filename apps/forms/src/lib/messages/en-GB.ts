@@ -1586,6 +1586,38 @@ export const enGB = {
   'fill.unencodable': 'A letter you typed cannot be drawn in this PDF’s own font.',
   'fill.back': 'Back to the form',
   'scan.sign': 'Sign this PDF',
+  'scan.edit': 'Edit text or redact',
+  'scanEdit.heading': 'Edit page {n}',
+  'scanEdit.modeLabel': 'What to do',
+  'scanEdit.mode.text': 'Add text',
+  'scanEdit.mode.cover': 'Cover',
+  'scanEdit.mode.redact': 'Redact',
+  'scanEdit.hint.text': 'Click the page to place the text, or type where it goes.',
+  'scanEdit.hint.box': 'Drag on the page to draw a box, or type where it goes and how big it is.',
+  'scanEdit.coverNote':
+    'A cover only paints over the page. The words underneath stay in the file; use Redact to remove them.',
+  'scanEdit.redactNote':
+    'Redact turns the whole page into a picture. The words under the boxes are removed for good, but the page can no longer be searched or copied from.',
+  'scanEdit.text': 'Text',
+  'scanEdit.size': 'Size (points)',
+  'scanEdit.x': 'From the left (points)',
+  'scanEdit.y': 'From the top (points)',
+  'scanEdit.width': 'Width (points)',
+  'scanEdit.height': 'Height (points)',
+  'scanEdit.fill': 'Colour',
+  'scanEdit.add': 'Add to the page',
+  'scanEdit.pending': 'Changes to make',
+  'scanEdit.none': 'No changes yet.',
+  'scanEdit.item.text': 'Text: {text}',
+  'scanEdit.remove': 'Remove',
+  'scanEdit.redactConfirm':
+    'Turn page {n} into a picture with these boxes blacked out? The words under them are removed and this cannot be undone.',
+  'scanEdit.apply': 'Apply',
+  'scanEdit.applying': 'Working…',
+  'scanEdit.error.glyphs': 'These characters cannot be printed: {chars}. Take them out.',
+  'scanEdit.error.font': 'This server has no font for: {chars}.',
+  'scanEdit.error.bad': 'A change is not valid. Check the numbers and the text.',
+  'scanEdit.error.unsafe': 'This PDF cannot be redacted completely, so nothing was changed.',
 } as const;
 
 /**

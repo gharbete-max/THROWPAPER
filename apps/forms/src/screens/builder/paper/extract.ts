@@ -135,7 +135,7 @@ export type Pdfjs = typeof import('pdfjs-dist/legacy/build/pdf.mjs');
  * The legacy build is the same code with that method (and its kin) polyfilled; it is what
  * pdf.js itself recommends for anything that must run in browsers people actually have.
  */
-async function browserPdfjs(): Promise<Pdfjs> {
+export async function browserPdfjs(): Promise<Pdfjs> {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   const workerUrl = (await import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url')).default;
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
