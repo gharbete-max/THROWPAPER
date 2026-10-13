@@ -41,10 +41,15 @@ export function Forms() {
    * editor with the same draft.
    */
   const navigate = useNavigate();
-  /* `?new` arrives with the doors open: the room's Scan part lands on the paper door (ADR 0022). */
+  /*
+   * `?new` arrives with the doors open: the room's Scan part lands on the paper door (ADR 0022).
+   * `?new=questions` and `?new=paper` open them with that door under focus, and `?new=manual`
+   * opens "Build it myself". Opening a page never creates a form: that waits for a press.
+   */
   const [params] = useSearchParams();
+  const door = params.get('new');
   const [creating, setCreating] = useState<null | 'doors' | 'manual'>(() =>
-    params.has('new') ? 'doors' : null,
+    door === 'manual' ? 'manual' : params.has('new') ? 'doors' : null,
   );
   const [opening, setOpening] = useState(false);
   const [slug, setSlug] = useState('');
@@ -112,18 +117,13 @@ export function Forms() {
     setError(null);
     try {
       // The title starts in the org's default locale; the rest is filled in on the translation tab.
-      await client.createForm({
+      const created = await client.createForm({
         slug,
         title: { [locales.default]: title },
         ...(templateId ? { templateId } : {}),
       });
-      setSlug('');
-      setTitle('');
-      setTemplateId(null);
-      setCreating(null);
-      // Straight to your own pile, which is where the new form went.
-      if (scope === 'mine') load();
-      else setScope('mine');
+      // Straight into the editor, as the other doors go: a form made by hand is for editing.
+      navigate(`/forms/${created.id}`);
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : String(cause));
     }
@@ -178,6 +178,9 @@ export function Forms() {
               {t('phrases.title')}
             </Link>
           )}
+          <Link className="button button--quiet" to="/forms/pdf">
+            {t('fill.pdfHeading')}
+          </Link>
           <button
             className="button"
             onClick={() => setCreating((mode) => (mode === null ? 'doors' : null))}
@@ -193,6 +196,7 @@ export function Forms() {
         <Doors
           onQuestions={() => void openBlank('questions')}
           onPaper={() => void openBlank('paper')}
+          focus={door === 'paper' ? 'paper' : door === 'questions' ? 'questions' : undefined}
           onMyself={() => {
             setError(null);
             setCreating('manual');

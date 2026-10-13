@@ -1457,4 +1457,24 @@ export const isIS: Record<MessageKey, string> = {
   'scan.word.drop.field':
     'Reitir (sýndir eins og þeir voru síðast vistaðir í Word, ekki uppfærðir): {count}',
   'scan.word.drop.image': 'Myndir sem ekki var hægt að hafa með: {count}',
+  'draft.download': 'Sækja PDF',
+  'draft.working': 'Bý til PDF…',
+  'draft.fill': 'Fylla út',
+  'draft.sign': 'Undirrita',
+  'draft.send': 'Senda',
+  'draft.share': 'Deila til að safna svörum',
+  'draft.failed': 'Ekki tókst að búa til PDF-skjalið. Reyndu aftur.',
+  'fill.formIntro':
+    'Fylltu eyðublaðið út hér og vistaðu það sem PDF. Ekkert er sent, vistað eða birt.',
+  'fill.pdfHeading': 'Fylla út PDF',
+  'fill.pdfIntro':
+    'Veldu PDF með eigin reitum, fylltu þá út hér og haltu niðurstöðunni. Ekkert er sent, vistað eða birt.',
+  'fill.choose': 'Velja PDF',
+  'fill.keep': 'Halda sem PDF',
+  'fill.noFields': 'Þetta PDF-skjal hefur enga eigin reiti til að fylla út.',
+  'fill.signed':
+    'Þetta PDF-skjal er með stafræna undirskrift. Undirskriftin er fjarlægð ef þú fyllir það út.',
+  'fill.signedConfirm': 'Fjarlægja undirskriftina og fylla út',
+  'fill.unencodable': 'Ekki er hægt að teikna staf sem þú skrifaðir með leturgerð PDF-skjalsins.',
+  'fill.back': 'Til baka í eyðublaðið',
 };

@@ -30,6 +30,7 @@ export function FormPreview({
   locales,
   selectedId,
   note = true,
+  onValues,
 }: {
   definition: FormDefinition;
   locale: string;
@@ -41,10 +42,14 @@ export function FormPreview({
    * many previews: the review screen's items (S10).
    */
   note?: boolean;
+  /** Told what has been typed, so a screen that fills the form in for a PDF can send it. */
+  onValues?: (values: SubmissionValues) => void;
 }) {
   const t = useT();
   const [values, setValues] = useState<SubmissionValues>({});
   const [page, setPage] = useState(0);
+
+  useEffect(() => onValues?.(values), [values, onValues]);
 
   const pages = pagesOf(definition);
   const current = Math.min(page, pages.length - 1);

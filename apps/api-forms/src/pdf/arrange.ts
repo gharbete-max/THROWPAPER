@@ -49,7 +49,12 @@ export type ArrangeRefusalCode =
   | 'too-costly'
   | 'image-too-large'
   | 'encrypted'
-  | 'signed';
+  | 'signed'
+  // Filling a PDF's own fields (`pdf/fill.ts`) refuses with the same type, for the same routes.
+  | 'no-fields'
+  | 'no-such-field'
+  | 'bad-value'
+  | 'unencodable';
 
 /** A reason the plan cannot be carried out, in terms the caller can show a person. */
 export class ArrangeRefusal extends Error {
@@ -70,6 +75,35 @@ const SIGNATURE_MARKER = Buffer.from('/ByteRange');
  * encrypted one reaches it as garbage and would be called unreadable rather than encrypted.
  */
 const ENCRYPTION_MARKER = Buffer.from('/Encrypt');
+
+/**
+ * One untrusted PDF, opened for editing: encryption and signature refused first (the signature
+ * unless the person has agreed to lose it), then the guard's worker, then pdf-lib on this thread.
+ * Shared by page work and by filling a PDF's own fields, so both treat a stranger's file alike.
+ */
+export async function openChecked(
+  bytes: Uint8Array,
+  index: number,
+  acceptSignatureLoss = false,
+): Promise<PDFDocument> {
+  const view = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (view.includes(ENCRYPTION_MARKER)) throw new ArrangeRefusal('encrypted', index);
+  const checked = await checkPdf(bytes);
+  if (!checked.ok) {
+    throw new ArrangeRefusal(checked.reason === 'too-costly' ? 'too-costly' : 'unreadable', index);
+  }
+  if (!acceptSignatureLoss && view.includes(SIGNATURE_MARKER)) {
+    throw new ArrangeRefusal('signed', index);
+  }
+  try {
+    return await PDFDocument.load(bytes, { updateMetadata: false });
+  } catch (error) {
+    throw new ArrangeRefusal(
+      error instanceof EncryptedPDFError ? 'encrypted' : 'unreadable',
+      index,
+    );
+  }
+}
 
 export async function arrangePdf(
   files: readonly Uint8Array[],
@@ -102,25 +136,7 @@ export async function arrangePdf(
       images.add(index);
       continue;
     }
-    if (view.includes(ENCRYPTION_MARKER)) throw new ArrangeRefusal('encrypted', index);
-    const checked = await checkPdf(bytes);
-    if (!checked.ok) {
-      throw new ArrangeRefusal(
-        checked.reason === 'too-costly' ? 'too-costly' : 'unreadable',
-        index,
-      );
-    }
-    if (!options.acceptSignatureLoss && view.includes(SIGNATURE_MARKER)) {
-      throw new ArrangeRefusal('signed', index);
-    }
-    try {
-      sources.set(index, await PDFDocument.load(bytes, { updateMetadata: false }));
-    } catch (error) {
-      throw new ArrangeRefusal(
-        error instanceof EncryptedPDFError ? 'encrypted' : 'unreadable',
-        index,
-      );
-    }
+    sources.set(index, await openChecked(bytes, index, options.acceptSignatureLoss));
   }
 
   for (const step of plan) {

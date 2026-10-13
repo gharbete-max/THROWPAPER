@@ -79,10 +79,6 @@ for (const [shape, rotate] of [
     await page.getByLabel('Title', { exact: true }).fill(title);
     await page.getByLabel('Link address').fill(`paper-trip-${stamp}`);
     await page.getByRole('button', { name: 'Create' }).click();
-    await page
-      .locator('.card', { hasText: title })
-      .getByRole('link', { name: 'Edit form' })
-      .click();
     await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
     const formId = page.url().split('/').pop()!;
     forms.push(formId);
@@ -115,7 +111,7 @@ for (const [shape, rotate] of [
     ).toEqual(placed);
 
     // ── Publish ───────────────────────────────────────────────────────────────────────────
-    await page.getByRole('button', { name: 'Publish' }).first().click();
+    await page.getByRole('button', { name: 'Share to collect' }).first().click();
     // The organisation publishes in two languages and the boxes' labels are in one, so the builder
     // asks first (rule 7); the answer is yes.
     const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });

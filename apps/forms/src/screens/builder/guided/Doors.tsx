@@ -13,12 +13,15 @@ export function Doors({
   onMyself,
   busy,
   error,
+  focus,
 }: {
   onQuestions: () => void;
   onPaper: () => void;
   onMyself: () => void;
   busy: boolean;
   error: string | null;
+  /** The door under focus on arrival, when the address names one. */
+  focus?: 'questions' | 'paper';
 }) {
   const t = useT();
   return (
@@ -29,6 +32,7 @@ export function Doors({
           type="button"
           className="conversation__card doors__door"
           disabled={busy}
+          autoFocus={focus === 'questions'}
           onClick={onQuestions}
         >
           <Icon name="single_select" />
@@ -41,6 +45,7 @@ export function Doors({
           type="button"
           className="conversation__card doors__door"
           disabled={busy}
+          autoFocus={focus === 'paper'}
           onClick={onPaper}
         >
           <Icon name="file" />

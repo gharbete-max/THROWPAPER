@@ -1448,4 +1448,23 @@ export const svSE: Record<MessageKey, string> = {
     'Spårade ändringar (tillägg finns kvar, borttaget utelämnas): {count}',
   'scan.word.drop.field': 'Fält (visas som senast sparat i Word, uppdateras inte): {count}',
   'scan.word.drop.image': 'Bilder som inte kunde tas med: {count}',
+  'draft.download': 'Ladda ner PDF',
+  'draft.working': 'Skapar PDF:en…',
+  'draft.fill': 'Fyll i',
+  'draft.sign': 'Signera',
+  'draft.send': 'Skicka',
+  'draft.share': 'Dela för att samla in svar',
+  'draft.failed': 'PDF:en kunde inte skapas. Försök igen.',
+  'fill.formIntro':
+    'Fyll i formuläret här och spara det som PDF. Inget skickas, sparas eller publiceras.',
+  'fill.pdfHeading': 'Fyll i en PDF',
+  'fill.pdfIntro':
+    'Välj en PDF som har egna fält, fyll i dem här och behåll resultatet. Inget skickas, sparas eller publiceras.',
+  'fill.choose': 'Välj en PDF',
+  'fill.keep': 'Spara som PDF',
+  'fill.noFields': 'Den här PDF:en har inga egna fält att fylla i.',
+  'fill.signed': 'Den här PDF:en har en digital signatur. Om du fyller i den tas signaturen bort.',
+  'fill.signedConfirm': 'Ta bort signaturen och fyll i',
+  'fill.unencodable': 'En bokstav du skrev kan inte ritas med PDF:ens eget typsnitt.',
+  'fill.back': 'Tillbaka till formuläret',
 };

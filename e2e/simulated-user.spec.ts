@@ -145,12 +145,7 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
   await page.getByLabel('Länkadress').fill(slug);
   await page.getByRole('button', { name: 'Skapa', exact: true }).click();
 
-  // The wizard route opens the new form; this one hands you back the list and lets you find it.
-  // Recorded as a finding — the two ways of making a form end somewhere different.
-  await page
-    .locator('.card', { hasText: `Anmälan ${eventName}` })
-    .getByRole('link', { name: 'Redigera formulär' })
-    .click();
+  // Both ways of making a form now end in the editor.
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
   formId = page.url().split('/').pop()!;
 
@@ -201,7 +196,7 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
     .toBe(true);
 
   // ── 6. Publish ────────────────────────────────────────────────────────────────────────────
-  await page.getByRole('button', { name: 'Publicera' }).first().click();
+  await page.getByRole('button', { name: 'Dela för att samla in svar' }).first().click();
   // A form whose twelve locales are not all translated asks before publishing. Answering it is
   // part of the journey: the operator publishes in Swedish and fills the rest in later.
   //

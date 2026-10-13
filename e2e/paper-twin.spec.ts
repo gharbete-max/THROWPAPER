@@ -91,7 +91,7 @@ test('a PDF read into questions comes back filled in, as that paper (S12b)', asy
   await question(page, 'Your form is ready.');
   await page.getByRole('button', { name: /Open it in the editor/ }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
-  await page.getByRole('button', { name: 'Publish' }).first().click();
+  await page.getByRole('button', { name: 'Share to collect' }).first().click();
   const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });
   const published = page.getByText(/Version 1/).first();
   await expect(anyway.or(published).first()).toBeVisible({ timeout: 15_000 });

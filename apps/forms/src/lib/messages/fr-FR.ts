@@ -1489,4 +1489,23 @@ export const frFR: Record<MessageKey, string> = {
   'scan.word.drop.field':
     'Champs (affichés tels qu’enregistrés dans Word, non mis à jour) : {count}',
   'scan.word.drop.image': 'Images qui n’ont pas pu être incluses : {count}',
+  'draft.download': 'Télécharger le PDF',
+  'draft.working': 'Création du PDF…',
+  'draft.fill': 'Remplir',
+  'draft.sign': 'Signer',
+  'draft.send': 'Envoyer',
+  'draft.share': 'Partager pour collecter',
+  'draft.failed': 'Le PDF n’a pas pu être créé. Réessayez.',
+  'fill.formIntro':
+    'Remplissez le formulaire ici et gardez-le en PDF. Rien n’est envoyé, enregistré ni publié.',
+  'fill.pdfHeading': 'Remplir un PDF',
+  'fill.pdfIntro':
+    'Choisissez un PDF qui a ses propres champs, remplissez-les ici et gardez le résultat. Rien n’est envoyé, enregistré ni publié.',
+  'fill.choose': 'Choisir un PDF',
+  'fill.keep': 'Garder en PDF',
+  'fill.noFields': 'Ce PDF n’a aucun champ propre à remplir.',
+  'fill.signed': 'Ce PDF porte une signature numérique. Le remplir supprime la signature.',
+  'fill.signedConfirm': 'Supprimer la signature et remplir',
+  'fill.unencodable': 'Une lettre saisie ne peut pas être dessinée avec la police propre à ce PDF.',
+  'fill.back': 'Retour au formulaire',
 };

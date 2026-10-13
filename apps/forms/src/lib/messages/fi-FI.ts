@@ -1460,4 +1460,24 @@ export const fiFI: Record<MessageKey, string> = {
   'scan.word.drop.field':
     'Kentät (näytetään Wordiin viimeksi tallennettuina, ei päivitetä): {count}',
   'scan.word.drop.image': 'Kuvat, joita ei voitu sisällyttää: {count}',
+  'draft.download': 'Lataa PDF',
+  'draft.working': 'Tehdään PDF…',
+  'draft.fill': 'Täytä',
+  'draft.sign': 'Allekirjoita',
+  'draft.send': 'Lähetä',
+  'draft.share': 'Jaa vastausten keräämiseksi',
+  'draft.failed': 'PDF:ää ei voitu tehdä. Yritä uudelleen.',
+  'fill.formIntro':
+    'Täytä lomake tässä ja säilytä se PDF-tiedostona. Mitään ei lähetetä, tallenneta tai julkaista.',
+  'fill.pdfHeading': 'Täytä PDF',
+  'fill.pdfIntro':
+    'Valitse PDF, jossa on omia kenttiä, täytä ne tässä ja säilytä tulos. Mitään ei lähetetä, tallenneta tai julkaista.',
+  'fill.choose': 'Valitse PDF',
+  'fill.keep': 'Säilytä PDF:nä',
+  'fill.noFields': 'Tässä PDF:ssä ei ole omia täytettäviä kenttiä.',
+  'fill.signed':
+    'Tässä PDF:ssä on digitaalinen allekirjoitus. Täyttäminen poistaa allekirjoituksen.',
+  'fill.signedConfirm': 'Poista allekirjoitus ja täytä',
+  'fill.unencodable': 'Kirjoittamaasi kirjainta ei voi piirtää tämän PDF:n omalla kirjasimella.',
+  'fill.back': 'Takaisin lomakkeeseen',
 };

@@ -10,6 +10,8 @@ import type {
   FormVersionSummary,
 } from '@tp/shared/forms';
 import { ApiError, client } from '../../lib/api.js';
+import { saveBlob } from '../../lib/email-handoff.js';
+import { useEdition } from '../../lib/edition.js';
 import { useT } from '../../lib/i18n.js';
 import { useSession } from '../../lib/session.js';
 import { useConfirm } from '../../components/Confirm.js';
@@ -59,6 +61,8 @@ export function FormBuilder() {
   const [saveState, setSaveState] = useState<SaveState>('saved');
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const edition = useEdition();
   const [error, setError] = useState<string | null>(null);
   /** Paper is the default view of a form that has some: it is why the author brought it. */
   const [view, setView] = useState<'list' | 'paper'>('paper');
@@ -279,6 +283,23 @@ export function FormBuilder() {
     if (selectedId === fieldId) setSelectedId(null);
   }
 
+  /** The draft as a PDF to keep: no published version is needed and nothing is submitted. */
+  async function downloadDraft() {
+    if (!id) return;
+    setDownloading(true);
+    setError(null);
+    try {
+      saveBlob(
+        await client.draftPdf(id, locale),
+        `${pickText(locales, form?.title ?? {}, locale).value || 'form'}.pdf`,
+      );
+    } catch {
+      setError(t('draft.failed'));
+    } finally {
+      setDownloading(false);
+    }
+  }
+
   async function publish() {
     if (!id) return;
     setPublishing(true);
@@ -413,13 +434,43 @@ export function FormBuilder() {
           )}
 
           <span className="small muted">{t(`builder.${saveState}`)}</span>
+          {/*
+            Download, Fill in, Sign and Send come first: a form is a document to keep, sign and
+            send before it is a thing to collect answers with. Sharing it to collect is the
+            quieter choice (`docs/plan/DOCUMENTS.md`, "Forms"). Sign and Send are plain links to
+            the screens that already do the work.
+          */}
+          {id && (
+            <>
+              <button
+                type="button"
+                className="button"
+                onClick={() => void downloadDraft()}
+                disabled={downloading || saveState !== 'saved'}
+              >
+                <Icon name="download" />
+                {downloading ? t('draft.working') : t('draft.download')}
+              </button>
+              <Link className="button button--quiet" to={`/forms/${id}/fill`}>
+                {t('draft.fill')}
+              </Link>
+              <Link className="button button--quiet" to="/signing">
+                {t('draft.sign')}
+              </Link>
+              {edition === 'desktop' && (
+                <Link className="button button--quiet" to="/outgoing">
+                  {t('draft.send')}
+                </Link>
+              )}
+            </>
+          )}
           <button
-            className="button"
+            className="button button--quiet"
             onClick={publish}
             disabled={publishing || saveState !== 'saved'}
           >
             <Icon name="publish" />
-            {publishing ? t('builder.publishing') : t('builder.publish')}
+            {publishing ? t('builder.publishing') : t('draft.share')}
           </button>
         </div>
       </header>

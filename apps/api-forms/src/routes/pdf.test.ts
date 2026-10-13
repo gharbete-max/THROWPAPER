@@ -32,7 +32,7 @@ async function pdfOf(pages: number): Promise<Uint8Array> {
 async function arrange(
   files: Uint8Array[],
   fields: Record<string, string>,
-  options: { token?: string | null } = {},
+  options: { token?: string | null; url?: string } = {},
 ) {
   const form = new FormData();
   for (const [index, file] of files.entries()) {
@@ -48,7 +48,7 @@ async function arrange(
   const body = Buffer.from(await encoded.arrayBuffer());
   return harness.app.inject({
     method: 'POST',
-    url: '/v1/pdf/arrange',
+    url: options.url ?? '/v1/pdf/arrange',
     headers: {
       ...(options.token === null ? {} : bearer(options.token ?? operatorToken)),
       'content-type': `multipart/form-data; boundary=${boundary}`,
@@ -193,5 +193,64 @@ describe('POST /v1/pdf/word', () => {
     const svg = { kind: 'image', mime: 'image/svg+xml', data: 'AAAA' };
     expect((await send({ blocks: [svg] })).statusCode).toBe(400);
     expect((await send({ blocks, lang: '"><script>' })).statusCode).toBe(400);
+  });
+});
+
+describe('POST /v1/pdf/fields and /v1/pdf/fill', () => {
+  async function withFields(): Promise<Uint8Array> {
+    const doc = await PDFDocument.create();
+    const page = doc.addPage([200, 200]);
+    doc
+      .getForm()
+      .createTextField('name')
+      .addToPage(page, { x: 10, y: 100, width: 150, height: 20 });
+    return doc.save();
+  }
+
+  it('lists a PDF’s own fields, then returns it filled, storing and auditing nothing', async () => {
+    const pdf = await withFields();
+    const before = await harness.repos.audit.list(adminUser.organisationId);
+    const listed = await arrange([pdf], {}, { url: '/v1/pdf/fields' });
+    expect(listed.statusCode).toBe(200);
+    expect(listed.json().fields).toEqual([{ name: 'name', kind: 'text', value: '' }]);
+
+    const filled = await arrange(
+      [pdf],
+      { values: JSON.stringify({ name: 'Åsa' }) },
+      { url: '/v1/pdf/fill' },
+    );
+    expect(filled.statusCode).toBe(200);
+    expect(filled.headers['content-type']).toBe('application/pdf');
+    expect(
+      (await PDFDocument.load(filled.rawPayload)).getForm().getTextField('name').getText(),
+    ).toBe('Åsa');
+    expect(await harness.repos.audit.list(adminUser.organisationId)).toEqual(before);
+  });
+
+  it('refuses in codes a screen can translate', async () => {
+    const pdf = await withFields();
+    const fill = (values: string, files = [pdf], extra: Record<string, string> = {}) =>
+      arrange(files, { values, ...extra }, { url: '/v1/pdf/fill' });
+    expect((await fill('nope')).json().error.code).toBe('bad-values');
+    expect((await fill('{"x":"1"}')).json().error.code).toBe('no-such-field');
+    expect((await fill('{"name":"Заявка"}')).json().error.code).toBe('unencodable');
+    const plain = await pdfOf(1);
+    expect((await arrange([plain], {}, { url: '/v1/pdf/fields' })).json().error.code).toBe(
+      'no-fields',
+    );
+    const signed = new Uint8Array([
+      ...pdf,
+      ...new TextEncoder().encode('\n% /ByteRange [0 1 2 3]\n'),
+    ]);
+    const refused = await fill('{"name":"x"}', [signed]);
+    expect([refused.statusCode, refused.json().error.code]).toEqual([409, 'signed']);
+    const agreed = await fill('{"name":"x"}', [signed], { acceptSignatureLoss: 'true' });
+    expect(agreed.statusCode).toBe(200);
+    const encrypted = new Uint8Array(
+      readFileSync(new URL('../../../../fixtures/pdf/encrypted.pdf', import.meta.url)),
+    );
+    expect((await fill('{}', [encrypted])).json().error.code).toBe('encrypted');
+    const anonymous = await arrange([pdf], { values: '{}' }, { url: '/v1/pdf/fill', token: null });
+    expect(anonymous.statusCode).toBe(401);
   });
 });

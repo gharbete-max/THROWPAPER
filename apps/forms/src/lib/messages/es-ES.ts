@@ -1470,4 +1470,24 @@ export const esES: Record<MessageKey, string> = {
   'scan.word.drop.field':
     'Campos (se muestran como se guardaron por última vez en Word, sin actualizar): {count}',
   'scan.word.drop.image': 'Imágenes que no se pudieron incluir: {count}',
+  'draft.download': 'Descargar PDF',
+  'draft.working': 'Creando el PDF…',
+  'draft.fill': 'Rellenar',
+  'draft.sign': 'Firmar',
+  'draft.send': 'Enviar',
+  'draft.share': 'Compartir para recoger respuestas',
+  'draft.failed': 'No se pudo crear el PDF. Inténtalo de nuevo.',
+  'fill.formIntro':
+    'Rellena el formulario aquí y guárdalo como PDF. No se envía, guarda ni publica nada.',
+  'fill.pdfHeading': 'Rellenar un PDF',
+  'fill.pdfIntro':
+    'Elige un PDF con campos propios, rellénalos aquí y conserva el resultado. No se envía, guarda ni publica nada.',
+  'fill.choose': 'Elegir un PDF',
+  'fill.keep': 'Conservar como PDF',
+  'fill.noFields': 'Este PDF no tiene campos propios que rellenar.',
+  'fill.signed': 'Este PDF lleva una firma digital. Al rellenarlo se elimina la firma.',
+  'fill.signedConfirm': 'Eliminar la firma y rellenar',
+  'fill.unencodable':
+    'Una letra que escribiste no se puede dibujar con la fuente propia de este PDF.',
+  'fill.back': 'Volver al formulario',
 };

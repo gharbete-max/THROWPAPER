@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { api } from '@tp/shared';
 import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
@@ -12,6 +12,7 @@ import {
   MAX_FILES,
   type ArrangeRefusalCode,
 } from '../pdf/arrange.js';
+import { fillPdf, pdfFields } from '../pdf/fill.js';
 
 /**
  * The parser's own file limit is set well above ours. Reaching it fails the whole request stream
@@ -28,6 +29,9 @@ const Plan = z.array(
   }),
 );
 
+/** A PDF's own fields: field name to text, or to a tick. */
+const FieldValues = z.record(z.union([z.string(), z.boolean()]));
+
 /** What a screen can show, by refusal. A file the plan could not use is a 400; a signed one a 409. */
 const STATUS: Record<ArrangeRefusalCode, 400 | 409> = {
   'empty-plan': 400,
@@ -40,6 +44,10 @@ const STATUS: Record<ArrangeRefusalCode, 400 | 409> = {
   'image-too-large': 400,
   encrypted: 400,
   signed: 409,
+  'no-fields': 400,
+  'no-such-field': 400,
+  'bad-value': 400,
+  unencodable: 400,
 };
 
 const MESSAGE: Record<ArrangeRefusalCode, string> = {
@@ -52,8 +60,114 @@ const MESSAGE: Record<ArrangeRefusalCode, string> = {
   'too-costly': 'A file is too costly to open',
   'image-too-large': 'A photograph has more pixels than a page can use',
   encrypted: 'A file is protected with a password or encryption',
-  signed: 'A file carries a digital signature, which rearranging its pages removes',
+  signed: 'A file carries a digital signature, which changing it removes',
+  'no-fields': 'The PDF has no fields of its own to fill in',
+  'no-such-field': 'A value names a field the PDF does not have',
+  'bad-value': 'A value does not fit its field',
+  unencodable: 'A value has letters the PDF’s own fonts cannot draw',
 };
+
+const errors = {
+  400: api.ErrorResponse,
+  401: api.ErrorResponse,
+  409: api.ErrorResponse,
+  413: api.ErrorResponse,
+};
+
+type Upload = { files: Uint8Array[]; fields: Map<string, string> };
+
+/**
+ * The multipart body of a PDF route: its files and its text fields, or `null` once the reply has
+ * said why the body cannot be used (too large, too many files, none).
+ */
+async function readUpload(request: FastifyRequest, reply: FastifyReply): Promise<Upload | null> {
+  const files: Uint8Array[] = [];
+  const fields = new Map<string, string>();
+  try {
+    for await (const part of request.parts({
+      limits: {
+        files: PARSER_FILE_LIMIT,
+        fileSize: MAX_FILE_BYTES,
+        fields: 4,
+        fieldSize: 256 * 1024,
+      },
+    })) {
+      if (part.type === 'file') {
+        // One file past the limit is enough to know; the rest are read and thrown away rather
+        // than abandoned, because abandoning a half-read upload fails the request stream.
+        if (files.length > MAX_FILES) {
+          await part.toBuffer();
+          continue;
+        }
+        const content = await part.toBuffer();
+        if (part.file.truncated) {
+          void reply.code(413).send({
+            error: {
+              code: 'too-large',
+              message: `A file must be ${Math.floor(MAX_FILE_BYTES / 1024 / 1024)}MB or smaller`,
+            },
+          });
+          return null;
+        }
+        files.push(new Uint8Array(content));
+      } else if (typeof part.value === 'string') {
+        fields.set(part.fieldname, part.value);
+      }
+    }
+  } catch (error) {
+    // The parser's own limit errors (a field or part too large) carry a code of this shape.
+    if (((error as { code?: string }).code ?? '').startsWith('FST_')) {
+      void reply.code(413).send({
+        error: { code: 'too-large', message: 'The request is too large' },
+      });
+      return null;
+    }
+    throw error;
+  }
+
+  if (files.length > MAX_FILES) {
+    void reply.code(413).send({
+      error: { code: 'too-many-files', message: `At most ${MAX_FILES} files at once` },
+    });
+    return null;
+  }
+  if (files.length === 0) {
+    void reply.code(400).send({
+      error: {
+        code: 'no-file',
+        message: 'Send at least one PDF or photograph as multipart form data',
+      },
+    });
+    return null;
+  }
+  return { files, fields };
+}
+
+/** A refusal as the reply a screen can show; anything else is a bug and rethrown. */
+function refuse(reply: FastifyReply, error: unknown) {
+  if (error instanceof ArrangeRefusal) {
+    return reply.code(STATUS[error.code]).send({
+      error: { code: error.code, message: MESSAGE[error.code] },
+    });
+  }
+  throw error;
+}
+
+const jsonOf = (text: string | undefined): unknown => {
+  try {
+    return JSON.parse(text ?? '');
+  } catch {
+    return undefined;
+  }
+};
+
+function sendPdf(reply: FastifyReply, pdf: Uint8Array) {
+  return reply
+    .header('content-type', 'application/pdf')
+    .header('content-disposition', 'attachment; filename="loppa.pdf"')
+    .header('cache-control', 'no-store')
+    .send(Buffer.from(pdf));
+}
 
 export function registerPdfRoutes(
   app: FastifyInstance,
@@ -95,96 +209,84 @@ export function registerPdfRoutes(
   app.post('/v1/pdf/arrange', {
     preHandler: requireAuth(deps.guard),
     config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
-    schema: {
-      tags: ['pdf'],
-      response: {
-        400: api.ErrorResponse,
-        401: api.ErrorResponse,
-        409: api.ErrorResponse,
-        413: api.ErrorResponse,
-      },
-    },
+    schema: { tags: ['pdf'], response: errors },
     handler: async (request, reply) => {
-      const files: Uint8Array[] = [];
-      const fields = new Map<string, string>();
-      try {
-        for await (const part of request.parts({
-          limits: {
-            files: PARSER_FILE_LIMIT,
-            fileSize: MAX_FILE_BYTES,
-            fields: 4,
-            fieldSize: 256 * 1024,
-          },
-        })) {
-          if (part.type === 'file') {
-            // One file past the limit is enough to know; the rest are read and thrown away rather
-            // than abandoned, because abandoning a half-read upload fails the request stream.
-            if (files.length > MAX_FILES) {
-              await part.toBuffer();
-              continue;
-            }
-            const content = await part.toBuffer();
-            if (part.file.truncated) {
-              return reply.code(413).send({
-                error: {
-                  code: 'too-large',
-                  message: `A file must be ${Math.floor(MAX_FILE_BYTES / 1024 / 1024)}MB or smaller`,
-                },
-              });
-            }
-            files.push(new Uint8Array(content));
-          } else if (typeof part.value === 'string') {
-            fields.set(part.fieldname, part.value);
-          }
-        }
-      } catch (error) {
-        // The parser's own limit errors (a field or part too large) carry a code of this shape.
-        if (((error as { code?: string }).code ?? '').startsWith('FST_')) {
-          return reply.code(413).send({
-            error: { code: 'too-large', message: 'The request is too large' },
-          });
-        }
-        throw error;
-      }
-
-      if (files.length > MAX_FILES) {
-        return reply.code(413).send({
-          error: { code: 'too-many-files', message: `At most ${MAX_FILES} files at once` },
-        });
-      }
-      if (files.length === 0) {
-        return reply.code(400).send({
-          error: {
-            code: 'no-file',
-            message: 'Send at least one PDF or photograph as multipart form data',
-          },
-        });
-      }
-      let plan: z.infer<typeof Plan>;
-      try {
-        plan = Plan.parse(JSON.parse(fields.get('plan') ?? ''));
-      } catch {
+      const upload = await readUpload(request, reply);
+      if (!upload) return;
+      const parsed = Plan.safeParse(jsonOf(upload.fields.get('plan')));
+      if (!parsed.success) {
         return reply.code(400).send({
           error: { code: 'bad-plan', message: 'Send a plan: a JSON list of {file, page, rotate?}' },
         });
       }
-
       try {
-        const pdf = await arrangePdf(files, plan, {
-          acceptSignatureLoss: fields.get('acceptSignatureLoss') === 'true',
-        });
-        return reply
-          .header('content-type', 'application/pdf')
-          .header('content-disposition', 'attachment; filename="loppa.pdf"')
-          .header('cache-control', 'no-store')
-          .send(Buffer.from(pdf));
+        return sendPdf(
+          reply,
+          await arrangePdf(upload.files, parsed.data, {
+            acceptSignatureLoss: upload.fields.get('acceptSignatureLoss') === 'true',
+          }),
+        );
       } catch (error) {
-        if (error instanceof ArrangeRefusal) {
-          return reply.code(STATUS[error.code]).send({
-            error: { code: error.code, message: MESSAGE[error.code] },
-          });
-        }
-        throw error;
+        return refuse(reply, error);
+      }
+    },
+  });
+
+  /**
+   * The fields a PDF carries of its own, for a screen to draw as a form. Multipart: one `file`,
+   * and `acceptSignatureLoss` as for arranging (the screen asks first, so the fill that follows
+   * does not surprise anybody).
+   */
+  app.post('/v1/pdf/fields', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+    schema: { tags: ['pdf'], response: errors },
+    handler: async (request, reply) => {
+      const upload = await readUpload(request, reply);
+      if (!upload) return;
+      try {
+        return reply.header('cache-control', 'no-store').send({
+          fields: await pdfFields(upload.files[0]!, {
+            acceptSignatureLoss: upload.fields.get('acceptSignatureLoss') === 'true',
+          }),
+        });
+      } catch (error) {
+        return refuse(reply, error);
+      }
+    },
+  });
+
+  /**
+   * A PDF's own fields written and the PDF handed back (`pdf/fill.ts`). The person's own
+   * document: nothing is stored, no submission is made and nothing is published. `values` is a
+   * JSON object of field name to text or tick; `acceptSignatureLoss` = `true` once told a
+   * signature goes.
+   */
+  app.post('/v1/pdf/fill', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: { tags: ['pdf'], response: errors },
+    handler: async (request, reply) => {
+      const upload = await readUpload(request, reply);
+      if (!upload) return;
+      const values = FieldValues.safeParse(jsonOf(upload.fields.get('values')));
+      if (!values.success) {
+        return reply.code(400).send({
+          error: {
+            code: 'bad-values',
+            message: 'Send values: a JSON object of field to text or tick',
+          },
+        });
+      }
+      try {
+        return sendPdf(
+          reply,
+          await fillPdf(upload.files[0]!, values.data, {
+            acceptSignatureLoss: upload.fields.get('acceptSignatureLoss') === 'true',
+          }),
+        );
+      } catch (error) {
+        return refuse(reply, error);
       }
     },
   });

@@ -1463,6 +1463,25 @@ export const enGB = {
   'scan.word.drop.trackedChange': 'Tracked changes (insertions kept, deletions left out): {count}',
   'scan.word.drop.field': 'Fields (shown as last saved in Word, not updated): {count}',
   'scan.word.drop.image': 'Pictures that could not be included: {count}',
+  'draft.download': 'Download PDF',
+  'draft.working': 'Making the PDF…',
+  'draft.fill': 'Fill in',
+  'draft.sign': 'Sign',
+  'draft.send': 'Send',
+  'draft.share': 'Share to collect',
+  'draft.failed': 'The PDF could not be made. Try again.',
+  'fill.formIntro':
+    'Fill the form in here and keep it as a PDF. Nothing is sent, saved or published.',
+  'fill.pdfHeading': 'Fill in a PDF',
+  'fill.pdfIntro':
+    'Choose a PDF that has fields of its own, fill them in here and keep the result. Nothing is sent, saved or published.',
+  'fill.choose': 'Choose a PDF',
+  'fill.keep': 'Keep as PDF',
+  'fill.noFields': 'This PDF has no fields of its own to fill in.',
+  'fill.signed': 'This PDF carries a digital signature. Filling it in removes the signature.',
+  'fill.signedConfirm': 'Remove the signature and fill it in',
+  'fill.unencodable': 'A letter you typed cannot be drawn in this PDF’s own font.',
+  'fill.back': 'Back to the form',
 } as const;
 
 /**
