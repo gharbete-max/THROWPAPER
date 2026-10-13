@@ -967,6 +967,15 @@ export const daDK: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Send en e-mail med underskriftslink til {count} underskrivere, når det bliver deres tur? Dem uden adresse får intet – kopiér deres link i stedet.',
   'signing.inviteConfirmYes': 'Send og e-mail',
+  'signing.cancelRequest': 'Annuller anmodning',
+  'signing.cancelConfirm': 'Annullere “{document}”? Ingen kan underskrive det mere.',
+  'signing.cancelConfirmYes': 'Ja, annuller',
+  'signing.sendSigned': 'Send den underskrevne kopi',
+  'signing.sendSignedConfirm':
+    'Send den underskrevne kopi af “{document}” til {count} underskrivere?',
+  'signing.sendSignedConfirmYes': 'Send den underskrevne kopi',
+  'signing.copyQueued': 'Underskrevet kopi lagt i kø',
+  'signing.handoff': 'PDF klar: {name}',
   'signing.remind': 'Send påmindelse',
   'signing.remindConfirm': 'Send {name} ({email}) underskriftslinket igen?',
   'signing.emailed': 'Sendt på e-mail',
@@ -1464,4 +1473,5 @@ export const daDK: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Fjern signaturen og udfyld',
   'fill.unencodable': 'Et bogstav, du skrev, kan ikke tegnes med PDF’ens egen skrifttype.',
   'fill.back': 'Tilbage til formularen',
+  'scan.sign': 'Underskriv denne PDF',
 };

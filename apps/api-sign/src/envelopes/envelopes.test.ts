@@ -456,6 +456,55 @@ describe.skipIf(!database)('signing', () => {
   });
 });
 
+describe.skipIf(!database)('cancelling (§5.7)', () => {
+  function cancel(token: string, id: string) {
+    return app.inject({
+      method: 'POST',
+      url: `/v1/envelopes/${id}/cancel`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+  }
+
+  it('stops the envelope: links refuse to sign, the trail says cancelled', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org))).json();
+    const first = linkOf(created.signUrls.landlord);
+
+    const cancelled = await cancel(token, created.envelopeId);
+    expect(cancelled.statusCode).toBe(200);
+    expect(cancelled.json().status).toBe('cancelled');
+    // Asking again is the same answer, not an error: a retried press is not a second event.
+    expect((await cancel(token, created.envelopeId)).json().status).toBe('cancelled');
+    expect((await trailOf(created.envelopeId)).map((row) => row.seq)).toEqual([1, 2]);
+
+    const late = await sign(first, 'Åsa Öberg');
+    expect(late.statusCode).toBe(409);
+    expect(late.json().error.code).toBe('finished');
+  });
+
+  it('is the owner organisation only, and cannot undo a finished envelope', async () => {
+    const org = randomUUID();
+    const token = await tokenFor(org);
+    const created = (await create(token, envelopeRequest(org, { routing: 'parallel' }))).json();
+    expect((await cancel(await tokenFor(randomUUID()), created.envelopeId)).statusCode).toBe(404);
+    expect(
+      (
+        await app.inject({
+          method: 'POST',
+          url: `/v1/envelopes/${created.envelopeId}/cancel`,
+        })
+      ).statusCode,
+    ).toBe(401);
+
+    await sign(linkOf(created.signUrls.landlord), 'Åsa Öberg');
+    await sign(linkOf(created.signUrls.tenant), 'Jon Smith');
+    const refused = await cancel(token, created.envelopeId);
+    expect(refused.statusCode).toBe(409);
+    expect(refused.json().error.code).toBe('finished');
+  });
+});
+
 describe.skipIf(!database)('rate limits', () => {
   it('limits signing attempts per link, and one link cannot use up another', async () => {
     const hammered = `rl-${randomUUID()}`;

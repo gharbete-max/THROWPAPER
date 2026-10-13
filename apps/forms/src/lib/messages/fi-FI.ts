@@ -975,6 +975,15 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Lähetetäänkö allekirjoituslinkki sähköpostilla {count} allekirjoittajalle heidän vuorollaan? Ilman osoitetta olevat eivät saa mitään – kopioi heidän linkkinsä.',
   'signing.inviteConfirmYes': 'Lähetä ja lähetä sähköposti',
+  'signing.cancelRequest': 'Peruuta pyyntö',
+  'signing.cancelConfirm': 'Peruutetaanko ”{document}”? Kukaan ei voi enää allekirjoittaa sitä.',
+  'signing.cancelConfirmYes': 'Kyllä, peruuta',
+  'signing.sendSigned': 'Lähetä allekirjoitettu kopio',
+  'signing.sendSignedConfirm':
+    'Lähetetäänkö asiakirjan ”{document}” allekirjoitettu kopio {count} allekirjoittajalle?',
+  'signing.sendSignedConfirmYes': 'Lähetä allekirjoitettu kopio',
+  'signing.copyQueued': 'Allekirjoitettu kopio jonossa',
+  'signing.handoff': 'PDF valmis: {name}',
   'signing.remind': 'Lähetä muistutus',
   'signing.remindConfirm':
     'Lähetetäänkö allekirjoituslinkki uudelleen henkilölle {name} ({email})?',
@@ -1480,4 +1489,5 @@ export const fiFI: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Poista allekirjoitus ja täytä',
   'fill.unencodable': 'Kirjoittamaasi kirjainta ei voi piirtää tämän PDF:n omalla kirjasimella.',
   'fill.back': 'Takaisin lomakkeeseen',
+  'scan.sign': 'Allekirjoita tämä PDF',
 };

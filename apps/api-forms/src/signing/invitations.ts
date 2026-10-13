@@ -2,6 +2,7 @@ import type { Repositories, SigningRequestRecord } from '../db/repositories/inde
 import type { SigningRequestParty } from '../db/schema.js';
 import type { JobHandler } from '../jobs/worker.js';
 import type { MailProvider } from '../mail/provider.js';
+import type { SignClient } from './client.js';
 import { assertSendable, domainOf } from '../mail/domain-verification.js';
 import { renderNotification } from '../email/templates.js';
 import { resolveTokens } from '../routes/brand-kit.js';
@@ -31,6 +32,8 @@ const COPY = {
     open: 'Open and sign',
     test: 'This is a test. Nothing signed from it is marked as real.',
     footer: 'If you were not expecting this, you can ignore it.',
+    copySubject: 'The signed copy: {document}',
+    copyIntro: '{organisation} is sending you the signed copy of this document. It is attached.',
   },
   'sv-SE': {
     subject: '{organisation} ber dig signera: {document}',
@@ -42,6 +45,8 @@ const COPY = {
     open: 'Öppna och signera',
     test: 'Det här är ett test. Inget som signeras här markeras som skarpt.',
     footer: 'Om du inte väntade dig det här kan du bortse från det.',
+    copySubject: 'Den signerade kopian: {document}',
+    copyIntro: '{organisation} skickar dig den signerade kopian av dokumentet. Den är bifogad.',
   },
   'nb-NO': {
     subject: '{organisation} ber deg signere: {document}',
@@ -53,6 +58,8 @@ const COPY = {
     open: 'Åpne og signer',
     test: 'Dette er en test. Ingenting som signeres her, markeres som ekte.',
     footer: 'Hvis du ikke ventet dette, kan du se bort fra det.',
+    copySubject: 'Den signerte kopien: {document}',
+    copyIntro: '{organisation} sender deg den signerte kopien av dokumentet. Den er vedlagt.',
   },
   'da-DK': {
     subject: '{organisation} beder dig underskrive: {document}',
@@ -64,6 +71,8 @@ const COPY = {
     open: 'Åbn og underskriv',
     test: 'Dette er en test. Intet, der underskrives her, markeres som rigtigt.',
     footer: 'Hvis du ikke ventede dette, kan du se bort fra det.',
+    copySubject: 'Den underskrevne kopi: {document}',
+    copyIntro: '{organisation} sender dig den underskrevne kopi af dokumentet. Den er vedhæftet.',
   },
   'fi-FI': {
     subject: '{organisation} pyytää sinua allekirjoittamaan: {document}',
@@ -75,6 +84,9 @@ const COPY = {
     open: 'Avaa ja allekirjoita',
     test: 'Tämä on testi. Mitään tästä allekirjoitettua ei merkitä todelliseksi.',
     footer: 'Jos et odottanut tätä, voit jättää sen huomiotta.',
+    copySubject: 'Allekirjoitettu kopio: {document}',
+    copyIntro:
+      '{organisation} lähettää sinulle asiakirjan allekirjoitetun kopion. Se on liitteenä.',
   },
   'is-IS': {
     subject: '{organisation} biður þig að undirrita: {document}',
@@ -86,6 +98,8 @@ const COPY = {
     open: 'Opna og undirrita',
     test: 'Þetta er próf. Ekkert sem er undirritað hér telst raunverulegt.',
     footer: 'Ef þú áttir ekki von á þessu geturðu hunsað það.',
+    copySubject: 'Undirritaða afritið: {document}',
+    copyIntro: '{organisation} sendir þér undirritað afrit af skjalinu. Það er í viðhengi.',
   },
   'de-DE': {
     subject: '{organisation} bittet Sie um Ihre Unterschrift: {document}',
@@ -97,6 +111,9 @@ const COPY = {
     open: 'Öffnen und unterschreiben',
     test: 'Dies ist ein Test. Nichts, was hier unterschrieben wird, gilt als echt.',
     footer: 'Wenn Sie dies nicht erwartet haben, können Sie es ignorieren.',
+    copySubject: 'Die unterschriebene Kopie: {document}',
+    copyIntro:
+      '{organisation} schickt Ihnen die unterschriebene Kopie des Dokuments. Sie ist angehängt.',
   },
   'fr-FR': {
     subject: '{organisation} vous demande de signer : {document}',
@@ -108,6 +125,8 @@ const COPY = {
     open: 'Ouvrir et signer',
     test: "Ceci est un test. Rien de ce qui est signé ici n'est considéré comme réel.",
     footer: "Si vous ne vous attendiez pas à ce message, vous pouvez l'ignorer.",
+    copySubject: 'La copie signée : {document}',
+    copyIntro: '{organisation} vous envoie la copie signée du document. Elle est jointe.',
   },
   'es-ES': {
     subject: '{organisation} te pide que firmes: {document}',
@@ -119,6 +138,8 @@ const COPY = {
     open: 'Abrir y firmar',
     test: 'Esto es una prueba. Nada de lo que se firme aquí se considera real.',
     footer: 'Si no esperabas este mensaje, puedes ignorarlo.',
+    copySubject: 'La copia firmada: {document}',
+    copyIntro: '{organisation} te envía la copia firmada del documento. Va adjunta.',
   },
   'ru-RU': {
     subject: '{organisation} просит вас подписать: {document}',
@@ -130,6 +151,8 @@ const COPY = {
     open: 'Открыть и подписать',
     test: 'Это тест. Ничто подписанное здесь не считается настоящим.',
     footer: 'Если вы не ожидали этого письма, просто не обращайте на него внимания.',
+    copySubject: 'Подписанная копия: {document}',
+    copyIntro: '{organisation} отправляет вам подписанную копию документа. Она во вложении.',
   },
   'ja-JP': {
     subject: '{organisation} から署名の依頼: {document}',
@@ -141,6 +164,8 @@ const COPY = {
     open: '開いて署名する',
     test: 'これはテストです。ここで署名したものは本番扱いになりません。',
     footer: 'お心当たりのない場合は、このメールを無視してください。',
+    copySubject: '署名済みの写し: {document}',
+    copyIntro: '{organisation} から文書の署名済みの写しをお送りします。添付をご覧ください。',
   },
   'zh-CN': {
     subject: '{organisation} 请你签署：{document}',
@@ -152,6 +177,8 @@ const COPY = {
     open: '打开并签署',
     test: '这是测试。在此签署的内容不会被视为正式签署。',
     footer: '如果你没有预料到这封邮件，可以忽略它。',
+    copySubject: '已签署的副本：{document}',
+    copyIntro: '{organisation} 向你发送了该文件的已签署副本，请见附件。',
   },
 } as const;
 
@@ -167,7 +194,7 @@ function fill(text: string, values: Record<string, string>): string {
 
 /** Whose turn it is, has an address, and has not been emailed for it. */
 export function dueForInvitation(record: SigningRequestRecord): SigningRequestParty[] {
-  if (!record.inviteByEmail) return [];
+  if (!record.inviteByEmail || record.status !== 'sent') return [];
   return record.parties.filter(
     (party) => party.email && party.status === 'invited' && !party.invitedByEmailAt,
   );
@@ -209,6 +236,116 @@ export async function queueInvitations(
   );
 }
 
+/**
+ * The signed copy, sent to the signers (DOCUMENTS phase 6): the same mail path as an invitation,
+ * so the desktop keeps it in To send until its person presses Send, and a test-mode request says
+ * so. Queued only on a deliberate, confirmed press, once per signer per press.
+ */
+export const SIGNING_COPY_JOB = 'signing.copy';
+
+/** Queues the signed copy for each signer with an address, and marks them. */
+export async function queueSignedCopies(
+  repos: Repositories,
+  record: SigningRequestRecord,
+): Promise<SigningRequestRecord> {
+  const due = record.parties.filter((party) => party.email);
+  if (due.length === 0) return record;
+  const at = new Date().toISOString();
+  for (const party of due) {
+    await repos.jobs.enqueue({
+      organisationId: record.organisationId,
+      kind: SIGNING_COPY_JOB,
+      idempotencyKey: `${SIGNING_COPY_JOB}:${record.id}:${party.id}:${at}`,
+      payload: { signingRequestId: record.id, partyId: party.id },
+      progressTotal: 1,
+    });
+  }
+  const ids = new Set(due.map((p) => p.id));
+  const parties = record.parties.map((party) =>
+    ids.has(party.id) ? { ...party, signedCopyQueuedAt: at } : party,
+  );
+  return (
+    (await repos.signingRequests.saveStatus(record.id, { status: record.status, parties })) ??
+    record
+  );
+}
+
+/** The sender address every email from this product keeps to (`send-job.ts`). */
+async function senderFor(repos: Repositories, provider: MailProvider, organisationId: string) {
+  const sendingDomain = (await repos.sendingDomains.list(organisationId))[0] ?? null;
+  const from = sendingDomain?.fromAddress ?? '';
+  if (!['console', 'memory', 'outbox', 'queue', 'outlook', 'apple-mail'].includes(provider.name)) {
+    assertSendable(
+      sendingDomain
+        ? {
+            domain: sendingDomain.domain,
+            verified: sendingDomain.verified,
+            checks: [],
+            checkedAt: sendingDomain.lastCheckedAt?.toISOString() ?? '',
+          }
+        : null,
+      sendingDomain?.domain ?? (domainOf(from) || 'unknown'),
+    );
+  }
+  return from || undefined;
+}
+
+export function createSigningCopyHandler(deps: {
+  repos: Repositories;
+  provider: MailProvider;
+  /** Absent where there is no Sign: the job then has nothing to attach and fails, to be seen. */
+  sign: SignClient | null;
+}): JobHandler {
+  return async ({ job }) => {
+    const organisation = await deps.repos.organisations.findById(job.organisationId);
+    if (!organisation) throw new Error('organisation missing');
+    const record = await deps.repos.signingRequests.findById(
+      job.organisationId,
+      String(job.payload['signingRequestId'] ?? ''),
+    );
+    if (!record) throw new Error('signing request missing');
+    const party = record.parties.find((p) => p.id === job.payload['partyId']);
+    if (!party?.email) return { skipped: 'no address' };
+    if (!deps.sign) throw new Error('signing is not set up');
+    const sealed = await deps.sign.sealed(record.envelopeId);
+    if (!sealed) return { skipped: 'not completed' };
+
+    const from = await senderFor(deps.repos, deps.provider, job.organisationId);
+    const copy = copyFor(party.locale);
+    const values = { organisation: organisation.name, document: record.documentName };
+    const intro = fill(copy.copyIntro, values);
+    const testNote = record.environment === 'test' ? copy.test : '';
+    const { tokens } = await resolveTokens(deps.repos, job.organisationId);
+    const subject = fill(copy.copySubject, values);
+    const html = await renderNotification(tokens, {
+      lang: party.locale,
+      heading: subject,
+      intro: testNote ? `${intro} ${testNote}` : intro,
+      rows: [
+        { label: copy.document, value: record.documentName },
+        { label: copy.from, value: organisation.name },
+      ],
+      footer: `${organisation.name} · ${copy.footer}`,
+    });
+    const sent = await deps.provider.send({
+      to: party.email,
+      from,
+      subject,
+      text: [intro, testNote, copy.footer].filter(Boolean).join('\n\n'),
+      html,
+      attachments: [
+        {
+          filename: `${record.documentName.replace(/[^\p{L}\p{N} ._-]+/gu, '_')}-signed.pdf`,
+          contentType: 'application/pdf',
+          content: Buffer.from(sealed.bytes),
+        },
+      ],
+      idempotencyKey: job.idempotencyKey,
+    });
+    return { messageId: sent.messageId };
+  };
+}
+
 export function createSigningInviteHandler(deps: {
   repos: Repositories;
   provider: MailProvider;
@@ -223,31 +360,13 @@ export function createSigningInviteHandler(deps: {
     if (!record) throw new Error('signing request missing');
     const party = record.parties.find((p) => p.id === job.payload['partyId']);
     if (!party?.email) return { skipped: 'no address' };
-    // Signed or declined since it was queued: an invitation now would be wrong.
+    // Cancelled, signed or declined since it was queued: an invitation now would be wrong.
+    if (record.status !== 'sent') return { skipped: `request is ${record.status}` };
     if (party.status !== 'invited' && party.status !== 'viewed') {
       return { skipped: `party is ${party.status}` };
     }
 
-    const sendingDomain = (await deps.repos.sendingDomains.list(job.organisationId))[0] ?? null;
-    const from = sendingDomain?.fromAddress ?? '';
-    // The same rule every email from this product keeps (`send-job.ts`).
-    if (
-      !['console', 'memory', 'outbox', 'queue', 'outlook', 'apple-mail'].includes(
-        deps.provider.name,
-      )
-    ) {
-      assertSendable(
-        sendingDomain
-          ? {
-              domain: sendingDomain.domain,
-              verified: sendingDomain.verified,
-              checks: [],
-              checkedAt: sendingDomain.lastCheckedAt?.toISOString() ?? '',
-            }
-          : null,
-        sendingDomain?.domain ?? (domainOf(from) || 'unknown'),
-      );
-    }
+    const from = await senderFor(deps.repos, deps.provider, job.organisationId);
 
     const copy = copyFor(party.locale);
     const values = { organisation: organisation.name, document: record.documentName };
@@ -269,7 +388,7 @@ export function createSigningInviteHandler(deps: {
     const subject = fill(copy.subject, values);
     const sent = await deps.provider.send({
       to: party.email,
-      from: from || undefined,
+      from,
       subject,
       text: [intro, testNote, `${copy.open}: ${party.signUrl}`, copy.footer]
         .filter(Boolean)

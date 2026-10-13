@@ -986,6 +986,14 @@ export const enGB = {
   'signing.inviteConfirm':
     'Send an email with a signing link to {count} signers as their turn comes? Signers without an address get nothing; copy their links instead.',
   'signing.inviteConfirmYes': 'Send and email',
+  'signing.cancelRequest': 'Cancel request',
+  'signing.cancelConfirm': 'Cancel “{document}”? Nobody will be able to sign it any more.',
+  'signing.cancelConfirmYes': 'Yes, cancel it',
+  'signing.sendSigned': 'Send the signed copy',
+  'signing.sendSignedConfirm': 'Send the signed copy of “{document}” to {count} signers?',
+  'signing.sendSignedConfirmYes': 'Send the signed copy',
+  'signing.copyQueued': 'Signed copy queued',
+  'signing.handoff': 'PDF ready: {name}',
   'signing.remind': 'Send reminder',
   'signing.remindConfirm': 'Email {name} ({email}) their signing link again?',
   'signing.emailed': 'Emailed',
@@ -1482,6 +1490,7 @@ export const enGB = {
   'fill.signedConfirm': 'Remove the signature and fill it in',
   'fill.unencodable': 'A letter you typed cannot be drawn in this PDF’s own font.',
   'fill.back': 'Back to the form',
+  'scan.sign': 'Sign this PDF',
 } as const;
 
 /**

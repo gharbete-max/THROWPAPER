@@ -79,6 +79,8 @@ export const SigningRequestView = z.object({
       status: z.string(),
       signUrl: z.string(),
       invitedByEmailAt: z.string().optional(),
+      /** When the sealed copy was last queued for this party. Absent: never sent. */
+      signedCopyQueuedAt: z.string().optional(),
     }),
   ),
   inviteByEmail: z.boolean(),

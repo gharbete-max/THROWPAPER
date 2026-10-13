@@ -991,6 +991,14 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Отправить письмо со ссылкой для подписи {count} подписантам, когда наступит их очередь? Те, у кого нет адреса, ничего не получат — скопируйте их ссылки.',
   'signing.inviteConfirmYes': 'Отправить и написать',
+  'signing.cancelRequest': 'Отменить запрос',
+  'signing.cancelConfirm': 'Отменить «{document}»? Подписать его больше никто не сможет.',
+  'signing.cancelConfirmYes': 'Да, отменить',
+  'signing.sendSigned': 'Отправить подписанную копию',
+  'signing.sendSignedConfirm': 'Отправить подписанную копию «{document}» {count} подписантам?',
+  'signing.sendSignedConfirmYes': 'Отправить подписанную копию',
+  'signing.copyQueued': 'Подписанная копия в очереди',
+  'signing.handoff': 'PDF готов: {name}',
   'signing.remind': 'Отправить напоминание',
   'signing.remindConfirm': 'Снова отправить ссылку для подписи {name} ({email})?',
   'signing.emailed': 'Отправлено по почте',
@@ -1505,4 +1513,5 @@ export const ruRU: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Удалить подпись и заполнить',
   'fill.unencodable': 'Введённую букву нельзя нарисовать собственным шрифтом этого PDF.',
   'fill.back': 'Назад к форме',
+  'scan.sign': 'Подписать этот PDF',
 };

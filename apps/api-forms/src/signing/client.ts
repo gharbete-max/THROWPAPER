@@ -30,6 +30,8 @@ export class SignUnavailable extends Error {}
 export interface SignClient {
   create(request: CreateEnvelopeRequest): Promise<CreateEnvelopeResponse>;
   status(envelopeId: string): Promise<EnvelopeStatusResponse>;
+  /** §5.7: withdraw it. Every link stops working; what the answer says is the new state. */
+  cancel(envelopeId: string): Promise<EnvelopeStatusResponse>;
   /** The sealed PDF's bytes, fetched through the §5.3 short-lived link. */
   sealed(envelopeId: string): Promise<{ bytes: Uint8Array; sha256: string } | null>;
   /** §5.5: the declarations this organisation may ask a signer to approve. */
@@ -89,6 +91,14 @@ export function createSignClient(
     },
     async status(envelopeId) {
       const response = await call(`/v1/envelopes/${encodeURIComponent(envelopeId)}`);
+      return EnvelopeStatusResponse.parse(await body(response));
+    },
+    async cancel(envelopeId) {
+      const response = await call(`/v1/envelopes/${encodeURIComponent(envelopeId)}/cancel`, {
+        method: 'POST',
+        // The content type says JSON, and Fastify refuses an empty body under it.
+        body: '{}',
+      });
       return EnvelopeStatusResponse.parse(await body(response));
     },
     async sealed(envelopeId) {

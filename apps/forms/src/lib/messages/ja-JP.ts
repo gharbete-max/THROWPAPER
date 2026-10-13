@@ -970,6 +970,14 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     '順番が来た {count} 人の署名者に署名リンクをメールで送りますか？アドレスのない署名者には送られないので、リンクをコピーして渡してください。',
   'signing.inviteConfirmYes': '送信してメールする',
+  'signing.cancelRequest': '依頼を取り消す',
+  'signing.cancelConfirm': '「{document}」を取り消しますか？以後、誰も署名できなくなります。',
+  'signing.cancelConfirmYes': 'はい、取り消す',
+  'signing.sendSigned': '署名済みの写しを送る',
+  'signing.sendSignedConfirm': '「{document}」の署名済みの写しを {count} 人の署名者に送りますか？',
+  'signing.sendSignedConfirmYes': '署名済みの写しを送る',
+  'signing.copyQueued': '署名済みの写しを送信キューに追加済み',
+  'signing.handoff': 'PDF の準備完了: {name}',
   'signing.remind': 'リマインダーを送る',
   'signing.remindConfirm': '{name} ({email}) に署名リンクをもう一度メールしますか？',
   'signing.emailed': 'メール送信済み',
@@ -1466,4 +1474,5 @@ export const jaJP: Record<MessageKey, string> = {
   'fill.signedConfirm': '署名を削除して入力する',
   'fill.unencodable': '入力した文字は、このPDF自身のフォントでは描画できません。',
   'fill.back': 'フォームに戻る',
+  'scan.sign': 'この PDF に署名',
 };

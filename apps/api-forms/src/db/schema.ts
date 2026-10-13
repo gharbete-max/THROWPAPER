@@ -1149,4 +1149,6 @@ export interface SigningRequestParty {
   signUrl: string;
   /** When an invitation email for this party was last queued. Absent: never emailed. */
   invitedByEmailAt?: string;
+  /** When the sealed copy was last queued for this party. Absent: never sent. */
+  signedCopyQueuedAt?: string;
 }

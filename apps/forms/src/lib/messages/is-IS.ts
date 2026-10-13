@@ -972,6 +972,14 @@ export const isIS: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Senda tölvupóst með undirritunartengli til {count} undirritara þegar röðin kemur að þeim? Þeir sem hafa ekkert netfang fá ekkert – afritaðu tengilinn þeirra í staðinn.',
   'signing.inviteConfirmYes': 'Senda og senda tölvupóst',
+  'signing.cancelRequest': 'Hætta við beiðni',
+  'signing.cancelConfirm': 'Hætta við „{document}“? Enginn getur undirritað það lengur.',
+  'signing.cancelConfirmYes': 'Já, hætta við',
+  'signing.sendSigned': 'Senda undirritaða afritið',
+  'signing.sendSignedConfirm': 'Senda undirritað afrit af „{document}“ til {count} undirritara?',
+  'signing.sendSignedConfirmYes': 'Senda undirritaða afritið',
+  'signing.copyQueued': 'Undirritað afrit í biðröð',
+  'signing.handoff': 'PDF tilbúið: {name}',
   'signing.remind': 'Senda áminningu',
   'signing.remindConfirm': 'Senda {name} ({email}) undirritunartengilinn aftur?',
   'signing.emailed': 'Sent í tölvupósti',
@@ -1477,4 +1485,5 @@ export const isIS: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Fjarlægja undirskriftina og fylla út',
   'fill.unencodable': 'Ekki er hægt að teikna staf sem þú skrifaðir með leturgerð PDF-skjalsins.',
   'fill.back': 'Til baka í eyðublaðið',
+  'scan.sign': 'Undirrita þetta PDF',
 };

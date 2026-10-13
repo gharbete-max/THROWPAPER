@@ -130,8 +130,9 @@ export interface NotificationContent {
   heading: string;
   intro: string;
   rows: Array<{ label: string; value: string }>;
-  linkLabel: string;
-  linkUrl: string;
+  /** Both or neither: a message that only informs has no button. */
+  linkLabel?: string;
+  linkUrl?: string;
   footer: string;
 }
 
@@ -161,11 +162,13 @@ export function NotificationEmail({
                 </Text>
               ))}
 
-              <Section style={{ paddingTop: '16px' }}>
-                <Link href={content.linkUrl} style={s.button}>
-                  {content.linkLabel}
-                </Link>
-              </Section>
+              {content.linkUrl && (
+                <Section style={{ paddingTop: '16px' }}>
+                  <Link href={content.linkUrl} style={s.button}>
+                    {content.linkLabel}
+                  </Link>
+                </Section>
+              )}
             </Section>
           </Section>
 

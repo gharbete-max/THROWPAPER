@@ -925,6 +925,14 @@ export const zhCN: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     '在轮到时向 {count} 位签署人发送含签署链接的邮件？没有邮箱的签署人不会收到，请改为复制其链接。',
   'signing.inviteConfirmYes': '发送并邮件通知',
+  'signing.cancelRequest': '取消请求',
+  'signing.cancelConfirm': '取消“{document}”？之后任何人都无法再签署。',
+  'signing.cancelConfirmYes': '是，取消',
+  'signing.sendSigned': '发送已签署的副本',
+  'signing.sendSignedConfirm': '把“{document}”的已签署副本发送给 {count} 位签署人？',
+  'signing.sendSignedConfirmYes': '发送已签署的副本',
+  'signing.copyQueued': '已签署的副本已排队',
+  'signing.handoff': 'PDF 已就绪：{name}',
   'signing.remind': '发送提醒',
   'signing.remindConfirm': '再次向 {name}（{email}）发送签署链接？',
   'signing.emailed': '已发邮件',
@@ -1394,4 +1402,5 @@ export const zhCN: Record<MessageKey, string> = {
   'fill.signedConfirm': '移除签名并填写',
   'fill.unencodable': '您输入的某个字符无法用此 PDF 自带的字体绘制。',
   'fill.back': '返回表单',
+  'scan.sign': '签署此 PDF',
 };

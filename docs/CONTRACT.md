@@ -5,10 +5,13 @@ other side, so neither blocks the other. Changes to this file are a joint decisi
 a version bump.
 
 Schemas live in `packages/shared/src/contract/`. `pnpm contract:check` validates all three
-backends against them. Version header on every request: `X-Contract-Version: 2`.
+backends against them. Version header on every request: `X-Contract-Version: 3`.
 
 **Version 2 (2026-09-23)** added §5, the Sign product (`docs/adr/0009-where-signing-lives.md`),
 by the owner's decision. It is additive: every v1 request is still valid.
+
+**Version 3 (2026-10-13)** added §5.7, cancelling an envelope. Additive again: every v2 request is
+still valid, and a caller that never cancels sees no difference.
 
 Auth between the products is a service token issued per organisation, scoped to the endpoints
 below. A customer running only one product never sees any of this.
@@ -119,8 +122,27 @@ envelope. **A hook is a hint, not the record:** delivery is retried a few times 
 so on a hook the caller reads §5.2 rather than trusting the body. No redirects are followed.
 Invitations and reminders are the caller's to send, never Sign's: when a party's status becomes
 `invited` the caller emails that party its `signUrls` link. Forms does this through its own mail
-provider (direct SMTP, or the desktop's outbox in test mode — rule 2) until Mailer is connected,
-when they go through `POST /v1/messages` like any other sender.
+provider until Mailer is connected, when they go through `POST /v1/messages` like any other
+sender (rule 2). The provider is whatever the deployment has: direct SMTP on a server; on the
+desktop, the queue behind **To send**, where each invitation waits as a draft until the person
+presses Send in their own mail program, and the outbox in test mode. Nothing is sent by the
+product itself on the desktop (ADR 0016). A cancelled envelope is invited no further: an
+invitation still queued when `cancelled` arrives is dropped, not sent.
+
+### `POST /v1/envelopes/{id}/cancel` — withdraw an envelope (§5.7)
+```
+(no body) → 200 EnvelopeStatusResponse (§5.2), status: "cancelled"
+            404 not this organisation's / unknown · 409 { error: { code: "finished" } }
+```
+Appends `cancelled` to the audit trail like any other event, and posts it as a §5.4 hook. From then
+on every party's link refuses to sign (`409 finished`). Cancelling an envelope that is already
+cancelled answers the same 200 and appends nothing, so a retried press is safe. An envelope that
+has completed, expired or been declined cannot be cancelled (`409 finished`). A cancelled envelope
+has no sealed file (§5.3 answers 409). The caller asks its user first: this cannot be undone.
+
+The signed copy reaches the signers the same way invitations do — by the caller's mail provider,
+from the §5.3 file — never from Sign. Forms queues it only when a person presses *Send the signed
+copy* and confirms; on the desktop it then waits in To send like any other message.
 
 ### `GET /v1/declarations` · `POST /v1/declarations` — the words a signer approves (§5.5)
 ```

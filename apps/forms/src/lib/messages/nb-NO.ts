@@ -968,6 +968,14 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.inviteConfirm':
     'Sende en e-post med signeringslenke til {count} signatarer når det blir deres tur? De uten adresse får ingenting – kopier lenken deres i stedet.',
   'signing.inviteConfirmYes': 'Send og send e-post',
+  'signing.cancelRequest': 'Avbryt forespørselen',
+  'signing.cancelConfirm': 'Avbryte «{document}»? Ingen kan signere det lenger.',
+  'signing.cancelConfirmYes': 'Ja, avbryt',
+  'signing.sendSigned': 'Send den signerte kopien',
+  'signing.sendSignedConfirm': 'Sende den signerte kopien av «{document}» til {count} signatarer?',
+  'signing.sendSignedConfirmYes': 'Send den signerte kopien',
+  'signing.copyQueued': 'Signert kopi lagt i køen',
+  'signing.handoff': 'PDF klar: {name}',
   'signing.remind': 'Send påminnelse',
   'signing.remindConfirm': 'Sende {name} ({email}) signeringslenken på nytt?',
   'signing.emailed': 'Sendt på e-post',
@@ -1462,4 +1470,5 @@ export const nbNO: Record<MessageKey, string> = {
   'fill.signedConfirm': 'Fjern signaturen og fyll ut',
   'fill.unencodable': 'En bokstav du skrev kan ikke tegnes med PDF-ens egen skrifttype.',
   'fill.back': 'Tilbake til skjemaet',
+  'scan.sign': 'Signer denne PDF-en',
 };

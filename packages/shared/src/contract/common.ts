@@ -5,7 +5,7 @@ import { z } from 'zod';
  * 2 since 2026-09-23: §5 (the Sign product) was added. Additive — every v1 request is still valid —
  * so a v1 caller keeps working; the number records that the surface grew by joint decision.
  */
-export const CONTRACT_VERSION = 2;
+export const CONTRACT_VERSION = 3;
 export const CONTRACT_VERSION_HEADER = 'x-contract-version';
 
 export const OrganisationId = z.string().uuid();
