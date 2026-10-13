@@ -1598,10 +1598,7 @@ export const svSE: Record<MessageKey, string> = {
   'scanEdit.pending': 'Ändringar som görs',
   'scanEdit.none': 'Inga ändringar än.',
   'scanEdit.item.text': 'Text: {text}',
-  'scanEdit.item.cover': 'Täck över',
-  'scanEdit.item.redact': 'Maskering',
   'scanEdit.remove': 'Ta bort',
-  'scanEdit.redact': 'Maskera',
   'scanEdit.redactConfirm':
     'Göra sida {n} till en bild med de här rutorna svärtade? Orden under dem tas bort och det går inte att ångra.',
   'scanEdit.apply': 'Genomför',

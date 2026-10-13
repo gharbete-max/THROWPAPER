@@ -1593,10 +1593,7 @@ export const jaJP: Record<MessageKey, string> = {
   'scanEdit.pending': '行う変更',
   'scanEdit.none': 'まだ変更はありません。',
   'scanEdit.item.text': 'テキスト:{text}',
-  'scanEdit.item.cover': '覆い',
-  'scanEdit.item.redact': '黒塗り',
   'scanEdit.remove': '削除',
-  'scanEdit.redact': '黒塗り',
   'scanEdit.redactConfirm':
     'ページ{n}を、これらの枠を黒く塗った画像にしますか?下の文字は削除され、元に戻せません。',
   'scanEdit.apply': '適用',

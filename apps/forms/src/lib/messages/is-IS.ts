@@ -1606,10 +1606,7 @@ export const isIS: Record<MessageKey, string> = {
   'scanEdit.pending': 'Breytingar sem verða gerðar',
   'scanEdit.none': 'Engar breytingar enn.',
   'scanEdit.item.text': 'Texti: {text}',
-  'scanEdit.item.cover': 'Hylja',
-  'scanEdit.item.redact': 'Útstrokun',
   'scanEdit.remove': 'Fjarlægja',
-  'scanEdit.redact': 'Stroka út',
   'scanEdit.redactConfirm':
     'Breyta síðu {n} í mynd með þessum kössum svörtum? Orðin undir þeim eru fjarlægð og ekki er hægt að afturkalla það.',
   'scanEdit.apply': 'Framkvæma',

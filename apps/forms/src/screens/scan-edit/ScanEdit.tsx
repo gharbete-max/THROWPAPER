@@ -177,7 +177,7 @@ export default function ScanEdit({ blob, page, onCancel, onDone }: Props) {
       boxes.length > 0 &&
       !acceptSignatureLoss &&
       !(await confirm(t('scanEdit.redactConfirm', { n: page + 1 }), {
-        confirmLabel: t('scanEdit.redact'),
+        confirmLabel: t('scanEdit.mode.redact'),
         danger: true,
       }))
     ) {
@@ -357,7 +357,7 @@ export default function ScanEdit({ blob, page, onCancel, onDone }: Props) {
               <span>
                 {item.mode === 'text'
                   ? t('scanEdit.item.text', { text: item.text ?? '' })
-                  : t(`scanEdit.item.${item.mode}` as const)}
+                  : t(`scanEdit.mode.${item.mode}` as const)}
               </span>
               <button
                 type="button"

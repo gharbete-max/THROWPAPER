@@ -1619,10 +1619,7 @@ export const esES: Record<MessageKey, string> = {
   'scanEdit.pending': 'Cambios que se harán',
   'scanEdit.none': 'Aún no hay cambios.',
   'scanEdit.item.text': 'Texto: {text}',
-  'scanEdit.item.cover': 'Cubierta',
-  'scanEdit.item.redact': 'Tachado',
   'scanEdit.remove': 'Quitar',
-  'scanEdit.redact': 'Tachar',
   'scanEdit.redactConfirm':
     '¿Convertir la página {n} en una imagen con estos recuadros en negro? Las palabras de debajo se eliminan y no se puede deshacer.',
   'scanEdit.apply': 'Aplicar',

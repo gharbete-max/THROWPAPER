@@ -1595,10 +1595,7 @@ export const daDK: Record<MessageKey, string> = {
   'scanEdit.pending': 'Ændringer der udføres',
   'scanEdit.none': 'Ingen ændringer endnu.',
   'scanEdit.item.text': 'Tekst: {text}',
-  'scanEdit.item.cover': 'Dæk over',
-  'scanEdit.item.redact': 'Overstregning',
   'scanEdit.remove': 'Fjern',
-  'scanEdit.redact': 'Overstreg',
   'scanEdit.redactConfirm':
     'Gøre side {n} til et billede med disse bokse sværtet? Ordene under dem fjernes, og det kan ikke fortrydes.',
   'scanEdit.apply': 'Udfør',

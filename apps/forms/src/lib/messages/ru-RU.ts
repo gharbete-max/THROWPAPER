@@ -1634,10 +1634,7 @@ export const ruRU: Record<MessageKey, string> = {
   'scanEdit.pending': 'Предстоящие изменения',
   'scanEdit.none': 'Изменений пока нет.',
   'scanEdit.item.text': 'Текст: {text}',
-  'scanEdit.item.cover': 'Закрытие',
-  'scanEdit.item.redact': 'Скрытие',
   'scanEdit.remove': 'Убрать',
-  'scanEdit.redact': 'Скрыть навсегда',
   'scanEdit.redactConfirm':
     'Превратить страницу {n} в картинку с закрашенными рамками? Слова под ними будут удалены, отменить это нельзя.',
   'scanEdit.apply': 'Применить',

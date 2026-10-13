@@ -1639,10 +1639,7 @@ export const frFR: Record<MessageKey, string> = {
   'scanEdit.pending': 'Modifications à effectuer',
   'scanEdit.none': "Aucune modification pour l'instant.",
   'scanEdit.item.text': 'Texte : {text}',
-  'scanEdit.item.cover': 'Recouvrement',
-  'scanEdit.item.redact': 'Caviardage',
   'scanEdit.remove': 'Retirer',
-  'scanEdit.redact': 'Caviarder',
   'scanEdit.redactConfirm':
     'Transformer la page {n} en image avec ces cadres noircis ? Les mots dessous sont supprimés et cette action est irréversible.',
   'scanEdit.apply': 'Appliquer',

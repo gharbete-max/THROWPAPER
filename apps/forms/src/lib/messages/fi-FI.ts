@@ -1610,10 +1610,7 @@ export const fiFI: Record<MessageKey, string> = {
   'scanEdit.pending': 'Tehtävät muutokset',
   'scanEdit.none': 'Ei vielä muutoksia.',
   'scanEdit.item.text': 'Teksti: {text}',
-  'scanEdit.item.cover': 'Peitä',
-  'scanEdit.item.redact': 'Mustaus',
   'scanEdit.remove': 'Poista',
-  'scanEdit.redact': 'Mustaa',
   'scanEdit.redactConfirm':
     'Muutetaanko sivu {n} kuvaksi, jossa nämä laatikot on mustattu? Niiden alla olevat sanat poistetaan, eikä tätä voi perua.',
   'scanEdit.apply': 'Toteuta',

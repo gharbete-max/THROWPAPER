@@ -1655,10 +1655,7 @@ export const deDE: Record<MessageKey, string> = {
   'scanEdit.pending': 'Auszuführende Änderungen',
   'scanEdit.none': 'Noch keine Änderungen.',
   'scanEdit.item.text': 'Text: {text}',
-  'scanEdit.item.cover': 'Abdeckung',
-  'scanEdit.item.redact': 'Schwärzung',
   'scanEdit.remove': 'Entfernen',
-  'scanEdit.redact': 'Schwärzen',
   'scanEdit.redactConfirm':
     'Seite {n} in ein Bild mit diesen geschwärzten Feldern umwandeln? Der Text darunter wird entfernt; das lässt sich nicht rückgängig machen.',
   'scanEdit.apply': 'Anwenden',

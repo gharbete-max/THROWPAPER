@@ -1591,10 +1591,7 @@ export const nbNO: Record<MessageKey, string> = {
   'scanEdit.pending': 'Endringer som gjøres',
   'scanEdit.none': 'Ingen endringer ennå.',
   'scanEdit.item.text': 'Tekst: {text}',
-  'scanEdit.item.cover': 'Dekk over',
-  'scanEdit.item.redact': 'Sverting',
   'scanEdit.remove': 'Fjern',
-  'scanEdit.redact': 'Sverte',
   'scanEdit.redactConfirm':
     'Gjøre side {n} om til et bilde med disse boksene svertet? Ordene under dem fjernes, og det kan ikke angres.',
   'scanEdit.apply': 'Utfør',

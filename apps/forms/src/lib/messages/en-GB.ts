@@ -1609,10 +1609,7 @@ export const enGB = {
   'scanEdit.pending': 'Changes to make',
   'scanEdit.none': 'No changes yet.',
   'scanEdit.item.text': 'Text: {text}',
-  'scanEdit.item.cover': 'Cover',
-  'scanEdit.item.redact': 'Redaction',
   'scanEdit.remove': 'Remove',
-  'scanEdit.redact': 'Redact',
   'scanEdit.redactConfirm':
     'Turn page {n} into a picture with these boxes blacked out? The words under them are removed and this cannot be undone.',
   'scanEdit.apply': 'Apply',
