@@ -1,0 +1,39 @@
+param(
+  [Parameter(Mandatory)][string]$Script,
+  [string]$ScriptArgs = "",
+  [string]$Mask = "",        # hex CPU affinity mask, e.g. 55 = logical CPUs 0,2,4,6 (4 P-cores, one thread each)
+  [string]$Out = ""          # file receiving stdout
+)
+$dir = "C:\Users\gusta\AppData\Local\Temp\claude\spike-s1"
+$stdout = if ($Out) { $Out } else { Join-Path $dir "last.out.txt" }
+$psi = New-Object System.Diagnostics.ProcessStartInfo
+$psi.FileName = "node"
+$psi.Arguments = "`"$dir\$Script`" $ScriptArgs"
+$psi.WorkingDirectory = $dir
+$psi.RedirectStandardOutput = $true
+$psi.RedirectStandardError = $true
+$psi.UseShellExecute = $false
+$psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+$p = [System.Diagnostics.Process]::Start($psi)
+if ($Mask) { $p.ProcessorAffinity = [IntPtr][Convert]::ToInt64($Mask, 16) }
+$sw = [System.IO.StreamWriter]::new($stdout, $false, (New-Object System.Text.UTF8Encoding($false)))
+$errTask = $p.StandardError.ReadToEndAsync()
+$readTask = $p.StandardOutput.ReadLineAsync()
+$peakWS = 0; $peakPriv = 0
+while (-not $p.HasExited -or $readTask.IsCompleted) {
+  if ($readTask.IsCompleted) {
+    $line = $readTask.Result
+    if ($null -eq $line) { break }
+    $sw.WriteLine($line); $sw.Flush()
+    $readTask = $p.StandardOutput.ReadLineAsync()
+  } else {
+    try { $p.Refresh(); if ($p.WorkingSet64 -gt $peakWS) { $peakWS = $p.WorkingSet64 }; if ($p.PrivateMemorySize64 -gt $peakPriv) { $peakPriv = $p.PrivateMemorySize64 } } catch {}
+    Start-Sleep -Milliseconds 200
+  }
+}
+$p.WaitForExit()
+$sw.WriteLine("@@EXTERNAL peakWorkingSetMB=$([math]::Round($peakWS/1MB)) peakPrivateMB=$([math]::Round($peakPriv/1MB)) exit=$($p.ExitCode)")
+$sw.Close()
+$err = $errTask.Result
+if ($err) { Set-Content -Path "$stdout.err" -Value $err }
+Get-Content $stdout -Encoding UTF8 | Select-Object -Last 30

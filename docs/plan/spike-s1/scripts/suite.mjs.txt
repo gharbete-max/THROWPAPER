@@ -1,0 +1,79 @@
+﻿import fs from "node:fs";
+import * as K from "./lib.mjs";
+const a = Object.fromEntries(process.argv.slice(2).reduce((acc, x, i, arr) => (x.startsWith("--") ? [...acc, [x.slice(2), arr[i + 1]]] : acc), []));
+const threads = +a.threads, ctx = +(a.ctx ?? 4096), mode = a.mode, out = a.out;
+const langs = (a.langs ?? K.LANGS.join(",")).split(",");
+const pairs = (a.pairs ?? "").split(",").filter(Boolean).map((p) => p.split("-"));
+const CHUNK = +(a.chunk ?? 2200);
+const log = (o) => { fs.appendFileSync(out, JSON.stringify(o) + "\n"); console.log(JSON.stringify({ ...o, text: undefined, partials: undefined })); };
+
+const b = await K.boot({ threads, ctx });
+log({ kind: "boot", threads, ctx, loadMs: b.loadMs, rssAfterLoadMB: b.rssAfterLoad, modelThreadsRequested: threads });
+
+const agg = (rs) => ({ promptTokens: rs.reduce((s, r) => s + r.promptTokens, 0), genTokens: rs.reduce((s, r) => s + r.genTokens, 0),
+  ttftMs: rs.reduce((s, r) => s + r.ttftMs, 0), totalMs: rs.reduce((s, r) => s + r.totalMs, 0) });
+const rates = (g) => ({ ...g, promptTps: +(g.promptTokens / (g.ttftMs / 1000)).toFixed(1), genTps: +(g.genTokens / ((g.totalMs - g.ttftMs) / 1000)).toFixed(2) });
+
+function chunks(doc, budget) {
+  const paras = doc.split(/\n{2,}/); const res = []; let cur = [], n = 0;
+  for (const p of paras) { const t = K.countTokens(b, p) + 2; if (n + t > budget && cur.length) { res.push(cur.join("\n\n")); cur = []; n = 0; } cur.push(p); n += t; }
+  if (cur.length) res.push(cur.join("\n\n")); return res;
+}
+
+async function summariseLong(lang, doc) {
+  const runs = [];
+  const parts = chunks(doc, CHUNK);
+  const partials = [];
+  for (const p of parts) { const r = await K.ask(b, K.SUM_SYS(lang), K.MAP_USER(lang, p), { maxTokens: 450 }); runs.push(r); partials.push(r.text); }
+  // note: map output is capped at 700 tokens; a truncated map shows up as missing amounts in amountsInPartials
+  let notes = partials.join("\n");
+  let levels = 1;
+  // recursive reduce if the notes would not fit next to the instructions
+  while (K.countTokens(b, notes) > CHUNK + 400 && levels < 4) {
+    const groups = chunks(notes.split("\n").join("\n\n"), CHUNK); const next = [];
+    for (const g of groups) { const r = await K.ask(b, K.SUM_SYS(lang), K.MAP_USER(lang, g), { maxTokens: 450 }); runs.push(r); next.push(r.text); }
+    notes = next.join("\n"); levels++;
+  }
+  const fin = await K.ask(b, K.SUM_SYS(lang), K.REDUCE_USER(lang, notes), { maxTokens: 500 }); runs.push(fin);
+  return { text: fin.text, partials, chunkCount: parts.length, reduceLevels: levels, runs };
+}
+
+const t00 = performance.now();
+if (mode === "sumpage" || mode === "form") {
+  for (const l of langs) {
+    const m = K.meta(l);
+    const doc = mode === "form" ? K.read(`${l}.form.txt`).trim() : K.page(l);
+    const user = mode === "form"
+      ? `This is a filled-in form (labels followed by the answers). In ${K.LANGNAME[l]}, write 2 to 4 short sentences saying what the form is and what was answered. Copy values, dates and names exactly as written.\n\n<form>\n${doc}\n</form>`
+      : K.SUM_USER(l, doc);
+    const r = await K.ask(b, K.SUM_SYS(l), user, { maxTokens: 600 });
+    const keys = mode === "form" ? ["1984-09-12", "27", "2026-02-03", m.formName.split(" ").pop()] : [...m.oneFacts, "120"];
+    const names = mode === "form" ? [] : m.oneNames;
+    log({ kind: mode, lang: l, docTokens: K.countTokens(b, doc), docChars: doc.length, ...r, peakRssMB: K.peakRssMB(), detected: K.detectLang(r.text).lang, leak: K.leak(r.text, l), lenRatio: K.lenRatio(r.text, doc), ...K.factCheck(r.text, doc, keys, names) });
+  }
+} else if (mode === "sumten") {
+  for (const l of langs) {
+    const m = K.meta(l); const doc = K.ten(l); const t0 = performance.now();
+    const r = await summariseLong(l, doc);
+    const g = rates(agg(r.runs));
+    const amounts = m.tenFacts.map((f) => String(f.amount));
+    const inFinal = K.factCheck(r.text, doc, amounts, [...new Set(m.tenFacts.map((f) => f.person))]);
+    const inPartials = K.factCheck(r.partials.join("\n"), doc, amounts, []);
+    log({ kind: "sumten", lang: l, docTokens: K.countTokens(b, doc), docChars: doc.length, chunkCount: r.chunkCount, reduceLevels: r.reduceLevels, calls: r.runs.length, wallMs: Math.round(performance.now() - t0), ...g,
+      peakRssMB: K.peakRssMB(), text: r.text, partials: r.partials, detected: K.detectLang(r.text).lang, leak: K.leak(r.text, l), lenRatio: K.lenRatio(r.text, doc),
+      amountsInFinal: inFinal.keysFound, amountsInPartials: inPartials.keysFound, amountsTotal: amounts.length, namesInFinal: inFinal.namesFound, namesTotal: inFinal.namesTotal, extraNumbers: inFinal.extraNumbers, extraNumbersPartials: inPartials.extraNumbers });
+  }
+} else if (mode === "trans") {
+  for (const [from, to] of pairs) {
+    const m = K.meta(from); const doc = K.page(from);
+    const r = await K.ask(b, K.TR_SYS(to), K.TR_USER(doc), { maxTokens: 2200 });
+    const srcSet = K.intSet(doc), outSet = K.intSet(r.text);
+    const missing = [...srcSet].filter((x) => !outSet.has(x)), extra = [...outSet].filter((x) => !srcSet.has(x));
+    const latinBoth = !["ja", "zh", "ru"].includes(from) && !["ja", "zh", "ru"].includes(to);
+    const nm = [m.chair.split(" ").pop(), m.treasurer.split(" ").pop()];
+    log({ kind: "trans", from, to, docTokens: K.countTokens(b, doc), ...r, peakRssMB: K.peakRssMB(), detected: K.detectLang(r.text).lang, leak: K.leak(r.text, to), lenRatio: K.lenRatio(r.text, doc),
+      missingNumbers: missing, extraNumbers: extra, namesChecked: latinBoth ? nm.filter((n) => r.text.includes(n)).length + "/" + nm.length : "n/a (script change)" });
+  }
+}
+log({ kind: "done", mode, wallMs: Math.round(performance.now() - t00), peakRssMB: K.peakRssMB() });
+

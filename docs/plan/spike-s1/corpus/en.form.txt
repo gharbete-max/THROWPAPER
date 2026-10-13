@@ -1,0 +1,9 @@
+Membership application
+Full name: Elin Ström
+Date of birth: 1984-09-12
+Plot number: 27
+Number of people in the household: 4
+Wants a compost bin: yes
+Preferred meeting day: Tuesday
+Comments: I would like a plot close to the water tap.
+Date: 2026-02-03

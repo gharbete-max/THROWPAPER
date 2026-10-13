@@ -1,0 +1,18 @@
+// Reduce v2: one bullet per part, so no part of the document is dropped. Reuses the stored map outputs of B8-sumten.
+import fs from "node:fs";
+import * as K from "./lib.mjs";
+const out = "C:/Users/gusta/AppData/Local/Temp/claude/spike-s1/results/B8-reduce2.jsonl";
+const rows = fs.readFileSync("C:/Users/gusta/AppData/Local/Temp/claude/spike-s1/results/B8-sumten.jsonl", "utf8").trim().split("\n").map(JSON.parse).filter((r) => r.kind === "sumten");
+const threads = +process.argv[2] || 8;
+const b = await K.boot({ threads, ctx: 4096 });
+const REDUCE2 = (lang, parts) => `Below are notes made from ${parts.length} consecutive parts of one long document. In ${K.LANGNAME[lang]}, write the final summary as exactly ${parts.length} bullet points ("- "), one for each part in order, each at most 40 words. Each bullet must keep the amounts of money, dates and names of that part exactly as written in the notes. Do not add anything that is not in the notes.\n\n` + parts.map((p, i) => `<part ${i + 1}>\n${p}\n</part ${i + 1}>`).join("\n");
+for (const r of rows) {
+  const m = K.meta(r.lang); const doc = K.ten(r.lang);
+  const res = await K.ask(b, K.SUM_SYS(r.lang), REDUCE2(r.lang, r.partials), { maxTokens: 700 });
+  const amounts = m.tenFacts.map((f) => String(f.amount));
+  const f = K.factCheck(res.text, doc, amounts, [...new Set(m.tenFacts.map((x) => x.person))]);
+  const rec = { kind: "reduce2", lang: r.lang, parts: r.partials.length, text: res.text, totalMs: res.totalMs, genTokens: res.genTokens, detected: K.detectLang(res.text).lang, leak: K.leak(res.text, r.lang), amountsInFinal: f.keysFound, amountsInPartials: r.amountsInPartials, amountsTotal: amounts.length, namesInFinal: f.namesFound, namesTotal: f.namesTotal, extraNumbers: f.extraNumbers, v1AmountsInFinal: r.amountsInFinal, lines: res.text.split("\n").filter((l) => l.trim()).length };
+  fs.appendFileSync(out, JSON.stringify(rec) + "\n");
+  console.log(JSON.stringify({ ...rec, text: undefined }));
+}
+console.log("peak", K.peakRssMB());
