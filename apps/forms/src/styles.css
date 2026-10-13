@@ -7128,6 +7128,8 @@ body:has(> #root .shell--narrow) {
 
 .scan__actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.25rem;
 }
 
