@@ -132,11 +132,16 @@ pnpm test:e2e
 
 `pnpm db:seed` (and the desktop's "open with demo data", which runs the same `seedDemo`) writes,
 today: the Demo AB organisation with an admin and an operator, its brand kit, one event with ~200
-registrations through a published form, a draft form shared with the admin, and a form in the
-bin. That is what it **contains**. The target it grows into is Documents-shaped
-(`docs/plan/DOCUMENTS.md` phase 9): an imported PDF form, a Word form, a filled PDF, an arranged
-PDF, a message in To send, and an invoice with a standing monthly charge. It cannot hold a signing
-request (`signing_requests.envelope_id` is NOT NULL and Sign has its own database). A broken seed
+registrations through a published form, a draft form shared with the admin, a form in the bin, and
+two draft forms standing for documents brought in ("Membership application (from a PDF)",
+"Inspection (from a Word file)"). The desktop's demo also leaves one message waiting in To send (the
+filled membership PDF attached). That is what it **contains**. Beside it, `fixtures/demo/` holds
+the files a person drops in: a PDF with fields of its own (blank and filled), a three-page PDF to
+arrange, an invoice picture, a CSV for Send/batch and a sample document in Swedish and English for
+the summary centre; the corpus in `fixtures/documents/` has the imported PDF and Word originals. Not
+in the seed, and why: a signing request (`signing_requests.envelope_id` is NOT NULL and Sign has its
+own database), a batch draft (a list is read in the browser and kept nowhere), and To send on the
+web edition (it has none). Still to come: an invoice with a standing monthly charge. A broken seed
 blocks demos — keep it current with the schema.
 
 ## Working style

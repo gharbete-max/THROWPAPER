@@ -18,6 +18,7 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts",
     "demo": "tsx src/demo/main.ts",
+    "demo:fixtures": "tsx src/demo/write-fixtures.ts",
     "start:demo": "node dist/demo/main.js",
     "desktop": "tsx src/desktop/main.ts"
   },
