@@ -73,9 +73,18 @@ describe('the weights manifest', () => {
     expect(WeightsManifest.safeParse(http).success).toBe(false);
   });
 
-  it('marks the unpublished release plainly, and says why the download is off', () => {
-    expect(MODEL_MANIFEST.parts.every((p) => p.url.startsWith(UNPUBLISHED))).toBe(true);
-    expect(unpublishedReason(MODEL_MANIFEST)).toBe('the release has not been cut yet');
+  it('marks an unpublished release plainly, and says why the download is off', () => {
+    const unpublished = WeightsManifest.parse({
+      ...MODEL_MANIFEST,
+      parts: MODEL_MANIFEST.parts.map((p) => ({
+        ...p,
+        url: `${UNPUBLISHED}the release has not been cut yet`,
+      })),
+    });
+    expect(unpublished.parts.every((p) => p.url.startsWith(UNPUBLISHED))).toBe(true);
+    expect(unpublishedReason(unpublished)).toBe('the release has not been cut yet');
+    // The shipped manifest points at the cut release.
+    expect(unpublishedReason(MODEL_MANIFEST)).toBeNull();
     const cut = WeightsManifest.parse({
       ...MODEL_MANIFEST,
       parts: MODEL_MANIFEST.parts.map((p) => ({ ...p, url: `https://example.com/${p.name}` })),

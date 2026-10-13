@@ -2,9 +2,19 @@ import { createHash, randomBytes } from 'node:crypto';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { MODEL_MANIFEST, WeightsManifest } from '@tp/shared/summary';
+import { MODEL_MANIFEST, UNPUBLISHED, WeightsManifest } from '@tp/shared/summary';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { downloadModel, sha256File, verifyFile, type Progress } from './weights.js';
+
+/** The shipped manifest with its release addresses unset, as before the release was cut. */
+const unpublishedManifest = () =>
+  WeightsManifest.parse({
+    ...MODEL_MANIFEST,
+    parts: MODEL_MANIFEST.parts.map((p) => ({
+      ...p,
+      url: `${UNPUBLISHED}the release has not been cut yet`,
+    })),
+  });
 
 const sha = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
 
@@ -166,7 +176,7 @@ describe('downloading the two parts', () => {
   it('is off, with the reason, while the release has no address', async () => {
     const asked: string[] = [];
     await expect(
-      downloadModel({ manifest: MODEL_MANIFEST, dir, fetch: serve({}, asked) }),
+      downloadModel({ manifest: unpublishedManifest(), dir, fetch: serve({}, asked) }),
     ).rejects.toMatchObject({
       failure: 'unpublished',
       message: 'the release has not been cut yet',
