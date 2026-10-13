@@ -161,9 +161,14 @@ test('an address on the suppression list is left out; a one-off document to it s
   expect(sent.map((job) => job['payload']['to'])).toEqual([address('asa'), address('cia')]);
 
   // Unsubscribing from a campaign: the page asks, the button records it.
-  await page.goto(String(sent[0]!['payload']['unsubscribe']).replace(/^https?:\/\/[^/]+/, ''));
-  await page.getByRole('button', { name: 'Unsubscribe' }).click();
-  await expect(page.getByText('will get no more campaign emails')).toBeVisible();
+  await page.goto(
+    String(sent[0]!['payload']['unsubscribe']).replace(
+      /^https?:\/\/[^/]+\/api/,
+      'http://localhost:4001',
+    ),
+  );
+  await page.getByRole('button', { name: 'Avsluta prenumeration' }).click();
+  await expect(page.getByText('får inga fler utskick')).toBeVisible();
   const [recorded] = await sql`select reason from campaign_suppressions
     where email = ${address('asa')}`;
   expect(recorded!['reason']).toBe('unsubscribed');
