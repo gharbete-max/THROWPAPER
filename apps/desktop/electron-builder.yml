@@ -16,6 +16,7 @@ directories:
 files:
   - main.js
   - preload.cjs
+  - model-preload.cjs
   - package.json
   - node_modules/**
 # Plain folders beside the asar: the server streams the web bundle and the migrator reads the SQL at
