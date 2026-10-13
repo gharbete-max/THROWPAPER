@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { MODEL_MANIFEST, WeightsManifest, type ModelEvent } from '@tp/shared/summary';
+import { MODEL_MANIFEST, UNPUBLISHED, WeightsManifest, type ModelEvent } from '@tp/shared/summary';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FakeEngine, type FakeBehaviour } from './fake-engine.js';
 import {
@@ -13,6 +13,16 @@ import {
   type WorkerHandle,
 } from './service.js';
 import { createWorker, type FromWorker, type ToWorker } from './worker-core.js';
+
+/** The shipped manifest with its release addresses unset, as before the release was cut. */
+const unpublishedManifest = () =>
+  WeightsManifest.parse({
+    ...MODEL_MANIFEST,
+    parts: MODEL_MANIFEST.parts.map((p) => ({
+      ...p,
+      url: `${UNPUBLISHED}the release has not been cut yet`,
+    })),
+  });
 
 const sha = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
 
@@ -164,6 +174,7 @@ describe('downloading', () => {
       chooseFile: () => Promise.resolve(null),
       fetch: (() => Promise.reject(new Error('must not be called'))) as typeof fetch,
       emit: (e) => events.push(e),
+      manifest: unpublishedManifest(),
     });
     expect((await service.status()).downloadBlocked).toBe('the release has not been cut yet');
     expect(await service.install()).toEqual({ ok: false, problem: 'download-unavailable' });
