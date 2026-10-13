@@ -7886,6 +7886,8 @@ a.room__centre:focus-visible {
   margin: 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
 /* --- Scan: edit one page (add text, cover, redact) ---------------------------------------------
  * The page is drawn at a fixed size and marks sit on top of it in percentages of the page, so they
  * stay put when the canvas shrinks on a phone. Marks are previews: a cover shows its own paper or
