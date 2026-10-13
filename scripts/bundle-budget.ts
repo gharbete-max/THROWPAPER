@@ -63,6 +63,14 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * phases that follow. A cut pass found no saving of that size without removing a feature
  * (`docs/plan/NEXT.md` Phase 0, item 3).
  *
+ * The Documents phases then landed (photos, Word to PDF, Forms draft and fill, Sign cancel and
+ * hand-off) and brought the total to 1 014.6 KB with 0.4 KB left. Each is a real feature of the
+ * Documents catcher with its words in twelve catalogues, and the rest of the plan (PDF text and
+ * redaction, the summary centre, Send, invoice scan) is the same kind of cost. The total is
+ * therefore raised to 1 080 KB. It is still a doubling-detector over every lazy chunk, not what a
+ * visitor downloads: the entry (12 KB) and stylesheet (20 KB) caps, which are what a visitor
+ * pays, are unchanged.
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -75,7 +83,7 @@ const BUDGET_KB = {
   /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
   stylesheet: 20,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 1015,
+  total: 1080,
 } as const;
 
 function gzippedKb(path: string): number {
