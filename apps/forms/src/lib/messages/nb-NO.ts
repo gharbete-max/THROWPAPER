@@ -1636,7 +1636,7 @@ export const nbNO: Record<MessageKey, string> = {
   'scan.edit': 'Rediger tekst eller sverte',
   'scan.filter.open': 'Filtre',
   'scan.filter.legend': 'Filter for side {n}',
-  'scan.filter.original': 'Original',
+  'scan.filter.original': 'Originalbilde',
   'scan.filter.enhanced': 'Forbedret farge',
   'scan.filter.grey': 'Grått',
   'scan.filter.bw': 'Svart-hvitt',

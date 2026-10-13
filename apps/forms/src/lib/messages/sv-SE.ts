@@ -1644,7 +1644,7 @@ export const svSE: Record<MessageKey, string> = {
   'scan.edit': 'Redigera text eller maskera',
   'scan.filter.open': 'Filter',
   'scan.filter.legend': 'Filter för sida {n}',
-  'scan.filter.original': 'Original',
+  'scan.filter.original': 'Originalfoto',
   'scan.filter.enhanced': 'Förbättrad färg',
   'scan.filter.grey': 'Grått',
   'scan.filter.bw': 'Svartvitt',

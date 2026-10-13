@@ -1685,7 +1685,7 @@ export const frFR: Record<MessageKey, string> = {
   'scan.edit': 'Modifier le texte ou caviarder',
   'scan.filter.open': 'Filtres',
   'scan.filter.legend': 'Filtre de la page {n}',
-  'scan.filter.original': 'Original',
+  'scan.filter.original': 'Photo d’origine',
   'scan.filter.enhanced': 'Couleurs améliorées',
   'scan.filter.grey': 'Gris',
   'scan.filter.bw': 'Noir et blanc',

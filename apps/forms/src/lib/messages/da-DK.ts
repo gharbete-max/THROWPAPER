@@ -1640,7 +1640,7 @@ export const daDK: Record<MessageKey, string> = {
   'scan.edit': 'Redigér tekst eller overstreg',
   'scan.filter.open': 'Filtre',
   'scan.filter.legend': 'Filter for side {n}',
-  'scan.filter.original': 'Original',
+  'scan.filter.original': 'Originalfoto',
   'scan.filter.enhanced': 'Forbedret farve',
   'scan.filter.grey': 'Gråt',
   'scan.filter.bw': 'Sort-hvidt',

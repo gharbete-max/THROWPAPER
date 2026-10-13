@@ -1700,7 +1700,7 @@ export const deDE: Record<MessageKey, string> = {
   'scan.edit': 'Text bearbeiten oder schwärzen',
   'scan.filter.open': 'Filter',
   'scan.filter.legend': 'Filter für Seite {n}',
-  'scan.filter.original': 'Original',
+  'scan.filter.original': 'Originalfoto',
   'scan.filter.enhanced': 'Farbe verbessert',
   'scan.filter.grey': 'Grau',
   'scan.filter.bw': 'Schwarzweiß',

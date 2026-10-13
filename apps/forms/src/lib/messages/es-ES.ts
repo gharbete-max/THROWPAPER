@@ -1664,7 +1664,7 @@ export const esES: Record<MessageKey, string> = {
   'scan.edit': 'Editar texto o tachar',
   'scan.filter.open': 'Filtros',
   'scan.filter.legend': 'Filtro de la página {n}',
-  'scan.filter.original': 'Original',
+  'scan.filter.original': 'Foto original',
   'scan.filter.enhanced': 'Color mejorado',
   'scan.filter.grey': 'Gris',
   'scan.filter.bw': 'Blanco y negro',
