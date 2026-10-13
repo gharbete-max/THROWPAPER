@@ -1776,6 +1776,36 @@ export const enGB = {
   'batch.previewTitle': 'Preview of the PDF for {name}',
   'batch.toConfirm': 'Continue to confirm',
   'batch.confirm.heading': 'plural:one Send {count} document? | other Send {count} documents?',
+  'send.tab.campaign': 'An email to a list',
+  'send.state.skipped': 'Not sent: on the suppression list',
+  'campaign.step.list': 'List',
+  'campaign.step.write': 'Write',
+  'campaign.step.preview': 'Preview',
+  'campaign.step.confirm': 'Confirm',
+  'campaign.list.intro':
+    'Paste a list or choose a CSV file. Up to {count} people at once. Each row gets one plain-text email.',
+  'campaign.cap': 'A campaign goes to at most {count} people. Split the list.',
+  'campaign.audience':
+    'plural:one {count} person will get this email | other {count} people will get this email',
+  'campaign.body': 'Message',
+  'campaign.fieldsHint':
+    'Fields you can use in the subject, message and footer: {fields}. After a bar you can give a fallback for rows where the list has nothing, like {example}.',
+  'campaign.footer': 'Footer (wording you provide)',
+  'campaign.footerHint':
+    'You write this: who is sending and from where, why this person is getting the email, and how they stop getting it. Put {link} where each person’s unsubscribe link goes. Loppa adds no wording of its own.',
+  'campaign.noTracking': 'Plain text only. Nothing in the email tracks opens or clicks.',
+  'campaign.problem.footerMissing': 'Write the footer. A campaign is not sent without one.',
+  'campaign.problem.footerNoLink':
+    'The footer must contain {link}, where each person’s unsubscribe link goes.',
+  'campaign.problem.unknownField': 'The text uses a field that does not exist. Fields: {fields}',
+  'campaign.previewLink': '[this person’s own unsubscribe link]',
+  'campaign.previewOf': 'The email for {name}',
+  'campaign.testToMe': 'Send me a test',
+  'campaign.testQueued': 'A test was queued to {email}. It is marked as a test.',
+  'campaign.confirm.heading': 'plural:one Send to {count} person? | other Send to {count} people?',
+  'campaign.leftOut':
+    'plural:one {count} address is left out because it has unsubscribed or bounced. | other {count} addresses are left out because they have unsubscribed or bounced.',
+  'campaign.leftOut.done': 'Left out (unsubscribed or bounced): {list}',
 } as const;
 
 /**

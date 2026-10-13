@@ -107,7 +107,9 @@ export function Delivery({ recipients }: { recipients: readonly Recipient[] }) {
                   ? ('send.state.queued' as const)
                   : seen.state === 'failed'
                     ? ('send.state.failed' as const)
-                    : sentKey(seen.provider);
+                    : seen.state === 'skipped'
+                      ? ('send.state.skipped' as const)
+                      : sentKey(seen.provider);
               return (
                 <tr key={recipient.id} data-state={seen?.state ?? 'queued'}>
                   <td>{recipient.to}</td>

@@ -28,6 +28,7 @@ import type {
   LoginTokenRecord,
   MessageRecord,
   SendingDomainRecord,
+  CampaignSuppressionRecord,
   SigningRequestRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
@@ -62,6 +63,7 @@ export interface MemoryState {
   builderSessions: BuilderSessionRecord[];
   builderAliases: (BuilderAliasRecord & { key: string })[];
   sendingDomains: SendingDomainRecord[];
+  campaignSuppressions: CampaignSuppressionRecord[];
   signingRequests: SigningRequestRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
@@ -127,6 +129,7 @@ export function createMemoryRepositories(
     builderSessions: seed.builderSessions ?? [],
     builderAliases: seed.builderAliases ?? [],
     sendingDomains: seed.sendingDomains ?? [],
+    campaignSuppressions: seed.campaignSuppressions ?? [],
     signingRequests: seed.signingRequests ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
@@ -1038,6 +1041,36 @@ export function createMemoryRepositories(
         const updated: SendingDomainRecord = { ...existing, ...input };
         state.sendingDomains[index] = updated;
         return { ...updated };
+      },
+    },
+
+    campaignSuppressions: {
+      list: async (organisationId) =>
+        state.campaignSuppressions
+          .filter((s) => s.organisationId === organisationId)
+          .map((s) => ({ ...s })),
+      among: async (organisationId, emails) => {
+        const wanted = new Set(emails.map((e) => e.trim().toLowerCase()));
+        return state.campaignSuppressions
+          .filter((s) => s.organisationId === organisationId && wanted.has(s.email))
+          .map((s) => s.email);
+      },
+      add: async (organisationId, email, reason) => {
+        const address = email.trim().toLowerCase();
+        const found = state.campaignSuppressions.find(
+          (s) => s.organisationId === organisationId && s.email === address,
+        );
+        if (found) return { ...found };
+        const record = { organisationId, email: address, reason, createdAt: clock() };
+        state.campaignSuppressions.push(record);
+        return { ...record };
+      },
+      remove: async (organisationId, email) => {
+        const before = state.campaignSuppressions.length;
+        state.campaignSuppressions = state.campaignSuppressions.filter(
+          (s) => !(s.organisationId === organisationId && s.email === email.trim().toLowerCase()),
+        );
+        return state.campaignSuppressions.length < before;
       },
     },
 

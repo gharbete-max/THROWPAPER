@@ -1790,4 +1790,35 @@ export const esES: Record<MessageKey, string> = {
   'batch.toConfirm': 'Continuar a la confirmación',
   'batch.confirm.heading':
     'plural:one ¿Enviar {count} documento? | other ¿Enviar {count} documentos?',
+  'send.tab.campaign': 'Un correo a una lista',
+  'send.state.skipped': 'No enviado: está en la lista de supresión',
+  'campaign.step.list': 'Lista',
+  'campaign.step.write': 'Redactar',
+  'campaign.step.preview': 'Vista previa',
+  'campaign.step.confirm': 'Confirmar',
+  'campaign.list.intro':
+    'Pega una lista o elige un archivo CSV. Hasta {count} personas a la vez. Cada fila recibe un correo en texto plano.',
+  'campaign.cap': 'Una campaña va a {count} personas como máximo. Divide la lista.',
+  'campaign.audience':
+    'plural:one {count} persona recibirá este correo | other {count} personas recibirán este correo',
+  'campaign.body': 'Mensaje',
+  'campaign.fieldsHint':
+    'Campos que puedes usar en el asunto, el mensaje y el pie: {fields}. Tras una barra vertical puedes dar un valor de reserva para las filas en que la lista no tenga nada, por ejemplo {example}.',
+  'campaign.footer': 'Pie (texto que tú proporcionas)',
+  'campaign.footerHint':
+    'Lo escribes tú: quién envía y desde dónde, por qué la persona recibe el correo y cómo dejar de recibirlo. Pon {link} donde deba ir el enlace de baja de cada persona. Loppa no añade ningún texto propio.',
+  'campaign.noTracking': 'Solo texto plano. Nada en el correo rastrea aperturas ni clics.',
+  'campaign.problem.footerMissing': 'Escribe el pie. Una campaña no se envía sin él.',
+  'campaign.problem.footerNoLink':
+    'El pie debe contener {link}, donde va el enlace de baja de cada persona.',
+  'campaign.problem.unknownField': 'El texto usa un campo que no existe. Campos: {fields}',
+  'campaign.previewLink': '[enlace de baja propio de esta persona]',
+  'campaign.previewOf': 'El correo para {name}',
+  'campaign.testToMe': 'Enviarme una prueba',
+  'campaign.testQueued': 'Se puso en cola una prueba para {email}. Está marcada como prueba.',
+  'campaign.confirm.heading':
+    'plural:one ¿Enviar a {count} persona? | other ¿Enviar a {count} personas?',
+  'campaign.leftOut':
+    'plural:one Se omite {count} dirección porque se ha dado de baja o ha rebotado. | other Se omiten {count} direcciones porque se han dado de baja o han rebotado.',
+  'campaign.leftOut.done': 'Omitidas (de baja o rebotadas): {list}',
 };

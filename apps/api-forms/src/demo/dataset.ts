@@ -683,6 +683,15 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     refreshTokens: [],
     jobs: [],
     sendingDomains: [],
+    // One address that has asked not to get campaigns, so a demo shows an audience being cut.
+    campaignSuppressions: [
+      {
+        organisationId,
+        email: 'avanmald@example.com',
+        reason: 'unsubscribed',
+        createdAt: new Date(),
+      },
+    ],
     signingRequests: [],
     messages: [],
     brandKits: [

@@ -1811,4 +1811,38 @@ export const frFR: Record<MessageKey, string> = {
   'batch.toConfirm': 'Passer à la confirmation',
   'batch.confirm.heading':
     'plural:one Envoyer {count} document ? | other Envoyer {count} documents ?',
+  'send.tab.campaign': 'Un e-mail à une liste',
+  'send.state.skipped': 'Non envoyé : figure sur la liste de suppression',
+  'campaign.step.list': 'Liste',
+  'campaign.step.write': 'Rédaction',
+  'campaign.step.preview': 'Aperçu',
+  'campaign.step.confirm': 'Confirmation',
+  'campaign.list.intro':
+    'Collez une liste ou choisissez un fichier CSV. {count} personnes au plus à la fois. Chaque ligne reçoit un e-mail en texte brut.',
+  'campaign.cap': 'Une campagne va à {count} personnes au plus. Scindez la liste.',
+  'campaign.audience':
+    'plural:one {count} personne recevra cet e-mail | other {count} personnes recevront cet e-mail',
+  'campaign.body': 'Message',
+  'campaign.fieldsHint':
+    'Champs utilisables dans l’objet, le message et le pied de page : {fields}. Après une barre verticale, vous pouvez donner une valeur de repli pour les lignes où la liste est vide, par exemple {example}.',
+  'campaign.footer': 'Pied de page (texte que vous fournissez)',
+  'campaign.footerHint':
+    'C’est à vous de l’écrire : qui envoie et d’où, pourquoi cette personne reçoit l’e-mail et comment ne plus le recevoir. Placez {link} là où doit figurer le lien de désabonnement de chacun. Loppa n’ajoute aucun texte de son cru.',
+  'campaign.noTracking':
+    'Texte brut uniquement. Rien dans l’e-mail ne suit les ouvertures ni les clics.',
+  'campaign.problem.footerMissing':
+    'Rédigez le pied de page. Une campagne n’est pas envoyée sans lui.',
+  'campaign.problem.footerNoLink':
+    'Le pied de page doit contenir {link}, là où figure le lien de désabonnement de chacun.',
+  'campaign.problem.unknownField': 'Le texte utilise un champ qui n’existe pas. Champs : {fields}',
+  'campaign.previewLink': '[lien de désabonnement propre à cette personne]',
+  'campaign.previewOf': 'L’e-mail pour {name}',
+  'campaign.testToMe': 'M’envoyer un test',
+  'campaign.testQueued':
+    'Un test a été mis en file d’attente pour {email}. Il est signalé comme test.',
+  'campaign.confirm.heading':
+    'plural:one Envoyer à {count} personne ? | other Envoyer à {count} personnes ?',
+  'campaign.leftOut':
+    'plural:one {count} adresse est écartée car elle s’est désabonnée ou a rebondi. | other {count} adresses sont écartées car elles se sont désabonnées ou ont rebondi.',
+  'campaign.leftOut.done': 'Écartées (désabonnées ou rebondies) : {list}',
 };

@@ -1762,4 +1762,33 @@ export const jaJP: Record<MessageKey, string> = {
   'batch.previewTitle': '{name}宛ての PDF のプレビュー',
   'batch.toConfirm': '確認に進む',
   'batch.confirm.heading': 'plural:other {count}件の書類を送りますか？',
+  'send.tab.campaign': 'リストにメールを送る',
+  'send.state.skipped': '未送信：配信停止リストに登録済み',
+  'campaign.step.list': 'リスト',
+  'campaign.step.write': '作成',
+  'campaign.step.preview': 'プレビュー',
+  'campaign.step.confirm': '確認',
+  'campaign.list.intro':
+    'リストを貼り付けるか、CSVファイルを選んでください。1回に最大{count}人です。各行に1通ずつ、テキスト形式のメールが届きます。',
+  'campaign.cap': '1回の配信は最大{count}人です。リストを分けてください。',
+  'campaign.audience': 'plural:other {count}人がこのメールを受け取ります',
+  'campaign.body': '本文',
+  'campaign.fieldsHint':
+    '件名・本文・フッターで使える項目：{fields}。縦線の後に、リストに値がない行で使う代わりの文字を指定できます（例：{example}）。',
+  'campaign.footer': 'フッター（ご自身で用意する文言）',
+  'campaign.footerHint':
+    'ご自身で書いてください。送信者と所在、受信者がこのメールを受け取る理由、受信を止める方法です。各受信者の配信停止リンクを入れる位置に {link} を書いてください。Loppa は独自の文言を加えません。',
+  'campaign.noTracking': 'テキストのみです。メールには開封やクリックを追跡するものはありません。',
+  'campaign.problem.footerMissing': 'フッターを書いてください。フッターがないと配信できません。',
+  'campaign.problem.footerNoLink':
+    'フッターには、各受信者の配信停止リンクを入れる位置に {link} が必要です。',
+  'campaign.problem.unknownField': '存在しない項目が使われています。使える項目：{fields}',
+  'campaign.previewLink': '[この人専用の配信停止リンク]',
+  'campaign.previewOf': '{name}宛てのメール',
+  'campaign.testToMe': '自分にテスト送信',
+  'campaign.testQueued': '{email} 宛てにテストを待機に入れました。テストと表示されます。',
+  'campaign.confirm.heading': 'plural:other {count}人に送りますか？',
+  'campaign.leftOut':
+    'plural:other 配信停止またはエラー返信のため、{count}件のアドレスを除外しました。',
+  'campaign.leftOut.done': '除外（配信停止またはエラー返信）：{list}',
 };

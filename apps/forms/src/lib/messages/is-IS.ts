@@ -1775,4 +1775,35 @@ export const isIS: Record<MessageKey, string> = {
   'batch.previewTitle': 'Forskoðun PDF fyrir {name}',
   'batch.toConfirm': 'Áfram í staðfestingu',
   'batch.confirm.heading': 'plural:one Senda {count} skjal? | other Senda {count} skjöl?',
+  'send.tab.campaign': 'Tölvupóstur til lista',
+  'send.state.skipped': 'Ekki sent: er á bannlistanum',
+  'campaign.step.list': 'Listi',
+  'campaign.step.write': 'Skrifa',
+  'campaign.step.preview': 'Forskoða',
+  'campaign.step.confirm': 'Staðfesta',
+  'campaign.list.intro':
+    'Límdu inn lista eða veldu CSV-skrá. Allt að {count} manns í einu. Hver lína fær einn tölvupóst í hreinum texta.',
+  'campaign.cap': 'Herferð fer til í mesta lagi {count} manns. Skiptu listanum.',
+  'campaign.audience':
+    'plural:one {count} manneskja fær þennan tölvupóst | other {count} manns fá þennan tölvupóst',
+  'campaign.body': 'Skilaboð',
+  'campaign.fieldsHint':
+    'Reitir sem þú getur notað í efnislínu, skilaboðum og fæti: {fields}. Á eftir lóðréttu striki geturðu gefið varagildi fyrir línur þar sem listinn er tómur, til dæmis {example}.',
+  'campaign.footer': 'Fótur (orðalag sem þú gefur upp)',
+  'campaign.footerHint':
+    'Þú skrifar þetta: hver sendir og hvaðan, hvers vegna viðkomandi fær póstinn og hvernig hann hættir að fá hann. Settu {link} þar sem afskráningarhlekkur hvers og eins á að vera. Loppa bætir engum eigin texta við.',
+  'campaign.noTracking': 'Aðeins hreinn texti. Ekkert í tölvupóstinum rekur opnanir eða smelli.',
+  'campaign.problem.footerMissing': 'Skrifaðu fótinn. Herferð er ekki send án hans.',
+  'campaign.problem.footerNoLink':
+    'Fóturinn verður að innihalda {link}, þar sem afskráningarhlekkur hvers og eins á að vera.',
+  'campaign.problem.unknownField': 'Textinn notar reit sem er ekki til. Reitir: {fields}',
+  'campaign.previewLink': '[eigin afskráningarhlekkur viðkomandi]',
+  'campaign.previewOf': 'Tölvupósturinn til {name}',
+  'campaign.testToMe': 'Senda mér prufu',
+  'campaign.testQueued': 'Prufa var sett í biðröð til {email}. Hún er merkt sem prufa.',
+  'campaign.confirm.heading':
+    'plural:one Senda til {count} manneskju? | other Senda til {count} manns?',
+  'campaign.leftOut':
+    'plural:one {count} netfangi er sleppt því það hefur afskráð sig eða skilað sér til baka. | other {count} netföngum er sleppt því þau hafa afskráð sig eða skilað sér til baka.',
+  'campaign.leftOut.done': 'Sleppt (afskráð eða skilað sér til baka): {list}',
 };

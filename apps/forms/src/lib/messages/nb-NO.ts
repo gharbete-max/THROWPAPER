@@ -1760,4 +1760,35 @@ export const nbNO: Record<MessageKey, string> = {
   'batch.previewTitle': 'Forhåndsvisning av PDF-en til {name}',
   'batch.toConfirm': 'Fortsett til bekreftelse',
   'batch.confirm.heading': 'plural:one Send {count} dokument? | other Send {count} dokumenter?',
+  'send.tab.campaign': 'En e-post til en liste',
+  'send.state.skipped': 'Ikke sendt: står på sperrelisten',
+  'campaign.step.list': 'Liste',
+  'campaign.step.write': 'Skriv',
+  'campaign.step.preview': 'Forhåndsvis',
+  'campaign.step.confirm': 'Bekreft',
+  'campaign.list.intro':
+    'Lim inn en liste eller velg en CSV-fil. Opptil {count} personer om gangen. Hver rad får én e-post i ren tekst.',
+  'campaign.cap': 'En kampanje går til maks {count} personer. Del opp listen.',
+  'campaign.audience':
+    'plural:one {count} person får denne e-posten | other {count} personer får denne e-posten',
+  'campaign.body': 'Melding',
+  'campaign.fieldsHint':
+    'Felt du kan bruke i emne, melding og bunntekst: {fields}. Etter en loddrett strek kan du oppgi en reserve for rader der listen mangler verdi, for eksempel {example}.',
+  'campaign.footer': 'Bunntekst (tekst du skriver selv)',
+  'campaign.footerHint':
+    'Dette skriver du selv: hvem som sender og hvorfra, hvorfor personen får e-posten, og hvordan man slutter å få den. Skriv {link} der hver persons avmeldingslenke skal stå. Loppa legger ikke til noen egen tekst.',
+  'campaign.noTracking': 'Kun ren tekst. Ingenting i e-posten sporer åpninger eller klikk.',
+  'campaign.problem.footerMissing': 'Skriv bunnteksten. En kampanje sendes ikke uten.',
+  'campaign.problem.footerNoLink':
+    'Bunnteksten må inneholde {link}, der hver persons avmeldingslenke skal stå.',
+  'campaign.problem.unknownField': 'Teksten bruker et felt som ikke finnes. Felt: {fields}',
+  'campaign.previewLink': '[personens egen avmeldingslenke]',
+  'campaign.previewOf': 'E-posten til {name}',
+  'campaign.testToMe': 'Send meg en test',
+  'campaign.testQueued': 'En test er satt i kø til {email}. Den er merket som test.',
+  'campaign.confirm.heading':
+    'plural:one Send til {count} person? | other Send til {count} personer?',
+  'campaign.leftOut':
+    'plural:one {count} adresse utelates fordi den har meldt seg av eller returnert. | other {count} adresser utelates fordi de har meldt seg av eller returnert.',
+  'campaign.leftOut.done': 'Utelatt (avmeldt eller returnert): {list}',
 };

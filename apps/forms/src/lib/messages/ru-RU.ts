@@ -1805,4 +1805,36 @@ export const ruRU: Record<MessageKey, string> = {
   'batch.toConfirm': 'Перейти к подтверждению',
   'batch.confirm.heading':
     'plural:one Отправить {count} документ? | few Отправить {count} документа? | many Отправить {count} документов?',
+  'send.tab.campaign': 'Письмо по списку',
+  'send.state.skipped': 'Не отправлено: адрес в списке исключений',
+  'campaign.step.list': 'Список',
+  'campaign.step.write': 'Текст',
+  'campaign.step.preview': 'Просмотр',
+  'campaign.step.confirm': 'Подтверждение',
+  'campaign.list.intro':
+    'Вставьте список или выберите файл CSV. Не более {count} человек за раз. Каждая строка получает одно письмо в виде обычного текста.',
+  'campaign.cap': 'Рассылка идёт не более чем {count} людям. Разделите список.',
+  'campaign.audience':
+    'plural:one {count} человек получит это письмо | few {count} человека получат это письмо | many {count} человек получат это письмо',
+  'campaign.body': 'Сообщение',
+  'campaign.fieldsHint':
+    'Поля для темы, сообщения и подвала: {fields}. После вертикальной черты можно указать запасное значение для строк, где в списке пусто, например {example}.',
+  'campaign.footer': 'Подвал (текст, который вы пишете сами)',
+  'campaign.footerHint':
+    'Это пишете вы: кто отправляет и откуда, почему человек получает письмо и как перестать его получать. Поставьте {link} там, где должна быть ссылка отписки каждого. Loppa не добавляет своего текста.',
+  'campaign.noTracking':
+    'Только обычный текст. В письме нет ничего, что отслеживает открытия или клики.',
+  'campaign.problem.footerMissing': 'Напишите подвал. Без него рассылка не отправляется.',
+  'campaign.problem.footerNoLink':
+    'Подвал должен содержать {link} — там будет ссылка отписки каждого.',
+  'campaign.problem.unknownField': 'В тексте есть несуществующее поле. Поля: {fields}',
+  'campaign.previewLink': '[личная ссылка отписки этого человека]',
+  'campaign.previewOf': 'Письмо для {name}',
+  'campaign.testToMe': 'Отправить тест мне',
+  'campaign.testQueued': 'Тест поставлен в очередь на {email}. Он помечен как тест.',
+  'campaign.confirm.heading':
+    'plural:one Отправить {count} человеку? | few Отправить {count} людям? | many Отправить {count} людям?',
+  'campaign.leftOut':
+    'plural:one {count} адрес исключён, потому что он отписался или письма возвращаются. | few {count} адреса исключены, потому что они отписались или письма возвращаются. | many {count} адресов исключено, потому что они отписались или письма возвращаются.',
+  'campaign.leftOut.done': 'Исключены (отписались или письма возвращаются): {list}',
 };

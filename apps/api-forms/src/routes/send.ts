@@ -250,12 +250,14 @@ export function registerSendRoutes(
       const items = [];
       for (const id of ids) {
         const job = await deps.repos.jobs.findById(request.auth!.organisation.id, id);
-        if (!job || job.kind !== 'send.document') continue;
+        if (!job || (job.kind !== 'send.document' && job.kind !== 'send.campaign')) continue;
         items.push({
           id,
           state:
             job.status === 'done'
-              ? ('sent' as const)
+              ? job.result?.['skipped']
+                ? ('skipped' as const)
+                : ('sent' as const)
               : job.status === 'failed'
                 ? ('failed' as const)
                 : ('queued' as const),

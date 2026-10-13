@@ -16,6 +16,8 @@ export const SEND_LIMITS = {
   batch: 200,
   /** People one document goes to in one press. */
   recipients: 20,
+  /** People one campaign email goes to in one press (`campaign.ts`). */
+  campaign: 500,
   /** One attachment, as brought in. */
   attachmentBytes: 25 * 1024 * 1024,
 } as const;
@@ -95,7 +97,8 @@ export const SendQueued = z.object({
 });
 export type SendQueued = z.infer<typeof SendQueued>;
 
-export const SEND_STATES = ['queued', 'sent', 'failed'] as const;
+/** `skipped`: a campaign message not sent because the address is on the suppression list. */
+export const SEND_STATES = ['queued', 'sent', 'failed', 'skipped'] as const;
 export const SendStatusResponse = z.object({
   items: z.array(
     z.object({

@@ -6,13 +6,9 @@ import {
   SEND_CURRENCIES,
   SEND_LIMITS,
   checkBatch,
-  guessColumns,
-  parseTable,
-  rowsFrom,
   type BatchLayout,
   type BatchRow,
   type BatchTemplate,
-  type ColumnMap,
   type RowProblem,
 } from '@tp/shared/api';
 import { client } from '../lib/api.js';
@@ -23,10 +19,10 @@ import { sortedRows, type SortColumn } from '../lib/send-rows.js';
 import { Icon } from '../components/Icon.js';
 import { openPdf, type PaperPdf } from './builder/paper/extract.js';
 import { Delivery, ModeNote, useSendMode } from './send-parts.js';
+import { ListStep, useList } from './send-list.js';
 
 type Step = 'list' | 'layout' | 'preview' | 'confirm' | 'done';
 const STEPS: readonly Step[] = ['list', 'layout', 'preview', 'confirm'];
-const COLUMNS = ['name', 'email', 'amount', 'reference'] as const;
 
 /**
  * One personalised PDF per row of a list — a month's invoices, say. Steps: the list (pasted, or a
@@ -40,12 +36,10 @@ export function SendBatch() {
   const toast = useToast();
   const { locale, user } = useSession();
   const mode = useSendMode();
-  const picker = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<Step>('list');
-  const [text, setText] = useState('');
-  const [header, setHeader] = useState(true);
-  const [map, setMap] = useState<ColumnMap>({ name: 0, email: 1, amount: 2, reference: 3 });
+  const list = useList();
+  const { rows } = list;
   const [template, setTemplate] = useState<BatchTemplate>({
     layout: 'invoice',
     locale: LOCALE_CODES.includes(locale) ? locale : 'en-GB',
@@ -60,9 +54,6 @@ export function SendBatch() {
   const [busy, setBusy] = useState(false);
   const [queued, setQueued] = useState<{ id: string; to: string }[]>([]);
 
-  const cells = useMemo(() => parseTable(text), [text]);
-  const columnNames = header ? (cells[0] ?? []) : (cells[0] ?? []).map((_, i) => String(i + 1));
-  const rows = useMemo(() => rowsFrom(header ? cells.slice(1) : cells, map), [cells, header, map]);
   const problems = useMemo(
     () => checkBatch(template, subject, message, rows),
     [template, subject, message, rows],
@@ -77,13 +68,6 @@ export function SendBatch() {
   }
   const edit = (patch: Partial<BatchTemplate>) =>
     setTemplate((current) => ({ ...current, ...patch }));
-
-  async function chooseFile(file: File | undefined) {
-    if (!file) return;
-    const content = await file.text();
-    setText(content);
-    setMap(guessColumns(header ? (parseTable(content)[0] ?? []) : []));
-  }
 
   function problemText(problem: RowProblem): string {
     if (problem.row < 0) {
@@ -169,72 +153,12 @@ export function SendBatch() {
 
       {step === 'list' && (
         <div className="stack">
-          <p className="muted small">{t('batch.list.intro', { count: SEND_LIMITS.batch })}</p>
-          <div className="row">
-            <input
-              ref={picker}
-              type="file"
-              accept=".csv,.tsv,.txt,text/csv,text/plain"
-              hidden
-              data-testid="batch-file"
-              onChange={(event) => {
-                void chooseFile(event.target.files?.[0]);
-                event.target.value = '';
-              }}
-            />
-            <button type="button" className="button" onClick={() => picker.current?.click()}>
-              <Icon name="upload" className="icon--lead" />
-              {t('batch.list.file')}
-            </button>
-          </div>
-          <label className="field">
-            <span>{t('batch.list.paste')}</span>
-            <textarea
-              rows={8}
-              value={text}
-              data-testid="batch-text"
-              onChange={(event) => {
-                setText(event.target.value);
-                setMap(guessColumns(header ? (parseTable(event.target.value)[0] ?? []) : []));
-              }}
-            />
-          </label>
-          <label className="row">
-            <input
-              type="checkbox"
-              checked={header}
-              onChange={(event) => setHeader(event.target.checked)}
-            />
-            <span>{t('batch.list.header')}</span>
-          </label>
-          {cells.length > 0 && (
-            <div className="row">
-              {COLUMNS.map((field) => (
-                <label key={field} className="field">
-                  <span>{t(`batch.map.${field}`)}</span>
-                  <select
-                    value={map[field]}
-                    onChange={(event) => setMap({ ...map, [field]: Number(event.target.value) })}
-                  >
-                    <option value={-1}>{t('batch.map.none')}</option>
-                    {columnNames.map((name, index) => (
-                      <option key={index} value={index}>
-                        {name || t('batch.column', { n: index + 1 })}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ))}
-            </div>
-          )}
-          <p className="small" aria-live="polite" data-testid="batch-count">
-            {t('batch.rows', { count: rows.length })}
-          </p>
-          {tooMany && (
-            <p className="status-down small" role="alert">
-              {t('batch.cap', { count: SEND_LIMITS.batch })}
-            </p>
-          )}
+          <ListStep
+            list={list}
+            intro={t('batch.list.intro', { count: SEND_LIMITS.batch })}
+            cap={SEND_LIMITS.batch}
+            capText={t('batch.cap', { count: SEND_LIMITS.batch })}
+          />
           {nav(null, 'layout', t('batch.next'), rows.length > 0 && !tooMany)}
         </div>
       )}
@@ -412,7 +336,7 @@ export function SendBatch() {
   );
 }
 
-type BatchColumn = (typeof COLUMNS)[number];
+type BatchColumn = 'name' | 'email' | 'amount' | 'reference';
 
 /** The recipients, sortable, with any one's PDF to look at. Nothing here is queued. */
 function Preview({
