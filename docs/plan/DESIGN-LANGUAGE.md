@@ -41,7 +41,9 @@ never truncated, in any language (`CAVEATS.md` #36).
 ## Motion
 
 Motion explains where something went; it never decorates. One exception, the owner's: the room's
-catchers float (ADR 0022). The float can be paused, and it stands still under reduced motion.
+catchers float (ADR 0022). The float can be paused, and it stands still under reduced motion. The
+room's own colours (its dark grey and the stronger gold, platinum and bronze beneath the catchers)
+are `DESIGN.md`'s, in the room only; nothing in the builder uses them.
 
 | What | Duration | Curve |
 | --- | --- | --- |

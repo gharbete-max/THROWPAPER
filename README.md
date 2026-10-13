@@ -11,12 +11,26 @@
 
 ---
 
-**Loppa** is forms and documents for organisations that have to get it right. You build a form (or
-turn an existing paper form into one), people fill it in, and each person gets the **finished
-document** — a PDF of exactly what they answered — to download, keep and email. Registrations,
-admission cards and check-in at the door, invoices, and sending documents for signature are built
-on the same base. It runs in a browser against a server, or entirely on one computer as a desktop
-app.
+**Loppa** is a lightweight helper for office documents: the most-used basics, not Acrobat. It is
+built as a room of three independent tools; only the first, **Documents**, is built. Spreadsheets
+and Presentation & planning are floating placeholders. Documents has four parts and a centre:
+
+- **Forms** — build a form one question at a time (the guided builder) or by hand, fill it in or
+  fill a PDF's own fields, and keep it as a PDF without publishing anything.
+- **Scan** — photos, phone scans, PDFs and Word files (a rough conversion) become pages you put
+  together, take out, turn and reorder; add, cover, replace or truly redact a PDF's text; read a
+  supplier invoice on the device.
+- **Sign** — typed or drawn signatures on a PDF, sealed with an audit page.
+- **Send** — messages wait in _To send_ and open as drafts in your own mail program; SMTP and a
+  test-mode outbox are under Advanced. Sending one document to several people, and a personalised
+  PDF each from a list, are in progress and not yet on `main`.
+- **Summary and translation** (the centre) — a local, offline model on your own computer, desktop
+  only, from a model file that is never in the installer: you open it from disk (the download
+  release has not been cut yet).
+
+Collecting answers from other people is optional ("Share to collect"). It runs in a browser against
+a server, or entirely on one computer as a desktop app. What is built and what is not:
+`docs/HANDOVER.md`.
 
 ## Download
 
@@ -67,6 +81,7 @@ The organisation downloads the same document from the response's row.
 | Email out                            | SMTP or Amazon SES    | a test-mode outbox of `.eml` files (default), your SMTP, or your own Outlook / Apple Mail                                                    |
 | Signing (typed or drawn, sealed PDF) | Loppa Sign service    | yes, offline, on this computer                                                                                                               |
 | National e-ID (BankID and similar)   | not connected yet     | not connected yet                                                                                                                            |
+| Summary and translation              | not offered           | yes, offline, with a model file (about 2.5 GB, never in the installer) that you open from disk; the download release is not cut yet          |
 | Scan with a phone                    | yes                   | yes, over your local network while a scan is open                                                                                            |
 
 **e-ID:** the identity-provider interface exists (`packages/signing/src/providers.ts`), but no
@@ -111,8 +126,10 @@ The respondent's document link is a one-day credential for that submission only,
 
 ## Products in this repository
 
-Forms, **Mailer** (email campaigns) and **Sign** each run on their own and talk only through the
-HTTP contract in `docs/CONTRACT.md`, never a shared database.
+Forms and **Sign** each run on their own and talk only through the HTTP contract in
+`docs/CONTRACT.md`, never a shared database. **Mailer** (email campaigns) is a stub: the mail work
+is built inside Documents' Send part (`docs/HANDOVER.md`). The earlier events, check-in, invoices
+and ledger stay in place, out of the room, until the catchers they belong to exist.
 
 ## Layout
 
@@ -136,13 +153,14 @@ docs/brand        The Loppa brand bundle: tokens, motion CSS, marks, lockups, an
 ## Read in this order
 
 0. `CLAUDE.md` — the short, always-loaded rules.
-1. `docs/START-HERE.md` — the plan. The specs are a destination; this is what gets built.
-2. `docs/HANDOVER.md` — current state and where to pick up.
+1. `docs/VISION.md` — what Loppa is, in the owner's words. It wins over older documents.
+2. `docs/HANDOVER.md` — current state and where to pick up; `docs/plan/DOCUMENTS.md` is the plan.
 3. `LAUNCH-CHECKLIST.md` — everything still temporary, unconfigured or waiting on a decision.
 4. `docs/CONTRACT.md` — the API between the products. Frozen before either side writes code.
 5. `docs/adr/` — the decisions with long-term consequences, one file each.
 6. `docs/SPEC-shared.md`, `docs/SPEC-forms.md`, `docs/SPEC-mailer.md`, `docs/ROADMAP.md` —
-   reference, consulted when a choice is hard to reverse.
+   reference from the earlier product, consulted when a choice is hard to reverse.
+   `docs/START-HERE.md` is retired history.
 
 ## Rules that apply to every change
 

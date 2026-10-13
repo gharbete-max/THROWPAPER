@@ -1,19 +1,24 @@
 # CLAUDE.md
 
-**Read `docs/VISION.md` first.** It is the owner's vision of what Loppa is (2026-10-07): a room of
-three independent catchers — Documents, Spreadsheets, Presentation & planning — with Documents built
-first. Where this file's product framing below disagrees with it, the vision wins until this file
-is brought in line.
+**Read `docs/VISION.md` first.** Loppa is a lightweight helper in the office, not Acrobat: a room of
+three independent catchers (Documents, Spreadsheets, Presentation & planning) with **Documents**
+built and finished first. Its four parts are **Forms, Scan, Sign and Send**, around a **summary and
+translation centre** that runs a local model on the person's own computer (ADR 0023). Spreadsheets
+and Presentation & planning are floating placeholders; nothing more is built for them yet. Where an
+older document disagrees with the vision, the vision wins.
 
 **Then `docs/HANDOVER.md`** — the current state, the order of work and the owner's decisions of
-2026-10-12. Monorepo whose code is three apps plus the packages they share (Forms, Sign, and a
-Mailer stub), which together serve the Documents catcher. Read `docs/CONTRACT.md` next, then the
-spec for whichever app you are working on. Do not paste specs into this file.
+2026-10-12. The code is three apps plus the packages they share (Forms, Sign, and a Mailer stub),
+which together serve the Documents catcher. Read `docs/CONTRACT.md` next, then the spec for
+whichever app you are working on. Do not paste specs into this file.
 
 ```
 apps/forms      Product A — the Documents catcher's screens: forms, scan, sign, send, invoices.
                 Also the room (/room), where a signed-in person arrives: three catchers,
-                Documents opening onto its four parts (ADR 0022); /scan arranges pages of PDFs.
+                Documents opening onto its four parts (ADR 0022). /scan arranges pages (PDFs,
+                photos, camera and phone scans, a rough Word to PDF), adds, covers, replaces and
+                truly redacts a PDF's text, and opens the invoice scan; /forms/:id/fill and
+                /forms/pdf fill a form or a PDF's own fields; /summary is the centre (desktop).
                 Events, the door and the ledger
                 are earlier work that stays in place, out of the room, until the catchers they
                 belong to (Presentation & planning; Spreadsheets) exist — never deleted unasked
@@ -22,18 +27,23 @@ apps/api-forms  Product A backend. A finished PDF of every submission (responden
                 token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
                 keeps each author's guided-builder conversation (builder_sessions) and the
                 organisation's learned phrases (builder_aliases)
-                Page work on PDFs: POST /v1/pdf/arrange puts files together, takes pages out,
-                turns and reorders them, keeping nothing (`src/pdf/arrange.ts`, under the PDF guard)
+                PDF routes, keeping nothing (`src/pdf/`, `src/routes/pdf*.ts`; the ones that take a
+                PDF pass the PDF guard): /v1/pdf/arrange (files together, pages out, turned,
+                reordered, photos), /edit and /redact (text), /word (rough Word to PDF), /fields
+                and /fill (a PDF's own fields); and POST /v1/forms/:id/draft.pdf, a form as a PDF
+                with no submission
 apps/api-mailer Product B backend
 apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
                 by typing or drawing, or decline (en/sv). No sender screens yet
 apps/api-sign   Product C backend. Own database (append-only, hash-chained trail) on Postgres or
-                PGlite, CONTRACT §5.1–5.6 (declarations each organisation writes; identity
+                PGlite, CONTRACT §5.1–5.7, cancel included (declarations each organisation writes; identity
                 methods — none unless EID_PROVIDER is set, `console` is test-only), typed and
                 drawn signing by link, PAdES seal + audit page on completion (development
                 certificate); serves the page
 apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own
-                embedded Postgres (PGlite) and loopback port, offline first; a LAN relay for a
+                embedded Postgres (PGlite) and loopback port, offline first; runs the summary
+                model in a utility process once the person has downloaded or opened its weights
+                (`src/model/`, ADR 0023); a LAN relay for a
                 phone scan exists only while one is open (ADR 0016). Not a product; it
                 imports only @tp/api-forms/desktop and @tp/api-sign/local (docs/adr/0016). Sends
                 no mail by itself by default: messages wait in To send and open as drafts in the
@@ -64,7 +74,12 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 stage 9's comparison of a form with its document read again (@tp/shared/import);
                 free text read by rules — normalisation, word lists and built-in aliases in twelve
                 languages, the rules for learned ones, the ladder T0–T8, the committed sigmoid
-                table, and an integer logarithm and exponential (@tp/shared/interpret)
+                table, and an integer logarithm and exponential (@tp/shared/interpret); the summary
+                centre's pure parts — weights manifest, the twelve languages, the checks around the
+                model, chunking, passage quoting (@tp/shared/summary) — with the word lists that
+                make an operative text quoted rather than reworded (@tp/shared/quoted); and the rules
+                that read a supplier invoice's amount, due date, bank number and payment reference
+                with their check digits (@tp/shared/payable)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
@@ -140,7 +155,7 @@ decisions are ADRs 0017–0021, accepted on 2026-10-06. ADR 0018 supersedes only
 creates a field"; ADR 0004 still governs the editor's classic paper import (boxes drawn by hand).
 
 - **Six non-negotiables.** (1) In the builder and the import: no AI, no LLM, no ML service, no network call at runtime
-  (the local summary model lives in the Documents centre and never decides anything here, VISION §9): rules,
+  (the local summary model lives in the Documents centre, ADR 0023, and never decides anything here or runs in `packages/shared/src/{builder,interpret,import}`, VISION §9): rules,
   weights and thresholds a person can read and a test can freeze; same bytes in, same JSON out, on
   every machine. (2) The guided path is primary: a form can be built and published by clicking
   alone; free text is optional. (3) Never a dead end, never a silent guess: below threshold, ask.

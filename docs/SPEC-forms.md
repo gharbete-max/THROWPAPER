@@ -13,6 +13,14 @@ dataset `{{R}}` rows · data residency `{{DATA_REGION}}`.
 
 ## 1. Objective
 
+> **Now (2026-10-13):** Forms is one of four parts of the Documents catcher (Forms, Scan, Sign,
+> Send), in a lightweight office helper that is not Acrobat (`docs/VISION.md` §4). A form is built
+> one question at a time or by hand, and can be filled and kept as a PDF without publishing it;
+> collecting answers from others is optional. Inspections, measurements and the vertical
+> segments described below are the earlier product, not what is being built; the
+> Spreadsheets catcher is where data and reports are meant to go (VISION §5). The text below is
+> unchanged.
+
 A form builder and reporting tool that a non-technical operator runs unsupervised. Collect
 structured data, compute from it, and produce a branded report — on screen, as PDF, as
 CSV/XLSX, or delivered by email.

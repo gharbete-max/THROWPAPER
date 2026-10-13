@@ -1,7 +1,30 @@
 # Roadmap — two parallel tracks
 
-> **Superseded in part (2026-10-12).** The two tracks and the "form and email site" framing are the earlier product. `docs/VISION.md` and `docs/HANDOVER.md` win where they
-> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+> **Earlier roadmap; the live one is the Documents plan.** The two tracks (Forms, Mailer), the
+> "form and email site" framing and the events-first order below are the earlier product, parked,
+> not deleted. `docs/VISION.md` wins over this file; the order of work is in `docs/HANDOVER.md`
+> and the plan in `docs/plan/DOCUMENTS.md` §6. Nothing here is deleted without the owner's word.
+
+## The live roadmap: the Documents catcher
+
+Measured at `2669716` (`origin/main`, 2026-10-13) from `git log` and the code. The phase numbers
+are `docs/HANDOVER.md`'s "Order of work"; `docs/plan/DOCUMENTS.md` §6 numbers the same work
+differently (its phase 8 is the handover's 7).
+
+| Handover phase | State on `main` | Merged as |
+| --- | --- | --- |
+| 0 Docs aligned, `MinorAmount` moved | Built. The owner has not accepted ADR 0011 | #158 |
+| 1 Scan and page basics: arrange, photos, text tier and true redaction, Word to PDF (rough) | Built | #158, #160, #165, #162 |
+| 2 Forms: draft PDF, fill a PDF's own fields, "Share to collect" demoted, doors by URL | Built | #164 |
+| 3 Send: one document, then batch | **Not on `main`.** PR #169 is open | — |
+| 4 Invoice scan | Built | #170 |
+| 5 Sign hand-off and cancel (CONTRACT §5.7) | Built | #163 |
+| 6 Campaigns | Not started: no campaign code in `apps/api-forms` | — |
+| 7 Summary and translation: spike S1, ADR 0023, the centre | Built on `main` (#166, #168). The model release is not cut (the weights manifest says `unpublished`), so the person opens the file from disk; PR #172 is open for testing with local weights | #166, #168 |
+| DOCUMENTS.md phase 9: the Documents demo seed | Not built: `seed-demo.ts` has no PDF, Word, outbox or arranged-document content | — |
+
+The Spreadsheets and Presentation & planning catchers are placeholders and get nothing until
+Documents is finished (`docs/VISION.md` §7).
 
 
 ## What this is, before the phases

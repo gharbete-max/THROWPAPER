@@ -1,8 +1,12 @@
 # Start here
 
-> **Superseded in part (2026-10-12).** This describes the earlier v0.1 and no longer "wins over every other plan". `docs/VISION.md` and `docs/HANDOVER.md` win where they
-> disagree. Kept as history and reference; nothing here is deleted without the owner's word.
+> **Retired (superseded by `docs/VISION.md` and `docs/HANDOVER.md`).** This described the first six
+> weeks of the earlier v0.1 (events and registrations first) and no longer "wins over every other
+> plan". Read `docs/VISION.md` for what Loppa is, `docs/HANDOVER.md` for where the work stands and
+> `docs/plan/DOCUMENTS.md` for the plan. Kept as history only; nothing here is deleted without the
+> owner's word, and nothing below is a current instruction.
 
+The text below is unchanged from when it was the plan.
 
 The other documents describe a destination. This one describes the first six weeks. If the two
 ever disagree, this one wins.
