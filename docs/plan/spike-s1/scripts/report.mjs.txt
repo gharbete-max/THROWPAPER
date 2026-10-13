@@ -1,0 +1,25 @@
+import fs from "node:fs";
+const rd = (f) => (fs.existsSync(`results/${f}.jsonl`) ? fs.readFileSync(`results/${f}.jsonl`, "utf8").trim().split("\n").map(JSON.parse) : []);
+const s = (ms) => (ms / 1000).toFixed(0);
+const out = [];
+const P = (x = "") => out.push(x);
+const row = (...c) => P("| " + c.join(" | ") + " |");
+
+P("### Speed, summary of a one-page document");
+row("threads", "lang", "doc tokens", "prompt t/s", "gen t/s", "wall s", "peak RSS MB"); row("---", "---", "---", "---", "---", "---", "---");
+for (const [f, t] of [["A4-sumpage", 4], ["B8-sumpage", 8]]) for (const r of rd(f).filter((r) => r.kind === "sumpage")) row(t, r.lang, r.docTokens, r.promptTps, r.genTps, s(r.totalMs), r.peakRssMB);
+P(); P("### Boot");
+for (const f of ["A4-sumpage", "A4-trans", "A4-sumten", "B8-sumpage", "B8-form", "B8-trans", "B8-sumten"]) for (const r of rd(f).filter((r) => r.kind === "boot")) P(`- ${f}: load ${r.loadMs} ms, RSS after load ${r.rssAfterLoadMB} MB`);
+P(); P("### Long document (map-reduce)");
+row("threads", "lang", "doc tokens", "chunks", "calls", "wall s", "prompt t/s", "gen t/s", "amounts in notes", "amounts in final", "new numbers", "lang", "leak", "peak RSS"); row(...Array(14).fill("---"));
+for (const [f, t] of [["A4-sumten", 4], ["B8-sumten", 8]]) for (const r of rd(f).filter((r) => r.kind === "sumten")) row(t, r.lang, r.docTokens, r.chunkCount, r.calls, s(r.wallMs), r.promptTps, r.genTps, `${r.amountsInPartials}/${r.amountsTotal}`, `${r.amountsInFinal}/${r.amountsTotal}`, r.extraNumbers.length + r.extraNumbersPartials.length, r.detected, r.leak, r.peakRssMB);
+P(); P("### Summary quality, one page (8 threads)");
+row("lang", "detected", "leak", "key facts", "names", "new numbers", "len ratio"); row(...Array(7).fill("---"));
+for (const r of rd("B8-sumpage").filter((r) => r.kind === "sumpage")) row(r.lang, r.detected, r.leak, `${r.keysFound}/${r.keysTotal}`, `${r.namesFound}/${r.namesTotal}`, r.extraNumbers.join(",") || "-", r.lenRatio);
+P(); P("### Form summary (8 threads)");
+row("lang", "detected", "leak", "facts", "new numbers"); row(...Array(5).fill("---"));
+for (const r of rd("B8-form").filter((r) => r.kind === "form")) row(r.lang, r.detected, r.leak, `${r.keysFound}/${r.keysTotal}`, r.extraNumbers.join(",") || "-");
+P(); P("### Translation");
+row("threads", "pair", "doc tok", "gen tok", "prompt t/s", "gen t/s", "wall s", "lang ok", "leak", "numbers missing", "numbers new", "names", "len ratio"); row(...Array(13).fill("---"));
+for (const [f, t] of [["A4-trans", 4], ["B8-trans", 8]]) for (const r of rd(f).filter((r) => r.kind === "trans")) row(t, `${r.from}→${r.to}`, r.docTokens, r.genTokens, r.promptTps, r.genTps, s(r.totalMs), r.detected === r.to ? "yes" : `NO (${r.detected})`, r.leak, r.missingNumbers.join(",") || "-", r.extraNumbers.join(",") || "-", r.namesChecked, r.lenRatio);
+console.log(out.join("\n"));

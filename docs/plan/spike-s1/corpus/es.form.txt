@@ -1,0 +1,9 @@
+Solicitud de socio
+Nombre completo: Elin Ström
+Fecha de nacimiento: 1984-09-12
+Número de parcela: 27
+Número de personas en el hogar: 4
+Desea un contenedor de compost: sí
+Día de reunión preferido: martes
+Observaciones: Me gustaría una parcela cerca del grifo de agua.
+Fecha: 2026-02-03

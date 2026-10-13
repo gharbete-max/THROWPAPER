@@ -1,0 +1,6 @@
+// RSS and speed at a given context size (argv: threads ctx mmap)
+import * as K from "./lib.mjs";
+const threads = +process.argv[2], ctx = +process.argv[3], mmap = process.argv[4] === "mmap";
+const b = await K.boot({ threads, ctx, mmap });
+const r = await K.ask(b, K.SUM_SYS("en"), K.SUM_USER("en", K.page("en")));
+console.log(JSON.stringify({ threads, ctx, mmap, loadMs: b.loadMs, rssAfterLoad: b.rssAfterLoad, rssNow: K.rssMB(), peak: K.peakRssMB(), promptTps: r.promptTps, genTps: r.genTps, totalMs: r.totalMs }));

@@ -1,0 +1,111 @@
+// Original test prose, written for this spike. Facts are identical across languages (see facts.json).
+const L = Object.create(null);
+const lat = { chair: "Anders Holm", treasurer: "Karin Lindqvist", persons: ["Maja Berg","Olof Nyström","Ida Sand","Henrik Dahl","Petra Voss","Jonas Aalto","Lena Moreau","Tomas Ruiz","Elin Ström","Mikael Haugen"], formName: "Elin Ström" };
+
+L.is = { ...lat, name: "Icelandic", cur: (a) => `${a} kr.`,
+  topics: ["þak félagsheimilisins","vatnslagnirnar","moltutunnurnar","girðingin við veginn","verkfæraskúrinn","stígarnir milli reitanna","býflugnabúin","auglýsingataflan","sumarhátíðin","vetrargeymslan"],
+  title: "Garðyrkjufélagið Solbacken — Fundargerðir stjórnarfunda 2026",
+  one: `Garðyrkjufélagið Solbacken — Fréttabréf, vorið 2026
+
+Kæru félagar, vorið er komið og reitirnir 64 vakna til lífsins. Aðalfundur okkar verður haldinn 2026-04-18 klukkan 18:30 í félagsheimilinu. Formaðurinn, Anders Holm, fer yfir árið og gjaldkerinn, Karin Lindqvist, kynnir reikningana. Félagsgjaldið fyrir árið 2026 er 450 kr. og skal greiða í síðasta lagi 2026-03-31. Við bjóðum 12 nýja félaga velkomna í vor og nú er biðlisti með 9 fjölskyldum. Vatnið verður sett á 2026-05-02. Nýi verkfæraskúrinn kostar 380 kr. í efni og okkur vantar 3 sjálfboðaliða í byggingardaginn 2026-05-16. Munið að jarðgera: moltutunnurnar eru tæmdar annan hvern þriðjudag. Spurningar má senda til stjórnarinnar. Með kveðju, stjórnin.`,
+  form: `Umsókn um aðild
+Fullt nafn: Elin Ström
+Fæðingardagur: 1984-09-12
+Reitur númer: 27
+Fjöldi manns á heimilinu: 4
+Vill moltutunnu: já
+Æskilegur fundardagur: þriðjudagur
+Athugasemdir: Mig langar í reit nálægt vatnskrananum.
+Dagsetning: 2026-02-03`,
+  heading: (n) => `Fundur ${n}`,
+  P: [
+    (v) => `Fundur númer ${v.n} var haldinn ${v.date} klukkan ${v.time} í félagsheimilinu. ${v.chair} setti fundinn og ${v.members} félagar voru mættir. Dagskráin var samþykkt án breytinga og ${v.person} var valin(n) fundarritari.`,
+    (v) => `Fyrsta mál fundarins var: ${v.topic}. ${v.speakers} félagar báðu um orðið. Þeir lýstu stöðunni eins og hún er, útskýrðu hvað hafði verið gert á liðnu ári og spurðu hversu mikið verk væri eftir. Formaður tók fram að stjórnin hefði skoðað málið ${v.date2}.`,
+    (v) => `Fundurinn samþykkti að verja ${v.cur(v.amount)} í þetta mál. ${v.person} ber ábyrgð á verkinu og skilar skýrslu til stjórnar í síðasta lagi ${v.date3}. Gjaldkerinn, ${v.treasurer}, staðfesti að féð væri til á reikningnum.`,
+    (v) => `Nokkrir félagar báðu um að verkið yrði skipulagt þannig að það truflaði sem fæsta nágranna. Samþykkt var að hávaðasöm vinna mætti aðeins fara fram á virkum dögum milli 09:00 og 17:00 og að stjórnin sendi stutta tilkynningu til allra ${v.plots} reitahafa með minnst ${v.notice} daga fyrirvara.`,
+    (v) => `Verðskrá fyrir tímabilið: leiga á reit ${v.cur(v.rent)} á ári, vatn ${v.cur(v.water)} á mánuði, lyklatrygging ${v.cur(v.key)} og leiga á félagsheimilinu ${v.cur(v.hire)} á dag. Verð fyrir næsta ár verður ákveðið á næsta aðalfundi.`,
+    (v) => `Önnur mál: ${v.person2} spurði um auglýsingatöfluna og formaður lofaði svari á næsta fundi. Fundi var slitið klukkan ${v.time2}.`,
+  ] };
+
+L.ru = { name: "Russian", cur: (a) => `${a} руб.`,
+  chair: "Андрей Холмов", treasurer: "Карина Линдквист", formName: "Елена Стрём",
+  persons: ["Мария Берг","Олег Нюстрём","Ирина Сандова","Генрих Даль","Пётр Вос","Иван Аалто","Лена Мореаu".replace("u","у"),"Томас Руис","Елена Стрём","Михаил Хауген"],
+  topics: ["крыша клубного дома","водопроводные трубы","компостные ящики","забор вдоль дороги","сарай для инструментов","дорожки между участками","пчелиные ульи","доска объявлений","летний праздник","зимнее хранилище"],
+  title: "Садовое товарищество «Сольбакен» — Протоколы заседаний правления, 2026",
+  one: `Садовое товарищество «Сольбакен» — Информационный бюллетень, весна 2026
+
+Уважаемые члены товарищества, пришла весна, и 64 участка пробуждаются. Наше годовое собрание состоится 2026-04-18 в 18:30 в клубном доме. Председатель Андрей Холмов расскажет о прошедшем годе, а казначей Карина Линдквист представит отчёт. Членский взнос на 2026 год составляет 450 руб. и должен быть уплачен до 2026-03-31. Этой весной мы приветствуем 12 новых членов, и сейчас в очереди ждут 9 семей. Воду включат 2026-05-02. Новый сарай для инструментов обойдётся в 380 руб. за материалы, и нам нужны 3 добровольца на день стройки 2026-05-16. Не забывайте компостировать: компостные ящики опорожняют каждый второй вторник. Вопросы можно направлять в правление. С уважением, правление.`,
+  form: `Заявление о вступлении
+Полное имя: Елена Стрём
+Дата рождения: 1984-09-12
+Номер участка: 27
+Количество человек в семье: 4
+Хочет компостный ящик: да
+Предпочтительный день собрания: вторник
+Примечания: Я хотела бы участок рядом с водопроводным краном.
+Дата: 2026-02-03`,
+  heading: (n) => `Заседание ${n}`,
+  P: [
+    (v) => `Заседание № ${v.n} состоялось ${v.date} в ${v.time} в клубном доме. ${v.chair} открыл заседание, присутствовали ${v.members} членов. Повестка дня была утверждена без изменений, а ${v.person} назначили вести протокол.`,
+    (v) => `Первый вопрос касался темы: ${v.topic}. Слова попросили ${v.speakers} членов. Они описали нынешнее состояние, рассказали, что было сделано за прошлый год, и спросили, сколько работы осталось. Председатель отметил, что правление осмотрело объект ${v.date2}.`,
+    (v) => `Собрание решило выделить на этот вопрос ${v.cur(v.amount)}. ${v.person} отвечает за работы и отчитается перед правлением до ${v.date3}. Казначей ${v.treasurer} подтвердила, что деньги есть на счёте.`,
+    (v) => `Несколько членов попросили спланировать работы так, чтобы они мешали как можно меньшему числу соседей. Договорились, что шумные работы разрешены только в будние дни с 09:00 до 17:00, а правление разошлёт короткое уведомление всем ${v.plots} владельцам участков не позднее чем за ${v.notice} дней.`,
+    (v) => `Прейскурант на сезон: аренда участка ${v.cur(v.rent)} в год, вода ${v.cur(v.water)} в месяц, залог за ключ ${v.cur(v.key)} и аренда клубного дома ${v.cur(v.hire)} в день. Цены на следующий год будут утверждены на следующем годовом собрании.`,
+    (v) => `Разное: ${v.person2} спросил(а) о доске объявлений, и председатель пообещал ответить на следующем заседании. Заседание закрыто в ${v.time2}.`,
+  ] };
+
+L.ja = { name: "Japanese", cur: (a) => `${a}円`,
+  chair: "田中健", treasurer: "佐藤美咲", formName: "伊藤恵",
+  persons: ["山田花子","鈴木一郎","高橋愛","渡辺誠","小林優","加藤翔","吉田舞","山本大輔","伊藤恵","中村拓也"],
+  topics: ["クラブハウスの屋根","水道管","コンポスト容器","道路沿いのフェンス","道具小屋","区画の間の通路","ミツバチの巣箱","掲示板","夏祭り","冬の保管庫"],
+  title: "ソルバッケン市民農園組合 — 2026年 役員会議事録",
+  one: `ソルバッケン市民農園組合 — 会報 2026年春号
+
+組合員の皆さまへ。春が訪れ、64区画が目を覚ましました。年次総会は2026-04-18の18:30にクラブハウスで開催します。会長の田中健が1年間の活動を報告し、会計の佐藤美咲が決算を説明します。2026年の組合費は450円で、2026-03-31までにお支払いください。この春は12名の新しい組合員を迎え、現在9世帯が順番待ちをしています。水道は2026-05-02に開栓します。新しい道具小屋の資材費は380円で、2026-05-16の建築作業日にはボランティアが3名必要です。堆肥づくりも忘れずに。コンポスト容器は隔週の火曜日に空にします。ご質問は役員会までお寄せください。役員会より。`,
+  form: `入会申込書
+氏名: 伊藤恵
+生年月日: 1984-09-12
+区画番号: 27
+世帯の人数: 4
+コンポスト容器の希望: はい
+希望する会議の曜日: 火曜日
+備考: 水道の蛇口に近い区画を希望します。
+日付: 2026-02-03`,
+  heading: (n) => `第${n}回会議`,
+  P: [
+    (v) => `第${v.n}回会議は${v.date}の${v.time}にクラブハウスで開かれました。${v.chair}が開会を宣言し、${v.members}名の組合員が出席しました。議題は変更なく承認され、${v.person}が議事録の作成者に選ばれました。`,
+    (v) => `最初の議題は次の件でした：${v.topic}。${v.speakers}名の組合員が発言を求めました。現状を説明し、前年に行ったことを述べ、残りの作業量を尋ねました。会長は、役員会が${v.date2}にこの件を視察したと述べました。`,
+    (v) => `会議はこの件に${v.cur(v.amount)}を充てることを決定しました。${v.person}が作業の責任者となり、${v.date3}までに役員会へ報告します。会計の${v.treasurer}は、資金が口座にあることを確認しました。`,
+    (v) => `複数の組合員から、できるだけ近隣の迷惑にならないよう作業を計画してほしいという要望がありました。騒音の出る作業は平日の09:00から17:00の間に限ること、また役員会が少なくとも${v.notice}日前までに${v.plots}名の区画利用者全員へ短い通知を送ることが合意されました。`,
+    (v) => `今シーズンの料金表：区画使用料は年${v.cur(v.rent)}、水道代は月${v.cur(v.water)}、鍵の預り金は${v.cur(v.key)}、クラブハウスの貸出料は1日${v.cur(v.hire)}です。来年の料金は次回の年次総会で決定します。`,
+    (v) => `その他：${v.person2}が掲示板について質問し、会長は次回の会議で回答すると約束しました。会議は${v.time2}に閉会しました。`,
+  ] };
+
+L.zh = { name: "Chinese", cur: (a) => `${a}元`,
+  chair: "李明", treasurer: "王芳", formName: "陈静",
+  persons: ["张伟","刘洋","赵敏","孙强","周丽","吴刚","郑华","钱磊","陈静","冯军"],
+  topics: ["会所屋顶","供水管道","堆肥箱","沿路围栏","工具棚","地块之间的小路","蜂箱","公告栏","夏季联欢会","冬季储藏室"],
+  title: "阳坡市民农园协会 — 2026年理事会会议记录",
+  one: `阳坡市民农园协会 — 会员通讯，2026年春季
+
+亲爱的会员们，春天来了，64块菜地正在苏醒。我们的年会将于2026-04-18的18:30在会所举行。会长李明将回顾这一年，财务王芳将报告账目。2026年的会费为450元，请在2026-03-31之前缴纳。今年春天我们欢迎12位新会员，目前有9个家庭在排队等候。供水将在2026-05-02开通。新的工具棚材料费为380元，我们需要3名志愿者参加2026-05-16的施工日。请记得堆肥：堆肥箱每隔一个星期二清空一次。有问题请发给理事会。理事会敬上。`,
+  form: `入会申请表
+姓名：陈静
+出生日期：1984-09-12
+地块编号：27
+家庭人数：4
+是否需要堆肥箱：是
+希望的会议日：星期二
+备注：我希望分到靠近水龙头的地块。
+日期：2026-02-03`,
+  heading: (n) => `第${n}次会议`,
+  P: [
+    (v) => `第${v.n}次会议于${v.date}的${v.time}在会所召开。${v.chair}宣布开会，共有${v.members}名会员出席。议程未作修改即获通过，并推选${v.person}负责会议记录。`,
+    (v) => `第一项议题涉及：${v.topic}。有${v.speakers}名会员要求发言。他们介绍了目前的状况，说明了上一年所做的工作，并询问还剩多少工作量。会长指出，理事会已于${v.date2}对此事进行了实地查看。`,
+    (v) => `会议决定为此项拨款${v.cur(v.amount)}。${v.person}负责这项工作，并将在${v.date3}之前向理事会汇报。财务${v.treasurer}确认这笔钱已在账户中。`,
+    (v) => `几位会员要求合理安排工作，尽量少打扰邻居。会议同意，噪音较大的工作只能在工作日的09:00至17:00之间进行，理事会至少提前${v.notice}天向全部${v.plots}位地块使用者发送简短通知。`,
+    (v) => `本季价目表：地块租金每年${v.cur(v.rent)}，水费每月${v.cur(v.water)}，钥匙押金${v.cur(v.key)}，会所租用费每天${v.cur(v.hire)}。明年的价格将在下次年会上决定。`,
+    (v) => `其他事项：${v.person2}询问了公告栏的事，会长答应在下次会议上答复。会议于${v.time2}结束。`,
+  ] };
+
+export default L;

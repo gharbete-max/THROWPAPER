@@ -1,0 +1,2 @@
+{"threads":4,"ctx":4096,"mmap":true,"loadMs":1749,"rssAfterLoad":4154,"rssNow":4873,"peak":4873,"promptTps":66.1,"genTps":11.26,"totalMs":33915}
+@@EXTERNAL peakWorkingSetMB=4873 peakPrivateMB=2866 exit=0

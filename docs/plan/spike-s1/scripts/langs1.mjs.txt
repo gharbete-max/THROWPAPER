@@ -1,0 +1,205 @@
+// Original test prose, written for this spike. Facts are identical across languages (see facts.json).
+const L = Object.create(null);
+const lat = { chair: "Anders Holm", treasurer: "Karin Lindqvist", persons: ["Maja Berg","Olof Nyström","Ida Sand","Henrik Dahl","Petra Voss","Jonas Aalto","Lena Moreau","Tomas Ruiz","Elin Ström","Mikael Haugen"], formName: "Elin Ström" };
+
+L.en = { ...lat, name: "English", cur: (a) => `${a} EUR`,
+  topics: ["the clubhouse roof","the water pipes","the compost bins","the fence along the road","the tool shed","the paths between the plots","the bee hives","the notice board","the summer party","the winter storage"],
+  title: "Solbacken Allotment Association — Minutes of the committee meetings, 2026",
+  one: `Solbacken Allotment Association — Newsletter, spring 2026
+
+Dear members, spring is here and the 64 plots are waking up. Our annual meeting is on 2026-04-18 at 18:30 in the clubhouse. The chair, Anders Holm, will present the year, and the treasurer, Karin Lindqvist, will present the accounts. The membership fee for 2026 is 450 EUR and must be paid by 2026-03-31. We welcome 12 new members this spring, and there is now a waiting list of 9 families. The water is turned on on 2026-05-02. The new tool shed will cost 380 EUR in materials, and we need 3 volunteers for the building day on 2026-05-16. Please remember to compost: the compost bins are emptied every second Tuesday. Questions can be sent to the board. Warm regards, the board.`,
+  form: `Membership application
+Full name: Elin Ström
+Date of birth: 1984-09-12
+Plot number: 27
+Number of people in the household: 4
+Wants a compost bin: yes
+Preferred meeting day: Tuesday
+Comments: I would like a plot close to the water tap.
+Date: 2026-02-03`,
+  heading: (n) => `Meeting ${n}`,
+  P: [
+    (v) => `Meeting ${v.n} was held on ${v.date} at ${v.time} in the clubhouse. ${v.chair} opened the meeting and ${v.members} members were present. The agenda was approved without changes, and ${v.person} was appointed to keep the minutes.`,
+    (v) => `The first item concerned: ${v.topic}. ${v.speakers} members asked to speak. They described the present state, explained what had been done during the previous year and asked how much work remained. The chair noted that the board had inspected the matter on ${v.date2}.`,
+    (v) => `The meeting decided to spend ${v.cur(v.amount)} on this item. ${v.person} is responsible for the work and will report to the board by ${v.date3}. The treasurer, ${v.treasurer}, confirmed that the money is available in the account.`,
+    (v) => `Several members asked that the work be planned so that it disturbs as few neighbours as possible. It was agreed that noisy work may only be done on weekdays between 09:00 and 17:00, and that the board will send a short notice to all ${v.plots} plot holders at least ${v.notice} days before.`,
+    (v) => `Price list for the season: plot rent ${v.cur(v.rent)} per year, water ${v.cur(v.water)} per month, key deposit ${v.cur(v.key)}, and hire of the clubhouse ${v.cur(v.hire)} per day. The prices for the next year will be decided at the next annual meeting.`,
+    (v) => `Any other business: ${v.person2} asked about the notice board, and the chair promised an answer at the next meeting. The meeting was closed at ${v.time2}.`,
+  ] };
+
+L.sv = { ...lat, name: "Swedish", cur: (a) => `${a} kr`,
+  topics: ["klubbhustaket","vattenledningarna","kompostlådorna","staketet längs vägen","redskapsboden","gångarna mellan odlingslotterna","bikuporna","anslagstavlan","sommarfesten","vinterförvaringen"],
+  title: "Koloniföreningen Solbacken — Protokoll från styrelsemötena 2026",
+  one: `Koloniföreningen Solbacken — Nyhetsbrev, våren 2026
+
+Kära medlemmar, våren är här och de 64 lotterna vaknar till liv. Vårt årsmöte hålls den 2026-04-18 klockan 18:30 i klubbhuset. Ordföranden, Anders Holm, berättar om året, och kassören, Karin Lindqvist, går igenom bokslutet. Medlemsavgiften för 2026 är 450 kr och ska vara betald senast 2026-03-31. Vi hälsar 12 nya medlemmar välkomna i vår, och det finns nu en kö på 9 familjer. Vattnet sätts på den 2026-05-02. Det nya redskapsskjulet kostar 380 kr i material, och vi behöver 3 frivilliga till byggdagen den 2026-05-16. Kom ihåg att kompostera: kompostbehållarna töms varannan tisdag. Frågor skickas till styrelsen. Vänliga hälsningar, styrelsen.`,
+  form: `Ansökan om medlemskap
+Fullständigt namn: Elin Ström
+Födelsedatum: 1984-09-12
+Lotnummer: 27
+Antal personer i hushållet: 4
+Vill ha kompostlåda: ja
+Önskad mötesdag: tisdag
+Kommentarer: Jag vill gärna ha en lott nära vattenkranen.
+Datum: 2026-02-03`,
+  heading: (n) => `Möte ${n}`,
+  P: [
+    (v) => `Möte ${v.n} hölls den ${v.date} klockan ${v.time} i klubbhuset. ${v.chair} öppnade mötet och ${v.members} medlemmar var närvarande. Dagordningen godkändes utan ändringar, och ${v.person} utsågs att föra protokollet.`,
+    (v) => `Den första punkten gällde: ${v.topic}. ${v.speakers} medlemmar begärde ordet. De beskrev nuläget, förklarade vad som gjorts under det senaste året och frågade hur mycket arbete som återstod. Ordföranden konstaterade att styrelsen hade besiktigat saken den ${v.date2}.`,
+    (v) => `Mötet beslutade att använda ${v.cur(v.amount)} till denna punkt. ${v.person} ansvarar för arbetet och rapporterar till styrelsen senast ${v.date3}. Kassören, ${v.treasurer}, intygade att pengarna finns på kontot.`,
+    (v) => `Flera medlemmar bad om att arbetet planeras så att det stör så få grannar som möjligt. Man enades om att bullrande arbete bara får utföras vardagar mellan 09:00 och 17:00, och att styrelsen skickar ett kort meddelande till alla ${v.plots} lotthavare minst ${v.notice} dagar i förväg.`,
+    (v) => `Prislista för säsongen: lotthyra ${v.cur(v.rent)} per år, vatten ${v.cur(v.water)} per månad, nyckelpant ${v.cur(v.key)} och uthyrning av klubbhuset ${v.cur(v.hire)} per dag. Priserna för nästa år beslutas vid nästa årsmöte.`,
+    (v) => `Övriga frågor: ${v.person2} frågade om anslagstavlan, och ordföranden lovade svar vid nästa möte. Mötet avslutades klockan ${v.time2}.`,
+  ] };
+
+L.da = { ...lat, name: "Danish", cur: (a) => `${a} kr.`,
+  topics: ["klubhusets tag","vandrørene","kompostbeholderne","hegnet langs vejen","redskabsskuret","stierne mellem havelodderne","bikuberne","opslagstavlen","sommerfesten","vinteropbevaringen"],
+  title: "Haveforeningen Solbacken — Referater fra bestyrelsesmøderne 2026",
+  one: `Haveforeningen Solbacken — Nyhedsbrev, foråret 2026
+
+Kære medlemmer, foråret er kommet, og de 64 haver vågner op. Vores generalforsamling holdes den 2026-04-18 klokken 18:30 i klubhuset. Formanden, Anders Holm, fortæller om året, og kassereren, Karin Lindqvist, gennemgår regnskabet. Kontingentet for 2026 er 450 kr. og skal være betalt senest 2026-03-31. Vi byder 12 nye medlemmer velkommen i foråret, og der er nu en venteliste med 9 familier. Vandet tændes den 2026-05-02. Det nye redskabsskur koster 380 kr. i materialer, og vi har brug for 3 frivillige til byggedagen den 2026-05-16. Husk at kompostere: kompostbeholderne tømmes hver anden tirsdag. Spørgsmål kan sendes til bestyrelsen. Venlig hilsen bestyrelsen.`,
+  form: `Ansøgning om medlemskab
+Fulde navn: Elin Ström
+Fødselsdato: 1984-09-12
+Havenummer: 27
+Antal personer i husstanden: 4
+Ønsker kompostbeholder: ja
+Foretrukken mødedag: tirsdag
+Bemærkninger: Jeg ønsker en have tæt på vandhanen.
+Dato: 2026-02-03`,
+  heading: (n) => `Møde ${n}`,
+  P: [
+    (v) => `Møde ${v.n} blev holdt den ${v.date} klokken ${v.time} i klubhuset. ${v.chair} åbnede mødet, og ${v.members} medlemmer var til stede. Dagsordenen blev godkendt uden ændringer, og ${v.person} blev valgt til at skrive referat.`,
+    (v) => `Det første punkt handlede om: ${v.topic}. ${v.speakers} medlemmer bad om ordet. De beskrev den nuværende tilstand, forklarede hvad der var gjort i det forgangne år og spurgte, hvor meget arbejde der var tilbage. Formanden bemærkede, at bestyrelsen havde besigtiget sagen den ${v.date2}.`,
+    (v) => `Mødet besluttede at bruge ${v.cur(v.amount)} på dette punkt. ${v.person} har ansvaret for arbejdet og afrapporterer til bestyrelsen senest ${v.date3}. Kassereren, ${v.treasurer}, bekræftede, at pengene findes på kontoen.`,
+    (v) => `Flere medlemmer bad om, at arbejdet planlægges, så det generer så få naboer som muligt. Man blev enige om, at støjende arbejde kun må udføres på hverdage mellem 09:00 og 17:00, og at bestyrelsen sender en kort besked til alle ${v.plots} haveejere mindst ${v.notice} dage i forvejen.`,
+    (v) => `Prisliste for sæsonen: havelejen er ${v.cur(v.rent)} om året, vand ${v.cur(v.water)} om måneden, nøgledepositum ${v.cur(v.key)} og leje af klubhuset ${v.cur(v.hire)} pr. dag. Priserne for næste år besluttes på næste generalforsamling.`,
+    (v) => `Eventuelt: ${v.person2} spurgte til opslagstavlen, og formanden lovede et svar på næste møde. Mødet blev hævet klokken ${v.time2}.`,
+  ] };
+
+L.nb = { ...lat, name: "Norwegian Bokmål", cur: (a) => `${a} kr`,
+  topics: ["taket på klubbhuset","vannrørene","kompostbeholderne","gjerdet langs veien","redskapsboden","stiene mellom parsellene","bikubene","oppslagstavlen","sommerfesten","vinterlageret"],
+  title: "Kolonihageforeningen Solbacken — Referat fra styremøtene 2026",
+  one: `Kolonihageforeningen Solbacken — Nyhetsbrev, våren 2026
+
+Kjære medlemmer, våren er her, og de 64 parsellene våkner til liv. Årsmøtet vårt holdes 2026-04-18 klokken 18:30 i klubbhuset. Lederen, Anders Holm, forteller om året, og kassereren, Karin Lindqvist, går gjennom regnskapet. Medlemskontingenten for 2026 er 450 kr og må være betalt innen 2026-03-31. Vi ønsker 12 nye medlemmer velkommen i vår, og det er nå en venteliste med 9 familier. Vannet settes på 2026-05-02. Det nye redskapsskuret koster 380 kr i materialer, og vi trenger 3 frivillige til byggedagen 2026-05-16. Husk å kompostere: kompostbeholderne tømmes annenhver tirsdag. Spørsmål kan sendes til styret. Vennlig hilsen styret.`,
+  form: `Søknad om medlemskap
+Fullt navn: Elin Ström
+Fødselsdato: 1984-09-12
+Parsellnummer: 27
+Antall personer i husstanden: 4
+Ønsker kompostbeholder: ja
+Foretrukket møtedag: tirsdag
+Merknader: Jeg ønsker en parsell nær vannkranen.
+Dato: 2026-02-03`,
+  heading: (n) => `Møte ${n}`,
+  P: [
+    (v) => `Møte ${v.n} ble holdt ${v.date} klokken ${v.time} i klubbhuset. ${v.chair} åpnet møtet, og ${v.members} medlemmer var til stede. Sakslisten ble godkjent uten endringer, og ${v.person} ble valgt til å skrive referat.`,
+    (v) => `Den første saken gjaldt: ${v.topic}. ${v.speakers} medlemmer ba om ordet. De beskrev dagens tilstand, forklarte hva som var gjort det siste året og spurte hvor mye arbeid som gjensto. Lederen opplyste at styret hadde befart saken ${v.date2}.`,
+    (v) => `Møtet vedtok å bruke ${v.cur(v.amount)} på denne saken. ${v.person} har ansvaret for arbeidet og rapporterer til styret innen ${v.date3}. Kassereren, ${v.treasurer}, bekreftet at pengene finnes på kontoen.`,
+    (v) => `Flere medlemmer ba om at arbeidet planlegges slik at det forstyrrer færrest mulig naboer. Man ble enige om at støyende arbeid bare kan utføres på hverdager mellom 09:00 og 17:00, og at styret sender en kort melding til alle ${v.plots} parselleiere minst ${v.notice} dager i forveien.`,
+    (v) => `Prisliste for sesongen: parselleie ${v.cur(v.rent)} per år, vann ${v.cur(v.water)} per måned, nøkkeldepositum ${v.cur(v.key)} og leie av klubbhuset ${v.cur(v.hire)} per dag. Prisene for neste år vedtas på neste årsmøte.`,
+    (v) => `Eventuelt: ${v.person2} spurte om oppslagstavlen, og lederen lovet svar på neste møte. Møtet ble hevet klokken ${v.time2}.`,
+  ] };
+
+L.de = { ...lat, name: "German", cur: (a) => `${a} EUR`,
+  topics: ["das Dach des Vereinshauses","die Wasserleitungen","die Komposter","der Zaun an der Straße","der Geräteschuppen","die Wege zwischen den Parzellen","die Bienenstöcke","das schwarze Brett","das Sommerfest","das Winterlager"],
+  title: "Kleingartenverein Solbacken — Protokolle der Vorstandssitzungen 2026",
+  one: `Kleingartenverein Solbacken — Rundbrief, Frühling 2026
+
+Liebe Mitglieder, der Frühling ist da, und die 64 Parzellen erwachen. Unsere Jahreshauptversammlung findet am 2026-04-18 um 18:30 Uhr im Vereinshaus statt. Der Vorsitzende, Anders Holm, berichtet über das Jahr, und die Kassenwartin, Karin Lindqvist, stellt die Abrechnung vor. Der Mitgliedsbeitrag für 2026 beträgt 450 EUR und ist bis zum 2026-03-31 zu zahlen. Wir begrüßen in diesem Frühling 12 neue Mitglieder, und es gibt jetzt eine Warteliste mit 9 Familien. Das Wasser wird am 2026-05-02 angestellt. Der neue Geräteschuppen kostet 380 EUR an Material, und wir brauchen 3 Freiwillige für den Bautag am 2026-05-16. Bitte denkt ans Kompostieren: Die Komposter werden jeden zweiten Dienstag geleert. Fragen können an den Vorstand gerichtet werden. Herzliche Grüße, der Vorstand.`,
+  form: `Mitgliedsantrag
+Vollständiger Name: Elin Ström
+Geburtsdatum: 1984-09-12
+Parzellennummer: 27
+Anzahl der Personen im Haushalt: 4
+Wünscht einen Komposter: ja
+Bevorzugter Sitzungstag: Dienstag
+Bemerkungen: Ich hätte gern eine Parzelle in der Nähe des Wasserhahns.
+Datum: 2026-02-03`,
+  heading: (n) => `Sitzung ${n}`,
+  P: [
+    (v) => `Sitzung ${v.n} fand am ${v.date} um ${v.time} Uhr im Vereinshaus statt. ${v.chair} eröffnete die Sitzung, und ${v.members} Mitglieder waren anwesend. Die Tagesordnung wurde ohne Änderungen genehmigt, und ${v.person} wurde zur Protokollführung bestimmt.`,
+    (v) => `Der erste Punkt betraf: ${v.topic}. ${v.speakers} Mitglieder baten ums Wort. Sie beschrieben den gegenwärtigen Zustand, erläuterten, was im vergangenen Jahr getan worden war, und fragten, wie viel Arbeit noch übrig sei. Der Vorsitzende stellte fest, dass der Vorstand die Sache am ${v.date2} besichtigt hatte.`,
+    (v) => `Die Sitzung beschloss, für diesen Punkt ${v.cur(v.amount)} auszugeben. ${v.person} ist für die Arbeit verantwortlich und berichtet dem Vorstand bis zum ${v.date3}. Die Kassenwartin, ${v.treasurer}, bestätigte, dass das Geld auf dem Konto vorhanden ist.`,
+    (v) => `Mehrere Mitglieder baten darum, die Arbeit so zu planen, dass sie möglichst wenige Nachbarn stört. Man einigte sich darauf, dass lärmende Arbeiten nur werktags zwischen 09:00 und 17:00 Uhr ausgeführt werden dürfen und dass der Vorstand allen ${v.plots} Pächtern mindestens ${v.notice} Tage vorher eine kurze Mitteilung schickt.`,
+    (v) => `Preisliste für die Saison: Parzellenpacht ${v.cur(v.rent)} pro Jahr, Wasser ${v.cur(v.water)} pro Monat, Schlüsselpfand ${v.cur(v.key)} und Miete des Vereinshauses ${v.cur(v.hire)} pro Tag. Die Preise für das nächste Jahr werden auf der nächsten Jahreshauptversammlung beschlossen.`,
+    (v) => `Verschiedenes: ${v.person2} fragte nach dem schwarzen Brett, und der Vorsitzende versprach eine Antwort in der nächsten Sitzung. Die Sitzung wurde um ${v.time2} Uhr geschlossen.`,
+  ] };
+
+L.es = { ...lat, name: "Spanish", cur: (a) => `${a} EUR`,
+  topics: ["el tejado de la sede","las tuberías de agua","los contenedores de compost","la valla junto a la carretera","el cobertizo de herramientas","los caminos entre las parcelas","las colmenas","el tablón de anuncios","la fiesta de verano","el almacén de invierno"],
+  title: "Asociación de huertos Solbacken — Actas de las reuniones de la junta, 2026",
+  one: `Asociación de huertos Solbacken — Boletín, primavera de 2026
+
+Queridos socios: la primavera ha llegado y las 64 parcelas despiertan. Nuestra asamblea anual se celebrará el 2026-04-18 a las 18:30 en la sede. El presidente, Anders Holm, presentará el balance del año, y la tesorera, Karin Lindqvist, presentará las cuentas. La cuota de socio de 2026 es de 450 EUR y debe pagarse antes del 2026-03-31. Damos la bienvenida a 12 nuevos socios esta primavera, y ahora hay una lista de espera de 9 familias. El agua se abrirá el 2026-05-02. El nuevo cobertizo de herramientas costará 380 EUR en materiales, y necesitamos 3 voluntarios para la jornada de obra del 2026-05-16. Recordad compostar: los contenedores de compost se vacían cada dos martes. Las preguntas pueden enviarse a la junta. Un cordial saludo, la junta.`,
+  form: `Solicitud de socio
+Nombre completo: Elin Ström
+Fecha de nacimiento: 1984-09-12
+Número de parcela: 27
+Número de personas en el hogar: 4
+Desea un contenedor de compost: sí
+Día de reunión preferido: martes
+Observaciones: Me gustaría una parcela cerca del grifo de agua.
+Fecha: 2026-02-03`,
+  heading: (n) => `Reunión ${n}`,
+  P: [
+    (v) => `La reunión ${v.n} se celebró el ${v.date} a las ${v.time} en la sede. ${v.chair} abrió la reunión y asistieron ${v.members} socios. El orden del día se aprobó sin cambios y se designó a ${v.person} para redactar el acta.`,
+    (v) => `El primer punto trató sobre: ${v.topic}. ${v.speakers} socios pidieron la palabra. Describieron el estado actual, explicaron lo que se había hecho durante el año anterior y preguntaron cuánto trabajo quedaba. El presidente señaló que la junta había inspeccionado el asunto el ${v.date2}.`,
+    (v) => `La reunión decidió destinar ${v.cur(v.amount)} a este punto. ${v.person} es responsable del trabajo e informará a la junta antes del ${v.date3}. La tesorera, ${v.treasurer}, confirmó que el dinero está disponible en la cuenta.`,
+    (v) => `Varios socios pidieron que el trabajo se planifique de modo que moleste al menor número posible de vecinos. Se acordó que los trabajos ruidosos solo podrán hacerse en días laborables entre las 09:00 y las 17:00, y que la junta enviará un aviso breve a los ${v.plots} titulares de parcela con al menos ${v.notice} días de antelación.`,
+    (v) => `Lista de precios de la temporada: alquiler de parcela ${v.cur(v.rent)} al año, agua ${v.cur(v.water)} al mes, fianza de la llave ${v.cur(v.key)} y alquiler de la sede ${v.cur(v.hire)} al día. Los precios del próximo año se decidirán en la próxima asamblea anual.`,
+    (v) => `Ruegos y preguntas: ${v.person2} preguntó por el tablón de anuncios y el presidente prometió una respuesta en la próxima reunión. La reunión se levantó a las ${v.time2}.`,
+  ] };
+
+L.fi = { ...lat, name: "Finnish", cur: (a) => `${a} euroa`,
+  topics: ["kerhotalon katto","vesiputket","komposti­laatikot","tien varren aita","työkaluvaja","palstojen väliset polut","mehiläispesät","ilmoitustaulu","kesäjuhla","talvisäilytys"].map((s) => s.replace(/­/g, "")),
+  title: "Siirtolapuutarhayhdistys Solbacken — Hallituksen kokousten pöytäkirjat 2026",
+  one: `Siirtolapuutarhayhdistys Solbacken — Tiedote, kevät 2026
+
+Hyvät jäsenet, kevät on tullut, ja 64 palstaa herää eloon. Vuosikokouksemme pidetään 2026-04-18 kello 18:30 kerhotalolla. Puheenjohtaja Anders Holm kertoo kuluneesta vuodesta, ja rahastonhoitaja Karin Lindqvist esittelee tilinpäätöksen. Jäsenmaksu vuodelle 2026 on 450 euroa, ja se on maksettava viimeistään 2026-03-31. Toivotamme tänä keväänä tervetulleiksi 12 uutta jäsentä, ja jonossa on nyt 9 perhettä. Vesi avataan 2026-05-02. Uusi työkaluvaja maksaa 380 euroa materiaaleina, ja tarvitsemme 3 vapaaehtoista rakennuspäivään 2026-05-16. Muistakaa kompostoida: kompostilaatikot tyhjennetään joka toinen tiistai. Kysymykset voi lähettää hallitukselle. Ystävällisin terveisin, hallitus.`,
+  form: `Jäsenhakemus
+Koko nimi: Elin Ström
+Syntymäaika: 1984-09-12
+Palstan numero: 27
+Talouden henkilömäärä: 4
+Haluaa kompostilaatikon: kyllä
+Toivottu kokouspäivä: tiistai
+Huomautukset: Haluaisin palstan lähelle vesihanaa.
+Päivämäärä: 2026-02-03`,
+  heading: (n) => `Kokous ${n}`,
+  P: [
+    (v) => `Kokous ${v.n} pidettiin ${v.date} kello ${v.time} kerhotalolla. ${v.chair} avasi kokouksen, ja paikalla oli ${v.members} jäsentä. Esityslista hyväksyttiin muutoksitta, ja ${v.person} valittiin pöytäkirjanpitäjäksi.`,
+    (v) => `Ensimmäinen asia koski aihetta: ${v.topic}. ${v.speakers} jäsentä pyysi puheenvuoroa. He kuvasivat nykytilannetta, selittivät mitä edellisenä vuonna oli tehty ja kysyivät, kuinka paljon työtä oli vielä jäljellä. Puheenjohtaja totesi, että hallitus oli tarkastanut asian ${v.date2}.`,
+    (v) => `Kokous päätti käyttää tähän asiaan ${v.cur(v.amount)}. ${v.person} vastaa työstä ja raportoi hallitukselle viimeistään ${v.date3}. Rahastonhoitaja ${v.treasurer} vahvisti, että rahat ovat tilillä.`,
+    (v) => `Useat jäsenet pyysivät suunnittelemaan työn niin, että se häiritsee mahdollisimman vähän naapureita. Sovittiin, että meluisaa työtä saa tehdä vain arkisin kello 09:00 ja 17:00 välillä ja että hallitus lähettää kaikille ${v.plots} palstanhaltijalle lyhyen ilmoituksen vähintään ${v.notice} päivää etukäteen.`,
+    (v) => `Kauden hinnasto: palstan vuokra ${v.cur(v.rent)} vuodessa, vesi ${v.cur(v.water)} kuukaudessa, avaimen pantti ${v.cur(v.key)} ja kerhotalon vuokra ${v.cur(v.hire)} päivässä. Ensi vuoden hinnat päätetään seuraavassa vuosikokouksessa.`,
+    (v) => `Muut asiat: ${v.person2} kysyi ilmoitustaulusta, ja puheenjohtaja lupasi vastauksen seuraavassa kokouksessa. Kokous päättyi kello ${v.time2}.`,
+  ] };
+
+L.fr = { ...lat, name: "French", cur: (a) => `${a} EUR`,
+  topics: ["le toit du local commun","les canalisations d'eau","les bacs à compost","la clôture le long de la route","l'abri à outils","les allées entre les parcelles","les ruches","le panneau d'affichage","la fête d'été","le local de stockage d'hiver"],
+  title: "Association des jardins familiaux Solbacken — Procès-verbaux des réunions du bureau, 2026",
+  one: `Association des jardins familiaux Solbacken — Lettre d'information, printemps 2026
+
+Chers membres, le printemps est là et les 64 parcelles se réveillent. Notre assemblée générale aura lieu le 2026-04-18 à 18:30 dans le local commun. Le président, Anders Holm, présentera le bilan de l'année, et la trésorière, Karin Lindqvist, présentera les comptes. La cotisation 2026 est de 450 EUR et doit être réglée avant le 2026-03-31. Nous accueillons 12 nouveaux membres ce printemps, et il y a maintenant une liste d'attente de 9 familles. L'eau sera remise le 2026-05-02. Le nouvel abri à outils coûtera 380 EUR de matériaux, et nous avons besoin de 3 bénévoles pour la journée de construction du 2026-05-16. N'oubliez pas de composter : les bacs à compost sont vidés un mardi sur deux. Les questions peuvent être adressées au bureau. Cordialement, le bureau.`,
+  form: `Demande d'adhésion
+Nom complet : Elin Ström
+Date de naissance : 1984-09-12
+Numéro de parcelle : 27
+Nombre de personnes dans le foyer : 4
+Souhaite un bac à compost : oui
+Jour de réunion préféré : mardi
+Remarques : Je voudrais une parcelle près du robinet d'eau.
+Date : 2026-02-03`,
+  heading: (n) => `Réunion ${n}`,
+  P: [
+    (v) => `La réunion ${v.n} s'est tenue le ${v.date} à ${v.time} dans le local commun. ${v.chair} a ouvert la séance et ${v.members} membres étaient présents. L'ordre du jour a été approuvé sans modification, et ${v.person} a été désigné pour rédiger le procès-verbal.`,
+    (v) => `Le premier point portait sur : ${v.topic}. ${v.speakers} membres ont demandé la parole. Ils ont décrit l'état actuel, expliqué ce qui avait été fait l'année précédente et demandé combien de travail restait à faire. Le président a noté que le bureau avait inspecté la question le ${v.date2}.`,
+    (v) => `La réunion a décidé de consacrer ${v.cur(v.amount)} à ce point. ${v.person} est responsable des travaux et fera un rapport au bureau avant le ${v.date3}. La trésorière, ${v.treasurer}, a confirmé que l'argent est disponible sur le compte.`,
+    (v) => `Plusieurs membres ont demandé que les travaux soient planifiés de façon à déranger le moins de voisins possible. Il a été convenu que les travaux bruyants ne pourront être effectués que les jours ouvrables entre 09:00 et 17:00, et que le bureau enverra un bref avis aux ${v.plots} titulaires de parcelle au moins ${v.notice} jours à l'avance.`,
+    (v) => `Tarifs de la saison : location de parcelle ${v.cur(v.rent)} par an, eau ${v.cur(v.water)} par mois, caution de la clé ${v.cur(v.key)} et location du local commun ${v.cur(v.hire)} par jour. Les tarifs de l'année prochaine seront fixés lors de la prochaine assemblée générale.`,
+    (v) => `Questions diverses : ${v.person2} a posé une question sur le panneau d'affichage, et le président a promis une réponse à la prochaine réunion. La séance a été levée à ${v.time2}.`,
+  ] };
+
+export default L;
