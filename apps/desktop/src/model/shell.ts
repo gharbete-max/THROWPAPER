@@ -1,3 +1,4 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { freemem } from 'node:os';
 import { join } from 'node:path';
 import { createModelService, type ModelService, type WorkerHandle } from './service.js';
@@ -53,8 +54,19 @@ export function createShellModelService(pieces: ElectronPieces): ModelService {
     };
   };
 
+  const dir = join(pieces.userData, 'models');
+  // A developer's own copy of the weights: `LOPPA_MODEL_PATH=C:\path\model.gguf` is remembered
+  // as if it had been opened from disk. It is still hashed against the manifest before use.
+  if (pieces.env.LOPPA_MODEL_PATH) {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(
+      join(dir, 'location.json'),
+      JSON.stringify({ path: pieces.env.LOPPA_MODEL_PATH }),
+    );
+  }
+
   return createModelService({
-    dir: join(pieces.userData, 'models'),
+    dir,
     spawn,
     freeMemory: freemem,
     chooseFile: pieces.chooseFile,
