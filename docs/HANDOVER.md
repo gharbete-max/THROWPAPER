@@ -66,6 +66,9 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
   `/forms?new=questions|paper|manual`, and a form made by hand opens in the editor. Limit: a PDF's
   own fields take the standard fonts' letters only; Cyrillic and CJK need an embedded font (ADR 0015).
   `e2e/forms-draft-fill.spec.ts` holds it, asking the database for no submission and no version.
+- **Send (phase 3, built 2026-10-13):** `/send`, `routes/send.ts`, `send/`,
+  `packages/shared/src/api/send.ts`, `e2e/send-documents.spec.ts`. Bundle total 1 046.4 to 1 070.9 KB
+  (budget 1 080).
 - **Bundle:** the total is 999.95 KB and its budget was raised to 1 015 for this phase
   (`scripts/bundle-budget.ts` says why). Every later phase reports its delta against that.
 
