@@ -345,8 +345,7 @@ export const client = {
    */
   draftPdf: (formId: string, locale: string, values: Record<string, unknown> = {}) =>
     postForBlob(`/v1/forms/${formId}/draft.pdf`, { locale, values }),
-  wordToPdf: (document: api.WordPdfRequest) =>
-    postForBlob('/v1/pdf/word', JSON.stringify(document)),
+
   /** Text added to and covers painted on a PDF (`POST /v1/pdf/edit`); positions are PDF points. */
   editPdf: (file: Blob, ops: readonly object[], acceptSignatureLoss = false) => {
     const body = new FormData();
