@@ -66,6 +66,20 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
   `/forms?new=questions|paper|manual`, and a form made by hand opens in the editor. Limit: a PDF's
   own fields take the standard fonts' letters only; Cyrillic and CJK need an embedded font (ADR 0015).
   `e2e/forms-draft-fill.spec.ts` holds it, asking the database for no submission and no version.
+- **Invoice scan (phase 4, built 2026-10-13):** a button on Scan opens
+  `apps/forms/src/screens/invoice-scan/` (lazy): a photo, scan, camera shot or PDF is read in the
+  browser (a PDF's text layer if it has one, else Tesseract through the import's `openPageReader`),
+  then the rules in `packages/shared/src/payable` (`@tp/shared/payable`, pure, no model) pick the
+  total (bigint minor units; separators by rule, asked when `1.234` is ambiguous), currency, due date,
+  bank number (bankgiro, plusgiro, IBAN) and payment reference (Swedish OCR number by Luhn and length
+  digit, RF by mod 97), each with its box on the page, its check digit result and its flags. Nothing
+  is kept until the person confirms each field; a failed check digit needs a second decision and the
+  record names it (`keptDespiteFailedCheck`). Output: JSON, CSV and a payment note, copied or
+  downloaded. **No seam into `invoicing/`:** its types are for invoices this organisation sends. Not
+  done: Norwegian KID (read as free text, unchecked), the Swedish giro strip's `#` line, payment
+  terms ("30 days") never become a date, month names only in sv/da/nb/de/en. Fixtures:
+  `fixtures/invoices/invoices.ts` (invented invoices, drawn as words, PDF and HTML);
+  `e2e/invoice-scan.spec.ts` reads them through the real Tesseract.
 - **Bundle:** the total is 999.95 KB and its budget was raised to 1 015 for this phase
   (`scripts/bundle-budget.ts` says why). Every later phase reports its delta against that.
 

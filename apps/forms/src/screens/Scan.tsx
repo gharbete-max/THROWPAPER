@@ -12,6 +12,7 @@ import { Icon } from '../components/Icon.js';
 import { openPdf, type PaperPdf } from './builder/paper/extract.js';
 import { isPhoto, preparePhoto } from './scan-photo.js';
 import { fromWord, WordToPdf } from './WordToPdf.js';
+import { InvoiceScanEntry } from './invoice-scan/Entry.js';
 import {
   movePage,
   pagesOfFile,
@@ -216,6 +217,7 @@ export function Scan() {
         />
       ) : null}
       <WordToPdf onPdf={(pdf) => void add([pdf])} />
+      <InvoiceScanEntry />
 
       {pages.length === 0 ? (
         <EmptyState icon="upload" title={t('scan.empty')} />

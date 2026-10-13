@@ -7133,6 +7133,90 @@ body:has(> #root .shell--narrow) {
   gap: 0.25rem;
 }
 
+/* Reading a supplier invoice: the page with the found value outlined, beside the values to confirm. */
+.invoice-scan__panes {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .invoice-scan__panes {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .invoice-scan__page {
+    position: sticky;
+    top: var(--tp-spacing-unit);
+  }
+}
+
+.invoice-scan__sheet {
+  position: relative;
+  line-height: 0;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  background: var(--tp-colour-surface);
+}
+
+.invoice-scan__sheet canvas,
+.invoice-scan__sheet img {
+  width: 100%;
+  height: auto;
+}
+
+.invoice-scan__mark {
+  position: absolute;
+  border: 3px solid var(--tp-colour-primary);
+  background: color-mix(in srgb, var(--tp-colour-primary) 14%, transparent);
+  pointer-events: none;
+}
+
+.invoice-scan__field {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.invoice-scan__field--active {
+  border-color: var(--tp-colour-primary);
+}
+
+.invoice-scan__status,
+.invoice-scan__read,
+.invoice-scan__flag {
+  margin: 0;
+}
+
+.invoice-scan__status[data-tone='warn'] {
+  color: var(--tp-colour-danger);
+}
+
+.invoice-scan__status[data-tone='good'] {
+  color: var(--tp-colour-success);
+}
+
+.invoice-scan__edit,
+.invoice-scan__language {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.invoice-scan__edit input[type='text'] {
+  flex: 1 1 12rem;
+}
+
+.invoice-scan__note {
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  white-space: pre-wrap;
+}
+
 .nav-link__count {
   margin-inline-start: auto;
 }
