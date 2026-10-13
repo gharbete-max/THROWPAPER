@@ -7,8 +7,8 @@ import { db, plantLoginToken, signInAs } from './support.js';
  * Signing in lands in an empty dark grey room with three cootie catchers. Documents is built and
  * opens into Forms, Scan, Sign and Send around the centre; Spreadsheets and Presentation & planning
  * are placeholders that must never pretend to be controls. Checked by keyboard, under reduced
- * motion, at 360 × 640 in German, and on the server edition this suite runs, which has no Send and
- * no summary.
+ * motion, at 360 × 640 in German, and on the server edition this suite runs, which sends through its
+ * mail provider and has no summary.
  */
 const sql = db();
 
@@ -90,9 +90,8 @@ test('Documents opens by keyboard into four parts around the centre, and Escape 
 
   await expect(page.getByRole('link', { name: 'Scan' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Sign' })).toBeVisible();
-  // The server edition has no To send and no summary, and says so rather than offering either.
-  await expect(page.getByRole('link', { name: 'Send' })).toHaveCount(0);
-  await expect(page.locator('.room__part--send')).toContainText('Not in this edition');
+  // Send works here too, through the server's mail provider; there is still no summary.
+  await expect(page.getByRole('link', { name: 'Send' })).toHaveAttribute('href', '/send');
   await expect(page.locator('.room__centre')).toContainText('Summary and translation');
   await expect(page.locator('.room__centre')).toContainText('Not in this edition');
 

@@ -66,6 +66,7 @@ const Scan = lazy(() => import('./screens/Scan.js').then((m) => ({ default: m.Sc
 const Summary = lazy(() => import('./screens/Summary.js').then((m) => ({ default: m.Summary })));
 const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
 const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
+const Send = lazy(() => import('./screens/Send.js').then((m) => ({ default: m.Send })));
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
 const Room = lazy(() => import('./screens/Room.js').then((m) => ({ default: m.Room })));
 const UserWorkspace = lazy(() =>
@@ -405,6 +406,7 @@ function Shell() {
               <Route path="/summary" element={<Summary />} />
               <Route path="/signing" element={<Signing />} />
               <Route path="/outgoing" element={<Outgoing />} />
+              <Route path="/send" element={<Send />} />
               <Route path="/users" element={<Users />} />
               <Route path="/users/:id" element={<UserWorkspace />} />
               <Route path="/brand" element={<BrandKit />} />

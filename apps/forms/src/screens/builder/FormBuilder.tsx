@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { pickText } from '@tp/i18n';
 import { translatableTexts } from '@tp/shared/forms';
 import type {
@@ -11,7 +11,7 @@ import type {
 } from '@tp/shared/forms';
 import { ApiError, client } from '../../lib/api.js';
 import { saveBlob } from '../../lib/email-handoff.js';
-import { useEdition } from '../../lib/edition.js';
+import { sendWith } from '../../lib/send-handoff.js';
 import { useT } from '../../lib/i18n.js';
 import { useSession } from '../../lib/session.js';
 import { useConfirm } from '../../components/Confirm.js';
@@ -62,7 +62,7 @@ export function FormBuilder() {
   const [versions, setVersions] = useState<FormVersionSummary[]>([]);
   const [publishing, setPublishing] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const edition = useEdition();
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   /** Paper is the default view of a form that has some: it is why the author brought it. */
   const [view, setView] = useState<'list' | 'paper'>('paper');
@@ -284,15 +284,17 @@ export function FormBuilder() {
   }
 
   /** The draft as a PDF to keep: no published version is needed and nothing is submitted. */
-  async function downloadDraft() {
+  async function downloadDraft(then: 'save' | 'send' = 'save') {
     if (!id) return;
     setDownloading(true);
     setError(null);
     try {
-      saveBlob(
-        await client.draftPdf(id, locale),
-        `${pickText(locales, form?.title ?? {}, locale).value || 'form'}.pdf`,
-      );
+      const blob = await client.draftPdf(id, locale);
+      const name = `${pickText(locales, form?.title ?? {}, locale).value || 'form'}.pdf`;
+      // Send is handed the PDF in memory; it asks, and sends nothing, before the person confirms.
+      if (then === 'send')
+        navigate(...sendWith(new File([blob], name, { type: 'application/pdf' })));
+      else saveBlob(blob, name);
     } catch {
       setError(t('draft.failed'));
     } finally {
@@ -437,8 +439,8 @@ export function FormBuilder() {
           {/*
             Download, Fill in, Sign and Send come first: a form is a document to keep, sign and
             send before it is a thing to collect answers with. Sharing it to collect is the
-            quieter choice (`docs/plan/DOCUMENTS.md`, "Forms"). Sign and Send are plain links to
-            the screens that already do the work.
+            quieter choice (`docs/plan/DOCUMENTS.md`, "Forms"). Sign is a plain link; Send makes the
+            draft PDF and hands it to the Send screen, which asks before anything is queued.
           */}
           {id && (
             <>
@@ -457,11 +459,14 @@ export function FormBuilder() {
               <Link className="button button--quiet" to="/signing">
                 {t('draft.sign')}
               </Link>
-              {edition === 'desktop' && (
-                <Link className="button button--quiet" to="/outgoing">
-                  {t('draft.send')}
-                </Link>
-              )}
+              <button
+                type="button"
+                className="button button--quiet"
+                onClick={() => void downloadDraft('send')}
+                disabled={downloading || saveState !== 'saved'}
+              >
+                {t('draft.send')}
+              </button>
             </>
           )}
           <button

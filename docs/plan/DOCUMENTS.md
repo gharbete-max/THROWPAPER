@@ -104,8 +104,8 @@ animate.
 - The sidebar stays inside the parts as it is, minus whatever the switch hides.
 - **As built in phase 2**, the parts link to today's screens: Forms to `/forms`; Scan to
   `/forms?new`, which opens the doors on the paper door; Sign to `/signing`; Send to To send on
-  the desktop. The server edition has no Send yet, and its Send and centre say "Not in this
-  edition" rather than offering either. Phases 3 to 5 give each part its own screen.
+  the desktop. Phases 3 to 5 give each part its own screen. **As built in the Send phase**, Send
+  goes to `/send` on both editions; only the server's centre still says "Not in this edition".
 - **On a phone** the opened catcher stops putting each part on its pocket, where Scan and Send
   had a third of 360 px each, and stacks: the opened mark, the four parts two by two, then the
   centre. The closed room gives Documents the first row and the placeholders the second.
@@ -217,7 +217,15 @@ exists, reshaped where it must be.
       and a note, goes through a confirmation (rule 7) and into To send.
     - On the desktop the message opens as a draft in the person's own mail program.
     - Nothing leaves without their press.
-  - **The hosted edition has no To send.** Hosted Send comes with the hosted edition (§9).
+  - **The hosted edition has no To send.** As built, its Send queues through the server's mail
+    provider instead (`send.document` jobs). A test provider (console, `.eml` outbox) says "test" on
+    the confirmation and after it; a real one needs a verified sending domain (`senderFor`), and a
+    failed message shows as failed. How long a hosted server keeps the stored attachment is not
+    decided.
+  - **As built:** `/send` (one document, or one personalised PDF each from a list), the hand-off
+    `lib/send-handoff.ts` from Scan and Forms (Signing queues its own copy), `POST /v1/send/*`, a
+    cap of 200 per batch, idempotent on a key, a confirmation naming recipients, subject and
+    attachment, and per-recipient status. No tracking, no campaigns.
 
 ## 4. The centre: summary and translation
 

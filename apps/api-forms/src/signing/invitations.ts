@@ -271,7 +271,11 @@ export async function queueSignedCopies(
 }
 
 /** The sender address every email from this product keeps to (`send-job.ts`). */
-async function senderFor(repos: Repositories, provider: MailProvider, organisationId: string) {
+export async function senderFor(
+  repos: Repositories,
+  provider: MailProvider,
+  organisationId: string,
+) {
   const sendingDomain = (await repos.sendingDomains.list(organisationId))[0] ?? null;
   const from = sendingDomain?.fromAddress ?? '';
   if (!['console', 'memory', 'outbox', 'queue', 'outlook', 'apple-mail'].includes(provider.name)) {
