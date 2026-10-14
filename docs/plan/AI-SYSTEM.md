@@ -1,6 +1,6 @@
 # One AI system for every Loppa — the plan
 
-**Status:** proposed 2026-10-14, for the owner. Planning only: nothing in this file has been built.
+**Status:** accepted 2026-10-14. The owner left the model choice to the project's judgement and asked that neither model be ruled out: both stay, routed by task; the text model is the default for every text task, the vision model is used only to read pages; unification (D2) happens only if measured to be better. Phases 1 and 2 start together. Planning only: nothing in this file has been built.
 Written after reading the owner's brief (a visual document reader, the text model, an email reply
 helper, one coordinator) and checking the repository, the files the owner placed in it, the
 installed runtime and the model cards. What was measured is marked; what was not is marked
@@ -144,7 +144,7 @@ Defaults are taken so work can continue; each can be overturned.
    product on licence grounds, keeping it only as the evaluation baseline. This needs about 3.6 GB
    of new downloads in Phase 1.
 2. **Runtime:** default is `llama-server` for vision (D1), `node-llama-cpp` kept for text.
-3. **One file or two:** default is to measure whether Qwen3-VL-4B can replace the text model too.
+3. **One file or two:** default is two (the text model for text, a vision model for pages); whether Qwen3-VL-4B could replace the text model too is measured, and adopted only if it is at least as good.
 4. **Where files live:** default is to accept the repository root as it is (D7).
 
 ## 6. Hashes of the files placed in the repository
