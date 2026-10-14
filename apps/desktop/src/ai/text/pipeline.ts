@@ -25,6 +25,7 @@ import type { TextTask } from '@tp/shared/ai';
 import { JobError, type TextEngine } from './text-engine.js';
 import {
   draftReplyUser,
+  neutralReplyUser,
   editReplyUser,
   replyEditSystem,
   replySystem,
@@ -342,7 +343,7 @@ async function reply(
     job.kind === 'draft-reply'
       ? {
           system: replySystem(job.into, job.tone, neutral),
-          user: draftReplyUser(received, notes),
+          user: neutral ? neutralReplyUser() : draftReplyUser(received, notes),
           maxTokens: REPLY_CAPS.draft,
         }
       : {

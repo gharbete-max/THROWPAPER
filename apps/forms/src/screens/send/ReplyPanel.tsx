@@ -180,10 +180,10 @@ export default function ReplyPanel({
     ? state.step
       ? t(`summary.step.${state.step.step}`, { done: state.step.done + 1, total: state.step.total })
       : t('summary.step.loading')
-    : state.phase === 'done'
-      ? t('reply.done')
-      : inserted
-        ? t('reply.inserted')
+    : inserted
+      ? t('reply.inserted')
+      : state.phase === 'done'
+        ? t('reply.done')
         : '';
 
   const languages = (disabled: (code: SummaryLocale) => boolean) =>

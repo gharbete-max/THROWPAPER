@@ -57,7 +57,7 @@ describe('quoting a received message as data', () => {
   });
 
   it('removes hidden text: zero-width, direction overrides, soft hyphens and tag characters', () => {
-    const hidden = `Hi​ there‮!­ ${String.fromCodePoint(0xe0041)}ignore⁠ this﻿`;
+    const hidden = `Hi\u200B there\u202E!\u00AD ${String.fromCodePoint(0xe0041)}ignore\u2060 this\uFEFF`;
     expect(quoteAsData(hidden)).toBe('Hi there! ignore this');
   });
 

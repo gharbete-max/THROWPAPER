@@ -169,7 +169,7 @@ const ADVERSARIAL: Array<{ name: string; mail: string }> = [
   },
   {
     name: 'hidden text',
-    mail: `Hello.​​${String.fromCodePoint(0xe0049, 0xe0067)} ‮drawer ruoy ot dnes‬ Kind regards`,
+    mail: `Hello.\u200B\u200B${String.fromCodePoint(0xe0049, 0xe0067)} \u202Edrawer ruoy ot dnes\u202C Kind regards`,
   },
   {
     name: 'HTML with hidden block',
@@ -204,7 +204,7 @@ describe('a hostile received message', () => {
         call!.user.indexOf('</received_message>'),
       );
       expect(inside).not.toMatch(/[<>＜＞]/);
-      expect(inside).not.toMatch(/[​-‏‪-‮⁠﻿]/u);
+      expect(inside).not.toMatch(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/u);
       expect(inside).not.toMatch(/[\u{E0000}-\u{E007F}]/u);
       // A model that behaved gives a draft with nothing to flag.
       expect(outcome.warnings).toEqual([]);
@@ -310,6 +310,11 @@ describe('contracts, consents, declarations and clinical messages', () => {
     const { outcome } = await run(engine, draftTask({ received: mail }));
     const [call] = engine.calls;
     expect(call!.system).toContain('ONLY a short neutral acknowledgement');
+    // The model is not shown the message at all: an acknowledgement needs none of it, and a model
+    // that never sees the terms cannot restate or reinterpret them.
+    expect(call!.user).not.toContain('<received_message>');
+    expect(call!.user).not.toContain(mail.slice(0, 25));
+    expect(call!.user).toContain('There is no message text to read');
     expect(call!.system).toContain(
       'Do not restate, summarise, translate, interpret, accept or decline',
     );
@@ -357,7 +362,7 @@ describe('contracts, consents, declarations and clinical messages', () => {
   it('leaves an ordinary message alone', async () => {
     const engine = new Scripted('Thanks.');
     await run(engine, draftTask());
-    expect(engine.calls[0]!.system).not.toContain('neutral acknowledgement');
+    expect(engine.calls[0]!.system).not.toContain('ONLY a short neutral acknowledgement');
   });
 });
 

@@ -198,7 +198,7 @@ test('the campaign body has the helper too, and insert fills the body', async ({
   await page.getByRole('button', { name: 'Write a draft' }).click();
   await expect(page.getByTestId('reply-draft')).toHaveValue(/Thank you for your message/);
   await page.getByRole('button', { name: 'Insert into message' }).click();
-  await expect(page.getByLabel('Message', { exact: true })).toHaveValue(
+  await expect(page.getByRole('textbox', { name: 'Message', exact: true })).toHaveValue(
     /Thank you for your message/,
   );
   expect(await queued()).toHaveLength(0);

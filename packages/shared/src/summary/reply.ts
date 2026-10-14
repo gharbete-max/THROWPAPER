@@ -65,7 +65,7 @@ export function isReplyTask(value: unknown): value is ReplyTask {
 }
 
 /** Zero-width, bidirectional-control, soft-hyphen and "tag" characters: ways to hide text. */
-const INVISIBLE = /[­​-‏‪-‮⁠-⁯﻿\u{E0000}-\u{E007F}]/gu;
+const INVISIBLE = /[\u00AD\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF\u{E0000}-\u{E007F}]/gu;
 // eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 const ANGLES = /[<＜﹤]/g;
