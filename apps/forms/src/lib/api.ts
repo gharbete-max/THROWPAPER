@@ -204,7 +204,12 @@ async function requestBlob(path: string, retry = true): Promise<Blob> {
  * Sends a multipart body and gets bytes back — a PDF made from the files sent. Like `requestBlob`
  * it keeps the server's own error code, so a screen can say which file was the trouble.
  */
-async function postForBlob(path: string, body: FormData | object, retry = true): Promise<Blob> {
+async function postForBlob(
+  path: string,
+  body: FormData | object,
+  retry = true,
+  seen?: (headers: Headers) => void,
+): Promise<Blob> {
   const headers = new Headers();
   if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
   const json = !(body instanceof FormData);
@@ -216,7 +221,7 @@ async function postForBlob(path: string, body: FormData | object, retry = true):
     body: json ? JSON.stringify(body) : body,
   });
   if (response.status === 401 && retry && (await refreshOnce())) {
-    return postForBlob(path, body, false);
+    return postForBlob(path, body, false, seen);
   }
   if (!response.ok) {
     const parsed: unknown = await response.json().catch(() => null);
@@ -228,6 +233,7 @@ async function postForBlob(path: string, body: FormData | object, retry = true):
       error ?? {},
     );
   }
+  seen?.(response.headers);
   return response.blob();
 }
 
@@ -314,6 +320,17 @@ export const client = {
     body.set('plan', JSON.stringify(plan));
     if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
     return postForBlob('/v1/pdf/arrange', body);
+  },
+
+  /**
+   * A digital copy of a photographed page as a PDF (`POST /v1/pdf/copy`); with `photo`, the
+   * searchable kind. `seen` is given the reply's headers (`x-copy-replaced`).
+   */
+  copyPdf: (copy: api.CopyPdfRequest, photo?: Blob, seen?: (headers: Headers) => void) => {
+    const body = new FormData();
+    if (photo) body.append('file', photo, 'photo.jpg');
+    body.set('copy', JSON.stringify(copy));
+    return postForBlob('/v1/pdf/copy', body, true, seen);
   },
 
   /** What a send does on this server (a test, To send, or the real thing) and its caps. */

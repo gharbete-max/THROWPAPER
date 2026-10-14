@@ -71,7 +71,7 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 (confidence and bucket, the OCR cap), a PDF's own form fields over its text, and all
                 of them in one call, each with its debug artifact; the paper twin's boxes, where
                 each question's answer and each option's tick go on the page it was read from; and
-                stage 9's comparison of a form with its document read again (@tp/shared/import);
+                stage 9's comparison of a form with its document read again; and the digital copy of a photographed page — a line finder over ink and paper (skew, ruled lines, box and cell borders) and the copy built from it and the OCR words, as SVG and plain text (@tp/shared/import, scan/); POST /v1/pdf/copy's request schema is in @tp/shared/api;
                 free text read by rules — normalisation, word lists and built-in aliases in twelve
                 languages, the rules for learned ones, the ladder T0–T8, the committed sigmoid
                 table, and an integer logarithm and exponential (@tp/shared/interpret); the summary

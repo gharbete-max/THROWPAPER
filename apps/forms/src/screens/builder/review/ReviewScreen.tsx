@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { BUILDER_GRAPH, importQuestions, reimport, type Conversation } from '@tp/shared/builder';
 import { MAX_PAPER_PAGES } from '@tp/shared/forms';
 import { MAX_PASTE, type ImportChoices, type PageBox } from '@tp/shared/import';
 import { LoadFailed } from '../../../components/LoadFailed.js';
 import { Loading } from '../../../components/Loading.js';
 import { client } from '../../../lib/api.js';
+import { pageFromState } from '../../../lib/copy-handoff.js';
 import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { startConversation } from '../guided/conversation.js';
@@ -19,7 +20,7 @@ import {
   ReadingPageTooSlow,
   type PageReader,
 } from '../paper/ocr.js';
-import { photoDocument } from '../paper/ocr-words.js';
+import { photoDocument, type RecognisedWords } from '../paper/ocr-words.js';
 import { isPhoto, openPhoto, PHOTO_TYPES } from '../paper/photo.js';
 import type { Reading } from '../paper/reading.js';
 import { NoWorker, ReadingTooSlow, readInWorker } from '../paper/read-in-worker.js';
@@ -68,6 +69,7 @@ export function ReviewScreen() {
   const { id } = useParams();
   const t = useT();
   const navigate = useNavigate();
+  const handed = pageFromState(useLocation().state);
   const { locales, contentLocale, user } = useSession();
 
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -132,6 +134,14 @@ export function ReviewScreen() {
 
   useEffect(load, [load]);
 
+  // A page the digital copy handed over is read into the import at once, and once.
+  const startedHanded = useRef(false);
+  useEffect(() => {
+    if (!handed || startedHanded.current) return;
+    startedHanded.current = true;
+    void chooseFile(handed.photo, handed.recognised);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // An open PDF or photograph holds its pages for the source pane; closed when another replaces it,
   // or on leaving.
   useEffect(() => () => void read?.pages?.close(), [read]);
@@ -171,7 +181,7 @@ export function ReviewScreen() {
     setPhase('review');
   }
 
-  async function chooseFile(file: File | undefined) {
+  async function chooseFile(file: File | undefined, alreadyRead?: RecognisedWords) {
     if (!file) return;
     setPhase('reading');
     setError(null);
@@ -215,11 +225,10 @@ export function ReviewScreen() {
         // One page, read as it is; the form keeps no paper of it (`SCANS.md` §3).
         const photo = await openPhoto(file);
         try {
-          const recognised = await readByOcr(
-            () => Promise.resolve(photo.picture(READ_LONG_SIDE)),
-            1,
-            1,
-          );
+          // A page a digital copy handed over comes with its words: they are not read again.
+          const recognised =
+            alreadyRead ??
+            (await readByOcr(() => Promise.resolve(photo.picture(READ_LONG_SIDE)), 1, 1));
           const raw = photoDocument(recognised, photo.sha256);
           opened(await readInWorker({ kind: 'raw', raw }), photo);
         } catch (cause) {
