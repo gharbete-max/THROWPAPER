@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import {
   CAMPAIGN_FIELDS,
   SEND_LIMITS,
@@ -16,8 +16,13 @@ import { useSession } from '../lib/session.js';
 import { useToast } from '../lib/toast.js';
 import { sortedRows, type SortColumn } from '../lib/send-rows.js';
 import { Icon } from '../components/Icon.js';
+import { Loading } from '../components/Loading.js';
 import { Delivery, ModeNote, useSendMode } from './send-parts.js';
 import { ListStep, useList } from './send-list.js';
+
+const Suppressions = lazy(() =>
+  import('./Suppressions.js').then((m) => ({ default: m.Suppressions })),
+);
 
 type Step = 'list' | 'write' | 'preview' | 'confirm' | 'done';
 const STEPS: readonly Step[] = ['list', 'write', 'preview', 'confirm'];
@@ -44,6 +49,7 @@ export function SendCampaign() {
   const [key, setKey] = useState('');
   const [testToMe, setTestToMe] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [managing, setManaging] = useState(false);
   const [suppressed, setSuppressed] = useState<ReadonlySet<string>>(new Set());
   const [queued, setQueued] = useState<{ id: string; to: string }[]>([]);
   const [leftOut, setLeftOut] = useState<string[]>([]);
@@ -133,6 +139,14 @@ export function SendCampaign() {
     </div>
   );
 
+  if (managing) {
+    return (
+      <Suspense fallback={<Loading />}>
+        <Suppressions onClose={() => setManaging(false)} />
+      </Suspense>
+    );
+  }
+
   if (step === 'done') {
     return (
       <div className="stack" data-testid="campaign-done">
@@ -160,6 +174,15 @@ export function SendCampaign() {
           </li>
         ))}
       </ol>
+      <div className="row">
+        <button
+          type="button"
+          className="button button--quiet small"
+          onClick={() => setManaging(true)}
+        >
+          {t('suppress.open')}
+        </button>
+      </div>
 
       {step === 'list' && (
         <div className="stack">

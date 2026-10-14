@@ -1842,6 +1842,25 @@ export const enGB = {
   'docs.keep.save': 'Download',
   'docs.keep.cancel': 'Cancel',
   'docs.keep.working': 'Working out the sizes…',
+  'suppress.open': 'Do not email list',
+  'suppress.close': 'Back to the campaign',
+  'suppress.heading': 'Do not email',
+  'suppress.scope':
+    'This list only stops campaigns (an email to a list). It does not stop one-off documents or signing invitations.',
+  'suppress.empty': 'No addresses on the list.',
+  'suppress.col.email': 'Address',
+  'suppress.col.date': 'Added',
+  'suppress.col.reason': 'Reason',
+  'suppress.reason.unsubscribed': 'Unsubscribed',
+  'suppress.reason.bounced': 'Bounced',
+  'suppress.reason.manual': 'Added by hand',
+  'suppress.add.label': 'Address to add',
+  'suppress.add': 'Add',
+  'suppress.invalid': 'That is not a valid email address.',
+  'suppress.remove': 'Remove {email}',
+  'suppress.removeConfirm':
+    'Remove {email} from the list? Campaigns can then reach this address again.',
+  'suppress.failed': 'The list could not be changed. Try again.',
 } as const;
 
 /**
