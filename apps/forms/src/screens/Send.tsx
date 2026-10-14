@@ -6,9 +6,14 @@ import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useToast } from '../lib/toast.js';
 import { addressesOf, isSendable, sendFileFromState, subjectOf } from '../lib/send-handoff.js';
+import { checkAddresses, tokensOf } from '../lib/address-hygiene.js';
+import { formatMegabytes as megabytes } from '../lib/attachment-size.js';
 import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { Delivery, ModeNote, useSendMode } from './send-parts.js';
+import { AddressInput, RecentAddresses, useAddressBook } from './AddressInput.js';
+import { AddressIssues } from './AddressIssues.js';
+import { AttachmentSize } from './AttachmentSize.js';
 
 // The list screen is the larger half and only some people open it.
 const SendBatch = lazy(() => import('./SendBatch.js').then((m) => ({ default: m.SendBatch })));
@@ -61,8 +66,6 @@ export function Send() {
 
 type Step = 'write' | 'confirm' | 'done';
 
-const megabytes = (bytes: number) => `${Math.max(0.1, bytes / 1024 / 1024).toFixed(1)} MB`;
-
 function SendOne() {
   const t = useT();
   const toast = useToast();
@@ -83,6 +86,15 @@ function SendOne() {
   const [queued, setQueued] = useState<{ id: string; to: string }[]>([]);
 
   const addresses = addressesOf(to);
+  const book = useAddressBook();
+  const tokens = tokensOf(to);
+  /** Fixing or skipping a row of the table rewrites the box it came from. */
+  const rewrite = (index: number, address: string | null) =>
+    setTo(
+      tokens
+        .flatMap((token, i) => (i !== index ? [token] : address === null ? [] : [address]))
+        .join(', '),
+    );
 
   function choose(chosen: File | undefined) {
     if (!chosen) return;
@@ -123,6 +135,7 @@ function SendOne() {
         ...(testToMe && user ? { testTo: user.email } : {}),
       });
       setQueued(result.items.map((item) => ({ id: item.id, to: item.to })));
+      if (!testToMe) book.remember(addresses);
       setStep('done');
     } catch {
       toast.show(t('send.failed'), 'error');
@@ -181,6 +194,7 @@ function SendOne() {
           </div>
         </dl>
         {/\.docx$/i.test(file.name) && <p className="small muted">{t('send.wordAsIs')}</p>}
+        <AttachmentSize file={file} onReplace={setFile} />
         <ModeNote mode={mode?.mode ?? null} />
         {user && (
           <label className="row">
@@ -245,17 +259,26 @@ function SendOne() {
       {file && /\.docx$/i.test(file.name) && <p className="small muted">{t('send.wordAsIs')}</p>}
       <label className="field">
         <span>{t('send.to')}</span>
-        <textarea
-          rows={3}
-          aria-label={t('send.to')}
-          aria-describedby="send-to-hint"
+        <AddressInput
           value={to}
-          onChange={(event) => setTo(event.target.value)}
+          onChange={setTo}
+          book={book.book}
+          label={t('send.to')}
+          describedBy="send-to-hint"
         />
         <span id="send-to-hint" className="small muted">
           {t('send.toHint', { count: SEND_LIMITS.recipients })}
         </span>
       </label>
+      <RecentAddresses book={book} />
+      <AddressIssues
+        addresses={tokens}
+        // The address still being typed is not looked at until a separator ends it.
+        issues={checkAddresses(/[\s,;]$/.test(to) ? tokens : tokens.slice(0, -1))}
+        skipped={0}
+        onEdit={rewrite}
+        onSkip={(index) => rewrite(index, null)}
+      />
       <label className="field">
         <span>{t('send.subject')}</span>
         <input value={subject} onChange={(event) => setSubject(event.target.value)} />

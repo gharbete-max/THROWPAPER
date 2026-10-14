@@ -1791,4 +1791,41 @@ export const nbNO: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adresse utelates fordi den har meldt seg av eller returnert. | other {count} adresser utelates fordi de har meldt seg av eller returnert.',
   'campaign.leftOut.done': 'Utelatt (avmeldt eller returnert): {list}',
+  'hygiene.heading': 'Kontroller adressene',
+  'hygiene.col.row': 'Rad',
+  'hygiene.col.address': 'Adresse',
+  'hygiene.col.note': 'Merknad',
+  'hygiene.issue.syntax': 'Dette er ikke en e-postadresse.',
+  'hygiene.issue.duplicate': 'Samme adresse som rad {row}. Den sendes én gang.',
+  'hygiene.issue.typo': 'Mente du {suggestion}?',
+  'hygiene.issue.role': 'En felles postboks snarere enn en person. Kun til informasjon.',
+  'hygiene.edit': 'Adresse i rad {row}',
+  'hygiene.fix': 'Endre til {address}',
+  'hygiene.skip': 'Hopp over',
+  'hygiene.restore': 'Ta tilbake overhoppede adresser ({count})',
+  'hygiene.counts': '{send} sendes, {skipped} hoppes over',
+  'hygiene.blocked':
+    'Rett eller hopp over hver adresse som ikke er en e-postadresse, før du går videre.',
+  'book.label': 'Siste adresser',
+  'book.hint':
+    'Lagres bare i denne nettleseren og lastes aldri opp. Begynn å skrive for å velge en.',
+  'book.forget': 'Glem {address}',
+  'book.clear': 'Glem alle',
+  'book.clearAsk': 'Glem alle {count} siste adresser? De lagres bare i denne nettleseren.',
+  'attach.warn':
+    'Filen er stor ({size}). Mange e-postsystemer avviser meldinger over omtrent {limit}.',
+  'attach.shrink': 'Gjør mindre',
+  'attach.shrinking': 'Forminsker…',
+  'attach.shrunk': 'Gjort mindre: {before} til {after}.',
+  'attach.noGain': 'Den kunne ikke gjøres mindre.',
+  'attach.failed': 'Den kunne ikke gjøres mindre. En signert eller beskyttet fil kan ikke endres.',
+  'campaign.plainText': 'Ren tekst-visning',
+  'campaign.plainTextHint':
+    'Slik viser et e-postprogram som bare viser tekst, meldingen til denne personen.',
+  'campaign.links': 'Lenker i denne meldingen',
+  'campaign.links.none': 'Det er ingen lenker i denne meldingen.',
+  'campaign.links.note':
+    'Ingen av disse lenkene spores eller skrives om. De sendes nøyaktig slik de er skrevet.',
+  'campaign.testFirst': 'Send til meg selv først',
+  'campaign.testFirstHint': 'Anbefalt: se nøyaktig hva som kommer frem før det går til alle.',
 };
