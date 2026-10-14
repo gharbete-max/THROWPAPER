@@ -8262,6 +8262,8 @@ a.room__centre:focus-visible {
   position: absolute;
   background: var(--tp-colour-primary);
   opacity: 0.55;
+}
+
 /* Documents flow: what a drop was taken for, the keep panel, and the room's recent documents. */
 .scan__notice {
   padding: var(--tp-spacing-unit);
