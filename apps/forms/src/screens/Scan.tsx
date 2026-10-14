@@ -33,6 +33,7 @@ import {
 
 const ScanEdit = lazy(() => import('./scan-edit/ScanEdit.js'));
 const KeepPanel = lazy(() => import('./documents/KeepPanel.js'));
+const ScanFilter = lazy(() => import('./scan-filter/ScanFilter.js'));
 
 /** The server's limits (`api-forms/src/pdf/arrange.ts`), so the screen can say so before sending. */
 const MAX_FILES = 40;
@@ -57,6 +58,7 @@ export function Scan() {
   const [pages, setPages] = useState<ScanPage[]>([]);
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState<{ blob: Blob; page: number } | null>(null);
+  const [filtering, setFiltering] = useState<string | null>(null);
   const picker = useRef<HTMLInputElement>(null);
   const { user } = useSession();
   const location = useLocation();
@@ -242,6 +244,17 @@ export function Scan() {
     setPages(pagesOfFile(0, pdf.pageCount));
   }
 
+  /** A photograph made over (filtered, or put back): its file and drawing change, its place does not. */
+  function replacePhoto(index: number, photo: File) {
+    const old = sources[index];
+    if (old && 'url' in old) URL.revokeObjectURL(old.url);
+    setFiles((current) => current.map((file, i) => (i === index ? photo : file)));
+    setSources((current) =>
+      current.map((source, i) => (i === index ? { url: URL.createObjectURL(photo) } : source)),
+    );
+    setFiltering(null);
+  }
+
   function onDrop(event: DragEvent) {
     event.preventDefault();
     void receive([...event.dataTransfer.files]);
@@ -378,6 +391,13 @@ export function Scan() {
                   icon="redo"
                   onClick={() => setPages(turnPage(pages, page.id))}
                 />
+                {'url' in sources[page.file]! ? (
+                  <PageButton
+                    label={t('scan.filter.open')}
+                    icon="preview"
+                    onClick={() => setFiltering(page.id)}
+                  />
+                ) : null}
                 <PageButton
                   label={t('scan.edit')}
                   icon="edit"
@@ -393,6 +413,18 @@ export function Scan() {
             </li>
           ))}
         </ol>
+      )}
+      {pages.map((page, position) =>
+        page.id === filtering ? (
+          <Suspense key={page.id} fallback={null}>
+            <ScanFilter
+              number={position + 1}
+              file={files[page.file]!}
+              onApply={(photo) => replacePhoto(page.file, photo)}
+              onClose={() => setFiltering(null)}
+            />
+          </Suspense>
+        ) : null,
       )}
       {editing ? (
         <Suspense fallback={null}>
@@ -418,7 +450,7 @@ function PageButton({
   onClick,
 }: {
   label: string;
-  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit';
+  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit' | 'preview';
   disabled?: boolean;
   onClick: () => void;
 }) {

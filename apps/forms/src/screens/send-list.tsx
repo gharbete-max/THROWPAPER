@@ -1,7 +1,9 @@
 import { useMemo, useRef, useState } from 'react';
 import { guessColumns, parseTable, rowsFrom, type BatchRow, type ColumnMap } from '@tp/shared/api';
 import { useT } from '../lib/i18n.js';
+import { checkAddresses } from '../lib/address-hygiene.js';
 import { Icon } from '../components/Icon.js';
+import { AddressIssues } from './AddressIssues.js';
 
 const COLUMNS = ['name', 'email', 'amount', 'reference'] as const;
 
@@ -10,21 +12,71 @@ const COLUMNS = ['name', 'email', 'amount', 'reference'] as const;
  * its columns to name, email, amount and reference. Shared by the batch of documents and the
  * campaign, so a list is read the same way for both.
  */
-export function useList() {
+export function useList({ duplicates = false }: { duplicates?: boolean } = {}) {
   const [text, setText] = useState('');
-  const [header, setHeader] = useState(true);
-  const [map, setMap] = useState<ColumnMap>({ name: 0, email: 1, amount: 2, reference: 3 });
+  const [header, setHeaderState] = useState(true);
+  const [map, setMapState] = useState<ColumnMap>({ name: 0, email: 1, amount: 2, reference: 3 });
+  /** The person's fixes (an address) and skips (`null`) of rows, by their place in the list. */
+  const [edits, setEdits] = useState<Record<number, string | null>>({});
   const cells = useMemo(() => parseTable(text), [text]);
-  const rows: BatchRow[] = useMemo(
+  const all: BatchRow[] = useMemo(
     () => rowsFrom(header ? cells.slice(1) : cells, map),
     [cells, header, map],
   );
+  const edited = useMemo(
+    () =>
+      all.map((row, index) => {
+        const edit = edits[index];
+        return edit === undefined ? row : edit === null ? null : { ...row, email: edit };
+      }),
+    [all, edits],
+  );
+  const rows = useMemo(() => edited.filter((row): row is BatchRow => row !== null), [edited]);
+  const issues = useMemo(
+    () =>
+      checkAddresses(
+        edited.map((row) => row?.email ?? null),
+        { duplicates },
+      ),
+    [edited, duplicates],
+  );
+  // Fixes and skips belong to the rows they were made on: another reading of the list drops them.
+  const fresh = () => setEdits({});
   /** A new list: guess the mapping from its first line. */
   const load = (content: string) => {
     setText(content);
-    setMap(guessColumns(header ? (parseTable(content)[0] ?? []) : []));
+    setMapState(guessColumns(header ? (parseTable(content)[0] ?? []) : []));
+    fresh();
   };
-  return { text, header, setHeader, map, setMap, cells, rows, load };
+  return {
+    text,
+    header,
+    setHeader: (value: boolean) => {
+      setHeaderState(value);
+      fresh();
+    },
+    map,
+    setMap: (value: ColumnMap) => {
+      setMapState(value);
+      fresh();
+    },
+    cells,
+    /** The rows to use: skipped ones out, fixes in. */
+    rows,
+    /** How many rows the list had as read, before skips. */
+    total: all.length,
+    addresses: edited.map((row) => row?.email ?? null),
+    issues,
+    skipped: edited.length - rows.length,
+    edit: (index: number, address: string) =>
+      setEdits((current) => ({ ...current, [index]: address })),
+    skip: (index: number) => setEdits((current) => ({ ...current, [index]: null })),
+    restore: () =>
+      setEdits((current) =>
+        Object.fromEntries(Object.entries(current).filter(([, v]) => v !== null)),
+      ),
+    load,
+  };
 }
 
 export type List = ReturnType<typeof useList>;
@@ -108,6 +160,14 @@ export function ListStep({
       <p className="small" aria-live="polite" data-testid="batch-count">
         {t('batch.rows', { count: rows.length })}
       </p>
+      <AddressIssues
+        addresses={list.addresses}
+        issues={list.issues}
+        skipped={list.skipped}
+        onEdit={list.edit}
+        onSkip={list.skip}
+        onRestore={list.restore}
+      />
       {rows.length > cap && (
         <p className="status-down small" role="alert">
           {capText}
