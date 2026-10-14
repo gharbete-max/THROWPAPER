@@ -1562,6 +1562,47 @@ export const svSE: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'Modellen började upprepa sig och stoppades. Behandla resultatet med försiktighet.',
   'summary.passage': 'Avsnitt {n}',
+  'reply.open': 'Hjälp mig svara',
+  'reply.heading': 'Svarshjälp',
+  'reply.privacy':
+    'Utkastet skrivs av en modell på den här datorn. Inget skickas eller sparas, och inget bifogas.',
+  'reply.received': 'Meddelandet du fick',
+  'reply.receivedHint':
+    'Klistra in det här. Lämna tomt för att skriva utifrån dina egna anteckningar nedan.',
+  'reply.notes': 'Vad jag vill säga (valfritt)',
+  'reply.language': 'Svarsspråk',
+  'reply.tone': 'Ton',
+  'reply.tone.professional': 'Professionell',
+  'reply.tone.friendly': 'Vänlig',
+  'reply.tone.concise': 'Kortfattad',
+  'reply.tone.formal': 'Formell',
+  'reply.tone.firm': 'Bestämd',
+  'reply.neutral':
+    'Det här ser ut som ett avtal, ett samtycke, en försäkran eller ett kliniskt meddelande. Utkastet är bara en neutral bekräftelse och återger eller tolkar inget av det. Läs originalet själv.',
+  'reply.generate': 'Skriv ett utkast',
+  'reply.done': 'Utkastet är klart.',
+  'reply.inserted': 'Infogat i meddelandet. Inget har skickats.',
+  'reply.label': 'Skapat av modellen på den här datorn — kontrollera det innan du använder det',
+  'reply.draft': 'Utkast',
+  'reply.shorter': 'Kortare',
+  'reply.regenerate': 'Skriv igen',
+  'reply.translateTo': 'Översätt till',
+  'reply.translate': 'Översätt',
+  'reply.revise': 'Hur ska det ändras?',
+  'reply.reviseGo': 'Ändra',
+  'reply.insert': 'Infoga i meddelandet',
+  'reply.discard': 'Släng',
+  'reply.overwrite': 'Meddelanderutan innehåller redan text. Ersätta den med det här utkastet?',
+  'reply.overwrite.yes': 'Ersätt',
+  'reply.noModel':
+    'Textmodellen är inte installerad på den här datorn, så inget utkast kan skrivas.',
+  'reply.noModelLink': 'Öppna modelllistan',
+  'reply.warn.numbers':
+    'Siffror i utkastet som inte finns i meddelandet eller dina anteckningar: {numbers}. Kontrollera dem eller ta bort dem.',
+  'reply.warn.attachment':
+    'Utkastet nämner en bilaga. Den här hjälpen bifogar ingenting. Ta bort den delen.',
+  'reply.warn.language': 'Utkastet kanske inte är på det språk du valde. Läs det noga.',
+  'reply.placeholders': 'Luckor markerade med frågetecken som du behöver fylla i: {count}.',
   'invoiceScan.heading': 'Läs en leverantörsfaktura',
   'invoiceScan.intro':
     'Välj ett foto, en skanning eller en PDF av en faktura du fått. Den läses på den här enheten och skickas ingen annanstans. Varje värde visas vid den plats där det hittades, och inget används förrän du bekräftat det.',

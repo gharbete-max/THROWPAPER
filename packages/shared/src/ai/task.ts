@@ -1,4 +1,5 @@
 import type { ModelJob } from '../summary/bridge.js';
+import type { ReplyTask } from '../summary/reply.js';
 import type { Capability } from './capability.js';
 
 /**
@@ -7,8 +8,11 @@ import type { Capability } from './capability.js';
  * {@link TASK_CAPABILITY}; it ships no runtime and no channel of its own.
  */
 
-/** The text kinds are the summary centre's jobs, unchanged (ADR 0023). */
-export type TextTask = ModelJob;
+/**
+ * The text kinds: the summary centre's jobs, unchanged (ADR 0023), and the email reply helper's
+ * four (docs/plan/AI-SYSTEM.md D6). Every one needs the text model and nothing else.
+ */
+export type TextTask = ModelJob | ReplyTask;
 
 /**
  * Read one page of a document from a picture of it (docs/plan/AI-SYSTEM.md D4). A TYPE ONLY for
@@ -33,6 +37,10 @@ export const TASK_CAPABILITY = {
   summarise: 'text',
   translate: 'text',
   select: 'text',
+  'draft-reply': 'text',
+  'shorten-reply': 'text',
+  'translate-reply': 'text',
+  'revise-reply': 'text',
   'read-page': 'vision',
 } as const satisfies Record<AiTaskKind, Capability>;
 

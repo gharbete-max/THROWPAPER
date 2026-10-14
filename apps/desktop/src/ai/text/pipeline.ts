@@ -10,15 +10,25 @@ import {
   parseSelection,
   reduceCap,
   repeatsARun,
+  quoteAsData,
+  REPLY_LIMITS,
+  replyFlags,
   summaryIn,
   translateInto,
   translationCap,
   type JobStep,
   type JobWarning,
   type ModelJob,
+  type ReplyTask,
 } from '@tp/shared/summary';
+import type { TextTask } from '@tp/shared/ai';
 import { JobError, type TextEngine } from './text-engine.js';
 import {
+  draftReplyUser,
+  neutralReplyUser,
+  editReplyUser,
+  replyEditSystem,
+  replySystem,
   formUser,
   mapUser,
   pageUser,
@@ -94,11 +104,15 @@ async function ask(engine: TextEngine, signal: AbortSignal, request: Ask) {
 
 export async function runJob(
   engine: TextEngine,
-  job: ModelJob,
+  job: TextTask,
   sink: Sink,
   signal: AbortSignal,
 ): Promise<JobOutcome> {
   const warnings: JobWarning[] = [];
+  if (isReply(job)) {
+    await reply(engine, job, sink, signal, warnings);
+    return { warnings };
+  }
   if (job.kind === 'select') {
     await select(engine, job, sink, signal);
     return { warnings };
@@ -278,4 +292,94 @@ async function select(
   }
   sink.step('reading', windows.length, windows.length);
   sink.selected([...chosen].sort((a, b) => a - b));
+}
+
+const isReply = (job: TextTask): job is ReplyTask => job.kind.endsWith('-reply');
+
+/** What a draft may take its numbers from: never the draft, always what the writer supplied. */
+export const replyReference = (job: ReplyTask): string[] => [
+  job.received,
+  job.notes,
+  job.kind === 'revise-reply' ? job.instruction : '',
+];
+
+const REPLY_CAPS = { draft: 500, shorten: 350, revise: 500 } as const;
+
+/**
+ * The email reply helper (docs/plan/AI-SYSTEM.md D6). One guarded call, shown as it is written,
+ * then the checks of {@link replyFlags}: numbers the writer never supplied, an attachment named,
+ * the wrong language. A message that trips the quote-only word lists gets a neutral
+ * acknowledgement and nothing else, and its terms are never translated (ADR 0012). Nothing is sent
+ * and nothing is kept: the model has no tools, and what it writes goes to the window only.
+ */
+async function reply(
+  engine: TextEngine,
+  job: ReplyTask,
+  sink: Sink,
+  signal: AbortSignal,
+  warnings: JobWarning[],
+): Promise<void> {
+  const draft = job.kind === 'draft-reply' ? '' : job.draft;
+  const instruction = job.kind === 'revise-reply' ? job.instruction : '';
+  if (
+    job.received.length > REPLY_LIMITS.received ||
+    job.notes.length > REPLY_LIMITS.notes ||
+    draft.length > REPLY_LIMITS.draft ||
+    instruction.length > REPLY_LIMITS.instruction
+  ) {
+    throw new JobError('too-long');
+  }
+  if (translateInto(job.into) === 'no') throw new JobError('language-refused');
+  const received = quoteAsData(job.received);
+  const notes = quoteAsData(job.notes);
+  if (job.kind === 'draft-reply' && received === '' && notes === '') {
+    throw new JobError('failed', 'nothing to answer and nothing to say');
+  }
+  // Legal and clinical wording is not reinterpreted, restated or translated.
+  const neutral = mustQuote([job.received, job.notes, draft].join('\n')).quoteOnly;
+  if (neutral && job.kind === 'translate-reply') throw new JobError('quote-only');
+
+  const request: Omit<Ask, 'onText'> =
+    job.kind === 'draft-reply'
+      ? {
+          system: replySystem(job.into, job.tone, neutral),
+          user: neutral ? neutralReplyUser() : draftReplyUser(received, notes),
+          maxTokens: REPLY_CAPS.draft,
+        }
+      : {
+          system: replyEditSystem(
+            job.kind.replace('-reply', '') as 'shorten' | 'translate' | 'revise',
+            job.into,
+            job.tone,
+            neutral,
+          ),
+          user: editReplyUser(
+            quoteAsData(draft),
+            job.kind === 'revise-reply' ? quoteAsData(instruction) : undefined,
+          ),
+          maxTokens:
+            job.kind === 'shorten-reply'
+              ? REPLY_CAPS.shorten
+              : job.kind === 'translate-reply'
+                ? translationCap(engine.countTokens(draft))
+                : REPLY_CAPS.revise,
+        };
+
+  sink.step('writing', 0, 1);
+  let shown = '';
+  const result = await ask(engine, signal, {
+    ...request,
+    onText: (piece) => {
+      shown += piece;
+      sink.text('replace', shown);
+    },
+  });
+  sink.text('replace', result.text);
+  sink.step('writing', 1, 1);
+  if (result.looped) warnings.push({ kind: 'repetition' });
+
+  const flags = replyFlags(result.text, replyReference(job), job.into);
+  if (flags.invented.length > 0) warnings.push({ kind: 'numbers-added', numbers: flags.invented });
+  if (flags.attachment) warnings.push({ kind: 'attachment-mentioned' });
+  if (flags.wrongLanguage) warnings.push({ kind: 'wrong-language' });
 }

@@ -1,4 +1,5 @@
 import type { Coordinator } from './coordinator.js';
+import { isReplyTask } from '@tp/shared/summary';
 import { AI_CHANNELS } from './channels.js';
 import { isModelJob } from './model-ipc.js';
 import { originGuard, type IpcMainLike } from './origin-guard.js';
@@ -64,7 +65,7 @@ export function registerAiIpc(
       ) {
         return { ok: false, problem: 'not-available' } as const;
       }
-      if (!isModelJob(task)) return refused;
+      if (!isModelJob(task) && !isReplyTask(task)) return refused;
       return coordinator.run(id, task);
     }),
   );

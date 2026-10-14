@@ -94,6 +94,19 @@ placeholders, and the digit check flags any number the draft invented. Sending s
 press with the existing confirmation. It needs only the text model; the vision model is not
 required.
 
+*Built (Phase 5).* Four text task kinds (`draft-reply`, `shorten-reply`, `translate-reply`,
+`revise-reply`) in the shared task union, pure checks in `packages/shared/src/summary/reply.ts`,
+prompts in `apps/desktop/src/ai/text/prompts.ts`, the panel in `apps/forms/src/screens/send/`. The
+received message is stripped of hidden characters and angle brackets and placed between our own
+tags; the shorten, translate and revise prompts never contain it. A message that trips the quote-only
+word lists is not shown to the model at all: the draft is a neutral acknowledgement from a fixed
+instruction. The digit check runs against the received message, the notes and the writer's own
+instructions, never against the draft, so an invented number stays flagged through every later
+version. Flags (invented numbers, an attachment named, the wrong language) are recomputed on the
+draft as the person edits it. A small model still invents when it is allowed to answer a question
+from nothing; the prompt for an empty-notes reply forbids answers and asks for `[answer?]`, and the
+flags are the net under it.
+
 **D7. Where files live.**
 Resolution order for any model or runtime file: `LOPPA_AI_DIR` if set; `<repo>/local-models/<kind>/`
 (Git-ignored, development only, not in a packaged app); the repository root as it stands now

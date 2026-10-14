@@ -21,6 +21,7 @@ import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { Delivery, ModeNote, useSendMode } from './send-parts.js';
 import { ListStep, useList } from './send-list.js';
+import { ReplyHelp } from './send/ReplyHelp.js';
 
 const Suppressions = lazy(() =>
   import('./Suppressions.js').then((m) => ({ default: m.Suppressions })),
@@ -240,6 +241,7 @@ export function SendCampaign() {
             <span>{t('campaign.body')}</span>
             <textarea rows={8} value={body} onChange={(e) => setBody(e.target.value)} />
           </label>
+          <ReplyHelp message={body} onInsert={setBody} />
           <p className="small muted">
             {t('campaign.fieldsHint', { fields, example: '{{name | …}}' })}
           </p>

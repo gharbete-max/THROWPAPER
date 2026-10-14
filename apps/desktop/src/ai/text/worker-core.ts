@@ -1,4 +1,5 @@
-import type { ModelEvent, ModelJob, ModelProblem } from '@tp/shared/summary';
+import type { TextTask } from '@tp/shared/ai';
+import type { ModelEvent, ModelProblem } from '@tp/shared/summary';
 import { JobError, type TextEngine } from './text-engine.js';
 import { runJob } from './pipeline.js';
 
@@ -11,7 +12,7 @@ import { runJob } from './pipeline.js';
  */
 export type ToWorker =
   | { type: 'load'; path: string }
-  | { type: 'run'; id: string; job: ModelJob }
+  | { type: 'run'; id: string; job: TextTask }
   | { type: 'cancel'; id: string }
   | { type: 'dispose' };
 
@@ -32,7 +33,7 @@ export function createWorker(port: Port, loadEngine: LoadEngine, now: () => numb
 
   const send = (event: ModelEvent) => port.post({ type: 'event', event });
 
-  async function run(id: string, job: ModelJob): Promise<void> {
+  async function run(id: string, job: TextTask): Promise<void> {
     if (!engine) return send({ id, kind: 'error', problem: 'not-installed' });
     if (running) return send({ id, kind: 'error', problem: 'busy' });
     const abort = new AbortController();

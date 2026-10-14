@@ -1560,6 +1560,47 @@ export const jaJP: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'モデルが同じ内容を繰り返し始めたため、停止しました。結果は注意してお使いください。',
   'summary.passage': '箇所 {n}',
+  'reply.open': '返信を手伝う',
+  'reply.heading': '返信アシスタント',
+  'reply.privacy':
+    '下書きはこのコンピューター上のモデルが書きます。何も送信・保存されず、何も添付されません。',
+  'reply.received': '受け取ったメッセージ',
+  'reply.receivedHint':
+    'ここに貼り付けてください。空のままにすると、下のご自身のメモから書きます。',
+  'reply.notes': '伝えたいこと（任意）',
+  'reply.language': '返信の言語',
+  'reply.tone': 'トーン',
+  'reply.tone.professional': 'ビジネス向け',
+  'reply.tone.friendly': 'フレンドリー',
+  'reply.tone.concise': '簡潔',
+  'reply.tone.formal': '丁寧・フォーマル',
+  'reply.tone.firm': '毅然',
+  'reply.neutral':
+    '契約書、同意書、宣誓書、または医療関連のメッセージのようです。下書きは中立的な受領の返答のみで、内容の再掲や解釈はしません。原文はご自身でお読みください。',
+  'reply.generate': '下書きを作成',
+  'reply.done': '下書きができました。',
+  'reply.inserted': 'メッセージに挿入しました。何も送信されていません。',
+  'reply.label': 'このコンピューター上のモデルが生成 — 使う前に確認してください',
+  'reply.draft': '下書き',
+  'reply.shorter': 'もっと短く',
+  'reply.regenerate': '書き直す',
+  'reply.translateTo': '翻訳先',
+  'reply.translate': '翻訳',
+  'reply.revise': 'どう変えますか？',
+  'reply.reviseGo': '修正',
+  'reply.insert': 'メッセージに挿入',
+  'reply.discard': '破棄',
+  'reply.overwrite': 'メッセージ欄にはすでに文章があります。この下書きに置き換えますか？',
+  'reply.overwrite.yes': '置き換える',
+  'reply.noModel':
+    'このコンピューターにはテキストモデルがインストールされていないため、下書きを作成できません。',
+  'reply.noModelLink': 'モデル一覧を開く',
+  'reply.warn.numbers':
+    'メッセージやメモにない数字が下書きにあります：{numbers}。確認するか削除してください。',
+  'reply.warn.attachment':
+    '下書きに添付ファイルへの言及があります。このアシスタントは何も添付しません。その部分を削除してください。',
+  'reply.warn.language': '下書きが選んだ言語ではない可能性があります。注意して読んでください。',
+  'reply.placeholders': '記入が必要な、疑問符で示された空欄：{count}。',
   'invoiceScan.heading': '仕入先の請求書を読み取る',
   'invoiceScan.intro':
     '受け取った請求書の写真、スキャン、またはPDFを選んでください。読み取りはこの端末の中で行われ、どこにも送信されません。各項目は見つかった場所の横に表示され、確認するまで何も使われません。',

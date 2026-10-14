@@ -1581,6 +1581,48 @@ export const esES: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'El modelo empezó a repetirse y se detuvo. Trata el resultado con cuidado.',
   'summary.passage': 'Pasaje {n}',
+  'reply.open': 'Ayúdame a responder',
+  'reply.heading': 'Ayuda para responder',
+  'reply.privacy':
+    'El borrador lo escribe un modelo en este ordenador. No se envía ni se guarda nada, y no se adjunta nada.',
+  'reply.received': 'El mensaje que recibiste',
+  'reply.receivedHint':
+    'Pégalo aquí. Déjalo vacío para escribir a partir de tus propias notas de abajo.',
+  'reply.notes': 'Lo que quiero decir (opcional)',
+  'reply.language': 'Idioma de la respuesta',
+  'reply.tone': 'Tono',
+  'reply.tone.professional': 'Profesional',
+  'reply.tone.friendly': 'Amistoso',
+  'reply.tone.concise': 'Conciso',
+  'reply.tone.formal': 'Formal',
+  'reply.tone.firm': 'Firme',
+  'reply.neutral':
+    'Esto parece un contrato, un consentimiento, una declaración o un mensaje clínico. El borrador es solo un acuse de recibo neutro y no repite ni interpreta nada. Lee el original tú mismo.',
+  'reply.generate': 'Escribir un borrador',
+  'reply.done': 'El borrador está listo.',
+  'reply.inserted': 'Insertado en el mensaje. No se ha enviado nada.',
+  'reply.label': 'Generado por el modelo en este ordenador — revísalo antes de usarlo',
+  'reply.draft': 'Borrador',
+  'reply.shorter': 'Más corto',
+  'reply.regenerate': 'Escribir de nuevo',
+  'reply.translateTo': 'Traducir a',
+  'reply.translate': 'Traducir',
+  'reply.revise': '¿Cómo debe cambiar?',
+  'reply.reviseGo': 'Modificar',
+  'reply.insert': 'Insertar en el mensaje',
+  'reply.discard': 'Descartar',
+  'reply.overwrite': 'El cuadro del mensaje ya tiene texto. ¿Reemplazarlo con este borrador?',
+  'reply.overwrite.yes': 'Reemplazar',
+  'reply.noModel':
+    'El modelo de texto no está instalado en este ordenador, así que no se puede escribir un borrador.',
+  'reply.noModelLink': 'Abrir la lista de modelos',
+  'reply.warn.numbers':
+    'Números del borrador que no están en el mensaje ni en tus notas: {numbers}. Compruébalos o quítalos.',
+  'reply.warn.attachment':
+    'El borrador menciona un adjunto. Esta ayuda no adjunta nada. Quita esa parte.',
+  'reply.warn.language':
+    'Puede que el borrador no esté en el idioma que elegiste. Léelo con atención.',
+  'reply.placeholders': 'Huecos marcados con interrogación que tienes que rellenar: {count}.',
   'invoiceScan.heading': 'Leer una factura de proveedor',
   'invoiceScan.intro':
     'Elija una foto, un escaneo o un PDF de una factura recibida. Se lee en este dispositivo y no va a ninguna parte. Cada valor se muestra junto al lugar donde se encontró, y no se usa nada hasta que lo confirme.',

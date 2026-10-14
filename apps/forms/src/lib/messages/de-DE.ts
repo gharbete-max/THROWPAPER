@@ -1615,6 +1615,48 @@ export const deDE: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'Das Modell begann sich zu wiederholen und wurde angehalten. Behandeln Sie das Ergebnis mit Vorsicht.',
   'summary.passage': 'Abschnitt {n}',
+  'reply.open': 'Antwort vorschlagen',
+  'reply.heading': 'Antworthilfe',
+  'reply.privacy':
+    'Der Entwurf wird von einem Modell auf diesem Computer geschrieben. Nichts wird gesendet oder gespeichert, und nichts wird angehängt.',
+  'reply.received': 'Die erhaltene Nachricht',
+  'reply.receivedHint':
+    'Hier einfügen. Leer lassen, um aus Ihren eigenen Notizen unten zu schreiben.',
+  'reply.notes': 'Was ich sagen möchte (optional)',
+  'reply.language': 'Sprache der Antwort',
+  'reply.tone': 'Ton',
+  'reply.tone.professional': 'Sachlich',
+  'reply.tone.friendly': 'Freundlich',
+  'reply.tone.concise': 'Knapp',
+  'reply.tone.formal': 'Förmlich',
+  'reply.tone.firm': 'Bestimmt',
+  'reply.neutral':
+    'Das sieht nach einem Vertrag, einer Einwilligung, einer Erklärung oder einer klinischen Nachricht aus. Der Entwurf ist nur eine neutrale Empfangsbestätigung und gibt nichts davon wieder oder legt es aus. Lesen Sie das Original selbst.',
+  'reply.generate': 'Entwurf schreiben',
+  'reply.done': 'Der Entwurf ist fertig.',
+  'reply.inserted': 'In die Nachricht eingefügt. Es wurde nichts gesendet.',
+  'reply.label': 'Vom Modell auf diesem Computer erzeugt — vor der Verwendung prüfen',
+  'reply.draft': 'Entwurf',
+  'reply.shorter': 'Kürzer',
+  'reply.regenerate': 'Neu schreiben',
+  'reply.translateTo': 'Übersetzen in',
+  'reply.translate': 'Übersetzen',
+  'reply.revise': 'Wie soll er geändert werden?',
+  'reply.reviseGo': 'Ändern',
+  'reply.insert': 'In die Nachricht einfügen',
+  'reply.discard': 'Verwerfen',
+  'reply.overwrite': 'Das Nachrichtenfeld enthält bereits Text. Durch diesen Entwurf ersetzen?',
+  'reply.overwrite.yes': 'Ersetzen',
+  'reply.noModel':
+    'Das Textmodell ist auf diesem Computer nicht installiert, daher kann kein Entwurf geschrieben werden.',
+  'reply.noModelLink': 'Modellliste öffnen',
+  'reply.warn.numbers':
+    'Zahlen im Entwurf, die weder in der Nachricht noch in Ihren Notizen stehen: {numbers}. Prüfen Sie sie oder entfernen Sie sie.',
+  'reply.warn.attachment':
+    'Der Entwurf erwähnt einen Anhang. Diese Hilfe hängt nichts an. Entfernen Sie diese Stelle.',
+  'reply.warn.language':
+    'Der Entwurf ist vielleicht nicht in der gewählten Sprache. Lesen Sie ihn sorgfältig.',
+  'reply.placeholders': 'Mit Fragezeichen markierte Lücken, die Sie ausfüllen müssen: {count}.',
   'invoiceScan.heading': 'Lieferantenrechnung lesen',
   'invoiceScan.intro':
     'Wählen Sie ein Foto, einen Scan oder eine PDF einer erhaltenen Rechnung. Sie wird auf diesem Gerät gelesen und nirgendwohin gesendet. Jeder Wert wird neben der Stelle gezeigt, an der er gefunden wurde, und nichts wird verwendet, bevor Sie es bestätigt haben.',

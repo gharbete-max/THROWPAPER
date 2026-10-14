@@ -189,11 +189,23 @@ describe('tasks', () => {
     expect(capabilityOf({ kind: 'translate' })).toBe('text');
     expect(capabilityOf({ kind: 'select' })).toBe('text');
     expect(capabilityOf({ kind: 'read-page' })).toBe('vision');
+    for (const kind of [
+      'draft-reply',
+      'shorten-reply',
+      'translate-reply',
+      'revise-reply',
+    ] as const) {
+      expect(capabilityOf({ kind })).toBe('text');
+    }
     expect(Object.keys(TASK_CAPABILITY).sort()).toEqual([
+      'draft-reply',
       'read-page',
+      'revise-reply',
       'select',
+      'shorten-reply',
       'summarise',
       'translate',
+      'translate-reply',
     ]);
   });
 });
