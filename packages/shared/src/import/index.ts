@@ -88,5 +88,20 @@ export type {
   Placement,
 } from './reimport.js';
 export type { LayoutReading } from './pipeline.js';
+export { binarise, estimateSkew, findLines, straighten } from './scan/lines.js';
+export type { Bitmap, FindOptions, FoundLines, RuledLine } from './scan/lines.js';
+export {
+  COPY_WIDTH_PT,
+  copySvg,
+  copyText,
+  digitalCopy,
+  editWord,
+  isUncertain,
+  LOW_CONFIDENCE,
+  pdfRequestOf,
+  uncertainWords,
+  xmlText,
+} from './scan/copy.js';
+export type { CopyInput, CopyLine, CopyWord, DigitalCopy, SvgStyle } from './scan/copy.js';
 export { QUOTED_CATEGORIES, QUOTED_LEXICON, TERMS_NEEDED, mustQuote } from './quoted/quoted.js';
 export type { QuotedCategory, QuotedVerdict } from './quoted/quoted.js';

@@ -32,6 +32,7 @@ import {
 } from './scan-plan.js';
 
 const ScanEdit = lazy(() => import('./scan-edit/ScanEdit.js'));
+const DigitalCopy = lazy(() => import('./digital-copy/DigitalCopy.js'));
 const KeepPanel = lazy(() => import('./documents/KeepPanel.js'));
 const ScanFilter = lazy(() => import('./scan-filter/ScanFilter.js'));
 
@@ -58,6 +59,9 @@ export function Scan() {
   const [pages, setPages] = useState<ScanPage[]>([]);
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState<{ blob: Blob; page: number } | null>(null);
+  const [copying, setCopying] = useState<{ source: Blob | HTMLCanvasElement; turn: number } | null>(
+    null,
+  );
   const [filtering, setFiltering] = useState<string | null>(null);
   const picker = useRef<HTMLInputElement>(null);
   const { user } = useSession();
@@ -244,6 +248,15 @@ export function Scan() {
     setPages(pagesOfFile(0, pdf.pageCount));
   }
 
+  /** A page as a picture for its digital copy: the photograph itself, or a PDF's page drawn. */
+  async function copyOf(page: ScanPage) {
+    const source = sources[page.file]!;
+    setCopying({
+      source: 'pdf' in source ? await source.pdf.picture(page.page, 3000) : files[page.file]!,
+      turn: page.turn,
+    });
+  }
+
   /** A photograph made over (filtered, or put back): its file and drawing change, its place does not. */
   function replacePhoto(index: number, photo: File) {
     const old = sources[index];
@@ -405,6 +418,12 @@ export function Scan() {
                   onClick={() => void make(false, (blob) => setEditing({ blob, page: position }))}
                 />
                 <PageButton
+                  label={t('copy.open')}
+                  icon="file"
+                  disabled={busy}
+                  onClick={() => void copyOf(page).catch(() => say('scan.error.unreadable'))}
+                />
+                <PageButton
                   label={t('scan.remove')}
                   icon="trash"
                   onClick={() => setPages(removePage(pages, page.id))}
@@ -414,6 +433,15 @@ export function Scan() {
           ))}
         </ol>
       )}
+      {copying ? (
+        <Suspense fallback={null}>
+          <DigitalCopy
+            source={copying.source}
+            turn={copying.turn}
+            onClose={() => setCopying(null)}
+          />
+        </Suspense>
+      ) : null}
       {pages.map((page, position) =>
         page.id === filtering ? (
           <Suspense key={page.id} fallback={null}>
@@ -450,7 +478,7 @@ function PageButton({
   onClick,
 }: {
   label: string;
-  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit' | 'preview';
+  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit' | 'preview' | 'file';
   disabled?: boolean;
   onClick: () => void;
 }) {
