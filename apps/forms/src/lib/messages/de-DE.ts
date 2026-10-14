@@ -1907,4 +1907,23 @@ export const deDE: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Das Formular konnte nicht gestartet werden. Versuchen Sie es erneut.',
   'copy.close': 'Schließen',
   'copy.noWords': 'Auf dieser Seite wurden keine Wörter gefunden.',
+  'suppress.open': 'Nicht-anschreiben-Liste',
+  'suppress.close': 'Zurück zum Versand',
+  'suppress.heading': 'Nicht anschreiben',
+  'suppress.scope':
+    'Diese Liste stoppt nur Rundmails (eine E-Mail an eine Liste). Einzelne Dokumente und Einladungen zum Unterschreiben stoppt sie nicht.',
+  'suppress.empty': 'Keine Adressen auf der Liste.',
+  'suppress.col.email': 'Adresse',
+  'suppress.col.date': 'Hinzugefügt',
+  'suppress.col.reason': 'Grund',
+  'suppress.reason.unsubscribed': 'Abgemeldet',
+  'suppress.reason.bounced': 'Unzustellbar',
+  'suppress.reason.manual': 'Von Hand hinzugefügt',
+  'suppress.add.label': 'Hinzuzufügende Adresse',
+  'suppress.add': 'Hinzufügen',
+  'suppress.invalid': 'Das ist keine gültige E-Mail-Adresse.',
+  'suppress.remove': '{email} entfernen',
+  'suppress.removeConfirm':
+    '{email} von der Liste entfernen? Rundmails können diese Adresse dann wieder erreichen.',
+  'suppress.failed': 'Die Liste konnte nicht geändert werden. Versuchen Sie es erneut.',
 };

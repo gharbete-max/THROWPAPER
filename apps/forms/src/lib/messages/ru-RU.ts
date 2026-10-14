@@ -1879,4 +1879,23 @@ export const ruRU: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Не удалось начать форму. Попробуйте ещё раз.',
   'copy.close': 'Закрыть',
   'copy.noWords': 'На этой странице слов не найдено.',
+  'suppress.open': 'Список «не писать»',
+  'suppress.close': 'Назад к рассылке',
+  'suppress.heading': 'Не писать',
+  'suppress.scope':
+    'Этот список останавливает только рассылки (письмо по списку). Отдельные документы и приглашения на подпись он не останавливает.',
+  'suppress.empty': 'В списке нет адресов.',
+  'suppress.col.email': 'Адрес',
+  'suppress.col.date': 'Добавлен',
+  'suppress.col.reason': 'Причина',
+  'suppress.reason.unsubscribed': 'Отписался',
+  'suppress.reason.bounced': 'Письма возвращаются',
+  'suppress.reason.manual': 'Добавлен вручную',
+  'suppress.add.label': 'Адрес для добавления',
+  'suppress.add': 'Добавить',
+  'suppress.invalid': 'Это не действительный адрес электронной почты.',
+  'suppress.remove': 'Удалить {email}',
+  'suppress.removeConfirm':
+    'Удалить {email} из списка? Рассылки снова смогут доходить до этого адреса.',
+  'suppress.failed': 'Не удалось изменить список. Повторите попытку.',
 };
