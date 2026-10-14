@@ -12,6 +12,8 @@ import {
   type ModelStatus,
   type SummaryLocale,
 } from '@tp/shared/summary';
+import { useLocation } from 'react-router';
+import { summaryFileFromState } from '../lib/documents-handoff.js';
 import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { useEdition } from '../lib/edition.js';
@@ -40,6 +42,8 @@ export function Summary() {
   const t = useT();
   const edition = useEdition();
   const bridge = modelBridge();
+  // A PDF handed over from Scan, read here like one chosen below.
+  const handed = summaryFileFromState(useLocation().state);
 
   if (!bridge) {
     return (
@@ -53,13 +57,13 @@ export function Summary() {
       </section>
     );
   }
-  return <Centre bridge={bridge} />;
+  return <Centre bridge={bridge} handed={handed} />;
 }
 
 type SourceKind = 'paste' | 'file' | 'form' | 'answers';
 type Task = 'summarise' | 'translate';
 
-function Centre({ bridge }: { bridge: ModelBridge }) {
+function Centre({ bridge, handed }: { bridge: ModelBridge; handed: File | null }) {
   const t = useT();
   const [status, setStatus] = useState<ModelStatus | null>(null);
   const [settings, setSettings] = useState(false);
@@ -87,15 +91,23 @@ function Centre({ bridge }: { bridge: ModelBridge }) {
         </button>
       ) : null}
       {!ready || settings ? <Setup bridge={bridge} status={status} onStatus={onStatus} /> : null}
-      {ready ? <Work bridge={bridge} status={status} /> : null}
+      {ready ? <Work bridge={bridge} status={status} handed={handed} /> : null}
     </section>
   );
 }
 
-function Work({ bridge, status }: { bridge: ModelBridge; status: ModelStatus }) {
+function Work({
+  bridge,
+  status,
+  handed,
+}: {
+  bridge: ModelBridge;
+  status: ModelStatus;
+  handed: File | null;
+}) {
   const t = useT();
   const { locale } = useSession();
-  const [kind, setKind] = useState<SourceKind>('paste');
+  const [kind, setKind] = useState<SourceKind>(handed ? 'file' : 'paste');
   const [text, setText] = useState('');
   const [reading, setReading] = useState<{ done: number; total: number } | null>(null);
   const [fileProblem, setFileProblem] = useState(false);
@@ -135,6 +147,12 @@ function Work({ bridge, status }: { bridge: ModelBridge; status: ModelStatus }) 
       setReading(null);
     }
   }
+
+  useEffect(() => {
+    if (handed) void chooseFile(handed);
+    // Once, for the file this opened with.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function go() {
     setCopied(false);

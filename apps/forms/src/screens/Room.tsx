@@ -15,6 +15,8 @@ import { useBrand } from '../lib/brand.js';
 import { useT } from '../lib/i18n.js';
 import { useEdition } from '../lib/edition.js';
 import { modelBridge } from '../lib/model-bridge.js';
+import { scanWith } from '../lib/documents-handoff.js';
+import { RecentDocuments } from './documents/RecentDocuments.js';
 import { rememberIntroSeen, useReducedMotion } from '../lib/motion.js';
 import { Mark } from '../components/Mark.js';
 import { Icon, type IconName } from '../components/Icon.js';
@@ -164,7 +166,19 @@ export function Room() {
         </span>
       </header>
 
-      <main className="room__floor">
+      <main
+        className="room__floor"
+        onDragOver={(event) => {
+          if (event.dataTransfer.types.includes('Files')) event.preventDefault();
+        }}
+        onDrop={(event) => {
+          // Anywhere in the room: Scan tells each file apart by its bytes and says what it did.
+          const dropped = [...event.dataTransfer.files];
+          if (dropped.length === 0) return;
+          event.preventDefault();
+          void navigate(...scanWith(dropped));
+        }}
+      >
         <h1 className="visually-hidden">{t('app.name')}</h1>
         <p className="visually-hidden" aria-live="polite">
           {announcement}
@@ -226,6 +240,7 @@ export function Room() {
                 <Catcher name={t('room.presentation')} note={t('room.notBuilt')} />
               </li>
             </ul>
+            <RecentDocuments />
             <button
               type="button"
               className="button button--quiet small room__pause"

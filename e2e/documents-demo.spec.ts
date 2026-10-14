@@ -187,6 +187,7 @@ test('the demo fixtures do what the demo says they do', async ({ page }) => {
   await page.locator('.scan__page').nth(1).getByRole('button', { name: 'Move later' }).click();
   const saving = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const arranged = await pdfText(await readFile(await (await saving).path()));
   expect(arranged.indexOf('Sida 1')).toBeGreaterThanOrEqual(0);
   expect(arranged.indexOf('Sida 1')).toBeLessThan(arranged.indexOf('Sida 2'));
