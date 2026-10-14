@@ -72,6 +72,25 @@ describe('POST /v1/pdf/edit', () => {
     expect((await PDFDocument.load(response.rawPayload)).getPageCount()).toBe(2);
   });
 
+  it('puts a picture sent along with the PDF on the page, named in the ops', async () => {
+    const png = new Uint8Array(PNG);
+    const response = await post('/v1/pdf/edit', [await pdfOf(2), png], {
+      ops: JSON.stringify([{ page: 1, x: 10, y: 20, width: 50, height: 25, image: 'signature' }]),
+      images: '["signature"]',
+    });
+    expect(response.statusCode).toBe(200);
+    expect((await PDFDocument.load(response.rawPayload)).getPageCount()).toBe(2);
+    const missing = await post('/v1/pdf/edit', [await pdfOf(1)], {
+      ops: '[{"page":0,"x":1,"y":1,"width":5,"height":5,"image":"signature"}]',
+    });
+    expect(missing.statusCode).toBe(400);
+    expect(missing.json().error.code).toBe('bad-op');
+    const unpaired = await post('/v1/pdf/edit', [await pdfOf(1), png], {
+      ops: '[{"page":0,"x":1,"y":1,"width":5,"height":5,"image":"signature"}]',
+    });
+    expect(unpaired.json().error.code).toBe('no-file');
+  });
+
   it('is not open to somebody who is not signed in', async () => {
     const response = await post('/v1/pdf/edit', [await pdfOf(1)], { ops: '[]' }, false);
     expect(response.statusCode).toBe(401);

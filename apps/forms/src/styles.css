@@ -8045,3 +8045,131 @@ a.room__centre:focus-visible {
   margin: 0;
   padding: 0;
 }
+
+/* --- Signing: place signature, initials and date ------------------------------------------------
+ * The page is a canvas with marks over it in percentages of the page, so they stay put when it
+ * shrinks. A date's letters scale with the page through container units. Every mark is a real
+ * button: focusable, moved with the arrow keys, dragged with a pointer.
+ */
+.sign-place__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .sign-place__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sign-place__page {
+  position: relative;
+  container-type: inline-size;
+  max-inline-size: 100%;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sign-place__canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.sign-place__mark {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 1px dashed var(--tp-colour-primary);
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+}
+
+.sign-place__mark[aria-pressed='true'] {
+  border-style: solid;
+  border-width: 2px;
+}
+
+.sign-place__mark img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.sign-place__mark--date span {
+  font-size: clamp(1px, calc(var(--sp-size) * 100cqw / var(--sp-width)), 100cqw);
+  line-height: 1;
+  white-space: nowrap;
+  color: #111111; /* ink on paper, as in the PDF */
+  pointer-events: none;
+}
+
+.sign-place__sample {
+  block-size: 2rem;
+  inline-size: auto;
+  background: #ffffff; /* the mark is dark ink: shown on paper, in any theme */
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sign-place__pad {
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  background: #ffffff; /* paper */
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sign-place__list,
+.sign-place__strip {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sign-place__strip {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  overflow-x: auto;
+  padding-block-end: var(--tp-spacing-unit);
+}
+
+.sign-place__thumbbutton {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  background: transparent;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  padding: 0.25rem;
+  color: var(--tp-colour-text);
+}
+
+.sign-place__thumb--marked .sign-place__thumbbutton {
+  border-color: var(--tp-colour-primary);
+  border-width: 2px;
+}
+
+.sign-place__thumbbutton[aria-current='page'] {
+  background: var(--tp-colour-surface);
+}
+
+.sign-place__thumbpage {
+  position: relative;
+  display: block;
+  inline-size: 5.5rem;
+}
+
+.sign-place__thumbpage canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.sign-place__thumbmark {
+  position: absolute;
+  background: var(--tp-colour-primary);
+  opacity: 0.55;
+}

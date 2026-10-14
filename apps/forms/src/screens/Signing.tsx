@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { localeLabel } from '@tp/i18n';
 import type { forms as formSchemas } from '@tp/shared';
@@ -19,6 +19,9 @@ import { detectPage } from './builder/paper/detect.js';
 import { SigningDeclarations } from './SigningDeclarations.js';
 import { documentNameOf, pdfFromState } from '../lib/sign-handoff.js';
 import { useToast } from '../lib/toast.js';
+
+// The marks (signature, initials, date) are placed in a lazy chunk, only when asked for.
+const PlaceMarks = lazy(() => import('./signing/PlaceMarks.js'));
 
 type Party = { name: string; email: string; locale: string };
 type Declaration = formSchemas.SigningDeclarationList['declarations'][number];
@@ -406,6 +409,7 @@ function Compose({
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState<{ file: File; corners: Corners }[]>([]);
   const [documentName, setDocumentName] = useState(handoff ? documentNameOf(handoff) : '');
+  const [placing, setPlacing] = useState(false);
 
   /** Pages from a camera, a phone or a scanner, each starting on the page's own corners if found. */
   async function addPages(pages: File[]) {
@@ -607,6 +611,34 @@ function Compose({
               </div>
             </div>
           )}
+          {via === 'file' &&
+          file &&
+          (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) ? (
+            placing ? (
+              <Suspense fallback={null}>
+                <PlaceMarks
+                  file={file}
+                  locale={locale}
+                  onCancel={() => setPlacing(false)}
+                  onDone={(marked) => {
+                    setFile(marked);
+                    setPlacing(false);
+                  }}
+                />
+              </Suspense>
+            ) : (
+              <div>
+                <button
+                  type="button"
+                  className="button button--quiet small"
+                  onClick={() => setPlacing(true)}
+                >
+                  <Icon name="signature" />
+                  {t('signPlace.open')}
+                </button>
+              </div>
+            )
+          ) : null}
           <label className="stack stack--tight">
             <span>{t('signing.documentName')}</span>
             <input
