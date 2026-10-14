@@ -45,5 +45,6 @@ test('a Word file with a footer becomes a labelled PDF page, and the footer is n
 
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   expect((await download).suggestedFilename()).toBe('protokoll (Layout may differ from Word).pdf');
 });

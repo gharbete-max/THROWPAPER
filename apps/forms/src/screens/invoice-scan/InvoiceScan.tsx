@@ -32,7 +32,14 @@ import {
  * page it came from. Nothing is used until it has been confirmed; a value whose check digit fails
  * needs a second, separate decision. No part of this file talks to a server.
  */
-export function InvoiceScan({ onClose }: { onClose: () => void }) {
+export function InvoiceScan({
+  onClose,
+  file = null,
+}: {
+  onClose: () => void;
+  /** A file already chosen elsewhere (dropped on Scan), read as soon as this opens. */
+  file?: File | null;
+}) {
   const t = useT();
   const toast = useToast();
   const { locale } = useSession();
@@ -88,6 +95,12 @@ export function InvoiceScan({ onClose }: { onClose: () => void }) {
       setProgress(null);
     }
   }
+
+  useEffect(() => {
+    if (file) void read(file);
+    // Read once per file handed over.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
 
   const reading = loaded?.reading ?? null;
   const unsettled = useMemo(

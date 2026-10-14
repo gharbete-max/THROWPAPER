@@ -74,6 +74,7 @@ test('arrange: pages from three PDFs are reordered, turned and removed into one 
 
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const saved = await (await download).path();
   const out = await PDFDocument.load(await readFile(saved));
   expect(out.getPages().map((p) => p.getRotation().angle)).toEqual([180, 90]);

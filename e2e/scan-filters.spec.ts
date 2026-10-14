@@ -101,6 +101,7 @@ test('scan filters: a shadowed photo made Black and white embeds as ink and pape
 
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const saved = await (await download).path();
   const doc = await PDFDocument.load(await readFile(saved));
   const images = doc.context

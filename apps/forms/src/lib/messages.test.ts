@@ -196,10 +196,14 @@ describe('twelve languages, each its own', () => {
     'invoiceScan.method.bankgiro',
     'invoiceScan.method.plusgiro',
     'invoiceScan.method.iban',
+    // File kinds named as the programs name them.
+    'docs.k.pdf',
+    'docs.k.word',
   ];
   /** Words each language uses as English does: cognates and loanwords, each one looked at. */
   const SAME_WORD: Readonly<Record<string, readonly MessageKey[]>> = {
     'sv-SE': [
+      'docs.keep.original',
       'scanEdit.text',
       'scanEdit.item.text',
       'event.status',
@@ -219,6 +223,7 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'da-DK': [
+      'docs.keep.original',
       'invoiceScan.json',
       'invoiceScan.csv',
       'invoiceScan.note.reference',
@@ -251,6 +256,7 @@ describe('twelve languages, each its own', () => {
       'conversation.send',
     ],
     'nb-NO': [
+      'docs.keep.original',
       'draft.send',
       'event.status',
       'forms.access.admin',
@@ -271,11 +277,15 @@ describe('twelve languages, each its own', () => {
     'fi-FI': ['brand.logo'],
     'is-IS': [],
     'fr-FR': [
+<<<<<<< HEAD
       'signPlace.signature',
       'signPlace.date',
       'signPlace.pageLabel',
       'signPlace.markLabel',
       'signPlace.stripPage',
+=======
+      'docs.k.photo',
+>>>>>>> origin/main
       'campaign.body',
       'scan.page',
       'scan.count',
@@ -318,6 +328,7 @@ describe('twelve languages, each its own', () => {
       'review.kind.question',
     ],
     'de-DE': [
+      'docs.keep.original',
       'scanEdit.text',
       'scanEdit.item.text',
       'invoiceScan.optional',
@@ -350,6 +361,7 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'es-ES': [
+      'docs.keep.original',
       'invoices.total',
       'brand.colour.danger',
       'public.no',

@@ -8136,6 +8136,7 @@ a.room__centre:focus-visible {
   padding: 0;
 }
 
+<<<<<<< HEAD
 /* --- Signing: place signature, initials and date ------------------------------------------------
  * The page is a canvas with marks over it in percentages of the page, so they stay put when it
  * shrinks. A date's letters scale with the page through container units. Every mark is a real
@@ -8262,4 +8263,90 @@ a.room__centre:focus-visible {
   position: absolute;
   background: var(--tp-colour-primary);
   opacity: 0.55;
+=======
+/* Documents flow: what a drop was taken for, the keep panel, and the room's recent documents. */
+.scan__notice {
+  padding: var(--tp-spacing-unit);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.scan__notice summary {
+  cursor: pointer;
+}
+
+.keep {
+  max-inline-size: 32rem;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.keep__sizes {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.keep__size {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.recent {
+  display: grid;
+  justify-items: center;
+  gap: var(--tp-spacing-unit);
+  inline-size: min(100%, 36rem);
+  text-align: center;
+}
+
+.recent__title {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+.recent__note {
+  margin: 0;
+  color: var(--tp-room-quiet);
+}
+
+.recent__list {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recent__item {
+  display: grid;
+  inline-size: 100%;
+  padding: var(--tp-spacing-unit);
+  border: 0;
+  border-radius: var(--tp-radius);
+  background: var(--tp-room-shade);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.recent__item:hover,
+.recent__item:focus-visible {
+  outline: var(--tp-border-width) solid var(--tp-room-quiet);
+}
+
+.recent__name {
+  overflow-wrap: anywhere;
+}
+
+.recent__meta {
+  color: var(--tp-room-quiet);
+>>>>>>> origin/main
 }
