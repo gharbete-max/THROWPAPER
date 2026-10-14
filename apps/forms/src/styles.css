@@ -8430,3 +8430,8 @@ a.room__centre:focus-visible {
 .recent__meta {
   color: var(--tp-room-quiet);
 }
+
+/* A file path in the model list: long, unbreakable, and still has to stay inside the card. */
+.ai-path {
+  overflow-wrap: anywhere;
+}

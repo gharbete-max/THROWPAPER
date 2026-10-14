@@ -1,7 +1,7 @@
-import type { Engine, GenerateRequest } from './engine.js';
+import type { TextEngine, GenerateRequest } from './text-engine.js';
 
 /**
- * An {@link Engine} that needs no model: what CI and the desktop's fake mode run.
+ * An {@link TextEngine} that needs no model: what CI and the desktop's fake mode run.
  *
  * It is deterministic and obviously not a language model. A summary is the first words of what it
  * was given as bullets, a translation is the text in square brackets, and a selection is
@@ -19,7 +19,7 @@ export interface FakeBehaviour {
   delayMs?: number;
 }
 
-export class FakeEngine implements Engine {
+export class FakeTextEngine implements TextEngine {
   readonly calls: GenerateRequest[] = [];
   disposed = false;
 

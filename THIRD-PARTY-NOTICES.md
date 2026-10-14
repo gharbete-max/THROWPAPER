@@ -21,7 +21,7 @@ in full.
 
 The summary and translation model is **never copied into this repository or the installer**
 (`*.gguf` is ignored). It is downloaded on the person's request, or opened from disk, and checked
-against `packages/shared/src/summary/weights/qwen3-4b-instruct-2507-q4_k_m.json`
+against `packages/shared/src/ai/models/qwen3-4b-instruct-2507-q4_k_m.json`
 (ADR 0023, ADR 0015). Recorded here so the licence has a home that `licence:check` does not read.
 
 | Model                                                                                    | Licence                                                                             | Source                                                                             | SHA-256                                                            |

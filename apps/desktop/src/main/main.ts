@@ -33,9 +33,10 @@ import type { LocalSign } from '@tp/api-sign/local';
 import { startForms, startSign } from './host.js';
 import { CHANNELS, type PanelView, type Result, type SettingsForm } from '../bridge.js';
 import { fill, messagesFor } from '../messages.js';
-import { MODEL_CHANNELS } from '../model/channels.js';
-import { registerModelIpc } from '../model/ipc.js';
-import { createShellModelService } from '../model/shell.js';
+import { registerAiIpc } from '../ai/ai-ipc.js';
+import { AI_CHANNELS, MODEL_CHANNELS } from '../ai/channels.js';
+import { registerModelIpc } from '../ai/model-ipc.js';
+import { createShellAi } from '../ai/shell.js';
 import { createElectronPdfRenderer } from './pdf.js';
 import { applySettingsForm, toPanelSettings } from './settings-form.js';
 import {
@@ -61,10 +62,10 @@ const dataDir = join(app.getPath('userData'), 'workspace');
 const { lang, t } = messagesFor([app.getLocale(), ...app.getPreferredSystemLanguages()]);
 
 /**
- * The summary and translation model (ADR 0023): a worker process of its own, started only when a
+ * The AI coordinator (ADR 0024, amending ADR 0023): the text model's worker process of its own, started only when a
  * job is asked for, and a narrow IPC to the Forms window. Nothing here runs at start-up.
  */
-const model = createShellModelService({
+const { coordinator: ai, model } = createShellAi({
   fork: (modulePath) => utilityProcess.fork(modulePath, [], { serviceName: 'Loppa model' }),
   chooseFile: async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
@@ -76,7 +77,10 @@ const model = createShellModelService({
   },
   userData: app.getPath('userData'),
   resources,
-  emit: (event) => mainWindow?.webContents.send(MODEL_CHANNELS.event, event),
+  // A checkout's own model folders are looked in by development builds only (docs/plan/AI-SYSTEM.md D7).
+  repoRoot: app.isPackaged ? null : join(here, '..', '..', '..'),
+  emit: (event) => mainWindow?.webContents.send(AI_CHANNELS.event, event),
+  emitLegacy: (event) => mainWindow?.webContents.send(MODEL_CHANNELS.event, event),
   env: process.env,
 });
 
@@ -202,7 +206,7 @@ async function openMainWindow(): Promise<void> {
     title: t.appName,
     show: false,
     webPreferences: {
-      // `window.loppaModel`, for the summary centre and nothing else (`model/preload.ts`).
+      // `window.loppaAi` and `window.loppaModel`, for the AI panes and nothing else (`ai/preload.ts`).
       preload: join(here, 'model-preload.cjs'),
       contextIsolation: true,
       sandbox: true,
@@ -331,6 +335,7 @@ async function replacePanelWithMain(): Promise<void> {
 
 function registerIpc(): void {
   registerModelIpc(ipcMain, model, () => ourOrigins());
+  registerAiIpc(ipcMain, ai, () => ourOrigins());
   const fail = (error: unknown): Result => ({ ok: false, error: (error as Error).message });
   const refused: Result = { ok: false, error: 'not-the-panel' };
 

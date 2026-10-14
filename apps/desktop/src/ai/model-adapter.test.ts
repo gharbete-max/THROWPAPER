@@ -2,28 +2,22 @@ import { createHash, randomBytes } from 'node:crypto';
 import { mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { MODEL_MANIFEST, UNPUBLISHED, WeightsManifest, type ModelEvent } from '@tp/shared/summary';
+import { ModelManifest, TEXT_MODEL, UNPUBLISHED } from '@tp/shared/ai';
+import type { ModelEvent } from '@tp/shared/summary';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { FakeEngine, type FakeBehaviour } from './fake-engine.js';
-import {
-  REQUIRED_MEMORY_BYTES,
-  createModelService,
-  type ModelService,
-  type ServiceDeps,
-  type WorkerHandle,
-} from './service.js';
-import { createWorker, type FromWorker, type ToWorker } from './worker-core.js';
+import { ResultCache } from './cache.js';
+import { createCoordinator, type CoordinatorDeps } from './coordinator.js';
+import { FakeEngine } from './engines/fake-engine.js';
+import { NodeLlamaEngine, type WorkerHandle } from './engines/node-llama-engine.js';
+import { createModelAdapter, type ModelService } from './model-adapter.js';
+import { FakeTextEngine, type FakeBehaviour } from './text/fake-text-engine.js';
+import { createWorker, type FromWorker, type ToWorker } from './text/worker-core.js';
 
-/** The shipped manifest with its release addresses unset, as before the release was cut. */
-const unpublishedManifest = () =>
-  WeightsManifest.parse({
-    ...MODEL_MANIFEST,
-    parts: MODEL_MANIFEST.parts.map((p) => ({
-      ...p,
-      url: `${UNPUBLISHED}the release has not been cut yet`,
-    })),
-  });
-
+/**
+ * The summary centre's `window.loppaModel` behaviour, as it was before the coordinator existed
+ * (this file is `service.test.ts` moved, not rewritten): the same cases, answered by the adapter
+ * over a coordinator, with the real worker protocol in memory around a fake language model.
+ */
 const sha = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
 
 /** The worker process, in memory, around a fake engine: the same message protocol as the real one. */
@@ -34,7 +28,7 @@ function memoryWorker(behaviour: FakeBehaviour = {}) {
     const record = { killed: false, messages: [] as ToWorker[] };
     spawned.push(record);
     const handle = createWorker({ post: (m) => listeners.forEach((l) => l(m)) }, () =>
-      Promise.resolve(new FakeEngine(behaviour)),
+      Promise.resolve(new FakeTextEngine(behaviour)),
     );
     return {
       post: (m) => {
@@ -53,57 +47,65 @@ function memoryWorker(behaviour: FakeBehaviour = {}) {
 
 let dir = '';
 beforeEach(async () => {
-  dir = await mkdtemp(join(tmpdir(), 'loppa-service-'));
+  dir = await mkdtemp(join(tmpdir(), 'loppa-adapter-'));
 });
 afterEach(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-const small = () => {
+const small = (published = true) => {
   const bytes = randomBytes(30_000);
-  const manifest = WeightsManifest.parse({
-    ...MODEL_MANIFEST,
-    bytes: bytes.length,
-    sha256: sha(bytes),
-    parts: [
+  const parts = [bytes.subarray(0, 10_000), bytes.subarray(10_000)];
+  const manifest = ModelManifest.parse({
+    ...TEXT_MODEL,
+    files: [
       {
-        bytes: 10_000,
-        name: 'a.part1',
-        sha256: sha(bytes.subarray(0, 10_000)),
-        url: 'https://example.test/1',
-      },
-      {
-        bytes: 20_000,
-        name: 'a.part2',
-        sha256: sha(bytes.subarray(10_000)),
-        url: 'https://example.test/2',
+        bytes: bytes.length,
+        name: 'small.gguf',
+        parts: parts.map((part, i) => ({
+          bytes: part.length,
+          name: `a.part${i + 1}`,
+          sha256: sha(part),
+          url: published
+            ? `https://example.test/${i + 1}`
+            : `${UNPUBLISHED}the release has not been cut yet`,
+        })),
+        role: 'weights',
+        sha256: sha(bytes),
       },
     ],
   });
   return { bytes, manifest };
 };
 
-function setup(overrides: Partial<ServiceDeps> & { behaviour?: FakeBehaviour } = {}) {
-  const { manifest, bytes } = small();
+function setup(
+  overrides: Partial<CoordinatorDeps> & { behaviour?: FakeBehaviour; published?: boolean } = {},
+) {
+  const { manifest, bytes } = small(overrides.published);
   const events: ModelEvent[] = [];
   const memory = memoryWorker(overrides.behaviour);
   const chosen = { path: null as string | null };
-  const service: ModelService = createModelService({
-    manifest,
+  const coordinator = createCoordinator({
+    registry: [manifest],
+    engines: { [manifest.id]: (files) => new NodeLlamaEngine(memory.spawn, files.weights) },
     dir: join(dir, 'models'),
-    spawn: memory.spawn,
-    freeMemory: () => REQUIRED_MEMORY_BYTES * 2,
+    env: {},
+    repoRoot: null,
+    freeMemory: () => manifest.requiredMemoryBytes * 2,
     chooseFile: () => Promise.resolve(chosen.path),
     fetch: (() => Promise.reject(new Error('no network in this test'))) as typeof fetch,
-    emit: (e) => events.push(e),
+    cache: new ResultCache(join(dir, 'cache.json')),
     ...overrides,
   });
-  /** Waits for an event of this kind. */
+  const service: ModelService = createModelAdapter(coordinator, {
+    emit: (e) => events.push(e),
+    modelId: manifest.id,
+  });
   const until = async (match: (e: ModelEvent) => boolean) => {
     await vi.waitFor(() => expect(events.some(match)).toBe(true), { timeout: 5000 });
     return events.find(match)!;
   };
-  return { service, events, memory, chosen, manifest, bytes, until };
+  return { service, coordinator, events, memory, chosen, manifest, bytes, until };
 }
 
 const JOB = {
@@ -166,39 +168,28 @@ describe('the model file', () => {
 
 describe('downloading', () => {
   it('is off, with a reason, while the release has no address', async () => {
-    const events: ModelEvent[] = [];
-    const service = createModelService({
-      dir: join(dir, 'models'),
-      spawn: memoryWorker().spawn,
-      freeMemory: () => REQUIRED_MEMORY_BYTES * 2,
-      chooseFile: () => Promise.resolve(null),
-      fetch: (() => Promise.reject(new Error('must not be called'))) as typeof fetch,
-      emit: (e) => events.push(e),
-      manifest: unpublishedManifest(),
-    });
+    const { service, events } = setup({ published: false });
     expect((await service.status()).downloadBlocked).toBe('the release has not been cut yet');
     expect(await service.install()).toEqual({ ok: false, problem: 'download-unavailable' });
     expect(events).toEqual([]);
   });
 
   it('fetches the parts, joins and verifies them, and the file is then installed and deletable', async () => {
-    const { manifest, bytes } = small();
-    const files: Record<string, Uint8Array> = {
-      'https://example.test/1': bytes.subarray(0, 10_000),
-      'https://example.test/2': bytes.subarray(10_000),
-    };
-    const { service, until } = setup({
-      manifest,
+    // The bytes are drawn by `setup`; the server is told about them just after.
+    const served: Record<string, Uint8Array> = {};
+    const ctx = setup({
       fetch: (async (url: string) =>
-        new Response(files[String(url)] ? new Blob([files[String(url)] as BlobPart]) : 'no', {
-          status: files[String(url)] ? 200 : 404,
+        new Response(served[String(url)] ? new Blob([served[String(url)] as BlobPart]) : 'no', {
+          status: served[String(url)] ? 200 : 404,
         })) as typeof fetch,
     });
-    expect(await service.install()).toEqual({ ok: true, id: 'install' });
-    await until((e) => e.kind === 'installed');
-    expect(await service.status()).toMatchObject({ installed: true, verified: true });
-    expect(await readdir(join(dir, 'models'))).toEqual([`${manifest.id}.gguf`]);
-    expect((await service.remove()).installed).toBe(false);
+    served['https://example.test/1'] = ctx.bytes.subarray(0, 10_000);
+    served['https://example.test/2'] = ctx.bytes.subarray(10_000);
+    expect(await ctx.service.install()).toEqual({ ok: true, id: 'install' });
+    await ctx.until((e) => e.kind === 'installed');
+    expect(await ctx.service.status()).toMatchObject({ installed: true, verified: true });
+    expect(await readdir(join(dir, 'models'))).toEqual(['small.gguf']);
+    expect((await ctx.service.remove()).installed).toBe(false);
     expect(await readdir(join(dir, 'models'))).toEqual([]);
   });
 });
@@ -255,7 +246,7 @@ describe('a job', () => {
     expect(
       await ctx.until((e) => e.id === 'c' && (e.kind === 'error' || e.kind === 'done')),
     ).toMatchObject({ kind: 'error', problem: 'cancelled' });
-    expect((await ctx.service.status()).activity).toBe('idle');
+    await vi.waitFor(async () => expect((await ctx.service.status()).activity).toBe('idle'));
   });
 
   it('refuses to load a file that does not match, deleting nothing', async () => {
@@ -299,29 +290,79 @@ describe('a job', () => {
         kill: () => undefined,
       };
     };
-    const failing = createModelService({
-      manifest: ctx.manifest,
-      dir: join(dir, 'models'),
-      spawn,
-      freeMemory: () => REQUIRED_MEMORY_BYTES * 2,
-      chooseFile: () => Promise.resolve(null),
-      fetch: fetch,
-      emit: (e) => ctx.events.push(e),
-      fake: true,
-    });
+    const events: ModelEvent[] = [];
+    const failing = createModelAdapter(
+      createCoordinator({
+        registry: [ctx.manifest],
+        engines: { [ctx.manifest.id]: (files) => new NodeLlamaEngine(spawn, files.weights) },
+        dir: join(dir, 'models'),
+        env: {},
+        repoRoot: null,
+        freeMemory: () => ctx.manifest.requiredMemoryBytes * 2,
+        chooseFile: () => Promise.resolve(null),
+        fetch,
+        cache: new ResultCache(join(dir, 'cache2.json')),
+        fake: true,
+      }),
+      { emit: (e) => events.push(e), modelId: ctx.manifest.id },
+    );
     await failing.start('x', JOB);
-    expect(await ctx.until((e) => e.id === 'x' && e.kind === 'error')).toMatchObject({
+    await vi.waitFor(() =>
+      expect(events.some((e) => e.id === 'x' && e.kind === 'error')).toBe(true),
+    );
+    expect(events.find((e) => e.id === 'x' && e.kind === 'error')).toMatchObject({
       problem: 'cannot-start',
     });
     expect((await failing.status()).activity).toBe('idle');
   });
 });
 
+describe('what the adapter does not pass on', () => {
+  it('a task another caller runs through the coordinator is not on the legacy channel', async () => {
+    const ctx = setup();
+    await installed(ctx);
+    await ctx.coordinator.run('theirs', JOB);
+    await vi.waitFor(() => expect(ctx.coordinator.state().running).toBeNull());
+    await vi.waitFor(() => expect(ctx.coordinator.state().activity).toBe('idle'));
+    expect(ctx.events.filter((e) => e.id === 'theirs')).toEqual([]);
+  });
+
+  it('queued events do not exist on the legacy channel', async () => {
+    const ctx = setup({ behaviour: { delayMs: 10 } });
+    await installed(ctx);
+    await ctx.service.start('a', JOB);
+    await ctx.until((e) => e.id === 'a' && e.kind === 'done');
+    expect(ctx.events.every((e) => e.kind !== ('queued' as string))).toBe(true);
+  });
+});
+
 describe('the fake mode CI runs', () => {
   it('needs no file, no hash and no memory, and still runs the whole path', async () => {
-    const ctx = setup({ fake: true, freeMemory: () => 0 });
-    expect(await ctx.service.status()).toMatchObject({ installed: true, verified: true });
-    await ctx.service.start('f', JOB);
-    await ctx.until((e) => e.kind === 'done' && e.id === 'f');
+    const events: ModelEvent[] = [];
+    const service = createModelAdapter(
+      createCoordinator({
+        registry: [TEXT_MODEL],
+        engines: { [TEXT_MODEL.id]: () => new FakeEngine({ behaviour: { delayMs: 1 } }) },
+        dir: join(dir, 'models'),
+        env: {},
+        repoRoot: null,
+        freeMemory: () => 0,
+        chooseFile: () => Promise.resolve(null),
+        fetch,
+        cache: new ResultCache(join(dir, 'cache3.json')),
+        fake: true,
+      }),
+      { emit: (e) => events.push(e) },
+    );
+    expect(await service.status()).toMatchObject({
+      installed: true,
+      verified: true,
+      location: null,
+      downloadBlocked: null,
+    });
+    await service.start('f', JOB);
+    await vi.waitFor(() =>
+      expect(events.some((e) => e.kind === 'done' && e.id === 'f')).toBe(true),
+    );
   });
 });

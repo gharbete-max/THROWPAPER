@@ -1,6 +1,7 @@
 import { SUMMARY_LOCALES, type ModelJob } from '@tp/shared/summary';
 import { MODEL_CHANNELS } from './channels.js';
-import type { ModelService } from './service.js';
+import type { ModelService } from './model-adapter.js';
+import { originGuard, type IpcMainLike } from './origin-guard.js';
 
 /**
  * The narrow IPC from the Forms window to the model service: status, install, open from disk,
@@ -10,12 +11,7 @@ import type { ModelService } from './service.js';
  * frame inside Forms from elsewhere, is refused. The job is checked for shape here because it
  * arrives from a renderer; the text in it is never logged.
  */
-export interface IpcMainLike {
-  handle(
-    channel: string,
-    listener: (event: { senderFrame?: { url: string } | null }, ...args: unknown[]) => unknown,
-  ): void;
-}
+export type { IpcMainLike };
 
 export function isModelJob(value: unknown): value is ModelJob {
   if (typeof value !== 'object' || value === null) return false;
@@ -45,15 +41,7 @@ export function registerModelIpc(
   service: ModelService,
   allowedOrigins: () => string[],
 ): void {
-  const guarded =
-    <A extends unknown[], R>(run: (...args: A) => R) =>
-    (event: { senderFrame?: { url: string } | null }, ...args: unknown[]): R => {
-      const url = event.senderFrame?.url ?? '';
-      if (!allowedOrigins().some((origin) => url === origin || url.startsWith(`${origin}/`))) {
-        throw new Error('not-the-forms-window');
-      }
-      return run(...(args as A));
-    };
+  const guarded = originGuard(allowedOrigins);
 
   ipc.handle(
     MODEL_CHANNELS.status,

@@ -82,7 +82,7 @@ async function buildModelRuntime(): Promise<void> {
   const dir = join(stage, 'model');
   await mkdir(dir, { recursive: true });
   await build({
-    entryPoints: [join(root, 'src', 'model', 'worker.ts')],
+    entryPoints: [join(root, 'src', 'ai', 'text', 'worker.ts')],
     outfile: join(dir, 'worker.mjs'),
     bundle: true,
     platform: 'node',
@@ -92,7 +92,7 @@ async function buildModelRuntime(): Promise<void> {
     logLevel: 'warning',
   });
   await build({
-    entryPoints: [join(root, 'src', 'model', 'preload.ts')],
+    entryPoints: [join(root, 'src', 'ai', 'preload.ts')],
     outfile: join(stage, 'model-preload.cjs'),
     bundle: true,
     platform: 'node',

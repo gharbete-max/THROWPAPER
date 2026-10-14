@@ -21,6 +21,7 @@ import { modelBridge } from '../lib/model-bridge.js';
 import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { FormSource } from './summary/FormSource.js';
+import { ModelsPanel } from './summary/ModelsPanel.js';
 import { Setup } from './summary/Setup.js';
 import { useJob } from './summary/job.js';
 import { textOfFile } from './summary/text.js';
@@ -90,7 +91,12 @@ function Centre({ bridge, handed }: { bridge: ModelBridge; handed: File | null }
           {t('summary.settingsToggle')}
         </button>
       ) : null}
-      {!ready || settings ? <Setup bridge={bridge} status={status} onStatus={onStatus} /> : null}
+      {!ready || settings ? (
+        <>
+          <Setup bridge={bridge} status={status} onStatus={onStatus} />
+          <ModelsPanel />
+        </>
+      ) : null}
       {ready ? <Work bridge={bridge} status={status} handed={handed} /> : null}
     </section>
   );
