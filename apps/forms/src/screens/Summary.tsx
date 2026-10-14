@@ -416,6 +416,8 @@ function Work({
 
 function warnings(list: JobWarning[], t: ReturnType<typeof useT>) {
   return list.map((warning) => {
+    // Only the reply helper's drafts raise these two; a summary never does.
+    if (warning.kind === 'wrong-language' || warning.kind === 'attachment-mentioned') return null;
     if (warning.kind === 'repetition') {
       return (
         <p key="repetition" className="status-down" role="alert">

@@ -1560,6 +1560,47 @@ export const daDK: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'Modellen begyndte at gentage sig selv og blev stoppet. Brug resultatet med forsigtighed.',
   'summary.passage': 'Afsnit {n}',
+  'reply.open': 'Hjælp mig med at svare',
+  'reply.heading': 'Svarhjælp',
+  'reply.privacy':
+    'Udkastet skrives af en model på denne computer. Intet sendes eller gemmes, og intet vedhæftes.',
+  'reply.received': 'Beskeden du modtog',
+  'reply.receivedHint':
+    'Indsæt den her. Lad feltet stå tomt for at skrive ud fra dine egne noter nedenfor.',
+  'reply.notes': 'Hvad jeg vil sige (valgfrit)',
+  'reply.language': 'Svarsprog',
+  'reply.tone': 'Tone',
+  'reply.tone.professional': 'Professionel',
+  'reply.tone.friendly': 'Venlig',
+  'reply.tone.concise': 'Kortfattet',
+  'reply.tone.formal': 'Formel',
+  'reply.tone.firm': 'Bestemt',
+  'reply.neutral':
+    'Det ligner en kontrakt, et samtykke, en erklæring eller en klinisk besked. Udkastet er kun en neutral kvittering og gengiver eller fortolker intet af det. Læs originalen selv.',
+  'reply.generate': 'Skriv et udkast',
+  'reply.done': 'Udkastet er klar.',
+  'reply.inserted': 'Indsat i beskeden. Intet er sendt.',
+  'reply.label': 'Lavet af modellen på denne computer — tjek det, før du bruger det',
+  'reply.draft': 'Udkast',
+  'reply.shorter': 'Kortere',
+  'reply.regenerate': 'Skriv igen',
+  'reply.translateTo': 'Oversæt til',
+  'reply.translate': 'Oversæt',
+  'reply.revise': 'Hvordan skal det ændres?',
+  'reply.reviseGo': 'Ret',
+  'reply.insert': 'Indsæt i beskeden',
+  'reply.discard': 'Kassér',
+  'reply.overwrite': 'Beskedfeltet indeholder allerede tekst. Skal den erstattes med dette udkast?',
+  'reply.overwrite.yes': 'Erstat',
+  'reply.noModel':
+    'Tekstmodellen er ikke installeret på denne computer, så der kan ikke skrives et udkast.',
+  'reply.noModelLink': 'Åbn modellisten',
+  'reply.warn.numbers':
+    'Tal i udkastet, som ikke står i beskeden eller dine noter: {numbers}. Tjek dem, eller fjern dem.',
+  'reply.warn.attachment':
+    'Udkastet nævner en vedhæftet fil. Denne hjælp vedhæfter ikke noget. Fjern den del.',
+  'reply.warn.language': 'Udkastet er måske ikke på det sprog, du valgte. Læs det omhyggeligt.',
+  'reply.placeholders': 'Huller markeret med spørgsmålstegn, som du skal udfylde: {count}.',
   'invoiceScan.heading': 'Læs en leverandørfaktura',
   'invoiceScan.intro':
     'Vælg et foto, en scanning eller en PDF af en faktura, du har modtaget. Den læses på denne enhed og sendes ingen steder hen. Hver værdi vises ved det sted, hvor den blev fundet, og intet bruges, før du har bekræftet det.',

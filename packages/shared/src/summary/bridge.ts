@@ -69,7 +69,11 @@ export type JobStep = 'loading' | 'reading' | 'combining' | 'writing' | 'transla
 export type JobWarning =
   | { kind: 'numbers-added'; numbers: string[] }
   | { kind: 'numbers-missing'; numbers: string[] }
-  | { kind: 'repetition' };
+  | { kind: 'repetition' }
+  /** A reply draft that does not seem to be in the language asked for. */
+  | { kind: 'wrong-language' }
+  /** A reply draft that names or implies an attachment; this helper attaches nothing. */
+  | { kind: 'attachment-mentioned' };
 
 export type ModelEvent =
   /** A job's progress: `done` of `total` steps of this kind. */

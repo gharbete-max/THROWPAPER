@@ -1601,6 +1601,48 @@ export const frFR: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'Le modèle a commencé à se répéter et a été arrêté. Prenez le résultat avec prudence.',
   'summary.passage': 'Extrait {n}',
+  'reply.open': 'M’aider à répondre',
+  'reply.heading': 'Aide à la réponse',
+  'reply.privacy':
+    'Le brouillon est écrit par un modèle sur cet ordinateur. Rien n’est envoyé ni enregistré, et rien n’est joint.',
+  'reply.received': 'Le message reçu',
+  'reply.receivedHint':
+    'Collez-le ici. Laissez vide pour écrire à partir de vos propres notes ci-dessous.',
+  'reply.notes': 'Ce que je veux dire (facultatif)',
+  'reply.language': 'Langue de la réponse',
+  'reply.tone': 'Ton',
+  'reply.tone.professional': 'Professionnel',
+  'reply.tone.friendly': 'Amical',
+  'reply.tone.concise': 'Concis',
+  'reply.tone.formal': 'Formel',
+  'reply.tone.firm': 'Ferme',
+  'reply.neutral':
+    'Ce message ressemble à un contrat, un consentement, une déclaration ou un message clinique. Le brouillon n’est qu’un accusé de réception neutre et ne reprend ni n’interprète rien. Lisez l’original vous-même.',
+  'reply.generate': 'Écrire un brouillon',
+  'reply.done': 'Le brouillon est prêt.',
+  'reply.inserted': 'Inséré dans le message. Rien n’a été envoyé.',
+  'reply.label': 'Généré par le modèle sur cet ordinateur — vérifiez-le avant de l’utiliser',
+  'reply.draft': 'Brouillon',
+  'reply.shorter': 'Plus court',
+  'reply.regenerate': 'Réécrire',
+  'reply.translateTo': 'Traduire en',
+  'reply.translate': 'Traduire',
+  'reply.revise': 'Comment le modifier ?',
+  'reply.reviseGo': 'Modifier',
+  'reply.insert': 'Insérer dans le message',
+  'reply.discard': 'Supprimer',
+  'reply.overwrite': 'Le champ du message contient déjà du texte. Le remplacer par ce brouillon ?',
+  'reply.overwrite.yes': 'Remplacer',
+  'reply.noModel':
+    'Le modèle de texte n’est pas installé sur cet ordinateur, aucun brouillon ne peut donc être écrit.',
+  'reply.noModelLink': 'Ouvrir la liste des modèles',
+  'reply.warn.numbers':
+    'Nombres du brouillon absents du message ou de vos notes : {numbers}. Vérifiez-les ou supprimez-les.',
+  'reply.warn.attachment':
+    'Le brouillon mentionne une pièce jointe. Cette aide ne joint rien. Supprimez ce passage.',
+  'reply.warn.language':
+    'Le brouillon n’est peut-être pas dans la langue choisie. Relisez-le attentivement.',
+  'reply.placeholders': 'Trous marqués d’un point d’interrogation à compléter : {count}.',
   'invoiceScan.heading': 'Lire une facture fournisseur',
   'invoiceScan.intro':
     'Choisissez une photo, un scan ou un PDF d’une facture reçue. Elle est lue sur cet appareil et ne va nulle part. Chaque valeur est montrée à côté de l’endroit où elle a été trouvée, et rien n’est utilisé avant votre confirmation.',

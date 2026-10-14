@@ -1555,6 +1555,48 @@ export const nbNO: Record<MessageKey, string> = {
   'summary.warn.repetition':
     'Modellen begynte å gjenta seg selv og ble stoppet. Bruk resultatet med forsiktighet.',
   'summary.passage': 'Avsnitt {n}',
+  'reply.open': 'Hjelp meg å svare',
+  'reply.heading': 'Svarhjelp',
+  'reply.privacy':
+    'Utkastet skrives av en modell på denne datamaskinen. Ingenting sendes eller lagres, og ingenting legges ved.',
+  'reply.received': 'Meldingen du fikk',
+  'reply.receivedHint':
+    'Lim den inn her. La feltet stå tomt for å skrive ut fra dine egne notater nedenfor.',
+  'reply.notes': 'Hva jeg vil si (valgfritt)',
+  'reply.language': 'Svarspråk',
+  'reply.tone': 'Tone',
+  'reply.tone.professional': 'Profesjonell',
+  'reply.tone.friendly': 'Vennlig',
+  'reply.tone.concise': 'Kortfattet',
+  'reply.tone.formal': 'Formell',
+  'reply.tone.firm': 'Bestemt',
+  'reply.neutral':
+    'Dette ligner en kontrakt, et samtykke, en erklæring eller en klinisk melding. Utkastet er bare en nøytral bekreftelse og gjengir eller tolker ingenting av det. Les originalen selv.',
+  'reply.generate': 'Skriv et utkast',
+  'reply.done': 'Utkastet er ferdig.',
+  'reply.inserted': 'Satt inn i meldingen. Ingenting er sendt.',
+  'reply.label': 'Laget av modellen på denne datamaskinen — kontroller det før du bruker det',
+  'reply.draft': 'Utkast',
+  'reply.shorter': 'Kortere',
+  'reply.regenerate': 'Skriv på nytt',
+  'reply.translateTo': 'Oversett til',
+  'reply.translate': 'Oversett',
+  'reply.revise': 'Hvordan skal det endres?',
+  'reply.reviseGo': 'Endre',
+  'reply.insert': 'Sett inn i meldingen',
+  'reply.discard': 'Forkast',
+  'reply.overwrite':
+    'Meldingsfeltet inneholder allerede tekst. Vil du erstatte den med dette utkastet?',
+  'reply.overwrite.yes': 'Erstatt',
+  'reply.noModel':
+    'Tekstmodellen er ikke installert på denne datamaskinen, så ingen utkast kan skrives.',
+  'reply.noModelLink': 'Åpne modelllisten',
+  'reply.warn.numbers':
+    'Tall i utkastet som ikke står i meldingen eller notatene dine: {numbers}. Kontroller dem eller fjern dem.',
+  'reply.warn.attachment':
+    'Utkastet nevner et vedlegg. Denne hjelpen legger ikke ved noe. Fjern den delen.',
+  'reply.warn.language': 'Utkastet er kanskje ikke på språket du valgte. Les det nøye.',
+  'reply.placeholders': 'Hull markert med spørsmålstegn som du må fylle ut: {count}.',
   'invoiceScan.heading': 'Les en leverandørfaktura',
   'invoiceScan.intro':
     'Velg et bilde, en skanning eller en PDF av en faktura du har mottatt. Den leses på denne enheten og sendes ingen steder. Hver verdi vises ved stedet der den ble funnet, og ingenting brukes før du har bekreftet det.',

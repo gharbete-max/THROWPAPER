@@ -14,6 +14,7 @@ import { Delivery, ModeNote, useSendMode } from './send-parts.js';
 import { AddressInput, RecentAddresses, useAddressBook } from './AddressInput.js';
 import { AddressIssues } from './AddressIssues.js';
 import { AttachmentSize } from './AttachmentSize.js';
+import { ReplyHelp } from './send/ReplyHelp.js';
 
 // The list screen is the larger half and only some people open it.
 const SendBatch = lazy(() => import('./SendBatch.js').then((m) => ({ default: m.SendBatch })));
@@ -287,6 +288,7 @@ function SendOne() {
         <span>{t('send.message')}</span>
         <textarea rows={5} value={message} onChange={(event) => setMessage(event.target.value)} />
       </label>
+      <ReplyHelp message={message} onInsert={setMessage} />
       {problem && (
         <p className="status-down small" role="alert">
           {problem}
