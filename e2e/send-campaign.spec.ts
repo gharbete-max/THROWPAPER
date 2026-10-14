@@ -206,3 +206,52 @@ test('a list over the cap is refused on the screen', async ({ page }) => {
   await expect(page.getByRole('alert')).toContainText('at most 500 people');
   await expect(page.getByRole('button', { name: 'Next' })).toBeDisabled();
 });
+
+test('the do-not-email list: add an address, see it, the campaign leaves it out, remove it after a confirmation', async ({
+  page,
+}) => {
+  const tag = `${TAG}-screen`;
+  // A clean list: the test before this one left two of this run's addresses on it.
+  await sql`delete from campaign_suppressions where email like ${`%-${TAG}@example.com`}`;
+  await signedIn(page);
+  await pasteList(page);
+  await page.getByRole('button', { name: 'Do not email list' }).click();
+  const screen = page.getByTestId('suppressions');
+  await expect(screen).toContainText('only stops campaigns');
+  await expect(screen).toContainText('one-off documents or signing invitations');
+
+  // Refused without a valid address; then added by hand.
+  await screen.getByLabel('Address to add').fill('not-an-address');
+  await screen.getByRole('button', { name: 'Add', exact: true }).click();
+  await expect(screen.getByRole('alert')).toContainText('not a valid email address');
+  await screen.getByLabel('Address to add').fill(address('bo'));
+  await screen.getByRole('button', { name: 'Add', exact: true }).click();
+  const row = screen.getByRole('row', { name: new RegExp(address('bo')) });
+  await expect(row).toContainText('Added by hand');
+
+  // The campaign built from the same list leaves that address out.
+  await screen.getByRole('button', { name: 'Back to the campaign' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByLabel('Subject').fill(`Hello ${tag}`);
+  await page.getByLabel('Message', { exact: true }).fill('News for {{name | you}}.');
+  await page.getByLabel('Footer (wording you provide)').fill(FOOTER);
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByRole('button', { name: 'Continue to confirm' }).click();
+  await expect(page.getByTestId('campaign-suppressed')).toContainText('1 address is left out');
+  await expect(page.getByTestId('campaign-confirm-to')).not.toContainText(address('bo'));
+
+  // Removing asks first: Cancel keeps it, the confirmation removes it.
+  await page.getByRole('button', { name: 'Do not email list' }).click();
+  const remove = screen.getByRole('button', { name: `Remove ${address('bo')}` });
+  await remove.click();
+  await page.getByRole('button', { name: 'Cancel' }).click();
+  await expect(row).toBeVisible();
+  await remove.click();
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: `Remove ${address('bo')}` })
+    .click();
+  await expect(row).toHaveCount(0);
+  const left = await sql`select 1 from campaign_suppressions where email = ${address('bo')}`;
+  expect(left).toHaveLength(0);
+});

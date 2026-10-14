@@ -1837,4 +1837,23 @@ export const ruRU: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} адрес исключён, потому что он отписался или письма возвращаются. | few {count} адреса исключены, потому что они отписались или письма возвращаются. | many {count} адресов исключено, потому что они отписались или письма возвращаются.',
   'campaign.leftOut.done': 'Исключены (отписались или письма возвращаются): {list}',
+  'suppress.open': 'Список «не писать»',
+  'suppress.close': 'Назад к рассылке',
+  'suppress.heading': 'Не писать',
+  'suppress.scope':
+    'Этот список останавливает только рассылки (письмо по списку). Отдельные документы и приглашения на подпись он не останавливает.',
+  'suppress.empty': 'В списке нет адресов.',
+  'suppress.col.email': 'Адрес',
+  'suppress.col.date': 'Добавлен',
+  'suppress.col.reason': 'Причина',
+  'suppress.reason.unsubscribed': 'Отписался',
+  'suppress.reason.bounced': 'Письма возвращаются',
+  'suppress.reason.manual': 'Добавлен вручную',
+  'suppress.add.label': 'Адрес для добавления',
+  'suppress.add': 'Добавить',
+  'suppress.invalid': 'Это не действительный адрес электронной почты.',
+  'suppress.remove': 'Удалить {email}',
+  'suppress.removeConfirm':
+    'Удалить {email} из списка? Рассылки снова смогут доходить до этого адреса.',
+  'suppress.failed': 'Не удалось изменить список. Повторите попытку.',
 };

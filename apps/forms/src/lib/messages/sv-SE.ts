@@ -1799,4 +1799,22 @@ export const svSE: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adress utelämnas eftersom den har avregistrerat sig eller studsat. | other {count} adresser utelämnas eftersom de har avregistrerat sig eller studsat.',
   'campaign.leftOut.done': 'Utelämnade (avregistrerade eller studsade): {list}',
+  'suppress.open': 'Skicka-inte-lista',
+  'suppress.close': 'Tillbaka till utskicket',
+  'suppress.heading': 'Skicka inte',
+  'suppress.scope':
+    'Den här listan stoppar bara utskick (ett mejl till en lista). Den stoppar inte enstaka dokument eller signeringsinbjudningar.',
+  'suppress.empty': 'Inga adresser på listan.',
+  'suppress.col.email': 'Adress',
+  'suppress.col.date': 'Tillagd',
+  'suppress.col.reason': 'Orsak',
+  'suppress.reason.unsubscribed': 'Avregistrerad',
+  'suppress.reason.bounced': 'Studsade',
+  'suppress.reason.manual': 'Tillagd för hand',
+  'suppress.add.label': 'Adress att lägga till',
+  'suppress.add': 'Lägg till',
+  'suppress.invalid': 'Det är ingen giltig e-postadress.',
+  'suppress.remove': 'Ta bort {email}',
+  'suppress.removeConfirm': 'Ta bort {email} från listan? Utskick kan då nå adressen igen.',
+  'suppress.failed': 'Listan kunde inte ändras. Försök igen.',
 };
