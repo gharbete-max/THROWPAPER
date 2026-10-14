@@ -80,6 +80,30 @@ test('set up from a file on disk, summarise, translate, cancel, and see the limi
   expect(sent).toBe(3);
 });
 
+test('the model list shows every model, and a vision model is not available yet', async ({
+  page,
+}) => {
+  await page.addInitScript(fakeBridge);
+  await signIn(page);
+  await page.goto('/summary');
+  await expect(page.getByRole('heading', { name: 'AI models on this computer' })).toBeVisible();
+
+  const text = page.locator('[data-model="qwen3"]');
+  await expect(text).toContainText('Not installed');
+  await expect(text).toContainText('qwen3.gguf: not found');
+  await expect(text).toContainText('put them in this folder: C:\\Users\\me\\AppData');
+  await expect(text.getByRole('button', { name: 'Open a file from disk' })).toBeEnabled();
+
+  const vision = page.locator('[data-model="qwen-vl"]');
+  await expect(vision).toContainText('For evaluation only');
+  await expect(vision).toContainText('Not available yet');
+  await expect(vision).toContainText('never offered for download');
+  await expect(vision).toContainText(/found in this checkout.s top folder/);
+  await expect(vision).toContainText('mmproj.gguf: not found');
+  // Nothing to run it with, so nothing to get or open.
+  await expect(vision.getByRole('button')).toHaveCount(0);
+});
+
 test('a consent is quoted, never summarised or translated', async ({ page }) => {
   await page.addInitScript(fakeBridge);
   await signIn(page);

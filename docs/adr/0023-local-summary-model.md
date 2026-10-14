@@ -167,7 +167,7 @@ disk, status, the size and "this stays on this computer". The desktop panel's AI
 - **Manifest** `packages/shared/src/summary/weights/*.json`, Zod in `packages/shared/src/summary/manifest.ts`,
   held by a test; the two part URLs and the source revision are marked `unpublished:` / `unpinned:` until
   the release is cut, and the download is off with that reason until then. "Open from disk" works now.
-- **Pipeline** `apps/desktop/src/model/pipeline.ts` (settings and prompts from the spike), engine seam
+- **Pipeline** `apps/desktop/src/model/pipeline.ts` (now `src/ai/text/pipeline.ts`, ADR 0024) (settings and prompts from the spike), engine seam
   `engine.ts`, real engine `llama-engine.ts`, in-memory `fake-engine.ts` for CI and e2e, worker `worker.ts`,
   main-side `service.ts` (verify before first use each session, free-memory check, idle release, cancel).
   Streaming SHA-256 and the two-part download are in `weights.ts`.

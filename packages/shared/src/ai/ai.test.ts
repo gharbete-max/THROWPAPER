@@ -58,7 +58,7 @@ describe('the text model manifest', () => {
 });
 
 describe('the registry', () => {
-  it('has every manifest file in ADR 0021 form: sorted keys, two-space indentation', () => {
+  it('has every manifest file in ADR 0021 form: keys sorted at every level, one trailing newline', () => {
     const dir = join(HERE, 'models');
     const names = readdirSync(dir);
     expect(names.length).toBe(MODEL_REGISTRY.length);
@@ -74,7 +74,9 @@ describe('the registry', () => {
           : value;
     for (const name of names) {
       const text = readFileSync(join(dir, name), 'utf8');
-      expect(text, name).toBe(`${JSON.stringify(sorted(JSON.parse(text)), null, 2)}\n`);
+      // Prettier owns the layout (it keeps short arrays on a line); the order of the keys is ours.
+      expect(/\}\n$/.test(text), name).toBe(true);
+      expect(JSON.stringify(JSON.parse(text)), name).toBe(JSON.stringify(sorted(JSON.parse(text))));
     }
   });
 
