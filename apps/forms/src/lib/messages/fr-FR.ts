@@ -1845,4 +1845,47 @@ export const frFR: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adresse est écartée car elle s’est désabonnée ou a rebondi. | other {count} adresses sont écartées car elles se sont désabonnées ou ont rebondi.',
   'campaign.leftOut.done': 'Écartées (désabonnées ou rebondies) : {list}',
+  'copy.open': 'Créer une copie numérique',
+  'copy.heading': 'Copie numérique',
+  'copy.intro':
+    'Seulement des lignes et du texte, lus sur cet appareil à partir de la photo. Vérifiez les mots signalés comme incertains, puis conservez la copie. La photo elle-même n’est pas modifiée.',
+  'copy.language': 'Langue de la page',
+  'copy.reading': 'Lecture de la page…',
+  'copy.readFailed':
+    'La page n’a pas pu être lue. Essayez une autre langue ou une photo plus nette.',
+  'copy.summary': 'Mots : {words}. Lignes : {lines}. À vérifier : {unsure}.',
+  'copy.photo': 'Photo',
+  'copy.photoAlt': 'La photo dont la copie est tirée',
+  'copy.sheet': 'Copie numérique',
+  'copy.sheetLabel': 'La copie numérique : lignes et texte',
+  'copy.legend':
+    'Un soulignement en pointillés signale un mot dont la lecture n’était pas sûre. Il n’apparaît pas dans la copie enregistrée.',
+  'copy.word': 'Mot {n} sur {total}',
+  'copy.wordField': 'Le mot',
+  'copy.confidence': 'Lu avec {percent} % de confiance',
+  'copy.edited': 'Corrigé par vous',
+  'copy.apply': 'Utiliser ce mot',
+  'copy.previous': 'Mot précédent',
+  'copy.next': 'Mot suivant',
+  'copy.nextUnsure': 'Prochain mot à vérifier',
+  'copy.noneUnsure': 'Il ne reste aucun mot incertain.',
+  'copy.unsure': 'incertain, {percent} %',
+  'copy.keep': 'Conserver la copie en',
+  'copy.pdf': 'PDF avec lignes et texte',
+  'copy.searchable': 'PDF avec texte recherchable',
+  'copy.searchableHint':
+    'Conserve la photo comme page et y cache les mots, pour pouvoir rechercher dans le PDF et sélectionner du texte.',
+  'copy.svg': 'Image SVG',
+  'copy.text': 'Texte brut',
+  'copy.form': 'Un formulaire',
+  'copy.privacy':
+    'Un PDF est créé par le serveur et n’est conservé nulle part. L’image, le texte et le formulaire sont créés sur cet appareil.',
+  'copy.working': 'Création…',
+  'copy.kept': 'La copie a été enregistrée.',
+  'copy.replaced':
+    'Les caractères qu’aucune police PDF ne pouvait dessiner ont été remplacés par ? : {count}.',
+  'copy.error.failed': 'Le PDF n’a pas pu être créé. Réessayez.',
+  'copy.error.formFailed': 'Le formulaire n’a pas pu être démarré. Réessayez.',
+  'copy.close': 'Fermer',
+  'copy.noWords': 'Aucun mot n’a été trouvé sur cette page.',
 };

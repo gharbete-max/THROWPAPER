@@ -192,7 +192,7 @@ export async function arrangePdf(
 const A4 = { short: 595.28, long: 841.89 };
 
 /** JPEG and PNG by their first bytes; the declared type is the caller's word and proves nothing. */
-function imageFormat(bytes: Buffer): 'jpeg' | 'png' | null {
+export function imageFormat(bytes: Buffer): 'jpeg' | 'png' | null {
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'jpeg';
   if (bytes.subarray(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47]))) return 'png';
   return null;

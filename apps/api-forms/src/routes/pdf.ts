@@ -13,6 +13,7 @@ import {
   type ArrangeRefusalCode,
 } from '../pdf/arrange.js';
 import { fillPdf, pdfFields } from '../pdf/fill.js';
+import { copyPdf } from '../pdf/copy.js';
 
 /**
  * The parser's own file limit is set well above ours. Reaching it fails the whole request stream
@@ -80,7 +81,11 @@ type Upload = { files: Uint8Array[]; fields: Map<string, string> };
  * The multipart body of a PDF route: its files and its text fields, or `null` once the reply has
  * said why the body cannot be used (too large, too many files, none).
  */
-async function readUpload(request: FastifyRequest, reply: FastifyReply): Promise<Upload | null> {
+async function readUpload(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  filesRequired = true,
+): Promise<Upload | null> {
   const files: Uint8Array[] = [];
   const fields = new Map<string, string>();
   try {
@@ -89,7 +94,7 @@ async function readUpload(request: FastifyRequest, reply: FastifyReply): Promise
         files: PARSER_FILE_LIMIT,
         fileSize: MAX_FILE_BYTES,
         fields: 4,
-        fieldSize: 256 * 1024,
+        fieldSize: 1024 * 1024,
       },
     })) {
       if (part.type === 'file') {
@@ -131,7 +136,7 @@ async function readUpload(request: FastifyRequest, reply: FastifyReply): Promise
     });
     return null;
   }
-  if (files.length === 0) {
+  if (files.length === 0 && filesRequired) {
     void reply.code(400).send({
       error: {
         code: 'no-file',
@@ -226,6 +231,37 @@ export function registerPdfRoutes(
             acceptSignatureLoss: upload.fields.get('acceptSignatureLoss') === 'true',
           }),
         );
+      } catch (error) {
+        return refuse(reply, error);
+      }
+    },
+  });
+
+  /**
+   * A digital copy of a photographed page as a PDF (`pdf/copy.ts`): the lines and words the browser
+   * read, drawn. Multipart: a `copy` field holding `api.CopyPdfRequest` JSON, and, for the
+   * searchable kind, the photograph as the one `file`. Nothing is stored. Any signed-in person.
+   * `x-copy-replaced` says how many characters no font could print (drawn as "?").
+   */
+  app.post('/v1/pdf/copy', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: { tags: ['pdf'], response: errors },
+    handler: async (request, reply) => {
+      const upload = await readUpload(request, reply, false);
+      if (!upload) return;
+      const parsed = api.CopyPdfRequest.safeParse(jsonOf(upload.fields.get('copy')));
+      if (!parsed.success) {
+        return reply.code(400).send({
+          error: {
+            code: 'bad-copy',
+            message: 'Send a copy: the page size, its lines and its words',
+          },
+        });
+      }
+      try {
+        const made = await copyPdf(parsed.data, upload.files[0]);
+        return sendPdf(reply.header('x-copy-replaced', String(made.replaced)), made.pdf);
       } catch (error) {
         return refuse(reply, error);
       }

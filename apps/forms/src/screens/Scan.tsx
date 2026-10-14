@@ -24,6 +24,7 @@ import {
 } from './scan-plan.js';
 
 const ScanEdit = lazy(() => import('./scan-edit/ScanEdit.js'));
+const DigitalCopy = lazy(() => import('./digital-copy/DigitalCopy.js'));
 
 /** The server's limits (`api-forms/src/pdf/arrange.ts`), so the screen can say so before sending. */
 const MAX_FILES = 40;
@@ -48,6 +49,9 @@ export function Scan() {
   const [pages, setPages] = useState<ScanPage[]>([]);
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState<{ blob: Blob; page: number } | null>(null);
+  const [copying, setCopying] = useState<{ source: Blob | HTMLCanvasElement; turn: number } | null>(
+    null,
+  );
   const picker = useRef<HTMLInputElement>(null);
 
   // The drawings are released when the screen goes.
@@ -153,6 +157,15 @@ export function Scan() {
     setFiles([file]);
     setSources([{ pdf }]);
     setPages(pagesOfFile(0, pdf.pageCount));
+  }
+
+  /** A page as a picture for its digital copy: the photograph itself, or a PDF's page drawn. */
+  async function copyOf(page: ScanPage) {
+    const source = sources[page.file]!;
+    setCopying({
+      source: 'pdf' in source ? await source.pdf.picture(page.page, 3000) : files[page.file]!,
+      turn: page.turn,
+    });
   }
 
   function onDrop(event: DragEvent) {
@@ -262,6 +275,12 @@ export function Scan() {
                   onClick={() => void make(false, (blob) => setEditing({ blob, page: position }))}
                 />
                 <PageButton
+                  label={t('copy.open')}
+                  icon="file"
+                  disabled={busy}
+                  onClick={() => void copyOf(page).catch(() => say('scan.error.unreadable'))}
+                />
+                <PageButton
                   label={t('scan.remove')}
                   icon="trash"
                   onClick={() => setPages(removePage(pages, page.id))}
@@ -271,6 +290,15 @@ export function Scan() {
           ))}
         </ol>
       )}
+      {copying ? (
+        <Suspense fallback={null}>
+          <DigitalCopy
+            source={copying.source}
+            turn={copying.turn}
+            onClose={() => setCopying(null)}
+          />
+        </Suspense>
+      ) : null}
       {editing ? (
         <Suspense fallback={null}>
           <ScanEdit
@@ -295,7 +323,7 @@ function PageButton({
   onClick,
 }: {
   label: string;
-  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit';
+  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit' | 'file';
   disabled?: boolean;
   onClick: () => void;
 }) {

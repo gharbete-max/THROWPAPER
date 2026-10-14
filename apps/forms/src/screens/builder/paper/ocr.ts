@@ -85,15 +85,22 @@ export interface PageReader {
  * {@link OCR_PAGE_TIMEOUT_MS}: past it the worker is ended and the reading refused, so nothing is
  * added from a page half read.
  */
-export async function openPageReader(locale: string): Promise<PageReader> {
+export async function openPageReader(
+  locale: string,
+  /** Tesseract page segmentation mode, when the default (automatic) is not the right one: 4 reads a table's cells as lines. */
+  pageSegMode?: string,
+): Promise<PageReader> {
   const { createWorker } = await import('tesseract.js');
-  const start = () =>
-    createWorker(tessLangs(locale), 1, {
+  const start = async () => {
+    const created = await createWorker(tessLangs(locale), 1, {
       workerPath: '/ocr/worker.min.js',
       corePath: '/ocr/',
       langPath: '/ocr/lang',
       gzip: true,
     });
+    if (pageSegMode) await created.setParameters({ tessedit_pageseg_mode: pageSegMode as never });
+    return created;
+  };
   let worker = await start();
   let ended = false;
   return {

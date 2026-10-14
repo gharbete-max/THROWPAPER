@@ -1806,6 +1806,47 @@ export const enGB = {
   'campaign.leftOut':
     'plural:one {count} address is left out because it has unsubscribed or bounced. | other {count} addresses are left out because they have unsubscribed or bounced.',
   'campaign.leftOut.done': 'Left out (unsubscribed or bounced): {list}',
+  'copy.open': 'Make a digital copy',
+  'copy.heading': 'Digital copy',
+  'copy.intro':
+    'Lines and text only, read from the photograph on this device. Check the words marked as unsure, then keep the copy. The photograph itself is not changed.',
+  'copy.language': 'Language of the page',
+  'copy.reading': 'Reading the page…',
+  'copy.readFailed': 'The page could not be read. Try another language, or a clearer photograph.',
+  'copy.summary': 'Words: {words}. Lines: {lines}. To check: {unsure}.',
+  'copy.photo': 'Photograph',
+  'copy.photoAlt': 'The photograph the copy was made from',
+  'copy.sheet': 'Digital copy',
+  'copy.sheetLabel': 'The digital copy: lines and text',
+  'copy.legend':
+    'A dashed underline marks a word the reader was unsure of. It is not in the saved copy.',
+  'copy.word': 'Word {n} of {total}',
+  'copy.wordField': 'The word',
+  'copy.confidence': 'Read with {percent}% confidence',
+  'copy.edited': 'Fixed by you',
+  'copy.apply': 'Use this word',
+  'copy.previous': 'Previous word',
+  'copy.next': 'Next word',
+  'copy.nextUnsure': 'Next word to check',
+  'copy.noneUnsure': 'No unsure words left.',
+  'copy.unsure': 'unsure, {percent}%',
+  'copy.keep': 'Keep the copy as',
+  'copy.pdf': 'PDF with lines and text',
+  'copy.searchable': 'Searchable PDF',
+  'copy.searchableHint':
+    'Keeps the photograph as the page and hides the words in it, so the PDF can be searched and selected.',
+  'copy.svg': 'SVG picture',
+  'copy.text': 'Plain text',
+  'copy.form': 'A form',
+  'copy.privacy':
+    'A PDF is made by the server and kept nowhere. The picture, the text and the form are made on this device.',
+  'copy.working': 'Making…',
+  'copy.kept': 'The copy was saved.',
+  'copy.replaced': 'Characters that no PDF font could draw were replaced by ?: {count}.',
+  'copy.error.failed': 'The PDF could not be made. Try again.',
+  'copy.error.formFailed': 'The form could not be started. Try again.',
+  'copy.close': 'Close',
+  'copy.noWords': 'No words were found on this page.',
 } as const;
 
 /**
