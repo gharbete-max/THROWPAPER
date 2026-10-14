@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { REPLY_TONES } from '@tp/shared/summary';
 import { ALL_CATALOGUES as messages } from '../../lib/messages/all.js';
 import { sourceFiles } from '../../lib/source-files.js';
-import { IDLE, applyEvent } from './reply-job.js';
+import { IDLE, applyEvent, type ReplyState } from './reply-job.js';
 
 const ROOT = new URL('../../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 
@@ -74,7 +74,7 @@ describe('the words of the reply helper', () => {
 
 describe("a reply task's events", () => {
   it('stream text, end with warnings, or end with a problem', () => {
-    let state = { ...IDLE, phase: 'running' as const };
+    let state: ReplyState = { ...IDLE, phase: 'running' };
     state = applyEvent(state, { id: 'a', kind: 'step', step: 'writing', done: 0, total: 1 });
     state = applyEvent(state, { id: 'a', kind: 'text', mode: 'replace', text: 'Hel' });
     state = applyEvent(state, { id: 'a', kind: 'text', mode: 'append', text: 'lo' });

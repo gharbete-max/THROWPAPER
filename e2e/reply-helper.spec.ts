@@ -18,6 +18,11 @@ test.afterAll(async () => {
   await sql.end();
 });
 
+let baseline = 0;
+test.beforeEach(async () => {
+  baseline = (await queued()).length;
+});
+
 const queued = () =>
   sql`select id from jobs where kind = 'send.document' and payload->>'subject' like ${`%${TAG}%`}`;
 
@@ -117,15 +122,15 @@ test('generate, edit, insert only after asking, and nothing is queued until the 
     'Hello,\n\nThanks, see you then.\n\nKind regards',
   );
   await expect(page.getByText('Inserted into the message. Nothing has been sent.')).toBeVisible();
-  expect(await queued()).toHaveLength(0);
+  expect(await queued()).toHaveLength(baseline);
 
   // Sending is the old two-step: review, then confirm. The message is the inserted draft.
   await page.getByRole('button', { name: 'Review before sending' }).click();
   await expect(page.getByTestId('send-confirm')).toContainText('Thanks, see you then.');
-  expect(await queued()).toHaveLength(0);
+  expect(await queued()).toHaveLength(baseline);
   await page.getByRole('button', { name: 'Confirm and send' }).click();
   await expect(page.getByTestId('send-status')).toBeVisible();
-  expect(await queued()).toHaveLength(1);
+  expect(await queued()).toHaveLength(baseline + 1);
 });
 
 test('inserts into an empty box without asking, and discard forgets the draft', async ({
@@ -142,7 +147,7 @@ test('inserts into an empty box without asking, and discard forgets the draft', 
   await expect(page.getByTestId('reply-draft')).toHaveCount(0);
   // The message the writer now owns stays; the helper keeps nothing of its own.
   await expect(page.getByLabel('Short message')).toHaveValue(/Thank you for your message/);
-  expect(await queued()).toHaveLength(0);
+  expect(await queued()).toHaveLength(baseline);
 });
 
 test('an invented date is warned about, and shorter, translate and revise keep working', async ({
@@ -201,5 +206,5 @@ test('the campaign body has the helper too, and insert fills the body', async ({
   await expect(page.getByRole('textbox', { name: 'Message', exact: true })).toHaveValue(
     /Thank you for your message/,
   );
-  expect(await queued()).toHaveLength(0);
+  expect(await queued()).toHaveLength(baseline);
 });

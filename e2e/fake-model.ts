@@ -104,7 +104,7 @@ export function fakeBridge() {
     openFromDisk: () => Promise.resolve({ ok: false, problem: 'cancelled' }),
     remove: () => Promise.resolve(aiStatus()),
     run: (id: string, task: Record<string, string>) => {
-      if (!REPLY_KINDS.includes(task.kind)) {
+      if (!REPLY_KINDS.includes(task.kind ?? '')) {
         return Promise.resolve({ ok: false, problem: 'not-available' });
       }
       if (!state.installed) return Promise.resolve({ ok: false, problem: 'not-installed' });

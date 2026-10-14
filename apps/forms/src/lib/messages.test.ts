@@ -223,6 +223,7 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'da-DK': [
+      'reply.tone',
       'docs.keep.original',
       'invoiceScan.json',
       'invoiceScan.csv',
@@ -256,6 +257,7 @@ describe('twelve languages, each its own', () => {
       'conversation.send',
     ],
     'nb-NO': [
+      'reply.tone',
       'docs.keep.original',
       'draft.send',
       'event.status',
@@ -358,6 +360,7 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'es-ES': [
+      'reply.tone.formal',
       'docs.keep.original',
       'invoices.total',
       'brand.colour.danger',
