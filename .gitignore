@@ -42,3 +42,6 @@ graphify-out/
 # Model weights never go into git (docs/plan/NEXT.md, ADR 0015)
 *.gguf
 *.safetensors
+
+# AI model files for local evaluation (docs/plan/AI-SYSTEM.md D7): <kind>/ folders of GGUF files, never committed
+local-models/

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { MODEL_CHANNELS } from './channels.js';
-import { isModelJob, registerModelIpc } from './ipc.js';
-import type { ModelService } from './service.js';
+import { isModelJob, registerModelIpc } from './model-ipc.js';
+import type { ModelService } from './model-adapter.js';
 
 function harness() {
   const handlers = new Map<

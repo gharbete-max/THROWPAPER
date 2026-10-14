@@ -17,7 +17,7 @@ import {
   type JobWarning,
   type ModelJob,
 } from '@tp/shared/summary';
-import { JobError, type Engine } from './engine.js';
+import { JobError, type TextEngine } from './text-engine.js';
 import {
   formUser,
   mapUser,
@@ -43,7 +43,7 @@ import {
  * - **Around every call.** A loop guard (an 8-token run repeated three times stops the call), an
  *   output cap, and at the end a comparison of the output's numbers with the source's.
  *
- * Nothing here knows which model is behind the {@link Engine}, and nothing here touches a network.
+ * Nothing here knows which model is behind the {@link TextEngine}, and nothing here touches a network.
  */
 
 /** About thirty printed pages. Beyond it a summary takes an hour on a laptop; say so instead. */
@@ -71,7 +71,7 @@ interface Ask {
 }
 
 /** One call, guarded: cancel and the loop guard both abort it; only the second is not an error. */
-async function ask(engine: Engine, signal: AbortSignal, request: Ask) {
+async function ask(engine: TextEngine, signal: AbortSignal, request: Ask) {
   if (signal.aborted) throw new JobError('cancelled');
   const loop = new AbortController();
   const tokens: string[] = [];
@@ -93,7 +93,7 @@ async function ask(engine: Engine, signal: AbortSignal, request: Ask) {
 }
 
 export async function runJob(
-  engine: Engine,
+  engine: TextEngine,
   job: ModelJob,
   sink: Sink,
   signal: AbortSignal,
@@ -128,7 +128,7 @@ function digits(warnings: JobWarning[], source: string, output: string, strict: 
 }
 
 async function summarise(
-  engine: Engine,
+  engine: TextEngine,
   job: Summarise,
   sink: Sink,
   signal: AbortSignal,
@@ -205,7 +205,7 @@ async function summarise(
 }
 
 async function translate(
-  engine: Engine,
+  engine: TextEngine,
   job: Translate,
   sink: Sink,
   signal: AbortSignal,
@@ -238,7 +238,7 @@ async function translate(
 }
 
 async function select(
-  engine: Engine,
+  engine: TextEngine,
   job: Extract<ModelJob, { kind: 'select' }>,
   sink: Sink,
   signal: AbortSignal,

@@ -23,7 +23,7 @@ export interface GenerateRequest {
   onTokens?: (tokens: readonly string[]) => void;
 }
 
-export interface Engine {
+export interface TextEngine {
   /** The model's own tokeniser: chunk sizes and output caps are in its tokens. */
   countTokens(text: string): number;
   generate(request: GenerateRequest): Promise<string>;

@@ -1,6 +1,6 @@
 import { availableParallelism } from 'node:os';
 import { LlamaChatSession, LlamaLogLevel, getLlama } from 'node-llama-cpp';
-import type { Engine, GenerateRequest } from './engine.js';
+import type { TextEngine, GenerateRequest } from './text-engine.js';
 
 /**
  * The real engine: `node-llama-cpp` (MIT) running Qwen3-4B-Instruct-2507 on the CPU, in the
@@ -45,7 +45,7 @@ export function chooseThreads(
 export async function loadLlamaEngine(
   modelPath: string,
   options: { threads?: number } = {},
-): Promise<Engine> {
+): Promise<TextEngine> {
   const llama = await getLlama({ gpu: false, build: 'never', logLevel: LlamaLogLevel.error });
   const model = await llama.loadModel({ modelPath, useMmap: false });
   const context = await model.createContext({

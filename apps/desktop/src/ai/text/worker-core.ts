@@ -1,5 +1,5 @@
 import type { ModelEvent, ModelJob, ModelProblem } from '@tp/shared/summary';
-import { JobError, type Engine } from './engine.js';
+import { JobError, type TextEngine } from './text-engine.js';
 import { runJob } from './pipeline.js';
 
 /**
@@ -24,10 +24,10 @@ export interface Port {
   post(message: FromWorker): void;
 }
 
-export type LoadEngine = (path: string) => Promise<Engine>;
+export type LoadEngine = (path: string) => Promise<TextEngine>;
 
 export function createWorker(port: Port, loadEngine: LoadEngine, now: () => number = Date.now) {
-  let engine: Engine | null = null;
+  let engine: TextEngine | null = null;
   let running: { id: string; abort: AbortController } | null = null;
 
   const send = (event: ModelEvent) => port.post({ type: 'event', event });

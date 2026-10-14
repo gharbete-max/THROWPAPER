@@ -19,6 +19,7 @@
     "./import": "./src/import/index.ts",
     "./interpret": "./src/interpret/index.ts",
     "./summary": "./src/summary/index.ts",
+    "./ai": "./src/ai/index.ts",
     "./quoted": "./src/import/quoted/quoted.ts"
   },
   "scripts": {

@@ -33,16 +33,28 @@ describe('the licence allowlist', () => {
 
 describe('the model weights', () => {
   // licence:check reads npm packages only, so the weights' licence is held here (ADR 0023 section 3).
-  it('are under a licence the allowlist accepts, with provenance and attribution recorded', async () => {
-    const { MODEL_MANIFEST } = await import('../packages/shared/src/summary/manifest.js');
-    expect(satisfiable(MODEL_MANIFEST.licence)).toBe(true);
-    expect(MODEL_MANIFEST.licenceUrl).toMatch(/^https:\/\//);
-    expect(MODEL_MANIFEST.source).toMatch(/^https:\/\/huggingface\.co\//);
+  it('of every distributable model are under a licence the allowlist accepts, with provenance and attribution recorded', async () => {
+    const { MODEL_REGISTRY } = await import('../packages/shared/src/ai/manifest.js');
     const notices = (await import('node:fs')).readFileSync(
       new URL('../THIRD-PARTY-NOTICES.md', import.meta.url),
       'utf8',
     );
-    expect(notices).toContain(MODEL_MANIFEST.id);
-    expect(notices).toContain(MODEL_MANIFEST.sha256);
+    const shipped = MODEL_REGISTRY.filter((m) => m.distributable);
+    expect(shipped.length).toBeGreaterThan(0);
+    for (const model of shipped) {
+      expect(satisfiable(model.licence), model.id).toBe(true);
+      expect(model.licenceUrl).toMatch(/^https:\/\//);
+      expect(model.source).toMatch(/^https:\/\/huggingface\.co\//);
+      expect(notices).toContain(model.id);
+      for (const file of model.files) expect(notices).toContain(file.sha256);
+    }
+  });
+
+  it('under a licence that does not allow shipping them are marked evaluation-only and never distributable', async () => {
+    const { MODEL_REGISTRY } = await import('../packages/shared/src/ai/manifest.js');
+    for (const model of MODEL_REGISTRY.filter((m) => !satisfiable(m.licence))) {
+      expect(model.evaluationOnly, model.id).toBe(true);
+      expect(model.distributable, model.id).toBe(false);
+    }
   });
 });

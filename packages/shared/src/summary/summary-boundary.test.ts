@@ -27,7 +27,7 @@ describe('the deterministic parts stay deterministic', () => {
       const offenders = files(join(SRC, dir)).filter((path) => {
         const source = readFileSync(path, 'utf8');
         return (
-          /from\s+['"][^'"]*(node-llama-cpp|\/summary\/|\.\.\/summary|@tp\/shared\/summary)/.test(
+          /from\s+['"][^'"]*(node-llama-cpp|\/summary\/|\.\.\/summary|@tp\/shared\/summary|\/ai\/|\.\.\/ai|@tp\/shared\/ai)/.test(
             source,
           ) || /loppaModel|utilityProcess|llama\.cpp/.test(source)
         );

@@ -1,16 +1,10 @@
-import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
 import { LOCALE_CODES } from '@tp/i18n';
 import { describe, expect, it } from 'vitest';
 import {
-  MODEL_MANIFEST,
-  UNPUBLISHED,
-  WeightsManifest,
   canTranslate,
   chunkParagraphs,
   digitCheck,
   isSummaryLocale,
-  modelFileName,
   parseSelection,
   quote,
   repeatsARun,
@@ -19,79 +13,7 @@ import {
   SUMMARY_LOCALES,
   translateInto,
   translationCap,
-  unpublishedReason,
 } from './index.js';
-
-const HERE = new URL('.', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-
-describe('the weights manifest', () => {
-  it('holds the values the owner chose and the spike measured', () => {
-    expect(MODEL_MANIFEST).toMatchObject({
-      id: 'qwen3-4b-instruct-2507-q4_k_m',
-      licence: 'Apache-2.0',
-      sha256: '3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597',
-      bytes: 2497281120,
-      retrievedAt: '2026-10-13',
-    });
-    expect(MODEL_MANIFEST.parts.map((p) => p.bytes)).toEqual([1248640560, 1248640560]);
-    expect(MODEL_MANIFEST.parts.map((p) => p.sha256)).toEqual([
-      '03377c7b7cdc673232fc6fa7455a5d06e9f9abf7f88840e43ac1273a167ff67c',
-      '4b589d9775c55bb47df28d73b480e06d7d80a4b0f27d3672f15ef078b14b7a38',
-    ]);
-    expect(modelFileName(MODEL_MANIFEST)).toBe('qwen3-4b-instruct-2507-q4_k_m.gguf');
-  });
-
-  it('keeps each part under GitHub 2 GiB release-asset limit', () => {
-    for (const part of MODEL_MANIFEST.parts) expect(part.bytes).toBeLessThan(2 * 1024 ** 3);
-  });
-
-  it('is the file ADR 0021 asks for: sorted keys, two-space indentation, provenance as fields', () => {
-    const path = join(HERE, 'weights', readdirSync(join(HERE, 'weights'))[0]!);
-    const sorted = (value: unknown): unknown =>
-      Array.isArray(value)
-        ? value.map(sorted)
-        : value && typeof value === 'object'
-          ? Object.fromEntries(
-              Object.entries(value)
-                .sort(([a], [b]) => a.localeCompare(b, 'en'))
-                .map(([k, v]) => [k, sorted(v)]),
-            )
-          : value;
-    const text = readFileSync(path, 'utf8');
-    expect(text).toBe(`${JSON.stringify(sorted(JSON.parse(text)), null, 2)}\n`);
-  });
-
-  it('is refused when it is wrong, with the first problem', () => {
-    const bad = { ...MODEL_MANIFEST, bytes: MODEL_MANIFEST.bytes + 1 };
-    expect(WeightsManifest.safeParse(bad).success).toBe(false);
-    const noHash = { ...MODEL_MANIFEST, sha256: 'ABC' };
-    expect(WeightsManifest.safeParse(noHash).success).toBe(false);
-    const http = {
-      ...MODEL_MANIFEST,
-      parts: MODEL_MANIFEST.parts.map((p) => ({ ...p, url: 'http://example.com/x' })),
-    };
-    expect(WeightsManifest.safeParse(http).success).toBe(false);
-  });
-
-  it('marks an unpublished release plainly, and says why the download is off', () => {
-    const unpublished = WeightsManifest.parse({
-      ...MODEL_MANIFEST,
-      parts: MODEL_MANIFEST.parts.map((p) => ({
-        ...p,
-        url: `${UNPUBLISHED}the release has not been cut yet`,
-      })),
-    });
-    expect(unpublished.parts.every((p) => p.url.startsWith(UNPUBLISHED))).toBe(true);
-    expect(unpublishedReason(unpublished)).toBe('the release has not been cut yet');
-    // The shipped manifest points at the cut release.
-    expect(unpublishedReason(MODEL_MANIFEST)).toBeNull();
-    const cut = WeightsManifest.parse({
-      ...MODEL_MANIFEST,
-      parts: MODEL_MANIFEST.parts.map((p) => ({ ...p, url: `https://example.com/${p.name}` })),
-    });
-    expect(unpublishedReason(cut)).toBeNull();
-  });
-});
 
 describe('the twelve languages', () => {
   it('are exactly the languages Loppa has', () => {

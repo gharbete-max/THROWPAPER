@@ -1,0 +1,37 @@
+{
+  "capabilities": ["text"],
+  "distributable": true,
+  "evaluationOnly": false,
+  "files": [
+    {
+      "aliases": ["Qwen3-4B-Instruct-2507-Q4_K_M.gguf"],
+      "bytes": 2497281120,
+      "name": "qwen3-4b-instruct-2507-q4_k_m.gguf",
+      "parts": [
+        {
+          "bytes": 1248640560,
+          "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf.part1",
+          "sha256": "03377c7b7cdc673232fc6fa7455a5d06e9f9abf7f88840e43ac1273a167ff67c",
+          "url": "https://github.com/gharbete-max/THROWPAPER/releases/download/model-qwen3-4b-instruct-2507-q4km/Qwen3-4B-Instruct-2507-Q4_K_M.gguf.part1"
+        },
+        {
+          "bytes": 1248640560,
+          "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf.part2",
+          "sha256": "4b589d9775c55bb47df28d73b480e06d7d80a4b0f27d3672f15ef078b14b7a38",
+          "url": "https://github.com/gharbete-max/THROWPAPER/releases/download/model-qwen3-4b-instruct-2507-q4km/Qwen3-4B-Instruct-2507-Q4_K_M.gguf.part2"
+        }
+      ],
+      "role": "weights",
+      "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597"
+    }
+  ],
+  "id": "qwen3-4b-instruct-2507-q4_k_m",
+  "kind": "text",
+  "licence": "Apache-2.0",
+  "licenceUrl": "https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/blob/main/LICENSE",
+  "name": "Qwen3-4B-Instruct-2507 (Q4_K_M)",
+  "requiredMemoryBytes": 5000000000,
+  "retrievedAt": "2026-10-13",
+  "source": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+  "sourceRevision": "a06e946bb6b655725eafa393f4a9745d460374c9"
+}

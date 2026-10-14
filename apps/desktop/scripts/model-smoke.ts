@@ -14,10 +14,11 @@
 import { readFileSync } from 'node:fs';
 import { freemem } from 'node:os';
 import { resolve } from 'node:path';
-import { MODEL_MANIFEST, splitPassages, quote } from '@tp/shared/summary';
-import { loadLlamaEngine, chooseThreads } from '../src/model/llama-engine.js';
-import { runJob, type Sink } from '../src/model/pipeline.js';
-import { verifyFile } from '../src/model/weights.js';
+import { TEXT_MODEL } from '@tp/shared/ai';
+import { splitPassages, quote } from '@tp/shared/summary';
+import { loadLlamaEngine, chooseThreads } from '../src/ai/text/llama-engine.js';
+import { runJob, type Sink } from '../src/ai/text/pipeline.js';
+import { verifyFile } from '../src/ai/download.js';
 
 const file = process.argv[2];
 if (!file) throw new Error('usage: model-smoke.ts <path to the .gguf> [--quick]');
@@ -31,7 +32,7 @@ const rss = () => `${(process.memoryUsage().rss / 1e9).toFixed(2)} GB resident`;
 console.log(`free memory before: ${(freemem() / 1e9).toFixed(1)} GB; threads: ${chooseThreads()}`);
 
 let t = performance.now();
-const verdict = await verifyFile(file, MODEL_MANIFEST);
+const verdict = await verifyFile(file, TEXT_MODEL.files[0]!);
 console.log(`verify against the manifest: ${verdict} (${seconds(t)} s)`);
 if (verdict !== 'ok') process.exit(1);
 
