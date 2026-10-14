@@ -1881,6 +1881,45 @@ export const deDE: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} Adresse wird ausgelassen, weil sie sich abgemeldet hat oder unzustellbar war. | other {count} Adressen werden ausgelassen, weil sie sich abgemeldet haben oder unzustellbar waren.',
   'campaign.leftOut.done': 'Ausgelassen (abgemeldet oder unzustellbar): {list}',
+  'hygiene.heading': 'Adressen prüfen',
+  'hygiene.col.row': 'Zeile',
+  'hygiene.col.address': 'Adresse',
+  'hygiene.col.note': 'Hinweis',
+  'hygiene.issue.syntax': 'Das ist keine E-Mail-Adresse.',
+  'hygiene.issue.duplicate': 'Dieselbe Adresse wie in Zeile {row}. Sie wird nur einmal gesendet.',
+  'hygiene.issue.typo': 'Meinten Sie {suggestion}?',
+  'hygiene.issue.role': 'Ein gemeinsames Postfach statt einer Person. Nur zur Information.',
+  'hygiene.edit': 'Adresse in Zeile {row}',
+  'hygiene.fix': 'Ändern in {address}',
+  'hygiene.skip': 'Überspringen',
+  'hygiene.restore': 'Übersprungene Adressen zurückholen ({count})',
+  'hygiene.counts': '{send} werden gesendet, {skipped} übersprungen',
+  'hygiene.blocked':
+    'Korrigieren oder überspringen Sie jede Adresse, die keine E-Mail-Adresse ist, bevor Sie weitermachen.',
+  'book.label': 'Zuletzt verwendete Adressen',
+  'book.hint':
+    'Wird nur in diesem Browser gespeichert und nie hochgeladen. Tippen Sie, um eine auszuwählen.',
+  'book.forget': '{address} vergessen',
+  'book.clear': 'Alle vergessen',
+  'book.clearAsk':
+    'Alle {count} zuletzt verwendeten Adressen vergessen? Sie werden nur in diesem Browser gespeichert.',
+  'attach.warn':
+    'Die Datei ist groß ({size}). Viele Mailsysteme weisen Nachrichten über etwa {limit} ab.',
+  'attach.shrink': 'Verkleinern',
+  'attach.shrinking': 'Wird verkleinert …',
+  'attach.shrunk': 'Verkleinert: {before} auf {after}.',
+  'attach.noGain': 'Sie ließ sich nicht weiter verkleinern.',
+  'attach.failed':
+    'Sie ließ sich nicht verkleinern. Eine signierte oder geschützte Datei kann nicht geändert werden.',
+  'campaign.plainText': 'Nur-Text-Ansicht',
+  'campaign.plainTextHint':
+    'So zeigt ein Mailprogramm, das nur Text darstellt, die Nachricht für diese Person.',
+  'campaign.links': 'Links in dieser Nachricht',
+  'campaign.links.none': 'Diese Nachricht enthält keine Links.',
+  'campaign.links.note':
+    'Keiner dieser Links wird verfolgt oder umgeschrieben. Sie werden genau so gesendet, wie sie geschrieben sind.',
+  'campaign.testFirst': 'Zuerst an mich selbst senden',
+  'campaign.testFirstHint': 'Empfohlen: Sehen Sie genau, was ankommt, bevor es an alle geht.',
   'suppress.open': 'Nicht-anschreiben-Liste',
   'suppress.close': 'Zurück zum Versand',
   'suppress.heading': 'Nicht anschreiben',

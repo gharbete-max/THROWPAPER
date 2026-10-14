@@ -1,8 +1,9 @@
 /**
  * A one-page PDF, written out by hand so the spec needs no PDF library. `rotate` sets the page's
- * `/Rotate`, as a scanner often does.
+ * `/Rotate`, as a scanner often does. `padBytes` adds an object nothing points to, of that size: an
+ * editor's leftover, which "Make smaller" in Send drops.
  */
-export function tinyPdf(text: string, rotate = 0): Buffer {
+export function tinyPdf(text: string, rotate = 0, padBytes = 0): Buffer {
   const content = `BT /F1 18 Tf 72 760 Td (${text}) Tj ET`;
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
@@ -11,6 +12,9 @@ export function tinyPdf(text: string, rotate = 0): Buffer {
     `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
   ];
+  if (padBytes > 0) {
+    objects.push(`<< /Length ${padBytes} >>\nstream\n${' '.repeat(padBytes)}\nendstream`);
+  }
   let body = '%PDF-1.7\n';
   const offsets: number[] = [];
   objects.forEach((object, index) => {

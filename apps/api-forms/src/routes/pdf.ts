@@ -13,6 +13,7 @@ import {
   type ArrangeRefusalCode,
 } from '../pdf/arrange.js';
 import { fillPdf, pdfFields } from '../pdf/fill.js';
+import { shrinkPdf } from '../pdf/shrink.js';
 
 /**
  * The parser's own file limit is set well above ours. Reaching it fails the whole request stream
@@ -285,6 +286,25 @@ export function registerPdfRoutes(
             acceptSignatureLoss: upload.fields.get('acceptSignatureLoss') === 'true',
           }),
         );
+      } catch (error) {
+        return refuse(reply, error);
+      }
+    },
+  });
+
+  /**
+   * A PDF written again smaller (`pdf/shrink.ts`), for Send's "Make smaller". The person's own
+   * document: nothing is stored. The same bytes come back when nothing could be gained.
+   */
+  app.post('/v1/pdf/shrink', {
+    preHandler: requireAuth(deps.guard),
+    config: { rateLimit: { max: 20, timeWindow: '1 minute' } },
+    schema: { tags: ['pdf'], response: errors },
+    handler: async (request, reply) => {
+      const upload = await readUpload(request, reply);
+      if (!upload) return;
+      try {
+        return sendPdf(reply, await shrinkPdf(upload.files[0]!));
       } catch (error) {
         return refuse(reply, error);
       }

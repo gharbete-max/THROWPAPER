@@ -1862,6 +1862,45 @@ export const frFR: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adresse est écartée car elle s’est désabonnée ou a rebondi. | other {count} adresses sont écartées car elles se sont désabonnées ou ont rebondi.',
   'campaign.leftOut.done': 'Écartées (désabonnées ou rebondies) : {list}',
+  'hygiene.heading': 'Vérifier ces adresses',
+  'hygiene.col.row': 'Ligne',
+  'hygiene.col.address': 'Adresse',
+  'hygiene.col.note': 'Remarque',
+  'hygiene.issue.syntax': 'Ce n’est pas une adresse e-mail.',
+  'hygiene.issue.duplicate': 'Même adresse qu’à la ligne {row}. Elle ne sera envoyée qu’une fois.',
+  'hygiene.issue.typo': 'Vouliez-vous écrire {suggestion} ?',
+  'hygiene.issue.role':
+    'Une boîte partagée plutôt qu’une personne. À titre d’information seulement.',
+  'hygiene.edit': 'Adresse de la ligne {row}',
+  'hygiene.fix': 'Remplacer par {address}',
+  'hygiene.skip': 'Ignorer',
+  'hygiene.restore': 'Rétablir les adresses ignorées ({count})',
+  'hygiene.counts': '{send} seront envoyés, {skipped} ignorés',
+  'hygiene.blocked':
+    'Corrigez ou ignorez chaque adresse qui n’est pas une adresse e-mail avant de continuer.',
+  'book.label': 'Adresses récentes',
+  'book.hint':
+    'Conservées uniquement dans ce navigateur et jamais envoyées. Commencez à écrire pour en choisir une.',
+  'book.forget': 'Oublier {address}',
+  'book.clear': 'Tout oublier',
+  'book.clearAsk':
+    'Oublier les {count} adresses récentes ? Elles ne sont conservées que dans ce navigateur.',
+  'attach.warn':
+    'Le fichier est volumineux ({size}). De nombreux systèmes de messagerie refusent les messages de plus d’environ {limit}.',
+  'attach.shrink': 'Alléger',
+  'attach.shrinking': 'Allègement…',
+  'attach.shrunk': 'Allégé : {before} à {after}.',
+  'attach.noGain': 'Impossible de l’alléger davantage.',
+  'attach.failed': 'Impossible de l’alléger. Un fichier signé ou protégé ne peut pas être modifié.',
+  'campaign.plainText': 'Vue en texte brut',
+  'campaign.plainTextHint':
+    'Ce qu’affiche, pour cette personne, un logiciel de messagerie qui n’affiche que du texte.',
+  'campaign.links': 'Liens de ce message',
+  'campaign.links.none': 'Ce message ne contient aucun lien.',
+  'campaign.links.note':
+    'Aucun de ces liens n’est suivi ni réécrit. Ils sont envoyés exactement tels qu’ils sont écrits.',
+  'campaign.testFirst': 'M’envoyer d’abord ce message',
+  'campaign.testFirstHint': 'Recommandé : voyez exactement ce qui arrive avant l’envoi à tous.',
   'suppress.open': 'Liste « ne pas écrire »',
   'suppress.close': 'Retour à l’envoi',
   'suppress.heading': 'Ne pas écrire',

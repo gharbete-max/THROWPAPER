@@ -1829,6 +1829,46 @@ export const fiFI: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} osoite jätetään pois, koska se on perunut tilauksen tai palautunut. | other {count} osoitetta jätetään pois, koska ne ovat perunut tilauksen tai palautuneet.',
   'campaign.leftOut.done': 'Jätetty pois (tilaus peruttu tai palautunut): {list}',
+  'hygiene.heading': 'Tarkista osoitteet',
+  'hygiene.col.row': 'Rivi',
+  'hygiene.col.address': 'Osoite',
+  'hygiene.col.note': 'Huomautus',
+  'hygiene.issue.syntax': 'Tämä ei ole sähköpostiosoite.',
+  'hygiene.issue.duplicate': 'Sama osoite kuin rivillä {row}. Se lähetetään kerran.',
+  'hygiene.issue.typo': 'Tarkoititko {suggestion}?',
+  'hygiene.issue.role': 'Yhteinen postilaatikko eikä yksittäinen henkilö. Vain tiedoksi.',
+  'hygiene.edit': 'Osoite rivillä {row}',
+  'hygiene.fix': 'Muuta muotoon {address}',
+  'hygiene.skip': 'Ohita',
+  'hygiene.restore': 'Palauta ohitetut osoitteet ({count})',
+  'hygiene.counts': '{send} lähetetään, {skipped} ohitetaan',
+  'hygiene.blocked':
+    'Korjaa tai ohita jokainen osoite, joka ei ole sähköpostiosoite, ennen kuin jatkat.',
+  'book.label': 'Viimeisimmät osoitteet',
+  'book.hint':
+    'Tallennetaan vain tähän selaimeen eikä koskaan ladata minnekään. Aloita kirjoittaminen valitaksesi osoitteen.',
+  'book.forget': 'Unohda {address}',
+  'book.clear': 'Unohda kaikki',
+  'book.clearAsk':
+    'Unohdetaanko kaikki {count} viimeisintä osoitetta? Ne tallennetaan vain tähän selaimeen.',
+  'attach.warn':
+    'Tiedosto on suuri ({size}). Monet sähköpostijärjestelmät hylkäävät viestit, jotka ovat yli noin {limit}.',
+  'attach.shrink': 'Pienennä',
+  'attach.shrinking': 'Pienennetään…',
+  'attach.shrunk': 'Pienennetty: {before} → {after}.',
+  'attach.noGain': 'Tiedostoa ei voitu pienentää enempää.',
+  'attach.failed':
+    'Tiedostoa ei voitu pienentää. Allekirjoitettua tai suojattua tiedostoa ei voi muuttaa.',
+  'campaign.plainText': 'Pelkkä teksti -näkymä',
+  'campaign.plainTextHint':
+    'Näin vain tekstiä näyttävä sähköpostiohjelma näyttää viestin tälle henkilölle.',
+  'campaign.links': 'Viestin linkit',
+  'campaign.links.none': 'Tässä viestissä ei ole linkkejä.',
+  'campaign.links.note':
+    'Mitään näistä linkeistä ei seurata tai kirjoiteta uudelleen. Ne lähetetään täsmälleen sellaisina kuin ne on kirjoitettu.',
+  'campaign.testFirst': 'Lähetä ensin itselleni',
+  'campaign.testFirstHint':
+    'Suositus: katso tarkalleen, mitä perille tulee, ennen kuin se lähtee kaikille.',
   'suppress.open': 'Älä lähetä -lista',
   'suppress.close': 'Takaisin lähetykseen',
   'suppress.heading': 'Älä lähetä',
