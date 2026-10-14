@@ -8136,7 +8136,6 @@ a.room__centre:focus-visible {
   padding: 0;
 }
 
-<<<<<<< HEAD
 /* --- Signing: place signature, initials and date ------------------------------------------------
  * The page is a canvas with marks over it in percentages of the page, so they stay put when it
  * shrinks. A date's letters scale with the page through container units. Every mark is a real
@@ -8263,7 +8262,6 @@ a.room__centre:focus-visible {
   position: absolute;
   background: var(--tp-colour-primary);
   opacity: 0.55;
-=======
 /* Documents flow: what a drop was taken for, the keep panel, and the room's recent documents. */
 .scan__notice {
   padding: var(--tp-spacing-unit);
@@ -8348,5 +8346,4 @@ a.room__centre:focus-visible {
 
 .recent__meta {
   color: var(--tp-room-quiet);
->>>>>>> origin/main
 }
