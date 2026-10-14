@@ -24,12 +24,21 @@ const Ops = z.array(
     }),
     z.object({
       page: z.number().int(),
+      x: z.number(),
+      y: z.number(),
+      width: z.number(),
+      height: z.number(),
+      image: z.string(),
+    }),
+    z.object({
+      page: z.number().int(),
       rect: z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() }),
       fill: z.string(),
     }),
   ]),
 );
 const Pages = z.array(z.number().int());
+const ImageNames = z.array(z.string()).max(8);
 
 const STATUS: Record<EditRefusalCode, 400 | 409> = {
   unreadable: 400,
@@ -86,16 +95,18 @@ const schema = {
 
 export function registerPdfEditRoutes(app: FastifyInstance, deps: { guard: AuthGuardDeps }): void {
   /**
-   * Text on a PDF (`pdf/edit.ts`). Multipart: one `file`, an `ops` field with the JSON list
-   * `[{page, x, y, text, size, color?} | {page, rect: {x, y, width, height}, fill}]` (points from
-   * the lower left, pages from 0), and `acceptSignatureLoss` = `true` once the person has been told.
+   * Text on a PDF (`pdf/edit.ts`). Multipart: the PDF as the first `file`, an `ops` field with the
+   * JSON list `[{page, x, y, text, size, color?} | {page, rect: {x, y, width, height}, fill} |
+   * {page, x, y, width, height, image}]` (points from the lower left, pages from 0), and
+   * `acceptSignatureLoss` = `true` once the person has been told. A picture op names a PNG: further
+   * `file`s are PNGs, called in order by the names in an `images` field (a JSON list of names).
    */
   app.post('/v1/pdf/edit', {
     preHandler: requireAuth(deps.guard),
     config: { rateLimit: { max: 30, timeWindow: '1 minute' } },
     schema,
     handler: async (request, reply) => {
-      const upload = await readPdfUpload(request, reply, 1);
+      const upload = await readPdfUpload(request, reply, 9);
       if (!upload) return reply;
       let ops: z.infer<typeof Ops>;
       try {
@@ -105,9 +116,19 @@ export function registerPdfEditRoutes(app: FastifyInstance, deps: { guard: AuthG
           error: { code: 'bad-ops', message: 'Send `ops`: a JSON list of text and cover changes' },
         });
       }
-      if (upload.files.length !== 1) {
+      let names: string[];
+      try {
+        names = upload.fields.has('images')
+          ? ImageNames.parse(JSON.parse(upload.fields.get('images')!))
+          : [];
+      } catch {
         return reply.code(400).send({
-          error: { code: 'no-file', message: 'Send one PDF as multipart form data' },
+          error: { code: 'bad-ops', message: 'Send `images`: a JSON list of picture names' },
+        });
+      }
+      if (upload.files.length !== 1 + names.length) {
+        return reply.code(400).send({
+          error: { code: 'no-file', message: 'Send the PDF, then one PNG for each name' },
         });
       }
       try {
@@ -115,6 +136,7 @@ export function registerPdfEditRoutes(app: FastifyInstance, deps: { guard: AuthG
           reply,
           await editPdf(upload.files[0]!, ops, {
             acceptSignatureLoss: upload.fields.get('acceptSignatureLoss') === 'true',
+            images: new Map(names.map((name, i) => [name, upload.files[i + 1]!])),
           }),
         );
       } catch (error) {

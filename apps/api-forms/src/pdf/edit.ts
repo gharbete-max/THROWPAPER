@@ -1,4 +1,12 @@
-import { PDFDict, PDFDocument, PDFName, PDFPageLeaf, type PDFPage } from 'pdf-lib';
+import {
+  degrees,
+  PDFDict,
+  PDFDocument,
+  PDFName,
+  PDFPageLeaf,
+  type PDFImage,
+  type PDFPage,
+} from 'pdf-lib';
 import { imageSize } from '../uploads/image-size.js';
 import { ArrangeRefusal, openChecked } from './arrange.js';
 import { FontUnavailable, hexColor, TextFonts, UnsupportedText } from './text-fonts.js';
@@ -26,6 +34,8 @@ export const MAX_TEXT = 500;
 export const MIN_SIZE = 4;
 export const MAX_SIZE = 200;
 /** Pages redacted in one request, and the pixels of each page's picture. */
+/** The longest a picture put on a page may be shown, in points. */
+export const MAX_IMAGE_SIDE = 2000;
 export const MAX_REDACTED_PAGES = 50;
 export const MAX_REDACTION_PIXELS = 24_000_000;
 
@@ -46,7 +56,22 @@ export interface CoverOp {
   fill: string;
 }
 
-export type EditOp = TextOp | CoverOp;
+/**
+ * A picture put on a page — a saved signature, initials. `image` names one of the PNGs sent with
+ * the request. `x`, `y` are the lower left of the picture *as the person sees the page*, in user
+ * space like a text op's, and `width`, `height` its size as seen: a turned page turns the picture
+ * the other way so that it reads upright, as text does.
+ */
+export interface ImageOp {
+  page: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  image: string;
+}
+
+export type EditOp = TextOp | CoverOp | ImageOp;
 
 export type EditRefusalCode =
   | 'unreadable'
@@ -86,11 +111,12 @@ async function open(bytes: Uint8Array, acceptSignatureLoss: boolean | undefined)
 const finite = (...numbers: number[]) => numbers.every((n) => Number.isFinite(n));
 
 const isCover = (op: EditOp): op is CoverOp => 'rect' in op;
+const isImage = (op: EditOp): op is ImageOp => 'image' in op;
 
 export async function editPdf(
   bytes: Uint8Array,
   ops: readonly EditOp[],
-  options: { acceptSignatureLoss?: boolean } = {},
+  options: { acceptSignatureLoss?: boolean; images?: ReadonlyMap<string, Uint8Array> } = {},
 ): Promise<Uint8Array> {
   if (ops.length === 0) throw new EditRefusal('no-ops');
   if (ops.length > MAX_OPS) throw new EditRefusal('too-many-ops');
@@ -103,7 +129,20 @@ export async function editPdf(
     if (!Number.isInteger(op.page) || op.page < 0 || op.page >= pages.length) {
       throw new EditRefusal('no-such-page');
     }
-    if (isCover(op)) {
+    if (isImage(op)) {
+      const png = options.images?.get(op.image);
+      if (
+        !png ||
+        !finite(op.x, op.y, op.width, op.height) ||
+        op.width <= 0 ||
+        op.height <= 0 ||
+        op.width > MAX_IMAGE_SIDE ||
+        op.height > MAX_IMAGE_SIDE
+      ) {
+        throw new EditRefusal('bad-op');
+      }
+      checkPng(png);
+    } else if (isCover(op)) {
       const { x, y, width, height } = op.rect ?? {};
       if (!finite(x!, y!, width!, height!) || width! <= 0 || height! <= 0 || !hexColor(op.fill)) {
         throw new EditRefusal('bad-op');
@@ -125,9 +164,27 @@ export async function editPdf(
     }
   }
 
+  const embedded = new Map<string, PDFImage>();
   for (const op of ops) {
     const page = pages[op.page]!;
-    if (isCover(op)) {
+    if (isImage(op)) {
+      let picture = embedded.get(op.image);
+      if (!picture) {
+        try {
+          picture = await doc.embedPng(options.images!.get(op.image)!);
+        } catch {
+          throw new EditRefusal('bad-image');
+        }
+        embedded.set(op.image, picture);
+      }
+      page.drawImage(picture, {
+        x: op.x,
+        y: op.y,
+        width: op.width,
+        height: op.height,
+        rotate: degrees(page.getRotation().angle),
+      });
+    } else if (isCover(op)) {
       page.drawRectangle({ ...op.rect, color: hexColor(op.fill)!, borderWidth: 0 });
     } else {
       await fonts.draw(page, op.text.replace(/\r\n?/g, '\n').replace(/\t/g, ' '), {
@@ -195,11 +252,7 @@ export async function redactPdf(
   const byPage = new Map<number, Uint8Array>();
   for (const { page, image } of redactions) {
     if (!Number.isInteger(page) || page < 0 || page >= count) throw new EditRefusal('no-such-page');
-    // The header is read before anything decodes the picture: pdf-lib inflates a PNG to 4 bytes a pixel.
-    const view = Buffer.from(image.buffer, image.byteOffset, image.byteLength);
-    const size = view.subarray(0, 8).equals(PNG_SIGNATURE) ? imageSize(view, 'png') : null;
-    if (!size || size.width < 1 || size.height < 1) throw new EditRefusal('bad-image');
-    if (size.width * size.height > MAX_REDACTION_PIXELS) throw new EditRefusal('image-too-large');
+    checkPng(image);
     byPage.set(page, image);
   }
 
@@ -230,6 +283,14 @@ export async function redactPdf(
     .filter(([, object]) => object instanceof PDFPageLeaf).length;
   if (leaves !== out.getPageCount()) throw new EditRefusal('cannot-redact-safely');
   return out.save();
+}
+
+/** The header is read before anything decodes the picture: pdf-lib inflates a PNG to 4 bytes a pixel. */
+function checkPng(image: Uint8Array): void {
+  const view = Buffer.from(image.buffer, image.byteOffset, image.byteLength);
+  const size = view.subarray(0, 8).equals(PNG_SIGNATURE) ? imageSize(view, 'png') : null;
+  if (!size || size.width < 1 || size.height < 1) throw new EditRefusal('bad-image');
+  if (size.width * size.height > MAX_REDACTION_PIXELS) throw new EditRefusal('image-too-large');
 }
 
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);

@@ -277,6 +277,11 @@ describe('twelve languages, each its own', () => {
     'fi-FI': ['brand.logo'],
     'is-IS': [],
     'fr-FR': [
+      'signPlace.signature',
+      'signPlace.date',
+      'signPlace.pageLabel',
+      'signPlace.markLabel',
+      'signPlace.stripPage',
       'docs.k.photo',
       'campaign.body',
       'scan.page',

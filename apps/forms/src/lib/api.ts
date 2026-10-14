@@ -429,11 +429,24 @@ export const client = {
   draftPdf: (formId: string, locale: string, values: Record<string, unknown> = {}) =>
     postForBlob(`/v1/forms/${formId}/draft.pdf`, { locale, values }),
 
-  /** Text added to and covers painted on a PDF (`POST /v1/pdf/edit`); positions are PDF points. */
-  editPdf: (file: Blob, ops: readonly object[], acceptSignatureLoss = false) => {
+  /**
+   * Text added to, covers painted on and pictures put on a PDF (`POST /v1/pdf/edit`); positions
+   * are PDF points. A picture op names one of `images`, PNGs sent along with the PDF.
+   */
+  editPdf: (
+    file: Blob,
+    ops: readonly object[],
+    acceptSignatureLoss = false,
+    images: Readonly<Record<string, Blob>> = {},
+  ) => {
     const body = new FormData();
     body.append('file', file, 'loppa.pdf');
     body.set('ops', JSON.stringify(ops));
+    const names = Object.keys(images);
+    if (names.length > 0) {
+      body.set('images', JSON.stringify(names));
+      for (const name of names) body.append('file', images[name]!, `${name}.png`);
+    }
     if (acceptSignatureLoss) body.set('acceptSignatureLoss', 'true');
     return postForBlob('/v1/pdf/edit', body);
   },

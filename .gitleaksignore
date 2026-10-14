@@ -8,3 +8,5 @@ fa2653e2d148762cdd818c0ee2f749a88420428a:apps/api-forms/src/log-redaction.test.t
 # A fixed UUID used as the idempotency key in the Send route test (PR #169), written as a literal in
 # that commit. Not a credential; the test now makes it at runtime.
 17de682937efe779f8492599a5e6883b0d06bc4d:apps/api-forms/src/routes/send.test.ts:generic-api-key:20
+3f76d1da6fa6cb0aa68dcaadf29828de89119b07:apps/forms/src/lib/sign-marks.ts:generic-api-key:28
+3f76d1da6fa6cb0aa68dcaadf29828de89119b07:e2e/sign-placement.spec.ts:generic-api-key:21

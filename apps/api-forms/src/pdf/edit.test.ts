@@ -344,3 +344,108 @@ describe('redactPdf: the redacted text is gone', () => {
     expect(await textOf(out)).toEqual(['', WORDS[1], WORDS[2]]);
   });
 });
+
+/**
+ * Where a picture lands as a person sees the page: pdf.js's operator list, walked with the
+ * current matrix, then its viewport (which applies the page's turn). The picture's unit square is
+ * mapped through both and the box it covers is read back.
+ */
+async function pictureBoxes(bytes: Uint8Array, pageNumber: number) {
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const pdf = await getDocument({
+    data: new Uint8Array(bytes),
+    standardFontDataUrl: STANDARD_FONTS,
+  }).promise;
+  const page = await pdf.getPage(pageNumber);
+  const viewport = page.getViewport({ scale: 1 });
+  const { fnArray, argsArray } = await page.getOperatorList();
+  const times = (a: number[], b: number[]) => [
+    a[0]! * b[0]! + a[2]! * b[1]!,
+    a[1]! * b[0]! + a[3]! * b[1]!,
+    a[0]! * b[2]! + a[2]! * b[3]!,
+    a[1]! * b[2]! + a[3]! * b[3]!,
+    a[0]! * b[4]! + a[2]! * b[5]! + a[4]!,
+    a[1]! * b[4]! + a[3]! * b[5]! + a[5]!,
+  ];
+  let ctm = viewport.transform as number[];
+  const stack: number[][] = [];
+  const boxes: Array<{ x: number; y: number; width: number; height: number }> = [];
+  fnArray.forEach((fn, i) => {
+    if (fn === pdfjs.OPS.save) stack.push(ctm);
+    else if (fn === pdfjs.OPS.restore) ctm = stack.pop() ?? ctm;
+    else if (fn === pdfjs.OPS.transform) ctm = times(ctm, argsArray[i] as number[]);
+    else if (fn === pdfjs.OPS.paintImageXObject) {
+      const corners = [
+        [0, 0],
+        [1, 0],
+        [0, 1],
+        [1, 1],
+      ].map(([u, v]) => [
+        ctm[0]! * u! + ctm[2]! * v! + ctm[4]!,
+        ctm[1]! * u! + ctm[3]! * v! + ctm[5]!,
+      ]);
+      const xs = corners.map((c) => c[0]!);
+      const ys = corners.map((c) => c[1]!);
+      boxes.push({
+        x: Math.min(...xs),
+        y: Math.min(...ys),
+        width: Math.max(...xs) - Math.min(...xs),
+        height: Math.max(...ys) - Math.min(...ys),
+      });
+    }
+  });
+  await pdf.loadingTask.destroy();
+  return boxes;
+}
+
+describe('editPdf: put a picture on a page', () => {
+  const picture = (page: number, extra: Partial<Record<string, number>> = {}) =>
+    ({ page, x: 60, y: 50, width: 100, height: 40, image: 'signature', ...extra }) as EditOp;
+  const images = new Map([['signature', png(8, 4)]]);
+
+  it('puts it by its lower left corner, once embedded however often it is used', async () => {
+    const out = await editPdf(await fixture(), [picture(0), picture(2, { x: 10, y: 10 })], {
+      images,
+    });
+    const doc = await PDFDocument.load(out);
+    const embedded = doc.context
+      .enumerateIndirectObjects()
+      .filter(
+        ([, o]) =>
+          o instanceof PDFStream && o.dict.get(PDFName.of('Subtype')) === PDFName.of('Image'),
+      );
+    expect(embedded).toHaveLength(1);
+    // Page 300 x 400: the lower left at (60, 50) is (60, 350) as seen, so the box starts at y 310.
+    expect(await pictureBoxes(out, 1)).toEqual([{ x: 60, y: 310, width: 100, height: 40 }]);
+    expect(await pictureBoxes(out, 3)).toEqual([{ x: 10, y: 350, width: 100, height: 40 }]);
+    expect(await pictureBoxes(out, 2)).toEqual([]);
+  });
+
+  it('turns it with a turned page so that it covers the box as seen', async () => {
+    const out = await editPdf(await fixture({ rotate: 90 }), [picture(1)], { images });
+    // Turned 90: seen 400 wide and 300 tall. The seen lower left is (x0 + ... ) = file (60, 50),
+    // which as seen is (50, 60): so the box is 100 x 40 up from there.
+    const [box] = await pictureBoxes(out, 2);
+    expect(box!.x).toBeCloseTo(50, 3);
+    expect(box!.y).toBeCloseTo(60 - 40, 3);
+    expect(box!.width).toBeCloseTo(100, 3);
+    expect(box!.height).toBeCloseTo(40, 3);
+  });
+
+  it('refuses a picture nobody sent, one that is not a PNG, and a size that is not one', async () => {
+    expect((await refusal(editPdf(await fixture(), [picture(0)]))).code).toBe('bad-op');
+    const notPng = new Map([['signature', new Uint8Array([1, 2, 3])]]);
+    expect((await refusal(editPdf(await fixture(), [picture(0)], { images: notPng }))).code).toBe(
+      'bad-image',
+    );
+    for (const extra of [{ width: 0 }, { height: -1 }, { x: Number.NaN }, { width: 5000 }]) {
+      expect((await refusal(editPdf(await fixture(), [picture(0, extra)], { images }))).code).toBe(
+        'bad-op',
+      );
+    }
+    const huge = new Map([['signature', png(2, 2, { width: 9000, height: 9000 })]]);
+    expect((await refusal(editPdf(await fixture(), [picture(0)], { images: huge }))).code).toBe(
+      'image-too-large',
+    );
+  });
+});
