@@ -254,3 +254,27 @@ describe('POST /v1/pdf/fields and /v1/pdf/fill', () => {
     expect(anonymous.statusCode).toBe(401);
   });
 });
+
+describe('POST /v1/pdf/shrink', () => {
+  it('hands back a smaller PDF with the same pages, for anyone signed in', async () => {
+    const doc = await PDFDocument.create();
+    doc.addPage([100, 200]);
+    doc.context.register(doc.context.stream(new Uint8Array(200_000).fill(65)));
+    const bulky = await doc.save({ useObjectStreams: false });
+    const response = await arrange([bulky], {}, { url: '/v1/pdf/shrink' });
+    expect(response.statusCode).toBe(200);
+    expect(response.rawPayload.length).toBeLessThan(bulky.length / 2);
+    expect(await widths(response)).toEqual([100]);
+    const anonymous = await arrange([bulky], {}, { url: '/v1/pdf/shrink', token: null });
+    expect(anonymous.statusCode).toBe(401);
+  });
+
+  it('refuses a signed file as a 409', async () => {
+    const signed = new Uint8Array([
+      ...(await pdfOf(1)),
+      ...new TextEncoder().encode('\n% /ByteRange [0 1 2 3]\n'),
+    ]);
+    const response = await arrange([signed], {}, { url: '/v1/pdf/shrink' });
+    expect([response.statusCode, response.json().error.code]).toEqual([409, 'signed']);
+  });
+});
