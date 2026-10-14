@@ -1808,4 +1808,22 @@ export const nbNO: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adresse utelates fordi den har meldt seg av eller returnert. | other {count} adresser utelates fordi de har meldt seg av eller returnert.',
   'campaign.leftOut.done': 'Utelatt (avmeldt eller returnert): {list}',
+  'suppress.open': 'Ikke-send-liste',
+  'suppress.close': 'Tilbake til utsendingen',
+  'suppress.heading': 'Ikke send',
+  'suppress.scope':
+    'Denne listen stopper bare utsendinger (en e-post til en liste). Den stopper ikke enkeltdokumenter eller invitasjoner til signering.',
+  'suppress.empty': 'Ingen adresser på listen.',
+  'suppress.col.email': 'Adresse',
+  'suppress.col.date': 'Lagt til',
+  'suppress.col.reason': 'Årsak',
+  'suppress.reason.unsubscribed': 'Avmeldt',
+  'suppress.reason.bounced': 'Returnert',
+  'suppress.reason.manual': 'Lagt til manuelt',
+  'suppress.add.label': 'Adresse som skal legges til',
+  'suppress.add': 'Legg til',
+  'suppress.invalid': 'Det er ikke en gyldig e-postadresse.',
+  'suppress.remove': 'Fjern {email}',
+  'suppress.removeConfirm': 'Fjerne {email} fra listen? Utsendinger kan da nå adressen igjen.',
+  'suppress.failed': 'Listen kunne ikke endres. Prøv igjen.',
 };

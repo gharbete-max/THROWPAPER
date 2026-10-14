@@ -1829,4 +1829,23 @@ export const fiFI: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} osoite jätetään pois, koska se on perunut tilauksen tai palautunut. | other {count} osoitetta jätetään pois, koska ne ovat perunut tilauksen tai palautuneet.',
   'campaign.leftOut.done': 'Jätetty pois (tilaus peruttu tai palautunut): {list}',
+  'suppress.open': 'Älä lähetä -lista',
+  'suppress.close': 'Takaisin lähetykseen',
+  'suppress.heading': 'Älä lähetä',
+  'suppress.scope':
+    'Tämä lista pysäyttää vain massalähetykset (sähköposti listalle). Se ei pysäytä yksittäisiä asiakirjoja eikä allekirjoituskutsuja.',
+  'suppress.empty': 'Listalla ei ole osoitteita.',
+  'suppress.col.email': 'Osoite',
+  'suppress.col.date': 'Lisätty',
+  'suppress.col.reason': 'Syy',
+  'suppress.reason.unsubscribed': 'Tilaus peruttu',
+  'suppress.reason.bounced': 'Palautunut',
+  'suppress.reason.manual': 'Lisätty käsin',
+  'suppress.add.label': 'Lisättävä osoite',
+  'suppress.add': 'Lisää',
+  'suppress.invalid': 'Tämä ei ole kelvollinen sähköpostiosoite.',
+  'suppress.remove': 'Poista {email}',
+  'suppress.removeConfirm':
+    'Poistetaanko {email} listalta? Lähetykset voivat sen jälkeen tavoittaa osoitteen.',
+  'suppress.failed': 'Listaa ei voitu muuttaa. Yritä uudelleen.',
 };

@@ -1812,4 +1812,22 @@ export const daDK: Record<MessageKey, string> = {
   'campaign.leftOut':
     'plural:one {count} adresse udelades, fordi den har afmeldt sig eller er returneret. | other {count} adresser udelades, fordi de har afmeldt sig eller er returneret.',
   'campaign.leftOut.done': 'Udeladt (afmeldt eller returneret): {list}',
+  'suppress.open': 'Send-ikke-liste',
+  'suppress.close': 'Tilbage til udsendelsen',
+  'suppress.heading': 'Send ikke',
+  'suppress.scope':
+    'Denne liste stopper kun udsendelser (en mail til en liste). Den stopper ikke enkeltstående dokumenter eller invitationer til underskrift.',
+  'suppress.empty': 'Ingen adresser på listen.',
+  'suppress.col.email': 'Adresse',
+  'suppress.col.date': 'Tilføjet',
+  'suppress.col.reason': 'Årsag',
+  'suppress.reason.unsubscribed': 'Afmeldt',
+  'suppress.reason.bounced': 'Returneret',
+  'suppress.reason.manual': 'Tilføjet manuelt',
+  'suppress.add.label': 'Adresse der skal tilføjes',
+  'suppress.add': 'Tilføj',
+  'suppress.invalid': 'Det er ikke en gyldig mailadresse.',
+  'suppress.remove': 'Fjern {email}',
+  'suppress.removeConfirm': 'Fjern {email} fra listen? Udsendelser kan så nå adressen igen.',
+  'suppress.failed': 'Listen kunne ikke ændres. Prøv igen.',
 };
