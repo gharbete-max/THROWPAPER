@@ -1858,4 +1858,23 @@ export const esES: Record<MessageKey, string> = {
     'Ninguno de estos enlaces se rastrea ni se reescribe. Se envían exactamente como están escritos.',
   'campaign.testFirst': 'Enviármelo primero a mí',
   'campaign.testFirstHint': 'Recomendado: vea exactamente qué llega antes de que se envíe a todos.',
+  'suppress.open': 'Lista de no escribir',
+  'suppress.close': 'Volver al envío',
+  'suppress.heading': 'No escribir',
+  'suppress.scope':
+    'Esta lista solo detiene los envíos a listas (un correo a una lista). No detiene los documentos sueltos ni las invitaciones a firmar.',
+  'suppress.empty': 'No hay direcciones en la lista.',
+  'suppress.col.email': 'Dirección',
+  'suppress.col.date': 'Añadida',
+  'suppress.col.reason': 'Motivo',
+  'suppress.reason.unsubscribed': 'De baja',
+  'suppress.reason.bounced': 'Rebotada',
+  'suppress.reason.manual': 'Añadida a mano',
+  'suppress.add.label': 'Dirección que añadir',
+  'suppress.add': 'Añadir',
+  'suppress.invalid': 'No es una dirección de correo válida.',
+  'suppress.remove': 'Quitar {email}',
+  'suppress.removeConfirm':
+    '¿Quitar {email} de la lista? Los envíos podrán volver a llegar a esta dirección.',
+  'suppress.failed': 'No se pudo cambiar la lista. Inténtelo de nuevo.',
 };

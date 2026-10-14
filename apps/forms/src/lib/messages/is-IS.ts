@@ -1844,4 +1844,23 @@ export const isIS: Record<MessageKey, string> = {
     'Enginn þessara tengla er rakinn eða endurskrifaður. Þeir eru sendir nákvæmlega eins og þeir eru skrifaðir.',
   'campaign.testFirst': 'Senda fyrst til mín',
   'campaign.testFirstHint': 'Mælt með: sjáðu nákvæmlega hvað berst áður en það fer til allra.',
+  'suppress.open': 'Ekki-senda listi',
+  'suppress.close': 'Til baka í útsendinguna',
+  'suppress.heading': 'Ekki senda',
+  'suppress.scope':
+    'Þessi listi stöðvar aðeins fjöldapóst (tölvupóst til lista). Hann stöðvar ekki stök skjöl eða boð um undirritun.',
+  'suppress.empty': 'Engin netföng á listanum.',
+  'suppress.col.email': 'Netfang',
+  'suppress.col.date': 'Bætt við',
+  'suppress.col.reason': 'Ástæða',
+  'suppress.reason.unsubscribed': 'Afskráð',
+  'suppress.reason.bounced': 'Skilaði sér til baka',
+  'suppress.reason.manual': 'Bætt við handvirkt',
+  'suppress.add.label': 'Netfang til að bæta við',
+  'suppress.add': 'Bæta við',
+  'suppress.invalid': 'Þetta er ekki gilt netfang.',
+  'suppress.remove': 'Fjarlægja {email}',
+  'suppress.removeConfirm':
+    'Fjarlægja {email} af listanum? Útsendingar geta þá náð til netfangsins aftur.',
+  'suppress.failed': 'Ekki tókst að breyta listanum. Reyndu aftur.',
 };

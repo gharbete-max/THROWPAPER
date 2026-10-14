@@ -360,6 +360,18 @@ export const client = {
       body: JSON.stringify({ emails }),
     }),
 
+  /** The organisation's do-not-email list, which stops campaigns only (`/v1/send/suppressions`). */
+  suppressions: () => request<api.SuppressionList>('/v1/send/suppressions'),
+  addSuppression: (email: string) =>
+    request<null>('/v1/send/suppressions', {
+      method: 'POST',
+      body: JSON.stringify({ email, reason: 'manual' }),
+    }),
+  removeSuppression: (email: string) =>
+    request<null>(`/v1/send/suppressions?email=${encodeURIComponent(email)}`, {
+      method: 'DELETE',
+    }),
+
   sendStatus: (ids: readonly string[]) =>
     request<api.SendStatusResponse>(`/v1/send/status?ids=${ids.join(',')}`),
 

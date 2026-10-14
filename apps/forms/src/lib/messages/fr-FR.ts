@@ -1884,4 +1884,23 @@ export const frFR: Record<MessageKey, string> = {
     'Aucun de ces liens n’est suivi ni réécrit. Ils sont envoyés exactement tels qu’ils sont écrits.',
   'campaign.testFirst': 'M’envoyer d’abord ce message',
   'campaign.testFirstHint': 'Recommandé : voyez exactement ce qui arrive avant l’envoi à tous.',
+  'suppress.open': 'Liste « ne pas écrire »',
+  'suppress.close': 'Retour à l’envoi',
+  'suppress.heading': 'Ne pas écrire',
+  'suppress.scope':
+    'Cette liste n’arrête que les envois groupés (un e-mail à une liste). Elle n’arrête ni les documents envoyés à l’unité ni les invitations à signer.',
+  'suppress.empty': 'Aucune adresse sur la liste.',
+  'suppress.col.email': 'Adresse',
+  'suppress.col.date': 'Ajoutée',
+  'suppress.col.reason': 'Motif',
+  'suppress.reason.unsubscribed': 'Désabonnée',
+  'suppress.reason.bounced': 'Rebondie',
+  'suppress.reason.manual': 'Ajoutée à la main',
+  'suppress.add.label': 'Adresse à ajouter',
+  'suppress.add': 'Ajouter',
+  'suppress.invalid': 'Ce n’est pas une adresse e-mail valide.',
+  'suppress.remove': 'Retirer {email}',
+  'suppress.removeConfirm':
+    'Retirer {email} de la liste ? Les envois pourront de nouveau atteindre cette adresse.',
+  'suppress.failed': 'La liste n’a pas pu être modifiée. Réessayez.',
 };
