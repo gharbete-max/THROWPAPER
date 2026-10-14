@@ -1842,4 +1842,23 @@ export const jaJP: Record<MessageKey, string> = {
   'signPlace.failed': 'マークを適用できませんでした。',
   'signPlace.unreadable': 'この PDF を表示できませんでした。',
   'signPlace.loading': 'ページを読み込み中…',
+  'suppress.open': '送信しないリスト',
+  'suppress.close': '配信に戻る',
+  'suppress.heading': '送信しない',
+  'suppress.scope':
+    'このリストが止めるのは一斉配信（リスト宛てのメール）だけです。単発の書類や署名の招待は止めません。',
+  'suppress.empty': 'リストにアドレスはありません。',
+  'suppress.col.email': 'アドレス',
+  'suppress.col.date': '追加日',
+  'suppress.col.reason': '理由',
+  'suppress.reason.unsubscribed': '配信停止',
+  'suppress.reason.bounced': 'エラー返信',
+  'suppress.reason.manual': '手動で追加',
+  'suppress.add.label': '追加するアドレス',
+  'suppress.add': '追加',
+  'suppress.invalid': '有効なメールアドレスではありません。',
+  'suppress.remove': '{email} を削除',
+  'suppress.removeConfirm':
+    '{email} をリストから削除しますか？以後の一斉配信がこのアドレスに届くようになります。',
+  'suppress.failed': 'リストを変更できませんでした。もう一度お試しください。',
 };
