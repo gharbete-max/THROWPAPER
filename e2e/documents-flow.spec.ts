@@ -1,5 +1,4 @@
 import { createRequire } from 'node:module';
-import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { db, signInAs } from './support.js';
 import { linesPdf, tinyPdf } from './pdf.js';
@@ -99,9 +98,7 @@ test('several mixed files all go to the page list, and a photograph named .pdf i
 }) => {
   await signIn(page);
   await page.goto('/scan');
-  const photo = await readFile(
-    new URL('../fixtures/documents/scans/erste-hilfe.png', import.meta.url),
-  );
+  const photo = await noisyPhoto(page);
   await dropOn(page, '.scan', [
     pdf('a.pdf'),
     { name: 'b.pdf', type: 'application/pdf', buffer: photo },

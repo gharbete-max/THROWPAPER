@@ -65,6 +65,8 @@ export function Scan() {
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [keeping, setKeeping] = useState(false);
   const handled = useRef(false);
+  // How many files the list holds, kept synchronously: two adds in flight (a drop of mixed files) must not share an index.
+  const count = useRef(0);
 
   // The drawings are released when the screen goes.
   const open = useRef<Source[]>([]);
@@ -91,7 +93,7 @@ export function Scan() {
     const wantedKinds = kinds.filter((kind) => kind === 'pdf' || kind === 'photo');
     if (wanted.length < chosen.length) say('scan.error.notSupported');
     if (wanted.length === 0) return null;
-    if (files.length + wanted.length > MAX_FILES) return void say('scan.error.tooMany');
+    if (count.current + wanted.length > MAX_FILES) return void say('scan.error.tooMany');
     if (wanted.some((file) => file.size > MAX_FILE_BYTES)) return void say('scan.error.tooLarge');
 
     const sent: File[] = [];
@@ -114,7 +116,8 @@ export function Scan() {
       }
       return void say('scan.error.unreadable');
     }
-    const first = files.length;
+    const first = count.current;
+    count.current += sent.length;
     setFiles((current) => [...current, ...sent]);
     setSources((current) => [...current, ...opened]);
     setPages((current) => [
@@ -233,6 +236,7 @@ export function Scan() {
   async function replaceAll(file: File) {
     const pdf = await openPdf(await file.arrayBuffer());
     for (const old of sources) if ('pdf' in old) void old.pdf.close();
+    count.current = 1;
     setFiles([file]);
     setSources([{ pdf }]);
     setPages(pagesOfFile(0, pdf.pageCount));
