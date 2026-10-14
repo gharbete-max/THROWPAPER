@@ -18,7 +18,7 @@ const APP_ORIGIN = 'http://localhost:4173';
 const DATABASE_URL =
   process.env['DATABASE_URL'] ?? 'postgres://throwpaper:throwpaper@localhost:5432/throwpaper';
 const PAGE = { width: 595, height: 842 };
-const STORAGE_KEY = 'tp.sign.marks.v1';
+const STORE_NAME = 'tp.sign.marks.v1';
 
 interface Stream {
   [key: string]: unknown;
@@ -129,7 +129,7 @@ test('place signature, initials and date on two pages by keyboard, seal, and fin
   }
 
   await page.goto('/signing');
-  await page.evaluate((key) => localStorage.removeItem(key), STORAGE_KEY);
+  await page.evaluate((key) => localStorage.removeItem(key), STORE_NAME);
   await page.reload();
   await page.getByRole('button', { name: 'Send a PDF for signing' }).click();
   await page
@@ -140,7 +140,7 @@ test('place signature, initials and date on two pages by keyboard, seal, and fin
   await makeMark(page, 'Signature', 'Jon Smith');
   await makeMark(page, 'Initials', 'JS');
   // Kept on this computer, and only here.
-  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).toContain(
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORE_NAME)).toContain(
     'data:image/png',
   );
   const sample = async (n: number) =>
@@ -276,7 +276,7 @@ test('a saved signature is forgotten only after a confirmation', async ({ page }
     await sql.end();
   }
   await page.goto('/signing');
-  await page.evaluate((key) => localStorage.removeItem(key), STORAGE_KEY);
+  await page.evaluate((key) => localStorage.removeItem(key), STORE_NAME);
   await page.reload();
   await page.getByRole('button', { name: 'Send a PDF for signing' }).click();
   await page
@@ -284,14 +284,14 @@ test('a saved signature is forgotten only after a confirmation', async ({ page }
     .setInputFiles({ name: 'Lease.pdf', mimeType: 'application/pdf', buffer: await twoPages() });
   await page.getByRole('button', { name: 'Place signature, initials and date' }).click();
   await makeMark(page, 'Signature', 'Jon Smith');
-  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).not.toBeNull();
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORE_NAME)).not.toBeNull();
 
   await page.getByRole('button', { name: 'Forget: Signature' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
-  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).not.toBeNull();
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORE_NAME)).not.toBeNull();
 
   await page.getByRole('button', { name: 'Forget: Signature' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Forget', exact: true }).click();
   await expect(page.getByText('Not saved yet')).not.toHaveCount(0);
-  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY)).toBeNull();
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORE_NAME)).toBeNull();
 });

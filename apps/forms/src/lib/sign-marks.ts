@@ -25,7 +25,7 @@ export interface MarkStorage {
   removeItem(key: string): void;
 }
 
-export const STORAGE_KEY = 'tp.sign.marks.v1';
+export const STORE_NAME = 'tp.sign.marks.v1';
 const PREFIX = 'data:image/png;base64,';
 /** A mark is a few KB; anything near this is not one, and storage is small. */
 const MAX_PNG_CHARS = 300_000;
@@ -57,7 +57,7 @@ function valid(mark: unknown): mark is SavedMark {
 /** What is saved. Anything unreadable or not a mark is treated as nothing. */
 export function loadMarks(storage: MarkStorage | null = browserStorage()): SavedMarks {
   try {
-    const raw = storage?.getItem(STORAGE_KEY);
+    const raw = storage?.getItem(STORE_NAME);
     if (!raw) return {};
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     const out: SavedMarks = {};
@@ -73,8 +73,8 @@ export function loadMarks(storage: MarkStorage | null = browserStorage()): Saved
 function write(marks: SavedMarks, storage: MarkStorage | null): boolean {
   try {
     if (!storage) return false;
-    if (Object.keys(marks).length === 0) storage.removeItem(STORAGE_KEY);
-    else storage.setItem(STORAGE_KEY, JSON.stringify(marks));
+    if (Object.keys(marks).length === 0) storage.removeItem(STORE_NAME);
+    else storage.setItem(STORE_NAME, JSON.stringify(marks));
     return true;
   } catch {
     return false;

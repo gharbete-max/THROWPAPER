@@ -5,7 +5,7 @@ import {
   inkBounds,
   loadMarks,
   saveMark,
-  STORAGE_KEY,
+  STORE_NAME,
   type MarkStorage,
   type SavedMark,
 } from './sign-marks.js';
@@ -41,7 +41,7 @@ describe('the signature and initials kept on this computer', () => {
     expect(forgetMark('signature', storage)).toBe(true);
     expect(loadMarks(storage)).toEqual({ initials: mark });
     expect(forgetAllMarks(storage)).toBe(true);
-    expect(storage.map.has(STORAGE_KEY)).toBe(false);
+    expect(storage.map.has(STORE_NAME)).toBe(false);
   });
 
   it('refuse what is not a picture of a mark', () => {
@@ -57,9 +57,9 @@ describe('the signature and initials kept on this computer', () => {
 
   it('read damaged storage as empty rather than failing', () => {
     const storage = memory();
-    storage.setItem(STORAGE_KEY, '{not json');
+    storage.setItem(STORE_NAME, '{not json');
     expect(loadMarks(storage)).toEqual({});
-    storage.setItem(STORAGE_KEY, JSON.stringify({ signature: { png: 7 }, initials: mark }));
+    storage.setItem(STORE_NAME, JSON.stringify({ signature: { png: 7 }, initials: mark }));
     expect(loadMarks(storage)).toEqual({ initials: mark });
   });
 
