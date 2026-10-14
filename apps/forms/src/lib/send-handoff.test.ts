@@ -35,5 +35,6 @@ describe('handing a document to Send', () => {
       'c@x.se',
     ]);
     expect(addressesOf('  ')).toEqual([]);
+    expect(addressesOf('Asa@x.se asa@X.se')).toEqual(['Asa@x.se']);
   });
 });

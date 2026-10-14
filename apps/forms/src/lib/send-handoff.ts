@@ -28,12 +28,15 @@ export function subjectOf(file: File): string {
   return file.name.replace(/\.(pdf|docx)$/i, '');
 }
 
-/** Addresses from what a person typed or pasted: split on lines, commas, semicolons and spaces. */
+/**
+ * Addresses from what a person typed or pasted: split on lines, commas, semicolons and spaces,
+ * once each whatever the capitals (the first spelling stays), as the server will count them.
+ */
 export function addressesOf(text: string): string[] {
-  const seen = new Set<string>();
+  const seen = new Map<string, string>();
   for (const part of text.split(/[\s,;]+/)) {
     const address = part.trim();
-    if (address) seen.add(address);
+    if (address && !seen.has(address.toLowerCase())) seen.set(address.toLowerCase(), address);
   }
-  return [...seen];
+  return [...seen.values()];
 }

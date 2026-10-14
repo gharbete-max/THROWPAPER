@@ -25,6 +25,7 @@ import {
 
 const ScanEdit = lazy(() => import('./scan-edit/ScanEdit.js'));
 const DigitalCopy = lazy(() => import('./digital-copy/DigitalCopy.js'));
+const ScanFilter = lazy(() => import('./scan-filter/ScanFilter.js'));
 
 /** The server's limits (`api-forms/src/pdf/arrange.ts`), so the screen can say so before sending. */
 const MAX_FILES = 40;
@@ -52,6 +53,7 @@ export function Scan() {
   const [copying, setCopying] = useState<{ source: Blob | HTMLCanvasElement; turn: number } | null>(
     null,
   );
+  const [filtering, setFiltering] = useState<string | null>(null);
   const picker = useRef<HTMLInputElement>(null);
 
   // The drawings are released when the screen goes.
@@ -168,6 +170,17 @@ export function Scan() {
     });
   }
 
+  /** A photograph made over (filtered, or put back): its file and drawing change, its place does not. */
+  function replacePhoto(index: number, photo: File) {
+    const old = sources[index];
+    if (old && 'url' in old) URL.revokeObjectURL(old.url);
+    setFiles((current) => current.map((file, i) => (i === index ? photo : file)));
+    setSources((current) =>
+      current.map((source, i) => (i === index ? { url: URL.createObjectURL(photo) } : source)),
+    );
+    setFiltering(null);
+  }
+
   function onDrop(event: DragEvent) {
     event.preventDefault();
     void add([...event.dataTransfer.files]);
@@ -268,6 +281,13 @@ export function Scan() {
                   icon="redo"
                   onClick={() => setPages(turnPage(pages, page.id))}
                 />
+                {'url' in sources[page.file]! ? (
+                  <PageButton
+                    label={t('scan.filter.open')}
+                    icon="preview"
+                    onClick={() => setFiltering(page.id)}
+                  />
+                ) : null}
                 <PageButton
                   label={t('scan.edit')}
                   icon="edit"
@@ -299,6 +319,18 @@ export function Scan() {
           />
         </Suspense>
       ) : null}
+      {pages.map((page, position) =>
+        page.id === filtering ? (
+          <Suspense key={page.id} fallback={null}>
+            <ScanFilter
+              number={position + 1}
+              file={files[page.file]!}
+              onApply={(photo) => replacePhoto(page.file, photo)}
+              onClose={() => setFiltering(null)}
+            />
+          </Suspense>
+        ) : null,
+      )}
       {editing ? (
         <Suspense fallback={null}>
           <ScanEdit
@@ -323,7 +355,7 @@ function PageButton({
   onClick,
 }: {
   label: string;
-  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit' | 'file';
+  icon: 'arrow-left' | 'arrow-right' | 'redo' | 'trash' | 'edit' | 'preview' | 'file';
   disabled?: boolean;
   onClick: () => void;
 }) {

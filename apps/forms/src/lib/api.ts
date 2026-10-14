@@ -406,6 +406,13 @@ export const client = {
     return request<{ fields: PdfField[] }>('/v1/pdf/fields', { method: 'POST', body });
   },
 
+  /** The PDF written again smaller (`POST /v1/pdf/shrink`); the same bytes if nothing was gained. */
+  shrinkPdf: (file: File) => {
+    const body = new FormData();
+    body.append('file', file);
+    return postForBlob('/v1/pdf/shrink', body);
+  },
+
   /** The PDF with its own fields written (`POST /v1/pdf/fill`). Nothing is stored. */
   fillPdf: (file: File, values: Record<string, string | boolean>, acceptSignatureLoss = false) => {
     const body = new FormData();

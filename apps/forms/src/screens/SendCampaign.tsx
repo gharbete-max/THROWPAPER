@@ -15,6 +15,8 @@ import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
 import { useToast } from '../lib/toast.js';
 import { sortedRows, type SortColumn } from '../lib/send-rows.js';
+import { blocks } from '../lib/address-hygiene.js';
+import { PlainTextView } from './PlainTextView.js';
 import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { Delivery, ModeNote, useSendMode } from './send-parts.js';
@@ -40,7 +42,7 @@ export function SendCampaign() {
   const toast = useToast();
   const { locale, user } = useSession();
   const mode = useSendMode();
-  const list = useList();
+  const list = useList({ duplicates: true });
 
   const [step, setStep] = useState<Step>('list');
   const [subject, setSubject] = useState('');
@@ -95,6 +97,28 @@ export function SendCampaign() {
       setSuppressed(new Set());
     }
     setStep('confirm');
+  }
+
+  /** The first recipient's own message, to the sender alone, marked as a test. */
+  async function testFirst() {
+    if (!user || !audience[0]) return;
+    setBusy(true);
+    try {
+      await client.sendCampaign({
+        key: crypto.randomUUID(),
+        confirmed: true,
+        testTo: user.email,
+        subject: subject.trim(),
+        body,
+        footer,
+        rows: [audience[0]],
+      });
+      toast.show(t('campaign.testQueued', { email: user.email }));
+    } catch {
+      toast.show(t('send.failed'), 'error');
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function press() {
@@ -199,7 +223,9 @@ export function SendCampaign() {
             null,
             'write',
             t('batch.next'),
-            audience.length > 0 && list.rows.length <= SEND_LIMITS.campaign,
+            audience.length > 0 &&
+              list.rows.length <= SEND_LIMITS.campaign &&
+              !list.issues.some(blocks),
           )}
         </div>
       )}
@@ -271,12 +297,34 @@ export function SendCampaign() {
               </dd>
             </div>
           </dl>
+          <p className="small" data-testid="campaign-counts">
+            {t('hygiene.counts', {
+              send: receiving.length,
+              skipped: list.total - audience.length,
+            })}
+          </p>
           {suppressed.size > 0 && (
             <p className="small" data-testid="campaign-suppressed">
               {t('campaign.leftOut', { count: audience.length - receiving.length })}
             </p>
           )}
           <ModeNote mode={mode?.mode ?? null} />
+          {user && (
+            <div className="card stack stack--tight" data-testid="campaign-test-first">
+              <p className="small">{t('campaign.testFirstHint')}</p>
+              <div className="row">
+                <button
+                  type="button"
+                  className="button"
+                  disabled={busy}
+                  onClick={() => void testFirst()}
+                >
+                  <Icon name="email" className="icon--lead" />
+                  {t('campaign.testFirst')}
+                </button>
+              </div>
+            </div>
+          )}
           {user && (
             <label className="row">
               <input
@@ -428,7 +476,7 @@ function Preview({
           <p>
             <strong>{message.subject}</strong>
           </p>
-          <p className="outgoing__text">{message.text}</p>
+          <PlainTextView text={message.text} />
         </section>
       )}
       {footer}
