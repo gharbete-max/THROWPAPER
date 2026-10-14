@@ -86,6 +86,7 @@ async function open(page: Page) {
 async function download(page: Page) {
   const saving = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
+  await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const saved = await (await saving).path();
   const out = await PDFDocument.load(await readFile(saved));
   return out
@@ -155,13 +156,13 @@ test('a WebP is converted to a JPEG page, and what cannot be a page is refused i
     .getByTestId('scan-files')
     .setInputFiles({ name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('hello') });
   await expect(page.getByText(/Only PDF, JPEG, PNG and WebP files can be added/)).toBeVisible();
-  // Called a photo, but not one (and a HEIC the browser cannot open lands here too).
+  // Called a photo, but its bytes say it is not one: refused by content, not by name.
   await page.getByTestId('scan-files').setInputFiles({
     name: 'broken.jpg',
     mimeType: 'image/jpeg',
     buffer: Buffer.from('this is not a picture'),
   });
-  await expect(page.getByText('A file is not a PDF or photo that can be opened.')).toBeVisible();
+  await expect(page.getByText(/Only PDF, JPEG, PNG and WebP files can be added/)).toHaveCount(2);
   await expect(page.locator('.scan__page')).toHaveCount(1);
 
   expect(await download(page)).toEqual([[842, 595, 0]]);

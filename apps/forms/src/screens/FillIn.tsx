@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
+import { fillPdfFromState } from '../lib/documents-handoff.js';
 import { pickText } from '@tp/i18n';
 import type { FormResponse } from '@tp/shared/forms';
 import { ApiError, client, type PdfField } from '../lib/api.js';
@@ -123,6 +124,14 @@ export function FillPdf() {
   const [empty, setEmpty] = useState(false);
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
+  const handed = fillPdfFromState(useLocation().state);
+
+  // A PDF handed over by Scan opens straight away, as if it had been chosen here.
+  useEffect(() => {
+    if (handed) void open(handed);
+    // Once, for the file this screen was opened with.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function open(chosen: File, accept = false): Promise<void> {
     setEmpty(false);
