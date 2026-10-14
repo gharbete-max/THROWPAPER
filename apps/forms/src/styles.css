@@ -7148,6 +7148,54 @@ body:has(> #root .shell--narrow) {
   gap: 0.25rem;
 }
 
+/* Scan filters: the chosen page large, beside the five ways of making it. */
+.scan-filter {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.scan-filter__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+@media (min-width: 48rem) {
+  .scan-filter__body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.scan-filter__preview {
+  max-width: 100%;
+  max-height: 70vh;
+  justify-self: center;
+  border: 1px solid var(--tp-colour-border);
+}
+
+.scan-filter__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.scan-filter__choice {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  width: 6.5rem;
+  cursor: pointer;
+}
+
+.scan-filter__choice img {
+  width: 100%;
+  border: 1px solid var(--tp-colour-border);
+}
+
 /* Reading a supplier invoice: the page with the found value outlined, beside the values to confirm. */
 .invoice-scan__panes {
   display: grid;
