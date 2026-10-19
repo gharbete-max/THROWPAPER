@@ -3,7 +3,7 @@
 **Read `docs/VISION.md` first.** Loppa is a lightweight helper in the office, not Acrobat: a room of
 three independent catchers (Documents, Spreadsheets, Presentation & planning) with **Documents**
 built and finished first. Its four parts are **Forms, Scan, Sign and Send**, around a **summary and
-translation centre** that runs a local model on the person's own computer (ADR 0023). Spreadsheets
+translation centre** that runs a local model on the person's own computer (ADR 0023, 0025). Spreadsheets
 and Presentation & planning are floating placeholders; nothing more is built for them yet. Where an
 older document disagrees with the vision, the vision wins.
 
@@ -41,9 +41,10 @@ apps/api-sign   Product C backend. Own database (append-only, hash-chained trail
                 drawn signing by link, PAdES seal + audit page on completion (development
                 certificate); serves the page
 apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own
-                embedded Postgres (PGlite) and loopback port, offline first; runs the summary
-                model in a utility process once the person has downloaded or opened its weights
-                (`src/ai/`, ADR 0023 and 0024: one coordinator, one model alive); a LAN relay for a
+                embedded Postgres (PGlite) and loopback port, offline first; runs the one AI
+                model (Qwen2.5-VL-7B, text and pictures) as a supervised `llama-server` child
+                process once its files are on the disk (`src/ai/`, ADR 0023 to 0025: one
+                coordinator, one model alive; `scripts/fetch-runtime.ts` fetches the program); a LAN relay for a
                 phone scan exists only while one is open (ADR 0016). Not a product; it
                 imports only @tp/api-forms/desktop and @tp/api-sign/local (docs/adr/0016). Sends
                 no mail by itself by default: messages wait in To send and open as drafts in the
@@ -74,7 +75,7 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 stage 9's comparison of a form with its document read again; and the digital copy of a photographed page — a line finder over ink and paper (skew, ruled lines, box and cell borders) and the copy built from it and the OCR words, as SVG and plain text (@tp/shared/import, scan/); POST /v1/pdf/copy's request schema is in @tp/shared/api;
                 free text read by rules — normalisation, word lists and built-in aliases in twelve
                 languages, the rules for learned ones, the ladder T0–T8, the committed sigmoid
-                table, and an integer logarithm and exponential (@tp/shared/interpret); the AI coordinator's shared types — capabilities, the model manifest registry (several files per model, evaluation-only), the task union, the structured document, the cache key, the `window.loppaAi` bridge (@tp/shared/ai, ADR 0024); the summary
+                table, and an integer logarithm and exponential (@tp/shared/interpret); the AI coordinator's shared types — capabilities, the model manifest registry (one model of two files, evaluation-only supported) and the pinned `llama-server` runtime manifest, the task union, the structured document, the cache key, the `window.loppaAi` bridge (@tp/shared/ai, ADR 0024, 0025); the summary
                 centre's pure parts — the twelve languages, the checks around the
                 model, chunking, passage quoting (@tp/shared/summary) — with the word lists that
                 make an operative text quoted rather than reworded (@tp/shared/quoted); and the rules

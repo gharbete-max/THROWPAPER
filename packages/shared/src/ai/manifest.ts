@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import qwen3Text from './models/qwen3-4b-instruct-2507-q4_k_m.json';
-import qwen25Vl from './models/qwen2.5-vl-3b-instruct-q4_k_m.json';
+import qwen25Vl7b from './models/qwen2.5-vl-7b-instruct-q4_k_m.json';
 import { CAPABILITIES, type Capability } from './capability.js';
 
 /**
@@ -11,7 +10,7 @@ import { CAPABILITIES, type Capability } from './capability.js';
  * `licence:check` reads npm packages only, so a model file's licence has no other home. A model is
  * one or more files: weights, optionally a projector (vision) and optionally a runtime binary. A
  * file is published whole or in parts (a GitHub release asset may not exceed 2 GiB; the text model
- * is 2.33), and is joined and hashed on this computer.
+ * is 4.68 GB in three), and is joined and hashed on this computer.
  *
  * `evaluationOnly` marks a model under a licence that does not allow shipping it (a research
  * licence): it is accepted where the owner put it, labelled, never offered for download and never
@@ -40,7 +39,8 @@ export const ModelPart = z
   .strict();
 export type ModelPart = z.infer<typeof ModelPart>;
 
-export const FILE_ROLES = ['weights', 'projector', 'runtime'] as const;
+/** `projector-lite` is the smaller projector (Q8_0): an optional alternative to `projector`. */
+export const FILE_ROLES = ['weights', 'projector', 'projector-lite', 'runtime'] as const;
 export type FileRole = (typeof FILE_ROLES)[number];
 
 export const ModelFile = z
@@ -50,6 +50,8 @@ export const ModelFile = z
     bytes: z.number().int().positive(),
     /** The name the file has once whole. */
     name: FileName,
+    /** Not needed for the model to be installed or downloaded; used when present. */
+    optional: z.boolean().optional(),
     /** Empty: the file is not published by Loppa (evaluation only) or arrives in one piece named `name`. */
     parts: z.array(ModelPart),
     role: z.enum(FILE_ROLES),
@@ -126,11 +128,14 @@ export function parseRegistry(list: readonly unknown[]): readonly ModelManifest[
   return parsed;
 }
 
-export const MODEL_REGISTRY: readonly ModelManifest[] = parseRegistry([qwen3Text, qwen25Vl]);
+export const MODEL_REGISTRY: readonly ModelManifest[] = parseRegistry([qwen25Vl7b]);
 
-/** The text model the summary centre uses. */
+/**
+ * The one model (ADR 0025): it reads pictures of pages and writes summaries, translations and
+ * replies. Kept under the name the summary centre and the reply helper already use.
+ */
 export const TEXT_MODEL: ModelManifest = MODEL_REGISTRY.find(
-  (m) => m.id === 'qwen3-4b-instruct-2507-q4_k_m',
+  (m) => m.id === 'qwen2.5-vl-7b-instruct-q4_k_m',
 )!;
 
 export function findModel(id: string): ModelManifest | undefined {
@@ -141,9 +146,9 @@ export function modelsFor(capability: Capability): ModelManifest[] {
   return MODEL_REGISTRY.filter((m) => m.capabilities.includes(capability));
 }
 
-/** What a model costs in disk and traffic: all its files. */
+/** What a model costs in disk and traffic: all its required files. */
 export function totalBytes(manifest: ModelManifest): number {
-  return manifest.files.reduce((total, file) => total + file.bytes, 0);
+  return manifest.files.reduce((total, file) => total + (file.optional ? 0 : file.bytes), 0);
 }
 
 /** Why the download is off, or null when it can be started. */

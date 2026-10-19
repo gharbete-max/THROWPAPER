@@ -80,7 +80,7 @@ test('set up from a file on disk, summarise, translate, cancel, and see the limi
   expect(sent).toBe(3);
 });
 
-test('the model list shows every model, and a vision model is not available yet', async ({
+test('the model list shows the one model, its files and the program that runs it', async ({
   page,
 }) => {
   await page.addInitScript(fakeBridge);
@@ -88,20 +88,19 @@ test('the model list shows every model, and a vision model is not available yet'
   await page.goto('/summary');
   await expect(page.getByRole('heading', { name: 'AI models on this computer' })).toBeVisible();
 
-  const text = page.locator('[data-model="qwen3"]');
-  await expect(text).toContainText('Not installed');
-  await expect(text).toContainText('qwen3.gguf: not found');
-  await expect(text).toContainText('put them in this folder: C:\\Users\\me\\AppData');
-  await expect(text.getByRole('button', { name: 'Open a file from disk' })).toBeEnabled();
+  const model = page.locator('[data-model="qwen2.5-vl-7b-instruct-q4_k_m"]');
+  await expect(page.locator('[data-model]')).toHaveCount(1);
+  await expect(model).toContainText('Not installed');
+  await expect(model).toContainText('qwen-vl.gguf: not found');
+  await expect(model).toContainText('mmproj.gguf: not found');
+  await expect(model).toContainText('at least 12 GB of memory');
+  await expect(model).toContainText('put them in this folder: C:\\Users\\me\\AppData');
+  await expect(model.getByRole('button', { name: 'Open a file from disk' })).toBeEnabled();
 
-  const vision = page.locator('[data-model="qwen-vl"]');
-  await expect(vision).toContainText('For evaluation only');
-  await expect(vision).toContainText('Not available yet');
-  await expect(vision).toContainText('never offered for download');
-  await expect(vision).toContainText(/found in this checkout.s top folder/);
-  await expect(vision).toContainText('mmproj.gguf: not found');
-  // Nothing to run it with, so nothing to get or open.
-  await expect(vision.getByRole('button')).toHaveCount(0);
+  const runtime = page.locator('[data-runtime]');
+  await expect(runtime).toContainText('llama.cpp llama-server b11741');
+  await expect(runtime).toContainText('found in the AI pack beside Loppa');
+  await expect(runtime).toContainText('checked');
 });
 
 test('a consent is quoted, never summarised or translated', async ({ page }) => {

@@ -1,8 +1,7 @@
 import { isTextTask, type AiProblem, type AiTask } from '@tp/shared/ai';
 import { AiError, type Engine, type EngineEvent, type RunResult } from '../engine.js';
 import { FakeTextEngine, type FakeBehaviour } from '../text/fake-text-engine.js';
-import { runJob } from '../text/pipeline.js';
-import { JobError } from '../text/text-engine.js';
+import { runTextTask } from '../text/run-text-task.js';
 
 /**
  * An {@link Engine} that needs no model: what CI and the desktop's fake mode (`LOPPA_FAKE_MODEL=1`)
@@ -41,21 +40,7 @@ export class FakeEngine implements Engine {
   ): Promise<RunResult> {
     this.tasks.push(task);
     if (!isTextTask(task)) throw new AiError('not-available');
-    try {
-      const outcome = await runJob(
-        new FakeTextEngine(this.options.behaviour),
-        task,
-        {
-          step: (step, done, total) => onEvent({ kind: 'step', step, done, total }),
-          text: (mode, text) => onEvent({ kind: 'text', mode, text }),
-          selected: (numbers) => onEvent({ kind: 'selected', numbers }),
-        },
-        signal,
-      );
-      return { warnings: outcome.warnings };
-    } catch (error) {
-      throw error instanceof JobError ? new AiError(error.problem) : error;
-    }
+    return runTextTask(new FakeTextEngine(this.options.behaviour), task, onEvent, signal);
   }
 
   dispose(): Promise<void> {

@@ -1443,6 +1443,9 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'このチェックアウトの最上位フォルダーで見つかりました',
   'ai.models.source.remembered': 'ディスクから開きました',
   'ai.models.source.user-data': 'Loppaのモデルフォルダー内',
+  'ai.models.source.ai-pack': 'Loppaの隣にあるAIパックで見つかりました',
+  'ai.models.needs':
+    '少なくとも12 GBのメモリを搭載したコンピューターが必要で、実行中は約10 GBの空きが必要です。これより小さいコンピューターでは起動しません。',
   'ai.models.hash.verified': '確認済み',
   'ai.models.hash.unchecked': 'まだ確認していません（初回使用の前に確認されます）',
   'ai.models.hash.unpinned': '照合するチェックサムがありません',
@@ -1478,7 +1481,7 @@ export const jaJP: Record<MessageKey, string> = {
     'このコンピューターの空きメモリは{free} GBで、モデルには約{need} GBが必要です。ほかのプログラムを閉じて、もう一度お試しください。',
   'summary.get': 'モデルを取得',
   'summary.getConfirm':
-    'Loppaのリリース（GitHub）から{size}を2つに分けてダウンロードし、検査します。その分のディスク容量を使います。文書はどこにも送信されません。続けますか。',
+    'Loppaのリリース（GitHub）から{size}をダウンロードし、検査します。その分のディスク容量を使います。文書はどこにも送信されません。続けますか。',
   'summary.getConfirmYes': 'ダウンロード',
   'summary.getOff':
     'ダウンロードはまだ利用できません。モデルが公開されていません。代わりに、ディスクからモデルファイルを開くことができます。',

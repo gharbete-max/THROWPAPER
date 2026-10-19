@@ -1454,6 +1454,9 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'löytyi tämän kopion ylimmästä kansiosta',
   'ai.models.source.remembered': 'avattu levyltä',
   'ai.models.source.user-data': 'Loppan mallikansiossa',
+  'ai.models.source.ai-pack': 'löytyi Loppan vieressä olevasta tekoälypaketista',
+  'ai.models.needs':
+    'Vaatii tietokoneen, jossa on vähintään 12 Gt muistia ja noin 10 Gt vapaana käytön aikana. Pienemmällä tietokoneella se ei käynnisty.',
   'ai.models.hash.verified': 'tarkistettu',
   'ai.models.hash.unchecked': 'ei vielä tarkistettu (se tarkistetaan ennen ensimmäistä käyttöä)',
   'ai.models.hash.unpinned': 'ei tarkistussummaa, johon verrata',
@@ -1488,7 +1491,7 @@ export const fiFI: Record<MessageKey, string> = {
     'Tällä tietokoneella on {free} Gt vapaata muistia, ja malli tarvitsee noin {need} Gt. Sulje muut ohjelmat ja yritä uudelleen.',
   'summary.get': 'Hae malli',
   'summary.getConfirm':
-    'Tämä lataa {size} Loppan julkaisusta GitHubista kahdessa osassa ja tarkistaa ne. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
+    'Tämä lataa {size} Loppan julkaisusta GitHubista ja tarkistaa ne. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
   'summary.getConfirmYes': 'Lataa',
   'summary.getOff':
     'Lataus ei ole vielä saatavilla: mallia ei ole julkaistu. Voit sen sijaan avata mallitiedoston levyltä.',

@@ -1450,6 +1450,9 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'fannst í efstu möppu þessa afrits',
   'ai.models.source.remembered': 'opnað af diski',
   'ai.models.source.user-data': 'í líkanamöppu Loppa',
+  'ai.models.source.ai-pack': 'fannst í gervigreindarpakkanum við hlið Loppa',
+  'ai.models.needs':
+    'Krefst tölvu með að minnsta kosti 12 GB af minni og um 10 GB lausum á meðan það keyrir. Á minni tölvu fer það ekki í gang.',
   'ai.models.hash.verified': 'athugað',
   'ai.models.hash.unchecked': 'ekki athugað enn (það er athugað áður en það er fyrst notað)',
   'ai.models.hash.unpinned': 'engin sannprófunarsumma til að bera saman við',
@@ -1485,7 +1488,7 @@ export const isIS: Record<MessageKey, string> = {
     'Þessi tölva hefur {free} GB af lausu minni og líkanið þarf um {need} GB. Lokaðu öðrum forritum og reyndu aftur.',
   'summary.get': 'Sækja líkanið',
   'summary.getConfirm':
-    'Þetta sækir {size} úr útgáfu Loppa á GitHub, í tveimur hlutum, og athugar þá. Það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt. Halda áfram?',
+    'Þetta sækir {size} úr útgáfu Loppa á GitHub og athugar þá. Það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt. Halda áfram?',
   'summary.getConfirmYes': 'Sækja',
   'summary.getOff':
     'Niðurhalið er ekki tiltækt enn: líkanið hefur ekki verið gefið út. Þú getur opnað líkanskrá af disknum í staðinn.',

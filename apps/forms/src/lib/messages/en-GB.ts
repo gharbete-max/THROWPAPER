@@ -1458,6 +1458,9 @@ export const enGB = {
   'ai.models.source.repo-root': 'found in this checkout’s top folder',
   'ai.models.source.remembered': 'opened from disk',
   'ai.models.source.user-data': 'in Loppa’s model folder',
+  'ai.models.source.ai-pack': 'found in the AI pack beside Loppa',
+  'ai.models.needs':
+    'Needs a computer with at least 12 GB of memory, and about 10 GB free while it runs. On a smaller computer it will not start.',
   'ai.models.hash.verified': 'checked',
   'ai.models.hash.unchecked': 'not checked yet (it is checked before first use)',
   'ai.models.hash.unpinned': 'no checksum to check it against',
@@ -1493,7 +1496,7 @@ export const enGB = {
     'This computer has {free} GB of free memory and the model needs about {need} GB. Close other programs and try again.',
   'summary.get': 'Get the model',
   'summary.getConfirm':
-    'This downloads {size} from Loppa’s release on GitHub, in two parts, and checks them. It takes that much disk space. Your documents are not sent anywhere. Continue?',
+    'This downloads {size} from Loppa’s release on GitHub and checks it. It takes that much disk space. Your documents are not sent anywhere. Continue?',
   'summary.getConfirmYes': 'Download',
   'summary.getOff':
     'The download is not available yet: the model has not been published. You can open a model file from disk instead.',

@@ -20,13 +20,16 @@ export const FILE_SOURCES = [
   'env',
   'local-models',
   'repo-root',
+  'ai-pack',
   'remembered',
   'user-data',
 ] as const;
 export type FileSource = (typeof FILE_SOURCES)[number];
 
 export interface AiFileStatus {
-  role: 'weights' | 'projector' | 'runtime';
+  role: 'weights' | 'projector' | 'projector-lite' | 'runtime';
+  /** An alternative the model does not need: missing is not a problem. */
+  optional?: boolean;
   name: string;
   bytes: number;
   /** Where it is, or null when missing. */
@@ -79,6 +82,8 @@ export interface AiStatus {
   /** What the shell is doing now. */
   activity: 'idle' | 'downloading' | 'verifying' | 'loading' | 'working';
   queued: number;
+  /** The program that runs the models (ADR 0025); null when this edition has none to show. */
+  runtime: AiFileStatus | null;
   cache: { entries: number; bytes: number; maxBytes: number };
 }
 

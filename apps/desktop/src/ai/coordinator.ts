@@ -79,6 +79,10 @@ export interface CoordinatorDeps {
   env: NodeJS.ProcessEnv;
   /** The checkout in a development build, null when packaged. */
   repoRoot: string | null;
+  /** The AI pack beside the app (`<resources>/ai-pack`), null when there is none to look in. */
+  packDir?: string | null;
+  /** The runtime's state for the status panel; omitted where the engines need no program. */
+  runtimeStatus?(): Promise<AiFileStatus | null>;
   freeMemory(): number;
   /** The computer's own file dialog; null when the person closes it. */
   chooseFile(): Promise<string | null>;
@@ -167,6 +171,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     return {
       env: deps.env,
       repoRoot: deps.repoRoot,
+      packDir: deps.packDir ?? null,
       userDataModels: deps.dir,
       remembered: await readRemembered(),
     };
@@ -184,7 +189,12 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     const factoryExists = deps.engines[model.id] !== undefined;
     const files: AiFileStatus[] = await Promise.all(
       located.map(async ({ file, found }): Promise<AiFileStatus> => {
-        const base = { role: file.role, name: file.name, bytes: file.bytes };
+        const base = {
+          role: file.role,
+          name: file.name,
+          bytes: file.bytes,
+          ...(file.optional ? { optional: true } : {}),
+        };
         if (deps.fake && factoryExists) {
           return { ...base, path: null, source: null, hash: 'verified' };
         }
@@ -201,7 +211,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
         return { ...base, path: found.path, source: found.source, hash };
       }),
     );
-    const allThere = files.every((f) => f.hash !== 'missing');
+    const allThere = files.every((f) => f.hash !== 'missing' || f.optional);
     const state: AiModelStatus['state'] = model.evaluationOnly
       ? 'evaluation-only'
       : files.some((f) => f.hash === 'damaged')
@@ -242,6 +252,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
       freeMemoryBytes: deps.freeMemory(),
       activity,
       queued: queue.length,
+      runtime: (await deps.runtimeStatus?.()) ?? null,
       cache: await deps.cache.stats(),
     };
   }
@@ -271,7 +282,10 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     const files: EngineFiles = { weights: '' };
     const todo: Array<{ file: ModelFile; path: string; key: string }> = [];
     for (const { file, found } of located) {
-      if (!found) throw new AiError('not-installed');
+      if (!found) {
+        if (file.optional) continue;
+        throw new AiError('not-installed');
+      }
       files[file.role] = found.path;
       const key = await keyOf(found.path);
       if (verified.get(found.path) !== key) todo.push({ file, path: found.path, key });
@@ -476,7 +490,9 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     void (async () => {
       try {
         const have = await locateModel(model, await context());
-        const todo = have.filter((item) => item.found === null).map((item) => item.file);
+        const todo = have
+          .filter((item) => item.found === null && !item.file.optional)
+          .map((item) => item.file);
         for (const [index, file] of todo.entries()) {
           const path = await downloadFile({
             file,

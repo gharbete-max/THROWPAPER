@@ -13,10 +13,10 @@ const MB = 1000 ** 2;
  * evaluation only; its size and licence; where each of its files was found; and the actions to
  * get it or to use a file already on the disk, with the exact folder to put files in by hand.
  *
- * What the list says comes from the shell's status and nothing in the window decides it. A model
- * with no engine to run it is "not available yet" and offers nothing: the vision models read so
- * until a later phase registers one, and nothing here pretends otherwise. An evaluation-only model
- * can be opened from disk and is never offered for download.
+ * What the list says comes from the shell's status and nothing in the window decides it. There is
+ * one model (ADR 0025) and the program that runs it, listed under it. A model with no engine to run
+ * it is "not available yet" and offers nothing; an evaluation-only model can be opened from disk and
+ * is never offered for download.
  *
  * Nothing starts on its own. A download needs the button and then a confirmation that says what it
  * costs and that no document is sent (CLAUDE.md rule 7).
@@ -142,6 +142,7 @@ function Models({ bridge }: { bridge: AiBridge }) {
               ))}
             </ul>
             <p className="muted small">{t('ai.models.folder', { path: model.folder })}</p>
+            {model.available ? <p className="muted small">{t('ai.models.needs')}</p> : null}
 
             {model.available ? (
               <div className="row">
@@ -186,6 +187,23 @@ function Models({ bridge }: { bridge: AiBridge }) {
           </li>
         ))}
       </ul>
+
+      {status.runtime ? (
+        <p className="small" data-runtime>
+          {status.runtime.path === null || status.runtime.source === null ? (
+            t('ai.models.fileMissing', { name: status.runtime.name })
+          ) : (
+            <>
+              {t('ai.models.file', {
+                name: status.runtime.name,
+                where: `${t(`ai.models.source.${status.runtime.source}`)}, ${t(`ai.models.hash.${status.runtime.hash === 'missing' ? 'unchecked' : status.runtime.hash}`)}`,
+              })}
+              <br />
+              <code className="ai-path">{status.runtime.path}</code>
+            </>
+          )}
+        </p>
+      ) : null}
 
       {progress ? (
         <div className="stack">

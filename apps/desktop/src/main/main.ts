@@ -19,7 +19,6 @@ import {
   safeStorage,
   session,
   shell,
-  utilityProcess,
   type MenuItemConstructorOptions,
 } from 'electron';
 import {
@@ -62,11 +61,10 @@ const dataDir = join(app.getPath('userData'), 'workspace');
 const { lang, t } = messagesFor([app.getLocale(), ...app.getPreferredSystemLanguages()]);
 
 /**
- * The AI coordinator (ADR 0024, amending ADR 0023): the text model's worker process of its own, started only when a
+ * The AI coordinator (ADR 0024, amending ADR 0023): the one model, run by a `llama-server` process of its own, started only when a
  * job is asked for, and a narrow IPC to the Forms window. Nothing here runs at start-up.
  */
 const { coordinator: ai, model } = createShellAi({
-  fork: (modulePath) => utilityProcess.fork(modulePath, [], { serviceName: 'Loppa model' }),
   chooseFile: async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       title: t.menuOpenModel,

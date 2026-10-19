@@ -33,18 +33,8 @@ extraResources:
     to: sign-web
   - from: sign-drizzle
     to: sign-drizzle
-  # The summary model's runtime (ADR 0023): the worker and node-llama-cpp with its CPU binary, as
-  # plain files so the utility process loads them by ordinary paths. The model file itself is never
-  # here; it is downloaded on request or opened from disk. The CUDA, CUDA-extension and Vulkan
-  # packages (169, 351 and 71 MB) and the 35 MB llama.cpp source bundle stay out; scripts/build.ts
-  # prunes them and the filter says it again.
-  - from: model
-    to: model
-    filter:
-      - '**/*'
-      - '!node_modules/@node-llama-cpp/*-cuda*/**'
-      - '!node_modules/@node-llama-cpp/*-vulkan*/**'
-      - '!node_modules/node-llama-cpp/llama/gitRelease.bundle'
+  # Not here, on purpose (ADR 0025): the model, its projector and llama-server are about 6 GB, more
+  # than an installer can carry. They come as a separate AI pack, placed in `ai-pack` beside the app.
 # PGlite reads its WebAssembly with fs from beside its module; out of the asar, nothing can go wrong.
 asarUnpack:
   - node_modules/@electric-sql/pglite/**
@@ -53,16 +43,15 @@ asarUnpack:
   - node_modules/@pdf-lib/**
   - node_modules/pako/**
   - node_modules/tslib/**
-# The one native module, node-llama-cpp, ships prebuilt N-API binaries under extraResources above,
-# outside the asar: nothing to rebuild against Electron's ABI and nothing for asarUnpack to unpack.
+# No native Node module is left (node-llama-cpp went with ADR 0025), so there is nothing to rebuild
+# against Electron's ABI.
 npmRebuild: false
 # Electron's fuses, flipped at package time. Off: running the binary as plain Node
 # (ELECTRON_RUN_AS_NODE — any local process could otherwise borrow Loppa's camera and Apple-events
 # permissions and send mail as the user), NODE_OPTIONS, and --inspect. On: the app loads only from
-# its asar, and the asar is checked against the hash stamped into the executable. The summary model
-# runs in an Electron utilityProcess (ADR 0023), which is not ELECTRON_RUN_AS_NODE; nothing else
-# forks a Node process. UNVERIFIED in a packaged build: that a utilityProcess started from a plain
-# file in resources/model is allowed by onlyLoadAppFromAsar. The packaged smoke test proves it.
+# its asar, and the asar is checked against the hash stamped into the executable. The model is run by
+# `llama-server`, an ordinary child program started by the main process (ADR 0025); no fuse touches
+# a child that is not Node. UNVERIFIED in a packaged build: the pack found beside the app.
 electronFuses:
   runAsNode: false
   enableCookieEncryption: true
