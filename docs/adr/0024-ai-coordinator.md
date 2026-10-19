@@ -4,6 +4,9 @@
 runtime (D1, D2, D4) is not, and is decided by the Phase 1 spike. This ADR is edited, not superseded, when that
 lands.
 **Date:** 2026-10-14
+**Amended 2026-10-19 by ADR 0025:** the registry holds one model (`qwen2.5-vl-7b-instruct-q4_k_m`, text and
+vision); `ServerEngine` is built (a supervised `llama-server`) and `NodeLlamaEngine` is removed; a status carries
+the runtime beside the models; a file source `ai-pack` is added. The vision page pipeline is still to come.
 **Amends:** ADR 0023 (the one model becomes a registry of models; `window.loppaModel` becomes an adapter),
 ADR 0016 (the shell hosts a coordinator, not a single model service; a second native-process kind is planned),
 ADR 0015 (permissive licences also for any model that ships; a research licence is allowed on the owner's disk and

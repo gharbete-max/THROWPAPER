@@ -1,5 +1,11 @@
 # ADR 0023 — A local summary and translation model: one model, on the desktop, downloaded once
 
+> **Amended 2026-10-19 by ADR 0025.** The model is now Qwen2.5-VL-7B-Instruct (Apache-2.0, text and pictures)
+> and the runtime a pinned `llama-server` child process; `node-llama-cpp`, the utility process and the
+> "first native module" consequences in sections 1 and 2 are gone, and the model ships as an AI pack beside
+> the app. Everything in this ADR about what the model may do (section 4), the languages (5), the checks and
+> the pipeline stands unchanged. The measurements below are those of the Qwen3-4B it replaced.
+
 **Status:** accepted — the owner chose the model on 2026-10-13; this ADR records what spike S1 measured
 and what follows from it. Built in Documents phase 8 ("As built" below)
 **Date:** 2026-10-13

@@ -1441,6 +1441,9 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'fundet i denne kopis øverste mappe',
   'ai.models.source.remembered': 'åbnet fra disken',
   'ai.models.source.user-data': 'i Loppas modelmappe',
+  'ai.models.source.ai-pack': 'fundet i AI-pakken ved siden af Loppa',
+  'ai.models.needs':
+    'Kræver en computer med mindst 12 GB hukommelse og omkring 10 GB ledig, mens den kører. På en mindre computer starter den ikke.',
   'ai.models.hash.verified': 'kontrolleret',
   'ai.models.hash.unchecked': 'ikke kontrolleret endnu (den kontrolleres før første brug)',
   'ai.models.hash.unpinned': 'ingen kontrolsum at sammenligne med',
@@ -1476,7 +1479,7 @@ export const daDK: Record<MessageKey, string> = {
     'Denne computer har {free} GB ledig hukommelse, og modellen skal bruge ca. {need} GB. Luk andre programmer, og prøv igen.',
   'summary.get': 'Hent modellen',
   'summary.getConfirm':
-    'Dette henter {size} fra Loppas udgivelse på GitHub i to dele og kontrollerer dem. Det fylder så meget på disken. Dine dokumenter sendes ingen steder hen. Fortsæt?',
+    'Dette henter {size} fra Loppas udgivelse på GitHub og kontrollerer dem. Det fylder så meget på disken. Dine dokumenter sendes ingen steder hen. Fortsæt?',
   'summary.getConfirmYes': 'Hent',
   'summary.getOff':
     'Hentningen er ikke tilgængelig endnu: modellen er ikke udgivet. Du kan åbne en modelfil fra disken i stedet.',

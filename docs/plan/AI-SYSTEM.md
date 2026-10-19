@@ -1,5 +1,9 @@
 # One AI system for every Loppa — the plan
 
+> **2026-10-19:** the owner decided on **one** model for everything, Qwen2.5-VL-7B-Instruct (Apache-2.0), run by
+> a pinned `llama-server`; sections 1, 2 (D2) and 5 below describe the two-model plan it replaces. See ADR 0025
+> for the decision, the measurements and the size consequences (an AI pack beside the app).
+
 **Status:** accepted 2026-10-14. The owner left the model choice to the project's judgement and asked that neither model be ruled out: both stay, routed by task; the text model is the default for every text task, the vision model is used only to read pages; unification (D2) happens only if measured to be better. Phases 1 and 2 start together. Planning only: nothing in this file has been built.
 Written after reading the owner's brief (a visual document reader, the text model, an email reply
 helper, one coordinator) and checking the repository, the files the owner placed in it, the

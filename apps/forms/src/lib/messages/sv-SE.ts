@@ -1443,6 +1443,9 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'hittad i den här kopians översta mapp',
   'ai.models.source.remembered': 'öppnad från disken',
   'ai.models.source.user-data': 'i Loppas modellmapp',
+  'ai.models.source.ai-pack': 'hittad i AI-paketet bredvid Loppa',
+  'ai.models.needs':
+    'Kräver en dator med minst 12 GB minne och cirka 10 GB ledigt medan den körs. På en mindre dator startar den inte.',
   'ai.models.hash.verified': 'kontrollerad',
   'ai.models.hash.unchecked': 'inte kontrollerad ännu (den kontrolleras före första användningen)',
   'ai.models.hash.unpinned': 'ingen kontrollsumma att jämföra med',
@@ -1478,7 +1481,7 @@ export const svSE: Record<MessageKey, string> = {
     'Den här datorn har {free} GB ledigt minne och modellen behöver ungefär {need} GB. Stäng andra program och försök igen.',
   'summary.get': 'Hämta modellen',
   'summary.getConfirm':
-    'Det här hämtar {size} från Loppas utgåva på GitHub, i två delar, och kontrollerar dem. Det tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
+    'Det här hämtar {size} från Loppas utgåva på GitHub och kontrollerar dem. Det tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
   'summary.getConfirmYes': 'Hämta',
   'summary.getOff':
     'Hämtningen är inte tillgänglig än: modellen är inte publicerad. Du kan öppna en modellfil från disken i stället.',

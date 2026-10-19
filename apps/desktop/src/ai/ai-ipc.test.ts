@@ -82,10 +82,10 @@ describe('the AI IPC', () => {
   it('starts a download only on consent that is exactly true, for a plain model id', async () => {
     const { handlers, coordinator } = harness();
     const install = handlers.get(AI_CHANNELS.install)!;
-    await install(forms, 'qwen3-4b-instruct-2507-q4_k_m', true);
-    expect(coordinator.install).toHaveBeenLastCalledWith('qwen3-4b-instruct-2507-q4_k_m', true);
-    await install(forms, 'qwen3-4b-instruct-2507-q4_k_m', 'yes');
-    expect(coordinator.install).toHaveBeenLastCalledWith('qwen3-4b-instruct-2507-q4_k_m', false);
+    await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', true);
+    expect(coordinator.install).toHaveBeenLastCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', true);
+    await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', 'yes');
+    expect(coordinator.install).toHaveBeenLastCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', false);
     await install(forms, '../../etc', true);
     await install(forms, 7, true);
     expect(coordinator.install).toHaveBeenCalledTimes(2);

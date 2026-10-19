@@ -44,9 +44,10 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
 5. **Invoice scan:** optical reading (on-device tesseract) then deterministic rules for amount,
    due date, bank number and payment reference, checked by the reference's check digit, asking
    when unsure. Not to be confused with the Swedish "OCR number" in `invoicing/ocr.ts`.
-6. **Summary and translation:** one model, Qwen3-4B-Instruct-2507, desktop only, downloaded on
-   request, never in the installer. Apache-2.0 and the ~2.5 GB size are from secondary sources:
-   confirm on the model card first. Contracts, consents, declarations and clinical forms are
+6. **Summary and translation:** one model for everything, Qwen2.5-VL-7B-Instruct (Q4_K_M, with its
+   projector; Apache-2.0; about 6 GB), desktop only, run by a pinned `llama-server`, shipped as an AI
+   pack beside the app and never in the installer (ADR 0025). It needs 12 GB of memory or more; an
+   8 GB laptop cannot run it. Contracts, consents, declarations and clinical forms are
    quoted, never reworded or translated (rule 8, ADR 0012).
 7. **Order** was left to Claude: below.
 

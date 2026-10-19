@@ -5,6 +5,7 @@
  */
 export * from './capability.js';
 export * from './manifest.js';
+export * from './runtime.js';
 export * from './task.js';
 export * from './document.js';
 export * from './cache-key.js';

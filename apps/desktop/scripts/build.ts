@@ -11,11 +11,10 @@
  * Unpackaged, `pnpm --filter @tp/desktop start` runs Electron on the stage directly.
  */
 import { execFileSync } from 'node:child_process';
-import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { build } from 'esbuild';
-import { toPrune } from '../src/packaging/model-runtime.js';
 import { macSigningPlan } from '../src/packaging/signing.js';
 
 const root = resolve(import.meta.dirname, '..');
@@ -69,28 +68,11 @@ async function exists(path: string): Promise<boolean> {
 }
 
 /**
- * The summary model's runtime, as plain files in `.stage/model/` (shipped as an extra resource,
- * like `web` and `drizzle`), and not inside the asar. A utility process started from there
- * resolves `node-llama-cpp` and loads its native binary by ordinary paths, with no asar
- * redirection to get right (ADR 0023 section 2). `node-llama-cpp` is left out of the worker's
- * bundle: it finds its binaries and `llama/` folder relative to itself.
- *
- * Installed with `--ignore-scripts` (its postinstall only reports on GPU builds, and we build
- * none), then pruned to the CPU package of this platform and without the 35 MB source bundle.
+ * The window's bridge to the AI coordinator. The model itself is not built here: it is run by a
+ * separate program, `llama-server`, which with the model's files comes in the AI pack beside the
+ * app and not in the installer (ADR 0025).
  */
-async function buildModelRuntime(): Promise<void> {
-  const dir = join(stage, 'model');
-  await mkdir(dir, { recursive: true });
-  await build({
-    entryPoints: [join(root, 'src', 'ai', 'text', 'worker.ts')],
-    outfile: join(dir, 'worker.mjs'),
-    bundle: true,
-    platform: 'node',
-    format: 'esm',
-    target: 'node22',
-    external: ['electron', 'node-llama-cpp'],
-    logLevel: 'warning',
-  });
+async function buildModelPreload(): Promise<void> {
   await build({
     entryPoints: [join(root, 'src', 'ai', 'preload.ts')],
     outfile: join(stage, 'model-preload.cjs'),
@@ -101,31 +83,6 @@ async function buildModelRuntime(): Promise<void> {
     external: ['electron'],
     logLevel: 'warning',
   });
-  await writeFile(
-    join(dir, 'package.json'),
-    JSON.stringify(
-      {
-        name: 'loppa-model',
-        private: true,
-        type: 'module',
-        dependencies: { 'node-llama-cpp': versionOf('node-llama-cpp', root) },
-      },
-      null,
-      2,
-    ),
-  );
-  execFileSync('npm', ['install', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund'], {
-    cwd: dir,
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-  });
-  const modules = join(dir, 'node_modules');
-  const installed = (await readdir(join(modules, '@node-llama-cpp'))).map(
-    (name) => `@node-llama-cpp/${name}`,
-  );
-  for (const path of toPrune(installed, process.platform, process.arch)) {
-    await rm(join(modules, path), { recursive: true, force: true });
-  }
 }
 
 async function main(): Promise<void> {
@@ -176,7 +133,7 @@ async function main(): Promise<void> {
     logLevel: 'warning',
   });
 
-  await buildModelRuntime();
+  await buildModelPreload();
 
   execFileSync('pnpm', ['exec', 'vite', 'build', '--logLevel', 'warn'], {
     cwd: root,

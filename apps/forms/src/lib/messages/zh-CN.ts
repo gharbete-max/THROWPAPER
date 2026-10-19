@@ -1373,6 +1373,9 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.source.repo-root': '在此副本的顶层文件夹中找到',
   'ai.models.source.remembered': '从磁盘打开',
   'ai.models.source.user-data': '在 Loppa 的模型文件夹中',
+  'ai.models.source.ai-pack': '在 Loppa 旁边的 AI 包中找到',
+  'ai.models.needs':
+    '需要至少 12 GB 内存的电脑，运行时约需 10 GB 可用内存。内存更小的电脑无法启动。',
   'ai.models.hash.verified': '已校验',
   'ai.models.hash.unchecked': '尚未校验（首次使用前会校验）',
   'ai.models.hash.unpinned': '没有可比对的校验和',
@@ -1406,7 +1409,7 @@ export const zhCN: Record<MessageKey, string> = {
     '这台电脑有 {free} GB 可用内存，而模型大约需要 {need} GB。请关闭其他程序后重试。',
   'summary.get': '获取模型',
   'summary.getConfirm':
-    '这将从 GitHub 上 Loppa 的发布页分两部分下载 {size} 并进行校验，会占用相应的磁盘空间。你的文档不会被发送到任何地方。继续吗？',
+    '这将从 GitHub 上 Loppa 的发布页下载 {size} 并进行校验，会占用相应的磁盘空间。你的文档不会被发送到任何地方。继续吗？',
   'summary.getConfirmYes': '下载',
   'summary.getOff': '暂时无法下载：模型尚未发布。你可以改为从磁盘打开模型文件。',
   'summary.open': '从磁盘打开模型文件',

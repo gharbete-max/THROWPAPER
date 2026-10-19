@@ -27,59 +27,56 @@ export function fakeBridge() {
     requiredMemoryBytes: 5e9,
     activity: 'idle',
   });
-  // `window.loppaAi` (ADR 0024): the same two models the shell registers, one text and one
-  // evaluation-only vision model that nothing can run yet. Installing is the same state as above.
-  const model = (id: string, name: string, vision: boolean) => ({
-    id,
-    name,
-    capabilities: [vision ? 'vision' : 'text'],
-    state: vision ? 'evaluation-only' : state.installed ? 'installed' : 'missing',
-    available: !vision,
-    licence: vision ? 'Qwen-Research' : 'Apache-2.0',
+  // `window.loppaAi` (ADR 0025): the one model the shell registers, with its projector, and the
+  // program that runs it. Installing is the same state as above.
+  const model = () => ({
+    id: 'qwen2.5-vl-7b-instruct-q4_k_m',
+    name: 'Qwen2.5-VL-7B-Instruct (Q4_K_M)',
+    capabilities: ['text', 'vision'],
+    state: state.installed ? 'installed' : 'missing',
+    available: true,
+    licence: 'Apache-2.0',
     licenceUrl: 'https://example.test/licence',
-    distributable: !vision,
-    evaluationOnly: vision,
-    label: vision ? 'unverified-licence' : null,
-    bytes: vision ? 2774658784 : bytes,
-    requiredMemoryBytes: 5e9,
-    files: vision
-      ? [
-          {
-            role: 'weights',
-            name: 'Qwen2.5-VL.gguf',
-            bytes: 1929901056,
-            path: 'C:\\repo\\Qwen2.5-VL.gguf',
-            source: 'repo-root',
-            hash: 'unchecked',
-          },
-          {
-            role: 'projector',
-            name: 'mmproj.gguf',
-            bytes: 844757728,
-            path: null,
-            source: null,
-            hash: 'missing',
-          },
-        ]
-      : [
-          {
-            role: 'weights',
-            name: 'qwen3.gguf',
-            bytes,
-            path: state.installed ? 'C:\\Models\\fake.gguf' : null,
-            source: state.installed ? 'remembered' : null,
-            hash: state.installed ? 'verified' : 'missing',
-          },
-        ],
-    downloadBlocked: vision ? 'evaluation-only' : 'the release has not been cut yet',
+    distributable: true,
+    evaluationOnly: false,
+    label: null,
+    bytes,
+    requiredMemoryBytes: 10e9,
+    files: [
+      {
+        role: 'weights',
+        name: 'qwen-vl.gguf',
+        bytes,
+        path: state.installed ? 'C:\\Models\\fake.gguf' : null,
+        source: state.installed ? 'remembered' : null,
+        hash: state.installed ? 'verified' : 'missing',
+      },
+      {
+        role: 'projector',
+        name: 'mmproj.gguf',
+        bytes: 1354162912,
+        path: state.installed ? 'C:\\Models\\mmproj.gguf' : null,
+        source: state.installed ? 'remembered' : null,
+        hash: state.installed ? 'verified' : 'missing',
+      },
+    ],
+    downloadBlocked: 'the release has not been cut yet',
     folder: 'C:\\Users\\me\\AppData\\Roaming\\Loppa\\models',
     resident: false,
   });
   const aiStatus = () => ({
-    models: [model('qwen3', 'Qwen3-4B', false), model('qwen-vl', 'Qwen2.5-VL-3B', true)],
+    models: [model()],
     freeMemoryBytes: 16e9,
     activity: 'idle',
     queued: 0,
+    runtime: {
+      role: 'runtime',
+      name: 'llama.cpp llama-server b11741',
+      bytes: 19708452,
+      path: 'C:\\Loppa\\ai-pack',
+      source: 'ai-pack',
+      hash: 'verified',
+    },
     cache: { entries: 0, bytes: 0, maxBytes: 64e6 },
   });
   // The email reply helper's four kinds, answered like the real pipeline would: a draft with a

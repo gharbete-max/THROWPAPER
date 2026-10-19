@@ -1495,6 +1495,9 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'gefunden im obersten Ordner dieser Kopie',
   'ai.models.source.remembered': 'von der Festplatte geöffnet',
   'ai.models.source.user-data': 'im Modellordner von Loppa',
+  'ai.models.source.ai-pack': 'im KI-Paket neben Loppa gefunden',
+  'ai.models.needs':
+    'Benötigt einen Computer mit mindestens 12 GB Arbeitsspeicher, davon etwa 10 GB frei, solange es läuft. Auf einem kleineren Computer startet es nicht.',
   'ai.models.hash.verified': 'geprüft',
   'ai.models.hash.unchecked': 'noch nicht geprüft (sie wird vor der ersten Benutzung geprüft)',
   'ai.models.hash.unpinned': 'keine Prüfsumme zum Vergleichen',
@@ -1530,7 +1533,7 @@ export const deDE: Record<MessageKey, string> = {
     'Dieser Computer hat {free} GB freien Speicher, das Modell braucht etwa {need} GB. Schließen Sie andere Programme und versuchen Sie es erneut.',
   'summary.get': 'Modell herunterladen',
   'summary.getConfirm':
-    'Dies lädt {size} aus dem Loppa-Release auf GitHub in zwei Teilen herunter und prüft sie. Es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
+    'Dies lädt {size} aus dem Loppa-Release auf GitHub herunter und prüft sie. Es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
   'summary.getConfirmYes': 'Herunterladen',
   'summary.getOff':
     'Der Download ist noch nicht verfügbar: Das Modell ist nicht veröffentlicht. Sie können stattdessen eine Modelldatei von der Festplatte öffnen.',

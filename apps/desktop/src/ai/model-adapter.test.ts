@@ -8,41 +8,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultCache } from './cache.js';
 import { createCoordinator, type CoordinatorDeps } from './coordinator.js';
 import { FakeEngine } from './engines/fake-engine.js';
-import { NodeLlamaEngine, type WorkerHandle } from './engines/node-llama-engine.js';
 import { createModelAdapter, type ModelService } from './model-adapter.js';
-import { FakeTextEngine, type FakeBehaviour } from './text/fake-text-engine.js';
-import { createWorker, type FromWorker, type ToWorker } from './text/worker-core.js';
+import type { FakeBehaviour } from './text/fake-text-engine.js';
 
 /**
  * The summary centre's `window.loppaModel` behaviour, as it was before the coordinator existed
  * (this file is `service.test.ts` moved, not rewritten): the same cases, answered by the adapter
- * over a coordinator, with the real worker protocol in memory around a fake language model.
+ * over a coordinator, around the fake engine (the same pipeline, a fake language model).
  */
 const sha = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
 
-/** The worker process, in memory, around a fake engine: the same message protocol as the real one. */
-function memoryWorker(behaviour: FakeBehaviour = {}) {
-  const spawned: Array<{ killed: boolean; messages: ToWorker[] }> = [];
-  const spawn = (): WorkerHandle => {
-    const listeners: Array<(m: FromWorker) => void> = [];
-    const record = { killed: false, messages: [] as ToWorker[] };
-    spawned.push(record);
-    const handle = createWorker({ post: (m) => listeners.forEach((l) => l(m)) }, () =>
-      Promise.resolve(new FakeTextEngine(behaviour)),
-    );
-    return {
-      post: (m) => {
-        record.messages.push(m);
-        void handle(m);
-      },
-      onMessage: (l) => listeners.push(l),
-      onExit: () => undefined,
-      kill: () => {
-        record.killed = true;
-      },
-    };
+/** The engines the coordinator made, counted: one per load of the model. */
+function memoryEngines(behaviour: FakeBehaviour = {}) {
+  const spawned: FakeEngine[] = [];
+  const make = () => {
+    const engine = new FakeEngine({ behaviour });
+    spawned.push(engine);
+    return engine;
   };
-  return { spawn, spawned };
+  return { make, spawned };
 }
 
 let dir = '';
@@ -83,11 +67,11 @@ function setup(
 ) {
   const { manifest, bytes } = small(overrides.published);
   const events: ModelEvent[] = [];
-  const memory = memoryWorker(overrides.behaviour);
+  const memory = memoryEngines(overrides.behaviour);
   const chosen = { path: null as string | null };
   const coordinator = createCoordinator({
     registry: [manifest],
-    engines: { [manifest.id]: (files) => new NodeLlamaEngine(memory.spawn, files.weights) },
+    engines: { [manifest.id]: memory.make },
     dir: join(dir, 'models'),
     env: {},
     repoRoot: null,
@@ -202,7 +186,7 @@ async function installed(ctx: ReturnType<typeof setup>) {
 }
 
 describe('a job', () => {
-  it('goes through the worker and ends with done, then the worker is released when idle', async () => {
+  it('goes through the engine and ends with done, then the engine is released when idle', async () => {
     const ctx = setup({ idleMs: 30 });
     await installed(ctx);
     expect(await ctx.service.start('job-1', JOB)).toEqual({ ok: true, id: 'job-1' });
@@ -211,8 +195,7 @@ describe('a job', () => {
     expect(kinds.indexOf('step')).toBeLessThan(kinds.indexOf('text'));
     expect(kinds.at(-1)).toBe('done');
     expect(ctx.memory.spawned).toHaveLength(1);
-    await vi.waitFor(() => expect(ctx.memory.spawned[0]!.killed).toBe(true), { timeout: 2000 });
-    expect(ctx.memory.spawned[0]!.messages.map((m) => m.type)).toContain('dispose');
+    await vi.waitFor(() => expect(ctx.memory.spawned[0]!.disposed).toBe(true), { timeout: 2000 });
   });
 
   it('loads the model once for several jobs', async () => {
@@ -223,7 +206,7 @@ describe('a job', () => {
       await ctx.until((e) => e.kind === 'done' && e.id === id);
     }
     expect(ctx.memory.spawned).toHaveLength(1);
-    expect(ctx.memory.spawned[0]!.messages.filter((m) => m.type === 'load')).toHaveLength(1);
+    expect(ctx.memory.spawned[0]!.loaded).toBe(true);
   });
 
   it('refuses a second job while one runs', async () => {
@@ -273,28 +256,16 @@ describe('a job', () => {
     expect((await ctx.service.status()).freeMemoryBytes).toBe(1_000_000_000);
   });
 
-  it('reports a worker that cannot load the model', async () => {
+  it('reports an engine that cannot load the model', async () => {
     const ctx = setup();
     await installed(ctx);
-    const spawn = (): WorkerHandle => {
-      const listeners: Array<(m: FromWorker) => void> = [];
-      return {
-        post: (m) => {
-          if (m.type === 'load')
-            listeners.forEach((l) =>
-              l({ type: 'load-failed', problem: 'cannot-start', detail: 'no binary' }),
-            );
-        },
-        onMessage: (l) => listeners.push(l),
-        onExit: () => undefined,
-        kill: () => undefined,
-      };
-    };
     const events: ModelEvent[] = [];
     const failing = createModelAdapter(
       createCoordinator({
         registry: [ctx.manifest],
-        engines: { [ctx.manifest.id]: (files) => new NodeLlamaEngine(spawn, files.weights) },
+        engines: {
+          [ctx.manifest.id]: () => new FakeEngine({ loadError: 'cannot-start' }),
+        },
         dir: join(dir, 'models'),
         env: {},
         repoRoot: null,
@@ -358,7 +329,7 @@ describe('the fake mode CI runs', () => {
       installed: true,
       verified: true,
       location: null,
-      downloadBlocked: null,
+      downloadBlocked: 'the AI pack has not been published yet',
     });
     await service.start('f', JOB);
     await vi.waitFor(() =>

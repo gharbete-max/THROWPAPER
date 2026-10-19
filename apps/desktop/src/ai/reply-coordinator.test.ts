@@ -69,7 +69,7 @@ const textOf = (events: AiEvent[], id: string) =>
   events.filter((e) => e.id === id && e.kind === 'text').at(-1);
 
 describe('the reply helper through the coordinator', () => {
-  it('runs on the text model alone, streams a draft and ends with its warnings', async () => {
+  it('runs on the one model, streams a draft and ends with its warnings', async () => {
     const { coordinator, events, made, settled } = setup();
     expect(await coordinator.run('r1', TASK)).toEqual({ ok: true, id: 'r1' });
     await settled('r1');
@@ -79,12 +79,8 @@ describe('the reply helper through the coordinator', () => {
     expect(text).toMatchObject({ kind: 'text', mode: 'replace' });
     expect((text as { text: string }).text).toContain('[date?]');
     expect(events.find((e) => e.id === 'r1' && e.kind === 'done')).toMatchObject({ warnings: [] });
-    // Only the text model exists: nothing for a vision model was asked of anyone.
-    expect(
-      (await coordinator.status()).models.filter(
-        (m) => m.capabilities.includes('vision') && m.available,
-      ),
-    ).toEqual([]);
+    // One model serves text and pictures (ADR 0025); no picture was asked of it.
+    expect((await coordinator.status()).models).toHaveLength(1);
   });
 
   it('works on a draft: shorter, translate and revise each come back changed', async () => {

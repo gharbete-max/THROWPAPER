@@ -12,6 +12,9 @@ import {
   cacheKey,
   capabilityOf,
   findModel,
+  LLAMA_SERVER,
+  RuntimeManifest,
+  runtimeAssetFor,
   isDownloadable,
   modelsFor,
   parseRegistry,
@@ -20,40 +23,64 @@ import {
 } from './index.js';
 
 const HERE = new URL('.', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-const VISION = findModel('qwen2.5-vl-3b-instruct-q4_k_m')!;
+/** A made-up model under a research licence: the registry holds none now, the rule still stands. */
+const VISION = ModelManifest.parse({
+  capabilities: ['vision'],
+  distributable: false,
+  evaluationOnly: true,
+  files: [
+    { bytes: 100, name: 'eval.gguf', parts: [], role: 'weights', sha256: 'a'.repeat(64) },
+    { bytes: 50, name: 'eval-proj.gguf', parts: [], role: 'projector', sha256: 'b'.repeat(64) },
+  ],
+  id: 'eval-model',
+  kind: 'eval',
+  licence: 'Qwen-Research',
+  licenceUrl: 'https://example.test/licence',
+  name: 'Evaluation model',
+  requiredMemoryBytes: 1,
+  retrievedAt: '2026-10-19',
+  source: 'https://example.test/',
+  sourceRevision: 'x',
+});
 
-describe('the text model manifest', () => {
-  it('holds the values the owner chose and the spike measured', () => {
+describe('the model manifest', () => {
+  it('holds the one model the owner chose, with the hashes of the files he placed', () => {
+    expect(MODEL_REGISTRY).toHaveLength(1);
     expect(TEXT_MODEL).toMatchObject({
-      id: 'qwen3-4b-instruct-2507-q4_k_m',
+      id: 'qwen2.5-vl-7b-instruct-q4_k_m',
       licence: 'Apache-2.0',
-      capabilities: ['text'],
+      capabilities: ['text', 'vision'],
       distributable: true,
       evaluationOnly: false,
-      requiredMemoryBytes: 5_000_000_000,
-      retrievedAt: '2026-10-13',
+      requiredMemoryBytes: 10_000_000_000,
+      retrievedAt: '2026-10-19',
     });
-    const [file] = TEXT_MODEL.files;
-    expect(file).toMatchObject({
-      name: 'qwen3-4b-instruct-2507-q4_k_m.gguf',
-      bytes: 2497281120,
-      sha256: '3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597',
+    const [weights, projector] = TEXT_MODEL.files;
+    expect(weights).toMatchObject({
+      role: 'weights',
+      name: 'Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf',
+      bytes: 4683072032,
+      sha256: '9258bf05b12686d097ff3b6b18d968ab393649780aa2b3cd67fec43d50554392',
     });
-    expect(file!.parts.map((p) => p.bytes)).toEqual([1248640560, 1248640560]);
-    expect(file!.parts.map((p) => p.sha256)).toEqual([
-      '03377c7b7cdc673232fc6fa7455a5d06e9f9abf7f88840e43ac1273a167ff67c',
-      '4b589d9775c55bb47df28d73b480e06d7d80a4b0f27d3672f15ef078b14b7a38',
-    ]);
-    expect(totalBytes(TEXT_MODEL)).toBe(2497281120);
+    expect(projector).toMatchObject({
+      role: 'projector',
+      name: 'mmproj-Qwen2.5-VL-7B-Instruct-f16.gguf',
+      bytes: 1354162912,
+      sha256: 'c24a7f5fcfc68286f0a217023b6738e73bea4f11787a43e8238d4bb1b8604cde',
+    });
+    expect(weights!.parts.map((p) => p.bytes)).toEqual([1610612736, 1610612736, 1461846560]);
+    expect(totalBytes(TEXT_MODEL)).toBe(4683072032 + 1354162912);
   });
 
   it('keeps each part under the 2 GiB release-asset limit', () => {
-    for (const part of TEXT_MODEL.files[0]!.parts) expect(part.bytes).toBeLessThan(2 * 1024 ** 3);
+    for (const file of TEXT_MODEL.files) {
+      for (const part of file.parts) expect(part.bytes).toBeLessThan(2 * 1024 ** 3);
+    }
   });
 
-  it('is released, so the download is on', () => {
-    expect(unpublishedReason(TEXT_MODEL)).toBeNull();
-    expect(isDownloadable(TEXT_MODEL)).toBe(true);
+  it('is not downloadable yet: the AI pack has not been published, and the manifest says so', () => {
+    expect(unpublishedReason(TEXT_MODEL)).toBe('the AI pack has not been published yet');
+    expect(isDownloadable(TEXT_MODEL)).toBe(false);
   });
 });
 
@@ -83,7 +110,7 @@ describe('the registry', () => {
   it('finds models by id and by capability', () => {
     expect(findModel('nope')).toBeUndefined();
     expect(modelsFor('text').map((m) => m.id)).toEqual([TEXT_MODEL.id]);
-    expect(modelsFor('vision').map((m) => m.id)).toEqual([VISION.id]);
+    expect(modelsFor('vision').map((m) => m.id)).toEqual([TEXT_MODEL.id]);
   });
 
   it('refuses two models with one id', () => {
@@ -128,8 +155,14 @@ describe('the registry', () => {
   });
 
   it('accepts a model of several files: weights and a projector', () => {
-    expect(VISION.files.map((f) => f.role)).toEqual(['weights', 'projector']);
-    expect(totalBytes(VISION)).toBe(1929901056 + 844757728);
+    expect(TEXT_MODEL.files.map((f) => f.role)).toEqual(['weights', 'projector', 'projector-lite']);
+    // The lighter projector is optional: it is not part of what a download costs.
+    expect(TEXT_MODEL.files[2]).toMatchObject({
+      optional: true,
+      bytes: 853119712,
+      sha256: '2ddb555391bae966e412deab9e07b58afa18bcc06930ba0f1c78a3695ab9e506',
+    });
+    expect(totalBytes(VISION)).toBe(150);
   });
 
   it('takes a single part as the whole file, with its hash', () => {
@@ -152,7 +185,7 @@ describe('the registry', () => {
 });
 
 describe('an evaluation-only model', () => {
-  it('is Qwen2.5-VL under a research licence: not distributable, never downloadable', () => {
+  it('under a research licence is not distributable and never downloadable', () => {
     expect(VISION).toMatchObject({
       evaluationOnly: true,
       distributable: false,
@@ -167,7 +200,11 @@ describe('an evaluation-only model', () => {
   });
 
   it('cannot carry a download address', () => {
-    const file = { ...VISION.files[0]!, parts: TEXT_MODEL.files[0]!.parts };
+    const file = {
+      ...VISION.files[0]!,
+      bytes: TEXT_MODEL.files[0]!.bytes,
+      parts: TEXT_MODEL.files[0]!.parts,
+    };
     expect(ModelManifest.safeParse({ ...VISION, files: [file] }).success).toBe(false);
   });
 
@@ -179,7 +216,9 @@ describe('an evaluation-only model', () => {
   });
 
   it('is never offered as the licence of a distributable model', () => {
-    for (const m of MODEL_REGISTRY) if (m.evaluationOnly) expect(m.distributable).toBe(false);
+    for (const m of [...MODEL_REGISTRY, VISION]) {
+      if (m.evaluationOnly) expect(m.distributable).toBe(false);
+    }
   });
 });
 
@@ -325,5 +364,42 @@ describe('the structured document', () => {
       StructuredDocument.safeParse(doc([{ ...ok, blocks: [block] }])).success;
     expect(bad({ type: 'video', ...common })).toBe(false);
     expect(bad({ type: 'paragraph', text: 'x', ...common, confidence: 1.5 })).toBe(false);
+  });
+});
+
+describe('the runtime manifest', () => {
+  it('pins a release of llama-server, MIT, with the hash of the archive for this computer', () => {
+    expect(LLAMA_SERVER).toMatchObject({ id: 'llama-server', tag: 'b11741', licence: 'MIT' });
+    const win = runtimeAssetFor('win32', 'x64')!;
+    expect(win).toMatchObject({
+      name: 'llama-b11741-bin-win-cpu-x64.zip',
+      bytes: 19708452,
+      sha256: '2f86ad2fb6e118aedf3b319c554a6ba14bc6888b2d0ff9135e81fb0201da807e',
+      entry: 'llama-server.exe',
+      verified: true,
+    });
+    expect(win.contents.some((c) => c.name === 'llama-server-impl.dll')).toBe(true);
+  });
+
+  it('marks every platform that was not run here as UNVERIFIED, with no contents list', () => {
+    for (const asset of LLAMA_SERVER.assets) {
+      if (asset.platform !== 'win32-x64') {
+        expect(asset.verified, asset.platform).toBe(false);
+        expect(asset.contents, asset.platform).toEqual([]);
+      }
+    }
+    expect(runtimeAssetFor('freebsd', 'x64')).toBeUndefined();
+  });
+
+  it('is refused when it is inconsistent', () => {
+    const win = runtimeAssetFor('win32', 'x64')!;
+    const parse = (patch: object) =>
+      RuntimeManifest.safeParse({ ...LLAMA_SERVER, ...patch }).success;
+    expect(parse({})).toBe(true);
+    expect(parse({ tag: 'b1' })).toBe(false); // assets are from another tag
+    expect(parse({ assets: [win, win] })).toBe(false); // one platform twice
+    expect(parse({ assets: [{ ...win, contents: [] }] })).toBe(false); // verified, no program listed
+    expect(parse({ assets: [{ ...win, verified: false }] })).toBe(false); // unverified with a list
+    expect(parse({ assets: [{ ...win, url: 'https://example.com/x.zip' }] })).toBe(false);
   });
 });

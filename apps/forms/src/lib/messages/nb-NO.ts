@@ -1437,6 +1437,9 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.source.repo-root': 'funnet i denne kopiens øverste mappe',
   'ai.models.source.remembered': 'åpnet fra disken',
   'ai.models.source.user-data': 'i Loppas modellmappe',
+  'ai.models.source.ai-pack': 'funnet i AI-pakken ved siden av Loppa',
+  'ai.models.needs':
+    'Krever en datamaskin med minst 12 GB minne og omtrent 10 GB ledig mens den kjører. På en mindre datamaskin starter den ikke.',
   'ai.models.hash.verified': 'kontrollert',
   'ai.models.hash.unchecked': 'ikke kontrollert ennå (den kontrolleres før første bruk)',
   'ai.models.hash.unpinned': 'ingen kontrollsum å sammenligne med',
@@ -1472,7 +1475,7 @@ export const nbNO: Record<MessageKey, string> = {
     'Denne datamaskinen har {free} GB ledig minne, og modellen trenger omtrent {need} GB. Lukk andre programmer og prøv igjen.',
   'summary.get': 'Hent modellen',
   'summary.getConfirm':
-    'Dette laster ned {size} fra Loppas utgivelse på GitHub, i to deler, og kontrollerer dem. Det tar så mye diskplass. Dokumentene dine sendes ingen steder. Fortsette?',
+    'Dette laster ned {size} fra Loppas utgivelse på GitHub og kontrollerer dem. Det tar så mye diskplass. Dokumentene dine sendes ingen steder. Fortsette?',
   'summary.getConfirmYes': 'Last ned',
   'summary.getOff':
     'Nedlastingen er ikke tilgjengelig ennå: modellen er ikke publisert. Du kan åpne en modellfil fra disken i stedet.',

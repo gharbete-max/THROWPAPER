@@ -27,7 +27,7 @@ list, not the phases.
 | The placeholders | **Inert and honest.** They float, are named, and say "Not built yet". They are not focusable and offer no button that does nothing. |
 | The room's look | **The room alone is dark grey**: a new grey token, not the derived dark's near-black. **Beneath each catcher is one of Loppa's own colours, made stronger** so it stands out against the grey (the owner's answer): gold beneath Documents, platinum beneath Spreadsheets, bronze beneath Presentation & planning. Each tool keeps today's look once its catcher opens, and the colours stay in the room. |
 | Earlier features | **Behind one switch, off by default:** events, registrations, check-in, attendance, the inbox, invoices and the ledger. Their code, tables and tests stay, and e2e runs with the switch on. Mailer is parked. Nothing is deleted. |
-| The centre | **Summary and translation in all twelve of Loppa's languages** (the owner's answer), by one model: **Qwen3-4B-Instruct-2507** (Apache-2.0, Q4_K_M, 2,497,281,120 bytes, non-thinking; the owner's decision of 2026-10-13: only the slower, more accurate model). It is a separate model file, downloaded once on request from Loppa's GitHub release or opened from disk, and never inside the installer. |
+| The centre | **Summary and translation in all twelve of Loppa's languages** (the owner's answer), by one model for everything: **Qwen2.5-VL-7B-Instruct** (Apache-2.0, Q4_K_M with its f16 projector, 4,683,072,032 + 1,354,162,912 bytes; the owner's decision of 2026-10-19, replacing Qwen3-4B-Instruct-2507). It reads pictures of pages as well as writing summaries, translations and replies, is run by a pinned `llama-server`, and is a separate AI pack placed beside the app, opened from disk or found in a development folder, never inside the installer (ADR 0025). It needs 12 GB of memory or more. |
 | What the centre reads of a form | **Both:** a blank form's labels and a filled form's answers. |
 | Contracts, consents, declarations and clinical forms | **Quoted, never reworded or translated.** For these the centre picks passages and quotes them in the original language (rule 8, ADR 0012). |
 | How the centre is shown | **Beside the document**, labelled as generated, never stored, and never written into the document. |
@@ -254,7 +254,8 @@ Icelandic, Japanese, Norwegian Bokmål, Russian, Swedish and Chinese (`apps/form
   Icelandic is the likeliest to fall short (UNVERIFIED). A language that fails S1's bar offers no
   summary or translation in it, and says why, rather than a poor one.
 
-**Model.**
+**Model.** *(Superseded 2026-10-19 by ADR 0025: one model, Qwen2.5-VL-7B-Instruct, run by `llama-server`; the
+Qwen3-4B and `node-llama-cpp` text below is the earlier plan, kept as history.)*
 - **The model:** Qwen3-4B-Instruct-2507, Q4_K_M (Apache-2.0). The owner chose it alone on 2026-10-13;
   the smaller Qwen3 sizes and DeepSeek-R1-Distill are not carried.
 - **Excluded by licence:** Qwen2.5-3B and 72B, and models under the DeepSeek or Llama licences.

@@ -57,7 +57,9 @@ Its centre:
 - **Summary and translation** — an open-source AI model, such as one from the Qwen or DeepSeek
   families, run **locally and offline**, **only large enough to properly summarise documents, PDFs
   and forms**, in **all the languages Loppa has so far** (twelve), and, if it fits, translating
-  them too: "a summary/translation tool".
+  them too: "a summary/translation tool". Decided 2026-10-19 (ADR 0025): one model,
+  Qwen2.5-VL-7B-Instruct, which also reads pictures of pages; it needs a computer with 12 GB of memory
+  or more and is a separate pack of about 6 GB.
 
 **Editing is the basics, not Acrobat.** Everything is boiled down to the most-used features. The
 basics the session proposed and the owner confirmed ("Now you get it!") are: putting files
@@ -117,7 +119,7 @@ change:
   locally and offline.
 - **The bundle budget** (`pnpm bundle:budget`) still holds for Forms' web build. It does not measure
   the desktop download (211.5 MB zipped on Windows at `eea1774`, `docs/plan/DOCUMENTS.md` §8; ADR
-  0016 estimated about 206 MB) or a summary model.
+  0016 estimated about 206 MB) or the model (about 6 GB, a separate AI pack, ADR 0025).
 
 ## 10. Open, and the owner's to decide
 
