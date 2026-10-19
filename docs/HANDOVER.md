@@ -185,3 +185,7 @@ is a dev tool, not a dependency: Python, outside `package.json`, nothing in the 
 `docs/plan/DOCUMENTS.md` (the plan), `docs/adr/` (0022 the room, 0016 desktop, 0011 invoices),
 `docs/CONTRACT.md` (Forms to Sign), `docs/MODULE-STATUS.md` (re-measured at `2669716` at its top; the rest is history).
 `docs/PROGRESS.md` is a 3,500-line log: search it, never read it whole.
+
+## Decisions of 2026-10-20 (ADR 0026)
+
+Offline first; the network only on a confirmed action naming the host. Desktop is the product; hosted/site items block a hosted launch only. Campaign footer opens with a placeholder skeleton the sender must complete. The earlier-features switch is dropped; Mailer stays parked. Desktop backup excludes `secrets.json` (encrypted backup by passphrase to follow). The AI pack ships as parts under 2 GiB, opened from disk or fetched with a confirmation. Open follow-ups: footer skeleton, encrypted backup, AI pack distribution, AI page reader (in progress).
