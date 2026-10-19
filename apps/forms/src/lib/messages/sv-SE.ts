@@ -1673,6 +1673,8 @@ export const svSE: Record<MessageKey, string> = {
   'about.write': 'Skriv e-postmeddelandet',
   'about.spans':
     'E-postmeddelandet citerar inte dessa avsnitt: {spans}. Lägg till dem innan du skickar.',
+  'about.missing':
+    'E-postmeddelandet utelämnar dessa siffror från texten: {numbers}. Kontrollera att inget viktigt saknas.',
   'invoiceScan.heading': 'Läs en leverantörsfaktura',
   'invoiceScan.intro':
     'Välj ett foto, en skanning eller en PDF av en faktura du fått. Den läses på den här enheten och skickas ingen annanstans. Varje värde visas vid den plats där det hittades, och inget används förrän du bekräftat det.',

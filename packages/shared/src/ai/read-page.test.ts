@@ -50,6 +50,24 @@ describe('a page from what the model said', () => {
     expect(pageText(page)).toContain(' | B');
   });
 
+  it('puts tables that follow one another back together, whichever way the rows are counted', () => {
+    const row = (r: number, a: string, b: string) => ({
+      type: 'table',
+      cells: [
+        { row: r, column: 0, text: a },
+        { row: r, column: 1, text: b },
+      ],
+    });
+    for (const rows of [
+      [row(0, 'Region', 'Q1'), row(1, 'Norr', '120'), row(2, 'Syd', '310')],
+      [row(0, 'Region', 'Q1'), row(0, 'Norr', '120'), row(0, 'Syd', '310')],
+    ]) {
+      const page = pageFromModel(1, answer([{ type: 'heading', level: 1, text: 'T' }, ...rows]));
+      expect(page.blocks.map((b) => b.type)).toEqual(['heading', 'table']);
+      expect(pageText(page)).toBe('T\nRegion | Q1\nNorr | 120\nSyd | 310');
+    }
+  });
+
   it('drops empty and unknown blocks and keeps the rest', () => {
     const page = pageFromModel(
       1,

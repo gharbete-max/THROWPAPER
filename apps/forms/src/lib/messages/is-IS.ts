@@ -1680,6 +1680,8 @@ export const isIS: Record<MessageKey, string> = {
   'about.write': 'Skrifa tölvupóstinn',
   'about.spans':
     'Tölvupósturinn vitnar ekki í þessa kafla: {spans}. Bættu þeim við áður en þú sendir.',
+  'about.missing':
+    'Tölvupósturinn sleppir þessum tölum úr textanum: {numbers}. Athugaðu að ekkert mikilvægt vanti.',
   'invoiceScan.heading': 'Lesa birgjareikning',
   'invoiceScan.intro':
     'Veldu mynd, skönnun eða PDF af reikningi sem þú hefur fengið. Hann er lesinn í þessu tæki og fer hvergi. Hvert gildi er sýnt við þann stað sem það fannst á og ekkert er notað fyrr en þú hefur staðfest það.',

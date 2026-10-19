@@ -1715,6 +1715,8 @@ export const frFR: Record<MessageKey, string> = {
   'about.recipient': 'À (nom)',
   'about.write': 'Rédiger l’e-mail',
   'about.spans': 'L’e-mail ne cite pas ces passages : {spans}. Ajoutez-les avant d’envoyer.',
+  'about.missing':
+    'L’e-mail omet ces nombres du texte : {numbers}. Vérifiez qu’il ne manque rien d’important.',
   'invoiceScan.heading': 'Lire une facture fournisseur',
   'invoiceScan.intro':
     'Choisissez une photo, un scan ou un PDF d’une facture reçue. Elle est lue sur cet appareil et ne va nulle part. Chaque valeur est montrée à côté de l’endroit où elle a été trouvée, et rien n’est utilisé avant votre confirmation.',

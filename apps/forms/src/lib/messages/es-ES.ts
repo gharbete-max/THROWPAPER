@@ -1695,6 +1695,8 @@ export const esES: Record<MessageKey, string> = {
   'about.recipient': 'Para (nombre)',
   'about.write': 'Escribir el correo',
   'about.spans': 'El correo no cita estos pasajes: {spans}. Añádalos antes de enviar.',
+  'about.missing':
+    'El correo omite estos números del texto: {numbers}. Compruebe que no falte nada importante.',
   'invoiceScan.heading': 'Leer una factura de proveedor',
   'invoiceScan.intro':
     'Elija una foto, un escaneo o un PDF de una factura recibida. Se lee en este dispositivo y no va a ninguna parte. Cada valor se muestra junto al lugar donde se encontró, y no se usa nada hasta que lo confirme.',

@@ -1580,6 +1580,7 @@ export const zhCN: Record<MessageKey, string> = {
   'about.recipient': '收件人（姓名）',
   'about.write': '撰写邮件',
   'about.spans': '邮件没有引用以下段落：{spans}。请在发送前补上。',
+  'about.missing': '邮件遗漏了文本中的这些数字：{numbers}。请检查是否漏掉了重要内容。',
   'invoiceScan.heading': '读取供应商发票',
   'invoiceScan.intro':
     '请选择收到的发票的照片、扫描件或 PDF。读取在本设备上进行，不会发送到任何地方。每个值都显示在找到它的位置旁边，在您确认之前不会使用任何内容。',

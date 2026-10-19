@@ -1667,6 +1667,8 @@ export const nbNO: Record<MessageKey, string> = {
   'about.recipient': 'Til (navn)',
   'about.write': 'Skriv e-posten',
   'about.spans': 'E-posten siterer ikke disse avsnittene: {spans}. Legg dem til før du sender.',
+  'about.missing':
+    'E-posten utelater disse tallene fra teksten: {numbers}. Kontroller at ingenting viktig mangler.',
   'invoiceScan.heading': 'Les en leverandørfaktura',
   'invoiceScan.intro':
     'Velg et bilde, en skanning eller en PDF av en faktura du har mottatt. Den leses på denne enheten og sendes ingen steder. Hver verdi vises ved stedet der den ble funnet, og ingenting brukes før du har bekreftet det.',

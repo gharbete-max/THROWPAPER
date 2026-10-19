@@ -98,14 +98,16 @@ describe('numbers the source does not have', () => {
     expect(doubts[0]).toMatchObject({ kind: 'factual-doubt', fix: null });
     expect(text.slice(doubts[0]!.start, doubts[0]!.end)).toBe('150');
   });
-  it('are not repeated inside an issue the model already raised', () => {
+  it('outrank a model issue on the same words, so a reword does not hide them', () => {
     const text = 'About 150 members came.';
     const verified = verifyIssues(
       text,
-      raw({ span: '150 members', kind: 'factual-doubt', fix: '120 members' }),
+      raw({ span: 'About 150 members', kind: 'wording', fix: 'Approximately 150 members' }),
       source,
     );
-    expect(mergeIssues(text, verified, source).issues).toHaveLength(1);
+    const merged = mergeIssues(text, verified, source).issues;
+    expect(merged).toHaveLength(1);
+    expect(merged[0]).toMatchObject({ kind: 'factual-doubt', span: '150', fix: null });
   });
   it('are nothing without a source', () => {
     expect(addedNumberDoubts('150', '')).toEqual([]);

@@ -13,6 +13,7 @@ import {
   quoteAsData,
   PROOFREAD_LIMITS,
   PROOFREAD_SCHEMA,
+  SHORT_MATERIAL,
   mergeIssues,
   missingSpans,
   verifyIssues,
@@ -34,6 +35,7 @@ import {
   composeSystem,
   composeUser,
   proofreadSystem,
+  spellingSystem,
   proofreadUser,
   draftReplyUser,
   neutralReplyUser,
@@ -340,24 +342,40 @@ async function proofread(
   // below is all the factual check there is.
   const withSource =
     source !== '' && count(source) + Math.max(...pieces.map(count), 0) <= ONE_CALL_TOKENS;
+  // Two passes over each piece: the general one, then one that only looks for misspelt words (the
+  // model misses a swapped letter when it is also asked about grammar and sense, spike on the real
+  // model). What the second finds that the first already found is not counted twice.
   const system = proofreadSystem(job.into, withSource);
+  const spelling = spellingSystem(job.into);
   const raw: unknown[] = [];
-  for (const [index, piece] of pieces.entries()) {
-    sink.step('reading', index, pieces.length);
+  const ask2 = async (prompt: string, user: string): Promise<Array<{ span?: unknown }>> => {
     const result = await ask(engine, signal, {
-      system,
-      user: proofreadUser(piece, withSource ? source : null),
+      system: prompt,
+      user,
       maxTokens: 700,
       schema: { name: 'proofread', schema: PROOFREAD_SCHEMA },
     });
     try {
       const issues = (JSON.parse(result.text) as { issues?: unknown }).issues;
-      if (Array.isArray(issues)) raw.push(...issues);
+      return Array.isArray(issues) ? issues : [];
     } catch {
       // An answer that is not JSON has no issues in it; the pieces that were read still count.
+      return [];
+    }
+  };
+  for (const [index, piece] of pieces.entries()) {
+    sink.step('reading', index * 2, pieces.length * 2);
+    const general = await ask2(system, proofreadUser(piece, withSource ? source : null));
+    raw.push(...general);
+    sink.step('reading', index * 2 + 1, pieces.length * 2);
+    const unmatched = [...general];
+    for (const entry of await ask2(spelling, proofreadUser(piece, null))) {
+      const same = unmatched.findIndex((found) => found.span === entry.span);
+      if (same >= 0) unmatched.splice(same, 1);
+      else raw.push(entry);
     }
   }
-  sink.step('reading', pieces.length, pieces.length);
+  sink.step('reading', pieces.length * 2, pieces.length * 2);
   const merged = mergeIssues(text, verifyIssues(text, { issues: raw }, source), source);
   sink.text('replace', JSON.stringify(merged));
 }
@@ -408,6 +426,12 @@ async function compose(
   if (flags.invented.length > 0) warnings.push({ kind: 'numbers-added', numbers: flags.invented });
   if (flags.attachment) warnings.push({ kind: 'attachment-mentioned' });
   if (flags.wrongLanguage) warnings.push({ kind: 'wrong-language' });
+  // A summary is short enough for an email to keep its numbers: one that dropped a date is flagged
+  // (the real model replaced a given date with a placeholder). A whole document may leave some out.
+  if (!neutral && job.purpose === 'summary' && material.length <= SHORT_MATERIAL) {
+    const missing = digitCheck(material, result.text).missing;
+    if (missing.length > 0) warnings.push({ kind: 'numbers-missing', numbers: missing });
+  }
   const left = neutral ? [] : missingSpans(result.text, job.quotes);
   if (left.length > 0) warnings.push({ kind: 'spans-missing', spans: left });
 }

@@ -157,12 +157,16 @@ export function addedNumberDoubts(text: string, source: string): Omit<Issue, 'id
   return doubts;
 }
 
-/** The model's issues and the number doubts together; a doubt inside a model issue is not repeated. */
+/**
+ * The model's issues and the number doubts together. A number the source does not have outranks a
+ * model issue on the same words (a suggestion to "reword" it would hide the doubt), which is dropped.
+ */
 export function mergeIssues(text: string, verified: Verified, source: string): Verified {
-  const doubts = addedNumberDoubts(text, source).filter(
-    (doubt) => !verified.issues.some((issue) => doubt.start < issue.end && doubt.end > issue.start),
-  );
-  const all = [...verified.issues.map(({ id: _id, ...rest }) => rest), ...doubts];
+  const doubts = addedNumberDoubts(text, source);
+  const mine = verified.issues
+    .filter((issue) => !doubts.some((doubt) => doubt.start < issue.end && doubt.end > issue.start))
+    .map(({ id: _id, ...rest }) => rest);
+  const all = [...mine, ...doubts];
   return { issues: numbered(all), rejected: verified.rejected };
 }
 
@@ -182,6 +186,9 @@ export function applyFixes(
 }
 
 // --- Emails --------------------------------------------------------------------------------
+
+/** Characters: material up to this is a summary, whose numbers an email about it should keep. */
+export const SHORT_MATERIAL = 2000;
 
 export const COMPOSE_PURPOSES = ['summary', 'feedback'] as const;
 export type ComposePurpose = (typeof COMPOSE_PURPOSES)[number];

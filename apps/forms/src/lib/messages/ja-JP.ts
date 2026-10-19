@@ -1671,6 +1671,8 @@ export const jaJP: Record<MessageKey, string> = {
   'about.recipient': '宛先（名前）',
   'about.write': 'メールを書く',
   'about.spans': 'メールは次の箇所を引用していません：{spans}。送信前に追加してください。',
+  'about.missing':
+    'メールにはテキストにある次の数字が含まれていません：{numbers}。重要なものが抜けていないか確認してください。',
   'invoiceScan.heading': '仕入先の請求書を読み取る',
   'invoiceScan.intro':
     '受け取った請求書の写真、スキャン、またはPDFを選んでください。読み取りはこの端末の中で行われ、どこにも送信されません。各項目は見つかった場所の横に表示され、確認するまで何も使われません。',

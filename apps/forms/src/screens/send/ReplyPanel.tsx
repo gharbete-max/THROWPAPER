@@ -5,6 +5,8 @@ import type { AiBridge, AiProblem, TextTask } from '@tp/shared/ai';
 import { mustQuote } from '@tp/shared/quoted';
 import {
   PROOFREAD_LIMITS,
+  SHORT_MATERIAL,
+  digitCheck,
   missingSpans,
   REPLY_LIMITS,
   REPLY_TONES,
@@ -123,6 +125,11 @@ export default function ReplyPanel({
   const hasDraft = draft.trim() !== '' && !running;
   /** A review has to quote what it is about; the draft is checked as the writer edits it. */
   const unquoted = about && hasDraft ? missingSpans(draft, about.quotes) : [];
+  /** An email about a summary keeps the summary's numbers (a long text may leave some out). */
+  const dropped =
+    about?.purpose === 'summary' && hasDraft && received.length <= SHORT_MATERIAL
+      ? digitCheck(received, draft).missing
+      : [];
 
   function run(task: TextTask, language: SummaryLocale) {
     before.current = draft;
@@ -375,6 +382,11 @@ export default function ReplyPanel({
               {unquoted.length > 0 ? (
                 <p className="status-down" role="alert" data-testid="reply-warn-spans">
                   {t('about.spans', { spans: unquoted.map((span) => `“${span}”`).join(', ') })}
+                </p>
+              ) : null}
+              {dropped.length > 0 ? (
+                <p className="status-down" role="alert" data-testid="reply-warn-dropped">
+                  {t('about.missing', { numbers: dropped.join(', ') })}
                 </p>
               ) : null}
               {flags.attachment ? (

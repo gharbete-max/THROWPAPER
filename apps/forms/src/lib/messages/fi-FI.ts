@@ -1682,6 +1682,8 @@ export const fiFI: Record<MessageKey, string> = {
   'about.recipient': 'Vastaanottaja (nimi)',
   'about.write': 'Kirjoita sähköposti',
   'about.spans': 'Sähköposti ei lainaa näitä kohtia: {spans}. Lisää ne ennen lähettämistä.',
+  'about.missing':
+    'Sähköpostista puuttuvat nämä tekstin luvut: {numbers}. Tarkista, ettei mitään tärkeää puutu.',
   'invoiceScan.heading': 'Lue toimittajan lasku',
   'invoiceScan.intro':
     'Valitse kuva, skannaus tai PDF saamastasi laskusta. Se luetaan tällä laitteella eikä lähde minnekään. Jokainen arvo näytetään sen löytöpaikan vieressä, eikä mitään käytetä, ennen kuin olet vahvistanut sen.',

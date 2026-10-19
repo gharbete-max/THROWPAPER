@@ -1670,6 +1670,8 @@ export const daDK: Record<MessageKey, string> = {
   'about.recipient': 'Til (navn)',
   'about.write': 'Skriv e-mailen',
   'about.spans': 'E-mailen citerer ikke disse passager: {spans}. Tilføj dem, før du sender.',
+  'about.missing':
+    'E-mailen udelader disse tal fra teksten: {numbers}. Kontrollér, at intet vigtigt mangler.',
   'invoiceScan.heading': 'Læs en leverandørfaktura',
   'invoiceScan.intro':
     'Vælg et foto, en scanning eller en PDF af en faktura, du har modtaget. Den læses på denne enhed og sendes ingen steder hen. Hver værdi vises ved det sted, hvor den blev fundet, og intet bruges, før du har bekræftet det.',

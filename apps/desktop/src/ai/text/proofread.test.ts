@@ -65,6 +65,23 @@ describe('proofreading', () => {
     expect(answer.rejected).toBe(0);
   });
 
+  it('adds what the spelling pass finds that the general pass missed, and counts the rest once', async () => {
+    const engine = new Scripted((request) =>
+      request.system.includes('You are a spell checker')
+        ? JSON.stringify({
+            issues: [
+              { span: 'Teh', kind: 'spelling', fix: 'The' },
+              { span: 'bord', kind: 'spelling', fix: 'board' },
+            ],
+          })
+        : JSON.stringify({ issues: [{ span: 'Teh', kind: 'spelling', fix: 'The' }] }),
+    );
+    const { text } = await run(engine, proofread({ text: 'Teh bord met.' }));
+    const answer = JSON.parse(text) as { issues: Array<{ span: string }> };
+    expect(answer.issues.map((i) => i.span)).toEqual(['Teh', 'bord']);
+    expect(engine.calls).toHaveLength(2);
+  });
+
   it('drops a span the model made up, and says how many it dropped', async () => {
     const { text } = await run(new FakeTextEngine({ inventSpan: true }), proofread());
     const answer = JSON.parse(text) as { issues: unknown[]; rejected: number };
@@ -185,6 +202,20 @@ describe('the corporate email', () => {
     expect(kinds(warnings)).toEqual(
       expect.arrayContaining(['numbers-added', 'attachment-mentioned', 'wrong-language']),
     );
+  });
+
+  it('flags a summary email that dropped a number the summary had, but not a long document', async () => {
+    const dropped = new Scripted(
+      'Dear Anna,\n\nThe board approved the budget.\n\nKind regards\n[sender name?]',
+    );
+    const { warnings } = await run(dropped, compose());
+    // The summary had 450 and the date 2026-11-03; the email kept neither.
+    expect(warnings).toContainEqual({
+      kind: 'numbers-missing',
+      numbers: ['3', '11', '450', '2026'],
+    });
+    const long = compose({ material: 'Item 12 was discussed. '.repeat(120) });
+    expect(kinds((await run(dropped, long)).warnings)).not.toContain('numbers-missing');
   });
 
   it('asks the review email for a different opening when the view is mixed', async () => {

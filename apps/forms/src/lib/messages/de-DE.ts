@@ -1733,6 +1733,8 @@ export const deDE: Record<MessageKey, string> = {
   'about.write': 'E-Mail schreiben',
   'about.spans':
     'Die E-Mail zitiert diese Stellen nicht: {spans}. Fügen Sie sie vor dem Senden hinzu.',
+  'about.missing':
+    'In der E-Mail fehlen diese Zahlen aus dem Text: {numbers}. Prüfen Sie, ob nichts Wichtiges fehlt.',
   'invoiceScan.heading': 'Lieferantenrechnung lesen',
   'invoiceScan.intro':
     'Wählen Sie ein Foto, einen Scan oder eine PDF einer erhaltenen Rechnung. Sie wird auf diesem Gerät gelesen und nirgendwohin gesendet. Jeder Wert wird neben der Stelle gezeigt, an der er gefunden wurde, und nichts wird verwendet, bevor Sie es bestätigt haben.',

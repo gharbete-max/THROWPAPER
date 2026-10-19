@@ -209,6 +209,36 @@ function blockOf(item: unknown, page: number, language: string | null): Block | 
   return parsed.success ? parsed.data : null;
 }
 
+/**
+ * Tables that follow one another are one table. The model, asked for a table, sometimes writes each
+ * row as a table of its own (and spends most of its time doing it): their rows are put back
+ * together, a block that starts again at row 0 below the last one, one that carries on from it
+ * where it is.
+ */
+function mergeTables(blocks: Block[]): Block[] {
+  const out: Block[] = [];
+  for (const block of blocks) {
+    const last = out[out.length - 1];
+    if (block.type !== 'table' || last?.type !== 'table') {
+      out.push(block);
+      continue;
+    }
+    const first = Math.min(...block.cells.map((cell) => cell.row));
+    const shift = first >= last.rows ? 0 : last.rows - first;
+    const cells = [
+      ...last.cells,
+      ...block.cells.map((cell) => ({ ...cell, row: cell.row + shift })),
+    ];
+    out[out.length - 1] = {
+      ...last,
+      rows: Math.max(...cells.map((cell) => cell.row)) + 1,
+      columns: Math.max(last.columns, block.columns),
+      cells,
+    };
+  }
+  return out;
+}
+
 /** A page that could not be read: listed with why, never dropped. */
 export const failedPage = (page: number, reason: string): StructuredPage => ({
   page,
@@ -233,7 +263,7 @@ export function pageFromModel(page: number, json: string): StructuredPage {
   }
   const language = text(parsed.raw.language) || null;
   const items = Array.isArray(parsed.raw.blocks) ? parsed.raw.blocks : [];
-  const blocks = items.flatMap((item) => blockOf(item, page, language) ?? []);
+  const blocks = mergeTables(items.flatMap((item) => blockOf(item, page, language) ?? []));
   const result = StructuredPage.safeParse({
     page,
     status: parsed.cutOff ? 'uncertain' : 'ok',
@@ -285,7 +315,10 @@ export function pageText(page: StructuredPage): string {
         case 'table': {
           const rows: string[][] = Array.from({ length: block.rows }, () => []);
           for (const cell of block.cells) (rows[cell.row] ??= [])[cell.column] = cell.text;
-          return rows.map((row) => Array.from(row, (c) => c ?? '').join(' | ')).join('\n');
+          return rows
+            .filter((row) => row.some((cell) => cell))
+            .map((row) => Array.from(row, (c) => c ?? '').join(' | '))
+            .join('\n');
         }
       }
     })

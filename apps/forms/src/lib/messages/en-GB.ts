@@ -1684,6 +1684,8 @@ export const enGB = {
   'about.recipient': 'To (name)',
   'about.write': 'Write the email',
   'about.spans': 'The email does not quote these passages: {spans}. Add them before sending.',
+  'about.missing':
+    'The email leaves out these numbers from the text: {numbers}. Check that nothing important is missing.',
   'invoiceScan.heading': 'Read a supplier invoice',
   'invoiceScan.intro':
     'Choose a photo, a scan or a PDF of an invoice you have received. It is read on this device and goes nowhere. Each value is shown beside the place it was found, and nothing is used until you confirm it.',
