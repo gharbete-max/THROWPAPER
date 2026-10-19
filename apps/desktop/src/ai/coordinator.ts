@@ -1,6 +1,8 @@
 import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { basename, join, resolve, sep } from 'node:path';
 import {
+  PAGE_PIPELINE_VERSION,
+  cacheKey,
   capabilityOf,
   fileNames,
   installId,
@@ -50,6 +52,15 @@ import { locateModel, type ResolveContext } from './resolve.js';
  * - **Evaluation-only models are never fetched**, whatever is asked.
  */
 export const IDLE_MS = 10 * 60 * 1000;
+
+/** A page's JSON that is worth keeping: it was read, wholly or with doubts, and not given up on. */
+function readPageKept(json: string): boolean {
+  try {
+    return (JSON.parse(json) as { status?: unknown }).status !== 'failed';
+  } catch {
+    return false;
+  }
+}
 
 export const PRIORITY = { background: -1, normal: 0, interactive: 1 } as const;
 
@@ -333,9 +344,32 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     return engine;
   }
 
+  /**
+   * A page's reading is kept under its cache key (docs/plan/AI-SYSTEM.md D4), so reading the same
+   * file again, or summarising what was read, never touches an image twice. A cached page is
+   * answered without loading the model. Only a page that was read is kept: a failed one is tried again.
+   */
+  const pageKey = (task: AiTask): string | null =>
+    task.kind === 'read-page'
+      ? cacheKey({
+          fileSha256: task.fileSha256,
+          page: task.page,
+          pipelineVersion: PAGE_PIPELINE_VERSION,
+          modelId: modelFor(task)?.id ?? '',
+          settings: { longEdge: task.longEdge, turn: task.turn, language: task.language },
+        })
+      : null;
+
   async function execute(job: Job): Promise<void> {
     const { id } = job;
     try {
+      const key = pageKey(job.task);
+      const hit = key ? await deps.cache.get<string>(key) : undefined;
+      if (hit !== undefined) {
+        emit({ id, kind: 'text', mode: 'replace', text: hit });
+        emit({ id, kind: 'done', warnings: [], seconds: 0 });
+        return;
+      }
       const files = await ensureFiles(job);
       if (job.abort.signal.aborted) throw new AiError('cancelled');
       const engine = await makeResident(job, files);
@@ -343,12 +377,17 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
       note({ type: 'start', model: job.model.id, id });
       const started = Date.now();
       try {
+        let last = '';
         const result = await engine.run(
           job.task,
-          (event) => emit({ id, ...event } as AiEvent),
+          (event) => {
+            if (event.kind === 'text' && event.mode === 'replace') last = event.text;
+            emit({ id, ...event } as AiEvent);
+          },
           job.abort.signal,
         );
         if (job.abort.signal.aborted) throw new AiError('cancelled');
+        if (key && readPageKept(last)) await deps.cache.set(key, last);
         emit({
           id,
           kind: 'done',

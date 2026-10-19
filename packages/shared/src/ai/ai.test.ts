@@ -233,11 +233,15 @@ describe('tasks', () => {
       'shorten-reply',
       'translate-reply',
       'revise-reply',
+      'proofread',
+      'compose-email',
     ] as const) {
       expect(capabilityOf({ kind })).toBe('text');
     }
     expect(Object.keys(TASK_CAPABILITY).sort()).toEqual([
+      'compose-email',
       'draft-reply',
+      'proofread',
       'read-page',
       'revise-reply',
       'select',

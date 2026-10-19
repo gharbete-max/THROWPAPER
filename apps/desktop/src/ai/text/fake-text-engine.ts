@@ -1,5 +1,5 @@
 import type { TextEngine, GenerateRequest } from './text-engine.js';
-import { REPLY_SYSTEM_START } from './prompts.js';
+import { COMPOSE_SYSTEM_START, REPLY_SYSTEM_START } from './prompts.js';
 
 const between = (text: string, tag: string): string | undefined =>
   new RegExp(`<${tag}>\\n([\\s\\S]*?)\\n</${tag}>`).exec(text)?.[1];
@@ -21,6 +21,25 @@ function fakeReply(request: GenerateRequest): string {
   return `${draft}\n\n(${between(request.user, 'instruction') ?? ''})`;
 }
 
+/** An email that is obviously not a model's: the material under a greeting, a placeholder to sign. */
+function fakeCompose(request: GenerateRequest, dropQuotes: boolean): string {
+  const material = between(request.user, 'material') ?? '';
+  const recipient = between(request.user, 'recipient');
+  const body = dropQuotes ? material.replace(/"[^"]*"/g, 'this') : material;
+  return `Dear ${recipient ?? 'colleague'},\n\n${body}\n\nKind regards\n[sender name?]`;
+}
+
+/** The mistakes the fake proofreader knows: "teh", plus a made-up span when it is told to invent. */
+function fakeIssues(request: GenerateRequest, invent: boolean): string {
+  const text = between(request.user, 'text') ?? '';
+  const issues: Array<{ span: string; kind: string; fix: string }> = [];
+  for (const match of text.matchAll(/\bteh\b/gi)) {
+    issues.push({ span: match[0], kind: 'spelling', fix: match[0] === 'Teh' ? 'The' : 'the' });
+  }
+  if (invent) issues.push({ span: 'a phrase nobody wrote', kind: 'wording', fix: 'another one' });
+  return JSON.stringify({ issues });
+}
+
 /**
  * An {@link TextEngine} that needs no model: what CI and the desktop's fake mode run.
  *
@@ -38,6 +57,10 @@ export interface FakeBehaviour {
   invent?: string;
   /** A pause per token-chunk, so a test can cancel in the middle. */
   delayMs?: number;
+  /** The fake proofreader also reports a span that is not in the text. */
+  inventSpan?: boolean;
+  /** The fake email leaves out what it was asked to quote. */
+  dropQuotes?: boolean;
 }
 
 export class FakeTextEngine implements TextEngine {
@@ -53,22 +76,29 @@ export class FakeTextEngine implements TextEngine {
   async generate(request: GenerateRequest): Promise<string> {
     this.calls.push(request);
     if (request.choose !== undefined) return JSON.stringify({ indices: [1] });
+    if (request.schema?.name === 'proofread') {
+      const answer = fakeIssues(request, this.behaviour.inventSpan === true);
+      request.onText?.(answer);
+      return answer;
+    }
 
     const source =
       /<(?:document|part|form)[^>]*>\n([\s\S]*?)\n<\/(?:document|part|form)/.exec(
         request.user,
       )?.[1] ?? request.user;
     const isTranslation = request.system.startsWith('You are a professional translator');
-    const body = request.system.startsWith(REPLY_SYSTEM_START)
-      ? fakeReply(request)
-      : isTranslation
-        ? `[${source}]`
-        : source
-            .split(/\n+/)
-            .filter((line) => line.trim() !== '')
-            .slice(0, 3)
-            .map((line) => `- ${line.slice(0, 60)}`)
-            .join('\n') + (this.behaviour.invent ? `\n- ${this.behaviour.invent}` : '');
+    const body = request.system.startsWith(COMPOSE_SYSTEM_START)
+      ? fakeCompose(request, this.behaviour.dropQuotes === true)
+      : request.system.startsWith(REPLY_SYSTEM_START)
+        ? fakeReply(request)
+        : isTranslation
+          ? `[${source}]`
+          : source
+              .split(/\n+/)
+              .filter((line) => line.trim() !== '')
+              .slice(0, 3)
+              .map((line) => `- ${line.slice(0, 60)}`)
+              .join('\n') + (this.behaviour.invent ? `\n- ${this.behaviour.invent}` : '');
 
     const pieces = this.behaviour.loop
       ? Array.from({ length: 400 }, (_, i) => ['aðeins ', 'aðeins '][i % 2]!)

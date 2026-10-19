@@ -45,12 +45,21 @@ if (modes.includes('no-avx2')) {
     const request = JSON.parse(body);
     const last = request.messages.at(-1).content;
     const text = typeof last === 'string' ? last : '(a picture)';
-    const answer = request.response_format
-      ? JSON.stringify({ indices: [1] })
-      : `[${text
-          .replace(/<[^>]+>/g, '')
-          .trim()
-          .slice(0, 40)}] ok`;
+    const format = request.response_format?.json_schema?.name;
+    const answer =
+      format === 'page'
+        ? JSON.stringify({
+            language: 'en',
+            blocks: [{ type: 'paragraph', text: 'Stand-in page, 2026-10-19' }],
+          })
+        : format === 'proofread'
+          ? JSON.stringify({ issues: [{ span: 'Teh', kind: 'spelling', fix: 'The' }] })
+          : request.response_format
+            ? JSON.stringify({ indices: [1] })
+            : `[${text
+                .replace(/<[^>]+>/g, '')
+                .trim()
+                .slice(0, 40)}] ok`;
     res.writeHead(200, { 'content-type': 'text/event-stream' });
     res.on('close', () => console.log('fake: client closed'));
     const pieces = answer.match(/\S+\s*/g) ?? [];

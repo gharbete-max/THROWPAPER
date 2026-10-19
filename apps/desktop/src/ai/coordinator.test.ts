@@ -55,6 +55,8 @@ const PAGE_TASK: AiTask = {
   fileSha256: 'a'.repeat(64),
   page: 1,
   png: new Uint8Array(1),
+  longEdge: 1000,
+  turn: 0,
   language: null,
 };
 

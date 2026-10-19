@@ -1,5 +1,6 @@
 import type { ModelJob } from '../summary/bridge.js';
 import type { ReplyTask } from '../summary/reply.js';
+import type { ComposeTask, ProofreadTask } from '../summary/proofread.js';
 import type { Capability } from './capability.js';
 
 /**
@@ -12,12 +13,13 @@ import type { Capability } from './capability.js';
  * The text kinds: the summary centre's jobs, unchanged (ADR 0023), and the email reply helper's
  * four (docs/plan/AI-SYSTEM.md D6). Every one needs the text model and nothing else.
  */
-export type TextTask = ModelJob | ReplyTask;
+export type TextTask = ModelJob | ReplyTask | ProofreadTask | ComposeTask;
 
 /**
- * Read one page of a document from a picture of it (docs/plan/AI-SYSTEM.md D4). A TYPE ONLY for
- * now: no engine has the `vision` capability until Phase 3 registers one, and the bridge refuses
- * this kind with `not-available`. The picture itself travels as PNG bytes.
+ * Read one page of a document from a picture of it (docs/plan/AI-SYSTEM.md D4). The picture travels
+ * as PNG or JPEG bytes, rendered by the window at a bounded pixel budget (`longEdge` is the long
+ * side it was drawn with, and is part of the cache key, so a second pass at a higher resolution is
+ * a different result). The answer is one `text` event holding a `StructuredPage` as JSON.
  */
 export interface ReadPageTask {
   kind: 'read-page';
@@ -26,6 +28,10 @@ export interface ReadPageTask {
   /** 1-based. */
   page: number;
   png: Uint8Array;
+  /** Pixels of the picture's long side. */
+  longEdge: number;
+  /** Degrees the page was turned by before it was drawn: part of what was read. */
+  turn: 0 | 90 | 180 | 270;
   /** The language the page is probably in, when known. */
   language: string | null;
 }
@@ -41,6 +47,8 @@ export const TASK_CAPABILITY = {
   'shorten-reply': 'text',
   'translate-reply': 'text',
   'revise-reply': 'text',
+  proofread: 'text',
+  'compose-email': 'text',
   'read-page': 'vision',
 } as const satisfies Record<AiTaskKind, Capability>;
 

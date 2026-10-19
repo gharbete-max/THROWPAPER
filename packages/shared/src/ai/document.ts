@@ -22,7 +22,8 @@ export type Box = z.infer<typeof Box>;
 
 const common = {
   page: z.number().int().positive(),
-  box: Box,
+  /** Where on the page, when a reader knows; the vision model is not asked for it (docs/plan/AI-SYSTEM.md D4). */
+  box: Box.nullable(),
   /** BCP 47, or null when it could not be told. */
   language: z.string().min(2).nullable(),
   confidence: z.number().min(0).max(1),
