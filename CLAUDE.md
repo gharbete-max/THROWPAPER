@@ -16,87 +16,33 @@ which together serve the Documents catcher. Read `docs/CONTRACT.md` next, then t
 whichever app you are working on. Do not paste specs into this file.
 
 ```
-apps/forms      Product A — the Documents catcher's screens: forms, scan, sign, send, invoices.
-                Also the room (/room), where a signed-in person arrives: three catchers,
-                Documents opening onto its four parts (ADR 0022). /scan arranges pages (PDFs,
-                photos, camera and phone scans, a rough Word to PDF), adds, covers, replaces and
-                truly redacts a PDF's text, and opens the invoice scan; /forms/:id/fill and
-                /forms/pdf fill a form or a PDF's own fields; /summary is the centre (desktop). On the
-                desktop, Scan also has "Read with AI" (the optional page reader of AI-SYSTEM D4), and
-                a summary or a reading can be proofread and written up as a corporate email in Send.
-                Events, the door and the ledger
-                are earlier work that stays in place, out of the room, until the catchers they
-                belong to (Presentation & planning; Spreadsheets) exist — never deleted unasked
-apps/mailer     A stub. The mail work is built inside Documents' Send part (docs/HANDOVER.md)
-apps/api-forms  Product A backend. A finished PDF of every submission (respondent by a one-day
-                token, staff by row); sends PDFs to Sign over CONTRACT §5 when SIGN_API_URL is set;
-                keeps each author's guided-builder conversation (builder_sessions) and the
-                organisation's learned phrases (builder_aliases)
-                PDF routes, keeping nothing (`src/pdf/`, `src/routes/pdf*.ts`; the ones that take a
-                PDF pass the PDF guard): /v1/pdf/arrange (files together, pages out, turned,
-                reordered, photos), /edit and /redact (text), /word (rough Word to PDF), /fields
-                and /fill (a PDF's own fields); and POST /v1/forms/:id/draft.pdf, a form as a PDF
-                with no submission
-apps/api-mailer Product B backend
-apps/sign       Product C — signing. The signer's page: open a link, read the declaration, sign
-                by typing or drawing, or decline (en/sv). No sender screens yet
-apps/api-sign   Product C backend. Own database (append-only, hash-chained trail) on Postgres or
-                PGlite, CONTRACT §5.1–5.7, cancel included (declarations each organisation writes; identity
-                methods — none unless EID_PROVIDER is set, `console` is test-only), typed and
-                drawn signing by link, PAdES seal + audit page on completion (development
-                certificate); serves the page
-apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign side by side, each on its own
-                embedded Postgres (PGlite) and loopback port, offline first; runs the one AI
-                model (Qwen2.5-VL-7B, text and pictures) as a supervised `llama-server` child
-                process once its files are on the disk (`src/ai/`, ADR 0023 to 0025: one
-                coordinator, one model alive; `scripts/fetch-runtime.ts` fetches the program); a LAN relay for a
-                phone scan exists only while one is open (ADR 0016). Not a product; it
-                imports only @tp/api-forms/desktop and @tp/api-sign/local (docs/adr/0016). Sends
-                no mail by itself by default: messages wait in To send and open as drafts in the
-                person's own mail program (SMTP / Outlook / Apple Mail sending is under Advanced)
-packages/tokens Design tokens as JSON. Compiled to CSS vars / inline email styles / print CSS
-                / native tokens. Owns the contrast guard, and the room's fixed colours (ADR 0022)
-packages/i18n   Translation catalogues and locale utilities, incl. ICU collation
-packages/ui     One `cn()` class-name helper. The shared data grid is deliberately not in v0.1
-                — see its own src/index.ts
-packages/calc   Calculation errors and propagation, exact money, the ledger
-packages/shared Types and Zod schemas, including the CONTRACT schemas; the guided builder's
-                conversation graph, its `when` language, its validator, and the machine that walks
-                it — answers as undoable changes, answers ahead of their turn, replay, stable
-                question ids, the saved session, reconciliation that never writes over a hand edit,
-                questions read from a document added as one step, with the PDF they were read from,
-                walked for what it left open, and brought up to date when it is read again, and the
-                guess — a belief over 25 recipes in integer log-odds, the question that tells it
-                most, and the template's questions "Right" adds, structure only for the two rule 8
-                keeps out (@tp/shared/builder); document import's Layout IR with its validator,
-                pasted text as a layout document, stage 2 (columns, lines, hyphenation, blocks, page
-                furniture, headings, the document's language), stage 3 (the list-marker detector,
-                with Word's own numbering), stage 4 (headings, instructions and questions with what
-                answers them, grids, tables), stage 5 (each question's likely type, by integer
-                weights over word lists in twelve languages, with its three likeliest), stage 7
-                (confidence and bucket, the OCR cap), a PDF's own form fields over its text, and all
-                of them in one call, each with its debug artifact; the paper twin's boxes, where
-                each question's answer and each option's tick go on the page it was read from; and
-                stage 9's comparison of a form with its document read again; and the digital copy of a photographed page — a line finder over ink and paper (skew, ruled lines, box and cell borders) and the copy built from it and the OCR words, as SVG and plain text (@tp/shared/import, scan/); POST /v1/pdf/copy's request schema is in @tp/shared/api;
-                free text read by rules — normalisation, word lists and built-in aliases in twelve
-                languages, the rules for learned ones, the ladder T0–T8, the committed sigmoid
-                table, and an integer logarithm and exponential (@tp/shared/interpret); the AI coordinator's shared types — capabilities, the model manifest registry (one model of two files, evaluation-only supported) and the pinned `llama-server` runtime manifest, the task union, the structured document, the cache key, the `window.loppaAi` bridge (@tp/shared/ai, ADR 0024, 0025); the summary
-                centre's pure parts — the twelve languages, the checks around the
-                model, chunking, passage quoting (@tp/shared/summary) — with the word lists that
-                make an operative text quoted rather than reworded (@tp/shared/quoted); the AI reader's pure
-                parts — the page shape the model is asked for, its answer made a StructuredPage, the
-                cross-check against a PDF's text layer, the document as text (@tp/shared/ai) — and
-                proofreading (issues verified against the text, fixes on a copy, the review email's
-                material, the email task's shape; @tp/shared/summary); and the rules
-                that read a supplier invoice's amount, due date, bank number and payment reference
-                with their check digits (@tp/shared/payable)
+apps/forms      The Documents catcher's screens (forms, scan, sign, send, invoices, the AI centre) and the
+                room (/room). Earlier events/door/ledger screens stay in place, out of the room — never
+                deleted unasked
+apps/api-forms  Forms' backend: forms, submissions and their PDFs, the PDF routes (`src/pdf/`,
+                `routes/pdf*.ts`; page work keeps nothing), send/campaign/mail, invoicing, phone scan, the
+                guided builder's saved conversations
+apps/sign       Signing: the signer's page (open a link, sign by typing or drawing, or decline)
+apps/api-sign   Sign's backend: own database, CONTRACT §5.1–5.7, PAdES seal + audit page
+apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign on embedded PGlite and loopback ports,
+                offline first; runs the AI centre (`src/ai/`, ADRs 0023–0025: one model through a pinned
+                llama-server, one resident at a time). Not a product: imports only @tp/api-forms/desktop
+                and @tp/api-sign/local (ADR 0016)
+apps/mailer     A stub. Mail is built inside Documents' Send (docs/HANDOVER.md)
+apps/api-mailer A stub backend
+packages/tokens Design tokens as JSON → CSS vars / email styles / print CSS; the contrast guard; the room's colours
+packages/i18n   Catalogues and locale utilities (ICU collation)
+packages/ui     One `cn()` helper
+packages/calc   Calculation errors, exact money, the ledger
+packages/shared Types and Zod schemas incl. the CONTRACT; pure cores, one subpath each: `/builder`, `/interpret`,
+                `/import` (the guided builder, free-text rules, document import and the digital copy — no AI,
+                ever), `/summary` `/quoted` `/ai` (the AI centre's pure parts: manifests, tasks, checks,
+                quoting), `/payable` (supplier-invoice rules), `/api` (request schemas)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
 ```
 
-Descriptions above are of what a package **contains**, not what it is planned to contain, and a
-description changes in the same PR that changes the package. Two of them were written from intent
-and survived long enough to be planned around; a data grid that does not exist is worse than no
-entry at all.
+Descriptions are of what a package **contains**; change one in the PR that changes the package. Finer
+detail: `docs/MAP.md` (where to look) and each package's `src/index.ts`.
 
 ## Rules that apply to every session
 
