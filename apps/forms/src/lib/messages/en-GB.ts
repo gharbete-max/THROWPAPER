@@ -1986,6 +1986,12 @@ export const enGB = {
   'campaign.fieldsHint':
     'Fields you can use in the subject, message and footer: {fields}. After a bar you can give a fallback for rows where the list has nothing, like {example}.',
   'campaign.footer': 'Footer (wording you provide)',
+  'campaign.footerSkeleton':
+    '[Your name or organisation] · [Your postal address]\nYou are receiving this because [why this person is on the list].\nUnsubscribe: {link}',
+  'campaign.footerStarter':
+    'This is a starting point, not finished wording. Complete every [bracket]; you are responsible for what the footer says.',
+  'campaign.problem.footerPlaceholder':
+    'The footer still has text in [brackets] to complete: {left}',
   'campaign.footerHint':
     'You write this: who is sending and from where, why this person is getting the email, and how they stop getting it. Put {link} where each person’s unsubscribe link goes. Loppa adds no wording of its own.',
   'campaign.noTracking': 'Plain text only. Nothing in the email tracks opens or clicks.',

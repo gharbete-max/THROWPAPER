@@ -97,8 +97,14 @@ export type CampaignProblem = {
     | 'unknown-field'
     | 'footer-missing'
     | 'footer-no-link'
+    | 'footer-placeholder'
     | 'too-many';
+  /** For `footer-placeholder`: the bracketed placeholders still left, as typed. */
+  left?: string[];
 };
+
+/** A `[Your name]`-style placeholder of the footer skeleton the sender has not written over. */
+const PLACEHOLDER = /\[[^[\]\n]+\]/g;
 
 const LINK = /\{\{\s*unsubscribe\s*\}\}/;
 
@@ -132,7 +138,12 @@ export function checkCampaign(
     problems.push({ row: -1, field: 'email', code: 'too-many' });
   }
   if (footer.trim() === '') problems.push({ row: -1, field: 'footer', code: 'footer-missing' });
-  else if (!LINK.test(footer)) problems.push({ row: -1, field: 'footer', code: 'footer-no-link' });
+  else {
+    const left = [...new Set(footer.match(PLACEHOLDER) ?? [])];
+    if (left.length > 0)
+      problems.push({ row: -1, field: 'footer', code: 'footer-placeholder', left });
+    if (!LINK.test(footer)) problems.push({ row: -1, field: 'footer', code: 'footer-no-link' });
+  }
 
   const needed = new Set<CampaignField>();
   for (const [field, text] of [

@@ -398,7 +398,23 @@ test.describe('on a small phone, by keyboard alone', () => {
   test.use({ viewport: { width: 360, height: 640 } });
 
   /** Every answer card is on the first screen: nothing to scroll to, and nothing under a bar. */
+  /**
+   * Measure the settled layout, not a frame of the slide-in: under load a question can mount
+   * again (or its animation start) between "nothing is running" and the measurement, and a node
+   * 24px along its way reads as off the screen. Finishing the finite animations here, in the
+   * same task as the measurement, leaves nothing to race.
+   */
+  async function settle(page: Page) {
+    await page.evaluate(() =>
+      document
+        .getAnimations()
+        .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+        .forEach((animation) => animation.finish()),
+    );
+  }
+
   async function answersFit(page: Page) {
+    await settle(page);
     const { bottom, floor, wide } = await page.evaluate(() => {
       const answers = Array.from(document.querySelectorAll('[data-answer]'));
       const bar = document.querySelector('.sidebar')?.getBoundingClientRect();
@@ -496,6 +512,7 @@ test.describe('on a small phone, by keyboard alone', () => {
   test.describe('long and mirrored (#36)', () => {
     /** Words that do not fit where they are: clipped by their box, or off the screen. */
     async function nothingCut(page: Page) {
+      await settle(page);
       const cut = await page.evaluate(() => {
         const found: string[] = [];
         for (const el of Array.from(document.querySelectorAll<HTMLElement>('main *'))) {

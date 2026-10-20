@@ -1974,6 +1974,12 @@ export const nbNO: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Felt du kan bruke i emne, melding og bunntekst: {fields}. Etter en loddrett strek kan du oppgi en reserve for rader der listen mangler verdi, for eksempel {example}.',
   'campaign.footer': 'Bunntekst (tekst du skriver selv)',
+  'campaign.footerSkeleton':
+    '[Ditt navn eller din organisasjon] · [Din postadresse]\nDu får denne e-posten fordi [hvorfor personen står på listen].\nMeld deg av: {link}',
+  'campaign.footerStarter':
+    'Dette er et utgangspunkt, ikke ferdig tekst. Fyll ut alle [hakeparenteser]; du er ansvarlig for hva bunnteksten sier.',
+  'campaign.problem.footerPlaceholder':
+    'Bunnteksten har fortsatt tekst i [hakeparenteser] som må fylles ut: {left}',
   'campaign.footerHint':
     'Dette skriver du selv: hvem som sender og hvorfra, hvorfor personen får e-posten, og hvordan man slutter å få den. Skriv {link} der hver persons avmeldingslenke skal stå. Loppa legger ikke til noen egen tekst.',
   'campaign.noTracking': 'Kun ren tekst. Ingenting i e-posten sporer åpninger eller klikk.',

@@ -65,8 +65,14 @@ test('a list of three: refused without a footer, previewed per person, confirmed
   await page
     .getByLabel('Message', { exact: true })
     .fill('Dear {{name | there}}, here is the news.');
-  // No footer, no way on: the product writes none for you.
+  // The footer opens as a skeleton of [placeholders]: no way on until they are written over.
+  await expect(page.getByLabel('Footer (wording you provide)')).toHaveValue(
+    /\[Your postal address\]/,
+  );
   await expect(page.getByRole('button', { name: 'Next' })).toBeDisabled();
+  await expect(page.getByTestId('campaign-problems')).toContainText('[Your name or organisation]');
+  // Emptied, it is refused too: the product writes none for you.
+  await page.getByLabel('Footer (wording you provide)').fill('');
   await expect(page.getByTestId('campaign-problems')).toContainText('Write the footer.');
   // A footer without the unsubscribe link is not enough either.
   await page.getByLabel('Footer (wording you provide)').fill('Sender, a street.');

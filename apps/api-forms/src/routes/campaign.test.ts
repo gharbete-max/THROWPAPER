@@ -85,6 +85,60 @@ describe('queueing a campaign', () => {
     expect(jobs()).toHaveLength(0);
   });
 
+  it('refuses a footer that still holds a placeholder of the skeleton', async () => {
+    const footer =
+      '[Your name or organisation] · [Your postal address]\nUnsubscribe: {{unsubscribe}}';
+    const response = await post('/v1/send/campaign', campaign({ footer }));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.fields['campaign']).toContain('footer:footer-placeholder');
+    expect(jobs()).toHaveLength(0);
+  });
+
+  it('refuses a footer that still holds a placeholder of the skeleton', async () => {
+    const footer =
+      '[Your name or organisation] · [Your postal address]\nUnsubscribe: {{unsubscribe}}';
+    const response = await post('/v1/send/campaign', campaign({ footer }));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.fields['campaign']).toContain('footer:footer-placeholder');
+    expect(jobs()).toHaveLength(0);
+  });
+
+  it('refuses a footer that still holds a placeholder of the skeleton', async () => {
+    const footer =
+      '[Your name or organisation] · [Your postal address]\nUnsubscribe: {{unsubscribe}}';
+    const response = await post('/v1/send/campaign', campaign({ footer }));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.fields['campaign']).toContain('footer:footer-placeholder');
+    expect(jobs()).toHaveLength(0);
+  });
+
+  it('refuses a footer that still holds a placeholder of the skeleton', async () => {
+    const footer =
+      '[Your name or organisation] · [Your postal address]\nUnsubscribe: {{unsubscribe}}';
+    const response = await post('/v1/send/campaign', campaign({ footer }));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.fields['campaign']).toContain('footer:footer-placeholder');
+    expect(jobs()).toHaveLength(0);
+  });
+
+  it('refuses a footer that still holds a placeholder of the skeleton', async () => {
+    const footer =
+      '[Your name or organisation] · [Your postal address]\nUnsubscribe: {{unsubscribe}}';
+    const response = await post('/v1/send/campaign', campaign({ footer }));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.fields['campaign']).toContain('footer:footer-placeholder');
+    expect(jobs()).toHaveLength(0);
+  });
+
+  it('refuses a footer that still holds a placeholder of the skeleton', async () => {
+    const footer =
+      '[Your name or organisation] · [Your postal address]\nUnsubscribe: {{unsubscribe}}';
+    const response = await post('/v1/send/campaign', campaign({ footer }));
+    expect(response.statusCode).toBe(422);
+    expect(response.json().error.fields['campaign']).toContain('footer:footer-placeholder');
+    expect(jobs()).toHaveLength(0);
+  });
+
   it('three rows become three previewable, merged messages, each with its own link and headers', async () => {
     const response = await post('/v1/send/campaign', campaign());
     expect(response.statusCode).toBe(200);

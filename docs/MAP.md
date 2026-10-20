@@ -73,10 +73,11 @@ per page. Local file resolution: `LOPPA_AI_DIR` → `local-models/` → repo roo
 Postgres is portable at `C:\Users\gusta\pg16` (no Docker). After dependency changes: `pnpm exec playwright install chromium`.
 
 ## Known quirks (don't chase)
-- Local-only test failures: `mail/queue.test.ts` (POSIX file mode), a `C:\C:\…` snapshot path error inside a worktree.
+- Unit tests: all green on Windows (2026-10-20, 7466 tests; `mail/queue.test.ts` skips its POSIX file-mode check there). The old `C:\C:\…` snapshot-path error did not reappear in a worktree.
 - Desktop build needs `NPM_CONFIG_USERCONFIG=<empty file>` (global `~/.npmrc` has an `allow-scripts` line npm 11 rejects).
 - Shell: Bash tool mangles `|` in quoted args to pnpm scripts — call `pnpm exec playwright test --grep …` directly.
-- A German small-phone guided-builder e2e flakes under load (passes alone).
+- Guided-builder layout checks (`answersFit`, `nothingCut`) finish the slide-in animation before measuring (`settle`); a node 24 px along its way reads as off the screen. Full e2e on 2026-10-20: 156/156, 12 min.
+- a11y smoke (axe-core 4.10, injected from a scratch install, not a dependency): room, Scan, Send, Summary, Signing in sv/en/ja are clean except Send's `textarea role=combobox` (minor) and Signing's empty actions `<th>` (minor, same pattern in AddressIssues, Invoices, SendBatch, SendCampaign). A contrast hit on Signing is the start-up intro fading in, not a defect.
 - `pdfjs-dist` pinned 6.3.289 (6.4 changes golden-corpus reading).
 - Gitleaks scans every PR commit: no secret-looking literals in tests.
 - A green `verify` is not a green e2e; a backgrounded exit code is not the command's; re-read files after `git switch`.
@@ -92,7 +93,9 @@ Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix wat
 ## Current state (2026-10-20)
 Merged: the whole Documents plan; coordinator, single-model migration, reply helper, AI reader +
 proofread + corporate email. In flight: the optional model catalogue (`claude/model-catalogue`).
-Next: campaign-footer placeholder skeleton; desktop backup excludes `secrets.json` (+ encrypted
-backup); AI pack distribution (parts < 2 GiB with SHA-256, open from disk or download with
+Done on `claude/footer-and-keys-backup`: the campaign footer opens as a skeleton of `[placeholders]`
+in all twelve languages and sending stays blocked (client and server, `checkCampaign`) while one is
+left or `{{unsubscribe}}` is absent; File > Back up with the keys / Restore keys from a backup
+(`keys.enc`, AES-256-GCM, scrypt; procedure in `docs/BACKUP.md`). Next: AI pack distribution (parts < 2 GiB with SHA-256, open from disk or download with
 confirmation); packaged-app test of the llama-server runtime. Unverified everywhere: macOS, 8–12 GB
 laptops, CPUs without AVX2, native-speaker quality. Plans/ADRs are history unless linked above.
