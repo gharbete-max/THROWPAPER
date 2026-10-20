@@ -2003,6 +2003,7 @@ export const zhCN: Record<MessageKey, string> = {
   'docs.keep.save': '下载',
   'docs.keep.cancel': '取消',
   'docs.keep.working': '正在计算大小…',
+  'table.actions': '操作',
   'hygiene.heading': '检查这些地址',
   'hygiene.col.row': '行',
   'hygiene.col.address': '地址',
@@ -2051,5 +2052,6 @@ export const zhCN: Record<MessageKey, string> = {
   'suppress.invalid': '这不是有效的电子邮件地址。',
   'suppress.remove': '移除 {email}',
   'suppress.removeConfirm': '要从名单中移除 {email} 吗？之后群发邮件可以再次发到此地址。',
+  'suppress.lastSkipped': 'plural:other 最近一次群发跳过了此列表中的 {count} 个地址。',
   'suppress.failed': '无法更改名单，请重试。',
 };

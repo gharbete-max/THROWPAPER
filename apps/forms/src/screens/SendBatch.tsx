@@ -410,7 +410,9 @@ function Preview({
               {header('email')}
               {header('amount')}
               {header('reference')}
-              <th>{/* the preview button; the header would only repeat it */}</th>
+              <th>
+                <span className="visually-hidden">{t('table.actions')}</span>
+              </th>
             </tr>
           </thead>
           <tbody>

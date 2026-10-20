@@ -28,7 +28,7 @@ const PAGE: AiTask = {
 
 /** The real process plumbing, running the stand-in instead of llama-server. */
 function standIn(modes = '', seen: { args?: string[]; pid?: number } = {}): SpawnFn {
-  const real = defaultSpawn({ ...process.env, FAKE_LLAMA: modes });
+  const real = defaultSpawn({ ...process.env, FAKE_LLAMA: modes }, ['FAKE_LLAMA']);
   return (_command, args) => {
     seen.args = args;
     const handle = real(process.execPath, [SCRIPT, ...args], process.cwd());

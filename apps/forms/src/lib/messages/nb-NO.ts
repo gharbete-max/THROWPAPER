@@ -2125,6 +2125,7 @@ export const nbNO: Record<MessageKey, string> = {
   'docs.keep.save': 'Last ned',
   'docs.keep.cancel': 'Avbryt',
   'docs.keep.working': 'Regner ut størrelsene…',
+  'table.actions': 'Handlinger',
   'hygiene.heading': 'Kontroller adressene',
   'hygiene.col.row': 'Rad',
   'hygiene.col.address': 'Adresse',
@@ -2179,5 +2180,7 @@ export const nbNO: Record<MessageKey, string> = {
   'suppress.invalid': 'Det er ikke en gyldig e-postadresse.',
   'suppress.remove': 'Fjern {email}',
   'suppress.removeConfirm': 'Fjerne {email} fra listen? Utsendinger kan da nå adressen igjen.',
+  'suppress.lastSkipped':
+    'plural:one Den siste kampanjen hoppet over {count} adresse på denne listen. | other Den siste kampanjen hoppet over {count} adresser på denne listen.',
   'suppress.failed': 'Listen kunne ikke endres. Prøv igjen.',
 };

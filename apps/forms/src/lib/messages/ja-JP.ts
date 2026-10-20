@@ -2123,6 +2123,7 @@ export const jaJP: Record<MessageKey, string> = {
   'docs.keep.save': 'ダウンロード',
   'docs.keep.cancel': 'キャンセル',
   'docs.keep.working': 'サイズを計算中…',
+  'table.actions': '操作',
   'hygiene.heading': 'アドレスを確認',
   'hygiene.col.row': '行',
   'hygiene.col.address': 'アドレス',
@@ -2177,5 +2178,7 @@ export const jaJP: Record<MessageKey, string> = {
   'suppress.remove': '{email} を削除',
   'suppress.removeConfirm':
     '{email} をリストから削除しますか？以後の一斉配信がこのアドレスに届くようになります。',
+  'suppress.lastSkipped':
+    'plural:other 直近のキャンペーンでは、このリストにより{count}件のアドレスをスキップしました。',
   'suppress.failed': 'リストを変更できませんでした。もう一度お試しください。',
 };

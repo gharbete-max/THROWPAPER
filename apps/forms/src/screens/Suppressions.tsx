@@ -13,7 +13,13 @@ import { Loading } from '../components/Loading.js';
  * email to a list), never a one-off document or a signing invitation, and says so. Adding an
  * address is checked first; removing one asks first (rule 7).
  */
-export function Suppressions({ onClose }: { onClose: () => void }) {
+export function Suppressions({
+  onClose,
+  lastSkipped = 0,
+}: {
+  onClose: () => void;
+  lastSkipped?: number;
+}) {
   const t = useT();
   const toast = useToast();
   const confirm = useConfirm();
@@ -63,6 +69,11 @@ export function Suppressions({ onClose }: { onClose: () => void }) {
     <div className="stack" data-testid="suppressions">
       <h2>{t('suppress.heading')}</h2>
       <p className="small">{t('suppress.scope')}</p>
+      {lastSkipped > 0 && (
+        <p className="small" data-testid="suppress-last-skipped">
+          {t('suppress.lastSkipped', { count: lastSkipped })}
+        </p>
+      )}
       <form
         className="row"
         noValidate
@@ -101,7 +112,9 @@ export function Suppressions({ onClose }: { onClose: () => void }) {
                 <th>{t('suppress.col.email')}</th>
                 <th>{t('suppress.col.date')}</th>
                 <th>{t('suppress.col.reason')}</th>
-                <th />
+                <th>
+                  <span className="visually-hidden">{t('table.actions')}</span>
+                </th>
               </tr>
             </thead>
             <tbody>

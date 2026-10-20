@@ -75,9 +75,13 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
     }),
   });
   const settings = () => {
-    const number = (name: string) => Number(pieces.env[name]) || undefined;
-    const contextTokens = number('LOPPA_AI_CTX');
-    const threads = number('LOPPA_AI_THREADS');
+    // A whole number in a sane range, or ignored: the values become arguments of the program.
+    const number = (name: string, min: number, max: number) => {
+      const value = Number(pieces.env[name]);
+      return Number.isInteger(value) && value >= min && value <= max ? value : undefined;
+    };
+    const contextTokens = number('LOPPA_AI_CTX', 512, 131_072);
+    const threads = number('LOPPA_AI_THREADS', 1, 64);
     return {
       ...(contextTokens ? { contextTokens } : {}),
       ...(threads ? { threads } : {}),

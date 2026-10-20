@@ -85,7 +85,9 @@ export function Invoices() {
                 <th>{t('invoices.subject')}</th>
                 <th>{t('invoices.due')}</th>
                 <th className="grid__amount">{t('invoices.total')}</th>
-                <th>{/* status and the two links; the header would only repeat the buttons */}</th>
+                <th>
+                  <span className="visually-hidden">{t('table.actions')}</span>
+                </th>
               </tr>
             </thead>
             <tbody>

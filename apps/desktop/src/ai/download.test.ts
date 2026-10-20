@@ -247,6 +247,29 @@ describe('downloading the parts of a file', () => {
     ).rejects.toMatchObject({ failure: 'size' });
   });
 
+  it('stops a server that sends more than the manifest lists, and keeps none of it', async () => {
+    const { file, a, b } = smallModel();
+    const endless = new Response(
+      new ReadableStream({
+        pull(controller) {
+          controller.enqueue(new Uint8Array(64 * 1024));
+        },
+      }),
+    );
+    await expect(
+      downloadFile({
+        file,
+        dir,
+        fetch: (async (url: string | URL | Request) =>
+          String(url).endsWith('part1')
+            ? new Response(new Blob([a as BlobPart]))
+            : endless) as typeof fetch,
+      }),
+    ).rejects.toMatchObject({ failure: 'size' });
+    expect(await readdir(dir)).toEqual(['m.gguf.part1']);
+    void b;
+  });
+
   it('refuses a joined file that is not the manifest file, and keeps no joined file', async () => {
     const { file, a, b } = smallModel();
     const lying = ModelFile.parse({ ...file, sha256: '0'.repeat(64) });

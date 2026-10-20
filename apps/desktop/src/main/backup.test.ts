@@ -81,6 +81,10 @@ describe('the encrypted keys backup', () => {
     expect(() => openKeys(Buffer.from(JSON.stringify({ ...sealed, N: 2 ** 30 })), phrase)).toThrow(
       expect.objectContaining({ code: 'unreadable' }),
     );
+    // A gigabyte of scrypt memory is also too much to ask of a file somebody handed over.
+    expect(() => openKeys(Buffer.from(JSON.stringify({ ...sealed, N: 2 ** 20 })), phrase)).toThrow(
+      expect.objectContaining({ code: 'unreadable' }),
+    );
   });
 
   it('lays out as keys.enc beside the copy and writes the files back only from a good one', async () => {

@@ -2134,6 +2134,7 @@ export const svSE: Record<MessageKey, string> = {
   'docs.keep.save': 'Ladda ner',
   'docs.keep.cancel': 'Avbryt',
   'docs.keep.working': 'Räknar ut storlekarna…',
+  'table.actions': 'Åtgärder',
   'hygiene.heading': 'Kontrollera adresserna',
   'hygiene.col.row': 'Rad',
   'hygiene.col.address': 'Adress',
@@ -2188,5 +2189,7 @@ export const svSE: Record<MessageKey, string> = {
   'suppress.invalid': 'Det är ingen giltig e-postadress.',
   'suppress.remove': 'Ta bort {email}',
   'suppress.removeConfirm': 'Ta bort {email} från listan? Utskick kan då nå adressen igen.',
+  'suppress.lastSkipped':
+    'plural:one Det senaste utskicket hoppade över {count} adress på den här listan. | other Det senaste utskicket hoppade över {count} adresser på den här listan.',
   'suppress.failed': 'Listan kunde inte ändras. Försök igen.',
 };

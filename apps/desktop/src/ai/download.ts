@@ -45,17 +45,26 @@ export interface Progress {
 
 export type OnProgress = (progress: Progress) => void;
 
-/** Counts bytes and hashes them as they pass, and reports. `from` is how many were already counted. */
+/**
+ * Counts bytes and hashes them as they pass, and reports. `from` is how many were already counted.
+ * With `limit`, more bytes than that is an error at once: a server may not fill the disk with a
+ * file that was published at a known size.
+ */
 export function measure(
   hash: ReturnType<typeof createHash>,
   report: (bytes: number) => void,
   from = 0,
+  limit = Infinity,
 ): Transform {
   let seen = from;
   return new Transform({
     transform(chunk: Buffer, _encoding, done) {
-      hash.update(chunk);
       seen += chunk.length;
+      if (seen > limit) {
+        done(new WeightsError('size', `more than the ${limit} bytes the manifest lists`));
+        return;
+      }
+      hash.update(chunk);
       report(seen);
       done(null, chunk);
     },
@@ -247,11 +256,17 @@ async function fetchPart(
             report(bytes);
           },
           start,
+          part.bytes,
         ),
         createWriteStream(partial, { flags: resumed ? 'a' : 'w' }),
         ...(signal ? [{ signal }] : []),
       );
     } catch (error) {
+      if (error instanceof WeightsError) {
+        // Longer than published: not a cut-off to resume, a wrong file to throw away.
+        await rm(partial, { force: true });
+        throw error;
+      }
       // Kept either way, so the next attempt can ask for the rest.
       if (signal?.aborted) throw error;
       throw new WeightsError('io', error instanceof Error ? error.message : String(error));

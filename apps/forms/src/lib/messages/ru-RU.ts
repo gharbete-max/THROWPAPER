@@ -2173,6 +2173,7 @@ export const ruRU: Record<MessageKey, string> = {
   'docs.keep.save': 'Скачать',
   'docs.keep.cancel': 'Отмена',
   'docs.keep.working': 'Расчёт размеров…',
+  'table.actions': 'Действия',
   'hygiene.heading': 'Проверьте адреса',
   'hygiene.col.row': 'Строка',
   'hygiene.col.address': 'Адрес',
@@ -2229,5 +2230,7 @@ export const ruRU: Record<MessageKey, string> = {
   'suppress.remove': 'Удалить {email}',
   'suppress.removeConfirm':
     'Удалить {email} из списка? Рассылки снова смогут доходить до этого адреса.',
+  'suppress.lastSkipped':
+    'plural:one Последняя рассылка пропустила {count} адрес из этого списка. | few Последняя рассылка пропустила {count} адреса из этого списка. | many Последняя рассылка пропустила {count} адресов из этого списка.',
   'suppress.failed': 'Не удалось изменить список. Повторите попытку.',
 };

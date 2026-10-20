@@ -102,11 +102,28 @@ export async function makePack(
   return manifest;
 }
 
+/**
+ * A name from a `PACK.json` that is safe to join onto a folder on any system: letters, digits,
+ * dot, underscore, hyphen; not `.` or `..`; no trailing dot (Windows drops it, so two names become
+ * one); not a Windows device name (`CON`, `NUL`, `COM1`, also with an extension), which would write
+ * to the device instead of a file.
+ */
+export function isPlainFileName(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    value.length <= 200 &&
+    /^[A-Za-z0-9._-]+$/.test(value) &&
+    !value.startsWith('.') &&
+    !value.endsWith('.') &&
+    !/^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\.|$)/i.test(value)
+  );
+}
+
 export async function readPackManifest(folder: string): Promise<PackManifest> {
   const raw: unknown = JSON.parse(await readFile(join(folder, PACK_FILE), 'utf8'));
   const m = raw as Partial<PackManifest> | null;
   const isHash = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v);
-  const isName = (v: unknown) => typeof v === 'string' && /^[A-Za-z0-9._-]+$/.test(v);
+  const isName = isPlainFileName;
   const isSize = (v: unknown) => Number.isInteger(v) && (v as number) > 0;
   const ok =
     m?.format === 1 &&

@@ -128,11 +128,43 @@ describe('the AI IPC', () => {
     const consent = { host: 'huggingface.co', files: ['a'], totalBytes: 1 };
     await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', consent);
     expect(coordinator.install).toHaveBeenLastCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', consent);
-    await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', 'yes');
+    await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', consent);
     expect(coordinator.install).toHaveBeenCalledTimes(2);
+    for (const bad of ['yes', null, { ...consent, totalBytes: '1' }, { ...consent, files: [7] }]) {
+      expect(await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', bad)).toEqual({
+        ok: false,
+        problem: 'consent-required',
+      });
+    }
     await install(forms, '../../etc', consent);
     await install(forms, 7, consent);
     expect(coordinator.install).toHaveBeenCalledTimes(2);
+  });
+
+  it('hands the coordinator the three fields of the consent and no others', async () => {
+    const { handlers, coordinator } = harness();
+    const forged = {
+      host: 'huggingface.co',
+      files: ['a'],
+      totalBytes: 1,
+      at: '1999-01-01T00:00:00Z',
+      modelId: 'other',
+      note: 'x'.repeat(10_000),
+    };
+    await handlers.get(AI_CHANNELS.install)!(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', forged);
+    expect(coordinator.install).toHaveBeenCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', {
+      host: 'huggingface.co',
+      files: ['a'],
+      totalBytes: 1,
+    });
+  });
+
+  it('refuses a text a window could use to hand the model gigabytes', async () => {
+    const { handlers, coordinator } = harness();
+    const run = handlers.get(AI_CHANNELS.run)!;
+    const huge = { kind: 'translate', text: 'x'.repeat(5_000_001), into: 'sv-SE' };
+    expect(await run(forms, 'a', huge)).toEqual({ ok: false, problem: 'failed' });
+    expect(coordinator.run).not.toHaveBeenCalled();
   });
 
   it('passes a cancel, a status and a cache clear straight on', async () => {
