@@ -138,6 +138,9 @@ export default function ModelTiers({
           );
         })}
       </ul>
+      {status.models[0] ? (
+        <p className="muted small">{t('ai.models.folder', { path: status.models[0].folder })}</p>
+      ) : null}
     </fieldset>
   );
 }
