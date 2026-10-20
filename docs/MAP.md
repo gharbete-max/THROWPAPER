@@ -40,6 +40,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
 | Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/` | gold is a fill, never text |
+| What the app shows a user (words, flows) | `apps/forms/src/lib/messages/en-GB.ts` | `docs/USER-GUIDE.md` (keep it in step with the screens) |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
 
 ## AI in one paragraph
