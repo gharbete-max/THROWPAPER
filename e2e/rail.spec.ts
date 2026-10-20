@@ -26,7 +26,7 @@ test('the rail lists the four parts; the earlier features fold, remember and sta
   // Closed to start with; the keyboard opens it and the choice is remembered.
   const earlier = rail.getByText('Earlier features');
   await expect(rail.getByRole('link', { name: 'Events' })).toBeHidden();
-  await earlier.focus();
+  await rail.locator('summary').focus();
   await page.keyboard.press('Enter');
   for (const name of ['Events', 'Responses', 'Invoices', 'Users', 'Brand']) {
     await expect(rail.getByRole('link', { name, exact: true })).toBeVisible();
@@ -45,6 +45,7 @@ test('the rail lists the four parts; the earlier features fold, remember and sta
 
   // The palette finds a route that is folded away.
   await page.goto('/forms');
+  await expect(rail.getByRole('link', { name: 'Forms', exact: true })).toBeVisible();
   await page.keyboard.press('Control+k');
   await page.keyboard.type('brand');
   await page.keyboard.press('Enter');
