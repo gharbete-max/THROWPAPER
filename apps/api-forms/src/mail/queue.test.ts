@@ -44,8 +44,11 @@ describe('mail waiting for somebody to press Send', () => {
     });
     const attachment = await queue.attachment(message!.id, 0);
     expect(attachment?.content.toString()).toBe('%PDF-1.7 card');
-    // Private to the person whose workspace it is.
-    expect((await stat(join(dir, message!.id, 'message.json'))).mode & 0o777).toBe(0o600);
+    // Private to the person whose workspace it is. (Windows has no POSIX file modes: it reports
+    // 0o666 whatever was asked, so the check means something only elsewhere.)
+    if (process.platform !== 'win32') {
+      expect((await stat(join(dir, message!.id, 'message.json'))).mode & 0o777).toBe(0o600);
+    }
   });
 
   it('lists waiting messages first, newest first, then the ones already opened', async () => {
