@@ -1,3 +1,6 @@
+> **Historical log (2026-10-20).** Start with `docs/MAP.md`, not this file. What follows is the build diary, kept for
+> reasons behind decisions; it is not the current state.
+
 # Progress
 
 Session state for Claude Code. When a session gets heavy, write here and start fresh from this
