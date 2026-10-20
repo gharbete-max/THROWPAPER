@@ -94,7 +94,9 @@ test('the model list shows the model, its files and the program that runs it', a
   await expect(model).toContainText('Needs about 10.0 GB of memory');
   await expect(page.getByText('put them in this folder: ')).toContainText('AppData');
   await expect(page.getByText('AI is optional.')).toBeVisible();
-  await expect(model.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ })).toBeEnabled();
+  await expect(
+    model.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ }),
+  ).toBeEnabled();
 
   const runtime = page.locator('[data-runtime]');
   await expect(runtime).toContainText('llama.cpp llama-server b11741');
