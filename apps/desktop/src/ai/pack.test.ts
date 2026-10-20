@@ -8,6 +8,7 @@ import {
   PackError,
   installFromFolder,
   joinFile,
+  isPlainFileName,
   makePack,
   readPackManifest,
   splitFile,
@@ -64,6 +65,51 @@ describe('splitting a pack', () => {
   it('refuses a PACK.json that is not one', async () => {
     await mkdir(pack, { recursive: true });
     await writeFile(join(pack, PACK_FILE), JSON.stringify({ format: 2 }));
+    await expect(readPackManifest(pack)).rejects.toMatchObject({ failure: 'io' });
+  });
+});
+
+describe('names in a PACK.json', () => {
+  it('accepts file names and refuses anything that could leave the folder or name a device', () => {
+    for (const ok of ['model.gguf', 'model.gguf.part1', 'mmproj-F16.gguf', 'a_b-c.1']) {
+      expect(isPlainFileName(ok), ok).toBe(true);
+    }
+    for (const bad of [
+      '..',
+      '.',
+      '.hidden',
+      'a/b',
+      'a\\b',
+      '..\\x',
+      'C:x',
+      'x:stream',
+      'model.',
+      'NUL',
+      'nul.gguf',
+      'CON',
+      'com1.part1',
+      'LPT9',
+      '',
+      'x'.repeat(201),
+      7,
+    ]) {
+      expect(isPlainFileName(bad), String(bad)).toBe(false);
+    }
+  });
+
+  it('refuses a PACK.json whose part is named like a device', async () => {
+    await mkdir(pack, { recursive: true });
+    const h = 'a'.repeat(64);
+    await writeFile(
+      join(pack, PACK_FILE),
+      JSON.stringify({
+        format: 1,
+        id: 'x',
+        files: [
+          { name: 'm.gguf', bytes: 1, sha256: h, parts: [{ name: 'NUL', bytes: 1, sha256: h }] },
+        ],
+      }),
+    );
     await expect(readPackManifest(pack)).rejects.toMatchObject({ failure: 'io' });
   });
 });

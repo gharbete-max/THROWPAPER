@@ -25,8 +25,8 @@ export const KEYS_FILE = 'keys.enc';
 export const KEY_FILES = ['secrets.json', join('sign', 'secrets.json')] as const;
 
 const SCRYPT = { N: 2 ** 15, r: 8, p: 1 } as const;
-/** Parameters read from a file are held to this, so a crafted file cannot ask for gigabytes. */
-const SCRYPT_MAX_N = 2 ** 20;
+/** Parameters read from a file are held to this, so a crafted file cannot ask for a gigabyte and freeze the window while it is derived. */
+const SCRYPT_MAX_N = 2 ** 17; // 128 MiB, about a second; the default is 2 ** 15
 export const MIN_PASSPHRASE = 8;
 
 export class KeysError extends Error {

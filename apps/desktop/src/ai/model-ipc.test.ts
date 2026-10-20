@@ -63,4 +63,22 @@ describe('the model IPC', () => {
     expect(isModelJob({ kind: 'select', passages: ['a'], language: null })).toBe(true);
     expect(isModelJob({ kind: 'select', passages: [1], language: null })).toBe(false);
   });
+
+  it('refuses a job larger than any document', () => {
+    const into = 'sv-SE';
+    expect(isModelJob({ kind: 'translate', text: 'x'.repeat(5_000_001), into })).toBe(false);
+    expect(
+      isModelJob({ kind: 'summarise', text: 'x'.repeat(5_000_001), into, shape: 'document' }),
+    ).toBe(false);
+    expect(isModelJob({ kind: 'select', passages: Array(5_001).fill('a'), language: null })).toBe(
+      false,
+    );
+    expect(
+      isModelJob({
+        kind: 'select',
+        passages: ['x'.repeat(3_000_000), 'y'.repeat(3_000_000)],
+        language: null,
+      }),
+    ).toBe(false);
+  });
 });

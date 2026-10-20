@@ -421,8 +421,10 @@ async function replacePanelWithMain(): Promise<void> {
 }
 
 function registerIpc(): void {
-  registerModelIpc(ipcMain, model, () => ourOrigins());
-  registerAiIpc(ipcMain, ai, () => ourOrigins());
+  // The AI bridge answers Forms' own origin only, not Sign's beside it (ADR 0023, ADR 0024).
+  const formsOnly = () => (server ? [server.url] : []);
+  registerModelIpc(ipcMain, model, formsOnly);
+  registerAiIpc(ipcMain, ai, formsOnly);
   const fail = (error: unknown): Result => ({ ok: false, error: (error as Error).message });
   const refused: Result = { ok: false, error: 'not-the-panel' };
 

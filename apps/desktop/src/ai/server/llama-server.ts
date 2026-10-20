@@ -25,7 +25,8 @@ export interface ProcessHandle {
   readonly pid?: number | undefined;
   onLog(listener: (line: string) => void): void;
   onExit(listener: (code: number | null) => void): void;
-  kill(): void;
+  /** Ends the process; `force` is the uncatchable kind (SIGKILL), for one that ignored the first. */
+  kill(force?: boolean): void;
 }
 export type SpawnFn = (command: string, args: string[], cwd: string) => ProcessHandle;
 
@@ -102,20 +103,43 @@ export function lacksAvx2(line: string, arch: string = process.arch): boolean {
   );
 }
 
+/**
+ * The environment the child gets: what a program needs to find its libraries and temporary folder
+ * and nothing else. The shell's own environment may hold tokens, proxies or `LOPPA_*` switches that
+ * a model server has no use for.
+ */
+const CHILD_ENV =
+  /^(PATH|PATHEXT|SYSTEMROOT|WINDIR|COMSPEC|TEMP|TMP|TMPDIR|HOME|USERPROFILE|LANG|LC_[A-Z]+|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH)$/i;
+
+export function childEnv(env: NodeJS.ProcessEnv, pass: readonly string[] = []): NodeJS.ProcessEnv {
+  return Object.fromEntries(
+    Object.entries(env).filter(([key]) => CHILD_ENV.test(key) || pass.includes(key)),
+  );
+}
+
+/** The program could not take its port: somebody else got it between our probe and its bind. */
+const BIND_FAILURE =
+  /address already in use|couldn't bind|could not bind|failed to bind|EADDRINUSE/i;
+
 const MEMORY_FAILURE = /out of memory|failed to allocate|bad_alloc|cudaMalloc|insufficient memory/i;
 
-export function defaultSpawn(env: NodeJS.ProcessEnv = process.env): SpawnFn {
+/** `pass`: extra variable names a test stand-in needs; production passes none. */
+export function defaultSpawn(
+  env: NodeJS.ProcessEnv = process.env,
+  pass: readonly string[] = [],
+): SpawnFn {
   return (command, args, cwd) => {
     const child = nodeSpawn(command, args, {
       cwd, // the DLLs sit beside the program
       windowsHide: true,
       stdio: ['ignore', 'pipe', 'pipe'],
-      env: {
-        ...Object.fromEntries(
-          Object.entries(env).filter(([key]) => !/^(LLAMA_|HF_|HTTPS?_PROXY|ALL_PROXY)/i.test(key)),
-        ),
-      },
+      env: childEnv(env, pass),
     });
+    // A shell that ends without closing the model (app.exit, an uncaught error) must not leave a
+    // process holding the model's memory. A hard kill of the shell itself cannot be caught.
+    const reap = () => void child.kill('SIGKILL');
+    process.once('exit', reap);
+    child.once('exit', () => process.removeListener('exit', reap));
     const listeners = {
       log: [] as Array<(line: string) => void>,
       exit: [] as Array<(c: number | null) => void>,
@@ -138,7 +162,7 @@ export function defaultSpawn(env: NodeJS.ProcessEnv = process.env): SpawnFn {
       pid: child.pid,
       onLog: (l) => listeners.log.push(l),
       onExit: (l) => listeners.exit.push(l),
-      kill: () => void child.kill(),
+      kill: (force) => void child.kill(force ? 'SIGKILL' : undefined),
     };
   };
 }
@@ -190,6 +214,7 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
   let exitCode: number | null = null;
   let noAvx2 = false;
   let memory = false;
+  let portTaken = false;
   const tail: string[] = [];
   const gone = new Promise<void>((resolve) => {
     handle.onExit((code) => {
@@ -206,6 +231,7 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
       handle.kill();
     }
     if (MEMORY_FAILURE.test(line)) memory = true;
+    if (BIND_FAILURE.test(line)) portTaken = true;
   });
 
   const server: RunningServer = {
@@ -218,7 +244,12 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
     async kill() {
       if (exited) return;
       handle.kill();
-      await Promise.race([gone, sleep(10_000)]);
+      await Promise.race([gone, sleep(5_000)]);
+      // Asked politely and ignored: no process may outlive its session holding gigabytes.
+      if (!exited) {
+        handle.kill(true);
+        await Promise.race([gone, sleep(5_000)]);
+      }
     },
   };
 
@@ -236,6 +267,10 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
         'this computer cannot run the on-device model: its processor has no AVX2',
       );
     }
+    if (portTaken) {
+      // Whatever answers on that port is not our child; nothing is sent to it, least of all the key.
+      return fail('cannot-start', 'the port chosen for llama-server was taken by another program');
+    }
     if (exited) {
       return memory
         ? fail('too-little-memory', 'llama-server ran out of memory while loading')
@@ -247,7 +282,14 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
       const response = await fetch(`${connection.baseUrl}/health`, {
         signal: AbortSignal.any([options.signal, AbortSignal.timeout(2000)]),
       });
-      if (response.ok) return server;
+      if (response.ok) {
+        // A health check alone proves only that something answers on the port. A real child
+        // answers after its model has loaded, long after a failed bind was logged; an answer that
+        // comes at once, from a child that then reports the bind or ends, is somebody else's.
+        await sleep(300);
+        if (!exited && !portTaken) return server;
+        continue;
+      }
     } catch {
       // not listening yet, or still loading
     }
