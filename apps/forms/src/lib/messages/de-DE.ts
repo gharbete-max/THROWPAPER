@@ -1475,7 +1475,7 @@ export const deDE: Record<MessageKey, string> = {
   'room.centreOpen': 'Öffnen',
   'ai.models.heading': 'KI-Modelle auf diesem Computer',
   'ai.models.intro':
-    'Alle Loppa, die KI nutzen, teilen sich diese Modelle. Es ist immer nur eines geladen, sie laufen ohne Netzwerk, und kein Dokument verlässt den Computer.',
+    'Alle Loppa, die KI nutzen, teilen sich diese Modelle. Es ist immer nur eines geladen, und es läuft auf diesem Computer. Kein Dokument verlässt ihn.',
   'ai.models.state.installed': 'Installiert',
   'ai.models.state.missing': 'Nicht installiert',
   'ai.models.state.damaged': 'Beschädigt',
@@ -1510,7 +1510,7 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.open': 'Datei von der Festplatte öffnen',
   'ai.models.remove': 'Entfernen',
   'ai.models.getConfirm':
-    'Dies lädt {size} GB für {name} aus Loppas Veröffentlichung auf GitHub herunter und prüft die Datei. Sie belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
+    '{name} von {host} herunterladen? Dateien: {files}. Insgesamt {size} GB; so viel Speicherplatz wird belegt. Ihre Dokumente werden nirgendwohin gesendet, und Sie können jederzeit abbrechen. Fortfahren?',
   'ai.models.getConfirmYes': 'Herunterladen',
   'ai.models.removeConfirm':
     '{name} von diesem Computer entfernen? Dateien, die Sie von der Festplatte geöffnet haben, werden nicht gelöscht. Sie können es später erneut herunterladen.',
@@ -1521,6 +1521,31 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     'Die gespeicherten Ergebnisse löschen? Ein Dokument erneut zu lesen dauert dann wieder so lange wie beim ersten Mal.',
   'ai.models.clearCacheYes': 'Löschen',
+  'ai.models.optional':
+    'KI ist optional. Loppa funktioniert vollständig ohne Modell. Es wird nichts heruntergeladen, solange Sie nicht auf Herunterladen drücken und bestätigen.',
+  'ai.models.tier.full': 'Voll',
+  'ai.models.tier.balanced': 'Ausgewogen',
+  'ai.models.tier.light': 'Leicht',
+  'ai.models.tier.very-light': 'Sehr leicht',
+  'ai.models.quality.full':
+    'Liest und schreibt am besten. Braucht einen leistungsstarken Computer.',
+  'ai.models.quality.balanced': 'Gut für die meisten Dokumente auf einem normalen Computer.',
+  'ai.models.quality.light':
+    'Läuft auf schwächeren Computern. Liest und schreibt schlechter und macht bei schwierigen Scans mehr Fehler.',
+  'ai.models.quality.very-light':
+    'Für sehr schwache Computer. Kleine Modelle lesen und schreiben schlechter und tun sich mit Scans schwer.',
+  'ai.models.ram': 'Braucht etwa {size} GB Arbeitsspeicher',
+  'ai.models.ramEstimate': 'Braucht etwa {size} GB Arbeitsspeicher (eine Schätzung)',
+  'ai.models.recommended': 'Empfohlen für diesen Computer',
+  'ai.models.chosen': 'Gewählt',
+  'ai.models.use': 'Dieses verwenden',
+  'ai.models.notWorking':
+    'Funktioniert noch nicht: Es hat unseren Test nicht bestanden und kann deshalb nicht heruntergeladen werden.',
+  'ai.models.untested': 'Von uns noch nicht getestet.',
+  'ai.models.evidence': 'Testnotizen und Dateien',
+  'ai.models.progressEta': '{done} von {total} MB, {speed} MB/s, noch etwa {minutes} Min.',
+  'summary.problem.no-disk-space':
+    'Für dieses Modell ist nicht genug freier Speicherplatz vorhanden.',
   'summary.intro':
     'Ein Entwurf einer Zusammenfassung oder Übersetzung eines geöffneten Dokuments, erstellt auf diesem Computer. Er wird neben dem Original angezeigt, als erzeugt gekennzeichnet und nie gespeichert.',
   'summary.settingsToggle': 'Modell-Einstellungen',

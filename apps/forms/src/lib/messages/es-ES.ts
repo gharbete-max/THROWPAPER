@@ -1443,7 +1443,7 @@ export const esES: Record<MessageKey, string> = {
   'room.centreOpen': 'Abrirlo',
   'ai.models.heading': 'Modelos de IA en este ordenador',
   'ai.models.intro':
-    'Todos los Loppa que usan IA comparten estos modelos. Solo uno está cargado a la vez, funcionan sin conexión y ningún documento sale del ordenador.',
+    'Todos los Loppa que usan IA comparten estos modelos. Solo hay uno cargado a la vez y funciona en este ordenador. Ningún documento sale de él.',
   'ai.models.state.installed': 'Instalado',
   'ai.models.state.missing': 'No instalado',
   'ai.models.state.damaged': 'Dañado',
@@ -1474,11 +1474,11 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.loaded': 'Cargado en memoria.',
   'ai.models.downloadOff':
     'Todavía no hay descarga para este. Puedes abrir un archivo del disco en su lugar.',
-  'ai.models.get': 'Obtener',
+  'ai.models.get': 'Descargar',
   'ai.models.open': 'Abrir un archivo del disco',
   'ai.models.remove': 'Quitar',
   'ai.models.getConfirm':
-    'Esto descarga {size} GB para {name} desde la versión de Loppa en GitHub y comprueba el archivo. Ocupa ese espacio en disco. Tus documentos no se envían a ninguna parte. ¿Continuar?',
+    '¿Descargar {name} desde {host}? Archivos: {files}. Total: {size} GB, y ocupa ese espacio en disco. Tus documentos no se envían a ninguna parte y puedes cancelar en cualquier momento. ¿Continuar?',
   'ai.models.getConfirmYes': 'Descargar',
   'ai.models.removeConfirm':
     '¿Quitar {name} de este ordenador? Los archivos que abriste desde el disco no se borran. Puedes obtenerlo de nuevo más tarde.',
@@ -1489,6 +1489,29 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     '¿Borrar los resultados guardados? Volver a leer un documento tardará entonces lo mismo que la primera vez.',
   'ai.models.clearCacheYes': 'Borrar',
+  'ai.models.optional':
+    'La IA es opcional. Loppa funciona por completo sin ningún modelo. No se descarga nada a menos que pulses Descargar y confirmes.',
+  'ai.models.tier.full': 'Completo',
+  'ai.models.tier.balanced': 'Equilibrado',
+  'ai.models.tier.light': 'Ligero',
+  'ai.models.tier.very-light': 'Muy ligero',
+  'ai.models.quality.full': 'La mejor lectura y escritura. Necesita un ordenador potente.',
+  'ai.models.quality.balanced': 'Bueno para la mayoría de los documentos en un ordenador normal.',
+  'ai.models.quality.light':
+    'Funciona en ordenadores más modestos. Lee y escribe peor y se equivoca más con escaneos difíciles.',
+  'ai.models.quality.very-light':
+    'Para ordenadores muy modestos. Los modelos pequeños leen y escriben peor y les cuestan los escaneos.',
+  'ai.models.ram': 'Necesita unos {size} GB de memoria',
+  'ai.models.ramEstimate': 'Necesita unos {size} GB de memoria (una estimación)',
+  'ai.models.recommended': 'Recomendado para este ordenador',
+  'ai.models.chosen': 'Elegido',
+  'ai.models.use': 'Usar este',
+  'ai.models.notWorking':
+    'Todavía no funciona: no superó nuestra prueba, así que no se puede descargar.',
+  'ai.models.untested': 'Aún no lo hemos probado.',
+  'ai.models.evidence': 'Notas de prueba y archivos',
+  'ai.models.progressEta': '{done} de {total} MB, {speed} MB/s, quedan unos {minutes} min',
+  'summary.problem.no-disk-space': 'No hay suficiente espacio libre en el disco para este modelo.',
   'summary.intro':
     'Un borrador de resumen o traducción de un documento que tienes abierto, hecho en este equipo. Se muestra junto al original, marcado como generado, y nunca se guarda.',
   'summary.settingsToggle': 'Ajustes del modelo',

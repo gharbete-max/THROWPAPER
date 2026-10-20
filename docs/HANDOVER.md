@@ -44,7 +44,7 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
 5. **Invoice scan:** optical reading (on-device tesseract) then deterministic rules for amount,
    due date, bank number and payment reference, checked by the reference's check digit, asking
    when unsure. Not to be confused with the Swedish "OCR number" in `invoicing/ocr.ts`.
-6. **Summary and translation:** one model for everything, Qwen2.5-VL-7B-Instruct (Q4_K_M, with its
+6. **Summary and translation:** one model at a time, optional and chosen from a catalogue (ADR 0025 section 6); the Full tier is Qwen2.5-VL-7B-Instruct (Q4_K_M, with its
    projector; Apache-2.0; about 6 GB), desktop only, run by a pinned `llama-server`, shipped as an AI
    pack beside the app and never in the installer (ADR 0025). It needs 12 GB of memory or more; an
    8 GB laptop cannot run it. Contracts, consents, declarations and clinical forms are
@@ -185,6 +185,15 @@ is a dev tool, not a dependency: Python, outside `package.json`, nothing in the 
 `docs/plan/DOCUMENTS.md` (the plan), `docs/adr/` (0022 the room, 0016 desktop, 0011 invoices),
 `docs/CONTRACT.md` (Forms to Sign), `docs/MODULE-STATUS.md` (re-measured at `2669716` at its top; the rest is history).
 `docs/PROGRESS.md` is a 3,500-line log: search it, never read it whole.
+
+## Model catalogue (2026-10-20, ADR 0025 section 6)
+
+AI is optional and the model is chosen in the Summary pane's list: six pinned Apache-2.0 models in four tiers
+(Full is the owner's Qwen2.5-VL-7B), downloaded from huggingface.co only on a press after a confirmation naming the
+host, files and total size. Measured here: Qwen3-VL-2B works (3.54 GB peak, 12 of 12 strings); SmolVLM2-500M runs but
+is marked not working yet (1 of 12). Not run: Balanced (4B), SmolVLM2-2.2B, SmolVLM2-256M; their memory figures are
+estimates and the list says so. `scripts/model-bench.ts` re-measures any of them. Packages touched: `packages/shared`
+(manifest fields, `ai/catalogue.ts`, the bridge types). Still open: encrypted backup, footer skeleton, the AI pack (now optional).
 
 ## Decisions of 2026-10-20 (ADR 0026)
 

@@ -1434,7 +1434,7 @@ export const fiFI: Record<MessageKey, string> = {
   'room.centreOpen': 'Avaa se',
   'ai.models.heading': 'Tekoälymallit tällä tietokoneella',
   'ai.models.intro':
-    'Kaikki tekoälyä käyttävät Loppat jakavat nämä mallit. Vain yksi on ladattuna kerrallaan, ne toimivat ilman verkkoa, eikä mikään asiakirja poistu koneelta.',
+    'Kaikki tekoälyä käyttävät Loppat jakavat nämä mallit. Vain yksi on ladattuna kerrallaan, ja se toimii tällä tietokoneella. Mikään asiakirja ei lähde sieltä.',
   'ai.models.state.installed': 'Asennettu',
   'ai.models.state.missing': 'Ei asennettu',
   'ai.models.state.damaged': 'Vahingoittunut',
@@ -1464,11 +1464,11 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.folder': 'Lisää tiedostot käsin tähän kansioon: {path}',
   'ai.models.loaded': 'Ladattu muistiin.',
   'ai.models.downloadOff': 'Tälle ei ole vielä latausta. Voit avata tiedoston levyltä sen sijaan.',
-  'ai.models.get': 'Hae',
+  'ai.models.get': 'Lataa',
   'ai.models.open': 'Avaa tiedosto levyltä',
   'ai.models.remove': 'Poista',
   'ai.models.getConfirm':
-    'Tämä lataa {size} Gt mallille {name} Loppan julkaisusta GitHubista ja tarkistaa tiedoston. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
+    'Ladataanko {name} osoitteesta {host}? Tiedostot: {files}. Yhteensä {size} Gt, ja se vie yhtä paljon levytilaa. Asiakirjojasi ei lähetetä minnekään, ja voit peruuttaa milloin tahansa. Jatketaanko?',
   'ai.models.getConfirmYes': 'Lataa',
   'ai.models.removeConfirm':
     'Poistetaanko {name} tältä tietokoneelta? Levyltä avaamiasi tiedostoja ei poisteta. Voit hakea sen myöhemmin uudelleen.',
@@ -1479,6 +1479,28 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     'Poistetaanko tallennetut tulokset? Asiakirjan lukeminen uudelleen kestää silloin yhtä kauan kuin ensimmäisellä kerralla.',
   'ai.models.clearCacheYes': 'Poista',
+  'ai.models.optional':
+    'Tekoäly on valinnaista. Loppa toimii täysin ilman mallia. Mitään ei ladata, ellet paina Lataa ja vahvista.',
+  'ai.models.tier.full': 'Täysi',
+  'ai.models.tier.balanced': 'Tasapainoinen',
+  'ai.models.tier.light': 'Kevyt',
+  'ai.models.tier.very-light': 'Hyvin kevyt',
+  'ai.models.quality.full': 'Paras lukemaan ja kirjoittamaan. Vaatii tehokkaan tietokoneen.',
+  'ai.models.quality.balanced': 'Hyvä useimmille asiakirjoille tavallisella tietokoneella.',
+  'ai.models.quality.light':
+    'Toimii heikommilla tietokoneilla. Lukee ja kirjoittaa huonommin ja tekee enemmän virheitä vaikeissa skannauksissa.',
+  'ai.models.quality.very-light':
+    'Hyvin heikoille tietokoneille. Pienet mallit lukevat ja kirjoittavat huonommin ja kamppailevat skannausten kanssa.',
+  'ai.models.ram': 'Tarvitsee noin {size} Gt muistia',
+  'ai.models.ramEstimate': 'Tarvitsee noin {size} Gt muistia (arvio)',
+  'ai.models.recommended': 'Suositeltu tälle tietokoneelle',
+  'ai.models.chosen': 'Valittu',
+  'ai.models.use': 'Käytä tätä',
+  'ai.models.notWorking': 'Ei vielä toimi: se ei läpäissyt testiämme, joten sitä ei voi ladata.',
+  'ai.models.untested': 'Emme ole vielä testanneet sitä.',
+  'ai.models.evidence': 'Testimuistiinpanot ja tiedostot',
+  'ai.models.progressEta': '{done} / {total} Mt, {speed} Mt/s, noin {minutes} min jäljellä',
+  'summary.problem.no-disk-space': 'Tälle mallille ei ole tarpeeksi vapaata levytilaa.',
   'summary.intro':
     'Luonnos avoinna olevan asiakirjan tiivistelmästä tai käännöksestä, tehty tällä tietokoneella. Se näytetään alkuperäisen vieressä, merkittynä tuotetuksi, eikä sitä koskaan tallenneta.',
   'summary.settingsToggle': 'Mallin asetukset',

@@ -51,7 +51,7 @@ const small = (published = true) => {
           name: `a.part${i + 1}`,
           sha256: sha(part),
           url: published
-            ? `https://example.test/${i + 1}`
+            ? `https://huggingface.co/x/resolve/r/${i + 1}`
             : `${UNPUBLISHED}the release has not been cut yet`,
         })),
         role: 'weights',
@@ -167,14 +167,14 @@ describe('downloading', () => {
           status: served[String(url)] ? 200 : 404,
         })) as typeof fetch,
     });
-    served['https://example.test/1'] = ctx.bytes.subarray(0, 10_000);
-    served['https://example.test/2'] = ctx.bytes.subarray(10_000);
+    served['https://huggingface.co/x/resolve/r/1'] = ctx.bytes.subarray(0, 10_000);
+    served['https://huggingface.co/x/resolve/r/2'] = ctx.bytes.subarray(10_000);
     expect(await ctx.service.install()).toEqual({ ok: true, id: 'install' });
     await ctx.until((e) => e.kind === 'installed');
     expect(await ctx.service.status()).toMatchObject({ installed: true, verified: true });
-    expect(await readdir(join(dir, 'models'))).toEqual(['small.gguf']);
+    expect(await readdir(join(dir, 'models'))).toEqual(['consents.jsonl', 'small.gguf']);
     expect((await ctx.service.remove()).installed).toBe(false);
-    expect(await readdir(join(dir, 'models'))).toEqual([]);
+    expect(await readdir(join(dir, 'models'))).toEqual(['consents.jsonl']);
   });
 });
 
@@ -329,7 +329,7 @@ describe('the fake mode CI runs', () => {
       installed: true,
       verified: true,
       location: null,
-      downloadBlocked: 'the AI pack has not been published yet',
+      downloadBlocked: null,
     });
     await service.start('f', JOB);
     await vi.waitFor(() =>

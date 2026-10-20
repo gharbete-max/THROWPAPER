@@ -1461,7 +1461,7 @@ export const frFR: Record<MessageKey, string> = {
   'room.centreOpen': 'L’ouvrir',
   'ai.models.heading': 'Modèles d’IA sur cet ordinateur',
   'ai.models.intro':
-    'Tous les Loppa qui utilisent l’IA partagent ces modèles. Un seul est chargé à la fois, ils fonctionnent hors ligne et aucun document ne quitte l’ordinateur.',
+    'Tous les Loppa qui utilisent l’IA partagent ces modèles. Un seul est chargé à la fois et il fonctionne sur cet ordinateur. Aucun document ne le quitte.',
   'ai.models.state.installed': 'Installé',
   'ai.models.state.missing': 'Non installé',
   'ai.models.state.damaged': 'Endommagé',
@@ -1492,11 +1492,11 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.loaded': 'Chargé en mémoire.',
   'ai.models.downloadOff':
     'Il n’y a pas encore de téléchargement pour celui-ci. Vous pouvez ouvrir un fichier depuis le disque.',
-  'ai.models.get': 'Obtenir',
+  'ai.models.get': 'Télécharger',
   'ai.models.open': 'Ouvrir un fichier depuis le disque',
   'ai.models.remove': 'Supprimer',
   'ai.models.getConfirm':
-    'Cela télécharge {size} Go pour {name} depuis la publication de Loppa sur GitHub et vérifie le fichier. Il occupe autant d’espace disque. Vos documents ne sont envoyés nulle part. Continuer ?',
+    'Télécharger {name} depuis {host} ? Fichiers : {files}. Total : {size} Go, et cela occupe autant d’espace disque. Vos documents ne sont envoyés nulle part et vous pouvez annuler à tout moment. Continuer ?',
   'ai.models.getConfirmYes': 'Télécharger',
   'ai.models.removeConfirm':
     'Supprimer {name} de cet ordinateur ? Les fichiers que vous avez ouverts depuis le disque ne sont pas supprimés. Vous pourrez le récupérer plus tard.',
@@ -1507,6 +1507,29 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     'Supprimer les résultats enregistrés ? Relire un document prendra alors autant de temps que la première fois.',
   'ai.models.clearCacheYes': 'Supprimer',
+  'ai.models.optional':
+    'L’IA est facultative. Loppa fonctionne pleinement sans aucun modèle. Rien n’est téléchargé tant que vous n’appuyez pas sur Télécharger et ne confirmez pas.',
+  'ai.models.tier.full': 'Complet',
+  'ai.models.tier.balanced': 'Équilibré',
+  'ai.models.tier.light': 'Léger',
+  'ai.models.tier.very-light': 'Très léger',
+  'ai.models.quality.full': 'Meilleure lecture et écriture. Demande un ordinateur puissant.',
+  'ai.models.quality.balanced': 'Convient à la plupart des documents sur un ordinateur ordinaire.',
+  'ai.models.quality.light':
+    'Fonctionne sur des ordinateurs plus modestes. Lit et écrit moins bien et se trompe davantage sur les scans difficiles.',
+  'ai.models.quality.very-light':
+    'Pour des ordinateurs très modestes. Les petits modèles lisent et écrivent moins bien et peinent avec les scans.',
+  'ai.models.ram': 'Demande environ {size} Go de mémoire',
+  'ai.models.ramEstimate': 'Demande environ {size} Go de mémoire (estimation)',
+  'ai.models.recommended': 'Recommandé pour cet ordinateur',
+  'ai.models.chosen': 'Choisi',
+  'ai.models.use': 'Utiliser celui-ci',
+  'ai.models.notWorking':
+    'Ne fonctionne pas encore : il a échoué à notre test, il ne peut donc pas être téléchargé.',
+  'ai.models.untested': 'Pas encore testé par nous.',
+  'ai.models.evidence': 'Notes de test et fichiers',
+  'ai.models.progressEta': '{done} sur {total} Mo, {speed} Mo/s, environ {minutes} min restantes',
+  'summary.problem.no-disk-space': 'Il n’y a pas assez d’espace disque libre pour ce modèle.',
   'summary.intro':
     'Un brouillon de résumé ou de traduction d’un document ouvert, fait sur cet ordinateur. Il s’affiche à côté de l’original, marqué comme généré, et n’est jamais enregistré.',
   'summary.settingsToggle': 'Réglages du modèle',

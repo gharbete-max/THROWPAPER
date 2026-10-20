@@ -45,7 +45,9 @@ const toLegacyProblem = (problem: AiProblem): ModelProblem =>
     ? 'cannot-start'
     : problem === 'consent-required'
       ? 'failed'
-      : problem;
+      : problem === 'no-disk-space'
+        ? 'download-failed'
+        : problem;
 
 const toLegacyResult = (result: AiStart): StartResult =>
   result.ok ? result : { ok: false, problem: toLegacyProblem(result.problem) };
@@ -76,12 +78,15 @@ export function createModelAdapter(
   coordinator: Coordinator,
   options: { emit(event: ModelEvent): void; modelId?: string },
 ): ModelService {
-  const modelId = options.modelId ?? TEXT_MODEL.id;
+  const fixed = options.modelId;
+  /** The model the pane means: the one tasks go to now (the person's choice), unless one is fixed. */
+  const current = async (): Promise<string> =>
+    fixed ?? (await coordinator.status()).models.find((m) => m.selected)?.id ?? TEXT_MODEL.id;
   /** The jobs this adapter started: the only ones whose events are its to forward. */
   const mine = new Set<string>();
 
   coordinator.onEvent((event: AiEvent) => {
-    if (event.id === installId(modelId)) {
+    if (event.id.startsWith('install:')) {
       if (event.kind === 'install') {
         options.emit({
           id: LEGACY_INSTALL,
@@ -96,7 +101,7 @@ export function createModelAdapter(
         options.emit({
           id: LEGACY_INSTALL,
           kind: 'installed',
-          status: legacyStatus(event.status, modelId),
+          status: legacyStatus(event.status, event.modelId),
         });
       } else if (event.kind === 'install-failed') {
         options.emit({
@@ -124,14 +129,21 @@ export function createModelAdapter(
     if (event.kind === 'done' || event.kind === 'error') mine.delete(event.id);
   });
 
-  const status = async () => legacyStatus(await coordinator.status(), modelId);
+  const status = async () => legacyStatus(await coordinator.status(), await current());
 
   return {
     status,
-    install: async () => asInstall(toLegacyResult(await coordinator.install(modelId, true))),
-    openFromDisk: async () => asInstall(toLegacyResult(await coordinator.openFromDisk(modelId))),
+    async install() {
+      const id = await current();
+      const consent = (await coordinator.status()).models.find((m) => m.id === id)?.consent;
+      if (!consent) return { ok: false, problem: 'download-unavailable' };
+      return asInstall(toLegacyResult(await coordinator.install(id, consent)));
+    },
+    openFromDisk: async () =>
+      asInstall(toLegacyResult(await coordinator.openFromDisk(await current()))),
     async remove() {
-      return legacyStatus(await coordinator.remove(modelId), modelId);
+      const id = await current();
+      return legacyStatus(await coordinator.remove(id), id);
     },
     async start(id, job) {
       const { running, queued } = coordinator.state();
@@ -142,7 +154,7 @@ export function createModelAdapter(
       return result;
     },
     async cancel(id) {
-      await coordinator.cancel(id === LEGACY_INSTALL ? installId(modelId) : id);
+      await coordinator.cancel(id === LEGACY_INSTALL ? installId(await current()) : id);
     },
     close: () => coordinator.close(),
   };

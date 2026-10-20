@@ -1430,7 +1430,7 @@ export const isIS: Record<MessageKey, string> = {
   'room.centreOpen': 'Opna það',
   'ai.models.heading': 'Gervigreindarlíkön á þessari tölvu',
   'ai.models.intro':
-    'Öll Loppa sem nota gervigreind deila þessum líkönum. Aðeins eitt er hlaðið í einu, þau keyra án nets og ekkert skjal fer úr tölvunni.',
+    'Öll Loppa sem nota gervigreind deila þessum líkönum. Aðeins eitt er hlaðið í einu og það keyrir á þessari tölvu. Ekkert skjal fer úr henni.',
   'ai.models.state.installed': 'Uppsett',
   'ai.models.state.missing': 'Ekki uppsett',
   'ai.models.state.damaged': 'Skemmt',
@@ -1465,7 +1465,7 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.open': 'Opna skrá af diski',
   'ai.models.remove': 'Fjarlægja',
   'ai.models.getConfirm':
-    'Þetta sækir {size} GB fyrir {name} úr útgáfu Loppa á GitHub og athugar skrána. Hún tekur svona mikið pláss á disknum. Skjölin þín eru hvergi send. Halda áfram?',
+    'Sækja {name} frá {host}? Skrár: {files}. Alls: {size} GB og það tekur jafn mikið diskpláss. Skjölin þín eru hvergi send og þú getur hætt við hvenær sem er. Halda áfram?',
   'ai.models.getConfirmYes': 'Sækja',
   'ai.models.removeConfirm':
     'Fjarlægja {name} af þessari tölvu? Skrár sem þú opnaðir af diski eru ekki eyddar. Þú getur sótt það aftur síðar.',
@@ -1476,6 +1476,29 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     'Eyða vistuðum niðurstöðum? Það tekur þá jafn langan tíma að lesa skjal aftur og í fyrsta sinn.',
   'ai.models.clearCacheYes': 'Eyða',
+  'ai.models.optional':
+    'Gervigreind er valfrjáls. Loppa virkar til fulls án nokkurs líkans. Ekkert er sótt nema þú ýtir á Sækja og staðfestir.',
+  'ai.models.tier.full': 'Fullt',
+  'ai.models.tier.balanced': 'Jafnvægi',
+  'ai.models.tier.light': 'Létt',
+  'ai.models.tier.very-light': 'Mjög létt',
+  'ai.models.quality.full': 'Best í lestri og skrift. Þarf öfluga tölvu.',
+  'ai.models.quality.balanced': 'Gott fyrir flest skjöl á venjulegri tölvu.',
+  'ai.models.quality.light':
+    'Keyrir á veikari tölvum. Les og skrifar verr og gerir fleiri mistök í erfiðum skönnunum.',
+  'ai.models.quality.very-light':
+    'Fyrir mjög veikar tölvur. Lítil líkön lesa og skrifa verr og eiga erfitt með skannanir.',
+  'ai.models.ram': 'Þarf um {size} GB af minni',
+  'ai.models.ramEstimate': 'Þarf um {size} GB af minni (áætlun)',
+  'ai.models.recommended': 'Mælt með fyrir þessa tölvu',
+  'ai.models.chosen': 'Valið',
+  'ai.models.use': 'Nota þetta',
+  'ai.models.notWorking':
+    'Virkar ekki enn: það stóðst ekki prófið okkar og er því ekki hægt að sækja það.',
+  'ai.models.untested': 'Við höfum ekki prófað það enn.',
+  'ai.models.evidence': 'Prófunarathugasemdir og skrár',
+  'ai.models.progressEta': '{done} af {total} MB, {speed} MB/s, um {minutes} mín eftir',
+  'summary.problem.no-disk-space': 'Ekki er nóg laust diskpláss fyrir þetta líkan.',
   'summary.intro':
     'Uppkast að samantekt eða þýðingu á skjali sem þú hefur opið, gert á þessari tölvu. Það birtist við hlið frumtextans, merkt sem útbúið af vél, og er aldrei vistað.',
   'summary.settingsToggle': 'Stillingar líkansins',

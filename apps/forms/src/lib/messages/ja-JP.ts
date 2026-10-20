@@ -1423,7 +1423,7 @@ export const jaJP: Record<MessageKey, string> = {
   'room.centreOpen': '開く',
   'ai.models.heading': 'このコンピューターのAIモデル',
   'ai.models.intro':
-    'AIを使うすべてのLoppaがこれらのモデルを共有します。読み込まれるのは一度に1つだけで、オフラインで動作し、文書がこのコンピューターから出ることはありません。',
+    'AI を使うすべての Loppa がこれらのモデルを共有します。読み込まれるのは一度に 1 つだけで、このコンピューター上で動作します。文書がこのコンピューターの外に出ることはありません。',
   'ai.models.state.installed': 'インストール済み',
   'ai.models.state.missing': '未インストール',
   'ai.models.state.damaged': '破損',
@@ -1454,11 +1454,11 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.loaded': 'メモリに読み込み済みです。',
   'ai.models.downloadOff':
     'これにはまだダウンロードがありません。代わりにディスクからファイルを開けます。',
-  'ai.models.get': '入手',
+  'ai.models.get': 'ダウンロード',
   'ai.models.open': 'ディスクからファイルを開く',
   'ai.models.remove': '削除',
   'ai.models.getConfirm':
-    '{name}用に、LoppaのGitHubリリースから{size} GBをダウンロードし、ファイルを確認します。その分のディスク容量を使います。文書はどこにも送信されません。続けますか？',
+    '{host} から {name} をダウンロードしますか？ ファイル：{files}。合計 {size} GB で、同じ量のディスク容量を使います。文書はどこにも送信されず、いつでもキャンセルできます。続けますか？',
   'ai.models.getConfirmYes': 'ダウンロード',
   'ai.models.removeConfirm':
     '{name}をこのコンピューターから削除しますか？ディスクから開いたファイルは削除されません。後でもう一度入手できます。',
@@ -1469,6 +1469,28 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     '保存された結果を削除しますか？文書を再度読み取るには、初回と同じ時間がかかります。',
   'ai.models.clearCacheYes': '削除',
+  'ai.models.optional':
+    'AI は任意です。モデルがなくても Loppa は問題なく使えます。「ダウンロード」を押して確認しない限り、何もダウンロードされません。',
+  'ai.models.tier.full': 'フル',
+  'ai.models.tier.balanced': 'バランス',
+  'ai.models.tier.light': '軽量',
+  'ai.models.tier.very-light': '超軽量',
+  'ai.models.quality.full': '読み書きが最も優れています。高性能なコンピューターが必要です。',
+  'ai.models.quality.balanced': '一般的なコンピューターでほとんどの文書に適しています。',
+  'ai.models.quality.light':
+    '性能の低いコンピューターでも動きます。読み書きは劣り、難しいスキャンでは間違いが増えます。',
+  'ai.models.quality.very-light':
+    '非常に性能の低いコンピューター向けです。小さなモデルは読み書きが劣り、スキャンが苦手です。',
+  'ai.models.ram': '約 {size} GB のメモリが必要です',
+  'ai.models.ramEstimate': '約 {size} GB のメモリが必要です（推定）',
+  'ai.models.recommended': 'このコンピューターにおすすめ',
+  'ai.models.chosen': '選択中',
+  'ai.models.use': 'これを使う',
+  'ai.models.notWorking': 'まだ動作しません：テストに合格しなかったため、ダウンロードできません。',
+  'ai.models.untested': 'まだテストしていません。',
+  'ai.models.evidence': 'テストメモとファイル',
+  'ai.models.progressEta': '{done} / {total} MB、{speed} MB/秒、残り約 {minutes} 分',
+  'summary.problem.no-disk-space': 'このモデルに必要な空きディスク容量が足りません。',
   'summary.intro':
     '開いている文書の要約または翻訳の下書きを、このコンピューター上で作ります。原文の隣に「生成されたもの」と示して表示され、保存されることはありません。',
   'summary.settingsToggle': 'モデルの設定',
