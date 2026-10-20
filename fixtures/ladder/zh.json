@@ -1,7 +1,7 @@
 {
   "language": "zh",
   "locale": "zh-CN",
-  "source": "docs/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. Chinese is read as character bigrams, which T3 never compares fuzzily, so there are no T3 rows. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
+  "source": "docs/archive/plan/INTENT-LADDER.md, 'Tests'. Each row is a phrase typed at a node (or read as a named pattern) and what the ladder must make of it; 'ask' rows must not resolve. Chinese is read as character bigrams, which T3 never compares fuzzily, so there are no T3 rows. packages/shared/src/interpret/ladder.test.ts runs every row. A row changes only with the behaviour it describes, in the same commit.",
   "rows": [
     {
       "phrase": "可以选多个",

@@ -21,7 +21,7 @@ import { readDocument } from './pipeline.js';
 import type { Reading } from './reading.js';
 
 /**
- * The golden corpus — `docs/plan/IMPORT-PIPELINE.md`, "The golden corpus": real documents, written
+ * The golden corpus — `docs/archive/plan/IMPORT-PIPELINE.md`, "The golden corpus": real documents, written
  * by a real word processor, read by exactly the code the paper door runs. Stage 1 (`openPdf` with
  * Node's pdf.js, or `readDocx`), then stages 2 to 7 (`readDocument`, as in the worker).
  *
@@ -265,7 +265,7 @@ describe('the golden corpus', () => {
 });
 
 /**
- * The corpus's scans (S14, `docs/plan/SCANS.md` §5): corpus documents printed and scanned
+ * The corpus's scans (S14, `docs/archive/plan/SCANS.md` §5): corpus documents printed and scanned
  * (`pnpm corpus:scan`), and pictures of real paper kept as they were found, each kept as its
  * picture and as the raw document Tesseract read from it, frozen. The test reads the frozen file
  * through the same stages, against an expectation written from the document's own: what the paper

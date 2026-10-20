@@ -1,5 +1,5 @@
 /**
- * The belief engine — `docs/plan/BELIEF.md` (S11): what it can guess, what an answer says, which
+ * The belief engine — `docs/archive/plan/BELIEF.md` (S11): what it can guess, what an answer says, which
  * question next, the guess, and what "Right" adds.
  */
 export { RECIPES, RECIPE_IDS, recipeOf, type Recipe } from './recipes.js';

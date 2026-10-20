@@ -3,7 +3,7 @@ import { lexiconFor, occurrences, type Language, type Lexicon } from './lexicon.
 import { isCjk, probed, spanOf, tokenise, type Probed } from './text.js';
 
 /**
- * T4 — values rather than options (`docs/plan/INTENT-LADDER.md`, "T4 — gazetteers and
+ * T4 — values rather than options (`docs/archive/plan/INTENT-LADDER.md`, "T4 — gazetteers and
  * patterns"). Each pattern is named and locked by rows in `fixtures/ladder/`: a quantity, an
  * amount of money, a date, an e-mail address, a phone number, a Swedish organisation number and a
  * Swedish personal identity number.

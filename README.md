@@ -86,8 +86,6 @@ apps/api-forms    Forms backend: forms, PDF routes, send, invoicing, phone scan
 apps/sign         Sign — the signer's page
 apps/api-sign     Sign backend — envelopes, audit trail, PAdES sealing
 apps/desktop      Loppa desktop (Windows, macOS) — offline first, hosts Forms and Sign, runs the AI centre
-apps/mailer       A stub; mail is built inside Documents' Send
-apps/api-mailer   A stub backend
 packages/*        tokens, i18n, ui, calc, shared (types, contract, pure cores), signing
 docs/brand        The Loppa brand bundle
 ```

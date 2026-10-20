@@ -2,7 +2,7 @@ import type { Json } from '../builder/graph/schema.js';
 import type { Tier } from '../builder/machine.js';
 
 /**
- * What the ladder makes of free text — `docs/plan/INTENT-LADDER.md`, "The contract".
+ * What the ladder makes of free text — `docs/archive/plan/INTENT-LADDER.md`, "The contract".
  */
 
 export interface Alternative {

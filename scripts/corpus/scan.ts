@@ -1,5 +1,5 @@
 /**
- * `pnpm corpus:scan` — the golden corpus's scans (S14, `docs/plan/SCANS.md` §5).
+ * `pnpm corpus:scan` — the golden corpus's scans (S14, `docs/archive/plan/SCANS.md` §5).
  *
  * A scan is a corpus document printed and put through a scanner: here, its first page drawn by
  * pdf.js at 200 dots an inch, in grey, turned a fraction of a degree as a sheet fed by hand is

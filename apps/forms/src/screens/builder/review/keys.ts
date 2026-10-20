@@ -1,5 +1,5 @@
 /**
- * The review screen's keys — `docs/plan/IMPORT-PIPELINE.md` §8 — as a function from a key press to
+ * The review screen's keys — `docs/archive/plan/IMPORT-PIPELINE.md` §8 — as a function from a key press to
  * what it does, so every rule is a test (`keys.test.ts`) and the screen only has to call it.
  *
  * | Key | Does |

@@ -1,4 +1,4 @@
-> Live for **structure only** (see START-HERE.md §3). Token prefixes and the product name were
+> Live for **structure only** (see archive/START-HERE.md §3). Token prefixes and the product name were
 > renamed on ingest; every colour name and old asset path in here is dead — `tokens-loppa.css`,
 > `css/loppa-motion.css` and `css/loppa-spinner.svg` replace them.
 

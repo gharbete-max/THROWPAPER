@@ -2,7 +2,7 @@ import { occurrences, type Lexicon } from './lexicon.js';
 import { probed, tokenise } from './text.js';
 
 /**
- * T5's clauses (`docs/plan/INTENT-LADDER.md`, T5): a sentence cut where it says several things —
+ * T5's clauses (`docs/archive/plan/INTENT-LADDER.md`, T5): a sentence cut where it says several things —
  * at `, ; : . ! ?`, their CJK forms and line breaks, as every rung reads clauses, and at the
  * language's conjunctions ("and", "och", "und", 和). Each is a span of what was typed, trimmed to
  * its first and last letter or digit, so what a clause decides points at what was typed.

@@ -1,6 +1,6 @@
 {
   "language": "sv",
-  "source": "docs/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. A word added here is a behaviour change: it needs a row in fixtures/ladder/sv.json in the same commit.",
+  "source": "docs/archive/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. A word added here is a behaviour change: it needs a row in fixtures/ladder/sv.json in the same commit.",
   "decimalSeparator": ",",
   "numbers": {
     "noll": 0,

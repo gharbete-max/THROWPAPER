@@ -1,5 +1,5 @@
 {
-  "source": "docs/plan/IMPORT-PIPELINE.md §4: the yes/no pairs of rule 4, the words by which a question points at a table (§4.2, CAVEATS #102), and the words that start a form number or a revision (rule 9). Compared lower-cased after NFKC. tableWords are word prefixes, so that an inflected form matches (tabellen, Tabelle, taulukkoon); for Chinese and Japanese they are substrings.",
+  "source": "docs/archive/plan/IMPORT-PIPELINE.md §4: the yes/no pairs of rule 4, the words by which a question points at a table (§4.2, CAVEATS #102), and the words that start a form number or a revision (rule 9). Compared lower-cased after NFKC. tableWords are word prefixes, so that an inflected form matches (tabellen, Tabelle, taulukkoon); for Chinese and Japanese they are substrings.",
   "lexiconVersion": 1,
   "booleanPairs": {
     "da": [["ja", "nej"]],

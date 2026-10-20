@@ -13,8 +13,6 @@ export * from './import-surveyjs.js';
 export * from './import-acroform.js';
 export * from './pattern-safety.js';
 export * from './uploads.js';
-export * from './wizard.js';
-export * from './wizard-definition.js';
 export * from './signature-vector.js';
 export * from './signing-requests.js';
 export * from './phone-scan.js';

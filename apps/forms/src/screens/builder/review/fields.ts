@@ -100,7 +100,7 @@ interface Taken {
 export interface Imported {
   readonly fields: Field[];
   /**
-   * By field id, the slots the document decided (`docs/plan/CONVERGENCE.md`): the kind always,
+   * By field id, the slots the document decided (`docs/archive/plan/CONVERGENCE.md`): the kind always,
    * since nothing leaves the review unsettled; whether it must be answered, when the document said
    * either way; the options, when they were printed. The walk asks the rest.
    */

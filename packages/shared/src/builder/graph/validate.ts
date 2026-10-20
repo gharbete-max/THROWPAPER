@@ -19,7 +19,7 @@ import voice from './voice.json';
  * `pnpm builder:validate` — the rules the conversation graph must satisfy before it ships.
  *
  * Each rule has an id, a broken-graph test in `validate.test.ts`, and a line in
- * `docs/plan/BUILDER-GRAPH.md` ("Validation"). The rules split in two:
+ * `docs/archive/plan/BUILDER-GRAPH.md` ("Validation"). The rules split in two:
  *
  * - **Structural** (G0–G3, G5–G9, G11, G12, G14) need only the graph, and run here and in
  *   `graph.test.ts`.

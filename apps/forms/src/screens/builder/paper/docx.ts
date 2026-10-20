@@ -6,7 +6,7 @@ import { at, child, childrenNamed, parseXml, type XmlElement } from './xml.js';
 import { openZip, type Zip } from './zip.js';
 
 /**
- * A Word document as stage 1's `RawDocument` — `docs/plan/IMPORT-PIPELINE.md` §1, DOCX, and
+ * A Word document as stage 1's `RawDocument` — `docs/archive/plan/IMPORT-PIPELINE.md` §1, DOCX, and
  * `LAYOUT-IR.md`, "How each source fills it". This is the half of the importer that touches a
  * Word file's bytes; everything after it is `@tp/shared/import`.
  *

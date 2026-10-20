@@ -4,7 +4,7 @@ import { documentText, formText, nothingChanged, type Update } from './reimport.
 
 /**
  * "Compared with your form" — the document read again against the form made from it (S12c,
- * `docs/plan/CONVERGENCE.md`). What is new is listed and added; everything else is one decision
+ * `docs/archive/plan/CONVERGENCE.md`). What is new is listed and added; everything else is one decision
  * each, a toggle that starts off: nothing is taken out, reworded or moved without a press
  * (`CLAUDE.md` rule 7).
  */

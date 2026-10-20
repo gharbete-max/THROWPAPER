@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { EXP_ZERO_FROM, expMicro } from './exp.js';
 
 /**
- * The belief engine's exponential (`docs/plan/BELIEF.md`, `CAVEATS.md` #50): integers, the same on
+ * The belief engine's exponential (`docs/archive/plan/BELIEF.md`, `CAVEATS.md` #50): integers, the same on
  * every machine. A test may use `Math.exp` as the reference; the core may not.
  */
 describe('expMicro', () => {

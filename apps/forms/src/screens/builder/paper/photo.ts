@@ -16,7 +16,7 @@ export interface Photo extends PageDrawer {
 /**
  * Opens a photograph, turned the way its file says (`imageOrientation: 'from-image'`): a phone's
  * picture of a page held upright is read upright. It is never straightened or cropped here
- * (`docs/plan/SCANS.md`, "Not in S14"), and never made larger than it is.
+ * (`docs/archive/plan/SCANS.md`, "Not in S14"), and never made larger than it is.
  */
 export async function openPhoto(file: Blob): Promise<Photo> {
   const bytes = await file.arrayBuffer();

@@ -4,7 +4,7 @@ import { LayoutDocumentSchema, RawDocumentSchema } from './schema.js';
 import type { Box, IrBlock, IrColumn, IrLine, LayoutDocument, RawDocument } from './types.js';
 
 /**
- * The IR validator: `docs/plan/LAYOUT-IR.md`, "Invariants".
+ * The IR validator: `docs/archive/plan/LAYOUT-IR.md`, "Invariants".
  *
  * A problem is a sentence naming where it is, never an exception, so a fixture author sees every
  * mistake at once. `parseLayoutDocument` is the one entry that throws, for callers that want a

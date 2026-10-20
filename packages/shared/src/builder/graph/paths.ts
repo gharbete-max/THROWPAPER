@@ -22,7 +22,7 @@ import type { Json, Op } from './schema.js';
  *
  * A path written today has to mean the same field after the person reorders their questions, so
  * fields and options are addressed by what they are — `[focus]`, `[id=…]`, `[value=…]` — never by
- * where they are. The grammar (`docs/plan/BUILDER-GRAPH.md`, "State and paths"):
+ * where they are. The grammar (`docs/archive/plan/BUILDER-GRAPH.md`, "State and paths"):
  *
  *     path     = root ( '.' key | '[' selector ']' )*
  *     root     = draft | sidecar | pending | focus | guess

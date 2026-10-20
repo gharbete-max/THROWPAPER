@@ -7,7 +7,7 @@ import { z } from 'zod';
  * A document is made for Loppa (no `origin`: written in `documents.ts`, built by `pnpm corpus:build`,
  * CC0 like the manifest) or real (`origin: "real"`: found, not written here). A real one carries its
  * own licence, where it was found, when, and whom to credit, and is never built or rewritten
- * (`docs/plan/IMPORT-PIPELINE.md`, "The golden corpus"). The formats a document has are its
+ * (`docs/archive/plan/IMPORT-PIPELINE.md`, "The golden corpus"). The formats a document has are its
  * `files`' keys.
  */
 

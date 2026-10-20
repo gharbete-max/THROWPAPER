@@ -16,7 +16,7 @@ import {
 } from './machine.js';
 
 /**
- * Acceptance scenario S6, "two doors converge" — `docs/plan/CONVERGENCE.md` (S12a): a form read
+ * Acceptance scenario S6, "two doors converge" — `docs/archive/plan/CONVERGENCE.md` (S12a): a form read
  * from a document, walked by the conversation, which asks only what the document left open, never
  * re-asks what it decided, and never reorders the person's questions.
  */

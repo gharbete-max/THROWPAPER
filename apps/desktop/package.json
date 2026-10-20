@@ -15,10 +15,8 @@
   "dependencies": {
     "@tp/api-forms": "workspace:*",
     "@tp/api-sign": "workspace:*",
-    "@tp/i18n": "workspace:*",
     "@tp/shared": "workspace:*",
     "@tp/tokens": "workspace:*",
-    "@tp/ui": "workspace:*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

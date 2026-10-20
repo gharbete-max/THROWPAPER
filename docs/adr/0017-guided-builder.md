@@ -70,7 +70,7 @@ fields once and then hand over to the editor.
 
 ## As built (S13, 2026-10-05)
 
-All ten decisions are built as written (`docs/plan/ROADMAP.md`, S1–S13). The build went further,
+All ten decisions are built as written (`docs/archive/plan/ROADMAP.md`, S1–S13). The build went further,
 or differently, in five places:
 
 - **Four schema additions, not three.** S13 added the yes/no `checkbox` appearance: one box to

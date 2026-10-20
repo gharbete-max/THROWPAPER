@@ -41,7 +41,7 @@ import { DocxRefused } from './refusal.js';
  * ## What was read (S7)
  *
  * A PDF's printed text, a Word document and pasted text are also read by the import's stages
- * (`docs/plan/IMPORT-PIPELINE.md`, in a worker), and what they read is shown: the numbered items
+ * (`docs/archive/plan/IMPORT-PIPELINE.md`, in a worker), and what they read is shown: the numbered items
  * in reading order, and the whole reading as a download. Reading changes nothing — a Word
  * document or a paste has no page to import, so for those the confirmation stays shut — until
  * the review screen (S10) turns what was read into questions.

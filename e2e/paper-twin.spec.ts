@@ -5,7 +5,7 @@ import { linesPdf } from './pdf.js';
 import { findAnswer, see } from './pdf-read.js';
 
 /**
- * The paper twin from an import — `docs/plan/CONVERGENCE.md`, S12b. A PDF printed with blanks is
+ * The paper twin from an import — `docs/archive/plan/CONVERGENCE.md`, S12b. A PDF printed with blanks is
  * read on the review screen and its questions added; the form keeps the file, and each question
  * the box it was printed with. Published and filled in, the response comes back as that paper:
  * the page as it was, each answer written inside its question's box.

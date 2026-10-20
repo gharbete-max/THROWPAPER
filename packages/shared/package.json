@@ -14,7 +14,6 @@
     "./ledger": "./src/ledger/index.ts",
     "./invoicing": "./src/invoicing/index.ts",
     "./payable": "./src/payable/index.ts",
-    "./wizard": "./src/wizard/index.ts",
     "./builder": "./src/builder/index.ts",
     "./import": "./src/import/index.ts",
     "./interpret": "./src/interpret/index.ts",

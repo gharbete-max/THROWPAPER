@@ -6,7 +6,7 @@ must produce detectors that give byte-identical output on every fixture in `fixt
 If a sentence here can be read two ways, that is a bug in this document — fix the sentence and add
 the fixture that would have caught it.
 
-**Input:** a `LayoutDocument` (`LAYOUT-IR.md`). **Output:** an `EnumerateResult` (below). No other
+**Input:** a `LayoutDocument` (`../archive/plan/LAYOUT-IR.md`). **Output:** an `EnumerateResult` (below). No other
 input exists: no locale setting, no options, no clock, no randomness.
 
 **Checked against its fixtures, twice.** When this document was written, it was also implemented
@@ -128,7 +128,7 @@ decided (`column.x1 − column.x0`); `relX(L) = L.box.x0 − column.x0` for the 
 
 ## 3. The pass
 
-The detector makes **one pass** over the document's lines in reading order (`LAYOUT-IR.md`,
+The detector makes **one pass** over the document's lines in reading order (`../archive/plan/LAYOUT-IR.md`,
 "Reading order"), then **one post-pass** over the runs it built. Each line is handled by the first
 of these steps that claims it.
 
@@ -163,7 +163,7 @@ have no effect on any run. **Fixture:** `page-break-continuation`.
 ### P3 — a soft-wrapped line is never a marker line
 
 Applies only when `L.source` is `text-layer` or `ocr` (docx and paste have no soft wraps —
-`LAYOUT-IR.md`), when `L` has a predecessor `P` in the **same block**, and when `WRAPPED(P)` — or
+`../archive/plan/LAYOUT-IR.md`), when `L` has a predecessor `P` in the **same block**, and when `WRAPPED(P)` — or
 when P3d applies, whose join is its own evidence of the wrap.
 
 - **P3d — a word broken across the break.** `P`'s last word carries a `dehyphenated` or
@@ -533,7 +533,7 @@ opinion and fails `scripts/caveat-fixtures.test.ts`.
 ## 11. What this does not decide
 
 - Whether an accepted item is a **question**, an **option** of the question above it, or an
-  instruction. That is stage 4 (`IMPORT-PIPELINE.md` §4), which reads the items, their levels and
+  instruction. That is stage 4 (`../archive/plan/IMPORT-PIPELINE.md` §4), which reads the items, their levels and
   their detail lines.
 - What **kind** of answer an item wants (stage 5).
 - How confident the draft is overall (stage 7). The verdicts here feed it: `accept` contributes

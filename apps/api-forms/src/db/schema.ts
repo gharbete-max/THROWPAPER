@@ -279,7 +279,7 @@ export const builderSessions = pgTable(
 /**
  * The organisation's learned aliases — ways its people say an answer that Loppa did not know,
  * each remembered only because someone pressed "Remember" on that exact phrase
- * (`docs/plan/INTENT-LADDER.md`, "Aliases"; S6). Built-in aliases ship with the code and are never
+ * (`docs/archive/plan/INTENT-LADDER.md`, "Aliases"; S6). Built-in aliases ship with the code and are never
  * stored here.
  *
  * `key` is the phrase as the ladder compares it (`keyOf`): one row per way of saying something, per

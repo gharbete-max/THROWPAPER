@@ -3,7 +3,7 @@ import table from './recipes.json';
 import { STRUCTURES, type Structure } from './structures.js';
 
 /**
- * What the engine can guess — `docs/plan/BELIEF.md`, "Recipes": every template in the catalogue,
+ * What the engine can guess — `docs/archive/plan/BELIEF.md`, "Recipes": every template in the catalogue,
  * and the two structure-only recipes rule 8 keeps out of it. `recipes.json` holds their priors and
  * a template's name, which the guess says ("This looks like Proxy form. Right?") whether or not the
  * catalogue could be loaded; the questions stay in the templates (brief §6).

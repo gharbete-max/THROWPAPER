@@ -21,7 +21,7 @@ import {
 import weights from './weights.json';
 
 /**
- * Stage 5, classify: what each question's answer is likely to be — `docs/plan/IMPORT-PIPELINE.md`
+ * Stage 5, classify: what each question's answer is likely to be — `docs/archive/plan/IMPORT-PIPELINE.md`
  * §5, which is the specification. A scored feature model in integer millinats: each kind the
  * question's answer allows gets its bias plus the weight of every feature present, the best wins,
  * and its confidence is the committed sigmoid of its lead over the runner-up (ADR 0019). The

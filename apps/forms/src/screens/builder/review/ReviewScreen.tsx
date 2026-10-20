@@ -58,7 +58,7 @@ import { SourcePane } from './SourcePane.js';
  *
  * The author gives it a PDF, a Word document or a photograph of a form, or pastes text; the stages
  * read it in their worker, on this device. A photograph, and a PDF's pages that are a scan, are read
- * word by word by OCR first, in a worker of its own (S14, `docs/plan/SCANS.md`). The review opens
+ * word by word by OCR first, in a worker of its own (S14, `docs/archive/plan/SCANS.md`). The review opens
  * on one sentence — "I read 14 questions. 3 need your eye." — the document on one side and the
  * form it would make on the other, linked line by line. Nothing enters the form until "Use these
  * questions", which adds them through the conversation's machine as one step Back undoes, saves,

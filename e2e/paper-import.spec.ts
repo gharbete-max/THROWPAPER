@@ -96,7 +96,7 @@ test('a PDF imported from paper is drawn on the page', async ({ page }) => {
 });
 
 /**
- * The M4 demo (`docs/plan/ROADMAP.md`): a Word file with Word's own numbering read in order, in
+ * The M4 demo (`docs/archive/plan/ROADMAP.md`): a Word file with Word's own numbering read in order, in
  * the worker, what was read downloadable, and the form untouched — then pasted text, and a paste
  * that carries only HTML. A Word file with a DTD is refused, never read.
  */

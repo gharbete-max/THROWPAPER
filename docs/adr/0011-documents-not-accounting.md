@@ -77,7 +77,7 @@ needs the owner's wording for the site copy; nothing will be rewritten until tha
 ### Where each piece runs
 
 - Invoice data, charge catalogues and runs stay in **Forms** (they already live there).
-- **Mailer sends** them through the contract (proposal in `docs/EXPANSION.md` §3): Forms confirms a
+- **Mailer sends** them through the contract (proposal in `docs/archive/EXPANSION.md` §3): Forms confirms a
   run, then pushes a *document audience* — each member with a link to their own PDF — and Mailer
   sends it as a **rent / transactional** segment, which a marketing unsubscribe never stops
   (`SPEC-mailer.md` §3).

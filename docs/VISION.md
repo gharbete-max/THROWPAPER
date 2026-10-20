@@ -3,7 +3,7 @@
 **The owner's, 2026-10-07.** Written down from the owner's own words in the session that re-planned
 Loppa ("I think we need to start over planning wise"); they are quoted verbatim at the end, with the
 session's words they answered. Where any other document disagrees — the
-README, `START-HERE.md`, the specs, `DESIGN.md`, older plans — this one wins until that document is
+README, `archive/START-HERE.md`, the specs, `DESIGN.md`, older plans — this one wins until that document is
 brought in line (the second-last section lists them). This file says what Loppa is. The plan for
 building it is `docs/plan/DOCUMENTS.md`, which the owner accepted ("Let's go!"); the room's
 decisions are ADR 0022.
@@ -154,7 +154,7 @@ them:
   ledger (data, now Spreadsheets) is kept, hidden, moved into those catchers when they are built,
   or retired — nothing is deleted without the owner's word; whether invoices (PDFs rendered from
   data and mailed, ADR 0011) belong to Documents' Send or to Spreadsheets; and whether **Mailer**
-  (the email-campaign product of `SPEC-mailer.md`, of which only a stub is built) lives on beside
+  (the email-campaign product of `archive/SPEC-mailer.md`, of which only a stub is built) lives on beside
   Send or is dropped.
 
 ## 11. Older documents that still say otherwise
@@ -173,8 +173,8 @@ open elsewhere: the marketing site's copy (the owner's words) and ADR 0011's "pr
   no longer conflicts: the hues are Loppa's own colours.)
 - `docs/plan/DESIGN-LANGUAGE.md` — "Motion explains where something went; it never decorates." The
   room's floating catchers need the owner's amendment there too.
-- `docs/START-HERE.md` — says it wins over every other plan; it describes the earlier v0.1.
-- `docs/SPEC-forms.md`, `docs/SPEC-mailer.md`, `docs/ROADMAP.md`, `docs/MODULE-STATUS.md` — the
+- `docs/archive/START-HERE.md` — says it wins over every other plan; it describes the earlier v0.1.
+- `docs/SPEC-forms.md`, `docs/archive/SPEC-mailer.md`, `docs/ROADMAP.md`, `docs/MODULE-STATUS.md` — the
   earlier products and their order.
 - `CLAUDE.md`'s guided-builder non-negotiable "No AI, no LLM", and "No AI is involved anywhere" in
   `docs/plan/BRIEF.md` and `docs/plan/PREDICTIVE-BUILDER.md` — still true of the builder and the

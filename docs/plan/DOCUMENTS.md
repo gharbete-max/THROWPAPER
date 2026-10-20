@@ -401,7 +401,7 @@ session, best after phase 4 as Scan's out-of-sample test, and its prose document
   - `DESIGN.md` and `DESIGN-LANGUAGE.md`;
   - `docs/ROADMAP.md`;
   - `docs/SPEC-forms.md` §1;
-  - `docs/START-HERE.md`, retired;
+  - `docs/archive/START-HERE.md`, retired;
   - `docs/MODULE-STATUS.md`, re-measured: it was measured many commits ago, and Forms has grown
     well past what it records;
   - `docs/CONTRACT.md` §5 (cancel, and its stale note on desktop invitations);

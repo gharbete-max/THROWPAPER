@@ -62,7 +62,7 @@ export interface DigitalCopy {
 
 /** A page as wide as A4. */
 export const COPY_WIDTH_PT = 595;
-/** A word read with less confidence than this is shown as uncertain (`docs/plan/SCANS.md`). */
+/** A word read with less confidence than this is shown as uncertain (`docs/archive/plan/SCANS.md`). */
 export const LOW_CONFIDENCE = 75;
 /** The share of a row's height (ascender to descender) that is the font size. */
 const SIZE_OF_ROW = 0.9;

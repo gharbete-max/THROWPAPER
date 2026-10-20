@@ -197,7 +197,7 @@ describe('the buttons chain (acceptance scenario S2)', () => {
 });
 
 /**
- * Acceptance S1 by clicking alone (`docs/plan/POLISH.md`, S13a): the form's name, which is its
+ * Acceptance S1 by clicking alone (`docs/archive/plan/POLISH.md`, S13a): the form's name, which is its
  * heading; and after "No buttons", a line, a few sentences, or a box to tick.
  */
 describe("the form's name, a paragraph and a box to tick (acceptance scenario S1)", () => {

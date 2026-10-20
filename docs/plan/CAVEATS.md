@@ -59,7 +59,7 @@ The detector's own procedure is `NUMBERING-RULES.md`; the rule ids below are its
 
 ## 8.4 The classification features
 
-Not traps but the scored feature model that avoids them (`IMPORT-PIPELINE.md` §5, built in S9):
+Not traps but the scored feature model that avoids them (`../archive/plan/IMPORT-PIPELINE.md` §5, built in S9):
 word features read from `classify/lexicon/<language>.json` in twelve languages — `nameWord`,
 `emailWord`, `phoneWord`, `addressWord`, `dateWord`, `timeWord`, `numberWord`, `currencyHint`,
 `personnummerWord`, `orgNrWord`, `signatureHint`, `fileHint`, `consentHint`, `commentWord`,

@@ -4,7 +4,7 @@
 (PR #147, "As built" below)
 **Date:** 2026-09-25
 **Supersedes in part:** ADR 0004 — its rule that OCR and layout "never create a field"
-**Depends on:** ADR 0019 (deterministic rules), ADR 0021 (JSON data), `docs/plan/LAYOUT-IR.md`
+**Depends on:** ADR 0019 (deterministic rules), ADR 0021 (JSON data), `docs/archive/plan/LAYOUT-IR.md`
 
 ## Context
 
@@ -33,9 +33,9 @@ the document and the draft side by side before anything enters the form.
      and Tesseract, already there and lazy-loaded); the pure stages run in a Web Worker; the desktop
      runs the same bundle.
    - **Storage and caps** are ADR 0004's (private upload store, 10 MB, 20 pages), plus DOCX limits.
-3. **Nine stages, each a pure function** (`docs/plan/IMPORT-PIPELINE.md`): extract, reassemble,
+3. **Nine stages, each a pure function** (`docs/archive/plan/IMPORT-PIPELINE.md`): extract, reassemble,
    enumerate, segment, classify, map + paper twin, score, review, re-import. Everything after
-   extraction reads only the **Layout IR** (`docs/plan/LAYOUT-IR.md`), frozen at `irVersion: 1`,
+   extraction reads only the **Layout IR** (`docs/archive/plan/LAYOUT-IR.md`), frozen at `irVersion: 1`,
    integer and page-relative, so the hardest stage can be tested with hand-written documents and no
    PDF at all.
 4. **The numbering detector is a written decision procedure** (`docs/plan/NUMBERING-RULES.md`),

@@ -3,7 +3,7 @@ import { db, signInAs } from './support.js';
 import { linesPdf } from './pdf.js';
 
 /**
- * Importing the same form again — `docs/plan/CONVERGENCE.md`, S12c. A form made from a document,
+ * Importing the same form again — `docs/archive/plan/CONVERGENCE.md`, S12c. A form made from a document,
  * changed by hand, is brought up to date with a new version of the document: what is new is
  * added; what the document removed or reworded is asked, one decision each; what the person did is
  * never touched. And the document the form was made from, read again unchanged, changes nothing.

@@ -3,7 +3,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { db, signInAs } from './support.js';
 
 /**
- * The review screen — `docs/plan/IMPORT-PIPELINE.md` §8, slice S10 — pressed. "Start from paper" on
+ * The review screen — `docs/archive/plan/IMPORT-PIPELINE.md` §8, slice S10 — pressed. "Start from paper" on
  * a new form, a document read on this device, "I read 14 questions. 3 need your eye.", the chips,
  * merge and Undo, and "Use these questions" adding exactly what was reviewed to the form, as one
  * step in its conversation. Acceptance S4 and S5 (`PREDICTIVE-BUILDER.md`) by pointer, and each
@@ -176,7 +176,7 @@ test('acceptance S5 by keyboard alone', async ({ page }) => {
 });
 
 /**
- * Acceptance S6 — the two doors converge (`docs/plan/CONVERGENCE.md`, S12). S5's draft, added,
+ * Acceptance S6 — the two doors converge (`docs/archive/plan/CONVERGENCE.md`, S12). S5's draft, added,
  * goes on in the conversation, which asks only what the document left open: whether each must be
  * answered, never its type; never in another order.
  */

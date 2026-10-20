@@ -1,7 +1,7 @@
 # Spike S1 — a local summary and translation model, measured
 
 **Date:** 2026-10-13 · **Phase:** `DOCUMENTS.md` §6 phase 8, spike S1 · **Feeds:** ADR 0023 (proposed)
-· **Data and scripts:** `docs/plan/spike-s1/`
+· **Data:** `docs/plan/spike-s1/corpus/` (the raw results and scripts were removed in the 2026-10 cleanup; they are in git history before that PR)
 
 Docs only. No dependency was added to the repo and no app code written; everything ran in a scratch
 directory outside it. The scripts are stored as `*.mjs.txt` so the linter does not pick them up.

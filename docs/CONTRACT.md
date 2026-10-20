@@ -4,8 +4,8 @@
 other side, so neither blocks the other. Changes to this file are a joint decision and require
 a version bump.
 
-Schemas live in `packages/shared/src/contract/`. `pnpm contract:check` validates all three
-backends against them. Version header on every request: `X-Contract-Version: 3`.
+Schemas live in `packages/shared/src/contract/`. `pnpm contract:check` validates the built
+backends (Forms, Sign) against them. **Mailer is not built** (its stubs were removed in the 2026-10 cleanup, ADR 0026 #6): the Forms ⇄ Mailer exchanges (§1, §2) stay documented for a future Mailer, and `contract:check` lists them as "not built" rather than expecting a backend. Version header on every request: `X-Contract-Version: 3`.
 
 **Version 2 (2026-09-23)** added §5, the Sign product (`docs/adr/0009-where-signing-lives.md`),
 by the owner's decision. It is additive: every v1 request is still valid.

@@ -111,7 +111,7 @@ function resolveValue(
     }
     return lastAddedId;
   }
-  // The next question from a document to walk (`docs/plan/CONVERGENCE.md`), as the step found it;
+  // The next question from a document to walk (`docs/archive/plan/CONVERGENCE.md`), as the step found it;
   // null when there is none.
   if (isRef(value, '$toWalk')) {
     const next = state.pending['toWalk'];

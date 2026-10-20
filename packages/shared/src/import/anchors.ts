@@ -3,7 +3,7 @@ import type { Box, IrLine, IrWord, LayoutDocument } from './ir/types.js';
 import { blankRuns, isBlankWord, isCheckboxWord } from './layout/hints.js';
 
 /**
- * The paper twin's boxes — `docs/plan/CONVERGENCE.md` (S12b), `IMPORT-PIPELINE.md` stage 6: where
+ * The paper twin's boxes — `docs/archive/plan/CONVERGENCE.md` (S12b), `IMPORT-PIPELINE.md` stage 6: where
  * a question read from a page has its answer written, and where each of its options is ticked, so
  * a filled response can come back as that page (`apps/api-forms/src/documents/paper.ts`).
  *

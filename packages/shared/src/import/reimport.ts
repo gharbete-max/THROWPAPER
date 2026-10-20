@@ -1,6 +1,6 @@
 /**
  * Stage 9: a form read from a document, compared with the document read again —
- * `docs/plan/CONVERGENCE.md` (S12c), `IMPORT-PIPELINE.md` stage 9.
+ * `docs/archive/plan/CONVERGENCE.md` (S12c), `IMPORT-PIPELINE.md` stage 9.
  *
  * Pure and integer. The form's fields and the document's, each with its id, its family and its
  * text, in their own orders. The document's are made as if into an empty form, so a field the

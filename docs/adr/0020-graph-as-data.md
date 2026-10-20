@@ -25,7 +25,7 @@ build-time validator — and allows guarded cycles (the "add another question?" 
 1. **The conversation is data**: one TypeScript module of plain data (`builder/graph/nodes.ts`,
    `satisfies BuilderGraph`, proven JSON-serialisable by a test), rendered by components that never
    decide what comes next. The schema, the node kinds, and the `when` / `patch` / `score` semantics
-   are `docs/plan/BUILDER-GRAPH.md`.
+   are `docs/archive/plan/BUILDER-GRAPH.md`.
 2. **Both of ADR 0006's shapes, each where it is right.** The purpose question (`flow.start`) and
    the feature menu keep facet semantics: independent, answerable in any order, reached through
    menus. **Ordered `next` exists only inside a feature's chain** (buttons → one or several → how

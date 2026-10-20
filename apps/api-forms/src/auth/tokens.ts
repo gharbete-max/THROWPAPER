@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { SignJWT, jwtVerify } from 'jose';
 import type { Role } from '@tp/shared/api';
 
@@ -27,13 +27,6 @@ export function generateSecret(): string {
 
 export function hashSecret(secret: string): string {
   return createHash('sha256').update(secret).digest('hex');
-}
-
-/** Constant-time compare, so a token cannot be recovered by timing a series of guesses. */
-export function secretMatches(secret: string, expectedHash: string): boolean {
-  const actual = Buffer.from(hashSecret(secret), 'hex');
-  const expected = Buffer.from(expectedHash, 'hex');
-  return actual.length === expected.length && timingSafeEqual(actual, expected);
 }
 
 export function newFamilyId(): string {

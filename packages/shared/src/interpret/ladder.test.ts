@@ -16,7 +16,7 @@ import { LANGUAGES, type Language } from './lexicon.js';
 import { PATTERN_KINDS, readPattern } from './patterns.js';
 
 /**
- * The phrase tables — `docs/plan/INTENT-LADDER.md`, "Tests". `fixtures/ladder/<language>.json`
+ * The phrase tables — `docs/archive/plan/INTENT-LADDER.md`, "Tests". `fixtures/ladder/<language>.json`
  * holds, per shipped language, phrases typed at a node and what the ladder must make of each:
  * an option or a value and the tier that read it, or the reason it must ask instead. Changing an
  * alias, a word list or a threshold changes a row here in the same commit (`CLAUDE.md`).

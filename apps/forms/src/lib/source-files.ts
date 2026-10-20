@@ -20,14 +20,3 @@ export function sourceFiles(dir: string): string[] {
     return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry) ? [path] : [];
   });
 }
-
-/**
- * The app's `src/` directory, as a path `readdirSync` accepts on Windows too.
- *
- * `new URL(...).pathname` yields `/C:/Users/...` on Windows, which Node's fs rejects; the leading
- * slash comes off. Every caller was doing this by hand with the same regex.
- */
-export const APP_SOURCE_ROOT = new URL('../', import.meta.url).pathname.replace(
-  /^\/([A-Za-z]:)/,
-  '$1',
-);

@@ -32,7 +32,7 @@ export const READ_LONG_SIDE = 3000;
 type Corners = { x0: number; y0: number; x1: number; y1: number };
 
 /**
- * A page read word by word — the part of a Tesseract result stage 1 reads (`docs/plan/SCANS.md`).
+ * A page read word by word — the part of a Tesseract result stage 1 reads (`docs/archive/plan/SCANS.md`).
  * Our own shape, so an upgrade lands here: each line's words, its baseline and its height.
  */
 export interface RecognisedWords {

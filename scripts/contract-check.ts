@@ -1,5 +1,5 @@
 /**
- * Validates all three products' backends against docs/CONTRACT.md.
+ * Validates the built backends (Forms, Sign) against docs/CONTRACT.md.
  *
  * The contract is frozen before either track writes code, so this check exists from phase 0 and
  * has teeth immediately: an endpoint in the manifest that no app claims is a failure, and so is
@@ -8,10 +8,12 @@
  */
 import { CONTRACT_ENDPOINTS, CONTRACT_VERSION, type ContractRegistry } from '@tp/shared/contract';
 import { registry as formsRegistry } from '@tp/api-forms/contract-registry';
-import { registry as mailerRegistry } from '@tp/api-mailer/contract-registry';
 import { registry as signRegistry } from '@tp/api-sign/contract-registry';
 
-const registries: ContractRegistry[] = [formsRegistry, mailerRegistry, signRegistry];
+const registries: ContractRegistry[] = [formsRegistry, signRegistry];
+// Mailer's backend was removed (ADR 0026 #6). Its exchanges stay documented in docs/CONTRACT.md for
+// a future Mailer, but nothing serves them, so nothing is expected here and the table says so.
+const UNBUILT_SIDES = new Set<string>(['sendwork']);
 const problems: string[] = [];
 const knownIds = new Set<string>(CONTRACT_ENDPOINTS.map((endpoint) => endpoint.id));
 
@@ -40,6 +42,7 @@ for (const registry of registries) {
 }
 
 for (const endpoint of CONTRACT_ENDPOINTS) {
+  if (UNBUILT_SIDES.has(endpoint.servedBy)) continue;
   const owner = registries.find((registry) => registry.side === endpoint.servedBy);
   if (!owner) {
     problems.push(`no app registered for side "${endpoint.servedBy}" (${endpoint.id})`);
@@ -59,7 +62,7 @@ const rows = CONTRACT_ENDPOINTS.map((endpoint) => {
     '§': endpoint.section,
     endpoint: `${endpoint.method} ${endpoint.path}`,
     servedBy: endpoint.servedBy,
-    status: entry?.status ?? 'UNACCOUNTED',
+    status: entry?.status ?? (UNBUILT_SIDES.has(endpoint.servedBy) ? 'not built' : 'UNACCOUNTED'),
     phase: entry?.plannedPhase ?? '',
   };
 });
@@ -74,4 +77,7 @@ if (problems.length > 0) {
 }
 
 const implemented = rows.filter((row) => row.status === 'implemented').length;
-console.log(`contract:check passed — ${implemented}/${rows.length} implemented, rest deferred`);
+const notBuilt = rows.filter((row) => row.status === 'not built').length;
+console.log(
+  `contract:check passed — ${implemented}/${rows.length - notBuilt} implemented, rest deferred; ${notBuilt} documented only (no backend)`,
+);

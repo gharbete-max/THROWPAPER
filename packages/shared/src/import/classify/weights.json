@@ -1,5 +1,5 @@
 {
-  "source": "docs/plan/IMPORT-PIPELINE.md §5 and §7. Integer millinats. A kind's score is its bias plus the weight of each of its features the question has; the best of the kinds its answer allows wins, and its confidence is sigmoid(best - runner-up) from interpret/sigmoid.json. With no feature at all, short_text beats long_text by 1200 millinats: confidence 769, the flag bucket - 'I guessed the answer type'. The score section is stage 7: a question's own confidence is sigmoid of the sum of its contributions, then the caps.",
+  "source": "docs/archive/plan/IMPORT-PIPELINE.md §5 and §7. Integer millinats. A kind's score is its bias plus the weight of each of its features the question has; the best of the kinds its answer allows wins, and its confidence is sigmoid(best - runner-up) from interpret/sigmoid.json. With no feature at all, short_text beats long_text by 1200 millinats: confidence 769, the flag bucket - 'I guessed the answer type'. The score section is stage 7: a question's own confidence is sigmoid of the sum of its contributions, then the caps.",
   "weightsVersion": 1,
   "candidates": {
     "blank": [

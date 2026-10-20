@@ -12,7 +12,7 @@ export interface SeedSource {
 }
 
 /**
- * What "Right" adds — `docs/plan/BELIEF.md`, "What "Right" adds": the recipe's questions, copied
+ * What "Right" adds — `docs/archive/plan/BELIEF.md`, "What "Right" adds": the recipe's questions, copied
  * whole in every language (as the gallery copies a template), appended in the template's order.
  *
  * - **New ids**, fingerprints of the recipe and the question's place, never one the form used —

@@ -8,7 +8,7 @@ import { isBlankWord, isCheckboxWord } from '../layout/hints.js';
 import type { Segment, SegmentResult } from '../segment/types.js';
 
 /**
- * Stage 7, score and bucket — `docs/plan/IMPORT-PIPELINE.md` §7, which is the specification.
+ * Stage 7, score and bucket — `docs/archive/plan/IMPORT-PIPELINE.md` §7, which is the specification.
  *
  * Every decision the review screen shows gets a confidence in per mille and a bucket: `auto` (at
  * least 850: listed, accepted by default), `flag` (550–849: listed with its chips, "check this")
