@@ -1392,6 +1392,20 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     '从这台电脑移除 {name}？您从磁盘打开的文件不会被删除。您以后可以再次获取。',
   'ai.models.removeConfirmYes': '移除',
+  'ai.graphics.label': '使用显卡（更快，可选）',
+  'ai.graphics.note':
+    '默认关闭，需要你手动开启。在有独立显卡的电脑上，读取页面会快数倍。如果无法使用显卡，Loppa 会自动改用处理器。',
+  'ai.graphics.later': '此电脑上暂不可用。Mac 自己的图形支持将在后续阶段提供。',
+  'ai.graphics.missing':
+    '所需程序尚未在这台电脑上：开启时会先询问再下载，你也可以自己把它放进 {folder}。',
+  'ai.graphics.getConfirm':
+    '从 {host} 下载显卡程序吗？文件：{files}。大小：{size} MB，会占用相应的磁盘空间。你的文档不会被发送到任何地方，你可以随时取消。使用前会对照其公布的指纹进行校验。继续吗？',
+  'ai.graphics.getConfirmYes': '下载',
+  'ai.graphics.failure': '无法使用显卡；正在使用处理器。',
+  'ai.graphics.tryAgain': '再次尝试使用显卡',
+  'ai.graphics.on.processor': '运行于：处理器',
+  'ai.graphics.on.graphics': '运行于：显卡',
+  'ai.graphics.on.device': '运行于：显卡（{device}）',
   'ai.models.progress': '第 {file} 个文件，共 {files} 个：{done} / {total} MB',
   'ai.models.cache': '已保存的结果：{count}（{size} MB）',
   'ai.models.clearCache': '清除已保存的结果',
@@ -1429,7 +1443,7 @@ export const zhCN: Record<MessageKey, string> = {
     '这台电脑有 {free} GB 可用内存，而模型大约需要 {need} GB。请关闭其他程序后重试。',
   'summary.get': '获取模型',
   'summary.getConfirm':
-    '这将从 GitHub 上 Loppa 的发布页下载 {size} 并进行校验，会占用相应的磁盘空间。你的文档不会被发送到任何地方。继续吗？',
+    '这将从 {host} 下载 {size} 并进行校验，会占用相应的磁盘空间。你的文档不会被发送到任何地方。继续吗？',
   'summary.getConfirmYes': '下载',
   'summary.getOff': '暂时无法下载：模型尚未发布。你可以改为从磁盘打开模型文件。',
   'summary.open': '从磁盘打开模型文件',

@@ -19,5 +19,8 @@ export const AI_CHANNELS = {
   run: 'loppa-ai:run',
   cancel: 'loppa-ai:cancel',
   clearCache: 'loppa-ai:clear-cache',
+  useGraphics: 'loppa-ai:use-graphics',
+  installGraphics: 'loppa-ai:install-graphics',
+  clearGraphicsFailure: 'loppa-ai:clear-graphics-failure',
   event: 'loppa-ai:event',
 } as const;

@@ -1,7 +1,8 @@
 /* global process, console, setTimeout, setInterval */
 // A stand-in for `llama-server`, for tests only: the same HTTP surface the engine uses, no model.
 // Behaviour comes from FAKE_LLAMA (comma-separated): no-avx2, crash-on-start, oom, die-mid-stream,
-// slow-load, slow-stream. It prints what it was asked to do on stdout as `fake:` lines.
+// slow-load, slow-stream, and for the Vulkan build (started with --device): card-oom, card-crash-start,
+// card-crash-request, card-empty. It prints what it was asked to do on stdout as `fake:` lines.
 import { createServer } from 'node:http';
 
 const args = process.argv.slice(2);
@@ -10,6 +11,7 @@ const modes = (process.env.FAKE_LLAMA ?? '').split(',');
 const port = Number(arg('--port'));
 const key = arg('--api-key');
 const host = arg('--host');
+const card = args.includes('--device');
 console.log(`fake: args ${JSON.stringify(args)}`);
 
 if (modes.includes('no-avx2')) {
@@ -20,7 +22,10 @@ if (modes.includes('no-avx2')) {
 } else if (modes.includes('crash-on-start')) {
   console.error('fatal: could not load the model');
   process.exit(3);
-} else if (modes.includes('oom')) {
+} else if (card && modes.includes('card-crash-start')) {
+  console.error('vk::PhysicalDevice::createDevice: ErrorInitializationFailed');
+  process.exit(3);
+} else if ((card && modes.includes('card-oom')) || modes.includes('oom')) {
   console.error(
     'ggml_backend_cpu_buffer_type_alloc_buffer: failed to allocate buffer of size 4683072032',
   );
@@ -29,6 +34,11 @@ if (modes.includes('no-avx2')) {
   console.error(
     'system_info: n_threads = 8 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 |',
   );
+  if (card) {
+    console.error(
+      `load_tensors: offloaded ${modes.includes('card-empty') ? 0 : 29}/29 layers to GPU`,
+    );
+  }
   const readyAt = Date.now() + (modes.includes('slow-load') ? 800 : 50);
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   createServer(async (req, res) => {
@@ -42,6 +52,7 @@ if (modes.includes('no-avx2')) {
     }
     let body = '';
     for await (const chunk of req) body += chunk;
+    if (card && modes.includes('card-crash-request')) process.exit(9);
     const request = JSON.parse(body);
     const last = request.messages.at(-1).content;
     const text = typeof last === 'string' ? last : '(a picture)';

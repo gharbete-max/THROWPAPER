@@ -40,8 +40,10 @@ export interface ServerSettings {
   threads: number;
   /** Largest number of tokens a picture may take; bounds a page's time and memory. */
   imageMaxTokens: number;
-  /** Layers kept on the graphics card; 0, the CPU only, unless the person chose otherwise (Vulkan build). */
+  /** Layers kept on the graphics card; 0, the CPU only. Unset on the Vulkan build: the program fits as many as the free memory holds. */
   gpuLayers?: number;
+  /** The graphics card to use, as the program names it (`Vulkan0`): set only for the Vulkan build. */
+  device?: string;
 }
 
 export const DEFAULT_SETTINGS = { contextTokens: 8192, imageMaxTokens: 2560 } as const;
@@ -84,7 +86,9 @@ export function serverArgs(
     '-t',
     `${settings.threads}`,
     '-ngl',
-    `${settings.gpuLayers ?? 0}`,
+    `${settings.gpuLayers ?? (settings.device ? 'auto' : 0)}`,
+    // One card, chosen by Loppa (never a split with the integrated chip), and the log that names it.
+    ...(settings.device ? ['--device', settings.device, '-lv', '4'] : []),
     '-np',
     '1',
     '-fa',
@@ -123,7 +127,11 @@ export function childEnv(env: NodeJS.ProcessEnv, pass: readonly string[] = []): 
 const BIND_FAILURE =
   /address already in use|couldn't bind|could not bind|failed to bind|EADDRINUSE/i;
 
-const MEMORY_FAILURE = /out of memory|failed to allocate|bad_alloc|cudaMalloc|insufficient memory/i;
+const MEMORY_FAILURE =
+  /out of memory|failed to allocate|bad_alloc|cudaMalloc|insufficient memory|OutOfDeviceMemory|Device memory allocation/i;
+
+/** The Vulkan build says how much of the model went to the card: `offloaded 29/29 layers to GPU`. */
+const OFFLOADED = /offloaded (\d+)\/(\d+) layers to GPU/;
 
 /** `pass`: extra variable names a test stand-in needs; production passes none. */
 export function defaultSpawn(
@@ -184,6 +192,8 @@ async function freePort(): Promise<number> {
 export interface RunningServer {
   connection: Connection;
   readonly pid: number | undefined;
+  /** Layers on the graphics card, as the program reported; null before it did or on the CPU build. */
+  readonly offloaded: { layers: number; total: number } | null;
   /** True once the process has ended, however it ended. */
   readonly exited: boolean;
   /** True if the process is, or within `ms` becomes, gone: a broken connection often comes first. */
@@ -217,6 +227,7 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
   let noAvx2 = false;
   let memory = false;
   let portTaken = false;
+  let offloaded: { layers: number; total: number } | null = null;
   const tail: string[] = [];
   const gone = new Promise<void>((resolve) => {
     handle.onExit((code) => {
@@ -233,12 +244,17 @@ export async function startServer(options: StartOptions): Promise<RunningServer>
       handle.kill();
     }
     if (MEMORY_FAILURE.test(line)) memory = true;
+    const layers = OFFLOADED.exec(line);
+    if (layers) offloaded = { layers: Number(layers[1]), total: Number(layers[2]) };
     if (BIND_FAILURE.test(line)) portTaken = true;
   });
 
   const server: RunningServer = {
     connection,
     pid: handle.pid,
+    get offloaded() {
+      return offloaded;
+    },
     get exited() {
       return exited;
     },

@@ -1515,6 +1515,22 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     '{name} von diesem Computer entfernen? Dateien, die Sie von der Festplatte geöffnet haben, werden nicht gelöscht. Sie können es später erneut herunterladen.',
   'ai.models.removeConfirmYes': 'Entfernen',
+  'ai.graphics.label': 'Grafikkarte verwenden (schneller, optional)',
+  'ai.graphics.note':
+    'Aus, solange Sie es nicht einschalten. Seiten werden auf einem Computer mit eigener Grafikkarte mehrfach schneller gelesen. Lässt sich die Karte nicht nutzen, kehrt Loppa von selbst zum Prozessor zurück.',
+  'ai.graphics.later':
+    'Auf diesem Computer noch nicht verfügbar. Die eigene Grafikunterstützung des Mac folgt in einem späteren Schritt.',
+  'ai.graphics.missing':
+    'Das Programm dafür ist noch nicht auf diesem Computer: Beim Einschalten wird vor dem Herunterladen gefragt, oder Sie legen es selbst in {folder} ab.',
+  'ai.graphics.getConfirm':
+    'Das Grafikkarten-Programm von {host} herunterladen? Datei: {files}. Größe: {size} MB; es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet, und Sie können jederzeit abbrechen. Vor der Nutzung wird es mit seinem veröffentlichten Fingerabdruck verglichen. Fortfahren?',
+  'ai.graphics.getConfirmYes': 'Herunterladen',
+  'ai.graphics.failure':
+    'Die Grafikkarte konnte nicht verwendet werden; es wird der Prozessor verwendet.',
+  'ai.graphics.tryAgain': 'Grafikkarte erneut versuchen',
+  'ai.graphics.on.processor': 'Läuft auf: dem Prozessor',
+  'ai.graphics.on.graphics': 'Läuft auf: der Grafikkarte',
+  'ai.graphics.on.device': 'Läuft auf: der Grafikkarte ({device})',
   'ai.models.progress': 'Datei {file} von {files}: {done} von {total} MB',
   'ai.models.cache': 'Gespeicherte Ergebnisse: {count} ({size} MB)',
   'ai.models.clearCache': 'Gespeicherte Ergebnisse löschen',
@@ -1558,7 +1574,7 @@ export const deDE: Record<MessageKey, string> = {
     'Dieser Computer hat {free} GB freien Speicher, das Modell braucht etwa {need} GB. Schließen Sie andere Programme und versuchen Sie es erneut.',
   'summary.get': 'Modell herunterladen',
   'summary.getConfirm':
-    'Dies lädt {size} aus dem Loppa-Release auf GitHub herunter und prüft sie. Es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
+    'Dies lädt {size} von {host} herunter und prüft sie. Es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
   'summary.getConfirmYes': 'Herunterladen',
   'summary.getOff':
     'Der Download ist noch nicht verfügbar: Das Modell ist nicht veröffentlicht. Sie können stattdessen eine Modelldatei von der Festplatte öffnen.',

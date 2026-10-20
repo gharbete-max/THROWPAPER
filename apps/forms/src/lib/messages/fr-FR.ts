@@ -1501,6 +1501,21 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     'Supprimer {name} de cet ordinateur ? Les fichiers que vous avez ouverts depuis le disque ne sont pas supprimés. Vous pourrez le récupérer plus tard.',
   'ai.models.removeConfirmYes': 'Supprimer',
+  'ai.graphics.label': 'Utiliser la carte graphique (plus rapide, facultatif)',
+  'ai.graphics.note':
+    'Désactivé tant que vous ne l’activez pas. Les pages sont lues plusieurs fois plus vite sur un ordinateur doté d’une carte graphique dédiée. Si la carte ne peut pas être utilisée, Loppa revient seule au processeur.',
+  'ai.graphics.later':
+    'Pas encore disponible sur cet ordinateur. La prise en charge graphique propre au Mac viendra dans une étape ultérieure.',
+  'ai.graphics.missing':
+    'Le programme nécessaire n’est pas encore sur cet ordinateur : l’activer demande confirmation avant le téléchargement, ou vous pouvez le placer vous-même dans {folder}.',
+  'ai.graphics.getConfirm':
+    'Télécharger le programme de la carte graphique depuis {host} ? Fichier : {files}. Taille : {size} Mo, et il occupe autant d’espace disque. Vos documents ne sont envoyés nulle part et vous pouvez annuler à tout moment. Il est vérifié avec son empreinte publiée avant d’être utilisé. Continuer ?',
+  'ai.graphics.getConfirmYes': 'Télécharger',
+  'ai.graphics.failure': 'La carte graphique n’a pas pu être utilisée ; le processeur est utilisé.',
+  'ai.graphics.tryAgain': 'Réessayer la carte graphique',
+  'ai.graphics.on.processor': 'Exécution sur : le processeur',
+  'ai.graphics.on.graphics': 'Exécution sur : la carte graphique',
+  'ai.graphics.on.device': 'Exécution sur : la carte graphique ({device})',
   'ai.models.progress': 'Fichier {file} sur {files} : {done} sur {total} Mo',
   'ai.models.cache': 'Résultats enregistrés : {count} ({size} Mo)',
   'ai.models.clearCache': 'Effacer les résultats enregistrés',
@@ -1542,7 +1557,7 @@ export const frFR: Record<MessageKey, string> = {
     'Cet ordinateur a {free} Go de mémoire libre et le modèle a besoin d’environ {need} Go. Fermez d’autres programmes et réessayez.',
   'summary.get': 'Obtenir le modèle',
   'summary.getConfirm':
-    'Ceci télécharge {size} depuis la publication de Loppa sur GitHub et les vérifie. Cela occupe autant d’espace disque. Vos documents ne sont envoyés nulle part. Continuer ?',
+    'Ceci télécharge {size} depuis {host} et les vérifie. Cela occupe autant d’espace disque. Vos documents ne sont envoyés nulle part. Continuer ?',
   'summary.getConfirmYes': 'Télécharger',
   'summary.getOff':
     'Le téléchargement n’est pas encore disponible : le modèle n’est pas publié. Vous pouvez ouvrir un fichier de modèle depuis le disque.',

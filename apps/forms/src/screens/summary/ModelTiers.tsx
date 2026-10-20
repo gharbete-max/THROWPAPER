@@ -1,4 +1,5 @@
 import type { AiBridge, AiModelStatus, AiStatus } from '@tp/shared/ai';
+import GraphicsSetting from './GraphicsSetting.js';
 import { Banner } from '../../components/Banner.js';
 import { Icon } from '../../components/Icon.js';
 import { useT } from '../../lib/i18n.js';
@@ -14,6 +15,8 @@ interface Props {
   onGet(model: AiModelStatus): void;
   onOpen(model: AiModelStatus): void;
   onRemove(model: AiModelStatus): void;
+  onGraphics(on: boolean): void;
+  onClearGraphics(): void;
 }
 
 /**
@@ -31,136 +34,148 @@ export default function ModelTiers({
   onGet,
   onOpen,
   onRemove,
+  onGraphics,
+  onClearGraphics,
 }: Props) {
   const t = useT();
   const gb = (bytes: number) => (bytes / GB).toFixed(1);
 
   return (
-    <fieldset className="stack models" disabled={working}>
-      <legend className="muted small">{t('ai.models.optional')}</legend>
-      <ul className="stack" role="list">
-        {status.models.map((model) => {
-          const installed = model.state === 'installed' || model.state === 'busy';
-          const broken = model.support.state === 'not-working-yet';
-          return (
-            <li key={model.id} className="stack model" data-model={model.id}>
-              {model.tier === 'full' ? (
-                <Banner name="blur" decorative className="banner--thin" />
-              ) : null}
-              <label className="model__head">
-                <input
-                  type="radio"
-                  name="ai-model"
-                  checked={model.selected}
-                  disabled={!installed || broken}
-                  onChange={() => void bridge.select(model.id).then(onStatus)}
-                />
-                <strong>{model.name}</strong>
-              </label>
-              <p className="model__chips">
-                <span className={`badge badge--tier badge--tier-${model.tier}`}>
-                  {t(`ai.models.tier.${model.tier}`)}
-                </span>
-                {/* The sentence below says it in full; the chip is for the eye. */}
-                <span className="badge badge--ram" aria-hidden="true">
-                  {t('ai.models.ramChip', { size: gb(model.requiredMemoryBytes) })}
-                </span>
-                {model.recommended ? (
-                  <span className="badge badge--quiet">{t('ai.models.recommended')}</span>
+    <>
+      <fieldset className="stack models" disabled={working}>
+        <legend className="muted small">{t('ai.models.optional')}</legend>
+        <ul className="stack" role="list">
+          {status.models.map((model) => {
+            const installed = model.state === 'installed' || model.state === 'busy';
+            const broken = model.support.state === 'not-working-yet';
+            return (
+              <li key={model.id} className="stack model" data-model={model.id}>
+                {model.tier === 'full' ? (
+                  <Banner name="blur" decorative className="banner--thin" />
                 ) : null}
-                <span
-                  className={
-                    model.state === 'damaged' ? 'badge badge--warning' : 'badge badge--quiet'
-                  }
-                >
-                  {t(`ai.models.state.${model.state}`)}
-                </span>
-                {model.selected && installed ? (
-                  <span className="badge">{t('ai.models.chosen')}</span>
-                ) : null}
-              </p>
-              <p className="muted small">{t(`ai.models.quality.${model.tier}`)}</p>
-              <p className="muted small">
-                {t('ai.models.size', { size: gb(model.bytes) })} ·{' '}
-                {t(model.requiredMemoryVerified ? 'ai.models.ram' : 'ai.models.ramEstimate', {
-                  size: gb(model.requiredMemoryBytes),
-                })}{' '}
-                · {t('ai.models.licence', { licence: model.licence })}
-                {model.resident ? ` · ${t('ai.models.loaded')}` : ''}
-              </p>
-              {broken ? (
-                <p className="status-warning small">{t('ai.models.notWorking')}</p>
-              ) : model.support.state === 'untested' ? (
-                <p className="muted small">{t('ai.models.untested')}</p>
-              ) : null}
-              <details className="small">
-                <summary>{t('ai.models.evidence')}</summary>
-                <p className="muted">{model.support.evidence}</p>
-                <ul role="list">
-                  {model.files.map((file) => (
-                    <li key={file.name}>
-                      {file.path === null || file.source === null ? (
-                        t('ai.models.fileMissing', { name: file.name })
-                      ) : (
-                        <>
-                          {t('ai.models.file', {
-                            name: file.name,
-                            where: `${t(`ai.models.source.${file.source}`)}, ${t(`ai.models.hash.${file.hash === 'missing' ? 'unchecked' : file.hash}`)}`,
-                          })}
-                          <br />
-                          <code className="ai-path">{file.path}</code>
-                        </>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-              {model.available ? (
-                <div className="row">
-                  {!model.evaluationOnly ? (
-                    <button
-                      type="button"
-                      className="button"
-                      disabled={working || model.downloadBlocked !== null || installed || broken}
-                      onClick={() => onGet(model)}
-                    >
-                      <Icon name="download" /> {t('ai.models.get')}
-                    </button>
+                <label className="model__head">
+                  <input
+                    type="radio"
+                    name="ai-model"
+                    checked={model.selected}
+                    disabled={!installed || broken}
+                    onChange={() => void bridge.select(model.id).then(onStatus)}
+                  />
+                  <strong>{model.name}</strong>
+                </label>
+                <p className="model__chips">
+                  <span className={`badge badge--tier badge--tier-${model.tier}`}>
+                    {t(`ai.models.tier.${model.tier}`)}
+                  </span>
+                  {/* The sentence below says it in full; the chip is for the eye. */}
+                  <span className="badge badge--ram" aria-hidden="true">
+                    {t('ai.models.ramChip', { size: gb(model.requiredMemoryBytes) })}
+                  </span>
+                  {model.recommended ? (
+                    <span className="badge badge--quiet">{t('ai.models.recommended')}</span>
                   ) : null}
-                  {installed && !model.selected && !broken ? (
-                    <button
-                      type="button"
-                      className="button button--quiet"
-                      onClick={() => void bridge.select(model.id).then(onStatus)}
-                    >
-                      {t('ai.models.use')}
-                    </button>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="button button--quiet"
-                    onClick={() => onOpen(model)}
+                  <span
+                    className={
+                      model.state === 'damaged' ? 'badge badge--warning' : 'badge badge--quiet'
+                    }
                   >
-                    <Icon name="upload" /> {t('ai.models.open')}
-                  </button>
-                  {model.files.some((file) => file.path !== null) ? (
+                    {t(`ai.models.state.${model.state}`)}
+                  </span>
+                  {model.selected && installed ? (
+                    <span className="badge">{t('ai.models.chosen')}</span>
+                  ) : null}
+                </p>
+                <p className="muted small">{t(`ai.models.quality.${model.tier}`)}</p>
+                <p className="muted small">
+                  {t('ai.models.size', { size: gb(model.bytes) })} ·{' '}
+                  {t(model.requiredMemoryVerified ? 'ai.models.ram' : 'ai.models.ramEstimate', {
+                    size: gb(model.requiredMemoryBytes),
+                  })}{' '}
+                  · {t('ai.models.licence', { licence: model.licence })}
+                  {model.resident ? ` · ${t('ai.models.loaded')}` : ''}
+                </p>
+                {broken ? (
+                  <p className="status-warning small">{t('ai.models.notWorking')}</p>
+                ) : model.support.state === 'untested' ? (
+                  <p className="muted small">{t('ai.models.untested')}</p>
+                ) : null}
+                <details className="small">
+                  <summary>{t('ai.models.evidence')}</summary>
+                  <p className="muted">{model.support.evidence}</p>
+                  <ul role="list">
+                    {model.files.map((file) => (
+                      <li key={file.name}>
+                        {file.path === null || file.source === null ? (
+                          t('ai.models.fileMissing', { name: file.name })
+                        ) : (
+                          <>
+                            {t('ai.models.file', {
+                              name: file.name,
+                              where: `${t(`ai.models.source.${file.source}`)}, ${t(`ai.models.hash.${file.hash === 'missing' ? 'unchecked' : file.hash}`)}`,
+                            })}
+                            <br />
+                            <code className="ai-path">{file.path}</code>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+                {model.available ? (
+                  <div className="row">
+                    {!model.evaluationOnly ? (
+                      <button
+                        type="button"
+                        className="button"
+                        disabled={working || model.downloadBlocked !== null || installed || broken}
+                        onClick={() => onGet(model)}
+                      >
+                        <Icon name="download" /> {t('ai.models.get')}
+                      </button>
+                    ) : null}
+                    {installed && !model.selected && !broken ? (
+                      <button
+                        type="button"
+                        className="button button--quiet"
+                        onClick={() => void bridge.select(model.id).then(onStatus)}
+                      >
+                        {t('ai.models.use')}
+                      </button>
+                    ) : null}
                     <button
                       type="button"
                       className="button button--quiet"
-                      onClick={() => onRemove(model)}
+                      onClick={() => onOpen(model)}
                     >
-                      <Icon name="trash" /> {t('ai.models.remove')}
+                      <Icon name="upload" /> {t('ai.models.open')}
                     </button>
-                  ) : null}
-                </div>
-              ) : null}
-            </li>
-          );
-        })}
-      </ul>
-      {status.models[0] ? (
-        <p className="muted small">{t('ai.models.folder', { path: status.models[0].folder })}</p>
+                    {model.files.some((file) => file.path !== null) ? (
+                      <button
+                        type="button"
+                        className="button button--quiet"
+                        onClick={() => onRemove(model)}
+                      >
+                        <Icon name="trash" /> {t('ai.models.remove')}
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+        {status.models[0] ? (
+          <p className="muted small">{t('ai.models.folder', { path: status.models[0].folder })}</p>
+        ) : null}
+      </fieldset>
+      {status.graphics ? (
+        <GraphicsSetting
+          graphics={status.graphics}
+          working={working}
+          onToggle={onGraphics}
+          onClear={onClearGraphics}
+        />
       ) : null}
-    </fieldset>
+    </>
   );
 }

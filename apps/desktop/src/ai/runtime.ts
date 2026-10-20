@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { readdir, stat } from 'node:fs/promises';
-import { join, relative } from 'node:path';
+import { basename, join, relative } from 'node:path';
 import {
   runtimeAssetFor,
   type AiFileStatus,
@@ -78,10 +78,15 @@ export async function locateRuntime(
   manifest: RuntimeManifest,
   platform: string = process.platform,
   arch: string = process.arch,
+  variant?: 'vulkan',
 ): Promise<LocatedRuntime | null> {
-  const asset = runtimeAssetFor(platform, arch, manifest);
+  const asset = runtimeAssetFor(platform, arch, manifest, variant);
   if (!asset) return null;
-  for (const { dir, source } of searchDirs('runtime', context)) {
+  // The graphics build has the CPU build's file names: only its own folder may hold it, never a
+  // root or pack folder where the CPU program sits.
+  const kind = variant ? 'runtime-vulkan' : 'runtime';
+  for (const { dir, source } of searchDirs(kind, context)) {
+    if (variant && basename(dir) !== kind) continue;
     const entry = join(dir, asset.entry);
     if ((await stat(entry).catch(() => null))?.isFile()) return { dir, entry, asset, source };
   }
@@ -97,13 +102,20 @@ export function createRuntimeChecker(options: {
   manifest: RuntimeManifest;
   platform?: string;
   arch?: string;
+  variant?: 'vulkan';
 }) {
   const platform = options.platform ?? process.platform;
   const arch = options.arch ?? process.arch;
   const checked = new Map<string, RuntimeVerdict>();
 
   async function check(): Promise<{ found: LocatedRuntime; verdict: RuntimeVerdict } | null> {
-    const found = await locateRuntime(options.context(), options.manifest, platform, arch);
+    const found = await locateRuntime(
+      options.context(),
+      options.manifest,
+      platform,
+      arch,
+      options.variant,
+    );
     if (!found) return null;
     let verdict = checked.get(found.dir);
     if (!verdict) {
@@ -114,6 +126,8 @@ export function createRuntimeChecker(options: {
   }
 
   return {
+    /** Forget what was checked: a folder was just put there. */
+    forget: () => checked.clear(),
     /** The program to start. Rejects with a problem a person can be told: missing, or damaged. */
     async entry(): Promise<string> {
       const result = await check();
@@ -130,7 +144,7 @@ export function createRuntimeChecker(options: {
     },
 
     async status(): Promise<AiFileStatus> {
-      const asset = runtimeAssetFor(platform, arch, options.manifest);
+      const asset = runtimeAssetFor(platform, arch, options.manifest, options.variant);
       const base = {
         role: 'runtime' as const,
         name: `${options.manifest.name} ${options.manifest.tag}`,

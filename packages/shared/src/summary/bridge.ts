@@ -50,6 +50,8 @@ export interface ModelStatus {
   damaged: boolean;
   /** Null when the download can be started; otherwise why not (the release has no address yet). */
   downloadBlocked: string | null;
+  /** The host a download would come from, for the confirmation; null when there is none. */
+  host?: string | null;
   freeMemoryBytes: number;
   requiredMemoryBytes: number;
   /** What the shell is doing now. */

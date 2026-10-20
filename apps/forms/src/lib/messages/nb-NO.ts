@@ -1457,6 +1457,21 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     'Fjerne {name} fra denne datamaskinen? Filer du åpnet fra disken, slettes ikke. Du kan hente den igjen senere.',
   'ai.models.removeConfirmYes': 'Fjern',
+  'ai.graphics.label': 'Bruk grafikkortet (raskere, valgfritt)',
+  'ai.graphics.note':
+    'Av til du slår det på. Sider leses flere ganger raskere på en datamaskin med eget grafikkort. Hvis kortet ikke kan brukes, går Loppa tilbake til prosessoren av seg selv.',
+  'ai.graphics.later':
+    'Ikke tilgjengelig ennå på denne datamaskinen. Macens egen grafikkstøtte kommer i et senere trinn.',
+  'ai.graphics.missing':
+    'Programmet som trengs er ikke på denne datamaskinen ennå: når du slår det på, spør Loppa før det lastes ned, eller du kan legge det i {folder} selv.',
+  'ai.graphics.getConfirm':
+    'Laste ned grafikkortprogrammet fra {host}? Fil: {files}. Størrelse: {size} MB, og det tar så mye diskplass. Dokumentene dine sendes ingen steder, og du kan avbryte når som helst. Det kontrolleres mot sitt publiserte fingeravtrykk før bruk. Fortsette?',
+  'ai.graphics.getConfirmYes': 'Last ned',
+  'ai.graphics.failure': 'Grafikkortet kunne ikke brukes; prosessoren brukes i stedet.',
+  'ai.graphics.tryAgain': 'Prøv grafikkortet igjen',
+  'ai.graphics.on.processor': 'Kjører på: prosessoren',
+  'ai.graphics.on.graphics': 'Kjører på: grafikkortet',
+  'ai.graphics.on.device': 'Kjører på: grafikkortet ({device})',
   'ai.models.progress': 'Fil {file} av {files}: {done} av {total} MB',
   'ai.models.cache': 'Lagrede resultater: {count} ({size} MB)',
   'ai.models.clearCache': 'Tøm lagrede resultater',
@@ -1498,7 +1513,7 @@ export const nbNO: Record<MessageKey, string> = {
     'Denne datamaskinen har {free} GB ledig minne, og modellen trenger omtrent {need} GB. Lukk andre programmer og prøv igjen.',
   'summary.get': 'Hent modellen',
   'summary.getConfirm':
-    'Dette laster ned {size} fra Loppas utgivelse på GitHub og kontrollerer dem. Det tar så mye diskplass. Dokumentene dine sendes ingen steder. Fortsette?',
+    'Dette laster ned {size} fra {host} og kontrollerer dem. Det tar så mye diskplass. Dokumentene dine sendes ingen steder. Fortsette?',
   'summary.getConfirmYes': 'Last ned',
   'summary.getOff':
     'Nedlastingen er ikke tilgjengelig ennå: modellen er ikke publisert. Du kan åpne en modellfil fra disken i stedet.',

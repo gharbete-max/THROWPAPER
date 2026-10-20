@@ -1461,6 +1461,21 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     'Fjern {name} fra denne computer? Filer, du åbnede fra disken, slettes ikke. Du kan hente den igen senere.',
   'ai.models.removeConfirmYes': 'Fjern',
+  'ai.graphics.label': 'Brug grafikkortet (hurtigere, valgfrit)',
+  'ai.graphics.note':
+    'Slået fra, medmindre du slår det til. Sider læses flere gange hurtigere på en computer med et separat grafikkort. Kan kortet ikke bruges, vender Loppa tilbage til processoren af sig selv.',
+  'ai.graphics.later':
+    'Ikke tilgængeligt endnu på denne computer. Macens egen grafikunderstøttelse kommer i et senere trin.',
+  'ai.graphics.missing':
+    'Programmet til det er ikke på denne computer endnu: når du slår det til, spørger Loppa, før det hentes, eller du kan lægge det i {folder} selv.',
+  'ai.graphics.getConfirm':
+    'Hent grafikkortprogrammet fra {host}? Fil: {files}. Størrelse: {size} MB, og det fylder så meget på disken. Dine dokumenter sendes ingen steder hen, og du kan annullere når som helst. Det kontrolleres mod sit offentliggjorte fingeraftryk, før det bruges. Fortsæt?',
+  'ai.graphics.getConfirmYes': 'Hent',
+  'ai.graphics.failure': 'Grafikkortet kunne ikke bruges; processoren bruges i stedet.',
+  'ai.graphics.tryAgain': 'Prøv grafikkortet igen',
+  'ai.graphics.on.processor': 'Kører på: processoren',
+  'ai.graphics.on.graphics': 'Kører på: grafikkortet',
+  'ai.graphics.on.device': 'Kører på: grafikkortet ({device})',
   'ai.models.progress': 'Fil {file} af {files}: {done} af {total} MB',
   'ai.models.cache': 'Gemte resultater: {count} ({size} MB)',
   'ai.models.clearCache': 'Ryd gemte resultater',
@@ -1502,7 +1517,7 @@ export const daDK: Record<MessageKey, string> = {
     'Denne computer har {free} GB ledig hukommelse, og modellen skal bruge ca. {need} GB. Luk andre programmer, og prøv igen.',
   'summary.get': 'Hent modellen',
   'summary.getConfirm':
-    'Dette henter {size} fra Loppas udgivelse på GitHub og kontrollerer dem. Det fylder så meget på disken. Dine dokumenter sendes ingen steder hen. Fortsæt?',
+    'Dette henter {size} fra {host} og kontrollerer dem. Det fylder så meget på disken. Dine dokumenter sendes ingen steder hen. Fortsæt?',
   'summary.getConfirmYes': 'Hent',
   'summary.getOff':
     'Hentningen er ikke tilgængelig endnu: modellen er ikke udgivet. Du kan åbne en modelfil fra disken i stedet.',

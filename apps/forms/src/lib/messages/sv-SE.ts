@@ -1463,6 +1463,21 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     'Ta bort {name} från den här datorn? Filer du öppnade från disken raderas inte. Du kan hämta den igen senare.',
   'ai.models.removeConfirmYes': 'Ta bort',
+  'ai.graphics.label': 'Använd grafikkortet (snabbare, valfritt)',
+  'ai.graphics.note':
+    'Av tills du slår på det. Sidor läses flera gånger snabbare på en dator med eget grafikkort. Går kortet inte att använda återgår Loppa till processorn av sig själv.',
+  'ai.graphics.later':
+    'Inte tillgängligt ännu på den här datorn. Macens egna grafikstöd kommer i ett senare steg.',
+  'ai.graphics.missing':
+    'Programmet som behövs finns inte på den här datorn ännu: när du slår på det frågar Loppa innan det hämtas, eller så kan du lägga det i {folder} själv.',
+  'ai.graphics.getConfirm':
+    'Hämta grafikkortsprogrammet från {host}? Fil: {files}. Storlek: {size} MB, och det tar så mycket diskutrymme. Dina dokument skickas ingenstans och du kan avbryta när som helst. Det kontrolleras mot sitt publicerade fingeravtryck innan det används. Fortsätta?',
+  'ai.graphics.getConfirmYes': 'Hämta',
+  'ai.graphics.failure': 'Grafikkortet gick inte att använda; processorn används i stället.',
+  'ai.graphics.tryAgain': 'Försök med grafikkortet igen',
+  'ai.graphics.on.processor': 'Körs på: processorn',
+  'ai.graphics.on.graphics': 'Körs på: grafikkortet',
+  'ai.graphics.on.device': 'Körs på: grafikkortet ({device})',
   'ai.models.progress': 'Fil {file} av {files}: {done} av {total} MB',
   'ai.models.cache': 'Sparade resultat: {count} ({size} MB)',
   'ai.models.clearCache': 'Rensa sparade resultat',
@@ -1505,7 +1520,7 @@ export const svSE: Record<MessageKey, string> = {
     'Den här datorn har {free} GB ledigt minne och modellen behöver ungefär {need} GB. Stäng andra program och försök igen.',
   'summary.get': 'Hämta modellen',
   'summary.getConfirm':
-    'Det här hämtar {size} från Loppas utgåva på GitHub och kontrollerar dem. Det tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
+    'Det här hämtar {size} från {host} och kontrollerar dem. Det tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
   'summary.getConfirmYes': 'Hämta',
   'summary.getOff':
     'Hämtningen är inte tillgänglig än: modellen är inte publicerad. Du kan öppna en modellfil från disken i stället.',

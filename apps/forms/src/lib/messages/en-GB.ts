@@ -1478,6 +1478,21 @@ export const enGB = {
   'ai.models.removeConfirm':
     'Remove {name} from this computer? Files you opened from disk are not deleted. You can get it again later.',
   'ai.models.removeConfirmYes': 'Remove',
+  'ai.graphics.label': 'Use the graphics card (faster, optional)',
+  'ai.graphics.note':
+    'Off unless you turn it on. Pages are read several times faster on a computer with a separate graphics card. If the card cannot be used, Loppa goes back to the processor by itself.',
+  'ai.graphics.later':
+    'Not available yet on this computer. The Mac’s own graphics support comes in a later step.',
+  'ai.graphics.missing':
+    'The program for it is not on this computer yet: turning this on asks before it is downloaded, or you can put it in {folder} yourself.',
+  'ai.graphics.getConfirm':
+    'Download the graphics-card program from {host}? File: {files}. Size: {size} MB, and it takes that much disk space. Your documents are not sent anywhere, and you can cancel at any time. It is checked against its published fingerprint before use. Continue?',
+  'ai.graphics.getConfirmYes': 'Download',
+  'ai.graphics.failure': 'The graphics card could not be used; using the processor.',
+  'ai.graphics.tryAgain': 'Try the graphics card again',
+  'ai.graphics.on.processor': 'Running on: the processor',
+  'ai.graphics.on.graphics': 'Running on: the graphics card',
+  'ai.graphics.on.device': 'Running on: the graphics card ({device})',
   'ai.models.progress': 'File {file} of {files}: {done} of {total} MB',
   'ai.models.cache': 'Saved results: {count} ({size} MB)',
   'ai.models.clearCache': 'Clear saved results',
@@ -1518,7 +1533,7 @@ export const enGB = {
     'This computer has {free} GB of free memory and the model needs about {need} GB. Close other programs and try again.',
   'summary.get': 'Get the model',
   'summary.getConfirm':
-    'This downloads {size} from Loppa’s release on GitHub and checks it. It takes that much disk space. Your documents are not sent anywhere. Continue?',
+    'This downloads {size} from {host} and checks it. It takes that much disk space. Your documents are not sent anywhere. Continue?',
   'summary.getConfirmYes': 'Download',
   'summary.getOff':
     'The download is not available yet: the model has not been published. You can open a model file from disk instead.',

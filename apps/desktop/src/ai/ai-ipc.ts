@@ -112,4 +112,23 @@ export function registerAiIpc(
     AI_CHANNELS.clearCache,
     guarded(() => coordinator.clearCache()),
   );
+  ipc.handle(
+    AI_CHANNELS.useGraphics,
+    guarded((on: unknown) =>
+      typeof on === 'boolean' ? coordinator.useGraphics(on) : coordinator.status(),
+    ),
+  );
+  ipc.handle(
+    AI_CHANNELS.installGraphics,
+    guarded((consent: unknown) => {
+      const plain = plainConsent(consent);
+      return plain
+        ? coordinator.installGraphics(plain)
+        : { ok: false, problem: 'consent-required' };
+    }),
+  );
+  ipc.handle(
+    AI_CHANNELS.clearGraphicsFailure,
+    guarded(() => coordinator.clearGraphicsFailure()),
+  );
 }

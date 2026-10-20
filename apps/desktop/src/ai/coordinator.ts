@@ -1,6 +1,7 @@
 import { appendFile, mkdir, readFile, rm, stat, statfs, writeFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve, sep } from 'node:path';
 import {
+  GRAPHICS_INSTALL_ID,
   PAGE_PIPELINE_VERSION,
   cacheKey,
   capabilityOf,
@@ -28,6 +29,7 @@ import {
 import type { ResultCache } from './cache.js';
 import { WeightsError, downloadFile, sha256File, verifyFile } from './download.js';
 import { AiError, type Engine, type EngineFactory, type EngineFiles } from './engine.js';
+import type { Graphics } from './graphics.js';
 import { PACK_FILE, PackError, installFromFolder } from './pack.js';
 import { locateModel, type ResolveContext } from './resolve.js';
 
@@ -103,6 +105,8 @@ export interface CoordinatorDeps {
   packDir?: string | null;
   /** The runtime's state for the status panel; omitted where the engines need no program. */
   runtimeStatus?(): Promise<AiFileStatus | null>;
+  /** The optional graphics-card setting (`graphics.ts`); omitted where there is none. */
+  graphics?: Graphics;
   freeMemory(): number;
   /** Total memory, for the recommendation; falls back to free memory. */
   totalMemory?(): number;
@@ -127,6 +131,9 @@ export interface Coordinator {
   run(id: string, task: AiTask, options?: { priority?: number }): Promise<AiStart>;
   cancel(id: string): Promise<void>;
   clearCache(): Promise<AiStatus>;
+  useGraphics(on: boolean): Promise<AiStatus>;
+  installGraphics(consent: AiConsent): Promise<AiStart>;
+  clearGraphicsFailure(): Promise<AiStatus>;
   onEvent(listener: (event: AiEvent) => void): () => void;
   onTransition(listener: (transition: Transition) => void): () => void;
   state(): CoordinatorState;
@@ -295,8 +302,10 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     const effective = (
       await modelFor({ kind: 'summarise', text: '', into: 'en-GB', shape: 'document' })
     )?.id;
+    const graphics = await deps.graphics?.status();
     return {
       models: await Promise.all(registry.map((model) => modelStatus(model, ctx, effective))),
+      ...(graphics ? { graphics } : {}),
       freeMemoryBytes: deps.freeMemory(),
       totalMemoryBytes: deps.totalMemory?.() ?? deps.freeMemory(),
       freeDiskBytes: await freeDisk(deps.dir),
@@ -593,7 +602,81 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
       emit({ id, kind: 'error', problem: 'cancelled' });
       return;
     }
-    if (id.startsWith('install')) installAbort?.abort();
+    if (id.startsWith('install') || id === GRAPHICS_INSTALL_ID) installAbort?.abort();
+  }
+
+  // --- the graphics card (optional, off by default) -------------------------------------------
+
+  /** The setting changed: a model already loaded was started the other way, so let it go. */
+  async function settingChanged(): Promise<AiStatus> {
+    if (resident && !running) await release('swap');
+    return status();
+  }
+
+  async function useGraphics(on: boolean): Promise<AiStatus> {
+    await deps.graphics?.setEnabled(on);
+    return settingChanged();
+  }
+
+  async function clearGraphicsFailure(): Promise<AiStatus> {
+    await deps.graphics?.clearFailure();
+    return settingChanged();
+  }
+
+  async function installGraphics(consent: AiConsent): Promise<AiStart> {
+    const graphics = deps.graphics;
+    if (!graphics) return { ok: false, problem: 'failed' };
+    // The network only on a confirmed action naming exactly what is fetched (ADR 0026).
+    if (!graphics.consentMatches(consent)) return { ok: false, problem: 'consent-required' };
+    if (activity !== 'idle') return { ok: false, problem: 'busy' };
+    activity = 'downloading';
+    installAbort = new AbortController();
+    const signal = installAbort.signal;
+    const id = GRAPHICS_INSTALL_ID;
+    await mkdir(deps.dir, { recursive: true });
+    await appendFile(
+      consentLog,
+      `${JSON.stringify({ at: new Date().toISOString(), modelId: 'graphics', ...consent })}\n`,
+      'utf8',
+    ).catch(() => undefined);
+    void (async () => {
+      try {
+        await graphics.install({
+          fetch: deps.fetch,
+          signal,
+          onProgress: (p) =>
+            emit({
+              id,
+              kind: 'install',
+              modelId: 'graphics',
+              file: 1,
+              files: 1,
+              ...p,
+              modelDone: p.done,
+              modelTotal: p.total,
+              bytesPerSecond: 0,
+              etaSeconds: null,
+            }),
+        });
+        activity = 'idle';
+        emit({ id, kind: 'installed', modelId: 'graphics', status: await settingChanged() });
+      } catch (error) {
+        activity = 'idle';
+        emit({
+          id,
+          kind: 'install-failed',
+          modelId: 'graphics',
+          problem: signal.aborted
+            ? 'cancelled'
+            : error instanceof WeightsError && error.failure === 'disk'
+              ? 'no-disk-space'
+              : 'download-failed',
+        });
+      } finally {
+        installAbort = null;
+      }
+    })();
+    return { ok: true, id };
   }
 
   // --- getting and forgetting files ------------------------------------------------------
@@ -835,6 +918,9 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     run,
     cancel,
     clearCache,
+    useGraphics,
+    installGraphics,
+    clearGraphicsFailure,
     onEvent(listener) {
       eventListeners.add(listener);
       return () => void eventListeners.delete(listener);
