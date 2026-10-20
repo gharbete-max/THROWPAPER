@@ -2184,6 +2184,7 @@ export const frFR: Record<MessageKey, string> = {
   'docs.keep.save': 'Télécharger',
   'docs.keep.cancel': 'Annuler',
   'docs.keep.working': 'Calcul des tailles…',
+  'table.actions': 'Actions',
   'hygiene.heading': 'Vérifier ces adresses',
   'hygiene.col.row': 'Ligne',
   'hygiene.col.address': 'Adresse',
@@ -2241,5 +2242,7 @@ export const frFR: Record<MessageKey, string> = {
   'suppress.remove': 'Retirer {email}',
   'suppress.removeConfirm':
     'Retirer {email} de la liste ? Les envois pourront de nouveau atteindre cette adresse.',
+  'suppress.lastSkipped':
+    'plural:one La dernière campagne a écarté {count} adresse de cette liste. | other La dernière campagne a écarté {count} adresses de cette liste.',
   'suppress.failed': 'La liste n’a pas pu être modifiée. Réessayez.',
 };

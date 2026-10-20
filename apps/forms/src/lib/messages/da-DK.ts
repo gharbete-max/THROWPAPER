@@ -2127,6 +2127,7 @@ export const daDK: Record<MessageKey, string> = {
   'docs.keep.save': 'Hent',
   'docs.keep.cancel': 'Annuller',
   'docs.keep.working': 'Beregner størrelserne…',
+  'table.actions': 'Handlinger',
   'hygiene.heading': 'Kontrollér adresserne',
   'hygiene.col.row': 'Række',
   'hygiene.col.address': 'Adresse',
@@ -2180,5 +2181,7 @@ export const daDK: Record<MessageKey, string> = {
   'suppress.invalid': 'Det er ikke en gyldig mailadresse.',
   'suppress.remove': 'Fjern {email}',
   'suppress.removeConfirm': 'Fjern {email} fra listen? Udsendelser kan så nå adressen igen.',
+  'suppress.lastSkipped':
+    'plural:one Den seneste kampagne udelod {count} adresse fra denne liste. | other Den seneste kampagne udelod {count} adresser fra denne liste.',
   'suppress.failed': 'Listen kunne ikke ændres. Prøv igen.',
 };

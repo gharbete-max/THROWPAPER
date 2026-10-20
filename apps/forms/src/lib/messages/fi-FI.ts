@@ -2145,6 +2145,7 @@ export const fiFI: Record<MessageKey, string> = {
   'docs.keep.save': 'Lataa',
   'docs.keep.cancel': 'Peruuta',
   'docs.keep.working': 'Lasketaan kokoja…',
+  'table.actions': 'Toiminnot',
   'hygiene.heading': 'Tarkista osoitteet',
   'hygiene.col.row': 'Rivi',
   'hygiene.col.address': 'Osoite',
@@ -2203,5 +2204,7 @@ export const fiFI: Record<MessageKey, string> = {
   'suppress.remove': 'Poista {email}',
   'suppress.removeConfirm':
     'Poistetaanko {email} listalta? Lähetykset voivat sen jälkeen tavoittaa osoitteen.',
+  'suppress.lastSkipped':
+    'plural:one Viimeisin kampanja ohitti {count} osoitteen tältä listalta. | other Viimeisin kampanja ohitti {count} osoitetta tältä listalta.',
   'suppress.failed': 'Listaa ei voitu muuttaa. Yritä uudelleen.',
 };

@@ -2140,6 +2140,7 @@ export const isIS: Record<MessageKey, string> = {
   'docs.keep.save': 'Sækja',
   'docs.keep.cancel': 'Hætta við',
   'docs.keep.working': 'Reikna stærðirnar…',
+  'table.actions': 'Aðgerðir',
   'hygiene.heading': 'Athugaðu netföngin',
   'hygiene.col.row': 'Lína',
   'hygiene.col.address': 'Netfang',
@@ -2196,5 +2197,7 @@ export const isIS: Record<MessageKey, string> = {
   'suppress.remove': 'Fjarlægja {email}',
   'suppress.removeConfirm':
     'Fjarlægja {email} af listanum? Útsendingar geta þá náð til netfangsins aftur.',
+  'suppress.lastSkipped':
+    'plural:one Síðasta herferð sleppti {count} netfangi á þessum lista. | other Síðasta herferð sleppti {count} netföngum á þessum lista.',
   'suppress.failed': 'Ekki tókst að breyta listanum. Reyndu aftur.',
 };
