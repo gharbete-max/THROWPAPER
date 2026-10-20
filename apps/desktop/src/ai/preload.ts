@@ -14,6 +14,7 @@ import { AI_CHANNELS, MODEL_CHANNELS } from './channels.js';
 const ai: AiBridge = {
   status: () => ipcRenderer.invoke(AI_CHANNELS.status),
   install: (modelId, consent) => ipcRenderer.invoke(AI_CHANNELS.install, modelId, consent),
+  select: (modelId) => ipcRenderer.invoke(AI_CHANNELS.select, modelId),
   openFromDisk: (modelId) => ipcRenderer.invoke(AI_CHANNELS.openFromDisk, modelId),
   remove: (modelId) => ipcRenderer.invoke(AI_CHANNELS.remove, modelId),
   run: (id, task) => ipcRenderer.invoke(AI_CHANNELS.run, id, task),

@@ -85,7 +85,7 @@ separate **AI pack** placed in `ai-pack/` beside the app (`<resources>/ai-pack`)
 already carries the parts (three for the weights, one for the projector, 1.5 GiB each at most) with
 `unpublished:` addresses. **The pack's distribution workflow is not built here.** Until it is, the model is
 opened from disk or found by `LOPPA_AI_DIR`, `local-models/` or the repository root in development
-(`docs/plan/AI-SYSTEM.md` D7, plus `ai-pack/` and `<kind>/` folders). **Built since: section 6.**
+(`docs/plan/AI-SYSTEM.md` D7, plus `ai-pack/` and `<kind>/` folders). **Built since: section 7.**
 
 ### 5. Measured on this computer (2026-10-19)
 
@@ -121,7 +121,43 @@ files cached); a processor without AVX2 (only the stand-in server, which prints 
 GPU; battery; a ten-page document through the real model; reading many pages (the page pipeline is not
 built); more than two invented pages with the Q8_0 projector.
 
-### 6. Distribution, built and measured (2026-10-20)
+### 6. AI is optional and the model is a choice: a catalogue (2026-10-20)
+
+Loppa works fully without any model. Nothing is fetched at start-up or on its own. The Summary
+pane lists a catalogue of models, best first, each pinned in `packages/shared/src/ai/models/*.json`
+(Zod, ADR 0021): source repository, revision, file URL `https://huggingface.co/<repo>/resolve/<revision>/<file>`,
+size, SHA-256 (the LFS oid), licence, tier, a memory figure that says whether it was measured, and
+whether it has been run (`support`: working, untested or not-working-yet, with the evidence). All are Apache-2.0
+(Qwen2.5-VL-3B is left out: its base licence is the Qwen Research Licence).
+
+| Tier | Model | Download | Memory (measured peak) | Run here |
+| --- | --- | --- | --- | --- |
+| Full | Qwen2.5-VL-7B-Instruct Q4_K_M + f16 projector (the owner's files) | 6.04 GB | 9.8 GB (section 5) | yes, section 5 |
+| Balanced | Qwen3-VL-4B-Instruct Q4_K_M + Q8_0 projector | 2.95 GB | about 6 GB, estimate | no |
+| Light | Qwen3-VL-2B-Instruct Q4_K_M + Q8_0 projector | 1.55 GB | 3.54 GB | yes: 12 of 12 strings of an invented invoice, 9.8 s a page, 5.7 s for a Swedish summary |
+| Very light | SmolVLM2-2.2B-Instruct Q4_K_M + Q8_0 projector | 1.71 GB | about 3.5 GB, estimate | no |
+| Very light | SmolVLM2-500M-Video-Instruct Q8_0 + Q8_0 projector | 0.55 GB | 0.94 GB | yes, and **not working yet**: 1 of 12 strings (it invents numbers), the summary repeats the source |
+| Very light | SmolVLM2-256M-Video-Instruct Q4_K_M + Q8_0 projector | 0.24 GB | about 0.7 GB, estimate | no |
+
+The runs were made with `scripts/model-bench.ts` (llama.cpp b11741, 8 threads, CPU, files fetched by
+Loppa's own download manager). Qwen3-VL and SmolVLM2 need no flag beyond `--mmproj`; the server's built-in
+chat template is used. Smaller models read and write worse; the list says so beside each.
+
+- **One resident at a time.** The coordinator's lock is unchanged. The person's choice is kept in
+  `selected.json` in the models folder; with none, the best installed model is used. The first-use
+  suggestion ("Recommended for this computer") is the best tier whose memory fits the computer's total
+  (with 15 per cent over) and free memory. It never downloads anything.
+- **Download.** Only on a press, after a confirmation that names the host (huggingface.co), the files and the total
+  size. The same three facts are sent as a consent object and must equal what the manifest would fetch,
+  or nothing starts; each consent is appended to `consents.jsonl` (when, model, host, files, size, never a document).
+  The download is resumable (`Range`), follows redirects by hand and only to `huggingface.co` and `hf.co` over https,
+  hashes while streaming, checks the size, writes `<name>.partial` and renames it whole, deletes it on a mismatch,
+  can be cancelled, reports speed and time left, and first checks that the disk has room (the files, less
+  any part already fetched, and 256 MB).
+- **Open from disk** stays for files obtained elsewhere. The owner's current files are the Full tier.
+- **Not measured:** the Balanced, 2.2B and 256M rows, a cold disk, macOS and Linux.
+
+### 7. Distribution, built and measured (2026-10-20)
 
 - **Runtime in the package.** `scripts/build.ts` stages `ai-pack/` for every target (a README) and, for
   Windows x64 only (the one verified asset), `ai-pack/runtime/` with the CPU build and `RUNTIME.json`

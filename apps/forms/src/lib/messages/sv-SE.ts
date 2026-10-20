@@ -1423,7 +1423,7 @@ export const svSE: Record<MessageKey, string> = {
   'room.centreOpen': 'Öppna den',
   'ai.models.heading': 'AI-modeller på den här datorn',
   'ai.models.intro':
-    'Alla Loppa som använder AI delar de här modellerna. Bara en är laddad åt gången, de körs utan nätverk och inget dokument lämnar datorn.',
+    'Alla Loppa som använder AI delar dessa modeller. Bara en är laddad åt gången och den körs på den här datorn. Inget dokument lämnar den.',
   'ai.models.state.installed': 'Installerad',
   'ai.models.state.missing': 'Inte installerad',
   'ai.models.state.damaged': 'Skadad',
@@ -1458,7 +1458,7 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.open': 'Öppna en fil eller ett AI-paket (PACK.json) från disken',
   'ai.models.remove': 'Ta bort',
   'ai.models.getConfirm':
-    'Det här hämtar {size} GB för {name} från Loppas utgåva på GitHub och kontrollerar filen. Den tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
+    'Hämta {name} från {host}? Filer: {files}. Totalt: {size} GB, och det tar så mycket diskutrymme. Dina dokument skickas ingenstans och du kan avbryta när som helst. Fortsätta?',
   'ai.models.getConfirmYes': 'Hämta',
   'ai.models.removeConfirm':
     'Ta bort {name} från den här datorn? Filer du öppnade från disken raderas inte. Du kan hämta den igen senare.',
@@ -1469,6 +1469,30 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     'Radera de sparade resultaten? Att läsa ett dokument igen tar då lika lång tid som första gången.',
   'ai.models.clearCacheYes': 'Radera',
+  'ai.models.optional':
+    'AI är valfritt. Loppa fungerar fullt ut utan någon modell. Inget hämtas om du inte trycker på Hämta och bekräftar.',
+  'ai.models.tier.full': 'Fullständig',
+  'ai.models.tier.balanced': 'Balanserad',
+  'ai.models.tier.light': 'Lätt',
+  'ai.models.tier.very-light': 'Mycket lätt',
+  'ai.models.quality.full': 'Bäst på att läsa och skriva. Kräver en kraftfull dator.',
+  'ai.models.quality.balanced': 'Bra för de flesta dokument på en vanlig dator.',
+  'ai.models.quality.light':
+    'Går på svagare datorer. Läser och skriver sämre och gör fler fel på svåra skanningar.',
+  'ai.models.quality.very-light':
+    'För mycket svaga datorer. Små modeller läser och skriver sämre och har svårt med skanningar.',
+  'ai.models.ram': 'Behöver ungefär {size} GB minne',
+  'ai.models.ramEstimate': 'Behöver ungefär {size} GB minne (en uppskattning)',
+  'ai.models.recommended': 'Rekommenderas för den här datorn',
+  'ai.models.chosen': 'Vald',
+  'ai.models.use': 'Använd den här',
+  'ai.models.notWorking':
+    'Fungerar inte än: den klarade inte vårt test och kan därför inte hämtas.',
+  'ai.models.untested': 'Inte testad av oss än.',
+  'ai.models.evidence': 'Testanteckningar och filer',
+  'ai.models.progressEta': '{done} av {total} MB, {speed} MB/s, ungefär {minutes} min kvar',
+  'summary.problem.no-disk-space':
+    'Det finns inte tillräckligt med ledigt diskutrymme för den här modellen.',
   'summary.intro':
     'Ett utkast till sammanfattning eller översättning av ett dokument du har öppet, gjort på den här datorn. Det visas bredvid originalet, märkt som genererat, och sparas aldrig.',
   'summary.settingsToggle': 'Modellinställningar',

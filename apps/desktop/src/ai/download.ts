@@ -22,7 +22,7 @@ import { UNPUBLISHED, type ModelFile } from '@tp/shared/ai';
  * attempt asks the server for the rest with a `Range` header, hashing what is already there first.
  * A server that answers 200 instead of 206 is taken to have started over, and so do we.
  */
-export type DownloadFailure = 'unpublished' | 'http' | 'size' | 'hash' | 'io';
+export type DownloadFailure = 'unpublished' | 'http' | 'size' | 'hash' | 'io' | 'host' | 'disk';
 
 export class WeightsError extends Error {
   constructor(
@@ -106,6 +106,38 @@ export interface DownloadOptions {
   fetch: typeof fetch;
   signal?: AbortSignal;
   onProgress?: OnProgress;
+  /**
+   * When given, every address fetched, the first and each redirect's, must be https on a host this
+   * accepts, or the download stops with `host`. Redirects are followed here, by hand, for that.
+   */
+  allowHost?: (host: string) => boolean;
+}
+
+const MAX_REDIRECTS = 5;
+
+/** `fetch` that follows redirects itself so that no hop can leave the allowed hosts. */
+async function fetchChecked(
+  url: string,
+  init: RequestInit,
+  options: Pick<DownloadOptions, 'fetch' | 'allowHost'>,
+): Promise<Response> {
+  if (!options.allowHost) return options.fetch(url, { ...init, redirect: 'follow' });
+  let at = url;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
+    const target = new URL(at);
+    if (target.protocol !== 'https:' || !options.allowHost(target.hostname)) {
+      throw new WeightsError('host', `${target.hostname} is not a host Loppa downloads from`);
+    }
+    const response = await options.fetch(at, { ...init, redirect: 'manual' });
+    const location = response.headers.get('location');
+    if (response.status >= 300 && response.status < 400 && location) {
+      await response.body?.cancel().catch(() => undefined);
+      at = new URL(location, at).href;
+      continue;
+    }
+    return response;
+  }
+  throw new WeightsError('http', 'too many redirects');
 }
 
 /**
@@ -183,11 +215,14 @@ async function fetchPart(
       );
     }
 
-    const response = await options.fetch(part.url, {
-      redirect: 'follow',
-      ...(have > 0 ? { headers: { Range: `bytes=${have}-` } } : {}),
-      ...(signal ? { signal } : {}),
-    });
+    const response = await fetchChecked(
+      part.url,
+      {
+        ...(have > 0 ? { headers: { Range: `bytes=${have}-` } } : {}),
+        ...(signal ? { signal } : {}),
+      },
+      options,
+    );
     if (response.status === 416 && attempt === 0) {
       await rm(partial, { force: true });
       continue;

@@ -63,10 +63,18 @@ export function fakeBridge() {
     downloadBlocked: 'the release has not been cut yet',
     folder: 'C:\\Users\\me\\AppData\\Roaming\\Loppa\\models',
     resident: false,
+    tier: 'full',
+    support: { state: 'working', evidence: 'fake' },
+    requiredMemoryVerified: true,
+    consent: null,
+    selected: true,
+    recommended: true,
   });
   const aiStatus = () => ({
     models: [model()],
     freeMemoryBytes: 16e9,
+    totalMemoryBytes: 32e9,
+    freeDiskBytes: 500e9,
     activity: 'idle',
     queued: 0,
     runtime: {
@@ -98,6 +106,7 @@ export function fakeBridge() {
   w.loppaAi = {
     status: () => Promise.resolve(aiStatus()),
     install: () => Promise.resolve({ ok: false, problem: 'download-unavailable' }),
+    select: () => Promise.resolve(aiStatus()),
     openFromDisk: () => Promise.resolve({ ok: false, problem: 'cancelled' }),
     remove: () => Promise.resolve(aiStatus()),
     run: (id: string, task: Record<string, string>) => {

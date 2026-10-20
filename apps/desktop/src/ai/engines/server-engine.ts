@@ -63,6 +63,8 @@ export interface ServerEngineDeps {
   /** The program's path; rejects with an {@link AiError} when it is missing or damaged. */
   locateRuntime(): Promise<string>;
   totalMemory(): number;
+  /** Total memory under which this model is not loaded; the default suits the 7B model. */
+  minTotalMemory?: number;
   freeMemory?(): number;
   projector?: ProjectorChoice;
   settings?: Partial<ServerSettings>;
@@ -82,10 +84,10 @@ export class ServerEngine implements Engine {
 
   async load(signal: AbortSignal): Promise<void> {
     if (this.server) return;
-    if (this.deps.totalMemory() < MIN_TOTAL_MEMORY_BYTES) {
+    if (this.deps.totalMemory() < (this.deps.minTotalMemory ?? MIN_TOTAL_MEMORY_BYTES)) {
       throw new AiError(
         'too-little-memory',
-        'the on-device model needs a computer with at least 12 GB of memory',
+        'this computer has too little memory for the chosen model; a lighter one can be chosen',
       );
     }
     const entry = await this.deps.locateRuntime();

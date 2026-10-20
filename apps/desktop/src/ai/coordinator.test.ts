@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ModelManifest, type AiEvent, type AiTask } from '@tp/shared/ai';
+import { ModelManifest, consentFor, type AiEvent, type AiTask } from '@tp/shared/ai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultCache } from './cache.js';
 import {
@@ -30,7 +30,12 @@ function tiny(id: string, capability: 'text' | 'vision', sizes: number[]) {
         bytes: bytes.length,
         name,
         parts: [
-          { bytes: bytes.length, name, sha256: sha(bytes), url: `https://example.test/${name}` },
+          {
+            bytes: bytes.length,
+            name,
+            sha256: sha(bytes),
+            url: `https://huggingface.co/x/resolve/r/${name}`,
+          },
         ],
         role: index === 0 ? 'weights' : 'projector',
         sha256: sha(bytes),
@@ -42,6 +47,9 @@ function tiny(id: string, capability: 'text' | 'vision', sizes: number[]) {
     licenceUrl: 'https://example.test/licence',
     name: id,
     requiredMemoryBytes: 1000,
+    requiredMemoryVerified: false,
+    support: { evidence: 'test', state: 'untested' },
+    tier: 'light',
     retrievedAt: '2026-10-14',
     source: 'https://example.test/source',
     sourceRevision: 'x',
@@ -529,7 +537,13 @@ describe('getting a model', () => {
   it('does nothing without the explicit consent flag', async () => {
     const fetchSpy = vi.fn();
     const ctx = setup({ fetch: fetchSpy as unknown as typeof fetch });
-    expect(await ctx.coordinator.install('vision-b', false)).toEqual({
+    expect(
+      await ctx.coordinator.install('vision-b', {
+        host: 'huggingface.co',
+        files: [],
+        totalBytes: 0,
+      }),
+    ).toEqual({
       ok: false,
       problem: 'consent-required',
     });
@@ -552,7 +566,10 @@ describe('getting a model', () => {
     });
     const events: AiEvent[] = [];
     own.onEvent((e) => events.push(e));
-    expect(await own.install('vision-b', true)).toEqual({ ok: true, id: 'install:vision-b' });
+    expect(await own.install('vision-b', consentFor(probe.vision.manifest)!)).toEqual({
+      ok: true,
+      id: 'install:vision-b',
+    });
     await vi.waitFor(() => expect(events.some((e) => e.kind === 'installed')).toBe(true));
     const files = events.filter((e) => e.kind === 'install').map((e) => 'file' in e && e.file);
     expect(new Set(files)).toEqual(new Set([1, 2]));
@@ -563,7 +580,8 @@ describe('getting a model', () => {
 
     // Removing deletes what Loppa downloaded.
     expect((await own.remove('vision-b')).models[0]!.state).toBe('missing');
-    expect(await readdir(join(dir, 'own'))).toEqual([]);
+    // Only the record of the consent is left.
+    expect(await readdir(join(dir, 'own'))).toEqual(['consents.jsonl']);
   });
 
   it('is busy while another download runs, and a task waits for nothing it cannot have', async () => {
@@ -575,11 +593,14 @@ describe('getting a model', () => {
     }) as unknown as typeof fetch;
     const ctx = setup({ fetch: slow });
     await ctx.install(ctx.text);
-    expect(await ctx.coordinator.install('vision-b', true)).toEqual({
+    expect(await ctx.coordinator.install('vision-b', consentFor(ctx.vision.manifest)!)).toEqual({
       ok: true,
       id: 'install:vision-b',
     });
-    expect(await ctx.coordinator.install('text-a', true)).toEqual({ ok: false, problem: 'busy' });
+    expect(await ctx.coordinator.install('text-a', consentFor(ctx.text.manifest)!)).toEqual({
+      ok: false,
+      problem: 'busy',
+    });
     expect(await ctx.coordinator.run('t', TEXT_TASK)).toEqual({ ok: false, problem: 'busy' });
     release();
     expect(await ctx.until((e) => e.kind === 'install-failed')).toMatchObject({
@@ -595,7 +616,7 @@ describe('getting a model', () => {
         init?.signal?.addEventListener('abort', stop);
       })) as unknown as typeof fetch;
     const ctx = setup({ fetch: hang });
-    await ctx.coordinator.install('vision-b', true);
+    await ctx.coordinator.install('vision-b', consentFor(ctx.vision.manifest)!);
     await ctx.coordinator.cancel('install:vision-b');
     expect(await ctx.until((e) => e.kind === 'install-failed')).toMatchObject({
       problem: 'cancelled',
@@ -696,6 +717,9 @@ describe('an evaluation-only model', () => {
       licenceUrl: 'https://example.test/licence',
       name: 'eval',
       requiredMemoryBytes: 1000,
+      requiredMemoryVerified: false,
+      support: { evidence: 'test', state: 'untested' },
+      tier: 'light',
       retrievedAt: '2026-10-14',
       source: 'https://example.test/source',
       sourceRevision: 'x',
@@ -716,7 +740,9 @@ describe('an evaluation-only model', () => {
       fetch: fetchSpy as unknown as typeof fetch,
       cache: new ResultCache(join(dir, 'c.json')),
     });
-    expect(await coordinator.install('eval-v', true)).toEqual({
+    expect(
+      await coordinator.install('eval-v', { host: 'huggingface.co', files: [], totalBytes: 0 }),
+    ).toEqual({
       ok: false,
       problem: 'download-unavailable',
     });
