@@ -37,7 +37,7 @@ test.afterAll(async () => {
   await new Promise((done) => documents.close(done));
 });
 
-test('a typed and a drawn signature, sealed, verified, and a tampered copy refused', async ({
+test('a typed and a drawn signature, sealed, verified, and a tampered copy refused @smoke', async ({
   page,
   request,
 }) => {

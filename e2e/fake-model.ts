@@ -107,7 +107,14 @@ export function fakeBridge() {
     status: () => Promise.resolve(aiStatus()),
     install: () => Promise.resolve({ ok: false, problem: 'download-unavailable' }),
     select: () => Promise.resolve(aiStatus()),
-    openFromDisk: () => Promise.resolve({ ok: false, problem: 'cancelled' }),
+    // The same state as the summary bridge below: the file is taken, the model is installed.
+    openFromDisk: (modelId: string) => {
+      setTimeout(() => {
+        state.installed = true;
+        aiEmit({ id: 'install:' + modelId, kind: 'installed', modelId, status: aiStatus() });
+      }, 50);
+      return Promise.resolve({ ok: true, id: 'install:' + modelId });
+    },
     remove: () => Promise.resolve(aiStatus()),
     run: (id: string, task: Record<string, string>) => {
       if (!REPLY_KINDS.includes(task.kind ?? '')) {

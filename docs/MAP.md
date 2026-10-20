@@ -30,12 +30,12 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 ## Where to look (open only the row you need)
 | Working on | Code | Read first |
 | --- | --- | --- |
-| Room, catchers, arrival | `apps/forms/src/screens/Room.tsx`, `packages/tokens/src/room.ts` | ADR 0022, `docs/plan/DOCUMENTS.md` §2 |
+| Room, catchers, arrival, side rail | `apps/forms/src/screens/Room.tsx`, `packages/tokens/src/room.ts`; the rail is `Shell` in `App.tsx` (four parts + AI centre; events, responses, invoices, users, brand folded under "Earlier features", routes unchanged) | ADR 0022, `docs/plan/DOCUMENTS.md` §2, `docs/plan/SIMPLIFY.md` |
 | Scan (pages, photos, filters, digital copy, invoice, PDF text/redact, Word→PDF) | `screens/Scan.tsx`, `screens/scan-*`, `screens/invoice-scan`, `api-forms/src/pdf/`, `routes/pdf*.ts`, `packages/shared/src/{import,payable}` | `docs/plan/IMPROVEMENTS.md`, `NEXT.md`, `archive/plan/SCANS.md` |
 | Forms (builder, fill, draft PDF) | `screens/Forms.tsx`, `FillIn.tsx`, `screens/builder/`, `packages/shared/src/{builder,interpret,import}` | ADRs 0017–0021, `docs/plan/PREDICTIVE-BUILDER.md`, `CAVEATS.md` |
 | Sign | `screens/Signing*`, `screens/signing/`, `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
 | Send (single, batch, campaigns, reply helper) | `screens/Send*`, `screens/send/`, `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
-| AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`, `graphics`, `runtime-fetch`, `server/gpu`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/Summary*`, `screens/summary/GraphicsSetting.tsx` | `docs/plan/AI-SYSTEM.md`, `docs/plan/VISION-TUNING.md` (speed and accuracy numbers per setting and model), ADRs 0023–0025 |
+| AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`, `graphics`, `runtime-fetch`, `server/gpu`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/Summary*`, `screens/AiSetup.tsx` (the one Set up AI page: recommended model, Choose another, Advanced) with `screens/summary/{ModelsPanel,ModelTiers,GraphicsSetting}.tsx` | `docs/plan/AI-SYSTEM.md`, `docs/plan/VISION-TUNING.md` (speed and accuracy numbers per setting and model), ADRs 0023–0025 |
 | Desktop packaging, AI pack | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/{fetch-runtime,make-ai-pack,join-ai-pack,publish-ai-pack}.ts`, `src/ai/pack.ts`) | ADR 0016, 0025 §6, `docs/DEPLOY.md` |
 | Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
@@ -72,7 +72,7 @@ per page. Local file resolution: `LOPPA_AI_DIR` → `local-models/` → repo roo
 
 ## Commands
 `pnpm verify` (serial chain; exit 1 tells only the FIRST failing step — run `format:check`, `typecheck`,
-`lint`, `test`, `build` singly) · `pnpm test:e2e` (ONE run at a time; at most one agent) · `pnpm bundle:budget` (after build) ·
+`lint`, `test`, `build` singly) · `pnpm test:e2e:smoke` (about 1 min: the `@smoke`-tagged specs via `playwright --grep @smoke`, for UI-only changes; CI and merges run the full suite) · `pnpm test:e2e` (full; ONE run at a time; at most one agent) · `pnpm bundle:budget` (after build) ·
 `pnpm contract:check` · `pnpm licence:check` · `pnpm builder:validate` · `pnpm --filter @tp/desktop start|package:win`.
 Postgres is portable at `C:\Users\gusta\pg16` (no Docker). After dependency changes: `pnpm exec playwright install chromium`.
 

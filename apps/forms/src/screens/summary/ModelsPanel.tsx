@@ -5,6 +5,7 @@ import { useT } from '../../lib/i18n.js';
 import { useConfirm } from '../../components/Confirm.js';
 import { Banner } from '../../components/Banner.js';
 import { Icon } from '../../components/Icon.js';
+import GraphicsSetting from './GraphicsSetting.js';
 
 const GB = 1000 ** 3;
 const MB = 1000 ** 2;
@@ -38,6 +39,7 @@ function Models({ bridge }: { bridge: AiBridge }) {
   const [status, setStatus] = useState<AiStatus | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
   const [problem, setProblem] = useState<AiProblem | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const refresh = useCallback(() => void bridge.status().then(setStatus), [bridge]);
   useEffect(refresh, [refresh]);
@@ -143,42 +145,31 @@ function Models({ bridge }: { bridge: AiBridge }) {
           minutes: Math.max(1, Math.round(p.etaSeconds / 60)),
         });
 
+  // One recommended model first (the shell's hint from this computer's memory, else the best that
+  // works); the others on request, and those that do not work yet only on "Show all".
+  const works = (m: AiModelStatus) => m.support.state !== 'not-working-yet';
+  const pick = status.models.find((m) => m.recommended && works(m)) ?? status.models.find(works);
+  const others = status.models.filter((m) => m !== pick && (showAll || works(m)));
+  const hidden = status.models.some((m) => m !== pick && !works(m));
+  const list = (models: AiModelStatus[]) => (
+    <ModelTiers
+      models={models}
+      bridge={bridge}
+      working={working}
+      onStatus={setStatus}
+      onGet={(model) => void get(model)}
+      onOpen={(model) => void open(model)}
+      onRemove={(model) => void remove(model)}
+    />
+  );
+
   return (
     <section className="card stack" aria-labelledby="ai-models">
       <Banner name="streaks" className="banner--thin" />
       <h2 id="ai-models">{t('ai.models.heading')}</h2>
       <p className="muted small">{t('ai.models.intro')}</p>
 
-      <Suspense fallback={null}>
-        <ModelTiers
-          status={status}
-          bridge={bridge}
-          working={working}
-          onStatus={setStatus}
-          onGet={(model) => void get(model)}
-          onOpen={(model) => void open(model)}
-          onRemove={(model) => void remove(model)}
-          onGraphics={(on) => void graphics(on)}
-          onClearGraphics={() => void bridge.clearGraphicsFailure().then(setStatus)}
-        />
-      </Suspense>
-
-      {status.runtime ? (
-        <p className="small" data-runtime>
-          {status.runtime.path === null || status.runtime.source === null ? (
-            t('ai.models.fileMissing', { name: status.runtime.name })
-          ) : (
-            <>
-              {t('ai.models.file', {
-                name: status.runtime.name,
-                where: `${t(`ai.models.source.${status.runtime.source}`)}, ${t(`ai.models.hash.${status.runtime.hash === 'missing' ? 'unchecked' : status.runtime.hash}`)}`,
-              })}
-              <br />
-              <code className="ai-path">{status.runtime.path}</code>
-            </>
-          )}
-        </p>
-      ) : null}
+      <Suspense fallback={null}>{list(pick ? [pick] : [])}</Suspense>
 
       {progress ? (
         <div className="stack">
@@ -205,22 +196,69 @@ function Models({ bridge }: { bridge: AiBridge }) {
         </p>
       ) : null}
 
-      <div className="row">
-        <span className="muted small">
-          {t('ai.models.cache', {
-            count: status.cache.entries,
-            size: mb(status.cache.bytes),
-          })}
-        </span>
-        <button
-          type="button"
-          className="button button--quiet"
-          disabled={working || status.cache.entries === 0}
-          onClick={() => void clear()}
-        >
-          <Icon name="trash" /> {t('ai.models.clearCache')}
-        </button>
-      </div>
+      {others.length > 0 || hidden ? (
+        <details className="stack">
+          <summary>{t('ai.setup.another')}</summary>
+          <Suspense fallback={null}>{list(others)}</Suspense>
+          {hidden ? (
+            <label className="field field--inline">
+              <input
+                type="checkbox"
+                checked={showAll}
+                onChange={(event) => setShowAll(event.target.checked)}
+              />
+              {t('ai.setup.showAll')}
+            </label>
+          ) : null}
+        </details>
+      ) : null}
+
+      <details className="stack">
+        <summary>{t('ai.setup.advanced')}</summary>
+        {status.graphics ? (
+          <GraphicsSetting
+            graphics={status.graphics}
+            working={working}
+            onToggle={(on) => void graphics(on)}
+            onClear={() => void bridge.clearGraphicsFailure().then(setStatus)}
+          />
+        ) : null}
+        {status.runtime ? (
+          <p className="small" data-runtime>
+            {status.runtime.path === null || status.runtime.source === null ? (
+              t('ai.models.fileMissing', { name: status.runtime.name })
+            ) : (
+              <>
+                {t('ai.models.file', {
+                  name: status.runtime.name,
+                  where: `${t(`ai.models.source.${status.runtime.source}`)}, ${t(`ai.models.hash.${status.runtime.hash === 'missing' ? 'unchecked' : status.runtime.hash}`)}`,
+                })}
+                <br />
+                <code className="ai-path">{status.runtime.path}</code>
+              </>
+            )}
+          </p>
+        ) : null}
+        {status.models[0] ? (
+          <p className="muted small">{t('ai.models.folder', { path: status.models[0].folder })}</p>
+        ) : null}
+        <div className="row">
+          <span className="muted small">
+            {t('ai.models.cache', {
+              count: status.cache.entries,
+              size: mb(status.cache.bytes),
+            })}
+          </span>
+          <button
+            type="button"
+            className="button button--quiet"
+            disabled={working || status.cache.entries === 0}
+            onClick={() => void clear()}
+          >
+            <Icon name="trash" /> {t('ai.models.clearCache')}
+          </button>
+        </div>
+      </details>
     </section>
   );
 }

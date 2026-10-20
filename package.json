@@ -28,6 +28,7 @@
     "bundle:budget": "tsx scripts/bundle-budget.ts",
     "tokens:proof": "tsx scripts/proof/index.ts",
     "test:e2e": "tsx scripts/run-e2e.ts",
+    "test:e2e:smoke": "tsx scripts/run-e2e.ts --grep @smoke",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:migrate": "pnpm --filter @tp/api-forms --filter @tp/api-sign db:migrate",

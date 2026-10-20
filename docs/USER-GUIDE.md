@@ -134,7 +134,7 @@ on a laptop. Smaller tiers exist for weaker computers (_Full_, _Balanced_, _Ligh
 they read and write worse and struggle with hard scans. Loppa marks one _Recommended for this
 computer_. Tiers that failed testing are shown as _Not working yet_ and cannot be downloaded.
 
-**Getting a model**, under _AI models_ (the summary centre's _Model settings_):
+**Getting a model**, on the _Set up AI_ page (the room's corner, or the link in the summary centre): one recommended model and one Download button; _Choose another model_ lists the rest and _Advanced_ holds the graphics card, the program, the folder and the saved results:
 
 1. **Pick a tier and Download.** Loppa names the host (huggingface.co), the files and the total size
    and waits for you to confirm; you can cancel at any time. The files are checked before first use.
@@ -142,7 +142,7 @@ computer_. Tiers that failed testing are shown as _Not working yet_ and cannot b
    in one folder (a USB stick works); Loppa joins the parts and checks each against its hash. No
    internet is used.
 
-**Using the graphics card (optional)**: under the model list, _Use the graphics card (faster, optional)_ is
+**Using the graphics card (optional)**: under _Advanced_, _Use the graphics card (faster, optional)_ is
 off until you turn it on. On a Windows computer with a separate graphics card it reads pages several times
 faster. The first time you turn it on, Loppa asks before downloading the extra program (it names github.com,
 the file and its size; it is checked against its published fingerprint), or you can put the program in the

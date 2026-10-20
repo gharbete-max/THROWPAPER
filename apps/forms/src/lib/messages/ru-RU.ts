@@ -348,6 +348,7 @@ export const ruRU: Record<MessageKey, string> = {
 
   'nav.checkin': 'Регистрация',
   'nav.brand': 'Оформление',
+  'nav.earlier': 'Прежние функции',
 
   'problem.duplicate-key': 'Ключ поля «{key}» используется больше одного раза.',
   'problem.no-answerable-fields': 'Форма пока не собирает ни одного ответа.',
@@ -914,7 +915,6 @@ export const ruRU: Record<MessageKey, string> = {
     'Вот что было прочитано, по порядку. Форма не меняется: вы всё проверите, прежде чем что-либо из этого станет вопросом.',
   'paper.read.download': 'Скачать прочитанное',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Подписание',
   'signing.heading': 'Подписание',
   'signing.new': 'Отправить PDF на подпись',
   'signing.notConfigured': 'Подписание не настроено',
@@ -1523,6 +1523,12 @@ export const ruRU: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Удалить',
   'ai.models.optional':
     'ИИ не обязателен. Loppa полностью работает без какой-либо модели. Ничего не скачивается, пока вы не нажмёте «Скачать» и не подтвердите.',
+  'ai.setup.title': 'Настроить ИИ',
+  'ai.setup.doesText': 'Кратко излагает, переводит, вычитывает и готовит черновики писем.',
+  'ai.setup.doesVision': 'Читает отсканированную страницу.',
+  'ai.setup.another': 'Выбрать другую модель',
+  'ai.setup.showAll': 'Показать все, включая модели, которые пока не работают',
+  'ai.setup.advanced': 'Дополнительно',
   'ai.models.tier.full': 'Полная',
   'ai.models.tier.balanced': 'Сбалансированная',
   'ai.models.tier.light': 'Лёгкая',
@@ -1545,28 +1551,10 @@ export const ruRU: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'Для этой модели не хватает свободного места на диске.',
   'summary.intro':
     'Черновик краткого содержания или перевода открытого документа, сделанный на этом компьютере. Он показывается рядом с оригиналом, помечен как созданный машиной и никогда не сохраняется.',
-  'summary.settingsToggle': 'Настройки модели',
-  'summary.modelHeading': 'Модель',
-  'summary.modelWhat':
-    'Языковая модель размером {size} работает на этом компьютере без сети. Ваши документы никогда его не покидают. Она скачивается один раз, только по вашей просьбе, и её можно удалить.',
   'summary.state.ready': 'Модель готова.',
-  'summary.state.location': 'Файл: {path}',
   'summary.memory.low':
     'На этом компьютере свободно {free} ГБ памяти, а модели нужно около {need} ГБ. Закройте другие программы и повторите.',
-  'summary.get': 'Получить модель',
-  'summary.getConfirm':
-    'Будет скачано {size} с {host} с проверкой. Это займёт столько же места на диске. Ваши документы никуда не отправляются. Продолжить?',
-  'summary.getConfirmYes': 'Скачать',
-  'summary.getOff':
-    'Скачивание пока недоступно: модель не опубликована. Вместо этого можно открыть файл модели с диска.',
-  'summary.open': 'Открыть файл модели с диска',
-  'summary.remove': 'Удалить модель',
-  'summary.removeConfirm': 'Удалить модель с этого компьютера? Позже её можно получить снова.',
-  'summary.removeConfirmYes': 'Удалить',
   'summary.cancel': 'Отмена',
-  'summary.progress.download': 'Скачивается часть {part} из {parts}: {done} из {total} МБ',
-  'summary.progress.join': 'Части соединяются: {done} из {total} МБ',
-  'summary.progress.verify': 'Файл проверяется: {done} из {total} МБ',
   'summary.problem.not-installed': 'Модели нет на этом компьютере.',
   'summary.problem.damaged':
     'Файл не совпадает с опубликованной моделью и не был использован. Ничего не удалено.',

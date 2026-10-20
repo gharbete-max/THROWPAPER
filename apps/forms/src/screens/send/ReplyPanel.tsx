@@ -237,7 +237,7 @@ export default function ReplyPanel({
 
       {missing ? (
         <p role="alert" data-testid="reply-no-model">
-          {t('reply.noModel')} <Link to="/summary">{t('reply.noModelLink')}</Link>
+          {t('reply.noModel')} <Link to="/ai-setup">{t('reply.noModelLink')}</Link>
         </p>
       ) : null}
 

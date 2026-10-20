@@ -35,7 +35,8 @@ test('page photographs: sized, lazy, described, and the pair follows the theme',
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(liquid).toHaveAttribute('src', '/media/summary-dark.webp');
 
-  // The gold strips: the model card's is decoration, the AI models card's is described.
+  // The gold strips (on the set-up page): the model card's is decoration, the AI models card's is described.
+  await page.goto('/ai-setup');
   await expect(page.locator('[data-model]').first().locator('img.banner')).toHaveAttribute(
     'alt',
     '',

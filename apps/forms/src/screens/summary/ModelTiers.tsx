@@ -1,5 +1,4 @@
 import type { AiBridge, AiModelStatus, AiStatus } from '@tp/shared/ai';
-import GraphicsSetting from './GraphicsSetting.js';
 import { Banner } from '../../components/Banner.js';
 import { Icon } from '../../components/Icon.js';
 import { useT } from '../../lib/i18n.js';
@@ -7,7 +6,8 @@ import { useT } from '../../lib/i18n.js';
 const GB = 1000 ** 3;
 
 interface Props {
-  status: AiStatus;
+  /** The models to list; the panel chooses which (the recommended one, the others, or all). */
+  models: AiModelStatus[];
   bridge: AiBridge;
   /** A download or a check is under way: nothing else is started. */
   working: boolean;
@@ -15,8 +15,6 @@ interface Props {
   onGet(model: AiModelStatus): void;
   onOpen(model: AiModelStatus): void;
   onRemove(model: AiModelStatus): void;
-  onGraphics(on: boolean): void;
-  onClearGraphics(): void;
 }
 
 /**
@@ -27,25 +25,22 @@ interface Props {
  * thing on the list says so.
  */
 export default function ModelTiers({
-  status,
+  models,
   bridge,
   working,
   onStatus,
   onGet,
   onOpen,
   onRemove,
-  onGraphics,
-  onClearGraphics,
 }: Props) {
   const t = useT();
   const gb = (bytes: number) => (bytes / GB).toFixed(1);
 
   return (
     <>
-      <fieldset className="stack models" disabled={working}>
-        <legend className="muted small">{t('ai.models.optional')}</legend>
+      <fieldset className="stack models" disabled={working} aria-label={t('ai.models.heading')}>
         <ul className="stack" role="list">
-          {status.models.map((model) => {
+          {models.map((model) => {
             const installed = model.state === 'installed' || model.state === 'busy';
             const broken = model.support.state === 'not-working-yet';
             return (
@@ -85,7 +80,10 @@ export default function ModelTiers({
                     <span className="badge">{t('ai.models.chosen')}</span>
                   ) : null}
                 </p>
-                <p className="muted small">{t(`ai.models.quality.${model.tier}`)}</p>
+                <p className="muted small">
+                  {t(`ai.models.quality.${model.tier}`)} {t('ai.setup.doesText')}{' '}
+                  {model.capabilities.includes('vision') ? t('ai.setup.doesVision') : ''}
+                </p>
                 <p className="muted small">
                   {t('ai.models.size', { size: gb(model.bytes) })} ·{' '}
                   {t(model.requiredMemoryVerified ? 'ai.models.ram' : 'ai.models.ramEstimate', {
@@ -121,13 +119,16 @@ export default function ModelTiers({
                     ))}
                   </ul>
                 </details>
+                {model.downloadBlocked !== null && !installed && !model.evaluationOnly ? (
+                  <p className="muted small">{t('ai.models.downloadOff')}</p>
+                ) : null}
                 {model.available ? (
                   <div className="row">
-                    {!model.evaluationOnly ? (
+                    {!model.evaluationOnly && !installed ? (
                       <button
                         type="button"
                         className="button"
-                        disabled={working || model.downloadBlocked !== null || installed || broken}
+                        disabled={working || model.downloadBlocked !== null || broken}
                         onClick={() => onGet(model)}
                       >
                         <Icon name="download" /> {t('ai.models.get')}
@@ -164,18 +165,7 @@ export default function ModelTiers({
             );
           })}
         </ul>
-        {status.models[0] ? (
-          <p className="muted small">{t('ai.models.folder', { path: status.models[0].folder })}</p>
-        ) : null}
       </fieldset>
-      {status.graphics ? (
-        <GraphicsSetting
-          graphics={status.graphics}
-          working={working}
-          onToggle={onGraphics}
-          onClear={onClearGraphics}
-        />
-      ) : null}
     </>
   );
 }

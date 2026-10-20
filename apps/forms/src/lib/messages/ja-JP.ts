@@ -344,6 +344,7 @@ export const jaJP: Record<MessageKey, string> = {
 
   'nav.checkin': '受付',
   'nav.brand': 'ブランド',
+  'nav.earlier': '以前の機能',
 
   'problem.duplicate-key': '項目キー「{key}」が複数回使われています。',
   'problem.no-answerable-fields': 'このフォームはまだ何も回答を集めていません。',
@@ -896,7 +897,6 @@ export const jaJP: Record<MessageKey, string> = {
     '読み取った内容を順番に表示しています。フォームは変更されません。質問になる前に、内容を確認していただきます。',
   'paper.read.download': '読み取った内容をダウンロード',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': '署名',
   'signing.heading': '署名',
   'signing.new': 'PDF を署名に送る',
   'signing.notConfigured': '署名は設定されていません',
@@ -1486,6 +1486,12 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': '削除',
   'ai.models.optional':
     'AI は任意です。モデルがなくても Loppa は問題なく使えます。「ダウンロード」を押して確認しない限り、何もダウンロードされません。',
+  'ai.setup.title': 'AIを設定',
+  'ai.setup.doesText': '要約、翻訳、校正、メールの下書きを行います。',
+  'ai.setup.doesVision': 'スキャンしたページを読み取ります。',
+  'ai.setup.another': '別のモデルを選ぶ',
+  'ai.setup.showAll': 'まだ動作しないモデルも含めてすべて表示',
+  'ai.setup.advanced': '詳細設定',
   'ai.models.tier.full': 'フル',
   'ai.models.tier.balanced': 'バランス',
   'ai.models.tier.light': '軽量',
@@ -1508,28 +1514,10 @@ export const jaJP: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'このモデルに必要な空きディスク容量が足りません。',
   'summary.intro':
     '開いている文書の要約または翻訳の下書きを、このコンピューター上で作ります。原文の隣に「生成されたもの」と示して表示され、保存されることはありません。',
-  'summary.settingsToggle': 'モデルの設定',
-  'summary.modelHeading': 'モデル',
-  'summary.modelWhat':
-    '{size}の言語モデルがこのコンピューター上でオフラインで動きます。文書がコンピューターの外に出ることはありません。ダウンロードは、ご希望のときだけ一度行われ、あとで削除することもできます。',
   'summary.state.ready': 'モデルの準備ができました。',
-  'summary.state.location': 'ファイル：{path}',
   'summary.memory.low':
     'このコンピューターの空きメモリは{free} GBで、モデルには約{need} GBが必要です。ほかのプログラムを閉じて、もう一度お試しください。',
-  'summary.get': 'モデルを取得',
-  'summary.getConfirm':
-    '{host} から{size}をダウンロードし、検査します。その分のディスク容量を使います。文書はどこにも送信されません。続けますか。',
-  'summary.getConfirmYes': 'ダウンロード',
-  'summary.getOff':
-    'ダウンロードはまだ利用できません。モデルが公開されていません。代わりに、ディスクからモデルファイルを開くことができます。',
-  'summary.open': 'ディスクからモデルファイルを開く',
-  'summary.remove': 'モデルを削除',
-  'summary.removeConfirm': 'このコンピューターからモデルを削除しますか。あとでまた取得できます。',
-  'summary.removeConfirmYes': '削除',
   'summary.cancel': 'キャンセル',
-  'summary.progress.download': '{parts}個中{part}個目をダウンロード中：{done} / {total} MB',
-  'summary.progress.join': '部分を結合中：{done} / {total} MB',
-  'summary.progress.verify': 'ファイルを検査中：{done} / {total} MB',
   'summary.problem.not-installed': 'モデルはこのコンピューターにありません。',
   'summary.problem.damaged':
     'ファイルが公開されているモデルと一致しないため、使用されませんでした。何も削除されていません。',

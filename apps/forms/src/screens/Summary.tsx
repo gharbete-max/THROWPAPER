@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { localeLabel } from '@tp/i18n';
 import { mustQuote } from '@tp/shared/quoted';
 import {
@@ -13,7 +13,7 @@ import {
   type ModelStatus,
   type SummaryLocale,
 } from '@tp/shared/summary';
-import { useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { summaryFileFromState, summaryTextFromState } from '../lib/documents-handoff.js';
 import { emailAboutWith } from '../lib/email-about-handoff.js';
 import { aiBridge } from '../lib/ai-bridge.js';
@@ -25,8 +25,6 @@ import { modelBridge } from '../lib/model-bridge.js';
 import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { FormSource } from './summary/FormSource.js';
-import { ModelsPanel } from './summary/ModelsPanel.js';
-import { Setup } from './summary/Setup.js';
 import { Banner } from '../components/Banner.js';
 import { useJob } from './summary/job.js';
 import { textOfFile } from './summary/text.js';
@@ -83,12 +81,12 @@ function Centre({
 }) {
   const t = useT();
   const [status, setStatus] = useState<ModelStatus | null>(null);
-  const [settings, setSettings] = useState(false);
+  // The handed-over document goes to the set-up page and back.
+  const location = useLocation();
 
   useEffect(() => {
     void bridge.status().then(setStatus);
   }, [bridge]);
-  const onStatus = useCallback((next: ModelStatus) => setStatus(next), []);
 
   if (!status) return <Loading />;
   const ready = status.installed && !status.damaged;
@@ -98,22 +96,16 @@ function Centre({
       <Banner name="summary" />
       <h1>{t('room.centre')}</h1>
       <p>{t('summary.intro')}</p>
-      {ready ? (
-        <button
-          type="button"
-          className="button button--quiet"
-          aria-expanded={settings}
-          onClick={() => setSettings((open) => !open)}
-        >
-          {t('summary.settingsToggle')}
-        </button>
-      ) : null}
-      {!ready || settings ? (
-        <>
-          <Setup bridge={bridge} status={status} onStatus={onStatus} />
-          <ModelsPanel />
-        </>
-      ) : null}
+      <p role="status">
+        {status.damaged
+          ? t('summary.problem.damaged')
+          : ready
+            ? t('summary.state.ready')
+            : t('summary.problem.not-installed')}{' '}
+        <Link to="/ai-setup" state={location.state}>
+          {t('ai.setup.title')}
+        </Link>
+      </p>
       {ready ? (
         <Work bridge={bridge} status={status} handed={handed} handedText={handedText} />
       ) : null}

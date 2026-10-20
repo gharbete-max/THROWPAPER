@@ -138,7 +138,7 @@ describe('the document readers', () => {
 describe('the summary centre', () => {
   const HOLDS_TEXT = [
     'screens/Summary.tsx',
-    'screens/summary/Setup.tsx',
+    'screens/summary/ModelsPanel.tsx',
     'screens/summary/job.ts',
     'screens/summary/text.ts',
     'lib/model-bridge.ts',

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
+import { useEdition } from '../lib/edition.js';
+import { modelBridge } from '../lib/model-bridge.js';
 import { Icon, type IconName } from './Icon.js';
 
 /**
@@ -61,6 +63,7 @@ export function CommandPalette() {
   const t = useT();
   const navigate = useNavigate();
   const { user } = useSession();
+  const edition = useEdition();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -70,18 +73,30 @@ export function CommandPalette() {
 
   const commands = useMemo<Command[]>(() => {
     const list: Command[] = [
-      { id: 'events', label: t('nav.events'), icon: 'events', to: '/events' },
       { id: 'forms', label: t('nav.forms'), icon: 'forms', to: '/forms' },
+      { id: 'scan', label: t('room.scan'), icon: 'upload', to: '/scan' },
+      { id: 'sign', label: t('room.sign'), icon: 'signature', to: '/signing' },
+      { id: 'send', label: t('room.send'), icon: 'email', to: '/send' },
+      { id: 'events', label: t('nav.events'), icon: 'events', to: '/events' },
       { id: 'inbox', label: t('nav.inbox'), icon: 'inbox', to: '/responses' },
       { id: 'invoices', label: t('nav.invoices'), icon: 'file', to: '/invoices' },
       { id: 'brand', label: t('nav.brand'), icon: 'brand', to: '/brand' },
     ];
+    if (edition === 'desktop') {
+      list.push({ id: 'outgoing', label: t('nav.outgoing'), icon: 'email', to: '/outgoing' });
+      if (modelBridge()) {
+        list.push(
+          { id: 'summary', label: t('room.centre'), icon: 'globe', to: '/summary' },
+          { id: 'ai-setup', label: t('ai.setup.title'), icon: 'settings', to: '/ai-setup' },
+        );
+      }
+    }
     // Same rule as the top bar: support work only appears for the people who do it.
     if (user?.role === 'admin') {
       list.push({ id: 'users', label: t('nav.users'), icon: 'people', to: '/users' });
     }
     return list;
-  }, [t, user?.role]);
+  }, [t, user?.role, edition]);
 
   const found = useMemo(
     () => commands.filter((command) => matches(query, command.label)),
