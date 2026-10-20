@@ -1507,7 +1507,7 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Dafür gibt es noch keinen Download. Sie können stattdessen eine Datei von der Festplatte öffnen.',
   'ai.models.get': 'Herunterladen',
-  'ai.models.open': 'Datei von der Festplatte öffnen',
+  'ai.models.open': 'Datei oder KI-Paket (PACK.json) von der Festplatte öffnen',
   'ai.models.remove': 'Entfernen',
   'ai.models.getConfirm':
     '{name} von {host} herunterladen? Dateien: {files}. Insgesamt {size} GB; so viel Speicherplatz wird belegt. Ihre Dokumente werden nirgendwohin gesendet, und Sie können jederzeit abbrechen. Fortfahren?',

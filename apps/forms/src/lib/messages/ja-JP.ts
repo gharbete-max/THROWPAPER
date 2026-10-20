@@ -1455,7 +1455,7 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'これにはまだダウンロードがありません。代わりにディスクからファイルを開けます。',
   'ai.models.get': 'ダウンロード',
-  'ai.models.open': 'ディスクからファイルを開く',
+  'ai.models.open': 'ディスクからファイルまたはAIパック（PACK.json）を開く',
   'ai.models.remove': '削除',
   'ai.models.getConfirm':
     '{host} から {name} をダウンロードしますか？ ファイル：{files}。合計 {size} GB で、同じ量のディスク容量を使います。文書はどこにも送信されず、いつでもキャンセルできます。続けますか？',

@@ -1384,7 +1384,7 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.loaded': '已加载到内存。',
   'ai.models.downloadOff': '这个模型目前还没有下载。您可以改为从磁盘打开文件。',
   'ai.models.get': '下载',
-  'ai.models.open': '从磁盘打开文件',
+  'ai.models.open': '从磁盘打开文件或 AI 包（PACK.json）',
   'ai.models.remove': '移除',
   'ai.models.getConfirm':
     '从 {host} 下载 {name}？文件：{files}。总计 {size} GB，将占用同样大小的磁盘空间。你的文档不会被发送到任何地方，你可以随时取消。继续吗？',

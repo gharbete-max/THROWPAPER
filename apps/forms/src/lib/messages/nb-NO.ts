@@ -1449,7 +1449,7 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Det finnes ingen nedlasting av denne ennå. Du kan åpne en fil fra disken i stedet.',
   'ai.models.get': 'Hent',
-  'ai.models.open': 'Åpne en fil fra disken',
+  'ai.models.open': 'Åpne en fil eller en AI-pakke (PACK.json) fra disken',
   'ai.models.remove': 'Fjern',
   'ai.models.getConfirm':
     'Hent {name} fra {host}? Filer: {files}. Totalt: {size} GB, og det tar like mye diskplass. Dokumentene dine sendes ingen steder, og du kan avbryte når som helst. Fortsette?',

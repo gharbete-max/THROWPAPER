@@ -1475,7 +1475,7 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Todavía no hay descarga para este. Puedes abrir un archivo del disco en su lugar.',
   'ai.models.get': 'Descargar',
-  'ai.models.open': 'Abrir un archivo del disco',
+  'ai.models.open': 'Abrir un archivo o un paquete de IA (PACK.json) del disco',
   'ai.models.remove': 'Quitar',
   'ai.models.getConfirm':
     '¿Descargar {name} desde {host}? Archivos: {files}. Total: {size} GB, y ocupa ese espacio en disco. Tus documentos no se envían a ninguna parte y puedes cancelar en cualquier momento. ¿Continuar?',

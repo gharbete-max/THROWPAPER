@@ -1492,7 +1492,7 @@ export const ruRU: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Для этой модели пока нет загрузки. Вместо этого можно открыть файл с диска.',
   'ai.models.get': 'Скачать',
-  'ai.models.open': 'Открыть файл с диска',
+  'ai.models.open': 'Открыть файл или ИИ-пакет (PACK.json) с диска',
   'ai.models.remove': 'Удалить',
   'ai.models.getConfirm':
     'Скачать {name} с {host}? Файлы: {files}. Всего: {size} ГБ, столько же места займёт на диске. Ваши документы никуда не отправляются, и вы можете отменить в любой момент. Продолжить?',
