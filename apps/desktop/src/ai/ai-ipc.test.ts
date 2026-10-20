@@ -16,6 +16,9 @@ function harness() {
     run: vi.fn(() => Promise.resolve({ ok: true, id: 'x' })),
     cancel: vi.fn(() => Promise.resolve()),
     clearCache: vi.fn(() => Promise.resolve({})),
+    useGraphics: vi.fn(() => Promise.resolve({})),
+    installGraphics: vi.fn(() => Promise.resolve({ ok: true, id: 'graphics:install' })),
+    clearGraphicsFailure: vi.fn(() => Promise.resolve({})),
   } as unknown as Coordinator;
   registerAiIpc({ handle: (c, l) => handlers.set(c, l) }, coordinator, () => [
     'http://127.0.0.1:4100',
@@ -48,6 +51,26 @@ describe('the AI IPC', () => {
     }
     expect(coordinator.status).not.toHaveBeenCalled();
     expect(coordinator.run).not.toHaveBeenCalled();
+  });
+
+  it('takes the graphics setting as a boolean and the download only with a well-formed consent', async () => {
+    const { handlers, coordinator } = harness();
+    await handlers.get(AI_CHANNELS.useGraphics)!(forms, 'yes');
+    expect(coordinator.useGraphics).not.toHaveBeenCalled();
+    await handlers.get(AI_CHANNELS.useGraphics)!(forms, true);
+    expect(coordinator.useGraphics).toHaveBeenCalledWith(true);
+    const install = handlers.get(AI_CHANNELS.installGraphics)!;
+    expect(await install(forms, { host: 'github.com' })).toEqual({
+      ok: false,
+      problem: 'consent-required',
+    });
+    expect(coordinator.installGraphics).not.toHaveBeenCalled();
+    await install(forms, { host: 'github.com', files: ['a.zip'], totalBytes: 5, extra: 'x' });
+    expect(coordinator.installGraphics).toHaveBeenCalledWith({
+      host: 'github.com',
+      files: ['a.zip'],
+      totalBytes: 5,
+    });
   });
 
   it('refuses a task of the wrong shape, an unknown language, or a reserved id', async () => {

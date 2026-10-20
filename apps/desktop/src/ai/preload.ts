@@ -20,6 +20,9 @@ const ai: AiBridge = {
   run: (id, task) => ipcRenderer.invoke(AI_CHANNELS.run, id, task),
   cancel: (id) => ipcRenderer.invoke(AI_CHANNELS.cancel, id),
   clearCache: () => ipcRenderer.invoke(AI_CHANNELS.clearCache),
+  useGraphics: (on) => ipcRenderer.invoke(AI_CHANNELS.useGraphics, on),
+  installGraphics: (consent) => ipcRenderer.invoke(AI_CHANNELS.installGraphics, consent),
+  clearGraphicsFailure: () => ipcRenderer.invoke(AI_CHANNELS.clearGraphicsFailure),
   onEvent(listener) {
     const forward = (_event: unknown, payload: AiEvent) => listener(payload);
     ipcRenderer.on(AI_CHANNELS.event, forward);

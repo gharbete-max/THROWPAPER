@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { AiConsent } from './catalogue.js';
 import llamaServer from './runtimes/llama-server.json';
 
 /**
@@ -89,4 +90,30 @@ export function runtimeAssetFor(
   variant?: 'vulkan',
 ): RuntimeAsset | undefined {
   return manifest.assets.find((a) => a.platform === `${platform}-${arch}` && a.variant === variant);
+}
+
+/**
+ * Where the graphics-card build may be fetched from, and where a redirect may lead (ADR 0026): the
+ * release page on GitHub and the CDN it hands the file to. Nothing else is followed.
+ */
+export const RUNTIME_HOSTS = ['github.com', 'githubusercontent.com'] as const;
+
+export function isRuntimeHost(host: string): boolean {
+  const name = host.toLowerCase();
+  return RUNTIME_HOSTS.some((allowed) => name === allowed || name.endsWith(`.${allowed}`));
+}
+
+/**
+ * What the person agrees to before the graphics-card build is fetched: host, file and size. Null
+ * where no such build is pinned (macOS, arm64), which is also how the setting knows to be absent.
+ */
+export function graphicsConsentFor(
+  platform: string,
+  arch: string,
+  manifest: RuntimeManifest = LLAMA_SERVER,
+): AiConsent | null {
+  const asset = runtimeAssetFor(platform, arch, manifest, 'vulkan');
+  return asset
+    ? { host: new URL(asset.url).hostname, files: [asset.name], totalBytes: asset.bytes }
+    : null;
 }

@@ -13,6 +13,7 @@ import {
 import type { JobWarning } from '@tp/shared/summary';
 import type { EngineEvent } from './engine.js';
 import { ServerEngine } from './engines/server-engine.js';
+import { EXPECTED, squash } from './test-support/pages.js';
 
 /**
  * OPT-IN, never part of `pnpm verify`: the AI reader, the proofreader and the corporate email on
@@ -49,70 +50,6 @@ const log = (line: string) => {
 `,
     );
 };
-
-/** Strings that must be found on each page, as printed. */
-const EXPECTED: Record<string, string[]> = {
-  'invoice.png': [
-    'Nordisk Testbolag AB',
-    'Faktura',
-    '2026-10-31',
-    '2026-11-30',
-    '114',
-    'Konsulttjänst oktober',
-    '10 000,00',
-    '2 000,00',
-    '12 000,00',
-    '3 000,00',
-    '15 000,00',
-    '123-4566',
-    '202611497',
-  ],
-  'table.png': [
-    'Kvartalsrapport',
-    'Norr',
-    'Mitt',
-    'Syd',
-    'Väst',
-    'Öst',
-    '352 400',
-    '675 000',
-    '935 750',
-    '280 120',
-    '207 300',
-    '2026-10-12',
-  ],
-  'form.png': [
-    'Anmälan till årsmötet',
-    'Anna Lindqvist',
-    '48213',
-    'anna.lindqvist@example.org',
-    '070-555 01 42',
-    '2026-11-14',
-    'middagen',
-    'tolk',
-    'röstkort',
-  ],
-  'text.png': [
-    'Rapport från trädgårdsgruppen',
-    'odlingslådorna',
-    'åttiotal',
-    'Tomaterna',
-    'försommarväder',
-    'saft och bullar',
-    'ordföranden',
-  ],
-  'photo.jpg': [
-    'Rapport från trädgårdsgruppen',
-    'odlingslådorna',
-    'åttiotal',
-    'Tomaterna',
-    'försommarväder',
-    'saft och bullar',
-    'ordföranden',
-  ],
-};
-
-const squash = (s: string) => s.replace(/\s+/g, ' ').toLowerCase();
 
 const SUMMARY =
   'Summary of the board meeting\n\nThe board recieved the annual report and discussed the budjet for next year. The members was informed that the roof renovation will start in spring. About 150 members attended the meeting, which was opened by the chair, Mr Berg. The next meeting is on 2026-11-03.';

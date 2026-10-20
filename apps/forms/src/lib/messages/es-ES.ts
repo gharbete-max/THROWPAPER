@@ -1483,6 +1483,21 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     '¿Quitar {name} de este ordenador? Los archivos que abriste desde el disco no se borran. Puedes obtenerlo de nuevo más tarde.',
   'ai.models.removeConfirmYes': 'Quitar',
+  'ai.graphics.label': 'Usar la tarjeta gráfica (más rápido, opcional)',
+  'ai.graphics.note':
+    'Desactivado hasta que lo actives. Las páginas se leen varias veces más rápido en un equipo con tarjeta gráfica independiente. Si no se puede usar la tarjeta, Loppa vuelve al procesador por sí sola.',
+  'ai.graphics.later':
+    'Aún no está disponible en este equipo. El soporte gráfico propio del Mac llegará en un paso posterior.',
+  'ai.graphics.missing':
+    'El programa necesario aún no está en este equipo: al activarlo se pregunta antes de descargarlo, o puedes ponerlo tú mismo en {folder}.',
+  'ai.graphics.getConfirm':
+    '¿Descargar el programa de la tarjeta gráfica desde {host}? Archivo: {files}. Tamaño: {size} MB, y ocupa ese espacio en el disco. Tus documentos no se envían a ninguna parte y puedes cancelar en cualquier momento. Se comprueba con su huella publicada antes de usarlo. ¿Continuar?',
+  'ai.graphics.getConfirmYes': 'Descargar',
+  'ai.graphics.failure': 'No se pudo usar la tarjeta gráfica; se usa el procesador.',
+  'ai.graphics.tryAgain': 'Probar de nuevo la tarjeta gráfica',
+  'ai.graphics.on.processor': 'Se ejecuta en: el procesador',
+  'ai.graphics.on.graphics': 'Se ejecuta en: la tarjeta gráfica',
+  'ai.graphics.on.device': 'Se ejecuta en: la tarjeta gráfica ({device})',
   'ai.models.progress': 'Archivo {file} de {files}: {done} de {total} MB',
   'ai.models.cache': 'Resultados guardados: {count} ({size} MB)',
   'ai.models.clearCache': 'Borrar los resultados guardados',
@@ -1524,7 +1539,7 @@ export const esES: Record<MessageKey, string> = {
     'Este equipo tiene {free} GB de memoria libre y el modelo necesita unos {need} GB. Cierra otros programas e inténtalo de nuevo.',
   'summary.get': 'Obtener el modelo',
   'summary.getConfirm':
-    'Esto descarga {size} de la versión de Loppa en GitHub y las comprueba. Ocupa ese espacio en el disco. Tus documentos no se envían a ninguna parte. ¿Continuar?',
+    'Esto descarga {size} desde {host} y las comprueba. Ocupa ese espacio en el disco. Tus documentos no se envían a ninguna parte. ¿Continuar?',
   'summary.getConfirmYes': 'Descargar',
   'summary.getOff':
     'La descarga aún no está disponible: el modelo no se ha publicado. Puedes abrir un archivo de modelo desde el disco.',

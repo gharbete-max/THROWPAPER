@@ -68,6 +68,7 @@ export function legacyStatus(status: AiStatus, modelId: string = TEXT_MODEL.id):
     verified: there && model.files.every((file) => file.hash === 'verified'),
     damaged: model.state === 'damaged',
     downloadBlocked: model.downloadBlocked,
+    host: model.consent?.host ?? null,
     freeMemoryBytes: status.freeMemoryBytes,
     requiredMemoryBytes: model.requiredMemoryBytes,
     activity: status.activity,

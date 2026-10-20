@@ -11,13 +11,13 @@
  * `--record` prints the `contents` list of the extracted folder, for pinning a new release.
  * An asset not marked `verified` is extracted with a warning: it has not been run by this project.
  */
-import { spawnSync } from 'node:child_process';
 import { createWriteStream } from 'node:fs';
 import { mkdir, rm, stat } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { LLAMA_SERVER, type RuntimeAsset } from '@tp/shared/ai';
+import { untar } from '../src/ai/runtime-fetch.js';
 import { describeFolder, sha256Of, verifyRuntimeFolder } from '../src/ai/runtime.js';
 
 async function download(asset: RuntimeAsset, to: string): Promise<void> {
@@ -62,16 +62,7 @@ async function main(): Promise<void> {
 
   await rm(out, { recursive: true, force: true });
   await mkdir(out, { recursive: true });
-  // bsdtar unpacks a zip; the tar first on PATH in a POSIX shell on Windows cannot, so use Windows' own.
-  const tar =
-    process.platform === 'win32'
-      ? join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
-      : 'tar';
-  const untar = spawnSync(tar, ['-xf', asset.name, '-C', out], {
-    cwd: dirname(archive), // a name with a drive letter in it is a remote host to GNU tar
-    stdio: 'inherit',
-  });
-  if (untar.status !== 0) throw new Error('tar could not unpack the archive');
+  untar(archive, out);
 
   if (args.includes('--record')) {
     console.log(JSON.stringify(await describeFolder(out), null, 2));

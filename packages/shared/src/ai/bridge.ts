@@ -93,8 +93,36 @@ export interface AiModelStatus {
   recommended: boolean;
 }
 
+/** Why the graphics card was given up on; remembered until the person clears it. */
+export type GraphicsFailure = 'no-device' | 'out-of-memory' | 'start-failed' | 'request-failed';
+
+/** The id of the graphics-card build's download, in install events (not `install:`, which is a model's). */
+export const GRAPHICS_INSTALL_ID = 'graphics:install';
+
+/**
+ * The optional "use the graphics card" setting (ADR 0025, docs/plan/VISION-TUNING.md §5). Off by
+ * default. `later`: macOS, which will use Metal in a later step. `none`: no such build is pinned.
+ */
+export interface AiGraphics {
+  support: 'available' | 'later' | 'none';
+  enabled: boolean;
+  /** The pinned program is on this computer and whole. */
+  present: boolean;
+  /** What a download would ask the person to agree to; null where there is nothing to download. */
+  consent: AiConsent | null;
+  /** The folder the program can be put in by hand, offline. */
+  folder: string;
+  /** A remembered failure: the processor is used until it is cleared. */
+  failure: GraphicsFailure | null;
+  /** What the model last ran on, and the card's name when the server said it. */
+  ranOn: 'processor' | 'graphics' | null;
+  device: string | null;
+}
+
 export interface AiStatus {
   models: AiModelStatus[];
+  /** Absent in an edition with no such setting. */
+  graphics?: AiGraphics;
   freeMemoryBytes: number;
   totalMemoryBytes: number;
   /** Room left on the disk the models folder is on, or null when it could not be read. */
@@ -164,4 +192,13 @@ export interface AiBridge {
   onEvent(listener: (event: AiEvent) => void): () => void;
   /** Empties the local result cache. */
   clearCache(): Promise<AiStatus>;
+  /**
+   * Turns "use the graphics card" on or off. Turning it on does nothing when the program for it is
+   * not on this computer (the status says so, and `installGraphics` fetches it); it fetches nothing.
+   */
+  useGraphics(on: boolean): Promise<AiStatus>;
+  /** Fetches the graphics-card build after the person agreed to `consent`, verifies it and turns the setting on. */
+  installGraphics(consent: AiConsent): Promise<AiStart>;
+  /** Forgets a remembered failure so the card is tried again. */
+  clearGraphicsFailure(): Promise<AiStatus>;
 }

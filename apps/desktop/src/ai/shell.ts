@@ -15,6 +15,7 @@ import { FakeEngine } from './engines/fake-engine.js';
 import type { EngineFiles } from './engine.js';
 import { ServerEngine } from './engines/server-engine.js';
 import { createModelAdapter, type ModelService } from './model-adapter.js';
+import { createGraphics } from './graphics.js';
 import { createRuntimeChecker } from './runtime.js';
 
 /**
@@ -74,6 +75,18 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
       remembered: {},
     }),
   });
+  const graphics = fake
+    ? undefined
+    : createGraphics({
+        dir,
+        context: () => ({
+          env: pieces.env,
+          repoRoot: pieces.repoRoot,
+          packDir,
+          userDataModels: dir,
+          remembered: {},
+        }),
+      });
   const settings = () => {
     // A whole number in a sane range, or ignored: the values become arguments of the program.
     const number = (name: string, min: number, max: number) => {
@@ -107,6 +120,7 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
                 minTotalMemory: minTotalMemoryBytes(model),
                 projector: projectorChoice(),
                 settings: settings(),
+                ...(graphics ? { gpu: graphics.hook } : {}),
               }),
       ]),
     ),
@@ -115,6 +129,7 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
     repoRoot: pieces.repoRoot,
     packDir,
     runtimeStatus: fake ? () => Promise.resolve(null) : runtime.status,
+    ...(graphics ? { graphics } : {}),
     freeMemory: freemem,
     totalMemory: totalmem,
     chooseFile: pieces.chooseFile,

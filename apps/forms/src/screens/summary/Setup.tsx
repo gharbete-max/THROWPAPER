@@ -51,7 +51,10 @@ export function Setup({
 
   async function get() {
     const yes = await confirm(
-      t('summary.getConfirm', { size: `${(status.bytes / GB).toFixed(1)} GB` }),
+      t('summary.getConfirm', {
+        size: `${(status.bytes / GB).toFixed(1)} GB`,
+        host: status.host ?? '',
+      }),
       {
         confirmLabel: t('summary.getConfirmYes'),
         danger: false,

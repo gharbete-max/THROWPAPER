@@ -1463,6 +1463,21 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     '{name}をこのコンピューターから削除しますか？ディスクから開いたファイルは削除されません。後でもう一度入手できます。',
   'ai.models.removeConfirmYes': '削除',
+  'ai.graphics.label': 'グラフィックスカードを使う（高速・任意）',
+  'ai.graphics.note':
+    'オンにするまでオフです。独立したグラフィックスカードがあるコンピューターでは、ページの読み取りが数倍速くなります。カードを使えない場合、Loppaは自動的にプロセッサーに戻ります。',
+  'ai.graphics.later':
+    'このコンピューターではまだ利用できません。Mac独自のグラフィックス対応は後の段階で追加されます。',
+  'ai.graphics.missing':
+    '必要なプログラムはまだこのコンピューターにありません。オンにするとダウンロード前に確認します。{folder} に自分で置くこともできます。',
+  'ai.graphics.getConfirm':
+    '{host} からグラフィックスカード用プログラムをダウンロードしますか。ファイル：{files}。サイズ：{size} MB で、その分のディスク容量を使います。文書はどこにも送信されず、いつでもキャンセルできます。使用前に公開されているフィンガープリントと照合します。続けますか。',
+  'ai.graphics.getConfirmYes': 'ダウンロード',
+  'ai.graphics.failure': 'グラフィックスカードを使えなかったため、プロセッサーを使っています。',
+  'ai.graphics.tryAgain': 'グラフィックスカードをもう一度試す',
+  'ai.graphics.on.processor': '実行中：プロセッサー',
+  'ai.graphics.on.graphics': '実行中：グラフィックスカード',
+  'ai.graphics.on.device': '実行中：グラフィックスカード（{device}）',
   'ai.models.progress': 'ファイル {file}/{files}: {done}/{total} MB',
   'ai.models.cache': '保存された結果: {count}件（{size} MB）',
   'ai.models.clearCache': '保存された結果を消去',
@@ -1503,7 +1518,7 @@ export const jaJP: Record<MessageKey, string> = {
     'このコンピューターの空きメモリは{free} GBで、モデルには約{need} GBが必要です。ほかのプログラムを閉じて、もう一度お試しください。',
   'summary.get': 'モデルを取得',
   'summary.getConfirm':
-    'Loppaのリリース（GitHub）から{size}をダウンロードし、検査します。その分のディスク容量を使います。文書はどこにも送信されません。続けますか。',
+    '{host} から{size}をダウンロードし、検査します。その分のディスク容量を使います。文書はどこにも送信されません。続けますか。',
   'summary.getConfirmYes': 'ダウンロード',
   'summary.getOff':
     'ダウンロードはまだ利用できません。モデルが公開されていません。代わりに、ディスクからモデルファイルを開くことができます。',

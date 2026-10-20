@@ -1473,6 +1473,21 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     'Poistetaanko {name} tältä tietokoneelta? Levyltä avaamiasi tiedostoja ei poisteta. Voit hakea sen myöhemmin uudelleen.',
   'ai.models.removeConfirmYes': 'Poista',
+  'ai.graphics.label': 'Käytä näytönohjainta (nopeampi, valinnainen)',
+  'ai.graphics.note':
+    'Pois päältä, kunnes otat sen käyttöön. Sivut luetaan moninkertaisesti nopeammin koneella, jossa on erillinen näytönohjain. Jos näytönohjainta ei voi käyttää, Loppa palaa itse suorittimeen.',
+  'ai.graphics.later':
+    'Ei vielä käytettävissä tällä koneella. Macin oma grafiikkatuki tulee myöhemmässä vaiheessa.',
+  'ai.graphics.missing':
+    'Tarvittavaa ohjelmaa ei ole vielä tällä koneella: käyttöön otettaessa kysytään ennen lataamista, tai voit laittaa sen itse kansioon {folder}.',
+  'ai.graphics.getConfirm':
+    'Ladataanko näytönohjainohjelma osoitteesta {host}? Tiedosto: {files}. Koko: {size} Mt, ja se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään, ja voit peruuttaa milloin tahansa. Se tarkistetaan julkaistua sormenjälkeä vasten ennen käyttöä. Jatketaanko?',
+  'ai.graphics.getConfirmYes': 'Lataa',
+  'ai.graphics.failure': 'Näytönohjainta ei voitu käyttää; käytetään suoritinta.',
+  'ai.graphics.tryAgain': 'Kokeile näytönohjainta uudelleen',
+  'ai.graphics.on.processor': 'Käytössä: suoritin',
+  'ai.graphics.on.graphics': 'Käytössä: näytönohjain',
+  'ai.graphics.on.device': 'Käytössä: näytönohjain ({device})',
   'ai.models.progress': 'Tiedosto {file}/{files}: {done}/{total} Mt',
   'ai.models.cache': 'Tallennetut tulokset: {count} ({size} Mt)',
   'ai.models.clearCache': 'Tyhjennä tallennetut tulokset',
@@ -1513,7 +1528,7 @@ export const fiFI: Record<MessageKey, string> = {
     'Tällä tietokoneella on {free} Gt vapaata muistia, ja malli tarvitsee noin {need} Gt. Sulje muut ohjelmat ja yritä uudelleen.',
   'summary.get': 'Hae malli',
   'summary.getConfirm':
-    'Tämä lataa {size} Loppan julkaisusta GitHubista ja tarkistaa ne. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
+    'Tämä lataa {size} osoitteesta {host} ja tarkistaa ne. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
   'summary.getConfirmYes': 'Lataa',
   'summary.getOff':
     'Lataus ei ole vielä saatavilla: mallia ei ole julkaistu. Voit sen sijaan avata mallitiedoston levyltä.',

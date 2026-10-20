@@ -44,7 +44,9 @@ function Models({ bridge }: { bridge: AiBridge }) {
   useEffect(
     () =>
       bridge.onEvent((event) => {
-        if (!event.id.startsWith('install:')) return;
+        // A task that ended may have changed what the model runs on (the card gave way to the processor).
+        if (event.kind === 'done' || event.kind === 'error') refresh();
+        if (!event.id.startsWith('install:') && !event.id.startsWith('graphics:')) return;
         if (event.kind === 'install') setProgress(event);
         if (event.kind === 'installed') {
           setProgress(null);
@@ -77,6 +79,27 @@ function Models({ bridge }: { bridge: AiBridge }) {
     if (!yes) return;
     setProblem(null);
     const result = await bridge.install(model.id, model.consent);
+    if (!result.ok) setProblem(result.problem);
+  }
+
+  // Turning the card on without its program asks first: host, file and size (ADR 0026).
+  async function graphics(on: boolean) {
+    setProblem(null);
+    const next = await bridge.useGraphics(on);
+    setStatus(next);
+    const g = next.graphics;
+    if (!on || !g || g.enabled || !g.consent) return;
+    const yes = await confirm(
+      t('ai.graphics.getConfirm', {
+        host: g.consent.host,
+        files: g.consent.files.join(', '),
+        size: mb(g.consent.totalBytes),
+        folder: g.folder,
+      }),
+      { confirmLabel: t('ai.graphics.getConfirmYes'), danger: false },
+    );
+    if (!yes) return;
+    const result = await bridge.installGraphics(g.consent);
     if (!result.ok) setProblem(result.problem);
   }
 
@@ -135,6 +158,8 @@ function Models({ bridge }: { bridge: AiBridge }) {
           onGet={(model) => void get(model)}
           onOpen={(model) => void open(model)}
           onRemove={(model) => void remove(model)}
+          onGraphics={(on) => void graphics(on)}
+          onClearGraphics={() => void bridge.clearGraphicsFailure().then(setStatus)}
         />
       </Suspense>
 

@@ -1470,6 +1470,21 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.removeConfirm':
     'Fjarlægja {name} af þessari tölvu? Skrár sem þú opnaðir af diski eru ekki eyddar. Þú getur sótt það aftur síðar.',
   'ai.models.removeConfirmYes': 'Fjarlægja',
+  'ai.graphics.label': 'Nota skjákortið (hraðara, valfrjálst)',
+  'ai.graphics.note':
+    'Slökkt nema þú kveikir á því. Síður eru lesnar mörgum sinnum hraðar í tölvu með sérstöku skjákorti. Ef ekki er hægt að nota kortið fer Loppa sjálf aftur í örgjörvann.',
+  'ai.graphics.later':
+    'Ekki enn í boði á þessari tölvu. Eigin grafíkstuðningur Mac kemur í síðara skrefi.',
+  'ai.graphics.missing':
+    'Forritið sem þarf er ekki enn á þessari tölvu: þegar kveikt er á þessu er spurt áður en það er sótt, eða þú getur sett það sjálfur í {folder}.',
+  'ai.graphics.getConfirm':
+    'Sækja skjákortsforritið frá {host}? Skrá: {files}. Stærð: {size} MB og það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt og þú getur hætt við hvenær sem er. Það er borið saman við birt fingrafar áður en það er notað. Halda áfram?',
+  'ai.graphics.getConfirmYes': 'Sækja',
+  'ai.graphics.failure': 'Ekki var hægt að nota skjákortið; örgjörvinn er notaður.',
+  'ai.graphics.tryAgain': 'Reyna skjákortið aftur',
+  'ai.graphics.on.processor': 'Keyrir á: örgjörvanum',
+  'ai.graphics.on.graphics': 'Keyrir á: skjákortinu',
+  'ai.graphics.on.device': 'Keyrir á: skjákortinu ({device})',
   'ai.models.progress': 'Skrá {file} af {files}: {done} af {total} MB',
   'ai.models.cache': 'Vistaðar niðurstöður: {count} ({size} MB)',
   'ai.models.clearCache': 'Hreinsa vistaðar niðurstöður',
@@ -1511,7 +1526,7 @@ export const isIS: Record<MessageKey, string> = {
     'Þessi tölva hefur {free} GB af lausu minni og líkanið þarf um {need} GB. Lokaðu öðrum forritum og reyndu aftur.',
   'summary.get': 'Sækja líkanið',
   'summary.getConfirm':
-    'Þetta sækir {size} úr útgáfu Loppa á GitHub og athugar þá. Það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt. Halda áfram?',
+    'Þetta sækir {size} frá {host} og athugar þá. Það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt. Halda áfram?',
   'summary.getConfirmYes': 'Sækja',
   'summary.getOff':
     'Niðurhalið er ekki tiltækt enn: líkanið hefur ekki verið gefið út. Þú getur opnað líkanskrá af disknum í staðinn.',
