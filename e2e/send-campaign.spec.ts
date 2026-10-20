@@ -162,6 +162,10 @@ test('an address on the suppression list is left out; a one-off document to it s
   await expect(page.getByTestId('campaign-confirm-to')).not.toContainText(address('bo'));
   await page.getByRole('button', { name: 'Confirm and send' }).click();
   await expect(page.getByTestId('campaign-left-out')).toContainText(address('bo'));
+  // The list shows how many the campaign just skipped.
+  await page.getByRole('button', { name: 'Do not email list' }).click();
+  await expect(page.getByTestId('suppress-last-skipped')).toContainText('skipped 1 address');
+  await page.getByRole('button', { name: 'Back to the campaign' }).click();
   await expect(page.getByTestId('send-status').locator('tbody tr')).toHaveCount(2);
   const sent = await jobs(tag);
   expect(sent.map((job) => job['payload']['to'])).toEqual([address('asa'), address('cia')]);

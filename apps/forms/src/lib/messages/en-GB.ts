@@ -2134,6 +2134,7 @@ export const enGB = {
   'docs.keep.save': 'Download',
   'docs.keep.cancel': 'Cancel',
   'docs.keep.working': 'Working out the sizes…',
+  'table.actions': 'Actions',
   'hygiene.heading': 'Check these addresses',
   'hygiene.col.row': 'Row',
   'hygiene.col.address': 'Address',
@@ -2186,6 +2187,8 @@ export const enGB = {
   'suppress.remove': 'Remove {email}',
   'suppress.removeConfirm':
     'Remove {email} from the list? Campaigns can then reach this address again.',
+  'suppress.lastSkipped':
+    'plural:one The last campaign skipped {count} address on this list. | other The last campaign skipped {count} addresses on this list.',
   'suppress.failed': 'The list could not be changed. Try again.',
 } as const;
 

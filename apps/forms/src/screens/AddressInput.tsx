@@ -32,8 +32,8 @@ export type AddressBook = ReturnType<typeof useAddressBook>;
 const SEPARATOR = /[\s,;]+/;
 
 /**
- * The "To" box: addresses typed or pasted, with recent ones suggested as you type. A combobox in
- * the usual keyboard sense: arrows move through the suggestions, Enter takes the highlighted one,
+ * The "To" box: addresses typed or pasted, with recent ones suggested as you type. Listbox-popup keyboard
+ * behaviour (a textarea cannot carry role combobox): arrows move through the suggestions, Enter takes the highlighted one,
  * Escape closes them, and typing carries on as normal when none is highlighted.
  */
 export function AddressInput({
@@ -68,11 +68,9 @@ export function AddressInput({
     <div className="combo">
       <textarea
         rows={3}
-        role="combobox"
         aria-label={label}
         aria-describedby={describedBy}
         aria-autocomplete="list"
-        aria-expanded={expanded}
         aria-controls={`${id}-list`}
         aria-activedescendant={expanded && active >= 0 ? `${id}-${active}` : undefined}
         value={value}

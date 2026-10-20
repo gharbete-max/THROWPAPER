@@ -2210,6 +2210,7 @@ export const deDE: Record<MessageKey, string> = {
   'docs.keep.save': 'Herunterladen',
   'docs.keep.cancel': 'Abbrechen',
   'docs.keep.working': 'Größen werden berechnet…',
+  'table.actions': 'Aktionen',
   'hygiene.heading': 'Adressen prüfen',
   'hygiene.col.row': 'Zeile',
   'hygiene.col.address': 'Adresse',
@@ -2267,5 +2268,7 @@ export const deDE: Record<MessageKey, string> = {
   'suppress.remove': '{email} entfernen',
   'suppress.removeConfirm':
     '{email} von der Liste entfernen? Rundmails können diese Adresse dann wieder erreichen.',
+  'suppress.lastSkipped':
+    'plural:one Die letzte Kampagne hat {count} Adresse dieser Liste ausgelassen. | other Die letzte Kampagne hat {count} Adressen dieser Liste ausgelassen.',
   'suppress.failed': 'Die Liste konnte nicht geändert werden. Versuchen Sie es erneut.',
 };

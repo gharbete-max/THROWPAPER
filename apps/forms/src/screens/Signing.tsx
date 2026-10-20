@@ -161,7 +161,9 @@ export function Signing() {
                 <th>{t('signing.document')}</th>
                 <th>{t('signing.parties')}</th>
                 <th>{t('signing.status')}</th>
-                <th>{/* actions */}</th>
+                <th>
+                  <span className="visually-hidden">{t('table.actions')}</span>
+                </th>
               </tr>
             </thead>
             <tbody>

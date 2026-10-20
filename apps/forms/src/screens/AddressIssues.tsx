@@ -51,7 +51,9 @@ export function AddressIssues({
                   <th>{t('hygiene.col.row')}</th>
                   <th>{t('hygiene.col.address')}</th>
                   <th>{t('hygiene.col.note')}</th>
-                  <th>{/* the buttons; the header would only repeat them */}</th>
+                  <th>
+                    <span className="visually-hidden">{t('table.actions')}</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>

@@ -172,7 +172,7 @@ export function SendCampaign() {
   if (managing) {
     return (
       <Suspense fallback={<Loading />}>
-        <Suppressions onClose={() => setManaging(false)} />
+        <Suppressions onClose={() => setManaging(false)} lastSkipped={leftOut.length} />
       </Suspense>
     );
   }
@@ -185,6 +185,17 @@ export function SendCampaign() {
           <p className="small" data-testid="campaign-left-out">
             {t('campaign.leftOut.done', { list: leftOut.join(', ') })}
           </p>
+        )}
+        {leftOut.length > 0 && (
+          <div className="row">
+            <button
+              type="button"
+              className="button button--quiet"
+              onClick={() => setManaging(true)}
+            >
+              {t('suppress.open')}
+            </button>
+          </div>
         )}
         <Delivery recipients={queued} />
       </div>
@@ -440,7 +451,9 @@ function Preview({
             <tr>
               {header('name')}
               {header('email')}
-              <th>{/* the buttons; the header would only repeat them */}</th>
+              <th>
+                <span className="visually-hidden">{t('table.actions')}</span>
+              </th>
             </tr>
           </thead>
           <tbody>

@@ -279,6 +279,7 @@ describe('twelve languages, each its own', () => {
     'fi-FI': ['brand.logo'],
     'is-IS': [],
     'fr-FR': [
+      'table.actions',
       'signPlace.signature',
       'signPlace.date',
       'signPlace.pageLabel',
