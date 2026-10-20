@@ -85,7 +85,10 @@ const { coordinator: ai, model } = createShellAi({
     const { canceled, filePaths } = await dialog.showOpenDialog({
       title: t.menuOpenModel,
       properties: ['openFile'],
-      filters: [{ name: 'GGUF', extensions: ['gguf'] }],
+      filters: [
+        { name: 'GGUF, PACK.json', extensions: ['gguf', 'json', 'part1'] },
+        { name: '*', extensions: ['*'] },
+      ],
     });
     return canceled ? null : (filePaths[0] ?? null);
   },

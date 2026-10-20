@@ -46,7 +46,7 @@ export interface Progress {
 export type OnProgress = (progress: Progress) => void;
 
 /** Counts bytes and hashes them as they pass, and reports. `from` is how many were already counted. */
-function measure(
+export function measure(
   hash: ReturnType<typeof createHash>,
   report: (bytes: number) => void,
   from = 0,

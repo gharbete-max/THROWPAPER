@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ModelManifest, consentFor, type AiEvent, type AiTask } from '@tp/shared/ai';
@@ -643,6 +643,46 @@ describe('getting a model', () => {
     // Forgetting it does not delete the person's file.
     await ctx.coordinator.remove('vision-b');
     expect(await readdir(dir)).toContain('mine.bin');
+  });
+
+  it('installs from a pack folder when PACK.json is chosen, offline, parts joined and verified', async () => {
+    const chosen = { path: null as string | null };
+    const ctx = setup({ chooseFile: () => Promise.resolve(chosen.path) });
+    const pack = join(dir, 'pack');
+    await mkdir(pack, { recursive: true });
+    // The vision model's two files arrive as a part of one and the other whole.
+    const [weights, projector] = ctx.vision.manifest.files;
+    await writeFile(join(pack, weights!.name), ctx.vision.contents[0]!);
+    await writeFile(join(pack, projector!.name), ctx.vision.contents[1]!);
+    await writeFile(join(pack, 'PACK.json'), '{}');
+    chosen.path = join(pack, 'PACK.json');
+    expect(await ctx.coordinator.openFromDisk('vision-b')).toEqual({
+      ok: true,
+      id: 'install:vision-b',
+    });
+    await ctx.until((e) => e.kind === 'installed');
+    const status = (await ctx.coordinator.status()).models.find((m) => m.id === 'vision-b')!;
+    expect(status.state).toBe('installed');
+    expect(status.files.map((f) => [f.source, f.hash])).toEqual([
+      ['user-data', 'verified'],
+      ['user-data', 'verified'],
+    ]);
+  });
+
+  it('says damaged for a pack part that is not the manifest, and installs nothing', async () => {
+    const ctx = setup({ chooseFile: () => Promise.resolve(join(dir, 'pack', 'PACK.json')) });
+    const pack = join(dir, 'pack');
+    await mkdir(pack, { recursive: true });
+    const [weights, projector] = ctx.vision.manifest.files;
+    await writeFile(join(pack, weights!.name), randomBytes(2000));
+    await writeFile(join(pack, projector!.name), ctx.vision.contents[1]!);
+    await ctx.coordinator.openFromDisk('vision-b');
+    expect(await ctx.until((e) => e.kind === 'install-failed')).toMatchObject({
+      problem: 'damaged',
+    });
+    expect((await ctx.coordinator.status()).models.find((m) => m.id === 'vision-b')!.state).toBe(
+      'missing',
+    );
   });
 
   it('refuses a file that is none of the model, and remembers nothing', async () => {

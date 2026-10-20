@@ -1,5 +1,5 @@
 import { appendFile, mkdir, readFile, rm, stat, statfs, writeFile } from 'node:fs/promises';
-import { basename, join, resolve, sep } from 'node:path';
+import { basename, dirname, join, resolve, sep } from 'node:path';
 import {
   PAGE_PIPELINE_VERSION,
   cacheKey,
@@ -28,6 +28,7 @@ import {
 import type { ResultCache } from './cache.js';
 import { WeightsError, downloadFile, sha256File, verifyFile } from './download.js';
 import { AiError, type Engine, type EngineFactory, type EngineFiles } from './engine.js';
+import { PACK_FILE, PackError, installFromFolder } from './pack.js';
 import { locateModel, type ResolveContext } from './resolve.js';
 
 /**
@@ -704,6 +705,38 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
         emit({ id, kind: 'install-failed', modelId, problem });
       };
       try {
+        // A pack: PACK.json, or any part of one. Its folder is joined and checked against the
+        // manifest in code, fully offline (ADR 0026 decision 8).
+        if (basename(chosen) === PACK_FILE || /\.part\d+$/i.test(chosen)) {
+          const hashed = model.files.filter(
+            (f): f is typeof f & { sha256: string } => f.sha256 !== undefined,
+          );
+          const modelTotal = hashed.reduce((sum, f) => sum + f.bytes, 0);
+          const paths = await installFromFolder(hashed, dirname(chosen), deps.dir, {
+            signal,
+            onProgress: (file, files, p) =>
+              emit({
+                id,
+                kind: 'install',
+                modelId,
+                file,
+                files,
+                ...p,
+                modelDone: hashed.slice(0, file - 1).reduce((sum, f) => sum + f.bytes, 0) + p.done,
+                modelTotal,
+                bytesPerSecond: 0,
+                etaSeconds: null,
+              }),
+          });
+          // The join hashed every byte against the manifest's own hash: it counts as verified.
+          for (const path of paths) {
+            verified.set(path, await keyOf(path));
+            damaged.delete(path);
+          }
+          activity = 'idle';
+          emit({ id, kind: 'installed', modelId, status: await status() });
+          return;
+        }
         const info = await stat(chosen);
         const candidates = model.files.filter((file) => file.bytes === info.size);
         let match: ModelFile | undefined;
@@ -741,8 +774,18 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
         damaged.delete(chosen);
         activity = 'idle';
         emit({ id, kind: 'installed', modelId, status: await status() });
-      } catch {
-        fail(signal.aborted ? 'cancelled' : 'failed');
+      } catch (error) {
+        fail(
+          signal.aborted
+            ? 'cancelled'
+            : error instanceof PackError
+              ? error.failure === 'missing'
+                ? 'not-installed'
+                : error.failure === 'io'
+                  ? 'failed'
+                  : 'damaged'
+              : 'failed',
+        );
       } finally {
         installAbort = null;
       }

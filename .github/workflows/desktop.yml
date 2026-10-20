@@ -7,6 +7,12 @@ name: Desktop
 # hdiutil and codesign); a cross-build elsewhere only produces a zip. Runs on pull requests that
 # touch what goes into the app, by hand, and on a `desktop-v*` tag — which also publishes the files
 # as a GitHub release, the "download" in "downloadable".
+#
+# The app is lean: the installer carries llama-server (Windows, CPU build, a few dozen MB, fetched
+# and hash-checked by apps/desktop/scripts/build.ts) but never the model. The AI pack (about 6 GB:
+# model and projector in parts under 2 GiB) is its own release, published by hand with
+# apps/desktop/scripts/publish-ai-pack.ts (docs/DEPLOY.md). This workflow never fetches it: a runner
+# has about 14 GB of disk and the installers are what is being tested.
 
 on:
   pull_request:
@@ -18,6 +24,7 @@ on:
       - 'apps/api-forms/src/db/pglite.ts'
       - 'apps/api-forms/src/mail/**'
       - 'apps/api-forms/drizzle/**'
+      - 'packages/shared/src/ai/**'
       - '.github/workflows/desktop.yml'
   # By hand. With `release` ticked, on main only: builds, then tags this commit
   # `desktop-v<apps/desktop version>` and publishes — the same release a pushed tag makes, for
@@ -107,6 +114,17 @@ jobs:
           Stop-Process -Id $app.Id -Force -ErrorAction SilentlyContinue
           Get-ChildItem -Recurse (Join-Path $profile 'workspace') | Select-Object FullName | Format-Table -HideTableHeaders
           if (-not $ok) { throw 'Loppa.exe did not answer on 127.0.0.1:47017 and :47018' }
+
+      # The model's program travels with the app as plain files beside the asar, and runs from there:
+      # a fuse (onlyLoadAppFromAsar) must not stop a child started from resources.
+      - name: llama-server is in the package and starts
+        shell: pwsh
+        run: |
+          $dir = 'apps/desktop/release/win-unpacked/resources/ai-pack/runtime'
+          if (-not (Test-Path "$dir/llama-server.exe")) { throw 'llama-server.exe is not in resources/ai-pack/runtime' }
+          if (-not (Test-Path "$dir/RUNTIME.json")) { throw 'RUNTIME.json is missing' }
+          & "$dir/llama-server.exe" --version
+          if ($LASTEXITCODE -ne 0) { throw 'llama-server.exe did not run' }
 
       # With a certificate configured, every file shipped must carry a valid signature; without
       # one, none claims to. A certificate that was set and did not sign fails the build.
@@ -345,6 +363,8 @@ jobs:
           ${windows} ${mac}
 
           Check a download: compare \`shasum -a 256 <file>\` (macOS) or \`Get-FileHash <file>\` (Windows) with SHA256SUMS.txt.
+
+          **The AI features are optional and not in these files.** Loppa works fully without them. To add them (about 6 GB; one model, runs on your computer, offline), either press *Get* under AI models in the summary centre, which fetches the pack from this repository's release \`ai-pack-*\` after you confirm, or download the pack's files yourself, put them in one folder and choose its \`PACK.json\` with *Open a file from disk*. See docs/DEPLOY.md.
 
           Built from ${GITHUB_SHA} by the Desktop workflow. What works offline: docs/adr/0016-desktop-edition.md.
           NOTES

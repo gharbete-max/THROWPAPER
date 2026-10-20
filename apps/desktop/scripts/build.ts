@@ -14,6 +14,7 @@ import { execFileSync } from 'node:child_process';
 import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
+import { LLAMA_SERVER, runtimeAssetFor } from '@tp/shared/ai';
 import { build } from 'esbuild';
 import { macSigningPlan } from '../src/packaging/signing.js';
 
@@ -85,6 +86,39 @@ async function buildModelPreload(): Promise<void> {
   });
 }
 
+/**
+ * `ai-pack/` beside the app (ADR 0025, 0026): always created, so the folder a pack is dropped into
+ * is there, with a note. Where `llama-server` is pinned as verified for this computer (Windows x64)
+ * and the target is that platform, the CPU-only program goes in as plain files under
+ * `ai-pack/runtime/`, with RUNTIME.json, the hash list the app checks every file against before it
+ * starts anything. The model never goes in: it is a separate pack.
+ */
+async function stageAiPack(): Promise<void> {
+  const pack = join(stage, 'ai-pack');
+  await mkdir(pack, { recursive: true });
+  const note = [
+    'Loppa AI pack folder. The language model (about 6 GB) is not part of the installer.',
+    'Put the pack here, or use "Open AI pack from a folder" in Loppa. See docs/DEPLOY.md.',
+    '',
+  ];
+  await writeFile(join(pack, 'README.txt'), note.join('\r\n'));
+  const asset = runtimeAssetFor(process.platform, process.arch, LLAMA_SERVER);
+  if (!asset?.verified || target !== 'win' || process.platform !== 'win32') {
+    console.log(`desktop: no llama-server staged for ${target ?? 'this build'}`);
+    return;
+  }
+  const fetched = join(repo, 'local-models', 'runtime');
+  if (!(await exists(join(fetched, asset.entry)))) {
+    execFileSync('pnpm', ['exec', 'tsx', join(root, 'scripts', 'fetch-runtime.ts')], {
+      cwd: root,
+      stdio: 'inherit',
+      shell: process.platform === 'win32',
+    });
+  }
+  await cp(fetched, join(pack, 'runtime'), { recursive: true });
+  await writeFile(join(pack, 'runtime', 'RUNTIME.json'), JSON.stringify(asset, null, 2));
+}
+
 async function main(): Promise<void> {
   const apiForms = join(repo, 'apps', 'api-forms');
   const formsDist = join(repo, 'apps', 'forms', 'dist');
@@ -134,6 +168,7 @@ async function main(): Promise<void> {
   });
 
   await buildModelPreload();
+  await stageAiPack();
 
   execFileSync('pnpm', ['exec', 'vite', 'build', '--logLevel', 'warn'], {
     cwd: root,

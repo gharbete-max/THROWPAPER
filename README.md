@@ -25,8 +25,8 @@ and Presentation & planning are floating placeholders. Documents has four parts 
   test-mode outbox are under Advanced. Sending one document to several people, and a personalised
   PDF each from a list, are in progress and not yet on `main`.
 - **Summary and translation** (the centre) — a local, offline model on your own computer, desktop
-  only, from a model file that is never in the installer: you open it from disk (the download
-  release has not been cut yet).
+  only. The model (about 6 GB) is never in the installer; it is the separate **AI pack** (see
+  _Getting the AI pack_ below), fetched after you confirm or opened offline from a folder.
 
 Collecting answers from other people is optional ("Share to collect"). It runs in a browser against
 a server, or entirely on one computer as a desktop app. What is built and what is not:
@@ -51,6 +51,13 @@ Loppa and choose _Open_. Check a download against `SHA256SUMS.txt` with `Get-Fil
 - **Windows:** run `Loppa-Windows-Setup.exe`; it installs for your user, no administrator needed.
   The portable `.exe` runs from anywhere and keeps its data in the same place.
 - **macOS:** open the `.dmg`, drag Loppa to Applications, then right-click → _Open_ the first time.
+- **Getting the AI pack** (optional; Loppa works without it; needs about 12 GB of memory). The pack is
+  the model and its projector, cut into parts under 2 GiB with a SHA-256 each, in its own release
+  (`ai-pack-*`). Either press _Get_ under _AI models_ in the summary centre (it names GitHub and the
+  size and waits for your press), or download the files yourself, put them in one folder with
+  `PACK.json`, and choose `PACK.json` with _Open a file from disk_: that path is fully offline
+  (a USB stick works). Loppa joins and checks every part against hashes in its own code before it
+  uses anything. Details: `docs/DEPLOY.md`.
 - First start asks for your organisation's name and your own, or offers the demo data. Nothing is
   sent anywhere to set up.
 
