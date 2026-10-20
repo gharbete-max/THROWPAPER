@@ -347,6 +347,7 @@ export const frFR: Record<MessageKey, string> = {
 
   'nav.checkin': 'Accueil',
   'nav.brand': 'Identité',
+  'nav.earlier': 'Fonctions précédentes',
 
   'problem.duplicate-key': 'La clé de champ « {key} » est utilisée plus d’une fois.',
   'problem.no-answerable-fields': 'Le formulaire ne recueille encore aucune réponse.',
@@ -917,7 +918,6 @@ export const frFR: Record<MessageKey, string> = {
     'Voici ce qui a été lu, dans l’ordre. Votre formulaire n’est pas modifié : vous le vérifierez avant que quoi que ce soit ne devienne une question.',
   'paper.read.download': 'Télécharger ce qui a été lu',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Signature',
   'signing.heading': 'Signature',
   'signing.new': 'Envoyer un PDF à signer',
   'signing.notConfigured': "La signature n'est pas configurée",
@@ -1524,6 +1524,12 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Supprimer',
   'ai.models.optional':
     'L’IA est facultative. Loppa fonctionne pleinement sans aucun modèle. Rien n’est téléchargé tant que vous n’appuyez pas sur Télécharger et ne confirmez pas.',
+  'ai.setup.title': 'Configurer l’IA',
+  'ai.setup.doesText': 'Résume, traduit, relit et prépare des brouillons de courriel.',
+  'ai.setup.doesVision': 'Lit une page numérisée.',
+  'ai.setup.another': 'Choisir un autre modèle',
+  'ai.setup.showAll': 'Tout afficher, y compris les modèles qui ne fonctionnent pas encore',
+  'ai.setup.advanced': 'Avancé',
   'ai.models.tier.full': 'Complet',
   'ai.models.tier.balanced': 'Équilibré',
   'ai.models.tier.light': 'Léger',
@@ -1547,30 +1553,10 @@ export const frFR: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'Il n’y a pas assez d’espace disque libre pour ce modèle.',
   'summary.intro':
     'Un brouillon de résumé ou de traduction d’un document ouvert, fait sur cet ordinateur. Il s’affiche à côté de l’original, marqué comme généré, et n’est jamais enregistré.',
-  'summary.settingsToggle': 'Réglages du modèle',
-  'summary.modelHeading': 'Le modèle',
-  'summary.modelWhat':
-    'Un modèle de langage de {size} fonctionne sur cet ordinateur, hors ligne. Vos documents ne le quittent jamais. Il est téléchargé une fois, seulement à votre demande, et vous pouvez le supprimer.',
   'summary.state.ready': 'Le modèle est prêt.',
-  'summary.state.location': 'Fichier : {path}',
   'summary.memory.low':
     'Cet ordinateur a {free} Go de mémoire libre et le modèle a besoin d’environ {need} Go. Fermez d’autres programmes et réessayez.',
-  'summary.get': 'Obtenir le modèle',
-  'summary.getConfirm':
-    'Ceci télécharge {size} depuis {host} et les vérifie. Cela occupe autant d’espace disque. Vos documents ne sont envoyés nulle part. Continuer ?',
-  'summary.getConfirmYes': 'Télécharger',
-  'summary.getOff':
-    'Le téléchargement n’est pas encore disponible : le modèle n’est pas publié. Vous pouvez ouvrir un fichier de modèle depuis le disque.',
-  'summary.open': 'Ouvrir un fichier de modèle depuis le disque',
-  'summary.remove': 'Supprimer le modèle',
-  'summary.removeConfirm':
-    'Supprimer le modèle de cet ordinateur ? Vous pourrez le récupérer plus tard.',
-  'summary.removeConfirmYes': 'Supprimer',
   'summary.cancel': 'Annuler',
-  'summary.progress.download':
-    'Téléchargement de la partie {part} sur {parts} : {done} sur {total} Mo',
-  'summary.progress.join': 'Assemblage des parties : {done} sur {total} Mo',
-  'summary.progress.verify': 'Vérification du fichier : {done} sur {total} Mo',
   'summary.problem.not-installed': 'Le modèle n’est pas sur cet ordinateur.',
   'summary.problem.damaged':
     'Le fichier ne correspond pas au modèle publié et n’a pas été utilisé. Rien n’a été supprimé.',

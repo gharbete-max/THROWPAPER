@@ -104,7 +104,9 @@ async function draftOf(formId: string) {
   };
 }
 
-test('the buttons chain builds the form it describes, without the editor', async ({ page }) => {
+test('the buttons chain builds the form it describes, without the editor @smoke', async ({
+  page,
+}) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   const formId = await startFromQuestions(page);
 

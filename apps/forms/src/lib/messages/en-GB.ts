@@ -343,6 +343,7 @@ export const enGB = {
 
   'nav.checkin': 'Check-in',
   'nav.brand': 'Brand',
+  'nav.earlier': 'Earlier features',
 
   'problem.duplicate-key': 'The field key "{key}" is used more than once.',
   'problem.no-answerable-fields': 'The form does not collect any answers yet.',
@@ -911,7 +912,6 @@ export const enGB = {
     "This is what was read, in order. It does not change your form: you'll review it before any of it becomes a question.",
   'paper.read.download': 'Download what was read',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Signing',
   'signing.heading': 'Signing',
   'signing.new': 'Send a PDF for signing',
   'signing.notConfigured': 'Signing is not set up',
@@ -1501,6 +1501,12 @@ export const enGB = {
   'ai.models.clearCacheYes': 'Delete',
   'ai.models.optional':
     'AI is optional. Loppa works fully without any model. Nothing is downloaded unless you press Download and confirm.',
+  'ai.setup.title': 'Set up AI',
+  'ai.setup.doesText': 'Summarises, translates, proofreads and drafts email.',
+  'ai.setup.doesVision': 'Reads a scanned page.',
+  'ai.setup.another': 'Choose another model',
+  'ai.setup.showAll': 'Show all, including models that do not work yet',
+  'ai.setup.advanced': 'Advanced',
   'ai.models.tier.full': 'Full',
   'ai.models.tier.balanced': 'Balanced',
   'ai.models.tier.light': 'Light',
@@ -1523,28 +1529,10 @@ export const enGB = {
   'summary.problem.no-disk-space': 'There is not enough free disk space for this model.',
   'summary.intro':
     'A draft summary or translation of a document you have open, made on this computer. It is shown beside the original, labelled as generated, and never saved.',
-  'summary.settingsToggle': 'Model settings',
-  'summary.modelHeading': 'The model',
-  'summary.modelWhat':
-    'A language model of {size} runs on this computer, offline. Your documents never leave it. It is downloaded once, only when you ask, and you can remove it again.',
   'summary.state.ready': 'The model is ready.',
-  'summary.state.location': 'File: {path}',
   'summary.memory.low':
     'This computer has {free} GB of free memory and the model needs about {need} GB. Close other programs and try again.',
-  'summary.get': 'Get the model',
-  'summary.getConfirm':
-    'This downloads {size} from {host} and checks it. It takes that much disk space. Your documents are not sent anywhere. Continue?',
-  'summary.getConfirmYes': 'Download',
-  'summary.getOff':
-    'The download is not available yet: the model has not been published. You can open a model file from disk instead.',
-  'summary.open': 'Open a model file from disk',
-  'summary.remove': 'Remove the model',
-  'summary.removeConfirm': 'Remove the model from this computer? You can get it again later.',
-  'summary.removeConfirmYes': 'Remove',
   'summary.cancel': 'Cancel',
-  'summary.progress.download': 'Downloading part {part} of {parts}: {done} of {total} MB',
-  'summary.progress.join': 'Putting the parts together: {done} of {total} MB',
-  'summary.progress.verify': 'Checking the file: {done} of {total} MB',
   'summary.problem.not-installed': 'The model is not on this computer.',
   'summary.problem.damaged':
     'The file does not match the published model and was not used. Nothing was deleted.',

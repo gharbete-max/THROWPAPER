@@ -345,6 +345,7 @@ export const esES: Record<MessageKey, string> = {
 
   'nav.checkin': 'Registro de entrada',
   'nav.brand': 'Marca',
+  'nav.earlier': 'Funciones anteriores',
 
   'problem.duplicate-key': 'La clave de campo «{key}» se usa más de una vez.',
   'problem.no-answerable-fields': 'El formulario todavía no recoge ninguna respuesta.',
@@ -908,7 +909,6 @@ export const esES: Record<MessageKey, string> = {
     'Esto es lo que se leyó, en orden. Su formulario no cambia: lo revisará antes de que nada de esto se convierta en preguntas.',
   'paper.read.download': 'Descargar lo leído',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Firma',
   'signing.heading': 'Firma',
   'signing.new': 'Enviar un PDF para firmar',
   'signing.notConfigured': 'La firma no está configurada',
@@ -1506,6 +1506,12 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Borrar',
   'ai.models.optional':
     'La IA es opcional. Loppa funciona por completo sin ningún modelo. No se descarga nada a menos que pulses Descargar y confirmes.',
+  'ai.setup.title': 'Configurar la IA',
+  'ai.setup.doesText': 'Resume, traduce, revisa y redacta borradores de correo.',
+  'ai.setup.doesVision': 'Lee una página escaneada.',
+  'ai.setup.another': 'Elegir otro modelo',
+  'ai.setup.showAll': 'Mostrar todos, también los modelos que aún no funcionan',
+  'ai.setup.advanced': 'Avanzado',
   'ai.models.tier.full': 'Completo',
   'ai.models.tier.balanced': 'Equilibrado',
   'ai.models.tier.light': 'Ligero',
@@ -1529,28 +1535,10 @@ export const esES: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'No hay suficiente espacio libre en el disco para este modelo.',
   'summary.intro':
     'Un borrador de resumen o traducción de un documento que tienes abierto, hecho en este equipo. Se muestra junto al original, marcado como generado, y nunca se guarda.',
-  'summary.settingsToggle': 'Ajustes del modelo',
-  'summary.modelHeading': 'El modelo',
-  'summary.modelWhat':
-    'Un modelo de lenguaje de {size} funciona en este equipo, sin conexión. Tus documentos nunca salen de él. Se descarga una vez, solo cuando lo pides, y puedes quitarlo de nuevo.',
   'summary.state.ready': 'El modelo está listo.',
-  'summary.state.location': 'Archivo: {path}',
   'summary.memory.low':
     'Este equipo tiene {free} GB de memoria libre y el modelo necesita unos {need} GB. Cierra otros programas e inténtalo de nuevo.',
-  'summary.get': 'Obtener el modelo',
-  'summary.getConfirm':
-    'Esto descarga {size} desde {host} y las comprueba. Ocupa ese espacio en el disco. Tus documentos no se envían a ninguna parte. ¿Continuar?',
-  'summary.getConfirmYes': 'Descargar',
-  'summary.getOff':
-    'La descarga aún no está disponible: el modelo no se ha publicado. Puedes abrir un archivo de modelo desde el disco.',
-  'summary.open': 'Abrir un archivo de modelo desde el disco',
-  'summary.remove': 'Quitar el modelo',
-  'summary.removeConfirm': '¿Quitar el modelo de este equipo? Podrás obtenerlo de nuevo más tarde.',
-  'summary.removeConfirmYes': 'Quitar',
   'summary.cancel': 'Cancelar',
-  'summary.progress.download': 'Descargando la parte {part} de {parts}: {done} de {total} MB',
-  'summary.progress.join': 'Uniendo las partes: {done} de {total} MB',
-  'summary.progress.verify': 'Comprobando el archivo: {done} de {total} MB',
   'summary.problem.not-installed': 'El modelo no está en este equipo.',
   'summary.problem.damaged':
     'El archivo no coincide con el modelo publicado y no se usó. No se ha borrado nada.',

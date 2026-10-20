@@ -81,7 +81,7 @@ test('Send: the three ways are a choice, not three buttons', async ({ page }) =>
 test('the models are cards with their tier and memory as chips', async ({ page }) => {
   await page.addInitScript(fakeBridge);
   await signIn(page);
-  await page.goto('/summary');
+  await page.goto('/ai-setup');
   const model = page.locator('[data-model]').first();
   await expect(model.locator('.badge--tier')).toHaveText('Full');
   await expect(model.locator('.badge--ram')).toHaveText('10.0 GB RAM');

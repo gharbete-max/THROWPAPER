@@ -26,7 +26,7 @@ async function signedIn(page: Page) {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
 }
 
-test('a PDF arranged in Scan is sent: confirmation first, nothing queued before the press', async ({
+test('a PDF arranged in Scan is sent: confirmation first, nothing queued before the press @smoke', async ({
   page,
 }) => {
   const tag = `${TAG}-scan`;

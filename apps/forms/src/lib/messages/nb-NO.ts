@@ -339,6 +339,7 @@ export const nbNO: Record<MessageKey, string> = {
 
   'nav.checkin': 'Innsjekk',
   'nav.brand': 'Merkevare',
+  'nav.earlier': 'Tidligere funksjoner',
 
   'problem.duplicate-key': 'Feltnøkkelen "{key}" brukes mer enn én gang.',
   'problem.no-answerable-fields': 'Skjemaet samler ikke inn noen svar ennå.',
@@ -892,7 +893,6 @@ export const nbNO: Record<MessageKey, string> = {
     'Slik ble det lest, i rekkefølge. Skjemaet endres ikke: du går gjennom det før noe av det blir til spørsmål.',
   'paper.read.download': 'Last ned det som ble lest',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Signering',
   'signing.heading': 'Signering',
   'signing.new': 'Send en PDF til signering',
   'signing.notConfigured': 'Signering er ikke satt opp',
@@ -1480,6 +1480,12 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Slett',
   'ai.models.optional':
     'AI er valgfritt. Loppa fungerer fullt ut uten noen modell. Ingenting lastes ned med mindre du trykker Hent og bekrefter.',
+  'ai.setup.title': 'Sett opp AI',
+  'ai.setup.doesText': 'Sammenfatter, oversetter, korrekturleser og lager utkast til e-post.',
+  'ai.setup.doesVision': 'Leser en skannet side.',
+  'ai.setup.another': 'Velg en annen modell',
+  'ai.setup.showAll': 'Vis alle, også modeller som ikke fungerer ennå',
+  'ai.setup.advanced': 'Avansert',
   'ai.models.tier.full': 'Fullstendig',
   'ai.models.tier.balanced': 'Balansert',
   'ai.models.tier.light': 'Lett',
@@ -1503,28 +1509,10 @@ export const nbNO: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'Det er ikke nok ledig diskplass til denne modellen.',
   'summary.intro':
     'Et utkast til sammendrag eller oversettelse av et dokument du har åpent, laget på denne datamaskinen. Det vises ved siden av originalen, merket som generert, og lagres aldri.',
-  'summary.settingsToggle': 'Modellinnstillinger',
-  'summary.modelHeading': 'Modellen',
-  'summary.modelWhat':
-    'En språkmodell på {size} kjører på denne datamaskinen, uten nett. Dokumentene dine forlater den aldri. Den lastes ned én gang, bare når du ber om det, og du kan fjerne den igjen.',
   'summary.state.ready': 'Modellen er klar.',
-  'summary.state.location': 'Fil: {path}',
   'summary.memory.low':
     'Denne datamaskinen har {free} GB ledig minne, og modellen trenger omtrent {need} GB. Lukk andre programmer og prøv igjen.',
-  'summary.get': 'Hent modellen',
-  'summary.getConfirm':
-    'Dette laster ned {size} fra {host} og kontrollerer dem. Det tar så mye diskplass. Dokumentene dine sendes ingen steder. Fortsette?',
-  'summary.getConfirmYes': 'Last ned',
-  'summary.getOff':
-    'Nedlastingen er ikke tilgjengelig ennå: modellen er ikke publisert. Du kan åpne en modellfil fra disken i stedet.',
-  'summary.open': 'Åpne en modellfil fra disken',
-  'summary.remove': 'Fjern modellen',
-  'summary.removeConfirm': 'Fjerne modellen fra denne datamaskinen? Du kan hente den igjen senere.',
-  'summary.removeConfirmYes': 'Fjern',
   'summary.cancel': 'Avbryt',
-  'summary.progress.download': 'Laster ned del {part} av {parts}: {done} av {total} MB',
-  'summary.progress.join': 'Setter sammen delene: {done} av {total} MB',
-  'summary.progress.verify': 'Kontrollerer filen: {done} av {total} MB',
   'summary.problem.not-installed': 'Modellen er ikke på denne datamaskinen.',
   'summary.problem.damaged':
     'Filen stemmer ikke med den publiserte modellen og ble ikke brukt. Ingenting er slettet.',

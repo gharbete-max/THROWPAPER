@@ -150,7 +150,10 @@ test('scan, then Summarise: the PDF travels in memory to the summary pane and is
 
   await expect(page).toHaveURL(/\/summary$/);
   expect(page.url()).not.toContain('fee');
-  await page.getByRole('button', { name: 'Open a model file from disk' }).click();
+  await page.getByRole('link', { name: 'Set up AI' }).click();
+  await page.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ }).click();
+  await expect(page.getByText('Installed', { exact: true })).toBeVisible();
+  await page.getByRole('main').getByRole('link', { name: 'Summary and translation' }).click();
   await expect(page.getByRole('heading', { name: 'What to read' })).toBeVisible();
   await expect(page.locator('textarea[readonly]')).toHaveValue(/The fee is 120 kronor\./);
   await page.getByRole('button', { name: 'Start' }).click();

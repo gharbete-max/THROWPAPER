@@ -89,8 +89,9 @@ async function open(page: import('@playwright/test').Page, seed: Seed = {}) {
   await page.addInitScript(fakeBridge);
   await page.addInitScript(graphicsFake, seed);
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
-  await page.goto('/summary');
+  await page.goto('/ai-setup');
   await expect(page.getByRole('heading', { name: 'AI models on this computer' })).toBeVisible();
+  await page.getByText('Advanced', { exact: true }).click();
 }
 
 test('the setting is off by default; turning it on asks first, naming host, file and size', async ({

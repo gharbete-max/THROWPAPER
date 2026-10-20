@@ -339,6 +339,7 @@ export const svSE: Record<MessageKey, string> = {
 
   'nav.checkin': 'Incheckning',
   'nav.brand': 'Utseende',
+  'nav.earlier': 'Tidigare funktioner',
 
   'problem.duplicate-key': 'Fältnyckeln "{key}" används mer än en gång.',
   'problem.no-answerable-fields': 'Formuläret samlar inte in några svar än.',
@@ -893,7 +894,6 @@ export const svSE: Record<MessageKey, string> = {
     'Så här lästes det, i ordning. Formuläret ändras inte: du går igenom det innan något av det blir frågor.',
   'paper.read.download': 'Ladda ned det som lästes',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Signering',
   'signing.heading': 'Signering',
   'signing.new': 'Skicka en PDF för signering',
   'signing.notConfigured': 'Signering är inte inställt',
@@ -1486,6 +1486,12 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Radera',
   'ai.models.optional':
     'AI är valfritt. Loppa fungerar fullt ut utan någon modell. Inget hämtas om du inte trycker på Hämta och bekräftar.',
+  'ai.setup.title': 'Ställ in AI',
+  'ai.setup.doesText': 'Sammanfattar, översätter, korrekturläser och skriver utkast till e-post.',
+  'ai.setup.doesVision': 'Läser en skannad sida.',
+  'ai.setup.another': 'Välj en annan modell',
+  'ai.setup.showAll': 'Visa alla, även modeller som inte fungerar ännu',
+  'ai.setup.advanced': 'Avancerat',
   'ai.models.tier.full': 'Fullständig',
   'ai.models.tier.balanced': 'Balanserad',
   'ai.models.tier.light': 'Lätt',
@@ -1510,28 +1516,10 @@ export const svSE: Record<MessageKey, string> = {
     'Det finns inte tillräckligt med ledigt diskutrymme för den här modellen.',
   'summary.intro':
     'Ett utkast till sammanfattning eller översättning av ett dokument du har öppet, gjort på den här datorn. Det visas bredvid originalet, märkt som genererat, och sparas aldrig.',
-  'summary.settingsToggle': 'Modellinställningar',
-  'summary.modelHeading': 'Modellen',
-  'summary.modelWhat':
-    'En språkmodell på {size} körs på den här datorn, utan nätverk. Dina dokument lämnar den aldrig. Den hämtas en gång, bara när du ber om det, och du kan ta bort den igen.',
   'summary.state.ready': 'Modellen är redo.',
-  'summary.state.location': 'Fil: {path}',
   'summary.memory.low':
     'Den här datorn har {free} GB ledigt minne och modellen behöver ungefär {need} GB. Stäng andra program och försök igen.',
-  'summary.get': 'Hämta modellen',
-  'summary.getConfirm':
-    'Det här hämtar {size} från {host} och kontrollerar dem. Det tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',
-  'summary.getConfirmYes': 'Hämta',
-  'summary.getOff':
-    'Hämtningen är inte tillgänglig än: modellen är inte publicerad. Du kan öppna en modellfil från disken i stället.',
-  'summary.open': 'Öppna en modellfil från disken',
-  'summary.remove': 'Ta bort modellen',
-  'summary.removeConfirm': 'Ta bort modellen från den här datorn? Du kan hämta den igen senare.',
-  'summary.removeConfirmYes': 'Ta bort',
   'summary.cancel': 'Avbryt',
-  'summary.progress.download': 'Hämtar del {part} av {parts}: {done} av {total} MB',
-  'summary.progress.join': 'Sätter ihop delarna: {done} av {total} MB',
-  'summary.progress.verify': 'Kontrollerar filen: {done} av {total} MB',
   'summary.problem.not-installed': 'Modellen finns inte på den här datorn.',
   'summary.problem.damaged':
     'Filen stämmer inte med den publicerade modellen och användes inte. Ingenting har raderats.',

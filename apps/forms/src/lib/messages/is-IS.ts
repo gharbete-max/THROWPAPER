@@ -340,6 +340,7 @@ export const isIS: Record<MessageKey, string> = {
 
   'nav.checkin': 'Innritun',
   'nav.brand': 'Útlit',
+  'nav.earlier': 'Eldri aðgerðir',
 
   'problem.duplicate-key': 'Reitalykillinn "{key}" er notaður oftar en einu sinni.',
   'problem.no-answerable-fields': 'Eyðublaðið safnar engum svörum enn.',
@@ -896,7 +897,6 @@ export const isIS: Record<MessageKey, string> = {
     'Svona var það lesið, í röð. Eyðublaðinu er ekki breytt: þú ferð yfir það áður en nokkuð af því verður að spurningum.',
   'paper.read.download': 'Sækja það sem var lesið',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Undirritun',
   'signing.heading': 'Undirritun',
   'signing.new': 'Senda PDF til undirritunar',
   'signing.notConfigured': 'Undirritun hefur ekki verið sett upp',
@@ -1493,6 +1493,12 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Eyða',
   'ai.models.optional':
     'Gervigreind er valfrjáls. Loppa virkar til fulls án nokkurs líkans. Ekkert er sótt nema þú ýtir á Sækja og staðfestir.',
+  'ai.setup.title': 'Setja upp gervigreind',
+  'ai.setup.doesText': 'Tekur saman, þýðir, les yfir og skrifar drög að tölvupósti.',
+  'ai.setup.doesVision': 'Les skannaða síðu.',
+  'ai.setup.another': 'Velja annað líkan',
+  'ai.setup.showAll': 'Sýna öll, líka líkön sem virka ekki enn',
+  'ai.setup.advanced': 'Ítarlegt',
   'ai.models.tier.full': 'Fullt',
   'ai.models.tier.balanced': 'Jafnvægi',
   'ai.models.tier.light': 'Létt',
@@ -1516,28 +1522,10 @@ export const isIS: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'Ekki er nóg laust diskpláss fyrir þetta líkan.',
   'summary.intro':
     'Uppkast að samantekt eða þýðingu á skjali sem þú hefur opið, gert á þessari tölvu. Það birtist við hlið frumtextans, merkt sem útbúið af vél, og er aldrei vistað.',
-  'summary.settingsToggle': 'Stillingar líkansins',
-  'summary.modelHeading': 'Líkanið',
-  'summary.modelWhat':
-    'Mállíkan, {size} að stærð, keyrir á þessari tölvu án nettengingar. Skjölin þín fara aldrei af henni. Það er sótt einu sinni, aðeins þegar þú biður um það, og þú getur fjarlægt það aftur.',
   'summary.state.ready': 'Líkanið er tilbúið.',
-  'summary.state.location': 'Skrá: {path}',
   'summary.memory.low':
     'Þessi tölva hefur {free} GB af lausu minni og líkanið þarf um {need} GB. Lokaðu öðrum forritum og reyndu aftur.',
-  'summary.get': 'Sækja líkanið',
-  'summary.getConfirm':
-    'Þetta sækir {size} frá {host} og athugar þá. Það tekur svona mikið diskpláss. Skjölin þín eru ekki send neitt. Halda áfram?',
-  'summary.getConfirmYes': 'Sækja',
-  'summary.getOff':
-    'Niðurhalið er ekki tiltækt enn: líkanið hefur ekki verið gefið út. Þú getur opnað líkanskrá af disknum í staðinn.',
-  'summary.open': 'Opna líkanskrá af disknum',
-  'summary.remove': 'Fjarlægja líkanið',
-  'summary.removeConfirm': 'Fjarlægja líkanið af þessari tölvu? Þú getur sótt það aftur síðar.',
-  'summary.removeConfirmYes': 'Fjarlægja',
   'summary.cancel': 'Hætta við',
-  'summary.progress.download': 'Sæki hluta {part} af {parts}: {done} af {total} MB',
-  'summary.progress.join': 'Set hlutana saman: {done} af {total} MB',
-  'summary.progress.verify': 'Athuga skrána: {done} af {total} MB',
   'summary.problem.not-installed': 'Líkanið er ekki á þessari tölvu.',
   'summary.problem.damaged':
     'Skráin passar ekki við útgefna líkanið og var ekki notuð. Engu var eytt.',

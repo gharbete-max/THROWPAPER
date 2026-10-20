@@ -56,7 +56,7 @@ test('says the text model is not installed, links to the model list, and writes 
   await expect(missing).toContainText('The text model is not installed on this computer');
   await expect(missing.getByRole('link', { name: 'Open the model list' })).toHaveAttribute(
     'href',
-    '/summary',
+    '/ai-setup',
   );
   await page.getByLabel('The message you received').fill('Hello, can you come?');
   await expect(page.getByRole('button', { name: 'Write a draft' })).toBeDisabled();

@@ -164,7 +164,10 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
   await page.addInitScript(fakeBridge);
   await page.goto('/room/documents');
   await page.getByRole('link', { name: /Summary and translation/ }).click();
-  await page.getByRole('button', { name: 'Open a model file from disk' }).click();
+  await page.getByRole('link', { name: 'Set up AI' }).click();
+  await page.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ }).click();
+  await expect(page.getByText('Installed', { exact: true })).toBeVisible();
+  await page.getByRole('main').getByRole('link', { name: 'Summary and translation' }).click();
   await page.getByLabel('A PDF or text file').check();
   await page.getByTestId('summary-file').setInputFiles(file('summary-en.txt'));
   await page.getByRole('button', { name: 'Start' }).click();
