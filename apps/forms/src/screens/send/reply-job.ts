@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { AiBridge, AiEvent, AiProblem } from '@tp/shared/ai';
-import type { JobStep, JobWarning, ReplyTask } from '@tp/shared/summary';
+import type { AiBridge, AiEvent, AiProblem, TextTask } from '@tp/shared/ai';
+import type { JobStep, JobWarning } from '@tp/shared/summary';
 
 /**
- * One reply task at a time through the desktop's `window.loppaAi`, as React state.
+ * One text task at a time (a reply, a proofreading, an email) through the desktop's `window.loppaAi`, as React state.
  *
  * The received message and the draft live in the component that owns them and nowhere else: not in
  * storage, not in the URL, not in a request. The bridge is the shell on this computer
@@ -64,7 +64,7 @@ export function useReplyJob(bridge: AiBridge) {
   );
 
   const start = useCallback(
-    async (task: ReplyTask) => {
+    async (task: TextTask) => {
       const id = crypto.randomUUID();
       current.current = id;
       setState({ ...IDLE, phase: 'running' });

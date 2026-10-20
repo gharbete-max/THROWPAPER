@@ -17,6 +17,8 @@ export interface GenerateRequest {
    * from 1 to `choose` and at most five of them. The model cannot name a passage that is not there.
    */
   choose?: number;
+  /** When set, the answer is constrained by a grammar to this JSON schema (proofreading). */
+  schema?: { name: string; schema: object };
   /** New text as it is written. */
   onText?: (text: string) => void;
   /** Token identifiers as they are written, for the loop guard. */

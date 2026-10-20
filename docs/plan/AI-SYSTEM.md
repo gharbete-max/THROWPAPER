@@ -79,6 +79,19 @@ Vision never runs inside `packages/shared/src/{builder,interpret,import}`; the d
 and the digital copy stay as they are and remain the offline default. The vision reader is an
 optional second opinion for what they cannot read.
 
+*Built (Phase 3).* `read-page` on `ServerEngine` (`apps/desktop/src/ai/vision/read-page.ts`): one page
+picture (PNG or JPEG, at most 1 million pixels normally, 2 million on the second pass) goes to
+`llama-server` under a JSON grammar (`MODEL_PAGE_SCHEMA`); `pageFromModel` turns the answer into a
+`StructuredPage` (boxes are not asked for and are `null`; a cut-off answer keeps its finished blocks
+and is `uncertain`; an answer that is not the shape is a `failed` page). The window draws and sends
+one page at a time (`apps/forms/src/screens/read-ai/`), compares each page with the PDF's own text
+layer (`crossCheck`: word overlap both ways and the numbers; a photograph has no layer and is not
+compared, Tesseract is not run alongside), numbers it into the document and lists any page it
+could not read. The coordinator keeps a read page under `cacheKey` (file hash, page, pipeline
+version, model, long edge, turn, language) and answers a repeat without loading the model. The
+document goes to Summary as text with a line before each page, to Send as the material of an
+email, and to the proofreader. The deterministic readers are untouched.
+
 **D5. Text tasks consume the structured document.**
 Summarise, ask a question, explain simply and translate flatten `StructuredDocument` in reading
 order and use the existing chunking, prompts, loop guard, digit check and the quote-only rule. The
@@ -110,6 +123,17 @@ version. Flags (invented numbers, an attachment named, the wrong language) are r
 draft as the person edits it. A small model still invents when it is allowed to answer a question
 from nothing; the prompt for an empty-notes reply forbids answers and asks for `[answer?]`, and the
 flags are the net under it.
+
+*Extended (reader, proofreader and corporate email).* Two more text task kinds. `proofread` returns
+a list of issues under a grammar; every span is looked up in the text and dropped (and counted) if
+it is not there word for word, a fix that brings in a number is dropped, numbers a source never had
+are found without the model, and a protected text is held to spelling (`packages/shared/src/summary/proofread.ts`).
+Accepted fixes are applied to a copy, never to the original. `compose-email` writes a corporate
+email from a summary or from the review comments, with the material as quoted data, no tools,
+`[sender name?]` and placeholders for unknown facts, the digit check, and for a review a check that
+every span the email was asked to quote is in it; a protected text gets a neutral note and none of
+its content. Shorter, translate and revise reuse the reply tasks. Send's panel opens on the material
+(`lib/email-about-handoff.ts`); nothing is sent.
 
 **D7. Where files live.**
 Resolution order for any model or runtime file: `LOPPA_AI_DIR` if set; `<repo>/local-models/<kind>/`

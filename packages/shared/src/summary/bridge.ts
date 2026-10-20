@@ -73,7 +73,9 @@ export type JobWarning =
   /** A reply draft that does not seem to be in the language asked for. */
   | { kind: 'wrong-language' }
   /** A reply draft that names or implies an attachment; this helper attaches nothing. */
-  | { kind: 'attachment-mentioned' };
+  | { kind: 'attachment-mentioned' }
+  /** A review email that does not quote some of the passages it was given to quote. */
+  | { kind: 'spans-missing'; spans: string[] };
 
 export type ModelEvent =
   /** A job's progress: `done` of `total` steps of this kind. */

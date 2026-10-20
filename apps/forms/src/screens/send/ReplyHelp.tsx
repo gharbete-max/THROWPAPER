@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import { aiBridge } from '../../lib/ai-bridge.js';
 import { useT } from '../../lib/i18n.js';
 import { Icon } from '../../components/Icon.js';
+import type { EmailAbout } from '../../lib/email-about-handoff.js';
 
 // The panel, the model's word lists and the bridge calls load only when somebody asks for help.
 const ReplyPanel = lazy(() => import('./ReplyPanel.js'));
@@ -15,13 +16,16 @@ const ReplyPanel = lazy(() => import('./ReplyPanel.js'));
 export function ReplyHelp({
   message,
   onInsert,
+  about = null,
 }: {
   message: string;
   onInsert: (text: string) => void;
+  /** Something a part handed over to write an email about (a summary, review comments): opens on it. */
+  about?: EmailAbout | null;
 }) {
   const t = useT();
   const bridge = aiBridge();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(about !== null);
   if (!bridge) return null;
   return (
     <div className="stack stack--tight">
@@ -40,7 +44,7 @@ export function ReplyHelp({
       {open ? (
         <div id="reply-panel">
           <Suspense fallback={<p role="status">{t('summary.step.loading')}</p>}>
-            <ReplyPanel bridge={bridge} message={message} onInsert={onInsert} />
+            <ReplyPanel bridge={bridge} message={message} onInsert={onInsert} about={about} />
           </Suspense>
         </div>
       ) : null}

@@ -70,13 +70,56 @@ describe('the AI IPC', () => {
     expect(coordinator.run).toHaveBeenCalledTimes(1);
   });
 
-  it('answers a page-reading task with not-available, without passing it on', async () => {
+  it('passes on a page-reading task of the right shape and refuses any other', async () => {
     const { handlers, coordinator } = harness();
-    expect(await handlers.get(AI_CHANNELS.run)!(forms, 'p', { kind: 'read-page' })).toEqual({
-      ok: false,
-      problem: 'not-available',
-    });
+    const run = handlers.get(AI_CHANNELS.run)!;
+    const page = {
+      kind: 'read-page',
+      fileSha256: 'b'.repeat(64),
+      page: 1,
+      png: new Uint8Array([0x89, 0x50, 0x4e, 0x47]),
+      longEdge: 1200,
+      turn: 0,
+      language: null,
+    };
+    for (const bad of [
+      { kind: 'read-page' },
+      { ...page, png: 'AAAA' },
+      { ...page, png: new Uint8Array(0) },
+      { ...page, png: new Uint8Array(13 * 1024 * 1024) },
+      { ...page, page: 0 },
+      { ...page, turn: 45 },
+      { ...page, fileSha256: 'x' },
+    ]) {
+      expect(await run(forms, 'p', bad)).toEqual({ ok: false, problem: 'failed' });
+    }
     expect(coordinator.run).not.toHaveBeenCalled();
+    await run(forms, 'p', page);
+    expect(coordinator.run).toHaveBeenCalledTimes(1);
+  });
+
+  it('passes on proofreading and email tasks of the right shape', async () => {
+    const { handlers, coordinator } = harness();
+    const run = handlers.get(AI_CHANNELS.run)!;
+    await run(forms, 'a', { kind: 'proofread', text: 'Hi', source: '', into: 'en-GB' });
+    await run(forms, 'b', {
+      kind: 'compose-email',
+      purpose: 'feedback',
+      material: '1. spelling: "x"',
+      recipient: 'Anna',
+      notes: '',
+      into: 'sv-SE',
+      tone: 'formal',
+      overall: 'mixed',
+      quotes: ['x'],
+    });
+    expect(coordinator.run).toHaveBeenCalledTimes(2);
+    expect(
+      await run(forms, 'c', { kind: 'proofread', text: '', source: '', into: 'en-GB' }),
+    ).toEqual({
+      ok: false,
+      problem: 'failed',
+    });
   });
 
   it('starts a download only on consent that is exactly true, for a plain model id', async () => {

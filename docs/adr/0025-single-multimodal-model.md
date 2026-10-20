@@ -123,8 +123,8 @@ built); more than two invented pages with the Q8_0 projector.
 
 ## Consequences
 
-- Reading a picture of a page is possible with the model but **not wired**: `read-page` is still
-  `not-available` in `ServerEngine.run` until the page pipeline (D4) lands. The Summary pane lists the one
+- Reading a picture of a page is wired (`vision/read-page.ts`, AI-SYSTEM D4); the server starts with
+  `--image-max-tokens 2560` so a second pass at 2 million pixels is not downscaled. The Summary pane lists the one
   model, its two files and the runtime, the minimum memory, and the pack folder.
 - `window.loppaModel` and the Summary pane keep working unchanged on the new engine; the download is off
   ("the AI pack has not been published yet") until the pack exists.

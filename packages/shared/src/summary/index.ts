@@ -14,4 +14,5 @@ export * from './check.js';
 export * from './chunk.js';
 export * from './passages.js';
 export * from './reply.js';
+export * from './proofread.js';
 export type * from './bridge.js';

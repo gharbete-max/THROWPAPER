@@ -1,5 +1,7 @@
 # Launch checklist
 
+> **Scope (ADR 0026, 2026-10-20).** The desktop app runs offline with none of this. Sections 1 to 3 block a **hosted** launch of the web edition and the marketing site, not the desktop release. The defaults for hosting and retention are in ADR 0026; the company, terms and policy facts stay the owner's.
+
 Everything that is temporary, unconfigured, unconfirmed or deliberately deferred, in one place.
 Maintained by hand; when an item is done, delete the row rather than ticking it, so the file only
 ever lists what is still open. Last reviewed **2026-09-21** in L0 of the local track

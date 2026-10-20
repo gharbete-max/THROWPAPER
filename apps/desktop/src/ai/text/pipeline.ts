@@ -11,6 +11,14 @@ import {
   reduceCap,
   repeatsARun,
   quoteAsData,
+  PROOFREAD_LIMITS,
+  PROOFREAD_SCHEMA,
+  SHORT_MATERIAL,
+  mergeIssues,
+  missingSpans,
+  verifyIssues,
+  type ComposeTask,
+  type ProofreadTask,
   REPLY_LIMITS,
   replyFlags,
   summaryIn,
@@ -24,6 +32,11 @@ import {
 import type { TextTask } from '@tp/shared/ai';
 import { JobError, type TextEngine } from './text-engine.js';
 import {
+  composeSystem,
+  composeUser,
+  proofreadSystem,
+  spellingSystem,
+  proofreadUser,
   draftReplyUser,
   neutralReplyUser,
   editReplyUser,
@@ -77,6 +90,7 @@ interface Ask {
   user: string;
   maxTokens: number;
   choose?: number;
+  schema?: { name: string; schema: object };
   onText?: (text: string) => void;
 }
 
@@ -111,6 +125,14 @@ export async function runJob(
   const warnings: JobWarning[] = [];
   if (isReply(job)) {
     await reply(engine, job, sink, signal, warnings);
+    return { warnings };
+  }
+  if (job.kind === 'proofread') {
+    await proofread(engine, job, sink, signal);
+    return { warnings };
+  }
+  if (job.kind === 'compose-email') {
+    await compose(engine, job, sink, signal, warnings);
     return { warnings };
   }
   if (job.kind === 'select') {
@@ -295,6 +317,124 @@ async function select(
 }
 
 const isReply = (job: TextTask): job is ReplyTask => job.kind.endsWith('-reply');
+
+/**
+ * Proofreading: the text is cut like a summary's, each piece is asked for a list of issues under a
+ * grammar, and everything the model says is verified against the text before it is shown (a span not
+ * found word for word is dropped and counted). Numbers the source never had are found without the
+ * model. The answer is one JSON text, `{issues, rejected}`, the whole of it each time.
+ */
+async function proofread(
+  engine: TextEngine,
+  job: ProofreadTask,
+  sink: Sink,
+  signal: AbortSignal,
+): Promise<void> {
+  if (job.text.length > PROOFREAD_LIMITS.text || job.source.length > PROOFREAD_LIMITS.source) {
+    throw new JobError('too-long');
+  }
+  if (summaryIn(job.into) === 'no') throw new JobError('language-refused');
+  const count = (text: string) => engine.countTokens(text);
+  const text = quoteAsData(job.text);
+  const source = quoteAsData(job.source);
+  const pieces = chunkParagraphs(text, MAP_CHUNK_TOKENS, count);
+  // The source is shown to the model only when it fits next to a piece; otherwise the number check
+  // below is all the factual check there is.
+  const withSource =
+    source !== '' && count(source) + Math.max(...pieces.map(count), 0) <= ONE_CALL_TOKENS;
+  // Two passes over each piece: the general one, then one that only looks for misspelt words (the
+  // model misses a swapped letter when it is also asked about grammar and sense, spike on the real
+  // model). What the second finds that the first already found is not counted twice.
+  const system = proofreadSystem(job.into, withSource);
+  const spelling = spellingSystem(job.into);
+  const raw: unknown[] = [];
+  const ask2 = async (prompt: string, user: string): Promise<Array<{ span?: unknown }>> => {
+    const result = await ask(engine, signal, {
+      system: prompt,
+      user,
+      maxTokens: 700,
+      schema: { name: 'proofread', schema: PROOFREAD_SCHEMA },
+    });
+    try {
+      const issues = (JSON.parse(result.text) as { issues?: unknown }).issues;
+      return Array.isArray(issues) ? issues : [];
+    } catch {
+      // An answer that is not JSON has no issues in it; the pieces that were read still count.
+      return [];
+    }
+  };
+  for (const [index, piece] of pieces.entries()) {
+    sink.step('reading', index * 2, pieces.length * 2);
+    const general = await ask2(system, proofreadUser(piece, withSource ? source : null));
+    raw.push(...general);
+    sink.step('reading', index * 2 + 1, pieces.length * 2);
+    const unmatched = [...general];
+    for (const entry of await ask2(spelling, proofreadUser(piece, null))) {
+      const same = unmatched.findIndex((found) => found.span === entry.span);
+      if (same >= 0) unmatched.splice(same, 1);
+      else raw.push(entry);
+    }
+  }
+  sink.step('reading', pieces.length * 2, pieces.length * 2);
+  const merged = mergeIssues(text, verifyIssues(text, { issues: raw }, source), source);
+  sink.text('replace', JSON.stringify(merged));
+}
+
+const COMPOSE_CAP = 700;
+
+/**
+ * A corporate email from material (a summary, or review comments). The material is quoted data,
+ * the model has no tools, and a material that trips the quote-only word lists gets a neutral note
+ * and nothing of it (ADR 0012). Afterwards: numbers the writer never supplied, an attachment named,
+ * the wrong language, and for a review, quotes the email left out.
+ */
+async function compose(
+  engine: TextEngine,
+  job: ComposeTask,
+  sink: Sink,
+  signal: AbortSignal,
+  warnings: JobWarning[],
+): Promise<void> {
+  if (
+    job.material.length > PROOFREAD_LIMITS.material ||
+    job.notes.length > PROOFREAD_LIMITS.notes ||
+    job.recipient.length > PROOFREAD_LIMITS.recipient
+  ) {
+    throw new JobError('too-long');
+  }
+  if (translateInto(job.into) === 'no') throw new JobError('language-refused');
+  const material = quoteAsData(job.material);
+  if (material === '') throw new JobError('failed', 'nothing to write about');
+  const neutral = mustQuote([job.material, job.notes].join('\n')).quoteOnly;
+  sink.step('writing', 0, 1);
+  let shown = '';
+  const result = await ask(engine, signal, {
+    system: composeSystem(job.into, job.tone, neutral, job.purpose, job.overall),
+    user: composeUser(material, quoteAsData(job.recipient), quoteAsData(job.notes), neutral),
+    maxTokens: COMPOSE_CAP,
+    onText: (piece) => {
+      shown += piece;
+      sink.text('replace', shown);
+    },
+  });
+  sink.text('replace', result.text);
+  sink.step('writing', 1, 1);
+  if (result.looped) warnings.push({ kind: 'repetition' });
+  // A neutral note quotes nothing, so there is nothing to check it against.
+  const reference = neutral ? [''] : [job.material, job.notes];
+  const flags = replyFlags(result.text, reference, job.into);
+  if (flags.invented.length > 0) warnings.push({ kind: 'numbers-added', numbers: flags.invented });
+  if (flags.attachment) warnings.push({ kind: 'attachment-mentioned' });
+  if (flags.wrongLanguage) warnings.push({ kind: 'wrong-language' });
+  // A summary is short enough for an email to keep its numbers: one that dropped a date is flagged
+  // (the real model replaced a given date with a placeholder). A whole document may leave some out.
+  if (!neutral && job.purpose === 'summary' && material.length <= SHORT_MATERIAL) {
+    const missing = digitCheck(material, result.text).missing;
+    if (missing.length > 0) warnings.push({ kind: 'numbers-missing', numbers: missing });
+  }
+  const left = neutral ? [] : missingSpans(result.text, job.quotes);
+  if (left.length > 0) warnings.push({ kind: 'spans-missing', spans: left });
+}
 
 /** What a draft may take its numbers from: never the draft, always what the writer supplied. */
 export const replyReference = (job: ReplyTask): string[] => [

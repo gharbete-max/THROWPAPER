@@ -18,7 +18,9 @@ apps/forms      Product A — the Documents catcher's screens: forms, scan, sign
                 Documents opening onto its four parts (ADR 0022). /scan arranges pages (PDFs,
                 photos, camera and phone scans, a rough Word to PDF), adds, covers, replaces and
                 truly redacts a PDF's text, and opens the invoice scan; /forms/:id/fill and
-                /forms/pdf fill a form or a PDF's own fields; /summary is the centre (desktop).
+                /forms/pdf fill a form or a PDF's own fields; /summary is the centre (desktop). On the
+                desktop, Scan also has "Read with AI" (the optional page reader of AI-SYSTEM D4), and
+                a summary or a reading can be proofread and written up as a corporate email in Send.
                 Events, the door and the ledger
                 are earlier work that stays in place, out of the room, until the catchers they
                 belong to (Presentation & planning; Spreadsheets) exist — never deleted unasked
@@ -78,7 +80,11 @@ packages/shared Types and Zod schemas, including the CONTRACT schemas; the guide
                 table, and an integer logarithm and exponential (@tp/shared/interpret); the AI coordinator's shared types — capabilities, the model manifest registry (one model of two files, evaluation-only supported) and the pinned `llama-server` runtime manifest, the task union, the structured document, the cache key, the `window.loppaAi` bridge (@tp/shared/ai, ADR 0024, 0025); the summary
                 centre's pure parts — the twelve languages, the checks around the
                 model, chunking, passage quoting (@tp/shared/summary) — with the word lists that
-                make an operative text quoted rather than reworded (@tp/shared/quoted); and the rules
+                make an operative text quoted rather than reworded (@tp/shared/quoted); the AI reader's pure
+                parts — the page shape the model is asked for, its answer made a StructuredPage, the
+                cross-check against a PDF's text layer, the document as text (@tp/shared/ai) — and
+                proofreading (issues verified against the text, fixes on a copy, the review email's
+                material, the email task's shape; @tp/shared/summary); and the rules
                 that read a supplier invoice's amount, due date, bank number and payment reference
                 with their check digits (@tp/shared/payable)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing

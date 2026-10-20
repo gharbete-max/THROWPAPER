@@ -11,3 +11,4 @@ export * from './task.js';
 export * from './document.js';
 export * from './cache-key.js';
 export * from './bridge.js';
+export * from './read-page.js';
