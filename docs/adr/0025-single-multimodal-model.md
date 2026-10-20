@@ -215,3 +215,30 @@ chat template is used. Smaller models read and write worse; the list says so bes
   memory, the app's only native module kept for no gain.
 - **Put the model in the installer.** Impossible at 6 GB (section 4).
 - **A GPU build by default.** Unproven on other people's computers, and 169 to 351 MB more per backend.
+  Amended 2026-10-20: the graphics card is an **optional setting**, off by default (the processor stays the
+  default), see "The graphics card" below.
+
+## The graphics card (amendment, 2026-10-20)
+
+The pinned Vulkan build of the same release is offered as an optional setting, "Use the graphics card (faster,
+optional)", in the model list. The processor build stays the default and the fall-back.
+
+- **Off until chosen, and only where a build is pinned** (today Windows x64; macOS says "not available yet",
+  Metal comes later). Turning it on without the program asks first, naming github.com, the file and its size
+  (ADR 0026); the download goes through the same checked code as a model file and every one of its 52 files is
+  hashed again. Offline: put the program in `runtime-vulkan` where the model files are looked for (the AI pack,
+  `local-models/`, `LOPPA_AI_DIR`, Loppa's own folder). Only a folder of that name counts, so the processor
+  program in a root or pack folder is never mistaken for it.
+- **One card, the program fits the model.** Loppa takes the first device `llama-server --list-devices` names
+  (it lists a separate card before the chip inside the processor) and passes `--device` and `-ngl auto`; the
+  pinned build's own `--fit` (on by default) puts as many layers on the card as its free memory holds, keeping
+  1 GB. A card with under 2 GB free (a game is using it) is left alone this time, without a failure.
+- **Never a hard failure.** No device, a start that fails, running out of memory, a card that ends or fails on
+  its first request: the processor program is started and the task is answered from it. The reason is
+  remembered in `graphics.json` so a task does not try again, shown plainly in the list ("The graphics card
+  could not be used; using the processor.") and cleared by one button. A first request that fails on the card is
+  only blamed on it if the processor then answers it.
+- **Same guarantees.** Loopback, a key made for the run, the allow-listed environment, `--offline`, no web page;
+  the Vulkan program is hashed before it is started. One model resident at a time: ending the process gives the
+  card's memory back; changing the setting ends a loaded model so it restarts the new way. The status says
+  whether the model runs on the processor or the graphics card, and the card's name.

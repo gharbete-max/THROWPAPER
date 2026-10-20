@@ -142,14 +142,23 @@ computer_. Tiers that failed testing are shown as _Not working yet_ and cannot b
    in one folder (a USB stick works); Loppa joins the parts and checks each against its hash. No
    internet is used.
 
+**Using the graphics card (optional)**: under the model list, _Use the graphics card (faster, optional)_ is
+off until you turn it on. On a Windows computer with a separate graphics card it reads pages several times
+faster. The first time you turn it on, Loppa asks before downloading the extra program (it names github.com,
+the file and its size; it is checked against its published fingerprint), or you can put the program in the
+folder the setting shows, offline. If the card cannot be used, Loppa says _The graphics card could not be
+used; using the processor_, carries on with the processor, and does not try the card again until you press
+_Try the graphics card again_. The list says whether the model runs on the processor or the graphics card.
+On a Mac the setting says it is not available yet.
+
 The installer never contains the model. The Windows installer carries the program that runs it
 (`llama-server`); a macOS runtime is not verified.
 
 ## Privacy
 
 **Nothing leaves this computer unless you press something and confirm it.** There is no telemetry, no
-cloud AI and no update check. The desktop's local servers answer only on this computer. The two
-exceptions you start yourself are a model download (confirmation names the host) and a phone scan,
+cloud AI and no update check. The desktop's local servers answer only on this computer. The
+exceptions you start yourself are a model download or the graphics-card program (each confirmation names the host) and a phone scan,
 which uses your local network while open. Email goes out only when you confirm, through your own mail
 program or your SMTP server.
 

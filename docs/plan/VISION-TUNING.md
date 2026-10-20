@@ -21,8 +21,8 @@ and what was adopted. Only numbers that were measured are here; where a run was 
 - **More threads help on a machine with many cores** (28 threads: prefill +43 %, decode +19 % in
   `llama-bench`) but the cap of 8 stays: it is one computer, and the cap protects every other.
 - **A graphics card is the one large gain: 6.6 times faster** (the 7B, five pages, 281 s → 43 s, same
-  44/48; the 2B 100 s → 14 s). It is optional and not wired to a setting: the Vulkan build is pinned in
-  the runtime manifest and `ServerSettings.gpuLayers` exists, nothing chooses it yet (section 5).
+  44/48; the 2B 100 s → 14 s). It is an optional setting, off by default (section 5): the Vulkan build is pinned in
+  the runtime manifest, and a card another program is using can make it slower than the processor.
 - **The 2B (Qwen3-VL) is clearly faster than the 7B at nearly equal accuracy** (section 4): 21 s a page
   against 56 s, 3.7 GB against 9.7 GB, invoice, table and form complete on both; it misses three small
   words on the text and the photograph that the 7B finds (41/48 against 44/48). At 2 megapixels the
@@ -168,14 +168,42 @@ lists the RTX 4070 and the Intel UHD 770. Run with `-ngl 99`, the same pages, `r
 | 7B | 281 s | **42.6 s** (first page 22 s while the card warmed up, then 4 to 6 s) | 44/48 | 70 | 5.4 GB (CPU 9.7) |
 | 2B | 100–108 s | **14.1 s** (2 to 5 s a page) | 41/48 | 170 | 2.2 GB (CPU 3.7) |
 
-Same answers, 6.6 and 7.5 times faster. It is **not** switched on, and it should stay a choice the person
-makes: it needs a graphics driver Loppa has not met on other machines (a wrong driver can crash or give
-garbage), the build is 32 MB more, and a laptop's weak integrated chip might be picked. What exists:
-the asset is pinned and verified (`variant: "vulkan"`; the manifest says it was run, once, on this
-computer), `fetch-runtime.ts --variant vulkan` fetches it, and `ServerSettings.gpuLayers` reaches `-ngl`.
-**What does not exist:** a place to choose it (a "Use the graphics card" switch in the AI pane), the
-runtime search for a Vulkan folder beside the CPU one, a fall-back to the CPU when the card fails to
-start, and packaging it in the AI pack. That is a UI and packaging task.
+Same answers, 6.6 and 7.5 times faster. It is **a setting, off by default** (2026-10-20, ADR 0025 amendment):
+"Use the graphics card (faster, optional)" in the model list. It stays a choice because it needs a graphics
+driver Loppa has not met on other machines (a wrong driver can crash or give garbage), the build is 32 MB more,
+and a laptop's weak integrated chip might be picked. What exists now: the pinned, hash-listed build
+(`variant: "vulkan"`), the setting and its confirmation (github.com, file, size), a `runtime-vulkan` folder
+accepted from the AI pack, `local-models/`, `LOPPA_AI_DIR` or Loppa's own folder, `ServerSettings.device` /
+`gpuLayers` reaching `--device` / `-ngl`, the fall-back to the processor, the remembered (clearable) failure and
+the status line. Not done: macOS (Metal), and carrying the Vulkan folder inside the AI pack.
+
+**Layers.** The pinned build fits the model to free graphics memory itself (`-fit on` is its default; with
+`-ngl auto` it keeps 1 GB free and moves layers back to the processor until the rest fits; forced to leave
+9000 MiB it settled on 12 of 29 layers). Loppa therefore does not estimate VRAM; it takes the first device from
+`llama-server --list-devices` (the separate card is listed before the chip in the processor, which reports
+the computer's RAM as "free" and would win a largest-free rule), leaves a card with under 2 GB free alone for
+that run, and treats "0 layers fitted" as the processor, with nothing remembered.
+
+**Measured through the engine** (`apps/desktop/src/ai/graphics.real.test.ts`, 7B Q4_K_M with the f16
+projector, the five invented pages, 2026-10-20, RTX 4070 12 GB, no other program using the card):
+
+| Setting | Five pages | Found | Card memory | Ran on |
+| --- | --- | --- | --- | --- |
+| off | 294.9 s (52 to 62 s a page) | 44/48 | n/a | processor |
+| on | **32.0 s** (3.6 to 6.8 s a page, load 5 s) | 44/48 | 6.6 GB over the 2.1 GB already in use | the card, 29/29 layers |
+
+9.2 times faster with the same strings found. **A card another program is using is the exception**: with a
+game at 96 to 99% of the card (the same machine, 7.9 GB of it taken), the same first page took 288 s on the
+card against 59 to 73 s on the processor, and the program reported 11.2 GB "free" and fitted all 29 layers
+anyway. Loppa cannot see another program's load (Vulkan has no portable query for it), so the setting's text
+says it is for a computer with a separate card, and turning it off is one click. The Qwen3-VL-2B was not on this
+computer; its Vulkan figures above (14.1 s) are from the earlier measurement.
+
+**Forced failures** (same test, the processor program answering): a Vulkan program that is not there (no
+device) and a device that is listed but whose program ends at once both ended with the page read on the
+processor, 13/13 strings, the failure remembered (`no-device`, `start-failed`) and no failed task. The other
+reasons (out of memory while loading, a crash on the first request, a card with nothing fitting) are covered
+with the stand-in server in `server-engine.graphics.test.ts`.
 
 ## 6. To repeat it
 

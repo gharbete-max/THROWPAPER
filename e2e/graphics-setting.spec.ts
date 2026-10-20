@@ -27,6 +27,12 @@ function graphicsFake(seed: Seed) {
   const w = window as unknown as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   const ai = w.loppaAi;
   const base = ai.status.bind(ai);
+  const listeners: Array<(event: unknown) => void> = [];
+  const baseOn = ai.onEvent;
+  ai.onEvent = (listener: (event: unknown) => void) => {
+    listeners.push(listener);
+    return baseOn(listener);
+  };
   const g = {
     support: 'available',
     enabled: false,
@@ -58,6 +64,16 @@ function graphicsFake(seed: Seed) {
     calls.install.push(consent);
     g.present = true;
     g.enabled = true;
+    // the shell says so when the program is in place, as the real coordinator does
+    setTimeout(async () => {
+      const done = {
+        id: 'graphics:install',
+        kind: 'installed',
+        modelId: 'graphics',
+        status: await status(),
+      };
+      listeners.forEach((l) => l(done));
+    }, 20);
     return { ok: true, id: 'graphics:install' };
   };
   ai.clearGraphicsFailure = async () => {
@@ -86,7 +102,7 @@ test('the setting is off by default; turning it on asks first, naming host, file
   await expect(page.getByText('Off unless you turn it on.')).toBeVisible();
   await expect(page.getByText('runtime-vulkan', { exact: false })).toBeVisible();
 
-  await box.check();
+  await box.click();
   const dialog = page.getByRole('dialog', { name: 'Confirm' });
   await expect(dialog).toContainText('github.com');
   await expect(dialog).toContainText('llama-b11741-bin-win-vulkan-x64.zip');
@@ -99,7 +115,7 @@ test('the setting is off by default; turning it on asks first, naming host, file
     ),
   ).toBe(0);
 
-  await box.check();
+  await box.click();
   await dialog.getByRole('button', { name: 'Download' }).click();
   await expect(box).toBeChecked();
   expect(
