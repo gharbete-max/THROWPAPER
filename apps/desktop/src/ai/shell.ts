@@ -104,7 +104,6 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
               new ServerEngine(files, {
                 locateRuntime: runtime.entry,
                 totalMemory: totalmem,
-                freeMemory: freemem,
                 minTotalMemory: minTotalMemoryBytes(model),
                 projector: projectorChoice(),
                 settings: settings(),

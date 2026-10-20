@@ -294,6 +294,18 @@ describe('the settings of the process', () => {
     expect(args).not.toContain('--mmproj');
   });
 
+  it('keeps every layer on the processor unless graphics-card layers are asked for', () => {
+    const args = (gpuLayers?: number) =>
+      serverArgs(
+        { weights: 'w' },
+        { contextTokens: 1, threads: 2, imageMaxTokens: 3, ...(gpuLayers ? { gpuLayers } : {}) },
+        9,
+        'k',
+      );
+    expect(args()[args().indexOf('-ngl') + 1]).toBe('0');
+    expect(args(99)[args(99).indexOf('-ngl') + 1]).toBe('99');
+  });
+
   it('counts tokens high, never low, so a cut text fits', () => {
     expect(estimateTokens('')).toBe(0);
     expect(estimateTokens('1234567890')).toBeGreaterThanOrEqual(10);
@@ -306,15 +318,14 @@ describe('the settings of the process', () => {
 
 describe('the choice of projector', () => {
   const both = { weights: 'w', projector: 'full', 'projector-lite': 'lite' };
-  it('prefers f16, takes the lighter one when asked or when memory is low', () => {
-    expect(pickProjector(both, 'auto', 20e9)).toBe('full');
-    expect(pickProjector(both, 'auto', 10.5e9)).toBe('lite');
-    expect(pickProjector(both, 'lite', 20e9)).toBe('lite');
-    expect(pickProjector(both, 'full', 1e9)).toBe('full');
+  it('prefers the lighter one, takes f16 only when asked', () => {
+    expect(pickProjector(both, 'auto')).toBe('lite');
+    expect(pickProjector(both, 'lite')).toBe('lite');
+    expect(pickProjector(both, 'full')).toBe('full');
   });
   it('uses whichever exists when only one does', () => {
-    expect(pickProjector({ weights: 'w', projector: 'full' }, 'lite', 1e9)).toBe('full');
-    expect(pickProjector({ weights: 'w', 'projector-lite': 'lite' }, 'full', 99e9)).toBe('lite');
-    expect(pickProjector({ weights: 'w' }, 'auto', 1e9)).toBeUndefined();
+    expect(pickProjector({ weights: 'w', projector: 'full' }, 'lite')).toBe('full');
+    expect(pickProjector({ weights: 'w', 'projector-lite': 'lite' }, 'full')).toBe('lite');
+    expect(pickProjector({ weights: 'w' }, 'auto')).toBeUndefined();
   });
 });

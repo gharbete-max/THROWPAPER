@@ -58,7 +58,7 @@
   "source": "https://huggingface.co/ggml-org/Qwen2.5-VL-7B-Instruct-GGUF",
   "sourceRevision": "508edd0afaa66bb9e9f40587acc2184f02daf1f6",
   "support": {
-    "evidence": "Measured 2026-10-19 (ADR 0025): 9.8 GB peak.",
+    "evidence": "Measured 2026-10-19 (ADR 0025): 9.8 GB peak. Run 2026-10-20 on llama.cpp b11741, 8 threads pinned to performance cores, CPU, Q8_0 projector, five invented pages at 1 megapixel: peak memory 9.7 GB (10.6 GB on a 2-megapixel page), 11 tokens a second, 56 s a page, 44 of 48 expected strings found.",
     "state": "working"
   },
   "tier": "full"

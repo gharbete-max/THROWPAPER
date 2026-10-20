@@ -37,14 +37,14 @@
   "licence": "Apache-2.0",
   "licenceUrl": "https://huggingface.co/HuggingFaceTB/SmolVLM2-2.2B-Instruct",
   "name": "SmolVLM2-2.2B-Instruct (Q4_K_M)",
-  "requiredMemoryBytes": 4000000000,
-  "requiredMemoryVerified": false,
+  "requiredMemoryBytes": 4400000000,
+  "requiredMemoryVerified": true,
   "retrievedAt": "2026-10-20",
   "source": "https://huggingface.co/ggml-org/SmolVLM2-2.2B-Instruct-GGUF",
   "sourceRevision": "1bc3c9f74ceafd4c8d4411cc9cf188bba3798f91",
   "support": {
-    "evidence": "Not run on this computer yet.",
-    "state": "untested"
+    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads pinned to performance cores, CPU, Q8_0 projector, load 1.6 s, peak memory 4.2 GB, but 2 of 12 expected strings on an invented invoice and 17 of 48 on five invented pages: it writes empty table cells and, on running text, goes on to the 2400-token limit. Its Swedish summary reads well (13 s). Not usable for scans yet.",
+    "state": "not-working-yet"
   },
   "tier": "very-light"
 }

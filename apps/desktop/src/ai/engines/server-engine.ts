@@ -38,25 +38,17 @@ export const MIN_TOTAL_MEMORY_BYTES = 11_500_000_000; // "12 GB" computers repor
 
 export type ProjectorChoice = 'auto' | 'full' | 'lite';
 
-/** Free memory under which `auto` takes the lighter projector, when there is one. */
-export const LOW_FREE_MEMORY_BYTES = 11_000_000_000;
-
 /**
- * Which projector to load (ADR 0025). The f16 one is preferred; the Q8_0 one (853 MB against 1.35 GB)
- * is used when the person chose 'lighter' or, on 'auto', when free memory is low. Whichever exists
- * when only one does.
+ * Which projector to load (ADR 0025). The Q8_0 one (853 MB against 1.35 GB) is preferred when there
+ * is one: on the five invented pages of the real-model suite it found the same 44 of 48 strings as
+ * the f16 one, no slower, in 0.5 GB less memory (docs/plan/VISION-TUNING.md). 'full' still asks for
+ * f16; whichever exists when only one does.
  */
-export function pickProjector(
-  files: EngineFiles,
-  choice: ProjectorChoice,
-  freeMemory: number,
-): string | undefined {
+export function pickProjector(files: EngineFiles, choice: ProjectorChoice): string | undefined {
   const full = files.projector;
   const lite = files['projector-lite'];
   if (!full || !lite) return full ?? lite;
-  if (choice === 'lite') return lite;
-  if (choice === 'full') return full;
-  return freeMemory < LOW_FREE_MEMORY_BYTES ? lite : full;
+  return choice === 'full' ? full : lite;
 }
 
 export interface ServerEngineDeps {
@@ -65,7 +57,6 @@ export interface ServerEngineDeps {
   totalMemory(): number;
   /** Total memory under which this model is not loaded; the default suits the 7B model. */
   minTotalMemory?: number;
-  freeMemory?(): number;
   projector?: ProjectorChoice;
   settings?: Partial<ServerSettings>;
   spawn?: SpawnFn;
@@ -96,11 +87,7 @@ export class ServerEngine implements Engine {
       threads: chooseThreads(),
       ...this.deps.settings,
     };
-    const projector = pickProjector(
-      this.files,
-      this.deps.projector ?? 'auto',
-      this.deps.freeMemory?.() ?? Infinity,
-    );
+    const projector = pickProjector(this.files, this.deps.projector ?? 'auto');
     const server = await startServer({
       entry,
       files: { weights: this.files.weights, ...(projector ? { projector } : {}) },

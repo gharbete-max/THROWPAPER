@@ -35,7 +35,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Forms (builder, fill, draft PDF) | `screens/Forms.tsx`, `FillIn.tsx`, `screens/builder/`, `packages/shared/src/{builder,interpret,import}` | ADRs 0017–0021, `docs/plan/PREDICTIVE-BUILDER.md`, `CAVEATS.md` |
 | Sign | `screens/Signing*`, `screens/signing/`, `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
 | Send (single, batch, campaigns, reply helper) | `screens/Send*`, `screens/send/`, `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
-| AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/Summary*` | `docs/plan/AI-SYSTEM.md`, ADRs 0023–0025 |
+| AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/Summary*` | `docs/plan/AI-SYSTEM.md`, `docs/plan/VISION-TUNING.md` (speed and accuracy numbers per setting and model), ADRs 0023–0025 |
 | Desktop packaging, AI pack | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/{fetch-runtime,make-ai-pack,join-ai-pack,publish-ai-pack}.ts`, `src/ai/pack.ts`) | ADR 0016, 0025 §6, `docs/DEPLOY.md` |
 | Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
@@ -49,7 +49,7 @@ One multimodal model, **Qwen2.5-VL-7B-Instruct** (Q4_K_M + f16 or lighter Q8_0 p
 files sit in the repo root in dev, Git-ignored), run by a pinned **llama.cpp `llama-server`** child
 process on loopback (ADR 0025); killed when idle so memory is truly freed. Needs ~12 GB RAM (9.8 GB
 measured peak); CPU only by default. An optional catalogue of smaller Apache-2.0 models (Qwen3-VL
-4B/2B, SmolVLM2) is being added. Tasks: read-page (vision), summarise, translate, quote, proofread,
+4B/2B, SmolVLM2) is in the catalogue and was measured 2026-10-20: **Qwen3-VL-2B** reads a page in 21 s (3.7 GB) against the 7B's 56 s at 41/48 against 44/48 known strings; the 4B has no edge over the 2B; both SmolVLM2 models do not work yet. A table is asked for as `rows`, the Q8_0 projector is preferred, and the Vulkan (graphics card) build is pinned but not wired to a setting (VISION-TUNING §5). Tasks: read-page (vision), summarise, translate, quote, proofread,
 compose-email, reply. Never in the installer (≈6 GB): ships as a separate AI pack (parts < 2 GiB + `PACK.json`; `make-ai-pack.ts`, `join-ai-pack.ts`, `publish-ai-pack.ts`, `src/ai/pack.ts`; install offline via *Open a file from disk* → `PACK.json`). The Windows installer carries `llama-server` in `resources/ai-pack/runtime`. Results are cached
 per page. Local file resolution: `LOPPA_AI_DIR` → `local-models/` → repo root (dev) → `resources/ai-pack`
 → user-data. `LOPPA_MODEL_PATH` points a dev run at a file.

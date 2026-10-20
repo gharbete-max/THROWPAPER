@@ -399,6 +399,21 @@ describe('the runtime manifest', () => {
     expect(win.contents.some((c) => c.name === 'llama-server-impl.dll')).toBe(true);
   });
 
+  it('also pins the Vulkan build, an optional choice that is never the default', () => {
+    const vulkan = runtimeAssetFor('win32', 'x64', LLAMA_SERVER, 'vulkan')!;
+    expect(vulkan).toMatchObject({
+      name: 'llama-b11741-bin-win-vulkan-x64.zip',
+      sha256: '1981b9898b68dc6637077d6c618effaa350f5939ee75e9a4d803508708413ab5',
+      verified: true,
+    });
+    expect(vulkan.contents.some((c) => c.name === 'ggml-vulkan.dll')).toBe(true);
+    expect(runtimeAssetFor('win32', 'x64')?.variant).toBeUndefined();
+    expect(runtimeAssetFor('linux', 'x64', LLAMA_SERVER, 'vulkan')).toBeUndefined();
+    expect(RuntimeManifest.safeParse({ ...LLAMA_SERVER, assets: [vulkan, vulkan] }).success).toBe(
+      false,
+    );
+  });
+
   it('marks every platform that was not run here as UNVERIFIED, with no contents list', () => {
     for (const asset of LLAMA_SERVER.assets) {
       if (asset.platform !== 'win32-x64') {

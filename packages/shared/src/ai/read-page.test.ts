@@ -50,6 +50,26 @@ describe('a page from what the model said', () => {
     expect(pageText(page)).toContain(' | B');
   });
 
+  it('reads a table written as rows, empty cells kept, as the model is asked to', () => {
+    const page = pageFromModel(
+      1,
+      answer([
+        {
+          type: 'table',
+          rows: [
+            ['Region', 'Q1', 'Totalt (kr)'],
+            ['Norr', '', '352 400'],
+          ],
+        },
+      ]),
+    );
+    const table = page.blocks[0];
+    expect(table?.type === 'table' && [table.rows, table.columns, table.cells.length]).toEqual([
+      2, 3, 6,
+    ]);
+    expect(pageText(page)).toBe('Region | Q1 | Totalt (kr)\nNorr |  | 352 400');
+  });
+
   it('puts tables that follow one another back together, whichever way the rows are counted', () => {
     const row = (r: number, a: string, b: string) => ({
       type: 'table',

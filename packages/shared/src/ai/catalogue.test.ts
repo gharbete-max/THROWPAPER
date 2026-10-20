@@ -50,14 +50,14 @@ describe('the recommendation', () => {
     const pick = (total: number, free: number) =>
       recommendModel(MODEL_REGISTRY, { totalBytes: total * GB, freeBytes: free * GB });
     expect(pick(32, 20)).toBe('qwen2.5-vl-7b-instruct-q4_k_m');
-    expect(pick(16, 6)).toBe('qwen3-vl-4b-instruct-q4_k_m');
+    expect(pick(16, 8)).toBe('qwen3-vl-4b-instruct-q4_k_m');
     expect(pick(8, 5)).toBe('qwen3-vl-2b-instruct-q4_k_m');
-    expect(pick(32, 6.5)).toBe('qwen3-vl-4b-instruct-q4_k_m'); // plenty in all, little free now
+    expect(pick(32, 6.5)).toBe('qwen3-vl-2b-instruct-q4_k_m'); // plenty in all, little free now
   });
 
   it('falls back to the smallest model rather than to nothing', () => {
     expect(recommendModel(MODEL_REGISTRY, { totalBytes: 2 * GB, freeBytes: GB / 2 })).toBe(
-      'smolvlm2-256m-video-instruct-q4_k_m',
+      'qwen3-vl-2b-instruct-q4_k_m', // the smallest that works; both SmolVLM2 models are marked not working
     );
   });
 

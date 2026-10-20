@@ -35,6 +35,12 @@ export const RuntimeAsset = z
     sha256: Sha256,
     url: z.string().url().startsWith('https://github.com/ggml-org/llama.cpp/releases/download/'),
     verified: z.boolean(),
+    /**
+     * Absent: the CPU build, which is the default (ADR 0025). `vulkan`: the same release built for
+     * the graphics card, an optional choice (docs/plan/VISION-TUNING.md): about 6 times faster on an
+     * RTX 4070, but a driver Loppa has not met can crash it, so it is never chosen unasked.
+     */
+    variant: z.literal('vulkan').optional(),
   })
   .strict();
 export type RuntimeAsset = z.infer<typeof RuntimeAsset>;
@@ -57,8 +63,9 @@ export const RuntimeManifest = z
     const seen = new Set<string>();
     for (const [index, asset] of manifest.assets.entries()) {
       const at = ['assets', index];
-      if (seen.has(asset.platform)) issue([...at, 'platform'], 'two assets for one platform');
-      seen.add(asset.platform);
+      const key = `${asset.platform}/${asset.variant ?? 'cpu'}`;
+      if (seen.has(key)) issue([...at, 'platform'], 'two assets for one platform and variant');
+      seen.add(key);
       if (!asset.name.includes(manifest.tag) || !asset.url.includes(`/${manifest.tag}/`)) {
         issue(at, 'the asset is not from the pinned tag');
       }
@@ -74,11 +81,12 @@ export type RuntimeManifest = z.infer<typeof RuntimeManifest>;
 
 export const LLAMA_SERVER: RuntimeManifest = RuntimeManifest.parse(llamaServer);
 
-/** The asset for this computer, or undefined: there is no build pinned for it. */
+/** The asset for this computer (the CPU build unless `variant` asks for the other), or undefined: none is pinned. */
 export function runtimeAssetFor(
   platform: string,
   arch: string,
   manifest: RuntimeManifest = LLAMA_SERVER,
+  variant?: 'vulkan',
 ): RuntimeAsset | undefined {
-  return manifest.assets.find((a) => a.platform === `${platform}-${arch}`);
+  return manifest.assets.find((a) => a.platform === `${platform}-${arch}` && a.variant === variant);
 }

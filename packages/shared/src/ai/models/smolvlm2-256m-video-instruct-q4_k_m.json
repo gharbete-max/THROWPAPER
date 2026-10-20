@@ -37,14 +37,14 @@
   "licence": "Apache-2.0",
   "licenceUrl": "https://huggingface.co/HuggingFaceTB/SmolVLM2-256M-Video-Instruct",
   "name": "SmolVLM2-256M-Video-Instruct (Q4_K_M)",
-  "requiredMemoryBytes": 800000000,
-  "requiredMemoryVerified": false,
+  "requiredMemoryBytes": 700000000,
+  "requiredMemoryVerified": true,
   "retrievedAt": "2026-10-20",
   "source": "https://huggingface.co/ggml-org/SmolVLM2-256M-Video-Instruct-GGUF",
   "sourceRevision": "a8383113a70b406f088ac936e5f1918ed08e620d",
   "support": {
-    "evidence": "Not run on this computer yet.",
-    "state": "untested"
+    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads pinned to performance cores, CPU, Q8_0 projector, load 0.5 s, peak memory 0.63 GB, 150 tokens a second, but 7 of 12 expected strings on an invented invoice (it repeats an amount without end) and 5 of 48 on five invented pages. Its Swedish summary copies the source. Not usable for scans yet.",
+    "state": "not-working-yet"
   },
   "tier": "very-light"
 }
