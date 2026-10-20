@@ -46,3 +46,6 @@ graphify-out/
 # AI model files for local evaluation (docs/plan/AI-SYSTEM.md D7): <kind>/ folders of GGUF files, never committed
 local-models/
 ai-pack-out/
+
+# Photos picked by hand before they are processed into apps/forms/public/media (docs/brand/MEDIA.md)
+local-media/
