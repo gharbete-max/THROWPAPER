@@ -13,6 +13,8 @@ const EN = {
   menuOpenData: 'Open data folder',
   menuOpenOutbox: 'Open outbox (test-mode mail)',
   menuBackup: 'Back up…',
+  menuBackupKeys: 'Back up with the keys…',
+  menuRestoreKeys: 'Restore keys from a backup…',
   menuOpenInBrowser: 'Open in your browser',
   menuQuit: 'Quit',
   menuView: 'View',
@@ -89,6 +91,31 @@ const EN = {
   backupDone:
     'Backup written to {path}. The access keys were left out on purpose; a restored copy makes new ones.',
   backupFailed: 'The backup could not be written: {message}',
+  backupKeysDone:
+    'Backup written to {path}, with the keys in keys.enc. Without the passphrase they cannot be read, and Loppa cannot recover it.',
+  keysBackupTitle: 'Back up with the keys',
+  keysBackupLead:
+    'The access keys (they keep you signed in and make signing and download links work) are put in one file, keys.enc, protected by a passphrase you choose. Keep the passphrase somewhere safe: nobody, Loppa included, can recover it.',
+  keysRestoreTitle: 'Restore keys from a backup',
+  keysRestoreLead:
+    'Choose the keys.enc from a backup and type the passphrase it was made with. Nothing is changed until you confirm.',
+  keysPassphrase: 'Passphrase',
+  keysPassphraseAgain: 'Passphrase again',
+  keysBackupGo: 'Choose where to save…',
+  keysRestoreGo: 'Choose keys.enc…',
+  keysWorking: 'Working…',
+  keysTooShort: 'Use at least {min} characters.',
+  keysNoMatch: 'The two passphrases are not the same.',
+  keysNothing: 'There are no keys on this computer to back up yet.',
+  keysWrong: 'That passphrase is wrong, or the file is damaged. Nothing was changed.',
+  keysUnreadable: 'That file is not a Loppa keys backup. Nothing was changed.',
+  keysEmpty: 'That backup holds no keys. Nothing was changed.',
+  keysPickTitle: 'Choose keys.enc',
+  keysRestoreConfirm:
+    'Replace the keys on this computer with the ones in {file}? Everyone signed in is signed out, and the links that were sent out under the old keys work again only if they were made under these. Loppa restarts its servers.',
+  keysRestoreYes: 'Restore',
+  keysRestoreNo: 'Cancel',
+  keysRestoreDone: 'The keys were restored.',
   startFailed: 'Loppa could not start',
   errorAlreadySetUp: 'This computer already has a Loppa organisation. Restart Loppa to open it.',
 };
@@ -100,6 +127,8 @@ const SV: typeof EN = {
   menuOpenData: 'Öppna datamappen',
   menuOpenOutbox: 'Öppna utkorgen (e-post i testläge)',
   menuBackup: 'Säkerhetskopiera…',
+  menuBackupKeys: 'Säkerhetskopiera med nycklarna…',
+  menuRestoreKeys: 'Återställ nycklar från en säkerhetskopia…',
   menuOpenInBrowser: 'Öppna i din webbläsare',
   menuQuit: 'Avsluta',
   menuView: 'Visa',
@@ -177,6 +206,31 @@ const SV: typeof EN = {
   backupDone:
     'Säkerhetskopian skrevs till {path}. Åtkomstnycklarna lämnades medvetet utanför; en återställd kopia skapar nya.',
   backupFailed: 'Säkerhetskopian kunde inte skrivas: {message}',
+  backupKeysDone:
+    'Säkerhetskopian skrevs till {path}, med nycklarna i keys.enc. Utan lösenfrasen går de inte att läsa, och Loppa kan inte återskapa den.',
+  keysBackupTitle: 'Säkerhetskopiera med nycklarna',
+  keysBackupLead:
+    'Åtkomstnycklarna (de håller dig inloggad och får signerings- och nedladdningslänkar att fungera) läggs i en fil, keys.enc, skyddad av en lösenfras som du väljer. Spara lösenfrasen på ett säkert ställe: ingen, Loppa inte heller, kan återskapa den.',
+  keysRestoreTitle: 'Återställ nycklar från en säkerhetskopia',
+  keysRestoreLead:
+    'Välj keys.enc från en säkerhetskopia och skriv lösenfrasen den gjordes med. Inget ändras förrän du bekräftar.',
+  keysPassphrase: 'Lösenfras',
+  keysPassphraseAgain: 'Lösenfras igen',
+  keysBackupGo: 'Välj var den ska sparas…',
+  keysRestoreGo: 'Välj keys.enc…',
+  keysWorking: 'Arbetar…',
+  keysTooShort: 'Använd minst {min} tecken.',
+  keysNoMatch: 'De två lösenfraserna är inte likadana.',
+  keysNothing: 'Det finns inga nycklar på den här datorn att säkerhetskopiera ännu.',
+  keysWrong: 'Lösenfrasen är fel, eller filen är skadad. Inget ändrades.',
+  keysUnreadable: 'Filen är ingen Loppa-nyckelkopia. Inget ändrades.',
+  keysEmpty: 'Säkerhetskopian innehåller inga nycklar. Inget ändrades.',
+  keysPickTitle: 'Välj keys.enc',
+  keysRestoreConfirm:
+    'Ersätta nycklarna på den här datorn med dem i {file}? Alla som är inloggade loggas ut, och länkar som skickats ut under de gamla nycklarna fungerar bara om de gjordes under dessa. Loppa startar om sina servrar.',
+  keysRestoreYes: 'Återställ',
+  keysRestoreNo: 'Avbryt',
+  keysRestoreDone: 'Nycklarna återställdes.',
   startFailed: 'Loppa kunde inte starta',
   errorAlreadySetUp:
     'Den här datorn har redan en Loppa-organisation. Starta om Loppa för att öppna den.',

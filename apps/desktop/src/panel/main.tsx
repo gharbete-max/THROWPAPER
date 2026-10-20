@@ -20,7 +20,14 @@ document.head.appendChild(style);
 const state = await window.loppa.state();
 const { lang, t } = messagesFor([state.lang]);
 document.documentElement.lang = lang;
-document.title = state.view === 'setup' ? t.setupTitle : t.settingsTitle;
+document.title =
+  state.view === 'setup'
+    ? t.setupTitle
+    : state.view === 'backupKeys'
+      ? t.keysBackupTitle
+      : state.view === 'restoreKeys'
+        ? t.keysRestoreTitle
+        : t.settingsTitle;
 
 const container = document.getElementById('root');
 if (!container) throw new Error('#root missing from index.html');

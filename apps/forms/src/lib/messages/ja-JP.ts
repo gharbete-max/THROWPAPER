@@ -1973,6 +1973,11 @@ export const jaJP: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     '件名・本文・フッターで使える項目：{fields}。縦線の後に、リストに値がない行で使う代わりの文字を指定できます（例：{example}）。',
   'campaign.footer': 'フッター（ご自身で用意する文言）',
+  'campaign.footerSkeleton':
+    '[お名前または組織名] · [郵送先の住所]\nこのメールは、[この方がリストに載っている理由]のためお送りしています。\n配信停止: {link}',
+  'campaign.footerStarter':
+    'これは出発点であり、完成した文面ではありません。[ ]内をすべて記入してください。フッターの内容は送信者の責任です。',
+  'campaign.problem.footerPlaceholder': 'フッターに、記入が必要な[ ]内の文字がまだあります: {left}',
   'campaign.footerHint':
     'ご自身で書いてください。送信者と所在、受信者がこのメールを受け取る理由、受信を止める方法です。各受信者の配信停止リンクを入れる位置に {link} を書いてください。Loppa は独自の文言を加えません。',
   'campaign.noTracking': 'テキストのみです。メールには開封やクリックを追跡するものはありません。',

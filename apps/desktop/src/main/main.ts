@@ -7,8 +7,17 @@
  * itself: a first-run screen, settings that live on this machine, "open the data folder", backup,
  * and the OS password store for an SMTP password.
  */
-import { cp, mkdir } from 'node:fs/promises';
-import { backupFilter } from './backup.js';
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import {
+  KEYS_FILE,
+  KeysError,
+  MIN_PASSPHRASE,
+  backupFilter,
+  openKeys,
+  readKeyFiles,
+  sealKeys,
+  writeKeyFiles,
+} from './backup.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
@@ -31,7 +40,13 @@ import {
 } from '@tp/api-forms/desktop';
 import type { LocalSign } from '@tp/api-sign/local';
 import { startForms, startSign } from './host.js';
-import { CHANNELS, type PanelView, type Result, type SettingsForm } from '../bridge.js';
+import {
+  CHANNELS,
+  type KeysForm,
+  type PanelView,
+  type Result,
+  type SettingsForm,
+} from '../bridge.js';
 import { fill, messagesFor } from '../messages.js';
 import { registerAiIpc } from '../ai/ai-ipc.js';
 import { AI_CHANNELS, MODEL_CHANNELS } from '../ai/channels.js';
@@ -230,8 +245,15 @@ async function openPanel(view: PanelView): Promise<void> {
   }
   panelWindow = new BrowserWindow({
     width: 640,
-    height: view === 'setup' ? 640 : 860,
-    title: view === 'setup' ? t.setupTitle : t.settingsTitle,
+    height: view === 'setup' ? 640 : view === 'settings' ? 860 : 480,
+    title:
+      view === 'setup'
+        ? t.setupTitle
+        : view === 'backupKeys'
+          ? t.keysBackupTitle
+          : view === 'restoreKeys'
+            ? t.keysRestoreTitle
+            : t.settingsTitle,
     parent: mainWindow ?? undefined,
     webPreferences: {
       preload: join(here, 'preload.cjs'),
@@ -248,13 +270,14 @@ async function openPanel(view: PanelView): Promise<void> {
   await panelWindow.loadFile(join(resources, 'panel', 'index.html'), { query: { view } });
 }
 
-async function backUp(): Promise<void> {
+/** Writes the data folder to a place the person chooses; with a passphrase, the keys go beside it as keys.enc. */
+async function backUp(passphrase?: string): Promise<Result> {
   const stamp = new Date().toISOString().slice(0, 10);
   const { canceled, filePath } = await dialog.showSaveDialog({
     title: t.menuBackup,
     defaultPath: join(app.getPath('documents'), `Loppa-backup-${stamp}`),
   });
-  if (canceled || !filePath) return;
+  if (canceled || !filePath) return { ok: false, error: '' };
   try {
     // Stopped first: PGlite's files are only consistent at rest, and a copy taken mid-write is
     // a backup that restores to a corrupt database.
@@ -264,9 +287,69 @@ async function backUp(): Promise<void> {
     sign = null;
     await mkdir(filePath, { recursive: true });
     await cp(dataDir, filePath, { recursive: true, filter: backupFilter() });
-    await dialog.showMessageBox({ message: fill(t.backupDone, { path: filePath }) });
+    if (passphrase) {
+      await writeFile(
+        join(filePath, KEYS_FILE),
+        sealKeys(await readKeyFiles(dataDir), passphrase),
+        {
+          mode: 0o600,
+        },
+      );
+    }
+    await dialog.showMessageBox({
+      message: fill(passphrase ? t.backupKeysDone : t.backupDone, { path: filePath }),
+    });
+    return { ok: true };
   } catch (error) {
-    dialog.showErrorBox(t.menuBackup, fill(t.backupFailed, { message: (error as Error).message }));
+    const message = fill(t.backupFailed, { message: (error as Error).message });
+    dialog.showErrorBox(t.menuBackup, message);
+    return { ok: false, error: message };
+  } finally {
+    await restartServer();
+  }
+}
+
+/**
+ * Puts the keys of a `keys.enc` back. Decrypted first, so a wrong passphrase ends here with nothing
+ * written; then a confirmation; then the servers stop, the files are written and the servers start.
+ */
+async function restoreKeys(passphrase: string): Promise<Result> {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    title: t.keysPickTitle,
+    defaultPath: app.getPath('documents'),
+    properties: ['openFile'],
+    filters: [{ name: KEYS_FILE, extensions: ['enc'] }],
+  });
+  const file = filePaths[0];
+  if (canceled || !file) return { ok: false, error: '' };
+  let files;
+  try {
+    files = openKeys(await readFile(file), passphrase);
+  } catch (error) {
+    if (error instanceof KeysError) {
+      return { ok: false, error: error.code === 'unreadable' ? t.keysUnreadable : t.keysWrong };
+    }
+    return { ok: false, error: t.keysUnreadable };
+  }
+  if (Object.keys(files).length === 0) return { ok: false, error: t.keysEmpty };
+  const { response } = await dialog.showMessageBox({
+    type: 'warning',
+    message: fill(t.keysRestoreConfirm, { file }),
+    buttons: [t.keysRestoreNo, t.keysRestoreYes],
+    defaultId: 0,
+    cancelId: 0,
+  });
+  if (response !== 1) return { ok: false, error: '' };
+  try {
+    await server?.close();
+    server = null;
+    await sign?.close();
+    sign = null;
+    await writeKeyFiles(dataDir, files);
+    await dialog.showMessageBox({ message: t.keysRestoreDone });
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: (error as Error).message };
   } finally {
     await restartServer();
   }
@@ -289,6 +372,8 @@ function buildMenu(): void {
         { label: t.menuOpenData, click: () => void shell.openPath(paths.root) },
         { label: t.menuOpenOutbox, click: () => void shell.openPath(paths.outbox) },
         { label: t.menuBackup, click: () => void backUp() },
+        { label: t.menuBackupKeys, click: () => void openPanel('backupKeys') },
+        { label: t.menuRestoreKeys, click: () => void openPanel('restoreKeys') },
         ...(process.platform === 'darwin'
           ? []
           : [{ type: 'separator' } as const, { label: t.menuQuit, role: 'quit' } as const]),
@@ -341,8 +426,9 @@ function registerIpc(): void {
   ipcMain.handle(CHANNELS.state, async (event) => {
     // The bridge answers the settings panel and nothing else — not a page that got into a window.
     if (!fromPanel(event)) throw new Error('not-the-panel');
-    const view =
-      new URL(event.sender.getURL()).searchParams.get('view') === 'setup' ? 'setup' : 'settings';
+    const asked = new URL(event.sender.getURL()).searchParams.get('view');
+    const view: PanelView =
+      asked === 'setup' || asked === 'backupKeys' || asked === 'restoreKeys' ? asked : 'settings';
     const settings = await readSettings(workspacePaths(dataDir).settings);
     return {
       view,
@@ -389,6 +475,26 @@ function registerIpc(): void {
       await writeSettings(paths.settings, applied.settings);
       await restartServer();
       return { ok: true };
+    } catch (error) {
+      return fail(error);
+    }
+  });
+
+  ipcMain.handle(CHANNELS.keys, async (event, form: KeysForm): Promise<Result> => {
+    if (!fromPanel(event)) return refused;
+    const view = new URL(event.sender.getURL()).searchParams.get('view');
+    const passphrase = String(form?.passphrase ?? '');
+    try {
+      if (view === 'restoreKeys') return await restoreKeys(passphrase);
+      if (view !== 'backupKeys') return refused;
+      if (passphrase.length < MIN_PASSPHRASE) {
+        return { ok: false, error: fill(t.keysTooShort, { min: String(MIN_PASSPHRASE) }) };
+      }
+      if (passphrase !== String(form.again ?? '')) return { ok: false, error: t.keysNoMatch };
+      if (Object.keys(await readKeyFiles(dataDir)).length === 0) {
+        return { ok: false, error: t.keysNothing };
+      }
+      return await backUp(passphrase);
     } catch (error) {
       return fail(error);
     }

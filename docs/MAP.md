@@ -92,7 +92,9 @@ Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix wat
 ## Current state (2026-10-20)
 Merged: the whole Documents plan; coordinator, single-model migration, reply helper, AI reader +
 proofread + corporate email. In flight: the optional model catalogue (`claude/model-catalogue`).
-Next: campaign-footer placeholder skeleton; desktop backup excludes `secrets.json` (+ encrypted
-backup); AI pack distribution (parts < 2 GiB with SHA-256, open from disk or download with
+Done on `claude/footer-and-keys-backup`: the campaign footer opens as a skeleton of `[placeholders]`
+in all twelve languages and sending stays blocked (client and server, `checkCampaign`) while one is
+left or `{{unsubscribe}}` is absent; File > Back up with the keys / Restore keys from a backup
+(`keys.enc`, AES-256-GCM, scrypt; procedure in `docs/BACKUP.md`). Next: AI pack distribution (parts < 2 GiB with SHA-256, open from disk or download with
 confirmation); packaged-app test of the llama-server runtime. Unverified everywhere: macOS, 8–12 GB
 laptops, CPUs without AVX2, native-speaker quality. Plans/ADRs are history unless linked above.
