@@ -1463,7 +1463,7 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Fjern',
   'ai.graphics.label': 'Brug grafikkortet (hurtigere, valgfrit)',
   'ai.graphics.note':
-    'Slået fra, medmindre du slår det til. Sider læses flere gange hurtigere på en computer med et separat grafikkort. Kan kortet ikke bruges, vender Loppa tilbage til processoren af sig selv.',
+    'Slået fra, medmindre du slår det til. Sider læses flere gange hurtigere på en computer med et separat grafikkort. Kan kortet ikke bruges, vender Loppa tilbage til processoren af sig selv. Hvis et andet program, for eksempel et spil, allerede belaster kortet kraftigt, kan læsningen gå langsommere end på processoren; slå det så fra.',
   'ai.graphics.later':
     'Ikke tilgængeligt endnu på denne computer. Macens egen grafikunderstøttelse kommer i et senere trin.',
   'ai.graphics.missing':

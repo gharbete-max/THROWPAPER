@@ -1459,7 +1459,7 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Fjern',
   'ai.graphics.label': 'Bruk grafikkortet (raskere, valgfritt)',
   'ai.graphics.note':
-    'Av til du slår det på. Sider leses flere ganger raskere på en datamaskin med eget grafikkort. Hvis kortet ikke kan brukes, går Loppa tilbake til prosessoren av seg selv.',
+    'Av til du slår det på. Sider leses flere ganger raskere på en datamaskin med eget grafikkort. Hvis kortet ikke kan brukes, går Loppa tilbake til prosessoren av seg selv. Hvis et annet program, for eksempel et spill, allerede belaster kortet hardt, kan lesingen gå saktere enn på prosessoren; slå det da av.',
   'ai.graphics.later':
     'Ikke tilgjengelig ennå på denne datamaskinen. Macens egen grafikkstøtte kommer i et senere trinn.',
   'ai.graphics.missing':

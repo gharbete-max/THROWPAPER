@@ -1472,7 +1472,7 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Fjarlægja',
   'ai.graphics.label': 'Nota skjákortið (hraðara, valfrjálst)',
   'ai.graphics.note':
-    'Slökkt nema þú kveikir á því. Síður eru lesnar mörgum sinnum hraðar í tölvu með sérstöku skjákorti. Ef ekki er hægt að nota kortið fer Loppa sjálf aftur í örgjörvann.',
+    'Slökkt nema þú kveikir á því. Síður eru lesnar mörgum sinnum hraðar í tölvu með sérstöku skjákorti. Ef ekki er hægt að nota kortið fer Loppa sjálf aftur í örgjörvann. Ef annað forrit, til dæmis leikur, notar skjákortið þegar mikið getur lesturinn verið hægari en á örgjörvanum; slökktu þá á þessu.',
   'ai.graphics.later':
     'Ekki enn í boði á þessari tölvu. Eigin grafíkstuðningur Mac kemur í síðara skrefi.',
   'ai.graphics.missing':

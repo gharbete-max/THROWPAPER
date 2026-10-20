@@ -1394,7 +1394,7 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': '移除',
   'ai.graphics.label': '使用显卡（更快，可选）',
   'ai.graphics.note':
-    '默认关闭，需要你手动开启。在有独立显卡的电脑上，读取页面会快数倍。如果无法使用显卡，Loppa 会自动改用处理器。',
+    '默认关闭，需要你手动开启。在有独立显卡的电脑上，读取页面会快数倍。如果无法使用显卡，Loppa 会自动改用处理器。 如果其他程序（例如游戏）已在大量占用显卡，读取可能比使用处理器更慢；这时请关闭此选项。',
   'ai.graphics.later': '此电脑上暂不可用。Mac 自己的图形支持将在后续阶段提供。',
   'ai.graphics.missing':
     '所需程序尚未在这台电脑上：开启时会先询问再下载，你也可以自己把它放进 {folder}。',

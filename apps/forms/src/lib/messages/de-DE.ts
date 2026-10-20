@@ -1517,7 +1517,7 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Entfernen',
   'ai.graphics.label': 'Grafikkarte verwenden (schneller, optional)',
   'ai.graphics.note':
-    'Aus, solange Sie es nicht einschalten. Seiten werden auf einem Computer mit eigener Grafikkarte mehrfach schneller gelesen. Lässt sich die Karte nicht nutzen, kehrt Loppa von selbst zum Prozessor zurück.',
+    'Aus, solange Sie es nicht einschalten. Seiten werden auf einem Computer mit eigener Grafikkarte mehrfach schneller gelesen. Lässt sich die Karte nicht nutzen, kehrt Loppa von selbst zum Prozessor zurück. Wenn ein anderes Programm, etwa ein Spiel, die Grafikkarte bereits stark auslastet, kann das Lesen langsamer sein als auf dem Prozessor; schalten Sie es dann aus.',
   'ai.graphics.later':
     'Auf diesem Computer noch nicht verfügbar. Die eigene Grafikunterstützung des Mac folgt in einem späteren Schritt.',
   'ai.graphics.missing':

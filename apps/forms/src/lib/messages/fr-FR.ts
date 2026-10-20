@@ -1503,7 +1503,7 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Supprimer',
   'ai.graphics.label': 'Utiliser la carte graphique (plus rapide, facultatif)',
   'ai.graphics.note':
-    'Désactivé tant que vous ne l’activez pas. Les pages sont lues plusieurs fois plus vite sur un ordinateur doté d’une carte graphique dédiée. Si la carte ne peut pas être utilisée, Loppa revient seule au processeur.',
+    'Désactivé tant que vous ne l’activez pas. Les pages sont lues plusieurs fois plus vite sur un ordinateur doté d’une carte graphique dédiée. Si la carte ne peut pas être utilisée, Loppa revient seule au processeur. Si un autre programme, comme un jeu, utilise déjà beaucoup la carte, la lecture peut être plus lente que sur le processeur ; désactivez alors cette option.',
   'ai.graphics.later':
     'Pas encore disponible sur cet ordinateur. La prise en charge graphique propre au Mac viendra dans une étape ultérieure.',
   'ai.graphics.missing':

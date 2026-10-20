@@ -1480,7 +1480,7 @@ export const enGB = {
   'ai.models.removeConfirmYes': 'Remove',
   'ai.graphics.label': 'Use the graphics card (faster, optional)',
   'ai.graphics.note':
-    'Off unless you turn it on. Pages are read several times faster on a computer with a separate graphics card. If the card cannot be used, Loppa goes back to the processor by itself.',
+    'Off unless you turn it on. Pages are read several times faster on a computer with a separate graphics card. If the card cannot be used, Loppa goes back to the processor by itself. If another program, such as a game, is already using the card heavily, reading can be slower than on the processor; then turn this off.',
   'ai.graphics.later':
     'Not available yet on this computer. The Mac’s own graphics support comes in a later step.',
   'ai.graphics.missing':
