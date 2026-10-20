@@ -13,7 +13,7 @@ import {
 } from './update.js';
 
 /**
- * Which guess question next — `docs/plan/BELIEF.md`, "Which question next": the one expected to
+ * Which guess question next — `docs/archive/plan/BELIEF.md`, "Which question next": the one expected to
  * shrink the belief's entropy most, in integers. `next: { best, else }` in the graph asks it; the
  * machine records where it went, so replay needs none of this.
  */

@@ -90,7 +90,7 @@ try {
     `${JSON.stringify(
       {
         $comment:
-          'The golden corpus (docs/plan/IMPORT-PIPELINE.md). The documents written for Loppa are dedicated to the public domain (the licence below), built by `pnpm corpus:build`, never edited by hand; a real one (origin "real") carries its own licence and source, and is never built.',
+          'The golden corpus (docs/archive/plan/IMPORT-PIPELINE.md). The documents written for Loppa are dedicated to the public domain (the licence below), built by `pnpm corpus:build`, never edited by hand; a real one (origin "real") carries its own licence and source, and is never built.',
         licence: 'CC0-1.0',
         tool,
         documents: all,

@@ -504,7 +504,7 @@ test.describe('on a small phone, by keyboard alone', () => {
   });
 
   /**
-   * `CAVEATS.md` #36 (`rtl-and-long-strings`), `docs/plan/POLISH.md` S13b: the whole flow, once in
+   * `CAVEATS.md` #36 (`rtl-and-long-strings`), `docs/archive/plan/POLISH.md` S13b: the whole flow, once in
    * German — the longest of the twelve catalogues — and once mirrored, right to left. At every
    * question: nothing wider than the phone, every answer on the first screen, and no words cut —
    * no element that clips what overflows it holding more than it shows, nothing off either edge.
@@ -970,7 +970,7 @@ test('a phrase it did not understand can be taught — with consent — and remo
 });
 
 /**
- * S11 — the guess (`docs/plan/BELIEF.md`). Somebody collecting proxies for an association's
+ * S11 — the guess (`docs/archive/plan/BELIEF.md`). Somebody collecting proxies for an association's
  * meeting, answering whatever the engine asks in the order it asks: it guesses the proxy form,
  * says why, and "Right" adds the template's questions, shown whole before the brand.
  */

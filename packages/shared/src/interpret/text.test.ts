@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { compareCodePoints, fold, keyOf, probed, spanOf, tokenise } from './text.js';
 
 /**
- * Normalisation — `docs/plan/INTENT-LADDER.md`, "Normalisation". What matters most is the way
+ * Normalisation — `docs/archive/plan/INTENT-LADDER.md`, "Normalisation". What matters most is the way
  * back: every token and every span points at what was typed, however NFKC reshaped it.
  */
 

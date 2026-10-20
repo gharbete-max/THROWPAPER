@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * The guided builder's conversation, as data — the types, and a runtime schema for the same shape.
  *
- * `docs/plan/BUILDER-GRAPH.md` is the specification and ADR 0020 the decision. The short version:
+ * `docs/archive/plan/BUILDER-GRAPH.md` is the specification and ADR 0020 the decision. The short version:
  * components render nodes and never decide which node comes next, so the whole conversation can be
  * validated for dead ends, walked by a test, and replayed from a log. None of that is possible if
  * the order of questions lives in an `if` inside a component.
@@ -56,7 +56,7 @@ export type Slot = (typeof SLOTS)[number];
 /**
  * Where to go next: one node, or guarded branches read top to bottom ending in `when: 'true'`, or
  * the question of a group that tells the belief most, and `else` when none is worth asking
- * (`docs/plan/BELIEF.md`, "Which question next").
+ * (`docs/archive/plan/BELIEF.md`, "Which question next").
  */
 export type Next =
   | string
@@ -137,7 +137,7 @@ interface Base {
   readonly escape: string;
   /** A preview spec id: what to render after this node. */
   readonly preview?: string;
-  /** The option a negated phrase selects ("no buttons") — `docs/plan/INTENT-LADDER.md`. */
+  /** The option a negated phrase selects ("no buttons") — `docs/archive/plan/INTENT-LADDER.md`. */
   readonly negative?: string;
   /**
    * What answering this node settles for the question in focus. An answer given ahead of its turn

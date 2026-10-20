@@ -21,6 +21,7 @@ export async function readPdfUpload(
   request: FastifyRequest,
   reply: FastifyReply,
   maxFiles: number,
+  { filesRequired = false, fieldSize = 256 * 1024 } = {},
 ): Promise<PdfUpload | null> {
   const files: Uint8Array[] = [];
   const fields = new Map<string, string>();
@@ -30,7 +31,7 @@ export async function readPdfUpload(
         files: PARSER_FILE_LIMIT,
         fileSize: MAX_FILE_BYTES,
         fields: 4,
-        fieldSize: 256 * 1024,
+        fieldSize,
       },
     })) {
       if (part.type === 'file') {
@@ -68,6 +69,15 @@ export async function readPdfUpload(
   if (files.length > maxFiles) {
     void reply.code(413).send({
       error: { code: 'too-many-files', message: `At most ${maxFiles} files at once` },
+    });
+    return null;
+  }
+  if (files.length === 0 && filesRequired) {
+    void reply.code(400).send({
+      error: {
+        code: 'no-file',
+        message: 'Send at least one PDF or photograph as multipart form data',
+      },
     });
     return null;
   }

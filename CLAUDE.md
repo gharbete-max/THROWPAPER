@@ -11,7 +11,7 @@ and Presentation & planning are floating placeholders; nothing more is built for
 older document disagrees with the vision, the vision wins.
 
 **`docs/HANDOVER.md`** — open it for the history of decisions: the state, the order of work and the owner's decisions of
-2026-10-12. The code is three apps plus the packages they share (Forms, Sign, and a Mailer stub),
+2026-10-12. The code is two products (Forms, Sign) and the desktop that hosts them, plus the packages they share,
 which together serve the Documents catcher. Read `docs/CONTRACT.md` next, then the spec for
 whichever app you are working on. Do not paste specs into this file.
 
@@ -28,8 +28,6 @@ apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign on embedded
                 offline first; runs the AI centre (`src/ai/`, ADRs 0023–0025: one model through a pinned
                 llama-server, one resident at a time). Not a product: imports only @tp/api-forms/desktop
                 and @tp/api-sign/local (ADR 0016)
-apps/mailer     A stub. Mail is built inside Documents' Send (docs/HANDOVER.md)
-apps/api-mailer A stub backend
 packages/tokens Design tokens as JSON → CSS vars / email styles / print CSS; the contrast guard; the room's colours
 packages/i18n   Catalogues and locale utilities (ICU collation)
 packages/ui     One `cn()` helper
@@ -46,12 +44,12 @@ detail: `docs/MAP.md` (where to look) and each package's `src/index.ts`.
 
 ## Rules that apply to every session
 
-1. **The products never import each other.** Forms, Mailer and Sign (`docs/adr/0009`) may not
+1. **The products never import each other.** Forms and Sign (`docs/adr/0009`) may not
    import from one another or each other's databases; `eslint.config.js` enforces it. They talk
    only through the HTTP contract in `docs/CONTRACT.md`. If you find yourself wanting a direct
    import, the contract is missing something — change the contract.
-2. **Each product must run standalone.** `apps/forms` with the mailer switched off falls back to
-   direct SMTP. `apps/mailer` works with audiences uploaded by CSV and no forms app at all.
+2. **Each product must run standalone.** `apps/forms` sends mail itself (direct SMTP or its own
+   provider). Mailer was never built; its stubs were removed (ADR 0026 #6) and mail is built inside Send.
 3. **API-first, token auth.** Every screen calls a documented endpoint. Bearer + refresh, not
    cookie-only, so native clients can follow later.
 4. **No hard-coded colours, fonts, spacing or user-facing strings.** Colours and type come from
@@ -70,7 +68,7 @@ detail: `docs/MAP.md` (where to look) and each package's `src/index.ts`.
 ## Commands
 
 ```
-pnpm dev:forms      pnpm dev:mailer      pnpm dev:sign
+pnpm dev:forms      pnpm dev:sign
 pnpm --filter @tp/desktop start        # the desktop app, unpackaged
 pnpm --filter @tp/desktop package:win  # installer + portable .exe (a zip when not on Windows)
 pnpm --filter @tp/desktop package:mac  # .dmg for Apple Silicon and Intel (a zip when not on a Mac)

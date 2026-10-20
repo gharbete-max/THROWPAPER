@@ -41,7 +41,7 @@ export {
 export type { Alternative, AskReason, Interpretation, Reading, Unused } from './reading.js';
 
 /**
- * The ladder — free text read by rules, cheapest and surest first (`docs/plan/INTENT-LADDER.md`,
+ * The ladder — free text read by rules, cheapest and surest first (`docs/archive/plan/INTENT-LADDER.md`,
  * ADR 0019). `rungs.ts` reads one node (T0–T4, S3); this file decides the order, and reads the
  * group the node belongs to (S6):
  *

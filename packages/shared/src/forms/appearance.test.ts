@@ -224,7 +224,7 @@ describe('choice style', () => {
 });
 
 /**
- * A yes/no drawn as one box to tick — the consent presentation (`docs/plan/POLISH.md`, S13a). The
+ * A yes/no drawn as one box to tick — the consent presentation (`docs/archive/plan/POLISH.md`, S13a). The
  * one appearance that says something about the answer: a box that is not ticked has still been
  * answered, so "required" can only mean "ticked", as it does for a required checkbox in HTML.
  */

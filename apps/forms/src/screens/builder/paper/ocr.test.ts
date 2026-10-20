@@ -31,7 +31,7 @@ describe('reading a photographed page', () => {
   });
 });
 
-/** S14 (`docs/plan/SCANS.md`): a page read word by word, as stage 1's words. */
+/** S14 (`docs/archive/plan/SCANS.md`): a page read word by word, as stage 1's words. */
 describe('words read by OCR', () => {
   const page = {
     width: 2000,

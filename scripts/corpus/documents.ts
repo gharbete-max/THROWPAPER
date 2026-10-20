@@ -12,7 +12,7 @@ import {
 } from './word.js';
 
 /**
- * The corpus's own documents — `docs/plan/IMPORT-PIPELINE.md`, "The golden corpus". Each is
+ * The corpus's own documents — `docs/archive/plan/IMPORT-PIPELINE.md`, "The golden corpus". Each is
  * written here as a Word document in a few readable lines; `pnpm corpus:build` has LibreOffice
  * read it and write the PDF and the DOCX in `fixtures/documents/`, so the files the tests read
  * are a real writer's: real fonts, kerning, list numbering, headers and fields. Made for Loppa,

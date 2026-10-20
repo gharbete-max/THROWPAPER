@@ -171,7 +171,7 @@ non-square logo); `outline`/`soft` email buttons on a pastel; `.rise` stagger pa
 
 ## 6. Expansion decisions — signing, eID, documents, AI, app (added 2026-09-23)
 
-From `docs/EXPANSION.md` and ADRs 0009–0015. Answered on 2026-09-23 and removed: start now; signing
+From `docs/archive/EXPANSION.md` and ADRs 0009–0015. Answered on 2026-09-23 and removed: start now; signing
 is a third product; Loppa is proprietary; the field is called a signature. Nothing here is a
 placeholder in code: each row is a decision, a contract, a certificate or a sign-off, and the phase
 that needs it waits for it.

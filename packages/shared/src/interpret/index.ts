@@ -1,5 +1,5 @@
 /**
- * Free text read by rules — `docs/plan/INTENT-LADDER.md`, ADR 0019. S3: normalisation, the word
+ * Free text read by rules — `docs/archive/plan/INTENT-LADDER.md`, ADR 0019. S3: normalisation, the word
  * lists of the twelve languages, the built-in aliases, and the ladder's rungs T0–T4. S6: the rungs
  * that read a group — several answers at once (T5), a list (T6), a guess (T7) — and learned
  * aliases.

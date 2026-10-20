@@ -16,7 +16,7 @@ import { PreviewMoment } from './PreviewMoment.js';
 import { Shell } from './Shell.js';
 
 /**
- * The guess on screen — `docs/plan/BELIEF.md` (S11): "This looks like a proxy form. Right?", why,
+ * The guess on screen — `docs/archive/plan/BELIEF.md` (S11): "This looks like a proxy form. Right?", why,
  * and what "Right" added, each question of it editable in place. Static renders of a real
  * conversation; `e2e/guided-builder.spec.ts` presses it.
  */

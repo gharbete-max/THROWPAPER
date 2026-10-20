@@ -3,7 +3,7 @@ import type { Box, IrBlock, IrColumn, IrLine, IrPage, IrWord, LayoutDocument } f
 import { textHints } from './layout/hints.js';
 
 /**
- * Pasted text as a layout document — `docs/plan/LAYOUT-IR.md`, "How each source fills it", the
+ * Pasted text as a layout document — `docs/archive/plan/LAYOUT-IR.md`, "How each source fills it", the
  * `paste` column. One pasted line is one line, blank lines separate blocks, and the geometry is
  * synthetic and says only what the paste said: order, indentation and paragraph breaks.
  *

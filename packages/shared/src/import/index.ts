@@ -1,5 +1,5 @@
 /**
- * Document import's pure core — `docs/plan/IMPORT-PIPELINE.md`, ADRs 0018 and 0019.
+ * Document import's pure core — `docs/archive/plan/IMPORT-PIPELINE.md`, ADRs 0018 and 0019.
  *
  * Stages 2–7 live here and run in the author's browser (a Web Worker) and in the desktop app; the
  * bytes of a file are only ever touched in `apps/forms`. Its own subpath (`@tp/shared/import`) so

@@ -1,5 +1,5 @@
 /**
- * What stage 5 produces — `docs/plan/IMPORT-PIPELINE.md` §5: for each question, grid and table, a
+ * What stage 5 produces — `docs/archive/plan/IMPORT-PIPELINE.md` §5: for each question, grid and table, a
  * proposed kind with its confidence and its reasons, whether it is required, and the chips the
  * review screen offers. Proposals only: nothing here is applied to a draft (stage 8 asks).
  */

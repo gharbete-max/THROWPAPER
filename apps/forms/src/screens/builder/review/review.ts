@@ -2,7 +2,7 @@ import type { Bucket, Kind, LayoutDocument, Segment } from '@tp/shared/import';
 import type { Reading } from '../paper/reading.js';
 
 /**
- * The review screen's model — `docs/plan/IMPORT-PIPELINE.md` §8 — with nothing on screen, so every
+ * The review screen's model — `docs/archive/plan/IMPORT-PIPELINE.md` §8 — with nothing on screen, so every
  * rule here is a function a test can call (`review.test.ts`). The screen renders it; it never
  * decides.
  *

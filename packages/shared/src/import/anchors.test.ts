@@ -9,7 +9,7 @@ import { readLayout } from './pipeline.js';
 import type { QuestionSegment } from './segment/types.js';
 
 /**
- * The paper twin's boxes — `docs/plan/CONVERGENCE.md`, S12b, and `IMPORT-PIPELINE.md` stage 6:
+ * The paper twin's boxes — `docs/archive/plan/CONVERGENCE.md`, S12b, and `IMPORT-PIPELINE.md` stage 6:
  * where each question's answer, and each option's tick, is written on the page it was read from.
  */
 

@@ -11,7 +11,7 @@ import { ALL_CATALOGUES } from './messages/all.js';
  * `packages/shared/src/builder/graph/validate.test.ts` proves each rule catches its mistake with
  * a made-up catalogue. This proves the shipped graph and the shipped catalogues pass every rule
  * together: every key in all twelve languages, every question short enough, no banned word, no
- * operative wording in an example chip (`docs/plan/BUILDER-GRAPH.md`, rules G4, G10, G13).
+ * operative wording in an example chip (`docs/archive/plan/BUILDER-GRAPH.md`, rules G4, G10, G13).
  */
 describe('the guided graph and the catalogues', () => {
   it('has a catalogue for every shipped locale', () => {

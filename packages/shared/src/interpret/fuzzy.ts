@@ -1,5 +1,5 @@
 /**
- * T3's word similarity — `docs/plan/INTENT-LADDER.md`, "T3 — fuzzy". Two words match when
+ * T3's word similarity — `docs/archive/plan/INTENT-LADDER.md`, "T3 — fuzzy". Two words match when
  * **trigram Dice ≥ 0.62 and Jaro-Winkler ≥ 0.80**, or when both are at least six characters long
  * and their **Levenshtein distance is at most 2**.
  *

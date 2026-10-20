@@ -3,7 +3,7 @@ import { V, word } from '../../forms/vocabulary.js';
 
 /**
  * The two recipes `CLAUDE.md` rule 8 keeps out of the template catalogue — a consent form and an
- * incident report (`docs/plan/BELIEF.md`, "Recipes"). The engine may recognise them, so nobody is
+ * incident report (`docs/archive/plan/BELIEF.md`, "Recipes"). The engine may recognise them, so nobody is
  * asked twenty questions to find out; but what "Right" adds is **structure and a bracketed
  * placeholder only**, the way the proxy template does (`forms/templates.ts`). The sentences that
  * make either one mean something are the organisation's to write (ADR 0012).

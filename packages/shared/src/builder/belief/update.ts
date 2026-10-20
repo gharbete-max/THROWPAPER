@@ -5,7 +5,7 @@ import type { Guess } from '../state.js';
 import { RECIPES } from './recipes.js';
 
 /**
- * The belief — `docs/plan/BELIEF.md`: a weight in millinats for each recipe, moved by the answers
+ * The belief — `docs/archive/plan/BELIEF.md`: a weight in millinats for each recipe, moved by the answers
  * to scored questions and by the guess's three states, and turned into probabilities with integers
  * only (ADR 0019). Pure: the same log gives the same belief on every machine.
  */

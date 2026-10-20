@@ -18,15 +18,15 @@ ADRs 0017–0021; the open questions for the owner are at the end. Slices and mi
 | --- | --- |
 | `BRIEF.md` | the owner's brief, revision 3, reconciled with everything below — the mission; these files are the specification |
 | `PREDICTIVE-BUILDER.md` (this) | the product: two doors, the conversation, the preview contract, reconciliation, acceptance |
-| `BUILDER-GRAPH.md` | the conversation as data: node schema, `when` / `patch` / `score`, validation |
-| `INTENT-LADDER.md` | free text → an answer, T0–T8, and the alias file |
-| `LAYOUT-IR.md` | the frozen input of every import stage after extraction |
+| `../archive/plan/BUILDER-GRAPH.md` | the conversation as data: node schema, `when` / `patch` / `score`, validation |
+| `../archive/plan/INTENT-LADDER.md` | free text → an answer, T0–T8, and the alias file |
+| `../archive/plan/LAYOUT-IR.md` | the frozen input of every import stage after extraction |
 | `NUMBERING-RULES.md` | the list-marker detector, as a decision procedure |
-| `IMPORT-PIPELINE.md` | the nine import stages, thresholds, debug JSON, paper twin, re-import |
+| `../archive/plan/IMPORT-PIPELINE.md` | the nine import stages, thresholds, debug JSON, paper twin, re-import |
 | `CAVEATS.md` | the ledger: every trap, its rule, its fixture |
 | `DESIGN-LANGUAGE.md` | one decision per screen, motion, voice, placement slots, layout shelf |
 | `ROADMAP.md` | M0–M6 mapped to slices S1–S13 |
-| `POLISH.md` | S13: acceptance S1 by clicking alone, the keyboard twins, the long and mirrored runs, the budget |
+| `../archive/plan/POLISH.md` | S13: acceptance S1 by clicking alone, the keyboard twins, the long and mirrored runs, the budget |
 
 ## Non-negotiables
 
@@ -68,11 +68,11 @@ assumes:
 The first screen after **New form** has two large cards and nothing else:
 
 - **Start from paper.** Drop a PDF, a Word file or a photographed page, paste text, or scan with a
-  phone (the existing LAN scan). Loppa reads it locally (`IMPORT-PIPELINE.md`) and opens the
+  phone (the existing LAN scan). Loppa reads it locally (`../archive/plan/IMPORT-PIPELINE.md`) and opens the
   **review screen**, which is never skipped. *As built (S10):* the door makes a blank form and
   opens its review at `/forms/:id/import`, for a PDF with a text layer, a Word file or pasted text.
   *Since S14* it reads a photographed page and a scanned PDF too, word by word by OCR, on this
-  device (`SCANS.md`); the editor's paper import (ADR 0004), where a page becomes boxes drawn by
+  device (`../archive/plan/SCANS.md`); the editor's paper import (ADR 0004), where a page becomes boxes drawn by
   hand, is unchanged beside it.
 - **Start from questions.** The guided conversation. Nothing is required first: the brand kit can
   be answered later, and every skipped answer is recorded as "use Loppa's default" so the draft is
@@ -118,7 +118,7 @@ FieldProvenance = {
 ```
 
 The conversation's working memory (`pending`) sits beside the sidecar in the builder's state
-(`BUILDER-GRAPH.md`, "State and paths"), not inside it. S2 built the sidecar as far as the
+(`../archive/plan/BUILDER-GRAPH.md`, "State and paths"), not inside it. S2 built the sidecar as far as the
 first line of `FieldProvenance` (`packages/shared/src/builder/state.ts`); the rest arrives with the
 slices named.
 
@@ -159,7 +159,7 @@ Existing forms keep the ids they have.
 
 ## The conversation
 
-The conversation is a graph of nodes declared as data (`BUILDER-GRAPH.md`). A node asks one thing,
+The conversation is a graph of nodes declared as data (`../archive/plan/BUILDER-GRAPH.md`). A node asks one thing,
 offers two to four large answers (or a stepper, a picker, a text entry), and each answer is a
 **patch** — a declarative list of `set` / `add` / `remove` / `insert` / `reorder` operations on the
 draft and the sidecar. Patches are the only way the conversation changes anything.
@@ -168,7 +168,7 @@ draft and the sidecar. Patches are the only way the conversation changes anythin
   (`builder/machine.ts`). Back is "apply the last inverse". Jumping to a breadcrumb is "replay the
   log up to there". Because the reducer is pure, **replaying the log reproduces the draft** — equal
   as canonical JSON, which is all `jsonb` keeps anyway — and `machine.test.ts` proves it over every
-  answer from every reachable state, not a comment (`BUILDER-GRAPH.md`, "The machine").
+  answer from every reachable state, not a comment (`../archive/plan/BUILDER-GRAPH.md`, "The machine").
 - **Autosave.** The log saves to `builder_sessions` (one row per form and author, migration 0019;
   `GET/PUT /v1/forms/:id/builder-session`, optimistic concurrency on a version number; the cursor is
   where the log leads, so it is not stored twice). A refresh or
@@ -188,9 +188,9 @@ draft and the sidecar. Patches are the only way the conversation changes anythin
   the brand kit has, for a moment, a form with nothing to answer yet — the same as a blank form in
   the classic editor, which publishing refuses with a message.)
 - **Free text** is offered at every node ("Or type it — e.g. 'four buttons in a row'") and read by
-  the deterministic ladder in `INTENT-LADDER.md`. A reading applies only above its threshold, and
+  the deterministic ladder in `../archive/plan/INTENT-LADDER.md`. A reading applies only above its threshold, and
   shows what it read in a chip that undoes it in one press.
-- **The guess** (§6 of the brief; S11, `BELIEF.md`): a belief over the templates, updated by each
+- **The guess** (§6 of the brief; S11, `../archive/plan/BELIEF.md`): a belief over the templates, updated by each
   answer's declared scores, with yes / no / not sure questions chosen one at a time for what they
   would tell it (five at most); at p ≥ 0.80 Loppa asks "This looks like an event registration —
   right?" (Right / Sort of / No). "Right" seeds the template, shows the whole form to change in
@@ -304,7 +304,7 @@ fixtures/        numbering/  ir/  documents/ (the corpus)  sessions/ (recorded c
 ## Acceptance scenarios
 
 The definition of done; the team demos exactly these, and each is a Playwright journey with a
-keyboard-only twin (S13: `POLISH.md` lists where each lives).
+keyboard-only twin (S13: `../archive/plan/POLISH.md` lists where each lives).
 
 **S1 — Click-through only.** From an empty workspace, clicking only (no typing except the form's
 own labels), a user produces a published form with: a heading, a logo, a required name field, a
@@ -312,7 +312,7 @@ single-choice question with 4 options rendered as pills in the brand colour, an 
 paragraph field, and a consent checkbox. Every question they were asked made sense to a
 non-technical person. *(The consent checkbox's text is typed by the person or chosen from their
 organisation's own authored texts; see "Wording Loppa does not write".) Built in S13a
-(`POLISH.md`): the heading is the form's name ("What is your form called?"), the paragraph and the
+(`../archive/plan/POLISH.md`): the heading is the form's name ("What is your form called?"), the paragraph and the
 box come from "How should people answer?", and the box is a yes/no drawn as one checkbox that must
 be ticked when required; pressed in `e2e/acceptance-s1.spec.ts`, by pointer and by keyboard.*
 
@@ -344,7 +344,7 @@ about unresolved things (answer types, validation, option shapes), never re-asks
 already determined, and never reorders the user's questions. *Mechanism: every imported field's
 sidecar records which decisions the import made and at what bucket; the graph's `when` guards
 read `sidecar.fields[id].decided`, so a decided slot's node is skipped with an explanation
-("Already decided"). Built in S12a: `CONVERGENCE.md`; pressed in `e2e/review.spec.ts`.*
+("Already decided"). Built in S12a: `../archive/plan/CONVERGENCE.md`; pressed in `e2e/review.spec.ts`.*
 
 ## Where the brief was fitted to the repository
 

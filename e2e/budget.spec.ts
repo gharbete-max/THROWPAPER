@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { db, signInAs } from './support.js';
 
 /**
- * The performance budget, in the browser — `CAVEATS.md` #42 (`perf-budget`), `docs/plan/POLISH.md`
+ * The performance budget, in the browser — `CAVEATS.md` #42 (`perf-budget`), `docs/archive/plan/POLISH.md`
  * S13c. The built app, against a real server: an answer's next question is on the page within a
  * frame (16 ms), and a wait shorter than 150 ms shows no waiting picture at all. (Twenty pages in
  * under four seconds, the ladder's budget and the graph's load are held in `packages/shared`.)

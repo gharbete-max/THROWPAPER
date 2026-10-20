@@ -39,7 +39,7 @@ export interface PaperPdf {
   /**
    * The whole document as stage 1's raw document: its words and its printed rules. A scanned page
    * — a picture, with fewer than {@link SCANNED_RUNS} text runs — is read by `ocr` when one is
-   * given (S14, `docs/plan/SCANS.md`), and is empty without it.
+   * given (S14, `docs/archive/plan/SCANS.md`), and is empty without it.
    */
   raw(options?: { ocr?: (pageIndex: number) => Promise<RecognisedWords> }): Promise<RawDocument>;
   /**

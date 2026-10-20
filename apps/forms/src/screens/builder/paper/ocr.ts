@@ -16,7 +16,7 @@ export { READ_LONG_SIDE, tessLangs } from './ocr-words.js';
  *
  * ## Words, for the review screen (S14)
  *
- * `openPageReader` reads a page word by word for stage 1 (`ocr-words.ts`, `docs/plan/SCANS.md`),
+ * `openPageReader` reads a page word by word for stage 1 (`ocr-words.ts`, `docs/archive/plan/SCANS.md`),
  * on the path ADR 0018 proposes: the stages read the words, and nothing becomes a question until
  * the author has been through the review, with the picture beside it and a word Tesseract was
  * unsure of holding its question below `auto`.
@@ -64,7 +64,7 @@ export async function readPage(image: Blob, locale: string): Promise<TextRun[]> 
   }
 }
 
-/** How long one page may take to read before the author is told (`docs/plan/SCANS.md`). */
+/** How long one page may take to read before the author is told (`docs/archive/plan/SCANS.md`). */
 export const OCR_PAGE_TIMEOUT_MS = 60_000;
 
 export class ReadingPageTooSlow extends Error {

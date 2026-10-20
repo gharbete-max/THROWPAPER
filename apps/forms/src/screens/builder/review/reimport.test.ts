@@ -24,7 +24,7 @@ import {
 import { startReview } from './review.js';
 
 /**
- * "Update the form" (S12c, `docs/plan/CONVERGENCE.md`) on readings made by the stages themselves:
+ * "Update the form" (S12c, `docs/archive/plan/CONVERGENCE.md`) on readings made by the stages themselves:
  * a form made from a paste, the paste changed, read again, compared, and brought up to date
  * through the machine.
  */

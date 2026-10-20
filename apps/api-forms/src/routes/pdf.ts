@@ -5,23 +5,11 @@ import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
 import type { PdfRenderer } from '../documents/render.js';
 import { wordToPdf } from '../pdf/word.js';
-import {
-  arrangePdf,
-  ArrangeRefusal,
-  MAX_FILE_BYTES,
-  MAX_FILES,
-  type ArrangeRefusalCode,
-} from '../pdf/arrange.js';
+import { arrangePdf, ArrangeRefusal, MAX_FILES, type ArrangeRefusalCode } from '../pdf/arrange.js';
 import { fillPdf, pdfFields } from '../pdf/fill.js';
 import { copyPdf } from '../pdf/copy.js';
 import { shrinkPdf } from '../pdf/shrink.js';
-
-/**
- * The parser's own file limit is set well above ours. Reaching it fails the whole request stream
- * (`FST_FILES_LIMIT`, then a premature close), so the count that matters is made here, and files
- * past it are read and thrown away.
- */
-const PARSER_FILE_LIMIT = 100;
+import { readPdfUpload, sendPdf } from './pdf-upload.js';
 
 const Plan = z.array(
   z.object({
@@ -76,78 +64,9 @@ const errors = {
   413: api.ErrorResponse,
 };
 
-type Upload = { files: Uint8Array[]; fields: Map<string, string> };
-
-/**
- * The multipart body of a PDF route: its files and its text fields, or `null` once the reply has
- * said why the body cannot be used (too large, too many files, none).
- */
-async function readUpload(
-  request: FastifyRequest,
-  reply: FastifyReply,
-  filesRequired = true,
-): Promise<Upload | null> {
-  const files: Uint8Array[] = [];
-  const fields = new Map<string, string>();
-  try {
-    for await (const part of request.parts({
-      limits: {
-        files: PARSER_FILE_LIMIT,
-        fileSize: MAX_FILE_BYTES,
-        fields: 4,
-        fieldSize: 1024 * 1024,
-      },
-    })) {
-      if (part.type === 'file') {
-        // One file past the limit is enough to know; the rest are read and thrown away rather
-        // than abandoned, because abandoning a half-read upload fails the request stream.
-        if (files.length > MAX_FILES) {
-          await part.toBuffer();
-          continue;
-        }
-        const content = await part.toBuffer();
-        if (part.file.truncated) {
-          void reply.code(413).send({
-            error: {
-              code: 'too-large',
-              message: `A file must be ${Math.floor(MAX_FILE_BYTES / 1024 / 1024)}MB or smaller`,
-            },
-          });
-          return null;
-        }
-        files.push(new Uint8Array(content));
-      } else if (typeof part.value === 'string') {
-        fields.set(part.fieldname, part.value);
-      }
-    }
-  } catch (error) {
-    // The parser's own limit errors (a field or part too large) carry a code of this shape.
-    if (((error as { code?: string }).code ?? '').startsWith('FST_')) {
-      void reply.code(413).send({
-        error: { code: 'too-large', message: 'The request is too large' },
-      });
-      return null;
-    }
-    throw error;
-  }
-
-  if (files.length > MAX_FILES) {
-    void reply.code(413).send({
-      error: { code: 'too-many-files', message: `At most ${MAX_FILES} files at once` },
-    });
-    return null;
-  }
-  if (files.length === 0 && filesRequired) {
-    void reply.code(400).send({
-      error: {
-        code: 'no-file',
-        message: 'Send at least one PDF or photograph as multipart form data',
-      },
-    });
-    return null;
-  }
-  return { files, fields };
-}
+/** The multipart body of a PDF route (see `readPdfUpload`); `null` once the reply has said why not. */
+const readUpload = (request: FastifyRequest, reply: FastifyReply, filesRequired = true) =>
+  readPdfUpload(request, reply, MAX_FILES, { filesRequired, fieldSize: 1024 * 1024 });
 
 /** A refusal as the reply a screen can show; anything else is a bug and rethrown. */
 function refuse(reply: FastifyReply, error: unknown) {
@@ -166,14 +85,6 @@ const jsonOf = (text: string | undefined): unknown => {
     return undefined;
   }
 };
-
-function sendPdf(reply: FastifyReply, pdf: Uint8Array) {
-  return reply
-    .header('content-type', 'application/pdf')
-    .header('content-disposition', 'attachment; filename="loppa.pdf"')
-    .header('cache-control', 'no-store')
-    .send(Buffer.from(pdf));
-}
 
 export function registerPdfRoutes(
   app: FastifyInstance,

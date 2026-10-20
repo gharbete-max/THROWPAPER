@@ -1,6 +1,6 @@
 {
   "language": "zh",
-  "source": "docs/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. Chinese has no spaces: these are matched as text within a clause, the single numerals 一–九, 十 and 百 compose (二十一 is 21), and stop words are the bigram tokens they stand for. 不 alone is in too many ordinary words to be a negator (按钮不错 is 'the buttons are nice'), so the negators are the words it makes. A word added here is a behaviour change: it needs a row in fixtures/ladder/zh.json in the same commit.",
+  "source": "docs/archive/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. Chinese has no spaces: these are matched as text within a clause, the single numerals 一–九, 十 and 百 compose (二十一 is 21), and stop words are the bigram tokens they stand for. 不 alone is in too many ordinary words to be a negator (按钮不错 is 'the buttons are nice'), so the negators are the words it makes. A word added here is a behaviour change: it needs a row in fixtures/ladder/zh.json in the same commit.",
   "decimalSeparator": ".",
   "numbers": {
     "零": 0,

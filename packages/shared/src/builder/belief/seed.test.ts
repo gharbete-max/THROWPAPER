@@ -13,7 +13,7 @@ import { RECIPES, recipeOf } from './recipes.js';
 import { seedChanges, type SeedSource } from './seed.js';
 
 /**
- * What "Right" adds — `docs/plan/BELIEF.md`: the recipe's questions, as the conversation's own, in
+ * What "Right" adds — `docs/archive/plan/BELIEF.md`: the recipe's questions, as the conversation's own, in
  * one step Back undoes; and for the two recipes rule 8 keeps out of the catalogue, structure and a
  * bracketed placeholder only.
  */

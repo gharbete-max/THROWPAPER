@@ -1,5 +1,5 @@
 /**
- * The Layout IR, `irVersion: 1` — copied from `docs/plan/LAYOUT-IR.md`, which is the contract.
+ * The Layout IR, `irVersion: 1` — copied from `docs/archive/plan/LAYOUT-IR.md`, which is the contract.
  *
  * A change to any type here is a new `irVersion`, a note in `docs/adr/0018-document-import.md` and a
  * migration of every fixture in `fixtures/`; `schema.ts` is typed against these interfaces, so the

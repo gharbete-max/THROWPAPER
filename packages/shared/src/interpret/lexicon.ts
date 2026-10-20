@@ -15,7 +15,7 @@ import zh from './gazetteers/zh.json';
 import { clauseAt, isCjk, phraseTokens, type Probed, type Token } from './text.js';
 
 /**
- * The words the ladder knows in each shipped language, as data — `docs/plan/INTENT-LADDER.md`
+ * The words the ladder knows in each shipped language, as data — `docs/archive/plan/INTENT-LADDER.md`
  * (ADR 0021: JSON, provenance in a field, schema-validated on load). One file per language in
  * `gazetteers/`, so whoever maintains a language finds all of its words in one place, and
  * `currency.json` for the markers that mean the same in every language.

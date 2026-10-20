@@ -29,7 +29,7 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
 
 ## Decisions of 2026-10-12 (the owner's)
 
-1. **Send includes campaigns** (`SPEC-mailer.md`), built inside Documents, after Sign hand-off.
+1. **Send includes campaigns** (`archive/SPEC-mailer.md`), built inside Documents, after Sign hand-off.
    First comes batch send: one personalised PDF per recipient from a list, for monthly invoices.
 2. **Editing includes a PDF's text**, in two tiers: add a text box, cover an area, replace text by
    covering and writing over it; and true redaction that removes the text underneath. A Word

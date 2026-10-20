@@ -180,7 +180,7 @@ describe('translations for schema-driven strings', () => {
 /**
  * A string left in English. A missing key is a compile error and an empty one fails above; what
  * nothing caught was a translation that is the English, copied — it compiles, it renders, and it
- * reads as finished (`docs/plan/POLISH.md`, S13c). A translation may equal the English only where
+ * reads as finished (`docs/archive/plan/POLISH.md`, S13c). A translation may equal the English only where
  * it says nothing in any language (placeholders, punctuation, digits), where it is a name or a
  * format that is the same everywhere, or where this list says the language really uses that word.
  * A new entry is a translator's decision, made here where a reviewer sees it.

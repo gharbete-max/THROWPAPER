@@ -1,6 +1,6 @@
 # Deploying
 
-`START-HERE.md` phase 0 said "deployed to the real hosting target — day one, not at the end". That
+`archive/START-HERE.md` phase 0 said "deployed to the real hosting target — day one, not at the end". That
 did not happen, and it has been the thing blocking the phase 4 checkpoint ever since: you cannot
 verify that email lands in real inboxes without a real domain, and you cannot open a phone camera
 on the check-in screen without HTTPS.
@@ -17,7 +17,7 @@ This document is what makes that decision actionable. It does not make it for yo
   the `DocumentStore` interface is where that goes.
 - **HTTPS.** The check-in camera will not open without it. `localhost` is exempt, a phone on your
   network is not.
-- **A region.** `SPEC-mailer.md` §0 has `{{DATA_REGION}}`, and SES is already chosen as
+- **A region.** `archive/SPEC-mailer.md` §0 has `{{DATA_REGION}}`, and SES is already chosen as
   `eu-north-1` (Stockholm). Putting the application somewhere else does not break anything, but it
   does make the residency story harder to state.
 
@@ -146,7 +146,7 @@ of one without the other is not a backup.
 2. **Verify the sending domain.** Publish SPF, DKIM and DMARC, then use the verification screen
    until all three pass. Sending from an unverified domain is refused, with no override.
 3. **Send to a real Gmail and a real Outlook address** and confirm neither lands in spam. This is
-   `START-HERE.md`'s own check and there is no substitute for it.
+   `archive/START-HERE.md`'s own check and there is no substitute for it.
 4. **Scan a QR with a phone.** No test replaces a camera.
 
 ## On one PC instead

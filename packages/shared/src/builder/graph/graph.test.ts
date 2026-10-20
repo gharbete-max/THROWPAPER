@@ -5,7 +5,7 @@ import { optionsOf, type Node } from './schema.js';
 import { opProblem, parsePath, resolvePath } from './paths.js';
 
 /**
- * The shipped graph, held to what `docs/plan/BUILDER-GRAPH.md` says slice S1 ships.
+ * The shipped graph, held to what `docs/archive/plan/BUILDER-GRAPH.md` says slice S1 ships.
  *
  * `validate.test.ts` proves the rules catch mistakes; this proves the graph is the one planned —
  * the nodes, the kinds, and the one promise S1 can already check from the data alone.

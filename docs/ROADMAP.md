@@ -108,7 +108,7 @@ backup and restore rehearsal, load test of the grid and bulk PDF generation.
 **A5+ — the predictive builder and document import (built 2026-09-25 to 2026-10-06, PR #147).** A
 guided, click-through conversation as the way into A5's builder, and paper, Word, pasted text, a
 scan or a photograph turned into a reviewed draft. Planned in `docs/plan/` with its own milestones
-(`docs/plan/ROADMAP.md`); its decisions are ADRs 0017–0021, accepted on 2026-10-06.
+(`docs/archive/plan/ROADMAP.md`); its decisions are ADRs 0017–0021, accepted on 2026-10-06.
 
 **A15.** Field styling and media.
 
@@ -182,8 +182,8 @@ erasure.
 ## Expansion — signing first (approved 2026-09-23)
 
 From the owner's expansion brief. Gap analysis, conflicts and the contract proposal are in
-`docs/EXPANSION.md`; the decisions are ADRs 0009–0015. **The owner decided on 2026-09-23 that the
-expansion starts now, beside the v0.1 launch blockers** — `START-HERE.md`'s "after the first real
+`docs/archive/EXPANSION.md`; the decisions are ADRs 0009–0015. **The owner decided on 2026-09-23 that the
+expansion starts now, beside the v0.1 launch blockers** — `archive/START-HERE.md`'s "after the first real
 event" is overridden for this track only. The v0.1 rows in `LAUNCH-CHECKLIST.md` §1 still block
 *launch*; they no longer block *building*.
 
@@ -243,7 +243,7 @@ PGlite) and P1c-3 (Forms sends PDFs to Sign, §5.4) done — `docs/PROGRESS.md` 
 - *Needs:* broker chosen and a test tenant; counsel's wording for method/level labels.
 
 **P3 — Mailer document sends: rent, invoices, admission cards + QR check-in.** (contract)
-- Contract v2 (`docs/EXPANSION.md` §3) — schemas and `manifest.ts` first, then `contract:check`.
+- Contract v2 (`docs/archive/EXPANSION.md` §3) — schemas and `manifest.ts` first, then `contract:check`.
 - Mailer B2 (contacts), B3 (provider), B6 (transactional + `POST /v1/messages`), B9 (scoped
   suppression — rent is never stopped by a marketing unsubscribe), B10 (recurring + approval).
 - Invoice/rent runs push document audiences; admission cards sent through Mailer.

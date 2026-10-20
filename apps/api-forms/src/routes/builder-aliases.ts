@@ -29,7 +29,7 @@ import type { Repositories } from '../db/repositories/index.js';
 import type { BuilderAliasRecord } from '../db/repositories/types.js';
 
 /**
- * The organisation's learned aliases — `docs/plan/INTENT-LADDER.md`, "Aliases" (S6).
+ * The organisation's learned aliases — `docs/archive/plan/INTENT-LADDER.md`, "Aliases" (S6).
  *
  * - `GET /v1/builder/aliases`: every learned alias, for the ladder to read with the built-in ones.
  * - `POST /v1/builder/aliases`: "Remember 'blabla' as a way to say this?" — pressed. Never called

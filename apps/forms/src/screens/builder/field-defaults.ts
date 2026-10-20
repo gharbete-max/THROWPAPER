@@ -1,19 +1,5 @@
-import {
-  EntryField,
-  FIELD_TYPES,
-  MAX_UPLOAD_BYTES,
-  type Field,
-  type FieldType,
-} from '@tp/shared/forms';
+import { EntryField, MAX_UPLOAD_BYTES, type Field, type FieldType } from '@tp/shared/forms';
 import { currentMessages } from '../../lib/messages/index.js';
-
-/**
- * A new field of each type, ready to drop on the canvas.
- *
- * The key is generated and unique, because a duplicate key silently loses answers — the publish
- * endpoint refuses one, and the operator should never have to think about it.
- */
-export const PALETTE: readonly FieldType[] = FIELD_TYPES;
 
 /**
  * The palette, grouped.

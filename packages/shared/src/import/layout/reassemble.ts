@@ -30,7 +30,7 @@ import {
 import { columnRegions, type CutDecision, type Region } from './xycut.js';
 
 /**
- * Stage 2, reassemble: raw words in, a layout document out — `docs/plan/IMPORT-PIPELINE.md` §2,
+ * Stage 2, reassemble: raw words in, a layout document out — `docs/archive/plan/IMPORT-PIPELINE.md` §2,
  * step by step; each function below names the step it implements, and each decision in the debug
  * artifact names its rule (the table in §2).
  *

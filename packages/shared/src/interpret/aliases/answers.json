@@ -1,5 +1,5 @@
 {
-  "source": "docs/plan/BELIEF.md, \"The questions\": every guess question is answered yes, no or not sure, so each language's ways of saying those three are written once here and given, when the built-in aliases load, to every question listed in `nodes` — the same entries one per question would be, without shipping them once for each. The card's own label is first; `pnpm builder:validate` holds the list to the graph.",
+  "source": "docs/archive/plan/BELIEF.md, \"The questions\": every guess question is answered yes, no or not sure, so each language's ways of saying those three are written once here and given, when the built-in aliases load, to every question listed in `nodes` — the same entries one per question would be, without shipping them once for each. The card's own label is first; `pnpm builder:validate` holds the list to the graph.",
   "answersVersion": 1,
   "createdAt": "2026-09-29",
   "nodes": [

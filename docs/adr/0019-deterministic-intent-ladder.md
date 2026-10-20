@@ -20,7 +20,7 @@ Node and the desktop's Electron — rarely, which is the worst kind of rarely.
 
 ## Decision
 
-1. **A ladder of deterministic methods** reads free text (`docs/plan/INTENT-LADDER.md`): exact and
+1. **A ladder of deterministic methods** reads free text (`docs/archive/plan/INTENT-LADDER.md`): exact and
    alias match, normalised token match, weighted keywords, fuzzy match (trigram Dice and
    Jaro-Winkler, Levenshtein for long words), gazetteers and patterns, a multi-slot parse, list
    extraction, ranking within the current group — and, when nothing clears its threshold, a visual
@@ -47,7 +47,7 @@ Node and the desktop's Electron — rarely, which is the worst kind of rarely.
    out of the catalogue), updated only by `score` weights declared on the graph's options,
    three-state (Right / Sort of / No at 1.0 / 0.5 / 0.0), with the next question chosen by the
    largest expected reduction in belief entropy — computed with the same integers — and the three
-   strongest contributing answers always shown. As built in S11 (`docs/plan/BELIEF.md`), a score
+   strongest contributing answers always shown. As built in S11 (`docs/archive/plan/BELIEF.md`), a score
    is normalised over its node's scored options, `P(option | recipe) = e^score / Σ e^score`,
    rather than added as it stands: only then can a question's answers be weighed against each
    other, which choosing the question that tells most requires.
@@ -74,7 +74,7 @@ All five decisions are built as written:
   - `interpret/ln.ts`, an integer logarithm;
   - `interpret/exp.ts`, an integer exponential;
   - `interpret/sigmoid.json`, 321 values from −8 000 to +8 000 millinats in steps of 50.
-- **The guess** (S11, `docs/plan/BELIEF.md`): a belief over 25 recipes (the 23 templates and the two
+- **The guess** (S11, `docs/archive/plan/BELIEF.md`): a belief over 25 recipes (the 23 templates and the two
   rule 8 keeps structure-only), shown at 800 per mille.
 
 Three things are worth knowing:

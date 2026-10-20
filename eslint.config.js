@@ -47,7 +47,7 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
   {
-    files: ['apps/forms/**/*.tsx', 'apps/mailer/**/*.tsx', 'apps/sign/**/*.tsx'],
+    files: ['apps/forms/**/*.tsx', 'apps/sign/**/*.tsx'],
     plugins: { 'react-hooks': reactHooks },
     rules: reactHooks.configs.recommended.rules,
   },
@@ -129,17 +129,17 @@ function desktopHost() {
             {
               // A regex, not a gitignore-style group: a group cannot re-include a subpath of a
               // package it has excluded, so `!@tp/api-forms/desktop` never took effect.
-              regex:
-                '^@tp/(?:api-forms(?!/desktop$)|api-sign(?!/local$)|forms|sign|mailer|api-mailer)(?:/.*)?$',
+              regex: '^@tp/(?:api-forms(?!/desktop$)|api-sign(?!/local$)|forms|sign)(?:/.*)?$',
               message:
                 'The desktop shell starts products through their entry points only (@tp/api-forms/desktop, @tp/api-sign/local). ADR 0016.',
             },
             {
               group: [
                 '**/apps/*/src/**',
-                ...['forms', 'api-forms', 'sign', 'api-sign', 'mailer', 'api-mailer'].flatMap(
-                  (app) => [`../../${app}/**`, `../../../${app}/**`],
-                ),
+                ...['forms', 'api-forms', 'sign', 'api-sign'].flatMap((app) => [
+                  `../../${app}/**`,
+                  `../../../${app}/**`,
+                ]),
               ],
               message: 'The desktop shell does not reach into another app by path. ADR 0016.',
             },
@@ -158,7 +158,6 @@ function productBoundaries() {
   const products = {
     // `desktop` hosts products rather than being one; its own rule is `desktopHost` above.
     forms: ['forms', 'api-forms'],
-    mailer: ['mailer', 'api-mailer'],
     sign: ['sign', 'api-sign'],
   };
   return Object.entries(products).map(([name, apps]) => {

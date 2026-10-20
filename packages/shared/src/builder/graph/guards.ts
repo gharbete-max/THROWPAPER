@@ -6,7 +6,7 @@ import { parsePath, resolvePath, type ParsedPath } from './paths.js';
  * A guard decides whether a node is asked. It must be impossible for one to loop, to throw at run
  * time, or to reach outside the state it is given, so there is no `eval`, no `Function`, and no
  * arithmetic: a guard is parsed once into a tree and the tree is interpreted. The grammar
- * (`docs/plan/BUILDER-GRAPH.md`, "The when language"):
+ * (`docs/archive/plan/BUILDER-GRAPH.md`, "The when language"):
  *
  *     expr = or
  *     or   = and ( '||' and )*

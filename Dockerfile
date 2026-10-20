@@ -29,9 +29,7 @@ RUN corepack enable
 # Manifests first, so a dependency install is only redone when dependencies change.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/api-forms/package.json apps/api-forms/
-COPY apps/api-mailer/package.json apps/api-mailer/
 COPY apps/forms/package.json apps/forms/
-COPY apps/mailer/package.json apps/mailer/
 COPY apps/api-sign/package.json apps/api-sign/
 COPY apps/sign/package.json apps/sign/
 COPY apps/desktop/package.json apps/desktop/

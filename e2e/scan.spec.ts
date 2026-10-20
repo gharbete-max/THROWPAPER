@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { db, signInAs } from './support.js';
 
 /**
- * Photographs and scans through the stages — slice S14, `docs/plan/SCANS.md`. A photograph of a
+ * Photographs and scans through the stages — slice S14, `docs/archive/plan/SCANS.md`. A photograph of a
  * paper form, and a scanned PDF with no text in it, given to "Start from paper": read word by word
  * by the real Tesseract, in its own worker, from this origin, then by the stages like any other
  * document, and added. Swedish, as the author who has these papers works: the interface's language

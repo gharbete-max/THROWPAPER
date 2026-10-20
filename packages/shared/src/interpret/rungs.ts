@@ -9,7 +9,7 @@ import type { NodeWords, Vocabulary, Word } from './vocabulary.js';
 
 /**
  * The rungs that read one node — T0 exact, T1 tokens, T2 weighted keywords, T3 fuzzy, T4 values
- * — with negation and "no number from vagueness" on every one (`docs/plan/INTENT-LADDER.md`,
+ * — with negation and "no number from vagueness" on every one (`docs/archive/plan/INTENT-LADDER.md`,
  * S3). `ladder.ts` decides the order the rungs are tried in, and adds the rungs that read a group
  * of nodes (T5–T7).
  *

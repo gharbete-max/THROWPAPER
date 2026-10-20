@@ -4,7 +4,7 @@ import { readingFile, type Reading } from './reading.js';
 
 /**
  * What the import read from a document, before anything becomes a question — the M4 demo in
- * `docs/plan/ROADMAP.md`: a two-column PDF and a Word file with real numbering read in order, and
+ * `docs/archive/plan/ROADMAP.md`: a two-column PDF and a Word file with real numbering read in order, and
  * what was read downloadable.
  *
  * It shows the numbered items in reading order, each at its level, and says plainly that nothing

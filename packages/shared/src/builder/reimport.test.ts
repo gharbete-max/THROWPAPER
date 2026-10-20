@@ -8,7 +8,7 @@ import { fromSession, toSession } from './session.js';
 import { MachineError } from './state.js';
 
 /**
- * "Update the form" (S12c, `docs/plan/CONVERGENCE.md`): the document read again, and the form
+ * "Update the form" (S12c, `docs/archive/plan/CONVERGENCE.md`): the document read again, and the form
  * brought up to date with it as one step in the conversation's log.
  */
 

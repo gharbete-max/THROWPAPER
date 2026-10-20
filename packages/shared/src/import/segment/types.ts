@@ -1,5 +1,5 @@
 /**
- * What stage 4 produces — `docs/plan/IMPORT-PIPELINE.md` §4, which is the contract.
+ * What stage 4 produces — `docs/archive/plan/IMPORT-PIPELINE.md` §4, which is the contract.
  *
  * Every line a reader reads is in exactly one segment, in reading order of its first line; page
  * furniture is in none. The one exception is a line with two label-and-blank pairs on it, which is

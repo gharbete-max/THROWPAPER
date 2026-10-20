@@ -50,22 +50,3 @@ export async function resolveFormAccess(
 
   return { form, access, shareCount: shares.length, sharedRole: mine };
 }
-
-/**
- * Which of these forms this person may read, answered once for a set.
- *
- * An event's attendee list spans every form pointed at it, so the alternative is `resolveFormAccess`
- * inside a loop over submissions — two queries per row, and the same form resolved forty times for
- * a forty-person event. This asks once per distinct form.
- */
-export async function readableFormIds(
-  repos: Repositories,
-  auth: Auth,
-  formIds: Iterable<string>,
-): Promise<Set<string>> {
-  const distinct = [...new Set(formIds)];
-  const resolved = await Promise.all(
-    distinct.map(async (id) => ((await resolveFormAccess(repos, auth, id)) ? id : null)),
-  );
-  return new Set(resolved.filter((id): id is string => id !== null));
-}

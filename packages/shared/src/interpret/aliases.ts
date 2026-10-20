@@ -17,7 +17,7 @@ import { LANGUAGES, type Language } from './lexicon.js';
 import { compareCodePoints, keyOf } from './text.js';
 
 /**
- * Aliases — the ways of saying an option that T0–T3 match (`docs/plan/INTENT-LADDER.md`,
+ * Aliases — the ways of saying an option that T0–T3 match (`docs/archive/plan/INTENT-LADDER.md`,
  * "Aliases: `aliases.json`"). The built-in ones ship as `aliases/<language>.json`; learned ones
  * (S6) are exported and imported as a file of exactly the same shape, so one schema and one writer
  * serve both.
@@ -110,7 +110,7 @@ export const BUILTIN_ALIAS_FILES: Readonly<Record<Language, unknown>> = {
  * The shared answers (S11): questions whose cards are all yes, no and not sure are said the same
  * way, so each language's ways are written once, in `aliases/answers.json`, and given to every
  * question it lists when the built-in aliases load — the entries one per question would be, without
- * shipping them once for each (`docs/plan/BELIEF.md`, "The questions"). The card's label is first.
+ * shipping them once for each (`docs/archive/plan/BELIEF.md`, "The questions"). The card's label is first.
  */
 export const AnswersFile = z
   .object({

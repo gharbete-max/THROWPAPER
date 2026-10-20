@@ -1,6 +1,6 @@
 {
   "language": "fr",
-  "source": "docs/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. Hyphenated numbers are matched word by word: 'dix-sept' is the phrase 'dix sept'. A word added here is a behaviour change: it needs a row in fixtures/ladder/fr.json in the same commit.",
+  "source": "docs/archive/plan/INTENT-LADDER.md — normalisation step 6, T1's stop words, 'No number from vagueness', 'Negation is honoured', and T4's dates and currencies. Hyphenated numbers are matched word by word: 'dix-sept' is the phrase 'dix sept'. A word added here is a behaviour change: it needs a row in fixtures/ladder/fr.json in the same commit.",
   "decimalSeparator": ",",
   "numbers": {
     "zéro": 0,

@@ -12,7 +12,7 @@ import {
 } from './reimport.js';
 
 /**
- * Stage 9 — `docs/plan/CONVERGENCE.md` (S12c). Each fixture in `fixtures/reimport/` is a form and
+ * Stage 9 — `docs/archive/plan/CONVERGENCE.md` (S12c). Each fixture in `fixtures/reimport/` is a form and
  * the document read again, with what the comparison must give, written by hand before the code;
  * some also say what the person chose and what is then done. Compared whole.
  */

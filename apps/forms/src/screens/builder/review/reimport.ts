@@ -13,7 +13,7 @@ import { importOf } from './fields.js';
 import type { ReviewItem } from './review.js';
 
 /**
- * A form read from a document, and the document read again — `docs/plan/CONVERGENCE.md` (S12c).
+ * A form read from a document, and the document read again — `docs/archive/plan/CONVERGENCE.md` (S12c).
  * Pure: what the review screen shows under "Compared with your form", and what "Update the form"
  * hands the machine. The comparison itself is `@tp/shared/import`'s (`compareImport`).
  */

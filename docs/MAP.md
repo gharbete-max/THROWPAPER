@@ -2,7 +2,7 @@
 
 A router for a coding session, written to save tokens. It summarises `docs/VISION.md`, `CLAUDE.md`,
 `docs/HANDOVER.md` and the ADRs; where it is thin, the linked file is the authority. **Change this
-file in the same PR that changes an area** (a stale map is worse than none). Last updated 2026-10-20.
+file in the same PR that changes an area** (a stale map is worse than none). Last updated 2026-10-20 (cleanup: Mailer stubs, the old wizard and finished plans removed).
 
 ## What Loppa is
 A lightweight, **local-first office helper**, not Acrobat. A room of three independent catchers
@@ -22,7 +22,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 5. No hard-coded strings, colours, fonts: strings are keys in **all twelve** catalogues
    (`apps/forms/src/lib/messages/`: da de en es fi fr is ja nb ru sv zh), colours/type from `packages/tokens`.
 6. Exact arithmetic (bigint minor units, never floats). ICU collation for sorting; numbers sort numerically.
-7. Products never import each other (Forms, Sign, Mailer stub) — only HTTP via `docs/CONTRACT.md`.
+7. Products never import each other (Forms, Sign) — only HTTP via `docs/CONTRACT.md`.
 8. Only permissive licences (ADR 0015); weights need their own licence check. No new dependency without need.
 9. Page work (merge/split/redact) stays server-side with `pdf-lib`; untrusted PDFs pass `uploads/pdf-guard.ts`.
 10. Monetisation, company, terms, pricing are **out of scope** for development. Don't raise them.
@@ -31,7 +31,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Working on | Code | Read first |
 | --- | --- | --- |
 | Room, catchers, arrival | `apps/forms/src/screens/Room.tsx`, `packages/tokens/src/room.ts` | ADR 0022, `docs/plan/DOCUMENTS.md` §2 |
-| Scan (pages, photos, filters, digital copy, invoice, PDF text/redact, Word→PDF) | `screens/Scan.tsx`, `screens/scan-*`, `screens/invoice-scan`, `api-forms/src/pdf/`, `routes/pdf*.ts`, `packages/shared/src/{import,payable}` | `docs/plan/IMPROVEMENTS.md`, `NEXT.md`, `SCANS.md` |
+| Scan (pages, photos, filters, digital copy, invoice, PDF text/redact, Word→PDF) | `screens/Scan.tsx`, `screens/scan-*`, `screens/invoice-scan`, `api-forms/src/pdf/`, `routes/pdf*.ts`, `packages/shared/src/{import,payable}` | `docs/plan/IMPROVEMENTS.md`, `NEXT.md`, `archive/plan/SCANS.md` |
 | Forms (builder, fill, draft PDF) | `screens/Forms.tsx`, `FillIn.tsx`, `screens/builder/`, `packages/shared/src/{builder,interpret,import}` | ADRs 0017–0021, `docs/plan/PREDICTIVE-BUILDER.md`, `CAVEATS.md` |
 | Sign | `screens/Signing*`, `screens/signing/`, `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
 | Send (single, batch, campaigns, reply helper) | `screens/Send*`, `screens/send/`, `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
@@ -105,6 +105,7 @@ photographs, model cards and template covers (#208); vision tuning (#209: tables
 Q8_0 projector preferred, measured tiers, the Vulkan build pinned); twelve graded photographs (#210, #211).
 This branch (`claude/gpu-option`): the optional graphics-card setting (above), and the summary pane's download
 confirmation now names the real host from the manifest (huggingface.co), not "GitHub".
+Cleanup (`claude/cleanup-obsolete`): the Mailer stubs, the old wizard (`wizardAnswers`), spike raw data, `.impeccable/critique/` and the finished builder plans (now `docs/archive/`, index in its README) are gone; before/after sizes are in that PR. Kept on purpose: events, door, attendance, inbox, ledger, invoicing (reserved for the other catchers).
 Not done: **uploading the ~6.9 GB pack** (`publish-ai-pack.ts <folder> --yes`, owner's go; until then the
 in-app Get stays off and a pack installs from a folder); the graphics card on macOS (Metal) and inside the AI
 pack; SmolVLM2-500M is marked not-working-yet; Qwen3-VL-4B, SmolVLM2-2.2B/256M never run. Unverified

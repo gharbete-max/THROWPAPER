@@ -4,7 +4,7 @@ import type { FormDefinition } from '../forms/definition.js';
 import type { Json, Slot } from './graph/schema.js';
 
 /**
- * What the guided builder holds while a conversation runs — `docs/plan/BUILDER-GRAPH.md`, "State
+ * What the guided builder holds while a conversation runs — `docs/archive/plan/BUILDER-GRAPH.md`, "State
  * and paths", and `PREDICTIVE-BUILDER.md`, "The draft".
  *
  * The draft is the form itself: the same `FormDefinition` the editor, the renderer, the PDF and

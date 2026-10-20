@@ -2,7 +2,7 @@ import type { BuilderGraph } from './schema.js';
 
 /**
  * The guided conversation — slice S1's fifteen nodes, plus the menu every node can escape to and
- * the end (`docs/plan/BUILDER-GRAPH.md`, "The nodes of slice S1").
+ * the end (`docs/archive/plan/BUILDER-GRAPH.md`, "The nodes of slice S1").
  *
  * **This is data, not code.** `graph.test.ts` proves it round-trips through JSON unchanged — no
  * functions, no `undefined`, nothing a server could not send. It is TypeScript rather than JSON
@@ -31,7 +31,7 @@ import type { BuilderGraph } from './schema.js';
  * effect only through the brand kit, which is every form's and every mail's. Anyone else passes it
  * by, told why. What the administrator picks is applied only once they confirm it, on the screen.
  *
- * **Version 5 (S11)** is the guess (`docs/plan/BELIEF.md`). Twenty-two yes / no / not sure questions,
+ * **Version 5 (S11)** is the guess (`docs/archive/plan/BELIEF.md`). Twenty-two yes / no / not sure questions,
  * group `guess`, tell the recipes apart; after "What is this form for?" the machine asks the one
  * expected to tell it most (`next: { best: 'guess', else }`), up to five, until one recipe is at
  * 800 per mille. A score is now how much likelier a person building that recipe is to choose the
@@ -39,13 +39,13 @@ import type { BuilderGraph } from './schema.js';
  * scale: a recipe no option names is indifferent to the question. "Right" seeds the recipe, and the
  * conversation goes on with only the gaps: the brand, then "Add another question?".
  *
- * **Version 6 (S12)** walks a form read from a document (`docs/plan/CONVERGENCE.md`, acceptance
+ * **Version 6 (S12)** walks a form read from a document (`docs/archive/plan/CONVERGENCE.md`, acceptance
  * S6): "Use these questions" leads to "Go through the questions from your document?", and each
  * question it walks goes through the chain every question goes through, which passes by what the
  * document decided. The choice chain also serves a question that is a choice before the
  * conversation met it, and a shape shows the question as buttons.
  *
- * **Version 7 (S13)** makes acceptance S1 possible by clicking alone (`docs/plan/POLISH.md`): "What
+ * **Version 7 (S13)** makes acceptance S1 possible by clicking alone (`docs/archive/plan/POLISH.md`): "What
  * is your form called?" between the guess and the brand, so the form has its heading and the
  * masthead its name; and after "No buttons", "How should people answer?" — a line, a few sentences,
  * or a box to tick, the last of which is a consent's presentation, its words the person's own.
@@ -205,7 +205,7 @@ export const BUILDER_GRAPH = {
       next: 'flow.title',
       escape: 'menu.top',
     },
-    // The guess questions (S11, `docs/plan/BELIEF.md`). Each changes nothing in the form: its
+    // The guess questions (S11, `docs/archive/plan/BELIEF.md`). Each changes nothing in the form: its
     // answer only moves the belief. "Yes" names the recipes a person building them would say yes
     // for, "No" those they would say no for, and how surely, in millinats; a recipe named on
     // neither side is indifferent to the question. "Not sure" has no score, and says nothing.
@@ -1518,7 +1518,7 @@ export const BUILDER_GRAPH = {
       kind: 'question',
       ask: 'guided.text.required.ask',
       help: 'guided.text.required.help',
-      // Reachable from its sibling before any question exists (docs/plan/BUILDER-GRAPH.md,
+      // Reachable from its sibling before any question exists (docs/archive/plan/BUILDER-GRAPH.md,
       // "The machine": the walk found it).
       when: 'has(focus) && !decided(required)',
       skip: [
@@ -1814,7 +1814,7 @@ export const BUILDER_GRAPH = {
       ],
       escape: 'menu.siblings(choice)',
     },
-    // The walk over a form read from a document (S12, `docs/plan/CONVERGENCE.md`). Which question is
+    // The walk over a form read from a document (S12, `docs/archive/plan/CONVERGENCE.md`). Which question is
     // next is the machine's (`pending.toWalk`): the first after the focus, in the form's order, with
     // something still open. Each walked question goes through the chain every question does.
     {

@@ -1,6 +1,6 @@
 /**
  * `round(10⁶ × e^(−d / 1000))` for a whole number of millinats d ≥ 0, computed with integers only —
- * the belief engine's probabilities in parts per million (`docs/plan/BELIEF.md`, ADR 0019).
+ * the belief engine's probabilities in parts per million (`docs/archive/plan/BELIEF.md`, ADR 0019).
  *
  * `Math.exp` is not required to be correctly rounded, so two engines may differ in the last bit,
  * and a probability compared with a threshold could flip. So the exponential is the same 40-digit

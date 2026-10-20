@@ -15,7 +15,7 @@ import type {
 
 /**
  * Stage 4, segment: what each part of the document is — a heading, an instruction, a form number,
- * a question and what answers it, a grid, a table — `docs/plan/IMPORT-PIPELINE.md` §4, which is the
+ * a question and what answers it, a grid, a table — `docs/archive/plan/IMPORT-PIPELINE.md` §4, which is the
  * specification. Every rule's id is in the debug artifact, with its evidence.
  *
  * The input is stage 2's layout document and stage 3's reading of it. It runs in three passes:

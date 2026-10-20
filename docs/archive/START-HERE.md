@@ -126,7 +126,7 @@ phase 3, the field set is too big — cut it.
 
 Put `CLAUDE.md` at the repo root and this file plus the specs in `docs/`. Then, per phase:
 
-> Read `docs/START-HERE.md` phase {N}, and the sections of `docs/SPEC-forms.md` and
+> Read `docs/archive/START-HERE.md` phase {N}, and the sections of `docs/SPEC-forms.md` and
 > `docs/SPEC-shared.md` it references. Enter plan mode. Plan the files, the schema changes, the
 > endpoints with their Zod schemas, and the tests. List anything ambiguous. Do not write code
 > until I approve the plan.

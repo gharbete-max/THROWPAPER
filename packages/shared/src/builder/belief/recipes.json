@@ -1,5 +1,5 @@
 {
-  "source": "docs/plan/BELIEF.md, \"Recipes\": the 23 FORM_TEMPLATES and the two structure-only recipes of belief/structures.ts, each with its prior in millinats. Every prior is 0 but one: event-registration, the catalogue's general sign-up, is +700 (about twice as likely before any answer), because a person signing people up to an event says \"no\" to every more particular question, and nothing else would ever set it apart.",
+  "source": "docs/archive/plan/BELIEF.md, \"Recipes\": the 23 FORM_TEMPLATES and the two structure-only recipes of belief/structures.ts, each with its prior in millinats. Every prior is 0 but one: event-registration, the catalogue's general sign-up, is +700 (about twice as likely before any answer), because a person signing people up to an event says \"no\" to every more particular question, and nothing else would ever set it apart.",
   "recipesVersion": 1,
   "recipes": [
     {

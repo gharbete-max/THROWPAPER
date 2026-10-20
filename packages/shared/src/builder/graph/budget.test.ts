@@ -7,7 +7,7 @@ import { BUILDER_GRAPH } from './nodes.js';
 import type { BuilderGraph } from './schema.js';
 
 /**
- * `CAVEATS.md` #42, `perf-budget`: the graph loads in under 50 ms (`docs/plan/POLISH.md`, S13c).
+ * `CAVEATS.md` #42, `perf-budget`: the graph loads in under 50 ms (`docs/archive/plan/POLISH.md`, S13c).
  * Loading it is everything the screen waits on before the first question and the first thing
  * typed: the conversation begun over it, and the ladder's vocabulary in the author's language —
  * every card's label and alias, normalised. (Rules G0–G14 are checked when it is built, by

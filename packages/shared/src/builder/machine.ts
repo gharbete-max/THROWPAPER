@@ -460,7 +460,7 @@ function seedSource(id: string, context: AnswerContext): SeedSource {
   return source;
 }
 
-// --- The walk over an imported form (S12, `docs/plan/CONVERGENCE.md`) --------------------------
+// --- The walk over an imported form (S12, `docs/archive/plan/CONVERGENCE.md`) --------------------------
 
 const withoutKey = (record: BuilderState['pending'], key: string): BuilderState['pending'] =>
   Object.fromEntries(Object.entries(record).filter(([k]) => k !== key));
@@ -778,7 +778,7 @@ export function edit(
  * attach to it (`CAVEATS.md` #49).
  *
  * The conversation then goes to "Go through the questions from your document?" (`import.walk`,
- * S12), which passes itself by when the document left nothing open (`docs/plan/CONVERGENCE.md`).
+ * S12), which passes itself by when the document left nothing open (`docs/archive/plan/CONVERGENCE.md`).
  *
  * A PDF the form keeps (`source`, already stored with it) joins `definition.paper.sources` in the
  * same step, so its questions' boxes on the page (`paper`, S12b) and the page itself arrive, and

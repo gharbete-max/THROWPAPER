@@ -5,8 +5,8 @@
  * The same checks `apps/forms/src/lib/guided-graph.test.ts` and
  * `packages/shared/src/interpret/data.test.ts` run inside `pnpm verify`, as a command that lists
  * every problem at once, by rule and node, for whoever is editing the graph, its translations or
- * its aliases. `docs/plan/BUILDER-GRAPH.md`, "Validation", says what each graph rule means;
- * `docs/plan/INTENT-LADDER.md`, "Aliases", what each alias rule means.
+ * its aliases. `docs/archive/plan/BUILDER-GRAPH.md`, "Validation", says what each graph rule means;
+ * `docs/archive/plan/INTENT-LADDER.md`, "Aliases", what each alias rule means.
  */
 import { BUILDER_GRAPH, validateGraph } from '@tp/shared/builder';
 import { BUILTIN_ALIASES, aliasProblems } from '@tp/shared/interpret';

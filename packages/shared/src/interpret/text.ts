@@ -1,7 +1,7 @@
 import { probe } from '../import/enumerate/grammar.js';
 
 /**
- * What typed text becomes before any tier reads it — `docs/plan/INTENT-LADDER.md`,
+ * What typed text becomes before any tier reads it — `docs/archive/plan/INTENT-LADDER.md`,
  * "Normalisation".
  *
  * Everything keeps the way back to what was typed. The input is cut into segments — a code point

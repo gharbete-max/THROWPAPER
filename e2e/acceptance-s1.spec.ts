@@ -4,7 +4,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { db, deleteSubmission, signInAs } from './support.js';
 
 /**
- * Acceptance S1 — `docs/plan/PREDICTIVE-BUILDER.md`, built in S13a (`docs/plan/POLISH.md`):
+ * Acceptance S1 — `docs/plan/PREDICTIVE-BUILDER.md`, built in S13a (`docs/archive/plan/POLISH.md`):
  *
  * > From an empty workspace, clicking only (no typing except the form's own labels), a user
  * > produces a published form with: a heading, a logo, a required name field, a single-choice

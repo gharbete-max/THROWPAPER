@@ -2,7 +2,7 @@ import { enumerate } from '../import/enumerate/enumerate.js';
 import { MAX_PASTE, pasteDocument } from '../import/paste.js';
 
 /**
- * T6's list (`docs/plan/INTENT-LADDER.md`, T6): two or more items, their labels verbatim.
+ * T6's list (`docs/archive/plan/INTENT-LADDER.md`, T6): two or more items, their labels verbatim.
  *
  * - **Several lines** — typed or pasted — are read the way the importer reads a pasted document:
  *   through the paste layout and the list-number detector (`@tp/shared/import`), so `1. Röd`,

@@ -22,7 +22,7 @@ import { FORM_TEMPLATES } from '../../forms/templates.js';
 import { expMicro } from '../../interpret/exp.js';
 
 /**
- * The belief engine — `docs/plan/BELIEF.md`, `CAVEATS.md` #50. Integers throughout, so every
+ * The belief engine — `docs/archive/plan/BELIEF.md`, `CAVEATS.md` #50. Integers throughout, so every
  * number here is the number on every machine: these are frozen, and a change to the scores, the
  * recipes or the arithmetic shows up as a change to them, for a person to review.
  */

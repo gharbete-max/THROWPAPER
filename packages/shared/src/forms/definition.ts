@@ -9,7 +9,7 @@ import { FileAccept, MAX_UPLOAD_BYTES, UploadKey } from './uploads.js';
  * Submissions reference the version they were filled against, so editing a form can never
  * retroactively change what somebody answered.
  *
- * The first thirteen were exactly the v0.1 field set from `docs/START-HERE.md`. Adding to this
+ * The first thirteen were exactly the v0.1 field set from `docs/archive/START-HERE.md`. Adding to this
  * union is a scope change, not a detail — `image` arrived with A15b because the product is a
  * general form builder rather than a registration tool, and it needed somewhere to put a picture.
  */
@@ -188,7 +188,7 @@ export const SelectOption = z.object({
 export const SINGLE_SELECT_APPEARANCES = ['dropdown', 'radio', 'buttons', 'cards'] as const;
 export const MULTI_SELECT_APPEARANCES = ['checkboxes', 'buttons', 'cards'] as const;
 /**
- * `checkbox` is one box to tick, its label beside it: the consent presentation (`docs/plan/POLISH.md`,
+ * `checkbox` is one box to tick, its label beside it: the consent presentation (`docs/archive/plan/POLISH.md`,
  * S13a). The one appearance that says something about the answer — a box not ticked has still been
  * answered, so a required one must be ticked (`validate.ts`, `validation.tick`).
  */

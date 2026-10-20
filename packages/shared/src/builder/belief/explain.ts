@@ -2,7 +2,7 @@ import type { BuilderGraph } from '../graph/schema.js';
 import { logLikelihoods, type Told } from './update.js';
 
 /**
- * "Why this guess" — `docs/plan/BELIEF.md`, "The guess": the three answers that moved it most. An
+ * "Why this guess" — `docs/archive/plan/BELIEF.md`, "The guess": the three answers that moved it most. An
  * answer moved a recipe by how much more likely it made it than the others on average: `log
  * P(option | guess)` less the mean of `log P(option | r)` over every other recipe. Only answers
  * that favoured it are listed, largest first, ties to the later answer. Never hidden: the screen

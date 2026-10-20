@@ -263,7 +263,7 @@ export function FieldInput({
   const invalid = error ? true : undefined;
 
   /**
-   * A box to tick — the consent presentation (`docs/plan/POLISH.md`, S13a): one checkbox, its words
+   * A box to tick — the consent presentation (`docs/archive/plan/POLISH.md`, S13a): one checkbox, its words
    * beside it as its label, so pressing the words ticks the box. Ticked is yes, not ticked is no;
    * a required one must be ticked (`validation.tick`). The words are the form's own, verbatim.
    */

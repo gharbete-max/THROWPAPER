@@ -1,7 +1,7 @@
 import { sha256Hex } from './sha256.js';
 
 /**
- * The debug artifact every import stage emits — `docs/plan/IMPORT-PIPELINE.md`, "Debug".
+ * The debug artifact every import stage emits — `docs/archive/plan/IMPORT-PIPELINE.md`, "Debug".
  *
  * It says, for each thing a stage decided, which rule decided it and on what evidence, so a wrong
  * import can be traced to one rule and one number. Snapshots of these are the fixtures' and the
