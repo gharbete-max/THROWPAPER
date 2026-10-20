@@ -52,6 +52,20 @@ compose-email, reply. Never in the installer (≈6 GB): ships as a separate AI p
 per page. Local file resolution: `LOPPA_AI_DIR` → `local-models/` → repo root (dev) → `resources/ai-pack`
 → user-data. `LOPPA_MODEL_PATH` points a dev run at a file.
 
+## Navigating cheaply (use before opening files)
+- **Graphify** (code graph, local, no model; `graphify-out/` is git-ignored). Install once:
+  `python -m venv ~/.gfy && ~/.gfy/Scripts/pip install graphifyy==0.9.87` (two y's). Build: `graphify update . --no-cluster`
+  then `graphify cluster-only . --no-label --no-viz` (~30 s, ~11 k symbols). Query: `graphify explain "Name"` (callers,
+  callees, tests with `file:line`), `graphify path "A" "B" --undirected` (how two things connect). It says what calls
+  what, never whether code is right: read the file before editing. Don't run `graphify install` (it writes hooks into the repo).
+- **Search before read:** `Grep` with `output_mode: files_with_matches`, then `-n` with `head_limit`; read a file with
+  `offset`/`limit` around the hit. Glob by area (`apps/forms/src/screens/send/**`).
+- **Exports at a glance:** each package's `src/index.ts` and subpath exports (`@tp/shared/ai`, `/summary`, `/import`) are the API.
+- **Tests name the behaviour:** `grep -n "it('" file.test.ts` reads faster than the code.
+- **Decisions:** ADR headings only (`grep -n "^#" docs/adr/00NN-*.md`); the Status line says if it is current.
+- **Heavy sweeps** (many files, one conclusion) go to a read-only `Explore` subagent; an agent costs its own tokens,
+  so run one at a time and ask for a 25-line report.
+
 ## Commands
 `pnpm verify` (serial chain; exit 1 tells only the FIRST failing step — run `format:check`, `typecheck`,
 `lint`, `test`, `build` singly) · `pnpm test:e2e` (ONE run at a time; at most one agent) · `pnpm bundle:budget` (after build) ·
