@@ -122,15 +122,16 @@ describe('the AI IPC', () => {
     });
   });
 
-  it('starts a download only on consent that is exactly true, for a plain model id', async () => {
+  it('hands the consent on for the coordinator to check, for a plain model id only', async () => {
     const { handlers, coordinator } = harness();
     const install = handlers.get(AI_CHANNELS.install)!;
-    await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', true);
-    expect(coordinator.install).toHaveBeenLastCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', true);
+    const consent = { host: 'huggingface.co', files: ['a'], totalBytes: 1 };
+    await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', consent);
+    expect(coordinator.install).toHaveBeenLastCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', consent);
     await install(forms, 'qwen2.5-vl-7b-instruct-q4_k_m', 'yes');
-    expect(coordinator.install).toHaveBeenLastCalledWith('qwen2.5-vl-7b-instruct-q4_k_m', false);
-    await install(forms, '../../etc', true);
-    await install(forms, 7, true);
+    expect(coordinator.install).toHaveBeenCalledTimes(2);
+    await install(forms, '../../etc', consent);
+    await install(forms, 7, consent);
     expect(coordinator.install).toHaveBeenCalledTimes(2);
   });
 

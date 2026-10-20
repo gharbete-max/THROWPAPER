@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import type { AiBridge, AiEvent, AiModelStatus, AiProblem, AiStatus } from '@tp/shared/ai';
 import { aiBridge } from '../../lib/ai-bridge.js';
 import { useT } from '../../lib/i18n.js';
@@ -7,6 +7,9 @@ import { Icon } from '../../components/Icon.js';
 
 const GB = 1000 ** 3;
 const MB = 1000 ** 2;
+
+// Only when this panel is shown: the list of models is its own chunk.
+const ModelTiers = lazy(() => import('./ModelTiers.js'));
 
 /**
  * Every AI model Loppa knows, on one list (ADR 0024): installed, missing, damaged, in use, or for
@@ -60,13 +63,19 @@ function Models({ bridge }: { bridge: AiBridge }) {
   const working = progress !== null || status.activity !== 'idle';
 
   async function get(model: AiModelStatus) {
+    if (!model.consent) return;
     const yes = await confirm(
-      t('ai.models.getConfirm', { name: model.name, size: (model.bytes / GB).toFixed(1) }),
+      t('ai.models.getConfirm', {
+        name: model.name,
+        host: model.consent.host,
+        files: model.consent.files.join(', '),
+        size: (model.consent.totalBytes / GB).toFixed(1),
+      }),
       { confirmLabel: t('ai.models.getConfirmYes'), danger: false },
     );
     if (!yes) return;
     setProblem(null);
-    const result = await bridge.install(model.id, true);
+    const result = await bridge.install(model.id, model.consent);
     if (!result.ok) setProblem(result.problem);
   }
 
@@ -94,99 +103,38 @@ function Models({ bridge }: { bridge: AiBridge }) {
   // A problem with no sentence of its own is "something went wrong".
   const sentence = (p: AiProblem) =>
     t(`summary.problem.${p === 'not-available' || p === 'consent-required' ? 'failed' : p}`);
+  // Speed and time left are the shell's own reckoning over the whole install.
+  const progressText = (p: Progress) =>
+    p.etaSeconds === null
+      ? t('ai.models.progress', {
+          file: p.file,
+          files: p.files,
+          done: mb(p.done),
+          total: mb(p.total),
+        })
+      : t('ai.models.progressEta', {
+          done: mb(p.modelDone),
+          total: mb(p.modelTotal),
+          speed: (p.bytesPerSecond / MB).toFixed(1),
+          minutes: Math.max(1, Math.round(p.etaSeconds / 60)),
+        });
 
   return (
     <section className="card stack" aria-labelledby="ai-models">
       <h2 id="ai-models">{t('ai.models.heading')}</h2>
       <p className="muted small">{t('ai.models.intro')}</p>
 
-      <ul className="stack" role="list">
-        {status.models.map((model) => (
-          <li key={model.id} className="stack" data-model={model.id}>
-            <h3>
-              {model.name}{' '}
-              <span className={model.state === 'damaged' ? 'badge badge--warning' : 'badge'}>
-                {t(`ai.models.state.${model.state}`)}
-              </span>
-              {!model.available ? (
-                <span className="badge badge--quiet">{t('ai.models.unavailable')}</span>
-              ) : null}
-            </h3>
-            <p className="muted small">
-              {t('ai.models.size', { size: (model.bytes / GB).toFixed(1) })} ·{' '}
-              {t('ai.models.licence', { licence: model.licence })}
-              {model.resident ? ` · ${t('ai.models.loaded')}` : ''}
-            </p>
-            {!model.available ? (
-              <p className="muted small">{t('ai.models.unavailableWhy')}</p>
-            ) : null}
-            {model.label === 'unverified-licence' ? (
-              <p className="status-warning small">{t('ai.models.unverifiedLicence')}</p>
-            ) : null}
-            <ul className="small" role="list">
-              {model.files.map((file) => (
-                <li key={file.name}>
-                  {file.path === null || file.source === null ? (
-                    t('ai.models.fileMissing', { name: file.name })
-                  ) : (
-                    <>
-                      {t('ai.models.file', {
-                        name: file.name,
-                        where: `${t(`ai.models.source.${file.source}`)}, ${t(`ai.models.hash.${file.hash === 'missing' ? 'unchecked' : file.hash}`)}`,
-                      })}
-                      <br />
-                      <code className="ai-path">{file.path}</code>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
-            <p className="muted small">{t('ai.models.folder', { path: model.folder })}</p>
-            {model.available ? <p className="muted small">{t('ai.models.needs')}</p> : null}
-
-            {model.available ? (
-              <div className="row">
-                {model.available && !model.evaluationOnly ? (
-                  <button
-                    type="button"
-                    className="button"
-                    disabled={
-                      working || model.downloadBlocked !== null || model.state === 'installed'
-                    }
-                    onClick={() => void get(model)}
-                  >
-                    <Icon name="download" /> {t('ai.models.get')}
-                  </button>
-                ) : null}
-                <button
-                  type="button"
-                  className="button"
-                  disabled={working}
-                  onClick={() => void open(model)}
-                >
-                  <Icon name="upload" /> {t('ai.models.open')}
-                </button>
-                {model.files.some((file) => file.path !== null) ? (
-                  <button
-                    type="button"
-                    className="button button--quiet"
-                    disabled={working}
-                    onClick={() => void remove(model)}
-                  >
-                    <Icon name="trash" /> {t('ai.models.remove')}
-                  </button>
-                ) : null}
-              </div>
-            ) : null}
-            {model.available &&
-            !model.evaluationOnly &&
-            model.downloadBlocked !== null &&
-            model.state !== 'installed' ? (
-              <p className="muted small">{t('ai.models.downloadOff')}</p>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+      <Suspense fallback={null}>
+        <ModelTiers
+          status={status}
+          bridge={bridge}
+          working={working}
+          onStatus={setStatus}
+          onGet={(model) => void get(model)}
+          onOpen={(model) => void open(model)}
+          onRemove={(model) => void remove(model)}
+        />
+      </Suspense>
 
       {status.runtime ? (
         <p className="small" data-runtime>
@@ -208,22 +156,12 @@ function Models({ bridge }: { bridge: AiBridge }) {
       {progress ? (
         <div className="stack">
           <progress
-            value={progress.done}
-            max={progress.total}
-            aria-label={t('ai.models.progress', {
-              file: progress.file,
-              files: progress.files,
-              done: mb(progress.done),
-              total: mb(progress.total),
-            })}
+            value={progress.modelDone}
+            max={progress.modelTotal}
+            aria-label={progressText(progress)}
           />
           <p className="small" aria-live="polite">
-            {t('ai.models.progress', {
-              file: progress.file,
-              files: progress.files,
-              done: mb(progress.done),
-              total: mb(progress.total),
-            })}
+            {progressText(progress)}
           </p>
           <button
             type="button"

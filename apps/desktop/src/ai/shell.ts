@@ -1,11 +1,18 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { freemem, totalmem } from 'node:os';
 import { join } from 'node:path';
-import { LLAMA_SERVER, TEXT_MODEL, type AiEvent } from '@tp/shared/ai';
+import {
+  LLAMA_SERVER,
+  MODEL_REGISTRY,
+  TEXT_MODEL,
+  minTotalMemoryBytes,
+  type AiEvent,
+} from '@tp/shared/ai';
 import type { ModelEvent } from '@tp/shared/summary';
 import { ResultCache } from './cache.js';
 import { createCoordinator, type Coordinator } from './coordinator.js';
 import { FakeEngine } from './engines/fake-engine.js';
+import type { EngineFiles } from './engine.js';
 import { ServerEngine } from './engines/server-engine.js';
 import { createModelAdapter, type ModelService } from './model-adapter.js';
 import { createRuntimeChecker } from './runtime.js';
@@ -83,24 +90,30 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
   };
 
   const coordinator = createCoordinator({
-    engines: {
-      [TEXT_MODEL.id]: fake
-        ? () => new FakeEngine({ behaviour: { delayMs: 15 } })
-        : (files) =>
-            new ServerEngine(files, {
-              locateRuntime: runtime.entry,
-              totalMemory: totalmem,
-              freeMemory: freemem,
-              projector: projectorChoice(),
-              settings: settings(),
-            }),
-    },
+    // One engine factory per catalogue model; only one is ever alive (the coordinator's lock).
+    engines: Object.fromEntries(
+      MODEL_REGISTRY.map((model) => [
+        model.id,
+        fake
+          ? () => new FakeEngine({ behaviour: { delayMs: 15 } })
+          : (files: EngineFiles) =>
+              new ServerEngine(files, {
+                locateRuntime: runtime.entry,
+                totalMemory: totalmem,
+                freeMemory: freemem,
+                minTotalMemory: minTotalMemoryBytes(model),
+                projector: projectorChoice(),
+                settings: settings(),
+              }),
+      ]),
+    ),
     dir,
     env: pieces.env,
     repoRoot: pieces.repoRoot,
     packDir,
     runtimeStatus: fake ? () => Promise.resolve(null) : runtime.status,
     freeMemory: freemem,
+    totalMemory: totalmem,
     chooseFile: pieces.chooseFile,
     fetch: (input, init) => fetch(input, init),
     cache: new ResultCache(join(pieces.userData, 'ai-cache', 'index.json')),

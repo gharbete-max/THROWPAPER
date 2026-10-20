@@ -1,5 +1,10 @@
 import { z } from 'zod';
 import qwen25Vl7b from './models/qwen2.5-vl-7b-instruct-q4_k_m.json';
+import qwen3Vl4b from './models/qwen3-vl-4b-instruct-q4_k_m.json';
+import qwen3Vl2b from './models/qwen3-vl-2b-instruct-q4_k_m.json';
+import smolvlm22b from './models/smolvlm2-2.2b-instruct-q4_k_m.json';
+import smolvlm500m from './models/smolvlm2-500m-video-instruct-q8_0.json';
+import smolvlm256m from './models/smolvlm2-256m-video-instruct-q4_k_m.json';
 import { CAPABILITIES, type Capability } from './capability.js';
 
 /**
@@ -61,6 +66,23 @@ export const ModelFile = z
   .strict();
 export type ModelFile = z.infer<typeof ModelFile>;
 
+/** Best first. A tier is a promise about hardware and about quality, in that order of honesty. */
+export const TIERS = ['full', 'balanced', 'light', 'very-light'] as const;
+export type Tier = (typeof TIERS)[number];
+
+/**
+ * Whether the model has been run through Loppa's engine: `working` (with the measurement),
+ * `untested` (pinned and verified on the Hub, never run here) or `not-working-yet` (it was run and
+ * failed: the evidence says how, and the list says so rather than hiding it).
+ */
+export const Support = z
+  .object({
+    evidence: z.string().min(1),
+    state: z.enum(['working', 'untested', 'not-working-yet']),
+  })
+  .strict();
+export type Support = z.infer<typeof Support>;
+
 export const ModelManifest = z
   .object({
     capabilities: z.array(z.enum(CAPABILITIES)).min(1),
@@ -78,9 +100,13 @@ export const ModelManifest = z
     name: z.string().min(1),
     /** Free memory needed to load it: checked before loading. */
     requiredMemoryBytes: z.number().int().positive(),
+    /** False: `requiredMemoryBytes` is an estimate, not a measurement. The list says so. */
+    requiredMemoryVerified: z.boolean(),
     retrievedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     source: z.string().url(),
     sourceRevision: z.string().min(1),
+    support: Support,
+    tier: z.enum(TIERS),
   })
   .strict()
   .superRefine((manifest, context) => {
@@ -128,7 +154,14 @@ export function parseRegistry(list: readonly unknown[]): readonly ModelManifest[
   return parsed;
 }
 
-export const MODEL_REGISTRY: readonly ModelManifest[] = parseRegistry([qwen25Vl7b]);
+export const MODEL_REGISTRY: readonly ModelManifest[] = parseRegistry([
+  qwen25Vl7b,
+  qwen3Vl4b,
+  qwen3Vl2b,
+  smolvlm22b,
+  smolvlm500m,
+  smolvlm256m,
+]);
 
 /**
  * The one model (ADR 0025): it reads pictures of pages and writes summaries, translations and
@@ -151,6 +184,27 @@ export function totalBytes(manifest: ModelManifest): number {
   return manifest.files.reduce((total, file) => total + (file.optional ? 0 : file.bytes), 0);
 }
 
+/**
+ * Where a model may be fetched from, and where a redirect may lead (ADR 0026: the network only on
+ * a confirmed action, to a host the person was told). Hugging Face serves a file from its own name
+ * and then from a CDN under `hf.co`; nothing else is followed.
+ */
+export const DOWNLOAD_HOSTS = ['huggingface.co', 'hf.co'] as const;
+
+export function isAllowedHost(host: string): boolean {
+  const name = host.toLowerCase();
+  return DOWNLOAD_HOSTS.some((allowed) => name === allowed || name.endsWith(`.${allowed}`));
+}
+
+const hostAllowed = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' && isAllowedHost(parsed.hostname);
+  } catch {
+    return false;
+  }
+};
+
 /** Why the download is off, or null when it can be started. */
 export function unpublishedReason(manifest: ModelManifest): string | null {
   for (const file of manifest.files) {
@@ -166,6 +220,9 @@ export function isDownloadable(manifest: ModelManifest): boolean {
     manifest.distributable &&
     !manifest.evaluationOnly &&
     manifest.files.every((file) => file.parts.length > 0) &&
+    manifest.files.every((file) =>
+      file.parts.every((part) => part.url.startsWith(UNPUBLISHED) || hostAllowed(part.url)),
+    ) &&
     unpublishedReason(manifest) === null
   );
 }

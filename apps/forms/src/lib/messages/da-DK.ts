@@ -1421,7 +1421,7 @@ export const daDK: Record<MessageKey, string> = {
   'room.centreOpen': 'Åbn den',
   'ai.models.heading': 'AI-modeller på denne computer',
   'ai.models.intro':
-    'Alle Loppa, der bruger AI, deler disse modeller. Kun én er indlæst ad gangen, de kører uden netværk, og intet dokument forlader computeren.',
+    'Alle Loppa, der bruger AI, deler disse modeller. Kun én er indlæst ad gangen, og den kører på denne computer. Ingen dokumenter forlader den.',
   'ai.models.state.installed': 'Installeret',
   'ai.models.state.missing': 'Ikke installeret',
   'ai.models.state.damaged': 'Beskadiget',
@@ -1456,7 +1456,7 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.open': 'Åbn en fil fra disken',
   'ai.models.remove': 'Fjern',
   'ai.models.getConfirm':
-    'Det henter {size} GB til {name} fra Loppas udgivelse på GitHub og kontrollerer filen. Den fylder så meget på disken. Dine dokumenter sendes ingen steder. Fortsæt?',
+    'Hent {name} fra {host}? Filer: {files}. I alt: {size} GB, og det fylder lige så meget på disken. Dine dokumenter sendes ingen steder, og du kan annullere når som helst. Fortsæt?',
   'ai.models.getConfirmYes': 'Hent',
   'ai.models.removeConfirm':
     'Fjern {name} fra denne computer? Filer, du åbnede fra disken, slettes ikke. Du kan hente den igen senere.',
@@ -1467,6 +1467,29 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.clearCacheConfirm':
     'Slet de gemte resultater? Det tager så lige så lang tid at læse et dokument igen som første gang.',
   'ai.models.clearCacheYes': 'Slet',
+  'ai.models.optional':
+    'AI er valgfrit. Loppa virker fuldt ud uden en model. Intet hentes, medmindre du trykker på Hent og bekræfter.',
+  'ai.models.tier.full': 'Fuld',
+  'ai.models.tier.balanced': 'Afbalanceret',
+  'ai.models.tier.light': 'Let',
+  'ai.models.tier.very-light': 'Meget let',
+  'ai.models.quality.full': 'Bedst til at læse og skrive. Kræver en kraftig computer.',
+  'ai.models.quality.balanced': 'God til de fleste dokumenter på en almindelig computer.',
+  'ai.models.quality.light':
+    'Kører på svagere computere. Læser og skriver dårligere og laver flere fejl ved svære scanninger.',
+  'ai.models.quality.very-light':
+    'Til meget svage computere. Små modeller læser og skriver dårligere og har svært ved scanninger.',
+  'ai.models.ram': 'Skal bruge ca. {size} GB hukommelse',
+  'ai.models.ramEstimate': 'Skal bruge ca. {size} GB hukommelse (et skøn)',
+  'ai.models.recommended': 'Anbefalet til denne computer',
+  'ai.models.chosen': 'Valgt',
+  'ai.models.use': 'Brug denne',
+  'ai.models.notWorking':
+    'Virker ikke endnu: den bestod ikke vores test og kan derfor ikke hentes.',
+  'ai.models.untested': 'Ikke testet af os endnu.',
+  'ai.models.evidence': 'Testnoter og filer',
+  'ai.models.progressEta': '{done} af {total} MB, {speed} MB/s, ca. {minutes} min tilbage',
+  'summary.problem.no-disk-space': 'Der er ikke nok ledig diskplads til denne model.',
   'summary.intro':
     'Et udkast til resumé eller oversættelse af et dokument, du har åbent, lavet på denne computer. Det vises ved siden af originalen, mærket som genereret, og gemmes aldrig.',
   'summary.settingsToggle': 'Modelindstillinger',

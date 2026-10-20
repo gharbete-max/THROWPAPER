@@ -42,14 +42,9 @@ and only with the person's confirmation).
    app, separate from code. Delivery is a set of parts under 2 GiB with SHA-256 hashes; the app
    opens a pack from disk (offline) or fetches it with the confirmation of decision 2.
 
-## Not decidable from the vision, left to the owner
-
-Facts about the world, not choices: the registered company name and number, contact and privacy
-addresses, registered address, terms (price, term, liability, governing law), a data protection
-officer or a statement that none is needed, and the language of the policy pages in the site's
-other languages. They are needed to sell or host Loppa, not to run it.
+The company name and number, addresses, terms, price and the data protection officer are out of scope for development. They are not an open decision; they are needed to sell or host Loppa, not to run it.
 
 ## Follow-up work this creates
 
 The footer skeleton (4) and the encrypted backup (7) are small code changes; the AI pack
-distribution (8) is the packaging work already planned. They are tracked in `docs/HANDOVER.md`.
+distribution (8) is the packaging work already planned, and is now also met by the model catalogue (ADR 0025, section 6): a person may download a model from Hugging Face on a confirmed press. They are tracked in `docs/HANDOVER.md`.
