@@ -12,11 +12,33 @@ import { originGuard, type IpcMainLike } from './origin-guard.js';
  * else crosses, and only the Forms window's own origin is answered.
  *
  * What arrives from a renderer is checked for shape here: a model id is a short plain string, a
- * task id is a short string that does not start with `install`, consent is an object the coordinator checks against the manifest (host, files, total size), and a
+ * task id is a short string that does not start with `install`, consent is reduced to its three fields (host, files, total size) and the coordinator checks them against the manifest, and a
  * task is one of the kinds a window may send (a page picture only as PNG or JPEG bytes of a bounded
  * size, checked again by the reader). The text in a task is never logged.
  */
 const PLAIN_ID = /^[a-z0-9._-]{1,80}$/;
+
+/**
+ * The consent as the three fields it is, and nothing else: the coordinator appends what it gets to
+ * the consent record, and a window must not be able to add keys to it, overwrite the time in it
+ * or make it large.
+ */
+export function plainConsent(value: unknown): AiConsent | null {
+  if (typeof value !== 'object' || value === null) return null;
+  const c = value as Record<string, unknown>;
+  if (
+    typeof c.host !== 'string' ||
+    c.host.length > 253 ||
+    typeof c.totalBytes !== 'number' ||
+    !Number.isSafeInteger(c.totalBytes) ||
+    !Array.isArray(c.files) ||
+    c.files.length > 32 ||
+    !c.files.every((name) => typeof name === 'string' && name.length <= 255)
+  ) {
+    return null;
+  }
+  return { host: c.host, files: [...(c.files as string[])], totalBytes: c.totalBytes };
+}
 
 export function registerAiIpc(
   ipc: IpcMainLike,
@@ -32,11 +54,13 @@ export function registerAiIpc(
   );
   ipc.handle(
     AI_CHANNELS.install,
-    guarded((modelId: unknown, consent: unknown) =>
-      typeof modelId === 'string' && PLAIN_ID.test(modelId)
-        ? coordinator.install(modelId, consent as AiConsent)
-        : refused,
-    ),
+    guarded((modelId: unknown, consent: unknown) => {
+      if (typeof modelId !== 'string' || !PLAIN_ID.test(modelId)) return refused;
+      const plain = plainConsent(consent);
+      return plain
+        ? coordinator.install(modelId, plain)
+        : { ok: false, problem: 'consent-required' };
+    }),
   );
   ipc.handle(
     AI_CHANNELS.select,
