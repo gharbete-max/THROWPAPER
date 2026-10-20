@@ -27,7 +27,7 @@ const { PDFDocument } = createRequire(new URL('../apps/api-forms/package.json', 
   'pdf-lib',
 ) as Reader;
 
-test('arrange: pages from three PDFs are reordered, turned and removed into one download', async ({
+test('arrange: pages from three PDFs are reordered, turned and removed into one download @smoke', async ({
   page,
 }) => {
   const secret = await plantLoginToken(sql, 'admin@example.com');

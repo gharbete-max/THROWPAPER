@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { db, plantLoginToken } from './support.js';
+import { db, signInAs } from './support.js';
 import { fakeBridge } from './fake-model.js';
 
 /**
@@ -16,9 +16,22 @@ test.afterAll(async () => {
 });
 
 async function signIn(page: Page) {
-  const secret = await plantLoginToken(sql, 'admin@example.com');
-  await page.goto(`/auth/callback?token=${secret}`);
-  await expect(page.getByRole('link', { name: 'Documents' })).toBeVisible();
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+}
+
+/** Summary says the model is missing and links to Set up AI, where a file on disk is opened. */
+async function setUp(page: Page) {
+  await expect(page.getByText('The model is not on this computer.')).toBeVisible();
+  await page.getByRole('link', { name: 'Set up AI' }).click();
+  await expect(page.getByRole('heading', { name: 'Set up AI', level: 1 })).toBeVisible();
+  // Nothing is downloaded, and the download says why it is off.
+  await expect(page.getByRole('button', { name: 'Download' })).toBeDisabled();
+  await expect(page.getByText(/There is no download for this yet/)).toBeVisible();
+  await page.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ }).click();
+  await expect(page.getByText('Installed', { exact: true })).toBeVisible();
+  await page.getByRole('main').getByRole('link', { name: 'Summary and translation' }).click();
+  await expect(page.getByRole('heading', { name: 'What to read' })).toBeVisible();
+  await expect(page.getByText('The model is ready.')).toBeVisible();
 }
 
 test('without the desktop bridge the centre says it is not in this edition', async ({ page }) => {
@@ -28,22 +41,14 @@ test('without the desktop bridge the centre says it is not in this edition', asy
   await expect(page.getByText('Not in this edition')).toBeVisible();
 });
 
-test('set up from a file on disk, summarise, translate, cancel, and see the limits', async ({
+test('set up from a file on disk, summarise, translate, cancel, and see the limits @smoke', async ({
   page,
 }) => {
   await page.addInitScript(fakeBridge);
   await signIn(page);
   await page.goto('/summary');
 
-  // Settings step first: nothing is downloaded, and the download says why it is off.
-  await expect(page.getByRole('heading', { name: 'The model' })).toBeVisible();
-  await expect(page.getByText('The model is not on this computer.')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Get the model' })).toBeDisabled();
-  await expect(page.getByText(/the model has not been published/)).toBeVisible();
-  await page.getByRole('button', { name: 'Open a model file from disk' }).click();
-  await expect(page.getByRole('heading', { name: 'What to read' })).toBeVisible();
-  await expect(page.getByText('The model is ready.')).toHaveCount(0);
-
+  await setUp(page);
   // A summary of pasted text streams in, is labelled as generated, and warns about an invented year.
   await page
     .getByLabel('Paste the text here')
@@ -80,11 +85,15 @@ test('set up from a file on disk, summarise, translate, cancel, and see the limi
   expect(sent).toBe(3);
 });
 
-test('the model list shows the model, its files and the program that runs it', async ({ page }) => {
+test('the model list shows the model, its files and the program that runs it @smoke', async ({
+  page,
+}) => {
   await page.addInitScript(fakeBridge);
   await signIn(page);
-  await page.goto('/summary');
+  await page.goto('/ai-setup');
   await expect(page.getByRole('heading', { name: 'AI models on this computer' })).toBeVisible();
+  await expect(page.getByText('AI is optional.')).toBeVisible();
+  await page.getByText('Advanced', { exact: true }).click();
 
   const model = page.locator('[data-model="qwen2.5-vl-7b-instruct-q4_k_m"]');
   await expect(page.locator('[data-model]')).toHaveCount(1);
@@ -108,8 +117,7 @@ test('a consent is quoted, never summarised or translated', async ({ page }) => 
   await page.addInitScript(fakeBridge);
   await signIn(page);
   await page.goto('/summary');
-  await page.getByRole('button', { name: 'Open a model file from disk' }).click();
-  await expect(page.getByRole('heading', { name: 'What to read' })).toBeVisible();
+  await setUp(page);
 
   const consent =
     'Consent: I consent to my personal data being processed.\n\nI can withdraw my consent at any time, by writing to the club within 30 days.\n\nThe club keeps nothing else.';

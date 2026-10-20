@@ -36,7 +36,7 @@ async function tabStops(page: Page): Promise<string[]> {
   return stops;
 }
 
-test('signing in lands in the room, with three named catchers', async ({ page }) => {
+test('signing in lands in the room, with three named catchers @smoke', async ({ page }) => {
   // Through the magic link's own landing screen, which sends a person to the app's `/`.
   const secret = await plantLoginToken(sql, 'admin@example.com');
   await page.addInitScript(() => window.localStorage.setItem('tp.locale', 'en-GB'));
@@ -72,7 +72,7 @@ test('the placeholders are not controls, by role or by keyboard', async ({ page 
   expect(stops.filter((stop) => stop.startsWith('IDLE'))).toEqual([]);
 });
 
-test('Documents opens by keyboard into four parts around the centre, and Escape closes it', async ({
+test('Documents opens by keyboard into four parts around the centre, and Escape closes it @smoke', async ({
   page,
 }) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');

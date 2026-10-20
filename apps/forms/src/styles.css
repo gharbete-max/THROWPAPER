@@ -4275,14 +4275,16 @@ body:has(.app) > #root {
   gap: 2px;
 }
 
-/* Pushed to the bottom: Brand configures the sections above rather than being one of them. */
-.sidebar__foot {
+/* "Earlier features": pushed to the bottom, folded until asked for. */
+.sidebar__earlier {
   margin-block-start: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
   padding-block-start: calc(var(--tp-spacing-unit) * 2);
   border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sidebar__earlier > summary {
+  list-style: none;
+  cursor: pointer;
 }
 
 /*
@@ -4446,13 +4448,29 @@ body:has(.app) > #root {
     display: none;
   }
 
-  .sidebar__sections,
-  .sidebar__foot {
+  .sidebar {
+    /* The opened "Earlier features" rises above the bar. */
+    overflow: visible;
+  }
+
+  .sidebar__sections {
     flex-direction: row;
     gap: 0;
+  }
+
+  .sidebar__earlier {
+    flex: 0 0 22%;
     margin-block-start: 0;
     padding-block-start: 0;
     border-block-start: 0;
+  }
+
+  .sidebar__earlier[open] > .sidebar__sections {
+    position: absolute;
+    inset: auto 0 100%;
+    padding: calc(var(--tp-spacing-unit) * 0.5);
+    border-block-start: var(--tp-border-width) solid var(--tp-colour-border);
+    background: var(--tp-colour-surface);
   }
 
   /*

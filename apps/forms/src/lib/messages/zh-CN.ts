@@ -335,6 +335,7 @@ export const zhCN: Record<MessageKey, string> = {
 
   'nav.checkin': '签到',
   'nav.brand': '品牌',
+  'nav.earlier': '早期功能',
 
   'problem.duplicate-key': '字段键名“{key}”被使用了不止一次。',
   'problem.no-answerable-fields': '该表单还没有收集任何答案。',
@@ -856,7 +857,6 @@ export const zhCN: Record<MessageKey, string> = {
     '以下是按顺序读取的内容。您的表单不会改变：在任何内容成为问题之前，您都会先检查一遍。',
   'paper.read.download': '下载读取的内容',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': '签署',
   'signing.heading': '签署',
   'signing.new': '发送 PDF 以供签署',
   'signing.notConfigured': '尚未设置签署',
@@ -1413,6 +1413,12 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': '删除',
   'ai.models.optional':
     'AI 是可选的。没有任何模型，Loppa 也能完整使用。除非你点击“下载”并确认，否则不会下载任何内容。',
+  'ai.setup.title': '设置 AI',
+  'ai.setup.doesText': '可摘要、翻译、校对并起草电子邮件。',
+  'ai.setup.doesVision': '可读取扫描的页面。',
+  'ai.setup.another': '选择其他模型',
+  'ai.setup.showAll': '显示全部，包括尚不能使用的模型',
+  'ai.setup.advanced': '高级',
   'ai.models.tier.full': '完整',
   'ai.models.tier.balanced': '均衡',
   'ai.models.tier.light': '轻量',
@@ -1433,27 +1439,10 @@ export const zhCN: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': '可用磁盘空间不足，无法容纳此模型。',
   'summary.intro':
     '在这台电脑上为你打开的文档生成摘要或翻译草稿。它显示在原文旁边，标明为生成内容，且从不保存。',
-  'summary.settingsToggle': '模型设置',
-  'summary.modelHeading': '模型',
-  'summary.modelWhat':
-    '一个 {size} 的语言模型在这台电脑上离线运行。你的文档不会离开这台电脑。它只会在你要求时下载一次，之后也可以删除。',
   'summary.state.ready': '模型已就绪。',
-  'summary.state.location': '文件：{path}',
   'summary.memory.low':
     '这台电脑有 {free} GB 可用内存，而模型大约需要 {need} GB。请关闭其他程序后重试。',
-  'summary.get': '获取模型',
-  'summary.getConfirm':
-    '这将从 {host} 下载 {size} 并进行校验，会占用相应的磁盘空间。你的文档不会被发送到任何地方。继续吗？',
-  'summary.getConfirmYes': '下载',
-  'summary.getOff': '暂时无法下载：模型尚未发布。你可以改为从磁盘打开模型文件。',
-  'summary.open': '从磁盘打开模型文件',
-  'summary.remove': '移除模型',
-  'summary.removeConfirm': '要从这台电脑移除模型吗？之后可以再次获取。',
-  'summary.removeConfirmYes': '移除',
   'summary.cancel': '取消',
-  'summary.progress.download': '正在下载第 {part} 部分（共 {parts} 部分）：{done} / {total} MB',
-  'summary.progress.join': '正在合并各部分：{done} / {total} MB',
-  'summary.progress.verify': '正在校验文件：{done} / {total} MB',
   'summary.problem.not-installed': '这台电脑上没有模型。',
   'summary.problem.damaged': '该文件与已发布的模型不一致，未被使用。没有删除任何内容。',
   'summary.problem.too-little-memory': '可用内存太少，无法加载模型。请关闭其他程序后重试。',

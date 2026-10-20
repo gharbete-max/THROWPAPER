@@ -337,6 +337,7 @@ export const daDK: Record<MessageKey, string> = {
 
   'nav.checkin': 'Check-in',
   'nav.brand': 'Udseende',
+  'nav.earlier': 'Tidligere funktioner',
 
   'problem.duplicate-key': 'Feltnøglen "{key}" bruges mere end én gang.',
   'problem.no-answerable-fields': 'Formularen indsamler endnu ingen svar.',
@@ -891,7 +892,6 @@ export const daDK: Record<MessageKey, string> = {
     'Sådan blev det læst, i rækkefølge. Formularen ændres ikke: du gennemgår det, før noget af det bliver til spørgsmål.',
   'paper.read.download': 'Hent det, der blev læst',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Underskrift',
   'signing.heading': 'Underskrift',
   'signing.new': 'Send en PDF til underskrift',
   'signing.notConfigured': 'Underskrift er ikke sat op',
@@ -1484,6 +1484,12 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Slet',
   'ai.models.optional':
     'AI er valgfrit. Loppa virker fuldt ud uden en model. Intet hentes, medmindre du trykker på Hent og bekræfter.',
+  'ai.setup.title': 'Opsæt AI',
+  'ai.setup.doesText': 'Resumerer, oversætter, korrekturlæser og skriver udkast til e-mail.',
+  'ai.setup.doesVision': 'Læser en indscannet side.',
+  'ai.setup.another': 'Vælg en anden model',
+  'ai.setup.showAll': 'Vis alle, også modeller der ikke virker endnu',
+  'ai.setup.advanced': 'Avanceret',
   'ai.models.tier.full': 'Fuld',
   'ai.models.tier.balanced': 'Afbalanceret',
   'ai.models.tier.light': 'Let',
@@ -1507,28 +1513,10 @@ export const daDK: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'Der er ikke nok ledig diskplads til denne model.',
   'summary.intro':
     'Et udkast til resumé eller oversættelse af et dokument, du har åbent, lavet på denne computer. Det vises ved siden af originalen, mærket som genereret, og gemmes aldrig.',
-  'summary.settingsToggle': 'Modelindstillinger',
-  'summary.modelHeading': 'Modellen',
-  'summary.modelWhat':
-    'En sprogmodel på {size} kører på denne computer, uden netværk. Dine dokumenter forlader den aldrig. Den hentes én gang, kun når du beder om det, og du kan fjerne den igen.',
   'summary.state.ready': 'Modellen er klar.',
-  'summary.state.location': 'Fil: {path}',
   'summary.memory.low':
     'Denne computer har {free} GB ledig hukommelse, og modellen skal bruge ca. {need} GB. Luk andre programmer, og prøv igen.',
-  'summary.get': 'Hent modellen',
-  'summary.getConfirm':
-    'Dette henter {size} fra {host} og kontrollerer dem. Det fylder så meget på disken. Dine dokumenter sendes ingen steder hen. Fortsæt?',
-  'summary.getConfirmYes': 'Hent',
-  'summary.getOff':
-    'Hentningen er ikke tilgængelig endnu: modellen er ikke udgivet. Du kan åbne en modelfil fra disken i stedet.',
-  'summary.open': 'Åbn en modelfil fra disken',
-  'summary.remove': 'Fjern modellen',
-  'summary.removeConfirm': 'Fjern modellen fra denne computer? Du kan hente den igen senere.',
-  'summary.removeConfirmYes': 'Fjern',
   'summary.cancel': 'Annuller',
-  'summary.progress.download': 'Henter del {part} af {parts}: {done} af {total} MB',
-  'summary.progress.join': 'Samler delene: {done} af {total} MB',
-  'summary.progress.verify': 'Kontrollerer filen: {done} af {total} MB',
   'summary.problem.not-installed': 'Modellen er ikke på denne computer.',
   'summary.problem.damaged':
     'Filen svarer ikke til den udgivne model og blev ikke brugt. Intet er slettet.',

@@ -348,6 +348,7 @@ export const deDE: Record<MessageKey, string> = {
 
   'nav.checkin': 'Check-in',
   'nav.brand': 'Marke',
+  'nav.earlier': 'Frühere Funktionen',
 
   'problem.duplicate-key': 'Der Feldschlüssel „{key}“ wird mehr als einmal verwendet.',
   'problem.no-answerable-fields': 'Das Formular erfasst noch keine Antworten.',
@@ -919,7 +920,6 @@ export const deDE: Record<MessageKey, string> = {
     'So wurde es gelesen, in dieser Reihenfolge. Ihr Formular ändert sich nicht: Sie prüfen alles, bevor daraus Fragen werden.',
   'paper.read.download': 'Gelesenes herunterladen',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Unterschrift',
   'signing.heading': 'Unterschrift',
   'signing.new': 'PDF zur Unterschrift senden',
   'signing.notConfigured': 'Unterschrift ist nicht eingerichtet',
@@ -1539,6 +1539,12 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Löschen',
   'ai.models.optional':
     'KI ist optional. Loppa funktioniert vollständig ohne Modell. Es wird nichts heruntergeladen, solange Sie nicht auf Herunterladen drücken und bestätigen.',
+  'ai.setup.title': 'KI einrichten',
+  'ai.setup.doesText': 'Fasst zusammen, übersetzt, korrigiert und entwirft E-Mails.',
+  'ai.setup.doesVision': 'Liest eine gescannte Seite.',
+  'ai.setup.another': 'Anderes Modell wählen',
+  'ai.setup.showAll': 'Alle anzeigen, auch Modelle, die noch nicht funktionieren',
+  'ai.setup.advanced': 'Erweitert',
   'ai.models.tier.full': 'Voll',
   'ai.models.tier.balanced': 'Ausgewogen',
   'ai.models.tier.light': 'Leicht',
@@ -1564,29 +1570,10 @@ export const deDE: Record<MessageKey, string> = {
     'Für dieses Modell ist nicht genug freier Speicherplatz vorhanden.',
   'summary.intro':
     'Ein Entwurf einer Zusammenfassung oder Übersetzung eines geöffneten Dokuments, erstellt auf diesem Computer. Er wird neben dem Original angezeigt, als erzeugt gekennzeichnet und nie gespeichert.',
-  'summary.settingsToggle': 'Modell-Einstellungen',
-  'summary.modelHeading': 'Das Modell',
-  'summary.modelWhat':
-    'Ein Sprachmodell von {size} läuft auf diesem Computer, ohne Netzwerk. Ihre Dokumente verlassen ihn nie. Es wird einmal heruntergeladen, nur auf Ihren Wunsch, und kann wieder entfernt werden.',
   'summary.state.ready': 'Das Modell ist bereit.',
-  'summary.state.location': 'Datei: {path}',
   'summary.memory.low':
     'Dieser Computer hat {free} GB freien Speicher, das Modell braucht etwa {need} GB. Schließen Sie andere Programme und versuchen Sie es erneut.',
-  'summary.get': 'Modell herunterladen',
-  'summary.getConfirm':
-    'Dies lädt {size} von {host} herunter und prüft sie. Es belegt so viel Speicherplatz. Ihre Dokumente werden nirgendwohin gesendet. Fortfahren?',
-  'summary.getConfirmYes': 'Herunterladen',
-  'summary.getOff':
-    'Der Download ist noch nicht verfügbar: Das Modell ist nicht veröffentlicht. Sie können stattdessen eine Modelldatei von der Festplatte öffnen.',
-  'summary.open': 'Modelldatei von der Festplatte öffnen',
-  'summary.remove': 'Modell entfernen',
-  'summary.removeConfirm':
-    'Das Modell von diesem Computer entfernen? Sie können es später erneut laden.',
-  'summary.removeConfirmYes': 'Entfernen',
   'summary.cancel': 'Abbrechen',
-  'summary.progress.download': 'Teil {part} von {parts} wird geladen: {done} von {total} MB',
-  'summary.progress.join': 'Die Teile werden zusammengefügt: {done} von {total} MB',
-  'summary.progress.verify': 'Die Datei wird geprüft: {done} von {total} MB',
   'summary.problem.not-installed': 'Das Modell ist nicht auf diesem Computer.',
   'summary.problem.damaged':
     'Die Datei stimmt nicht mit dem veröffentlichten Modell überein und wurde nicht verwendet. Es wurde nichts gelöscht.',

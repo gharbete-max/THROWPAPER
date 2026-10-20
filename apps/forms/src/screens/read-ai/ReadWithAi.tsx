@@ -164,12 +164,12 @@ export default function ReadWithAi({
 
       {blocked === 'model' ? (
         <p role="alert" data-testid="read-no-model">
-          {t('read.noModel')} <Link to="/summary">{t('read.noModelLink')}</Link>
+          {t('read.noModel')} <Link to="/ai-setup">{t('read.noModelLink')}</Link>
         </p>
       ) : null}
       {blocked === 'runtime' ? (
         <p role="alert">
-          {t('read.noRuntime')} <Link to="/summary">{t('read.noModelLink')}</Link>
+          {t('read.noRuntime')} <Link to="/ai-setup">{t('read.noModelLink')}</Link>
         </p>
       ) : null}
       {blocked === 'memory' && status && model ? (

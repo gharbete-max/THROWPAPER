@@ -341,6 +341,7 @@ export const fiFI: Record<MessageKey, string> = {
 
   'nav.checkin': 'Sisäänkirjaus',
   'nav.brand': 'Ilme',
+  'nav.earlier': 'Aiemmat toiminnot',
 
   'problem.duplicate-key': 'Kentän avainta "{key}" käytetään useammin kuin kerran.',
   'problem.no-answerable-fields': 'Lomake ei vielä kerää yhtään vastausta.',
@@ -898,7 +899,6 @@ export const fiFI: Record<MessageKey, string> = {
     'Näin se luettiin, järjestyksessä. Lomakkeesi ei muutu: tarkistat kaiken ennen kuin siitä tulee kysymyksiä.',
   'paper.read.download': 'Lataa luettu',
   // Signing (P1c-3): sending a PDF to Loppa Sign.
-  'nav.signing': 'Allekirjoitus',
   'signing.heading': 'Allekirjoitus',
   'signing.new': 'Lähetä PDF allekirjoitettavaksi',
   'signing.notConfigured': 'Allekirjoitusta ei ole otettu käyttöön',
@@ -1496,6 +1496,12 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.clearCacheYes': 'Poista',
   'ai.models.optional':
     'Tekoäly on valinnaista. Loppa toimii täysin ilman mallia. Mitään ei ladata, ellet paina Lataa ja vahvista.',
+  'ai.setup.title': 'Ota tekoäly käyttöön',
+  'ai.setup.doesText': 'Tiivistää, kääntää, oikolukee ja luonnostelee sähköpostia.',
+  'ai.setup.doesVision': 'Lukee skannatun sivun.',
+  'ai.setup.another': 'Valitse toinen malli',
+  'ai.setup.showAll': 'Näytä kaikki, myös mallit, jotka eivät vielä toimi',
+  'ai.setup.advanced': 'Lisäasetukset',
   'ai.models.tier.full': 'Täysi',
   'ai.models.tier.balanced': 'Tasapainoinen',
   'ai.models.tier.light': 'Kevyt',
@@ -1518,29 +1524,10 @@ export const fiFI: Record<MessageKey, string> = {
   'summary.problem.no-disk-space': 'Tälle mallille ei ole tarpeeksi vapaata levytilaa.',
   'summary.intro':
     'Luonnos avoinna olevan asiakirjan tiivistelmästä tai käännöksestä, tehty tällä tietokoneella. Se näytetään alkuperäisen vieressä, merkittynä tuotetuksi, eikä sitä koskaan tallenneta.',
-  'summary.settingsToggle': 'Mallin asetukset',
-  'summary.modelHeading': 'Malli',
-  'summary.modelWhat':
-    'Kielimalli, jonka koko on {size}, toimii tällä tietokoneella ilman verkkoa. Asiakirjasi eivät koskaan poistu sieltä. Malli ladataan kerran, vain pyynnöstäsi, ja sen voi poistaa uudelleen.',
   'summary.state.ready': 'Malli on valmis.',
-  'summary.state.location': 'Tiedosto: {path}',
   'summary.memory.low':
     'Tällä tietokoneella on {free} Gt vapaata muistia, ja malli tarvitsee noin {need} Gt. Sulje muut ohjelmat ja yritä uudelleen.',
-  'summary.get': 'Hae malli',
-  'summary.getConfirm':
-    'Tämä lataa {size} osoitteesta {host} ja tarkistaa ne. Se vie niin paljon levytilaa. Asiakirjojasi ei lähetetä minnekään. Jatketaanko?',
-  'summary.getConfirmYes': 'Lataa',
-  'summary.getOff':
-    'Lataus ei ole vielä saatavilla: mallia ei ole julkaistu. Voit sen sijaan avata mallitiedoston levyltä.',
-  'summary.open': 'Avaa mallitiedosto levyltä',
-  'summary.remove': 'Poista malli',
-  'summary.removeConfirm':
-    'Poistetaanko malli tältä tietokoneelta? Voit hakea sen myöhemmin uudelleen.',
-  'summary.removeConfirmYes': 'Poista',
   'summary.cancel': 'Peruuta',
-  'summary.progress.download': 'Ladataan osaa {part}/{parts}: {done}/{total} Mt',
-  'summary.progress.join': 'Yhdistetään osia: {done}/{total} Mt',
-  'summary.progress.verify': 'Tarkistetaan tiedostoa: {done}/{total} Mt',
   'summary.problem.not-installed': 'Mallia ei ole tällä tietokoneella.',
   'summary.problem.damaged':
     'Tiedosto ei vastaa julkaistua mallia, eikä sitä käytetty. Mitään ei poistettu.',

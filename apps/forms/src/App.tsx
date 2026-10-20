@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState, type CSSProperties } from 'react';
+import { Suspense, lazy, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { roomCssVariables } from '@tp/tokens';
 import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
@@ -15,6 +15,7 @@ import { Intro } from './components/Intro.js';
 import { useT } from './lib/i18n.js';
 import { OUTGOING_CHANGED, useEdition } from './lib/edition.js';
 import { client } from './lib/api.js';
+import { modelBridge } from './lib/model-bridge.js';
 import { Login } from './screens/Login.js';
 import { Callback } from './screens/Callback.js';
 
@@ -64,6 +65,7 @@ const FillForm = lazy(() => import('./screens/FillIn.js').then((m) => ({ default
 const FillPdf = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillPdf })));
 const Scan = lazy(() => import('./screens/Scan.js').then((m) => ({ default: m.Scan })));
 const Summary = lazy(() => import('./screens/Summary.js').then((m) => ({ default: m.Summary })));
+const AiSetup = lazy(() => import('./screens/AiSetup.js').then((m) => ({ default: m.AiSetup })));
 const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
 const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
 const Send = lazy(() => import('./screens/Send.js').then((m) => ({ default: m.Send })));
@@ -171,6 +173,56 @@ function NavSection({
       <span className="nav-link__label">{label}</span>
       {count ? <span className="badge nav-link__count">{count}</span> : null}
     </NavLink>
+  );
+}
+
+/** The routes that live under "Earlier features" (door and check-in are inside `/events`). */
+const EARLIER = ['/events', '/responses', '/invoices', '/users', '/brand'];
+const EARLIER_KEY = 'tp.rail.earlier';
+
+/**
+ * A disclosure for the screens of the first product: closed by default, remembers what the person
+ * chose (locally, and only if storage is there), and open while the current screen is inside it so
+ * the highlighted row is never hidden. Native `details`, so it is a keyboard control already.
+ */
+function EarlierFeatures({
+  label,
+  current,
+  children,
+}: {
+  label: string;
+  current: boolean;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(() => {
+    try {
+      return localStorage.getItem(EARLIER_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    if (current) setOpen(true);
+  }, [current]);
+  return (
+    <details className="sidebar__earlier" open={open}>
+      <summary
+        className="button button--quiet small nav-link"
+        onClick={(event) => {
+          event.preventDefault();
+          try {
+            localStorage.setItem(EARLIER_KEY, open ? '0' : '1');
+          } catch {
+            // Private window or blocked storage: it simply forgets.
+          }
+          setOpen(!open);
+        }}
+      >
+        <Icon name="archive" className="icon--lead" />
+        <span className="nav-link__label">{label}</span>
+      </summary>
+      <div className="sidebar__sections">{children}</div>
+    </details>
   );
 }
 
@@ -320,26 +372,35 @@ function Shell() {
               )}
             </Link>
 
+            {/* The four parts of Documents, then the AI centre; the first product's screens fold below. */}
             <div className="sidebar__sections">
-              <NavSection to="/events" icon="events" label={t('nav.events')} />
               <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
-              <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
-              <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
-              <NavSection to="/signing" icon="signature" label={t('nav.signing')} />
+              <NavSection to="/scan" icon="upload" label={t('room.scan')} />
+              <NavSection to="/signing" icon="signature" label={t('room.sign')} />
+              <NavSection to="/send" icon="email" label={t('room.send')} />
               {/* The desktop sends nothing by itself: its mail waits here for somebody to send it. */}
               {edition === 'desktop' && (
                 <NavSection to="/outgoing" icon="email" label={t('nav.outgoing')} count={waiting} />
               )}
+              {edition === 'desktop' && modelBridge() && (
+                <NavSection to="/summary" icon="globe" label={t('room.centre')} />
+              )}
+            </div>
+
+            {/* Nothing here is removed; these wait for the catchers they belong to. */}
+            <EarlierFeatures
+              label={t('nav.earlier')}
+              current={EARLIER.some((to) => location.pathname.startsWith(to))}
+            >
+              <NavSection to="/events" icon="events" label={t('nav.events')} />
+              <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
+              <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
               {/* Support work, so it only appears for the people who do it. */}
               {user.role === 'admin' && (
                 <NavSection to="/users" icon="people" label={t('nav.users')} />
               )}
-            </div>
-
-            {/* Brand configures the sections above rather than sitting among them, so it sits apart. */}
-            <div className="sidebar__foot">
               <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
-            </div>
+            </EarlierFeatures>
           </nav>
 
           {/*
@@ -412,6 +473,7 @@ function Shell() {
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/scan" element={<Scan />} />
               <Route path="/summary" element={<Summary />} />
+              <Route path="/ai-setup" element={<AiSetup />} />
               <Route path="/signing" element={<Signing />} />
               <Route path="/outgoing" element={<Outgoing />} />
               <Route path="/send" element={<Send />} />

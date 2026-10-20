@@ -159,6 +159,11 @@ export function Room() {
             onChange={setLocale}
             t={t}
           />
+          {edition === 'desktop' && modelBridge() ? (
+            <Link className="button button--quiet small" to="/ai-setup">
+              {t('ai.setup.title')}
+            </Link>
+          ) : null}
           <span className="room__who small">{user.name}</span>
           <button className="button button--quiet small" onClick={signOut}>
             {t('app.signOut')}
