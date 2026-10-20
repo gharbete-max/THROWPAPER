@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { db, plantLoginToken } from './support.js';
+import { db, signInAs } from './support.js';
 import { fakeBridge } from './fake-model.js';
 
 /**
@@ -12,13 +12,14 @@ test.afterAll(async () => {
   await sql.end();
 });
 
-async function signIn(page: Page, locale = 'en-GB') {
-  await page.addInitScript((l) => window.localStorage.setItem('tp.locale', l), locale);
-  const secret = await plantLoginToken(sql, 'admin@example.com');
-  await page.goto(`/auth/callback?token=${secret}`);
-  await page.waitForURL(/\/room/);
+/**
+ * By a planted refresh token, not the magic link: the link's callback is rate-limited to 20 a quarter
+ * of an hour for the whole suite, and every extra sign-in here once took it past that for the specs
+ * that come after.
+ */
+async function signIn(page: Page, locale: 'en-GB' | 'de-DE' = 'en-GB') {
+  await signInAs(page, sql, 'admin@example.com', locale);
 }
-
 test('Scan: a photograph with its alt text, one filled button, nothing from another origin', async ({
   page,
 }) => {
