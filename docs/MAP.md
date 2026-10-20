@@ -90,12 +90,14 @@ resources (one Postgres, fixed ports): take the lock `mkdir C:/Users/gusta/AppDa
 before DB tests/e2e, `rmdir` after. Run agents one at a time unless work is truly disjoint.
 Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix watches).
 
-## Current state (2026-10-20)
-Merged: the whole Documents plan; coordinator, single-model migration, reply helper, AI reader +
-proofread + corporate email. In flight: the optional model catalogue (`claude/model-catalogue`).
-Done on `claude/footer-and-keys-backup`: the campaign footer opens as a skeleton of `[placeholders]`
-in all twelve languages and sending stays blocked (client and server, `checkCampaign`) while one is
-left or `{{unsubscribe}}` is absent; File > Back up with the keys / Restore keys from a backup
-(`keys.enc`, AES-256-GCM, scrypt; procedure in `docs/BACKUP.md`). Next: AI pack distribution (parts < 2 GiB with SHA-256, open from disk or download with
-confirmation); packaged-app test of the llama-server runtime. Unverified everywhere: macOS, 8–12 GB
+## Current state (2026-10-20, evening)
+Merged: the whole Documents plan; the AI coordinator, single-model migration (Qwen2.5-VL-7B through
+a pinned llama-server), the optional model catalogue (Full/Balanced/Light/Very light, direct Hugging
+Face download after a confirmation), the AI reader, proofreading and corporate email, the Send reply
+helper, the campaign footer skeleton, the keys backup (`keys.enc`, `docs/BACKUP.md`), the AI pack
+(runtime in the package; split/join/publish scripts; install from a folder offline) and e2e health
+(156/156). Not done: **uploading the ~6.9 GB pack** (`publish-ai-pack.ts <folder> --yes`, owner's go;
+until then the in-app Get stays off and a pack installs from a folder); empty `<th>` in the
+actions column of several tables (needs one word in all twelve catalogues); SmolVLM2-500M is marked
+not-working-yet; Qwen3-VL-4B, SmolVLM2-2.2B/256M never run. Unverified everywhere: macOS, 8-12 GB
 laptops, CPUs without AVX2, native-speaker quality. Plans/ADRs are history unless linked above.
