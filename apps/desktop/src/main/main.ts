@@ -8,6 +8,7 @@
  * and the OS password store for an SMTP password.
  */
 import { cp, mkdir } from 'node:fs/promises';
+import { backupFilter } from './backup.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
@@ -262,7 +263,7 @@ async function backUp(): Promise<void> {
     await sign?.close();
     sign = null;
     await mkdir(filePath, { recursive: true });
-    await cp(dataDir, filePath, { recursive: true });
+    await cp(dataDir, filePath, { recursive: true, filter: backupFilter() });
     await dialog.showMessageBox({ message: fill(t.backupDone, { path: filePath }) });
   } catch (error) {
     dialog.showErrorBox(t.menuBackup, fill(t.backupFailed, { message: (error as Error).message }));
