@@ -33,8 +33,13 @@ extraResources:
     to: sign-web
   - from: sign-drizzle
     to: sign-drizzle
-  # Not here, on purpose (ADR 0025): the model, its projector and llama-server are about 6 GB, more
-  # than an installer can carry. They come as a separate AI pack, placed in `ai-pack` beside the app.
+  # The AI pack folder (ADR 0025, 0026). Plain files beside the asar, never inside it: `llama-server`
+  # is a child program started from `resources/ai-pack/runtime` (Windows x64 only, CPU build, with
+  # its RUNTIME.json hash list; scripts/build.ts stages it). The model and projector are NOT here:
+  # about 6 GB, more than an installer can carry. They come as a separate pack, placed in this folder
+  # or opened from a folder in the app.
+  - from: ai-pack
+    to: ai-pack
 # PGlite reads its WebAssembly with fs from beside its module; out of the asar, nothing can go wrong.
 asarUnpack:
   - node_modules/@electric-sql/pglite/**
@@ -51,7 +56,7 @@ npmRebuild: false
 # permissions and send mail as the user), NODE_OPTIONS, and --inspect. On: the app loads only from
 # its asar, and the asar is checked against the hash stamped into the executable. The model is run by
 # `llama-server`, an ordinary child program started by the main process (ADR 0025); no fuse touches
-# a child that is not Node. UNVERIFIED in a packaged build: the pack found beside the app.
+# a child that is not Node (proved in a packaged build, docs/adr/0025 section 6).
 electronFuses:
   runAsNode: false
   enableCookieEncryption: true

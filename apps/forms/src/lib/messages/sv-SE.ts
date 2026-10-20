@@ -1455,7 +1455,7 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Det finns ingen nedladdning av den här ännu. Du kan öppna en fil från disken i stället.',
   'ai.models.get': 'Hämta',
-  'ai.models.open': 'Öppna en fil från disken',
+  'ai.models.open': 'Öppna en fil eller ett AI-paket (PACK.json) från disken',
   'ai.models.remove': 'Ta bort',
   'ai.models.getConfirm':
     'Det här hämtar {size} GB för {name} från Loppas utgåva på GitHub och kontrollerar filen. Den tar så mycket diskutrymme. Dina dokument skickas ingenstans. Fortsätta?',

@@ -85,7 +85,7 @@ separate **AI pack** placed in `ai-pack/` beside the app (`<resources>/ai-pack`)
 already carries the parts (three for the weights, one for the projector, 1.5 GiB each at most) with
 `unpublished:` addresses. **The pack's distribution workflow is not built here.** Until it is, the model is
 opened from disk or found by `LOPPA_AI_DIR`, `local-models/` or the repository root in development
-(`docs/plan/AI-SYSTEM.md` D7, plus `ai-pack/` and `<kind>/` folders).
+(`docs/plan/AI-SYSTEM.md` D7, plus `ai-pack/` and `<kind>/` folders). **Built since: section 6.**
 
 ### 5. Measured on this computer (2026-10-19)
 
@@ -120,6 +120,43 @@ UNVERIFIED); macOS and Linux (the archives are pinned, never run); a cold disk (
 files cached); a processor without AVX2 (only the stand-in server, which prints such a line, was run); a
 GPU; battery; a ten-page document through the real model; reading many pages (the page pipeline is not
 built); more than two invented pages with the Q8_0 projector.
+
+### 6. Distribution, built and measured (2026-10-20)
+
+- **Runtime in the package.** `scripts/build.ts` stages `ai-pack/` for every target (a README) and, for
+  Windows x64 only (the one verified asset), `ai-pack/runtime/` with the CPU build and `RUNTIME.json`
+  (the asset's hash list). `electron-builder.yml` copies it as an `extraResources` folder beside
+  `app.asar`: plain files, found by the resolver as tier 4 (`resources/ai-pack/runtime`), hashed file by
+  file before use. macOS and Linux get the folder without the program (their assets are UNVERIFIED);
+  a Mac gets `llama-server` with the pack once it has been run there.
+- **Packaged build, driven over CDP** (`Loppa.exe --remote-debugging-port`, `LOPPA_AI_DIR` at the owner's
+  files, a throwaway Playwright script, deleted): status showed the model `installed`, files `env`, the
+  runtime `ai-pack`, `verified`; a summary of an invented minutes text took 10.5 s and kept every date and
+  amount; `read-page` of an invented invoice picture took 34 s and returned the heading, the table rows,
+  the total, the due date and both checkboxes; `llama-server` listened on `127.0.0.1` only, and `netstat`
+  showed no connection of Loppa or `llama-server` to anything but this computer.
+  **The fuse worry is disproved:** `onlyLoadAppFromAsar` governs what Electron loads as code, not a child
+  process started from `resources/`; `runAsNode: false` and `enableNodeCliInspectArguments: false` did not
+  block `--remote-debugging-port` (a Chromium switch), which is how the build was driven. Memory
+  came back after the idle kill (see the measurement below).
+- **The pack.** `scripts/make-ai-pack.ts` cuts the files into parts of 1.5 GiB (below the 2 GiB asset
+  limit; the default equals the manifest's parts, so the hashes already in the manifest are the pack's)
+  and writes `PACK.json`; it says whether every file and part matches the manifest (it does: 6.89 GB,
+  five files, 7 s). `scripts/join-ai-pack.ts` and the app's _Open a file from disk_ (choose `PACK.json`
+  or a `.part1`) share `src/ai/pack.ts`: each part is checked as it is streamed into
+  `<name>.joining` in Loppa's folder, the whole before the rename, and the pack folder is never
+  changed. A finished file is skipped, so a retry resumes at the file that stopped. A missing part is
+  `not-installed`, a wrong size or hash `damaged`; nothing that looks like a model is left behind.
+  Fully offline. Joining the real pack took 6 s.
+- **Download.** The same manifest drives _Get_, with the existing confirmation that names GitHub and the
+  size (ADR 0026). `scripts/publish-ai-pack.ts` prints the release, the files, their sizes and the
+  exact `gh` command and uploads nothing; `--yes` uploads, publishes and rewrites the part URLs. Not
+  run: the upload is the owner's decision. The old `model-qwen3-4b-instruct-2507-q4km` release is
+  obsolete and can be deleted. CI never fetches the pack (about 14 GB of runner disk).
+- **NSIS.** The installer step failed in the agent's deep worktree because `makensis` could not open
+  `allowOnlyOneInstallerInstance.nsh`: the file exists, its path is 267 characters, over the 260 limit
+  NSIS 3.0.4 works under. The cause is the checkout's path, not the size of the package (555 MB unpacked,
+  the pack is not in it). CI paths are short; the Desktop workflow builds the installer.
 
 ## Consequences
 

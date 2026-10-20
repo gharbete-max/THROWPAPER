@@ -1470,7 +1470,7 @@ export const enGB = {
   'ai.models.downloadOff':
     'There is no download for this yet. You can open a file from disk instead.',
   'ai.models.get': 'Get',
-  'ai.models.open': 'Open a file from disk',
+  'ai.models.open': 'Open a file or an AI pack (PACK.json) from disk',
   'ai.models.remove': 'Remove',
   'ai.models.getConfirm':
     'This downloads {size} GB for {name} from Loppa’s release on GitHub and checks it. It takes that much disk space. Your documents are not sent anywhere. Continue?',

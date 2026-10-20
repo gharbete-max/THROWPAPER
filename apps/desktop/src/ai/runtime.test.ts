@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rename, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { RuntimeManifest, LLAMA_SERVER } from '@tp/shared/ai';
@@ -57,6 +57,14 @@ describe('the runtime folder', () => {
     expect(await locateRuntime(context, manifest, 'darwin', 'arm64')).toBeNull(); // nothing pinned
     context.packDir = null;
     expect(await locateRuntime(context, manifest, 'linux', 'x64')).toBeNull();
+  });
+
+  it('is found in ai-pack/runtime too, which is where the packaged app has it', async () => {
+    await rename(join(root, 'pack'), join(root, 'moved'));
+    await mkdir(join(root, 'pack'), { recursive: true });
+    await rename(join(root, 'moved'), join(root, 'pack', 'runtime'));
+    const found = await locateRuntime(context, manifest, 'linux', 'x64');
+    expect(found).toMatchObject({ dir: join(root, 'pack', 'runtime'), source: 'ai-pack' });
   });
 
   it('is checked file by file against the manifest', async () => {

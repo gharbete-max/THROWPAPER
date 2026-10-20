@@ -36,7 +36,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Sign | `screens/Signing*`, `screens/signing/`, `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
 | Send (single, batch, campaigns, reply helper) | `screens/Send*`, `screens/send/`, `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
 | AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/Summary*` | `docs/plan/AI-SYSTEM.md`, ADRs 0023–0025 |
-| Desktop packaging | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/fetch-runtime.ts`) | ADR 0016, 0025 |
+| Desktop packaging, AI pack | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/{fetch-runtime,make-ai-pack,join-ai-pack,publish-ai-pack}.ts`, `src/ai/pack.ts`) | ADR 0016, 0025 §6, `docs/DEPLOY.md` |
 | Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
 | Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/` | gold is a fill, never text |
@@ -48,7 +48,7 @@ files sit in the repo root in dev, Git-ignored), run by a pinned **llama.cpp `ll
 process on loopback (ADR 0025); killed when idle so memory is truly freed. Needs ~12 GB RAM (9.8 GB
 measured peak); CPU only by default. An optional catalogue of smaller Apache-2.0 models (Qwen3-VL
 4B/2B, SmolVLM2) is being added. Tasks: read-page (vision), summarise, translate, quote, proofread,
-compose-email, reply. Never in the installer (≈6 GB): ships as a separate AI pack. Results are cached
+compose-email, reply. Never in the installer (≈6 GB): ships as a separate AI pack (parts < 2 GiB + `PACK.json`; `make-ai-pack.ts`, `join-ai-pack.ts`, `publish-ai-pack.ts`, `src/ai/pack.ts`; install offline via *Open a file from disk* → `PACK.json`). The Windows installer carries `llama-server` in `resources/ai-pack/runtime`. Results are cached
 per page. Local file resolution: `LOPPA_AI_DIR` → `local-models/` → repo root (dev) → `resources/ai-pack`
 → user-data. `LOPPA_MODEL_PATH` points a dev run at a file.
 

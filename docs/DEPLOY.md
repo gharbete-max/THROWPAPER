@@ -163,3 +163,29 @@ builds the installer. The same thing without a window, on any OS:
 No Kubernetes manifests, no Terraform, no autoscaling. One container and a Postgres is the correct
 shape for a product with one organisation and its first customer, and guessing at an orchestration
 layer before the hosting target is chosen would be inventing constraints rather than removing them.
+
+## The desktop AI pack (ADR 0025, 0026)
+
+The installers are lean. They carry `llama-server` (Windows x64, CPU build, 50 MB, plain files in
+`resources/ai-pack/runtime` with `RUNTIME.json`) but never the model: about 6 GB, more than NSIS, Apple
+notarisation or a GitHub release file (2 GiB) can carry. The **AI pack** is the model and projector in
+parts under 2 GiB with `PACK.json`; it is separate from code and published on its own.
+
+```bash
+# 1. cut and check (the parts are byte for byte the ones the app's manifest names)
+pnpm --filter @tp/desktop exec tsx scripts/make-ai-pack.ts --src <folder with the .gguf files> --out ai-pack-out --with-lite
+# 2. plan the release: prints the files, sizes and the exact gh command; uploads nothing
+pnpm --filter @tp/desktop exec tsx scripts/publish-ai-pack.ts ai-pack-out
+# 3. the owner's go: upload (about 6.9 GB), publish, and point the manifest's part URLs at it
+pnpm --filter @tp/desktop exec tsx scripts/publish-ai-pack.ts ai-pack-out --yes
+# check a pack by hand, without the app
+pnpm --filter @tp/desktop exec tsx scripts/join-ai-pack.ts ai-pack-out joined
+```
+
+Step 3 rewrites `packages/shared/src/ai/models/*.json`; commit it. Until then the manifest says
+`unpublished:` and the app's _Get_ button is off, while opening a pack from a folder works. **CI never
+fetches the pack**: a hosted runner has about 14 GB of disk and the Desktop workflow only needs to
+prove that the installers build and start. Windows packaging needs a checkout path short enough for
+NSIS (260 characters including `node_modules/.pnpm/...`); a deep worktree fails at `makensis` with
+"could not open file ...allowOnlyOneInstallerInstance.nsh" though the file is there.
+
