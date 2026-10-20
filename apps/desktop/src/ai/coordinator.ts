@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { appendFile, mkdir, readFile, rm, stat, statfs, writeFile } from 'node:fs/promises';
 import { basename, join, resolve, sep } from 'node:path';
 import {
   PAGE_PIPELINE_VERSION,
@@ -6,7 +6,12 @@ import {
   capabilityOf,
   fileNames,
   installId,
+  isAllowedHost,
   isDownloadable,
+  consentFor,
+  consentMatches,
+  recommendModel,
+  type AiConsent,
   totalBytes,
   unpublishedReason,
   MODEL_REGISTRY,
@@ -51,6 +56,9 @@ import { locateModel, type ResolveContext } from './resolve.js';
  *   memory back completely.
  * - **Evaluation-only models are never fetched**, whatever is asked.
  */
+/** Left free on the disk after a download. */
+const DISK_MARGIN_BYTES = 256 * 1024 * 1024;
+
 export const IDLE_MS = 10 * 60 * 1000;
 
 /** A page's JSON that is worth keeping: it was read, wholly or with doubts, and not given up on. */
@@ -95,6 +103,10 @@ export interface CoordinatorDeps {
   /** The runtime's state for the status panel; omitted where the engines need no program. */
   runtimeStatus?(): Promise<AiFileStatus | null>;
   freeMemory(): number;
+  /** Total memory, for the recommendation; falls back to free memory. */
+  totalMemory?(): number;
+  /** Room left on the disk `dir` is on; null if unknown. Defaults to the operating system's answer. */
+  freeDisk?(dir: string): Promise<number | null>;
   /** The computer's own file dialog; null when the person closes it. */
   chooseFile(): Promise<string | null>;
   fetch: typeof fetch;
@@ -106,7 +118,9 @@ export interface CoordinatorDeps {
 
 export interface Coordinator {
   status(): Promise<AiStatus>;
-  install(modelId: string, consent: boolean): Promise<AiStart>;
+  install(modelId: string, consent: AiConsent): Promise<AiStart>;
+  /** The model tasks go to; null returns to the best one installed. Fetches nothing. */
+  select(modelId: string | null): Promise<AiStatus>;
   openFromDisk(modelId: string): Promise<AiStart>;
   remove(modelId: string): Promise<AiStatus>;
   run(id: string, task: AiTask, options?: { priority?: number }): Promise<AiStart>;
@@ -137,6 +151,14 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
   const registry = deps.registry ?? MODEL_REGISTRY;
   const idleMs = deps.idleMs ?? IDLE_MS;
   const locationsFile = join(deps.dir, 'locations.json');
+  const selectionFile = join(deps.dir, 'selected.json');
+  const consentLog = join(deps.dir, 'consents.jsonl');
+  const freeDisk =
+    deps.freeDisk ??
+    (async (dir: string) => {
+      const info = await statfs(dir).catch(() => null);
+      return info ? Number(info.bavail) * Number(info.bsize) : null;
+    });
 
   const eventListeners = new Set<(event: AiEvent) => void>();
   const transitionListeners = new Set<(transition: Transition) => void>();
@@ -195,7 +217,11 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   // --- status ----------------------------------------------------------------------------
 
-  async function modelStatus(model: ModelManifest, ctx: ResolveContext): Promise<AiModelStatus> {
+  async function modelStatus(
+    model: ModelManifest,
+    ctx: ResolveContext,
+    effectiveId: string | undefined,
+  ): Promise<AiModelStatus> {
     const located = await locateModel(model, ctx);
     const factoryExists = deps.engines[model.id] !== undefined;
     const files: AiFileStatus[] = await Promise.all(
@@ -253,14 +279,26 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
           : (unpublishedReason(model) ?? 'not-published'),
       folder: deps.dir,
       resident: resident?.model.id === model.id,
+      tier: model.tier,
+      support: model.support,
+      requiredMemoryVerified: model.requiredMemoryVerified,
+      consent: consentFor(model),
+      selected: model.id === effectiveId,
+      recommended: model.id === recommended(),
     };
   }
 
   async function status(): Promise<AiStatus> {
     const ctx = await context();
+    await mkdir(deps.dir, { recursive: true }).catch(() => undefined);
+    const effective = (
+      await modelFor({ kind: 'summarise', text: '', into: 'en-GB', shape: 'document' })
+    )?.id;
     return {
-      models: await Promise.all(registry.map((model) => modelStatus(model, ctx))),
+      models: await Promise.all(registry.map((model) => modelStatus(model, ctx, effective))),
       freeMemoryBytes: deps.freeMemory(),
+      totalMemoryBytes: deps.totalMemory?.() ?? deps.freeMemory(),
+      freeDiskBytes: await freeDisk(deps.dir),
       activity,
       queued: queue.length,
       runtime: (await deps.runtimeStatus?.()) ?? null,
@@ -349,13 +387,13 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
    * file again, or summarising what was read, never touches an image twice. A cached page is
    * answered without loading the model. Only a page that was read is kept: a failed one is tried again.
    */
-  const pageKey = (task: AiTask): string | null =>
+  const pageKey = (task: AiTask, modelId: string): string | null =>
     task.kind === 'read-page'
       ? cacheKey({
           fileSha256: task.fileSha256,
           page: task.page,
           pipelineVersion: PAGE_PIPELINE_VERSION,
-          modelId: modelFor(task)?.id ?? '',
+          modelId,
           settings: { longEdge: task.longEdge, turn: task.turn, language: task.language },
         })
       : null;
@@ -363,7 +401,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
   async function execute(job: Job): Promise<void> {
     const { id } = job;
     try {
-      const key = pageKey(job.task);
+      const key = pageKey(job.task, job.model.id);
       const hit = key ? await deps.cache.get<string>(key) : undefined;
       if (hit !== undefined) {
         emit({ id, kind: 'text', mode: 'replace', text: hit });
@@ -447,14 +485,58 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   // --- tasks -----------------------------------------------------------------------------
 
-  /** The model for a task: one that has the capability and an engine, a distributable one first. */
-  function modelFor(task: AiTask): ModelManifest | undefined {
-    const capability = capabilityOf(task);
+  /**
+   * The model for a capability: the person's choice if it is installed and can do it; else the
+   * best one installed (the registry is best first); else the one that suits this computer, so the
+   * answer is `not-installed` for the model the list recommends. Evaluation-only only if nothing
+   * else exists.
+   */
+  async function modelForCapability(
+    capability: ReturnType<typeof capabilityOf>,
+  ): Promise<ModelManifest | undefined> {
     const candidates = registry.filter(
       (m) => m.capabilities.includes(capability) && deps.engines[m.id] !== undefined,
     );
-    return candidates.find((m) => !m.evaluationOnly) ?? candidates[0];
+    const usable = candidates.filter((m) => !m.evaluationOnly);
+    const pool = usable.length > 0 ? usable : candidates;
+    const chosen = (await readSelection()) ?? '';
+    const picked = pool.find((m) => m.id === chosen);
+    if (deps.fake) return picked ?? pool[0];
+    const ctx = await context();
+    const there = async (m: ModelManifest) =>
+      (await locateModel(m, ctx)).every((item) => item.found !== null || item.file.optional);
+    if (picked && (await there(picked))) return picked;
+    for (const m of pool) if (await there(m)) return m;
+    return pool.find((m) => m.id === recommended()) ?? pool[0];
   }
+
+  const modelFor = (task: AiTask) => modelForCapability(capabilityOf(task));
+
+  // --- the person's choice ---------------------------------------------------------------
+
+  async function readSelection(): Promise<string | null> {
+    return readFile(selectionFile, 'utf8')
+      .then((text) => {
+        const id = (JSON.parse(text) as { selected?: unknown }).selected;
+        return typeof id === 'string' ? id : null;
+      })
+      .catch(() => null);
+  }
+
+  async function select(modelId: string | null): Promise<AiStatus> {
+    if (modelId === null) await rm(selectionFile, { force: true });
+    else if (modelById(modelId) && deps.engines[modelId]) {
+      await mkdir(deps.dir, { recursive: true });
+      await writeFile(selectionFile, JSON.stringify({ selected: modelId }), 'utf8');
+    }
+    return status();
+  }
+
+  const recommended = (): string | null =>
+    recommendModel(registry, {
+      totalBytes: deps.totalMemory?.() ?? deps.freeMemory(),
+      freeBytes: deps.freeMemory(),
+    });
 
   async function run(
     id: string,
@@ -468,7 +550,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     if (running?.id === id || queue.some((job) => job.id === id)) {
       return { ok: false, problem: 'failed' };
     }
-    const model = modelFor(task);
+    const model = await modelFor(task);
     if (!model) return { ok: false, problem: 'not-available' };
     if (!deps.fake) {
       const located = await locateModel(model, await context());
@@ -515,33 +597,76 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   // --- getting and forgetting files ------------------------------------------------------
 
-  async function install(modelId: string, consent: boolean): Promise<AiStart> {
-    if (!consent) return { ok: false, problem: 'consent-required' };
+  async function install(modelId: string, consent: AiConsent): Promise<AiStart> {
     const model = modelById(modelId);
     if (!model) return { ok: false, problem: 'failed' };
-    if (activity !== 'idle') return { ok: false, problem: 'busy' };
     if (!isDownloadable(model)) return { ok: false, problem: 'download-unavailable' };
+    // What the person agreed to must be exactly what would be fetched: host, files, total size.
+    if (!consentMatches(model, consent)) return { ok: false, problem: 'consent-required' };
+    if (activity !== 'idle') return { ok: false, problem: 'busy' };
+
+    const todo = (await locateModel(model, await context()))
+      .filter((item) => item.found === null && !item.file.optional)
+      .map((item) => item.file);
+    const modelTotal = todo.reduce((sum, file) => sum + file.bytes, 0);
+
+    // Room first: what is still to fetch, less what an earlier attempt already left, and a margin.
+    await mkdir(deps.dir, { recursive: true });
+    let left = modelTotal;
+    for (const file of todo) {
+      left -= (await stat(join(deps.dir, `${file.name}.partial`)).catch(() => null))?.size ?? 0;
+    }
+    const room = await freeDisk(deps.dir);
+    if (room !== null && room < left + DISK_MARGIN_BYTES) {
+      return { ok: false, problem: 'no-disk-space' };
+    }
 
     activity = 'downloading';
     installAbort = new AbortController();
     const signal = installAbort.signal;
     const id = installId(modelId);
+    // The consent is kept: when, what, from where. Never the content of any document.
+    await appendFile(
+      consentLog,
+      `${JSON.stringify({ at: new Date().toISOString(), modelId, ...consent })}\n`,
+      'utf8',
+    ).catch(() => undefined);
     void (async () => {
       try {
-        const have = await locateModel(model, await context());
-        const todo = have
-          .filter((item) => item.found === null && !item.file.optional)
-          .map((item) => item.file);
+        let before = 0;
+        let speed = 0;
+        let last = { at: Date.now(), done: 0 };
         for (const [index, file] of todo.entries()) {
           const path = await downloadFile({
             file,
             dir: deps.dir,
             fetch: deps.fetch,
             signal,
-            onProgress: (p) =>
-              emit({ id, kind: 'install', modelId, file: index + 1, files: todo.length, ...p }),
+            allowHost: isAllowedHost,
+            onProgress: (p) => {
+              const done = before + p.done;
+              const now = Date.now();
+              if (now - last.at >= 500 && done > last.done) {
+                const instant = ((done - last.done) * 1000) / (now - last.at);
+                speed = speed === 0 ? instant : speed * 0.7 + instant * 0.3;
+                last = { at: now, done };
+              }
+              emit({
+                id,
+                kind: 'install',
+                modelId,
+                file: index + 1,
+                files: todo.length,
+                ...p,
+                modelDone: done,
+                modelTotal,
+                bytesPerSecond: Math.round(speed),
+                etaSeconds: speed > 0 ? Math.round((modelTotal - done) / speed) : null,
+              });
+            },
           });
-          // The join hashed every byte against the manifest's own hash: it counts as verified.
+          before += file.bytes;
+          // The hash was checked against the manifest while the bytes arrived: it counts as verified.
           verified.set(path, await keyOf(path));
           damaged.delete(path);
         }
@@ -599,6 +724,10 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
                   phase: 'verify',
                   done,
                   total: file.bytes,
+                  modelDone: done,
+                  modelTotal: file.bytes,
+                  bytesPerSecond: 0,
+                  etaSeconds: null,
                 }),
             })) === file.sha256
           ) {
@@ -657,6 +786,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
   return {
     status,
     install,
+    select,
     openFromDisk,
     remove,
     run,

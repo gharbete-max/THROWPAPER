@@ -80,9 +80,7 @@ test('set up from a file on disk, summarise, translate, cancel, and see the limi
   expect(sent).toBe(3);
 });
 
-test('the model list shows the one model, its files and the program that runs it', async ({
-  page,
-}) => {
+test('the model list shows the model, its files and the program that runs it', async ({ page }) => {
   await page.addInitScript(fakeBridge);
   await signIn(page);
   await page.goto('/summary');
@@ -93,8 +91,9 @@ test('the model list shows the one model, its files and the program that runs it
   await expect(model).toContainText('Not installed');
   await expect(model).toContainText('qwen-vl.gguf: not found');
   await expect(model).toContainText('mmproj.gguf: not found');
-  await expect(model).toContainText('at least 12 GB of memory');
-  await expect(model).toContainText('put them in this folder: C:\\Users\\me\\AppData');
+  await expect(model).toContainText('Needs about 10.0 GB of memory');
+  await expect(page.getByText('put them in this folder: ')).toContainText('AppData');
+  await expect(page.getByText('AI is optional.')).toBeVisible();
   await expect(model.getByRole('button', { name: 'Open a file from disk' })).toBeEnabled();
 
   const runtime = page.locator('[data-runtime]');

@@ -1,0 +1,50 @@
+{
+  "capabilities": ["text", "vision"],
+  "distributable": true,
+  "evaluationOnly": false,
+  "files": [
+    {
+      "bytes": 1107409952,
+      "name": "Qwen3VL-2B-Instruct-Q4_K_M.gguf",
+      "parts": [
+        {
+          "bytes": 1107409952,
+          "name": "Qwen3VL-2B-Instruct-Q4_K_M.gguf",
+          "sha256": "089d75c52f4b7ffc56ba998ffc50aae89fcafc755f9e7208aacca281dca6c2ae",
+          "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF/resolve/52d6c8ffea26cc873ac5ad116f8631268d7eb503/Qwen3VL-2B-Instruct-Q4_K_M.gguf"
+        }
+      ],
+      "role": "weights",
+      "sha256": "089d75c52f4b7ffc56ba998ffc50aae89fcafc755f9e7208aacca281dca6c2ae"
+    },
+    {
+      "bytes": 445053216,
+      "name": "mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf",
+      "parts": [
+        {
+          "bytes": 445053216,
+          "name": "mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf",
+          "sha256": "f9a68fabba69c3b81e153367b2c7521030b0fa8bb0de400c9599c8e6725f9c82",
+          "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF/resolve/52d6c8ffea26cc873ac5ad116f8631268d7eb503/mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf"
+        }
+      ],
+      "role": "projector",
+      "sha256": "f9a68fabba69c3b81e153367b2c7521030b0fa8bb0de400c9599c8e6725f9c82"
+    }
+  ],
+  "id": "qwen3-vl-2b-instruct-q4_k_m",
+  "kind": "qwen3-vl",
+  "licence": "Apache-2.0",
+  "licenceUrl": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct",
+  "name": "Qwen3-VL-2B-Instruct (Q4_K_M)",
+  "requiredMemoryBytes": 4200000000,
+  "requiredMemoryVerified": true,
+  "retrievedAt": "2026-10-20",
+  "source": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF",
+  "sourceRevision": "52d6c8ffea26cc873ac5ad116f8631268d7eb503",
+  "support": {
+    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads, CPU: load 1.6 s, peak memory 3.54 GB, an invented invoice page read in 9.8 s with 12 of 12 expected strings found, a Swedish summary in 5.7 s.",
+    "state": "working"
+  },
+  "tier": "light"
+}

@@ -1,5 +1,7 @@
 import type { JobWarning, ModelEvent, ModelProblem } from '../summary/bridge.js';
 import type { Capability } from './capability.js';
+import type { AiConsent } from './catalogue.js';
+import type { Support, Tier } from './manifest.js';
 import type { AiTask } from './task.js';
 
 /**
@@ -13,7 +15,12 @@ import type { AiTask } from './task.js';
  * coordinator and stays until its callers have moved.
  */
 
-export type AiProblem = ModelProblem | 'not-available' | 'consent-required';
+export type AiProblem =
+  | ModelProblem
+  | 'not-available'
+  | 'consent-required'
+  /** The folder's disk has less room than the files need. */
+  | 'no-disk-space';
 
 /** Where a model file was found, in the order they are looked in (docs/plan/AI-SYSTEM.md D7). */
 export const FILE_SOURCES = [
@@ -74,11 +81,24 @@ export interface AiModelStatus {
   /** The folder the person can put the files in, and the one downloads go to. */
   folder: string;
   resident: boolean;
+  tier: Tier;
+  support: Support;
+  /** False: `requiredMemoryBytes` is an estimate. */
+  requiredMemoryVerified: boolean;
+  /** What a download would ask the person to agree to; null when there is nothing to download. */
+  consent: AiConsent | null;
+  /** The model tasks go to: the person's choice, else the best one installed. */
+  selected: boolean;
+  /** Suits this computer's memory best. A hint; nothing is fetched because of it. */
+  recommended: boolean;
 }
 
 export interface AiStatus {
   models: AiModelStatus[];
   freeMemoryBytes: number;
+  totalMemoryBytes: number;
+  /** Room left on the disk the models folder is on, or null when it could not be read. */
+  freeDiskBytes: number | null;
   /** What the shell is doing now. */
   activity: 'idle' | 'downloading' | 'verifying' | 'loading' | 'working';
   queued: number;
@@ -105,6 +125,12 @@ export type AiEvent =
       total: number;
       part?: number;
       parts?: number;
+      /** The whole install, all files: bytes done and in all. */
+      modelDone: number;
+      modelTotal: number;
+      bytesPerSecond: number;
+      /** Null until the speed is known. */
+      etaSeconds: number | null;
     }
   | { id: string; kind: 'installed'; modelId: string; status: AiStatus }
   | { id: string; kind: 'install-failed'; modelId: string; problem: AiProblem };
@@ -117,10 +143,14 @@ export const installId = (modelId: string): string => `install:${modelId}`;
 export interface AiBridge {
   status(): Promise<AiStatus>;
   /**
-   * Fetches a model's files from Loppa's release, joins and verifies them. `consent` is true only
-   * after the person has been told the size and that no document is sent; without it nothing starts.
+   * Fetches a model's files from the host named in `consent`, verifies them and puts them in place.
+   * `consent` is built from the model's own status (`AiModelStatus.consent`) and sent only after the
+   * person has confirmed the host, the files and the total size; one that does not match what the
+   * manifest would fetch starts nothing.
    */
-  install(modelId: string, consent: boolean): Promise<AiStart>;
+  install(modelId: string, consent: AiConsent): Promise<AiStart>;
+  /** Makes a model the one tasks go to (null: back to the best one installed). Downloads nothing. */
+  select(modelId: string | null): Promise<AiStatus>;
   /** Asks for a file with the computer's own dialog, matches it to the model by hash, and uses it where it is. */
   openFromDisk(modelId: string): Promise<AiStart>;
   /** Forgets a model: deletes what Loppa downloaded, only stops using what the person supplied. */

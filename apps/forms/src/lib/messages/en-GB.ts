@@ -1438,7 +1438,7 @@ export const enGB = {
   'room.centreOpen': 'Open it',
   'ai.models.heading': 'AI models on this computer',
   'ai.models.intro':
-    'Every Loppa that uses AI shares these models. Only one is loaded at a time, they run offline, and no document leaves this computer.',
+    'Every Loppa that uses AI shares these models. Only one is loaded at a time and it runs on this computer. No document leaves it.',
   'ai.models.state.installed': 'Installed',
   'ai.models.state.missing': 'Not installed',
   'ai.models.state.damaged': 'Damaged',
@@ -1469,11 +1469,11 @@ export const enGB = {
   'ai.models.loaded': 'Loaded in memory.',
   'ai.models.downloadOff':
     'There is no download for this yet. You can open a file from disk instead.',
-  'ai.models.get': 'Get',
+  'ai.models.get': 'Download',
   'ai.models.open': 'Open a file from disk',
   'ai.models.remove': 'Remove',
   'ai.models.getConfirm':
-    'This downloads {size} GB for {name} from Loppa’s release on GitHub and checks it. It takes that much disk space. Your documents are not sent anywhere. Continue?',
+    'Download {name} from {host}? Files: {files}. Total: {size} GB, and it takes that much disk space. Your documents are not sent anywhere, and you can cancel at any time. Continue?',
   'ai.models.getConfirmYes': 'Download',
   'ai.models.removeConfirm':
     'Remove {name} from this computer? Files you opened from disk are not deleted. You can get it again later.',
@@ -1484,6 +1484,28 @@ export const enGB = {
   'ai.models.clearCacheConfirm':
     'Delete the saved results? Reading a document again will then take as long as the first time.',
   'ai.models.clearCacheYes': 'Delete',
+  'ai.models.optional':
+    'AI is optional. Loppa works fully without any model. Nothing is downloaded unless you press Download and confirm.',
+  'ai.models.tier.full': 'Full',
+  'ai.models.tier.balanced': 'Balanced',
+  'ai.models.tier.light': 'Light',
+  'ai.models.tier.very-light': 'Very light',
+  'ai.models.quality.full': 'Best reading and writing. Needs a strong computer.',
+  'ai.models.quality.balanced': 'Good for most documents on an ordinary computer.',
+  'ai.models.quality.light':
+    'Runs on weaker computers. It reads and writes worse and makes more mistakes on hard scans.',
+  'ai.models.quality.very-light':
+    'For very weak computers. Small models read and write worse and struggle with scans.',
+  'ai.models.ram': 'Needs about {size} GB of memory',
+  'ai.models.ramEstimate': 'Needs about {size} GB of memory (an estimate)',
+  'ai.models.recommended': 'Recommended for this computer',
+  'ai.models.chosen': 'Chosen',
+  'ai.models.use': 'Use this one',
+  'ai.models.notWorking': 'Not working yet: it failed our test, so it cannot be downloaded.',
+  'ai.models.untested': 'Not tested by us yet.',
+  'ai.models.evidence': 'Test notes and files',
+  'ai.models.progressEta': '{done} of {total} MB, {speed} MB/s, about {minutes} min left',
+  'summary.problem.no-disk-space': 'There is not enough free disk space for this model.',
   'summary.intro':
     'A draft summary or translation of a document you have open, made on this computer. It is shown beside the original, labelled as generated, and never saved.',
   'summary.settingsToggle': 'Model settings',

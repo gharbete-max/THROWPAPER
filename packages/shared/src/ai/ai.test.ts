@@ -38,14 +38,24 @@ const VISION = ModelManifest.parse({
   licenceUrl: 'https://example.test/licence',
   name: 'Evaluation model',
   requiredMemoryBytes: 1,
+  requiredMemoryVerified: false,
   retrievedAt: '2026-10-19',
   source: 'https://example.test/',
   sourceRevision: 'x',
+  support: { evidence: 'test', state: 'untested' },
+  tier: 'light',
 });
 
 describe('the model manifest', () => {
-  it('holds the one model the owner chose, with the hashes of the files he placed', () => {
-    expect(MODEL_REGISTRY).toHaveLength(1);
+  it('holds the owner model as the full tier, with the hashes of the files he placed', () => {
+    expect(MODEL_REGISTRY.map((m) => m.tier)).toEqual([
+      'full',
+      'balanced',
+      'light',
+      'very-light',
+      'very-light',
+      'very-light',
+    ]);
     expect(TEXT_MODEL).toMatchObject({
       id: 'qwen2.5-vl-7b-instruct-q4_k_m',
       licence: 'Apache-2.0',
@@ -53,7 +63,7 @@ describe('the model manifest', () => {
       distributable: true,
       evaluationOnly: false,
       requiredMemoryBytes: 10_000_000_000,
-      retrievedAt: '2026-10-19',
+      retrievedAt: '2026-10-20',
     });
     const [weights, projector] = TEXT_MODEL.files;
     expect(weights).toMatchObject({
@@ -68,19 +78,23 @@ describe('the model manifest', () => {
       bytes: 1354162912,
       sha256: 'c24a7f5fcfc68286f0a217023b6738e73bea4f11787a43e8238d4bb1b8604cde',
     });
-    expect(weights!.parts.map((p) => p.bytes)).toEqual([1610612736, 1610612736, 1461846560]);
+    expect(weights!.parts).toHaveLength(1);
+    expect(weights!.parts[0]!.url).toBe(
+      'https://huggingface.co/ggml-org/Qwen2.5-VL-7B-Instruct-GGUF/resolve/508edd0afaa66bb9e9f40587acc2184f02daf1f6/Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf',
+    );
     expect(totalBytes(TEXT_MODEL)).toBe(4683072032 + 1354162912);
   });
 
-  it('keeps each part under the 2 GiB release-asset limit', () => {
-    for (const file of TEXT_MODEL.files) {
-      for (const part of file.parts) expect(part.bytes).toBeLessThan(2 * 1024 ** 3);
+  it('is downloadable: every model comes from Hugging Face at a pinned revision', () => {
+    for (const model of MODEL_REGISTRY) {
+      expect(isDownloadable(model)).toBe(true);
+      expect(model.licence).toBe('Apache-2.0');
+      for (const file of model.files) {
+        expect(file.parts[0]!.url).toBe(
+          `${model.source}/resolve/${model.sourceRevision}/${file.name}`,
+        );
+      }
     }
-  });
-
-  it('is not downloadable yet: the AI pack has not been published, and the manifest says so', () => {
-    expect(unpublishedReason(TEXT_MODEL)).toBe('the AI pack has not been published yet');
-    expect(isDownloadable(TEXT_MODEL)).toBe(false);
   });
 });
 
@@ -109,8 +123,8 @@ describe('the registry', () => {
 
   it('finds models by id and by capability', () => {
     expect(findModel('nope')).toBeUndefined();
-    expect(modelsFor('text').map((m) => m.id)).toEqual([TEXT_MODEL.id]);
-    expect(modelsFor('vision').map((m) => m.id)).toEqual([TEXT_MODEL.id]);
+    expect(modelsFor('text').map((m) => m.id)).toEqual(MODEL_REGISTRY.map((m) => m.id));
+    expect(modelsFor('vision')).toHaveLength(MODEL_REGISTRY.length);
   });
 
   it('refuses two models with one id', () => {
