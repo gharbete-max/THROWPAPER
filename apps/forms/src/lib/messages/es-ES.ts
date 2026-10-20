@@ -1485,7 +1485,7 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Quitar',
   'ai.graphics.label': 'Usar la tarjeta gráfica (más rápido, opcional)',
   'ai.graphics.note':
-    'Desactivado hasta que lo actives. Las páginas se leen varias veces más rápido en un equipo con tarjeta gráfica independiente. Si no se puede usar la tarjeta, Loppa vuelve al procesador por sí sola.',
+    'Desactivado hasta que lo actives. Las páginas se leen varias veces más rápido en un equipo con tarjeta gráfica independiente. Si no se puede usar la tarjeta, Loppa vuelve al procesador por sí sola. Si otro programa, como un juego, ya usa mucho la tarjeta, la lectura puede ser más lenta que en el procesador; entonces desactívalo.',
   'ai.graphics.later':
     'Aún no está disponible en este equipo. El soporte gráfico propio del Mac llegará en un paso posterior.',
   'ai.graphics.missing':

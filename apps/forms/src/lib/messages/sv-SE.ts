@@ -1465,7 +1465,7 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Ta bort',
   'ai.graphics.label': 'Använd grafikkortet (snabbare, valfritt)',
   'ai.graphics.note':
-    'Av tills du slår på det. Sidor läses flera gånger snabbare på en dator med eget grafikkort. Går kortet inte att använda återgår Loppa till processorn av sig själv.',
+    'Av tills du slår på det. Sidor läses flera gånger snabbare på en dator med eget grafikkort. Går kortet inte att använda återgår Loppa till processorn av sig själv. Om ett annat program, till exempel ett spel, redan belastar kortet hårt kan läsningen gå långsammare än på processorn; stäng då av detta.',
   'ai.graphics.later':
     'Inte tillgängligt ännu på den här datorn. Macens egna grafikstöd kommer i ett senare steg.',
   'ai.graphics.missing':

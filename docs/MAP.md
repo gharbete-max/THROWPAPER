@@ -42,6 +42,8 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/`, `docs/plan/DESIGN-PASS.md` (the 2026-10 critique, what is left) | gold is a fill, never text |
 | Photographs (twelve: empty states and screen heads, never the room) | `apps/forms/public/media/`, `EmptyState`'s `media` prop | `docs/brand/MEDIA.md` (source, licence, hash per file; `scripts/media.test.ts`) |
 | What the app shows a user (words, flows) | `apps/forms/src/lib/messages/en-GB.ts` | `docs/USER-GUIDE.md` (keep it in step with the screens) |
+| Structure, simplification | `docs/plan/SIMPLIFY.md` | its ranked table and order |
+| Which decision says what | `docs/adr/README.md` | one line per ADR with its status |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
 
 ## AI in one paragraph
@@ -93,7 +95,7 @@ resources (one Postgres, fixed ports): take the lock `mkdir C:/Users/gusta/AppDa
 before DB tests/e2e, `rmdir` after. Run agents one at a time unless work is truly disjoint.
 Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix watches).
 
-## Current state (2026-10-20, night)
+## Current state (2026-10-21)
 Merged: the whole Documents plan (Forms, Scan, Sign, Send, invoices); the AI coordinator and the single
 model (Qwen2.5-VL-7B through a pinned llama-server), the optional catalogue (Full/Balanced/Light/Very light,
 direct Hugging Face download after a confirmation), the AI reader, proofreading, corporate email and the Send
@@ -103,10 +105,13 @@ polish with the empty actions `<th>` named and the textarea without a combobox r
 review of 2026-10 (#207: llama-server child, AI IPC, downloads, pack, backup); the design pass with
 photographs, model cards and template covers (#208); vision tuning (#209: tables as rows, -31% a page, the
 Q8_0 projector preferred, measured tiers, the Vulkan build pinned); twelve graded photographs (#210, #211).
-This branch (`claude/gpu-option`): the optional graphics-card setting (above), and the summary pane's download
-confirmation now names the real host from the manifest (huggingface.co), not "GitHub".
+The optional graphics-card setting (#212, off by default, falls back to the processor), and the summary pane's
+download confirmation names the real host from the manifest (huggingface.co).
 Not done: **uploading the ~6.9 GB pack** (`publish-ai-pack.ts <folder> --yes`, owner's go; until then the
 in-app Get stays off and a pack installs from a folder); the graphics card on macOS (Metal) and inside the AI
 pack; SmolVLM2-500M is marked not-working-yet; Qwen3-VL-4B, SmolVLM2-2.2B/256M never run. Unverified
 everywhere: macOS, 8-12 GB laptops, CPUs without AVX2, graphics drivers other than this machine's NVIDIA and
 Intel pair, native-speaker quality. Plans/ADRs are history unless linked above.
+Next: the structure review `docs/plan/SIMPLIFY.md` (ten ranked proposals: one 'Set up AI' page, Scan as three
+steps, a rail that follows the room, feature folders, split CSS, a fast e2e tier, archived plans); order is at
+its end. No agents or PRs are open as of this update.
