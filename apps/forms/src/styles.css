@@ -8476,7 +8476,8 @@ a.room__centre:focus-visible {
   padding-block-start: calc(var(--tp-spacing-unit) * 2);
 }
 
-.empty__media {
+.empty__media,
+.banner {
   display: block;
   inline-size: 100%;
   max-inline-size: 36rem;
@@ -8488,14 +8489,47 @@ a.room__centre:focus-visible {
   background: var(--tp-colour-surface);
 }
 
+/* A page photograph is as wide as its column and no taller than this; a pair swaps with the theme. */
+.banner {
+  max-inline-size: none;
+  aspect-ratio: auto;
+  max-block-size: 11rem;
+}
+
+.banner--dark {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .empty__media {
+  :root:not([data-theme='light']) .empty__media,
+  :root:not([data-theme='light']) .banner {
     filter: brightness(0.82);
+  }
+
+  :root:not([data-theme='light']) .banner--light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .banner--dark {
+    display: block;
   }
 }
 
-:root[data-theme='dark'] .empty__media {
+:root[data-theme='dark'] .empty__media,
+:root[data-theme='dark'] .banner {
   filter: brightness(0.82);
+}
+
+:root[data-theme='dark'] .banner--light {
+  display: none;
+}
+
+:root[data-theme='dark'] .banner--dark {
+  display: block;
+}
+
+.banner--thin {
+  max-block-size: 5rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {

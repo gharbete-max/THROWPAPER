@@ -33,7 +33,7 @@ test('Scan: a photograph with its alt text, one filled button, nothing from anot
   await signIn(page);
   await page.goto('/scan');
 
-  const photo = page.getByRole('img', { name: 'Stacked sheets of paper seen from the edge' });
+  const photo = page.getByRole('img', { name: 'A white paper crane' });
   await expect(photo).toBeVisible();
   await expect(photo).toHaveAttribute('width', '1120');
   await expect(photo).toHaveAttribute('height', '400');

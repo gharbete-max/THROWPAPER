@@ -3,6 +3,7 @@ import type { AiBridge, AiEvent, AiModelStatus, AiProblem, AiStatus } from '@tp/
 import { aiBridge } from '../../lib/ai-bridge.js';
 import { useT } from '../../lib/i18n.js';
 import { useConfirm } from '../../components/Confirm.js';
+import { Banner } from '../../components/Banner.js';
 import { Icon } from '../../components/Icon.js';
 
 const GB = 1000 ** 3;
@@ -121,6 +122,7 @@ function Models({ bridge }: { bridge: AiBridge }) {
 
   return (
     <section className="card stack" aria-labelledby="ai-models">
+      <Banner name="streaks" className="banner--thin" />
       <h2 id="ai-models">{t('ai.models.heading')}</h2>
       <p className="muted small">{t('ai.models.intro')}</p>
 

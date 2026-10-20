@@ -49,14 +49,11 @@ Priority: P1 changes what a person does or reads wrongly; P2 is craft a person f
 
 ## Media
 
-Four CC0 photographs, 140,732 bytes in all, none in the room, none in the JavaScript: `docs/brand/MEDIA.md`
-(source, author, licence, date, size, SHA-256, alt key) and `scripts/media.test.ts` (holds the file to
-the record and to the budget). Unsplash was the first choice and could not be used: its site answers a
-script with a bot check, which is not bypassed.
+Second pass (2026-10-20): the four Wikimedia photographs were replaced by twelve the owner chose from Unsplash, graded once by `scripts/media-process.py` (greyscale with a platinum tint; the three gold abstracts desaturated toward the brand gold), 622,278 bytes in all, none in the room, none in the JavaScript: `docs/brand/MEDIA.md` (source, photographer, licence, date, size, SHA-256, alt key, where used) and `scripts/media.test.ts`. Empty states keep `EmptyState`; screen and card heads use `Banner`. Seen at 1280 and 360 px, light and dark, in English, Swedish, German and Japanese; axe-core 4.10 reports nothing on Scan, Send, Summary and the Keep panel.
 
 ## Tests
 
-`e2e/design-pass.spec.ts` (photograph with alt, size attributes, lazy and async; one filled button on
+`e2e/media-pass.spec.ts` (page photographs sized, lazy, described; the pair follows the theme). `e2e/design-pass.spec.ts` (photograph with alt, size attributes, lazy and async; one filled button on
 Scan; no request to another origin on Scan, Send, Signing and Forms; reduced motion removes the
 fade; the Send choice; the model chips; a drawing on every template card; 360 px German with no
 sideways scroll and the bottom bar cut on the right). `scripts/media.test.ts`.

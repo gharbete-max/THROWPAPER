@@ -19,6 +19,7 @@ import { detectPage } from './builder/paper/detect.js';
 import { SigningDeclarations } from './SigningDeclarations.js';
 import { documentNameOf, pdfFromState } from '../lib/sign-handoff.js';
 import { useToast } from '../lib/toast.js';
+import { Banner } from '../components/Banner.js';
 
 // The marks (signature, initials, date) are placed in a lazy chunk, only when asked for.
 const PlaceMarks = lazy(() => import('./signing/PlaceMarks.js'));
@@ -525,6 +526,7 @@ function Compose({
 
   return (
     <form className="card stack" onSubmit={submit} aria-label={t('signing.new')}>
+      <Banner name="desk" />
       <h2>{t('signing.new')}</h2>
       {paper ? (
         <p>
