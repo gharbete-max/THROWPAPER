@@ -244,6 +244,15 @@ export default function ReadWithAi({
                 <p className="small">{reasonText(result)}</p>
               ) : null}
               {result ? <Blocks blocks={result.blocks} /> : null}
+              {!result && phases[index] === 'reading' ? (
+                <div className="skeleton" data-testid="read-skeleton">
+                  <span className="skeleton__line" aria-hidden="true" />
+                  <span className="skeleton__line" aria-hidden="true" />
+                  <span className="skeleton__line" aria-hidden="true" />
+                  <span className="skeleton__line skeleton__line--short" aria-hidden="true" />
+                  <p className="small muted">{t('read.slow')}</p>
+                </div>
+              ) : null}
               {result && result.status !== 'ok' && !running ? (
                 <div className="row">
                   <button

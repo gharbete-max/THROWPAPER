@@ -66,7 +66,12 @@ export function Outgoing() {
       </header>
 
       {data.messages.length === 0 ? (
-        <EmptyState icon="email" title={t('outgoing.empty')} hint={t('outgoing.emptyHint')} />
+        <EmptyState
+          icon="email"
+          media="send"
+          title={t('outgoing.empty')}
+          hint={t('outgoing.emptyHint')}
+        />
       ) : (
         <ul className="stack outgoing" aria-label={t('outgoing.heading')}>
           {data.messages.map((message) => (

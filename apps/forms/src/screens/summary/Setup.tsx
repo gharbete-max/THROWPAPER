@@ -149,7 +149,12 @@ export function Setup({
         >
           <Icon name="download" /> {t('summary.get')}
         </button>
-        <button type="button" className="button" disabled={working} onClick={() => void open()}>
+        <button
+          type="button"
+          className="button button--quiet"
+          disabled={working}
+          onClick={() => void open()}
+        >
           <Icon name="upload" /> {t('summary.open')}
         </button>
         {status.installed ? (

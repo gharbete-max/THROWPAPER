@@ -15,6 +15,7 @@ in full.
 | Project | Licence | Copied from | Into | Modified |
 | ------- | ------- | ----------- | ---- | -------- |
 
+| Four photographs (Wikimedia Commons; sources in `docs/brand/MEDIA.md`): A_Different_Perspective (Pixabay), Andrey Larin (Unsplash), Clara.Hoke, Cbaile19 | CC0 1.0 (no attribution required) | Wikimedia Commons, retrieved 2026-10-20 | `apps/forms/public/media/` | Yes: cropped, greyscale, resized, WebP. |
 | Noto Sans JP, Noto Sans SC (Google; <https://github.com/notofonts>) | SIL OFL 1.1 | `@fontsource/noto-sans-jp` and `-sc` 5.3.1, the "japanese" and "chinese-simplified" subsets, weight 400, woff | `apps/api-forms/assets/fonts/` (licence text beside them in `OFL.txt`) | No. Embedded into a PDF as a subset of the glyphs used, never whole (`apps/api-forms/src/pdf/text-fonts.ts`). |
 
 ## Model weights and runtime (not in this repository)

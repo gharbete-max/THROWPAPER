@@ -35,15 +35,15 @@ export default function ModelTiers({
   const gb = (bytes: number) => (bytes / GB).toFixed(1);
 
   return (
-    <fieldset className="stack" disabled={working}>
+    <fieldset className="stack models" disabled={working}>
       <legend className="muted small">{t('ai.models.optional')}</legend>
       <ul className="stack" role="list">
         {status.models.map((model) => {
           const installed = model.state === 'installed' || model.state === 'busy';
           const broken = model.support.state === 'not-working-yet';
           return (
-            <li key={model.id} className="stack" data-model={model.id}>
-              <label className="row">
+            <li key={model.id} className="stack model" data-model={model.id}>
+              <label className="model__head">
                 <input
                   type="radio"
                   name="ai-model"
@@ -52,17 +52,29 @@ export default function ModelTiers({
                   onChange={() => void bridge.select(model.id).then(onStatus)}
                 />
                 <strong>{model.name}</strong>
-                <span className="badge">{t(`ai.models.tier.${model.tier}`)}</span>
+              </label>
+              <p className="model__chips">
+                <span className={`badge badge--tier badge--tier-${model.tier}`}>
+                  {t(`ai.models.tier.${model.tier}`)}
+                </span>
+                {/* The sentence below says it in full; the chip is for the eye. */}
+                <span className="badge badge--ram" aria-hidden="true">
+                  {t('ai.models.ramChip', { size: gb(model.requiredMemoryBytes) })}
+                </span>
                 {model.recommended ? (
                   <span className="badge badge--quiet">{t('ai.models.recommended')}</span>
                 ) : null}
-                <span className={model.state === 'damaged' ? 'badge badge--warning' : 'badge'}>
+                <span
+                  className={
+                    model.state === 'damaged' ? 'badge badge--warning' : 'badge badge--quiet'
+                  }
+                >
                   {t(`ai.models.state.${model.state}`)}
                 </span>
                 {model.selected && installed ? (
                   <span className="badge">{t('ai.models.chosen')}</span>
                 ) : null}
-              </label>
+              </p>
               <p className="muted small">{t(`ai.models.quality.${model.tier}`)}</p>
               <p className="muted small">
                 {t('ai.models.size', { size: gb(model.bytes) })} ·{' '}
@@ -114,13 +126,17 @@ export default function ModelTiers({
                   {installed && !model.selected && !broken ? (
                     <button
                       type="button"
-                      className="button"
+                      className="button button--quiet"
                       onClick={() => void bridge.select(model.id).then(onStatus)}
                     >
                       {t('ai.models.use')}
                     </button>
                   ) : null}
-                  <button type="button" className="button" onClick={() => onOpen(model)}>
+                  <button
+                    type="button"
+                    className="button button--quiet"
+                    onClick={() => onOpen(model)}
+                  >
                     <Icon name="upload" /> {t('ai.models.open')}
                   </button>
                   {model.files.some((file) => file.path !== null) ? (

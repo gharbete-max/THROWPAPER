@@ -1,5 +1,23 @@
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from './Icon.js';
+import { useT } from '../lib/i18n.js';
+
+/**
+ * The restrained photographs an empty state may carry (`docs/brand/MEDIA.md`). Each is a CC0 photo
+ * of an object, made grey so gold stays the one hue on the page, committed in `public/media/` and
+ * served from the app's own origin. Never in the room: the room is the owner's dark grey.
+ */
+export type EmptyMedia = 'scan' | 'send' | 'sign' | 'forms';
+
+const MEDIA_FILE: Record<EmptyMedia, string> = {
+  scan: 'scan-pages',
+  send: 'send-plane',
+  sign: 'sign-pen',
+  forms: 'forms-typewriter',
+};
+
+/** The files are cropped to this, so the box is reserved before the picture arrives. */
+const MEDIA_SIZE = { width: 1120, height: 400 } as const;
 
 /**
  * Nothing here yet, said in a way that offers the way out.
@@ -19,6 +37,7 @@ export function EmptyState({
   title,
   hint,
   action,
+  media,
   level = 'h2',
 }: {
   icon: IconName;
@@ -27,6 +46,8 @@ export function EmptyState({
   hint?: string;
   /** Omitted where there is nothing to offer — a trash bin has no "create" to suggest. */
   action?: ReactNode;
+  /** A photograph above the mark, where this is the first thing somebody sees of a task. */
+  media?: EmptyMedia;
   /**
    * A heading, not a paragraph: somebody navigating by heading has to be able to land on "no
    * events yet". `h2` under a screen's own `h1`; `h1` where the empty state *is* the page.
@@ -34,8 +55,20 @@ export function EmptyState({
   level?: 'h1' | 'h2';
 }) {
   const Title = level;
+  const t = useT();
   return (
-    <div className="empty">
+    <div className={media ? 'empty empty--media' : 'empty'}>
+      {media && (
+        <img
+          className="empty__media"
+          src={`/media/${MEDIA_FILE[media]}.webp`}
+          width={MEDIA_SIZE.width}
+          height={MEDIA_SIZE.height}
+          alt={t(`media.alt.${media}`)}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
       {/*
         Decorative. The sentence beneath already says what this is, and a screen reader announcing
         "image" before reading it would only be in the way.

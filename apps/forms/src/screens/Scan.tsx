@@ -306,10 +306,15 @@ export function Scan() {
             event.target.value = '';
           }}
         />
-        <button type="button" className="button" onClick={() => picker.current?.click()}>
+        {/* One filled button per screen: adding is the primary action until there is a document. */}
+        <button
+          type="button"
+          className={pages.length === 0 ? 'button' : 'button button--quiet'}
+          onClick={() => picker.current?.click()}
+        >
           <Icon name="upload" /> {t('scan.add')}
         </button>
-        <button type="button" className="button" onClick={() => setCamera(true)}>
+        <button type="button" className="button button--quiet" onClick={() => setCamera(true)}>
           <Icon name="image" /> {t('scan.camera')}
         </button>
         {pages.length > 0 ? (
@@ -403,7 +408,7 @@ export function Scan() {
       <InvoiceScanEntry file={invoiceFile} />
 
       {pages.length === 0 ? (
-        <EmptyState icon="upload" title={t('scan.empty')} />
+        <EmptyState icon="upload" media="scan" title={t('scan.empty')} hint={t('scan.emptyHint')} />
       ) : (
         <ol className="scan__pages" aria-label={t('scan.heading')}>
           {pages.map((page, position) => (

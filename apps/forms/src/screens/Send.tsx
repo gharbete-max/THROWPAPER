@@ -41,14 +41,14 @@ export function Send() {
         <h1>{t('send.heading')}</h1>
         <p className="muted small">{t('send.intro')}</p>
       </header>
-      <div className="row" role="radiogroup" aria-label={t('send.heading')}>
+      <div className="pick" role="radiogroup" aria-label={t('send.heading')}>
         {(['one', 'batch', 'campaign'] as const).map((choice) => (
           <button
             key={choice}
             type="button"
             role="radio"
             aria-checked={which === choice}
-            className={which === choice ? 'button' : 'button button--quiet'}
+            className="pick__option"
             onClick={() => setWhich(choice)}
           >
             {t(`send.tab.${choice}`)}

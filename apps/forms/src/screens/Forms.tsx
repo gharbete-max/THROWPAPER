@@ -214,6 +214,7 @@ export function Forms() {
 
             <div className="templates">
               <TemplateCard
+                kind="blank"
                 selected={templateId === null}
                 name={t('templates.blank')}
                 description={t('templates.blankHint')}
@@ -235,6 +236,7 @@ export function Forms() {
               {templates.map((template) => (
                 <TemplateCard
                   key={template.id}
+                  kind={template.id}
                   selected={templateId === template.id}
                   name={pickText(interfaceLocales, template.name, locale).value}
                   description={pickText(interfaceLocales, template.description, locale).value}
@@ -282,6 +284,7 @@ export function Forms() {
       {forms?.length === 0 && (
         <EmptyState
           icon={scope === 'trash' ? 'trash' : 'forms'}
+          {...(scope === 'mine' ? { media: 'forms' as const } : {})}
           title={empty}
           /*
            * The bin offers nothing: "create a form" is not what somebody looking at an empty bin
@@ -325,12 +328,15 @@ export function Forms() {
  * are and which is selected.
  */
 function TemplateCard({
+  kind,
   selected,
   name,
   description,
   fieldCount,
   onSelect,
 }: {
+  /** The template's id, or "blank": picks the drawing on the card. */
+  kind: string;
   selected: boolean;
   name: string;
   description: string;
@@ -340,6 +346,7 @@ function TemplateCard({
   const t = useT();
   return (
     <label className="template">
+      <TemplateCover kind={kind} />
       <input type="radio" name="template" checked={selected} onChange={onSelect} />
       <span className="template__body">
         <strong>{name}</strong>
@@ -351,5 +358,57 @@ function TemplateCard({
         )}
       </span>
     </label>
+  );
+}
+
+/**
+ * A card's cover: a small drawing of the form, made from the tokens, not a picture. The shapes say
+ * what the form asks (a few fields, a choice, a rating, a long answer) so the gallery can be
+ * scanned without reading; the name and description beside it still say it in words.
+ */
+/** The templates with a drawing of their own; every other one gets the plain three-field page. */
+const KNOWN_COVERS = new Set([
+  'blank',
+  'event-registration',
+  'rsvp',
+  'contact-enquiry',
+  'customer-feedback',
+]);
+
+function TemplateCover({ kind }: { kind: string }) {
+  const field = (y: number, w = 96) => (
+    <rect key={y} className="tc__field" x="12" y={y} width={w} height="9" rx="2" />
+  );
+  const dots = (y: number, count: number) =>
+    Array.from({ length: count }, (_, i) => (
+      <circle
+        key={i}
+        className={i === 0 ? 'tc__dot tc__dot--on' : 'tc__dot'}
+        cx={18 + i * 16}
+        cy={y}
+        r="5"
+      />
+    ));
+  return (
+    <svg className="template__cover" viewBox="0 0 120 64" aria-hidden="true" focusable="false">
+      <rect className="tc__page" x="1" y="1" width="118" height="62" rx="4" />
+      {kind !== 'blank' && <rect className="tc__head" x="12" y="8" width="44" height="6" rx="2" />}
+      {(kind === 'event-registration' || !KNOWN_COVERS.has(kind)) && [
+        field(20),
+        field(33),
+        field(46, 60),
+      ]}
+      {kind === 'rsvp' && [...dots(25, 2), field(38, 64), field(50, 40)]}
+      {kind === 'contact-enquiry' && [
+        field(20),
+        field(33),
+        <rect key="m" className="tc__field" x="12" y="46" width="96" height="12" rx="2" />,
+      ]}
+      {kind === 'customer-feedback' && [
+        ...dots(26, 5),
+        <rect key="m" className="tc__field" x="12" y="38" width="96" height="20" rx="2" />,
+      ]}
+      {kind === 'blank' && <rect className="tc__cursor" x="12" y="12" width="2" height="12" />}
+    </svg>
   );
 }

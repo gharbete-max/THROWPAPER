@@ -39,7 +39,8 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Desktop packaging, AI pack | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/{fetch-runtime,make-ai-pack,join-ai-pack,publish-ai-pack}.ts`, `src/ai/pack.ts`) | ADR 0016, 0025 §6, `docs/DEPLOY.md` |
 | Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
-| Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/` | gold is a fill, never text |
+| Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/`, `docs/plan/DESIGN-PASS.md` (the 2026-10 critique, what is left) | gold is a fill, never text |
+| Photographs (four, in empty states only) | `apps/forms/public/media/`, `EmptyState`'s `media` prop | `docs/brand/MEDIA.md` (source, licence, hash per file; `scripts/media.test.ts`) |
 | What the app shows a user (words, flows) | `apps/forms/src/lib/messages/en-GB.ts` | `docs/USER-GUIDE.md` (keep it in step with the screens) |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
 
@@ -79,6 +80,7 @@ Postgres is portable at `C:\Users\gusta\pg16` (no Docker). After dependency chan
 - Shell: Bash tool mangles `|` in quoted args to pnpm scripts — call `pnpm exec playwright test --grep …` directly.
 - Guided-builder layout checks (`answersFit`, `nothingCut`) finish the slide-in animation before measuring (`settle`); a node 24 px along its way reads as off the screen. Full e2e on 2026-10-20: 156/156, 12 min.
 - a11y smoke (axe-core 4.10, injected from a scratch install, not a dependency): room, Scan, Send, Summary, Signing in sv/en/ja are clean except Send's `textarea role=combobox` (minor) and Signing's empty actions `<th>` (minor, same pattern in AddressIssues, Invoices, SendBatch, SendCampaign). A contrast hit on Signing is the start-up intro fading in, not a defect.
+- e2e sign-in: the magic-link callback is rate-limited (20 per 15 min for the whole suite, `routes/auth.ts`) and the suite is near it; a new spec signs in with `signInAs` (a planted refresh token), never `/auth/callback`. Past the cap, a later spec fails with "Back to sign in" on the page.
 - `pdfjs-dist` pinned 6.3.289 (6.4 changes golden-corpus reading).
 - Gitleaks scans every PR commit: no secret-looking literals in tests.
 - A green `verify` is not a green e2e; a backgrounded exit code is not the command's; re-read files after `git switch`.

@@ -151,7 +151,12 @@ export function Signing() {
 
       {data.requests.length === 0 ? (
         !composing && (
-          <EmptyState icon="signature" title={t('signing.empty')} hint={t('signing.emptyHint')} />
+          <EmptyState
+            icon="signature"
+            media="sign"
+            title={t('signing.empty')}
+            hint={t('signing.emptyHint')}
+          />
         )
       ) : (
         <div className="table-scroll">
