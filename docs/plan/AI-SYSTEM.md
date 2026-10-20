@@ -82,7 +82,7 @@ optional second opinion for what they cannot read.
 *Built (Phase 3).* `read-page` on `ServerEngine` (`apps/desktop/src/ai/vision/read-page.ts`): one page
 picture (PNG or JPEG, at most 1 million pixels normally, 2 million on the second pass) goes to
 `llama-server` under a JSON grammar (`MODEL_PAGE_SCHEMA`); `pageFromModel` turns the answer into a
-`StructuredPage` (boxes are not asked for and are `null`; a cut-off answer keeps its finished blocks
+`StructuredPage` (a table is asked for as `rows`, lists of cell texts, which halved the writing time: `VISION-TUNING.md`; boxes are not asked for and are `null`; a cut-off answer keeps its finished blocks
 and is `uncertain`; an answer that is not the shape is a `failed` page). The window draws and sends
 one page at a time (`apps/forms/src/screens/read-ai/`), compares each page with the PDF's own text
 layer (`crossCheck`: word overlap both ways and the numbers; a photograph has no layer and is not

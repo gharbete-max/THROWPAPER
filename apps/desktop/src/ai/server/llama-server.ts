@@ -39,6 +39,8 @@ export interface ServerSettings {
   threads: number;
   /** Largest number of tokens a picture may take; bounds a page's time and memory. */
   imageMaxTokens: number;
+  /** Layers kept on the graphics card; 0, the CPU only, unless the person chose otherwise (Vulkan build). */
+  gpuLayers?: number;
 }
 
 export const DEFAULT_SETTINGS = { contextTokens: 8192, imageMaxTokens: 2560 } as const;
@@ -81,7 +83,7 @@ export function serverArgs(
     '-t',
     `${settings.threads}`,
     '-ngl',
-    '0',
+    `${settings.gpuLayers ?? 0}`,
     '-np',
     '1',
     '-fa',

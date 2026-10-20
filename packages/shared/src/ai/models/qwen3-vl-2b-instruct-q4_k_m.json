@@ -43,7 +43,7 @@
   "source": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF",
   "sourceRevision": "52d6c8ffea26cc873ac5ad116f8631268d7eb503",
   "support": {
-    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads, CPU: load 1.6 s, peak memory 3.54 GB, an invented invoice page read in 9.8 s with 12 of 12 expected strings found, a Swedish summary in 5.7 s.",
+    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads pinned to performance cores, CPU, Q8_0 projector, five invented pages at 1 megapixel: load 1.6 s, peak memory 3.7 GB (4.0 GB at 2 megapixels), 30 tokens a second, 21 s a page, 41 of 48 expected strings found (43 at 2 megapixels, 36 s a page); invoice, table and form complete. The Swedish summary in 9 s.",
     "state": "working"
   },
   "tier": "light"

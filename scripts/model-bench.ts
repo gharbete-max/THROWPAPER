@@ -7,6 +7,8 @@
  *
  *   pnpm exec tsx scripts/model-bench.ts <work-dir> <runtime-dir> <model-id>...
  *
+ * `BENCH_MASK=0x5555` pins the threads (`-C`, strict) so another job on the machine moves a run less.
+ * `DOWNLOAD_ONLY=1` stops after the download (and prints the paths).
  * `<work-dir>` receives the model files (kept, so a second run downloads nothing).
  */
 import { spawnSync } from 'node:child_process';
@@ -16,6 +18,7 @@ import { runtimeAssetFor, findModel, isAllowedHost, totalBytes } from '@tp/share
 import { downloadFile } from '../apps/desktop/src/ai/download.js';
 import {
   DEFAULT_SETTINGS,
+  defaultSpawn,
   startServer,
   type RunningServer,
 } from '../apps/desktop/src/ai/server/llama-server.js';
@@ -106,7 +109,7 @@ const ask = {
   type: 'text',
   text: 'Read this page. Return all its text and structure as Markdown. Keep the table as a table and mark checkboxes as [x] or [ ].',
 };
-const swedish = readFileSync('fixtures/demo/summary-sv.txt', 'utf8');
+const swedish = readFileSync(join(import.meta.dirname, '../fixtures/demo/summary-sv.txt'), 'utf8');
 
 for (const id of ids) {
   const model = findModel(id);
@@ -124,12 +127,23 @@ for (const id of ids) {
       });
     }
     result.downloadSeconds = (Date.now() - t0) / 1000;
+    if (process.env['DOWNLOAD_ONLY'] === '1') {
+      console.log(JSON.stringify({ ...result, paths }));
+      continue;
+    }
 
     const loadStarted = Date.now();
+    const mask = process.env['BENCH_MASK']; // e.g. 0x5555: pins the threads to those logical processors
     const server = await startServer({
       entry: join(runtime, asset.entry),
       files: { weights: paths.weights!, projector: paths.projector! },
       settings: { ...DEFAULT_SETTINGS, threads: 8 },
+      ...(mask
+        ? {
+            spawn: (command, args, cwd) =>
+              defaultSpawn()(command, [...args, '-C', mask, '--cpu-strict', '1'], cwd),
+          }
+        : {}),
       signal: new AbortController().signal,
     });
     result.loadSeconds = (Date.now() - loadStarted) / 1000;

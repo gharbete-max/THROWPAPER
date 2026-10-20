@@ -12,7 +12,7 @@ import type { ReadPageTask } from './task.js';
  */
 
 /** Part of every cache key: change it when the prompt or this file's rules change what a page reads as. */
-export const PAGE_PIPELINE_VERSION = 1;
+export const PAGE_PIPELINE_VERSION = 2;
 
 /** Pixels in a page picture. The server is started to take up to `high`'s worth (`imageMaxTokens`). */
 export const PIXEL_BUDGET = { normal: 1_000_000, high: 2_000_000 } as const;
@@ -89,19 +89,13 @@ export const MODEL_PAGE_SCHEMA = {
           value: { type: 'string', maxLength: 600 },
           checked: { type: 'boolean' },
           caption: { type: 'string', maxLength: 300 },
-          cells: {
+          // A table is its rows, each a list of its cells' texts: the model spends most of a
+          // page's time writing, and `{"row":1,"column":2,"text":..}` per cell was half of it
+          // (docs/plan/VISION-TUNING.md: 49% faster on the 7B, same strings found).
+          rows: {
             type: 'array',
-            maxItems: 150,
-            items: {
-              type: 'object',
-              properties: {
-                row: { type: 'integer', minimum: 0, maximum: 60 },
-                column: { type: 'integer', minimum: 0, maximum: 20 },
-                text: { type: 'string', maxLength: 300 },
-              },
-              required: ['row', 'column', 'text'],
-              additionalProperties: false,
-            },
+            maxItems: 60,
+            items: { type: 'array', maxItems: 20, items: { type: 'string', maxLength: 300 } },
           },
         },
         required: ['type'],
@@ -174,7 +168,16 @@ function blockOf(item: unknown, page: number, language: string | null): Block | 
       block = { type: 'figure', caption: text(raw.caption) || null, ...common };
       break;
     case 'table': {
-      const cells = (Array.isArray(raw.cells) ? raw.cells : []).flatMap((cell: unknown) => {
+      // `rows` is what the model is asked for; `cells` (row and column given) is still read.
+      const fromRows = (Array.isArray(raw.rows) ? raw.rows : []).flatMap((line: unknown, row) =>
+        (Array.isArray(line) ? line : []).map((cell: unknown, column) => ({
+          row,
+          column,
+          text: cell,
+        })),
+      );
+      const given = Array.isArray(raw.cells) ? raw.cells : [];
+      const cells = [...fromRows, ...given].flatMap((cell: unknown) => {
         const c = (typeof cell === 'object' && cell !== null ? cell : {}) as Record<
           string,
           unknown

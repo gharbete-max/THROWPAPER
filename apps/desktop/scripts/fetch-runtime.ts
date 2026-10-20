@@ -1,7 +1,7 @@
 /**
  * Fetches the pinned `llama-server` for this computer, checks it and puts it where Loppa looks.
  *
- *   pnpm --filter @tp/desktop exec tsx scripts/fetch-runtime.ts [--out <dir>] [--platform win32-x64] [--record]
+ *   pnpm --filter @tp/desktop exec tsx scripts/fetch-runtime.ts [--out <dir>] [--platform win32-x64] [--variant vulkan] [--record]
  *
  * The release, the asset name, its size and its SHA-256 are pinned in
  * `packages/shared/src/ai/runtimes/llama-server.json` (ADR 0025). The archive is hashed before it
@@ -34,9 +34,12 @@ async function main(): Promise<void> {
     return at >= 0 ? args[at + 1] : undefined;
   };
   const platform = option('--platform') ?? `${process.platform}-${process.arch}`;
-  const asset = LLAMA_SERVER.assets.find((a) => a.platform === platform);
+  const variant = option('--variant') === 'vulkan' ? 'vulkan' : undefined;
+  const asset = LLAMA_SERVER.assets.find((a) => a.platform === platform && a.variant === variant);
   if (!asset) {
-    throw new Error(`no ${LLAMA_SERVER.name} ${LLAMA_SERVER.tag} is pinned for ${platform}`);
+    throw new Error(
+      `no ${LLAMA_SERVER.name} ${LLAMA_SERVER.tag} ${variant ?? 'cpu'} build is pinned for ${platform}`,
+    );
   }
   const out = resolve(
     option('--out') ?? join(import.meta.dirname, '../../../local-models/runtime'),
