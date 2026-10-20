@@ -14,6 +14,7 @@ import { Delivery, ModeNote, useSendMode } from './send-parts.js';
 import { AddressInput, RecentAddresses, useAddressBook } from './AddressInput.js';
 import { AddressIssues } from './AddressIssues.js';
 import { AttachmentSize } from './AttachmentSize.js';
+import { Banner } from '../components/Banner.js';
 import { ReplyHelp } from './send/ReplyHelp.js';
 import { emailAboutFromState } from '../lib/email-about-handoff.js';
 
@@ -41,6 +42,7 @@ export function Send() {
         <h1>{t('send.heading')}</h1>
         <p className="muted small">{t('send.intro')}</p>
       </header>
+      <Banner name="fortune" />
       <div className="pick" role="radiogroup" aria-label={t('send.heading')}>
         {(['one', 'batch', 'campaign'] as const).map((choice) => (
           <button

@@ -13,6 +13,7 @@ import { EmptyState } from '../components/EmptyState.js';
 import { LoadFailed } from '../components/LoadFailed.js';
 import { ScopeTabs } from '../components/ScopeTabs.js';
 import { ShareDialog } from '../components/ShareDialog.js';
+import { Banner } from '../components/Banner.js';
 import { Doors } from './builder/guided/Doors.js';
 
 /**
@@ -209,6 +210,7 @@ export function Forms() {
       {creating === 'manual' && (
         <form className="card stack" onSubmit={create}>
           <div className="stack">
+            <Banner name="foil" className="banner--thin" />
             <strong className="small">{t('templates.heading')}</strong>
             <p className="small muted">{t('templates.intro')}</p>
 

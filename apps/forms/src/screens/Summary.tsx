@@ -27,6 +27,7 @@ import { Loading } from '../components/Loading.js';
 import { FormSource } from './summary/FormSource.js';
 import { ModelsPanel } from './summary/ModelsPanel.js';
 import { Setup } from './summary/Setup.js';
+import { Banner } from '../components/Banner.js';
 import { useJob } from './summary/job.js';
 import { textOfFile } from './summary/text.js';
 
@@ -94,6 +95,7 @@ function Centre({
 
   return (
     <section className="stack">
+      <Banner name="summary" />
       <h1>{t('room.centre')}</h1>
       <p>{t('summary.intro')}</p>
       {ready ? (

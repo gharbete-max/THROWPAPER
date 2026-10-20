@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from './Icon.js';
 import { useT } from '../lib/i18n.js';
+import { MEDIA } from '../lib/media.js';
 
 /**
  * The restrained photographs an empty state may carry (`docs/brand/MEDIA.md`). Each is a CC0 photo
@@ -8,16 +9,6 @@ import { useT } from '../lib/i18n.js';
  * served from the app's own origin. Never in the room: the room is the owner's dark grey.
  */
 export type EmptyMedia = 'scan' | 'send' | 'sign' | 'forms';
-
-const MEDIA_FILE: Record<EmptyMedia, string> = {
-  scan: 'scan-pages',
-  send: 'send-plane',
-  sign: 'sign-pen',
-  forms: 'forms-typewriter',
-};
-
-/** The files are cropped to this, so the box is reserved before the picture arrives. */
-const MEDIA_SIZE = { width: 1120, height: 400 } as const;
 
 /**
  * Nothing here yet, said in a way that offers the way out.
@@ -61,9 +52,9 @@ export function EmptyState({
       {media && (
         <img
           className="empty__media"
-          src={`/media/${MEDIA_FILE[media]}.webp`}
-          width={MEDIA_SIZE.width}
-          height={MEDIA_SIZE.height}
+          src={`/media/${MEDIA[media].file}.webp`}
+          width={MEDIA[media].width}
+          height={MEDIA[media].height}
           alt={t(`media.alt.${media}`)}
           loading="lazy"
           decoding="async"

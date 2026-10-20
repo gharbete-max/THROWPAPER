@@ -1,4 +1,5 @@
 import type { AiBridge, AiModelStatus, AiStatus } from '@tp/shared/ai';
+import { Banner } from '../../components/Banner.js';
 import { Icon } from '../../components/Icon.js';
 import { useT } from '../../lib/i18n.js';
 
@@ -43,6 +44,9 @@ export default function ModelTiers({
           const broken = model.support.state === 'not-working-yet';
           return (
             <li key={model.id} className="stack model" data-model={model.id}>
+              {model.tier === 'full' ? (
+                <Banner name="blur" decorative className="banner--thin" />
+              ) : null}
               <label className="model__head">
                 <input
                   type="radio"

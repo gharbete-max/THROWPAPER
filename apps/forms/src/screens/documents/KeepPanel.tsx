@@ -3,6 +3,7 @@ import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { filesForSize, KEEP_SIZES, sizeText, type KeepSize } from '../../lib/keep-size.js';
 import { suggestName } from '../../lib/suggest-name.js';
+import { Banner } from '../../components/Banner.js';
 import { isPhoto } from '../scan-photo.js';
 
 type Made = { files: File[]; bytes: number };
@@ -82,6 +83,7 @@ export default function KeepPanel({
 
   return (
     <form className="keep stack" onSubmit={submit} data-testid="keep-panel">
+      <Banner name="keep" />
       <h2>{t('docs.keep.heading')}</h2>
       <label className="field">
         {t('docs.keep.name')}
