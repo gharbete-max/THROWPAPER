@@ -1,8 +1,5 @@
 {
-  "capabilities": [
-    "text",
-    "vision"
-  ],
+  "capabilities": ["text", "vision"],
   "distributable": true,
   "evaluationOnly": false,
   "files": [
@@ -40,14 +37,14 @@
   "licence": "Apache-2.0",
   "licenceUrl": "https://huggingface.co/HuggingFaceTB/SmolVLM2-500M-Video-Instruct",
   "name": "SmolVLM2-500M-Video-Instruct (Q8_0)",
-  "requiredMemoryBytes": 1500000000,
-  "requiredMemoryVerified": false,
+  "requiredMemoryBytes": 1200000000,
+  "requiredMemoryVerified": true,
   "retrievedAt": "2026-10-20",
   "source": "https://huggingface.co/ggml-org/SmolVLM2-500M-Video-Instruct-GGUF",
   "sourceRevision": "ccd7aae53bcb1997355c2f094959e72b3642ce17",
   "support": {
-    "evidence": "Not run on this computer yet.",
-    "state": "untested"
+    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads, CPU: load 0.8 s, peak memory 0.94 GB, 1.8 s a page, but 1 of 12 expected strings found on an invented invoice page (it invents numbers) and a Swedish summary that repeats the source text. Not usable for scans yet.",
+    "state": "not-working-yet"
   },
   "tier": "very-light"
 }

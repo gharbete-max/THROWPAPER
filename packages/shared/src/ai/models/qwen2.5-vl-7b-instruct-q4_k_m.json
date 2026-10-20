@@ -1,8 +1,5 @@
 {
-  "capabilities": [
-    "text",
-    "vision"
-  ],
+  "capabilities": ["text", "vision"],
   "distributable": true,
   "evaluationOnly": false,
   "files": [
@@ -35,9 +32,9 @@
       "sha256": "c24a7f5fcfc68286f0a217023b6738e73bea4f11787a43e8238d4bb1b8604cde"
     },
     {
-      "optional": true,
       "bytes": 853119712,
       "name": "mmproj-Qwen2.5-VL-7B-Instruct-Q8_0.gguf",
+      "optional": true,
       "parts": [
         {
           "bytes": 853119712,

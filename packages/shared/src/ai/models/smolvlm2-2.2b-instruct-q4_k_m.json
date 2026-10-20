@@ -1,8 +1,5 @@
 {
-  "capabilities": [
-    "text",
-    "vision"
-  ],
+  "capabilities": ["text", "vision"],
   "distributable": true,
   "evaluationOnly": false,
   "files": [
@@ -40,7 +37,7 @@
   "licence": "Apache-2.0",
   "licenceUrl": "https://huggingface.co/HuggingFaceTB/SmolVLM2-2.2B-Instruct",
   "name": "SmolVLM2-2.2B-Instruct (Q4_K_M)",
-  "requiredMemoryBytes": 3000000000,
+  "requiredMemoryBytes": 4000000000,
   "requiredMemoryVerified": false,
   "retrievedAt": "2026-10-20",
   "source": "https://huggingface.co/ggml-org/SmolVLM2-2.2B-Instruct-GGUF",

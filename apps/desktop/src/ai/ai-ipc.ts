@@ -1,3 +1,4 @@
+import type { AiConsent } from '@tp/shared/ai';
 import type { Coordinator } from './coordinator.js';
 import { isReadPageTask } from '@tp/shared/ai';
 import { isComposeTask, isProofreadTask, isReplyTask } from '@tp/shared/summary';
@@ -11,7 +12,7 @@ import { originGuard, type IpcMainLike } from './origin-guard.js';
  * else crosses, and only the Forms window's own origin is answered.
  *
  * What arrives from a renderer is checked for shape here: a model id is a short plain string, a
- * task id is a short string that does not start with `install`, consent is exactly `true`, and a
+ * task id is a short string that does not start with `install`, consent is an object the coordinator checks against the manifest (host, files, total size), and a
  * task is one of the kinds a window may send (a page picture only as PNG or JPEG bytes of a bounded
  * size, checked again by the reader). The text in a task is never logged.
  */
@@ -33,8 +34,16 @@ export function registerAiIpc(
     AI_CHANNELS.install,
     guarded((modelId: unknown, consent: unknown) =>
       typeof modelId === 'string' && PLAIN_ID.test(modelId)
-        ? coordinator.install(modelId, consent === true)
+        ? coordinator.install(modelId, consent as AiConsent)
         : refused,
+    ),
+  );
+  ipc.handle(
+    AI_CHANNELS.select,
+    guarded((modelId: unknown) =>
+      modelId === null || (typeof modelId === 'string' && PLAIN_ID.test(modelId))
+        ? coordinator.select(modelId)
+        : coordinator.status(),
     ),
   );
   ipc.handle(

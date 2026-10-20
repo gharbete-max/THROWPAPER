@@ -1,8 +1,5 @@
 {
-  "capabilities": [
-    "text",
-    "vision"
-  ],
+  "capabilities": ["text", "vision"],
   "distributable": true,
   "evaluationOnly": false,
   "files": [
@@ -40,7 +37,7 @@
   "licence": "Apache-2.0",
   "licenceUrl": "https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct",
   "name": "Qwen3-VL-4B-Instruct (Q4_K_M)",
-  "requiredMemoryBytes": 5000000000,
+  "requiredMemoryBytes": 6000000000,
   "requiredMemoryVerified": false,
   "retrievedAt": "2026-10-20",
   "source": "https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct-GGUF",

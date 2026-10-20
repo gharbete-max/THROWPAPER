@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { TEXT_MODEL, type AiEvent } from '@tp/shared/ai';
+import { MODEL_REGISTRY, TEXT_MODEL, type AiEvent } from '@tp/shared/ai';
 import type { ReplyTask } from '@tp/shared/summary';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultCache } from './cache.js';
@@ -80,7 +80,7 @@ describe('the reply helper through the coordinator', () => {
     expect((text as { text: string }).text).toContain('[date?]');
     expect(events.find((e) => e.id === 'r1' && e.kind === 'done')).toMatchObject({ warnings: [] });
     // One model serves text and pictures (ADR 0025); no picture was asked of it.
-    expect((await coordinator.status()).models).toHaveLength(1);
+    expect((await coordinator.status()).models).toHaveLength(MODEL_REGISTRY.length);
   });
 
   it('works on a draft: shorter, translate and revise each come back changed', async () => {

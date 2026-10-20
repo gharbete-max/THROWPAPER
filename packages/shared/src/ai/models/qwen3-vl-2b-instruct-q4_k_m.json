@@ -1,8 +1,5 @@
 {
-  "capabilities": [
-    "text",
-    "vision"
-  ],
+  "capabilities": ["text", "vision"],
   "distributable": true,
   "evaluationOnly": false,
   "files": [
@@ -40,14 +37,14 @@
   "licence": "Apache-2.0",
   "licenceUrl": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct",
   "name": "Qwen3-VL-2B-Instruct (Q4_K_M)",
-  "requiredMemoryBytes": 3000000000,
-  "requiredMemoryVerified": false,
+  "requiredMemoryBytes": 4200000000,
+  "requiredMemoryVerified": true,
   "retrievedAt": "2026-10-20",
   "source": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF",
   "sourceRevision": "52d6c8ffea26cc873ac5ad116f8631268d7eb503",
   "support": {
-    "evidence": "Not run on this computer yet.",
-    "state": "untested"
+    "evidence": "Run 2026-10-20 on llama.cpp b11741, 8 threads, CPU: load 1.6 s, peak memory 3.54 GB, an invented invoice page read in 9.8 s with 12 of 12 expected strings found, a Swedish summary in 5.7 s.",
+    "state": "working"
   },
   "tier": "light"
 }
