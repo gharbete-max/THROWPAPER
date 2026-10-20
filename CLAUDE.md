@@ -3,14 +3,14 @@
 **Start with `docs/MAP.md`** — a one-page router (vision, rules, where to look per area, commands,
 quirks, current state). Open the other documents only for the area you are working on.
 
-**Read `docs/VISION.md` first.** Loppa is a lightweight helper in the office, not Acrobat: a room of
+**`docs/VISION.md`** is the owner's own words — open it for the why, not every session. Loppa is a lightweight helper in the office, not Acrobat: a room of
 three independent catchers (Documents, Spreadsheets, Presentation & planning) with **Documents**
 built and finished first. Its four parts are **Forms, Scan, Sign and Send**, around a **summary and
 translation centre** that runs a local model on the person's own computer (ADR 0023, 0025). Spreadsheets
 and Presentation & planning are floating placeholders; nothing more is built for them yet. Where an
 older document disagrees with the vision, the vision wins.
 
-**Then `docs/HANDOVER.md`** — the current state, the order of work and the owner's decisions of
+**`docs/HANDOVER.md`** — open it for the history of decisions: the state, the order of work and the owner's decisions of
 2026-10-12. The code is three apps plus the packages they share (Forms, Sign, and a Mailer stub),
 which together serve the Documents catcher. Read `docs/CONTRACT.md` next, then the spec for
 whichever app you are working on. Do not paste specs into this file.
