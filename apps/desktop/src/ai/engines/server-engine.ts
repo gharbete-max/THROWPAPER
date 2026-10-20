@@ -16,6 +16,7 @@ import {
 } from '../server/llama-server.js';
 import { createServerTextEngine } from '../server/server-text-engine.js';
 import { runTextTask } from '../text/run-text-task.js';
+import { readPage } from '../vision/read-page.js';
 import type { TextEngine } from '../text/text-engine.js';
 
 /**
@@ -26,8 +27,8 @@ import type { TextEngine } from '../text/text-engine.js';
  *   its health check. It first refuses a computer that cannot hold the model: under about 12 GB of
  *   memory in all, `too-little-memory`, stated plainly because a 7B model on an 8 GB laptop would
  *   swap and freeze it rather than run.
- * - `run` sends a text task through Loppa's own pipeline over the server's chat API. Reading a
- *   page from a picture (`read-page`) is Phase 3's pipeline and is still `not-available`.
+ * - `run` sends a text task through Loppa's own pipeline over the server's chat API, and reads a
+ *   page from a picture (`read-page`, `vision/read-page.ts`) over the same server.
  * - `dispose` kills the process and waits for it to go. That is how memory comes back.
  *
  * The coordinator's contract holds: one engine alive, loaded only after its files were hashed,
@@ -117,11 +118,12 @@ export class ServerEngine implements Engine {
   ): Promise<RunResult> {
     const server = this.server;
     if (!server || !this.text) throw new AiError('not-installed');
-    if (!isTextTask(task)) throw new AiError('not-available');
     if (this.busy) throw new AiError('busy');
     this.busy = true;
     try {
-      return await runTextTask(this.text, task, onEvent, signal);
+      return isTextTask(task)
+        ? await runTextTask(this.text, task, onEvent, signal)
+        : await readPage(server.connection, task, onEvent, signal);
     } catch (error) {
       // A server that is gone cannot answer: the coordinator drops an engine that cannot carry on.
       if (!(error instanceof AiError) && !signal.aborted && (await server.exitedWithin(500))) {

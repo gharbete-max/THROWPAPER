@@ -11,7 +11,7 @@ import type { Connection } from './llama-server.js';
  * Cancel is an aborted request: the server notices the closed connection and stops generating, and
  * the call resolves with the text that exists, as {@link TextEngine} promises.
  */
-const SAMPLING = {
+export const SAMPLING = {
   temperature: 0.2,
   top_k: 40,
   top_p: 0.9,
@@ -136,15 +136,15 @@ export function createServerTextEngine(connection: Connection): TextEngine {
           ],
           max_tokens: request.maxTokens,
           ...SAMPLING,
-          ...(request.choose === undefined
+          ...(request.choose === undefined && request.schema === undefined
             ? {}
             : {
                 response_format: {
                   type: 'json_schema',
                   json_schema: {
-                    name: 'passages',
+                    name: request.schema?.name ?? 'passages',
                     strict: true,
-                    schema: indicesSchema(request.choose),
+                    schema: request.schema?.schema ?? indicesSchema(request.choose!),
                   },
                 },
               }),

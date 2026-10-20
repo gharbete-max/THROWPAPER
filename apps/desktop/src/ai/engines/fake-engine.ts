@@ -1,4 +1,11 @@
-import { isTextTask, type AiProblem, type AiTask } from '@tp/shared/ai';
+import {
+  isTextTask,
+  pageFromModel,
+  type AiProblem,
+  type AiTask,
+  type ReadPageTask,
+} from '@tp/shared/ai';
+import { pictureUri } from '../vision/read-page.js';
 import { AiError, type Engine, type EngineEvent, type RunResult } from '../engine.js';
 import { FakeTextEngine, type FakeBehaviour } from '../text/fake-text-engine.js';
 import { runTextTask } from '../text/run-text-task.js';
@@ -18,6 +25,9 @@ import { runTextTask } from '../text/run-text-task.js';
 export interface FakeEngineOptions {
   behaviour?: FakeBehaviour;
   loadError?: AiProblem;
+  /** What the "model" answers for a page; the default is one paragraph. */
+  pages?: (task: ReadPageTask) => string;
+  readDelayMs?: number;
 }
 
 export class FakeEngine implements Engine {
@@ -39,8 +49,36 @@ export class FakeEngine implements Engine {
     signal: AbortSignal,
   ): Promise<RunResult> {
     this.tasks.push(task);
-    if (!isTextTask(task)) throw new AiError('not-available');
+    if (!isTextTask(task)) return this.readPage(task, onEvent, signal);
     return runTextTask(new FakeTextEngine(this.options.behaviour), task, onEvent, signal);
+  }
+
+  /**
+   * A page that is obviously not read by a model: one paragraph naming the page, or whatever
+   * `pages` says for it. The picture is not looked at, but it is checked to be one, as the real
+   * engine does, and a `readDelayMs` lets a test cancel in the middle.
+   */
+  private async readPage(
+    task: ReadPageTask,
+    onEvent: (event: EngineEvent) => void,
+    signal: AbortSignal,
+  ): Promise<RunResult> {
+    if (!pictureUri(task.png)) throw new AiError('failed');
+    onEvent({ kind: 'step', step: 'reading', done: 0, total: 1 });
+    if (this.options.readDelayMs) {
+      await new Promise((resolve) => setTimeout(resolve, this.options.readDelayMs));
+    }
+    if (signal.aborted) throw new AiError('cancelled');
+    const answer =
+      this.options.pages?.(task) ??
+      JSON.stringify({
+        language: 'en',
+        blocks: [{ type: 'paragraph', text: `Fake page ${task.page}` }],
+      });
+    const page = pageFromModel(task.page, answer);
+    onEvent({ kind: 'text', mode: 'replace', text: JSON.stringify(page) });
+    onEvent({ kind: 'step', step: 'reading', done: 1, total: 1 });
+    return { warnings: [] };
   }
 
   dispose(): Promise<void> {

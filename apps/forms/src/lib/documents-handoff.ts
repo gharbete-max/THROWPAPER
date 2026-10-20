@@ -33,6 +33,19 @@ export function summaryWith(file: File): [string, { state: { summaryFile: File }
   return [SUMMARY_ROUTE, { state: { summaryFile: file } }];
 }
 
+/**
+ * Text handed to the Summary pane without a file: what the AI reader read, one page after another
+ * with a line before each page. It becomes the pane's text, which the person can still edit.
+ */
+export function summaryWithText(text: string): [string, { state: { summaryText: string } }] {
+  return [SUMMARY_ROUTE, { state: { summaryText: text } }];
+}
+
+export function summaryTextFromState(state: unknown): string | null {
+  const text = (state as { summaryText?: unknown } | null)?.summaryText;
+  return typeof text === 'string' && text.trim() !== '' ? text : null;
+}
+
 export function summaryFileFromState(state: unknown): File | null {
   const file = (state as { summaryFile?: unknown } | null)?.summaryFile;
   return file instanceof File ? file : null;

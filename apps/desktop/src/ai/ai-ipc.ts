@@ -1,5 +1,6 @@
 import type { Coordinator } from './coordinator.js';
-import { isReplyTask } from '@tp/shared/summary';
+import { isReadPageTask } from '@tp/shared/ai';
+import { isComposeTask, isProofreadTask, isReplyTask } from '@tp/shared/summary';
 import { AI_CHANNELS } from './channels.js';
 import { isModelJob } from './model-ipc.js';
 import { originGuard, type IpcMainLike } from './origin-guard.js';
@@ -11,8 +12,8 @@ import { originGuard, type IpcMainLike } from './origin-guard.js';
  *
  * What arrives from a renderer is checked for shape here: a model id is a short plain string, a
  * task id is a short string that does not start with `install`, consent is exactly `true`, and a
- * task is one of the kinds a window may send. `read-page` is not yet: no model can run it, so it
- * is answered `not-available` without looking inside. The text in a task is never logged.
+ * task is one of the kinds a window may send (a page picture only as PNG or JPEG bytes of a bounded
+ * size, checked again by the reader). The text in a task is never logged.
  */
 const PLAIN_ID = /^[a-z0-9._-]{1,80}$/;
 
@@ -59,13 +60,14 @@ export function registerAiIpc(
         return refused;
       }
       if (
-        typeof task === 'object' &&
-        task !== null &&
-        (task as { kind?: unknown }).kind === 'read-page'
+        !isModelJob(task) &&
+        !isReplyTask(task) &&
+        !isProofreadTask(task) &&
+        !isComposeTask(task) &&
+        !isReadPageTask(task)
       ) {
-        return { ok: false, problem: 'not-available' } as const;
+        return refused;
       }
-      if (!isModelJob(task) && !isReplyTask(task)) return refused;
       return coordinator.run(id, task);
     }),
   );

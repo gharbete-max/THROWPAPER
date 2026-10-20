@@ -16,6 +16,15 @@ const SCRIPT = join(import.meta.dirname, '../server/test-support/fake-llama-serv
 const FILES = { weights: '/models/m.gguf', projector: '/models/p.gguf' };
 const TRANSLATE: AiTask = { kind: 'translate', text: 'Hej på dig', into: 'en-GB' };
 const never = new AbortController().signal;
+const PAGE: AiTask = {
+  kind: 'read-page',
+  fileSha256: 'a'.repeat(64),
+  page: 2,
+  png: new Uint8Array([0x89, 0x50, 0x4e, 0x47, 1, 2, 3]),
+  longEdge: 1000,
+  turn: 0,
+  language: 'sv',
+};
 
 /** The real process plumbing, running the stand-in instead of llama-server. */
 function standIn(modes = '', seen: { args?: string[]; pid?: number } = {}): SpawnFn {
@@ -94,6 +103,44 @@ describe('the engine around llama-server', () => {
     await engine.dispose();
   });
 
+  it('reads a page from a picture into a structured page on that page', async () => {
+    const engine = engineWith();
+    await engine.load(never);
+    const events: EngineEvent[] = [];
+    await engine.run(PAGE, (e) => events.push(e), never);
+    const last = events.filter((e) => e.kind === 'text').at(-1);
+    const page = JSON.parse(last && last.kind === 'text' ? last.text : '{}');
+    expect(page).toMatchObject({ page: 2, status: 'ok', reason: null });
+    expect(page.blocks[0]).toMatchObject({ type: 'paragraph', page: 2, language: 'en', box: null });
+    await engine.dispose();
+  });
+
+  it('stops reading a page when cancelled', async () => {
+    const engine = engineWith('slow-stream');
+    await engine.load(never);
+    const abort = new AbortController();
+    const run = engine.run(PAGE, (e) => e.kind === 'text' && abort.abort(), abort.signal);
+    await expect(run).rejects.toMatchObject({ problem: 'cancelled' });
+    await engine.dispose();
+  });
+
+  it('proofreads under a grammar and keeps only issues that stand in the text', async () => {
+    const engine = engineWith();
+    await engine.load(never);
+    const events: EngineEvent[] = [];
+    await engine.run(
+      { kind: 'proofread', text: 'Teh board met.', source: '', into: 'en-GB' },
+      (e) => events.push(e),
+      never,
+    );
+    const last = events.filter((e) => e.kind === 'text').at(-1);
+    const answer = JSON.parse(last && last.kind === 'text' ? last.text : '{}');
+    expect(answer.issues).toEqual([
+      { id: 1, kind: 'spelling', span: 'Teh', start: 0, end: 3, fix: 'The' },
+    ]);
+    await engine.dispose();
+  });
+
   it('asks for a grammar-constrained answer when choosing passages', async () => {
     const engine = engineWith();
     await engine.load(never);
@@ -120,22 +167,12 @@ describe('the engine around llama-server', () => {
     await engine.dispose();
   });
 
-  it('refuses a picture task for now, and a second task while one runs', async () => {
+  it('refuses a picture that is not a picture, and a second task while one runs', async () => {
     const engine = engineWith('slow-stream');
     await engine.load(never);
     await expect(
-      engine.run(
-        {
-          kind: 'read-page',
-          fileSha256: 'a'.repeat(64),
-          page: 1,
-          png: new Uint8Array(),
-          language: null,
-        },
-        () => undefined,
-        never,
-      ),
-    ).rejects.toMatchObject({ problem: 'not-available' });
+      engine.run({ ...PAGE, png: new Uint8Array(4) }, () => undefined, never),
+    ).rejects.toMatchObject({ problem: 'failed' });
     const first = engine.run(TRANSLATE, () => undefined, never);
     await expect(engine.run(TRANSLATE, () => undefined, never)).rejects.toMatchObject({
       problem: 'busy',

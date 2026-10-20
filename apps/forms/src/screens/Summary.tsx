@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { localeLabel } from '@tp/i18n';
 import { mustQuote } from '@tp/shared/quoted';
 import {
+  PROOFREAD_LIMITS,
   SUMMARY_LOCALES,
   quote,
   splitPassages,
@@ -12,8 +13,11 @@ import {
   type ModelStatus,
   type SummaryLocale,
 } from '@tp/shared/summary';
-import { useLocation } from 'react-router';
-import { summaryFileFromState } from '../lib/documents-handoff.js';
+import { useLocation, useNavigate } from 'react-router';
+import { summaryFileFromState, summaryTextFromState } from '../lib/documents-handoff.js';
+import { emailAboutWith } from '../lib/email-about-handoff.js';
+import { aiBridge } from '../lib/ai-bridge.js';
+import { ProofreadSection } from './proofread/ProofreadSection.js';
 import { useSession } from '../lib/session.js';
 import { useT } from '../lib/i18n.js';
 import { useEdition } from '../lib/edition.js';
@@ -44,7 +48,10 @@ export function Summary() {
   const edition = useEdition();
   const bridge = modelBridge();
   // A PDF handed over from Scan, read here like one chosen below.
-  const handed = summaryFileFromState(useLocation().state);
+  const state = useLocation().state;
+  const handed = summaryFileFromState(state);
+  // What the AI reader read, handed over as text.
+  const handedText = summaryTextFromState(state);
 
   if (!bridge) {
     return (
@@ -58,13 +65,21 @@ export function Summary() {
       </section>
     );
   }
-  return <Centre bridge={bridge} handed={handed} />;
+  return <Centre bridge={bridge} handed={handed} handedText={handedText} />;
 }
 
 type SourceKind = 'paste' | 'file' | 'form' | 'answers';
 type Task = 'summarise' | 'translate';
 
-function Centre({ bridge, handed }: { bridge: ModelBridge; handed: File | null }) {
+function Centre({
+  bridge,
+  handed,
+  handedText,
+}: {
+  bridge: ModelBridge;
+  handed: File | null;
+  handedText: string | null;
+}) {
   const t = useT();
   const [status, setStatus] = useState<ModelStatus | null>(null);
   const [settings, setSettings] = useState(false);
@@ -97,7 +112,9 @@ function Centre({ bridge, handed }: { bridge: ModelBridge; handed: File | null }
           <ModelsPanel />
         </>
       ) : null}
-      {ready ? <Work bridge={bridge} status={status} handed={handed} /> : null}
+      {ready ? (
+        <Work bridge={bridge} status={status} handed={handed} handedText={handedText} />
+      ) : null}
     </section>
   );
 }
@@ -106,15 +123,17 @@ function Work({
   bridge,
   status,
   handed,
+  handedText,
 }: {
   bridge: ModelBridge;
   status: ModelStatus;
   handed: File | null;
+  handedText: string | null;
 }) {
   const t = useT();
   const { locale } = useSession();
   const [kind, setKind] = useState<SourceKind>(handed ? 'file' : 'paste');
-  const [text, setText] = useState('');
+  const [text, setText] = useState(handedText ?? '');
   const [reading, setReading] = useState<{ done: number; total: number } | null>(null);
   const [fileProblem, setFileProblem] = useState(false);
   const [task, setTask] = useState<Task>('summarise');
@@ -122,6 +141,7 @@ function Work({
     (SUMMARY_LOCALES as readonly string[]).includes(locale) ? (locale as SummaryLocale) : 'en-GB',
   );
   const { state, start, cancel, reset } = useJob(bridge);
+  const navigate = useNavigate();
   const picker = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
 
@@ -406,7 +426,34 @@ function Work({
               <button type="button" className="button button--quiet" onClick={() => void copy()}>
                 <Icon name="copy" /> {copied ? t('summary.copied') : t('summary.copy')}
               </button>
+              {aiBridge() && !state.selected ? (
+                <button
+                  type="button"
+                  className="button button--quiet"
+                  data-testid="summary-email"
+                  onClick={() =>
+                    navigate(
+                      ...emailAboutWith({
+                        purpose: 'summary',
+                        material: state.text,
+                        quotes: [],
+                        recipient: '',
+                        overall: 'good',
+                      }),
+                    )
+                  }
+                >
+                  <Icon name="email" /> {t('about.open')}
+                </button>
+              ) : null}
             </div>
+          ) : null}
+          {state.phase === 'done' && !state.selected ? (
+            // The original is the source for the number check, when it is short enough to be one.
+            <ProofreadSection
+              text={state.text}
+              source={text.length <= PROOFREAD_LIMITS.source ? text : ''}
+            />
           ) : null}
         </section>
       ) : null}
@@ -416,8 +463,14 @@ function Work({
 
 function warnings(list: JobWarning[], t: ReturnType<typeof useT>) {
   return list.map((warning) => {
-    // Only the reply helper's drafts raise these two; a summary never does.
-    if (warning.kind === 'wrong-language' || warning.kind === 'attachment-mentioned') return null;
+    // Only the reply helper's drafts and emails raise these; a summary never does.
+    if (
+      warning.kind === 'wrong-language' ||
+      warning.kind === 'attachment-mentioned' ||
+      warning.kind === 'spans-missing'
+    ) {
+      return null;
+    }
     if (warning.kind === 'repetition') {
       return (
         <p key="repetition" className="status-down" role="alert">

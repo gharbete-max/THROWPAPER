@@ -15,6 +15,7 @@ import { AddressInput, RecentAddresses, useAddressBook } from './AddressInput.js
 import { AddressIssues } from './AddressIssues.js';
 import { AttachmentSize } from './AttachmentSize.js';
 import { ReplyHelp } from './send/ReplyHelp.js';
+import { emailAboutFromState } from '../lib/email-about-handoff.js';
 
 // The list screen is the larger half and only some people open it.
 const SendBatch = lazy(() => import('./SendBatch.js').then((m) => ({ default: m.SendBatch })));
@@ -73,7 +74,9 @@ function SendOne() {
   const { user } = useSession();
   const mode = useSendMode();
   const picker = useRef<HTMLInputElement>(null);
-  const handed = sendFileFromState(useLocation().state);
+  const location = useLocation();
+  const handed = sendFileFromState(location.state);
+  const about = emailAboutFromState(location.state);
 
   const [file, setFile] = useState<File | null>(handed);
   const [to, setTo] = useState('');
@@ -288,7 +291,7 @@ function SendOne() {
         <span>{t('send.message')}</span>
         <textarea rows={5} value={message} onChange={(event) => setMessage(event.target.value)} />
       </label>
-      <ReplyHelp message={message} onInsert={setMessage} />
+      <ReplyHelp message={message} onInsert={setMessage} about={about} />
       {problem && (
         <p className="status-down small" role="alert">
           {problem}

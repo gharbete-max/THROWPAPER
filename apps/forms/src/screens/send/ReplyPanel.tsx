@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { localeLabel } from '@tp/i18n';
-import type { AiBridge, AiProblem } from '@tp/shared/ai';
+import type { AiBridge, AiProblem, TextTask } from '@tp/shared/ai';
 import { mustQuote } from '@tp/shared/quoted';
 import {
+  PROOFREAD_LIMITS,
+  SHORT_MATERIAL,
+  digitCheck,
+  missingSpans,
   REPLY_LIMITS,
   REPLY_TONES,
   SUMMARY_LOCALES,
@@ -11,11 +15,11 @@ import {
   localeOfText,
   replyFlags,
   translateInto,
-  type ReplyTask,
   type ReplyTone,
   type SummaryLocale,
 } from '@tp/shared/summary';
 import { useConfirm } from '../../components/Confirm.js';
+import type { EmailAbout } from '../../lib/email-about-handoff.js';
 import { Icon } from '../../components/Icon.js';
 import { useT } from '../../lib/i18n.js';
 import { useSession } from '../../lib/session.js';
@@ -37,11 +41,18 @@ export default function ReplyPanel({
   bridge,
   message,
   onInsert,
+  about = null,
 }: {
   bridge: AiBridge;
   /** What the message box holds now. */
   message: string;
   onInsert: (text: string) => void;
+  /**
+   * Something handed over to write an email about (a summary, or review comments on a text): it
+   * stands where the received message does, as quoted data, and a first draft is a corporate email
+   * about it. Shorter, translate and revise work on the draft as they do for a reply.
+   */
+  about?: EmailAbout | null;
 }) {
   const t = useT();
   const confirm = useConfirm();
@@ -49,13 +60,15 @@ export default function ReplyPanel({
   const { state, start, cancel } = useReplyJob(bridge);
 
   const [installed, setInstalled] = useState<boolean | null>(null);
-  const [received, setReceived] = useState('');
+  const [received, setReceived] = useState(about?.material ?? '');
+  const [recipient, setRecipient] = useState(about?.recipient ?? '');
+  const [overall, setOverall] = useState<'good' | 'mixed'>(about?.overall ?? 'good');
   const [notes, setNotes] = useState('');
   const [into, setInto] = useState<SummaryLocale>(
     isSummaryLocale(locale) && translateInto(locale) === 'draft' ? locale : 'en-GB',
   );
   const [chosen, setChosen] = useState(false);
-  const [tone, setTone] = useState<ReplyTone>('professional');
+  const [tone, setTone] = useState<ReplyTone>(about ? 'formal' : 'professional');
   const [draft, setDraft] = useState('');
   const [draftLanguage, setDraftLanguage] = useState<SummaryLocale>(into);
   const [target, setTarget] = useState<SummaryLocale>(into === 'en-GB' ? 'sv-SE' : 'en-GB');
@@ -110,8 +123,15 @@ export default function ReplyPanel({
   const canWrite = installed === true && !running && !tooLong;
   const canGenerate = canWrite && (received.trim() !== '' || notes.trim() !== '');
   const hasDraft = draft.trim() !== '' && !running;
+  /** A review has to quote what it is about; the draft is checked as the writer edits it. */
+  const unquoted = about && hasDraft ? missingSpans(draft, about.quotes) : [];
+  /** An email about a summary keeps the summary's numbers (a long text may leave some out). */
+  const dropped =
+    about?.purpose === 'summary' && hasDraft && received.length <= SHORT_MATERIAL
+      ? digitCheck(received, draft).missing
+      : [];
 
-  function run(task: ReplyTask, language: SummaryLocale) {
+  function run(task: TextTask, language: SummaryLocale) {
     before.current = draft;
     setCopied(false);
     setInserted(false);
@@ -120,7 +140,23 @@ export default function ReplyPanel({
   }
 
   const context = { received, notes, into, tone } as const;
-  const generate = () => run({ kind: 'draft-reply', ...context }, into);
+  const generate = () =>
+    run(
+      about
+        ? {
+            kind: 'compose-email',
+            purpose: about.purpose,
+            material: received,
+            recipient,
+            notes,
+            into,
+            tone,
+            overall,
+            quotes: about.quotes,
+          }
+        : { kind: 'draft-reply', ...context },
+      into,
+    );
   const shorter = () =>
     run({ kind: 'shorten-reply', ...context, into: draftLanguage, draft }, draftLanguage);
   const translate = () => run({ kind: 'translate-reply', ...context, into: target, draft }, target);
@@ -206,19 +242,48 @@ export default function ReplyPanel({
       ) : null}
 
       <label className="field">
-        <span>{t('reply.received')}</span>
+        <span>{about ? t('about.material') : t('reply.received')}</span>
         <textarea
           ref={first}
           rows={5}
           value={received}
           disabled={running}
-          aria-describedby="reply-received-hint"
+          readOnly={about !== null}
+          aria-describedby={about ? undefined : 'reply-received-hint'}
           onChange={(event) => onReceived(event.target.value)}
         />
-        <span id="reply-received-hint" className="small muted">
-          {t('reply.receivedHint')}
-        </span>
+        {about ? null : (
+          <span id="reply-received-hint" className="small muted">
+            {t('reply.receivedHint')}
+          </span>
+        )}
       </label>
+      {about ? (
+        <div className="row">
+          <label className="field">
+            <span>{t('about.recipient')}</span>
+            <input
+              value={recipient}
+              maxLength={PROOFREAD_LIMITS.recipient}
+              disabled={running}
+              onChange={(event) => setRecipient(event.target.value)}
+            />
+          </label>
+          {about.purpose === 'feedback' ? (
+            <label className="field">
+              <span>{t('proof.email.overall')}</span>
+              <select
+                value={overall}
+                disabled={running}
+                onChange={(event) => setOverall(event.target.value as 'good' | 'mixed')}
+              >
+                <option value="good">{t('proof.email.good')}</option>
+                <option value="mixed">{t('proof.email.mixed')}</option>
+              </select>
+            </label>
+          ) : null}
+        </div>
+      ) : null}
       <label className="field">
         <span>{t('reply.notes')}</span>
         <textarea
@@ -269,7 +334,7 @@ export default function ReplyPanel({
 
       <div className="row">
         <button type="button" className="button" disabled={!canGenerate} onClick={generate}>
-          {t('reply.generate')}
+          {about ? t('about.write') : t('reply.generate')}
         </button>
         {running ? (
           <button type="button" className="button button--quiet" onClick={cancel}>
@@ -312,6 +377,16 @@ export default function ReplyPanel({
               {flags.invented.length > 0 ? (
                 <p className="status-down" role="alert" data-testid="reply-warn-numbers">
                   {t('reply.warn.numbers', { numbers: flags.invented.join(', ') })}
+                </p>
+              ) : null}
+              {unquoted.length > 0 ? (
+                <p className="status-down" role="alert" data-testid="reply-warn-spans">
+                  {t('about.spans', { spans: unquoted.map((span) => `“${span}”`).join(', ') })}
+                </p>
+              ) : null}
+              {dropped.length > 0 ? (
+                <p className="status-down" role="alert" data-testid="reply-warn-dropped">
+                  {t('about.missing', { numbers: dropped.join(', ') })}
                 </p>
               ) : null}
               {flags.attachment ? (

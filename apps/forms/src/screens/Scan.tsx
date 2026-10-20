@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import { ApiError, client } from '../lib/api.js';
 import { saveBlob } from '../lib/email-handoff.js';
 import { droppedFromState, fillWith, summaryWith } from '../lib/documents-handoff.js';
+import { aiBridge } from '../lib/ai-bridge.js';
 import { modelBridge } from '../lib/model-bridge.js';
 import { remember } from '../lib/recent-docs.js';
 import { sendWith } from '../lib/send-handoff.js';
@@ -35,6 +36,7 @@ const ScanEdit = lazy(() => import('./scan-edit/ScanEdit.js'));
 const DigitalCopy = lazy(() => import('./digital-copy/DigitalCopy.js'));
 const KeepPanel = lazy(() => import('./documents/KeepPanel.js'));
 const ScanFilter = lazy(() => import('./scan-filter/ScanFilter.js'));
+const ReadWithAi = lazy(() => import('./read-ai/ReadWithAi.js'));
 
 /** The server's limits (`api-forms/src/pdf/arrange.ts`), so the screen can say so before sending. */
 const MAX_FILES = 40;
@@ -70,6 +72,7 @@ export function Scan() {
   const [opened, setOpened] = useState<OpenedAs | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [keeping, setKeeping] = useState(false);
+  const [aiReading, setAiReading] = useState(false);
   const handled = useRef(false);
   // How many files the list holds, kept synchronously: two adds in flight (a drop of mixed files) must not share an index.
   const count = useRef(0);
@@ -343,6 +346,17 @@ export function Scan() {
               onSummarise={modelBridge() ? () => void make(false, 'summarise') : null}
               onFill={fillable ? () => navigate(...fillWith(fillable)) : null}
             />
+            {aiBridge() ? (
+              <button
+                type="button"
+                className="button button--quiet"
+                disabled={busy || aiReading}
+                data-testid="handoff-read-ai"
+                onClick={() => setAiReading(true)}
+              >
+                <Icon name="preview" /> {t('read.open')}
+              </button>
+            ) : null}
           </>
         ) : null}
         <Link className="button button--quiet" to="/forms?new">
@@ -372,6 +386,16 @@ export function Scan() {
               setKeeping(false);
               void make(false, 'download', { files: kept, name: withPdf(name) });
             }}
+          />
+        </Suspense>
+      ) : null}
+      {aiReading ? (
+        <Suspense fallback={null}>
+          <ReadWithAi
+            files={files}
+            sources={sources}
+            pages={pages}
+            onClose={() => setAiReading(false)}
           />
         </Suspense>
       ) : null}

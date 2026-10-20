@@ -41,7 +41,7 @@ export interface ServerSettings {
   imageMaxTokens: number;
 }
 
-export const DEFAULT_SETTINGS = { contextTokens: 8192, imageMaxTokens: 1280 } as const;
+export const DEFAULT_SETTINGS = { contextTokens: 8192, imageMaxTokens: 2560 } as const;
 
 /**
  * Threads: physical cores minus one, between 2 and 8. Node reports logical processors; on a
