@@ -1,0 +1,84 @@
+# MAP — read this first, then open only the area you work on
+
+A router for a coding session, written to save tokens. It summarises `docs/VISION.md`, `CLAUDE.md`,
+`docs/HANDOVER.md` and the ADRs; where it is thin, the linked file is the authority. **Change this
+file in the same PR that changes an area** (a stale map is worse than none). Last updated 2026-10-20.
+
+## What Loppa is
+A lightweight, **local-first office helper**, not Acrobat. A room of three independent catchers
+(Documents, Spreadsheets, Presentation & planning). Only **Documents** is built: **Forms, Scan, Sign,
+Send** around an optional **AI centre**. The other two are inert placeholders. Desktop (Electron) is
+the product; the hosted web edition is secondary. Internal names stay `throwpaper` / `@tp/*`.
+
+## Rules that decide most questions
+1. **Offline by default.** The network only on a user press, with a confirmation naming the host
+   (ADR 0026). No telemetry, no cloud AI, no update ping.
+2. **AI is optional.** Loppa works with no model. One model resident at a time. AI output is labelled
+   generated, kept beside the document, never written into it. The builder/import stay rule-based:
+   the model never runs in `packages/shared/src/{builder,interpret,import}`.
+3. **Rule 8: no generated legal, clinical, tax or safety wording.** Contracts, consents, declarations,
+   clinical forms are quoted, never reworded or translated (ADR 0012). A human writes such text.
+4. **Nothing sends or deletes without a confirmation; every outbound action has a test mode.**
+5. No hard-coded strings, colours, fonts: strings are keys in **all twelve** catalogues
+   (`apps/forms/src/lib/messages/`: da de en es fi fr is ja nb ru sv zh), colours/type from `packages/tokens`.
+6. Exact arithmetic (bigint minor units, never floats). ICU collation for sorting; numbers sort numerically.
+7. Products never import each other (Forms, Sign, Mailer stub) — only HTTP via `docs/CONTRACT.md`.
+8. Only permissive licences (ADR 0015); weights need their own licence check. No new dependency without need.
+9. Page work (merge/split/redact) stays server-side with `pdf-lib`; untrusted PDFs pass `uploads/pdf-guard.ts`.
+10. Monetisation, company, terms, pricing are **out of scope** for development. Don't raise them.
+
+## Where to look (open only the row you need)
+| Working on | Code | Read first |
+| --- | --- | --- |
+| Room, catchers, arrival | `apps/forms/src/screens/Room.tsx`, `packages/tokens/src/room.ts` | ADR 0022, `docs/plan/DOCUMENTS.md` §2 |
+| Scan (pages, photos, filters, digital copy, invoice, PDF text/redact, Word→PDF) | `screens/Scan.tsx`, `screens/scan-*`, `screens/invoice-scan`, `api-forms/src/pdf/`, `routes/pdf*.ts`, `packages/shared/src/{import,payable}` | `docs/plan/IMPROVEMENTS.md`, `NEXT.md`, `SCANS.md` |
+| Forms (builder, fill, draft PDF) | `screens/Forms.tsx`, `FillIn.tsx`, `screens/builder/`, `packages/shared/src/{builder,interpret,import}` | ADRs 0017–0021, `docs/plan/PREDICTIVE-BUILDER.md`, `CAVEATS.md` |
+| Sign | `screens/Signing*`, `screens/signing/`, `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
+| Send (single, batch, campaigns, reply helper) | `screens/Send*`, `screens/send/`, `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
+| AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/Summary*` | `docs/plan/AI-SYSTEM.md`, ADRs 0023–0025 |
+| Desktop packaging | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/fetch-runtime.ts`) | ADR 0016, 0025 |
+| Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
+| Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
+| Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/` | gold is a fill, never text |
+| Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
+
+## AI in one paragraph
+One multimodal model, **Qwen2.5-VL-7B-Instruct** (Q4_K_M + f16 or lighter Q8_0 projector; Apache-2.0;
+files sit in the repo root in dev, Git-ignored), run by a pinned **llama.cpp `llama-server`** child
+process on loopback (ADR 0025); killed when idle so memory is truly freed. Needs ~12 GB RAM (9.8 GB
+measured peak); CPU only by default. An optional catalogue of smaller Apache-2.0 models (Qwen3-VL
+4B/2B, SmolVLM2) is being added. Tasks: read-page (vision), summarise, translate, quote, proofread,
+compose-email, reply. Never in the installer (≈6 GB): ships as a separate AI pack. Results are cached
+per page. Local file resolution: `LOPPA_AI_DIR` → `local-models/` → repo root (dev) → `resources/ai-pack`
+→ user-data. `LOPPA_MODEL_PATH` points a dev run at a file.
+
+## Commands
+`pnpm verify` (serial chain; exit 1 tells only the FIRST failing step — run `format:check`, `typecheck`,
+`lint`, `test`, `build` singly) · `pnpm test:e2e` (ONE run at a time; at most one agent) · `pnpm bundle:budget` (after build) ·
+`pnpm contract:check` · `pnpm licence:check` · `pnpm builder:validate` · `pnpm --filter @tp/desktop start|package:win`.
+Postgres is portable at `C:\Users\gusta\pg16` (no Docker). After dependency changes: `pnpm exec playwright install chromium`.
+
+## Known quirks (don't chase)
+- Local-only test failures: `mail/queue.test.ts` (POSIX file mode), a `C:\C:\…` snapshot path error inside a worktree.
+- Desktop build needs `NPM_CONFIG_USERCONFIG=<empty file>` (global `~/.npmrc` has an `allow-scripts` line npm 11 rejects).
+- Shell: Bash tool mangles `|` in quoted args to pnpm scripts — call `pnpm exec playwright test --grep …` directly.
+- A German small-phone guided-builder e2e flakes under load (passes alone).
+- `pdfjs-dist` pinned 6.3.289 (6.4 changes golden-corpus reading).
+- Gitleaks scans every PR commit: no secret-looking literals in tests.
+- A green `verify` is not a green e2e; a backgrounded exit code is not the command's; re-read files after `git switch`.
+- `.claude/` is ignored by prettier/eslint/vitest: gates run inside the worktree you work in.
+
+## Working style
+Plan before a phase; one branch/PR per phase; `pnpm verify` + `contract:check` before done; say when
+`packages/` or `docs/CONTRACT.md` changes; batch questions; decide small things yourself. Shared test
+resources (one Postgres, fixed ports): take the lock `mkdir C:/Users/gusta/AppData/Local/Temp/tp-e2e.lock`
+before DB tests/e2e, `rmdir` after. Run agents one at a time unless work is truly disjoint.
+Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix watches).
+
+## Current state (2026-10-20)
+Merged: the whole Documents plan; coordinator, single-model migration, reply helper, AI reader +
+proofread + corporate email. In flight: the optional model catalogue (`claude/model-catalogue`).
+Next: campaign-footer placeholder skeleton; desktop backup excludes `secrets.json` (+ encrypted
+backup); AI pack distribution (parts < 2 GiB with SHA-256, open from disk or download with
+confirmation); packaged-app test of the llama-server runtime. Unverified everywhere: macOS, 8–12 GB
+laptops, CPUs without AVX2, native-speaker quality. Plans/ADRs are history unless linked above.
