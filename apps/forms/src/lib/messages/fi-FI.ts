@@ -1778,6 +1778,15 @@ export const fiFI: Record<MessageKey, string> = {
   'scan.add': 'Lisää PDF-tiedostoja tai valokuvia',
   'scan.camera': 'Ota valokuvia',
   'scan.empty': 'Aloita lisäämällä PDF-tiedostoja tai valokuvia.',
+  'media.alt.scan': 'Pinossa olevia paperiarkkeja reunalta katsottuna',
+  'media.alt.send': 'Paperilentokone kaupungin yläpuolella',
+  'media.alt.sign': 'Täytekynän kärki paperilla',
+  'media.alt.forms': 'Kirjoituskone, jossa on paperiarkki',
+  'scan.emptyHint':
+    'PDF-tiedostot, valokuvat ja Word-tiedostot menevät sisään, ulos tulee yksi siisti PDF.',
+  'read.slow':
+    'Yhden sivun lukeminen voi kestää yhdestä kahteen minuuttia. Teksti ilmestyy tähän, kun se on valmis.',
+  'ai.models.ramChip': '{size} Gt RAM',
   'scan.page': 'Sivu {n}',
   'scan.count': '{count} sivua',
   'scan.earlier': 'Siirrä aiemmaksi',

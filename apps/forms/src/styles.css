@@ -8462,3 +8462,265 @@ a.room__centre:focus-visible {
 .ai-path {
   overflow-wrap: anywhere;
 }
+
+/* --- Design pass 2026-10 (docs/plan/DESIGN-PASS.md) ------------------------
+ *
+ * Tokens only. Everything here is read from the theme, so a brand kit and the derived dark theme
+ * reach it without a second palette.
+ */
+
+/* An empty state that carries a photograph: a grey banner of an object above the mark. The file is
+ * made grey at build time so gold stays the one hue on the page; the box is reserved by its width
+ * and height, so nothing shifts when it arrives. */
+.empty--media {
+  padding-block-start: calc(var(--tp-spacing-unit) * 2);
+}
+
+.empty__media {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 36rem;
+  block-size: auto;
+  aspect-ratio: 14 / 5;
+  object-fit: cover;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .empty__media {
+    filter: brightness(0.82);
+  }
+}
+
+:root[data-theme='dark'] .empty__media {
+  filter: brightness(0.82);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .empty--media {
+    animation: empty-in var(--tp-motion-slow) var(--tp-ease-unfurl) both;
+  }
+
+  @keyframes empty-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(var(--tp-spacing-unit) * 0.5));
+    }
+  }
+}
+
+/* A choice among a few, drawn as one piece. Selected is weight and a raised fill, never the
+ * primary button's gold: a screen has one filled button, and it is the thing it does. */
+.pick {
+  display: inline-flex;
+  max-inline-size: 100%;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 0.25);
+  padding: calc(var(--tp-spacing-unit) * 0.25);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+.pick__option {
+  flex: 1 1 auto;
+  min-block-size: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid transparent;
+  border-radius: var(--tp-radius);
+  background: transparent;
+  color: var(--tp-colour-muted);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--tp-motion-fast) var(--tp-ease),
+    color var(--tp-motion-fast) var(--tp-ease);
+}
+
+.pick__option:hover {
+  color: var(--tp-colour-text);
+}
+
+.pick__option[aria-checked='true'] {
+  background: var(--tp-colour-background);
+  border-color: var(--tp-colour-border);
+  color: var(--tp-colour-text);
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.pick__option:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pick__option {
+    transition: none;
+  }
+}
+
+/* The model list: one card per model, with the facts that decide the choice (tier, memory, state)
+ * as chips on a line of their own. */
+.models {
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+}
+
+.models > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.model {
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
+}
+
+.model:has(input:checked) {
+  border-color: var(--tp-colour-primary-edge);
+  box-shadow: inset 0 0 0 var(--tp-border-width) var(--tp-colour-primary-edge);
+}
+
+.model__head {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  align-items: center;
+  min-inline-size: 0;
+  font-size: var(--tp-text-lg);
+  overflow-wrap: anywhere;
+}
+
+.model__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  margin: 0;
+}
+
+.model__chips .badge {
+  white-space: normal;
+  /* Chips keep their case: "Light" and "Very light" are words, not shouted labels. */
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.badge--tier {
+  background: var(--tp-colour-surface);
+  border-color: var(--tp-colour-border);
+  color: var(--tp-colour-text);
+}
+
+/* Full is the tier the owner puts first: it alone takes the gold, as a fill with an ink label. */
+.badge--tier-full {
+  background: var(--tp-colour-primary);
+  border-color: var(--tp-button-border);
+  color: var(--tp-button-text);
+}
+
+.badge--ram {
+  background: none;
+  border-color: var(--tp-colour-border);
+  color: var(--tp-colour-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Template covers: a drawing of the form, from the theme's own colours. */
+.template {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.template__cover {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 15 / 8;
+  max-block-size: 8rem;
+}
+
+.tc__page {
+  fill: var(--tp-colour-background);
+  stroke: var(--tp-colour-border);
+  stroke-width: 1;
+}
+
+.tc__head {
+  fill: var(--tp-colour-primary);
+}
+
+.tc__field {
+  fill: var(--tp-colour-surface);
+  stroke: var(--tp-colour-border);
+  stroke-width: 0.75;
+}
+
+.tc__dot {
+  fill: var(--tp-colour-background);
+  stroke: var(--tp-colour-border);
+  stroke-width: 1;
+}
+
+.tc__dot--on {
+  fill: var(--tp-colour-primary);
+}
+
+.tc__cursor {
+  fill: var(--tp-colour-text);
+}
+
+.template:has(input:checked) .tc__page {
+  stroke: var(--tp-colour-primary-edge);
+}
+
+/* Waiting that explains itself: the shape of the text that is coming, and a sentence that says how
+ * long. Still under reduced motion; the sentence carries the meaning either way. */
+.skeleton {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+}
+
+.skeleton__line {
+  display: block;
+  block-size: 0.75rem;
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+}
+
+.skeleton__line--short {
+  inline-size: 55%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton__line {
+    animation: skeleton-pulse 1.6s var(--tp-ease) infinite alternate;
+  }
+
+  @keyframes skeleton-pulse {
+    from {
+      opacity: 0.45;
+    }
+  }
+}
+
+/* The bottom bar's labels: an ellipsis needs a block, and the link's own text sits in a flex
+ * column, so the label is a span (German "Veranstaltungen" was cut on the left, not the right). */
+.nav-link__label {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+@media (max-width: 64rem) {
+  .sidebar .nav-link__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

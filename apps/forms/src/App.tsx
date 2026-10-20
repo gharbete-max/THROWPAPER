@@ -168,7 +168,7 @@ function NavSection({
       to={to}
     >
       <Icon name={icon} className="icon--lead" />
-      {label}
+      <span className="nav-link__label">{label}</span>
       {count ? <span className="badge nav-link__count">{count}</span> : null}
     </NavLink>
   );
@@ -307,7 +307,11 @@ function Shell() {
            */}
           <nav className="sidebar" aria-label={t('nav.sections')}>
             {/* The way back to the room from every part (ADR 0022), where a logo usually leads home. */}
-            <Link className="sidebar__mark" to="/room" aria-label={t('room.back')}>
+            <Link
+              className="sidebar__mark"
+              to="/room"
+              aria-label={`${organisation?.name ?? t('app.name')} — ${t('room.back')}`}
+            >
               {brand.logoLight ? (
                 <img className="brand-mark" src={brand.logoLight} alt={organisation?.name ?? ''} />
               ) : (
@@ -345,7 +349,11 @@ function Shell() {
       */}
           {/* A `header`, so the session row — and Sign out in particular — is inside a landmark. */}
           <header className="topline">
-            <Link className="topline__mark" to="/room" aria-label={t('room.back')}>
+            <Link
+              className="topline__mark"
+              to="/room"
+              aria-label={`${organisation?.name ?? t('app.name')} — ${t('room.back')}`}
+            >
               <Wordmark name={organisation?.name ?? t('app.name')} />
             </Link>
 

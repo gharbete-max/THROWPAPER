@@ -39,7 +39,8 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Desktop packaging, AI pack | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/{fetch-runtime,make-ai-pack,join-ai-pack,publish-ai-pack}.ts`, `src/ai/pack.ts`) | ADR 0016, 0025 §6, `docs/DEPLOY.md` |
 | Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, entry 12, css 20) | its header comment |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
-| Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/` | gold is a fill, never text |
+| Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/`, `docs/plan/DESIGN-PASS.md` (the 2026-10 critique, what is left) | gold is a fill, never text |
+| Photographs (four, in empty states only) | `apps/forms/public/media/`, `EmptyState`'s `media` prop | `docs/brand/MEDIA.md` (source, licence, hash per file; `scripts/media.test.ts`) |
 | What the app shows a user (words, flows) | `apps/forms/src/lib/messages/en-GB.ts` | `docs/USER-GUIDE.md` (keep it in step with the screens) |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
 
