@@ -1,0 +1,53 @@
+{
+  "capabilities": [
+    "text",
+    "vision"
+  ],
+  "distributable": true,
+  "evaluationOnly": false,
+  "files": [
+    {
+      "bytes": 131234176,
+      "name": "SmolVLM2-256M-Video-Instruct-Q4_K_M.gguf",
+      "parts": [
+        {
+          "bytes": 131234176,
+          "name": "SmolVLM2-256M-Video-Instruct-Q4_K_M.gguf",
+          "sha256": "1d86050bd8ef9b4404ba682dcbf0f37a3144070c32e8825402c0b99a8e89f48e",
+          "url": "https://huggingface.co/ggml-org/SmolVLM2-256M-Video-Instruct-GGUF/resolve/a8383113a70b406f088ac936e5f1918ed08e620d/SmolVLM2-256M-Video-Instruct-Q4_K_M.gguf"
+        }
+      ],
+      "role": "weights",
+      "sha256": "1d86050bd8ef9b4404ba682dcbf0f37a3144070c32e8825402c0b99a8e89f48e"
+    },
+    {
+      "bytes": 103771616,
+      "name": "mmproj-SmolVLM2-256M-Video-Instruct-Q8_0.gguf",
+      "parts": [
+        {
+          "bytes": 103771616,
+          "name": "mmproj-SmolVLM2-256M-Video-Instruct-Q8_0.gguf",
+          "sha256": "05d5751132244a6ebd64cba9b34898c0d874b2cb78159d758e1d4da3aad91581",
+          "url": "https://huggingface.co/ggml-org/SmolVLM2-256M-Video-Instruct-GGUF/resolve/a8383113a70b406f088ac936e5f1918ed08e620d/mmproj-SmolVLM2-256M-Video-Instruct-Q8_0.gguf"
+        }
+      ],
+      "role": "projector",
+      "sha256": "05d5751132244a6ebd64cba9b34898c0d874b2cb78159d758e1d4da3aad91581"
+    }
+  ],
+  "id": "smolvlm2-256m-video-instruct-q4_k_m",
+  "kind": "smolvlm2",
+  "licence": "Apache-2.0",
+  "licenceUrl": "https://huggingface.co/HuggingFaceTB/SmolVLM2-256M-Video-Instruct",
+  "name": "SmolVLM2-256M-Video-Instruct (Q4_K_M)",
+  "requiredMemoryBytes": 1000000000,
+  "requiredMemoryVerified": false,
+  "retrievedAt": "2026-10-20",
+  "source": "https://huggingface.co/ggml-org/SmolVLM2-256M-Video-Instruct-GGUF",
+  "sourceRevision": "a8383113a70b406f088ac936e5f1918ed08e620d",
+  "support": {
+    "evidence": "Not run on this computer yet.",
+    "state": "untested"
+  },
+  "tier": "very-light"
+}
