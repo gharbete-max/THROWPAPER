@@ -48,7 +48,10 @@ export function SendCampaign() {
   const [step, setStep] = useState<Step>('list');
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
-  const [footer, setFooter] = useState('');
+  // A skeleton of [placeholders] to write over (ADR 0026): sending stays closed while one is left.
+  const [footer, setFooter] = useState(() =>
+    t('campaign.footerSkeleton', { link: UNSUBSCRIBE_PLACEHOLDER }),
+  );
   const [key, setKey] = useState('');
   const [testToMe, setTestToMe] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -79,6 +82,8 @@ export function SendCampaign() {
     switch (problem.code) {
       case 'footer-missing':
         return t('campaign.problem.footerMissing');
+      case 'footer-placeholder':
+        return t('campaign.problem.footerPlaceholder', { left: (problem.left ?? []).join(' ') });
       case 'footer-no-link':
         return t('campaign.problem.footerNoLink', { link });
       case 'too-many':
@@ -249,6 +254,7 @@ export function SendCampaign() {
             <span>{t('campaign.footer')}</span>
             <textarea rows={4} value={footer} onChange={(e) => setFooter(e.target.value)} />
             <span className="small muted">{t('campaign.footerHint', { link })}</span>
+            <span className="small muted">{t('campaign.footerStarter')}</span>
           </label>
           <p className="small muted">{t('campaign.noTracking')}</p>
           {problems.length > 0 && (subject || body || footer) && (

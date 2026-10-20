@@ -1983,6 +1983,12 @@ export const esES: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Campos que puedes usar en el asunto, el mensaje y el pie: {fields}. Tras una barra vertical puedes dar un valor de reserva para las filas en que la lista no tenga nada, por ejemplo {example}.',
   'campaign.footer': 'Pie (texto que tú proporcionas)',
+  'campaign.footerSkeleton':
+    '[Tu nombre u organización] · [Tu dirección postal]\nRecibes este mensaje porque [por qué esta persona está en la lista].\nCancelar suscripción: {link}',
+  'campaign.footerStarter':
+    'Es un punto de partida, no un texto final. Completa cada [corchete]; eres responsable de lo que dice el pie.',
+  'campaign.problem.footerPlaceholder':
+    'El pie todavía tiene texto entre [corchetes] por completar: {left}',
   'campaign.footerHint':
     'Lo escribes tú: quién envía y desde dónde, por qué la persona recibe el correo y cómo dejar de recibirlo. Pon {link} donde deba ir el enlace de baja de cada persona. Loppa no añade ningún texto propio.',
   'campaign.noTracking': 'Solo texto plano. Nada en el correo rastrea aperturas ni clics.',

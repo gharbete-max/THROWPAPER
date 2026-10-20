@@ -1966,6 +1966,12 @@ export const isIS: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Reitir sem þú getur notað í efnislínu, skilaboðum og fæti: {fields}. Á eftir lóðréttu striki geturðu gefið varagildi fyrir línur þar sem listinn er tómur, til dæmis {example}.',
   'campaign.footer': 'Fótur (orðalag sem þú gefur upp)',
+  'campaign.footerSkeleton':
+    '[Nafn þitt eða samtaka] · [Póstfang þitt]\nÞú færð þennan póst vegna þess að [hvers vegna viðkomandi er á listanum].\nAfskrá: {link}',
+  'campaign.footerStarter':
+    'Þetta er upphafspunktur, ekki fullbúinn texti. Fylltu út allar [hornklofa]; þú berð ábyrgð á því sem fóturinn segir.',
+  'campaign.problem.footerPlaceholder':
+    'Í fætinum er enn texti í [hornklofum] sem þarf að fylla út: {left}',
   'campaign.footerHint':
     'Þú skrifar þetta: hver sendir og hvaðan, hvers vegna viðkomandi fær póstinn og hvernig hann hættir að fá hann. Settu {link} þar sem afskráningarhlekkur hvers og eins á að vera. Loppa bætir engum eigin texta við.',
   'campaign.noTracking': 'Aðeins hreinn texti. Ekkert í tölvupóstinum rekur opnanir eða smelli.',

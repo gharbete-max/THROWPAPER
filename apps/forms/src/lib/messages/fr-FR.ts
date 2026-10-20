@@ -2004,6 +2004,12 @@ export const frFR: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Champs utilisables dans l’objet, le message et le pied de page : {fields}. Après une barre verticale, vous pouvez donner une valeur de repli pour les lignes où la liste est vide, par exemple {example}.',
   'campaign.footer': 'Pied de page (texte que vous fournissez)',
+  'campaign.footerSkeleton':
+    '[Votre nom ou organisation] · [Votre adresse postale]\nVous recevez ce message parce que [pourquoi cette personne figure sur la liste].\nSe désinscrire: {link}',
+  'campaign.footerStarter':
+    'Ceci est un point de départ, pas un texte final. Complétez chaque [crochet] ; vous êtes responsable du contenu du pied de page.',
+  'campaign.problem.footerPlaceholder':
+    'Le pied de page contient encore du texte entre [crochets] à compléter : {left}',
   'campaign.footerHint':
     'C’est à vous de l’écrire : qui envoie et d’où, pourquoi cette personne reçoit l’e-mail et comment ne plus le recevoir. Placez {link} là où doit figurer le lien de désabonnement de chacun. Loppa n’ajoute aucun texte de son cru.',
   'campaign.noTracking':

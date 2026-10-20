@@ -1958,6 +1958,12 @@ export const svSE: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Fält du kan använda i ämne, meddelande och sidfot: {fields}. Efter ett lodstreck kan du ange en reserv för rader där listan saknar värde, som {example}.',
   'campaign.footer': 'Sidfot (text du skriver själv)',
+  'campaign.footerSkeleton':
+    '[Ditt namn eller din organisation] · [Din postadress]\nDu får det här mejlet eftersom [varför personen finns på listan].\nAvregistrera: {link}',
+  'campaign.footerStarter':
+    'Det här är en utgångspunkt, inte färdig text. Fyll i alla [hakparenteser]; du ansvarar för vad sidfoten säger.',
+  'campaign.problem.footerPlaceholder':
+    'Sidfoten har fortfarande text inom [hakparenteser] att fylla i: {left}',
   'campaign.footerHint':
     'Det här skriver du själv: vem som skickar och varifrån, varför personen får mejlet och hur man slutar få det. Skriv {link} där varje persons avregistreringslänk ska stå. Loppa lägger inte till någon egen text.',
   'campaign.noTracking': 'Bara ren text. Inget i mejlet spårar öppningar eller klick.',

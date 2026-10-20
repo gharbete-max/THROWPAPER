@@ -1953,6 +1953,12 @@ export const daDK: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Felter du kan bruge i emne, besked og sidefod: {fields}. Efter en lodret streg kan du angive en reserve til rækker, hvor listen intet har, fx {example}.',
   'campaign.footer': 'Sidefod (tekst du selv skriver)',
+  'campaign.footerSkeleton':
+    '[Dit navn eller din organisation] · [Din postadresse]\nDu modtager denne mail, fordi [hvorfor personen står på listen].\nAfmeld: {link}',
+  'campaign.footerStarter':
+    'Det er et udgangspunkt, ikke færdig tekst. Udfyld alle [kantede parenteser]; du er ansvarlig for, hvad sidefoden siger.',
+  'campaign.problem.footerPlaceholder':
+    'Sidefoden har stadig tekst i [kantede parenteser], der skal udfyldes: {left}',
   'campaign.footerHint':
     'Det skriver du selv: hvem der sender og hvorfra, hvorfor personen får mailen, og hvordan man holder op med at få den. Skriv {link} dér, hvor hver persons afmeldingslink skal stå. Loppa tilføjer ingen tekst selv.',
   'campaign.noTracking': 'Kun ren tekst. Intet i mailen sporer åbninger eller klik.',

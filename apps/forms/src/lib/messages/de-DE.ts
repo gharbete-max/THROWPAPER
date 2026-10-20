@@ -2027,6 +2027,12 @@ export const deDE: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Felder für Betreff, Nachricht und Fußzeile: {fields}. Nach einem senkrechten Strich können Sie einen Ersatzwert für Zeilen angeben, in denen die Liste nichts enthält, zum Beispiel {example}.',
   'campaign.footer': 'Fußzeile (Text, den Sie selbst angeben)',
+  'campaign.footerSkeleton':
+    '[Ihr Name oder Ihre Organisation] · [Ihre Postanschrift]\nSie erhalten diese E-Mail, weil [warum diese Person auf der Liste steht].\nAbmelden: {link}',
+  'campaign.footerStarter':
+    'Dies ist ein Ausgangspunkt, kein fertiger Text. Füllen Sie jede [eckige Klammer] aus; Sie sind für den Inhalt der Fußzeile verantwortlich.',
+  'campaign.problem.footerPlaceholder':
+    'Die Fußzeile enthält noch Text in [eckigen Klammern], der auszufüllen ist: {left}',
   'campaign.footerHint':
     'Diesen Text schreiben Sie selbst: wer sendet und von wo, warum die Person die E-Mail erhält und wie sie keine mehr erhält. Setzen Sie {link} dorthin, wo der Abmeldelink jeder Person stehen soll. Loppa fügt keinen eigenen Text hinzu.',
   'campaign.noTracking': 'Nur reiner Text. Nichts in der E-Mail verfolgt Öffnungen oder Klicks.',

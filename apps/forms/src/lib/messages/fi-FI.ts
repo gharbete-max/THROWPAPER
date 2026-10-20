@@ -1969,6 +1969,12 @@ export const fiFI: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     'Kentät, joita voit käyttää otsikossa, viestissä ja alatunnisteessa: {fields}. Pystyviivan jälkeen voit antaa varalla käytettävän arvon riveille, joilla luettelossa ei ole arvoa, esimerkiksi {example}.',
   'campaign.footer': 'Alatunniste (itse kirjoittamasi teksti)',
+  'campaign.footerSkeleton':
+    '[Nimesi tai organisaatiosi] · [Postiosoitteesi]\nSaat tämän viestin, koska [miksi henkilö on listalla].\nPeruuta tilaus: {link}',
+  'campaign.footerStarter':
+    'Tämä on lähtökohta, ei valmis teksti. Täydennä jokainen [hakasulku]; vastaat itse alatunnisteen sisällöstä.',
+  'campaign.problem.footerPlaceholder':
+    'Alatunnisteessa on vielä [hakasulkeissa] täydennettävää tekstiä: {left}',
   'campaign.footerHint':
     'Kirjoitat tämän itse: kuka lähettää ja mistä, miksi vastaanottaja saa viestin ja miten viestien saaminen lopetetaan. Kirjoita {link} kohtaan, johon kunkin henkilön peruutuslinkki tulee. Loppa ei lisää omaa tekstiä.',
   'campaign.noTracking': 'Vain pelkkää tekstiä. Viestissä ei seurata avauksia tai klikkauksia.',

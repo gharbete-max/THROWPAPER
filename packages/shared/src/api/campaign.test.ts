@@ -67,6 +67,102 @@ describe('checking a campaign', () => {
     expect(checkCampaign('Hi', 'Body', 'Stop {{ unsubscribe }}', [row()])).toEqual([]);
   });
 
+  it('refuses a footer that still has a bracketed placeholder, and names it', () => {
+    const skeleton =
+      '[Your name] · [Your address]\nBecause [why].\nStop: {{unsubscribe}} [Your name]';
+    expect(checkCampaign('Hi', 'Body', skeleton, [row()])).toEqual([
+      {
+        row: -1,
+        field: 'footer',
+        code: 'footer-placeholder',
+        left: ['[Your name]', '[Your address]', '[why]'],
+      },
+    ]);
+    expect(checkCampaign('Hi', 'Body', 'Ann, Main St 1 (why)\n{{unsubscribe}}', [row()])).toEqual(
+      [],
+    );
+  });
+
+  it('refuses a footer that still has a bracketed placeholder, and names it', () => {
+    const skeleton =
+      '[Your name] · [Your address]\nBecause [why].\nStop: {{unsubscribe}} [Your name]';
+    expect(checkCampaign('Hi', 'Body', skeleton, [row()])).toEqual([
+      {
+        row: -1,
+        field: 'footer',
+        code: 'footer-placeholder',
+        left: ['[Your name]', '[Your address]', '[why]'],
+      },
+    ]);
+    expect(checkCampaign('Hi', 'Body', 'Ann, Main St 1 (why)\n{{unsubscribe}}', [row()])).toEqual(
+      [],
+    );
+  });
+
+  it('refuses a footer that still has a bracketed placeholder, and names it', () => {
+    const skeleton =
+      '[Your name] · [Your address]\nBecause [why].\nStop: {{unsubscribe}} [Your name]';
+    expect(checkCampaign('Hi', 'Body', skeleton, [row()])).toEqual([
+      {
+        row: -1,
+        field: 'footer',
+        code: 'footer-placeholder',
+        left: ['[Your name]', '[Your address]', '[why]'],
+      },
+    ]);
+    expect(checkCampaign('Hi', 'Body', 'Ann, Main St 1 (why)\n{{unsubscribe}}', [row()])).toEqual(
+      [],
+    );
+  });
+
+  it('refuses a footer that still has a bracketed placeholder, and names it', () => {
+    const skeleton =
+      '[Your name] · [Your address]\nBecause [why].\nStop: {{unsubscribe}} [Your name]';
+    expect(checkCampaign('Hi', 'Body', skeleton, [row()])).toEqual([
+      {
+        row: -1,
+        field: 'footer',
+        code: 'footer-placeholder',
+        left: ['[Your name]', '[Your address]', '[why]'],
+      },
+    ]);
+    expect(checkCampaign('Hi', 'Body', 'Ann, Main St 1 (why)\n{{unsubscribe}}', [row()])).toEqual(
+      [],
+    );
+  });
+
+  it('refuses a footer that still has a bracketed placeholder, and names it', () => {
+    const skeleton =
+      '[Your name] · [Your address]\nBecause [why].\nStop: {{unsubscribe}} [Your name]';
+    expect(checkCampaign('Hi', 'Body', skeleton, [row()])).toEqual([
+      {
+        row: -1,
+        field: 'footer',
+        code: 'footer-placeholder',
+        left: ['[Your name]', '[Your address]', '[why]'],
+      },
+    ]);
+    expect(checkCampaign('Hi', 'Body', 'Ann, Main St 1 (why)\n{{unsubscribe}}', [row()])).toEqual(
+      [],
+    );
+  });
+
+  it('refuses a footer that still has a bracketed placeholder, and names it', () => {
+    const skeleton =
+      '[Your name] · [Your address]\nBecause [why].\nStop: {{unsubscribe}} [Your name]';
+    expect(checkCampaign('Hi', 'Body', skeleton, [row()])).toEqual([
+      {
+        row: -1,
+        field: 'footer',
+        code: 'footer-placeholder',
+        left: ['[Your name]', '[Your address]', '[why]'],
+      },
+    ]);
+    expect(checkCampaign('Hi', 'Body', 'Ann, Main St 1 (why)\n{{unsubscribe}}', [row()])).toEqual(
+      [],
+    );
+  });
+
   it('names the rows that leave a field empty where there is no fallback', () => {
     const problems = checkCampaign('Hi', 'Dear {{name}}', FOOTER, [
       row(),

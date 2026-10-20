@@ -13,6 +13,7 @@ const bridge: LoppaBridge = {
   loadDemo: () => ipcRenderer.invoke(CHANNELS.loadDemo),
   saveSettings: (form) => ipcRenderer.invoke(CHANNELS.saveSettings, form),
   closePanel: () => ipcRenderer.send(CHANNELS.closePanel),
+  keys: (form) => ipcRenderer.invoke(CHANNELS.keys, form),
 };
 
 contextBridge.exposeInMainWorld('loppa', bridge);

@@ -7,7 +7,7 @@ import type { DesktopSettings } from '@tp/api-forms/desktop';
  * web app talking to its API over HTTP like every other client (rule 3), and a preload there would
  * be a second, undocumented API into the machine.
  */
-export type PanelView = 'setup' | 'settings';
+export type PanelView = 'setup' | 'settings' | 'backupKeys' | 'restoreKeys';
 
 /** Settings as the panel sees them: the stored password is never sent back to a renderer. */
 export type PanelSettings = Omit<DesktopSettings, 'mail'> & {
@@ -37,12 +37,19 @@ export interface SettingsForm {
 
 export type Result = { ok: true } | { ok: false; error: string };
 
+/** The passphrase window (ADR 0026, decision 7). Typed twice to make a backup, once to restore. */
+export interface KeysForm {
+  passphrase: string;
+  again: string;
+}
+
 export interface LoppaBridge {
   state(): Promise<PanelState>;
   bootstrap(owner: { organisationName: string; name: string; email: string }): Promise<Result>;
   loadDemo(): Promise<Result>;
   saveSettings(form: SettingsForm): Promise<Result>;
   closePanel(): void;
+  keys(form: KeysForm): Promise<Result>;
 }
 
 export const CHANNELS = {
@@ -51,4 +58,5 @@ export const CHANNELS = {
   loadDemo: 'loppa:load-demo',
   saveSettings: 'loppa:save-settings',
   closePanel: 'loppa:close-panel',
+  keys: 'loppa:keys',
 } as const;

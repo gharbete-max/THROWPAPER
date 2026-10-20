@@ -9,10 +9,77 @@ interface Props {
 }
 
 export function Panel({ t, initial, bridge }: Props) {
+  if (initial.view === 'backupKeys' || initial.view === 'restoreKeys') {
+    return <Keys t={t} bridge={bridge} restore={initial.view === 'restoreKeys'} />;
+  }
   return initial.view === 'setup' ? (
     <Setup t={t} bridge={bridge} />
   ) : (
     <Settings t={t} bridge={bridge} initial={initial.settings} platform={initial.platform} />
+  );
+}
+
+function Keys({ t, bridge, restore }: { t: Messages; bridge: LoppaBridge; restore: boolean }) {
+  const [passphrase, setPassphrase] = useState('');
+  const [again, setAgain] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
+    const result = await bridge.keys({ passphrase, again });
+    if (result.ok) return bridge.closePanel();
+    setError(result.error);
+    setBusy(false);
+  }
+
+  return (
+    <main className="panel">
+      <h1>{restore ? t.keysRestoreTitle : t.keysBackupTitle}</h1>
+      <p className="muted">{restore ? t.keysRestoreLead : t.keysBackupLead}</p>
+      <form onSubmit={(event) => void submit(event)}>
+        <fieldset disabled={busy}>
+          <label>
+            {t.keysPassphrase}
+            <input
+              type="password"
+              value={passphrase}
+              onChange={(event) => setPassphrase(event.target.value)}
+              autoComplete={restore ? 'current-password' : 'new-password'}
+              required
+              autoFocus
+            />
+          </label>
+          {restore ? null : (
+            <label>
+              {t.keysPassphraseAgain}
+              <input
+                type="password"
+                value={again}
+                onChange={(event) => setAgain(event.target.value)}
+                autoComplete="new-password"
+                required
+              />
+            </label>
+          )}
+          <div className="actions">
+            <button type="submit" className="primary">
+              {busy ? t.keysWorking : restore ? t.keysRestoreGo : t.keysBackupGo}
+            </button>
+            <button type="button" onClick={() => bridge.closePanel()}>
+              {t.settingsCancel}
+            </button>
+          </div>
+        </fieldset>
+      </form>
+      {error ? (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </main>
   );
 }
 

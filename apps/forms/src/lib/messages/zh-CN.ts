@@ -1845,6 +1845,10 @@ export const zhCN: Record<MessageKey, string> = {
   'campaign.fieldsHint':
     '主题、正文和页脚中可用的字段：{fields}。在竖线后可为名单中缺少内容的行给出备用值，例如 {example}。',
   'campaign.footer': '页脚（由您自行填写）',
+  'campaign.footerSkeleton':
+    '[您的姓名或机构] · [您的通讯地址]\n您收到此邮件，是因为[此人在名单中的原因]。\n退订: {link}',
+  'campaign.footerStarter': '这只是起点，不是成稿。请填写每一处[方括号]；页脚内容由您负责。',
+  'campaign.problem.footerPlaceholder': '页脚中仍有[方括号]内的文字需要填写：{left}',
   'campaign.footerHint':
     '这部分由您自己写：谁发送、从哪里发送、对方为何收到这封邮件，以及如何不再接收。请在每个人的退订链接应出现的位置写上 {link}。Loppa 不会自行添加任何文字。',
   'campaign.noTracking': '仅纯文本。邮件中没有任何追踪打开或点击的内容。',
