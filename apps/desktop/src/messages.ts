@@ -86,7 +86,8 @@ const EN = {
   pdfHeading: 'Documents',
   pdfBrowser: 'A browser to make PDFs with (leave empty — Loppa makes them itself)',
 
-  backupDone: 'Backup written to {path}',
+  backupDone:
+    'Backup written to {path}. The access keys were left out on purpose; a restored copy makes new ones.',
   backupFailed: 'The backup could not be written: {message}',
   startFailed: 'Loppa could not start',
   errorAlreadySetUp: 'This computer already has a Loppa organisation. Restart Loppa to open it.',
@@ -173,7 +174,8 @@ const SV: typeof EN = {
   pdfHeading: 'Dokument',
   pdfBrowser: 'En webbläsare som gör PDF:er (lämna tomt — Loppa gör dem själv)',
 
-  backupDone: 'Säkerhetskopian skrevs till {path}',
+  backupDone:
+    'Säkerhetskopian skrevs till {path}. Åtkomstnycklarna lämnades medvetet utanför; en återställd kopia skapar nya.',
   backupFailed: 'Säkerhetskopian kunde inte skrivas: {message}',
   startFailed: 'Loppa kunde inte starta',
   errorAlreadySetUp:
