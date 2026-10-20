@@ -1,5 +1,8 @@
 # CLAUDE.md
 
+**Start with `docs/MAP.md`** — a one-page router (vision, rules, where to look per area, commands,
+quirks, current state). Open the other documents only for the area you are working on.
+
 **Read `docs/VISION.md` first.** Loppa is a lightweight helper in the office, not Acrobat: a room of
 three independent catchers (Documents, Spreadsheets, Presentation & planning) with **Documents**
 built and finished first. Its four parts are **Forms, Scan, Sign and Send**, around a **summary and
