@@ -1453,7 +1453,7 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Der er endnu ingen download af denne. Du kan åbne en fil fra disken i stedet.',
   'ai.models.get': 'Hent',
-  'ai.models.open': 'Åbn en fil fra disken',
+  'ai.models.open': 'Åbn en fil eller en AI-pakke (PACK.json) fra disken',
   'ai.models.remove': 'Fjern',
   'ai.models.getConfirm':
     'Hent {name} fra {host}? Filer: {files}. I alt: {size} GB, og det fylder lige så meget på disken. Dine dokumenter sendes ingen steder, og du kan annullere når som helst. Fortsæt?',

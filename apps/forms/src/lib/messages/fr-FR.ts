@@ -1493,7 +1493,7 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Il n’y a pas encore de téléchargement pour celui-ci. Vous pouvez ouvrir un fichier depuis le disque.',
   'ai.models.get': 'Télécharger',
-  'ai.models.open': 'Ouvrir un fichier depuis le disque',
+  'ai.models.open': 'Ouvrir un fichier ou un pack IA (PACK.json) depuis le disque',
   'ai.models.remove': 'Supprimer',
   'ai.models.getConfirm':
     'Télécharger {name} depuis {host} ? Fichiers : {files}. Total : {size} Go, et cela occupe autant d’espace disque. Vos documents ne sont envoyés nulle part et vous pouvez annuler à tout moment. Continuer ?',

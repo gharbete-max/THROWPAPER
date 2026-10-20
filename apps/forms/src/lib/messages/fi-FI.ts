@@ -1465,7 +1465,7 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.loaded': 'Ladattu muistiin.',
   'ai.models.downloadOff': 'Tälle ei ole vielä latausta. Voit avata tiedoston levyltä sen sijaan.',
   'ai.models.get': 'Lataa',
-  'ai.models.open': 'Avaa tiedosto levyltä',
+  'ai.models.open': 'Avaa tiedosto tai tekoälypaketti (PACK.json) levyltä',
   'ai.models.remove': 'Poista',
   'ai.models.getConfirm':
     'Ladataanko {name} osoitteesta {host}? Tiedostot: {files}. Yhteensä {size} Gt, ja se vie yhtä paljon levytilaa. Asiakirjojasi ei lähetetä minnekään, ja voit peruuttaa milloin tahansa. Jatketaanko?',

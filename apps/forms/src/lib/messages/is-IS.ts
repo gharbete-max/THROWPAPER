@@ -1462,7 +1462,7 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.downloadOff':
     'Ekkert niðurhal er til fyrir þetta enn. Þú getur opnað skrá af diski í staðinn.',
   'ai.models.get': 'Sækja',
-  'ai.models.open': 'Opna skrá af diski',
+  'ai.models.open': 'Opna skrá eða gervigreindarpakka (PACK.json) af diski',
   'ai.models.remove': 'Fjarlægja',
   'ai.models.getConfirm':
     'Sækja {name} frá {host}? Skrár: {files}. Alls: {size} GB og það tekur jafn mikið diskpláss. Skjölin þín eru hvergi send og þú getur hætt við hvenær sem er. Halda áfram?',
