@@ -16,7 +16,7 @@ async function signIn(page: Page, locale = 'en-GB') {
   await page.addInitScript((l) => window.localStorage.setItem('tp.locale', l), locale);
   const secret = await plantLoginToken(sql, 'admin@example.com');
   await page.goto(`/auth/callback?token=${secret}`);
-  await expect(page.getByRole('link', { name: 'Documents' })).toBeVisible();
+  await page.waitForURL(/\/room/);
 }
 
 test('Scan: a photograph with its alt text, one filled button, nothing from another origin', async ({
@@ -91,8 +91,8 @@ test('the models are cards with their tier and memory as chips', async ({ page }
 test('the template gallery has a drawing on every card', async ({ page }) => {
   await signIn(page);
   await page.goto('/forms');
-  await page.locator('header button.button').last().click();
-  await page.locator('button.button--bare').click();
+  await page.getByRole('button', { name: 'New form' }).first().click();
+  await page.locator('.doors__myself button').click();
   const cards = page.locator('label.template');
   await expect(cards.first()).toBeVisible();
   expect(await cards.count()).toBeGreaterThan(4);
