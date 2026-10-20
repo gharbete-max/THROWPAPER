@@ -1475,7 +1475,7 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.removeConfirmYes': 'Poista',
   'ai.graphics.label': 'Käytä näytönohjainta (nopeampi, valinnainen)',
   'ai.graphics.note':
-    'Pois päältä, kunnes otat sen käyttöön. Sivut luetaan moninkertaisesti nopeammin koneella, jossa on erillinen näytönohjain. Jos näytönohjainta ei voi käyttää, Loppa palaa itse suorittimeen.',
+    'Pois päältä, kunnes otat sen käyttöön. Sivut luetaan moninkertaisesti nopeammin koneella, jossa on erillinen näytönohjain. Jos näytönohjainta ei voi käyttää, Loppa palaa itse suorittimeen. Jos jokin toinen ohjelma, kuten peli, kuormittaa korttia jo voimakkaasti, lukeminen voi olla hitaampaa kuin suorittimella; poista silloin tämä käytöstä.',
   'ai.graphics.later':
     'Ei vielä käytettävissä tällä koneella. Macin oma grafiikkatuki tulee myöhemmässä vaiheessa.',
   'ai.graphics.missing':
