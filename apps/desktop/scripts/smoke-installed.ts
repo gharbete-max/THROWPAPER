@@ -100,6 +100,14 @@ async function launch(): Promise<{ child: ChildProcess; browser: Browser }> {
     if (Date.now() - started > 60_000) throw new Error('Loppa did not open its debugging port');
     await sleep(200);
   }
+  // Connecting before the first window exists can leave Playwright with no page to see.
+  for (let tries = 0; tries < 120; tries += 1) {
+    const targets = (await fetch(`http://127.0.0.1:${port}/json`).then((r) => r.json())) as Array<{
+      type: string;
+    }>;
+    if (targets.some((t) => t.type === 'page')) break;
+    await sleep(250);
+  }
   const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   report('launch', true, { seconds: (Date.now() - started) / 1000, pid: child.pid });
   return { child, browser };
@@ -117,28 +125,29 @@ async function pageWhere(
     }
     await sleep(250);
   }
-  throw new Error('no window matched');
+  const seen = browser.contexts().flatMap((context) => context.pages().map((p) => p.url()));
+  throw new Error(`no window matched; open: ${JSON.stringify(seen)}`);
 }
 
 /** Clicks Open (or Save) in the common file dialog Loppa raised, after typing a path in it. */
 function driveFileDialog(pid: number, path: string): string {
+  // The modern file dialog exposes no Value or Invoke pattern, so it is found by UI Automation
+  // and then typed into like a person: activated by its title, path, Enter.
   const script = `
-Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
-$root=[Windows.Automation.AutomationElement]::RootElement
+Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes,Microsoft.VisualBasic,System.Windows.Forms
+$A=[Windows.Automation.AutomationElement]
 $deadline=(Get-Date).AddSeconds(30)
 while((Get-Date) -lt $deadline){
-  $dialogs=$root.FindAll([Windows.Automation.TreeScope]::Children,(New-Object Windows.Automation.PropertyCondition([Windows.Automation.AutomationElement]::ClassNameProperty,'#32770')))
-  foreach($d in $dialogs){
+  foreach($d in $A::RootElement.FindAll([Windows.Automation.TreeScope]::Children,(New-Object Windows.Automation.PropertyCondition($A::ClassNameProperty,'#32770')))){
     if($d.Current.ProcessId -ne ${pid}){ continue }
-    $edit=$d.FindFirst([Windows.Automation.TreeScope]::Descendants,(New-Object Windows.Automation.PropertyCondition([Windows.Automation.AutomationElement]::AutomationIdProperty,'1148')))
-    $ok=$d.FindFirst([Windows.Automation.TreeScope]::Descendants,(New-Object Windows.Automation.PropertyCondition([Windows.Automation.AutomationElement]::AutomationIdProperty,'1')))
-    if($edit -and $ok){
-      $edit.GetCurrentPattern([Windows.Automation.ValuePattern]::Pattern).SetValue('${path.replace(/'/g, "''")}')
-      Start-Sleep -Milliseconds 300
-      $ok.GetCurrentPattern([Windows.Automation.InvokePattern]::Pattern).Invoke()
-      'dialog driven: ' + $d.Current.Name
-      exit 0
-    }
+    Start-Sleep -Milliseconds 800
+    [Microsoft.VisualBasic.Interaction]::AppActivate($d.Current.Name)
+    Start-Sleep -Milliseconds 500
+    [System.Windows.Forms.SendKeys]::SendWait('${path.replace(/[+^%~(){}[\]]/g, (c) => `{${c}}`).replace(/'/g, "''")}')
+    Start-Sleep -Milliseconds 400
+    [System.Windows.Forms.SendKeys]::SendWait('{ENTER}')
+    'dialog driven: ' + $d.Current.Name
+    exit 0
   }
   Start-Sleep -Milliseconds 300
 }
@@ -244,17 +253,20 @@ async function first(): Promise<void> {
   const { child, browser } = await launch();
   const panel = await pageWhere(browser, (url) => url.startsWith('file:') && url.includes('panel'));
   report('first-run window', true, { url: panel.url(), seconds: (Date.now() - t0) / 1000 });
-  const set = await panel.evaluate(() =>
-    (
-      window as unknown as {
-        loppa: { bootstrap(o: object): Promise<{ ok: boolean; error?: string }> };
-      }
-    ).loppa.bootstrap({
-      organisationName: 'Smoke AB',
-      name: 'Smoke Tester',
-      email: 'smoke@example.test',
-    }),
-  );
+  // The set-up window is destroyed once the room opens, so its own call may never answer.
+  const set = await panel
+    .evaluate(() =>
+      (
+        window as unknown as {
+          loppa: { bootstrap(o: object): Promise<{ ok: boolean; error?: string }> };
+        }
+      ).loppa.bootstrap({
+        organisationName: 'Smoke AB',
+        name: 'Smoke Tester',
+        email: 'smoke@example.test',
+      }),
+    )
+    .catch(() => ({ ok: true, error: 'window closed after set-up, as it should' }));
   const main = await mainWindow(browser);
   report('workspace set up and room reachable', set.ok, {
     error: set.error,

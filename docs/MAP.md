@@ -47,6 +47,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Reviews (coverage map, findings, residual risks) | `docs/reviews/` (`2026-10-backend-and-shared.md`: backend and shared packages; fuzz tests are `*/fuzz*.test.ts`, seeded, `FUZZ_SEED=<n>` replays) | `docs/SECURITY-REVIEW-2026-10.md` |
 | Which decision says what | `docs/adr/README.md` | one line per ADR with its status |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
+| Reviews (security 2026-10, desktop and AI 2026-10: scenario table, soak, installer numbers) | `docs/SECURITY-REVIEW-2026-10.md`, `docs/reviews/2026-10-desktop-ai.md`; tests `apps/desktop/src/ai/reliability{,.real}.test.ts`; installed-program smoke `apps/desktop/scripts/smoke-installed.ts` | the finding tables |
 
 ## AI in one paragraph
 One multimodal model, **Qwen2.5-VL-7B-Instruct** (Q4_K_M + f16 or lighter Q8_0 projector; Apache-2.0;
@@ -81,6 +82,7 @@ Postgres is portable at `C:\Users\gusta\pg16` (no Docker). After dependency chan
 ## Known quirks (don't chase)
 - Unit tests: all green on Windows (2026-10-20, 7575 tests; `mail/queue.test.ts` skips its POSIX file-mode check there). In a nested worktree under `.claude/` vitest can still end with one unhandled `mkdir C:\C:\…\fixtures\sessions` snapshot-path error after every test passed: not a failing test.
 - Desktop build needs `NPM_CONFIG_USERCONFIG=<empty file>` (global `~/.npmrc` has an `allow-scripts` line npm 11 rejects).
+- Desktop installer: build from a SHORT path (a copy at `C:\tpb`); a deep worktree path broke NSIS once. An AI pack cut by `make-ai-pack.ts` is `<name>.partN` files: the app finds them by that name (the manifest lists files whole). Real-model suite is opt-in (`LOPPA_REAL_MODEL=1`, header of `reliability.real.test.ts`); never damage a hard link to the owner's model files, copy first. The modern Windows file dialog has no UI Automation Value/Invoke pattern: `smoke-installed.ts` types into it with SendKeys.
 - Shell: Bash tool mangles `|` in quoted args to pnpm scripts — call `pnpm exec playwright test --grep …` directly.
 - Guided-builder layout checks (`answersFit`, `nothingCut`) finish the slide-in animation before measuring (`settle`); a node 24 px along its way reads as off the screen. Full e2e on 2026-10-20: 156/156, 12 min.
 - a11y smoke (axe-core 4.10, injected from a scratch install, not a dependency): room, Scan, Send, Summary, Signing in sv/en/ja were clean on 2026-10-20 apart from the two minors since fixed in #206 (Send's `textarea role=combobox`, the empty actions `<th>`). A contrast hit on Signing is the start-up intro fading in, not a defect.
